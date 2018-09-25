@@ -17,7 +17,7 @@ INSTALLATION:
 - 4 - Copy/Paste the content of the "upload" folder at the root of your domain.
 - 5 - Find the 2 "config-dist.php" files (root and /admin) and rename them "config.php".
 - 6 - Create an empty database on your server and give your username all privileges.
-- 7 - Run the installer by entering "your domain/install/index.php" in your browser.
+- 7 - Run the installer by entering "<your domain>/install/index.php" in your browser.
 - 8 - Once you have completed the installer, simply login into your new Admin!
 
 

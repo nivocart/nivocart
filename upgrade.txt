@@ -1,0 +1,67 @@
+// ---------------------------------------
+//  NivoCart Shopping Cart v1.0.0
+//
+//  UPGRADE INSTRUCTIONS
+//
+//  https://nivocart.com
+// ---------------------------------------
+
+
+NOTE: THIS IS FOR UPGRADE ON EXISTING INSTALLS ONLY!
+IF INSTALLING NEW, BE SURE TO READ THE INSTALL.TXT FILE INSTEAD.
+
+##############################################
+THIS IS FOR UPGRADING EXISTING NIVOCART v1.x.x STORES ONLY!
+##############################################
+
+1. BACKUP YOUR EXISTING STORE FILES AND DATABASE!!
+	- Backup your database via your store Admin->System->Backup
+	- Backup your files using FTP file copy or use cPanel filemanager to create a zip of all the existing NivoCart files and folders.
+
+2. Download the latest version of NivoCart and upload ALL new files on top of your current install EXCEPT your config.php and admin/config.php.
+	If you are up-to-date with the last recent version and want to find just the new files that have changed since the last version, you can follow this guide to create a smaller changes-only patch. But for most, the full NivoCart zip will suffice.
+
+3. Browse to http://<yourstore.com>/install Replacing <yourstore.com> with your actual site (and subdirectory if applicable).
+
+4. You should see the NivoCart Upgrade script.
+	- If you see the NivoCart Install page, then that means you overwrote your config.php files. Restore them from your backup first. Then try again.
+
+5. Click "Upgrade". After a few seconds you should see the upgrade success page.
+	- If you see any errors, report them immediately in the forum before continuing.
+
+6. Clear any cookies in your browser.
+
+7. Goto the admin side of your store and press Ctrl+F5 3x times to refresh your browser cache. That will prevent oddly shifted elements due to stylesheet changes.
+	Login to your admin as the main administrator.
+
+8. Goto Admin->Users->User Groups and Edit the Top Administrator group. Check All boxes.
+	- This will ensure you have permissions for all the new files.
+
+9. Goto Admin->System->Settings
+	- Update any blank fields and click save. 
+	Even if you do not see any new fields, click save anyway to update the database with any new field names.
+
+10. Other Adjustments that may need to be made, depending on which version you are upgrading from and to.
+
+11. Load the store front and again press CTRL+F5 3x times to refresh your browser cache. That will prevent oddly shifted elements due to stylesheet.
+
+
+Note that some of your vQmod scripts may need to be updated for the new core changes. 
+So run through your site catalog and admin areas and check in FTP for the vqmod/vqmod.log file. 
+If you see errors, then you will need to address them.
+
+
+Troubleshooting:
+------------------------------
+1. If you have any upgrade script errors, post them in the forum
+2. If you have 3rd party addon errors, contact the mod author for an update.
+3. If you find bugs, check the "official" bug thread for this version of NivoCart.
+
+Many bugs may have already been reported and fixes will be offered in the first post of this thread.
+You should always visit this thread immediately after a fresh upgrade to see if there are any immediate bug fixes.
+If nobody has reported your bug, then please report it.
+
+
+That's It!
+
+NivoCart Dev Team
