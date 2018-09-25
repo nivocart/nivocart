@@ -1,0 +1,4 @@
+trigger:
+  type: deploy
+  script:
+    - "curl -X POST -F token=twRSHuPZzTr3SNZjuytK -F ref=master https://gitlab.com/api/v4/projects/8545964/trigger/pipeline"
