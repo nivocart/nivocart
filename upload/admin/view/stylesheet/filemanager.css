@@ -1,0 +1,194 @@
+/* -----------------------------------
+* NivoCart - File Manager
+* Copyright © 2018
+* ------------------------------------
+* Modal Styles 
+* ------------------------------------
+*/
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff2') format('woff2'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff') format('woff'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.ttf') format('truetype'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	background: #EFEFEF;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	overflow-y: hidden;
+}
+img {
+	border: 0;
+}
+#container {
+	padding: 0 10px;
+	height: 355px;
+	overflow: hidden;
+}
+#file-menu {
+	clear: both;
+	height: 29px;
+	margin-bottom: 3px;
+}
+#column-left {
+	background: #FAFAFA;
+	border: 1px solid #CCC;
+	float: left;
+	width: 26%;
+	height: 258px;
+	overflow: auto;
+}
+#column-right {
+	background: #FAFAFA;
+	border: 1px solid #CCC;
+	float: right;
+	width: 72%;
+	height: 285px;
+	overflow: auto;
+}
+#column-right div {
+	text-align: left;
+	padding: 5px;
+}
+#column-right a {
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	border: 1px solid #CCC;
+	cursor: pointer;
+	margin: 5px;
+	padding: 5px;
+}
+#column-right a.selected {
+	border: 1px solid #7DA2CE;
+	background: #EBF4FD;
+}
+#column-right input {
+	display: none;
+}
+#dialog {
+	display: none;
+}
+/* Buttons */
+.filemanager-button {
+	display: block;
+	float: left;
+	padding: 8px 5px 8px 25px;
+	margin-top: 1px;
+	margin-right: 5px;
+	background-position: 5px 6px;
+	background-repeat: no-repeat;
+	text-decoration: none;
+	cursor: pointer;
+}
+/* Images */
+.thumb {
+	padding: 5px;
+	width: 90px;
+	height: 90px;
+	background: #FAFAFA;
+	border: 1px solid #BBB;
+	cursor: pointer;
+	cursor: move;
+	position: relative;
+}
+#updateImage a {
+	width: 130px;
+	height: 16px;
+	color: #FBFBFB;
+	text-align: center;
+	line-height: 16px;
+	font-size: 115%;
+	font-weight: bold;
+	margin: auto;
+	margin-top: 3px;
+	padding: 5px;
+	border: 1px solid #CCC;
+	background: #5C9CCC;
+	background-position: 0 -50px;
+}
+#updateImage a:hover {
+	background-position: 0 0;
+	background-color: #EFEFEF;
+}
+/* Filter */
+.filter {
+	position: relative;
+	clear: left;
+	float: left;
+    width: 26%;
+	background: #FAFAFA;
+    border: 1px solid #CCC;
+	margin: 3px 0 0 0;
+}
+.filter > input {
+	margin: 0;
+	padding-left: 2px;
+	background: #FAFAFA;
+	border: none;
+	height: 20px;
+	width: 80%;
+}
+.filter > input:focus {
+	margin: 0;
+	outline: 0;
+}
+.filter > img {
+	position: relative;
+	float: right;
+	background: #FAFAFA;
+	line-height: 20px;
+	margin-right: 2px;
+}
+/* Tools */
+#toolset {
+	clear: both;
+}
+#toolset .btn {
+	float: left;
+	font-size: 10px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+.fileName {
+	display: block;
+}
+.fileSize {
+	clear: both;
+	display: block;
+}
+.feedback {
+	color: #1571B0;
+	font-size: 14px;
+	font-weight: bold;
+	margin: 30px 0 0 50px;
+}
+span.branding a {
+	float: right;
+	font-size: 12px;
+	padding: 10px 10px 0 0;
+	text-decoration: none;
+	color: #269BC6;
+}
+
+/* Tablets */
+@media only screen and (min-width: 640px) and (max-width: 790px) {
+	.filemanager-button {
+		padding: 7px 4px 7px 24px;
+	}
+}
+/* Phones */
+@media only screen and (max-width: 640px) {
+	.filemanager-button {
+		padding: 7px 2px 7px 22px;
+	}
+}
+

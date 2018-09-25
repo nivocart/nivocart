@@ -1,0 +1,177 @@
+# 1.To use URL Alias you need to be running apache with mod_rewrite enabled.
+# 2. In your NivoCart directory rename htaccess.txt to .htaccess.
+# For any support issues please visit: https://nivocart.com
+
+Options +FollowSymlinks
+
+## Prevent Directory listing.
+Options -Indexes
+
+## Prevent Apache from returning a 404 error as the result of a rewrite when the directory with the same name does not exist.
+Options -MultiViews
+
+## Reduce Server HTTP Header to the minimum product (Apache) rather than showing detailed version information of the server and operating system:
+# ServerTokens Prod
+
+## Remove the footer from error pages, which details the version numbers:
+ServerSignature Off
+
+## Hide X-Powered-By and Server headers, sent by downstream application servers:
+# Note you need both below as the "always" one doesn't work with Jboss for some reason.
+Header always unset "X-Powered-By"
+Header unset "X-Powered-By"
+
+## Remove browser bugs
+# This only applies to old browsers
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+Header append Vary User-Agent 
+
+## Use UTF-8 encoding for anything served as `text/html` or `text/plain`.
+AddDefaultCharset utf-8
+
+## Force UTF-8 for certain file formats.
+<IfModule mod_mime.c>
+  AddCharset utf-8 .atom .css .js .json .jsonld .rss .vtt .webapp .xml
+</IfModule>
+
+## Add Audio Codecs
+AddType audio/mp4 .m4a
+AddType audio/mpeg .mp1 .mp2 .mp3 .mpg .mpeg
+AddType audio/ogg .oga
+AddType audio/wav .wav
+
+## Add Video Codecs
+AddType video/mp4 .mp4 .m4v
+AddType video/ogg .ogv .ogm .ogg
+AddType video/webm .webm
+
+## Prevent Direct Access to files.
+<FilesMatch "(^#.*#|\.(bak|config|dist|fla|in[ci]|ini|tpl|log|psd|sh|sql|sw[op])|~)$">
+# Apache < 2.3
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+  Satisfy All
+</IfModule>
+# Apache ≥ 2.3
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+</FilesMatch>
+
+## Force IE to render pages in the highest available mode.
+<IfModule mod_headers.c>
+  Header set X-UA-Compatible "IE=edge"
+  # mod_headers cannot match based on the content-type, however this header should be sent only for HTML pages and not for the other resources.
+  <FilesMatch "\.(appcache|atom|crx|css|cur|eot|f4[abpv]|flv|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|vcf|vtt|webapp|web[mp]|woff|xml|xpi)$">
+    Header unset X-UA-Compatible
+  </FilesMatch>
+</IfModule>
+
+## Prevent some browsers from MIME-sniffing the response.
+# This reduces exposure to drive-by download attacks and cross-origin data leaks, and should be left uncommented,
+# especially if the web server is serving user-uploaded content or content that could potentially be treated as executable by the browser.
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+## Set XSS Protection header
+<IfModule mod_headers.c> 
+  Header set X-XSS-Protection "1; mode=block" 
+</IfModule>
+
+## SEO URL Settings
+RewriteEngine On
+
+RewriteBase /
+
+RewriteRule ^sitemap.xml$ index.php?route=feed/google_sitemap [L]
+RewriteRule ^googlebase.xml$ index.php?route=feed/google_base [L]
+RewriteRule ^download/(.*) index.php?route=error/not_found [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*\.(js|css|ico|gif|jpg|jpeg|png)
+RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
+
+## SEO Friendly INDEX (Single Store)
+## Use RewriteRule ^index\.php$ http://%{HTTP_HOST}/folder_name? [R=301,L] if your website is located within a folder inside the web root.
+
+# RewriteCond %{QUERY_STRING} ^route=common/home$
+# RewriteCond %{REQUEST_METHOD} !^POST$
+# RewriteRule ^index\.php$ http://%{HTTP_HOST}? [R=301,L]
+
+## Enable Apache Gzip.
+<ifModule mod_gzip.c>
+  mod_gzip_on Yes
+  mod_gzip_dechunk Yes
+  mod_gzip_item_include file .(html?|js|css|ico|txt|php)$
+  mod_gzip_item_include handler ^cgi-script$
+  mod_gzip_item_include mime ^text/.*
+  mod_gzip_item_include mime ^application/x-javascript.*
+  mod_gzip_item_exclude mime ^image/.*
+  mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</ifModule>
+
+## Use Mod_deflate to compress static files.
+<ifModule mod_deflate.c="">
+<filesMatch ".(js|css|ico|txt|htm|html|php)$"="">
+  SetOutputFilter DEFLATE
+</filesMatch>
+</ifModule>
+
+## Speed up caching.
+FileETag MTime Size
+
+## Serve resources with far-future expires headers.
+<IfModule mod_expires.c>
+  ExpiresActive on
+  ExpiresDefault                         "access plus 3 months"
+  ExpiresByType text/css                 "access plus 6 months"
+  ExpiresByType application/json         "access plus 0 seconds"
+  ExpiresByType application/ld+json      "access plus 0 seconds"
+  ExpiresByType application/xml          "access plus 0 seconds"
+  ExpiresByType text/xml                 "access plus 0 seconds"
+  ExpiresByType image/x-icon             "access plus 6 months"
+  ExpiresByType text/x-component         "access plus 6 months"
+  ExpiresByType text/html                "access plus 0 seconds"
+  ExpiresByType application/javascript   "access plus 6 months"
+  ExpiresByType image/gif                "access plus 3 months"
+  ExpiresByType image/jpg                "access plus 3 months"
+  ExpiresByType image/jpeg               "access plus 3 months"
+  ExpiresByType image/png                "access plus 3 months"
+  ExpiresByType image/svg+xml            "access plus 3 months"
+  ExpiresByType video/mp4                "access plus 3 months"
+  ExpiresByType video/ogg                "access plus 3 months"
+  ExpiresByType video/webm               "access plus 3 months"
+  ExpiresByType application/atom+xml     "access plus 1 hour"
+  ExpiresByType application/rss+xml      "access plus 1 hour"
+  ExpiresByType application/x-font-ttf   "access plus 6 months"
+  ExpiresByType font/opentype            "access plus 6 months"
+</IfModule>
+
+### Additional settings that may need to be enabled for some servers.
+### Uncomment the commands by removing the # sign in front of it.
+### If you get an "Internal Server Error 500" after enabling any of the following settings, restore the # as this means your host doesn't allow that.
+
+# 1. If your cart only allows you to add one item at a time, it is possible register_globals is on. This may work to disable it.
+# php_flag register_globals Off
+
+# 2. If your cart has magic quotes enabled, This may work to disable it.
+# php_flag magic_quotes_gpc Off
+
+# 3. Set max upload file size. Most hosts will limit this and not allow it to be overridden but you can try.
+# php_value upload_max_filesize 999M
+
+# 4. set max post size. uncomment this line if you have a lot of product options or are getting errors where forms are not saving all fields.
+# php_value post_max_size 999M
+
+# 5. set max time script can take. uncomment this line if you have a lot of product options or are getting errors where forms are not saving all fields.
+# php_value max_execution_time 200
+
+# 6. set max time for input to be received. Uncomment this line if you have a lot of product options or are getting errors where forms are not saving all fields.
+# php_value max_input_time 200
+
+# 7. disable open_basedir limitations.
+# php_admin_value open_basedir none

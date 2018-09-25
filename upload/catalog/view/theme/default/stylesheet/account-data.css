@@ -1,0 +1,89 @@
+/* ----------------------------
+* NivoCart - Account Data
+* Copyright © 2018
+* -----------------------------
+*/
+html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+body {
+	background: #FFF;
+}
+body, td, th, input, select, textarea, option, optgroup {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #000;
+}
+td span {
+	font-size: 10px;
+}
+td > img {
+	margin: 2px 2px 0 0;
+}
+h1 {
+	text-transform: uppercase;
+	color: #BBB;
+	text-align: right;
+	font-size: 24px;
+	font-weight: normal;
+	padding-bottom: 5px;
+	margin-top: 0;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #DDD;
+}
+/* General */
+.documents {
+	margin: 0 5px;
+}
+.store {
+	width: 100%;
+	margin-bottom: 20px;
+}
+.top-left {
+	width: 50%;
+}
+.top-right {
+	float: right;
+	width: 50%;
+	text-align: left;
+	vertical-align: top;
+}
+.center {
+	text-align: center;
+}
+/* Table */
+table.address, table.personal {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+table.personal > tbody {
+	border: 1px solid #DDD;
+}
+table.personal > tbody > tr > td:first-child {
+	width: 180px;
+}
+table.personal > tbody > tr > td {
+	padding: 10px;
+	border-bottom: 1px dotted #CCC;
+}
+table.bank {
+	width: 100%;
+	margin-top: 20px;
+}
+/* Address */
+.address {
+	width: 100%;
+	margin-bottom: 20px;
+	border-top: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+}
+.address td {
+	padding: 5px;
+	border-left: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	vertical-align: text-bottom;
+	margin-bottom: 10px;
+}

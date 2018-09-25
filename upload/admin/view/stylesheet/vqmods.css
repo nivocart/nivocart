@@ -1,0 +1,103 @@
+/* ------------------------------
+* NivoCart - VQmods v2.1.1
+* Copyright © 2018
+* -------------------------------
+*/
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff2') format('woff2'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff') format('woff'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.ttf') format('truetype'),
+    url('fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
+}
+
+#error-log {
+	width: 99%;
+	height: 280px;
+	padding: 5px;
+	border: 1px solid #CCC;
+	background: #FFF;
+	margin-bottom: 10px;
+	overflow-y: scroll;
+}
+#vqcache {
+	min-width: 250px;
+	margin-bottom: 10px;
+}
+/* Notification */
+.notice {
+	padding: 10px 10px 10px 40px;
+	margin-bottom: 15px;
+	background: #FFF url('../image/error.png') 10px center no-repeat;
+	border: 1px solid #D7E6F4;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	border-radius: 2px;
+	color: #444;
+}
+/* Button */
+input[type='submit'] {
+	display: inline-block;
+	line-height: 12px;
+	padding: 6px 13px;
+	margin: 0 4px;
+	color: #405060;
+	font-weight: bold;
+	text-decoration: none;
+	background-color: #FCFCFC;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#FCFCFC), to(#DEDEDE));
+	background-image: -webkit-linear-gradient(top, #FCFCFC, #DEDEDE);
+	background-image: -moz-linear-gradient(top, #FCFCFC, #DEDEDE);
+	background-image: -ms-linear-gradient(top, #FCFCFC, #DEDEDE);
+	background-image: -o-linear-gradient(top, #FCFCFC, #DEDEDE);
+	background-image: linear-gradient(to bottom, #FCFCFC, #DEDEDE);
+	border: 1px solid #36AAD8;
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	-khtml-border-radius: 1px;
+	border-radius: 1px;
+}
+input[type='submit']:hover {
+	background-color: #F8F8F8;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#D6D6D6));
+	background-image: -webkit-linear-gradient(top, #F8F8F8, #D6D6D6);
+	background-image: -moz-linear-gradient(top, #F8F8F8, #D6D6D6);
+	background-image: -ms-linear-gradient(top, #F8F8F8, #D6D6D6);
+	background-image: -o-linear-gradient(top, #F8F8F8, #D6D6D6);
+	background-image: linear-gradient(to bottom, #F8F8F8, #D6D6D6);
+	border: 1px solid #5DC15E;
+}
+/* About */
+a.about {
+	text-decoration: none;
+}
+a.about:hover {
+	text-decoration: underline;
+}
+/* Description */
+.description {
+	font-size: 12px;
+	margin: 3px 0;
+}
+.help {
+	color: #888;
+	font-size: 11px;
+	font-weight: normal;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	display: block;
+}
+.error-install {
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+.highlight {
+	color: #CC2626;
+}
+.right {
+	text-align: right;
+}
