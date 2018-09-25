@@ -89,7 +89,7 @@ class ModelToolExportImportRaw extends Model {
 		}
 
 		if (!$table) {
-			exit('Cannot find SQL table.');
+			exit();
 		}
 
 		$row_count = 0;
