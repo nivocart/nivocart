@@ -1,0 +1,20 @@
+{
+  "name": "nivocart/nivocart",
+  "type": "project",
+  "description": "NivoCart. Opensource Shopping Cart software.",
+  "keywords": ["ecommerce", "opensource"],
+  "homepage": "https://nivocart.com/",
+  "license": "OSL-3.0",
+  "config": {
+    "vendor-dir": "./upload/system/vendor/"
+  },
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "authors": [
+    {
+      "name": "Philippe Marion",
+      "email": "nivocart@gmail.com"
+    }
+  ]
+}
