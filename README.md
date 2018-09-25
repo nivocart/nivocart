@@ -1,6 +1,6 @@
 # nivocart
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f083a576fade4a7f83d5459569f0fe96)](https://www.codacy.com/app/nivocart/nivocart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nivocart/nivocart&amp;utm_campaign=Badge_Grade) [![pipeline status](https://gitlab.com/nivocart/nivocart/badges/master/pipeline.svg)](https://gitlab.com/nivocart/nivocart/commits/master)
+[![pipeline status](https://gitlab.com/nivocart/nivocart/badges/master/pipeline.svg)](https://gitlab.com/nivocart/nivocart/commits/master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f083a576fade4a7f83d5459569f0fe96)](https://www.codacy.com/app/nivocart/nivocart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nivocart/nivocart&amp;utm_campaign=Badge_Grade)
 
 Requirements:
 - Server: Apache Linux Server
@@ -43,6 +43,8 @@ WANT TO CONTRIBUTE?
 - Star the project.
 
 
-LICENCE: <a href="https://opensource.org/licenses/OSL-3.0">Open Software License version 3.0 (OSL-3.0)</a>
+LICENCE: <a href="https://opensource.org/licenses/OSL-3.0" title="License">Open Software License version 3.0 (OSL-3.0)</a>
+
+FORUM: <a href="http://forum.nivocart.com" title="Forum">NivoCart Community Forums</a>
 
 EMAIL: contact@nivocart.com
