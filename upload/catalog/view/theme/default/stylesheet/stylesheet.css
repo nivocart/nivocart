@@ -159,11 +159,11 @@ span.from {
 	background-color: #EDEDED;
 }
 #container-top .container-top-inner-normal {
-	width: 967px;
+	width: 1267px;
 	margin: 0 auto;
 }
 #container-top .container-top-inner-wide {
-	width: 1267px;
+	width: 1907px;
 	margin: 0 auto;
 }
 #container-top .container-top-inner-full {
@@ -250,13 +250,13 @@ a.top-link:hover {
 	border: none;
 }
 #container .container-normal {
-	max-width: 967px;
+	max-width: 1267px;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: left;
 }
 #container .container-wide {
-	max-width: 1267px;
+	max-width: 1907px;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: left;
@@ -267,24 +267,24 @@ a.top-link:hover {
 	margin-right: 10px;
 	text-align: left;
 }
-#column-left {
+#content-left {
 	float: left;
-	width: 190px;
+	width: 300px;
 }
-#column-right {
+#content-right {
 	float: right;
-	width: 190px;
+	width: 300px;
 }
 #content {
 	min-height: 400px;
 	margin-bottom: 25px;
 	background-color: transparent;
 }
-#column-left + #column-right + #content, #column-left + #content {
-	margin-left: 210px;
+#content-left + #content-right + #content, #content-left + #content {
+	margin-left: 320px;
 }
-#column-right + #content {
-	margin-right: 210px;
+#content-right + #content {
+	margin-right: 320px;
 }
 /* Header */
 #header {
@@ -1005,12 +1005,12 @@ a.button-add:hover {
 	text-align: center;
 	position: relative;
 }
-#column-left .box-product > div, #column-right .box-product > div {
+#content-left .box-product > div, #content-right .box-product > div {
 	width: 100%;
 	min-width: 170px;
 }
 #content .box-product > div {
-	width: 21%;
+	width: 24%;
 	min-width: 150px;
 }
 .box-product .image {
@@ -1026,17 +1026,17 @@ a.button-add:hover {
 	color: #36AAD8;
 	font-weight: bold;
 	text-decoration: none;
-	margin-bottom: 4px;
+	margin-bottom: 5px;
 	overflow-wrap: break-word;
 	word-wrap: break-word;
 }
 .box-product .price {
 	display: block;
 	color: #555;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: bold;
 	text-shadow: 0 1px 0 #FFF;
-	margin-bottom: 4px;
+	margin-bottom: 5px;
 }
 .box-product .price-old {
 	color: #CC2626;
@@ -1049,39 +1049,39 @@ a.button-add:hover {
 	color: #111;
 	font-weight: bold;
 	text-decoration: none;
-	margin-bottom: 4px;
+	margin-bottom: 5px;
 }
 .box-product .rating {
 	display: block;
-	margin-bottom: 4px;
+	margin-bottom: 5px;
 }
 .box-product .remaining {
 	display: block;
 	color: #CC2626;
 	font-weight: bold;
 	text-decoration: none;
-	margin-bottom: 4px;
+	margin-bottom: 5px;
 }
 .box-product .stock-status {
 	display: block;
 	color: #CC2626;
 	font-weight: bold;
 	text-decoration: none;
-	margin-bottom: 4px;
+	margin-bottom: 5px;
 }
 .box-product .offer a {
 	display: block;
 	color: #444;
 	font-weight: bold;
 	text-decoration: none;
-	margin-bottom: 2px;
+	margin-bottom: 3px;
 	padding: 5px;
 }
 .box-product > div .box-product-bottom {
 	position: relative;
 	bottom: 0;
 	width: 100%;
-	height: 35px;
+	height: 40px;
 	display: inline-block;
 	margin-top: 8px;
 	border-top: 1px solid #CCC;
@@ -1099,9 +1099,9 @@ a.button-add:hover {
 .box-product > div .box-product-bottom > div a {
 	color: #777;
 	font-weight: bold;
-	font-size: 21px;
+	font-size: 22px;
 	text-decoration: none;
-	line-height: 36px;
+	line-height: 40px;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 .box-product > div .box-product-bottom > div a:hover {

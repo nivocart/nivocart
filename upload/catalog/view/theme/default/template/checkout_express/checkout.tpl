@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php echo $content_header; ?>
+<?php echo $content_higher; ?>
 <?php if ($this->config->get($template . '_breadcrumbs')) { ?>
   <div class="breadcrumb">
   <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -7,8 +7,8 @@
   <?php } ?>
   </div>
 <?php } ?>
-<?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
+<?php echo $content_left; ?><?php echo $content_right; ?>
+<div id="content"><?php echo $content_high; ?>
   <div style="float:right;">
   <?php if ($logged && $shipping_required) { ?>
     <a href="<?php echo $express_address; ?>" title="<?php echo $text_your_address; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/address.png" alt="<?php echo $text_your_address; ?>" /></a>
@@ -112,9 +112,9 @@
       <div class="checkout-content"></div>
     </div>
   </div>
-  <?php echo $content_bottom; ?>
+  <?php echo $content_low; ?>
 </div>
-<?php echo $content_footer; ?>
+<?php echo $content_lower; ?>
 
 <script type="text/javascript"><!--
 $('#checkout .checkout-content input[name=\'account\']').on('change', function() {

@@ -5,12 +5,6 @@ $_['heading_title']         = 'Tag Cloud';
 // Text
 $_['text_module']           = 'Modules';
 $_['text_success']          = 'Success: You have modified module <b>Tag Cloud</b> !';
-$_['text_content_header']   = 'Content Header';
-$_['text_content_top']      = 'Content Top';
-$_['text_content_bottom']   = 'Content Bottom';
-$_['text_content_footer']   = 'Content Footer';
-$_['text_column_left']      = 'Column Left';
-$_['text_column_right']     = 'Column Right';
 $_['text_normal']           = 'Normal';
 $_['text_bold']             = 'Bold';
 $_['text_limit']            = 'N&deg; of Tags:';

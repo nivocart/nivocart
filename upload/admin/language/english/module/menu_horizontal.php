@@ -14,10 +14,6 @@ $_['text_ltr']            = 'Left to Right';
 $_['text_rtl']            = 'Right to Left';
 $_['text_icon']           = 'Icon';
 $_['text_manage_menu']    = 'Add, Edit or View, Menus and Menu items.';
-$_['text_content_header'] = 'Content Header';
-$_['text_content_top']    = 'Content Top';
-$_['text_content_bottom'] = 'Content Bottom';
-$_['text_content_footer'] = 'Content Footer';
 $_['text_no_menu']        = 'No menu !';
 $_['text_menus']          = 'Menus';
 

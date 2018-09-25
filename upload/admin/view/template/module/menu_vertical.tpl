@@ -93,15 +93,15 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="menu_vertical_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'column_left') { ?>
-                  <option value="column_left" selected="selected"><?php echo $text_column_left; ?></option>
+                <?php if ($module['position'] == 'content_left') { ?>
+                  <option value="content_left" selected="selected"><?php echo $text_content_left; ?></option>
                 <?php } else { ?>
-                  <option value="column_left"><?php echo $text_column_left; ?></option>
+                  <option value="content_left"><?php echo $text_content_left; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'column_right') { ?>
-                  <option value="column_right" selected="selected"><?php echo $text_column_right; ?></option>
+                <?php if ($module['position'] == 'content_right') { ?>
+                  <option value="content_right" selected="selected"><?php echo $text_content_right; ?></option>
                 <?php } else { ?>
-                  <option value="column_right"><?php echo $text_column_right; ?></option>
+                  <option value="content_right"><?php echo $text_content_right; ?></option>
                 <?php } ?>
               </select></td>
               <td class="left"><select name="menu_vertical_module[<?php echo $module_row; ?>][direction]">
@@ -166,8 +166,8 @@ function addModule() {
 	<?php } ?>
 	html += '    </select></td>';
 	html += '    <td class="left"><select name="menu_vertical_module[' + module_row + '][position]">';
-	html += '      <option value="column_left"><?php echo $text_column_left; ?></option>';
-	html += '      <option value="column_right"><?php echo $text_column_right; ?></option>';
+	html += '      <option value="content_left"><?php echo $text_content_left; ?></option>';
+	html += '      <option value="content_right"><?php echo $text_content_right; ?></option>';
 	html += '    </select></td>';
 	html += '    <td class="left"><select name="menu_vertical_module[' + module_row + '][direction]">';
 	html += '      <option value="ltr" selected="selected"><?php echo $text_ltr; ?></option>';

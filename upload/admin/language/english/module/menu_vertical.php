@@ -10,8 +10,6 @@ $_['text_no']               = 'No';
 $_['text_ltr']              = 'Left to Right';
 $_['text_rtl']              = 'Right to Left';
 $_['text_manage_menu']      = 'Add, Edit or View, Menus and Menu items.';
-$_['text_column_left']      = 'Column Left';
-$_['text_column_right']     = 'Column Right';
 $_['text_no_menu']          = 'No menu !';
 $_['text_menus']            = 'Menus';
 

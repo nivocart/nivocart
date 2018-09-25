@@ -154,7 +154,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#column-right a').live('click', function() {
+	$('#column-right').delegate('a', 'click', function() {
 		if ($(this).attr('class') == 'selected') {
 			$(this).removeAttr('class');
 		} else {
@@ -163,15 +163,15 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#column-right a').live('dblclick', function() {
-		<?php if ($fckeditor !== false) { ?>
-			window.opener.CKEDITOR.tools.callFunction(<?php echo $fckeditor; ?>, '<?php echo $directory; ?>' + encodeURIComponent($(this).find('input[name=\'image\']').attr('value')).replace('%2F', '/'));
-			self.close();
-		<?php } else { ?>
-			parent.$('#<?php echo $field; ?>').attr('value', 'data/' + $(this).find('input[name=\'image\']').attr('value'));
-			parent.$('#dialog').dialog('close');
-			parent.$('#dialog').remove();
-		<?php } ?>
+	$('#column-right').delegate('a', 'dblclick', function() {
+	<?php if ($fckeditor !== false) { ?>
+		window.opener.CKEDITOR.tools.callFunction(<?php echo $fckeditor; ?>, '<?php echo $directory; ?>' + encodeURIComponent($(this).find('input[name=\'image\']').attr('value')).replace('%2F', '/'));
+		self.close();
+	<?php } else { ?>
+		parent.$('#<?php echo $field; ?>').attr('value', 'data/' + $(this).find('input[name=\'image\']').attr('value'));
+		parent.$('#dialog').dialog('close');
+		parent.$('#dialog').remove();
+	<?php } ?>
 	});
 
 	$('#toolset button:first').button({
@@ -210,7 +210,7 @@ $(document).ready(function() {
 				'text-align': 'left'
 			});
 			$('span.fileName').css({
-				'margin-top': '-1px',
+				'margin-top': '0',
 				'margin-left': '15px',
 				'text-decoration': 'none'
 			});

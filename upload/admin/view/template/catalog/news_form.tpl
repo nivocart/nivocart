@@ -183,15 +183,15 @@
                   <td>&nbsp;&nbsp;</td>
                   <td> 
                     <div id="product-wise-list" class="scrollbox">
-                      <?php $class = 'odd'; ?>
-                      <?php if (isset($products)) { ?>
-                        <?php foreach ($products as $product) { ?>
-                          <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-                          <div id="product-wise-list<?php echo $product['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product['name']; ?><img src="view/image/delete.png" alt="" />
-                            <input type="hidden" name="product_wise[]" value="<?php echo $product['product_id']; ?>" />
-                          </div>
-                        <?php } ?>
-                      <?php } ?>	
+                    <?php $class = 'odd'; ?>
+                    <?php if (isset($products)) { ?>
+                      <?php foreach ($products as $product) { ?>
+                        <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                        <div id="product-wise-list<?php echo $product['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product['name']; ?><img src="view/image/delete.png" alt="" />
+                          <input type="hidden" name="product_wise[]" value="<?php echo $product['product_id']; ?>" />
+                        </div>
+                      <?php } ?>
+                    <?php } ?>	
                     </div>
                   </td>
                 </tr>
@@ -318,7 +318,7 @@ $('input[name=\'product\']').autocomplete({
 	}
 });
 
-$('#product-wise-list div').on('click', 'img', function() {
+$('#product-wise-list').delegate('img', 'click', function() {
 	$(this).parent().remove();
 
 	$('#product-wise-list div:odd').attr('class', 'odd');

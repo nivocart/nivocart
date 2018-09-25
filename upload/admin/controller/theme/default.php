@@ -146,7 +146,7 @@ class ControllerThemeDefault extends Controller {
 		if (file_exists(DIR_IMAGE . 'templates/' . $this->_name . '.png')) {
 			$image = $server . 'image/templates/' . $this->_name . '.png';
 		} else {
-			$image = $server . 'image/no_image.jpg';
+			$image = $server . 'image/no_image.png';
 		}
 
 		$this->data['image_preview'] = '<img src="' . $image . '" alt="" style="border:1px solid #EEE;" />';
@@ -154,9 +154,9 @@ class ControllerThemeDefault extends Controller {
 		// General
 		$this->data['display_sizes'] = array();
 
-		$this->data['display_sizes'][] = array('format' => 'normal', 'title' => 'Normal');
-		$this->data['display_sizes'][] = array('format' => 'wide', 'title' => 'Widescreen');
-		$this->data['display_sizes'][] = array('format' => 'full', 'title' => 'Fullscreen');
+		$this->data['display_sizes'][] = array('format' => 'normal', 'title' => 'Normal (HD)');
+		$this->data['display_sizes'][] = array('format' => 'wide', 'title' => 'Wide (Full HD)');
+		$this->data['display_sizes'][] = array('format' => 'full', 'title' => 'Unlimited');
 
 		if (isset($this->request->post[$this->_name . '_widescreen'])) {
 			$this->data[$this->_name . '_widescreen'] = $this->request->post[$this->_name . '_widescreen'];

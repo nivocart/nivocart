@@ -409,8 +409,6 @@ class ControllerDesignBanner extends Controller {
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		$this->load->model('tool/image');
-
 		if (isset($this->request->post['banner_image'])) {
 			$banner_images = $this->request->post['banner_image'];
 		} elseif (isset($this->request->get['banner_id'])) {
@@ -419,26 +417,28 @@ class ControllerDesignBanner extends Controller {
 			$banner_images = array();
 		}
 
+		$this->load->model('tool/image');
+
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
+
 		$this->data['banner_images'] = array();
 
 		foreach ($banner_images as $banner_image) {
 			if ($banner_image['image'] && file_exists(DIR_IMAGE . $banner_image['image'])) {
 				$image = $banner_image['image'];
 			} else {
-				$image = 'no_image.jpg';
+				$image = 'no_image.png';
 			}
 
 			$this->data['banner_images'][] = array(
 				'banner_image_description' => $banner_image['banner_image_description'],
 				'image'                    => $image,
-				'thumb'                    => $this->model_tool_image->resize($image, 100, 100),
+				'thumb'                    => $this->model_tool_image->resize($image, 120, 120),
 				'link'                     => $banner_image['link'],
 				'external_link'            => $banner_image['external_link'],
 				'sort_order'            => $banner_image['sort_order']
 			);
 		}
-
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 
 		$this->template = 'design/banner_form.tpl';
 		$this->children = array(

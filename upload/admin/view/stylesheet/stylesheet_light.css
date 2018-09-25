@@ -1633,6 +1633,8 @@ table.tool tr td {
 	width: 350px;
 	height: 100px;
 	background: #FFF;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-size: 14px;
 	border: 1px solid #CCC;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -1645,6 +1647,8 @@ table.tool tr td {
 	height: 90px;
 	margin-bottom: 5px;
 	background: #FFF;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-size: 14px;
 	border: 1px solid #CCC;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;

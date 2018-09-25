@@ -1730,7 +1730,7 @@ class ControllerSettingSetting extends Controller {
 		// Image
 		$this->load->model('tool/image');
 
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 
 		if (isset($this->request->post['config_logo'])) {
 			$this->data['config_logo'] = $this->request->post['config_logo'];
@@ -1739,9 +1739,9 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo')) && is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 100, 100);
+			$this->data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 120, 120);
 		} else {
-			$this->data['logo'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['logo'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 		}
 
 		if (isset($this->request->post['config_icon'])) {
@@ -1751,9 +1751,9 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if ($this->config->get('config_icon') && file_exists(DIR_IMAGE . $this->config->get('config_icon')) && is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
-			$this->data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 100, 100);
+			$this->data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 120, 120);
 		} else {
-			$this->data['icon'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['icon'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 		}
 
 		if (isset($this->request->post['config_image_category_width'])) {
@@ -1928,9 +1928,9 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if ($this->config->get('config_label_stock') && file_exists(DIR_IMAGE . $this->config->get('config_label_stock')) && is_file(DIR_IMAGE . $this->config->get('config_label_stock'))) {
-			$this->data['label_stock'] = $this->model_tool_image->resize($this->config->get('config_label_stock'), 100, 100);
+			$this->data['label_stock'] = $this->model_tool_image->resize($this->config->get('config_label_stock'), 120, 120);
 		} else {
-			$this->data['label_stock'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['label_stock'] = $this->model_tool_image->resize('no_image.jpg', 120, 120);
 		}
 
 		if (isset($this->request->post['config_label_offer'])) {
@@ -1940,9 +1940,9 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if ($this->config->get('config_label_offer') && file_exists(DIR_IMAGE . $this->config->get('config_label_offer')) && is_file(DIR_IMAGE . $this->config->get('config_label_offer'))) {
-			$this->data['label_offer'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), 100, 100);
+			$this->data['label_offer'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), 120, 120);
 		} else {
-			$this->data['label_offer'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['label_offer'] = $this->model_tool_image->resize('no_image.jpg', 120, 120);
 		}
 
 		if (isset($this->request->post['config_label_special'])) {
@@ -1952,9 +1952,9 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if ($this->config->get('config_label_special') && file_exists(DIR_IMAGE . $this->config->get('config_label_special')) && is_file(DIR_IMAGE . $this->config->get('config_label_special'))) {
-			$this->data['label_special'] = $this->model_tool_image->resize($this->config->get('config_label_special'), 100, 100);
+			$this->data['label_special'] = $this->model_tool_image->resize($this->config->get('config_label_special'), 120, 120);
 		} else {
-			$this->data['label_special'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['label_special'] = $this->model_tool_image->resize('no_image.jpg', 120, 120);
 		}
 
 		// Transfer

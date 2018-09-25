@@ -394,13 +394,13 @@ class ControllerSaleVoucherTheme extends Controller {
 
 		$this->load->model('tool/image');
 
-		if (isset($voucher_theme_info) && $voucher_theme_info['image'] && file_exists(DIR_IMAGE . $voucher_theme_info['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($voucher_theme_info['image'], 100, 100);
-		} else {
-			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-		}
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+		if (isset($voucher_theme_info) && $voucher_theme_info['image'] && file_exists(DIR_IMAGE . $voucher_theme_info['image'])) {
+			$this->data['thumb'] = $this->model_tool_image->resize($voucher_theme_info['image'], 120, 120);
+		} else {
+			$this->data['thumb'] = $this->model_tool_image->resize('no_image.png', 120, 120);
+		}
 
 		$this->template = 'sale/voucher_theme_form.tpl';
 		$this->children = array(

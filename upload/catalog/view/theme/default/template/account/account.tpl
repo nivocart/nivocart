@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php echo $content_header; ?>
+<?php echo $content_higher; ?>
 <?php if ($success) { ?>
   <div class="success"><?php echo $success; ?></div>
 <?php } ?>
@@ -10,8 +10,8 @@
   <?php } ?>
   </div>
 <?php } ?>
-<?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
+<?php echo $content_left; ?><?php echo $content_right; ?>
+<div id="content"><?php echo $content_high; ?>
   <div style="float:right;"><img src="<?php echo $thumb; ?>" alt="" /></div>
   <h1><?php echo $heading_title; ?></h1>
   <div class="buttons">
@@ -69,7 +69,7 @@
       </ul>
     </div>
   </div>
-  <?php echo $content_bottom; ?>
+  <?php echo $content_low; ?>
 </div>
-<?php echo $content_footer; ?>
+<?php echo $content_lower; ?>
 <?php echo $footer; ?>

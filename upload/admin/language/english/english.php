@@ -31,14 +31,13 @@ $_['text_view']                     = 'View';
 $_['text_home']                     = 'Home';
 $_['text_characters']               = 'Characters';
 
-// Position
-$_['text_header_bottom']            = 'Header Bottom';
-$_['text_content_header']           = 'Content Header';
-$_['text_content_top']              = 'Content Top';
-$_['text_content_bottom']           = 'Content Bottom';
-$_['text_content_footer']           = 'Content Footer';
-$_['text_column_left']              = 'Column Left';
-$_['text_column_right']             = 'Column Right';
+// Text Content (Positions)
+$_['text_content_higher']           = '&#9710; &nbsp; Higher';
+$_['text_content_high']             = '&#9651; &nbsp; High';
+$_['text_content_left']             = '&#9665; &nbsp; Left';
+$_['text_content_right']            = '&#9655; &nbsp; Right';
+$_['text_content_low']              = '&#9661; &nbsp; Low';
+$_['text_content_lower']            = '&#10729; &nbsp; Lower';
 
 // Confirm Delete/Uninstall
 $_['text_confirm']                  = 'Delete/Uninstall cannot be undone! Are you sure you want to do this?';
@@ -118,12 +117,12 @@ $_['tab_image']                     = 'Image';
 $_['tab_option']                    = 'Option';
 $_['tab_media']                     = 'Media';
 $_['tab_preference']                = 'Preference';
+$_['tab_price']                     = 'Price';
 $_['tab_server']                    = 'Server';
 $_['tab_store']                     = 'Store';
 $_['tab_special']                   = 'Special';
 $_['tab_local']                     = 'Local';
 $_['tab_mail']                      = 'Mail';
-$_['tab_marketplace_links']         = 'Marketplaces';
 $_['tab_module']                    = 'Module';
 $_['tab_order']                     = 'Order Details';
 $_['tab_payment']                   = 'Payment Details';
@@ -136,10 +135,6 @@ $_['tab_total']                     = 'Totals';
 $_['tab_transaction']               = 'Transactions';
 $_['tab_voucher']                   = 'Vouchers';
 $_['tab_voucher_history']           = 'Voucher History';
-$_['tab_price']                     = 'Price';
-
-// Compatibility 1.5.x & 1.6.x
-$_['tab_fraud']                     = 'Fraud';
 
 // Error
 $_['error_upload_1']                = 'Warning: The uploaded file exceeds the UPLOAD_MAX_FILESIZE directive in php.ini!';

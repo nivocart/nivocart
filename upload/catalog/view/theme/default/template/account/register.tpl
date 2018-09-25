@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php echo $content_header; ?>
+<?php echo $content_higher; ?>
 <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
@@ -10,8 +10,8 @@
   <?php } ?>
   </div>
 <?php } ?>
-<?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
+<?php echo $content_left; ?><?php echo $content_right; ?>
+<div id="content"><?php echo $content_high; ?>
   <h1><?php echo $heading_title; ?></h1>
   <p><?php echo $text_account_already; ?></p>
   <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
@@ -239,9 +239,9 @@
     </div>
   <?php } ?>
   </form>
-  <?php echo $content_bottom; ?>
+  <?php echo $content_low; ?>
 </div>
-<?php echo $content_footer; ?>
+<?php echo $content_lower; ?>
 
 <?php if ($account_captcha) { ?>
 <script type="text/javascript"><!--

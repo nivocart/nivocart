@@ -134,25 +134,25 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="menu_horizontal_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'content_header') { ?>
-                  <option value="content_header" selected="selected"><?php echo $text_content_header; ?></option>
+                <?php if ($module['position'] == 'content_higher') { ?>
+                  <option value="content_higher" selected="selected"><?php echo $text_content_higher; ?></option>
                 <?php } else { ?>
-                  <option value="content_header"><?php echo $text_content_header; ?></option>
+                  <option value="content_higher"><?php echo $text_content_higher; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_top') { ?>
-                  <option value="content_top" selected="selected"><?php echo $text_content_top; ?></option>
+                <?php if ($module['position'] == 'content_high') { ?>
+                  <option value="content_high" selected="selected"><?php echo $text_content_high; ?></option>
                 <?php } else { ?>
-                  <option value="content_top"><?php echo $text_content_top; ?></option>
+                  <option value="content_high"><?php echo $text_content_high; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_bottom') { ?>
-                  <option value="content_bottom" selected="selected"><?php echo $text_content_bottom; ?></option>
+                <?php if ($module['position'] == 'content_low') { ?>
+                  <option value="content_low" selected="selected"><?php echo $text_content_low; ?></option>
                 <?php } else { ?>
-                  <option value="content_bottom"><?php echo $text_content_bottom; ?></option>
+                  <option value="content_low"><?php echo $text_content_low; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_footer') { ?>
-                  <option value="content_footer" selected="selected"><?php echo $text_content_footer; ?></option>
+                <?php if ($module['position'] == 'content_lower') { ?>
+                  <option value="content_lower" selected="selected"><?php echo $text_content_lower; ?></option>
                 <?php } else { ?>
-                  <option value="content_footer"><?php echo $text_content_footer; ?></option>
+                  <option value="content_lower"><?php echo $text_content_lower; ?></option>
                 <?php } ?>
               </select></td>
               <td class="left"><select name="menu_horizontal_module[<?php echo $module_row; ?>][direction]">
@@ -226,10 +226,10 @@ function addModule() {
 	<?php } ?>
 	html += '    </select></td>';
 	html += '    <td class="left"><select name="menu_horizontal_module[' + module_row + '][position]">';
-	html += '      <option value="content_header"><?php echo $text_content_header; ?></option>';
-	html += '      <option value="content_top"><?php echo $text_content_top; ?></option>';
-	html += '      <option value="content_bottom"><?php echo $text_content_bottom; ?></option>';
-	html += '      <option value="content_footer"><?php echo $text_content_footer; ?></option>';
+	html += '      <option value="content_higher"><?php echo $text_content_higher; ?></option>';
+	html += '      <option value="content_high"><?php echo $text_content_high; ?></option>';
+	html += '      <option value="content_low"><?php echo $text_content_low; ?></option>';
+	html += '      <option value="content_lower"><?php echo $text_content_lower; ?></option>';
 	html += '    </select></td>';
 	html += '    <td class="left"><select name="menu_horizontal_module[' + module_row + '][direction]">';
 	html += '      <option value="1" selected="selected"><?php echo $text_ltr; ?></option>';

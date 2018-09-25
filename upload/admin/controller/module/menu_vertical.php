@@ -31,10 +31,11 @@ class ControllerModuleMenuVertical extends Controller {
 		$this->data['text_ltr'] = $this->language->get('text_ltr');
 		$this->data['text_rtl'] = $this->language->get('text_rtl');
 		$this->data['text_manage_menu'] = $this->language->get('text_manage_menu');
-		$this->data['text_column_left'] = $this->language->get('text_column_left');
-		$this->data['text_column_right'] = $this->language->get('text_column_right');
 		$this->data['text_no_menu'] = $this->language->get('text_no_menu');
 		$this->data['text_menus'] = $this->language->get('text_menus');
+
+		$this->data['text_content_left'] = $this->language->get('text_content_left');
+		$this->data['text_content_right'] = $this->language->get('text_content_right');
 
 		$this->data['entry_theme'] = $this->language->get('entry_theme');
 		$this->data['entry_title'] = $this->language->get('entry_title');

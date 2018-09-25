@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php echo $content_header; ?>
+<?php echo $content_higher; ?>
 <?php if ($this->config->get($template . '_breadcrumbs')) { ?>
   <div class="breadcrumb">
   <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -7,8 +7,8 @@
   <?php } ?>
   </div>
 <?php } ?>
-<?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
+<?php echo $content_left; ?><?php echo $content_right; ?>
+<div id="content"><?php echo $content_high; ?>
   <div class="content-info">
   <h1><?php echo $heading_title; ?></h1>
     <?php if ($news_info) { ?>
@@ -143,9 +143,9 @@
       </div>
     </div>
   <?php } ?>
-  <?php echo $content_bottom; ?>
+  <?php echo $content_low; ?>
 </div>
-<?php echo $content_footer; ?>
+<?php echo $content_lower; ?>
 
 <?php if ($lightbox == 'colorbox') { ?>
 <script type="text/javascript"><!--

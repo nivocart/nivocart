@@ -85,8 +85,6 @@ class ControllerCatalogProduct extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->model_catalog_product->editProduct($this->request->get['product_id'], $this->request->post);
 
-			$this->openbay->productUpdateListen($this->request->get['product_id'], $this->request->post);
-
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$url = '';
@@ -148,8 +146,6 @@ class ControllerCatalogProduct extends Controller {
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $product_id) {
 				$this->model_catalog_product->deleteProduct($product_id);
-
-				$this->openbay->deleteProduct($product_id);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -752,7 +748,6 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['tab_reward'] = $this->language->get('tab_reward');
 		$this->data['tab_image'] = $this->language->get('tab_image');
 		$this->data['tab_design'] = $this->language->get('tab_design');
-		$this->data['tab_marketplace_links'] = $this->language->get('tab_marketplace_links');
 
 		$this->data['token'] = $this->session->data['token'];
 
@@ -924,7 +919,7 @@ class ControllerCatalogProduct extends Controller {
 		// Image
 		$this->load->model('tool/image');
 
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 
 		if (isset($this->request->post['image'])) {
 			$this->data['image'] = $this->request->post['image'];
@@ -935,11 +930,11 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 120, 120);
 		} elseif (!empty($product_info) && $product_info['image'] && file_exists(DIR_IMAGE . $product_info['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 120, 120);
 		} else {
-			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 		}
 
 		// Label
@@ -952,11 +947,11 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		if (isset($this->request->post['label']) && file_exists(DIR_IMAGE . $this->request->post['label'])) {
-			$this->data['thumb_label'] = $this->model_tool_image->resize($this->request->post['label'], 100, 100);
+			$this->data['thumb_label'] = $this->model_tool_image->resize($this->request->post['label'], 120, 120);
 		} elseif (!empty($product_info) && $product_info['label'] && file_exists(DIR_IMAGE . $product_info['label'])) {
-			$this->data['thumb_label'] = $this->model_tool_image->resize($product_info['label'], 100, 100);
+			$this->data['thumb_label'] = $this->model_tool_image->resize($product_info['label'], 120, 120);
 		} else {
-			$this->data['thumb_label'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['thumb_label'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 		}
 
 		if (isset($this->request->post['video_code'])) {
@@ -1634,7 +1629,7 @@ class ControllerCatalogProduct extends Controller {
 			if ($product_image['image'] && file_exists(DIR_IMAGE . $product_image['image'])) {
 				$image = $product_image['image'];
 			} else {
-				$image = 'no_image.jpg';
+				$image = 'no_image.png';
 			}
 
 			if (isset($product_image['palette_color_id']) && isset($product_info['palette_id']) && !empty($palette_colors)) {

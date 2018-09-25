@@ -51,12 +51,12 @@ class ControllerInformationInformation extends Controller {
 			}
 
 			$this->children = array(
-				'common/column_left',
-				'common/column_right',
-				'common/content_header',
-				'common/content_top',
-				'common/content_bottom',
-				'common/content_footer',
+				'common/content_higher',
+				'common/content_high',
+				'common/content_left',
+				'common/content_right',
+				'common/content_low',
+				'common/content_lower',
 				'common/footer',
 				'common/header'
 			);
@@ -90,12 +90,12 @@ class ControllerInformationInformation extends Controller {
 			}
 
 			$this->children = array(
-				'common/column_left',
-				'common/column_right',
-				'common/content_header',
-				'common/content_top',
-				'common/content_bottom',
-				'common/content_footer',
+				'common/content_higher',
+				'common/content_high',
+				'common/content_left',
+				'common/content_right',
+				'common/content_low',
+				'common/content_lower',
 				'common/footer',
 				'common/header'
 			);
@@ -117,11 +117,11 @@ class ControllerInformationInformation extends Controller {
 		$information_info = $this->model_catalog_information->getInformation($information_id);
 
 		if ($information_info) {
-			$output  = '<html dir="ltr" lang="en">' . "\n";
+			$output = '<html dir="ltr" lang="en">' . "\n";
 			$output .= '<head>' . "\n";
-			$output .= '  <title>' . $information_info['title'] . '</title>' . "\n";
-			$output .= '  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . "\n";
-			$output .= '  <meta name="robots" content="noindex">' . "\n";
+			$output .= '<title>' . $information_info['title'] . '</title>' . "\n";
+			$output .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . "\n";
+			$output .= '<meta name="robots" content="noindex">' . "\n";
 			$output .= '</head>' . "\n";
 			$output .= '<body>' . "\n";
 			$output .= '  <h1>' . $information_info['title'] . '</h1>' . "\n";

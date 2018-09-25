@@ -594,12 +594,12 @@ class ControllerProductSearch extends Controller {
 		}
 
 		$this->children = array(
-			'common/column_left',
-			'common/column_right',
-			'common/content_header',
-			'common/content_top',
-			'common/content_bottom',
-			'common/content_footer',
+			'common/content_higher',
+			'common/content_high',
+			'common/content_left',
+			'common/content_right',
+			'common/content_low',
+			'common/content_lower',
 			'common/footer',
 			'common/header'
 		);
@@ -644,11 +644,11 @@ class ControllerProductSearch extends Controller {
 				$add = substr($add, 4);
 
 				$sql = 'SELECT p.product_id, p.image, p.price, p.tax_class_id,';
-				$sql .= ' (SELECT price FROM ' . DB_PREFIX . 'product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = "' . (int)$customer_group_id . '" AND ((ps.date_start = "0000-00-00" OR ps.date_start < NOW()) AND (ps.date_end = "0000-00-00" OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 0,1) AS special,';
-				$sql .= ' p.model AS model, pd.name AS name FROM ' . DB_PREFIX . 'product p';
-				$sql .= ' LEFT OUTER JOIN ' . DB_PREFIX . 'manufacturer_description md ON (p.manufacturer_id = md.manufacturer_id)';
-				$sql .= ' LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id)';
-				$sql .= ' LEFT JOIN ' . DB_PREFIX . 'product_to_store p2s ON (p.product_id = p2s.product_id)';
+				$sql .= ' (SELECT price FROM `' . DB_PREFIX . 'product_special` ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = "' . (int)$customer_group_id . '" AND ((ps.date_start = "0000-00-00" OR ps.date_start < NOW()) AND (ps.date_end = "0000-00-00" OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 0,1) AS special,';
+				$sql .= ' p.model AS model, pd.name AS `name` FROM `' . DB_PREFIX . 'product` p';
+				$sql .= ' LEFT OUTER JOIN `' . DB_PREFIX . 'manufacturer_description` md ON (p.manufacturer_id = md.manufacturer_id)';
+				$sql .= ' LEFT JOIN `' . DB_PREFIX . 'product_description` pd ON (p.product_id = pd.product_id)';
+				$sql .= ' LEFT JOIN `' . DB_PREFIX . 'product_to_store` p2s ON (p.product_id = p2s.product_id)';
 				$sql .= ' WHERE ' . $add . ' AND p.status = 1';
 				$sql .= ' AND pd.language_id = ' . (int)$this->config->get('config_language_id');
 				$sql .= ' AND p2s.store_id = ' . (int)$this->config->get('config_store_id');

@@ -35,12 +35,13 @@ class ControllerModuleMenuHorizontal extends Controller {
 		$this->data['text_rtl'] = $this->language->get('text_rtl');
 		$this->data['text_icon'] = $this->language->get('text_icon');
 		$this->data['text_manage_menu'] = $this->language->get('text_manage_menu');
-		$this->data['text_content_header'] = $this->language->get('text_content_header');
-		$this->data['text_content_top'] = $this->language->get('text_content_top');
-		$this->data['text_content_bottom'] = $this->language->get('text_content_bottom');
-		$this->data['text_content_footer'] = $this->language->get('text_content_footer');
 		$this->data['text_no_menu'] = $this->language->get('text_no_menu');
 		$this->data['text_menus'] = $this->language->get('text_menus');
+
+		$this->data['text_content_higher'] = $this->language->get('text_content_higher');
+		$this->data['text_content_high'] = $this->language->get('text_content_high');
+		$this->data['text_content_low'] = $this->language->get('text_content_low');
+		$this->data['text_content_lower'] = $this->language->get('text_content_lower');
 
 		$this->data['entry_theme'] = $this->language->get('entry_theme');
 		$this->data['entry_header_color'] = $this->language->get('entry_header_color');

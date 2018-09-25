@@ -8,12 +8,6 @@ $_['text_success']        = 'Success: You have modified module <b>Affiliate</b> 
 $_['text_hidden']         = 'Hidden';
 $_['text_compact']        = 'Compact';
 $_['text_complete']       = 'Complete';
-$_['text_content_header'] = 'Content Header';
-$_['text_content_top']    = 'Content Top';
-$_['text_content_bottom'] = 'Content Bottom';
-$_['text_content_footer'] = 'Content Footer';
-$_['text_column_left']    = 'Column Left';
-$_['text_column_right']   = 'Column Right';
 
 // Entry
 $_['entry_theme']         = 'Complete Module:<span class="help">Show content with header.</span>';

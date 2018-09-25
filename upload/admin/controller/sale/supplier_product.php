@@ -775,10 +775,6 @@ class ControllerSaleSupplierProduct extends Controller {
 		}
 
 		// Images
-		$this->load->model('tool/image');
-
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-
 		if (isset($this->request->post['image'])) {
 			$this->data['image'] = $this->request->post['image'];
 		} elseif (!empty($product_info)) {
@@ -787,12 +783,16 @@ class ControllerSaleSupplierProduct extends Controller {
 			$this->data['image'] = '';
 		}
 
+		$this->load->model('tool/image');
+
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
+
 		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 120, 120);
 		} elseif (!empty($product_info) && $product_info['image'] && file_exists(DIR_IMAGE . $product_info['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 120, 120);
 		} else {
-			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 		}
 
 		if (isset($this->request->post['price'])) {

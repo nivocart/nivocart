@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php echo $content_header; ?>
+<?php echo $content_higher; ?>
 <?php if ($success) { ?>
   <div class="success"><?php echo $success; ?><img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>
 <?php } ?>
@@ -10,8 +10,8 @@
   <?php } ?>
   </div>
 <?php } ?>
-<?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
+<?php echo $content_left; ?><?php echo $content_right; ?>
+<div id="content"><?php echo $content_high; ?>
   <h1><?php echo $heading_title; ?></h1>
   <?php if ($products) { ?>
     <div class="wishlist-info">
@@ -71,7 +71,7 @@
       <div class="right"><a href="<?php echo $continue; ?>" class="button"><?php echo $button_continue; ?></a></div>
     </div>
   <?php } ?>
-  <?php echo $content_bottom; ?>
+  <?php echo $content_low; ?>
 </div>
-<?php echo $content_footer; ?>
+<?php echo $content_lower; ?>
 <?php echo $footer; ?>

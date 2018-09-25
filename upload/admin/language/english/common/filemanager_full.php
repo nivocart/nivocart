@@ -83,7 +83,7 @@ $_['text_info_license']   = 'License:';
 $_['text_info_files']     = 'Formats:';
 
 $_['info_version']        = 'v2.0.0';
-$_['info_author']         = 'Villagedefrance (contact@villagedefrance.net)';
+$_['info_author']         = 'Nivocart (contact@nivocart.com)';
 $_['info_credit']         = 'Kay Lohn (Original script), Dhaupin (Performance).';
 $_['info_scripts']        = 'jsTree v0.9.9a and Plupload v2.3.6.';
 $_['info_license']        = 'GPLv3 (GNU General Public License)';

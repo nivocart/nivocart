@@ -336,7 +336,7 @@ $('input[name=\'filter\']').autocomplete({
 	}
 });
 
-$('#category-filter div img').live('click', function() {
+$('#category-filter').delegate('img', 'click', function() {
 	$(this).parent().remove();
 
 	$('#category-filter div:odd').attr('class', 'odd');

@@ -493,15 +493,15 @@ class ControllerCatalogManufacturer extends Controller {
 
 		$this->load->model('tool/image');
 
-		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-		} elseif (!empty($manufacturer_info) && $manufacturer_info['image'] && file_exists(DIR_IMAGE . $manufacturer_info['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($manufacturer_info['image'], 100, 100);
-		} else {
-			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-		}
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
+			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 120, 120);
+		} elseif (!empty($manufacturer_info) && $manufacturer_info['image'] && file_exists(DIR_IMAGE . $manufacturer_info['image'])) {
+			$this->data['thumb'] = $this->model_tool_image->resize($manufacturer_info['image'], 120, 120);
+		} else {
+			$this->data['thumb'] = $this->model_tool_image->resize('no_image.png', 120, 120);
+		}
 
 		if (isset($this->request->post['sort_order'])) {
 			$this->data['sort_order'] = $this->request->post['sort_order'];

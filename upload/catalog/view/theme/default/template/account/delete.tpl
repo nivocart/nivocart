@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php echo $content_header; ?>
+<?php echo $content_higher; ?>
 <?php if ($success) { ?>
   <div class="success"><?php echo $success; ?></div>
 <?php } ?>
@@ -13,8 +13,8 @@
   <?php } ?>
   </div>
 <?php } ?>
-<?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
+<?php echo $content_left; ?><?php echo $content_right; ?>
+<div id="content"><?php echo $content_high; ?>
   <h1><?php echo $heading_title; ?></h1>
   <div class="attention"><?php echo $text_delete_warning; ?></div>
   <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" name="delete">
@@ -59,9 +59,9 @@
       </div>
     </div>
   </form>
-  <?php echo $content_bottom; ?>
+  <?php echo $content_low; ?>
 </div>
-<?php echo $content_footer; ?>
+<?php echo $content_lower; ?>
 
 <script type="text/javascript"><!--
 $('img#captcha-image').on('load', function(event) {

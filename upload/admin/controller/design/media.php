@@ -451,17 +451,17 @@ class ControllerDesignMedia extends Controller {
 
 		$this->load->model('tool/image');
 
+		$this->data['no_file'] = $this->model_tool_image->resize('no_file.jpg', 120, 120);
+
 		if (isset($this->request->post['media']) && file_exists(DIR_IMAGE . $this->request->post['media'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['media'], 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['media'], 120, 120);
 		} elseif (!empty($media_info) && $media_info['media'] && file_exists(DIR_IMAGE . $media_info['media'])) {
 			$media_image = $this->model_design_media->getMediaImage($media_info['media_id']);
 
-			$this->data['thumb'] = $this->model_tool_image->resize($media_image, 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize($media_image, 120, 120);
 		} else {
-			$this->data['thumb'] = $this->model_tool_image->resize('no_file.jpg', 100, 100);
+			$this->data['thumb'] = $this->model_tool_image->resize('no_file.jpg', 120, 120);
 		}
-
-		$this->data['no_file'] = $this->model_tool_image->resize('no_file.jpg', 100, 100);
 
 		if (isset($this->request->post['credit'])) {
 			$this->data['credit'] = $this->request->post['credit'];

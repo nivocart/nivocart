@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php echo $content_header; ?>
+<?php echo $content_higher; ?>
 <?php if ($success) { ?>
   <div class="success"><?php echo $success; ?></div>
 <?php } ?>
@@ -13,8 +13,8 @@
   <?php } ?>
   </div>
 <?php } ?>
-<?php echo $column_left; ?><?php echo $column_right; ?>
-<div id="content"><?php echo $content_top; ?>
+<?php echo $content_left; ?><?php echo $content_right; ?>
+<div id="content"><?php echo $content_high; ?>
   <h1><?php echo $heading_title; ?></h1>
   <h2><?php echo $text_address_book; ?></h2>
   <?php foreach ($addresses as $result) { ?>
@@ -33,7 +33,7 @@
     <div class="left"><a href="<?php echo $back; ?>" class="button"><i class="fa fa-arrow-left"></i> &nbsp; <?php echo $button_back; ?></a></div>
     <div class="right"><a href="<?php echo $insert; ?>" class="button"><i class="fa fa-caret-right"></i> &nbsp; <?php echo $button_new_address; ?></a></div>
   </div>
-  <?php echo $content_bottom; ?>
+  <?php echo $content_low; ?>
 </div>
-<?php echo $content_footer; ?>
+<?php echo $content_lower; ?>
 <?php echo $footer; ?>

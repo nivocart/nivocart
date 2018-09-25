@@ -362,8 +362,9 @@
         <?php } else { ?>
           <tr>
             <td><?php echo $entry_manufacturer; ?><?php echo $text_autocomplete; ?></td>
-            <td><input type="text" name="manufacturer" value="<?php echo $manufacturer; ?>" /> &nbsp; <a href="<?php echo $configure_manufacturer; ?>" class="button-form ripple"><i class="fa fa-gear"></i></a>
+            <td><input type="text" name="manufacturer" value="<?php echo $manufacturer; ?>" />
               <input type="hidden" name="manufacturer_id" value="<?php echo $manufacturer_id; ?>" />
+              &nbsp; <a href="<?php echo $configure_manufacturer; ?>" class="button-form ripple" style="vertical-align:bottom;"><i class="fa fa-gear"></i></a>
             </td>
           </tr>
         <?php } ?>
@@ -1236,7 +1237,7 @@ $('input[name=\'manufacturer\']').autocomplete({
 	}
 });
 
-$('body').on('click', '#product-manufacturer div img', function() {
+$('#product-manufacturer').delegate('img', 'click', function() {
 	$(this).parent().remove();
 
 	$('#product-manufacturer div:odd').attr('class', 'odd');
@@ -1275,7 +1276,7 @@ $('input[name=\'category\']').autocomplete({
 	}
 });
 
-$('body').on('click', '#product-category div img', function() {
+$('#product-category').delegate('img', 'click', function() {
 	$(this).parent().remove();
 
 	$('#product-category div:odd').attr('class', 'odd');
@@ -1314,7 +1315,7 @@ $('input[name=\'filter\']').autocomplete({
 	}
 });
 
-$('body').on('click', '#product-filter div img', function() {
+$('#product-filter').delegate('img', 'click', function() {
 	$(this).parent().remove();
 
 	$('#product-filter div:odd').attr('class', 'odd');
@@ -1353,7 +1354,7 @@ $('input[name=\'download\']').autocomplete({
 	}
 });
 
-$('body').on('click', '#product-download div img', function() {
+$('#product-download').delegate('img', 'click', function() {
 	$(this).parent().remove();
 
 	$('#product-download div:odd').attr('class', 'odd');
@@ -1392,7 +1393,7 @@ $('input[name=\'related\']').autocomplete({
 	}
 });
 
-$('body').on('click', '#product-related div img', function() {
+$('#product-related').delegate('img', 'click', function() {
 	$(this).parent().remove();
 
 	$('#product-related div:odd').attr('class', 'odd');
@@ -1424,13 +1425,11 @@ function removeRelated() {
 
 function getProducts() {
 	$('#product option').remove();
-
-	<?php if (isset($this->request->get['product_id'])) { ?>
-		var product_id = '<?php echo $this->request->get['product_id']; ?>';
-	<?php } else { ?>
-		var product_id = 0;
-	<?php } ?>
-
+<?php if (isset($this->request->get['product_id'])) { ?>
+	var product_id = '<?php echo $this->request->get['product_id']; ?>';
+<?php } else { ?>
+	var product_id = 0;
+<?php } ?>
 	$.ajax({
 		url: 'index.php?route=catalog/product/category&token=<?php echo $token; ?>&category_id=' + $('#category').attr('value'),
 		dataType: 'json',

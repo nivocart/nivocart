@@ -36,12 +36,13 @@ class ControllerModuleMediaPlayer extends Controller {
 		$this->data['text_clear'] = $this->language->get('text_clear');
 		$this->data['text_entry_help'] = $this->language->get('text_entry_help');
 		$this->data['text_help'] = $this->language->get('text_help');
-		$this->data['text_content_header'] = $this->language->get('text_content_header');
-		$this->data['text_content_top'] = $this->language->get('text_content_top');
-		$this->data['text_content_bottom'] = $this->language->get('text_content_bottom');
-		$this->data['text_content_footer'] = $this->language->get('text_content_footer');
-		$this->data['text_column_left'] = $this->language->get('text_column_left');
-		$this->data['text_column_right'] = $this->language->get('text_column_right');
+
+		$this->data['text_content_higher'] = $this->language->get('text_content_higher');
+		$this->data['text_content_high'] = $this->language->get('text_content_high');
+		$this->data['text_content_left'] = $this->language->get('text_content_left');
+		$this->data['text_content_right'] = $this->language->get('text_content_right');
+		$this->data['text_content_low'] = $this->language->get('text_content_low');
+		$this->data['text_content_lower'] = $this->language->get('text_content_lower');
 
 		$this->data['entry_theme'] = $this->language->get('entry_theme');
 		$this->data['entry_title'] = $this->language->get('entry_title');

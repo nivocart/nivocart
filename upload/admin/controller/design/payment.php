@@ -433,13 +433,13 @@ class ControllerDesignPayment extends Controller {
 
 		$this->load->model('tool/image');
 
-		if (isset($payment_image_info) && $payment_image_info['image'] && file_exists(DIR_IMAGE . $payment_image_info['image'])) {
-			$this->data['thumb'] = $this->model_tool_image->resize($payment_image_info['image'], 100, 100);
-		} else {
-			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-		}
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+		if (isset($payment_image_info) && $payment_image_info['image'] && file_exists(DIR_IMAGE . $payment_image_info['image'])) {
+			$this->data['thumb'] = $this->model_tool_image->resize($payment_image_info['image'], 120, 120);
+		} else {
+			$this->data['thumb'] = $this->model_tool_image->resize('no_image.png', 120, 120);
+		}
 
 		if (isset($this->request->post['status'])) {
 			$this->data['status'] = $this->request->post['status'];

@@ -18,7 +18,7 @@ $_['tab_setup']                 = 'Setup';
 $_['tab_credits']               = 'Credits';
 
 // Entry
-$_['entry_widescreen']          = 'Widescreen Mode:<span class="help">Normal at 980px, Widescreen at 1280px, or Fullscreen unlimited. Default is Normal.</span>';
+$_['entry_widescreen']          = 'Widescreen Mode:<span class="help">Normal at 1280px, Wide at 1920px, or Unlimited. Default is Normal.</span>';
 $_['entry_breadcrumbs']         = 'Show Breadcrumbs:<span class="help">If "No" is selected, the breadcrumb trail will not show on catalog pages.</span>';
 $_['entry_back_to_top']         = 'Enable Scroll Back to Top:';
 $_['entry_right_click']         = 'Block Mouse Right Click:';

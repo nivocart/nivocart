@@ -400,12 +400,12 @@ class ControllerProductSpecial extends Controller {
 			}
 
 			$this->children = array(
-				'common/column_left',
-				'common/column_right',
-				'common/content_header',
-				'common/content_top',
-				'common/content_bottom',
-				'common/content_footer',
+				'common/content_higher',
+				'common/content_high',
+				'common/content_left',
+				'common/content_right',
+				'common/content_low',
+				'common/content_lower',
 				'common/footer',
 				'common/header'
 			);
@@ -455,12 +455,12 @@ class ControllerProductSpecial extends Controller {
 			}
 
 			$this->children = array(
-				'common/column_left',
-				'common/column_right',
-				'common/content_header',
-				'common/content_top',
-				'common/content_bottom',
-				'common/content_footer',
+				'common/content_higher',
+				'common/content_high',
+				'common/content_left',
+				'common/content_right',
+				'common/content_low',
+				'common/content_lower',
 				'common/footer',
 				'common/header'
 			);
