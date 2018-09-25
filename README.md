@@ -1,6 +1,6 @@
 # nivocart
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f083a576fade4a7f83d5459569f0fe96)](https://www.codacy.com/app/nivocart/nivocart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nivocart/nivocart&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f083a576fade4a7f83d5459569f0fe96)](https://www.codacy.com/app/nivocart/nivocart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nivocart/nivocart&amp;utm_campaign=Badge_Grade) [![pipeline status](https://gitlab.com/nivocart/nivocart/badges/master/pipeline.svg)](https://gitlab.com/nivocart/nivocart/commits/master)
 
 Requirements:
 - Server: Apache Linux Server
