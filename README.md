@@ -1,5 +1,7 @@
 # nivocart
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f083a576fade4a7f83d5459569f0fe96)](https://www.codacy.com/app/nivocart/nivocart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nivocart/nivocart&amp;utm_campaign=Badge_Grade)
+
 Requirements:
 - Server: Apache Linux Server
 - Database: MySQLi, PDO
