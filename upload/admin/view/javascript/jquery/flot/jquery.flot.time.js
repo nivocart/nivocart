@@ -9,7 +9,6 @@ API.txt for details.
 */
 
 (function($) {
-
 	var options = {
 		xaxis: {
 			timezone: null,		// "browser" for local to the client or timezone for timezone-js
@@ -20,16 +19,13 @@ API.txt for details.
 	};
 
 	// round to nearby lower multiple of base
-
 	function floorInBase(n, base) {
 		return base * Math.floor(n / base);
 	}
 
 	// Returns a string with the date d formatted according to fmt.
 	// A subset of the Open Group's strftime format is supported.
-
 	function formatDate(d, fmt, monthNames, dayNames) {
-
 		if (typeof d.strftime == "function") {
 			return d.strftime(fmt);
 		}
@@ -107,7 +103,6 @@ API.txt for details.
 	// zone the client happens to be in we need a date-like object independent
 	// of time zones. This is done through a wrapper that only calls the UTC
 	// versions of the accessor methods.
-
 	function makeUtcWrapper(d) {
 		function addProxyMethod(sourceObj, sourceMethod, targetObj, targetMethod) {
 			sourceObj[sourceMethod] = function() {
@@ -120,7 +115,6 @@ API.txt for details.
 		};
 
 		// support strftime, if found
-
 		if (d.strftime) {
 			addProxyMethod(utc, "strftime", d, "strftime");
 		}
@@ -136,11 +130,9 @@ API.txt for details.
 		}
 
 		return utc;
-	};
+	}
 
-	// select time zone strategy.  This returns a date-like object tied to the
-	// desired timezone
-
+	// select time zone strategy. This returns a date-like object tied to the desired timezone
 	function dateGenerator(ts, opts) {
 		if (opts.timezone == "browser") {
 			return new Date(ts);
@@ -157,9 +149,8 @@ API.txt for details.
 			return makeUtcWrapper(new Date(ts));
 		}
 	}
-	
-	// map of app. size of time units in milliseconds
 
+	// map of app. size of time units in milliseconds
 	var timeUnitSize = {
 		"second": 1000,
 		"minute": 60 * 1000,
@@ -170,9 +161,7 @@ API.txt for details.
 		"year": 365.2425 * 24 * 60 * 60 * 1000
 	};
 
-	// the allowed tick sizes, after 1 year we use
-	// an integer algorithm
-
+	// the allowed tick sizes, after 1 year we use an integer algorithm
 	var baseSpec = [
 		[1, "second"], [2, "second"], [5, "second"], [10, "second"],
 		[30, "second"], 
@@ -185,13 +174,9 @@ API.txt for details.
 		[2, "month"]
 	];
 
-	// we don't know which variant(s) we'll need yet, but generating both is
-	// cheap
-
-	var specMonths = baseSpec.concat([[3, "month"], [6, "month"],
-		[1, "year"]]);
-	var specQuarters = baseSpec.concat([[1, "quarter"], [2, "quarter"],
-		[1, "year"]]);
+	// we don't know which variant(s) we'll need yet, but generating both is cheap
+	var specMonths = baseSpec.concat([[3, "month"], [6, "month"], [1, "year"]]);
+	var specQuarters = baseSpec.concat([[1, "quarter"], [2, "quarter"], [1, "year"]]);
 
 	function init(plot) {
 		plot.hooks.processOptions.push(function (plot, options) {
@@ -200,14 +185,12 @@ API.txt for details.
 
 				if (opts.mode == "time") {
 					axis.tickGenerator = function(axis) {
-
 						var ticks = [];
 						var d = dateGenerator(axis.min, opts);
 						var minSize = 0;
 
 						// make quarter use a possibility if quarters are
 						// mentioned in either of these options
-
 						var spec = (opts.tickSize && opts.tickSize[1] ===
 							"quarter") ||
 							(opts.minTickSize && opts.minTickSize[1] ===
@@ -231,16 +214,13 @@ API.txt for details.
 						var unit = spec[i][1];
 
 						// special-case the possibility of several years
-
 						if (unit == "year") {
-
 							// if given a minTickSize in years, just use it,
 							// ensuring that it's an integer
 
 							if (opts.minTickSize != null && opts.minTickSize[1] == "year") {
 								size = Math.floor(opts.minTickSize[0]);
 							} else {
-
 								var magn = Math.pow(10, Math.floor(Math.log(axis.delta / timeUnitSize.year) / Math.LN10));
 								var norm = (axis.delta / timeUnitSize.year) / magn;
 
@@ -258,7 +238,6 @@ API.txt for details.
 							}
 
 							// minimum size for years is 1
-
 							if (size < 1) {
 								size = 1;
 							}
@@ -266,8 +245,8 @@ API.txt for details.
 
 						axis.tickSize = opts.tickSize || [size, unit];
 						var tickSize = axis.tickSize[0];
-						unit = axis.tickSize[1];
 
+						unit = axis.tickSize[1];
 						var step = tickSize * timeUnitSize[unit];
 
 						if (unit == "second") {
@@ -279,14 +258,12 @@ API.txt for details.
 						} else if (unit == "month") {
 							d.setMonth(floorInBase(d.getMonth(), tickSize));
 						} else if (unit == "quarter") {
-							d.setMonth(3 * floorInBase(d.getMonth() / 3,
-								tickSize));
+							d.setMonth(3 * floorInBase(d.getMonth() / 3, tickSize));
 						} else if (unit == "year") {
 							d.setFullYear(floorInBase(d.getFullYear(), tickSize));
 						}
 
 						// reset smaller components
-
 						d.setMilliseconds(0);
 
 						if (step >= timeUnitSize.minute) {
@@ -316,19 +293,16 @@ API.txt for details.
 						var prev;
 
 						do {
-
 							prev = v;
 							v = d.getTime();
 							ticks.push(v);
 
 							if (unit == "month" || unit == "quarter") {
 								if (tickSize < 1) {
-
 									// a bit complicated - we'll divide the
 									// month/quarter up but we need to take
 									// care of fractions so we don't end up in
 									// the middle of a day
-
 									d.setDate(1);
 									var start = d.getTime();
 									d.setMonth(d.getMonth() +
@@ -352,18 +326,14 @@ API.txt for details.
 					};
 
 					axis.tickFormatter = function (v, axis) {
-
 						var d = dateGenerator(v, axis.options);
 
 						// first check global format
-
 						if (opts.timeformat != null) {
 							return formatDate(d, opts.timeformat, opts.monthNames, opts.dayNames);
 						}
 
-						// possibly use quarters if quarters are mentioned in
-						// any of these places
-
+						// possibly use quarters if quarters are mentioned in any of these places
 						var useQuarters = (axis.options.tickSize &&
 								axis.options.tickSize[1] == "quarter") ||
 							(axis.options.minTickSize &&
@@ -421,8 +391,6 @@ API.txt for details.
 	// Time-axis support used to be in Flot core, which exposed the
 	// formatDate function on the plot object.  Various plugins depend
 	// on the function, so we need to re-expose it here.
-
 	$.plot.formatDate = formatDate;
 	$.plot.dateGenerator = dateGenerator;
-
 })(jQuery);

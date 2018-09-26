@@ -80,7 +80,7 @@
 			$container.fadeOut(options.closeDuration, function() {
 				state = false;
 			});
-		};
+		}
 	});
 
 	function show($e) {

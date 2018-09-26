@@ -1,7 +1,7 @@
 /* LOCKED */
 .tree-default .locked li a { color:gray; }
 /* DOTS */
-.tree-default ul { background-position:6px 1px; background-repeat:repeat-y; background-image:url("dot_for_ie.gif"); _background-image:url("dot_for_ie.gif"); *background-image:url("dot_for_ie.gif"); }
+.tree-default ul { background-position:6px 1px; background-repeat:repeat-y; background-image:url("dot_for_ie.gif"); *background-image:url("dot_for_ie.gif"); }
 .tree-default li { background-position:-64px -16px; background-repeat:no-repeat; background-image:url("icons.png"); }
 /* NO DOTS */
 .tree-default .no_dots, .tree-default .no_dots ul { background:transparent; }

@@ -73,19 +73,8 @@
 			return '<iframe id="printPage" name="printPage" src=' + url + ' style="position:absolute; top:0; left:0; width:0; height:0; border:0; overflow:none; z-index:-1;"></iframe>';
 		},
 		messageBox: function(message) {
-			return "<div id='printMessageBox' style='\
-				position:fixed;\
-				top:50%; left:50%;\
-				text-align:center; line-height:90px;\
-				margin:-50px 0 0 -155px;\
-				width:310px; height:100px; font-size:16px; padding:10px; color:#333; font-family:Arial, Helvetica, sans-serif;\
-				opacity:0;\
-				background:#FFF;\
-				border:2px solid #777;\
-				border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; -khtml-border-radius: 5px;\
-				box-shadow:0px 0px 5px #999; -webkit-box-shadow:0px 0px 5px #999; -moz-box-shadow:0px 0px 5px #999;'>\
-				" + message + "</div>";
-			}
+			return "<div id='printMessageBox' style='position:fixed; top:50%; left:50%; text-align:center; line-height:90px; margin:-50px 0 0 -155px; width:310px; height:100px; font-size:16px; padding:10px; color:#333; font-family:Arial, Helvetica, sans-serif; opacity:0; background:#FFF; border:2px solid #777; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; -khtml-border-radius:5px; box-shadow:0 0 5px #999; -webkit-box-shadow:0 0 5px #999; -moz-box-shadow:0 0 5px #999;'>" + message + "</div>";
 		}
+	}
 	};
 })(jQuery);

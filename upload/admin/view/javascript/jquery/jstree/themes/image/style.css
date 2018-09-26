@@ -1,5 +1,7 @@
 /* LOCKED */
-.tree-image .locked li a { color: #CCC; }
+.tree-image .locked li a {
+	color: #CCC;
+}
 /* DOTS */
 .tree-image ul {
 	margin: 0;

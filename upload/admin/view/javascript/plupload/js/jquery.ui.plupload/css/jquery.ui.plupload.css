@@ -1,7 +1,7 @@
 /*
  * Plupload v2.3.6
  *
- * Overclocked Edition © 2018 | Villagedefrance
+ * NivoCart © 2018
  */
 
 .plupload_wrapper * {
@@ -130,16 +130,13 @@
 	position: relative;
 }
 
-/* list view */
+/* List view */
 .plupload_view_list .plupload_file {
 	border-left: none;
 	border-right: none;
 	border-top: none;
 	height: 29px;
 	width: 100% !important;
-	/* fix IE6 vertical white-space bug */
-	_float: left;
-	_clear: left;
 }
 .plupload_view_list div.plupload_file_size,
 .plupload_view_list div.plupload_file_status,
@@ -152,7 +149,6 @@
 .plupload_view_list div.plupload_file_name {
 	margin-right: 156px;
 	padding: 8px 6px;
-	_width: 75%;
 }
 .plupload_view_list div.plupload_file_size {
 	right: 28px;
@@ -178,7 +174,7 @@
 	display: none;
 }
 
-/* thumbs view */
+/* Thumbs view */
 .plupload_view_thumbs .plupload_content {
 	top: 57px;
 }

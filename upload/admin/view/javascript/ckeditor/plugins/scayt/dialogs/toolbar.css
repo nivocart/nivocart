@@ -22,7 +22,7 @@ a.cke_scayt_toogle {
 .scayt_enabled a.cke_scayt_item {
 	color : #316ac5;
 	border-color: #fff;
-	margin : 0px;
+	margin : 0;
 }
 .scayt_disabled a.cke_scayt_item {
 	color : gray;
