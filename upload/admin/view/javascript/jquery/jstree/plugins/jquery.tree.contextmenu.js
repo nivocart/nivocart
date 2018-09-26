@@ -13,21 +13,21 @@
 					create : {
 						label : "Create",
 						icon : "create",
-						visible : function (NODE, TREE_OBJ) { if (NODE.length != 1) return 0; return TREE_OBJ.check("creatable", NODE); },
-						action : function (NODE, TREE_OBJ) { TREE_OBJ.create(false, TREE_OBJ.get_node(NODE[0])); },
+						visible : function(NODE, TREE_OBJ) { if (NODE.length != 1) return 0; return TREE_OBJ.check("creatable", NODE); },
+						action : function(NODE, TREE_OBJ) { TREE_OBJ.create(false, TREE_OBJ.get_node(NODE[0])); },
 						separator_after : true
 					},
 					rename : {
 						label : "Rename",
 						icon : "rename",
-						visible : function (NODE, TREE_OBJ) { if (NODE.length != 1) return false; return TREE_OBJ.check("renameable", NODE); },
-						action : function (NODE, TREE_OBJ) { TREE_OBJ.rename(NODE); }
+						visible : function(NODE, TREE_OBJ) { if (NODE.length != 1) return false; return TREE_OBJ.check("renameable", NODE); },
+						action : function(NODE, TREE_OBJ) { TREE_OBJ.rename(NODE); }
 					},
 					remove : {
 						label : "Delete",
 						icon : "remove",
-						visible : function (NODE, TREE_OBJ) { var ok = true; $.each(NODE, function (){ if (TREE_OBJ.check("deletable", this) == false) ok = false; return false; }); return ok; },
-						action : function (NODE, TREE_OBJ) { $.each(NODE, function (){ TREE_OBJ.remove(this); }); }
+						visible : function(NODE, TREE_OBJ) { var ok = true; $.each(NODE, function() { if (TREE_OBJ.check("deletable", this) == false) ok = false; return false; }); return ok; },
+						action : function(NODE, TREE_OBJ) { $.each(NODE, function() { TREE_OBJ.remove(this); }); }
 					}
 				}
 			},
@@ -124,7 +124,7 @@
 
 				try {
 					opts.items[cmd].action.apply(null, [$.tree.plugins.contextmenu.data.a, $.tree.plugins.contextmenu.data.t]);
-				} catch(e) { };
+				} catch(e) { }
 			},
 			callbacks : {
 				oninit : function() {

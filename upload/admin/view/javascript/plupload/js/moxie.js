@@ -30,8 +30,8 @@ var MXI_DEBUG = true;
  * Compiled inline version. (Library mode)
  */
 
-/*jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */
-/*globals $code */
+/* jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */
+/* globals $code */
 
 (function(exports, undefined) {
 	"use strict";
@@ -5263,7 +5263,7 @@ define("moxie/xhr/XMLHttpRequest", [
 				var matches, charset;
 
 				// 1
-				if (!!~Basic.inArray(_p('readyState'), [XMLHttpRequest.LOADING, XMLHttpRequest.DONE])) {
+				if (!~Basic.inArray(_p('readyState'), [XMLHttpRequest.LOADING, XMLHttpRequest.DONE])) {
 					throw new x.DOMException(x.DOMException.INVALID_STATE_ERR);
 				}
 

@@ -26,7 +26,7 @@
     <a id="move" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/edit-cut.png');"><?php echo $button_move; ?></a>
     <a id="copy" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/edit-copy.png');"><?php echo $button_copy; ?></a>
     <a id="rename" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/edit-rename.png');"><?php echo $button_rename; ?></a>
-    <a id="uploadmulti" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/upload-plus.png');"><?php echo $button_upload; ?></a>
+    <a id="upload" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/upload-plus.png');"><?php echo $button_upload; ?></a>
     <a id="refresh" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/refresh.png');"><?php echo $button_refresh; ?></a>
     <a id="information" class="filemanager-button ripple hide-phone" style="background-image: url('view/image/filemanager/information.png');"><?php echo $button_info; ?></a>
   </div>

@@ -5,7 +5,6 @@
  * @link https://github.com/pgooood/viewbox
  */
 (function($) {$.fn.viewbox = function(options) {
-
 	if (typeof(options) === 'undefined') {
 		options = {};
 	}
@@ -101,7 +100,7 @@
 		} else if (isAnchor(href)) {
 			$current = $e;
 			showPopup(href,caption);
-		};
+		}
 	};
 
 	function openWindow(width,height) {
@@ -127,7 +126,7 @@
 		} else {
 			w = $body.width();
 			h = $body.height();
-		};
+		}
 
 		$body.css({
 			'margin-left': -w/2,
@@ -143,16 +142,17 @@
 		get(name).html(value);
 	};
 
-	function index(){
+	function index() {
 		var index = -1;
 		if ($current) {
 			$links.each(function(i) {
 				if ($current.is(this)) {
 					index = i;
 					return false;
-				};
+				}
 			});
-		};
+		}
+
 		return index;
 	};
 
@@ -162,7 +162,7 @@
 
 	function isAnchor(href) {
 		return href.match(/^#.+$/i) && $(href).length;
-	}
+	};
 
 	function isImageLoaded($img) {
 		return $img.get(0).complete;
@@ -238,7 +238,7 @@
 				if (!isImageLoaded($img) && counter < 1000) {
 					counter++;
 					return;
-				};
+				}
 
 				window.clearInterval(timerId);
 				loader(false);
@@ -259,12 +259,12 @@
 				if (w > windowWidth) {
 					h = h * windowWidth / w;
 					w = windowWidth;
-				};
+				}
 
 				if (h > windowHeight) {
 					w = w * windowHeight / h;
 					h = windowHeight;
-				};
+				}
 
 				locked = true;
 
@@ -314,7 +314,7 @@
 				} else if (Math.abs(dist.y) >= threshold && Math.abs(dist.x) <= restraint) {
 					swipedir = dist.y < 0 ? 'up' : 'down';
 				}
-			};
+			}
 
 			callback.call(this, swipedir);
 		});
@@ -338,7 +338,7 @@
 			event.stopPropagation();
 			$container.trigger('viewbox.close');
 		});
-	};
+	}
 
 	if (options.navButtons && $links.length > 1) {
 		addSvgButton('next').click(function(event) {
@@ -350,22 +350,22 @@
 			event.stopPropagation();
 			$container.trigger('viewbox.prev');
 		});
-	};
+	}
 
 	if (options.closeOnSideClick) {
 		$container.click(function() {
 			$container.trigger('viewbox.close');
 		});
-	};
+	}
 
 	if (options.useGestures && 'ontouchstart' in document.documentElement) {
 		onSwipe($container, function(dir) {
-			switch(dir) {
+			switch (dir) {
 				case 'left': $container.trigger('viewbox.next'); break;
 				case 'right': $container.trigger('viewbox.prev'); break;
-			};
+			}
 		});
-	};
+	}
 
 	return $container;
 };}(jQuery));
