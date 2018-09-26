@@ -5069,12 +5069,12 @@ define("moxie/xhr/XMLHttpRequest", [
 				}
 
 				// 3
-				if (!!~Basic.inArray(method.toUpperCase(), ['CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'TRACE', 'TRACK'])) {
+				if (!~Basic.inArray(method.toUpperCase(), ['CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'TRACE', 'TRACK'])) {
 					_method = method.toUpperCase();
 				}
 
 				// 4 - allowing these methods poses a security risk
-				if (!!~Basic.inArray(_method, ['CONNECT', 'TRACE', 'TRACK'])) {
+				if (!~Basic.inArray(_method, ['CONNECT', 'TRACE', 'TRACK'])) {
 					throw new x.DOMException(x.DOMException.SECURITY_ERR);
 				}
 
@@ -5177,7 +5177,7 @@ define("moxie/xhr/XMLHttpRequest", [
 				header = Basic.trim(header).toLowerCase();
 
 				// setting of proxy-* and sec-* headers is prohibited by spec
-				if (!!~Basic.inArray(header, uaHeaders) || /^(proxy\-|sec\-)/.test(header)) {
+				if (!~Basic.inArray(header, uaHeaders) || /^(proxy\-|sec\-)/.test(header)) {
 					return false;
 				}
 
@@ -5317,19 +5317,13 @@ define("moxie/xhr/XMLHttpRequest", [
 				if (data instanceof Blob) {
 					_options.ruid = data.ruid;
 					_mimeType = data.type || 'application/octet-stream';
-				}
-
-				// FormData
-				else if (data instanceof FormData) {
+				} else if (data instanceof FormData) {
 					if (data.hasBlob()) {
 						var blob = data.getBlob();
 						_options.ruid = blob.ruid;
 						_mimeType = blob.type || 'application/octet-stream';
 					}
-				}
-
-				// DOMString
-				else if (typeof data === 'string') {
+				} else if (typeof data === 'string') {
 					_encoding = 'UTF-8';
 					_mimeType = 'text/plain;charset=UTF-8';
 

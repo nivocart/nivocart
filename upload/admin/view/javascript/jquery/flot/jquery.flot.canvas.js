@@ -35,7 +35,6 @@ browser, but needs to redraw with canvas text when exporting as an image.
 	var render, getTextInfo, addText;
 
 	// Cache the prototype hasOwnProperty for faster access
-
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 	function init(plot, classes) {
@@ -44,7 +43,6 @@ browser, but needs to redraw with canvas text when exporting as an image.
 		// We only want to replace the functions once; the second time around
 		// we would just get our new function back.  This whole replacing of
 		// prototype functions is a disaster, and needs to be changed ASAP.
-
 		if (render == null) {
 			getTextInfo = Canvas.prototype.getTextInfo,
 			addText = Canvas.prototype.addText,
@@ -52,7 +50,6 @@ browser, but needs to redraw with canvas text when exporting as an image.
 		}
 
 		// Finishes rendering the canvas, including overlaid text
-
 		Canvas.prototype.render = function() {
 			if (!plot.getOptions().canvas) {
 				return render.call(this);
@@ -62,7 +59,6 @@ browser, but needs to redraw with canvas text when exporting as an image.
 				cache = this._textCache;
 
 			// For each text layer, render elements marked as active
-
 			context.save();
 			context.textBaseline = "middle";
 
@@ -183,7 +179,6 @@ browser, but needs to redraw with canvas text when exporting as an image.
 				// classes and examine it to generate a canvas font spec.
 
 				if (typeof font !== "object") {
-
 					var element = $("<div>&nbsp;</div>")
 						.css("position", "absolute")
 						.addClass(typeof font === "string" ? font : null)
@@ -236,7 +231,6 @@ browser, but needs to redraw with canvas text when exporting as an image.
 				var lines = (text + "").replace(/<br ?\/?>|\r\n|\r/g, "\n").split("\n");
 
 				for (var i = 0; i < lines.length; ++i) {
-
 					var lineText = lines[i],
 						measured = context.measureText(lineText);
 
@@ -257,7 +251,6 @@ browser, but needs to redraw with canvas text when exporting as an image.
 		};
 
 		// Adds a text string to the canvas text overlay.
-
 		Canvas.prototype.addText = function(layer, x, y, text, font, angle, width, halign, valign) {
 			if (!plot.getOptions().canvas) {
 				return addText.call(this, layer, x, y, text, font, angle, width, halign, valign);
@@ -288,7 +281,7 @@ browser, but needs to redraw with canvas text when exporting as an image.
 			// Offset the y coordinate, since Opera is off pretty
 			// consistently compared to the other browsers.
 
-			if (!!(window.opera && window.opera.version().split(".")[0] < 12)) {
+			if (!(window.opera && window.opera.version().split(".")[0] < 12)) {
 				y -= 2;
 			}
 

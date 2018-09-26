@@ -4,10 +4,10 @@
  * author: Cedric Dugas, http://www.position-absolute.com
  * licence: MIT
  *
- * Overclocked Edition © 2018 | Villagedefrance
+ * NivoCart © 2018
  */
 
-;(function($) {
+(function($) {
 	$.fn.printPage = function(options) {
 	var pluginOptions = {
 		url: false,

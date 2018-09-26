@@ -81,10 +81,10 @@ The plugin allso adds the following methods to the plot object:
 (function ($) {
     function init(plot) {
         var selection = {
-                first: { x: -1, y: -1}, second: { x: -1, y: -1},
-                show: false,
-                active: false
-            };
+            first: { x: -1, y: -1}, second: { x: -1, y: -1},
+            show: false,
+            active: false
+        };
 
         // The drag handling implemented here should be
         // abstracted out, there's some similar code from a library in
@@ -94,7 +94,7 @@ The plugin allso adds the following methods to the plot object:
         var savedhandlers = {};
 
         var mouseUpHandler = null;
-        
+
         function onMouseMove(e) {
             if (selection.active) {
                 updateSelection(e);
@@ -275,7 +275,7 @@ The plugin allso adds the following methods to the plot object:
 
             return { from: from, to: to, axis: axis };
         }
-        
+
         function setSelection(ranges, preventEvent) {
             var axis, range, o = plot.getOptions();
 
