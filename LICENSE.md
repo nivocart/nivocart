@@ -1,6 +1,6 @@
 <h3>Open Software License v. 3.0 (OSL-3.0)</h3>
     <p>This Open Software License (the &ldquo;License&rdquo;) applies to any original work
-     of authorship (the &ldquo;Original Work&rdquo;)whose owner (the &ldquo;Licensor&rdquo;)
+     of authorship (the &ldquo;Original Work&rdquo;) whose owner (the &ldquo;Licensor&rdquo;)
      has placed the following licensing notice adjacent to the copyright notice for the Original Work:</p>
     <p>Licensed under the Open Software License version 3.0</p>
     <p>1) <b>Grant of Copyright License.</b> Licensor grants You a worldwide, royalty-free,
