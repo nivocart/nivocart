@@ -16,17 +16,17 @@ $_['heading_update']         = 'Check your settings';
 // Help
 $_['help_setting']           = 'Log into your Administration by clicking the "Go to my Dashboard" button below.<br />Go to "System > Settings > (Your Store)", check all your store parameters and adjust them as required. Save.';
 $_['help_security']          = 'Check "users" and "user group permissions" under "System > Users", then activate and configure the "User Log".<br />Block harmful IPs: if you already have a list of harmful IP addresses, enter them now under "System > Server > Block IPs".';
-$_['help_server']            = 'Go to your Host and check that everything has been setup correctly, including your PHP.ini settings.<br />Using the File Manager, delete any "index.html" that you may find at the root of your store, as only "index.php" must be present.';
+$_['help_server']            = 'Go to your Host and check that everything is setup correctly. Adjust your PHP.ini settings if necessary.';
 $_['help_installer']         = 'For security reasons, the install directory will be deleted automatically at the first login.';
-$_['help_update']            = 'Log into your Administration by clicking the "Go to my Dashboard" button below.<br />Go to "System > Settings > (Your Store)", check that all your parameters are correctly set. Save.';
+$_['help_update']            = 'Log into your Administration by clicking the "Go to my Dashboard" button below.<br />Go to "System > Settings > (Your Store)", check that all your parameters are set correctly. Save.';
 
 // Text
 $_['text_follow_steps']      = 'Follow these steps carefully!';
 $_['text_clear_cookie']      = 'After upgrade, clear any cookies in your browser to avoid getting token errors.';
-$_['text_admin_page']        = 'Load the Admin page &amp; press Ctrl+F5 twice to force the browser to apply the css changes.';
-$_['text_admin_user']        = 'Goto Admin -> Users -> User Groups and Edit the Top Administrator group. Check All boxes.';
-$_['text_admin_setting']     = 'Goto Admin &amp; Edit the main System Settings. Update all fields, even if there is no change. Save.';
-$_['text_store_front']       = 'Load the Store Front &amp; press Ctrl+F5 twice to force the browser to apply the css changes.';
+$_['text_admin_page']        = 'Load the Admin Dashboard and press Ctrl+F5 twice to force the browser to apply the CSS changes.';
+$_['text_admin_user']        = 'Go to "Admin > Users > User Groups" and Edit the Top Administrator group. Check All boxes.';
+$_['text_admin_setting']     = 'Go to "System > Settings > (Your Store)". Check and Update all fields, even if there is no change. Save.';
+$_['text_store_front']       = 'Load the Store Front and press Ctrl+F5 twice to force the browser to apply the CSS changes.';
 $_['text_be_patient']        = '<b>Click "Upgrade" to install the latest version of NivoCart.</b><br /><br />The upgrade process will take a few minutes to complete. <b>Please be patient!</b>';
 $_['text_success']           = 'Congratulations! You now have the latest version of NivoCart.';
 $_['text_install_php']       = '1. Please configure your PHP settings to match requirements listed below.';
