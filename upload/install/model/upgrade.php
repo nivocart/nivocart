@@ -7,7 +7,7 @@ class ModelUpgrade extends Model {
 
 	public function dataTables($step1) {
 		// Load the sql file
-		$file = DIR_APPLICATION . 'nivocart-clean.sql';
+		$file = DIR_APPLICATION . 'nivocart-upgrade.sql';
 
 		if (!file_exists($file)) {
 			exit('Could not load sql file: ' . $file);
