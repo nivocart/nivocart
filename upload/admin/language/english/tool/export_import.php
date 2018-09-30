@@ -209,7 +209,7 @@ $_['help_range_type']                                   = '(Optional, leave empt
 $_['help_incremental_yes']                              = '(Update and/or add data)';
 $_['help_incremental_no']                               = '(Delete all old data before Import)';
 $_['help_format']                                       = 'Tip: Do an Export first to see the exact format of the worksheets!';
-$_['help_notes']                                        = '<b>The Export/Import (XLSX) is designed to work with the default Opencart Overclocked Edition files only.</b><br /><br />If you are using third party Category, Product, Options, Specials, Discounts, Rewards, Attributes or Filters extensions, under your administration, who are modifying the default files, then unpredictable results may happen during Export and Import.<br /><br />If you have a very large number of Products in your store, and you are experiencing server memory issues, please use the range filters.<br /><br /><br />';
+$_['help_notes']                                        = '<b>The Export/Import (XLSX) is designed to work with the default NivoCart files only.</b><br /><br />If you are using third party Category, Product, Options, Specials, Discounts, Rewards, Attributes or Filters extensions, under your administration, who are modifying the default files, then unpredictable results may happen during Export and Import.<br /><br />If you have a very large number of Products in your store, and you are experiencing server memory issues, please use the range filters.<br /><br /><br />';
 
 // About
 $_['text_export_import_version']                        = 'Export / Import Version:';
