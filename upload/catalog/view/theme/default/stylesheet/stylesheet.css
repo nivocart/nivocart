@@ -2124,18 +2124,18 @@ ul.box-filter > li ul {
 	margin-bottom: 20px;
 }
 .attribute .attribute-group {
-	color: #111;
+	color: #222;
 	font-size: 14px;
-	font-weight: bold;
-	background: #F7F7F7;
+	font-weight: normal;
+	background: #F4F4F4;
 	text-align: left;
 	padding: 7px;
 }
 .attribute .attribute-list {
-	color: #111;
+	color: #333;
 	font-size: 13px;
-	font-weight: bold;
-	border-bottom: 1px solid #F7F7F7;
+	font-weight: normal;
+	border-bottom: 1px solid #F4F4F4;
 	margin-bottom: 10px;
 	padding: 0;
 }
