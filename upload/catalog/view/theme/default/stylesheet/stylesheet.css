@@ -141,11 +141,17 @@ select {
 input.large-field, select.large-field {
 	width: 300px;
 }
+ol { 
+	margin-left: 0;
+}
 label {
 	cursor: pointer;
 }
+label.hidden {
+	display: none;
+}
 samp, small {
-	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-family: "Lucida Console", Monaco, monospace;
 	font-size: 11px;
 }
 span.from {
@@ -556,7 +562,7 @@ a.top-link:hover {
 }
 .breadcrumb a {
 	color: #36AAD8;
-	font-size: 11px;
+	font-size: 12px;
 	text-transform: uppercase;
 	text-decoration: none;
 	outline: none;
@@ -566,13 +572,15 @@ a.top-link:hover {
 }
 /* Notifications */
 .success, .warning, .attention, .tooltip {
-	padding: 10px 10px 10px 33px;
-	margin-bottom: 15px;
 	color: #555;
+	font-size: 15px;
+	line-height: 25px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-khtml-border-radius: 2px;
 	border-radius: 2px;
+	padding: 5px 10px 5px 35px;
+	margin: 10px 0;
 }
 .success {
 	background: #EAF7D9 url('../image/success.png') 10px center no-repeat;
@@ -592,25 +600,22 @@ a.top-link:hover {
 }
 .close, .success .close, .warning .close, .attention .close, .tooltip .close {
 	float: right;
-	padding-top: 4px;
-	padding-right: 4px;
+	padding: 4px 4px 0 0;
 	cursor: pointer;
 }
 /* Common */
 .required {
 	color: #CC2626;
+	font-size: 13px;
 	font-weight: bold;
 }
 .error {
-	display: block;
 	color: #CC2626;
+	font-size: 13px;
 }
 .help {
-	color: #999;
-	font-size: 10px;
-	font-weight: normal;
-	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	display: block;
+	color: #646464;
+	font-size: 12px;
 }
 .hidden {
 	display: none;
@@ -1542,14 +1547,14 @@ ul.box-filter > li ul {
 /* Product filter */
 .product-filter {
 	border-bottom: 1px solid #E7E7E7;
-	padding-bottom: 5px;
-	margin-bottom: 15px;
+	padding: 0 0 5px 0;
+	margin: 0 0 15px 0;
 	overflow: auto;
 }
 .product-filter .display {
 	float: left;
-	padding-top: 4px;
-	margin-right: 15px;
+	padding: 4px 0 0 0;
+	margin: 0 15px 0 0;
 	color: #333;
 }
 .product-filter .display a {
@@ -1561,7 +1566,7 @@ ul.box-filter > li ul {
 }
 .product-filter .limit {
 	float: right;
-	margin-left: 15px;
+	margin: 0 5px 0 15px;
 	color: #333;
 }
 /* Product Compare */
@@ -1571,8 +1576,8 @@ ul.box-filter > li ul {
 }
 .product-compare a {
 	color: #777;
-	font-size: 14px;
-	line-height: 24px;
+	font-size: 15px;
+	line-height: 30px;
 	text-decoration: none;
 	display: block;
 }
