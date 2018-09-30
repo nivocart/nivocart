@@ -81,7 +81,7 @@ class ControllerCommonFooter extends Controller {
 		$mod_shape = ($footer_shape) ? $footer_shape : 'rounded-0';
 
 		if ($footer_theme == 'custom') {
-			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/footer-custom.css');
+			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/footer/footer-custom.css');
 
 			if ($mod_color == 'white-skin' || $mod_color == 'beige-skin' || $mod_color == 'ash-skin' || $mod_color == 'silver-skin' || $mod_color == 'citrus-skin' || $mod_color == 'yellow-skin' || $mod_color == 'mist-skin' || $mod_color == 'clear-skin') {
 				$footer_class = 'footer-dark';
@@ -90,7 +90,7 @@ class ControllerCommonFooter extends Controller {
 			}
 
 		} else {
-			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/footer.css');
+			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/footer/footer.css');
 
 			$mod_color = '';
 			$mod_shape = '';
@@ -167,6 +167,7 @@ class ControllerCommonFooter extends Controller {
 		$this->render();
 	}
 
+	// Banner clicks
 	public function add() {
 		$this->load->model('design/banner');
 

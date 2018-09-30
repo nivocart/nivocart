@@ -42,7 +42,7 @@
 	margin-bottom: 10px;
 }
 .footer-light #footer > .column-one > ul > li, .footer-light #footer > .column-two > ul > li, .footer-light #footer > .column-three > ul > li, .footer-light #footer > .column-four > ul > li {
-	list-style: url('../image/bullet-1.png');
+	list-style: url('../../image/bullet-1.png');
 	margin-bottom: 4px;
 }
 .footer-light #footer > .column-one > ul > li:hover, .footer-light #footer > .column-two > ul > li:hover, .footer-light #footer > .column-three > ul > li:hover, .footer-light #footer > .column-four > ul > li:hover {}
@@ -89,7 +89,7 @@
 	margin-bottom: 10px;
 }
 .footer-dark #footer > .column-one > ul > li, .footer-dark #footer > .column-two > ul > li, .footer-dark #footer > .column-three > ul > li, .footer-dark #footer > .column-four > ul > li {
-	list-style: url('../image/bullet-2.png');
+	list-style: url('../../image/bullet-2.png');
 	margin-bottom: 4px;
 }
 .footer-dark #footer > .column-one > ul > li:hover, .footer-dark #footer > .column-two > ul > li:hover, .footer-dark #footer > .column-three > ul > li:hover, .footer-dark #footer > .column-four > ul > li:hover {}
@@ -119,10 +119,10 @@ p.icon-location-footer-light, p.icon-location-footer-dark {
 	margin-bottom: 6px;
 }
 p.icon-location-footer-light {
-	background: url('../image/icon_location_light.png') left top no-repeat;
+	background: url('../../image/icon_location_light.png') left top no-repeat;
 }
 p.icon-location-footer-dark {
-	background: url('../image/icon_location.png') left top no-repeat;
+	background: url('../../image/icon_location.png') left top no-repeat;
 }
 p.icon-phone-footer-light, p.icon-phone-footer-dark {
 	font-size: 13px;
@@ -131,10 +131,10 @@ p.icon-phone-footer-light, p.icon-phone-footer-dark {
 	margin-bottom: 6px;
 }
 p.icon-phone-footer-light {
-	background: url('../image/icon_phone_light.png') left top no-repeat;
+	background: url('../../image/icon_phone_light.png') left top no-repeat;
 }
 p.icon-phone-footer-dark {
-	background: url('../image/icon_phone.png') left top no-repeat;
+	background: url('../../image/icon_phone.png') left top no-repeat;
 }
 p.icon-mail-footer-light, p.icon-mail-footer-dark {
 	font-size: 13px;
@@ -143,16 +143,16 @@ p.icon-mail-footer-light, p.icon-mail-footer-dark {
 	margin-bottom: 6px;
 }
 p.icon-mail-footer-light {
-	background: url('../image/icon_mail_light.png') left top no-repeat;
+	background: url('../../image/icon_mail_light.png') left top no-repeat;
 }
 p.icon-mail-footer-dark {
-	background: url('../image/icon_mail.png') left top no-repeat;
+	background: url('../../image/icon_mail.png') left top no-repeat;
 }
 .icon-facebook {
 	float: right;
 	width: 23px;
 	height: 23px;
-	background: url('../image/icon_facebook.png') center -23px no-repeat;
+	background: url('../../image/icon_facebook.png') center -23px no-repeat;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-o-transition: all 0.3s;
@@ -162,13 +162,13 @@ p.icon-mail-footer-dark {
 	margin-right: 12px;
 }
 a.icon-facebook:hover {
-	background: url('../image/icon_facebook.png') center top no-repeat;
+	background: url('../../image/icon_facebook.png') center top no-repeat;
 }
 .icon-twitter {
 	float: right;
 	width: 23px;
 	height: 23px;
-	background: url('../image/icon_twitter.png') center -23px no-repeat;
+	background: url('../../image/icon_twitter.png') center -23px no-repeat;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-o-transition: all 0.3s;
@@ -178,7 +178,7 @@ a.icon-facebook:hover {
 	margin-right: 12px;
 }
 a.icon-twitter:hover {
-	background: url('../image/icon_twitter.png') center top no-repeat;
+	background: url('../../image/icon_twitter.png') center top no-repeat;
 }
 .icon-google {
 	float: right;
@@ -194,13 +194,13 @@ a.icon-twitter:hover {
 	margin-right: 12px;
 }
 a.icon-google:hover {
-	background: url('../image/icon_google.png') top center no-repeat;
+	background: url('../../image/icon_google.png') top center no-repeat;
 }
 .icon-pinterest {
 	float: right;
 	width: 23px;
 	height: 23px;
-	background: url('../image/icon_pinterest.png') center -23px no-repeat;
+	background: url('../../image/icon_pinterest.png') center -23px no-repeat;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-o-transition: all 0.3s;
@@ -210,13 +210,13 @@ a.icon-google:hover {
 	margin-right: 12px;
 }
 a.icon-pinterest:hover {
-	background: url('../image/icon_pinterest.png') center top no-repeat;
+	background: url('../../image/icon_pinterest.png') center top no-repeat;
 }
 .icon-instagram {
 	float: right;
 	width: 23px;
 	height: 23px;
-	background: url('../image/icon_instagram.png') center -23px no-repeat;
+	background: url('../../image/icon_instagram.png') center -23px no-repeat;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-o-transition: all 0.3s;
@@ -226,13 +226,13 @@ a.icon-pinterest:hover {
 	margin-right: 12px;
 }
 a.icon-instagram:hover {
-	background: url('../image/icon_instagram.png') center top no-repeat;
+	background: url('../../image/icon_instagram.png') center top no-repeat;
 }
 .icon-skype {
 	float: right;
 	width: 23px;
 	height: 23px;
-	background: url('../image/icon_skype.png') center -23px no-repeat;
+	background: url('../../image/icon_skype.png') center -23px no-repeat;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-o-transition: all 0.3s;
@@ -242,7 +242,7 @@ a.icon-instagram:hover {
 	margin-right: 12px;
 }
 a.icon-skype:hover {
-	background: url('../image/icon_skype.png') top center no-repeat;
+	background: url('../../image/icon_skype.png') top center no-repeat;
 }
 /* Tablets */
 @media only screen and (min-width: 481px) and (max-width: 801px) {
