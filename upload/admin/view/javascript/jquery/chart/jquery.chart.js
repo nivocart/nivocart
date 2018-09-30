@@ -6,9 +6,9 @@
  * Sultan Tarimo © 2015 - sultantarimo@me.com
  * Released under the MIT license
  * 
- * Overclocked Edition © 2018 | Villagedefrance
+ * NivoCart © 2018
  */
-;(function($) {
+(function($) {
 	$.fn.extend({
 		cssCharts: function(opts) {
 			var defs = {};

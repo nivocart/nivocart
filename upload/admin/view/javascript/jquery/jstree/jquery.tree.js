@@ -8,10 +8,10 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Overclocked Edition © 2018 | Villagedefrance
+ * NivoCart © 2018
  */
 
-;(function($) {
+(function($) {
 	// jQuery plugin
 	$.tree = {
 		datastores : { },

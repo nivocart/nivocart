@@ -7,7 +7,7 @@
  *
  * Dual licensed under the MIT and GPL licenses.
  *
- * Overclocked Edition © 2018 | Villagedefrance
+ * NivoCart © 2018
  */
 
 (function($) {

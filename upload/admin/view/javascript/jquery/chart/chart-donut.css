@@ -6,7 +6,7 @@
  * (c)2015 Sultan Tarimo - sultantarimo@me.com
  * Released under the MIT license
  *
- * Overclocked Edition © 2018 | Villagedefrance
+ * NivoCart © 2018
  */
 
 .chart *, .chart {
@@ -20,7 +20,7 @@
 	width: auto;
 	display: flex;
 	position: relative;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	margin: 0 auto;
 }
@@ -112,16 +112,16 @@
 }
 
 @-webkit-keyframes rotateDonut {
-	0%{-webkit-transform:rotate(0turn);-moz-transform:rotate(0turn);-ms-transform:rotate(0turn);-o-transform:rotate(0turn);transform:rotate(0turn)}
+	0% {-webkit-transform:rotate(0turn); -moz-transform:rotate(0turn); -ms-transform:rotate(0turn); -o-transform:rotate(0turn); transform:rotate(0turn)}
 }
 @-moz-keyframes rotateDonut {
-	0%{-webkit-transform:rotate(0turn);-moz-transform:rotate(0turn);-ms-transform:rotate(0turn);-o-transform:rotate(0turn);transform:rotate(0turn)}
+	0% {-webkit-transform:rotate(0turn); -moz-transform:rotate(0turn); -ms-transform:rotate(0turn); -o-transform:rotate(0turn); transform:rotate(0turn)}
 }
 @-o-keyframes rotateDonut {
-	0%{-webkit-transform:rotate(0turn);-moz-transform:rotate(0turn);-ms-transform:rotate(0turn);-o-transform:rotate(0turn);transform:rotate(0turn)}
+	0% {-webkit-transform:rotate(0turn); -moz-transform:rotate(0turn); -ms-transform:rotate(0turn); -o-transform:rotate(0turn); transform:rotate(0turn)}
 }
 @keyframes rotateDonut {
-	0%{-webkit-transform:rotate(0turn);-moz-transform:rotate(0turn);-ms-transform:rotate(0turn);-o-transform:rotate(0turn);transform:rotate(0turn)}
+	0% {-webkit-transform:rotate(0turn); -moz-transform:rotate(0turn); -ms-transform:rotate(0turn); -o-transform:rotate(0turn); transform:rotate(0turn)}
 }
 
 .donut-chart .spinner.temp {
