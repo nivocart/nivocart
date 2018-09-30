@@ -21,9 +21,9 @@ class ModelToolDatabase extends Model {
 		$query = $this->db->query("SHOW TABLE STATUS FROM `" . DB_DATABASE . "` WHERE Data_free > 0");
 
 		foreach ($query->rows as $result) {
-			if (utf8_substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
-				if (isset($result['Tables_in_' . DB_DATABASE])) {
-					$this->db->query("OPTIMIZE TABLE " . $result['Tables_in_' . DB_DATABASE]);
+			if (utf8_substr($result['Name'], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
+				if (isset($result['Name'])) {
+					$this->db->query("OPTIMIZE TABLE " . $result['Name']);
 				}
 			}
 		}
