@@ -34,8 +34,8 @@ $_['text_namegzip']     = 'sitemap.xml.gz';
 $_['text_dategzip']     = '%s';
 $_['text_nogzip']       = 'Master XML.GZ Sitemap not found !';
 
-$_['text_create']       = '<b>Creating sitemaps :</b> Click on the <b>Generate</b> buttons to create your sitemaps.';
-$_['text_publish']      = '<b>Publishing sitemaps :</b> Click on any of the Search Engine links above to visit your Webmaster Dashboard and Submit your sitemaps.';
+$_['text_create']       = 'Creating sitemaps: Click on the Generate buttons to create your sitemaps.';
+$_['text_publish']      = 'Publishing sitemaps: Click on any of the Search Engine links above to visit your Webmaster Dashboard and Submit your sitemaps.';
 
 // Buttons
 $_['button_check']      = 'Verify';
