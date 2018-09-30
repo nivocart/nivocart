@@ -23,20 +23,20 @@ class ControllerModuleMenuHorizontal extends Controller {
 		$menu_direction = $setting['direction'] ? 'ltr' : 'rtl';
 
 		if ($menu_theme == 'custom') {
-			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu-' . $menu_direction . '.css');
+			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-' . $menu_direction . '.css');
 
 			if ($mod_color == 'white-skin' || $mod_color == 'beige-skin' || $mod_color == 'ash-skin' || $mod_color == 'silver-skin' || $mod_color == 'citrus-skin' || $mod_color == 'yellow-skin' || $mod_color == 'mist-skin' || $mod_color == 'clear-skin') {
-				$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu-dark.css');
+				$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-dark.css');
 				$menu_theme = 'light';
 			} else {
-				$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu-light.css');
+				$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-light.css');
 				$menu_theme = 'dark';
 			}
 
 			$menu_class = 'menu-' . $menu_direction;
 
 		} else {
-			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu-' . $menu_theme . '-' . $menu_direction . '.css');
+			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-' . $menu_theme . '-' . $menu_direction . '.css');
 
 			$menu_class = 'menu-' . $menu_theme;
 		}

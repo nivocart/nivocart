@@ -1,35 +1,47 @@
 /* -----------------------------------
-* NivoCart - Menu RTL
+* NivoCart - Menu LTR
 * Copyright © 2018
 * ------------------------------------
 */
-#menu-holder, #menu-holder .menu-rtl { }
-.menu-rtl #menu {
-	min-height: 40px;
-	padding: 0 5px 0 0;
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'),
+    url('../fonts/roboto-v18-cyrillic_greek_latin-regular.woff2') format('woff2'),
+    url('../fonts/roboto-v18-cyrillic_greek_latin-regular.woff') format('woff'),
+    url('../fonts/roboto-v18-cyrillic_greek_latin-regular.ttf') format('truetype'),
+    url('../fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
+}
+
+#menu-holder, #menu-holder .menu-ltr { }
+.menu-ltr #menu {
+	min-height: 45px;
+	padding: 0 0 0 5px;
 	margin: 0;
 }
-.menu-rtl #menu a {
+.menu-ltr #menu a {
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	font-size: 17px;
 }
-.menu-rtl #menu ul {
+.menu-ltr #menu ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
-.menu-rtl #menu > ul > li {
+.menu-ltr #menu > ul > li {
 	position: relative;
-	float: right;
-	padding: 0 0 0 2px;
-	background-position: left top;
+	float: left;
+	padding: 0 2px 0 0;
 	z-index: 515;
 }
-.menu-rtl #menu > ul > li:hover {
+.menu-ltr #menu > ul > li:hover {
 }
-.menu-rtl #menu > ul > li > a {
+.menu-ltr #menu > ul > li > a {
 	display: block;
 	position: relative;
-	line-height: 40px;
+	line-height: 45px;
 	text-decoration: none;
 	padding: 0 14px;
 	-webkit-transition: all 0.2s;
@@ -40,45 +52,42 @@
 	outline: none;
 	cursor: pointer;
 }
-.menu-rtl #menu > ul > li:hover > a, .menu-rtl #menu > ul > li > a:hover {
+.menu-ltr #menu > ul > li:hover > a, .menu-ltr #menu > ul > li > a:hover {
 }
-.menu-rtl #menu > ul > li > a > span {
-	padding: 0 14px 0 0;
-	background-position: right center;
+.menu-ltr #menu > ul > li > a > span {
+	padding: 0 0 0 14px;
 }
-.menu-rtl #menu > ul > li > a .home-icon {
-	width: 16px;
-	height: 40px;
+.menu-ltr #menu > ul > li > a .home-icon {
+	width: 18px;
+	height: 45px;
 	padding: 0;
 	display: block;
 }
-.menu-rtl #menu > ul > li > div {
+.menu-ltr #menu > ul > li > div {
 	display: none;
 	position: absolute;
-	left: auto;
-	right: 0;
+	left: -1px;
 	z-index: 520;
 	padding: 0 0 10px 0;
 	border: 1px solid transparent;
 }
-.menu-rtl #menu > ul > li:hover > div {
+.menu-ltr #menu > ul > li:hover > div {
 	display: block;
 }
-.menu-rtl #menu > ul > li > div > ul {
+.menu-ltr #menu > ul > li > div > ul {
 	display: table-cell;
 	padding: 7px 0 0 2px;
 	border-top: 1px solid #45494B;
 }
-.menu-rtl #menu > ul > li ul + ul {
+.menu-ltr #menu > ul > li ul + ul {
 	padding-left: 16px;
 }
-.menu-rtl #menu > ul > li ul > li > a {
+.menu-ltr #menu > ul > li ul > li > a {
 	display: block;
-	text-align: right;
-	min-width: 160px;
+	min-width: 180px;
 	padding: 7px 0 9px 0;
 	margin: 0 14px;
-	font-size: 13px;
+	font-size: 15px;
 	text-decoration: none;
 	white-space: nowrap;
 	-webkit-transition: all 0.3s;
@@ -87,26 +96,25 @@
 	transition: all 0.3s;
 	outline: none;
 }
-.menu-rtl #menu > ul > li ul > li > a > span {
+.menu-ltr #menu > ul > li ul > li > a > span {
 	display: inline-block;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-o-transition: all 0.3s;
 	transition: all 0.3s;
 }
-.menu-rtl #menu > ul > li ul > li > a.last-submenu-item {
+.menu-ltr #menu > ul > li ul > li > a.last-submenu-item {
 	padding: 7px 0 7px;
 	background: none;
 	text-decoration: none;
 }
-.menu-rtl #menu > ul > li ul > li > a:hover {
+.menu-ltr #menu > ul > li ul > li > a:hover {
 	text-decoration: none;
 }
-.menu-rtl #menu > ul > li ul > li > a:hover > span {
-	padding-left: 0;
-	padding-right: 12px;
+.menu-ltr #menu > ul > li ul > li > a:hover > span {
+	padding-left: 12px;
 }
-.menu-rtl #menu > ul > li > div > ul > li > a {
+.menu-ltr #menu > ul > li > div > ul > li > a {
 	text-decoration: none;
 }
 #menu-trigger, #menu-phone {
@@ -114,10 +122,10 @@
 }
 /* Desktops */
 @media only screen and (min-width: 1161px) and (max-width: 1281px) {
-	.menu-rtl #menu {
+	.menu-ltr #menu {
 		display: block;
 	}
-	.menu-rtl #menu > ul > li > a {
+	.menu-ltr #menu > ul > li > a {
 		padding: 0 12px;
 		font-size: 16px;
 	}
@@ -127,10 +135,10 @@
 }
 /* Laptops */
 @media only screen and (min-width: 981px) and (max-width: 1161px) {
-	.menu-rtl #menu {
+	.menu-ltr #menu {
 		display: block;
 	}
-	.menu-rtl #menu > ul > li > a {
+	.menu-ltr #menu > ul > li > a {
 		padding: 0 8px;
 		font-size: 15px;
 	}
@@ -140,13 +148,13 @@
 }
 /* Tablets */
 @media only screen and (min-width: 641px) and (max-width: 981px) {
-	.menu-rtl #menu {
+	.menu-ltr #menu {
 		display: none;
 	}
 	#menu-trigger {
 		display: block;
 		position: relative;
-		height: 40px;
+		height: 45px;
 		width: auto;
 	}
 	#menu-phone {
@@ -210,15 +218,15 @@
 		font-weight: normal;
 	}
 }
-/* Tablets / Phones */
+/* Phones */
 @media only screen and (max-width: 641px) {
-	.menu-rtl #menu {
+	.menu-ltr #menu {
 		display: none;
 	}
 	#menu-trigger {
 		display: block;
 		position: relative;
-		height: 40px;
+		height: 45px;
 		width: auto;
 	}
 	#menu-phone {

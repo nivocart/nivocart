@@ -10,7 +10,7 @@
 .menu-ltr #menu a { }
 .menu-ltr #menu ul { }
 .menu-ltr #menu > ul > li {
-	background: url('../image/menu/sep_light.png') right top no-repeat;
+	background: url('../../image/menu/sep_light.png') right top no-repeat;
 }
 .menu-ltr #menu > ul > li:hover { }
 .menu-ltr #menu > ul > li > a {
@@ -18,10 +18,10 @@
 }
 .menu-ltr #menu > ul > li:hover > a, .menu-ltr #menu > ul > li > a:hover { }
 .menu-ltr #menu > ul > li > a > span {
-	background: url('../image/menu/arrow_down_light.png') right center no-repeat;
+	background: url('../../image/menu/arrow_down_light.png') right center no-repeat;
 }
 .menu-ltr #menu > ul > li > a .home-icon {
-	background: url('../image/menu/home_icon_light.png') center center no-repeat;
+	background: url('../../image/menu/home_icon_light.png') center center no-repeat;
 }
 .menu-ltr #menu > ul > li > div { }
 .menu-ltr #menu > ul > li:hover > div {
@@ -32,16 +32,16 @@
 }
 .menu-ltr #menu > ul > li ul + ul { }
 .menu-ltr #menu > ul > li ul > li > a {
-	background: url('../image/menu/sep_vertical_light.png') bottom left repeat-x;
+	background: url('../../image/menu/sep_vertical_light.png') bottom left repeat-x;
 	color: #FFF;
 }
 .menu-ltr #menu > ul > li ul > li > a > span {
-	background: url('../image/menu/arrow_left_light.png') -20px center no-repeat;
+	background: url('../../image/menu/arrow_left_light.png') -20px center no-repeat;
 }
 .menu-ltr #menu > ul > li ul > li > a.last-submenu-item { }
 .menu-ltr #menu > ul > li ul > li > a:hover { }
 .menu-ltr #menu > ul > li ul > li > a:hover > span {
-	background: url('../image/menu/arrow_left_light.png') left center no-repeat;
+	background: url('../../image/menu/arrow_left_light.png') left center no-repeat;
 }
 .menu-ltr #menu > ul > li > div > ul > li > a {
 	color: #FFF;

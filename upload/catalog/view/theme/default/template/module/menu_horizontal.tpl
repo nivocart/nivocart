@@ -1,6 +1,7 @@
 <div style="margin-bottom:10px;">
 <?php if ($menu_horizontal) { ?>
-  <div id="menu-holder" class="<?php echo $menu_class; ?>">
+  <div id="menu-holder">
+  <div class="<?php echo $menu_class; ?>">
   <div id="menu" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>">
   <ul>
   <?php if ($menu_home) { ?>
@@ -51,6 +52,7 @@
   <?php } ?>
   </ul>
   </div>
+  </div>
   <!-- Menu Phone -->
   <div id="menu-phone" class="box-phone">
   <ul>
@@ -83,7 +85,7 @@
 </div>
 
 <script type="text/javascript"><!--
-$('#menu-holder').prepend('<div id="menu-trigger" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/menu/menu-button-<?php echo ($menu_theme == 'light') ? 'dark' : 'light'; ?>.png" alt="" style="padding:3px 15px;" /></div>');
+$('#menu-holder').prepend('<div id="menu-trigger" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/menu/menu-button-<?php echo ($menu_theme == 'light') ? 'dark' : 'light'; ?>.png" alt="" style="padding:5px 15px;" /></div>');
 $('body').on('click', '#menu-trigger', function(e) {
 	e.preventDefault();
 	$('#menu-phone').slideToggle();
