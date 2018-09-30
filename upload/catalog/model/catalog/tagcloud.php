@@ -8,11 +8,11 @@ class ModelCatalogTagCloud extends Model {
 
 		$tagcloud = false;
 
-		$query = $this->db->query("SELECT DISTINCT ptg.tag AS tag FROM " . DB_PREFIX . "product_tag ptg LEFT JOIN " . DB_PREFIX . "product p ON (ptg.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (ptg.product_id = p2s.product_id) WHERE ptg.language_id=" . (int)$this->config->get('config_language_id') . " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p.status = '1' LIMIT 0," . (int)$limit);
+		$query = $this->db->query("SELECT DISTINCT ptg.tag AS `tag` FROM " . DB_PREFIX . "product_tag ptg LEFT JOIN " . DB_PREFIX . "product p ON (ptg.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (ptg.product_id = p2s.product_id) WHERE ptg.language_id=" . (int)$this->config->get('config_language_id') . " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p.status = '1' LIMIT 0," . (int)$limit);
 
 		if (count($query->rows) > 0) {
 			foreach ($query->rows as $row) {
-				$tagcount = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_tag WHERE tag= '" . $row['tag'] . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+				$tagcount = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_tag WHERE `tag` = '" . $row['tag'] . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 				$names[] = trim(str_replace(',', ' ', (string)$row['tag']));
 				$totals[] = $tagcount->num_rows;

@@ -184,7 +184,7 @@ function addModule() {
 	html += '    </select></td>';
 	html += '    <td class="left"><?php echo $text_limit; ?> &nbsp;<input type="text" name="tagcloud_module[' + module_row + '][limit]" value="50" size="3" /></td>';
 	html += '    <td class="left"><input type="text" name="tagcloud_module[' + module_row + '][min_font_size]" value="9" size="3" /> px</td>';
-	html += '    <td class="left"><input type="text" name="tagcloud_module[' + module_row + '][max_font_size]" value="27" size="3" /> px</td>';
+	html += '    <td class="left"><input type="text" name="tagcloud_module[' + module_row + '][max_font_size]" value="36" size="3" /> px</td>';
 	html += '    <td class="left"><select name="tagcloud_module[' + module_row + '][font_weight]">';
 	<?php foreach ($font_weights as $font_weight) { ?>
 	html += '      <option value="<?php echo $font_weight['font_weight']; ?>"><?php echo $font_weight['title']; ?></option>';

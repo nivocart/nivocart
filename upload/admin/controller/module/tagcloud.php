@@ -181,7 +181,7 @@ class ControllerModuleTagCloud extends Controller {
 					$this->error['min_font_size'][$key] = $this->language->get('error_min_font_size');
 				}
 
-				if (!$value['max_font_size'] || !is_numeric($value['max_font_size']) || $value['max_font_size'] > 29) {
+				if (!$value['max_font_size'] || !is_numeric($value['max_font_size']) || $value['max_font_size'] > 36) {
 					$this->error['max_font_size'][$key] = $this->language->get('error_max_font_size');
 				}
 			}
