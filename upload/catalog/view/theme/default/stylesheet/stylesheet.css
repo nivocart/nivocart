@@ -29,41 +29,42 @@ html {
 	box-sizing: inherit;
 }
 body {
-	color: #111;
-	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	background-color: #FFF;
 	margin: 0;
 	padding: 0;
 }
 body, td, th, input, textarea, select, a {
-	font-size: 13px;
+	color: #111;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-size: 14px;
 }
 h1, .welcome {
 	color: #636E75;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	margin-top: 0;
-	margin-bottom: 20px;
-	margin-left: 6px;
-	font-size: 32px;
+	font-size: 34px;
 	font-weight: normal;
-	text-shadow: 0 0 1px rgba(0, 0, 0, .01);
+	text-shadow: 0 1px 1px #C2C2C2;
+	margin: 0 0 20px 6px;
 }
 h2 {
 	color: #333;
-	font-size: 16px;
-	margin-top: 0;
-	margin-bottom: 10px;
-	margin-left: 6px;
+	font-size: 24px;
+	font-weight: normal;
+	margin: 0 0 10px 6px;
 }
 h3 {
 	color: #555;
-	font-size: 14px;
-	margin-top: 0;
-	margin-bottom: 5px;
+	font-size: 18px;
+	font-weight: normal;
+	text-transform: uppercase;
+	margin: 0 0 10px 0;
 }
 p {
-	margin-top: 0;
-	margin-bottom: 20px;
+	color: #111;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	word-wrap: normal;
+	margin: 0 0 20px 0;
 }
 a, a:visited, a b {
 	color: #36AAD8;
@@ -88,9 +89,9 @@ a:hover, a img:hover {
 	user-select: none;
 }
 form {
+	display: inline;
 	padding: 0;
 	margin: 0;
-	display: inline;
 }
 input[type='text'], input[type='password'], textarea {
 	padding: 3px 0 3px 4px;
@@ -144,11 +145,11 @@ label {
 	cursor: pointer;
 }
 samp, small {
-	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-	font-size: 10px;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	font-size: 11px;
 }
 span.from {
-	font-size: 13px;
+	font-size: 14px;
 }
 /* Container Top */
 #container-top {
@@ -784,37 +785,37 @@ a.button-danger, input.button-danger {
 a.button, a.button-danger {
 	display: inline-block;
 	text-decoration: none;
-	padding: 6px 12px;
-	font-size: 12px;
+	padding: 6px 14px;
+	font-size: 14px;
 	font-weight: bold;
-	line-height: 12px;
+	line-height: 16px;
 }
 input.button, input.button-danger, button.button {
 	border: 0;
 	height: 24px;
-	padding: 0 12px;
-	font-size: 12px;
+	padding: 0 14px;
+	font-size: 14px;
 	font-weight: bold;
-	line-height: 12px;
+	line-height: 16px;
 }
 input.button-cart {
 	position: relative;
 	top: 0;
 	height: 30px;
-	padding: 0 15px;
-	margin-left: 15px;
-	font-size: 14px;
+	padding: 0 16px;
+	margin-left: 16px;
+	font-size: 16px;
 	font-weight: bold;
-	line-height: 14px;
+	line-height: 16px;
 	border: 0;
 }
 input.button-wrap-add, input.button-wrap-remove, input.button-wrap-add:hover, input.button-wrap-remove:hover {
 	border: 0;
 	height: 24px;
-	padding: 0 12px;
-	font-size: 12px;
+	padding: 0 13px;
+	font-size: 13px;
 	font-weight: bold;
-	line-height: 12px;
+	line-height: 13px;
 }
 input.button-wrap-add, input.button-wrap-add:hover {
 	background-image: url('../image/wrap-add.png');
@@ -847,12 +848,12 @@ a.button-danger:hover, input.button-danger:hover {
 input.button-buy-now {
 	color: #FFF;
 	top: 0;
-	height: 32px;
-	padding: 0 16px;
+	height: 34px;
+	padding: 0 17px;
 	margin-left: 10px;
-	font-size: 15px;
+	font-size: 17px;
 	font-weight: bold;
-	line-height: 15px;
+	line-height: 17px;
 	border: 0;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	background-color: #F9CB37;
@@ -928,55 +929,60 @@ a.button-add:hover {
 }
 /* Htabs */
 .htabs {
-	height: 31px;
+	height: 32px;
 	line-height: 16px;
-	border-bottom: 1px solid #DDD;
-	margin-bottom: 32px;
+	border-bottom: 1px solid #888;
+	margin: 0 0 30px 0;
 }
 .htabs a {
 	float: left;
-	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	color: #111;
-	font-size: 13px;
-	font-weight: bold;
+	color: #222;
+	font-size: 15px;
+	font-weight: normal;
 	text-align: center;
 	text-decoration: none;
-	border-top: 1px solid #DDD;
-	border-left: 1px solid #DDD;
-	border-right: 1px solid #DDD;
-	border-bottom: 1px solid #CCC;
-	background-color: #FCFCFC;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFF));
-	background-image: -webkit-linear-gradient(top, #EEE, #FFF);
-	background-image: -moz-linear-gradient(top, #EEE, #FFF);
-	background-image: -ms-linear-gradient(top, #EEE, #FFF);
-	background-image: -o-linear-gradient(top, #EEE, #FFF);
-	background-image: linear-gradient(to bottom, #EEE, #FFF);
-	padding: 7px 15px 6px 15px;
-	margin-right: 2px;
-	margin-bottom: 0;
+	text-shadow: 0 0 1px rgba(52, 52, 52, 0.5);
+	border-top: 1px solid #CCC;
+	border-left: 1px solid #CCC;
+	border-right: 1px solid #CCC;
+	border-bottom: 1px solid #888;
+	-moz-border-radius: 2px 2px 0 0;
+	-webkit-border-radius: 2px 2px 0 0;
+	-khtml-border-radius: 2px 2px 0 0;
+	border-radius: 2px 2px 0 0;
+	background-color: #FAFAFA;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#EAEAEA));
+	background-image: -webkit-linear-gradient(top, #FAFAFA, #EAEAEA);
+	background-image: -moz-linear-gradient(top, #FAFAFA, #EAEAEA);
+	background-image: -ms-linear-gradient(top, #FAFAFA, #EAEAEA);
+	background-image: -o-linear-gradient(top, #FAFAFA, #EAEAEA);
+	background-image: linear-gradient(to bottom, #FAFAFA, #EAEAEA);
+	padding: 7px 15px;
+	margin: 0 2px 0 0;
 	display: none;
 }
 .htabs a.selected {
 	background: #FFF;
-	border-top: 1px solid #CCC;
-	border-left: 1px solid #CCC;
-	border-right: 1px solid #CCC;
+	border-top: 1px solid #888;
+	border-left: 1px solid #888;
+	border-right: 1px solid #888;
 	border-bottom: 1px solid #FFF;
-	outline: 0;
 }
-.tab-content {
+.htabs-content {
+	border: none;
+	min-height: 100px;
+	background: transparent;
+	margin: 0 0 20px 0;
 	padding: 10px;
-	margin-bottom: 20px;
-	z-index: 2;
 	overflow: auto;
+	z-index: 2;
 }
 /* Box */
 .box {
 	margin-bottom: 15px;
 }
 .box .box-heading {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: normal;
 	line-height: 30px;
 	border-bottom: 1px solid #606060;
@@ -1024,6 +1030,7 @@ a.button-add:hover {
 .box-product .name a {
 	display: block;
 	color: #36AAD8;
+	font-size: 15px;
 	font-weight: bold;
 	text-decoration: none;
 	margin-bottom: 5px;
@@ -1099,7 +1106,7 @@ a.button-add:hover {
 .box-product > div .box-product-bottom > div a {
 	color: #777;
 	font-weight: bold;
-	font-size: 22px;
+	font-size: 26px;
 	text-decoration: none;
 	line-height: 40px;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
@@ -1687,12 +1694,11 @@ ul.box-filter > li ul {
 	overflow: auto;
 }
 .product-grid > div {
-	width: 19.3%;
+	width: 23%;
 	min-width: 160px;
 	display: inline-block;
 	vertical-align: top;
-	margin-right: 18px;
-	margin-bottom: 15px;
+	margin: 0 15px 15px 0;
 	padding: 0 0 5px 0;
 	text-align: center;
 	border: 1px solid #DDD;
