@@ -24,7 +24,7 @@ class ControllerAffiliateRegister extends Controller {
 
 			$this->affiliate->login($this->request->post['email'], $this->request->post['password']);
 
-			$this->redirect($this->url->link('affiliate/success', '' , 'SSL'));
+			$this->redirect($this->url->link('affiliate/success', '', 'SSL'));
 		}
 
 		$this->data['breadcrumbs'] = array();

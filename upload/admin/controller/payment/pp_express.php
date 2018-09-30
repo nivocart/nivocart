@@ -1,6 +1,7 @@
 <?php
 class ControllerPaymentPPExpress extends Controller {
 	const DEBUG_LOG_FILE = 'pp_express.log';
+
 	private $errors;
 
 	public function index() {
@@ -369,8 +370,8 @@ class ControllerPaymentPPExpress extends Controller {
 			$this->data['button_debug_clear'] = $this->language->get('button_clear');
 			$this->data['button_debug_download'] = $this->language->get('button_download');
 
-			$this->data['debug_clear'] = $this->url->link('payment/pp_express/debug_clear', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['debug_download'] = $this->url->link('payment/pp_express/debug_download', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['debug_clear'] = $this->url->link('payment/pp_express/debugClear', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['debug_download'] = $this->url->link('payment/pp_express/debugDownload', 'token=' . $this->session->data['token'], 'SSL');
 
 			// Create directory if it does not exist
 			if (!is_dir(DIR_SYSTEM . 'logs/')) {
@@ -545,8 +546,8 @@ class ControllerPaymentPPExpress extends Controller {
 					'payment_status' => $result['payment_status'],
 					'pending_reason' => $result['pending_reason'],
 					'created'        => date($this->language->get('date_format_time'), strtotime($result['created'])),
-					'view'           => $this->url->link('payment/pp_express/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id . '&referrer=detail', 'SSL'),
-					'refund'         => $this->url->link('payment/pp_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id, 'SSL'),
+					'view'           => $this->url->link('payment/pp_express/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . (int)$order_id . '&referrer=detail', 'SSL'),
+					'refund'         => $this->url->link('payment/pp_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . (int)$order_id, 'SSL'),
 					'resend'         => $this->url->link('payment/pp_express/do_resend', 'token=' . $this->session->data['token'] . '&paypal_order_transaction_id=' . $result['paypal_order_transaction_id'], 'SSL')
 				);
 			}
@@ -557,7 +558,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	public function do_capture() {
+	public function doCapture() {
 		// Used to capture authorised payments. Capture can be full or partial amounts
 		$json = array();
 
@@ -703,9 +704,9 @@ class ControllerPaymentPPExpress extends Controller {
 			'separator' => ' :: '
 		);
 
-		$this->data['action'] = $this->url->link('payment/pp_express/do_refund', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('payment/pp_express/doRefund', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id , 'SSL');
+		$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$order_id, 'SSL');
 
 		$this->data['transaction_id'] = $transaction_id;
 
@@ -753,7 +754,7 @@ class ControllerPaymentPPExpress extends Controller {
 	}
 
 	// Changed to json for calling from everywhere and return complete error messages.
-	public function do_refund() {
+	public function doRefund() {
 		// Used to issue a refund for a captured payment. Refund can be full or partial
 		$json = array();
 
@@ -853,7 +854,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function do_void() {
+	public function doVoid() {
 		// Used to void an authorised payment
 		$json = array();
 
@@ -956,7 +957,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function do_resend() {
+	public function doResend() {
 		$json = array();
 
 		$this->language->load('payment/pp_express');
@@ -1318,7 +1319,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	public function do_search() {
+	public function doSearch() {
 		// Used to search for transactions from a user account
 		$json = array();
 
@@ -1496,7 +1497,7 @@ class ControllerPaymentPPExpress extends Controller {
 		return $return;
 	}
 
-	public function debug_clear() {
+	public function debugClear() {
 		$this->language->load('payment/pp_express');
 
 		$file = DIR_LOGS . (self::DEBUG_LOG_FILE);
@@ -1512,7 +1513,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$this->redirect($this->url->link('payment/pp_express', 'token=' . $this->session->data['token'], 'SSL'));
 	}
 
-	public function debug_download() {
+	public function debugDownload() {
 		$file = DIR_LOGS . (self::DEBUG_LOG_FILE);
 
 		clearstatcache();

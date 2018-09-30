@@ -1453,7 +1453,7 @@ class ControllerSaleCustomer extends Controller {
 		$this->listTransactions();
 	}
 
-	public function add_transaction() {
+	public function addTransaction() {
 		$this->language->load('sale/customer');
 
 		$this->load->model('sale/customer');
@@ -1467,7 +1467,7 @@ class ControllerSaleCustomer extends Controller {
 		$this->listTransactions();
 	}
 
-	public function delete_transaction() {
+	public function deleteTransaction() {
 		$this->language->load('sale/customer');
 
 		$this->load->model('sale/customer');
@@ -1581,7 +1581,7 @@ class ControllerSaleCustomer extends Controller {
 		$this->listRewards();
 	}
 
-	public function add_reward() {
+	public function addReward() {
 		$this->language->load('sale/customer');
 
 		$this->load->model('sale/customer');
@@ -1595,7 +1595,7 @@ class ControllerSaleCustomer extends Controller {
 		$this->listRewards();
 	}
 
-	public function delete_reward() {
+	public function deleteReward() {
 		$this->language->load('sale/customer');
 
 		$this->load->model('sale/customer');

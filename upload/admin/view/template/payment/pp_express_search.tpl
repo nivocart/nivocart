@@ -134,94 +134,96 @@ $('.date').datepicker({dateFormat: 'yy-mm-dd'});
 
 <script type="text/javascript"><!--
 $('#button-search').on('click', function() {
-  $.ajax({
-    url: 'index.php?route=payment/pp_express/do_search&token=<?php echo $token; ?>',
-    type: 'POST',
-    dataType: 'json',
-    data: $('#form').serialize(),
-    beforeSend: function() {
-      $('.success, .warning, .attention').remove();
-      $('#search-input').hide();
-      $('#button-search').hide();
-      $('#button-edit').show();
-      $('#search-box').show();
-      $('#searching').show();
-    },
-  })
-  .fail(function(jqXHR, textStatus, errorThrown) { alert('Status: ' + textStatus + '\r\nError: ' + errorThrown); })
-  .done(function(json) {
-    if ('error' in json) {
-      $('.box').before('<div class="warning" style="display:none;">' + json['error'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
-      $('.warning').fadeIn('normal');
-    } else {
-      var html = '';
+	$.ajax({
+		url: 'index.php?route=payment/pp_express/doSearch&token=<?php echo $token; ?>',
+		type: 'POST',
+		dataType: 'json',
+		data: $('#form').serialize(),
+		beforeSend: function() {
+			$('.success, .warning, .attention').remove();
+			$('#search-input').hide();
+			$('#button-search').hide();
+			$('#button-edit').show();
+			$('#search-box').show();
+			$('#searching').show();
+		},
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
+	})
+	.done(function(json) {
+		if ('error' in json) {
+			$('.box').before('<div class="warning" style="display:none;">' + json['error'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
+			$('.warning').fadeIn('normal');
+		} else {
+			var html = '';
 
-      html += '<thead><tr>';
-      html += '<td class="left"><?php echo $column_date; ?></td>';
-      html += '<td class="left"><?php echo $column_type; ?></td>';
-      html += '<td class="left"><?php echo $column_email; ?></td>';
-      html += '<td class="left"><?php echo $column_name; ?></td>';
-      html += '<td class="left"><?php echo $column_transid; ?></td>';
-      html += '<td class="left"><?php echo $column_status; ?></td>';
-      html += '<td class="left"><?php echo $column_currency; ?></td>';
-      html += '<td class="right"><?php echo $column_amount; ?></td>';
-      html += '<td class="right"><?php echo $column_fee; ?></td>';
-      html += '<td class="right"><?php echo $column_netamt; ?></td>';
-      html += '<td class="center"><?php echo $column_action; ?></td>';
-      html += '</tr></thead>';
+			html += '<thead><tr>';
+			html += '<td class="left"><?php echo $column_date; ?></td>';
+			html += '<td class="left"><?php echo $column_type; ?></td>';
+			html += '<td class="left"><?php echo $column_email; ?></td>';
+			html += '<td class="left"><?php echo $column_name; ?></td>';
+			html += '<td class="left"><?php echo $column_transid; ?></td>';
+			html += '<td class="left"><?php echo $column_status; ?></td>';
+			html += '<td class="left"><?php echo $column_currency; ?></td>';
+			html += '<td class="right"><?php echo $column_amount; ?></td>';
+			html += '<td class="right"><?php echo $column_fee; ?></td>';
+			html += '<td class="right"><?php echo $column_netamt; ?></td>';
+			html += '<td class="center"><?php echo $column_action; ?></td>';
+			html += '</tr></thead>';
 
-      if (json.result.length > 0) {
-        $.each(json.result, function(index, element) {
-          if ('L_LONGMESSAGE' in element) {
-            $('.box').before('<div class="warning" style="display:none;">' + element.L_LONGMESSAGE + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
-            $('.warning').fadeIn('normal');
-          } else {
-            if (!('L_EMAIL' in element)) {
-              element.L_EMAIL = '';
-            }
+			if (json.result.length > 0) {
+				$.each(json.result, function(index, element) {
+					if ('L_LONGMESSAGE' in element) {
+						$('.box').before('<div class="warning" style="display:none;">' + element.L_LONGMESSAGE + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
+						$('.warning').fadeIn('normal');
+					} else {
+						if (!('L_EMAIL' in element)) {
+							element.L_EMAIL = '';
+						}
 
-            html += '<tr>';
-            html += '<td class="left">' + element.L_TIMESTAMP + '</td>';
-            html += '<td class="left">' + element.L_TYPE + '</td>';
-            html += '<td class="left">' + element.L_EMAIL + '</td>';
-            html += '<td class="left">' + element.L_NAME + '</td>';
-            html += '<td class="left">' + element.L_TRANSACTIONID + '</td>';
-            html += '<td class="left">' + element.L_STATUS + '</td>';
-            html += '<td class="left">' + element.L_CURRENCYCODE + '</td>';
-            html += '<td class="right">' + element.L_AMT + '</td>';
-            html += '<td class="right">' + element.L_FEEAMT + '</td>';
-            html += '<td class="right">' + element.L_NETAMT + '</td>';
-            html += '<td class="center">';
-            html += '<a href="<?php echo $view_link; ?>&transaction_id=' + element.L_TRANSACTIONID + '" class="button"><?php echo $text_view; ?></a>';
-            html += '</td>';
-            html += '</tr>';
-          }
-        });
-      } else {
-        html += '<td class="center" colspan="11"><?php echo $text_no_results; ?></td>';
-      }
+						html += '<tr>';
+						html += '<td class="left">' + element.L_TIMESTAMP + '</td>';
+						html += '<td class="left">' + element.L_TYPE + '</td>';
+						html += '<td class="left">' + element.L_EMAIL + '</td>';
+						html += '<td class="left">' + element.L_NAME + '</td>';
+						html += '<td class="left">' + element.L_TRANSACTIONID + '</td>';
+						html += '<td class="left">' + element.L_STATUS + '</td>';
+						html += '<td class="left">' + element.L_CURRENCYCODE + '</td>';
+						html += '<td class="right">' + element.L_AMT + '</td>';
+						html += '<td class="right">' + element.L_FEEAMT + '</td>';
+						html += '<td class="right">' + element.L_NETAMT + '</td>';
+						html += '<td class="center">';
+						html += '<a href="<?php echo $view_link; ?>&transaction_id=' + element.L_TRANSACTIONID + '" class="button"><?php echo $text_view; ?></a>';
+						html += '</td>';
+						html += '</tr>';
+					}
+				});
+			} else {
+				html += '<td class="center" colspan="11"><?php echo $text_no_results; ?></td>';
+			}
 
-      if ('attention' in json) {
-        $('.box').before('<div class="attention" style="display:none;">' + json['attention'] + '</div>');
-        $('.attention').fadeIn('normal');
-      }
+			if ('attention' in json) {
+				$('.box').before('<div class="attention" style="display:none;">' + json['attention'] + '</div>');
+				$('.attention').fadeIn('normal');
+			}
 
-      $('#search-results').append(html).fadeIn();
-    }
-  })
-  .always(function() {
-    $('#searching').hide();
-  });
+			$('#search-results').append(html).fadeIn();
+		}
+	})
+	.always(function() {
+		$('#searching').hide();
+	});
 });
 
 $('#button-edit').on('click', function() {
-  $('.success, .warning, .attention').remove();
-  $('#search-box').hide();
-  $('#search-input').show();
-  $('#button-edit').hide();
-  $('#button-search').show();
-  $('#searching').show();
-  $('#search-results').empty().hide();
+	$('.success, .warning, .attention').remove();
+	$('#search-box').hide();
+	$('#search-input').show();
+	$('#button-edit').hide();
+	$('#button-search').show();
+	$('#searching').show();
+	$('#search-results').empty().hide();
 });
 //--></script>
 

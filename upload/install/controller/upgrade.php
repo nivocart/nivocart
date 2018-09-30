@@ -112,7 +112,7 @@ class ControllerUpgrade extends Controller {
 		if (DB_DRIVER == 'mpdo') {
 			try {
 				new \PDO("mysql:host=" . DB_HOSTNAME . ";port=" . DB_PORT . ";dbname=" . DB_DATABASE, DB_USERNAME, DB_PASSWORD, array(\PDO::ATTR_PERSISTENT => true));
-			} catch(Exception $e) {
+			} catch (Exception $e) {
 				$this->error['warning'] = $e->getMessage();
 			}
 		}

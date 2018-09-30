@@ -602,7 +602,7 @@ $('#transaction').load('index.php?route=sale/customer/transactions&token=<?php e
 
 function addTransaction() {
 	$.ajax({
-		url: 'index.php?route=sale/customer/add_transaction&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+		url: 'index.php?route=sale/customer/addTransaction&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
 		type: 'POST',
 		dataType: 'html',
 		data: 'description=' + encodeURIComponent($("#tab-transaction input[name='description']").val()) + '&amount=' + encodeURIComponent($("#tab-transaction input[name='amount']").val()),
@@ -628,7 +628,7 @@ function addTransaction() {
 function deleteTransaction(customer_transaction_id) {
 	if (confirm('<?php echo addslashes($text_delete_transaction_confirm); ?>')) {
 		$.ajax({
-			url: 'index.php?route=sale/customer/delete_transaction&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+			url: 'index.php?route=sale/customer/deleteTransaction&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
 			type: 'POST',
 			data: {"customer_id":<?php echo (isset($customer_id) ? $customer_id : 0); ?>, "customer_transaction_id":customer_transaction_id},
 			dataType: 'html',
@@ -658,7 +658,7 @@ $('#reward').load('index.php?route=sale/customer/rewards&token=<?php echo $token
 
 function addRewardPoints() {
 	$.ajax({
-		url: 'index.php?route=sale/customer/add_reward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+		url: 'index.php?route=sale/customer/addReward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
 		type: 'POST',
 		dataType: 'html',
 		data: 'description=' + encodeURIComponent($("#tab-reward input[name='description']").val()) + '&points=' + encodeURIComponent($("#tab-reward input[name='points']").val()),
@@ -684,7 +684,7 @@ function addRewardPoints() {
 function deleteReward(customer_reward_id) {
 	if (confirm('<?php echo addslashes($text_delete_reward_confirm); ?>')) {
 		$.ajax({
-			url: 'index.php?route=sale/customer/delete_reward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+			url: 'index.php?route=sale/customer/deleteReward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
 			type: 'POST',
 			data: {"customer_id":<?php echo (isset($customer_id) ? $customer_id : 0); ?>, "customer_reward_id":customer_reward_id},
 			dataType: 'html',
@@ -707,7 +707,7 @@ function addBanIP(ip) {
 	var id = ip.replace(/\./g, '-');
 
 	$.ajax({
-		url: 'index.php?route=sale/customer/addbanip&token=<?php echo $token; ?>',
+		url: 'index.php?route=sale/customer/addbanIp&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'ip=' + encodeURIComponent(ip),
@@ -739,7 +739,7 @@ function removeBanIP(ip) {
 	var id = ip.replace(/\./g, '-');
 
 	$.ajax({
-		url: 'index.php?route=sale/customer/removebanip&token=<?php echo $token; ?>',
+		url: 'index.php?route=sale/customer/removeBanIp&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'ip=' + encodeURIComponent(ip),

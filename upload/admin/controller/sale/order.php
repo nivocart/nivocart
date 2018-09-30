@@ -190,7 +190,6 @@ class ControllerSaleOrder extends Controller {
 		if (isset($this->request->post['selected']) && ($this->validateDelete())) {
 			foreach ($this->request->post['selected'] as $order_id) {
 				$this->model_sale_order->deleteOrder($order_id);
-				$this->openbay->deleteOrder($order_id);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -2208,7 +2207,6 @@ class ControllerSaleOrder extends Controller {
 
 			$this->data['heading_title'] = $this->language->get('heading_title');
 
-			$this->data['text_amazon_order_id'] = $this->language->get('text_amazon_order_id');
 			$this->data['text_name'] = $this->language->get('text_name');
 			$this->data['text_order_id'] = $this->language->get('text_order_id');
 			$this->data['text_invoice_no'] = $this->language->get('text_invoice_no');
@@ -2376,8 +2374,6 @@ class ControllerSaleOrder extends Controller {
 			$this->data['shipping_label'] = $this->url->link('sale/order/shippingLabel', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
 			$this->data['delivery_note'] = $this->url->link('sale/order/deliveryNote', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
 			$this->data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
-
-			$this->data['amazon_order_id'] = $order_info['amazon_order_id'];
 
 			$this->data['order_id'] = (int)$this->request->get['order_id'];
 

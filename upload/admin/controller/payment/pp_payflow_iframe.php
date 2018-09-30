@@ -356,9 +356,9 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 					$remaining = $root_transaction['amount'] - $captured + $refunded;
 				}
 
-				$this->data['paypal_order']['captured'] = $this->currency->format($captured, strtoupper($paypal_order['currency_code']),1 ,true);
-				$this->data['paypal_order']['refunded'] = $this->currency->format($refunded, strtoupper($paypal_order['currency_code']),1 ,true);
-				$this->data['paypal_order']['remaining'] = $this->currency->format($remaining, strtoupper($paypal_order['currency_code']),1 ,true);
+				$this->data['paypal_order']['captured'] = $this->currency->format($captured, strtoupper($paypal_order['currency_code']), 1, true);
+				$this->data['paypal_order']['refunded'] = $this->currency->format($refunded, strtoupper($paypal_order['currency_code']), 1, true);
+				$this->data['paypal_order']['remaining'] = $this->currency->format($remaining, strtoupper($paypal_order['currency_code']), 1, true);
 				$this->data['paypal_order']['remaining_raw'] = number_format($remaining, 2, '.', '');
 
 				$this->template = 'payment/pp_payflow_iframe_order.tpl';

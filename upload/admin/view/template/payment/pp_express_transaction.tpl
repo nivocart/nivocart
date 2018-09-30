@@ -52,7 +52,9 @@ function resendTransaction(element) {
 			$(element).after('<img src="view/image/loading.gif" alt="Loading..." class="loading" />');
 		},
 	})
-	.fail(function(jqXHR, textStatus, errorThrown) { alert('Status: ' + textStatus + '\r\nError: ' + errorThrown); })
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
+	})
 	.done(function(json) {
 		if ('error' in json) {
 			$('#paypal-transaction').before('<div class="warning" style="display:none;">' + json['error'] + '</div>');

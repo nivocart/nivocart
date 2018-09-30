@@ -86,7 +86,9 @@ $('#form').on('submit', function(e) {
 				$('#button-refund').after('<img src="view/image/loading.gif" alt="Loading..." class="loading" id="img-loading-refund" style="float:right;" />');
 			},
 		})
-		.fail(function(jqXHR, textStatus, errorThrown) { alert('Status: ' + textStatus + '\r\nError: ' + errorThrown); })
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
+		})
 		.done(function(json) {
 			if ('error' in json) {
 				$('.box').before('<div class="warning" style="display:none;">' + json['error'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');

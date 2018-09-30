@@ -83,7 +83,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_product'])) {
 			foreach ($data['order_product'] as $order_product) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (float)$order_product['price'] . "', total = '" . (float)$order_product['total'] . "', tax = '" . (float)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (float)$order_product['price'] . "', `total` = '" . (float)$order_product['total'] . "', tax = '" . (float)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
 
 				$order_product_id = $this->db->getLastId();
 
@@ -182,7 +182,7 @@ class ModelSaleOrder extends Model {
 		}
 
 		// Update order total
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `total` = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
 
 		// Notify OpenBay Pro
 		$this->openbay->orderNew((int)$order_id);
@@ -253,7 +253,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_product'])) {
 			foreach ($data['order_product'] as $order_product) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_product_id = '" . (int)$order_product['order_product_id'] . "', order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (float)$order_product['price'] . "', total = '" . (float)$order_product['total'] . "', tax = '" . (float)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_product_id = '" . (int)$order_product['order_product_id'] . "', order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (float)$order_product['price'] . "', `total` = '" . (float)$order_product['total'] . "', tax = '" . (float)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
 
 				$order_product_id = $this->db->getLastId();
 
@@ -364,7 +364,7 @@ class ModelSaleOrder extends Model {
 			}
 		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET total = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `total` = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
 
 		$this->cache->delete('product.bestseller');
 	}
@@ -396,6 +396,7 @@ class ModelSaleOrder extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_transaction WHERE order_id = '" . (int)$order_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_reward WHERE order_id = '" . (int)$order_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "affiliate_transaction WHERE order_id = '" . (int)$order_id . "'");
+
 		$this->db->query("DELETE `or`, ort FROM " . DB_PREFIX . "order_recurring `or`, " . DB_PREFIX . "order_recurring_transaction ort WHERE order_id = '" . (int)$order_id . "' AND ort.order_recurring_id = `or`.order_recurring_id");
 
 		$this->cache->delete('product.bestseller');
@@ -481,26 +482,7 @@ class ModelSaleOrder extends Model {
 				$language_directory = '';
 			}
 
-			$amazonOrderId = '';
-
-			if ($this->config->get('amazon_status') == 1) {
-				$amazon_query = $this->db->query("SELECT amazon_order_id FROM " . DB_PREFIX . "amazon_order WHERE order_id = " . (int)$order_query->row['order_id'] . " LIMIT 0,1")->row;
-
-				if (isset($amazon_query['amazon_order_id']) && !empty($amazon_query['amazon_order_id'])) {
-					$amazonOrderId = $amazon_query['amazon_order_id'];
-				}
-			}
-
-			if ($this->config->get('amazonus_status') == 1) {
-				$amazon_query = $this->db->query("SELECT amazonus_order_id FROM " . DB_PREFIX . "amazonus_order WHERE order_id = " . (int)$order_query->row['order_id'] . " LIMIT 0,1")->row;
-
-				if (isset($amazon_query['amazonus_order_id']) && !empty($amazon_query['amazonus_order_id'])) {
-					$amazonOrderId = $amazon_query['amazonus_order_id'];
-				}
-			}
-
 			return array(
-				'amazon_order_id'         => $amazonOrderId,
 				'order_id'                => $order_query->row['order_id'],
 				'invoice_no'              => $order_query->row['invoice_no'],
 				'invoice_prefix'          => $order_query->row['invoice_prefix'],
@@ -581,7 +563,7 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getOrders($data = array()) {
-		$sql = "SELECT o.order_id, o.email, o.customer_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o";
+		$sql = "SELECT o.order_id, o.email, o.customer_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, o.`total`, o.currency_code, o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o";
 
 		if (isset($data['filter_order_status_id']) && !is_null($data['filter_order_status_id'])) {
 			$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -610,7 +592,7 @@ class ModelSaleOrder extends Model {
 		}
 
 		if (!empty($data['filter_total'])) {
-			$sql .= " AND o.total = '" . (float)$data['filter_total'] . "'";
+			$sql .= " AND o.`total` = '" . (float)$data['filter_total'] . "'";
 		}
 
 		$sort_data = array(
@@ -621,7 +603,7 @@ class ModelSaleOrder extends Model {
 			'status',
 			'o.date_added',
 			'o.date_modified',
-			'o.total'
+			'o.`total`'
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -696,7 +678,7 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getTotalOrders($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order`";
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order`";
 
 		if (isset($data['filter_order_status_id']) && !is_null($data['filter_order_status_id'])) {
 			$sql .= " WHERE order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -721,7 +703,7 @@ class ModelSaleOrder extends Model {
 		}
 
 		if (!empty($data['filter_total'])) {
-			$sql .= " AND total = '" . (float)$data['filter_total'] . "'";
+			$sql .= " AND `total` = '" . (float)$data['filter_total'] . "'";
 		}
 
 		$query = $this->db->query($sql);
@@ -730,55 +712,55 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getTotalOrdersByStoreId($store_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE store_id = '" . (int)$store_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE store_id = '" . (int)$store_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalOrdersByOrderStatusId($order_status_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id = '" . (int)$order_status_id . "' AND order_status_id > '0'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id = '" . (int)$order_status_id . "' AND order_status_id > '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalOrdersByLanguageId($language_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE language_id = '" . (int)$language_id . "' AND order_status_id > '0'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE language_id = '" . (int)$language_id . "' AND order_status_id > '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalOrdersByCurrencyId($currency_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE currency_id = '" . (int)$currency_id . "' AND order_status_id > '0'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE currency_id = '" . (int)$currency_id . "' AND order_status_id > '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalSales() {
-		$query = $this->db->query("SELECT SUM(total) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0'");
+		$query = $this->db->query("SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalSalesByYear($year) {
-		$query = $this->db->query("SELECT SUM(total) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND YEAR(date_added) = '" . (int)$year . "'");
+		$query = $this->db->query("SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND YEAR(date_added) = '" . (int)$year . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalSalesByMonth($month) {
-      	$query = $this->db->query("SELECT SUM(total) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $month . "'");
+      	$query = $this->db->query("SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $month . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalProductTaxByOrderId($order_id) {
-		$query = $this->db->query("SELECT SUM(tax * quantity) AS total FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+		$query = $this->db->query("SELECT SUM(tax * quantity) AS `total` FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalTaxValueByOrderId($order_id) {
-		$query = $this->db->query("SELECT SUM(ot.value) AS total FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.order_id = '" . (int)$order_id . "' AND ot.code = 'tax'");
+		$query = $this->db->query("SELECT SUM(ot.value) AS `total` FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.order_id = '" . (int)$order_id . "' AND ot.code = 'tax'");
 
 		return $query->row['total'];
 	}
@@ -904,10 +886,6 @@ class ModelSaleOrder extends Model {
 			$mail->setHtml($html);
 			$mail->send();
 		}
-
-		$this->load->model('payment/amazon_checkout');
-
-		$this->model_payment_amazon_checkout->orderStatusChange($order_id, $data);
 	}
 
 	public function getOrderHistories($order_id, $start = 0, $limit = 10) {
@@ -955,7 +933,7 @@ class ModelSaleOrder extends Model {
 			$implode[] = "op.product_id = '" . (int)$product_id . "'";
 		}
 
-		$query = $this->db->query("SELECT COUNT(DISTINCT email) AS total FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE (" . implode(" OR ", $implode) . ") AND o.order_status_id <> '0'");
+		$query = $this->db->query("SELECT COUNT(DISTINCT email) AS `total` FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE (" . implode(" OR ", $implode) . ") AND o.order_status_id <> '0'");
 
 		return $query->row['total'];
 	}

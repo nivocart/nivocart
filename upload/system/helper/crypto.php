@@ -34,14 +34,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *
- * The function is providing, at least at the systems tested :), 
+ * The function is providing, at least at the systems tested :),
  * $len bytes of entropy under any PHP installation or operating system.
  * The execution time should be at most 10-20 ms in any system.
  */
 
 /**
  * @param string $algo  Hash algorithm to return results in using PHP's hash() function. Must be available in hash_algos(). Default/fallback MD5.
- * @param integer $len  Number of bytes of randomness to generate.  Default 12.
+ * @param integer $len  Number of bytes of randomness to generate. Default 12.
  * @return string  Resulting hash of random bytes.
  */
 function hash_rand($algo, $len = 12) {
@@ -59,7 +59,7 @@ function hash_rand($algo, $len = 12) {
 
 	/*
 	 * Our primary choice for a cryptographic strong randomness function is
-	 * openssl_random_pseudo_bytes. 
+	 * openssl_random_pseudo_bytes.
 	 */
 	$SSLstr = '4'; // http://xkcd.com/221/
 
@@ -72,10 +72,10 @@ function hash_rand($algo, $len = 12) {
 	}
 
 	/*
-	 * If mcrypt extension is available then we use it to gather entropy from 
-	 * the operating system's PRNG. This is better than reading /dev/urandom 
-	 * directly since it avoids reading larger blocks of data than needed. 
-	 * Older versions of mcrypt_create_iv may be broken or take too much time 
+	 * If mcrypt extension is available then we use it to gather entropy from
+	 * the operating system's PRNG. This is better than reading /dev/urandom
+	 * directly since it avoids reading larger blocks of data than needed.
+	 * Older versions of mcrypt_create_iv may be broken or take too much time
 	 * to finish so we only use this function with PHP 5.3.7 and above.
 	 * @see https://bugs.php.net/bug.php?id=55169
 	 */
@@ -88,11 +88,11 @@ function hash_rand($algo, $len = 12) {
 	}
 
 	/*
-	 * No build-in crypto randomness function found. We collect any entropy 
+	 * No build-in crypto randomness function found. We collect any entropy
 	 * available in the PHP core PRNGs along with some filesystem info and memory
-	 * stats. To make this data cryptographically strong we add data either from 
-	 * /dev/urandom or if it's unavailable, we gather entropy by measuring the 
-	 * time needed to compute a number of SHA-1 hashes. 
+	 * stats. To make this data cryptographically strong we add data either from
+	 * /dev/urandom or if it's unavailable, we gather entropy by measuring the
+	 * time needed to compute a number of SHA-1 hashes.
 	 */
 	$str = '';
 	$bits_per_round = 2; // bits of entropy collected in each clock drift round

@@ -149,22 +149,38 @@ class ControllerFeedStoreya extends Controller {
 
 		$text = str_replace($formattags, $replacevals, $text);
 
-		$in[] = '@&(amp|#038);@i'; $out[] = '&';
-		$in[] = '@&(#036);@i'; $out[] = '$';
-		$in[] = '@&(quot);@i'; $out[] = '"';
-		$in[] = '@&(#039);@i'; $out[] = '\'';
-		$in[] = '@&(nbsp|#160);@i'; $out[] = ' ';
-		$in[] = '@&(hellip|#8230);@i'; $out[] = '...';
-		$in[] = '@&(copy|#169);@i'; $out[] = '(c)';
-		$in[] = '@&(trade|#129);@i'; $out[] = '(tm)';
-		$in[] = '@&(lt|#60);@i'; $out[] = '<';
-		$in[] = '@&(gt|#62);@i'; $out[] = '>';
-		$in[] = '@&(laquo);@i'; $out[] = '«';
-		$in[] = '@&(raquo);@i'; $out[] = '»';
-		$in[] = '@&(deg);@i'; $out[] = '°';
-		$in[] = '@&(mdash);@i'; $out[] = '—';
-		$in[] = '@&(reg);@i'; $out[] = '®';
-		$in[] = '@&(–);@i'; $out[] = '-';
+		$in[] = '@&(amp|#038);@i';
+		$out[] = '&';
+		$in[] = '@&(#036);@i';
+		$out[] = '$';
+		$in[] = '@&(quot);@i';
+		$out[] = '"';
+		$in[] = '@&(#039);@i';
+		$out[] = '\'';
+		$in[] = '@&(nbsp|#160);@i';
+		$out[] = ' ';
+		$in[] = '@&(hellip|#8230);@i';
+		$out[] = '...';
+		$in[] = '@&(copy|#169);@i';
+		$out[] = '(c)';
+		$in[] = '@&(trade|#129);@i';
+		$out[] = '(tm)';
+		$in[] = '@&(lt|#60);@i';
+		$out[] = '<';
+		$in[] = '@&(gt|#62);@i';
+		$out[] = '>';
+		$in[] = '@&(laquo);@i';
+		$out[] = '«';
+		$in[] = '@&(raquo);@i';
+		$out[] = '»';
+		$in[] = '@&(deg);@i';
+		$out[] = '°';
+		$in[] = '@&(mdash);@i';
+		$out[] = '—';
+		$in[] = '@&(reg);@i';
+		$out[] = '®';
+		$in[] = '@&(–);@i';
+		$out[] = '-';
 
 		$text = preg_replace($in, $out, $text);
 

@@ -7,7 +7,7 @@ class ModelToolSitemap extends Model {
 		$output = '';
 
 		//Generating TEXT sitemap
-		$fp = fopen('../sitemap.txt','w+');
+		$fp = fopen('../sitemap.txt', 'w+');
 		fwrite($fp, $this->getTextLinks());
 		fwrite($fp, $this->getTextCategories(0));
 		fclose($fp);
@@ -23,7 +23,7 @@ class ModelToolSitemap extends Model {
 		$output = '';
 
 		//Generating XML sitemap
-		$fp = fopen('../sitemap.xml','w+');
+		$fp = fopen('../sitemap.xml', 'w+');
 		fwrite($fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r");
 		fwrite($fp, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r");
 		fwrite($fp, $this->getCommonPages());
@@ -46,10 +46,10 @@ class ModelToolSitemap extends Model {
 		$output = '';
 
 		// Generating GZIP sitemap (from XML)
-		if ($fp_out = gzopen('../sitemap.xml.gz','wb9')) {
-			if ($fp_in = fopen('../sitemap.xml','rb')) {
+		if ($fp_out = gzopen('../sitemap.xml.gz', 'wb9')) {
+			if ($fp_in = fopen('../sitemap.xml', 'rb')) {
 				while (!feof($fp_in)) {
-					gzwrite ($fp_out, fread($fp_in,10000));
+					gzwrite ($fp_out, fread($fp_in, 10000));
 				}
 				fclose($fp_in);
 			}

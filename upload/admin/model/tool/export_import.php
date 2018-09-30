@@ -7172,18 +7172,18 @@ class ModelToolExportImport extends Model {
 		$j = 0;
 
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname'),20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname'),20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company'),30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company_id'),10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_id'),15)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_1'),30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_2'),30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('city'),30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('postcode'),10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('zone'),20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('country'),20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('default'),5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname'), 20)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname'), 20)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company'), 30)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company_id'), 10)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_id'), 15)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_1'), 30)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_2'), 30)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('city'), 30)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('postcode'), 10)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('zone'), 20)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('country'), 20)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('default'), 5)+1);
 
 		// The heading row and column styles
 		$styles = array();

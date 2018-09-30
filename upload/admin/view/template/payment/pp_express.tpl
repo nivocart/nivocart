@@ -359,7 +359,7 @@
             <td style="vertical-align:top;">
               <div class="image"><img src="<?php echo $thumb; ?>" alt="" id="thumb" />
                 <input type="hidden" name="pp_express_logo" value="<?php echo $pp_express_logo; ?>" id="image" /><br />
-                <a onclick="image_upload('image', 'thumb');" class="button-browse"></a><a onclick="$('#thumb').attr('src', '<?php echo $no_image; ?>'); $('#image').attr('value', '');" class="button-recycle"></a>
+                <a onclick="imageUpload('image', 'thumb');" class="button-browse"></a><a onclick="$('#thumb').attr('src', '<?php echo $no_image; ?>'); $('#image').attr('value', '');" class="button-recycle"></a>
               </div>
             </td>
           </tr>
@@ -398,7 +398,7 @@
 //--></script>
 
 <script type="text/javascript"><!--
-function image_upload(field, thumb) {
+function imageUpload(field, thumb) {
 	$('#dialog').remove();
 
 	$('#content').prepend('<div id="dialog" style="padding:3px 0 0 0;"><iframe src="index.php?route=common/filemanager&token=<?php echo $token; ?>&field=' + encodeURIComponent(field) + '" style="padding:0; margin:0; display:block; width:100%; height:100%;" frameborder="no" scrolling="auto"></iframe></div>');

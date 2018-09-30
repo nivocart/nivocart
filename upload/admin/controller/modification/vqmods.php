@@ -464,13 +464,20 @@ class ControllerModificationVQmods extends Controller {
 
 			if ($this->request->files['vqmod_file']['error'] > 0) {
 				switch ($this->request->files['vqmod_file']['error']) {
-					case 1: $this->session->data['error'] = $this->language->get('error_ini_max_file_size'); break;
-					case 2: $this->session->data['error'] = $this->language->get('error_form_max_file_size'); break;
-					case 3: $this->session->data['error'] = $this->language->get('error_partial_upload'); break;
-					case 4: $this->session->data['error'] = $this->language->get('error_no_upload'); break;
-					case 6: $this->session->data['error'] = $this->language->get('error_no_temp_dir'); break;
-					case 7: $this->session->data['error'] = $this->language->get('error_write_fail'); break;
-					case 8: $this->session->data['error'] = $this->language->get('error_php_conflict'); break;
+					case 1: $this->session->data['error'] = $this->language->get('error_ini_max_file_size');
+					break;
+					case 2: $this->session->data['error'] = $this->language->get('error_form_max_file_size');
+					break;
+					case 3: $this->session->data['error'] = $this->language->get('error_partial_upload');
+					break;
+					case 4: $this->session->data['error'] = $this->language->get('error_no_upload');
+					break;
+					case 6: $this->session->data['error'] = $this->language->get('error_no_temp_dir');
+					break;
+					case 7: $this->session->data['error'] = $this->language->get('error_write_fail');
+					break;
+					case 8: $this->session->data['error'] = $this->language->get('error_php_conflict');
+					break;
 					default: $this->session->data['error'] = $this->language->get('error_unknown');
 				}
 
@@ -801,6 +808,7 @@ class ControllerModificationVQmods extends Controller {
 				return false;
 			}
 		}
+
 		clearstatcache();
 		return true;
 	}

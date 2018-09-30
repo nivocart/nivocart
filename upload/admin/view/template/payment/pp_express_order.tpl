@@ -55,7 +55,7 @@ $('#button-capture').on('click', function() {
 		}
 
 		$.ajax({
-			url: 'index.php?route=payment/pp_express/do_capture&token=<?php echo $token; ?>',
+			url: 'index.php?route=payment/pp_express/doCapture&token=<?php echo $token; ?>',
 			type: 'POST',
 			dataType: 'json',
 			data: {
@@ -69,7 +69,9 @@ $('#button-capture').on('click', function() {
 				$('#button-capture').after('<img src="view/image/loading.gif" alt="Loading..." class="loading" id="img-loading-capture" />');
 			},
 		})
-		.fail(function(jqXHR, textStatus, errorThrown) { alert('Status: ' + textStatus + '\r\nError: ' + errorThrown); })
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
+		})
 		.done(function(json) {
 			if ('error' in json) {
 				$('#paypal-transaction').before('<div class="warning" style="display:none;">' + json['error'] + '</div>');
@@ -102,7 +104,7 @@ $('#button-capture').on('click', function() {
 $('#button-void').on('click', function() {
 	if (confirm('<?php echo addslashes($text_confirm_void); ?>')) {
 		$.ajax({
-			url: 'index.php?route=payment/pp_express/do_void&token=<?php echo $token; ?>',
+			url: 'index.php?route=payment/pp_express/doVoid&token=<?php echo $token; ?>',
 			type: 'POST',
 			dataType: 'json',
 			data: {'order_id':<?php echo $order_id; ?> },
@@ -112,7 +114,9 @@ $('#button-void').on('click', function() {
 				$('#button-void').after('<img src="view/image/loading.gif" alt="Loading..." class="loading" id="img-loading-void" />');
 			},
 		})
-		.fail(function(jqXHR, textStatus, errorThrown) { alert('Status: ' + textStatus + '\r\nError: ' + errorThrown); })
+		.fail(function(jqXHR, textStatus, errorThrown) {
+			alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
+		})
 		.done(function(json) {
 			if ('error' in json) {
 				$('#paypal-transaction').before('<div class="warning" style="display:none;">' + json['error'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');

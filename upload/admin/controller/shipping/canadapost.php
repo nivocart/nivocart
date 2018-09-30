@@ -221,7 +221,7 @@ class ControllerShippingCanadaPost extends Controller {
 			}
 
 			// Validate handling cost
-			if (!preg_match('/^[0-9]{1,2}(\.[0-9]{1,2})?$/',$this->request->post['canadapost_handling'])) {
+			if (!preg_match('/^[0-9]{1,2}(\.[0-9]{1,2})?$/', $this->request->post['canadapost_handling'])) {
 				$this->error['warning'] = "Additional Handling Cost must be a decimal value eg. (2.00). Maximum value (99.99)";
 			} else {
 				$this->request->post['canadapost_handling'] = sprintf("%.2f", $this->request->post['canadapost_handling']);

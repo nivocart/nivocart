@@ -96,12 +96,18 @@ class ControllerToolSitemap extends Controller {
 			$button = $this->request->post['buttonForm'];
 
 			switch ($button) {
-				case "gentext": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateText', 'token=' . $this->session->data['token'], 'SSL')); break;
-				case "genxml": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateXml', 'token=' . $this->session->data['token'], 'SSL')); break;
-				case "gengzip": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateGzip', 'token=' . $this->session->data['token'], 'SSL')); break;
-				case "loadtext": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadText', 'token=' . $this->session->data['token'], 'SSL')); break;
-				case "loadxml": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadXml', 'token=' . $this->session->data['token'], 'SSL')); break;
-				case "loadgzip": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadGzip', 'token=' . $this->session->data['token'], 'SSL')); break;
+				case "gentext": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateText', 'token=' . $this->session->data['token'], 'SSL'));
+				break;
+				case "genxml": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateXml', 'token=' . $this->session->data['token'], 'SSL'));
+				break;
+				case "gengzip": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateGzip', 'token=' . $this->session->data['token'], 'SSL'));
+				break;
+				case "loadtext": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadText', 'token=' . $this->session->data['token'], 'SSL'));
+				break;
+				case "loadxml": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadXml', 'token=' . $this->session->data['token'], 'SSL'));
+				break;
+				case "loadgzip": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadGzip', 'token=' . $this->session->data['token'], 'SSL'));
+				break;
 			}
 		}
 
