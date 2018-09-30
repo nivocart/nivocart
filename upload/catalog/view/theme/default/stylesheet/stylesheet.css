@@ -797,8 +797,8 @@ a.button, a.button-danger {
 }
 input.button, input.button-danger, button.button {
 	border: 0;
-	height: 24px;
-	padding: 0 14px;
+	height: 28px;
+	padding: 3px 15px;
 	font-size: 14px;
 	font-weight: bold;
 	line-height: 16px;
@@ -1111,7 +1111,7 @@ a.button-add:hover {
 .box-product > div .box-product-bottom > div a {
 	color: #777;
 	font-weight: bold;
-	font-size: 26px;
+	font-size: 24px;
 	text-decoration: none;
 	line-height: 40px;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
@@ -1699,7 +1699,7 @@ ul.box-filter > li ul {
 	overflow: auto;
 }
 .product-grid > div {
-	width: 23%;
+	width: 23.1%;
 	min-width: 160px;
 	display: inline-block;
 	vertical-align: top;
@@ -2855,25 +2855,25 @@ table.order-options tr td #payment-method h2 {
 		width: auto;
 		margin: 0 10px;
 	}
-	#column-left {
+	#content-left {
 		float: left;
-		width: 190px;
+		width: 250px;
 	}
-	#column-right {
+	#content-right {
 		float: right;
-		width: 190px;
+		width: 250px;
 	}
 	#content {
 		padding: 0 10px;
 	}
-	#column-left + #column-right + #content, #column-left + #content {
-		margin-left: 210px;
+	#content-left + #content-right + #content, #content-left + #content {
+		margin-left: 270px;
 	}
-	#column-right + #content {
-		margin-right: 210px;
+	#content-right + #content {
+		margin-right: 270px;
 	}
 	/* Product Filter */
-	#column-left + #column-right + #content .product-filter .product-compare {
+	#content-left + #content-right + #content .product-filter .product-compare {
 		clear: left;
 		padding: 4px 0 0 2px;
 	}
@@ -2897,25 +2897,29 @@ table.order-options tr td #payment-method h2 {
 		width: auto;
 		margin: 0 10px;
 	}
-	#column-left {
+	#content-left {
 		float: left;
-		width: 190px;
+		width: 220px;
 	}
-	#column-right {
+	#content-right {
 		float: right;
-		width: 190px;
+		width: 220px;
 	}
 	#content {
 		padding: 0 10px;
 	}
-	#column-left + #column-right + #content, #column-left + #content {
-		margin-left: 210px;
+	#content-left + #content-right + #content, #content-left + #content {
+		margin-left: 240px;
 	}
-	#column-right + #content {
-		margin-right: 210px;
+	#content-right + #content {
+		margin-right: 240px;
+	}
+	/* Product Grid */
+	.product-grid > div {
+		width: 30%;
 	}
 	/* Product Filter */
-	#column-left + #column-right + #content .product-filter .product-compare {
+	#content-left + #content-right + #content .product-filter .product-compare {
 		clear: left;
 		padding: 4px 0 0 2px;
 	}
@@ -2985,13 +2989,22 @@ table.order-options tr td #payment-method h2 {
 		clear: left;
 		float: left;
 	}
-	#column-left, #column-right {
-		display: none;
+	#content-left {
+		position: relative;
+		clear: left;
+		float: left;
+		width: 300px;
 	}
-	#column-left + #column-right + #content, #column-left + #content {
+	#content-right {
+		position: relative;
+		clear: left;
+		float: left;
+		width: 300px;
+	}
+	#content-left + #content-right + #content, #content-left + #content {
 		margin-left: 5px;
 	}
-	#column-right + #content {
+	#content-right + #content {
 		margin-right: 5px;
 	}
 	/* Header */
@@ -3063,10 +3076,14 @@ table.order-options tr td #payment-method h2 {
 		clear: left;
 		float: left;
 	}
+	/* Product Grid */
+	.product-grid > div {
+		width: 45%;
+	}
 	/* Product Filter */
-	#column-left + #content .product-filter .product-compare,
-	#column-right + #content .product-filter .product-compare,
-	#column-left + #column-right + #content .product-filter .product-compare {
+	#content-left + #content .product-filter .product-compare,
+	#content-right + #content .product-filter .product-compare,
+	#content-left + #content-right + #content .product-filter .product-compare {
 		clear: left;
 		padding: 4px 0 0 2px;
 	}
@@ -3143,13 +3160,22 @@ table.order-options tr td #payment-method h2 {
 		clear: left;
 		float: left;
 	}
-	#column-left, #column-right {
-		display: none;
+	#content-left {
+		position: relative;
+		clear: left;
+		float: left;
+		width: 300px;
 	}
-	#column-left + #column-right + #content, #column-left + #content {
+	#content-right {
+		position: relative;
+		clear: left;
+		float: left;
+		width: 300px;
+	}
+	#content-left + #content-right + #content, #content-left + #content {
 		margin-left: 5px;
 	}
-	#column-right + #content {
+	#content-right + #content {
 		margin-right: 5px;
 	}
 	/* Header */
@@ -3221,8 +3247,14 @@ table.order-options tr td #payment-method h2 {
 	.return-name, .return-quantity, .return-reason, .return-opened {
 		width: 100%;
 	}
+	/* Product Grid */
+	.product-grid > div {
+		width: 95%;
+	}
 	/* Product Filter */
-	.product-compare {
+	#content-left + #content .product-filter .product-compare,
+	#content-right + #content .product-filter .product-compare,
+	#content-left + #content-right + #content .product-filter .product-compare {
 		clear: left;
 		padding: 4px 0 0 2px;
 	}
@@ -3325,13 +3357,22 @@ table.order-options tr td #payment-method h2 {
 		clear: left;
 		float: left;
 	}
-	#column-left, #column-right {
-		display: none;
+	#content-left {
+		position: relative;
+		clear: left;
+		float: left;
+		width: 300px;
 	}
-	#column-left + #column-right + #content, #column-left + #content {
+	#content-right {
+		position: relative;
+		clear: left;
+		float: left;
+		width: 300px;
+	}
+	#content-left + #content-right + #content, #content-left + #content {
 		margin-left: 5px;
 	}
-	#column-right + #content {
+	#content-right + #content {
 		margin-right: 5px;
 	}
 	/* Header */
@@ -3403,8 +3444,14 @@ table.order-options tr td #payment-method h2 {
 	.return-name, .return-quantity, .return-reason, .return-opened {
 		width: 100%;
 	}
+	/* Product Grid */
+	.product-grid > div {
+		width: 95%;
+	}
 	/* Product Filter */
-	.product-compare {
+	#content-left + #content .product-filter .product-compare,
+	#content-right + #content .product-filter .product-compare,
+	#content-left + #content-right + #content .product-filter .product-compare {
 		clear: left;
 		padding: 4px 0 0 2px;
 	}

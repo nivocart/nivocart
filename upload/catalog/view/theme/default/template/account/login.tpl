@@ -31,19 +31,19 @@
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" name="login">
         <div class="content">
           <p><?php echo $text_i_am_returning_customer; ?></p>
-          <b><?php echo $entry_email; ?></b><br />
+          <?php echo $entry_email; ?><br />
           <input type="text" name="email" value="<?php echo $email; ?>" size="25" />
           <br />
           <br />
-          <b><?php echo $entry_password; ?></b><br />
+          <?php echo $entry_password; ?><br />
           <input type="password" name="password" value="<?php echo $password; ?>" />
           <br />
           <a href="<?php echo $forgotten; ?>"><?php echo $text_forgotten; ?></a><br />
           <br />
           <button type="submit" class="button"><i class="fa fa-sign-in"></i> &nbsp; <?php echo $button_login; ?></button>
-          <?php if ($redirect) { ?>
-            <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
-          <?php } ?>
+        <?php if ($redirect) { ?>
+          <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
+        <?php } ?>
         </div>
       </form>
     </div>
