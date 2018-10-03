@@ -23,8 +23,8 @@
  * @package    PHPExcel_Cell
  * @copyright  Copyright (c) 2015 J.Neuhoff - mhccorp.com
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.11.0, released: 01-05-2018
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -43,7 +43,7 @@ if (!defined('PHPEXCEL_ROOT')) {
  * @package    PHPExcel_Cell
  * @copyright  Copyright (c) 2015 J.Neuhoff - mhccorp.com
  */
-class PHPExcel_Cell_ExportImportValueBinder extends PHPExcel_Cell_DefaultValueBinder implements PHPExcel_Cell_IValueBinder { 
+class PHPExcel_Cell_ExportImportValueBinder extends PHPExcel_Cell_DefaultValueBinder implements PHPExcel_Cell_IValueBinder {
 	/**
 	* Bind value to a cell, preserving possible leading zeros
 	* See http://stackoverflow.com/questions/12457610/reading-numbers-as-text-format-with-phpexcel
@@ -52,21 +52,21 @@ class PHPExcel_Cell_ExportImportValueBinder extends PHPExcel_Cell_DefaultValueBi
 	* @param  mixed          $value   Value to bind in cell
 	* @return boolean
 	*/
-	public function bindValue(PHPExcel_Cell $cell, $value = null) { 
-		// sanitize UTF-8 strings 
-		if (is_string($value) || strpos($value, "\n") !== false) { 
-			$value = PHPExcel_Shared_String::SanitizeUTF8($value); 
-		} 
+	public function bindValue(PHPExcel_Cell $cell, $value = null) {
+		// sanitize UTF-8 strings
+		if (is_string($value) || strpos($value, "\n") !== false) {
+			$value = PHPExcel_Shared_String::SanitizeUTF8($value);
+		}
 
 		// Preserve numeric string, including leading zeros, if it is a text format
 		$format = $cell->getStyle()->getNumberFormat()->getFormatCode();
 
 		if ($format == PHPExcel_Style_NumberFormat::FORMAT_TEXT) {
-			$cell->setValueExplicit($value, PHPExcel_Cell_DataType::TYPE_STRING); 
-			return true; 
+			$cell->setValueExplicit($value, PHPExcel_Cell_DataType::TYPE_STRING);
+			return true;
 		}
 
-		// Not bound yet? Use default value parent... 
-		return parent::bindValue($cell, $value); 
-	} 
+		// Not bound yet? Use default value parent...
+		return parent::bindValue($cell, $value);
+	}
 }

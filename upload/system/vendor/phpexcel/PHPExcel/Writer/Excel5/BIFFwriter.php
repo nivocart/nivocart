@@ -22,8 +22,8 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 // Original file header of PEAR::Spreadsheet_Excel_Writer_BIFFwriter (used as the base for this class):
@@ -68,8 +68,7 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Writer_Excel5_BIFFwriter
-{
+class PHPExcel_Writer_Excel5_BIFFwriter {
 	/**
 	 * The byte order of this architecture. 0 => little endian, 1 => big endian
 	 * @var integer
@@ -98,8 +97,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Constructor
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_data       = '';
 		$this->_datasize   = 0;
 //		$this->_limit      = 8224;
@@ -111,8 +109,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * @return int
 	 */
-	public static function getByteOrder()
-	{
+	public static function getByteOrder() {
 		if (!isset(self::$_byte_order)) {
 			// Check if "pack" gives the required IEEE 64bit float
 			$teststr = pack("d", 1.2345);
@@ -137,8 +134,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	 * @param string $data binary data to append
 	 * @access private
 	 */
-	function _append($data)
-	{
+	function _append($data) {
 		if (strlen($data) - 4 > $this->_limit) {
 			$data = $this->_addContinue($data);
 		}
@@ -152,8 +148,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	 * @param string $data binary data to write
 	 * @return string
 	 */
-	public function writeData($data)
-	{
+	public function writeData($data) {
 		if (strlen($data) - 4 > $this->_limit) {
 			$data = $this->_addContinue($data);
 		}
@@ -170,8 +165,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	 *                       0x0010 Worksheet.
 	 * @access private
 	 */
-	function _storeBof($type)
-	{
+	function _storeBof($type) {
 		$record  = 0x0809;			// Record identifier	(BIFF5-BIFF8)
 		$length = 0x0010;
 
@@ -193,8 +187,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * @access private
 	 */
-	function _storeEof()
-	{
+	function _storeEof() {
 		$record = 0x000A;   // Record identifier
 		$length = 0x0000;   // Number of bytes to follow
 
@@ -207,8 +200,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * @access private
 	 */
-	public function writeEof()
-	{
+	public function writeEof() {
 		$record = 0x000A;   // Record identifier
 		$length = 0x0000;   // Number of bytes to follow
 		$header = pack("vv", $record, $length);
@@ -227,8 +219,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 	 * @return string        A very convenient string of continue blocks
 	 * @access private
 	 */
-	function _addContinue($data)
-	{
+	function _addContinue($data) {
 		$limit = $this->_limit;
 		$record = 0x003C;         // Record identifier
 
@@ -246,9 +237,9 @@ class PHPExcel_Writer_Excel5_BIFFwriter
 		}
 
 		// Retrieve the last chunk of data
-		$header  = pack("vv", $record, strlen($data) - $i);
-		$tmp    .= $header;
-		$tmp    .= substr($data, $i, strlen($data) - $i);
+		$header = pack("vv", $record, strlen($data) - $i);
+		$tmp .= $header;
+		$tmp .= substr($data, $i, strlen($data) - $i);
 
 		return $tmp;
 	}

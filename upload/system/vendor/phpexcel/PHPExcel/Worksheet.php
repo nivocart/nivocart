@@ -441,12 +441,12 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable {
         if ((str_replace(self::$_invalidCharacters, '', $pValue) !== $pValue) || (PHPExcel_Shared_String::Substring($pValue, -1, 1) == '\'') || (PHPExcel_Shared_String::Substring($pValue, 0, 1) == '\'')) {
             throw new PHPExcel_Exception('Invalid character found in sheet code name');
         }
- 
+
         // Maximum 31 characters allowed for sheet title
         if ($CharCount > 31) {
             throw new PHPExcel_Exception('Maximum 31 characters allowed in sheet code name.');
         }
- 
+
         return $pValue;
     }
 

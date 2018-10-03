@@ -17,8 +17,8 @@
  *	@license PHP v3.0
  *	@version 1.1
  */
-class SingularValueDecomposition  {
 
+class SingularValueDecomposition  {
 	/**
 	 *	Internal storage of U.
 	 *	@var array
@@ -49,7 +49,6 @@ class SingularValueDecomposition  {
 	 */
 	private $n;
 
-
 	/**
 	 *	Construct the singular value decomposition
 	 *
@@ -59,23 +58,21 @@ class SingularValueDecomposition  {
 	 *	@return Structure to access U, S and V.
 	 */
 	public function __construct($Arg) {
-
 		// Initialize.
 		$A = $Arg->getArrayCopy();
 		$this->m = $Arg->getRowDimension();
 		$this->n = $Arg->getColumnDimension();
-		$nu      = min($this->m, $this->n);
-		$e       = array();
-		$work    = array();
-		$wantu   = true;
-		$wantv   = true;
+		$nu = min($this->m, $this->n);
+		$e = array();
+		$work = array();
+		$wantu = true;
+		$wantv = true;
 		$nct = min($this->m - 1, $this->n);
 		$nrt = max(0, min($this->n - 2, $this->m));
 
 		// Reduce A to bidiagonal form, storing the diagonal elements
 		// in s and the super-diagonal elements in e.
 		for ($k = 0; $k < max($nct,$nrt); ++$k) {
-
 			if ($k < $nct) {
 				// Compute the transformation for the k-th column and
 				// place the k-th diagonal in s[$k].
@@ -84,10 +81,12 @@ class SingularValueDecomposition  {
 				for ($i = $k; $i < $this->m; ++$i) {
 					$this->s[$k] = hypo($this->s[$k], $A[$i][$k]);
 				}
+
 				if ($this->s[$k] != 0.0) {
 					if ($A[$k][$k] < 0.0) {
 						$this->s[$k] = -$this->s[$k];
 					}
+
 					for ($i = $k; $i < $this->m; ++$i) {
 						$A[$i][$k] /= $this->s[$k];
 					}
@@ -113,7 +112,7 @@ class SingularValueDecomposition  {
 				}
 			}
 
-			if ($wantu AND ($k < $nct)) {
+			if ($wantu and ($k < $nct)) {
 				// Place the transformation in U for subsequent back
 				// multiplication.
 				for ($i = $k; $i < $this->m; ++$i) {
@@ -139,7 +138,8 @@ class SingularValueDecomposition  {
 					$e[$k+1] += 1.0;
 				}
 				$e[$k] = -$e[$k];
-				if (($k+1 < $this->m) AND ($e[$k] != 0.0)) {
+
+				if (($k+1 < $this->m) and ($e[$k] != 0.0)) {
 					// Apply the transformation.
 					for ($i = $k+1; $i < $this->m; ++$i) {
 						$work[$i] = 0.0;
@@ -156,6 +156,7 @@ class SingularValueDecomposition  {
 						}
 					}
 				}
+
 				if ($wantv) {
 					// Place the transformation in V for subsequent
 					// back multiplication.
@@ -217,7 +218,7 @@ class SingularValueDecomposition  {
 		// If required, generate V.
 		if ($wantv) {
 			for ($k = $this->n - 1; $k >= 0; --$k) {
-				if (($k < $nrt) AND ($e[$k] != 0.0)) {
+				if (($k < $nrt) and ($e[$k] != 0.0)) {
 					for ($j = $k + 1; $j < $nu; ++$j) {
 						$t = 0;
 						for ($i = $k + 1; $i < $this->n; ++$i) {
@@ -408,14 +409,14 @@ class SingularValueDecomposition  {
 							$t = $this->s[$k];
 							$this->s[$k] = $this->s[$k+1];
 							$this->s[$k+1] = $t;
-							if ($wantv AND ($k < $this->n - 1)) {
+							if ($wantv and ($k < $this->n - 1)) {
 								for ($i = 0; $i < $this->n; ++$i) {
 									$t = $this->V[$i][$k+1];
 									$this->V[$i][$k+1] = $this->V[$i][$k];
 									$this->V[$i][$k] = $t;
 								}
 							}
-							if ($wantu AND ($k < $this->m-1)) {
+							if ($wantu and ($k < $this->m-1)) {
 								for ($i = 0; $i < $this->m; ++$i) {
 									$t = $this->U[$i][$k+1];
 									$this->U[$i][$k+1] = $this->U[$i][$k];
@@ -432,7 +433,6 @@ class SingularValueDecomposition  {
 
 	} // end constructor
 
-
 	/**
 	 *	Return the left singular vectors
 	 *
@@ -442,7 +442,6 @@ class SingularValueDecomposition  {
 	public function getU() {
 		return new Matrix($this->U, $this->m, min($this->m + 1, $this->n));
 	}
-
 
 	/**
 	 *	Return the right singular vectors
@@ -454,7 +453,6 @@ class SingularValueDecomposition  {
 		return new Matrix($this->V);
 	}
 
-
 	/**
 	 *	Return the one-dimensional array of singular values
 	 *
@@ -464,7 +462,6 @@ class SingularValueDecomposition  {
 	public function getSingularValues() {
 		return $this->s;
 	}
-
 
 	/**
 	 *	Return the diagonal matrix of singular values
@@ -482,7 +479,6 @@ class SingularValueDecomposition  {
 		return new Matrix($S);
 	}
 
-
 	/**
 	 *	Two norm
 	 *
@@ -493,7 +489,6 @@ class SingularValueDecomposition  {
 		return $this->s[0];
 	}
 
-
 	/**
 	 *	Two norm condition number
 	 *
@@ -503,7 +498,6 @@ class SingularValueDecomposition  {
 	public function cond() {
 		return $this->s[0] / $this->s[min($this->m, $this->n) - 1];
 	}
-
 
 	/**
 	 *	Effective numerical matrix rank
@@ -522,5 +516,4 @@ class SingularValueDecomposition  {
 		}
 		return $r;
 	}
-
-}	//	class SingularValueDecomposition
+}

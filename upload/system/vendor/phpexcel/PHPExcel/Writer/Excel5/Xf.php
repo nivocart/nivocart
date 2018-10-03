@@ -22,8 +22,8 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 // Original file header of PEAR::Spreadsheet_Excel_Writer_Format (used as the base for this class):
@@ -69,8 +69,7 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Writer_Excel5_Xf
-{
+class PHPExcel_Writer_Excel5_Xf {
     /**
 	 * Style XF or a cell XF ?
 	 *
@@ -138,8 +137,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param PHPExcel_Style	The XF format
 	 */
-	public function __construct(PHPExcel_Style $style = null)
-	{
+	public function __construct(PHPExcel_Style $style = null) {
 		$this->_isStyleXf = false;
 		$this->_fontIndex = 0;
 
@@ -161,14 +159,12 @@ class PHPExcel_Writer_Excel5_Xf
 
 	}
 
-
 	/**
 	 * Generate an Excel BIFF XF record (style or cell).
 	 *
 	 * @return string The XF record
 	 */
-	function writeXf()
-	{
+	function writeXf() {
 		// Set the type of the XF record and some of the attributes.
 		if ($this->_isStyleXf) {
 			$style = 0xFFF5;
@@ -184,10 +180,10 @@ class PHPExcel_Writer_Excel5_Xf
 		$atr_bdr = (self::_mapBorderStyle($this->_style->getBorders()->getBottom()->getBorderStyle()) ||
 						self::_mapBorderStyle($this->_style->getBorders()->getTop()->getBorderStyle()) ||
 						self::_mapBorderStyle($this->_style->getBorders()->getLeft()->getBorderStyle()) ||
-						self::_mapBorderStyle($this->_style->getBorders()->getRight()->getBorderStyle()))?1:0;
+						self::_mapBorderStyle($this->_style->getBorders()->getRight()->getBorderStyle())) ? 1 : 0;
 		$atr_pat = (($this->_fg_color != 0x40) ||
 						($this->_bg_color != 0x41) ||
-						self::_mapFillType($this->_style->getFill()->getFillType()))?1:0;
+						self::_mapFillType($this->_style->getFill()->getFillType())) ? 1 : 0;
 		$atr_prot = self::_mapLocked($this->_style->getProtection()->getLocked())
 						| self::_mapHidden($this->_style->getProtection()->getHidden());
 
@@ -215,8 +211,8 @@ class PHPExcel_Writer_Excel5_Xf
 		$ifmt = $this->_numberFormatIndex;  // Index to FORMAT record
 
 		$align = $this->_mapHAlign($this->_style->getAlignment()->getHorizontal());       // Alignment
-		$align |= (int) $this->_style->getAlignment()->getWrapText()     << 3;
-		$align |= self::_mapVAlign($this->_style->getAlignment()->getVertical())  << 4;
+		$align |= (int) $this->_style->getAlignment()->getWrapText() << 3;
+		$align |= self::_mapVAlign($this->_style->getAlignment()->getVertical()) << 4;
 		$align |= $this->_text_justlast << 7;
 
 		$used_attrib = $atr_num << 2;
@@ -254,7 +250,7 @@ class PHPExcel_Writer_Excel5_Xf
 		$biff8_options  = $this->_style->getAlignment()->getIndent();
 		$biff8_options |= (int) $this->_style->getAlignment()->getShrinkToFit() << 4;
 
-		$data  = pack("vvvC", $ifnt, $ifmt, $style, $align);
+		$data = pack("vvvC", $ifnt, $ifmt, $style, $align);
 		$data .= pack("CCC"
 			, self::_mapTextRotation($this->_style->getAlignment()->getTextRotation())
 			, $biff8_options
@@ -270,8 +266,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 *
 	 * @param boolean $value
 	 */
-	public function setIsStyleXf($value)
-	{
+	public function setIsStyleXf($value) {
 		$this->_isStyleXf = $value;
 	}
 
@@ -281,8 +276,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param int $colorIndex Color index
 	 */
-	function setBottomColor($colorIndex)
-	{
+	function setBottomColor($colorIndex) {
 		$this->_bottom_color = $colorIndex;
 	}
 
@@ -292,8 +286,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param int $colorIndex Color index
 	 */
-	function setTopColor($colorIndex)
-	{
+	function setTopColor($colorIndex) {
 		$this->_top_color = $colorIndex;
 	}
 
@@ -303,8 +296,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param int $colorIndex Color index
 	 */
-	function setLeftColor($colorIndex)
-	{
+	function setLeftColor($colorIndex) {
 		$this->_left_color = $colorIndex;
 	}
 
@@ -314,8 +306,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param int $colorIndex Color index
 	 */
-	function setRightColor($colorIndex)
-	{
+	function setRightColor($colorIndex) {
 		$this->_right_color = $colorIndex;
 	}
 
@@ -325,11 +316,9 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param int $colorIndex Color index
 	 */
-	function setDiagColor($colorIndex)
-	{
+	function setDiagColor($colorIndex) {
 		$this->_diag_color = $colorIndex;
 	}
-
 
 	/**
 	 * Sets the cell's foreground color
@@ -337,8 +326,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param int $colorIndex Color index
 	 */
-	function setFgColor($colorIndex)
-	{
+	function setFgColor($colorIndex) {
 		$this->_fg_color = $colorIndex;
 	}
 
@@ -348,8 +336,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param int $colorIndex Color index
 	 */
-	function setBgColor($colorIndex)
-	{
+	function setBgColor($colorIndex) {
 		$this->_bg_color = $colorIndex;
 	}
 
@@ -360,8 +347,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @access public
 	 * @param integer $numberFormatIndex Index to format record
 	 */
-	function setNumberFormatIndex($numberFormatIndex)
-	{
+	function setNumberFormatIndex($numberFormatIndex) {
 		$this->_numberFormatIndex = $numberFormatIndex;
 	}
 
@@ -370,8 +356,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 *
 	 * @param int $value Font index, note that value 4 does not exist
 	 */
-	public function setFontIndex($value)
-	{
+	public function setFontIndex($value) {
 		$this->_fontIndex = $value;
 	}
 
@@ -404,8 +389,9 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @return int
 	 */
 	private static function _mapBorderStyle($borderStyle) {
-		if (isset(self::$_mapBorderStyle[$borderStyle]))
+		if (isset(self::$_mapBorderStyle[$borderStyle])) {
 			return self::$_mapBorderStyle[$borderStyle];
+		}
 		return 0x00;
 	}
 
@@ -444,8 +430,9 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @return int
 	 */
 	private static function _mapFillType($fillType) {
-		if (isset(self::$_mapFillType[$fillType]))
+		if (isset(self::$_mapFillType[$fillType])) {
 			return self::$_mapFillType[$fillType];
+		}
 		return 0x00;
 	}
 
@@ -469,10 +456,10 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @param string $hAlign
 	 * @return int
 	 */
-	private function _mapHAlign($hAlign)
-	{
-		if (isset(self::$_mapHAlign[$hAlign]))
+	private function _mapHAlign($hAlign) {
+		if (isset(self::$_mapHAlign[$hAlign])) {
 			return self::$_mapHAlign[$hAlign];
+		}
 		return 0;
 	}
 
@@ -494,8 +481,9 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @return int
 	 */
 	private static function _mapVAlign($vAlign) {
-		if (isset(self::$_mapVAlign[$vAlign]))
+		if (isset(self::$_mapVAlign[$vAlign])) {
 			return self::$_mapVAlign[$vAlign];
+		}
 		return 2;
 	}
 

@@ -22,8 +22,8 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -33,8 +33,7 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Writer_Excel5_Font
-{
+class PHPExcel_Writer_Excel5_Font {
 	/**
 	 * Color index
 	 *
@@ -54,8 +53,7 @@ class PHPExcel_Writer_Excel5_Font
 	 *
 	 * @param PHPExcel_Style_Font $font
 	 */
-	public function __construct(PHPExcel_Style_Font $font = null)
-	{
+	public function __construct(PHPExcel_Style_Font $font = null) {
 		$this->_colorIndex = 0x7FFF;
 		$this->_font = $font;
 	}
@@ -65,8 +63,7 @@ class PHPExcel_Writer_Excel5_Font
 	 *
 	 * @param int $colorIndex
 	 */
-	public function setColorIndex($colorIndex)
-	{
+	public function setColorIndex($colorIndex) {
 		$this->_colorIndex = $colorIndex;
 	}
 
@@ -75,8 +72,7 @@ class PHPExcel_Writer_Excel5_Font
 	 *
 	 * @return string
 	 */
-	public function writeFont()
-	{
+	public function writeFont() {
 		$font_outline = 0;
 		$font_shadow = 0;
 
@@ -158,8 +154,9 @@ class PHPExcel_Writer_Excel5_Font
 	 * @return int
 	 */
 	private static function _mapUnderline($underline) {
-		if (isset(self::$_mapUnderline[$underline]))
+		if (isset(self::$_mapUnderline[$underline])) {
 			return self::$_mapUnderline[$underline];
+		}
 		return 0x00;
 	}
 }

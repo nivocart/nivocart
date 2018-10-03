@@ -22,8 +22,8 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -33,8 +33,7 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Writer_Excel5_Escher
-{
+class PHPExcel_Writer_Excel5_Escher {
 	/**
 	 * The object we are writing
 	 */
@@ -58,22 +57,20 @@ class PHPExcel_Writer_Excel5_Escher
 	 * @var array
 	 */
 	private $_spTypes;
-	
+
 	/**
 	 * Constructor
 	 *
 	 * @param mixed
 	 */
-	public function __construct($object)
-	{
+	public function __construct($object) {
 		$this->_object = $object;
 	}
 
 	/**
 	 * Process the object to be written
 	 */
-	public function close()
-	{
+	public function close() {
 		// initialize
 		$this->_data = '';
 
@@ -315,7 +312,7 @@ class PHPExcel_Writer_Excel5_Escher
 				// get the shape offsets relative to the spgrContainer record
 				$spOffsets = $writer->getSpOffsets();
 				$spTypes   = $writer->getSpTypes();
-				
+
 				// save the shape offsets relative to dgContainer
 				foreach ($spOffsets as & $spOffset) {
 					$spOffset += 24; // add length of dgContainer header data (8 bytes) plus dg data (16 bytes)
@@ -359,7 +356,7 @@ class PHPExcel_Writer_Excel5_Escher
 				// save the shape offsets (where new shape records begin)
 				$totalSize += strlen($spData);
 				$spOffsets[] = $totalSize;
-				
+
 				$spTypes = array_merge($spTypes, $writer->getSpTypes());
 			}
 
@@ -467,7 +464,7 @@ class PHPExcel_Writer_Excel5_Escher
 				$clientAnchorData = pack('vvvvvvvvv', $this->_object->getSpFlag(),
 					$c1, $startOffsetX, $r1, $startOffsetY,
 					$c2, $endOffsetX, $r2, $endOffsetY);
-				
+
 				$length			= strlen($clientAnchorData);
 
 				$recVerInstance  = $recVer;
@@ -517,8 +514,7 @@ class PHPExcel_Writer_Excel5_Escher
 	 *
 	 * @return array
 	 */
-	public function getSpOffsets()
-	{
+	public function getSpOffsets() {
 		return $this->_spOffsets;
 	}
 
@@ -527,8 +523,7 @@ class PHPExcel_Writer_Excel5_Escher
 	 *
 	 * @return array
 	 */
-	public function getSpTypes()
-	{
+	public function getSpTypes() {
 		return $this->_spTypes;
 	}
 }

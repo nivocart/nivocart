@@ -22,8 +22,8 @@
  * @package    PHPExcel_Writer_Excel5
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 // Original file header of PEAR::Spreadsheet_Excel_Writer_Workbook (used as the base for this class):
@@ -298,7 +298,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 	public function _addFont(PHPExcel_Style_Font $font) {
 		$fontHashCode = $font->getHashCode();
 
-		if(isset($this->_addedFonts[$fontHashCode])){
+		if (isset($this->_addedFonts[$fontHashCode])) {
 			$fontIndex = $this->_addedFonts[$fontHashCode];
 		} else {
 			$countFonts = count($this->_fontWriters);
@@ -603,7 +603,6 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 
 			// (exclusive) either repeatColumns or repeatRows
 			} else if ($sheetSetup->isColumnsToRepeatAtLeftSet() || $sheetSetup->isRowsToRepeatAtTopSet()) {
-
 				// Columns to repeat
 				if ($sheetSetup->isColumnsToRepeatAtLeftSet()) {
 					$repeat = $sheetSetup->getColumnsToRepeatAtLeft();

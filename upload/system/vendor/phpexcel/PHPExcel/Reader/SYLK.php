@@ -22,8 +22,8 @@
  * @package    PHPExcel_Reader
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -83,8 +83,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 *
 	 * @return boolean
 	 */
-	protected function _isValidFormat()
-	{
+	protected function _isValidFormat() {
 		// Read sample data (first 2 KB will do)
 		$data = fread($this->_fileHandle, 2048);
 
@@ -108,8 +107,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 *
 	 * @param string $pValue Input encoding
 	 */
-	public function setInputEncoding($pValue = 'ANSI')
-	{
+	public function setInputEncoding($pValue = 'ANSI') {
 		$this->_inputEncoding = $pValue;
 		return $this;
 	}
@@ -119,8 +117,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 *
 	 * @return string
 	 */
-	public function getInputEncoding()
-	{
+	public function getInputEncoding() {
 		return $this->_inputEncoding;
 	}
 
@@ -130,8 +127,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 * @param   string     $pFilename
 	 * @throws   PHPExcel_Reader_Exception
 	 */
-	public function listWorksheetInfo($pFilename)
-	{
+	public function listWorksheetInfo($pFilename) {
 		// Open file
 		$this->_openFile($pFilename);
 		if (!$this->_isValidFormat()) {
@@ -200,8 +196,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 * @return 	PHPExcel
 	 * @throws 	PHPExcel_Reader_Exception
 	 */
-	public function load($pFilename)
-	{
+	public function load($pFilename) {
 		// Create new PHPExcel
 		$objPHPExcel = new PHPExcel();
 
@@ -217,8 +212,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 * @return 	PHPExcel
 	 * @throws 	PHPExcel_Reader_Exception
 	 */
-	public function loadIntoExisting($pFilename, PHPExcel $objPHPExcel)
-	{
+	public function loadIntoExisting($pFilename, PHPExcel $objPHPExcel) {
 		// Open file
 		$this->_openFile($pFilename);
 		if (!$this->_isValidFormat()) {
@@ -243,7 +237,6 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 
 		// loop through one row (line) at a time in the file
 		while (($rowData = fgets($fileHandle)) !== false) {
-
 			// convert SYLK encoded $rowData to UTF-8
 			$rowData = PHPExcel_Shared_String::SYLKtoUTF8($rowData);
 
@@ -258,30 +251,30 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 				foreach($rowData as $rowDatum) {
 					switch($rowDatum{0}) {
 						case 'P' :	$formatArray['numberformat']['code'] = str_replace($fromFormats,$toFormats,substr($rowDatum,1));
-									break;
+							break;
 						case 'E' :
 						case 'F' :	$formatArray['font']['name'] = substr($rowDatum,1);
-									break;
+							break;
 						case 'L' :	$formatArray['font']['size'] = substr($rowDatum,1);
-									break;
+							break;
 						case 'S' :	$styleSettings = substr($rowDatum,1);
-									for ($i=0;$i<strlen($styleSettings);++$i) {
-										switch ($styleSettings{$i}) {
-											case 'I' :	$formatArray['font']['italic'] = true;
-														break;
-											case 'D' :	$formatArray['font']['bold'] = true;
-														break;
-											case 'T' :	$formatArray['borders']['top']['style'] = PHPExcel_Style_Border::BORDER_THIN;
-														break;
-											case 'B' :	$formatArray['borders']['bottom']['style'] = PHPExcel_Style_Border::BORDER_THIN;
-														break;
-											case 'L' :	$formatArray['borders']['left']['style'] = PHPExcel_Style_Border::BORDER_THIN;
-														break;
-											case 'R' :	$formatArray['borders']['right']['style'] = PHPExcel_Style_Border::BORDER_THIN;
-														break;
-										}
-									}
-									break;
+							for ($i=0;$i<strlen($styleSettings);++$i) {
+								switch ($styleSettings{$i}) {
+									case 'I' :	$formatArray['font']['italic'] = true;
+										break;
+									case 'D' :	$formatArray['font']['bold'] = true;
+										break;
+									case 'T' :	$formatArray['borders']['top']['style'] = PHPExcel_Style_Border::BORDER_THIN;
+										break;
+									case 'B' :	$formatArray['borders']['bottom']['style'] = PHPExcel_Style_Border::BORDER_THIN;
+										break;
+									case 'L' :	$formatArray['borders']['left']['style'] = PHPExcel_Style_Border::BORDER_THIN;
+										break;
+									case 'R' :	$formatArray['borders']['right']['style'] = PHPExcel_Style_Border::BORDER_THIN;
+										break;
+								}
+							}
+							break;
 					}
 				}
 				$this->_formats['P'.$this->_format++] = $formatArray;
@@ -289,8 +282,9 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 			} elseif ($dataType == 'C') {
 				$hasCalculatedValue = false;
 				$cellData = $cellDataFormula = '';
+
 				foreach ($rowData as $rowDatum) {
-					switch($rowDatum{0}) {
+					switch ($rowDatum{0}) {
 						case 'C' :
 						case 'X' :	$column = substr($rowDatum,1);
 									break;
@@ -306,7 +300,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 									foreach ($temp as &$value) {
 										//	Only count/replace in alternate array entries
 										if ($key = !$key) {
-											preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/',$value, $cellReferences,PREG_SET_ORDER+PREG_OFFSET_CAPTURE);
+											preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/', $value, $cellReferences, PREG_SET_ORDER + PREG_OFFSET_CAPTURE);
 											//	Reverse the matches array, otherwise all our offsets will become incorrect if we modify our way
 											//		through the formula from left to right. Reversing means that we work right to left.through
 											//		the formula
@@ -350,6 +344,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 			} elseif ($dataType == 'F') {
 				$formatStyle = $columnWidth = $styleSettings = '';
 				$styleData = array();
+
 				foreach ($rowData as $rowDatum) {
 					switch($rowDatum{0}) {
 						case 'C' :
@@ -382,16 +377,19 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 									break;
 					}
 				}
+
 				if (($formatStyle > '') && ($column > '') && ($row > '')) {
 					$columnLetter = PHPExcel_Cell::stringFromColumnIndex($column-1);
 					if (isset($this->_formats[$formatStyle])) {
 						$objPHPExcel->getActiveSheet()->getStyle($columnLetter.$row)->applyFromArray($this->_formats[$formatStyle]);
 					}
 				}
+
 				if ((!empty($styleData)) && ($column > '') && ($row > '')) {
 					$columnLetter = PHPExcel_Cell::stringFromColumnIndex($column-1);
 					$objPHPExcel->getActiveSheet()->getStyle($columnLetter.$row)->applyFromArray($styleData);
 				}
+
 				if ($columnWidth > '') {
 					if ($startCol == $endCol) {
 						$startCol = PHPExcel_Cell::stringFromColumnIndex($startCol-1);
