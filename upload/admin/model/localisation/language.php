@@ -344,7 +344,7 @@ class ModelLocalisationLanguage extends Model {
 		$this->cache->delete('filter');
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "filter_group_description WHERE language_id = '" . (int)$language_id . "'");
-		
+
 		$this->db->query("DELETE FROM " . DB_PREFIX . "footer_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('footer');
 

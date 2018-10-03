@@ -3127,14 +3127,7 @@ class PHPExcel_Calculation {
 		//		so we store the parent worksheet so that we can re-attach it when necessary
 		$pCellParent = ($pCell !== null) ? $pCell->getWorksheet() : null;
 
-		$regexpMatchString = '/^(' . self::CALCULATION_REGEXP_FUNCTION . 
-			'|' . self::CALCULATION_REGEXP_CELLREF . 
-			'|' . self::CALCULATION_REGEXP_NUMBER . 
-			'|' . self::CALCULATION_REGEXP_STRING . 
-			'|' . self::CALCULATION_REGEXP_OPENBRACE . 
-			'|' . self::CALCULATION_REGEXP_NAMEDRANGE . 
-			'|' . self::CALCULATION_REGEXP_ERROR . 
-		')/si';
+		$regexpMatchString = '/^(' . self::CALCULATION_REGEXP_FUNCTION . '|' . self::CALCULATION_REGEXP_CELLREF . '|' . self::CALCULATION_REGEXP_NUMBER . '|' . self::CALCULATION_REGEXP_STRING . '|' . self::CALCULATION_REGEXP_OPENBRACE . '|' . self::CALCULATION_REGEXP_NAMEDRANGE . '|' . self::CALCULATION_REGEXP_ERROR . ')/si';
 
 		//	Start with initialisation
 		$index = 0;
@@ -3147,7 +3140,7 @@ class PHPExcel_Calculation {
 
 		//	The guts of the lexical parser
 		//	Loop through the formula extracting each operator and operand in turn
-		while(true) {
+		while (true) {
 			$opCharacter = $formula{$index};	//	Get the first character of the value at the current index position
 
 			if ((isset(self::$_comparisonOperators[$opCharacter])) && (strlen($formula) > $index) && (isset(self::$_comparisonOperators[$formula{$index+1}]))) {
@@ -3168,7 +3161,7 @@ class PHPExcel_Calculation {
 			} elseif ((($opCharacter == '~') || ($opCharacter == '|')) && (!$isOperandOrFunction)) {	//	We have to explicitly deny a tilde or pipe, because they are legal
 				return $this->_raiseFormulaError("Formula Error: Illegal character '~'");				//  on the stack but not in the input expression
 			} elseif ((isset(self::$_operators[$opCharacter]) or $isOperandOrFunction) && $expectingOperator) {	//	Are we putting an operator on the stack?
-				while($stack->count() > 0 && ($o2 = $stack->last()) &&
+				while ($stack->count() > 0 && ($o2 = $stack->last()) &&
 					isset(self::$_operators[$o2['value']]) &&
 					@(self::$_operatorAssociativity[$opCharacter] ? self::$_operatorPrecedence[$opCharacter] < self::$_operatorPrecedence[$o2['value']] : self::$_operatorPrecedence[$opCharacter] <= self::$_operatorPrecedence[$o2['value']])) {
 					$output[] = $stack->pop();									//	Swap operands and higher precedence operators from the stack to the output
@@ -3620,7 +3613,7 @@ class PHPExcel_Calculation {
 						break;
 					case '&'	:			//	Concatenation
 						//	If either of the operands is a matrix, we need to treat them both as matrices
-						//  (converting the other operand to a matrix if need be); 
+						//  (converting the other operand to a matrix if need be);
 						//  then perform the required matrix operation
 						if (is_bool($operand1)) {
 							$operand1 = ($operand1) ? self::$_localeBoolean['TRUE'] : self::$_localeBoolean['FALSE'];
@@ -3842,7 +3835,7 @@ class PHPExcel_Calculation {
 						} else {
 							$args[] = self::_unwrapResult($arg['value']);
 
-							if ($functionName != 'MKMATRIX') { 
+							if ($functionName != 'MKMATRIX') {
 								$argArrayVals[] = $this->_showValue($arg['value']);
 							}
 						}
@@ -3936,7 +3929,7 @@ class PHPExcel_Calculation {
 		if (is_string($operand)) {
 			//	We only need special validations for the operand if it is a string
 			//	Start by stripping off the quotation marks we use to identify true excel string values internally
-			if ($operand > '' && $operand{0} == '"') { 
+			if ($operand > '' && $operand{0} == '"') {
 				$operand = self::_unwrapResult($operand);
 			}
 			//	If the string is a numeric value, we treat it as a numeric, so no further testing

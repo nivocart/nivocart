@@ -1,7 +1,7 @@
 # Configure the PHP version SensioLabsInsight should use to analyze
 # your project. It can be defined to 5, 7.0, or 7.1. If not
 # present, it will prefer 7.1 but fallback to 5 if errored.
-php_version: 7.0
+php_version: 7.1
 
 # Configure which PHP extensions your project need to be analyzed.
 php_ini: |

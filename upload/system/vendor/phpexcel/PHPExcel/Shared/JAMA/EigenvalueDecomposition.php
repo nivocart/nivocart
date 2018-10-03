@@ -22,7 +22,6 @@
  *	@version 1.1
  */
 class EigenvalueDecomposition {
-
 	/**
 	 *	Row and column dimension (square matrix).
 	 *	@var int
@@ -67,13 +66,12 @@ class EigenvalueDecomposition {
 	private $cdivr;
 	private $cdivi;
 
-
 	/**
 	 *	Symmetric Householder reduction to tridiagonal form.
 	 *
 	 *	@access private
 	 */
-	private function tred2 () {
+	private function tred2() {
 		//  This is derived from the Algol procedures tred2 by
 		//  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
 		//  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
@@ -85,6 +83,7 @@ class EigenvalueDecomposition {
 			// Scale to avoid under/overflow.
 			$h = $scale = 0.0;
 			$scale += array_sum(array_map(abs, $this->d));
+
 			if ($scale == 0.0) {
 				$this->e[$i] = $this->d[$i_];
 				$this->d = array_slice($this->V[$i_], 0, $i_);
@@ -160,6 +159,7 @@ class EigenvalueDecomposition {
 					}
 				}
 			}
+
 			for ($k = 0; $k <= $i; ++$k) {
 				$this->V[$k][$i+1] = 0.0;
 			}
@@ -170,7 +170,6 @@ class EigenvalueDecomposition {
 		$this->V[$this->n-1][$this->n-1] = 1.0;
 		$this->e[0] = 0.0;
 	}
-
 
 	/**
 	 *	Symmetric tridiagonal QL algorithm.
@@ -265,6 +264,7 @@ class EigenvalueDecomposition {
 					$p = $this->d[$j];
 				}
 			}
+
 			if ($k != $i) {
 				$this->d[$k] = $this->d[$i];
 				$this->d[$i] = $p;
@@ -277,7 +277,6 @@ class EigenvalueDecomposition {
 		}
 	}
 
-
 	/**
 	 *	Nonsymmetric reduction to Hessenberg form.
 	 *
@@ -288,7 +287,7 @@ class EigenvalueDecomposition {
 	 *
 	 *	@access private
 	 */
-	private function orthes () {
+	private function orthes() {
 		$low  = 0;
 		$high = $this->n-1;
 
@@ -344,6 +343,7 @@ class EigenvalueDecomposition {
 				$this->V[$i][$j] = ($i == $j ? 1.0 : 0.0);
 			}
 		}
+
 		for ($m = $high-1; $m >= $low+1; --$m) {
 			if ($this->H[$m][$m-1] != 0.0) {
 				for ($i = $m+1; $i <= $high; ++$i) {
@@ -364,7 +364,6 @@ class EigenvalueDecomposition {
 		}
 	}
 
-
 	/**
 	 *	Performs complex division.
 	 *
@@ -384,7 +383,6 @@ class EigenvalueDecomposition {
 		}
 	}
 
-
 	/**
 	 *	Nonsymmetric reduction from Hessenberg to real Schur form.
 	 *
@@ -395,7 +393,7 @@ class EigenvalueDecomposition {
 	 *
 	 *	@access private
 	 */
-	private function hqr2 () {
+	private function hqr2() {
 		//  Initialize
 		$nn = $this->n;
 		$n  = $nn - 1;
@@ -408,10 +406,11 @@ class EigenvalueDecomposition {
 		$norm = 0.0;
 
 		for ($i = 0; $i < $nn; ++$i) {
-			if (($i < $low) OR ($i > $high)) {
+			if (($i < $low) or ($i > $high)) {
 				$this->d[$i] = $this->H[$i][$i];
 				$this->e[$i] = 0.0;
 			}
+
 			for ($j = max($i-1, 0); $j < $nn; ++$j) {
 				$norm = $norm + abs($this->H[$i][$j]);
 			}
@@ -771,7 +770,6 @@ class EigenvalueDecomposition {
 		}
 	} // end hqr2
 
-
 	/**
 	 *	Constructor: Check for symmetry, then construct the eigenvalue decomposition
 	 *
@@ -806,7 +804,6 @@ class EigenvalueDecomposition {
 		}
 	}
 
-
 	/**
 	 *	Return the eigenvector matrix
 	 *
@@ -816,7 +813,6 @@ class EigenvalueDecomposition {
 	public function getV() {
 		return new Matrix($this->V, $this->n, $this->n);
 	}
-
 
 	/**
 	 *	Return the real parts of the eigenvalues
@@ -828,7 +824,6 @@ class EigenvalueDecomposition {
 		return $this->d;
 	}
 
-
 	/**
 	 *	Return the imaginary parts of the eigenvalues
 	 *
@@ -838,7 +833,6 @@ class EigenvalueDecomposition {
 	public function getImagEigenvalues() {
 		return $this->e;
 	}
-
 
 	/**
 	 *	Return the block diagonal eigenvalue matrix
@@ -858,5 +852,4 @@ class EigenvalueDecomposition {
 		}
 		return new Matrix($D);
 	}
-
-}	//	class EigenvalueDecomposition
+}

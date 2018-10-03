@@ -33,9 +33,7 @@
  * @package		PHPExcel_Chart
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Chart_DataSeries
-{
-
+class PHPExcel_Chart_DataSeries {
 	const TYPE_BARCHART = 'barChart';
 	const TYPE_BARCHART_3D = 'bar3DChart';
 	const TYPE_LINECHART = 'lineChart';
@@ -69,7 +67,6 @@ class PHPExcel_Chart_DataSeries
 	const STYLE_SMOOTHMARKER = 'smoothMarker';
 	const STYLE_MARKER = 'marker';
 	const STYLE_FILLED = 'filled';
-
 
 	/**
 	 * Series Plot Type
@@ -137,25 +134,27 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Create a new PHPExcel_Chart_DataSeries
 	 */
-	public function __construct($plotType = null, $plotGrouping = null, $plotOrder = array(), $plotLabel = array(), $plotCategory = array(), $plotValues = array(), $plotDirection = null, $smoothLine = null, $plotStyle = null)
-	{
+	public function __construct($plotType = null, $plotGrouping = null, $plotOrder = array(), $plotLabel = array(), $plotCategory = array(), $plotValues = array(), $plotDirection = null, $smoothLine = null, $plotStyle = null) {
 		$this->_plotType = $plotType;
 		$this->_plotGrouping = $plotGrouping;
 		$this->_plotOrder = $plotOrder;
 		$keys = array_keys($plotValues);
 		$this->_plotValues = $plotValues;
+
 		if ((count($plotLabel) == 0) || (is_null($plotLabel[$keys[0]]))) {
 			$plotLabel[$keys[0]] = new PHPExcel_Chart_DataSeriesValues();
 		}
 
 		$this->_plotLabel = $plotLabel;
+
 		if ((count($plotCategory) == 0) || (is_null($plotCategory[$keys[0]]))) {
 			$plotCategory[$keys[0]] = new PHPExcel_Chart_DataSeriesValues();
 		}
+
 		$this->_plotCategory = $plotCategory;
 		$this->_smoothLine = $smoothLine;
 		$this->_plotStyle = $plotStyle;
-		
+
 		if (is_null($plotDirection)) {
 			$plotDirection = self::DIRECTION_COL;
 		}
@@ -347,23 +346,23 @@ class PHPExcel_Chart_DataSeries
 	 * @param boolean $smoothLine
      * @return PHPExcel_Chart_DataSeries
 	 */
-	public function setSmoothLine($smoothLine = TRUE) {
+	public function setSmoothLine($smoothLine = true) {
 		$this->_smoothLine = $smoothLine;
         return $this;
 	}
 
 	public function refresh(PHPExcel_Worksheet $worksheet) {
 	    foreach ($this->_plotValues as $plotValues) {
-			if ($plotValues !== NULL)
-				$plotValues->refresh($worksheet, TRUE);
+			if ($plotValues !== null)
+				$plotValues->refresh($worksheet, true);
 		}
 		foreach ($this->_plotLabel as $plotValues) {
-			if ($plotValues !== NULL)
-				$plotValues->refresh($worksheet, TRUE);
+			if ($plotValues !== null)
+				$plotValues->refresh($worksheet, true);
 		}
 		foreach ($this->_plotCategory as $plotValues) {
-			if ($plotValues !== NULL)
-				$plotValues->refresh($worksheet, FALSE);
+			if ($plotValues !== null)
+				$plotValues->refresh($worksheet, false);
 		}
 	}
 }

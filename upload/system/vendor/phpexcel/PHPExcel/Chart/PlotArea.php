@@ -25,7 +25,6 @@
  * @version		##VERSION##, ##DATE##
  */
 
-
 /**
  * PHPExcel_Chart_PlotArea
  *
@@ -33,8 +32,7 @@
  * @package		PHPExcel_Chart
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Chart_PlotArea
-{
+class PHPExcel_Chart_PlotArea {
 	/**
 	 * PlotArea Layout
 	 *
@@ -52,8 +50,7 @@ class PHPExcel_Chart_PlotArea
 	/**
 	 * Create a new PHPExcel_Chart_PlotArea
 	 */
-	public function __construct(PHPExcel_Chart_Layout $layout = null, $plotSeries = array())
-	{
+	public function __construct(PHPExcel_Chart_Layout $layout = null, $plotSeries = array()) {
 		$this->_layout = $layout;
 		$this->_plotSeries = $plotSeries;
 	}
@@ -115,12 +112,12 @@ class PHPExcel_Chart_PlotArea
 	 */
 	public function setPlotSeries($plotSeries = array()) {
 		$this->_plotSeries = $plotSeries;
-        
-        return $this;
+
+		return $this;
 	}
 
 	public function refresh(PHPExcel_Worksheet $worksheet) {
-	    foreach($this->_plotSeries as $plotSeries) {
+		foreach($this->_plotSeries as $plotSeries) {
 			$plotSeries->refresh($worksheet);
 		}
 	}

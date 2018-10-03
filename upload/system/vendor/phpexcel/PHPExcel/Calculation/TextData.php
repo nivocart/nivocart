@@ -506,7 +506,7 @@ class PHPExcel_Calculation_TextData {
 	 * @param	string	$oldText	String to modify
 	 * @param	int		$start		Start character
 	 * @param	int		$chars		Number of characters
-	 * @param	string	$newText	String to replace in defined position 
+	 * @param	string	$newText	String to replace in defined position
 	 * @return	string
 	 */
 	public static function REPLACE($oldText = '', $start = 1, $chars = null, $newText) {
@@ -615,33 +615,33 @@ class PHPExcel_Calculation_TextData {
 		$value = PHPExcel_Calculation_Functions::flattenSingleValue($value);
 
 		if (!is_numeric($value)) {
-            $numberValue = str_replace(PHPExcel_Shared_String::getThousandsSeparator(), '', trim($value, " \t\n\r\0\x0B" . PHPExcel_Shared_String::getCurrencyCode()));
+			$numberValue = str_replace(PHPExcel_Shared_String::getThousandsSeparator(), '', trim($value, " \t\n\r\0\x0B" . PHPExcel_Shared_String::getCurrencyCode()));
 
-            if (is_numeric($numberValue)) {
-                return (float) $numberValue;
-            }
+			if (is_numeric($numberValue)) {
+				return (float) $numberValue;
+			}
 
-            $dateSetting = PHPExcel_Calculation_Functions::getReturnDateType();
+			$dateSetting = PHPExcel_Calculation_Functions::getReturnDateType();
 
-            PHPExcel_Calculation_Functions::setReturnDateType(PHPExcel_Calculation_Functions::RETURNDATE_EXCEL);
+			PHPExcel_Calculation_Functions::setReturnDateType(PHPExcel_Calculation_Functions::RETURNDATE_EXCEL);
 
-            if (strpos($value, ':') !== false) {
-                $timeValue = PHPExcel_Calculation_DateTime::TIMEVALUE($value);
+			if (strpos($value, ':') !== false) {
+				$timeValue = PHPExcel_Calculation_DateTime::TIMEVALUE($value);
 
-                if ($timeValue !== PHPExcel_Calculation_Functions::VALUE()) {
-                    PHPExcel_Calculation_Functions::setReturnDateType($dateSetting);
-                    return $timeValue;
-                }
-            }
+				if ($timeValue !== PHPExcel_Calculation_Functions::VALUE()) {
+					PHPExcel_Calculation_Functions::setReturnDateType($dateSetting);
+					return $timeValue;
+				}
+			}
 
 			$dateValue = PHPExcel_Calculation_DateTime::DATEVALUE($value);
 
-            if ($dateValue !== PHPExcel_Calculation_Functions::VALUE()) {
-                PHPExcel_Calculation_Functions::setReturnDateType($dateSetting);
-                return $dateValue;
-            }
+			if ($dateValue !== PHPExcel_Calculation_Functions::VALUE()) {
+				PHPExcel_Calculation_Functions::setReturnDateType($dateSetting);
+				return $dateValue;
+			}
 
-            PHPExcel_Calculation_Functions::setReturnDateType($dateSetting);
+			PHPExcel_Calculation_Functions::setReturnDateType($dateSetting);
 
 			return PHPExcel_Calculation_Functions::VALUE();
 		}
