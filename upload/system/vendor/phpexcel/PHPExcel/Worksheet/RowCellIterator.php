@@ -22,8 +22,8 @@
  * @package	PHPExcel_Worksheet
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -161,9 +161,7 @@ class PHPExcel_Worksheet_RowCellIterator extends PHPExcel_Worksheet_CellIterator
 	public function next() {
         do {
             ++$this->_position;
-        } while (($this->_onlyExistingCells) &&
-            (!$this->_subject->cellExistsByColumnAndRow($this->_position, $this->_rowIndex)) &&
-            ($this->_position <= $this->_endColumn));
+        } while (($this->_onlyExistingCells) && (!$this->_subject->cellExistsByColumnAndRow($this->_position, $this->_rowIndex)) && ($this->_position <= $this->_endColumn));
 	}
 
 	/**
@@ -173,18 +171,12 @@ class PHPExcel_Worksheet_RowCellIterator extends PHPExcel_Worksheet_CellIterator
 	 */
 	public function prev() {
         if ($this->_position <= $this->_startColumn) {
-            throw new PHPExcel_Exception(
-                "Column is already at the beginning of range (" . 
-                PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . " - " . 
-                PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . ")"
-            );
+            throw new PHPExcel_Exception("Column is already at the beginning of range (" . PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . " - " . PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . ")");
         }
 
         do {
             --$this->_position;
-        } while (($this->_onlyExistingCells) &&
-            (!$this->_subject->cellExistsByColumnAndRow($this->_position, $this->_rowIndex)) &&
-            ($this->_position >= $this->_startColumn));
+        } while (($this->_onlyExistingCells) && (!$this->_subject->cellExistsByColumnAndRow($this->_position, $this->_rowIndex)) && ($this->_position >= $this->_startColumn));
 	}
 
 	/**
@@ -203,17 +195,18 @@ class PHPExcel_Worksheet_RowCellIterator extends PHPExcel_Worksheet_CellIterator
 	 */
     protected function adjustForExistingOnlyRange() {
         if ($this->_onlyExistingCells) {
-            while ((!$this->_subject->cellExistsByColumnAndRow($this->_startColumn, $this->_rowIndex)) &&
-                ($this->_startColumn <= $this->_endColumn)) {
+            while ((!$this->_subject->cellExistsByColumnAndRow($this->_startColumn, $this->_rowIndex)) && ($this->_startColumn <= $this->_endColumn)) {
                 ++$this->_startColumn;
             }
+
             if ($this->_startColumn > $this->_endColumn) {
                 throw new PHPExcel_Exception('No cells exist within the specified range');
             }
-            while ((!$this->_subject->cellExistsByColumnAndRow($this->_endColumn, $this->_rowIndex)) &&
-                ($this->_endColumn >= $this->_startColumn)) {
+
+            while ((!$this->_subject->cellExistsByColumnAndRow($this->_endColumn, $this->_rowIndex)) && ($this->_endColumn >= $this->_startColumn)) {
                 --$this->_endColumn;
             }
+
             if ($this->_endColumn < $this->_startColumn) {
                 throw new PHPExcel_Exception('No cells exist within the specified range');
             }

@@ -8,7 +8,7 @@
  * 
  * NivoCart © 2018
  */
-(function($) {
+!(function($) {
 	$.fn.extend({
 		cssCharts: function(opts) {
 			var defs = {};

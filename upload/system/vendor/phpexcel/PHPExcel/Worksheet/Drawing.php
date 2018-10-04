@@ -22,8 +22,8 @@
  * @package    PHPExcel_Worksheet_Drawing
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -33,8 +33,7 @@
  * @package    PHPExcel_Worksheet_Drawing
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
-{
+class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable {
 	/**
 	 * Path
 	 *
@@ -45,10 +44,9 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
     /**
      * Create a new PHPExcel_Worksheet_Drawing
      */
-    public function __construct()
-    {
+    public function __construct() {
     	// Initialise values
-    	$this->_path				= '';
+    	$this->_path = '';
 
     	// Initialize parent
     	parent::__construct();
@@ -125,11 +123,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
 	 * @return string	Hash code
 	 */
 	public function getHashCode() {
-    	return md5(
-    		  $this->_path
-    		. parent::getHashCode()
-    		. __CLASS__
-    	);
+    	return md5($this->_path . parent::getHashCode() . __CLASS__);
     }
 
 	/**
@@ -137,6 +131,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
 	 */
 	public function __clone() {
 		$vars = get_object_vars($this);
+
 		foreach ($vars as $key => $value) {
 			if (is_object($value)) {
 				$this->$key = clone $value;

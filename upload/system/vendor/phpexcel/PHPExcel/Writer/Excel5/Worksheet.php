@@ -2459,7 +2459,6 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 		$grbit2 = 0x0001;   // Option flags
 		$Reserved5 = 0x0000;   // Reserved
 
-
 		$header = pack("vv", $record, $length);
 
 		$data = pack("V", $cObj);
