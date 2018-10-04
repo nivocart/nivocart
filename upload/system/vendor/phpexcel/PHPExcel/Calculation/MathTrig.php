@@ -22,8 +22,8 @@
  * @package		PHPExcel_Calculation
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -242,7 +242,7 @@ class PHPExcel_Calculation_MathTrig {
 			if ($factVal < 0) {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
-	
+
 			$factLoop = floor($factVal);
 
 			if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC) {
@@ -472,7 +472,7 @@ class PHPExcel_Calculation_MathTrig {
 		$returnValue = 1;
 		$allPoweredFactors = array();
 		// Loop through arguments
-		foreach(PHPExcel_Calculation_Functions::flattenArray(func_get_args()) as $value) {
+		foreach (PHPExcel_Calculation_Functions::flattenArray(func_get_args()) as $value) {
 			if (!is_numeric($value)) {
 				return PHPExcel_Calculation_Functions::VALUE();
 			}
@@ -971,10 +971,10 @@ class PHPExcel_Calculation_MathTrig {
 			return '';
 		}
 
-		$mill = Array('', 'M', 'MM', 'MMM', 'MMMM', 'MMMMM');
-		$cent = Array('', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM');
-		$tens = Array('', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC');
-		$ones = Array('', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX');
+		$mill = array('', 'M', 'MM', 'MMM', 'MMMM', 'MMMMM');
+		$cent = array('', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM');
+		$tens = array('', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC');
+		$ones = array('', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX');
 
 		$roman = '';
 
@@ -1067,7 +1067,7 @@ class PHPExcel_Calculation_MathTrig {
 			// Calculate
 			$i = 0;
 
-			foreach($aArgs as $arg) {
+			foreach ($aArgs as $arg) {
 				// Is it a numeric value?
 				if ((is_numeric($arg)) && (!is_string($arg))) {
 					$returnValue += $arg * pow($x, $n + ($m * $i++));
@@ -1148,7 +1148,7 @@ class PHPExcel_Calculation_MathTrig {
 		$subtotal = array_shift($aArgs);
 
 		if ((is_numeric($subtotal)) && (!is_string($subtotal))) {
-			switch($subtotal) {
+			switch ($subtotal) {
 				case 1	:
 					return PHPExcel_Calculation_Statistical::AVERAGE($aArgs);
 					break;

@@ -953,11 +953,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 							if (!$this->_readDataOnly && $xmlSheet && $xmlSheet->conditionalFormatting) {
 								foreach ($xmlSheet->conditionalFormatting as $conditional) {
 									foreach ($conditional->cfRule as $cfRule) {
-										if (((string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_NONE || 
-										(string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_CELLIS ||
-										(string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT || 
-										(string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_EXPRESSION
-										) && isset($dxfs[intval($cfRule["dxfId"])])) {
+										if (((string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_NONE || (string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_CELLIS || (string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_CONTAINSTEXT || (string)$cfRule["type"] == PHPExcel_Style_Conditional::CONDITION_EXPRESSION) && isset($dxfs[intval($cfRule["dxfId"])])) {
 											$conditionals[(string) $conditional["sqref"]][intval($cfRule["priority"])] = $cfRule;
 										}
 									}
@@ -1066,9 +1062,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 											}
 
 											foreach ($customFilters->customFilter as $filterRule) {
-												$column->createRule()->setRule(
-												(string) $filterRule["operator"],
-												(string) $filterRule["val"])->setRuleType(PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_CUSTOMFILTER);
+												$column->createRule()->setRule((string) $filterRule["operator"], (string) $filterRule["val"])->setRuleType(PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_CUSTOMFILTER);
 											}
 										}
 
@@ -1077,9 +1071,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 											$column->setFilterType(PHPExcel_Worksheet_AutoFilter_Column::AUTOFILTER_FILTERTYPE_DYNAMICFILTER);
 											//	We should only ever have one dynamic filter
 											foreach ($filterColumn->dynamicFilter as $filterRule) {
-												$column->createRule()->setRule(null, 
-												(string) $filterRule["val"],
-												(string) $filterRule["type"])->setRuleType(PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_DYNAMICFILTER);
+												$column->createRule()->setRule(null, (string) $filterRule["val"], (string) $filterRule["type"])->setRuleType(PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_DYNAMICFILTER);
 
 												if (isset($filterRule["val"])) {
 													$column->setAttribute('val', (string) $filterRule["val"]);

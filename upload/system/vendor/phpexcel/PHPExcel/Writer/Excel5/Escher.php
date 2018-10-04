@@ -411,7 +411,6 @@ class PHPExcel_Writer_Excel5_Escher {
 
 			$data .= $header . pack('VV', $this->_object->getSpId(), $this->_object->getSpgr() ? 0x0005 : 0x0A00);
 
-
 			// the options
 			if ($this->_object->getOPTCollection()) {
 				$optData = '';
@@ -461,11 +460,9 @@ class PHPExcel_Writer_Excel5_Escher {
 				// end offsetY
 				$endOffsetY = $this->_object->getEndOffsetY();
 
-				$clientAnchorData = pack('vvvvvvvvv', $this->_object->getSpFlag(),
-					$c1, $startOffsetX, $r1, $startOffsetY,
-					$c2, $endOffsetX, $r2, $endOffsetY);
+				$clientAnchorData = pack('vvvvvvvvv', $this->_object->getSpFlag(), $c1, $startOffsetX, $r1, $startOffsetY, $c2, $endOffsetX, $r2, $endOffsetY);
 
-				$length			= strlen($clientAnchorData);
+				$length = strlen($clientAnchorData);
 
 				$recVerInstance  = $recVer;
 				$recVerInstance |= $recInstance << 4;

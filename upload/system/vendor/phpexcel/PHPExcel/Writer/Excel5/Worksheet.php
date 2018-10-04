@@ -1127,7 +1127,6 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 			$link_type |= 0x08;
 		}
 
-
 		// Pack the link type
 		$link_type = pack("V", $link_type);
 

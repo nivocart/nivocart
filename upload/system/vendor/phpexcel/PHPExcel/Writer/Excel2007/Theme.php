@@ -22,8 +22,8 @@
  * @package    PHPExcel_Writer_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -33,8 +33,7 @@
  * @package    PHPExcel_Writer_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPart
-{
+class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPart {
 	/**
 	 * Map of Major fonts to write
 	 * @static	array of string
@@ -116,18 +115,18 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
 	 * @static	array of string
 	 *
 	 */
-		private static $_colourScheme = array(
-			'dk2' => '1F497D',
-			'lt2' => 'EEECE1',
-			'accent1' => '4F81BD',
-			'accent2' => 'C0504D',
-			'accent3' => '9BBB59',
-			'accent4' => '8064A2',
-			'accent5' => '4BACC6',
-			'accent6' => 'F79646',
-			'hlink' => '0000FF',
-			'folHlink' => '800080',
-		);
+	private static $_colourScheme = array(
+		'dk2' => '1F497D',
+		'lt2' => 'EEECE1',
+		'accent1' => '4F81BD',
+		'accent2' => 'C0504D',
+		'accent3' => '9BBB59',
+		'accent4' => '8064A2',
+		'accent5' => '4BACC6',
+		'accent6' => 'F79646',
+		'hlink' => '0000FF',
+		'folHlink' => '800080',
+	);
 
 	/**
 	 * Write theme to XML format
@@ -136,10 +135,10 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
 	 * @return 	string 		XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function writeTheme(PHPExcel $pPHPExcel = null)
-	{
+	public function writeTheme(PHPExcel $pPHPExcel = null) {
 			// Create XML writer
 			$objWriter = null;
+
 			if ($this->getParentWriter()->getUseDiskCaching()) {
 				$objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
 			} else {
@@ -147,7 +146,7 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
 			}
 
 			// XML header
-			$objWriter->startDocument('1.0','UTF-8','yes');
+			$objWriter->startDocument('1.0', 'UTF-8', 'yes');
 
 			// a:theme
 			$objWriter->startElement('a:theme');
@@ -476,8 +475,6 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
 							$objWriter->endElement();
 
 						$objWriter->endElement();
-
-
 
 						// a:effectStyleLst
 						$objWriter->startElement('a:effectStyleLst');
@@ -822,8 +819,7 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
 	 * @return 	string 						XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	private function _writeFonts($objWriter, $latinFont, $fontSet)
-	{
+	private function _writeFonts($objWriter, $latinFont, $fontSet) {
 		// a:latin
 		$objWriter->startElement('a:latin');
 		$objWriter->writeAttribute('typeface', $latinFont);
@@ -839,7 +835,7 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
 		$objWriter->writeAttribute('typeface', '');
 		$objWriter->endElement();
 
-		foreach($fontSet as $fontScript => $typeface) {
+		foreach ($fontSet as $fontScript => $typeface) {
 			$objWriter->startElement('a:font');
 				$objWriter->writeAttribute('script', $fontScript);
 				$objWriter->writeAttribute('typeface', $typeface);
@@ -855,9 +851,8 @@ class PHPExcel_Writer_Excel2007_Theme extends PHPExcel_Writer_Excel2007_WriterPa
 	 * @return 	string 						XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	private function _writeColourScheme($objWriter)
-	{
-		foreach(self::$_colourScheme as $colourName => $colourValue) {
+	private function _writeColourScheme($objWriter) {
+		foreach (self::$_colourScheme as $colourName => $colourValue) {
 			$objWriter->startElement('a:'.$colourName);
 
 				$objWriter->startElement('a:srgbClr');

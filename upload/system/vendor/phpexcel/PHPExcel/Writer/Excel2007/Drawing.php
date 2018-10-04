@@ -22,8 +22,8 @@
  * @package    PHPExcel_Writer_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -33,8 +33,7 @@
  * @package    PHPExcel_Writer_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_WriterPart
-{
+class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_WriterPart {
 	/**
 	 * Write drawings to XML format
 	 *
@@ -44,10 +43,10 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @return 	string 				XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function writeDrawings(PHPExcel_Worksheet $pWorksheet = null, &$chartRef, $includeCharts = FALSE)
-	{
+	public function writeDrawings(PHPExcel_Worksheet $pWorksheet = null, &$chartRef, $includeCharts = false) {
 		// Create XML writer
 		$objWriter = null;
+
 		if ($this->getParentWriter()->getUseDiskCaching()) {
 			$objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
 		} else {
@@ -55,33 +54,32 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 		}
 
 		// XML header
-		$objWriter->startDocument('1.0','UTF-8','yes');
+		$objWriter->startDocument('1.0', 'UTF-8', 'yes');
 
 		// xdr:wsDr
 		$objWriter->startElement('xdr:wsDr');
 		$objWriter->writeAttribute('xmlns:xdr', 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing');
 		$objWriter->writeAttribute('xmlns:a', 'http://schemas.openxmlformats.org/drawingml/2006/main');
 
-			// Loop through images and write drawings
-			$i = 1;
-			$iterator = $pWorksheet->getDrawingCollection()->getIterator();
-			while ($iterator->valid()) {
-				$this->_writeDrawing($objWriter, $iterator->current(), $i);
+		// Loop through images and write drawings
+		$i = 1;
+		$iterator = $pWorksheet->getDrawingCollection()->getIterator();
+		while ($iterator->valid()) {
+			$this->_writeDrawing($objWriter, $iterator->current(), $i);
 
-				$iterator->next();
-				++$i;
-			}
+			$iterator->next();
+			++$i;
+		}
 
-			if ($includeCharts) {
-				$chartCount = $pWorksheet->getChartCount();
-				// Loop through charts and write the chart position
-				if ($chartCount > 0) {
-					for ($c = 0; $c < $chartCount; ++$c) {
-						$this->_writeChart($objWriter, $pWorksheet->getChartByIndex($c), $c+$i);
-					}
+		if ($includeCharts) {
+			$chartCount = $pWorksheet->getChartCount();
+			// Loop through charts and write the chart position
+			if ($chartCount > 0) {
+				for ($c = 0; $c < $chartCount; ++$c) {
+					$this->_writeChart($objWriter, $pWorksheet->getChartByIndex($c), $c+$i);
 				}
 			}
-
+		}
 
 		$objWriter->endElement();
 
@@ -97,8 +95,7 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @param 	int							$pRelationId
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function _writeChart(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Chart $pChart = null, $pRelationId = -1)
-	{
+	public function _writeChart(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Chart $pChart = null, $pRelationId = -1) {
 		$tl = $pChart->getTopLeftPosition();
 		$tl['colRow'] = PHPExcel_Cell::coordinateFromString($tl['cell']);
 		$br = $pChart->getBottomRightPosition();
@@ -169,14 +166,13 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @param 	int									$pRelationId
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function _writeDrawing(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet_BaseDrawing $pDrawing = null, $pRelationId = -1)
-	{
+	public function _writeDrawing(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet_BaseDrawing $pDrawing = null, $pRelationId = -1) {
 		if ($pRelationId >= 0) {
 			// xdr:oneCellAnchor
 			$objWriter->startElement('xdr:oneCellAnchor');
 				// Image location
-				$aCoordinates 		= PHPExcel_Cell::coordinateFromString($pDrawing->getCoordinates());
-				$aCoordinates[0] 	= PHPExcel_Cell::columnIndexFromString($aCoordinates[0]);
+				$aCoordinates = PHPExcel_Cell::coordinateFromString($pDrawing->getCoordinates());
+				$aCoordinates[0] = PHPExcel_Cell::columnIndexFromString($aCoordinates[0]);
 
 				// xdr:from
 				$objWriter->startElement('xdr:from');
@@ -386,10 +382,10 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @return 	string 								XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function writeVMLHeaderFooterImages(PHPExcel_Worksheet $pWorksheet = null)
-	{
+	public function writeVMLHeaderFooterImages(PHPExcel_Worksheet $pWorksheet = null) {
 		// Create XML writer
 		$objWriter = null;
+
 		if ($this->getParentWriter()->getUseDiskCaching()) {
 			$objWriter = new PHPExcel_Shared_XMLWriter(PHPExcel_Shared_XMLWriter::STORAGE_DISK, $this->getParentWriter()->getDiskCachingDirectory());
 		} else {
@@ -410,29 +406,29 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 
 			// o:shapelayout
 			$objWriter->startElement('o:shapelayout');
-			$objWriter->writeAttribute('v:ext', 		'edit');
+			$objWriter->writeAttribute('v:ext', 'edit');
 
 				// o:idmap
 				$objWriter->startElement('o:idmap');
-				$objWriter->writeAttribute('v:ext', 	'edit');
-				$objWriter->writeAttribute('data', 		'1');
+				$objWriter->writeAttribute('v:ext', 'edit');
+				$objWriter->writeAttribute('data', '1');
 				$objWriter->endElement();
 
 			$objWriter->endElement();
 
 			// v:shapetype
 			$objWriter->startElement('v:shapetype');
-			$objWriter->writeAttribute('id', 					'_x0000_t75');
-			$objWriter->writeAttribute('coordsize', 			'21600,21600');
-			$objWriter->writeAttribute('o:spt', 				'75');
-			$objWriter->writeAttribute('o:preferrelative', 		't');
-			$objWriter->writeAttribute('path', 					'm@4@5l@4@11@9@11@9@5xe');
-			$objWriter->writeAttribute('filled',		 		'f');
-			$objWriter->writeAttribute('stroked',		 		'f');
+			$objWriter->writeAttribute('id', '_x0000_t75');
+			$objWriter->writeAttribute('coordsize', '21600,21600');
+			$objWriter->writeAttribute('o:spt', '75');
+			$objWriter->writeAttribute('o:preferrelative', 't');
+			$objWriter->writeAttribute('path', 'm@4@5l@4@11@9@11@9@5xe');
+			$objWriter->writeAttribute('filled', 'f');
+			$objWriter->writeAttribute('stroked', 'f');
 
 				// v:stroke
 				$objWriter->startElement('v:stroke');
-				$objWriter->writeAttribute('joinstyle', 		'miter');
+				$objWriter->writeAttribute('joinstyle', 'miter');
 				$objWriter->endElement();
 
 				// v:formulas
@@ -440,77 +436,77 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'if lineDrawn pixelLineWidth 0');
+					$objWriter->writeAttribute('eqn', 'if lineDrawn pixelLineWidth 0');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'sum @0 1 0');
+					$objWriter->writeAttribute('eqn', 'sum @0 1 0');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'sum 0 0 @1');
+					$objWriter->writeAttribute('eqn', 'sum 0 0 @1');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'prod @2 1 2');
+					$objWriter->writeAttribute('eqn', 'prod @2 1 2');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'prod @3 21600 pixelWidth');
+					$objWriter->writeAttribute('eqn', 'prod @3 21600 pixelWidth');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'prod @3 21600 pixelHeight');
+					$objWriter->writeAttribute('eqn', 'prod @3 21600 pixelHeight');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'sum @0 0 1');
+					$objWriter->writeAttribute('eqn', 'sum @0 0 1');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'prod @6 1 2');
+					$objWriter->writeAttribute('eqn', 'prod @6 1 2');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'prod @7 21600 pixelWidth');
+					$objWriter->writeAttribute('eqn', 'prod @7 21600 pixelWidth');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'sum @8 21600 0');
+					$objWriter->writeAttribute('eqn', 'sum @8 21600 0');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'prod @7 21600 pixelHeight');
+					$objWriter->writeAttribute('eqn', 'prod @7 21600 pixelHeight');
 					$objWriter->endElement();
 
 					// v:f
 					$objWriter->startElement('v:f');
-					$objWriter->writeAttribute('eqn', 		'sum @10 21600 0');
+					$objWriter->writeAttribute('eqn', 'sum @10 21600 0');
 					$objWriter->endElement();
 
 				$objWriter->endElement();
 
 				// v:path
 				$objWriter->startElement('v:path');
-				$objWriter->writeAttribute('o:extrusionok', 	'f');
-				$objWriter->writeAttribute('gradientshapeok', 	't');
-				$objWriter->writeAttribute('o:connecttype', 	'rect');
+				$objWriter->writeAttribute('o:extrusionok', 'f');
+				$objWriter->writeAttribute('gradientshapeok', 't');
+				$objWriter->writeAttribute('o:connecttype', 'rect');
 				$objWriter->endElement();
 
 				// o:lock
 				$objWriter->startElement('o:lock');
-				$objWriter->writeAttribute('v:ext', 			'edit');
-				$objWriter->writeAttribute('aspectratio', 		't');
+				$objWriter->writeAttribute('v:ext', 'edit');
+				$objWriter->writeAttribute('aspectratio', 't');
 				$objWriter->endElement();
 
 			$objWriter->endElement();
@@ -521,7 +517,6 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 			}
 
 		$objWriter->endElement();
-
 		// Return
 		return $objWriter->getData();
 	}
@@ -534,10 +529,10 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @param 	PHPExcel_Worksheet_HeaderFooterDrawing	$pImage		Image
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function _writeVMLHeaderFooterImage(PHPExcel_Shared_XMLWriter $objWriter = null, $pReference = '', PHPExcel_Worksheet_HeaderFooterDrawing $pImage = null)
-	{
+	public function _writeVMLHeaderFooterImage(PHPExcel_Shared_XMLWriter $objWriter = null, $pReference = '', PHPExcel_Worksheet_HeaderFooterDrawing $pImage = null) {
 		// Calculate object id
 		preg_match('{(\d+)}', md5($pReference), $m);
+
 		$id = 1500 + (substr($m[1], 0, 2) * 1);
 
 		// Calculate offset
@@ -568,7 +563,6 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 		$objWriter->endElement();
 	}
 
-
 	/**
 	 * Get an array of all drawings
 	 *
@@ -576,13 +570,12 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @return 	PHPExcel_Worksheet_Drawing[]		All drawings in PHPExcel
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function allDrawings(PHPExcel $pPHPExcel = null)
-	{
+	public function allDrawings(PHPExcel $pPHPExcel = null) {
 		// Get an array of all drawings
 		$aDrawings	= array();
-
 		// Loop through PHPExcel
 		$sheetCount = $pPHPExcel->getSheetCount();
+
 		for ($i = 0; $i < $sheetCount; ++$i) {
 			// Loop through images and add to array
 			$iterator = $pPHPExcel->getSheet($i)->getDrawingCollection()->getIterator();

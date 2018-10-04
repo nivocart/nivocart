@@ -22,8 +22,8 @@
  * @package    PHPExcel_Shared
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    v1.11.0, released: 01-05-2018
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -520,7 +520,7 @@ class PHPExcel_Shared_String {
 		$c0 = ord($str{0});
 		$c1 = ord($str{1});
 
-		if ($c0 == 0xfe && $c1 == 0xff) { 
+		if ($c0 == 0xfe && $c1 == 0xff) {
 			$str = substr($str, 2);
 		} elseif ($c0 == 0xff && $c1 == 0xfe) {
 			$str = substr($str, 2);
@@ -682,7 +682,7 @@ class PHPExcel_Shared_String {
 		}
 
 		return false;
-	}	//	function convertToNumberIfFraction()
+	}
 
 	/**
 	 * Get the decimal separator. If it has not yet been set explicitly, try to obtain number

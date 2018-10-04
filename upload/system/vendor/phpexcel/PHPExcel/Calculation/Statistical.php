@@ -22,8 +22,8 @@
  * @package		PHPExcel_Calculation
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -59,8 +59,12 @@ define('SQRT2PI', 2.5066282746310005024157652848110452530069867406099);
 class PHPExcel_Calculation_Statistical {
 
 	private static function _checkTrendArrays(&$array1, &$array2) {
-		if (!is_array($array1)) { $array1 = array($array1); }
-		if (!is_array($array2)) { $array2 = array($array2); }
+		if (!is_array($array1)) {
+			$array1 = array($array1);
+		}
+		if (!is_array($array2)) {
+			$array2 = array($array2);
+		}
 
 		$array1 = PHPExcel_Calculation_Functions::flattenArray($array1);
 		$array2 = PHPExcel_Calculation_Functions::flattenArray($array2);
@@ -1451,8 +1455,12 @@ class PHPExcel_Calculation_Statistical {
 			$m = floor($trials * $probability);
 			++$TotalUnscaledProbability;
 
-			if ($m == $Guess) { ++$UnscaledPGuess; }
-			if ($m <= $Guess) { ++$UnscaledCumPGuess; }
+			if ($m == $Guess) {
+				++$UnscaledPGuess;
+			}
+			if ($m <= $Guess) {
+				++$UnscaledCumPGuess;
+			}
 
 			$PreviousValue = 1;
 			$Done = false;
@@ -1461,9 +1469,15 @@ class PHPExcel_Calculation_Statistical {
 			while ((!$Done) && ($k <= $trials)) {
 				$CurrentValue = $PreviousValue * ($trials - $k + 1) * $probability / ($k * (1 - $probability));
 				$TotalUnscaledProbability += $CurrentValue;
-				if ($k == $Guess) { $UnscaledPGuess += $CurrentValue; }
-				if ($k <= $Guess) { $UnscaledCumPGuess += $CurrentValue; }
-				if ($CurrentValue <= $EssentiallyZero) { $Done = true; }
+				if ($k == $Guess) {
+					$UnscaledPGuess += $CurrentValue;
+				}
+				if ($k <= $Guess) {
+					$UnscaledCumPGuess += $CurrentValue;
+				}
+				if ($CurrentValue <= $EssentiallyZero) {
+					$Done = true;
+				}
 				$PreviousValue = $CurrentValue;
 				++$k;
 			}
@@ -1474,9 +1488,15 @@ class PHPExcel_Calculation_Statistical {
 			while ((!$Done) && ($k >= 0)) {
 				$CurrentValue = $PreviousValue * $k + 1 * (1 - $probability) / (($trials - $k) * $probability);
 				$TotalUnscaledProbability += $CurrentValue;
-				if ($k == $Guess) { $UnscaledPGuess += $CurrentValue; }
-				if ($k <= $Guess) { $UnscaledCumPGuess += $CurrentValue; }
-				if ($CurrentValue <= $EssentiallyZero) { $Done = true; }
+				if ($k == $Guess) {
+					$UnscaledPGuess += $CurrentValue;
+				}
+				if ($k <= $Guess) {
+					$UnscaledCumPGuess += $CurrentValue;
+				}
+				if ($CurrentValue <= $EssentiallyZero) {
+					$Done = true;
+				}
 				$PreviousValue = $CurrentValue;
 				--$k;
 			}
@@ -2099,7 +2119,7 @@ class PHPExcel_Calculation_Statistical {
 		if ($stats) {
 			return array(
 				array( $bestFitLinear->getSlope(), $bestFitLinear->getSlopeSE(), $bestFitLinear->getGoodnessOfFit(), $bestFitLinear->getF(), $bestFitLinear->getSSRegression(), ),
-				array( $bestFitLinear->getIntersect(), $bestFitLinear->getIntersectSE(), $bestFitLinear->getStdevOfResiduals(), $bestFitLinear->getDFResiduals(), $bestFitLinear->getSSResiduals() ) 
+				array( $bestFitLinear->getIntersect(), $bestFitLinear->getIntersectSE(), $bestFitLinear->getStdevOfResiduals(), $bestFitLinear->getDFResiduals(), $bestFitLinear->getSSResiduals() )
 			);
 		} else {
 			return array( $bestFitLinear->getSlope(), $bestFitLinear->getIntersect() );
@@ -2507,10 +2527,10 @@ class PHPExcel_Calculation_Statistical {
 	private static function _modeCalc($data) {
 		$frequencyArray = array();
 
-		foreach($data as $datum) {
+		foreach ($data as $datum) {
 			$found = false;
 
-			foreach($frequencyArray as $key => $value) {
+			foreach ($frequencyArray as $key => $value) {
 				if ((string)$value['value'] == (string)$datum) {
 					++$frequencyArray[$key]['frequency'];
 					$found = true;
@@ -2696,7 +2716,7 @@ class PHPExcel_Calculation_Statistical {
 	public static function NORMSDIST($value) {
 		$value = PHPExcel_Calculation_Functions::flattenSingleValue($value);
 
-		return self::NORMDIST($value, 0, 1, True);
+		return self::NORMDIST($value, 0, 1, true);
 	}
 
 	/**
@@ -2783,7 +2803,7 @@ class PHPExcel_Calculation_Statistical {
 
 		$significance = (is_null($significance)) ? 3 : (integer) PHPExcel_Calculation_Functions::flattenSingleValue($significance);
 
-		foreach($valueSet as $key => $valueEntry) {
+		foreach ($valueSet as $key => $valueEntry) {
 			if (!is_numeric($valueEntry)) {
 				unset($valueSet[$key]);
 			}
@@ -2937,7 +2957,7 @@ class PHPExcel_Calculation_Statistical {
 
 		$order = (is_null($order)) ? 0 : (integer) PHPExcel_Calculation_Functions::flattenSingleValue($order);
 
-		foreach($valueSet as $key => $valueEntry) {
+		foreach ($valueSet as $key => $valueEntry) {
 			if (!is_numeric($valueEntry)) {
 				unset($valueSet[$key]);
 			}
@@ -3505,7 +3525,7 @@ class PHPExcel_Calculation_Statistical {
 
 		$returnArray = array();
 
-		foreach($newValues as $xValue) {
+		foreach ($newValues as $xValue) {
 			$returnArray[0][] = $bestFitLinear->getValueOfYForX($xValue);
 		}
 

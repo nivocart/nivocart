@@ -22,8 +22,8 @@
  * @package	PHPExcel_Worksheet
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -35,8 +35,7 @@
  * @package	PHPExcel_Worksheet
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Worksheet_ColumnIterator implements Iterator
-{
+class PHPExcel_Worksheet_ColumnIterator implements Iterator {
 	/**
 	 * PHPExcel_Worksheet to iterate
 	 *
@@ -58,14 +57,12 @@ class PHPExcel_Worksheet_ColumnIterator implements Iterator
 	 */
 	private $_startColumn = 0;
 
-
 	/**
 	 * End position
 	 *
 	 * @var int
 	 */
 	private $_endColumn = 0;
-
 
 	/**
 	 * Create a new column iterator
@@ -124,9 +121,11 @@ class PHPExcel_Worksheet_ColumnIterator implements Iterator
 	 */
 	public function seek($column = 'A') {
         $column = PHPExcel_Cell::columnIndexFromString($column) - 1;
+
         if (($column < $this->_startColumn) || ($column > $this->_endColumn)) {
             throw new PHPExcel_Exception("Column $column is out of range ({$this->_startColumn} - {$this->_endColumn})");
         }
+
 		$this->_position = $column;
 
         return $this;
@@ -171,11 +170,7 @@ class PHPExcel_Worksheet_ColumnIterator implements Iterator
 	 */
 	public function prev() {
         if ($this->_position <= $this->_startColumn) {
-            throw new PHPExcel_Exception(
-                "Column is already at the beginning of range (" . 
-                PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . " - " . 
-                PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . ")"
-            );
+            throw new PHPExcel_Exception("Column is already at the beginning of range (" . PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . " - " . PHPExcel_Cell::stringFromColumnIndex($this->_endColumn) . ")");
         }
 
         --$this->_position;
