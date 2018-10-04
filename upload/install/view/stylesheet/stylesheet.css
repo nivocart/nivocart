@@ -200,17 +200,17 @@ label {
 	border-radius: 2px;
 }
 .success {
-	background: rgba(186, 209, 156, 0.7) url('../image/good.png') 10px center no-repeat;
+	background: rgba(186, 209, 156, 0.9) url('../image/good.png') 10px center no-repeat;
 	border: 1px solid #8EAD66;
 	color: #FCFCFC;
 }
 .warning {
-	background: rgba(226, 170, 170, 0.7) url('../image/warning.png') 10px center no-repeat;
+	background: rgba(226, 170, 170, 0.9) url('../image/warning.png') 10px center no-repeat;
 	border: 1px solid #D38383;
 	color: #FCFCFC;
 }
 .tooltip {
-	background: rgba(88, 154, 181, 0.7) url('../image/tooltip.png') 10px center no-repeat;
+	background: rgba(88, 154, 181, 0.9) url('../image/tooltip.png') 10px center no-repeat;
 	border: 1px solid #589AB5;
 	color: #FCFCFC;
 }
