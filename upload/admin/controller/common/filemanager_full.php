@@ -132,7 +132,7 @@ class ControllerCommonFileManagerFull extends Controller {
 		if ($return) {
 			return htmlspecialchars($this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 100, 100), ENT_QUOTES, 'UTF-8');
 		} else {
-			$this->response->setOutput(htmlspecialchars($this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 100, 100), ENT_QUOTES, 'UTF-8'));
+			$this->response->setOutput(htmlspecialchars($this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 120, 120), ENT_QUOTES, 'UTF-8'));
 		}
 	}
 

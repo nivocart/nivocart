@@ -8,7 +8,6 @@
 <script type="text/javascript" src="view/javascript/jquery/jstree/plugins/jquery.tree.cookie.js"></script>
 <script type="text/javascript" src="view/javascript/plupload/js/plupload.full.min.js"></script>
 <script type="text/javascript" src="view/javascript/plupload/js/jquery.ui.plupload/jquery.ui.plupload.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/ajaxupload.min.js"></script>
 
 <div id="content">
   <div class="breadcrumb">

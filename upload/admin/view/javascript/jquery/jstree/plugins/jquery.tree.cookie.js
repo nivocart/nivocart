@@ -32,7 +32,9 @@
 						if (this.settings.rules.multiple != false && this.selected_arr.length > 1) {
 							var val = Array();
 							$.each(this.selected_arr, function() {
-								if (this.attr("id")) { val.push(this.attr("id")); }
+								if (this.attr("id")) {
+									val.push(this.attr("id"));
+								}
 							});
 							val = val.join(",");
 						} else {
@@ -67,6 +69,7 @@
 					}
 
 					tmp = $.cookie(opts.prefix + 'selected');
+
 					if (tmp) {
 						tmp = tmp.split(",");
 						if (opts.keep_selected) {
@@ -76,13 +79,27 @@
 						}
 					}
 				},
-				onchange : function() { $.tree.plugins.cookie.set_cookie.apply(this, ["selected"]); },
-				onopen : function() { $.tree.plugins.cookie.set_cookie.apply(this, ["open"]); },
-				onclose : function() { $.tree.plugins.cookie.set_cookie.apply(this, ["open"]); },
-				ondelete	: function() { $.tree.plugins.cookie.set_cookie.apply(this, ["open"]); },
-				oncopy : function() { $.tree.plugins.cookie.set_cookie.apply(this, ["open"]); },
-				oncreate : function() { $.tree.plugins.cookie.set_cookie.apply(this, ["open"]); },
-				onmoved : function() { $.tree.plugins.cookie.set_cookie.apply(this, ["open"]); }
+				onchange : function() {
+					$.tree.plugins.cookie.set_cookie.apply(this, ["selected"]);
+				},
+				onopen : function() {
+					$.tree.plugins.cookie.set_cookie.apply(this, ["open"]);
+				},
+				onclose : function() {
+					$.tree.plugins.cookie.set_cookie.apply(this, ["open"]);
+				},
+				ondelete	: function() {
+					$.tree.plugins.cookie.set_cookie.apply(this, ["open"]);
+				},
+				oncopy : function() {
+					$.tree.plugins.cookie.set_cookie.apply(this, ["open"]);
+				},
+				oncreate : function() {
+					$.tree.plugins.cookie.set_cookie.apply(this, ["open"]);
+				},
+				onmoved : function() {
+					$.tree.plugins.cookie.set_cookie.apply(this, ["open"]);
+				}
 			}
 		}
 	});
