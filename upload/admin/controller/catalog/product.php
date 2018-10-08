@@ -1003,7 +1003,7 @@ class ControllerCatalogProduct extends Controller {
 		} elseif (!empty($product_info)) {
 			$this->data['price'] = $product_info['price'];
 		} else {
-			$this->data['price'] = '';
+			$this->data['price'] = 0;
 		}
 
 		if (isset($this->request->post['cost'])) {

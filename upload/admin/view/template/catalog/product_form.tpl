@@ -137,7 +137,7 @@
           <tr class="highlighted">
             <td><?php echo $entry_price; ?></td>
             <td>
-              <input type="text" name="price" class="excvat" value="<?php echo $price; ?>" /> &nbsp; <?php echo $text_exc_vat; ?> &nbsp; <a onclick="apply();" id="price-apply" class="button-save"><i class="fa fa-refresh"></i></a>
+              <input type="text" name="price" class="excvat" value="<?php echo number_format($price, 4, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?> &nbsp; <a onclick="apply();" id="price-apply" class="button-save"><i class="fa fa-refresh"></i></a>
               <br /><br />
               <input type="text" name="incvat" class="incvat" value="<?php echo number_format(($price * $vat_rate), 4, '.', ''); ?>" /> &nbsp; <?php echo $text_inc_vat; ?> (<?php echo round($base_rate, 2); ?>%)
             </td>
