@@ -202,9 +202,9 @@
       </div>
       <div class="rightside animated fadeIn">
         <div style="margin:5px 0;"><?php echo $entry_username; ?></div>
-        <div><input type="text" name="username" value="<?php echo $username; ?>" size="17" /></div>
+        <div><input type="text" name="username" value="<?php echo $username; ?>" size="15" /></div>
         <div style="margin:5px 0;"><?php echo $entry_password; ?></div>
-        <div><input type="password" name="password" value="<?php echo $password; ?>" size="17" /></div>
+        <div><input type="password" name="password" value="<?php echo $password; ?>" size="15" /></div>
       <?php if ($forgotten) { ?>
         <div style="margin:5px 0;"><a href="<?php echo $forgotten; ?>"><?php echo $text_forgotten; ?></a></div>
       <?php } ?>
