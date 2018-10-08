@@ -137,9 +137,9 @@
           <tr class="highlighted">
             <td><?php echo $entry_price; ?></td>
             <td>
-              <input type="text" name="price" class="excvat" value="<?php echo number_format($price, 4, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?> &nbsp; <a onclick="apply();" id="price-apply" class="button-save"><i class="fa fa-refresh"></i></a>
+              <input type="text" name="price" class="excvat" value="<?php echo number_format($price, 2, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?> &nbsp; <a onclick="apply();" id="price-apply" class="button-save"><i class="fa fa-refresh"></i></a>
               <br /><br />
-              <input type="text" name="incvat" class="incvat" value="<?php echo number_format(($price * $vat_rate), 4, '.', ''); ?>" /> &nbsp; <?php echo $text_inc_vat; ?> (<?php echo round($base_rate, 2); ?>%)
+              <input type="text" name="incvat" class="incvat" value="<?php echo number_format(($price * $vat_rate), 2, '.', ''); ?>" /> &nbsp; <?php echo $text_inc_vat; ?> (<?php echo round($base_rate, 2); ?>%)
             </td>
           </tr>
           <tr class="highlighted">
@@ -1484,11 +1484,11 @@ $('select[name=\'tax_local_rate_id\']').trigger('change');
 
 <script type="text/javascript"><!--
 $('.incvat').on('change keydown keyup', function() {
-	$('input.excvat').val(($(this).val()/<?php echo $vat_rate; ?>).toFixed(4));
+	$('input.excvat').val(($(this).val()/<?php echo $vat_rate; ?>).toFixed(2));
 });
 
 $('.excvat').on('change keydown keyup', function() {
-	$('input.incvat').val(($(this).val()*<?php echo $vat_rate; ?>).toFixed(4));
+	$('input.incvat').val(($(this).val()*<?php echo $vat_rate; ?>).toFixed(2));
 });
 //--></script>
 
