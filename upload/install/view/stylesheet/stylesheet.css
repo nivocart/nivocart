@@ -62,7 +62,13 @@ form {
 	margin: 0;
 }
 fieldset {
-	background: #DADADA;
+	background-color: #E6E6E6;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#E6E6E6), to(#D4D4D4));
+	background-image: -webkit-linear-gradient(top, #E6E6E6, #D4D4D4);
+	background-image: -moz-linear-gradient(top, #E6E6E6, #D4D4D4);
+	background-image: -ms-linear-gradient(top, #E6E6E6, #D4D4D4);
+	background-image: -o-linear-gradient(top, #E6E6E6, #D4D4D4);
+	background-image: linear-gradient(to bottom, #E6E6E6, #D4D4D4);
 	border: 1px solid #111;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -73,7 +79,7 @@ fieldset {
 	margin: 0 0 20px 0;
 }
 fieldset p {
-	color: #444;
+	color: #333;
 }
 fieldset table {
 	width: 100%;
