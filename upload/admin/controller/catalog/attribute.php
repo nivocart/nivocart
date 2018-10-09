@@ -382,7 +382,7 @@ class ControllerCatalogAttribute extends Controller {
 		} elseif (!empty($attribute_info)) {
 			$this->data['sort_order'] = $attribute_info['sort_order'];
 		} else {
-			$this->data['sort_order'] = '';
+			$this->data['sort_order'] = 0;
 		}
 
 		$this->template = 'catalog/attribute_form.tpl';

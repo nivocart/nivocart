@@ -2002,7 +2002,7 @@ function addImage() {
 	<?php } ?>
 	html += '    </select></td>';
 	<?php } ?>
-	html += '    <td class="center"><input type="text" name="product_image[' + image_row + '][sort_order]" value="" size="2" /></td>';
+	html += '    <td class="center"><input type="text" name="product_image[' + image_row + '][sort_order]" value="0" size="2" /></td>';
 	html += '    <td class="center"><a onclick="$(\'#image-row' + image_row  + '\').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>';
 	html += '  </tr>';
 	html += '</tbody>';

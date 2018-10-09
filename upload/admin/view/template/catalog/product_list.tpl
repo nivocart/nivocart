@@ -123,18 +123,18 @@
               <td class="left"><?php echo $product['name']; ?></td>
               <td class="left"><?php echo $product['barcode']; ?><?php echo $product['model']; ?></td>
               <td class="right"><?php if ($product['special']) { ?>
-                <span style="text-decoration:line-through;"><?php echo $product['price']; ?></span><br />
-                <span style="color:#E53030;"><?php echo $product['special']; ?></span><br />
+                <span style="text-decoration:line-through;"><?php echo number_format($product['price'], 2, '.', ''); ?></span><br />
+                <span style="color:#E53030;"><?php echo number_format($product['special'], 2, '.', ''); ?></span><br />
                 <?php if ($product['discount']) { ?>
                   <?php foreach ($product['discount'] as $discount) { ?>
-                    <span style="color:#558899; font-size:10px;"><?php echo $discount['price']; ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
+                    <span style="color:#558899; font-size:10px;"><?php echo number_format($discount['price'], 2, '.', ''); ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
                   <?php } ?>
                 <?php } ?>
               <?php } else { ?>
-                <?php echo $product['price']; ?><br />
+                <?php echo number_format($product['price'], 2, '.', ''); ?><br />
                 <?php if ($product['discount']) { ?>
                   <?php foreach ($product['discount'] as $discount) { ?>
-                    <span style="color:#558899; font-size:10px;"><?php echo $discount['price']; ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
+                    <span style="color:#558899; font-size:10px;"><?php echo number_format($discount['price'], 2, '.', ''); ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
                   <?php } ?>
                 <?php } ?>
               <?php } ?></td>

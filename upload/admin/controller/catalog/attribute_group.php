@@ -366,7 +366,7 @@ class ControllerCatalogAttributeGroup extends Controller {
 		} elseif (!empty($attribute_group_info)) {
 			$this->data['sort_order'] = $attribute_group_info['sort_order'];
 		} else {
-			$this->data['sort_order'] = '';
+			$this->data['sort_order'] = 0;
 		}
 
 		$this->template = 'catalog/attribute_group_form.tpl';
