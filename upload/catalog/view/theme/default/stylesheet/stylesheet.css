@@ -1011,7 +1011,7 @@ a.button-add:hover {
 }
 #content .box-product > div {
 	width: 24%;
-	min-width: 150px;
+	min-width: 170px;
 }
 .box-product .image {
 	display: block;
@@ -2902,6 +2902,10 @@ table.order-options tr td #payment-method h2 {
 	#content-right + #content {
 		margin-right: 240px;
 	}
+	/* Box Product */
+	#content .box-product > div {
+		width: 49%;
+	}
 	/* Product Grid */
 	.product-grid > div {
 		width: 30%;
@@ -3055,6 +3059,10 @@ table.order-options tr td #payment-method h2 {
 	}
 	#header #search input {
 		width: 196px;
+	}
+	/* Box Product */
+	#content .box-product > div {
+		width: 49%;
 	}
 	/* Return */
 	#return-product .content .return-product, #return-product .content .return-detail {
@@ -3223,6 +3231,10 @@ table.order-options tr td #payment-method h2 {
 	}
 	#header #search input {
 		width: 196px;
+	}
+	/* Box Product */
+	#content .box-product > div {
+		width: 100%;
 	}
 	/* Return */
 	#return-product .content .return-product, #return-product .content .return-detail {
@@ -3420,6 +3432,10 @@ table.order-options tr td #payment-method h2 {
 	}
 	#header #search input {
 		width: 196px;
+	}
+	/* Box Product */
+	#content .box-product > div {
+		width: 100%;
 	}
 	/* Return */
 	#return-product .content .return-product, #return-product .content .return-detail {
