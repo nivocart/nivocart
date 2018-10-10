@@ -377,7 +377,7 @@ class ControllerCatalogFilter extends Controller {
 		} elseif (!empty($filter_group_info)) {
 			$this->data['sort_order'] = $filter_group_info['sort_order'];
 		} else {
-			$this->data['sort_order'] = '';
+			$this->data['sort_order'] = 0;
 		}
 
 		if (isset($this->request->post['filter'])) {

@@ -487,7 +487,7 @@ class ControllerCatalogField extends Controller {
 		} elseif (!empty($field_info)) {
 			$this->data['sort_order'] = $field_info['sort_order'];
 		} else {
-			$this->data['sort_order'] = '';
+			$this->data['sort_order'] = 0;
 		}
 
 		$this->template = 'catalog/field_form.tpl';
