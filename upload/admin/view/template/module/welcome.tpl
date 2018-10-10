@@ -208,7 +208,7 @@ function addModule() {
 	html += '    </tr>';
 	html += '    <tr class="highlighted">';
 	html += '      <td><?php echo $entry_sort_order; ?></td>';
-	html += '      <td><input type="text" name="welcome_module[' + module_row + '][sort_order]" value="" size="3" /></td>';
+	html += '      <td><input type="text" name="welcome_module[' + module_row + '][sort_order]" value="0" size="3" /></td>';
 	html += '    </tr>';
 	html += '  </table>';
 	html += '</div>';

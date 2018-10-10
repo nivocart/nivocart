@@ -46,9 +46,9 @@
             <td><?php echo $entry_mode; ?></td>
             <td><select name="affiliate_mode">
               <?php if (isset($affiliate_mode)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($affiliate_mode == '0') {echo $selected;} ?>><?php echo $text_hidden; ?></option>
-                <option value="1" <?php if ($affiliate_mode == '1') {echo $selected;} ?>><?php echo $text_compact; ?></option>
-                <option value="2" <?php if ($affiliate_mode == '2') {echo $selected;} ?>><?php echo $text_complete; ?></option>
+                <option value="0" <?php if ($affiliate_mode == '0') { echo $selected; } ?>><?php echo $text_hidden; ?></option>
+                <option value="1" <?php if ($affiliate_mode == '1') { echo $selected; } ?>><?php echo $text_compact; ?></option>
+                <option value="2" <?php if ($affiliate_mode == '2') { echo $selected; } ?>><?php echo $text_complete; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_hidden; ?></option>
                 <option value="1"><?php echo $text_compact; ?></option>
@@ -167,7 +167,7 @@ function addModule() {
 	html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
 	html += '      <option value="0"><?php echo $text_disabled; ?></option>';
 	html += '    </select></td>';
-	html += '    <td class="center"><input type="text" name="affiliate_module[' + module_row + '][sort_order]" value="" size="3" /></td>';
+	html += '    <td class="center"><input type="text" name="affiliate_module[' + module_row + '][sort_order]" value="0" size="3" /></td>';
 	html += '    <td class="center"><a onclick="$(\'#module-row' + module_row + '\').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>';
 	html += '  </tr>';
 	html += '</tbody>';

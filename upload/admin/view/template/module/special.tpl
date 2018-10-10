@@ -176,8 +176,8 @@ function addModule() {
 	html += '  <tr>';
 	html += '    <td class="left"><input type="text" name="special_module[' + module_row + '][limit]" value="5" size="1" /></td>';
 	html += '    <td class="left">';
-	html += '      <input type="text" name="special_module[' + module_row + '][image_width]" value="120" size="3" /> x ';
-	html += '      <input type="text" name="special_module[' + module_row + '][image_height]" value="120" size="3" /> px';
+	html += '      <input type="text" name="special_module[' + module_row + '][image_width]" value="150" size="3" /> x ';
+	html += '      <input type="text" name="special_module[' + module_row + '][image_height]" value="150" size="3" /> px';
 	html += '    </td>';
 	html += '    <td class="left"><select name="special_module[' + module_row + '][layout_id]">';
 	<?php foreach ($layouts as $layout) { ?>
@@ -196,7 +196,7 @@ function addModule() {
 	html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
 	html += '      <option value="0"><?php echo $text_disabled; ?></option>';
 	html += '    </select></td>';
-	html += '    <td class="center"><input type="text" name="special_module[' + module_row + '][sort_order]" value="" size="3" /></td>';
+	html += '    <td class="center"><input type="text" name="special_module[' + module_row + '][sort_order]" value="0" size="3" /></td>';
 	html += '    <td class="center"><a onclick="$(\'#module-row' + module_row + '\').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>';
 	html += '  </tr>';
 	html += '</tbody>';

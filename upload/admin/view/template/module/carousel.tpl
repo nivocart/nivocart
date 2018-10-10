@@ -244,8 +244,8 @@ function addModule() {
 	<?php } ?>
 	html += '    </select></td>';
 	html += '    <td class="left">';
-	html += '      <input type="text" name="carousel_module[' + module_row + '][width]" value="120" size="3" /> x ';
-	html += '      <input type="text" name="carousel_module[' + module_row + '][height]" value="120" size="3" /> px';
+	html += '      <input type="text" name="carousel_module[' + module_row + '][width]" value="100" size="3" /> x ';
+	html += '      <input type="text" name="carousel_module[' + module_row + '][height]" value="100" size="3" /> px';
 	html += '    </td>';
     html += '    <td class="left">';
 	html += '      <input type="text" name="carousel_module[' + module_row + '][show]" value="4" size="2" /> Max';
@@ -271,7 +271,7 @@ function addModule() {
 	html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
 	html += '      <option value="0"><?php echo $text_disabled; ?></option>';
 	html += '    </select></td>';
-	html += '    <td class="center"><input type="text" name="carousel_module[' + module_row + '][sort_order]" value="" size="3" /></td>';
+	html += '    <td class="center"><input type="text" name="carousel_module[' + module_row + '][sort_order]" value="0" size="3" /></td>';
 	html += '    <td class="center"><a onclick="$(\'#module-row' + module_row + '\').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>';
 	html += '  </tr>';
 	html += '</tbody>';

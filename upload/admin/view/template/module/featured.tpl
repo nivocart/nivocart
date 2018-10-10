@@ -55,9 +55,9 @@
             <td>&nbsp;</td>
             <td>
               <div class="scrollbox" id="featured-product" style="height:180px;">
-                <?php $class='odd'; ?>
+                <?php $class = 'odd'; ?>
                 <?php foreach ($products as $product) { ?>
-                  <?php $class=($class == 'even' ? 'odd' : 'even'); ?>
+                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
                   <div id="featured-product<?php echo $product['product_id']; ?>" class="<?php echo $class; ?>"><?php echo $product['name']; ?> <img src="view/image/delete.png" alt="" />
                     <input type="hidden" value="<?php echo $product['product_id']; ?>" />
                   </div>
@@ -321,8 +321,8 @@ function addModule() {
 	html  = '<tbody id="module-row' + module_row + '">';
 	html += '  <tr>';
 	html += '    <td class="left">';
-	html += '      <input type="text" name="featured_module[' + module_row + '][image_width]" value="120" size="3" /> x ';
-	html += '      <input type="text" name="featured_module[' + module_row + '][image_height]" value="120" size="3" /> px';
+	html += '      <input type="text" name="featured_module[' + module_row + '][image_width]" value="150" size="3" /> x ';
+	html += '      <input type="text" name="featured_module[' + module_row + '][image_height]" value="150" size="3" /> px';
 	html += '    </td>';
 	html += '    <td class="left"><select name="featured_module[' + module_row + '][layout_id]">';
 	<?php foreach ($layouts as $layout) { ?>
@@ -341,7 +341,7 @@ function addModule() {
 	html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
 	html += '      <option value="0"><?php echo $text_disabled; ?></option>';
 	html += '    </select></td>';
-	html += '    <td class="center"><input type="text" name="featured_module[' + module_row + '][sort_order]" value="" size="3" /></td>';
+	html += '    <td class="center"><input type="text" name="featured_module[' + module_row + '][sort_order]" value="0" size="3" /></td>';
 	html += '    <td class="center"><a onclick="$(\'#module-row' + module_row + '\').remove();" class="button-delete ripple"><?php echo $button_remove; ?></td>';
 	html += '  </tr>';
 	html += '</tbody>';
