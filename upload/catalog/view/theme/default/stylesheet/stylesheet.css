@@ -701,7 +701,7 @@ table.radio tr.highlight:hover td {
 .pagination {
 	width: 100%;
 	display: inline-block;
-	border-top: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
 	padding-top: 8px;
 	margin-bottom: 10px;
 }
@@ -711,42 +711,31 @@ table.radio tr.highlight:hover td {
 	float: left;
 }
 .pagination .links a, .pagination .links b {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: bold;
-	line-height: 13px;
+	line-height: 14px;
 	text-decoration: none;
 	text-shadow: 0 1px 0 #FCFCFC;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
-	border-radius: 2px;
-	padding: 5px 11px;
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	-khtml-border-radius: 1px;
+	border-radius: 1px;
+	padding: 7px 12px;
 }
 .pagination .links a {
-	color: #AAA;
-	background-color: #FCFCFC;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#FCFCFC), to(#DEDEDE));
-	background-image: -webkit-linear-gradient(top, #FCFCFC, #DEDEDE);
-	background-image: -moz-linear-gradient(top, #FCFCFC, #DEDEDE);
-	background-image: -ms-linear-gradient(top, #FCFCFC, #DEDEDE);
-	background-image: -o-linear-gradient(top, #FCFCFC, #DEDEDE);
-	background-image: linear-gradient(to bottom, #FCFCFC, #DEDEDE);
-	border: 1px solid #CCC;
+	color: #FCFCFC;
+	background: #575757;
+	border: 1px solid #575757;
 }
 .pagination .links a:hover {
-	color: #777;
-	border: 1px solid #888;
+	color: #FFF;
+	background: #1991BE;
+	border: 1px solid #1991BE;
 }
 .pagination .links b {
-	color: #4691D2;
-	background-color: #F8F8F8;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#D6D6D6));
-	background-image: -webkit-linear-gradient(top, #F8F8F8, #D6D6D6);
-	background-image: -moz-linear-gradient(top, #F8F8F8, #D6D6D6);
-	background-image: -ms-linear-gradient(top, #F8F8F8, #D6D6D6);
-	background-image: -o-linear-gradient(top, #F8F8F8, #D6D6D6);
-	background-image: linear-gradient(to bottom, #F8F8F8, #D6D6D6);
-	border: 1px solid #4691D2;
+	color: #FFF;
+	background: #1991BE;
+	border: 1px solid #1991BE;
 }
 .pagination .results {
 	float: right;
@@ -905,7 +894,7 @@ a.button-add:hover {
 .buttons {
 	width: 100%;
 	background: #FCFCFC;
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 	margin: 0 0 20px 0;
 	padding: 6px;
 	overflow: auto;
@@ -1133,7 +1122,7 @@ a.button-add:hover {
 	padding: 8px 5px 8px 0;
 }
 .box-category > ul > li + li {
-	border-top: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
 }
 .box-category > ul > li a {
 	text-decoration: none;
@@ -1199,7 +1188,7 @@ a.button-add:hover {
 	margin: 0 6px 6px 0;
 }
 .box-manufacturer .image img {
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 	padding: 2px;
 }
 /* Box information */
@@ -1211,7 +1200,7 @@ a.button-add:hover {
 .box-information > ul > li {}
 .box-information > ul > li:hover {}
 .box-information > ul > li + li {
-	border-top: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
 }
 .box-information > ul > li > a {
 	text-decoration: none;
@@ -1275,7 +1264,7 @@ ul.box-filter, ul.box-filter ul {
 ul.box-filter span {
 	display: block;
 	font-weight: bold;
-	border-bottom: 1px solid #E7E7E7;
+	border-bottom: 1px solid #E3E3E3;
 	padding-bottom: 5px;
 	margin-bottom: 8px;
 }
@@ -1332,7 +1321,7 @@ ul.box-filter > li ul {
 }
 .content-info .info .image {
 	float: right;
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 	margin: 5px 5px 15px 15px;
 	padding: 5px;
 }
@@ -1414,7 +1403,7 @@ ul.box-filter > li ul {
 	padding: 10px;
 	overflow: auto;
 	margin-bottom: 15px;
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 }
 #content .content .left {
 	float: left;
@@ -1491,7 +1480,7 @@ ul.box-filter > li ul {
 	float: left;
 	padding: 5px;
 	margin-right: 15px;
-	border: 1px solid #E7E7E7;
+	border: none;
 }
 /* Refine */
 .category-list {
@@ -1546,7 +1535,7 @@ ul.box-filter > li ul {
 }
 /* Product filter */
 .product-filter {
-	border-bottom: 1px solid #E7E7E7;
+	border-bottom: 1px solid #E3E3E3;
 	padding: 0 0 5px 0;
 	margin: 0 0 15px 0;
 	overflow: auto;
@@ -1596,7 +1585,7 @@ ul.box-filter > li ul {
 	border-radius: 2px;
 }
 .product-list > div + div {
-	border-top: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
 	padding-top: 16px;
 }
 .product-list .product-label {
@@ -1821,7 +1810,7 @@ ul.box-filter > li ul {
 	margin-bottom: 20px;
 }
 .product-info > .left .image img {
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 	padding: 10px;
 }
 .product-info > .left .image-additional {
@@ -1838,19 +1827,19 @@ ul.box-filter > li ul {
 	margin: 0 10px 10px 0;
 }
 .product-info > .left .image-additional img {
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 	padding: 2px;
 }
 .product-info > .left .video {
 	float: left;
 	text-align: center;
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 	margin: 10px 0;
 	padding: 10px;
 }
 .product-info .description {
-	border-top: 1px solid #E7E7E7;
-	border-bottom: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
+	border-bottom: 1px solid #E3E3E3;
 	padding: 5px 5px 10px 5px;
 	margin-bottom: 10px;
 	line-height: 20px;
@@ -1864,7 +1853,7 @@ ul.box-filter > li ul {
 	text-decoration: none;
 }
 .product-info .color-range {
-	border-bottom: 1px solid #E7E7E7;
+	border-bottom: 1px solid #E3E3E3;
 	padding: 0 0 10px 5px;
 	margin-bottom: 10px;
 	line-height: 30px;
@@ -1887,12 +1876,12 @@ ul.box-filter > li ul {
 	margin: 5px 10px 5px 0;
 }
 .product-info .price {
-	border-bottom: 1px solid #E7E7E7;
+	border-bottom: 1px solid #E3E3E3;
 	padding: 0 5px 10px 5px;
 	margin-bottom: 10px;
 	font-size: 18px;
 	font-weight: bold;
-	text-shadow: 0 1px 0 #E7E7E7;
+	text-shadow: 0 1px 0 #E3E3E3;
 	color: #333;
 }
 .product-info .price-old {
@@ -1918,14 +1907,13 @@ ul.box-filter > li ul {
 	margin-top: 6px;
 }
 .product-info .options {
-	border-bottom: 1px solid #E7E7E7;
+	border-bottom: 1px solid #E3E3E3;
 	padding: 0 5px 10px 5px;
 	margin-bottom: 10px;
 	color: #111;
 }
 .product-info .option-image {
-	margin-top: 3px;
-	margin-bottom: 10px;
+	margin: 3px 0 10px 0;
 }
 .product-info .option-image label {
 	display: block;
@@ -1938,7 +1926,7 @@ ul.box-filter > li ul {
 	cursor: pointer;
 }
 .product-info .review {
-	border-top: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
 	color: #444;
 	margin-bottom: 10px;
 }
@@ -1962,7 +1950,7 @@ ul.box-filter > li ul {
 }
 /* Product Cart */
 .product-info .cart {
-	border-bottom: 1px solid #E7E7E7;
+	border-bottom: 1px solid #E3E3E3;
 	padding: 10px 10px 15px 10px;
 	margin-bottom: 20px;
 	overflow: auto;
@@ -1975,7 +1963,7 @@ ul.box-filter > li ul {
 .product-info .cart div .quantity-input {
 	float: left;
 	width: 32px;
-	background: rgba(255,255,255,1);
+	background: rgba(255, 255, 255, 1);
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
@@ -2046,7 +2034,7 @@ ul.box-filter > li ul {
 	width: 100%;
 	padding-top: 10px;
 	margin-bottom: 15px;
-	border-top: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
 	font-size: 13px;
 }
 .tags a {
@@ -2091,7 +2079,7 @@ ul.box-filter > li ul {
 }
 #review .content {
 	background: #FFF;
-	border: 1px solid #E7E7E7;
+	border: 1px solid #E3E3E3;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-khtml-border-radius: 2px;
@@ -2101,7 +2089,7 @@ ul.box-filter > li ul {
 }
 /* Review Box */
 .review-box {
-	border-top: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
 	margin-bottom: 10px;
 	padding: 10px;
 }
@@ -2289,8 +2277,8 @@ ul.box-filter > li ul {
 	display: inline-block;
 	width: 100%;
 	margin-bottom: 20px;
-	border-top: 1px solid #E7E7E7;
-	border-bottom: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
+	border-bottom: 1px solid #E3E3E3;
 }
 .order-list .order-content div {
 	float: left;
@@ -2323,8 +2311,8 @@ ul.box-filter > li ul {
 	display: inline-block;
 	width: 100%;
 	margin-bottom: 20px;
-	border-top: 1px solid #E7E7E7;
-	border-bottom: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
+	border-bottom: 1px solid #E3E3E3;
 }
 .return-list .return-content div {
 	float: left;
@@ -2454,8 +2442,8 @@ ul.box-filter > li ul {
 	display: inline-block;
 	width: 100%;
 	margin-bottom: 20px;
-	border-top: 1px solid #E7E7E7;
-	border-bottom: 1px solid #E7E7E7;
+	border-top: 1px solid #E3E3E3;
+	border-bottom: 1px solid #E3E3E3;
 }
 .download-list .download-content div {
 	float: left;

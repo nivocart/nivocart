@@ -8,8 +8,8 @@ class Pagination {
 	public $text = 'Showing {start}-{end} of {total} Results ({pages} Pages)';
 	public $text_first = '1';
 	public $text_last = '{page}';
-	public $text_next = '&rsaquo;';
-	public $text_prev = '&lsaquo;';
+	public $text_next = '&#10095;';
+	public $text_prev = '&#10094;';
 	public $style_links = 'links';
 	public $style_results = 'results';
 
