@@ -127,10 +127,10 @@ $_['error_email']            = 'Invalid Email address!';
 $_['error_config']           = 'Error: Could not write to config.php please check you have set the correct permissions on: ';
 
 // Buttons
-$_['button_install']         = 'Install NivoCart';
-$_['button_upgrade']         = 'Upgrade NivoCart';
-$_['button_continue']        = 'Continue &nbsp; &#9655;';
-$_['button_back']            = '&#9665; &nbsp; Back';
+$_['button_install']         = '&#9654; &nbsp; Install NivoCart';
+$_['button_upgrade']         = '&#9654; &nbsp; Upgrade NivoCart';
+$_['button_continue']        = 'Continue &nbsp; &#10095;';
+$_['button_back']            = '&#10094; &nbsp; Back';
 
 // Terms
 $_['text_terms'] = '<h3>Open Software License v. 3.0 (OSL-3.0)</h3>
