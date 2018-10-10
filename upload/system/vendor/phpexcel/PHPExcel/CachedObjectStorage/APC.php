@@ -279,7 +279,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
     public function __destruct() {
         $cacheList = $this->getCellList();
 
-        foreach($cacheList as $cellID) {
+        foreach ($cacheList as $cellID) {
             apc_delete($this->_cachePrefix . $cellID . '.cache');
         }
     }

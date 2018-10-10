@@ -1027,7 +1027,7 @@ class PHPExcel_Calculation_Engineering {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
 
-			switch(floor($ord)) {
+			switch (floor($ord)) {
 				case 0 :
 					return self::_Besselk0($x);
 					break;
@@ -1112,7 +1112,7 @@ class PHPExcel_Calculation_Engineering {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
 
-			switch(floor($ord)) {
+			switch (floor($ord)) {
 				case 0 :
 					return self::_Bessely0($x);
 					break;
@@ -2482,7 +2482,7 @@ class PHPExcel_Calculation_Engineering {
 	public static function getConversionGroups() {
 		$conversionGroups = array();
 
-		foreach(self::$_conversionUnits as $conversionUnit) {
+		foreach (self::$_conversionUnits as $conversionUnit) {
 			$conversionGroups[] = $conversionUnit['Group'];
 		}
 
@@ -2507,7 +2507,6 @@ class PHPExcel_Calculation_Engineering {
 
 		return $conversionGroups;
 	}
-
 
 	/**
 	 *	getConversionGroupUnitDetails

@@ -22,8 +22,8 @@
  * @package	PHPExcel_Writer_CSV
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -131,7 +131,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 		$maxRow = $sheet->getHighestDataRow();
 
 		// Write rows to file
-		for($row = 1; $row <= $maxRow; ++$row) {
+		for ($row = 1; $row <= $maxRow; ++$row) {
 			// Convert the row to an array...
 			$cellsArray = $sheet->rangeToArray('A' . $row . ':' . $maxCol . $row, '', $this->_preCalculateFormulas);
 			// ... and write to the file

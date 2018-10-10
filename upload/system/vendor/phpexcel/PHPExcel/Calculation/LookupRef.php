@@ -597,7 +597,7 @@ class PHPExcel_Calculation_LookupRef {
 			} elseif (($match_type == -1) && ($lookupArrayValue <= $lookup_value)) {
 				$i = array_search($i, $keySet);
 				// if match_type is -1 <=> find the smallest value that is greater than or equal to lookup_value
-				if ($i < 1){
+				if ($i < 1) {
 					// 1st cell was allready smaller than the lookup_value
 					break;
 				} else {

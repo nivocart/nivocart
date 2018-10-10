@@ -22,8 +22,8 @@
  * @package	PHPExcel_Writer_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -144,12 +144,12 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 	private function _writeSheetPr(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet $pSheet = null) {
 		// sheetPr
 		$objWriter->startElement('sheetPr');
-		//$objWriter->writeAttribute('codeName',		$pSheet->getTitle());
-		if ($pSheet->getParent()->hasMacros()){//if the workbook have macros, we need to have codeName for the sheet
-			if ($pSheet->hasCodeName() == false){
+		//$objWriter->writeAttribute('codeName', $pSheet->getTitle());
+		if ($pSheet->getParent()->hasMacros()) {	// if the workbook have macros, we need to have codeName for the sheet
+			if ($pSheet->hasCodeName() == false) {
 				$pSheet->setCodeName($pSheet->getTitle());
 			}
-			$objWriter->writeAttribute('codeName',		$pSheet->getCodeName());
+			$objWriter->writeAttribute('codeName', $pSheet->getCodeName());
 		}
 
 		$autoFilterRange = $pSheet->getAutoFilter()->getRange();
@@ -162,14 +162,14 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 		// tabColor
 		if ($pSheet->isTabColorSet()) {
 			$objWriter->startElement('tabColor');
-			$objWriter->writeAttribute('rgb',	$pSheet->getTabColor()->getARGB());
+			$objWriter->writeAttribute('rgb', $pSheet->getTabColor()->getARGB());
 			$objWriter->endElement();
 		}
 
 		// outlinePr
 		$objWriter->startElement('outlinePr');
-		$objWriter->writeAttribute('summaryBelow',	($pSheet->getShowSummaryBelow() ? '1' : '0'));
-		$objWriter->writeAttribute('summaryRight',	($pSheet->getShowSummaryRight() ? '1' : '0'));
+		$objWriter->writeAttribute('summaryBelow', ($pSheet->getShowSummaryBelow() ? '1' : '0'));
+		$objWriter->writeAttribute('summaryRight', ($pSheet->getShowSummaryRight() ? '1' : '0'));
 		$objWriter->endElement();
 
 		// pageSetUpPr
@@ -220,10 +220,10 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
 			// Zoom scales
 			if ($pSheet->getSheetView()->getZoomScale() != 100) {
-				$objWriter->writeAttribute('zoomScale',	$pSheet->getSheetView()->getZoomScale());
+				$objWriter->writeAttribute('zoomScale', $pSheet->getSheetView()->getZoomScale());
 			}
 			if ($pSheet->getSheetView()->getZoomScaleNormal() != 100) {
-				$objWriter->writeAttribute('zoomScaleNormal',	$pSheet->getSheetView()->getZoomScaleNormal());
+				$objWriter->writeAttribute('zoomScaleNormal', $pSheet->getSheetView()->getZoomScaleNormal());
 			}
 
 			// View Layout Type
@@ -233,9 +233,9 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
 			// Gridlines
 			if ($pSheet->getShowGridlines()) {
-				$objWriter->writeAttribute('showGridLines',	'true');
+				$objWriter->writeAttribute('showGridLines', 'true');
 			} else {
-				$objWriter->writeAttribute('showGridLines',	'false');
+				$objWriter->writeAttribute('showGridLines', 'false');
 			}
 
 			// Row and column headers
@@ -247,7 +247,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
 			// Right-to-left
 			if ($pSheet->getRightToLeft()) {
-				$objWriter->writeAttribute('rightToLeft',	'true');
+				$objWriter->writeAttribute('rightToLeft', 'true');
 			}
 
 			$activeCell = $pSheet->getActiveCell();
@@ -268,21 +268,26 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 				$pane = 'topRight';
 				$objWriter->startElement('pane');
 				if ($xSplit > 1) {
-					$objWriter->writeAttribute('xSplit',	$xSplit - 1);
+					$objWriter->writeAttribute('xSplit', $xSplit - 1);
 				}
 				if ($ySplit > 1) {
-					$objWriter->writeAttribute('ySplit',	$ySplit - 1);
+					$objWriter->writeAttribute('ySplit', $ySplit - 1);
 					$pane = ($xSplit > 1) ? 'bottomRight' : 'bottomLeft';
 				}
-				$objWriter->writeAttribute('topLeftCell',	$topLeftCell);
-				$objWriter->writeAttribute('activePane',	$pane);
-				$objWriter->writeAttribute('state',		'frozen');
+				$objWriter->writeAttribute('topLeftCell', $topLeftCell);
+				$objWriter->writeAttribute('activePane', $pane);
+				$objWriter->writeAttribute('state', 'frozen');
 				$objWriter->endElement();
 
 				if (($xSplit > 1) && ($ySplit > 1)) {
 					//	Write additional selections if more than two panes (ie both an X and a Y split)
-					$objWriter->startElement('selection');	$objWriter->writeAttribute('pane', 'topRight');		$objWriter->endElement();
-					$objWriter->startElement('selection');	$objWriter->writeAttribute('pane', 'bottomLeft');	$objWriter->endElement();
+					$objWriter->startElement('selection');
+					$objWriter->writeAttribute('pane', 'topRight');
+					$objWriter->endElement();
+
+					$objWriter->startElement('selection');
+					$objWriter->writeAttribute('pane', 'bottomLeft');
+					$objWriter->endElement();
 				}
 			}
 
@@ -318,15 +323,14 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
 		// Default row height
 		if ($pSheet->getDefaultRowDimension()->getRowHeight() >= 0) {
-			$objWriter->writeAttribute('customHeight',		'true');
+			$objWriter->writeAttribute('customHeight', 'true');
 			$objWriter->writeAttribute('defaultRowHeight',	PHPExcel_Shared_String::FormatNumber($pSheet->getDefaultRowDimension()->getRowHeight()));
 		} else {
 			$objWriter->writeAttribute('defaultRowHeight', '14.4');
 		}
 
 		// Set Zero Height row
-		if ((string)$pSheet->getDefaultRowDimension()->getZeroHeight()  == '1' ||
-			strtolower((string)$pSheet->getDefaultRowDimension()->getZeroHeight()) == 'true' ) {
+		if ((string)$pSheet->getDefaultRowDimension()->getZeroHeight()  == '1' || strtolower((string)$pSheet->getDefaultRowDimension()->getZeroHeight()) == 'true' ) {
 			$objWriter->writeAttribute('zeroHeight', '1');
 		}
 
@@ -343,7 +347,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 				$outlineLevelRow = $dimension->getOutlineLevel();
 			}
 		}
-		$objWriter->writeAttribute('outlineLevelRow',	(int)$outlineLevelRow);
+		$objWriter->writeAttribute('outlineLevelRow', (int)$outlineLevelRow);
 
 		// Outline level - column
 		$outlineLevelCol = 0;
@@ -354,7 +358,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 			}
 		}
 
-		$objWriter->writeAttribute('outlineLevelCol',	(int)$outlineLevelCol);
+		$objWriter->writeAttribute('outlineLevelCol', (int)$outlineLevelCol);
 
 		$objWriter->endElement();
 	}
@@ -368,7 +372,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 	 */
 	private function _writeCols(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet $pSheet = null) {
 		// cols
-		if (count($pSheet->getColumnDimensions()) > 0)  {
+		if (count($pSheet->getColumnDimensions()) > 0) {
 			$objWriter->startElement('cols');
 
 			$pSheet->calculateColumnWidths();
@@ -378,39 +382,39 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 				// col
 				$objWriter->startElement('col');
 				$objWriter->writeAttribute('min',	PHPExcel_Cell::columnIndexFromString($colDimension->getColumnIndex()));
-				$objWriter->writeAttribute('max',	PHPExcel_Cell::columnIndexFromString($colDimension->getColumnIndex()));
+				$objWriter->writeAttribute('max', PHPExcel_Cell::columnIndexFromString($colDimension->getColumnIndex()));
 
 				if ($colDimension->getWidth() < 0) {
 					// No width set, apply default of 10
-					$objWriter->writeAttribute('width',		'9.10');
+					$objWriter->writeAttribute('width', '9.10');
 				} else {
 					// Width set
-					$objWriter->writeAttribute('width',		PHPExcel_Shared_String::FormatNumber($colDimension->getWidth()));
+					$objWriter->writeAttribute('width', PHPExcel_Shared_String::FormatNumber($colDimension->getWidth()));
 				}
 
 				// Column visibility
 				if ($colDimension->getVisible() == false) {
-					$objWriter->writeAttribute('hidden',		'true');
+					$objWriter->writeAttribute('hidden', 'true');
 				}
 
 				// Auto size?
 				if ($colDimension->getAutoSize()) {
-					$objWriter->writeAttribute('bestFit',		'true');
+					$objWriter->writeAttribute('bestFit', 'true');
 				}
 
 				// Custom width?
 				if ($colDimension->getWidth() != $pSheet->getDefaultColumnDimension()->getWidth()) {
-					$objWriter->writeAttribute('customWidth',	'true');
+					$objWriter->writeAttribute('customWidth', 'true');
 				}
 
 				// Collapsed
 				if ($colDimension->getCollapsed() == true) {
-					$objWriter->writeAttribute('collapsed',		'true');
+					$objWriter->writeAttribute('collapsed', 'true');
 				}
 
 				// Outline level
 				if ($colDimension->getOutlineLevel() > 0) {
-					$objWriter->writeAttribute('outlineLevel',	$colDimension->getOutlineLevel());
+					$objWriter->writeAttribute('outlineLevel', $colDimension->getOutlineLevel());
 				}
 
 				// Style
@@ -454,6 +458,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 		$objWriter->writeAttribute('autoFilter', ($pSheet->getProtection()->getAutoFilter() ? 'true' : 'false'));
 		$objWriter->writeAttribute('pivotTables', ($pSheet->getProtection()->getPivotTables() ? 'true' : 'false'));
 		$objWriter->writeAttribute('selectUnlockedCells', ($pSheet->getProtection()->getSelectUnlockedCells() ? 'true' : 'false'));
+
 		$objWriter->endElement();
 	}
 
@@ -609,7 +614,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 					$objWriter->writeAttribute('r:id',	'rId_hyperlink_' . $relationId);
 					++$relationId;
 				} else {
-					$objWriter->writeAttribute('location',	str_replace('sheet://', '', $hyperlink->getUrl()));
+					$objWriter->writeAttribute('location', str_replace('sheet://', '', $hyperlink->getUrl()));
 				}
 
 				if ($hyperlink->getTooltip() != '') {
@@ -639,8 +644,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 			foreach ($pSheet->getProtectedCells() as $protectedCell => $passwordHash) {
 				// protectedRange
 				$objWriter->startElement('protectedRange');
-				$objWriter->writeAttribute('name',		'p' . md5($protectedCell));
-				$objWriter->writeAttribute('sqref',	$protectedCell);
+				$objWriter->writeAttribute('name', 'p' . md5($protectedCell));
+				$objWriter->writeAttribute('sqref', $protectedCell);
 				if (!empty($passwordHash)) {
 					$objWriter->writeAttribute('password',	$passwordHash);
 				}
@@ -686,7 +691,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 		// printOptions
 		$objWriter->startElement('printOptions');
 
-		$objWriter->writeAttribute('gridLines',	($pSheet->getPrintGridlines() ? 'true': 'false'));
+		$objWriter->writeAttribute('gridLines', ($pSheet->getPrintGridlines() ? 'true': 'false'));
 		$objWriter->writeAttribute('gridLinesSet',	'true');
 
 		if ($pSheet->getPageSetup()->getHorizontalCentered()) {
@@ -744,7 +749,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
 			$range = implode(':', $range);
 
-			$objWriter->writeAttribute('ref',	str_replace('$', '', $range));
+			$objWriter->writeAttribute('ref', str_replace('$', '', $range));
 
 			$columns = $pSheet->getAutoFilter()->getColumns();
 
@@ -969,7 +974,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 			}
 
 			$currentRow = 0;
-			while($currentRow++ < $highestRow) {
+
+			while ($currentRow++ < $highestRow) {
 				// Get row dimension
 				$rowDimension = $pSheet->getRowDimension($currentRow);
 
@@ -1016,7 +1022,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
 					// Write cells
 					if (isset($cellsByRow[$currentRow])) {
-						foreach($cellsByRow[$currentRow] as $cellAddress) {
+						foreach ($cellsByRow[$currentRow] as $cellAddress) {
 							// Write cell
 							$this->_writeCell($objWriter, $pSheet, $cellAddress, $pStringTable, $aFlippedStringTable);
 						}
@@ -1056,6 +1062,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 
 			// If cell value is supplied, write cell value
 			$cellValue = $pCell->getValue();
+
 			if (is_object($cellValue) || $cellValue !== '') {
 				// Map type
 				$mappedType = $pCell->getDataType();
@@ -1068,9 +1075,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 						$objWriter->writeAttribute('t', $mappedType);
 						break;
 					case 'f':			// Formula
-						$calculatedValue = ($this->getParentWriter()->getPreCalculateFormulas()) ?
-						    $pCell->getCalculatedValue() :
-						    $cellValue;
+						$calculatedValue = ($this->getParentWriter()->getPreCalculateFormulas()) ? $pCell->getCalculatedValue() : $cellValue;
 						if (is_string($calculatedValue)) {
 							$objWriter->writeAttribute('t', 'str');
 						}
@@ -1082,8 +1087,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 				// Write data depending on its type
 				switch (strtolower($mappedType)) {
 					case 'inlinestr':	// Inline string
-						if (! $cellValue instanceof PHPExcel_RichText) {
-							$objWriter->writeElement('t', PHPExcel_Shared_String::ControlCharacterPHP2OOXML( htmlspecialchars($cellValue) ) );
+						if (!$cellValue instanceof PHPExcel_RichText) {
+							$objWriter->writeElement('t', PHPExcel_Shared_String::ControlCharacterPHP2OOXML(htmlspecialchars($cellValue)));
 						} else if ($cellValue instanceof PHPExcel_RichText) {
 							$objWriter->startElement('is');
 							$this->getParentWriter()->getWriterPart('stringtable')->writeRichText($objWriter, $cellValue);
@@ -1103,7 +1108,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 						break;
 					case 'f':			// Formula
 						$attributes = $pCell->getFormulaAttributes();
-						if($attributes['t'] == 'array') {
+
+						if ($attributes['t'] == 'array') {
 							$objWriter->startElement('f');
 							$objWriter->writeAttribute('t', 'array');
 							$objWriter->writeAttribute('ref', $pCellAddress);
@@ -1114,6 +1120,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 						} else {
 							$objWriter->writeElement('f', substr($cellValue, 1));
 						}
+
 						if ($this->getParentWriter()->getOffice2003Compatibility() === false) {
 							if ($this->getParentWriter()->getPreCalculateFormulas()) {
 //								$calculatedValue = $pCell->getCalculatedValue();
@@ -1141,11 +1148,9 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 						} else {
 							$objWriter->writeElement('v', $cellValue);
 						}
-
 						break;
 				}
 			}
-
 			$objWriter->endElement();
 		} else {
 			throw new PHPExcel_Writer_Exception("Invalid parameters passed.");

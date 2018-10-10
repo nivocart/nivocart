@@ -23,8 +23,8 @@
  * @package		PHPExcel_Chart_Renderer
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 require_once(PHPExcel_Settings::getChartRendererPath().'/jpgraph.php');
@@ -513,7 +513,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 
 		$dataValues = array();
 		//	Loop through each data series in turn
-		for($i = 0; $i < $seriesCount; ++$i) {
+		for ($i = 0; $i < $seriesCount; ++$i) {
 			$dataValuesY = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotCategoryByIndex($i)->getDataValues();
 			$dataValuesX = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($i)->getDataValues();
 
@@ -533,7 +533,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		foreach ($plotOrder as $i => $v) {
 			$dataValuesX = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($v)->getDataValues();
 
-			foreach($dataValuesX as $j => $dataValueX) {
+			foreach ($dataValuesX as $j => $dataValueX) {
 				$dataValues[$plotOrder[$i]][$j] = $dataValueX;
 			}
 		}
@@ -628,7 +628,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 
 		$iLimit = ($multiplePlots) ? $groupCount : 1;
 
-		for($groupID = 0; $groupID < $iLimit; ++$groupID) {
+		for ($groupID = 0; $groupID < $iLimit; ++$groupID) {
 			$grouping = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotGrouping();
 			$exploded = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotStyle();
 
@@ -723,7 +723,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 
 		$this->_renderCartesianPlotArea('intint');
 
-		for($i = 0; $i < $groupCount; ++$i) {
+		for ($i = 0; $i < $groupCount; ++$i) {
 			$this->_renderPlotContour($i);
 		}
 	}

@@ -22,8 +22,8 @@
  * @package    PHPExcel_Shared
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    v1.11.0, released: 01-05-2018
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -60,7 +60,6 @@ class PHPExcel_Shared_File {
 	public static function getUseUploadTempDirectory() {
 		return self::$_useUploadTempDirectory;
 	}	//	function getUseUploadTempDirectory()
-
 
 	/**
 	  * Verify if a file exists
@@ -145,16 +144,22 @@ class PHPExcel_Shared_File {
 		// sys_get_temp_dir is only available since PHP 5.2.1
 		// http://php.net/manual/en/function.sys-get-temp-dir.php#94119
 		if (!function_exists('sys_get_temp_dir')) {
-			if ($temp = getenv('TMP') ) {
-				if ((!empty($temp)) && (file_exists($temp))) { return realpath($temp); }
+			if ($temp = getenv('TMP')) {
+				if ((!empty($temp)) && (file_exists($temp))) {
+					return realpath($temp);
+				}
 			}
 
-			if ($temp = getenv('TEMP') ) {
-				if ((!empty($temp)) && (file_exists($temp))) { return realpath($temp); }
+			if ($temp = getenv('TEMP')) {
+				if ((!empty($temp)) && (file_exists($temp))) {
+					return realpath($temp);
+				}
 			}
 
-			if ($temp = getenv('TMPDIR') ) {
-				if ((!empty($temp)) && (file_exists($temp))) { return realpath($temp); }
+			if ($temp = getenv('TMPDIR')) {
+				if ((!empty($temp)) && (file_exists($temp))) {
+					return realpath($temp);
+				}
 			}
 
 			// trick for creating a file in system's temporary dir

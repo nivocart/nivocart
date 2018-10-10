@@ -281,7 +281,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	public function __destruct() {
 		$cacheList = $this->getCellList();
 
-		foreach($cacheList as $cellID) {
+		foreach ($cacheList as $cellID) {
 			wincache_ucache_delete($this->_cachePrefix . $cellID . '.cache');
 		}
 	}

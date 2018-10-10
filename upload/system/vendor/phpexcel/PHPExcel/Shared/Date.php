@@ -23,9 +23,9 @@
  * @package	PHPExcel_Shared
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license	http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version	##VERSION##, ##DATE##
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
-
 
 /**
  * PHPExcel_Shared_Date
@@ -254,8 +254,7 @@ class PHPExcel_Shared_Date {
 	 * @return	 boolean
 	 */
 	public static function isDateTime(PHPExcel_Cell $pCell) {
-		return self::isDateTimeFormat($pCell->getWorksheet()->getStyle($pCell->getCoordinate())->getNumberFormat()
-		);
+		return self::isDateTimeFormat($pCell->getWorksheet()->getStyle($pCell->getCoordinate())->getNumberFormat());
 	}
 
 	/**
@@ -327,10 +326,9 @@ class PHPExcel_Shared_Date {
 			if (strpos($pFormatCode, '"') !== false) {
 				$segMatcher = false;
 
-				foreach(explode('"', $pFormatCode) as $subVal) {
+				foreach (explode('"', $pFormatCode) as $subVal) {
 					//	Only test in alternate array entries (the non-quoted blocks)
-					if (($segMatcher = !$segMatcher) &&
-						(preg_match('/(^|\])[^\[]*['.self::$possibleDateFormatCharacters.']/i', $subVal))) {
+					if (($segMatcher = !$segMatcher) && (preg_match('/(^|\])[^\[]*['.self::$possibleDateFormatCharacters.']/i', $subVal))) {
 						return true;
 					}
 				}

@@ -3043,7 +3043,7 @@ class PHPExcel_Calculation {
 	}
 
 	private function _convertMatrixReferences($formula) {
-		static $matrixReplaceFrom = array('{',';','}');
+		static $matrixReplaceFrom = array('{', ';', '}');
 		static $matrixReplaceTo = array('MKMATRIX(MKMATRIX(','), MKMATRIX(','))');
 
 		//	Convert any Excel matrix references to the MKMATRIX() function
@@ -3057,7 +3057,7 @@ class PHPExcel_Calculation {
 
 				$i = false;
 
-				foreach($temp as &$value) {
+				foreach ($temp as &$value) {
 					//	Only count/replace in alternating array entries
 					if ($i = !$i) {
 						$openCount += substr_count($value, '{');
@@ -3587,7 +3587,7 @@ class PHPExcel_Calculation {
 
 							$oCol = $oRow = array();
 
-							foreach($oData as $oDatum) {
+							foreach ($oData as $oDatum) {
 								$oCR = PHPExcel_Cell::coordinateFromString($oDatum);
 								$oCol[] = PHPExcel_Cell::columnIndexFromString($oCR[0]) - 1;
 								$oRow[] = $oCR[1];
@@ -3661,9 +3661,9 @@ class PHPExcel_Calculation {
 						$rowIntersect = array_intersect_key($operand1, $operand2);
 						$cellIntersect = $oCol = $oRow = array();
 
-						foreach(array_keys($rowIntersect) as $row) {
+						foreach (array_keys($rowIntersect) as $row) {
 							$oRow[] = $row;
-							foreach($rowIntersect[$row] as $col => $data) {
+							foreach ($rowIntersect[$row] as $col => $data) {
 								$oCol[] = PHPExcel_Cell::columnIndexFromString($col) - 1;
 								$cellIntersect[$row] = array_intersect_key($operand1[$row], $operand2[$row]);
 							}

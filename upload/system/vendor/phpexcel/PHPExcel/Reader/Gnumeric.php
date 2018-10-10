@@ -363,12 +363,12 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
 					foreach ($sheet->PrintInformation->Margins->children('gnm', true) as $key => $margin) {
 						$marginAttributes = $margin->attributes();
 						$marginSize = 72 / 100;	//	Default
-						switch($marginAttributes['PrefUnit']) {
+						switch ($marginAttributes['PrefUnit']) {
 							case 'mm' :
 								$marginSize = intval($marginAttributes['Points']) / 100;
 								break;
 						}
-						switch($key) {
+						switch ($key) {
 							case 'top' :
 								$objPHPExcel->getActiveSheet()->getPageMargins()->setTop($marginSize);
 								break;
@@ -643,7 +643,7 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
 									$styleArray['font']['underline'] = PHPExcel_Style_Font::UNDERLINE_NONE;
 									break;
 							}
-							switch($fontAttributes['Script']) {
+							switch ($fontAttributes['Script']) {
 								case '1' :
 									$styleArray['font']['superScript'] = true;
 									break;

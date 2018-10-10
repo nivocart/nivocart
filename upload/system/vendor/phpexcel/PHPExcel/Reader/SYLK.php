@@ -248,8 +248,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 			//	Read shared styles
 			if ($dataType == 'P') {
 				$formatArray = array();
-				foreach($rowData as $rowDatum) {
-					switch($rowDatum{0}) {
+				foreach ($rowData as $rowDatum) {
+					switch ($rowDatum{0}) {
 						case 'P' : $formatArray['numberformat']['code'] = str_replace($fromFormats, $toFormats, substr($rowDatum,1));
 							break;
 						case 'E' :
@@ -354,7 +354,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 				$styleData = array();
 
 				foreach ($rowData as $rowDatum) {
-					switch($rowDatum{0}) {
+					switch ($rowDatum{0}) {
 						case 'C' :
 						case 'X' : $column = substr($rowDatum, 1);
 									break;

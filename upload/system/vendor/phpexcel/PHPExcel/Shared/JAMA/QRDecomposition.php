@@ -18,7 +18,7 @@
  */
 class PHPExcel_Shared_JAMA_QRDecomposition {
 
-	const MatrixRankException	= "Can only perform operation on full-rank matrix.";
+	const MatrixRankException = "Can only perform operation on full-rank matrix.";
 
 	/**
 	 *	Array for internal storage of decomposition.
@@ -44,7 +44,6 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 	 */
 	private $Rdiag = array();
 
-
 	/**
 	 *	QR Decomposition computed by Householder reflections.
 	 *
@@ -52,7 +51,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 	 *	@return Structure to access R and the Householder vectors and compute Q.
 	 */
 	public function __construct($A) {
-		if($A instanceof PHPExcel_Shared_JAMA_Matrix) {
+		if ($A instanceof PHPExcel_Shared_JAMA_Matrix) {
 			// Initialize.
 			$this->QR = $A->getArrayCopy();
 			$this->m  = $A->getRowDimension();
@@ -90,8 +89,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 		} else {
 			throw new PHPExcel_Calculation_Exception(PHPExcel_Shared_JAMA_Matrix::ArgumentTypeException);
 		}
-	}	//	function __construct()
-
+	}
 
 	/**
 	 *	Is the matrix full rank?
@@ -105,8 +103,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 			}
 		}
 		return true;
-	}	//	function isFullRank()
-
+	}
 
 	/**
 	 *	Return the Householder vectors
@@ -124,8 +121,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 			}
 		}
 		return new PHPExcel_Shared_JAMA_Matrix($H);
-	}	//	function getH()
-
+	}
 
 	/**
 	 *	Return the upper triangular factor
@@ -145,8 +141,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 			}
 		}
 		return new PHPExcel_Shared_JAMA_Matrix($R);
-	}	//	function getR()
-
+	}
 
 	/**
 	 *	Generate and return the (economy-sized) orthogonal factor
@@ -182,8 +177,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 		}
 		*/
 		return new PHPExcel_Shared_JAMA_Matrix($Q);
-	}	//	function getQ()
-
+	}
 
 	/**
 	 *	Least squares solution of A*X = B
@@ -229,6 +223,5 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 		} else {
 			throw new PHPExcel_Calculation_Exception(PHPExcel_Shared_JAMA_Matrix::MatrixDimensionException);
 		}
-	}	//	function solve()
-
-}	//	PHPExcel_Shared_JAMA_class QRDecomposition
+	}
+}

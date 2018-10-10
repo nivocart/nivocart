@@ -22,12 +22,11 @@
  * @package    PHPExcel_Shared_Trend
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    ##VERSION##, ##DATE##
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
-
 require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php';
-
 
 /**
  * PHPExcel_Power_Best_Fit
@@ -36,8 +35,7 @@ require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php';
  * @package    PHPExcel_Shared_Trend
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
-{
+class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	/**
 	 * Algorithm type to use for best-fit
 	 * (Name of this trend class)
@@ -46,7 +44,6 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 **/
 	protected $_bestFitType = 'power';
 
-
 	/**
 	 * Return the Y-Value for a specified value of X
 	 *
@@ -54,9 +51,8 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 * @return	 float						Y-Value
 	 **/
 	public function getValueOfYForX($xValue) {
-		return $this->getIntersect() * pow(($xValue - $this->_Xoffset),$this->getSlope());
-	}	//	function getValueOfYForX()
-
+		return $this->getIntersect() * pow(($xValue - $this->_Xoffset), $this->getSlope());
+	}
 
 	/**
 	 * Return the X-Value for a specified value of Y
@@ -65,9 +61,8 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 * @return	 float						X-Value
 	 **/
 	public function getValueOfXForY($yValue) {
-		return pow((($yValue + $this->_Yoffset) / $this->getIntersect()),(1 / $this->getSlope()));
-	}	//	function getValueOfXForY()
-
+		return pow((($yValue + $this->_Yoffset) / $this->getIntersect()), (1 / $this->getSlope()));
+	}
 
 	/**
 	 * Return the Equation of the best-fit line
@@ -75,13 +70,11 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getEquation($dp=0) {
+	public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
-
 		return 'Y = '.$intersect.' * X^'.$slope;
-	}	//	function getEquation()
-
+	}
 
 	/**
 	 * Return the Value of X where it intersects Y = 0
@@ -89,13 +82,12 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getIntersect($dp=0) {
+	public function getIntersect($dp = 0) {
 		if ($dp != 0) {
-			return round(exp($this->_intersect),$dp);
+			return round(exp($this->_intersect), $dp);
 		}
 		return exp($this->_intersect);
-	}	//	function getIntersect()
-
+	}
 
 	/**
 	 * Execute the regression and calculate the goodness of fit for a set of X and Y data values
@@ -113,6 +105,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 			}
 		}
 		unset($value);
+
 		foreach ($yValues as &$value) {
 			if ($value < 0.0) {
 				$value = 0 - log(abs($value));
@@ -123,8 +116,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 		unset($value);
 
 		$this->_leastSquareFit($yValues, $xValues, $const);
-	}	//	function _power_regression()
-
+	}
 
 	/**
 	 * Define the regression and calculate the goodness of fit for a set of X and Y data values
@@ -137,6 +129,5 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_power_regression($yValues, $xValues, $const);
 		}
-	}	//	function __construct()
-
-}	//	class powerBestFit
+	}
+}

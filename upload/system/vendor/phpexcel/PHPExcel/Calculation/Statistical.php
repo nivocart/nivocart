@@ -86,7 +86,7 @@ class PHPExcel_Calculation_Statistical {
 		$array1 = array_merge($array1);
 		$array2 = array_merge($array2);
 
-		return True;
+		return true;
 	}
 
 	/**
@@ -1871,7 +1871,7 @@ class PHPExcel_Calculation_Statistical {
 
 		$returnArray = array();
 
-		foreach($newValues as $xValue) {
+		foreach ($newValues as $xValue) {
 			$returnArray[0][] = $bestFitExponential->getValueOfYForX($xValue);
 		}
 
@@ -2546,7 +2546,7 @@ class PHPExcel_Calculation_Statistical {
 			}
 		}
 
-		foreach($frequencyArray as $key => $value) {
+		foreach ($frequencyArray as $key => $value) {
 			$frequencyList[$key] = $value['frequency'];
 			$valueList[$key] = $value['value'];
 		}
@@ -2797,7 +2797,7 @@ class PHPExcel_Calculation_Statistical {
 	 * @param	number				The number of significant digits for the returned percentage value.
 	 * @return	float
 	 */
-	public static function PERCENTRANK($valueSet, $value, $significance=3) {
+	public static function PERCENTRANK($valueSet, $value, $significance = 3) {
 		$valueSet = PHPExcel_Calculation_Functions::flattenArray($valueSet);
 		$value = PHPExcel_Calculation_Functions::flattenSingleValue($value);
 
@@ -2824,7 +2824,7 @@ class PHPExcel_Calculation_Statistical {
 
 		$pos = array_search($value, $valueSet);
 
-		if ($pos === False) {
+		if ($pos === false) {
 			$pos = 0;
 			$testValue = $valueSet[0];
 

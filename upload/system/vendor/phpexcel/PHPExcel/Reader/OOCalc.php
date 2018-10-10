@@ -310,7 +310,7 @@ class PHPExcel_Reader_OOCalc extends PHPExcel_Reader_Abstract implements PHPExce
 		return $this->loadIntoExisting($pFilename, $objPHPExcel);
 	}
 
-	private static function identifyFixedStyleValue($styleList,&$styleAttributeValue) {
+	private static function identifyFixedStyleValue($styleList, &$styleAttributeValue) {
 		$styleAttributeValue = strtolower($styleAttributeValue);
 
 		foreach ($styleList as $style) {

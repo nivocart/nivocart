@@ -5073,11 +5073,10 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 
 			$this->_pos += 4 + $length;
 			$nextIdentifier = self::_GetInt2d($this->_data, $this->_pos);
-		}
-		while ($nextIdentifier == self::XLS_Type_CONTINUE);
+		} while ($nextIdentifier == self::XLS_Type_CONTINUE);
 
 		$splicedData = array(
-			'recordData'    => $data,
+			'recordData' => $data,
 			'spliceOffsets' => $spliceOffsets
 		);
 
@@ -5128,7 +5127,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * @param string $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
 	 * @return string Human readable formula
 	 */
-	private function _getFormulaFromData($formulaData,  $additionalData = '', $baseCell = 'A1') {
+	private function _getFormulaFromData($formulaData, $additionalData = '', $baseCell = 'A1') {
 		// start parsing the formula data
 		$tokens = array();
 
@@ -6555,7 +6554,6 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 			if ($sign) {
 				$value = -1 * $value;
 			}
-			//end of changes by mmp
 		}
 
 		if (($rknum & 0x01) != 0) {
@@ -6644,7 +6642,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * @param array $palette Color palette
 	 * @return array RGB color value, example: array('rgb' => 'FF0000')
 	 */
-	private static function _readColor($color,$palette,$version) {
+	private static function _readColor($color, $palette, $version) {
 		if ($color <= 0x07 || $color >= 0x40) {
 			// special built-in color
 			return self::_mapBuiltInColor($color);
@@ -6687,7 +6685,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 			case 0x0B: return PHPExcel_Style_Border::BORDER_DASHDOTDOT;
 			case 0x0C: return PHPExcel_Style_Border::BORDER_MEDIUMDASHDOTDOT;
 			case 0x0D: return PHPExcel_Style_Border::BORDER_SLANTDASHDOT;
-			default:   return PHPExcel_Style_Border::BORDER_NONE;
+			default: return PHPExcel_Style_Border::BORDER_NONE;
 		}
 	}
 
@@ -6719,7 +6717,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 			case 0x10: return PHPExcel_Style_Fill::FILL_PATTERN_LIGHTTRELLIS;
 			case 0x11: return PHPExcel_Style_Fill::FILL_PATTERN_GRAY125;
 			case 0x12: return PHPExcel_Style_Fill::FILL_PATTERN_GRAY0625;
-			default:   return PHPExcel_Style_Fill::FILL_NONE;
+			default: return PHPExcel_Style_Fill::FILL_NONE;
 		}
 	}
 
@@ -6731,14 +6729,22 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 */
 	private static function _mapErrorCode($subData) {
 		switch ($subData) {
-			case 0x00: return '#NULL!'; break;
-			case 0x07: return '#DIV/0!';	break;
-			case 0x0F: return '#VALUE!'; break;
-			case 0x17: return '#REF!'; break;
-			case 0x1D: return '#NAME?'; break;
-			case 0x24: return '#NUM!'; break;
-			case 0x2A: return '#N/A'; break;
-			default: return false;
+			case 0x00: return '#NULL!';
+			break;
+			case 0x07: return '#DIV/0!';
+			break;
+			case 0x0F: return '#VALUE!';
+			break;
+			case 0x17: return '#REF!';
+			break;
+			case 0x1D: return '#NAME?';
+			break;
+			case 0x24: return '#NUM!';
+			break;
+			case 0x2A: return '#N/A';
+			break;
+			default:
+			return false;
 		}
 	}
 
@@ -6760,7 +6766,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 			case 0x07: return array('rgb' => '00FFFF');
 			case 0x40: return array('rgb' => '000000'); // system window text color
 			case 0x41: return array('rgb' => 'FFFFFF'); // system window background color
-			default:   return array('rgb' => '000000');
+			default: return array('rgb' => '000000');
 		}
 	}
 
@@ -6828,7 +6834,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 			case 0x3D: return array('rgb' => '85396A');
 			case 0x3E: return array('rgb' => '4A3285');
 			case 0x3F: return array('rgb' => '424242');
-			default:   return array('rgb' => '000000');
+			default: return array('rgb' => '000000');
 		}
 	}
 
@@ -6896,7 +6902,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 			case 0x3D: return array('rgb' => '993366');
 			case 0x3E: return array('rgb' => '333399');
 			case 0x3F: return array('rgb' => '333333');
-			default:   return array('rgb' => '000000');
+			default: return array('rgb' => '000000');
 		}
 	}
 

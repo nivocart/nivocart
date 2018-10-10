@@ -61,7 +61,6 @@
 // *    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // */
 
-
 /**
  * PHPExcel_Writer_Excel5_Workbook
  *
@@ -680,7 +679,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 					}
 					$chunk .= $this->writeData($this->_writeDefinedNameBiff8($namedRange->getName(), $formulaData, $scope, false));
 
-				} catch(PHPExcel_Exception $e) {
+				} catch (PHPExcel_Exception $e) {
 					// do nothing
 				}
 			}

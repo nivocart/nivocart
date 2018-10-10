@@ -7,7 +7,7 @@ class Stripe_Recipient extends Stripe_ApiResource {
      *
      * @return Stripe_Recipient
      */
-    public static function retrieve($id, $apiKey=null) {
+    public static function retrieve($id, $apiKey = null) {
         $class = get_class();
         return self::_scopedRetrieve($class, $id, $apiKey);
     }
@@ -18,7 +18,7 @@ class Stripe_Recipient extends Stripe_ApiResource {
      *
      * @return array An array of Stripe_Recipients.
      */
-    public static function all($params=null, $apiKey=null) {
+    public static function all($params = null, $apiKey = null) {
         $class = get_class();
         return self::_scopedAll($class, $params, $apiKey);
     }
@@ -29,7 +29,7 @@ class Stripe_Recipient extends Stripe_ApiResource {
      *
      * @return Stripe_Recipient The created recipient.
      */
-    public static function create($params=null, $apiKey=null) {
+    public static function create($params = null, $apiKey = null) {
         $class = get_class();
         return self::_scopedCreate($class, $params, $apiKey);
     }
@@ -47,7 +47,7 @@ class Stripe_Recipient extends Stripe_ApiResource {
      *
      * @return Stripe_Recipient The deleted recipient.
      */
-    public function delete($params=null) {
+    public function delete($params = null) {
         $class = get_class();
         return self::_scopedDelete($class, $params);
     }
@@ -57,7 +57,7 @@ class Stripe_Recipient extends Stripe_ApiResource {
     *
     * @return array An array of the recipient's Stripe_Transfers.
     */
-    public function transfers($params=null) {
+    public function transfers($params = null) {
         if (!$params) {
             $params = array();
         }
