@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    v1.11.0, released: 01-05-2018
- * @edition     Overclocked Edition
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -243,7 +243,7 @@ class PHPExcel {
 		$ReturnData = null;
 		$What = strtolower($What);
 
-		switch($What) {
+		switch ($What) {
 		case 'all':
 			$ReturnData = $this->_ribbonXMLData;
 			break;

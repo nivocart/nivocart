@@ -885,7 +885,7 @@ class PHPExcel_Calculation_DateTime {
 							}
 						}
 					} else {
-						for($year = $startYear; $year <= $endYear; ++$year) {
+						for ($year = $startYear; $year <= $endYear; ++$year) {
 							if ($year == $startYear) {
 								$startMonth = self::MONTHOFYEAR($startDate);
 								$startDay = self::DAYOFMONTH($startDate);

@@ -69,7 +69,7 @@ class PHPExcel_Reader_Excel2007_Chart {
 		foreach ($chartElementsC as $chartElementKey => $chartElement) {
 			switch ($chartElementKey) {
 				case "chart":
-					foreach($chartElement as $chartDetailsKey => $chartDetails) {
+					foreach ($chartElement as $chartDetailsKey => $chartDetails) {
 						$chartDetailsC = $chartDetails->children($namespacesChartMeta['c']);
 						switch ($chartDetailsKey) {
 							case "plotArea":
@@ -320,7 +320,6 @@ class PHPExcel_Reader_Excel2007_Chart {
 		return null;
 	}	//	function _chartDataSeriesValueSet()
 
-
 	private static function _chartDataSeriesValues($seriesValueSet, $dataType = 'n') {
 		$seriesVal = array();
 		$formatCode = '';
@@ -355,7 +354,6 @@ class PHPExcel_Reader_Excel2007_Chart {
 			'dataValues' => $seriesVal
 		);
 	}	//	function _chartDataSeriesValues()
-
 
 	private static function _chartDataSeriesValuesMultiLevel($seriesValueSet, $dataType = 'n') {
 		$seriesVal = array();
@@ -426,7 +424,7 @@ class PHPExcel_Reader_Excel2007_Chart {
 				if (!is_null($baseline)) {
 					if ($baseline > 0) {
 						$objText->getFont()->setSuperScript(true);
-					} elseif($baseline < 0) {
+					} elseif ($baseline < 0) {
 						$objText->getFont()->setSubScript(true);
 					}
 				}
@@ -435,7 +433,7 @@ class PHPExcel_Reader_Excel2007_Chart {
 				if (!is_null($underscore)) {
 					if ($underscore == 'sng') {
 						$objText->getFont()->setUnderline(PHPExcel_Style_Font::UNDERLINE_SINGLE);
-					} elseif($underscore == 'dbl') {
+					} elseif ($underscore == 'dbl') {
 						$objText->getFont()->setUnderline(PHPExcel_Style_Font::UNDERLINE_DOUBLE);
 					} else {
 						$objText->getFont()->setUnderline(PHPExcel_Style_Font::UNDERLINE_NONE);

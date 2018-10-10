@@ -50,9 +50,9 @@ class CholeskyDecomposition {
 			$this->L = $A->getArray();
 			$this->m = $A->getRowDimension();
 
-			for($i = 0; $i < $this->m; ++$i) {
-				for($j = $i; $j < $this->m; ++$j) {
-					for($sum = $this->L[$i][$j], $k = $i - 1; $k >= 0; --$k) {
+			for ($i = 0; $i < $this->m; ++$i) {
+				for ($j = $i; $j < $this->m; ++$j) {
+					for ($sum = $this->L[$i][$j], $k = $i - 1; $k >= 0; --$k) {
 						$sum -= $this->L[$i][$k] * $this->L[$j][$k];
 					}
 					if ($i == $j) {
@@ -75,8 +75,7 @@ class CholeskyDecomposition {
 		} else {
 			throw new PHPExcel_Calculation_Exception(JAMAError(ArgumentTypeException));
 		}
-	}	//	function __construct()
-
+	}
 
 	/**
 	 *	Is the matrix symmetric and positive definite?
@@ -85,8 +84,7 @@ class CholeskyDecomposition {
 	 */
 	public function isSPD() {
 		return $this->isspd;
-	}	//	function isSPD()
-
+	}
 
 	/**
 	 *	getL
@@ -96,8 +94,7 @@ class CholeskyDecomposition {
 	 */
 	public function getL() {
 		return new Matrix($this->L);
-	}	//	function getL()
-
+	}
 
 	/**
 	 *	Solve A*X = B
@@ -144,6 +141,5 @@ class CholeskyDecomposition {
 		} else {
 			throw new PHPExcel_Calculation_Exception(JAMAError(ArgumentTypeException));
 		}
-	}	//	function solve()
-
-}	//	class CholeskyDecomposition
+	}
+}

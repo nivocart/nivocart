@@ -652,7 +652,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 				$testCurrentIndex = 0;
 
 				foreach ($dataValues as $k => $dataValue) {
-					while($k != $testCurrentIndex) {
+					while ($k != $testCurrentIndex) {
 						$dataValues[$testCurrentIndex] = null;
 						++$testCurrentIndex;
 					}

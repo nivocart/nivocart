@@ -98,9 +98,9 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->_data       = '';
-		$this->_datasize   = 0;
-//		$this->_limit      = 8224;
+		$this->_data = '';
+		$this->_datasize = 0;
+//		$this->_limit = 8224;
 	}
 
 	/**
@@ -116,7 +116,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 			$number  = pack("C8", 0x8D, 0x97, 0x6E, 0x12, 0x83, 0xC0, 0xF3, 0x3F);
 			if ($number == $teststr) {
 				$byte_order = 0;    // Little Endian
-			} elseif ($number == strrev($teststr)){
+			} elseif ($number == strrev($teststr)) {
 				$byte_order = 1;    // Big Endian
 			} else {
 				// Give up. I'll fix this in a later version.
@@ -166,7 +166,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	 * @access private
 	 */
 	function _storeBof($type) {
-		$record  = 0x0809;			// Record identifier	(BIFF5-BIFF8)
+		$record = 0x0809;			// Record identifier	(BIFF5-BIFF8)
 		$length = 0x0010;
 
 		// by inspection of real files, MS Office Excel 2007 writes the following

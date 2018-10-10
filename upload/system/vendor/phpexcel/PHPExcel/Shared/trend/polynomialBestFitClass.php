@@ -25,10 +25,8 @@
  * @version    ##VERSION##, ##DATE##
  */
 
-
 require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php';
 require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/JAMA/Matrix.php';
-
 
 /**
  * PHPExcel_Polynomial_Best_Fit
@@ -37,8 +35,7 @@ require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/JAMA/Matrix.php';
  * @package    PHPExcel_Shared_Trend
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
-{
+class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit {
 	/**
 	 * Algorithm type to use for best-fit
 	 * (Name of this trend class)
@@ -55,7 +52,6 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 	 **/
 	protected $_order = 0;
 
-
 	/**
 	 * Return the order of this polynomial
 	 *
@@ -63,8 +59,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 	 **/
 	public function getOrder() {
 		return $this->_order;
-	}	//	function getOrder()
-
+	}
 
 	/**
 	 * Return the Y-Value for a specified value of X
@@ -81,8 +76,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 			}
 		}
 		return $retVal;
-	}	//	function getValueOfYForX()
-
+	}
 
 	/**
 	 * Return the X-Value for a specified value of Y
@@ -92,8 +86,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 	 **/
 	public function getValueOfXForY($yValue) {
 		return ($yValue - $this->getIntersect()) / $this->getSlope();
-	}	//	function getValueOfXForY()
-
+	}
 
 	/**
 	 * Return the Equation of the best-fit line
@@ -106,6 +99,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 		$intersect = $this->getIntersect($dp);
 
 		$equation = 'Y = '.$intersect;
+
 		foreach ($slope as $key => $value) {
 			if ($value != 0.0) {
 				$equation .= ' + '.$value.' * X';
@@ -115,8 +109,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 			}
 		}
 		return $equation;
-	}	//	function getEquation()
-
+	}
 
 	/**
 	 * Return the Slope of the line
@@ -127,19 +120,18 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 	public function getSlope($dp = 0) {
 		if ($dp != 0) {
 			$coefficients = array();
+
 			foreach ($this->_slope as $coefficient) {
-				$coefficients[] = round($coefficient,$dp);
+				$coefficients[] = round($coefficient, $dp);
 			}
 			return $coefficients;
 		}
 		return $this->_slope;
-	}	//	function getSlope()
-
+	}
 
 	public function getCoefficients($dp = 0) {
-		return array_merge(array($this->getIntersect($dp)),$this->getSlope($dp));
-	}	//	function getCoefficients()
-
+		return array_merge(array($this->getIntersect($dp)), $this->getSlope($dp));
+	}
 
 	/**
 	 * Execute the regression and calculate the goodness of fit for a set of X and Y data values
@@ -154,6 +146,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 		$x_sum = array_sum($xValues);
 		$y_sum = array_sum($yValues);
 		$xx_sum = $xy_sum = 0;
+
 		for ($i = 0; $i < $this->_valueCount; ++$i) {
 			$xy_sum += $xValues[$i] * $yValues[$i];
 			$xx_sum += $xValues[$i] * $xValues[$i];
@@ -180,7 +173,8 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 		$C = $matrixA->solve($matrixB);
 
 		$coefficients = array();
-		for($i = 0; $i < $C->m; ++$i) {
+
+		for ($i = 0; $i < $C->m; ++$i) {
 			$r = $C->get($i, 0);
 			if (abs($r) <= pow(10, -9)) {
 				$r = 0;
@@ -191,7 +185,8 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 		$this->_intersect = array_shift($coefficients);
 		$this->_slope = $coefficients;
 
-		$this->_calculateGoodnessOfFit($x_sum,$y_sum,$xx_sum,$yy_sum,$xy_sum);
+		$this->_calculateGoodnessOfFit($x_sum, $y_sum, $xx_sum, $yy_sum, $xy_sum);
+
 		foreach ($this->_xValues as $xKey => $xValue) {
 			$this->_yBestFitValues[$xKey] = $this->getValueOfYForX($xValue);
 		}
@@ -219,6 +214,5 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 				$this->_error = true;
 			}
 		}
-	}	//	function __construct()
-
-}	//	class polynomialBestFit
+	}
+}

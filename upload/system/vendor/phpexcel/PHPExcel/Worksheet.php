@@ -620,7 +620,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable {
     public function getChartNames() {
         $chartNames = array();
 
-        foreach($this->_chartCollection as $chart) {
+        foreach ($this->_chartCollection as $chart) {
             $chartNames[] = $chart->getName();
         }
 
@@ -641,7 +641,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable {
             return false;
         }
 
-        foreach($this->_chartCollection as $index => $chart) {
+        foreach ($this->_chartCollection as $index => $chart) {
             if ($chart->getName() == $chartName) {
                 return $this->_chartCollection[$index];
             }
@@ -1384,8 +1384,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable {
     public function setDefaultStyle(PHPExcel_Style $pValue) {
         $this->_parent->getDefaultStyle()->applyFromArray(array(
             'font' => array(
-                'name'	=> $pValue->getFont()->getName(),
-                'size'		=> $pValue->getFont()->getSize()
+                'name' => $pValue->getFont()->getName(),
+                'size' => $pValue->getFont()->getSize()
             ),
         ));
 
@@ -1566,7 +1566,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable {
      * @return PHPExcel_Worksheet
      */
     public function duplicateConditionalStyle(array $pCellStyle = null, $pRange = '') {
-        foreach($pCellStyle as $cellStyle) {
+        foreach ($pCellStyle as $cellStyle) {
             if (!($cellStyle instanceof PHPExcel_Style_Conditional)) {
                 throw new PHPExcel_Exception('Style is not a conditional style');
             }

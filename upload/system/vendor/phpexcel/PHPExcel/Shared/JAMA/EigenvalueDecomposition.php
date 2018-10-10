@@ -692,7 +692,7 @@ class EigenvalueDecomposition {
 				} else {
 					$this->cdiv(0.0, -$this->H[$n-1][$n], $this->H[$n-1][$n-1] - $p, $q);
 					$this->H[$n-1][$n-1] = $this->cdivr;
-					$this->H[$n-1][$n]   = $this->cdivi;
+					$this->H[$n-1][$n] = $this->cdivi;
 				}
 				$this->H[$n][$n-1] = 0.0;
 				$this->H[$n][$n] = 1.0;
@@ -726,22 +726,22 @@ class EigenvalueDecomposition {
 							}
 							$this->cdiv($x * $r - $z * $ra + $q * $sa, $x * $s - $z * $sa - $q * $ra, $vr, $vi);
 							$this->H[$i][$n-1] = $this->cdivr;
-							$this->H[$i][$n]   = $this->cdivi;
+							$this->H[$i][$n] = $this->cdivi;
 							if (abs($x) > (abs($z) + abs($q))) {
 								$this->H[$i+1][$n-1] = (-$ra - $w * $this->H[$i][$n-1] + $q * $this->H[$i][$n]) / $x;
 								$this->H[$i+1][$n] = (-$sa - $w * $this->H[$i][$n] - $q * $this->H[$i][$n-1]) / $x;
 							} else {
 								$this->cdiv(-$r - $y * $this->H[$i][$n-1], -$s - $y * $this->H[$i][$n], $z, $q);
 								$this->H[$i+1][$n-1] = $this->cdivr;
-								$this->H[$i+1][$n]   = $this->cdivi;
+								$this->H[$i+1][$n] = $this->cdivi;
 							}
 						}
 						// Overflow control
-						$t = max(abs($this->H[$i][$n-1]),abs($this->H[$i][$n]));
+						$t = max(abs($this->H[$i][$n-1]), abs($this->H[$i][$n]));
 						if (($eps * $t) * $t > 1) {
 							for ($j = $i; $j <= $n; ++$j) {
 								$this->H[$j][$n-1] = $this->H[$j][$n-1] / $t;
-								$this->H[$j][$n]   = $this->H[$j][$n] / $t;
+								$this->H[$j][$n] = $this->H[$j][$n] / $t;
 							}
 						}
 					} // end else
@@ -850,6 +850,7 @@ class EigenvalueDecomposition {
 			$o = ($this->e[$i] > 0) ? $i + 1 : $i - 1;
 			$D[$i][$o] = $this->e[$i];
 		}
+
 		return new Matrix($D);
 	}
 }
