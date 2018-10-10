@@ -19,7 +19,6 @@
 //
 // $Id: PPS.php,v 1.7 2007/02/13 21:00:42 schmidt Exp $
 
-
 /**
 * Class for creating PPS's for OLE containers
 *
@@ -27,8 +26,7 @@
 * @category PHPExcel
 * @package  PHPExcel_Shared_OLE
 */
-class PHPExcel_Shared_OLE_PPS
-{
+class PHPExcel_Shared_OLE_PPS {
 	/**
 	* The PPS index
 	* @var integer
@@ -122,8 +120,7 @@ class PHPExcel_Shared_OLE_PPS
 	* @param string  $data  The (usually binary) source data of the PPS
 	* @param array   $children Array containing children PPS for this PPS
 	*/
-	public function __construct($No, $name, $type, $prev, $next, $dir, $time_1st, $time_2nd, $data, $children)
-	{
+	public function __construct($No, $name, $type, $prev, $next, $dir, $time_1st, $time_2nd, $data, $children) {
 		$this->No      = $No;
 		$this->Name    = $name;
 		$this->Type    = $type;
@@ -147,8 +144,7 @@ class PHPExcel_Shared_OLE_PPS
 	* @access public
 	* @return integer The amount of data (in bytes)
 	*/
-	public function _DataLen()
-	{
+	public function _DataLen() {
 		if (!isset($this->_data)) {
 			return 0;
 		}
@@ -167,9 +163,8 @@ class PHPExcel_Shared_OLE_PPS
 	* @access public
 	* @return string The binary string
 	*/
-	public function _getPpsWk()
-	{
-		$ret = str_pad($this->Name,64,"\x00");
+	public function _getPpsWk() {
+		$ret = str_pad($this->Name, 64, "\x00");
 
 		$ret .= pack("v", strlen($this->Name) + 2)  // 66
 			  . pack("c", $this->Type)              // 67
@@ -200,11 +195,10 @@ class PHPExcel_Shared_OLE_PPS
 	*                          container
 	* @return integer          The index for this PPS
 	*/
-	public static function _savePpsSetPnt(&$raList, $to_save, $depth = 0)
-	{
+	public static function _savePpsSetPnt(&$raList, $to_save, $depth = 0) {
 		if ( !is_array($to_save) || (empty($to_save)) ) {
 			return 0xFFFFFFFF;
-		} elseif( count($to_save) == 1 ) {
+		} elseif (count($to_save) == 1) {
 			$cnt = count($raList);
 			// If the first entry, it's the root... Don't clone it!
 			$raList[$cnt] = ( $depth == 0 ) ? $to_save[0] : clone $to_save[0];

@@ -70,12 +70,10 @@ class SingularValueDecomposition  {
 		$nct = min($this->m - 1, $this->n);
 		$nrt = max(0, min($this->n - 2, $this->m));
 
-		// Reduce A to bidiagonal form, storing the diagonal elements
-		// in s and the super-diagonal elements in e.
-		for ($k = 0; $k < max($nct,$nrt); ++$k) {
+		// Reduce A to bidiagonal form, storing the diagonal elements in s and the super-diagonal elements in e.
+		for ($k = 0; $k < max($nct, $nrt); ++$k) {
 			if ($k < $nct) {
-				// Compute the transformation for the k-th column and
-				// place the k-th diagonal in s[$k].
+				// Compute the transformation for the k-th column and place the k-th diagonal in s[$k].
 				// Compute 2-norm of k-th column without under/overflow.
 				$this->s[$k] = 0;
 				for ($i = $k; $i < $this->m; ++$i) {
@@ -106,23 +104,20 @@ class SingularValueDecomposition  {
 					for ($i = $k; $i < $this->m; ++$i) {
 						$A[$i][$j] += $t * $A[$i][$k];
 					}
-					// Place the k-th row of A into e for the
-					// subsequent calculation of the row transformation.
+					// Place the k-th row of A into e for the subsequent calculation of the row transformation.
 					$e[$j] = $A[$k][$j];
 				}
 			}
 
 			if ($wantu and ($k < $nct)) {
-				// Place the transformation in U for subsequent back
-				// multiplication.
+				// Place the transformation in U for subsequent back multiplication.
 				for ($i = $k; $i < $this->m; ++$i) {
 					$this->U[$i][$k] = $A[$i][$k];
 				}
 			}
 
 			if ($k < $nrt) {
-				// Compute the k-th row transformation and place the
-				// k-th super-diagonal in e[$k].
+				// Compute the k-th row transformation and place the k-th super-diagonal in e[$k].
 				// Compute 2-norm without under/overflow.
 				$e[$k] = 0;
 				for ($i = $k + 1; $i < $this->n; ++$i) {
@@ -158,8 +153,7 @@ class SingularValueDecomposition  {
 				}
 
 				if ($wantv) {
-					// Place the transformation in V for subsequent
-					// back multiplication.
+					// Place the transformation in V for subsequent back multiplication.
 					for ($i = $k + 1; $i < $this->n; ++$i) {
 						$this->V[$i][$k] = $e[$i];
 					}
@@ -269,14 +263,14 @@ class SingularValueDecomposition  {
 						break;
 					}
 					$t = ($ks != $p ? abs($e[$ks]) : 0.) + ($ks != $k + 1 ? abs($e[$ks-1]) : 0.);
-					if (abs($this->s[$ks]) <= $eps * $t)  {
+					if (abs($this->s[$ks]) <= $eps * $t) {
 						$this->s[$ks] = 0.0;
 						break;
 					}
 				}
 				if ($ks == $k) {
 					$kase = 3;
-				} else if ($ks == $p-1) {
+				} elseif ($ks == $p-1) {
 					$kase = 1;
 				} else {
 					$kase = 2;
@@ -332,16 +326,14 @@ class SingularValueDecomposition  {
 				// Perform one qr step.
 				case 3:
 						// Calculate the shift.
-						$scale = max(max(max(max(
-									abs($this->s[$p-1]),abs($this->s[$p-2])),abs($e[$p-2])),
-									abs($this->s[$k])), abs($e[$k]));
-						$sp   = $this->s[$p-1] / $scale;
+						$scale = max(max(max(max(abs($this->s[$p-1]), abs($this->s[$p-2])), abs($e[$p-2])), abs($this->s[$k])), abs($e[$k]));
+						$sp = $this->s[$p-1] / $scale;
 						$spm1 = $this->s[$p-2] / $scale;
 						$epm1 = $e[$p-2] / $scale;
-						$sk   = $this->s[$k] / $scale;
-						$ek   = $e[$k] / $scale;
-						$b    = (($spm1 + $sp) * ($spm1 - $sp) + $epm1 * $epm1) / 2.0;
-						$c    = ($sp * $epm1) * ($sp * $epm1);
+						$sk = $this->s[$k] / $scale;
+						$ek = $e[$k] / $scale;
+						$b = (($spm1 + $sp) * ($spm1 - $sp) + $epm1 * $epm1) / 2.0;
+						$c = ($sp * $epm1) * ($sp * $epm1);
 						$shift = 0.0;
 						if (($b != 0.0) || ($c != 0.0)) {
 							$shift = sqrt($b * $b + $c);
@@ -428,10 +420,9 @@ class SingularValueDecomposition  {
 						$iter = 0;
 						--$p;
 						break;
-			} // end switch
-		} // end while
-
-	} // end constructor
+			}
+		}
+	}
 
 	/**
 	 *	Return the left singular vectors

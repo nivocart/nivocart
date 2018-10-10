@@ -22,8 +22,8 @@
  * @package    PHPExcel_CachedObjectStorage
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -140,7 +140,7 @@ class PHPExcel_CachedObjectStorageFactory {
     public static function getCacheStorageMethods() {
         $activeMethods = array();
 
-        foreach(self::$_storageMethods as $storageMethod) {
+        foreach (self::$_storageMethods as $storageMethod) {
             $cacheStorageClass = 'PHPExcel_CachedObjectStorage_' . $storageMethod;
 
             if (call_user_func(array($cacheStorageClass, 'cacheMethodIsAvailable'))) {
@@ -172,7 +172,7 @@ class PHPExcel_CachedObjectStorageFactory {
 
         self::$_storageMethodParameters[$method] = self::$_storageMethodDefaultParameters[$method];
 
-        foreach($arguments as $k => $v) {
+        foreach ($arguments as $k => $v) {
             if (array_key_exists($k, self::$_storageMethodParameters[$method])) {
                 self::$_storageMethodParameters[$method][$k] = $v;
             }

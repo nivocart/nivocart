@@ -22,7 +22,8 @@
  * @package		PHPExcel_Chart
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license		http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version		##VERSION##, ##DATE##
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 
@@ -33,56 +34,55 @@
  * @package		PHPExcel_Chart
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Chart_Layout
-{
+class PHPExcel_Chart_Layout {
 	/**
 	 * layoutTarget
 	 *
 	 * @var string
 	 */
-	private $_layoutTarget = NULL;
+	private $_layoutTarget = null;
 
 	/**
 	 * X Mode
 	 *
 	 * @var string
 	 */
-	private $_xMode = NULL;
+	private $_xMode = null;
 
 	/**
 	 * Y Mode
 	 *
 	 * @var string
 	 */
-	private $_yMode = NULL;
+	private $_yMode = null;
 
 	/**
 	 * X-Position
 	 *
 	 * @var float
 	 */
-	private $_xPos = NULL;
+	private $_xPos = null;
 
 	/**
 	 * Y-Position
 	 *
 	 * @var float
 	 */
-	private $_yPos = NULL;
+	private $_yPos = null;
 
 	/**
 	 * width
 	 *
 	 * @var float
 	 */
-	private $_width = NULL;
+	private $_width = null;
 
 	/**
 	 * height
 	 *
 	 * @var float
 	 */
-	private $_height = NULL;
+	private $_height = null;
 
 	/**
 	 * show legend key
@@ -90,7 +90,7 @@ class PHPExcel_Chart_Layout
 	 *
 	 * @var boolean
 	 */
-	private $_showLegendKey = NULL;
+	private $_showLegendKey = null;
 
 	/**
 	 * show value
@@ -98,7 +98,7 @@ class PHPExcel_Chart_Layout
 	 *
 	 * @var boolean
 	 */
-	private $_showVal = NULL;
+	private $_showVal = null;
 
 	/**
 	 * show category name
@@ -106,7 +106,7 @@ class PHPExcel_Chart_Layout
 	 *
 	 * @var boolean
 	 */
-	private $_showCatName = NULL;
+	private $_showCatName = null;
 
 	/**
 	 * show data series name
@@ -114,7 +114,7 @@ class PHPExcel_Chart_Layout
 	 *
 	 * @var boolean
 	 */
-	private $_showSerName = NULL;
+	private $_showSerName = null;
 
 	/**
 	 * show percentage
@@ -122,14 +122,14 @@ class PHPExcel_Chart_Layout
 	 *
 	 * @var boolean
 	 */
-	private $_showPercent = NULL;
+	private $_showPercent = null;
 
 	/**
 	 * show bubble size
 	 *
 	 * @var boolean
 	 */
-	private $_showBubbleSize	= NULL;
+	private $_showBubbleSize	= null;
 
 	/**
 	 * show leader lines
@@ -137,21 +137,34 @@ class PHPExcel_Chart_Layout
 	 *
 	 * @var boolean
 	 */
-	private $_showLeaderLines = NULL;
+	private $_showLeaderLines = null;
 
 
 	/**
 	 * Create a new PHPExcel_Chart_Layout
 	 */
-	public function __construct($layout = array())
-	{
-		if (isset($layout['layoutTarget'])) { $this->_layoutTarget = $layout['layoutTarget']; }
-		if (isset($layout['xMode'])) { $this->_xMode = $layout['xMode']; }
-		if (isset($layout['yMode'])) { $this->_yMode = $layout['yMode']; }
-		if (isset($layout['x'])) { $this->_xPos = (float) $layout['x']; }
-		if (isset($layout['y'])) { $this->_yPos = (float) $layout['y']; }
-		if (isset($layout['w'])) { $this->_width = (float) $layout['w']; }
-		if (isset($layout['h'])) { $this->_height = (float) $layout['h']; }
+	public function __construct($layout = array()) {
+		if (isset($layout['layoutTarget'])) {
+			$this->_layoutTarget = $layout['layoutTarget'];
+		}
+		if (isset($layout['xMode'])) {
+			$this->_xMode = $layout['xMode'];
+		}
+		if (isset($layout['yMode'])) {
+			$this->_yMode = $layout['yMode'];
+		}
+		if (isset($layout['x'])) {
+			$this->_xPos = (float) $layout['x'];
+		}
+		if (isset($layout['y'])) {
+			$this->_yPos = (float) $layout['y'];
+		}
+		if (isset($layout['w'])) {
+			$this->_width = (float) $layout['w'];
+		}
+		if (isset($layout['h'])) {
+			$this->_height = (float) $layout['h'];
+		}
 	}
 
 	/**

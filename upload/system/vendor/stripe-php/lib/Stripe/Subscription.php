@@ -26,7 +26,7 @@ class Stripe_Subscription extends Stripe_ApiResource {
      * @param array|null $params
      * @return Stripe_Subscription The deleted subscription.
      */
-    public function cancel($params=null) {
+    public function cancel($params = null) {
         $class = get_class();
         return self::_scopedDelete($class, $params);
     }

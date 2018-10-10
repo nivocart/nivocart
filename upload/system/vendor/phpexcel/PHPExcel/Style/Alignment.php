@@ -22,8 +22,8 @@
  * @package	PHPExcel_Style
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -115,8 +115,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	 *									Leave this value at default unless you understand exactly what
 	 *										its ramifications are
 	 */
-	public function __construct($isSupervisor = false, $isConditional = false)
-	{
+	public function __construct($isSupervisor = false, $isConditional = false) {
 		// Supervisor?
 		parent::__construct($isSupervisor);
 
@@ -133,8 +132,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	 *
 	 * @return PHPExcel_Style_Alignment
 	 */
-	public function getSharedComponent()
-	{
+	public function getSharedComponent() {
 		return $this->_parent->getSharedComponent()->getAlignment();
 	}
 
@@ -144,8 +142,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	 * @param array $array
 	 * @return array
 	 */
-	public function getStyleArray($array)
-	{
+	public function getStyleArray($array) {
 		return array('alignment' => $array);
 	}
 
@@ -227,8 +224,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 		if ($this->_isSupervisor) {
 			$styleArray = $this->getStyleArray(array('horizontal' => $pValue));
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
-		}
-		else {
+		} else {
 			$this->_horizontal = $pValue;
 		}
 		return $this;
@@ -388,9 +384,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	 */
 	public function setIndent($pValue = 0) {
 		if ($pValue > 0) {
-			if ($this->getHorizontal() != self::HORIZONTAL_GENERAL &&
-				$this->getHorizontal() != self::HORIZONTAL_LEFT &&
-				$this->getHorizontal() != self::HORIZONTAL_RIGHT) {
+			if ($this->getHorizontal() != self::HORIZONTAL_GENERAL && $this->getHorizontal() != self::HORIZONTAL_LEFT && $this->getHorizontal() != self::HORIZONTAL_RIGHT) {
 				$pValue = 0; // indent not supported
 			}
 		}

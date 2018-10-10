@@ -22,7 +22,8 @@
  * @package    PHPExcel_Reader_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    ##VERSION##, ##DATE##
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 
@@ -33,8 +34,7 @@
  * @package    PHPExcel_Reader_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Reader_Excel2007_Theme
-{
+class PHPExcel_Reader_Excel2007_Theme {
 	/**
 	 * Theme Name
 	 *
@@ -69,8 +69,7 @@ class PHPExcel_Reader_Excel2007_Theme
      * Create a new PHPExcel_Theme
 	 *
      */
-    public function __construct($themeName,$colourSchemeName,$colourMap)
-    {
+    public function __construct($themeName, $colourSchemeName, $colourMap) {
 		// Initialise values
     	$this->_themeName = $themeName;
 		$this->_colourSchemeName = $colourSchemeName;
@@ -82,8 +81,7 @@ class PHPExcel_Reader_Excel2007_Theme
 	 *
 	 * @return string
 	 */
-	public function getThemeName()
-	{
+	public function getThemeName() {
 		return $this->_themeName;
 	}
 
@@ -101,7 +99,7 @@ class PHPExcel_Reader_Excel2007_Theme
      *
      * @return string
      */
-    public function getColourByIndex($index=0) {
+    public function getColourByIndex($index = 0) {
     	if (isset($this->_colourMap[$index])) {
 			return $this->_colourMap[$index];
 		}

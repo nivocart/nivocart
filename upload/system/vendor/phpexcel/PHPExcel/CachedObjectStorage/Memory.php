@@ -22,8 +22,8 @@
  * @package    PHPExcel_CachedObjectStorage
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /**
@@ -89,7 +89,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
 
 		$newCollection = array();
 
-		foreach($this->_cellCache as $k => &$cell) {
+		foreach ($this->_cellCache as $k => &$cell) {
 			$newCollection[$k] = clone $cell;
 			$newCollection[$k]->attach($this);
 		}

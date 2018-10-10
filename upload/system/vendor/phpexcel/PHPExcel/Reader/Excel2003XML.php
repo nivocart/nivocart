@@ -106,7 +106,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 		}
 
 		//	Retrieve charset encoding
-		if (preg_match('/<?xml.*encoding=[\'"](.*?)[\'"].*?>/um',$data,$matches)) {
+		if (preg_match('/<?xml.*encoding=[\'"](.*?)[\'"].*?>/um', $data, $matches)) {
 			$this->_charSet = strtoupper($matches[1]);
 		}
 //		echo 'Character Set is ',$this->_charSet,'<br />';
@@ -138,7 +138,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 
 		foreach ($xml_ss->Worksheet as $worksheet) {
 			$worksheet_ss = $worksheet->attributes($namespaces['ss']);
-			$worksheetNames[] = self::_convertStringEncoding((string) $worksheet_ss['Name'],$this->_charSet);
+			$worksheetNames[] = self::_convertStringEncoding((string)$worksheet_ss['Name'], $this->_charSet);
 		}
 
 		return $worksheetNames;
@@ -371,7 +371,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 			foreach ($xml->CustomDocumentProperties[0] as $propertyName => $propertyValue) {
 				$propertyAttributes = $propertyValue->attributes($namespaces['dt']);
 
-				$propertyName = preg_replace_callback('/_x([0-9a-z]{4})_/','PHPExcel_Reader_Excel2003XML::_hex2str', $propertyName);
+				$propertyName = preg_replace_callback('/_x([0-9a-z]{4})_/', 'PHPExcel_Reader_Excel2003XML::_hex2str', $propertyName);
 
 				$propertyType = PHPExcel_DocumentProperties::PROPERTY_TYPE_UNKNOWN;
 
@@ -403,7 +403,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 
 		foreach ($xml->Styles[0] as $style) {
 			$style_ss = $style->attributes($namespaces['ss']);
-			$styleID = (string) $style_ss['ID'];
+			$styleID = (string)$style_ss['ID'];
 //			echo 'Style ID = '.$styleID.'<br />';
 			if ($styleID == 'Default') {
 				$this->_styles['Default'] = array();
@@ -418,7 +418,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 					case 'Alignment' :
 						foreach ($styleAttributes as $styleAttributeKey => $styleAttributeValue) {
 //							echo $styleAttributeKey.' = '.$styleAttributeValue.'<br />';
-							$styleAttributeValue = (string) $styleAttributeValue;
+							$styleAttributeValue = (string)$styleAttributeValue;
 							switch ($styleAttributeKey) {
 								case 'Vertical' :
 									if (self::identifyFixedStyleValue($verticalAlignmentStyles,$styleAttributeValue)) {
@@ -646,7 +646,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 									const TYPE_ERROR		= 'e';
 									*/
 									case 'String' :
-											$cellValue = self::_convertStringEncoding($cellValue,$this->_charSet);
+											$cellValue = self::_convertStringEncoding($cellValue, $this->_charSet);
 											$type = PHPExcel_Cell_DataType::TYPE_STRING;
 											break;
 									case 'Number' :
@@ -674,28 +674,28 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 //								echo 'FORMULA<br />';
 								$type = PHPExcel_Cell_DataType::TYPE_FORMULA;
 								$columnNumber = PHPExcel_Cell::columnIndexFromString($columnID);
-								if (substr($cellDataFormula,0,3) == 'of:') {
-									$cellDataFormula = substr($cellDataFormula,3);
+								if (substr($cellDataFormula, 0, 3) == 'of:') {
+									$cellDataFormula = substr($cellDataFormula, 3);
 //									echo 'Before: ',$cellDataFormula,'<br />';
-									$temp = explode('"',$cellDataFormula);
+									$temp = explode('"', $cellDataFormula);
 									$key = false;
 
 									foreach ($temp as &$value) {
 										//	Only replace in alternate array entries (i.e. non-quoted blocks)
 										if ($key = !$key) {
-											$value = str_replace(array('[.','.',']'),'',$value);
+											$value = str_replace(array('[.', '.', ']'), '', $value);
 										}
 									}
 								} else {
 									//	Convert R1C1 style references to A1 style references (but only when not quoted)
 //									echo 'Before: ',$cellDataFormula,'<br />';
-									$temp = explode('"',$cellDataFormula);
+									$temp = explode('"', $cellDataFormula);
 									$key = false;
 
 									foreach ($temp as &$value) {
 										//	Only replace in alternate array entries (i.e. non-quoted blocks)
 										if ($key = !$key) {
-											preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/',$value, $cellReferences,PREG_SET_ORDER+PREG_OFFSET_CAPTURE);
+											preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/', $value, $cellReferences, PREG_SET_ORDER+PREG_OFFSET_CAPTURE);
 											//	Reverse the matches array, otherwise all our offsets will become incorrect if we modify our way
 											//		through the formula from left to right. Reversing means that we work right to left.through
 											//		the formula
@@ -759,7 +759,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 //							echo $annotation,'<br />';
 							$annotation = strip_tags($node);
 //							echo 'Annotation: ',$annotation,'<br />';
-							$objPHPExcel->getActiveSheet()->getComment( $columnID.$rowID )->setAuthor(self::_convertStringEncoding($author ,$this->_charSet))->setText($this->_parseRichText($annotation) );
+							$objPHPExcel->getActiveSheet()->getComment($columnID.$rowID)->setAuthor(self::_convertStringEncoding($author, $this->_charSet))->setText($this->_parseRichText($annotation));
 						}
 
 						if (($cellIsSet) && (isset($cell_ss['StyleID']))) {
@@ -806,7 +806,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 		return $objPHPExcel;
 	}
 
-	protected static function _convertStringEncoding($string,$charset) {
+	protected static function _convertStringEncoding($string, $charset) {
 		if ($charset != 'UTF-8') {
 			return PHPExcel_Shared_String::ConvertEncoding($string,'UTF-8',$charset);
 		}
@@ -816,7 +816,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 	protected function _parseRichText($is = '') {
 		$value = new PHPExcel_RichText();
 
-		$value->createText(self::_convertStringEncoding($is,$this->_charSet));
+		$value->createText(self::_convertStringEncoding($is, $this->_charSet));
 		return $value;
 	}
 }

@@ -22,8 +22,8 @@
  * @package		PHPExcel_Calculation
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -398,9 +398,15 @@ class PHPExcel_Calculation_DateTime {
 		$minute = PHPExcel_Calculation_Functions::flattenSingleValue($minute);
 		$second = PHPExcel_Calculation_Functions::flattenSingleValue($second);
 
-		if ($hour == '') { $hour = 0; }
-		if ($minute == '') { $minute = 0; }
-		if ($second == '') { $second = 0; }
+		if ($hour == '') {
+			$hour = 0;
+		}
+		if ($minute == '') {
+			$minute = 0;
+		}
+		if ($second == '') {
+			$second = 0;
+		}
 
 		if ((!is_numeric($hour)) || (!is_numeric($minute)) || (!is_numeric($second))) {
 			return PHPExcel_Calculation_Functions::VALUE();
@@ -413,7 +419,9 @@ class PHPExcel_Calculation_DateTime {
 		if ($second < 0) {
 			$minute += floor($second / 60);
 			$second = 60 - abs($second % 60);
-			if ($second == 60) { $second = 0; }
+			if ($second == 60) {
+				$second = 0;
+			}
 		} elseif ($second >= 60) {
 			$minute += floor($second / 60);
 			$second = $second % 60;
@@ -422,7 +430,9 @@ class PHPExcel_Calculation_DateTime {
 		if ($minute < 0) {
 			$hour += floor($minute / 60);
 			$minute = 60 - abs($minute % 60);
-			if ($minute == 60) { $minute = 0; }
+			if ($minute == 60) {
+				$minute = 0;
+			}
 		} elseif ($minute >= 60) {
 			$hour += floor($minute / 60);
 			$minute = $minute % 60;
@@ -453,7 +463,9 @@ class PHPExcel_Calculation_DateTime {
 				if ($hour < 0) {
 					$dayAdjust = floor($hour / 24);
 					$hour = 24 - abs($hour % 24);
-					if ($hour == 24) { $hour = 0; }
+					if ($hour == 24) {
+						$hour = 0;
+					}
 				} elseif ($hour >= 24) {
 					$dayAdjust = floor($hour / 24);
 					$hour = $hour % 24;
@@ -511,7 +523,9 @@ class PHPExcel_Calculation_DateTime {
 				if ($yearFound) {
 					return PHPExcel_Calculation_Functions::VALUE();
 				} else {
-					if ($t < 100) { $t += 1900; }
+					if ($t < 100) {
+						$t += 1900;
+					}
 					$yearFound = true;
 				}
 			}
@@ -535,15 +549,15 @@ class PHPExcel_Calculation_DateTime {
 
 		$PHPDateArray = date_parse($dateValue);
 
-		if (($PHPDateArray === False) || ($PHPDateArray['error_count'] > 0)) {
+		if (($PHPDateArray === false) || ($PHPDateArray['error_count'] > 0)) {
 			$testVal1 = strtok($dateValue, '- ');
 
-			if ($testVal1 !== False) {
+			if ($testVal1 !== false) {
 				$testVal2 = strtok('- ');
 
-				if ($testVal2 !== False) {
+				if ($testVal2 !== false) {
 					$testVal3 = strtok('- ');
-					if ($testVal3 === False) {
+					if ($testVal3 === false) {
 						$testVal3 = strftime('%Y');
 					}
 				} else {
@@ -555,10 +569,10 @@ class PHPExcel_Calculation_DateTime {
 
 			$PHPDateArray = date_parse($testVal1 . '-' . $testVal2 . '-' . $testVal3);
 
-			if (($PHPDateArray === False) || ($PHPDateArray['error_count'] > 0)) {
+			if (($PHPDateArray === false) || ($PHPDateArray['error_count'] > 0)) {
 				$PHPDateArray = date_parse($testVal2 . '-' . $testVal1 . '-' . $testVal3);
 
-				if (($PHPDateArray === False) || ($PHPDateArray['error_count'] > 0)) {
+				if (($PHPDateArray === false) || ($PHPDateArray['error_count'] > 0)) {
 					return PHPExcel_Calculation_Functions::VALUE();
 				}
 			}
@@ -966,15 +980,21 @@ class PHPExcel_Calculation_DateTime {
 
 		// Execute function
 		$startDoW = 6 - self::DAYOFWEEK($startDate, 2);
-		if ($startDoW < 0) { $startDoW = 0; }
+		if ($startDoW < 0) {
+			$startDoW = 0;
+		}
 
-		$endDoW = self::DAYOFWEEK($endDate,2);
-		if ($endDoW >= 6) { $endDoW = 0; }
+		$endDoW = self::DAYOFWEEK($endDate, 2);
+		if ($endDoW >= 6) {
+			$endDoW = 0;
+		}
 
 		$wholeWeekDays = floor(($endDate - $startDate) / 7) * 5;
 
 		$partWeekDays = $endDoW + $startDoW;
-		if ($partWeekDays > 5) { $partWeekDays -= 5; }
+		if ($partWeekDays > 5) {
+			$partWeekDays -= 5;
+		}
 
 		//	Test any extra holiday parameters
 		$holidayCountedArray = array();
@@ -995,6 +1015,7 @@ class PHPExcel_Calculation_DateTime {
 		if ($sDate > $eDate) {
 			return 0 - ($wholeWeekDays + $partWeekDays);
 		}
+
 		return $wholeWeekDays + $partWeekDays;
 	}
 
@@ -1395,6 +1416,7 @@ class PHPExcel_Calculation_DateTime {
 		if (!is_numeric($timeValue)) {
 			if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC) {
 				$testVal = strtok($timeValue, '/-: ');
+
 				if (strlen($testVal) < strlen($timeValue)) {
 					return PHPExcel_Calculation_Functions::VALUE();
 				}
@@ -1438,6 +1460,7 @@ class PHPExcel_Calculation_DateTime {
 		if (!is_numeric($timeValue)) {
 			if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_GNUMERIC) {
 				$testVal = strtok($timeValue, '/-: ');
+
 				if (strlen($testVal) < strlen($timeValue)) {
 					return PHPExcel_Calculation_Functions::VALUE();
 				}

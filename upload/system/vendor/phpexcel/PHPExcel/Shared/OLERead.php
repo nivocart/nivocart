@@ -22,8 +22,8 @@
  * @package    PHPExcel_Shared
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    v1.11.0, released: 01-05-2018
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 defined('IDENTIFIER_OLE') ||
@@ -224,7 +224,7 @@ class PHPExcel_Shared_OLERead {
 		$block = $bl;
 		$data = '';
 
-		while ($block != -2)  {
+		while ($block != -2) {
 			$pos = ($block + 1) * self::BIG_BLOCK_SIZE;
 			$data .= substr($this->data, $pos, self::BIG_BLOCK_SIZE);
 			$block = self::_GetInt4d($this->bigBlockChain, $block * 4);

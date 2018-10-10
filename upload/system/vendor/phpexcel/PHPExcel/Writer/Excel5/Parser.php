@@ -1212,7 +1212,7 @@ class PHPExcel_Writer_Excel5_Parser {
 			$this->_advance();
 			return $result;
         // If it's an error code
-        } elseif (preg_match("/^#[A-Z0\/]{3,5}[!?]{1}$/", $this->_current_token) or $this->_current_token == '#N/A'){
+        } elseif (preg_match("/^#[A-Z0\/]{3,5}[!?]{1}$/", $this->_current_token) or $this->_current_token == '#N/A') {
 		    $result = $this->_createTree($this->_current_token, 'ptgErr', '');
 		    $this->_advance();
 		    return $result;

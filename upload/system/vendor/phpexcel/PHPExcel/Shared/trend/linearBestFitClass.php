@@ -22,12 +22,11 @@
  * @package    PHPExcel_Shared_Trend
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    ##VERSION##, ##DATE##
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
-
 require_once(PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php');
-
 
 /**
  * PHPExcel_Linear_Best_Fit
@@ -36,8 +35,7 @@ require_once(PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php');
  * @package    PHPExcel_Shared_Trend
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
-{
+class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit {
 	/**
 	 * Algorithm type to use for best-fit
 	 * (Name of this trend class)
@@ -45,7 +43,6 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
 	 * @var	string
 	 **/
 	protected $_bestFitType		= 'linear';
-
 
 	/**
 	 * Return the Y-Value for a specified value of X
@@ -55,8 +52,7 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
 	 **/
 	public function getValueOfYForX($xValue) {
 		return $this->getIntersect() + $this->getSlope() * $xValue;
-	}	//	function getValueOfYForX()
-
+	}
 
 	/**
 	 * Return the X-Value for a specified value of Y
@@ -66,8 +62,7 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
 	 **/
 	public function getValueOfXForY($yValue) {
 		return ($yValue - $this->getIntersect()) / $this->getSlope();
-	}	//	function getValueOfXForY()
-
+	}
 
 	/**
 	 * Return the Equation of the best-fit line
@@ -75,13 +70,12 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getEquation($dp=0) {
+	public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
 
 		return 'Y = '.$intersect.' + '.$slope.' * X';
-	}	//	function getEquation()
-
+	}
 
 	/**
 	 * Execute the regression and calculate the goodness of fit for a set of X and Y data values
@@ -92,8 +86,7 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
 	 */
 	private function _linear_regression($yValues, $xValues, $const) {
 		$this->_leastSquareFit($yValues, $xValues,$const);
-	}	//	function _linear_regression()
-
+	}
 
 	/**
 	 * Define the regression and calculate the goodness of fit for a set of X and Y data values
@@ -106,6 +99,5 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_linear_regression($yValues, $xValues, $const);
 		}
-	}	//	function __construct()
-
-}	//	class linearBestFit
+	}
+}

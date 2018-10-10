@@ -195,14 +195,14 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
 		$this->_documentSummaryInformation = $this->_writeDocumentSummaryInformation();
 		// initialize OLE Document Summary Information
-		if (isset($this->_documentSummaryInformation) && !empty($this->_documentSummaryInformation)){
+		if (isset($this->_documentSummaryInformation) && !empty($this->_documentSummaryInformation)) {
 			$OLE_DocumentSummaryInformation = new PHPExcel_Shared_OLE_PPS_File(PHPExcel_Shared_OLE::Asc2Ucs(chr(5) . 'DocumentSummaryInformation'));
 			$OLE_DocumentSummaryInformation->append($this->_documentSummaryInformation);
 		}
 
 		$this->_summaryInformation = $this->_writeSummaryInformation();
 		// initialize OLE Summary Information
-		if (isset($this->_summaryInformation) && !empty($this->_summaryInformation)){
+		if (isset($this->_summaryInformation) && !empty($this->_summaryInformation)) {
 		  $OLE_SummaryInformation = new PHPExcel_Shared_OLE_PPS_File(PHPExcel_Shared_OLE::Asc2Ucs(chr(5) . 'SummaryInformation'));
 		  $OLE_SummaryInformation->append($this->_summaryInformation);
 		}
@@ -210,11 +210,11 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		// define OLE Parts
 		$arrRootData = array($OLE);
 		// initialize OLE Properties file
-		if (isset($OLE_SummaryInformation)){
+		if (isset($OLE_SummaryInformation)) {
 			$arrRootData[] = $OLE_SummaryInformation;
 		}
 		// initialize OLE Extended Properties file
-		if (isset($OLE_DocumentSummaryInformation)){
+		if (isset($OLE_DocumentSummaryInformation)) {
 			$arrRootData[] = $OLE_DocumentSummaryInformation;
 		}
 
@@ -334,14 +334,14 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 			}
 
 			// AutoFilters
-			if (!empty($filterRange)){
+			if (!empty($filterRange)) {
 				$rangeBounds = PHPExcel_Cell::rangeBoundaries($filterRange);
 				$iNumColStart = $rangeBounds[0][0];
 				$iNumColEnd = $rangeBounds[1][0];
 
 				$iInc = $iNumColStart;
 
-				while($iInc <= $iNumColEnd){
+				while ($iInc <= $iNumColEnd) {
 					++$countShapes[$sheetIndex];
 
 					// create an Drawing Object for the dropdown

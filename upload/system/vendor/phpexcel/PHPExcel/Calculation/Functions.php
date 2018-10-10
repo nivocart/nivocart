@@ -22,8 +22,8 @@
  * @package		PHPExcel_Calculation
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -112,10 +112,10 @@ class PHPExcel_Calculation_Functions {
 	public static function setCompatibilityMode($compatibilityMode) {
 		if (($compatibilityMode == self::COMPATIBILITY_EXCEL) || ($compatibilityMode == self::COMPATIBILITY_GNUMERIC) || ($compatibilityMode == self::COMPATIBILITY_OPENOFFICE)) {
 			self::$compatibilityMode = $compatibilityMode;
-			return True;
+			return true;
 		}
 
-		return False;
+		return false;
 	}
 
 	/**
@@ -148,10 +148,10 @@ class PHPExcel_Calculation_Functions {
 	public static function setReturnDateType($returnDateType) {
 		if (($returnDateType == self::RETURNDATE_PHP_NUMERIC) || ($returnDateType == self::RETURNDATE_PHP_OBJECT) || ($returnDateType == self::RETURNDATE_EXCEL)) {
 			self::$ReturnDateType = $returnDateType;
-			return True;
+			return true;
 		}
 
-		return False;
+		return false;
 	}
 
 	/**
@@ -702,7 +702,7 @@ if ((!function_exists('mb_str_replace')) && (function_exists('mb_substr')) && (f
 			$r = !is_array($replace) ? $replace : (array_key_exists($key, $replace) ? $replace[$key] : '');
 			$pos = mb_strpos($subject, $s, 0, 'UTF-8');
 
-			while($pos !== false) {
+			while ($pos !== false) {
 				$subject = mb_substr($subject, 0, $pos, 'UTF-8') . $r . mb_substr($subject, $pos + mb_strlen($s, 'UTF-8'), 65535, 'UTF-8');
 				$pos = mb_strpos($subject, $s, $pos + mb_strlen($r, 'UTF-8'), 'UTF-8');
 			}

@@ -22,8 +22,8 @@
  * @package		PHPExcel_Calculation
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -86,14 +86,22 @@ class PHPExcel_Calculation_LookupRef {
 			$rowRelative = $columnRelative = '$';
 			$column = PHPExcel_Cell::stringFromColumnIndex($column-1);
 
-			if (($relativity == 2) || ($relativity == 4)) { $columnRelative = ''; }
-			if (($relativity == 3) || ($relativity == 4)) { $rowRelative = ''; }
+			if (($relativity == 2) || ($relativity == 4)) {
+				$columnRelative = '';
+			}
+			if (($relativity == 3) || ($relativity == 4)) {
+				$rowRelative = '';
+			}
 
 			return $sheetText . $columnRelative . $column . $rowRelative . $row;
 
 		} else {
-			if (($relativity == 2) || ($relativity == 4)) { $column = '[' . $column . ']'; }
-			if (($relativity == 3) || ($relativity == 4)) { $row = '[' . $row . ']'; }
+			if (($relativity == 2) || ($relativity == 4)) {
+				$column = '[' . $column . ']';
+			}
+			if (($relativity == 3) || ($relativity == 4)) {
+				$row = '[' . $row . ']';
+			}
 
 			return $sheetText . 'R' . $row . 'C' . $column;
 		}
@@ -203,8 +211,8 @@ class PHPExcel_Calculation_LookupRef {
 		}
 
 		if (is_array($cellAddress)) {
-			foreach($cellAddress as $columnKey => $rowValue) {
-				foreach($rowValue as $rowKey => $cellValue) {
+			foreach ($cellAddress as $columnKey => $rowValue) {
+				foreach ($rowValue as $rowKey => $cellValue) {
 					return (integer) preg_replace('/[^0-9]/i', '', $rowKey);
 				}
 			}
@@ -554,7 +562,7 @@ class PHPExcel_Calculation_LookupRef {
 		}
 
 		//	lookup_array should contain only number, text, or logical values, or empty (null) cells
-		foreach($lookup_array as $i => $lookupArrayValue) {
+		foreach ($lookup_array as $i => $lookupArrayValue) {
 			//	check the type of the value
 			if ((!is_numeric($lookupArrayValue)) && (!is_string($lookupArrayValue)) && (!is_bool($lookupArrayValue)) && (!is_null($lookupArrayValue))) {
 				return PHPExcel_Calculation_Functions::NA();
@@ -648,7 +656,7 @@ class PHPExcel_Calculation_LookupRef {
 			$rowNum = $rowKeys[--$rowNum];
 			$returnArray = array();
 
-			foreach($arrayValues as $arrayColumn) {
+			foreach ($arrayValues as $arrayColumn) {
 				if (is_array($arrayColumn)) {
 					if (isset($arrayColumn[$rowNum])) {
 						$returnArray[] = $arrayColumn[$rowNum];
@@ -694,10 +702,10 @@ class PHPExcel_Calculation_LookupRef {
 
 		$column = 0;
 
-		foreach($matrixData as $matrixRow) {
+		foreach ($matrixData as $matrixRow) {
 			$row = 0;
 
-			foreach($matrixRow as $matrixCell) {
+			foreach ($matrixRow as $matrixCell) {
 				$returnMatrix[$row][$column] = $matrixCell;
 				++$row;
 			}
@@ -759,7 +767,7 @@ class PHPExcel_Calculation_LookupRef {
 
 		$rowNumber = $rowValue = false;
 
-		foreach($lookup_array as $rowKey => $rowData) {
+		foreach ($lookup_array as $rowKey => $rowData) {
 			if ((is_numeric($lookup_value) && is_numeric($rowData[$firstColumn]) && ($rowData[$firstColumn] > $lookup_value)) || (!is_numeric($lookup_value) && !is_numeric($rowData[$firstColumn]) && (strtolower($rowData[$firstColumn]) > strtolower($lookup_value)))) {
 				break;
 			}
@@ -823,9 +831,8 @@ class PHPExcel_Calculation_LookupRef {
 
         $rowNumber = $rowValue = false;
 
-        foreach($lookup_array[$firstColumn] as $rowKey => $rowData) {
-			if ((is_numeric($lookup_value) && is_numeric($rowData) && ($rowData > $lookup_value)) ||
-				(!is_numeric($lookup_value) && !is_numeric($rowData) && (strtolower($rowData) > strtolower($lookup_value)))) {
+        foreach ($lookup_array[$firstColumn] as $rowKey => $rowData) {
+            if ((is_numeric($lookup_value) && is_numeric($rowData) && ($rowData > $lookup_value)) || (!is_numeric($lookup_value) && !is_numeric($rowData) && (strtolower($rowData) > strtolower($lookup_value)))) {
                 break;
             }
 

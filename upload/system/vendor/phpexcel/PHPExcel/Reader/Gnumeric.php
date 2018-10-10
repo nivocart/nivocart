@@ -241,7 +241,7 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
 		    $officeDocXML = $officeXML->{'document-meta'};
 			$officeDocMetaXML = $officeDocXML->meta;
 
-			foreach($officeDocMetaXML as $officePropertyData) {
+			foreach ($officeDocMetaXML as $officePropertyData) {
 				$officePropertyDC = array();
 
 				if (isset($namespacesMeta['dc'])) {
@@ -360,7 +360,7 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
 
 			if ((!$this->_readDataOnly) && (isset($sheet->PrintInformation))) {
 				if (isset($sheet->PrintInformation->Margins)) {
-					foreach($sheet->PrintInformation->Margins->children('gnm', true) as $key => $margin) {
+					foreach ($sheet->PrintInformation->Margins->children('gnm', true) as $key => $margin) {
 						$marginAttributes = $margin->attributes();
 						$marginSize = 72 / 100;	//	Default
 						switch($marginAttributes['PrefUnit']) {
@@ -439,7 +439,7 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
 					}
 					$type = PHPExcel_Cell_DataType::TYPE_FORMULA;
 				} else {
-					switch($ValueType) {
+					switch ($ValueType) {
 						case '10' :		//	NULL
 							$type = PHPExcel_Cell_DataType::TYPE_NULL;
 							break;
@@ -626,7 +626,7 @@ class PHPExcel_Reader_Gnumeric extends PHPExcel_Reader_Abstract implements PHPEx
 							$styleArray['font']['bold'] = ($fontAttributes['Bold'] == '1') ? true : false;
 							$styleArray['font']['italic'] = ($fontAttributes['Italic'] == '1') ? true : false;
 							$styleArray['font']['strike'] = ($fontAttributes['StrikeThrough'] == '1') ? true : false;
-							switch($fontAttributes['Underline']) {
+							switch ($fontAttributes['Underline']) {
 								case '1' :
 									$styleArray['font']['underline'] = PHPExcel_Style_Font::UNDERLINE_SINGLE;
 									break;

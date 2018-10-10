@@ -2153,7 +2153,7 @@ class PHPExcel_Calculation_Statistical {
 		$yValueCount = count($yValues);
 		$xValueCount = count($xValues);
 
-		foreach($yValues as $value) {
+		foreach ($yValues as $value) {
 			if ($value <= 0.0) {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
@@ -3607,7 +3607,9 @@ class PHPExcel_Calculation_Statistical {
 		$aCount = 0;
 
 		foreach ($aArgs as $arg) {
-			if (is_bool($arg)) { $arg = (integer) $arg; }
+			if (is_bool($arg)) {
+				$arg = (integer) $arg;
+			}
 			// Is it a numeric value?
 			if ((is_numeric($arg)) && (!is_string($arg))) {
 				$summerA += ($arg * $arg);

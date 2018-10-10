@@ -417,11 +417,11 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 						$docProps = $excel->getProperties();
 
 						if (isset($xmlCore->Company)) {
-							$docProps->setCompany((string) $xmlCore->Company);
+							$docProps->setCompany((string)$xmlCore->Company);
 						}
 
 						if (isset($xmlCore->Manager)) {
-							$docProps->setManager((string) $xmlCore->Manager);
+							$docProps->setManager((string)$xmlCore->Manager);
 						}
 					}
 				break;
@@ -436,14 +436,14 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 							$cellDataOfficeAttributes = $xmlProperty->attributes();
 
 							if (isset($cellDataOfficeAttributes['name'])) {
-								$propertyName = (string) $cellDataOfficeAttributes['name'];
+								$propertyName = (string)$cellDataOfficeAttributes['name'];
 								$cellDataOfficeChildren = $xmlProperty->children('http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes');
 								$attributeType = $cellDataOfficeChildren->getName();
-								$attributeValue = (string) $cellDataOfficeChildren->{$attributeType};
-								$attributeValue = PHPExcel_DocumentProperties::convertProperty($attributeValue,$attributeType);
+								$attributeValue = (string)$cellDataOfficeChildren->{$attributeType};
+								$attributeValue = PHPExcel_DocumentProperties::convertProperty($attributeValue, $attributeType);
 								$attributeType = PHPExcel_DocumentProperties::convertPropertyType($attributeType);
 
-								$docProps->setCustomProperty($propertyName,$attributeValue,$attributeType);
+								$docProps->setCustomProperty($propertyName, $attributeValue, $attributeType);
 							}
 						}
 					}
@@ -469,7 +469,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 					if (isset($xmlStrings) && isset($xmlStrings->si)) {
 						foreach ($xmlStrings->si as $val) {
 							if (isset($val->t)) {
-								$sharedStrings[] = PHPExcel_Shared_String::ControlCharacterOOXML2PHP((string) $val->t);
+								$sharedStrings[] = PHPExcel_Shared_String::ControlCharacterOOXML2PHP((string)$val->t);
 							} elseif (isset($val->r)) {
 								$sharedStrings[] = $this->_parseRichText($val);
 							}
@@ -480,9 +480,9 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 					$macros = $customUI = null;
 
 					foreach ($relsWorkbook->Relationship as $ele) {
-						switch($ele['Type']){
+						switch ($ele['Type']) {
 						case "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet":
-							$worksheets[(string) $ele["Id"]] = $ele["Target"];
+							$worksheets[(string)$ele["Id"]] = $ele["Target"];
 							break;
 						// a vbaProject ? (: some macros)
 						case "http://schemas.microsoft.com/office/2006/relationships/vbaProject":
@@ -1663,7 +1663,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 												$rangeSets = explode(',', $extractedRange);
 												$newRangeSets = array();
 
-												foreach($rangeSets as $rangeSet) {
+												foreach ($rangeSets as $rangeSet) {
 													$range = explode('!', $rangeSet);
 													$rangeSet = isset($range[1]) ? $range[1] : $range[0];
 

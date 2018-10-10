@@ -7,7 +7,7 @@ class Stripe_Transfer extends Stripe_ApiResource {
      *
      * @return Stripe_Transfer
      */
-    public static function retrieve($id, $apiKey=null) {
+    public static function retrieve($id, $apiKey = null) {
         $class = get_class();
         return self::_scopedRetrieve($class, $id, $apiKey);
     }
@@ -18,7 +18,7 @@ class Stripe_Transfer extends Stripe_ApiResource {
      *
      * @return array An array of Stripe_Transfers.
      */
-    public static function all($params=null, $apiKey=null) {
+    public static function all($params = null, $apiKey = null) {
         $class = get_class();
         return self::_scopedAll($class, $params, $apiKey);
     }
@@ -29,7 +29,7 @@ class Stripe_Transfer extends Stripe_ApiResource {
      *
      * @return Stripe_Transfer The created transfer.
      */
-    public static function create($params=null, $apiKey=null) {
+    public static function create($params = null, $apiKey = null) {
         $class = get_class();
         return self::_scopedCreate($class, $params, $apiKey);
     }

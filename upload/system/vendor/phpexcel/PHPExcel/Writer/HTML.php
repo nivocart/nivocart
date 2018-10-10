@@ -1254,9 +1254,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 						// General horizontal alignment: Actual horizontal alignment depends on dataType
 						$sharedStyle = $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex());
 
-						if ($sharedStyle->getAlignment()->getHorizontal() == PHPExcel_Style_Alignment::HORIZONTAL_GENERAL
-							&& isset($this->_cssStyles['.' . $cell->getDataType()]['text-align']))
-						{
+						if ($sharedStyle->getAlignment()->getHorizontal() == PHPExcel_Style_Alignment::HORIZONTAL_GENERAL && isset($this->_cssStyles['.' . $cell->getDataType()]['text-align'])) {
 							$cssClass['text-align'] = $this->_cssStyles['.' . $cell->getDataType()]['text-align'];
 						}
 					}
@@ -1268,7 +1266,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 				}
 
 				// Should the cell be written or is it swallowed by a rowspan or colspan?
-				$writeCell = ! ( isset($this->_isSpannedCell[$pSheet->getParent()->getIndex($pSheet)][$pRow + 1][$colNum]) && $this->_isSpannedCell[$pSheet->getParent()->getIndex($pSheet)][$pRow + 1][$colNum] );
+				$writeCell = ! (isset($this->_isSpannedCell[$pSheet->getParent()->getIndex($pSheet)][$pRow + 1][$colNum]) && $this->_isSpannedCell[$pSheet->getParent()->getIndex($pSheet)][$pRow + 1][$colNum]);
 
 				// Colspan and Rowspan
 				$colspan = 1;

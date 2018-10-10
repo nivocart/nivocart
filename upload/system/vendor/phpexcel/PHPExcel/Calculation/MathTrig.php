@@ -356,7 +356,7 @@ class PHPExcel_Calculation_MathTrig {
 		$allValuesFactors = array();
 
 		// Loop through arguments
-		foreach(PHPExcel_Calculation_Functions::flattenArray(func_get_args()) as $value) {
+		foreach (PHPExcel_Calculation_Functions::flattenArray(func_get_args()) as $value) {
 			if (!is_numeric($value)) {
 				return PHPExcel_Calculation_Functions::VALUE();
 			} elseif ($value == 0) {
@@ -576,7 +576,9 @@ class PHPExcel_Calculation_MathTrig {
 				++$column;
 			}
 
-			if ($column > $maxColumn) { $maxColumn = $column; }
+			if ($column > $maxColumn) {
+				$maxColumn = $column;
+			}
 			++$row;
 		}
 
@@ -1281,7 +1283,7 @@ class PHPExcel_Calculation_MathTrig {
 			}
 		}
 
-		foreach($arrayList as $matrixData) {
+		foreach ($arrayList as $matrixData) {
 			$array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData);
 			$count = count($array2);
 

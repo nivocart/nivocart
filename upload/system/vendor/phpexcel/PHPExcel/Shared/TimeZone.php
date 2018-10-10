@@ -23,9 +23,9 @@
  * @package	PHPExcel_Shared
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license	http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version	##VERSION##, ##DATE##
+ * @version    v1.0.0, released: 03-10-2018
+ * @edition     NivoCart
  */
-
 
 /**
  * PHPExcel_Shared_TimeZone
@@ -34,8 +34,7 @@
  * @package	PHPExcel_Shared
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Shared_TimeZone
-{
+class PHPExcel_Shared_TimeZone {
 	/*
 	 * Default Timezone used for date/time conversions
 	 *
@@ -52,9 +51,9 @@ class PHPExcel_Shared_TimeZone
 	 */
 	public static function _validateTimeZone($timezone) {
 		if (in_array($timezone, DateTimeZone::listIdentifiers())) {
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -69,8 +68,7 @@ class PHPExcel_Shared_TimeZone
 			return true;
 		}
 		return false;
-	}	//	function setTimezone()
-
+	}
 
 	/**
 	 * Return the Default Timezone used for date/time conversions
@@ -79,8 +77,7 @@ class PHPExcel_Shared_TimeZone
 	 */
 	public static function getTimeZone() {
 		return self::$_timezone;
-	}	//	function getTimezone()
-
+	}
 
 	/**
 	 *	Return the Timezone transition for the specified timezone and timestamp
@@ -92,11 +89,13 @@ class PHPExcel_Shared_TimeZone
 	private static function _getTimezoneTransitions($objTimezone, $timestamp) {
 		$allTransitions = $objTimezone->getTransitions();
 		$transitions = array();
-		foreach($allTransitions as $key => $transition) {
+
+		foreach ($allTransitions as $key => $transition) {
 			if ($transition['ts'] > $timestamp) {
 				$transitions[] = ($key > 0) ? $allTransitions[$key - 1] : $transition;
 				break;
 			}
+
 			if (empty($transitions)) {
 				$transitions[] = end($allTransitions);
 			}
@@ -128,6 +127,7 @@ class PHPExcel_Shared_TimeZone
 		}
 
 		$objTimezone = new DateTimeZone($timezone);
+
 		if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
 			$transitions = $objTimezone->getTransitions($timestamp,$timestamp);
 		} else {

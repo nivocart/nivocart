@@ -2,16 +2,14 @@
 
 namespace Stripe;
 
-class Transfer extends ApiResource
-{
+class Transfer extends ApiResource {
     /**
      * @param string $id The ID of the transfer to retrieve.
      * @param array|string|null $opts
      *
      * @return Transfer
      */
-    public static function retrieve($id, $opts = null)
-    {
+    public static function retrieve($id, $opts = null) {
         return self::_retrieve($id, $opts);
     }
 
@@ -21,8 +19,7 @@ class Transfer extends ApiResource
      *
      * @return Collection of Transfers
      */
-    public static function all($params = null, $opts = null)
-    {
+    public static function all($params = null, $opts = null) {
         return self::_all($params, $opts);
     }
 
@@ -32,8 +29,7 @@ class Transfer extends ApiResource
      *
      * @return Transfer The created transfer.
      */
-    public static function create($params = null, $opts = null)
-    {
+    public static function create($params = null, $opts = null) {
         return self::_create($params, $opts);
     }
 
@@ -44,16 +40,14 @@ class Transfer extends ApiResource
      *
      * @return Transfer The updated transfer.
      */
-    public static function update($id, $params = null, $options = null)
-    {
+    public static function update($id, $params = null, $options = null) {
         return self::_update($id, $params, $options);
     }
 
     /**
      * @return TransferReversal The created transfer reversal.
      */
-    public function reverse($params = null, $opts = null)
-    {
+    public function reverse($params = null, $opts = null) {
         $url = $this->instanceUrl() . '/reversals';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
@@ -63,8 +57,7 @@ class Transfer extends ApiResource
     /**
      * @return Transfer The canceled transfer.
      */
-    public function cancel()
-    {
+    public function cancel() {
         $url = $this->instanceUrl() . '/cancel';
         list($response, $opts) = $this->_request('post', $url);
         $this->refreshFrom($response, $opts);
@@ -76,8 +69,7 @@ class Transfer extends ApiResource
      *
      * @return Transfer The saved transfer.
      */
-    public function save($opts = null)
-    {
+    public function save($opts = null) {
         return $this->_save($opts);
     }
 }
