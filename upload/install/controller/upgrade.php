@@ -81,11 +81,11 @@ class ControllerUpgrade extends Controller {
 
 			$this->model_upgrade->dataTables($step1);
 
-			if ($step1) {
+			if (isset($step1) && $step1 == true) {
 				$this->model_upgrade->additionalTables($step2);
 			}
 
-			if ($step2) {
+			if (isset($step2) && $step2 == true) {
 				$this->model_upgrade->repairCategories(0);
 			}
 		} else {

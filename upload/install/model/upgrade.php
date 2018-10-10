@@ -339,10 +339,11 @@ class ModelUpgrade extends Model {
 						$this->db->query($sql);
 					}
 				}
-
-				flush();
 			}
 		}
+
+		// Add version
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "version` SET `version` = '" . NC_VERSION . "', date_added = NOW()");
 
 		$step1 = true;
 
@@ -365,9 +366,6 @@ class ModelUpgrade extends Model {
 				$settings[$setting['key']] = unserialize($setting['value']);
 			}
 		}
-
-		// Add version
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "version` SET `version` = '" . $db->escape(NC_VERSION) . "', date_added = NOW()");
 
 		flush();
 

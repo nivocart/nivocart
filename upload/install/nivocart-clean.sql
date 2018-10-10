@@ -177,7 +177,7 @@ DROP TABLE IF EXISTS `nc_api_key`;
 CREATE TABLE `nc_api_key` (
   `api_key_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
-  `code`varchar(128) NOT NULL,
+  `code` varchar(128) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`api_key_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -1258,7 +1258,7 @@ DROP TABLE IF EXISTS `nc_customer_online`;
 CREATE TABLE `nc_customer_online` (
   `ip` varchar(32) NOT NULL,
   `customer_id` int(11) NOT NULL,
-  `url` text CHARACTER SET utf8 NOT NULL,
+  `url` text NOT NULL,
   `referer` text NOT NULL,
   `user_agent` text NOT NULL,
   `date_added` datetime NOT NULL,
@@ -3239,13 +3239,13 @@ CREATE TABLE `nc_profile` (
   `status` tinyint(4) NOT NULL,
   `price` decimal(10,4) NOT NULL,
   `frequency` enum('day','week','semi_month','month','year') NOT NULL,
-  `duration` int(10) unsigned NOT NULL,
-  `cycle` int(10) unsigned NOT NULL,
+  `duration` int(10) UNSIGNED NOT NULL,
+  `cycle` int(10) UNSIGNED NOT NULL,
   `trial_status` tinyint(4) NOT NULL,
   `trial_price` decimal(10,4) NOT NULL,
   `trial_frequency` enum('day','week','semi_month','month','year') NOT NULL,
-  `trial_duration` int(10) unsigned NOT NULL,
-  `trial_cycle` int(10) unsigned NOT NULL,
+  `trial_duration` int(10) UNSIGNED NOT NULL,
+  `trial_cycle` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`profile_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -3747,6 +3747,45 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nc_stock_status`
+--
+
+DROP TABLE IF EXISTS `nc_stock_status`;
+CREATE TABLE `nc_stock_status` (
+  `stock_status_id` int(11) NOT NULL AUTO_INCREMENT,
+  `language_id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  PRIMARY KEY (`stock_status_id`,`language_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `nc_stock_status`
+--
+
+INSERT INTO `nc_stock_status` (`stock_status_id`, `language_id`, `name`) VALUES
+(7, 1, 'In Stock'),
+(8, 1, 'Pre-Order'),
+(5, 1, 'Out Of Stock'),
+(6, 1, '2 - 3 Days');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nc_store`
+--
+
+DROP TABLE IF EXISTS `nc_store`;
+CREATE TABLE `nc_store` (
+  `store_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `ssl` varchar(255) NOT NULL,
+  PRIMARY KEY (`store_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nc_supplier`
 --
 
@@ -3879,45 +3918,6 @@ CREATE TABLE `nc_supplier_product` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`supplier_product_id`,`supplier_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nc_stock_status`
---
-
-DROP TABLE IF EXISTS `nc_stock_status`;
-CREATE TABLE `nc_stock_status` (
-  `stock_status_id` int(11) NOT NULL AUTO_INCREMENT,
-  `language_id` int(11) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  PRIMARY KEY (`stock_status_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `nc_stock_status`
---
-
-INSERT INTO `nc_stock_status` (`stock_status_id`, `language_id`, `name`) VALUES
-(7, 1, 'In Stock'),
-(8, 1, 'Pre-Order'),
-(5, 1, 'Out Of Stock'),
-(6, 1, '2 - 3 Days');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nc_store`
---
-
-DROP TABLE IF EXISTS `nc_store`;
-CREATE TABLE `nc_store` (
-  `store_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
-  `url` varchar(255) NOT NULL,
-  `ssl` varchar(255) NOT NULL,
-  PRIMARY KEY (`store_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
