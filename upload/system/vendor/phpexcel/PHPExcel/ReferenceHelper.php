@@ -22,7 +22,7 @@
  * @package	PHPExcel
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.0.0, released: 03-10-2018
+ * @version    v1.8.1, released: 01-05-2015
  * @edition     NivoCart
  */
 
@@ -742,7 +742,7 @@ class PHPExcel_ReferenceHelper {
 				$matchCount = preg_match_all('/' . self::REFHELPER_REGEXP_CELLRANGE . '/i', ' ' . $formulaBlock . ' ', $matches, PREG_SET_ORDER);
 
 				if ($matchCount > 0) {
-					foreach($matches as $match) {
+					foreach ($matches as $match) {
 						$fromString = ($match[2] > '') ? $match[2] . '!' : '';
 						$fromString .= $match[3] . ':' . $match[4];
 

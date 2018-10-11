@@ -22,7 +22,7 @@
  * @package    PHPExcel
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.11.0, released: 01-05-2018
+ * @version    v1.8.1, released: 01-05-2015
  * @edition     NivoCart
  */
 
@@ -285,24 +285,24 @@ class PHPExcel {
 		$ReturnData = null;
 		$What = strtolower($What);
 
-		switch($What) {
-		case 'all':
-			return $this->_ribbonBinObjects;
-			break;
-		case 'names':
-		case 'data':
-			if (is_array($this->_ribbonBinObjects) && array_key_exists($What, $this->_ribbonBinObjects)) {
-				$ReturnData = $this->_ribbonBinObjects[$What];
-			}
-			break;
-		case 'types':
-			if (is_array($this->_ribbonBinObjects) && array_key_exists('data', $this->_ribbonBinObjects) && is_array($this->_ribbonBinObjects['data'])) {
-				$tmpTypes = array_keys($this->_ribbonBinObjects['data']);
-				$ReturnData = array_unique(array_map(array($this, '_getExtensionOnly'), $tmpTypes));
-			} else {
-				$ReturnData = array(); // the caller want an array... not null if empty
-			}
-			break;
+		switch ($What) {
+			case 'all':
+				return $this->_ribbonBinObjects;
+				break;
+			case 'names':
+			case 'data':
+				if (is_array($this->_ribbonBinObjects) && array_key_exists($What, $this->_ribbonBinObjects)) {
+					$ReturnData = $this->_ribbonBinObjects[$What];
+				}
+				break;
+			case 'types':
+				if (is_array($this->_ribbonBinObjects) && array_key_exists('data', $this->_ribbonBinObjects) && is_array($this->_ribbonBinObjects['data'])) {
+					$tmpTypes = array_keys($this->_ribbonBinObjects['data']);
+					$ReturnData = array_unique(array_map(array($this, '_getExtensionOnly'), $tmpTypes));
+				} else {
+					$ReturnData = array(); // the caller want an array... not null if empty
+				}
+				break;
 		}
 		return $ReturnData;
 	}
@@ -509,12 +509,7 @@ class PHPExcel {
 			$this->_workSheetCollection[] = $pSheet;
 		} else {
 			// Insert the sheet at the requested index
-			array_splice(
-				$this->_workSheetCollection,
-				$iSheetIndex,
-				0,
-				array($pSheet)
-			);
+			array_splice($this->_workSheetCollection, $iSheetIndex, 0, array($pSheet));
 
 			// Adjust active sheet index if necessary
 			if ($this->_activeSheetIndex >= $iSheetIndex) {
@@ -622,18 +617,9 @@ class PHPExcel {
 	public function setIndexByName($sheetName, $newIndex) {
 		$oldIndex = $this->getIndex($this->getSheetByName($sheetName));
 
-		$pSheet = array_splice(
-			$this->_workSheetCollection,
-			$oldIndex,
-			1
-		);
+		$pSheet = array_splice($this->_workSheetCollection, $oldIndex, 1);
 
-		array_splice(
-			$this->_workSheetCollection,
-			$newIndex,
-			0,
-			$pSheet
-		);
+		array_splice($this->_workSheetCollection, $newIndex, 0, $pSheet);
 
 		return $newIndex;
 	}

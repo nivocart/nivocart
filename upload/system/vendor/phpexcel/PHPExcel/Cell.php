@@ -23,7 +23,7 @@
  *	@copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @edition     NivoCart
  */
 
 /**
@@ -498,7 +498,7 @@ class PHPExcel_Cell {
 	 *	@return string
 	 */
     public function getMergeRange() {
-        foreach($this->getWorksheet()->getMergeCells() as $mergeRange) {
+        foreach ($this->getWorksheet()->getMergeCells() as $mergeRange) {
             if ($this->isInRange($mergeRange)) {
                 return $mergeRange;
             }

@@ -38,7 +38,6 @@ class CholeskyDecomposition {
 	 */
 	private $isspd = true;
 
-
 	/**
 	 *	CholeskyDecomposition
 	 *
@@ -106,7 +105,7 @@ class CholeskyDecomposition {
 		if ($B instanceof Matrix) {
 			if ($B->getRowDimension() == $this->m) {
 				if ($this->isspd) {
-					$X  = $B->getArrayCopy();
+					$X = $B->getArrayCopy();
 					$nx = $B->getColumnDimension();
 
 					for ($k = 0; $k < $this->m; ++$k) {

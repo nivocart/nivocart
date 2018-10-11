@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @edition     NivoCart
  */
 
 /**
@@ -104,7 +104,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 
 		$this->_storeData();
 
-		$query = "SELECT value FROM kvp_" . $this->_TableName . " WHERE id = '" . $pCoord . "'";
+		$query = "SELECT `value` FROM kvp_" . $this->_TableName . " WHERE id = '" . $pCoord . "'";
 
 		$cellResultSet = $this->_DBHandle->query($query, SQLITE_ASSOC);
 
@@ -226,7 +226,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 
 		$cellKeys = array();
 
-		foreach($cellIdsResult as $row) {
+		foreach ($cellIdsResult as $row) {
 			$cellKeys[] = $row['id'];
 		}
 

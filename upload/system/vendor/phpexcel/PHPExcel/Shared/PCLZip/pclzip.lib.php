@@ -272,7 +272,7 @@
 
     // ----- Set default values
     $v_options = array();
-    $v_options[PCLZIP_OPT_NO_COMPRESSION] = FALSE;
+    $v_options[PCLZIP_OPT_NO_COMPRESSION] = false;
 
     // ----- Look for variable options arguments
     $v_size = func_num_args();
@@ -431,7 +431,7 @@
 
     // ----- Set default values
     $v_options = array();
-    $v_options[PCLZIP_OPT_NO_COMPRESSION] = FALSE;
+    $v_options[PCLZIP_OPT_NO_COMPRESSION] = false;
 
     // ----- Look for variable options arguments
     $v_size = func_num_args();
@@ -664,7 +664,7 @@
     $v_size = func_num_args();
 
     // ----- Default values for option
-    $v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = FALSE;
+    $v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = false;
 
     // ----- Look for arguments
     if ($v_size > 0) {
@@ -808,7 +808,7 @@
     $v_size = func_num_args();
 
     // ----- Default values for option
-    $v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = FALSE;
+    $v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = false;
 
     // ----- Look for arguments
     if ($v_size > 1) {
@@ -864,7 +864,7 @@
         }
 
         if (!isset($v_options[PCLZIP_OPT_EXTRACT_AS_STRING])) {
-          $v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = FALSE;
+          $v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = false;
         }
       } else {
         // ----- Get the first argument
@@ -2443,7 +2443,7 @@
             // ----- Set header parameters
             $p_header['compressed_size'] = $p_header['size'];
             $p_header['compression'] = 0;
-          }  else {
+          } else {
           // ----- Compress the content
           $v_content = @gzdeflate($v_content);
 
@@ -3749,7 +3749,7 @@
           $v_data = @fread($this->zip_fd, $p_entry['compressed_size']);
 
           // ----- Decompress the file
-          if (($p_string = @gzinflate($v_data)) === FALSE) {
+          if (($p_string = @gzinflate($v_data)) === false) {
               // TBC
           }
         }
@@ -4894,7 +4894,7 @@
       }
 
       // ----- Compare the items
-      if (($v_list_dir[$i] != $v_list_path[$j]) && ($v_list_dir[$i] != '') && ( $v_list_path[$j] != ''))  {
+      if (($v_list_dir[$i] != $v_list_path[$j]) && ($v_list_dir[$i] != '') && ( $v_list_path[$j] != '')) {
         $v_result = 0;
       }
 

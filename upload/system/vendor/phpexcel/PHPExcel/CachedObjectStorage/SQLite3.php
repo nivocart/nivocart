@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @edition     NivoCart
  */
 
 /**
@@ -329,7 +329,7 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
 			}
 		}
 
-		$this->_selectQuery = $this->_DBHandle->prepare("SELECT value FROM kvp_" . $this->_TableName . " WHERE id = :id");
+		$this->_selectQuery = $this->_DBHandle->prepare("SELECT `value` FROM kvp_" . $this->_TableName . " WHERE id = :id");
 		$this->_insertQuery = $this->_DBHandle->prepare("INSERT OR REPLACE INTO kvp_" . $this->_TableName . " VALUES(:id,:data)");
 		$this->_updateQuery = $this->_DBHandle->prepare("UPDATE kvp_" . $this->_TableName . " SET id=:toId WHERE id=:fromId");
 		$this->_deleteQuery = $this->_DBHandle->prepare("DELETE FROM kvp_" . $this->_TableName . " WHERE id = :id");

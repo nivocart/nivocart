@@ -23,7 +23,7 @@
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @edition     NivoCart
  */
 
 /** PHPExcel root directory */
@@ -1241,7 +1241,7 @@ class PHPExcel_Calculation_Financial {
 		$principal = PHPExcel_Calculation_Functions::flattenSingleValue($principal);
 		$schedule = PHPExcel_Calculation_Functions::flattenArray($schedule);
 
-		foreach($schedule as $rate) {
+		foreach ($schedule as $rate) {
 			$principal *= 1 + $rate;
 		}
 
@@ -1695,7 +1695,7 @@ class PHPExcel_Calculation_Financial {
 
 		$result = $redemption / pow($baseYF, (--$n + $de));
 
-		for($k = 0; $k <= $n; ++$k) {
+		for ($k = 0; $k <= $n; ++$k) {
 			$result += $rfp / (pow($baseYF, ($k + $de)));
 		}
 
@@ -2193,7 +2193,9 @@ class PHPExcel_Calculation_Financial {
 		$f2 = self::XNPV($x2, $values, $dates);
 
 		for ($i = 0; $i < FINANCIAL_MAX_ITERATIONS; ++$i) {
-			if (($f1 * $f2) < 0.0) break;
+			if (($f1 * $f2) < 0.0) {
+				break;
+			}
 
 			if (abs($f1) < abs($f2)) {
 				$f1 = self::XNPV($x1 += 1.6 * ($x1 - $x2), $values, $dates);

@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
+ * @edition     NivoCart
  */
 
 /**
@@ -272,10 +272,10 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 				$objZip->addFromString($tmpRibbonTarget, $this->_spreadSheet->getRibbonXMLData('data'));
 
 				if ($this->_spreadSheet->hasRibbonBinObjects()) {
-					$tmpRootPath=dirname($tmpRibbonTarget) . '/';
-					$ribbonBinObjects=$this->_spreadSheet->getRibbonBinObjects('data');// the files to write
+					$tmpRootPath = dirname($tmpRibbonTarget) . '/';
+					$ribbonBinObjects = $this->_spreadSheet->getRibbonBinObjects('data');// the files to write
 
-					foreach ($ribbonBinObjects as $aPath=>$aContent){
+					foreach ($ribbonBinObjects as $aPath=>$aContent) {
 						$objZip->addFromString($tmpRootPath . $aPath, $aContent);
 					}
 					// the rels for files
@@ -316,7 +316,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 				if ($this->_includeCharts) {
 					$charts = $this->_spreadSheet->getSheet($i)->getChartCollection();
 					if (count($charts) > 0) {
-						foreach($charts as $chart) {
+						foreach ($charts as $chart) {
 							$objZip->addFromString('xl/charts/chart' . ($chartCount + 1) . '.xml', $this->getWriterPart('Chart')->writeChart($chart));
 							$chartCount++;
 						}

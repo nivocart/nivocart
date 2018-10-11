@@ -22,7 +22,7 @@
  * @package		PHPExcel_Calculation
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version    v1.0.0, released: 03-10-2018
+ * @version    v1.8.1, released: 01-05-2015
  * @edition     NivoCart
  */
 
@@ -607,7 +607,7 @@ class PHPExcel_Calculation_LookupRef {
 			} elseif (($match_type == 1) && ($lookupArrayValue >= $lookup_value)) {
 				$i = array_search($i, $keySet);
 				// if match_type is 1 <=> find the largest value that is less than or equal to lookup_value
-				if ($i < 1){
+				if ($i < 1) {
 					// 1st cell was allready bigger than the lookup_value
 					break;
 				} else {
