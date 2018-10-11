@@ -31,7 +31,7 @@
         </tr>
         <tr>
           <td><?php echo $entry_access; ?></td>
-          <td><div class="scrollbox" style="height:220px; margin-bottom:5px;">
+          <td><div class="scrollbox" style="height:230px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
             <?php foreach ($permissions as $permission) { ?>
               <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -51,7 +51,7 @@
         </tr>
         <tr>
           <td><?php echo $entry_modify; ?></td>
-          <td><div class="scrollbox" style="height:220px; margin-bottom:5px;">
+          <td><div class="scrollbox" style="height:230px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
             <?php foreach ($permissions as $permission) { ?>
               <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>

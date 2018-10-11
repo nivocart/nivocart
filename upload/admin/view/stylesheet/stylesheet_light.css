@@ -1631,7 +1631,7 @@ table.tool tr td {
 /* Scrollbox */
 .scrollbox {
 	width: 350px;
-	height: 100px;
+	height: 118px;
 	background: #FFF;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	font-size: 14px;
@@ -1644,7 +1644,7 @@ table.tool tr td {
 }
 .scrollbox-store {
 	width: 220px;
-	height: 90px;
+	height: 118px;
 	margin-bottom: 5px;
 	background: #FFF;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;

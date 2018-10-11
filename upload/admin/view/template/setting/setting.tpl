@@ -1478,6 +1478,24 @@
             <?php } ?></td>
           </tr>
           <tr>
+            <td><?php echo $entry_auto_seo_url; ?><span class="help"><?php echo $help_auto_seo_url; ?></span></td>
+            <td><div class="scrollbox-store">
+              <?php $class = 'odd'; ?>
+              <?php foreach ($seo_url_pages as $seo_url_page) { ?>
+                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <div class="<?php echo $class; ?>">
+                  <?php if (in_array($seo_url_page, $config_auto_seo_url)) { ?>
+                    <input type="checkbox" name="config_auto_seo_url[]" value="<?php echo $seo_url_page; ?>" checked="checked" />
+                    <?php echo $seo_url_page; ?>
+                  <?php } else { ?>
+                    <input type="checkbox" name="config_auto_seo_url[]" value="<?php echo $seo_url_page; ?>" />
+                    <?php echo $seo_url_page; ?>
+                  <?php } ?>
+                </div>
+              <?php } ?>
+            </div></td>
+          </tr>
+          <tr>
             <td><?php echo $entry_user_group_display; ?><span class="help"><?php echo $help_user_group_display; ?></span></td>
             <td><div class="scrollbox-store">
               <?php $class = 'odd'; ?>
@@ -2425,7 +2443,7 @@
           </tr>
           <tr>
             <td><?php echo $entry_robots; ?><span class="help"><?php echo $help_robots; ?></span></td>
-            <td><textarea name="config_robots" cols="40" rows="5"><?php echo $config_robots; ?></textarea></td>
+            <td><textarea name="config_robots" cols="40" rows="8"><?php echo $config_robots; ?></textarea></td>
           </tr>
           <tr>
             <td><?php echo $entry_robots_online; ?><span class="help"><?php echo $help_robots_online; ?></span></td>
@@ -2499,7 +2517,7 @@
           </tr>
           <tr>
             <td><?php echo $entry_file_mime_allowed; ?><span class="help"><?php echo $help_file_mime_allowed; ?></span></td>
-            <td><textarea name="config_file_mime_allowed" cols="60" rows="8"><?php echo $config_file_mime_allowed; ?></textarea></td>
+            <td><textarea name="config_file_mime_allowed" cols="50" rows="8"><?php echo $config_file_mime_allowed; ?></textarea></td>
           </tr>
         </table>
       </div>

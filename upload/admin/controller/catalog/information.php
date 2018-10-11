@@ -469,6 +469,15 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
+		// Auto Seo Urls
+		$this->data['auto_seo_url'] = false;
+
+		if (is_array($this->config->get('config_auto_seo_url'))) {
+			if (in_array('Information', $this->config->get('config_auto_seo_url'))) {
+				$this->data['auto_seo_url'] = true;
+			}
+		}
+
 		if (isset($this->request->get['information_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$information_info = $this->model_catalog_information->getInformation($this->request->get['information_id']);
 		}

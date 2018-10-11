@@ -218,6 +218,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_autocomplete_category'] = $this->language->get('entry_autocomplete_category');
 		$this->data['entry_autocomplete_product'] = $this->language->get('entry_autocomplete_product');
 		$this->data['entry_autocomplete_offer'] = $this->language->get('entry_autocomplete_offer');
+		$this->data['entry_auto_seo_url'] = $this->language->get('entry_auto_seo_url');
 		$this->data['entry_user_group_display'] = $this->language->get('entry_user_group_display');
 		$this->data['entry_catalog_barcode'] = $this->language->get('entry_catalog_barcode');
 		$this->data['entry_admin_barcode'] = $this->language->get('entry_admin_barcode');
@@ -396,6 +397,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_autocomplete_category'] = $this->language->get('help_autocomplete_category');
 		$this->data['help_autocomplete_product'] = $this->language->get('help_autocomplete_product');
 		$this->data['help_autocomplete_offer'] = $this->language->get('help_autocomplete_offer');
+		$this->data['help_auto_seo_url'] = $this->language->get('help_auto_seo_url');
 		$this->data['help_user_group_display'] = $this->language->get('help_user_group_display');
 		$this->data['help_catalog_barcode'] = $this->language->get('help_catalog_barcode');
 		$this->data['help_admin_barcode'] = $this->language->get('help_admin_barcode');
@@ -1531,6 +1533,16 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_autocomplete_offer'] = $this->request->post['config_autocomplete_offer'];
 		} else {
 			$this->data['config_autocomplete_offer'] = $this->config->get('config_autocomplete_offer');
+		}
+
+		$this->data['seo_url_pages'] = array('Category', 'Product', 'Manufacturer', 'Information', 'News');
+
+		if (isset($this->request->post['config_auto_seo_url'])) {
+			$this->data['config_auto_seo_url'] = $this->request->post['config_auto_seo_url'];
+		} elseif ($this->config->get('config_auto_seo_url')) {
+			$this->data['config_auto_seo_url'] = $this->config->get('config_auto_seo_url');
+		} else {
+			$this->data['config_auto_seo_url'] = array();
 		}
 
 		$this->load->model('user/user_group');

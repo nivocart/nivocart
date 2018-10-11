@@ -2013,6 +2013,53 @@ function addImage() {
 };
 //--></script>
 
+<?php if ($auto_seo_url) { ?>
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	var keyword = $("input[name=keyword]");
+
+	if (!keyword.val()) {
+		$("input[name^='product_description'], input[name='name'], input[name^='model']").keyup(function() {
+			// Name
+			var SEOname = $("input[name^='product_description'], input[name='name']").val();
+
+			SEOname = SEOname.replace(/^\s+|\s+$/g, '');
+			SEOname = SEOname.toLowerCase();
+
+			var from = "ảãạàáäâấầậẩẫẻẹẽèéëêềếệểễăắằẳẵặìíïîịơởỡợờớọõỏòóöôốộồổỗđưứừựửữùúüûủụùúũñcçčlľštžýnrrdçõã·/_,:;";
+			var to = "aaaaaaaaaaaaeeeeeeeeeeeeaaaaaaiiiiiooooooooooooooooooduuuuuuuuuuuuuuuncccllstzynrrdcoa------";
+
+			for (var i=0, l=from.length ; i<l ; i++) {
+				SEOname = SEOname.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+			}
+
+			SEOname = SEOname.replace(/[^a-z0-9( -]/g, '').replace(/\(/g,"-").replace(/\s+/g, '-').replace(/-+/g, '-');
+
+			// Model
+			if ($("input[name^='model']").length) {
+				var SEOmodel = $("input[name^='model']").val();
+
+				SEOmodel = SEOmodel.replace(/^\s+|\s+$/g, '');
+				SEOmodel = SEOmodel.toLowerCase();
+
+				for (var i=0, l=from.length ; i<l ; i++) {
+					SEOmodel = SEOmodel.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+				}
+
+				SEOmodel = SEOmodel.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+			}
+
+			if (SEOmodel) {
+				keyword.val(SEOname+'-'+SEOmodel);
+			} else {
+				keyword.val(SEOname);
+			}
+		});
+	}
+});
+//--></script>
+<?php } ?>
+
 <script type="text/javascript"><!--
 $('#tabs a').tabs();
 $('#languages a').tabs();

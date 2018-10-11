@@ -502,6 +502,15 @@ class ControllerCatalogNews extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
+		// Auto Seo Urls
+		$this->data['auto_seo_url'] = false;
+
+		if (is_array($this->config->get('config_auto_seo_url'))) {
+			if (in_array('News', $this->config->get('config_auto_seo_url'))) {
+				$this->data['auto_seo_url'] = true;
+			}
+		}
+
 		$this->data['new_download'] = $this->url->link('catalog/news_download/insert', 'token=' . $this->session->data['token'], 'SSL');
 
 		if ((isset($this->request->get['news_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {

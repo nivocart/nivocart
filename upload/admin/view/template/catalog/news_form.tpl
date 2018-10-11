@@ -362,6 +362,34 @@ function getRelatedMethod(value) {
 }
 //--></script>
 
+<?php if ($auto_seo_url) { ?>
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	var keyword = $("input[name=keyword]");
+
+	if (!keyword.val()) {
+		$("input[name^='news_description'], input[name='name']").keyup(function() {
+			var SEOname = $("input[name^='news_description'], input[name='name']").val();
+
+			SEOname = SEOname.replace(/^\s+|\s+$/g, '');
+			SEOname = SEOname.toLowerCase();
+
+			var from = "ảãạàáäâấầậẩẫẻẹẽèéëêềếệểễăắằẳẵặìíïîịơởỡợờớọõỏòóöôốộồổỗđưứừựửữùúüûủụùúũñcçčlľštžýnrrdçõã·/_,:;";
+			var to = "aaaaaaaaaaaaeeeeeeeeeeeeaaaaaaiiiiiooooooooooooooooooduuuuuuuuuuuuuuuncccllstzynrrdcoa------";
+
+			for (var i=0, l=from.length ; i<l ; i++) {
+				SEOname = SEOname.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+			}
+
+			SEOname = SEOname.replace(/[^a-z0-9( -]/g, '').replace(/\(/g,"-").replace(/\s+/g, '-').replace(/-+/g, '-');
+
+			keyword.val(SEOname);
+		});
+	}
+});
+//--></script>
+<?php } ?>
+
 <script type="text/javascript"><!--
 $('#tabs a').tabs();
 $('#languages a').tabs();

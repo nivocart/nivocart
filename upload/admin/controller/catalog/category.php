@@ -513,6 +513,15 @@ class ControllerCatalogCategory extends Controller {
 		// Auto-complete
 		$this->data['autocomplete_off'] = $this->config->get('config_autocomplete_category');
 
+		// Auto Seo Urls
+		$this->data['auto_seo_url'] = false;
+
+		if (is_array($this->config->get('config_auto_seo_url'))) {
+			if (in_array('Category', $this->config->get('config_auto_seo_url'))) {
+				$this->data['auto_seo_url'] = true;
+			}
+		}
+
 		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$category_info = $this->model_catalog_category->getCategory($this->request->get['category_id']);
 		}
