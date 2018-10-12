@@ -232,30 +232,11 @@
             <?php } ?></td>
           </tr>
         </table>
-        <h2><?php echo $text_one_page; ?></h2>
-        <div class="tooltip" style="margin:5px 0px 10px 0px;"><?php echo $info_one_page; ?></div>
+        <h2><?php echo $text_express; ?></h2>
         <table class="form">
           <tr>
-            <td><?php echo $entry_one_page_checkout; ?><span class="help"><?php echo $help_one_page_checkout; ?></span></td>
-            <td><?php if ($config_one_page_checkout) { ?>
-              <input type="radio" name="config_one_page_checkout" value="1" id="one-page-checkout-on" class="radio" checked />
-              <label for="one-page-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_checkout" value="0" id="one-page-checkout-off" class="radio" />
-              <label for="one-page-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_one_page_checkout" value="1" id="one-page-checkout-on" class="radio" />
-              <label for="one-page-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_checkout" value="0" id="one-page-checkout-off" class="radio" checked />
-              <label for="one-page-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?>
-            <?php if ($error_multiple_checkout) { ?>
-              <span class="error"><?php echo $error_multiple_checkout; ?></span>
-            <?php } ?></td>
+            <td colspan="2"><img src="view/image/tooltip.png" alt="" /> &nbsp; <?php echo $info_express; ?></td>
           </tr>
-        </table>
-        <h2><?php echo $text_express; ?></h2>
-        <div class="tooltip" style="margin:5px 0px 10px 0px;"><?php echo $info_express; ?></div>
-        <table class="form">
           <tr>
             <td><?php echo $entry_express_checkout; ?><span class="help"><?php echo $help_express_checkout; ?></span></td>
             <td><?php if ($config_express_checkout) { ?>
@@ -294,6 +275,29 @@
                 <?php } ?>
               <?php } ?>
             </select></td>
+          </tr>
+        </table>
+        <h2><?php echo $text_one_page; ?></h2>
+        <table class="form">
+          <tr>
+            <td colspan="2"><img src="view/image/tooltip.png" alt="" /> &nbsp; <?php echo $info_one_page; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_one_page_checkout; ?><span class="help"><?php echo $help_one_page_checkout; ?></span></td>
+            <td><?php if ($config_one_page_checkout) { ?>
+              <input type="radio" name="config_one_page_checkout" value="1" id="one-page-checkout-on" class="radio" checked />
+              <label for="one-page-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_one_page_checkout" value="0" id="one-page-checkout-off" class="radio" />
+              <label for="one-page-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_one_page_checkout" value="1" id="one-page-checkout-on" class="radio" />
+              <label for="one-page-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_one_page_checkout" value="0" id="one-page-checkout-off" class="radio" checked />
+              <label for="one-page-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?>
+            <?php if ($error_multiple_checkout) { ?>
+              <span class="error"><?php echo $error_multiple_checkout; ?></span>
+            <?php } ?></td>
           </tr>
         </table>
       </div>
