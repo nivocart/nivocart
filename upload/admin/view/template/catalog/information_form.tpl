@@ -203,8 +203,8 @@ $(document).ready(function() {
 	var keyword = $("input[name=keyword]");
 
 	if (!keyword.val()) {
-		$("input[name^='information_description'], input[name='name']").keyup(function() {
-			var SEOname = $("input[name^='information_description'], input[name='name']").val();
+		$("input[name^='information_description'], input[name='title']").keyup(function() {
+			var SEOname = $("input[name^='information_description'], input[name='title']").val();
 
 			SEOname = SEOname.replace(/^\s+|\s+$/g, '');
 			SEOname = SEOname.toLowerCase();
