@@ -75,7 +75,7 @@
         <div class="user-status"><a href="<?php echo $user_profile; ?>" title="<?php echo $username; ?>" class="ripple"><img src="<?php echo $avatar; ?>" alt="<?php echo $username; ?>" /></a></div>
       <?php } ?>
     </div>
-    <?php if ($logged) { ?>
+  <?php if ($logged) { ?>
     <div id="menu">
     <ul class="menu">
       <li id="dashboard"><a class="dash" href="<?php echo $home; ?>" title=""><?php echo $text_dashboard; ?></a></li>
@@ -340,7 +340,7 @@
         <?php echo $notification; ?>
       <?php } ?>
     </ul>
-  </div>
+    </div>
   <?php } ?>
 </div>
 

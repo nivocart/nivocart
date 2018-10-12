@@ -86,7 +86,7 @@
       <?php if ($autocomplete_off) { ?>
         <tr>
           <td><?php echo $entry_filter; ?></td>
-          <td><div class="scrollbox" style="width:350px; height:153px; margin-bottom:5px;">
+          <td><div class="scrollbox" style="height:153px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
             <?php foreach ($filters as $filter) { ?>
               <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -103,7 +103,7 @@
               </div>
             <?php } ?>
           </div>
-          <a onclick="$(this).parent().find(':checkbox').attr('checked', true);" class="button-select"></a><a onclick="$(this).parent().find(':checkbox').attr('checked', false);" class="button-unselect"></a>
+          <a onclick="$(this).parent().find(':checkbox').prop('checked', true);" class="button-select"></a><a onclick="$(this).parent().find(':checkbox').prop('checked', false);" class="button-unselect"></a>
           </td>
         </tr>
       <?php } else { ?>
