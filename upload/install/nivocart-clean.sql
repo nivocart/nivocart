@@ -3425,7 +3425,7 @@ CREATE TABLE `nc_robot_online` (
 
 DROP TABLE IF EXISTS `nc_setting`;
 CREATE TABLE `nc_setting` (
-  `setting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `setting_id` int(16) NOT NULL AUTO_INCREMENT,
   `store_id` int(11) NOT NULL DEFAULT '0',
   `group` varchar(32) NOT NULL,
   `key` varchar(64) NOT NULL,
