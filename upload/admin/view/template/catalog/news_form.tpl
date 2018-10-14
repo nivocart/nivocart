@@ -79,7 +79,7 @@
           <tr>
             <td><?php echo $entry_download; ?></td>
             <td>
-              <div id="download-ids" class="scrollbox">
+              <div id="download-ids" class="scrollbox" style="width:350px;">
                 <?php $class = 'odd'; ?>
                 <?php foreach ($downloads as $download) { ?>
                   <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -96,7 +96,8 @@
               </div><br />
               <a onclick="$(this).parent().find(':checkbox').prop('checked', true);" class="button-select"></a><a onclick="$(this).parent().find(':checkbox').prop('checked', false);" class="button-unselect"></a>
             <?php if ($new_entry) { ?>
-              &nbsp;<a onclick="location = '<?php echo $new_download; ?>';" class="button-filter" style="margin-top:0;"><?php echo $button_new_download; ?></a>
+              <br /><br />
+              <a onclick="location = '<?php echo $new_download; ?>';" class="button-form"><?php echo $button_new_download; ?></a>
             <?php } ?>
             </td>
           </tr>
@@ -182,7 +183,7 @@
                   <td><?php echo $entry_product_search; ?><br /><input type="text" name="product" value="" /></td>
                   <td>&nbsp;&nbsp;</td>
                   <td> 
-                    <div id="product-wise-list" class="scrollbox">
+                    <div id="product-wise-list" class="scrollbox" style="width:350px;">
                     <?php $class = 'odd'; ?>
                     <?php if (isset($products)) { ?>
                       <?php foreach ($products as $product) { ?>
@@ -201,7 +202,7 @@
           <tr id="category-wise" style="display:none;">
             <td><?php echo $entry_category; ?></td>
             <td>
-              <div id="category-ids" class="scrollbox">
+              <div id="category-ids" class="scrollbox" style="width:500px;">
                 <?php $class = 'odd'; ?>
                 <?php foreach ($default_categories as $category) { ?>
                   <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -217,7 +218,7 @@
           <tr id="manufacturer-wise" style="display:none;">
             <td><?php echo $entry_manufacturer; ?></td>
             <td>
-              <div id="manufacturer-ids" class="scrollbox">
+              <div id="manufacturer-ids" class="scrollbox" style="width:350px;">
                 <?php $class = 'odd'; ?>
                 <?php foreach ($default_manufacturers as $manufacturer) { ?>
                   <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>

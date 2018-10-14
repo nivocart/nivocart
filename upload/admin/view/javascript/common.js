@@ -1,5 +1,5 @@
 /*
- Common v1.0.4 | @nivocart | NivoCart | OSL v3.0
+ Common v1.0.5 | @nivocart | NivoCart | OSL v3.0
  ---------------------------------------------------------------------------
  Common.js file for development. Use minified version for production.
  ---------------------------------------------------------------------------
@@ -31,10 +31,10 @@ function apply() {
 
 // Success and Tooltip Remove
 $(document).ready(function() {
-	$('body').on('click', '.success', function() {
+	$('body').on('click', '.tooltip', function() {
 		$(this).fadeOut('slow');
 	});
-	$('body').on('click', '.tooltip', function() {
+	$('body').on('click', '.success', function() {
 		$(this).fadeOut('slow');
 	});
 });

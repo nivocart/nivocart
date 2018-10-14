@@ -57,7 +57,7 @@ $_['help_related_method']     = 'This article can be linked to individual produc
 $_['button_module']           = 'News Module';
 $_['button_reset']            = 'Reset Views';
 $_['button_downloads']        = 'Downloads';
-$_['button_new_download']     = 'New download?';
+$_['button_new_download']     = 'New download ?';
 
 // Error
 $_['error_permission']        = 'Warning: You do not have permission to modify <b>News</b> !';

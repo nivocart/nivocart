@@ -1641,7 +1641,7 @@ table.tool tr td {
 }
 /* Scrollbox */
 .scrollbox {
-	min-width: 350px;
+	width: 350px;
 	min-height: 118px;
 	background: #DCDCDC;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;

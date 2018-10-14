@@ -101,7 +101,19 @@
           <li><a href="<?php echo $filter; ?>"><?php echo ($icons) ? '<i class="fa fa-filter"></i>' : ''; ?><?php echo $text_filter; ?></a></li>
           <li><a href="<?php echo $profile; ?>"><?php echo ($icons) ? '<i class="fa fa-exchange"></i>' : ''; ?><?php echo $text_profile; ?></a></li>
           <li><a href="<?php echo $palette; ?>"><?php echo ($icons) ? '<i class="fa fa-paint-brush"></i>' : ''; ?><?php echo $text_palette; ?></a></li>
-          <li><a href="<?php echo $news; ?>"><?php echo ($icons) ? '<i class="fa fa-pencil"></i>' : ''; ?><?php echo $text_news; ?></a></li>
+        <?php if ($blog_ready) { ?>
+          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-pencil"></i>' : ''; ?><?php echo $text_blog; ?></a>
+            <ul>
+              <li><a href="<?php echo $blog_article; ?>"><?php echo ($icons) ? '<i class="fa fa-file-text-o"></i>' : ''; ?><?php echo $text_blog_article; ?></a></li>
+              <li><a href="<?php echo $blog_author; ?>"><?php echo ($icons) ? '<i class="fa fa-group"></i>' : ''; ?><?php echo $text_blog_author; ?></a></li>
+              <li><a href="<?php echo $blog_category; ?>"><?php echo ($icons) ? '<i class="fa fa-sitemap"></i>' : ''; ?><?php echo $text_blog_category; ?></a></li>
+              <li><a href="<?php echo $blog_comment; ?>"><?php echo ($icons) ? '<i class="fa fa-pencil"></i>' : ''; ?><?php echo $text_blog_comment; ?></a></li>
+              <li><a href="<?php echo $blog_view_report; ?>"><?php echo ($icons) ? '<i class="fa fa-eye"></i>' : ''; ?><?php echo $text_blog_report; ?></a></li>
+              <li><a href="<?php echo $blog_setting; ?>"><?php echo ($icons) ? '<i class="fa fa-gears"></i>' : ''; ?><?php echo $text_blog_setting; ?></a></li>
+            </ul>
+          </li>
+        <?php } ?>
+          <li><a href="<?php echo $news; ?>"><?php echo ($icons) ? '<i class="fa fa-edit"></i>' : ''; ?><?php echo $text_news; ?></a></li>
           <li><a href="<?php echo $information; ?>"><?php echo ($icons) ? '<i class="fa fa-info-circle"></i>' : ''; ?><?php echo $text_information; ?></a></li>
         </ul>
       </li>
@@ -194,6 +206,9 @@
             </ul>
           </li>
           <li><a href="<?php echo $report_abandoned_cart; ?>"><?php echo ($icons) ? '<i class="fa fa-paper-plane"></i>' : ''; ?><?php echo $text_report_abandoned_cart; ?></a></li>
+        <?php if ($blog_ready) { ?>
+          <li><a href="<?php echo $blog_view_report; ?>"><?php echo ($icons) ? '<i class="fa fa-eye"></i>' : ''; ?><?php echo $text_blog_views; ?></a></li>
+        <?php } ?>
           <li><a href="<?php echo $report_banner_clicked; ?>"><?php echo ($icons) ? '<i class="fa fa-photo"></i>' : ''; ?><?php echo $text_report_banner_clicked; ?></a></li>
         <?php if ($track_robots) { ?>
           <li><a href="<?php echo $report_robot_online; ?>"><?php echo ($icons) ? '<i class="fa fa-wifi"></i>' : ''; ?><?php echo $text_report_robot_online; ?></a></li>
