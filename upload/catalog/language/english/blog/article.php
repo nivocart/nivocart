@@ -1,5 +1,5 @@
 <?php
-// Heading 
+// Heading
 $_['heading_title']           = 'Blog';
 
 $_['text_date_format']        = 'F jS, Y';

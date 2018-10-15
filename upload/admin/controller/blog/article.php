@@ -646,7 +646,7 @@ class ControllerBlogArticle extends Controller {
 
 		if (isset($this->request->post['blog_related_articles'])) {
 			$this->data['blog_related_articles'] = $this->request->post['blog_related_articles'];
-		}  elseif (isset($this->request->get['blog_article_id'])) {
+		} elseif (isset($this->request->get['blog_article_id'])) {
 			$this->data['blog_related_articles'] = $this->model_blog_article->getRelatedArticles($this->request->get['blog_article_id']);
 		} else {
 			$this->data['blog_related_articles'] = array();
@@ -654,7 +654,7 @@ class ControllerBlogArticle extends Controller {
 
 		if (isset($this->request->post['status'])) {
 			$this->data['status'] = $this->request->post['status'];
-		}  elseif (isset($article_info)) {
+		} elseif (isset($article_info)) {
 			$this->data['status'] = $article_info['status'];
 		} else {
 			$this->data['status'] = 0;

@@ -1,4 +1,4 @@
-<?php 
+<?php
 class ModelBlogStatus extends Model {
 
 	public function checkBlog() {

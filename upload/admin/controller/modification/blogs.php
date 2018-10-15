@@ -371,28 +371,27 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 			$this->db->query($sql);
 		}
 
-		$stores = array();
-
-		$store_query = $this->db->query("SELECT store_id FROM `" . DB_PREFIX . "store`");
-
-		foreach ($store_query->rows as $store) {
-			$stores[] = $store['store_id'];
-		}
+		// Get Layout ID
+		$layout_id = $this->getLayoutId();
 
 		// Check layout route
-		$newRoutes = array('blog/article', 'blog/author', 'blog/category', 'blog/search');
+		$new_routes = array('blog/article', 'blog/author', 'blog/category', 'blog/search');
 
-		foreach ($stores as $store_id) {
-			foreach ($newRoutes as $newRoute) {
-				$layout_route_query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` LIKE '" . $newRoute . "' LIMIT 0,1");
+		foreach ($new_routes as $new_route) {
+			$layout_route_query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '0' AND `route` LIKE '" . $new_route . "'");
 
-				if ($layout_route_query->num_rows == 0) {
-					$sql = "INSERT INTO `" . DB_PREFIX . "layout_route` SET `layout_id`= (SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog' LIMIT 0,1), store_id = '" . (int)$store_id . "', `route` = '" . $newRoute . "'";
+			if ($layout_route_query->num_rows == 0) {
+				$sql = "INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', `route` = '" . $new_route . "'";
 
-					$this->db->query($sql);
-				}
+				$this->db->query($sql);
 			}
 		}
+	}
+
+	protected function getLayoutId() {
+		$query = $this->db->query("SELECT DISTINCT layout_id AS layout FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog'");
+
+		return $query->row['layout'];
 	}
 
 	public function uninstall() {
@@ -415,6 +414,8 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_comment`");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_related_article`");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_view`");
+
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog'");
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE 'blog_article_id=%'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE 'blog_author_id=%'");

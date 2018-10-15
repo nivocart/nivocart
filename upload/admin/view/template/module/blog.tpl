@@ -137,13 +137,14 @@
         </table>
       </form>
     <?php } else { ?>
-      <div class="attention" style="margin:5px 0;"><?php echo $text_status_not_ready; ?></div>
+      <div class="attention" style="margin:15px 0;"><?php echo $text_status_not_ready; ?></div>
       <div><a href="<?php echo $install; ?>" class="button ripple"><i class="fa fa-gears"></i> &nbsp; <?php echo $button_install; ?></a></div>
     <?php } ?>
     </div>
   </div>
 </div>
 
+<?php if ($blog_ready) { ?>
 <script type="text/javascript"><!--
 var module_row = <?php echo $module_row; ?>;
 
@@ -178,5 +179,6 @@ function addModule() {
 	module_row++;
 }
 //--></script>
+<?php } ?>
 
 <?php echo $footer; ?>
