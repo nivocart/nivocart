@@ -69,6 +69,8 @@ class ControllerModuleBlog extends Controller {
 
 		$this->data['text_not_found'] = $this->language->get('text_not_found');
 
+		$this->data['button_continue_reading'] = $this->language->get('button_continue_reading');
+
 		$this->data['module'] = $module++;
 
 		// Template

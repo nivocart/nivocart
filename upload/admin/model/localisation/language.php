@@ -34,6 +34,38 @@ class ModelLocalisationLanguage extends Model {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "banner_image_description SET banner_image_id = '" . (int)$banner_image['banner_image_id'] . "', banner_id = '" . (int)$banner_image['banner_id'] . "', language_id = '" . (int)$language_id . "', title = '" . $this->db->escape($banner_image['title']) . "'");
 		}
 
+		// Check Blog
+		$this->load->model('blog/status');
+
+		$blog_tables = $this->model_blog_status->checkBlog();
+
+		if ($blog_tables) {
+			// Blog Article
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_article_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+			foreach ($query->rows as $blog_article) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_article_description` SET blog_article_id = '" . (int)$blog_article['blog_article_id'] . "', language_id = '" . (int)$language_id . "', article_title = '" . $this->db->escape($blog_article['article_title']) . "', meta_description = '" . $this->db->escape($blog_article['meta_description']) . "', meta_keyword = '" . $this->db->escape($blog_article['meta_keyword']) . "', description = '" . $this->db->escape($blog_article['description']) . "'");
+			}
+
+			// Blog Author
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_author_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+			foreach ($query->rows as $blog_author) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_author_description` SET blog_author_id = '" . (int)$blog_author['blog_author_id'] . "', language_id = '" . (int)$language_id . "', meta_description = '" . $this->db->escape($blog_author['meta_description']) . "', meta_keyword = '" . $this->db->escape($blog_author['meta_keyword']) . "', description = '" . $this->db->escape($blog_author['description']) . "'");
+			}
+
+			$this->cache->delete('blog_author');
+
+			// Blog Category
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_category_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+			foreach ($query->rows as $blog_category) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category_description` SET blog_category_id = '" . (int)$blog_category['blog_category_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($blog_category['name']) . "', meta_description = '" . $this->db->escape($blog_category['meta_description']) . "', meta_keyword = '" . $this->db->escape($blog_category['meta_keyword']) . "', description = '" . $this->db->escape($blog_category['description']) . "'");
+			}
+
+			$this->cache->delete('blog_category');
+		}
+
 		// Category
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
@@ -324,6 +356,20 @@ class ModelLocalisationLanguage extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "banner_image_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('banner.image');
 
+		// Check Blog
+		$this->load->model('blog/status');
+
+		$blog_tables = $this->model_blog_status->checkBlog();
+
+		if ($blog_tables) {
+			$this->db->query("DELETE FROM " . DB_PREFIX . "blog_article_description WHERE language_id = '" . (int)$language_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "blog_author_description WHERE language_id = '" . (int)$language_id . "'");
+			$this->cache->delete('blog_author');
+
+			$this->db->query("DELETE FROM " . DB_PREFIX . "blog_category_description WHERE language_id = '" . (int)$language_id . "'");
+			$this->cache->delete('blog_category');
+		}
+
 		$this->db->query("DELETE FROM " . DB_PREFIX . "category_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('category');
 
@@ -494,7 +540,7 @@ class ModelLocalisationLanguage extends Model {
 	}
 
 	public function getTotalLanguages() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "language`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "language`");
 
 		return $query->row['total'];
 	}

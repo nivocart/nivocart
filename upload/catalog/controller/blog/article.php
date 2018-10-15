@@ -302,6 +302,12 @@ class ControllerBlogArticle extends Controller {
 				'separator' => ' :: '
 			);
 
+			$this->data['breadcrumbs'][] = array(
+				'text'      => $article_info['article_title'],
+				'href'      => $this->url->link('blog/article/view', '&blog_article_id=' . $article_info['blog_article_id'], 'SSL'),
+				'separator' => ' :: '
+			);
+
 			// AddThis
 			if ($this->config->get('config_addthis')) {
 				$this->data['addthis'] = $this->config->get('config_addthis');

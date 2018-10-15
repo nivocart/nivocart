@@ -22,6 +22,7 @@ $_['text_offer']            = 'Offer!';
 $_['text_free']             = 'Free';
 $_['text_remaining']        = 'Only %s left!';
 $_['text_wait']             = 'Please wait!';
+$_['text_blog_search']      = 'Search Blog';
 
 // Buttons
 $_['button_add_address']    = 'Add Address';

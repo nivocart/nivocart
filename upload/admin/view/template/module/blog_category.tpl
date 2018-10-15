@@ -19,10 +19,7 @@
     </div>
     <div class="content">
     <?php if ($blog_ready) { ?>
-      <div class="success" style="margin:5px 0;"><?php echo $text_status_ready; ?></div>
-    <?php } else { ?>
-      <div class="attention" style="margin:5px 0;"><?php echo $text_status_not_ready; ?></div>
-    <?php } ?>
+      <div class="tooltip" style="margin:5px 0;"><?php echo $text_status_ready; ?></div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="blog_category">
         <table class="form">
         <tbody>
@@ -135,6 +132,10 @@
           </tfoot>
         </table>
       </form>
+    <?php } else { ?>
+      <div class="attention" style="margin:5px 0;"><?php echo $text_status_not_ready; ?></div>
+      <div><a href="<?php echo $install; ?>" class="button ripple"><i class="fa fa-gears"></i> &nbsp; <?php echo $button_install; ?></a></div>
+    <?php } ?>
     </div>
   </div>
 </div>

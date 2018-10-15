@@ -363,37 +363,31 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
 
 		// Check layout
-		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'Blog' LIMIT 0,1";
+		$layout_query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog' LIMIT 0,1");
 
-		$query = $this->db->query($sql);
-
-		if ($query->num_rows == 0) {
-			$sql = "INSERT INTO `" . DB_PREFIX . "layout` SET `name` = 'Blog'";
+		if ($layout_query->num_rows == 0) {
+			$sql = "INSERT INTO `" . DB_PREFIX . "layout` SET name = 'Blog'";
 
 			$this->db->query($sql);
 		}
 
 		$stores = array();
 
-		$sql = "SELECT store_id FROM `" . DB_PREFIX . "store`";
+		$store_query = $this->db->query("SELECT store_id FROM `" . DB_PREFIX . "store`");
 
-		$query = $this->db->query($sql);
-
-		foreach ($query->rows as $store) {
+		foreach ($store_query->rows as $store) {
 			$stores[] = $store['store_id'];
 		}
 
 		// Check layout route
 		$newRoutes = array('blog/article', 'blog/author', 'blog/category', 'blog/search');
 
-		foreach ($newRoutes as $newRoute) {
-			foreach ($stores as $store_id) {
-				$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` LIKE '" . $newRoute . "' LIMIT 0,1";
+		foreach ($stores as $store_id) {
+			foreach ($newRoutes as $newRoute) {
+				$layout_route_query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` LIKE '" . $newRoute . "' LIMIT 0,1");
 
-				$query = $this->db->query($sql);
-
-				if ($query->num_rows == 0) {
-					$sql = "INSERT INTO `" . DB_PREFIX . "layout_route` SET `layout_id`= (SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'Blog' LIMIT 0,1), store_id = '" . (int)$store_id . "', `route` = '" . $newRoute . "'";
+				if ($layout_route_query->num_rows == 0) {
+					$sql = "INSERT INTO `" . DB_PREFIX . "layout_route` SET `layout_id`= (SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog' LIMIT 0,1), store_id = '" . (int)$store_id . "', `route` = '" . $newRoute . "'";
 
 					$this->db->query($sql);
 				}

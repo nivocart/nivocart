@@ -5,7 +5,7 @@
   <div class="box-content">
   <?php foreach ($articles as $article) { ?>
     <div class="article-author">
-      <a href="<?php echo $article['href']; ?>"><?php echo $article['article_title']; ?></a>
+      <a href="<?php echo $article['href']; ?>" title=""><?php echo $article['article_title']; ?></a>
     </div>
     <?php if ($article['description']) { ?>
       <div class="description"><?php echo $article['description']; ?></div>
@@ -20,7 +20,7 @@
 <div style="margin-bottom:20px;">
   <?php foreach ($articles as $article) { ?>
     <div class="article-author">
-      <a href="<?php echo $article['href']; ?>"><?php echo $article['article_title']; ?></a>
+      <a href="<?php echo $article['href']; ?>" title=""><?php echo $article['article_title']; ?></a>
     </div>
     <?php if ($article['description']) { ?>
       <div class="description"><?php echo $article['description']; ?></div>

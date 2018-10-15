@@ -1,11 +1,11 @@
 /*
- Common v1.0.4 | @nivocart | NivoCart | OSL v3.0
+ Common v1.0.5 | @nivocart | NivoCart | OSL v3.0
  ---------------------------------------------------------------------------
  Common.js file for development. Use minified version for production.
  ---------------------------------------------------------------------------
 */
 $(document).ready(function() {
-	// Standard Search
+	// Product Search
 	$('.button-search').on('click', function() {
 		url = $('base').prop('href') + 'index.php?route=product/search';
 		var search = $('input[name=\'search\']').prop('value');
@@ -19,6 +19,27 @@ $(document).ready(function() {
 		if (e.keyCode == 13) {
 			url = $('base').prop('href') + 'index.php?route=product/search';
 			var search = $('input[name=\'search\']').prop('value');
+			if (search) {
+				url += '&search=' + encodeURIComponent(search);
+			}
+			location = url;
+		}
+	});
+
+	// Blog Search
+	$('.button-blog-search').on('click', function() {
+		url = $('base').prop('href') + 'index.php?route=blog/search';
+		var search = $('input[name=\'blog_search\']').prop('value');
+		if (search) {
+			url += '&search=' + encodeURIComponent(search);
+		}
+		location = url;
+	});
+
+	$('#header input[name=\'blog_search\']').on('keydown', function(e) {
+		if (e.keyCode == 13) {
+			url = $('base').prop('href') + 'index.php?route=blog/search';
+			var search = $('input[name=\'blog_search\']').prop('value');
 			if (search) {
 				url += '&search=' + encodeURIComponent(search);
 			}

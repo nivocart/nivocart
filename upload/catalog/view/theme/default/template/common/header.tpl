@@ -108,6 +108,16 @@ window.cookieconsent.initialise({
   <?php } ?>
   <?php echo $cart; ?>
   <div id="header-bottom">
+  <?php $route = (isset($this->request->get['route'])) ? explode('/', $this->request->get['route']) : explode('/', 'common/home'); ?>
+  <?php if ($route[0] == 'blog') { ?>
+    <div id="blog-search">
+      <div class="search-inside">
+        <label for="blog_search" class="hidden"><?php echo $text_blog_search; ?></label>
+        <input type="text" name="blog_search" placeholder="<?php echo $text_blog_search; ?>" value="" autocomplete="off" />
+        <div class="button-blog-search"></div>
+      </div>
+    </div>
+  <?php } else { ?>
     <div id="search">
       <div class="search-inside">
         <label for="search" class="hidden"><?php echo $text_search; ?></label>
@@ -115,5 +125,6 @@ window.cookieconsent.initialise({
         <div class="button-search"></div>
       </div>
     </div>
+  <?php } ?>
   </div>
 </div>

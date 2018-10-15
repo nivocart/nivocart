@@ -40,7 +40,7 @@
         <?php } else { ?>
           <div class="article-description"><?php echo $article['description']; ?></div>
         <?php } ?>
-        <div align="right"><a href="<?php echo $article['href']; ?>" class="button"><?php echo $button_continue_reading; ?></a></div>
+        <div style="text-align:right;"><a href="<?php echo $article['href']; ?>" class="button"><?php echo $button_continue_reading; ?></a></div>
       </div>
     <?php } ?>
   <?php } else { ?>

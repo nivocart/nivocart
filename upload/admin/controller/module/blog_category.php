@@ -52,6 +52,7 @@ class ControllerModuleBlogCategory extends Controller {
 		$this->data['button_add_module'] = $this->language->get('button_add_module');
 		$this->data['button_remove'] = $this->language->get('button_remove');
 		$this->data['button_manager'] = $this->language->get('button_manager');
+		$this->data['button_install'] = $this->language->get('button_install');
 
 		// Check Blog Status
 		$this->load->model('blog/status');
@@ -97,6 +98,9 @@ class ControllerModuleBlogCategory extends Controller {
 
 		// Manager
 		$this->data['manager'] = $this->url->link('modification/blogs', 'token=' . $this->session->data['token'], 'SSL');
+
+		// Install
+		$this->data['install'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Module
 		if (isset($this->request->post[$this->_name . '_theme'])) {
