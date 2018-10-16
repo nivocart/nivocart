@@ -367,10 +367,10 @@ class ControllerBlogArticle extends Controller {
 		$this->data['entry_description'] = $this->language->get('entry_description');
 		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
 		$this->data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
-		$this->data['entry_allow_comment'] = $this->language->get('entry_allow_comment');
-		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
 		$this->data['entry_author_name'] = $this->language->get('entry_author_name');
+		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
 		$this->data['entry_image'] = $this->language->get('entry_image');
+		$this->data['entry_allow_comment'] = $this->language->get('entry_allow_comment');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_category'] = $this->language->get('entry_category');
@@ -424,12 +424,6 @@ class ControllerBlogArticle extends Controller {
 			$this->data['error_author_name'] = $this->error['author_name'];
 		} else {
 			$this->data['error_author_name'] = '';
-		}
-
-		if (isset($this->error['seo_keyword'])) {
-			$this->data['error_seo_keyword'] = $this->error['seo_keyword'];
-		} else {
-			$this->data['error_seo_keyword'] = '';
 		}
 
 		$url = '';
@@ -726,10 +720,6 @@ class ControllerBlogArticle extends Controller {
 				$this->error['author_name'] = $this->language->get('error_author_not_found_list');
 				$this->error['warning'] = $this->language->get('error_author_not_found');
 			}
-		}
-
-		if ((utf8_strlen($this->request->post['keyword']) < 3) || (utf8_strlen($this->request->post['keyword']) > 64)) {
-			$this->error['seo_keyword'] = $this->language->get('error_seo_not_found');
 		}
 
 		if ($this->error && !isset($this->error['warning'])) {

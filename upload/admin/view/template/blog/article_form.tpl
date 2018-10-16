@@ -20,8 +20,8 @@
     <div class="content">
       <div id="tabs" class="htabs">
         <a href="#tab-general"><?php echo $tab_general; ?></a>
-        <a href="#tab-data"><?php echo $tab_data; ?></a>
         <a href="#tab-option"><?php echo $tab_option; ?></a>
+        <a href="#tab-data"><?php echo $tab_data; ?></a>
         <a href="#tab-related"><?php echo $tab_related; ?></a>
         <a href="#tab-design"><?php echo $tab_design; ?></a>
       </div>
@@ -76,12 +76,8 @@
             </td>
           </tr>
           <tr>
-            <td><span class="required">*</span> <?php echo $entry_keyword; ?></td>
-            <td><input type="text" name="keyword" value="<?php echo $keyword; ?>" size="40" />
-            <?php if ($error_seo_keyword) { ?>
-              <span class="error"><?php echo $error_seo_keyword; ?></span>
-            <?php } ?>
-            </td>
+            <td><?php echo $entry_keyword; ?></td>
+            <td><input type="text" name="keyword" value="<?php echo $keyword; ?>" size="40" /></td>
           </tr>
           <tr>
             <td><?php echo $entry_category; ?></td>
@@ -606,6 +602,32 @@ function getArticles(article_row, value) {
 		}
 	});
 }
+//--></script>
+
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	var keyword = $("input[name=keyword]");
+
+	if (!keyword.val()) {
+		$("input[name^='article_description'], input[name='article_title']").keyup(function() {
+			var SEOname = $("input[name^='article_description'], input[name='article_title']").val();
+
+			SEOname = SEOname.replace(/^\s+|\s+$/g, '');
+			SEOname = SEOname.toLowerCase();
+
+			var from = "ảãạàáäâấầậẩẫẻẹẽèéëêềếệểễăắằẳẵặìíïîịơởỡợờớọõỏòóöôốộồổỗđưứừựửữùúüûủụùúũñcçčlľštžýnrrdçõã·/_,:;";
+			var to = "aaaaaaaaaaaaeeeeeeeeeeeeaaaaaaiiiiiooooooooooooooooooduuuuuuuuuuuuuuuncccllstzynrrdcoa------";
+
+			for (var i=0, l=from.length ; i<l ; i++) {
+				SEOname = SEOname.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+			}
+
+			SEOname = SEOname.replace(/[^a-z0-9( -]/g, '').replace(/\(/g,"-").replace(/\s+/g, '-').replace(/-+/g, '-');
+
+			keyword.val(SEOname);
+		});
+	}
+});
 //--></script>
 
 <script type="text/javascript"><!--

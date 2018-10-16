@@ -13,11 +13,17 @@
       <h1><img src="view/image/module.png" alt="" /> <?php echo $heading_title; ?></h1>
       <div class="buttons">
         <a onclick="$('#form').submit();" class="button-save ripple"><?php echo $button_save; ?></a>
+        <a onclick="apply();" class="button-save ripple"><?php echo $button_apply; ?></a>
         <a href="<?php echo $cancel; ?>" class="button-cancel ripple"><?php echo $button_cancel; ?></a>
       </div>
     </div>
     <div class="content">
+    <div id="tabs" class="htabs">
+      <a href="#tab-settings"><?php echo $tab_settings; ?></a>
+      <a href="#tab-about"><?php echo $tab_about; ?></a>
+    </div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="blogs">
+      <div id="tab-settings">
         <table class="form">
           <tr>
             <td><?php echo $entry_blog_heading; ?></td>
@@ -105,6 +111,31 @@
             <?php } ?></td>
           </tr>
         </table>
+      </div>
+      <div id="tab-about">
+        <table class="form">
+          <tr>
+            <td><?php echo $text_blog_version; ?></td>
+            <td><?php echo $blog_version; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $text_blog_author; ?></td>
+            <td><?php echo $blog_author; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $text_blog_support; ?></td>
+            <td><?php echo $blog_support; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $text_blog_license; ?></td>
+            <td><a class="about" onclick="window.open('http://opensource.org/licenses/gpl-3.0.html');" title=""><?php echo $blog_license; ?></a></td>
+          </tr>
+          <tr>
+            <td><?php echo $text_blog_tables; ?></td>
+            <td><?php echo $blog_tables; ?></td>
+          </tr>
+        </table>
+      </div>
       </form>
     </div>
   </div>
@@ -136,6 +167,10 @@ function image_upload(field, thumb) {
 		modal: false
 	});
 };
+//--></script>
+
+<script type="text/javascript"><!--
+$('#tabs a').tabs();
 //--></script>
 
 <?php echo $footer; ?>

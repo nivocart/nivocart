@@ -151,8 +151,8 @@ $_['text_vqmod_license']               = 'VQmod&#8482; License:';
 // Version
 $_['vqmods_description']               = '<b>VQmods</b> is a VQmod&#8482; File Manager for NivoCart, based on the original <b>VQmod Manager</b> by Ryan (rph), and integrating the latest <b>VQmod&#8482;</b> Core Files!';
 $_['vqmods_version']                   = '1.0.0 - NivoCart';
-$_['vqmods_author']                    = 'Villagedefrance';
-$_['vqmods_support']                   = 'contact@villagedefrance.net';
+$_['vqmods_author']                    = 'Nivocart';
+$_['vqmods_support']                   = 'contact@nivocart.com';
 $_['vqmods_license']                   = 'GPLv3 (GNU General Public License)';
 $_['vqmod_manager_version']            = '2.0.1';
 $_['vqmod_manager_author']             = 'Ryan (rph) – OpenCartHelp.com';

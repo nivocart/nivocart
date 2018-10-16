@@ -5,7 +5,7 @@ $_['heading_title']         = 'Blog';
 // Text
 $_['text_module']           = 'Modules';
 $_['text_success']          = 'Success: You have modified module <b>Blog</b> !';
-$_['text_status_ready']     = 'Blog extension modification is ready.';
+$_['text_status_ready']     = 'Blog extension is installed.';
 $_['text_status_not_ready'] = 'Attention: Blog database tables not found!';
 
 // Entry

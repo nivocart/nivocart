@@ -58,7 +58,11 @@ class ControllerModificationBlogs extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$this->redirect($this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'));
+			if (isset($this->request->post['apply'])) {
+				$this->redirect($this->url->link('modification/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
+			} else {
+				$this->redirect($this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'));
+			}
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -72,6 +76,9 @@ class ControllerModificationBlogs extends Controller {
 		$this->data['text_browse'] = $this->language->get('text_browse');
 		$this->data['text_clear'] = $this->language->get('text_clear');
 		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
+
+		$this->data['tab_settings'] = $this->language->get('tab_settings');
+		$this->data['tab_about'] = $this->language->get('tab_about');
 
 		$this->data['entry_blog_heading'] = $this->language->get('entry_blog_heading');
 		$this->data['entry_related_heading'] = $this->language->get('entry_related_heading');
@@ -88,6 +95,19 @@ class ControllerModificationBlogs extends Controller {
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 		$this->data['button_add_module'] = $this->language->get('button_add_module');
 		$this->data['button_remove'] = $this->language->get('button_remove');
+
+		// About
+		$this->data['text_blog_version'] = $this->language->get('text_blog_version');
+		$this->data['text_blog_author'] = $this->language->get('text_blog_author');
+		$this->data['text_blog_support'] = $this->language->get('text_blog_support');
+		$this->data['text_blog_license'] = $this->language->get('text_blog_license');
+		$this->data['text_blog_tables'] = $this->language->get('text_blog_tables');
+
+		$this->data['blog_version'] = $this->language->get('blog_version');
+		$this->data['blog_author'] = $this->language->get('blog_author');
+		$this->data['blog_support'] = $this->language->get('blog_support');
+		$this->data['blog_license'] = $this->language->get('blog_license');
+		$this->data['blog_tables'] = $this->language->get('blog_tables');
 
 		$this->data['token'] = $this->session->data['token'];
 

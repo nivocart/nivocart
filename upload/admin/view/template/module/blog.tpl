@@ -19,7 +19,7 @@
     </div>
     <div class="content">
     <?php if ($blog_ready) { ?>
-      <div class="tooltip" style="margin:5px 0;"><?php echo $text_status_ready; ?></div>
+      <div style="color:#36AAD8; margin:5px 0 5px 10px;"><?php echo $text_status_ready; ?></div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="blog">
         <table class="form">
         <tbody>
