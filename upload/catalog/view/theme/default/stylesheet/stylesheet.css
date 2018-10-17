@@ -2365,9 +2365,9 @@ ul.box-filter > li ul {
 /* Captcha */
 #captcha-wrap {
 	width: 270px;
-	height: 105px;
-	background: #870500;
-	border: 1px solid #870500;
+	height: 108px;
+	background: #800500;
+	border: 1px solid #800500;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	-khtml-border-radius: 4px;
@@ -2376,7 +2376,7 @@ ul.box-filter > li ul {
 }
 #captcha-wrap .captcha-box {
 	background: #FAFAFA;
-	border: 4px solid #870500;
+	border: 4px solid #800500;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-khtml-border-radius: 2px;
@@ -2396,10 +2396,9 @@ ul.box-filter > li ul {
 }
 #captcha-wrap .captcha-text {
 	width: 180px;
-	height: 45px;
+	height: 48px;
 	float: left;
-	background: #FFDC73;
-	border: 1px solid #FFDC73;
+	background: #F2CD71;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-khtml-border-radius: 2px;
@@ -2424,7 +2423,7 @@ ul.box-filter > li ul {
 	color: #FCFCFC;
 	font-size: 34px;
 	text-align: center;
-	margin-top: 5px;
+	margin-top: 6px;
 	margin-right: 1px;
 }
 /* Downloads */
