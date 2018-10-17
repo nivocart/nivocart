@@ -29,15 +29,15 @@
         <tbody>
           <tr>
             <td><?php echo $entry_force_display; ?></td>
-            <td><?php if ($pp_layout_force_display) { ?>
-              <input type="radio" name="pp_layout_force_display" value="1" id="force-display-on" class="radio" checked />
+            <td><?php if ($paypal_force_display) { ?>
+              <input type="radio" name="paypal_force_display" value="1" id="force-display-on" class="radio" checked />
               <label for="force-display-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="pp_layout_force_display" value="0" id="force-display-off" class="radio" />
+              <input type="radio" name="paypal_force_display" value="0" id="force-display-off" class="radio" />
               <label for="force-display-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } else { ?>
-              <input type="radio" name="pp_layout_force_display" value="1" id="force-display-on" class="radio" />
+              <input type="radio" name="paypal_force_display" value="1" id="force-display-on" class="radio" />
               <label for="force-display-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="pp_layout_force_display" value="0" id="force-display-off" class="radio" checked />
+              <input type="radio" name="paypal_force_display" value="0" id="force-display-off" class="radio" checked />
               <label for="force-display-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
@@ -57,7 +57,7 @@
         <?php foreach ($modules as $module) { ?>
           <tbody id="module-row<?php echo $module_row; ?>">
             <tr>
-              <td class="left"><select name="pp_layout_module[<?php echo $module_row; ?>][layout_id]">
+              <td class="left"><select name="paypal_module[<?php echo $module_row; ?>][layout_id]">
                 <?php foreach ($layouts as $layout) { ?>
                   <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
@@ -66,7 +66,7 @@
                   <?php } ?>
                 <?php } ?>
               </select></td>
-              <td class="left"><select name="pp_layout_module[<?php echo $module_row; ?>][position]">
+              <td class="left"><select name="paypal_module[<?php echo $module_row; ?>][position]">
                 <?php if ($module['position'] == 'content_higher') { ?>
                   <option value="content_higher" selected="selected"><?php echo $text_content_higher; ?></option>
                 <?php } else { ?>
@@ -98,7 +98,7 @@
                   <option value="content_lower"><?php echo $text_content_lower; ?></option>
                 <?php } ?>
               </select></td>
-              <td class="left"><select name="pp_layout_module[<?php echo $module_row; ?>][status]">
+              <td class="left"><select name="paypal_module[<?php echo $module_row; ?>][status]">
                 <?php if ($module['status']) { ?>
                   <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                   <option value="0"><?php echo $text_disabled; ?></option>
@@ -108,7 +108,7 @@
                 <?php } ?>
               </select></td>
               <td class="center">
-                <input type="text" name="pp_layout_module[<?php echo $module_row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
+                <input type="text" name="paypal_module[<?php echo $module_row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" />
               </td>
               <td class="center">
                 <a onclick="$('#module-row<?php echo $module_row; ?>').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a>
@@ -135,12 +135,12 @@ var module_row = <?php echo $module_row; ?>;
 function addModule() {
 	html  = '<tbody id="module-row' + module_row + '">';
 	html += '  <tr>';
-	html += '    <td class="left"><select name="pp_layout_module[' + module_row + '][layout_id]">';
+	html += '    <td class="left"><select name="paypal_module[' + module_row + '][layout_id]">';
 	<?php foreach ($layouts as $layout) { ?>
 	html += '      <option value="<?php echo $layout['layout_id']; ?>"><?php echo addslashes($layout['name']); ?></option>';
 	<?php } ?>
 	html += '    </select></td>';
-	html += '    <td class="left"><select name="pp_layout_module[' + module_row + '][position]">';
+	html += '    <td class="left"><select name="paypal_module[' + module_row + '][position]">';
 	html += '      <option value="content_higher"><?php echo $text_content_higher; ?></option>';
 	html += '      <option value="content_high"><?php echo $text_content_high; ?></option>';
 	html += '      <option value="content_left"><?php echo $text_content_left; ?></option>';
@@ -148,11 +148,11 @@ function addModule() {
 	html += '      <option value="content_low"><?php echo $text_content_low; ?></option>';
 	html += '      <option value="content_lower"><?php echo $text_content_lower; ?></option>';
 	html += '    </select></td>';
-	html += '    <td class="left"><select name="pp_layout_module[' + module_row + '][status]">';
+	html += '    <td class="left"><select name="paypal_module[' + module_row + '][status]">';
     html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
     html += '      <option value="0"><?php echo $text_disabled; ?></option>';
     html += '    </select></td>';
-	html += '    <td class="center"><input type="text" name="pp_layout_module[' + module_row + '][sort_order]" value="0" size="3" /></td>';
+	html += '    <td class="center"><input type="text" name="paypal_module[' + module_row + '][sort_order]" value="0" size="3" /></td>';
 	html += '    <td class="center"><a onclick="$(\'#module-row' + module_row + '\').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>';
 	html += '  </tr>';
 	html += '</tbody>';

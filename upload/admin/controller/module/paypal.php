@@ -1,7 +1,7 @@
 <?php
-class ControllerModulePPLayout extends Controller {
+class ControllerModulePaypal extends Controller {
 	private $error = array();
-	private $_name = 'pp_layout';
+	private $_name = 'paypal';
 
 	public function index() {
 		$this->language->load('module/' . $this->_name);
@@ -73,11 +73,11 @@ class ControllerModulePPLayout extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/pp_layout', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		);
 
-		$this->data['action'] = $this->url->link('module/pp_layout', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -107,17 +107,17 @@ class ControllerModulePPLayout extends Controller {
 
 		$this->data['modules'] = array();
 
-		if (isset($this->request->post['pp_layout_module'])) {
-			$this->data['modules'] = $this->request->post['pp_layout_module'];
-		} elseif ($this->config->get('pp_layout_module')) {
-			$this->data['modules'] = $this->config->get('pp_layout_module');
+		if (isset($this->request->post[$this->_name . '_module'])) {
+			$this->data['modules'] = $this->request->post[$this->_name . '_module'];
+		} elseif ($this->config->get($this->_name . '_module')) {
+			$this->data['modules'] = $this->config->get($this->_name . '_module');
 		}
 
 		$this->load->model('design/layout');
 
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 
-		$this->template = 'module/pp_layout.tpl';
+		$this->template = 'module/' . $this->_name . '.tpl';
 		$this->children = array(
 			'common/header',
 			'common/footer'
@@ -127,7 +127,7 @@ class ControllerModulePPLayout extends Controller {
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'module/pp_layout')) {
+		if (!$this->user->hasPermission('modify', 'module/' . $this->_name)) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 

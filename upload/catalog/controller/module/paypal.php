@@ -1,6 +1,6 @@
 <?php
-class ControllerModulePPLayout extends Controller {
-	private $_name = 'pp_layout';
+class ControllerModulePaypal extends Controller {
+	private $_name = 'paypal';
 
 	protected function index($setting) {
 		$force_display = $this->config->get($this->_name . '_force_display');
@@ -44,10 +44,10 @@ class ControllerModulePPLayout extends Controller {
 				$this->data['pp_ready'] = 'border:2px solid #DE5954; -webkit-border-radius:7px; -moz-border-radius:7px; -khtml-border-radius:7px; border-radius:7px;';
 			}
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/pp_layout.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/pp_layout.tpl';
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
+				$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
 			} else {
-				$this->template = 'default/template/module/pp_layout.tpl';
+				$this->template = 'default/template/module/' . $this->_name . '.tpl';
 			}
 
 			$this->render();
