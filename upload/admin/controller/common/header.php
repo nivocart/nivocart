@@ -268,14 +268,12 @@ class ControllerCommonHeader extends Controller {
 			$this->data['backup'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['banner'] = $this->url->link('design/banner', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['block_ip'] = $this->url->link('tool/block_ip', 'token=' . $this->session->data['token'], 'SSL');
-
 			$this->data['blog_author'] = $this->url->link('blog/author', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['blog_category'] = $this->url->link('blog/category', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['blog_article'] = $this->url->link('blog/article', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['blog_comment'] = $this->url->link('blog/comment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['blog_view_report'] = $this->url->link('blog/report', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['blog_setting'] = $this->url->link('modification/blogs', 'token=' . $this->session->data['token'], 'SSL');
-
+			$this->data['blog_setting'] = $this->url->link('modification/blog_system', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['cache_files'] = $this->url->link('tool/cache_files', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['cache_images'] = $this->url->link('tool/cache_images', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');

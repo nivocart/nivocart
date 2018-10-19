@@ -136,6 +136,8 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		// Blog Search
+		$this->data['blog_routes'] = array('blog/article', 'blog/article/view', 'blog/category', 'blog/author', 'blog/search');
+
 		if (isset($this->request->get['blog_search'])) {
 			$this->data['blog_search'] = $this->request->get['blog_search'];
 		} else {
@@ -172,7 +174,7 @@ class ControllerCommonHeader extends Controller {
 
 		$cookie_privacy = $this->config->get('config_cookie_privacy');
 
-		$this->data['cookie_privacy'] = $this->url->link('information/information&information_id=' . $cookie_privacy, '', 'SSL');
+		$this->data['cookie_privacy'] = $this->url->link('information/information', 'information_id=' . $cookie_privacy, 'SSL');
 
 		$cookie_age = $this->config->get('config_cookie_age');
 

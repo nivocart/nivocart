@@ -6,10 +6,24 @@ class ControllerBlogCategory extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-custom.css');
+
+		$this->data['breadcrumbs'] = array();
+
+		$this->data['breadcrumbs'][] = array(
+			'text'      => $this->language->get('text_home'),
+			'href'      => $this->url->link('common/home', '', 'SSL'),
+			'separator' => false
+		);
+
+		$this->data['breadcrumbs'][] = array(
+			'text'      => $this->language->get('heading_title'),
+			'href'      => $this->url->link('blog/article_list', '', 'SSL'),
+			'separator' => $this->language->get('text_separator')
+		);
+
 		$this->load->model('blog/article');
 		$this->load->model('tool/image');
-
-		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog_custom.css');
 
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -22,20 +36,6 @@ class ControllerBlogCategory extends Controller {
 		} else {
 			$limit = $this->config->get('config_catalog_limit');
 		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', '', 'SSL'),
-			'separator' => false
-		);
-
-		$this->data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('blog/article', '', 'SSL'),
-			'separator' => $this->language->get('text_separator')
-		);
 
 		if (isset($this->request->get['blog_category_id'])) {
 			$url = '';
@@ -76,6 +76,7 @@ class ControllerBlogCategory extends Controller {
 
 		if ($category_info) {
 			$this->document->setTitle($category_info['name']);
+
 			$this->document->setDescription($category_info['meta_description']);
 			$this->document->setKeywords($category_info['meta_keyword']);
 
@@ -100,7 +101,11 @@ class ControllerBlogCategory extends Controller {
 				'separator' => $this->language->get('text_separator')
 			);
 
-			$this->data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			if ($category_info['description']) {
+				$this->data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$this->data['description'] = '';
+			}
 
 			// Get blogs according to category wise.
 			$this->data['categories'] = array();
@@ -111,8 +116,8 @@ class ControllerBlogCategory extends Controller {
 				$article_total = $this->model_blog_article->getTotalArticles($result['blog_category_id']);
 
 				$this->data['categories'] = array(
-					'name'  => $result['name'] . ' (' . $article_total . ')',
-					'href'  => $this->url->link('blog/category', 'blog_category_id=' . $this->request->get['blog_category_id'] . '_' . $result['blog_category_id'], 'SSL')
+					'name' => $result['name'] . ' (' . $article_total . ')',
+					'href' => $this->url->link('blog/category', 'blog_category_id=' . $this->request->get['blog_category_id'] . '_' . $result['blog_category_id'], 'SSL')
 				);
 			}
 
@@ -125,9 +130,9 @@ class ControllerBlogCategory extends Controller {
 			}
 
 			$data = array(
-				'blog_article_id' 	=> $blog_category_id,
-				'start'             => ($page - 1) * $limit,
-				'limit'             => $limit
+				'blog_article_id' => $blog_category_id,
+				'start'           => ($page - 1) * $limit,
+				'limit'           => $limit
 			);
 
 			$blog_total = $this->model_blog_article->getTotalArticleCategoryWise($data);
@@ -135,12 +140,16 @@ class ControllerBlogCategory extends Controller {
 			$results = $this->model_blog_article->getArticleCategoryWise($data);
 
 			foreach ($results as $result) {
-				$description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '...';
-
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], 100, 100);
 				} else {
 					$image = '';
+				}
+
+				if ($result['description']) {
+					$description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '...';
+				} else {
+					$description = '';
 				}
 
 				$total_comments = $this->model_blog_article->getTotalComments($result['blog_article_id']);
@@ -158,9 +167,9 @@ class ControllerBlogCategory extends Controller {
 					'image'           => $image,
 					'date_added'      => date($this->language->get('text_date_format'), strtotime($result['date_modified'])),
 					'description'     => $description,
-					'href'            => $this->url->link('blog/article/view', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
-					'author_href'     => $this->url->link('blog/author', 'blog_author_id=' . $result['blog_author_id'], 'SSL'),
-					'comment_href'    => $this->url->link('blog/article/view', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
+					'href'            => $this->url->link('blog/article_info', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
+					'author_href'     => $this->url->link('blog/article_author', 'blog_author_id=' . $result['blog_author_id'], 'SSL'),
+					'comment_href'    => $this->url->link('blog/article_info', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
 					'allow_comment'   => $result['allow_comment'],
 					'total_comment'   => $total_comments
 				);
@@ -170,23 +179,32 @@ class ControllerBlogCategory extends Controller {
 
 			$this->data['text_not_found'] = $this->language->get('text_not_found');
 
-			$pagination = new Pagination();
+			$url = '';
 
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			$pagination = new Pagination();
 			$pagination->total = $blog_total;
 			$pagination->page = $page;
 			$pagination->limit = $limit;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('blog/category', 'blog_category_id=' . $this->request->get['blog_category_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('blog/category', 'blog_category_id=' . $this->request->get['blog_category_id'] . $url, 'SSL');
 
 			$this->data['pagination'] = $pagination->render();
 
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/blog/article.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/blog/article.tpl';
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/blog/article_category.tpl')) {
+				$this->template = $this->config->get('config_template') . '/template/blog/article_category.tpl';
 			} else {
-				$this->template = 'default/template/blog/article.tpl';
+				$this->template = 'default/template/blog/article_category.tpl';
 			}
 
 			$this->children = array(
@@ -201,12 +219,9 @@ class ControllerBlogCategory extends Controller {
 			);
 
 			$this->response->setOutput($this->render());
+
 		} else {
 			$url = '';
-
-			if (isset($this->request->get['blog_category_id'])) {
-				$url .= '&blog_category_id=' . $this->request->get['blog_category_id'];
-			}
 
 			if (isset($this->request->get['page'])) {
 				$url .= '&page=' . $this->request->get['page'];
@@ -216,9 +231,11 @@ class ControllerBlogCategory extends Controller {
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 
+			$this->data['breadcrumbs'] = array();
+
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_category_error'),
-				'href'      => $this->url->link('blog/article/category', $url, 'SSL'),
+				'href'      => $this->url->link('blog/article_list', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -230,7 +247,7 @@ class ControllerBlogCategory extends Controller {
 
 			$this->data['button_continue'] = $this->language->get('button_continue');
 
-			$this->data['continue'] = $this->url->link('common/home');
+			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
 
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');

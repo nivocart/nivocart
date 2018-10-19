@@ -26,27 +26,6 @@ $(document).ready(function() {
 		}
 	});
 
-	// Blog Search
-	$('.button-blog-search').on('click', function() {
-		url = $('base').prop('href') + 'index.php?route=blog/search';
-		var search = $('input[name=\'blog_search\']').prop('value');
-		if (search) {
-			url += '&search=' + encodeURIComponent(search);
-		}
-		location = url;
-	});
-
-	$('#header input[name=\'blog_search\']').on('keydown', function(e) {
-		if (e.keyCode == 13) {
-			url = $('base').prop('href') + 'index.php?route=blog/search';
-			var search = $('input[name=\'blog_search\']').prop('value');
-			if (search) {
-				url += '&search=' + encodeURIComponent(search);
-			}
-			location = url;
-		}
-	});
-
 	// Ajax Cart
 	$('#cart').on('click', '.heading', function() {
 		$('#cart').load('index.php?route=module/cart');

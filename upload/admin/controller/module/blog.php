@@ -100,7 +100,7 @@ class ControllerModuleBlog extends Controller {
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Manager
-		$this->data['manager'] = $this->url->link('modification/blogs', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['manager'] = $this->url->link('modification/blog', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Install
 		$this->data['install'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');

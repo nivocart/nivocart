@@ -17,10 +17,6 @@ class ControllerModuleBlogCategory extends Controller {
 
 		$this->load->model('blog/article');
 
-		$this->data['text_search_article'] = $this->language->get('text_search_article');
-
-		$this->data['button_search'] = $this->language->get('button_search');
-
 		if (isset($this->request->get['blog_category_id'])) {
 			$parts = explode('_', (string)$this->request->get['blog_category_id']);
 		} else {
@@ -64,12 +60,6 @@ class ControllerModuleBlogCategory extends Controller {
 				'children'         => $children_data,
 				'href'             => $this->url->link('blog/category', 'blog_category_id=' . $category['blog_category_id'], 'SSL')
 			);
-		}
-
-		if (isset($this->request->get['blog_search'])) {
-			$this->data['blog_search'] = $this->request->get['blog_search'];
-		} else {
-			$this->data['blog_search'] = '';
 		}
 
 		// Template

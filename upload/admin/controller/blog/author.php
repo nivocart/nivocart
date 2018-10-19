@@ -348,7 +348,6 @@ class ControllerBlogAuthor extends Controller {
 		$this->data['text_clear'] = $this->language->get('text_clear');
 
 		$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
 		$this->data['entry_image'] = $this->language->get('entry_image');
 		$this->data['entry_description'] = $this->language->get('entry_description');
 		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
@@ -437,14 +436,6 @@ class ControllerBlogAuthor extends Controller {
 			$this->data['name'] = $author_info['name'];
 		} else {
 			$this->data['name'] = '';
-		}
-
-		if (isset($this->request->post['keyword'])) {
-			$this->data['keyword'] = $this->request->post['keyword'];
-		} elseif (!empty($author_info)) {
-			$this->data['keyword'] = $author_info['keyword'];
-		} else {
-			$this->data['keyword'] = '';
 		}
 
 		$this->load->model('tool/image');

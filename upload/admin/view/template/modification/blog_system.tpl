@@ -22,7 +22,7 @@
       <a href="#tab-settings"><?php echo $tab_settings; ?></a>
       <a href="#tab-about"><?php echo $tab_about; ?></a>
     </div>
-      <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="blogs">
+      <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="blog_system">
       <div id="tab-settings">
         <table class="form">
           <tr>

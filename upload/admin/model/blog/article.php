@@ -361,18 +361,6 @@ class ModelBlogArticle extends Model {
 		return $blog_article_additional_description;
 	}
 
-	public function getArticleStore($blog_article_id) {
-		$article_store_data = array();
-
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_store` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
-
-		foreach ($query->rows as $result) {
-			$article_store_data[] = $result['store_id'];
-		}
-
-		return $article_store_data;
-	}
-
 	public function getArticleCategories($blog_article_id) {
 		$article_category_data = array();
 
@@ -383,6 +371,18 @@ class ModelBlogArticle extends Model {
 		}
 
 		return $article_category_data;
+	}
+
+	public function getArticleStore($blog_article_id) {
+		$article_store_data = array();
+
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_store` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
+
+		foreach ($query->rows as $result) {
+			$article_store_data[] = $result['store_id'];
+		}
+
+		return $article_store_data;
 	}
 
 	public function getArticleLayouts($blog_article_id) {

@@ -108,8 +108,8 @@ window.cookieconsent.initialise({
   <?php } ?>
   <?php echo $cart; ?>
   <div id="header-bottom">
-  <?php $route = (isset($this->request->get['route'])) ? explode('/', $this->request->get['route']) : explode('/', 'common/home'); ?>
-  <?php if ($route[0] == 'blog') { ?>
+  <?php $route = (isset($this->request->get['route'])) ? $this->request->get['route'] : 'blog'; ?>
+  <?php if (in_array($route, $blog_routes)) { ?>
     <div id="blog-search">
       <div class="search-inside">
         <label for="blog_search" class="hidden"><?php echo $text_blog_search; ?></label>

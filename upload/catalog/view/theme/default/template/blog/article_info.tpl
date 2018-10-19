@@ -15,7 +15,7 @@
         <h1><?php echo $article_info['article_title']; ?></h1>
       </div>
       <div class="article-sub-title">
-        <span class="article-author"><a href="<?php echo $author_url; ?>"><?php echo $article_info['author_name']; ?></a></span>
+        <span class="article-author"><a href="<?php echo $author_url; ?>" title=""><?php echo $article_info['author_name']; ?></a></span>
         <span class="bullet">&bull;</span>
         <span class="article-date"><?php echo $article_date_modified; ?></span>
       <?php if ($article_info['allow_comment']) { ?>
@@ -74,7 +74,7 @@
               <?php } ?>
                 <div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
               <?php if ($product['rating']) { ?>
-                <div class="rating"><img src="catalog/view/theme/default/image/stars-<?php echo $product['rating']; ?>.png" alt="<?php echo $product['reviews']; ?>" /></div>
+                <div class="rating"><img src="catalog/view/theme/<?php echo $template; ?>/image/stars-<?php echo $product['rating']; ?>.png" alt="<?php echo $product['reviews']; ?>" /></div>
               <?php } ?>
               </div>
             <?php } ?>
@@ -131,7 +131,7 @@
             <div class="box-heading"><?php echo $author_name; ?> <?php echo $text_author_information; ?></div>
             <div class="box-content">
               <div class="author-info">
-                <div class="left"><img src="<?php echo $author_image; ?>" alt="<?php echo $article_info['article_title']; ?>" style="border:1px solid #CCC; padding:5px; border-radius:5px;" /></div>
+                <div class="left"><img src="<?php echo $author_image; ?>" alt="<?php echo $article_info['article_title']; ?>" /></div>
                 <div class="right"><?php echo $author_description; ?></div>
               </div>
             </div>
@@ -172,7 +172,9 @@
                 </div>
                 <br />
                 <div class="buttons">
-                  <div class="right"><a id="button-comment" class="button"><span><?php echo $button_submit; ?></span></a></div>
+                  <div class="right">
+                    <a id="button-comment" class="button"><?php echo $button_submit; ?></a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -212,14 +214,14 @@ $('#comment-list .pagination a').live('click', function() {
 	return false;
 });
 
-$('#comment-list').load('index.php?route=blog/article/comment&blog_article_id=<?php echo $blog_article_id; ?>');
+$('#comment-list').load('index.php?route=blog/article_info/comment&blog_article_id=<?php echo $blog_article_id; ?>');
 //--></script>
 
 <script type="text/javascript"><!--
 $('#button-comment').bind('click', function() {
 	$.ajax({
 		type: 'POST',
-		url: 'index.php?route=blog/article/writeComment&blog_article_id=<?php echo $blog_article_id; ?>',
+		url: 'index.php?route=blog/article_info/writeComment&blog_article_id=<?php echo $blog_article_id; ?>',
 		dataType: 'json',
 		data: 'name=' + encodeURIComponent($('input[name=\'name\']').val()) + '&text=' + encodeURIComponent($('textarea[name=\'text\']').val()) + '&captcha=' + encodeURIComponent($('input[name=\'captcha\']').val()) + '&reply_id=' + encodeURIComponent($('input[name=\'blog_article_reply_id\']').val()),
 		beforeSend: function() {
@@ -245,7 +247,7 @@ $('#button-comment').bind('click', function() {
 				$("#blog-reply-id").val(0);
 				$("#reply-remove").css('display', 'none');
 
-				$('#comment-list').load('index.php?route=blog/article/comment&blog_article_id=<?php echo $blog_article_id; ?>');
+				$('#comment-list').load('index.php?route=blog/article_info/comment&blog_article_id=<?php echo $blog_article_id; ?>');
 			}
 		}
 	});

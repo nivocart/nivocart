@@ -42,7 +42,7 @@ $_['entry_manufacturer']           = 'Manufacturer:';
 $_['entry_product']                = 'Product:';
 $_['entry_productwise']            = '<span class="help"><b>Product Name:</b><br />(Autocomplete)</span>';
 $_['entry_store']                  = 'Store:';
-$_['entry_layout']                 = 'Layout Override';
+$_['entry_layout']                 = 'Layout Override:';
 $_['entry_additional_description'] = 'Additional Description';
 $_['entry_article_related_method'] = 'Article Related Products:<span class="help">This article is related to a single product, a product category, or a product manufacturer, select accordingly.</span>';
 $_['entry_blog_related_articles']  = 'Related Articles';

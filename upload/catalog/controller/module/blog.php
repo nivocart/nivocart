@@ -57,15 +57,15 @@ class ControllerModuleBlog extends Controller {
 				'featured_found'  => '',
 				'description'     => $description,
 				'date_added'      => date($this->language->get('text_date_format'), strtotime($result['date_modified'])),
-				'href'            => $this->url->link('blog/article/view', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
-				'author_href'     => $this->url->link('blog/author', 'blog_author_id=' . $result['blog_author_id'], 'SSL'),
-				'comment_href'    => $this->url->link('blog/article/view', 'blog_article_id=' . $result['blog_article_id'] . '#comment-section', 'SSL'),
+				'href'            => $this->url->link('blog/article_info', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
+				'author_href'     => $this->url->link('blog/article_author', 'blog_author_id=' . $result['blog_author_id'], 'SSL'),
+				'comment_href'    => $this->url->link('blog/article_info', 'blog_article_id=' . $result['blog_article_id'] . '#comment-section', 'SSL'),
 				'allow_comment'   => $result['allow_comment'],
 				'total_comment'   => $total_comments
 			);
 		}
 
-		$this->data['article_link'] = $this->url->link('blog/article', '', 'SSL');
+		$this->data['article_link'] = $this->url->link('blog/article_list', '', 'SSL');
 
 		$this->data['text_not_found'] = $this->language->get('text_not_found');
 

@@ -3,7 +3,7 @@ class ModelSettingStore extends Model {
 
 	public function getStores($data = array()) {
 		if ($data) {
-			$sql = "SELECT * FROM " . DB_PREFIX . "store";
+			$sql = "SELECT * FROM `" . DB_PREFIX . "store`";
 
 			$sort_data = array(
 				'name',
@@ -42,7 +42,7 @@ class ModelSettingStore extends Model {
 			$store_data = $this->cache->get('store');
 
 			if (!$store_data) {
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store ORDER BY url");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` ORDER BY url");
 
 				$store_data = $query->rows;
 
@@ -54,7 +54,7 @@ class ModelSettingStore extends Model {
 	}
 
 	public function getTotalStores() {
-		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store";
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "store`";
 
 		$cache_id = 'stores.total';
 

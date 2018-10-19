@@ -6,6 +6,7 @@ class ControllerCommonContentRight extends Controller {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/product');
 		$this->load->model('catalog/information');
+		$this->load->model('blog/article');
 
 		if (isset($this->request->get['route'])) {
 			$route = (string)$this->request->get['route'];
@@ -27,6 +28,14 @@ class ControllerCommonContentRight extends Controller {
 
 		if ($route == 'information/information' && isset($this->request->get['information_id'])) {
 			$layout_id = $this->model_catalog_information->getInformationLayoutId($this->request->get['information_id']);
+		}
+
+		if ($route == 'blog/article_info' && isset($this->request->get['blog_article_id'])) {
+			$layout_id = $this->model_blog_article->getBlogArticleLayoutId($this->request->get['blog_article_id']);
+		}
+
+		if ($route == 'blog/category' && isset($this->request->get['blog_category_id'])) {
+			$layout_id = $this->model_blog_article->getBlogCategoryLayoutId($this->request->get['blog_category_id']);
 		}
 
 		if (!$layout_id) {

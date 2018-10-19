@@ -17,7 +17,6 @@ $_['text_clear']             = 'Clear';
 
 // Entry
 $_['entry_name']             = 'Author Name:<span class="help">Author\'s Name must be unique.</span>';
-$_['entry_keyword']          = 'SEO Keyword:<span class="help">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>';
 $_['entry_image']            = 'Avatar:';
 $_['entry_meta_description'] = 'Meta Tag Description:<span class="help">The optimal number of characters is around 155, including spaces.<br />SEO importance: High.</span>';
 $_['entry_meta_keyword']     = 'Meta Tag Keywords:<span class="help">Usually ignored by search engines.<br />SEO importance: Low.</span>';

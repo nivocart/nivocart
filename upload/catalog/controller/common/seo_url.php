@@ -25,11 +25,6 @@ class ControllerCommonSeoUrl extends Controller {
 			$this->registry->set('new_seo_url_map', false);
 		}
 
-		// Blog
-		$this->load->model('blog/status');
-
-		$blog_tables = $this->model_blog_status->checkBlog();
-
 		// Decode URL
 		if (isset($this->request->get['_route_'])) {
 			$parts = explode('/', $this->request->get['_route_']);
@@ -69,21 +64,19 @@ class ControllerCommonSeoUrl extends Controller {
 						$this->request->get['news_id'] = $url[1];
 					}
 
-					if ($blog_tables) {
-						if ($url[0] == 'blog_article_id') {
-							$this->request->get['blog_article_id'] = $url[1];
-						}
+					if ($url[0] == 'blog_article_id') {
+						$this->request->get['blog_article_id'] = $url[1];
+					}
 
-						if ($url[0] == 'blog_author_id') {
-							$this->request->get['blog_author_id'] = $url[1];
-						}
+					if ($url[0] == 'blog_author_id') {
+						$this->request->get['blog_author_id'] = $url[1];
+					}
 
-						if ($url[0] == 'blog_category_id') {
-							if (!isset($this->request->get['blog_category_id'])) {
-								$this->request->get['blog_category_id'] = $url[1];
-							} else {
-								$this->request->get['blog_category_id'] .= '_' . $url[1];
-							}
+					if ($url[0] == 'blog_category_id') {
+						if (!isset($this->request->get['blog_category_id'])) {
+							$this->request->get['blog_category_id'] = $url[1];
+						} else {
+							$this->request->get['blog_category_id'] .= '_' . $url[1];
 						}
 					}
 
@@ -108,13 +101,11 @@ class ControllerCommonSeoUrl extends Controller {
 			} elseif (isset($this->request->get['news_id'])) {
 				$this->request->get['route'] = 'information/news';
 			} elseif (isset($this->request->get['blog_article_id'])) {
-				$this->request->get['route'] = 'blog/article/view';
+				$this->request->get['route'] = 'blog/article_info';
 			} elseif (isset($this->request->get['blog_author_id'])) {
-				$this->request->get['route'] = 'blog/author';
+				$this->request->get['route'] = 'blog/article_author';
 			} elseif (isset($this->request->get['blog_category_id'])) {
 				$this->request->get['route'] = 'blog/category';
-			} elseif ($this->request->get['_route_'] ==  'blog') {
-				$this->request->get['route'] = 'blog/article';
 			}
 
 			if (isset($this->request->get['route'])) {
@@ -151,35 +142,14 @@ class ControllerCommonSeoUrl extends Controller {
 
 					if ($query->num_rows && $query->row['keyword']) {
 						$url .= '/' . $query->row['keyword'];
-
 						unset($data[$key]);
 					}
 
-				} elseif ($data['route'] == 'blog/article/view' && $key == 'blog_article_id') {
+				} elseif (($data['route'] == 'blog/article_info' && $key == 'blog_article_id') || ($data['route'] == 'blog/article_author' && $key == 'blog_author_id')) {
 					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
 
 					if ($query->num_rows) {
 						$url .= '/' . $query->row['keyword'];
-
-						unset($data[$key]);
-
-					} else {
-						$url .= '/blog/' . (int)$value;
-
-						unset($data[$key]);
-					}
-
-				} elseif ($data['route'] == 'blog/author' && $key == 'blog_author_id') {
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
-
-					if ($query->num_rows) {
-						$url .= '/' . $query->row['keyword'];
-
-						unset($data[$key]);
-
-					} else {
-						$url .= '/blog/' . (int)$value;
-
 						unset($data[$key]);
 					}
 
@@ -191,22 +161,10 @@ class ControllerCommonSeoUrl extends Controller {
 
 						if ($query->num_rows) {
 							$url .= '/' . $query->row['keyword'];
-						} else {
-							$url .= '/blog-category' . $blog_category;
 						}
 					}
 
 					unset($data[$key]);
-
-				} elseif ($data['route'] == 'blog/search') {
-					if (isset($key) && ($key == 'blog_search')) {
-						$url .= '/search&blog_search=' . $value;
-					} else {
-						$url .= '/search';
-					}
-
-				} elseif (isset($data['route']) && $data['route'] == 'blog/article' && $key != 'blog_article_id' && $key != 'blog_author_id' && $key != 'blog_category_id' && $key != 'page') {
-					$url .=  '/blog';
 
 				} elseif ($key == 'path') {
 					$categories = explode('_', $value);
@@ -218,7 +176,6 @@ class ControllerCommonSeoUrl extends Controller {
 							$url .= '/' . $query->row['keyword'];
 						} else {
 							$url = '';
-
 							break;
 						}
 					}
@@ -231,7 +188,6 @@ class ControllerCommonSeoUrl extends Controller {
 
 						if ($query->num_rows && $query->row['keyword']) {
 							$url .= '/' . $query->row['keyword'];
-
 							unset($data[$key]);
 						}
 					}

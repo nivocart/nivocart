@@ -11,7 +11,7 @@
 <div id="content"><?php echo $content_high; ?>
   <?php if (isset($author_information_found)) { ?>
     <div class="author-info">
-      <div class="left"><img src="<?php echo $author_image; ?>" alt="<?php echo $author_name; ?>" style="border-radius:5px; border:1px solid #EEE;" /></div>
+      <div class="left"><img src="<?php echo $author_image; ?>" alt="<?php echo $author_name; ?>" /></div>
       <div class="right"><h1><?php echo $author_name; ?></h1><?php echo $author_description; ?></div>
     </div>
   <?php } else { ?>
@@ -21,7 +21,7 @@
     <?php foreach ($articles as $article) { ?>
       <div class="article-info">
         <div class="article-title">
-          <h1><a href="<?php echo $article['href']; ?>"><?php echo $article['article_title']; ?></a><h1>
+          <h1><a href="<?php echo $article['href']; ?>" title=""><?php echo $article['article_title']; ?></a><h1>
         </div>
         <div class="article-sub-title">
           <span class="article-author"><a href="<?php echo $article['author_href']; ?>" title=""><?php echo $article['author_name']; ?></a></span>

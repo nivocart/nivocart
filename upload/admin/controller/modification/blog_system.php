@@ -1,7 +1,7 @@
 <?php
-class ControllerModificationBlogs extends Controller {
+class ControllerModificationBlogSystem extends Controller {
 	private $error = array();
-	private $_name = 'blogs';
+	private $_name = 'blog_system';
 
 	public function index() {
 		$url = $this->request->get['route'];
@@ -11,7 +11,7 @@ class ControllerModificationBlogs extends Controller {
 
 			$this->document->setTitle($this->language->get('error_database'));
 
-			$this->data['install_blog'] = $this->url->link('modification/blogs', 'token=' . $this->session->data['token'] . '&url=' . $url, 'SSL');
+			$this->data['install_blog'] = $this->url->link('modification/blog_system', 'token=' . $this->session->data['token'] . '&url=' . $url, 'SSL');
 
 			$this->data['text_install_message'] = $this->language->get('text_install_message');
 			$this->data['text_upgrade'] = $this->language->get('text_upgrade');
@@ -47,14 +47,14 @@ class ControllerModificationBlogs extends Controller {
 	}
 
 	public function setting() {
-		$this->language->load('modification/blogs');
+		$this->language->load('modification/blog_system');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->model_setting_setting->editSetting('blogs', $this->request->post);
+			$this->model_setting_setting->editSetting('blog_system', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -133,11 +133,11 @@ class ControllerModificationBlogs extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('modification/blogs', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('modification/blog_system', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		);
 
-		$this->data['action'] = $this->url->link('modification/blogs', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('modification/blog_system', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['cancel'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -191,7 +191,7 @@ class ControllerModificationBlogs extends Controller {
 			$this->data['blog_related_articles'] = $this->config->get('blog_related_articles');
 		}
 
-		$this->template = 'modification/blogs.tpl';
+		$this->template = 'modification/blog_system.tpl';
 		$this->children = array(
 			'common/header',
 			'common/footer'
@@ -201,7 +201,7 @@ class ControllerModificationBlogs extends Controller {
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'modification/blogs')) {
+		if (!$this->user->hasPermission('modify', 'modification/blog_system')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
@@ -382,36 +382,20 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
   PRIMARY KEY (`blog_view_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
 
-		// Check layout
-		$layout_query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog' LIMIT 0,1");
+		// Set layouts
+		$layout_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog'");
 
 		if ($layout_query->num_rows == 0) {
-			$sql = "INSERT INTO `" . DB_PREFIX . "layout` SET name = 'Blog'";
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET name = 'Blog'");
 
-			$this->db->query($sql);
-		}
+			$layout_id = $this->db->getLastId();
 
-		// Get Layout ID
-		$layout_id = $this->getLayoutId();
+			$routes = array('blog/article_info', 'blog/article_list', 'blog/article_author', 'blog/category');
 
-		// Check layout route
-		$new_routes = array('blog/article', 'blog/author', 'blog/category', 'blog/search');
-
-		foreach ($new_routes as $new_route) {
-			$layout_route_query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '0' AND `route` LIKE '" . $new_route . "'");
-
-			if ($layout_route_query->num_rows == 0) {
-				$sql = "INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', `route` = '" . $new_route . "'";
-
-				$this->db->query($sql);
+			foreach ($routes as $route) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', `route` = '" . $route . "'");
 			}
 		}
-	}
-
-	protected function getLayoutId() {
-		$query = $this->db->query("SELECT DISTINCT layout_id AS layout FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog'");
-
-		return $query->row['layout'];
 	}
 
 	public function uninstall() {

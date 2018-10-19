@@ -29,10 +29,6 @@
           </td>
         </tr>
         <tr>
-          <td><?php echo $entry_keyword; ?></td>
-          <td><input type="text" name="keyword" value="<?php echo $keyword; ?>" size="40" /></td>
-        </tr>
-        <tr>
           <td><?php echo $entry_image; ?></td>
           <td><div class="image"><img src="<?php echo $thumb; ?>" alt="" id="thumb" /><br />
             <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />

@@ -137,8 +137,16 @@
 	float: left;
 	margin-right: 15px;
 }
+.author-info > .left img {
+	border: 1px solid #EEE;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+}
 .author-info > .left + .right {
-	margin-left: 140px;
+	margin: 0 10px 0 140px;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	color: #D24D23;
@@ -163,11 +171,9 @@
 }
 .module-info > .left {
 	float: left;
-}
-.module-info > .left a {
 	margin-right: 15px;
 }
-.module-info > .left a img {
+.module-info > .left img {
 	border: 1px solid #EEE;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -176,10 +182,10 @@
 	padding: 3px;
 }
 .module-info > .left + .right {
-	margin-left: 160px;
+	margin: 0 10px 0 150px;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	font-weight: bold;
-	color: #D24D23;
+	font-weight: normal;
+	color: #333;
 }
 /* Related Bloks */
 .related-article-blok-1 {

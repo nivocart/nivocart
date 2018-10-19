@@ -17,10 +17,6 @@ class ModelBlogAuthor extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_author_description` SET blog_author_id = '" . (int)$blog_author_id . "', language_id = '" . (int)$language_id . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "url_alias` SET `query` = 'blog_author_id=" . (int)$blog_author_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
-		}
-
 		$this->cache->delete('blog_author');
 	}
 
@@ -37,12 +33,6 @@ class ModelBlogAuthor extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_author_description` SET blog_author_id = '" . (int)$blog_author_id . "', language_id = '" . (int)$language_id . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_author_id=" . (int)$blog_author_id . "'");
-
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "url_alias` SET `query` = 'blog_author_id=" . (int)$blog_author_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
-		}
-
 		$this->cache->delete('blog_author');
 	}
 
@@ -50,13 +40,11 @@ class ModelBlogAuthor extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_author` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_author_description` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_author_id=" . (int)$blog_author_id . "'");
-
 		$this->cache->delete('blog_author');
 	}
 
 	public function getAuthor($blog_author_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_author_id=" . (int)$blog_author_id . "') AS keyword FROM `" . DB_PREFIX . "blog_author` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "blog_author` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		return $query->row;
 	}
