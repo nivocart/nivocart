@@ -6,7 +6,7 @@ class ControllerBlogArticleList extends Controller {
 
 		$this->document->setTitle(($this->config->get('blog_heading')) ? $this->config->get('blog_heading') : $this->language->get('heading_title'));
 
-		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-custom.css');
+		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
 
 		$this->data['breadcrumbs'] = array();
 

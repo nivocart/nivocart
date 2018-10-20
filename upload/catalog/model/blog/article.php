@@ -1,17 +1,9 @@
 <?php
 class ModelBlogArticle extends Model {
 
-	public function getTotalArticle($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT(ba.blog_article_id)) AS `total` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE ba.status = '1' AND bau.status = '1' AND ba2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
-
-		$query = $this->db->query($sql);
-
-		return $query->row['total'];
-	}
-
 	public function getArticles($data = array()) {
-		$sql = "SELECT ba.*, bad.*, bau.name AS author_name FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE ba.status = '1' AND bau.status = '1' AND ba2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
-
+		$sql = "SELECT ba.*, bad.*, bau.name AS author_name FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id)";
+		$sql .= " WHERE ba.status = '1' AND bau.status = '1' AND ba2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		$sql .= " ORDER BY ba.date_modified DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -29,6 +21,16 @@ class ModelBlogArticle extends Model {
 		$query = $this->db->query($sql);
 
 		return $query->rows;
+	}
+
+	public function getTotalArticle($data = array()) {
+		$sql = "SELECT COUNT(DISTINCT(ba.blog_article_id)) AS `total` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id)";
+		$sql .= " WHERE ba.status = '1' AND bau.status = '1' AND ba2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql .= " ORDER BY ba.date_modified DESC";
+
+		$query = $this->db->query($sql);
+
+		return $query->row['total'];
 	}
 
 	public function getCategories($parent_id = 0) {

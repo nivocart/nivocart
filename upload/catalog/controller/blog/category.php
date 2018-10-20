@@ -6,7 +6,7 @@ class ControllerBlogCategory extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-custom.css');
+		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
 
 		$this->data['breadcrumbs'] = array();
 
