@@ -439,8 +439,7 @@ a.top-link:hover {
 	text-align: center;
 }
 /* Header Search */
-#header #search,
-#header #blog-search {
+#header #search {
 	float: right;
 	width: 206px;
 	height: 31px;
@@ -457,12 +456,10 @@ a.top-link:hover {
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	z-index: 15;
 }
-#header #search .search-inside,
-#header #blog-search .search-inside {
+#header #search .search-inside {
 	position: relative;
 }
-#header #search .search-inside input,
-#header #blog-search .search-inside input {
+#header #search .search-inside input {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -485,12 +482,10 @@ a.top-link:hover {
 	-moz-box-shadow: none;
 	box-shadow: none;
 }
-#header #search .search-inside input:focus,
-#header #blog-search .search-inside input:focus {
+#header #search .search-inside input:focus {
 	outline: none;
 }
-#header #search .search-inside .button-search,
-#header #blog-search .search-inside .button-blog-search {
+#header #search .search-inside .button-search {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -981,7 +976,7 @@ a.button-add:hover {
 	margin-bottom: 15px;
 }
 .box .box-heading {
-	font-size: 18px;
+	font-size: 19px;
 	font-weight: normal;
 	line-height: 30px;
 	border-bottom: 1px solid #606060;
@@ -1131,6 +1126,7 @@ a.button-add:hover {
 }
 .box-category > ul > li a {
 	text-decoration: none;
+	font-size: 15px;
 	outline: none;
 	color: #333;
 }
@@ -1153,6 +1149,7 @@ a.button-add:hover {
 }
 .box-category > ul > li > ul > li a {
 	text-decoration: none;
+	font-size: 14px;
 	outline: none;
 	display: block;
 }

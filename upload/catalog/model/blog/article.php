@@ -33,14 +33,28 @@ class ModelBlogArticle extends Model {
 		return $query->row['total'];
 	}
 
+	public function getCategory($blog_category_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'");
+
+		return $query->row;
+	}
+
 	public function getCategories($parent_id = 0) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1' ORDER BY bc.sort_order, LCASE(bcd.name)");
+		$sql = "SELECT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id)";
+		$sql .= " WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'";
+		$sql .= " ORDER BY bc.sort_order, LCASE(bcd.name)";
+
+		$query = $this->db->query($sql);
 
 		return $query->rows;
 	}
 
 	public function getTotalCategories($parent_id = 0) {
-		$query = $this->db->query("SELECT COUNT(DISTINCT(bc.blog_category_id)) AS `total` FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1' ORDER BY bc.sort_order, LCASE(bcd.name)");
+		$sql = "SELECT COUNT(DISTINCT(bc.blog_category_id)) AS `total` FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id)";
+		$sql .= " WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'";
+		$sql .= " ORDER BY bc.sort_order, LCASE(bcd.name)";
+
+		$query = $this->db->query($sql);
 
 		return $query->row['total'];
 	}
@@ -142,12 +156,6 @@ class ModelBlogArticle extends Model {
 		} else {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_comment` SET blog_article_id = '" . (int)$blog_article_id . "', author = '" . $this->db->escape($data['name']) . "', `comment` = '" . $this->db->escape($data['text']) . "', status = '" . (int)$status . "', date_added = NOW(), date_modified = NOW()");
 		}
-	}
-
-	public function getCategory($blog_category_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'");
-
-		return $query->row;
 	}
 
 	public function getTotalArticleCategoryWise($data = array()) {

@@ -8,6 +8,27 @@ class ControllerBlogCategory extends Controller {
 
 		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
 
+		$this->load->model('blog/article');
+		$this->load->model('tool/image');
+
+		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
+			$this->request->get['limit'] = $this->config->get('config_catalog_limit');
+		} elseif (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] > 100)) {
+			$this->request->get['limit'] = 100;
+		}
+
+		if (isset($this->request->get['limit'])) {
+			$limit = $this->request->get['limit'];
+		} else {
+			$limit = $this->config->get('config_catalog_limit');
+		}
+
+		if (isset($this->request->get['page'])) {
+			$page = $this->request->get['page'];
+		} else {
+			$page = 1;
+		}
+
 		$this->data['breadcrumbs'] = array();
 
 		$this->data['breadcrumbs'][] = array(
@@ -22,26 +43,15 @@ class ControllerBlogCategory extends Controller {
 			'separator' => $this->language->get('text_separator')
 		);
 
-		$this->load->model('blog/article');
-		$this->load->model('tool/image');
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		if (isset($this->request->get['limit'])) {
-			$limit = $this->request->get['limit'];
-		} else {
-			$limit = $this->config->get('config_catalog_limit');
-		}
-
 		if (isset($this->request->get['blog_category_id'])) {
 			$url = '';
 
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
 			}
 
 			$path = '';
@@ -80,19 +90,17 @@ class ControllerBlogCategory extends Controller {
 			$this->document->setDescription($category_info['meta_description']);
 			$this->document->setKeywords($category_info['meta_keyword']);
 
-			$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
-
 			$this->data['heading_title'] = $category_info['name'];
 
 			// Set the last category breadcrumb
 			$url = '';
 
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
 			}
 
 			$this->data['breadcrumbs'][] = array(
@@ -181,10 +189,6 @@ class ControllerBlogCategory extends Controller {
 
 			$url = '';
 
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
@@ -223,12 +227,12 @@ class ControllerBlogCategory extends Controller {
 		} else {
 			$url = '';
 
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
 			}
 
 			$this->data['breadcrumbs'] = array();
