@@ -41,21 +41,21 @@ $_['blog_author']              = 'Nivocart';
 $_['blog_support']             = 'contact@nivocart.com';
 $_['blog_license']             = 'GPLv3 (GNU General Public License)';
 $_['blog_tables']              = '
-	- blog_article,<br />
-	- blog_article_description,<br />
-	- blog_article_description_additional,<br />
-	- blog_article_product_related,<br />
-	- blog_article_to_category,<br />
-	- blog_article_to_layout,<br />
-	- blog_article_to_store,<br />
-	- blog_author,<br />
-	- blog_author_description,<br />
-	- blog_category,<br />
-	- blog_category_description,<br />
-	- blog_category_to_layout,<br />
-	- blog_category_to_store,<br />
-	- blog_comment,<br />
-	- blog_related_article,<br />
+	- blog_article<br />
+	- blog_article_description<br />
+	- blog_article_description_additional<br />
+	- blog_article_product_related<br />
+	- blog_article_to_category<br />
+	- blog_article_to_layout<br />
+	- blog_article_to_store<br />
+	- blog_author<br />
+	- blog_author_description<br />
+	- blog_category<br />
+	- blog_category_description<br />
+	- blog_category_to_layout<br />
+	- blog_category_to_store<br />
+	- blog_comment<br />
+	- blog_related_article<br />
 	- blog_view';
 
 // Error
