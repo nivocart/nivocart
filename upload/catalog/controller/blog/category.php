@@ -37,12 +37,6 @@ class ControllerBlogCategory extends Controller {
 			'separator' => false
 		);
 
-		$this->data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('blog/article_list', '', 'SSL'),
-			'separator' => $this->language->get('text_separator')
-		);
-
 		if (isset($this->request->get['blog_category_id'])) {
 			$url = '';
 
@@ -91,6 +85,8 @@ class ControllerBlogCategory extends Controller {
 			$this->document->setKeywords($category_info['meta_keyword']);
 
 			$this->data['heading_title'] = $category_info['name'];
+
+			$this->data['author_details'] = $this->config->get('blog_author_details');
 
 			// Set the last category breadcrumb
 			$url = '';

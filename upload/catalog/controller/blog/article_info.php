@@ -220,6 +220,8 @@ class ControllerBlogArticleInfo extends Controller {
 				);
 			}
 
+			$this->data['author_details'] = $this->config->get('blog_author_details');
+
 			$author_info = $this->model_blog_article->getAuthorInformation($article_info['blog_author_id']);
 
 			if ($author_info) {

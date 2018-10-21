@@ -102,6 +102,8 @@ class ControllerBlogArticleAuthor extends Controller {
 				);
 			}
 
+			$this->data['author_history'] = $this->config->get('blog_author_history');
+
 			if ($this->data['articles'] && $author_info) {
 				$this->data['author_information_found'] = 1;
 

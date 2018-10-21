@@ -17,6 +17,7 @@
   <?php } else { ?>
     <h1><?php echo $heading_title; ?></h1>
   <?php } ?>
+  <?php if ($author_history) { ?>
   <?php if ($articles) { ?>
     <?php foreach ($articles as $article) { ?>
       <div class="article-info">
@@ -33,7 +34,7 @@
         <?php } ?>
         </div>
         <?php if ($article['image']) { ?>
-          <div class="article-thumbnail-image" style="min-height:130px;">
+          <div class="article-thumbnail-image" style="min-height:110px;">
             <img src="<?php echo $article['image']; ?>" alt="<?php echo $article['article_title']; ?>" />
             <span class="article-description"><?php echo $article['description']; ?></span>
           </div>
@@ -43,12 +44,13 @@
         <div style="text-align:right;"><a href="<?php echo $article['href']; ?>" class="button"><?php echo $button_continue_reading; ?></a></div>
       </div>
     <?php } ?>
+    <div class="pagination"><?php echo $pagination; ?></div>
   <?php } else { ?>
     <div class="buttons">
       <div class="center"><?php echo $text_not_found; ?></div>
     </div>
   <?php } ?>
-  <div class="pagination"><?php echo $pagination; ?></div>
+  <?php } ?>
   <?php echo $content_low; ?>
 </div>
 <?php echo $content_lower; ?>

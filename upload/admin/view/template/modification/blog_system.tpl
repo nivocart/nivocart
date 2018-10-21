@@ -55,30 +55,30 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_show_author; ?></td>
-            <td><?php if ($blog_show_authors) { ?>
-              <input type="radio" name="blog_show_authors" value="1" id="authors-on" class="radio" checked />
+            <td><?php echo $entry_author_details; ?></td>
+            <td><?php if ($blog_author_details) { ?>
+              <input type="radio" name="blog_author_details" value="1" id="authors-on" class="radio" checked />
               <label for="authors-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="blog_show_authors" value="0" id="authors-off" class="radio" />
+              <input type="radio" name="blog_author_details" value="0" id="authors-off" class="radio" />
               <label for="authors-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } else { ?>
-              <input type="radio" name="blog_show_authors" value="1" id="authors-on" class="radio" />
+              <input type="radio" name="blog_author_details" value="1" id="authors-on" class="radio" />
               <label for="authors-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="blog_show_authors" value="0" id="authors-off" class="radio" checked />
+              <input type="radio" name="blog_author_details" value="0" id="authors-off" class="radio" checked />
               <label for="authors-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_author_information; ?></td>
-            <td><?php if ($blog_author_information) { ?>
-              <input type="radio" name="blog_author_information" value="1" id="information-on" class="radio" checked />
+            <td><?php echo $entry_author_history; ?></td>
+            <td><?php if ($blog_author_history) { ?>
+              <input type="radio" name="blog_author_history" value="1" id="information-on" class="radio" checked />
               <label for="information-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="blog_author_information" value="0" id="information-off" class="radio" />
+              <input type="radio" name="blog_author_history" value="0" id="information-off" class="radio" />
               <label for="information-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } else { ?>
-              <input type="radio" name="blog_author_information" value="1" id="information-on" class="radio" />
+              <input type="radio" name="blog_author_history" value="1" id="information-on" class="radio" />
               <label for="information-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="blog_author_information" value="0" id="information-off" class="radio" checked />
+              <input type="radio" name="blog_author_history" value="0" id="information-off" class="radio" checked />
               <label for="information-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>

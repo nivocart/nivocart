@@ -9,7 +9,7 @@
 <?php } ?>
 <?php echo $content_left; ?><?php echo $content_right; ?>
 <div id="content"><?php echo $content_high; ?>
-  <?php if (isset($author_information_found)) { ?>
+  <?php if (isset($author_information_found) && $author_details) { ?>
     <div class="author-info">
       <div class="left"><img src="<?php echo $author_image; ?>" alt="<?php echo $author_name; ?>" /></div>
       <div class="right"><h1><?php echo $author_name; ?></h1><?php echo $author_description; ?></div>
@@ -33,7 +33,7 @@
         <?php } ?>
         </div>
         <?php if ($article['image']) { ?>
-          <div class="article-thumbnail-image" style="min-height:130px;">
+          <div class="article-thumbnail-image" style="min-height:110px;">
             <img src="<?php echo $article['image']; ?>" alt="<?php echo $article['article_title']; ?>" />
             <span class="article-description"><?php echo $article['description']; ?></span>
           </div>
@@ -43,12 +43,12 @@
         <div style="text-align:right;"><a href="<?php echo $article['href']; ?>" class="button"><?php echo $button_continue_reading; ?></a></div>
       </div>
     <?php } ?>
+    <div class="pagination"><?php echo $pagination; ?></div>
   <?php } else { ?>
     <div class="buttons">
       <div class="center"><?php echo $text_not_found; ?></div>
     </div>
   <?php } ?>
-  <div class="pagination"><?php echo $pagination; ?></div>
   <?php echo $content_low; ?>
 </div>
 <?php echo $content_lower; ?>

@@ -85,10 +85,10 @@ class ControllerModificationBlogSystem extends Controller {
 		$this->data['entry_comment_heading'] = $this->language->get('entry_comment_heading');
 
 		$this->data['entry_comment_approval'] = $this->language->get('entry_comment_approval');
-		$this->data['entry_show_author'] = $this->language->get('entry_show_author');
-		$this->data['entry_author_information'] = $this->language->get('entry_author_information');
-		$this->data['entry_social_network'] = $this->language->get('entry_social_network');
+		$this->data['entry_author_details'] = $this->language->get('entry_author_details');
+		$this->data['entry_author_history'] = $this->language->get('entry_author_history');
 		$this->data['entry_related_article'] = $this->language->get('entry_related_article');
+		$this->data['entry_social_network'] = $this->language->get('entry_social_network');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_apply'] = $this->language->get('button_apply');
@@ -167,28 +167,28 @@ class ControllerModificationBlogSystem extends Controller {
 			$this->data['blog_comment_auto_approval'] = $this->config->get('blog_comment_auto_approval');
 		}
 
-		if (isset($this->request->post['blog_show_authors'])) {
-			$this->data['blog_show_authors'] = $this->request->post['blog_show_authors'];
+		if (isset($this->request->post['blog_author_details'])) {
+			$this->data['blog_author_details'] = $this->request->post['blog_author_details'];
 		} else {
-			$this->data['blog_show_authors'] = $this->config->get('blog_show_authors');
+			$this->data['blog_author_details'] = $this->config->get('blog_author_details');
 		}
 
-		if (isset($this->request->post['blog_author_information'])) {
-			$this->data['blog_author_information'] = $this->request->post['blog_author_information'];
+		if (isset($this->request->post['blog_author_history'])) {
+			$this->data['blog_author_history'] = $this->request->post['blog_author_history'];
 		} else {
-			$this->data['blog_author_information'] = $this->config->get('blog_author_information');
-		}
-
-		if (isset($this->request->post['blog_share_social_site'])) {
-			$this->data['blog_share_social_site'] = $this->request->post['blog_share_social_site'];
-		} else {
-			$this->data['blog_share_social_site'] = $this->config->get('blog_share_social_site');
+			$this->data['blog_author_history'] = $this->config->get('blog_author_history');
 		}
 
 		if (isset($this->request->post['blog_related_articles'])) {
 			$this->data['blog_related_articles'] = $this->request->post['blog_related_articles'];
 		} else {
 			$this->data['blog_related_articles'] = $this->config->get('blog_related_articles');
+		}
+
+		if (isset($this->request->post['blog_share_social_site'])) {
+			$this->data['blog_share_social_site'] = $this->request->post['blog_share_social_site'];
+		} else {
+			$this->data['blog_share_social_site'] = $this->config->get('blog_share_social_site');
 		}
 
 		$this->template = 'modification/blog_system.tpl';

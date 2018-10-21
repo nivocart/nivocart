@@ -27,6 +27,8 @@ class ControllerBlogArticleList extends Controller {
 
 		$this->data['heading_title'] = ($this->config->get('blog_heading')) ? $this->config->get('blog_heading') : $this->language->get('heading_title');
 
+		$this->data['author_details'] = $this->config->get('blog_author_details');
+
 		$this->data['articles'] = array();
 
 		if (isset($this->request->get['page'])) {
@@ -42,8 +44,8 @@ class ControllerBlogArticleList extends Controller {
 		}
 
 		$data = array(
-			'start'       => ($page - 1) * $limit,
-			'limit'       => $limit
+			'start' => ($page - 1) * $limit,
+			'limit' => $limit
 		);
 
 		$blog_total = $this->model_blog_article->getTotalArticle($data);

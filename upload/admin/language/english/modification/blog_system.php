@@ -19,15 +19,15 @@ $_['tab_settings']             = 'Settings';
 $_['tab_about']                = 'About';
 
 // Entry
-$_['entry_blog_heading']       = 'Custom Blog Heading:<span class="help">Enter a main heading title. Leave blank to use the default title. The default title is <b>Blog</b>.</span>';
-$_['entry_related_heading']    = 'Product Related Heading:<span class="help">Enter a new product related heading to replace the default: <b>Blog Related Products</b>.</span>';
-$_['entry_comment_heading']    = 'Comment Related Heading:<span class="help">Enter a new comment related heading to replace the default: <b>Blog Related Comments</b>.</span>';
+$_['entry_blog_heading']       = 'Heading Blog:<span class="help">Override the main heading title. Leave empty to use the default title.</span>';
+$_['entry_related_heading']    = 'Heading Product Related:<span class="help">Override all product related headings. Leave empty to use the default title.</span>';
+$_['entry_comment_heading']    = 'Heading Comment Related:<span class="help">Override the comment related heading. Leave empty to use the default title.</span>';
 
-$_['entry_comment_approval']   = 'Comment Auto approval:<span class="help">If "Yes", comments will be approved automatically.</span>';
-$_['entry_show_author']        = 'Show Authors:<span class="help">If "Yes", the authors blog history will be displayed on the author\'s page.</span>';
-$_['entry_author_information'] = 'Author Information:<span class="help">If "Yes", all information linked to the author will be displayed.</span>';
-$_['entry_related_article']    = 'Related Article:<span class="help">If "Yes", all related articles will be displayed.</span>';
-$_['entry_social_network']     = 'Share with social site:<span class="help">If "Yes", social network links will be displayed.</span>';
+$_['entry_comment_approval']   = 'Comments Auto-approval:<span class="help">If "Yes", comments will be approved automatically.</span>';
+$_['entry_author_details']     = 'Show Author Details:<span class="help">If "Yes", the author\'s information will be displayed on all blog pages.</span>';
+$_['entry_author_history']     = 'Show Author History:<span class="help">If "Yes", the author\'s blog history will be displayed on the author\'s page.</span>';
+$_['entry_related_article']    = 'Show Related Article:<span class="help">If "Yes", all related articles will be displayed on each article page.</span>';
+$_['entry_social_network']     = 'Show AddThis Share buttons:<span class="help">If "Yes", AddThis Share buttons will be displayed.</span>';
 
 // About
 $_['text_blog_version']        = 'Blog Version:';

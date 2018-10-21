@@ -164,7 +164,7 @@
           </div>
         <?php } ?>
       <?php } ?>
-      <?php if ($this->config->get('blog_author_information')) { ?>
+      <?php if ($author_details) { ?>
         <?php if (isset($author_image)) { ?>
           <div class="box">
             <div class="box-heading"><?php echo $author_name; ?> <?php echo $text_author_information; ?></div>
@@ -184,8 +184,7 @@
             <div id="comments" class="blog-comment-info">
               <div id="comment-list"></div>
               <div id="comment-section"></div>
-              <h2 id="review-title">
-                <?php echo $text_write_comment; ?>
+              <h2 id="review-title"><?php echo $text_write_comment; ?>
                 <img src="<?php echo HTTPS_SERVER; ?>catalog/view/theme/<?php echo $template; ?>/image/remove.png" alt="Remove" id="reply-remove" style="display:none;" onclick="removeCommentId();" />
               </h2>
               <input type="hidden" name="blog_article_reply_id" value="0" id="blog-reply-id" />
