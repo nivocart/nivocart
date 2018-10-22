@@ -235,9 +235,7 @@ class ModelDesignMenuItems extends Model {
 	}
 
 	public function getTotalMenuItems($menu_id, $data) {
-      	$sql = "SELECT COUNT(DISTINCT mi.menu_item_id) AS total FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (mi.menu_item_id = mid.menu_item_id) WHERE mi.menu_id = '" . (int)$menu_id . "'";
-
-		$sql .= " AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT COUNT(DISTINCT mi.menu_item_id) AS `total` FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (mi.menu_item_id = mid.menu_item_id) WHERE mi.menu_id = '" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND mid.menu_item_name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

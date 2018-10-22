@@ -100,7 +100,7 @@ class ModelCatalogPalette extends Model {
 	}
 
 	public function getTotalPalettes($data = array()) {
-		$sql = "SELECT COUNT(p.palette_id) AS total FROM " . DB_PREFIX . "palette p";
+		$sql = "SELECT COUNT(p.palette_id) AS `total` FROM " . DB_PREFIX . "palette p";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " WHERE p.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -212,7 +212,7 @@ class ModelCatalogPalette extends Model {
 	}
 
 	public function getTotalColorsByPaletteId($palette_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "palette_color WHERE palette_id = '" . (int)$palette_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "palette_color WHERE palette_id = '" . (int)$palette_id . "'");
 
 		return $query->row['total'];
 	}

@@ -18,7 +18,7 @@ class ModelReportCustomer extends Model {
 			$sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		$sql .= ") tmp GROUP BY tmp.customer_id ORDER BY total DESC";
+		$sql .= ") tmp GROUP BY tmp.customer_id ORDER BY `total` DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -148,7 +148,7 @@ class ModelReportCustomer extends Model {
 			$sql .= "AND DATE(ct.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		$sql .= " GROUP BY ct.customer_id ORDER BY total DESC";
+		$sql .= " GROUP BY ct.customer_id ORDER BY `total` DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {

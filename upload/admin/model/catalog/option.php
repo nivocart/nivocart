@@ -57,9 +57,9 @@ class ModelCatalogOption extends Model {
 
 	public function deleteOption($option_id) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "option` WHERE option_id = '" . (int)$option_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "option_description WHERE option_id = '" . (int)$option_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "option_value WHERE option_id = '" . (int)$option_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "option_value_description WHERE option_id = '" . (int)$option_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "option_description` WHERE option_id = '" . (int)$option_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "option_value` WHERE option_id = '" . (int)$option_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "option_value_description` WHERE option_id = '" . (int)$option_id . "'");
 	}
 
 	public function getOption($option_id) {
@@ -171,7 +171,7 @@ class ModelCatalogOption extends Model {
 	}
 
 	public function getTotalOptions() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "option`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "option`");
 
 		return $query->row['total'];
 	}

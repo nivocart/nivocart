@@ -73,7 +73,7 @@ class ModelDesignPayment extends Model {
 	}
 
 	public function getTotalPaymentImages() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "payment_image");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "payment_image");
 
 		return $query->row['total'];
 	}

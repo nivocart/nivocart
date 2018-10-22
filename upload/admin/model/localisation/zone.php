@@ -2,7 +2,7 @@
 class ModelLocalisationZone extends Model {
 
 	public function addZone($data) {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "zone` SET country_id = '" . (int)$data['country_id'] . "', name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . (int)$data['status'] . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "zone` SET country_id = '" . (int)$data['country_id'] . "', `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . (int)$data['status'] . "'");
 
 		$zone_id = $this->db->getLastId();
 
@@ -13,7 +13,7 @@ class ModelLocalisationZone extends Model {
 	}
 
 	public function editZone($zone_id, $data) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "zone` SET country_id = '" . (int)$data['country_id'] . "', name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . (int)$data['status'] . "' WHERE zone_id = '" . (int)$zone_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "zone` SET country_id = '" . (int)$data['country_id'] . "', `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . (int)$data['status'] . "' WHERE zone_id = '" . (int)$zone_id . "'");
 
 		$this->cache->delete('zone');
 	}
@@ -88,13 +88,13 @@ class ModelLocalisationZone extends Model {
 	}
 
 	public function getTotalZones() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "zone`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "zone`");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalZonesByCountryNames($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT z.name) AS total FROM `" . DB_PREFIX . "zone` z";
+		$sql = "SELECT COUNT(DISTINCT z.name) AS `total` FROM `" . DB_PREFIX . "zone` z";
 		$sql .= " LEFT JOIN " . DB_PREFIX . "country c ON (z.country_id = c.country_id)";
 		$sql .= " LEFT JOIN " . DB_PREFIX . "country_description cd ON (z.country_id = cd.country_id)";
 		$sql .= " WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
@@ -109,7 +109,7 @@ class ModelLocalisationZone extends Model {
 	}
 
 	public function getTotalZonesByCountryId($country_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "zone` WHERE country_id = '" . (int)$country_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "zone` WHERE country_id = '" . (int)$country_id . "'");
 
 		return $query->row['total'];
 	}

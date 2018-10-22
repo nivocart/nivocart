@@ -213,10 +213,10 @@ class ControllerBlogReport extends Controller {
 
 		$this->data['pagination'] = $pagination->render();
 
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
 		$this->data['filter_date_start'] = $filter_date_start;
 		$this->data['filter_date_end'] = $filter_date_end;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
 
 		$this->template = 'blog/report.tpl';
 		$this->children = array(

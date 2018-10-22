@@ -47,7 +47,7 @@ class ModelPaymentG2aPay extends Model {
 	}
 
 	public function getTotalReleased($g2apay_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "g2apay_order_transaction WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "' AND (`type` = 'payment' OR `type` = 'refund')");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "g2apay_order_transaction WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "' AND (`type` = 'payment' OR `type` = 'refund')");
 
 		return (double)$query->row['total'];
 	}
@@ -103,7 +103,7 @@ class ModelPaymentG2aPay extends Model {
 	}
 
 	public function getTotalRefunded($g2apay_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "g2apay_order_transaction WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "' AND 'refund'");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "g2apay_order_transaction WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "' AND 'refund'");
 
 		return (double)$query->row['total'];
 	}

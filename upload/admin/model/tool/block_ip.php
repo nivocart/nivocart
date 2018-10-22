@@ -85,7 +85,7 @@ class ModelToolBlockIp extends Model {
 	}
 
 	public function getTotalBlockIps($data = array()) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "block_ip");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "block_ip");
 
 		return $query->row['total'];
 	}

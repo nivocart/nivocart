@@ -69,7 +69,7 @@ class ModelToolSeoUrlManager extends Model {
 	}
 
 	public function getTotalUrls() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "url_alias`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "url_alias`");
 
 		return $query->row['total'];
 	}

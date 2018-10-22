@@ -648,7 +648,7 @@ class ControllerBlogArticle extends Controller {
 
 		if (isset($this->request->post['status'])) {
 			$this->data['status'] = $this->request->post['status'];
-		} elseif (isset($article_info)) {
+		} elseif (!empty($article_info)) {
 			$this->data['status'] = $article_info['status'];
 		} else {
 			$this->data['status'] = 0;

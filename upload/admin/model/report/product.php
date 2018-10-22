@@ -22,13 +22,13 @@ class ModelReportProduct extends Model {
 	}
 
 	public function getTotalProductsViewed() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE viewed > '0'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "product WHERE viewed > '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalProductViews() {
-		$query = $this->db->query("SELECT SUM(viewed) AS total FROM " . DB_PREFIX . "product");
+		$query = $this->db->query("SELECT SUM(viewed) AS `total` FROM " . DB_PREFIX . "product");
 
 		return $query->row['total'];
 	}
@@ -38,7 +38,7 @@ class ModelReportProduct extends Model {
 	}
 
 	public function getPurchased($data = array()) {
-		$sql = "SELECT op.product_id, op.name, op.model, p.price, p.cost, SUM(op.quantity) AS quantity, SUM((op.price + op.tax) * op.quantity) AS total FROM " . DB_PREFIX . "order_product op LEFT JOIN " . DB_PREFIX . "product p ON (op.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+		$sql = "SELECT op.product_id, op.name, op.model, p.price, p.cost, SUM(op.quantity) AS quantity, SUM((op.price + op.tax) * op.quantity) AS `total` FROM " . DB_PREFIX . "order_product op LEFT JOIN " . DB_PREFIX . "product p ON (op.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -54,7 +54,7 @@ class ModelReportProduct extends Model {
 			$sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		$sql .= " GROUP BY op.model ORDER BY total DESC";
+		$sql .= " GROUP BY op.model ORDER BY `total` DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -74,7 +74,7 @@ class ModelReportProduct extends Model {
 	}
 
 	public function getTotalPurchased($data) {
-		$sql = "SELECT COUNT(DISTINCT op.model) AS total FROM " . DB_PREFIX . "order_product op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+		$sql = "SELECT COUNT(DISTINCT op.model) AS `total` FROM " . DB_PREFIX . "order_product op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -160,7 +160,7 @@ class ModelReportProduct extends Model {
 	}
 
 	public function getProducts($data = array()) {
-		$sql = "SELECT p.product_id, p.image, p.label, p.cost, p.price, pd.name AS name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.price > '0'";
+		$sql = "SELECT p.product_id, p.image, p.label, p.cost, p.price, pd.name AS `name` FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.price > '0'";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -205,7 +205,7 @@ class ModelReportProduct extends Model {
 	}
 
 	public function getTotalProducts($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.price > '0'";
+		$sql = "SELECT COUNT(DISTINCT p.product_id) AS `total` FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.price > '0'";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

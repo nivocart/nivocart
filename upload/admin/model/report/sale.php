@@ -2,7 +2,7 @@
 class ModelReportSale extends Model {
 
 	public function getOrders($data = array()) {
-		$sql = "SELECT MIN(tmp.date_added) AS date_start, MAX(tmp.date_added) AS date_end, COUNT(tmp.order_id) AS orders, SUM(tmp.products) AS products, SUM(tmp.tax) AS tax, SUM(tmp.total) AS total FROM (SELECT o.order_id, (SELECT SUM(op.quantity) FROM " . DB_PREFIX . "order_product op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, (SELECT SUM(ot.value) FROM " . DB_PREFIX . "order_total ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id) AS tax, o.total, o.date_added FROM `" . DB_PREFIX . "order` o";
+		$sql = "SELECT MIN(tmp.date_added) AS date_start, MAX(tmp.date_added) AS date_end, COUNT(tmp.order_id) AS orders, SUM(tmp.products) AS products, SUM(tmp.tax) AS tax, SUM(tmp.total) AS `total` FROM (SELECT o.order_id, (SELECT SUM(op.quantity) FROM " . DB_PREFIX . "order_product op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, (SELECT SUM(ot.value) FROM " . DB_PREFIX . "order_total ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id) AS tax, o.total, o.date_added FROM `" . DB_PREFIX . "order` o";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -70,17 +70,17 @@ class ModelReportSale extends Model {
 
 		switch ($group) {
 			case 'day':
-				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `" . DB_PREFIX . "order`";
+				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
 				break;
 			default:
 			case 'week':
-				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `" . DB_PREFIX . "order`";
+				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
 				break;
 			case 'month':
-				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `" . DB_PREFIX . "order`";
+				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
 				break;
 			case 'year':
-				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `" . DB_PREFIX . "order`";
+				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
 				break;
 		}
 
@@ -104,7 +104,7 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalOrdersByCountry() {
-		$query = $this->db->query("SELECT COUNT(*) AS total, SUM(o.total) AS amount, c.iso_code_2 AS iso_code_2 FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "country c ON ((o.payment_country_id = c.country_id) OR (o.shipping_country_id = c.country_id)) WHERE o.order_status_id > '0' GROUP BY c.country_id");
+		$query = $this->db->query("SELECT COUNT(*) AS `total`, SUM(o.total) AS amount, c.iso_code_2 AS iso_code_2 FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "country c ON ((o.payment_country_id = c.country_id) OR (o.shipping_country_id = c.country_id)) WHERE o.order_status_id > '0' GROUP BY c.country_id");
 
 		return $query->rows;
 	}
@@ -122,7 +122,7 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalSales($data = array()) {
-		$sql = "SELECT SUM(total) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0'";
+		$sql = "SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0'";
 
 		if (!empty($data['filter_date_added'])) {
 			$sql .= " AND DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
@@ -134,13 +134,13 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalOrdersByCurrencyId($currency_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE currency_id = '" . (int)$currency_id . "' AND order_status_id > '0'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE currency_id = '" . (int)$currency_id . "' AND order_status_id > '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTaxes($data = array()) {
-		$sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS orders FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
+		$sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS `total`, COUNT(o.order_id) AS orders FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -196,7 +196,7 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalTaxes($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
+		$sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -242,7 +242,7 @@ class ModelReportSale extends Model {
 	}
 
 	public function getShipping($data = array()) {
-		$sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS orders FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
+		$sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS `total`, COUNT(o.order_id) AS orders FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -298,7 +298,7 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalShipping($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
+		$sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "order_total ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND order_status_id = '" . (int)$data['filter_order_status_id'] . "'";

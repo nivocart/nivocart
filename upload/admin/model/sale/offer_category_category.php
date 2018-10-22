@@ -91,7 +91,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 	}
 
 	public function getTotalOfferCategoryCategory() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "offer_category_category");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_category_category");
 
 		return $query->row['total'];
 	}

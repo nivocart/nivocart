@@ -2,7 +2,7 @@
 class ModelLocalisationTaxLocalRate extends Model {
 
 	public function addTaxLocalRate($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "tax_local_rate SET name = '" . $this->db->escape($data['name']) . "', rate = '" . (float)$data['rate'] . "', status = '" . (int)$data['status'] . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "tax_local_rate SET `name` = '" . $this->db->escape($data['name']) . "', rate = '" . (float)$data['rate'] . "', status = '" . (int)$data['status'] . "'");
 
 		$tax_local_rate_id = $this->db->getLastId();
 
@@ -11,7 +11,7 @@ class ModelLocalisationTaxLocalRate extends Model {
 	}
 
 	public function editTaxLocalRate($tax_local_rate_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "tax_local_rate SET name = '" . $this->db->escape($data['name']) . "', rate = '" . (float)$data['rate'] . "', status = '" . (int)$data['status'] . "' WHERE tax_local_rate_id = '" . (int)$tax_local_rate_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "tax_local_rate SET `name` = '" . $this->db->escape($data['name']) . "', rate = '" . (float)$data['rate'] . "', status = '" . (int)$data['status'] . "' WHERE tax_local_rate_id = '" . (int)$tax_local_rate_id . "'");
 	}
 
 	public function deleteTaxLocalRate($tax_local_rate_id) {
@@ -63,13 +63,13 @@ class ModelLocalisationTaxLocalRate extends Model {
 	}
 
 	public function getTotalTaxLocalRates() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "tax_local_rate");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "tax_local_rate");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalProductsByTaxLocalRateId($tax_local_rate_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_tax_local_rate WHERE tax_local_rate_id = '" . (int)$tax_local_rate_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "product_tax_local_rate WHERE tax_local_rate_id = '" . (int)$tax_local_rate_id . "'");
 
 		return $query->row['total'];
 	}

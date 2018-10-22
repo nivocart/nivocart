@@ -88,7 +88,7 @@ class ModelDesignMenu extends Model {
 	}
 
 	public function getTotalMenus() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "menu");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "menu");
 
 		return $query->row['total'];
 	}

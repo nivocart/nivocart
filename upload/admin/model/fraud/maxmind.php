@@ -63,11 +63,11 @@ class ModelFraudMaxMind extends Model {
 	}
 
 	public function uninstall() {
-		$this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "maxmind");
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "maxmind`");
 	}
 
 	public function getOrder($order_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "maxmind WHERE order_id = '" . (int)$order_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "maxmind` WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row;
 	}

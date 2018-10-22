@@ -10,7 +10,7 @@ class ModelSaleSupplierGroup extends Model {
 		$this->session->data['new_supplier_group_id'] = $supplier_group_id;
 
 		foreach ($data['supplier_group_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_group_description SET supplier_group_id = '" . (int)$supplier_group_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_group_description SET supplier_group_id = '" . (int)$supplier_group_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
 		$this->cache->delete('supplier_group');
@@ -22,7 +22,7 @@ class ModelSaleSupplierGroup extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_group_description WHERE supplier_group_id = '" . (int)$supplier_group_id . "'");
 
 		foreach ($data['supplier_group_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_group_description SET supplier_group_id = '" . (int)$supplier_group_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_group_description SET supplier_group_id = '" . (int)$supplier_group_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
 		$this->cache->delete('supplier_group');
@@ -117,7 +117,7 @@ class ModelSaleSupplierGroup extends Model {
 	}
 
 	public function getTotalSupplierGroups() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "supplier_group");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_group");
 
 		return $query->row['total'];
 	}

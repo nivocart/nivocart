@@ -84,7 +84,7 @@ class ModelCatalogNewsDownload extends Model {
 	}
 
 	public function getTotalDownloads() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "news_download");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "news_download");
 
 		return $query->row['total'];
 	}

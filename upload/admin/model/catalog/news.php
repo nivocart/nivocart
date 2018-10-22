@@ -310,19 +310,19 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getTotalNews() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "news`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news`");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalActiveNews() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "news` WHERE status = '1'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news` WHERE status = '1'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalNewsDownloads() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "news_to_download`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news_to_download`");
 
 		return $query->row['total'];
 	}

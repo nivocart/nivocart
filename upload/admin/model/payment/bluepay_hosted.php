@@ -59,9 +59,9 @@ class ModelPaymentBluepayHosted extends Model {
 			$void_data["MODE"] = strtoupper($this->config->get('bluepay_hosted_test'));
 			$void_data["RRNO"] = $bluepay_hosted_order['transaction_id'];
 
-			$void_data['APPROVED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
-			$void_data['DECLINED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
-			$void_data['MISSING_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
+			$void_data['APPROVED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
+			$void_data['DECLINED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
+			$void_data['MISSING_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
 
 			if (isset($this->request->server["REMOTE_ADDR"])) {
 				$void_data["REMOTE_IP"] = $this->request->server["REMOTE_ADDR"];
@@ -136,9 +136,9 @@ class ModelPaymentBluepayHosted extends Model {
 			$rebate_data["MODE"] = strtoupper($this->config->get('bluepay_hosted_test'));
 			$rebate_data["RRNO"] = $bluepay_hosted_order['transaction_id'];
 			$rebate_data["AMOUNT"] = $amount;
-			$rebate_data['APPROVED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
-			$rebate_data['DECLINED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
-			$rebate_data['MISSING_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
+			$rebate_data['APPROVED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
+			$rebate_data['DECLINED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
+			$rebate_data['MISSING_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_hosted/adminCallback';
 
 			if (isset($this->request->server["REMOTE_ADDR"])) {
 				$rebate_data["REMOTE_IP"] = $this->request->server["REMOTE_ADDR"];
@@ -165,7 +165,7 @@ class ModelPaymentBluepayHosted extends Model {
 	}
 
 	public function getOrder($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bluepay_hosted_order WHERE order_id = '" . (int)$order_id . "' LIMIT 1");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bluepay_hosted_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
 			$order = $query->row;
@@ -196,13 +196,13 @@ class ModelPaymentBluepayHosted extends Model {
 	}
 
 	public function getTotalReleased($bluepay_hosted_order_id) {
-		$query = $this->db->query("SELECT SUM(`amount`) AS total FROM " . DB_PREFIX . "bluepay_hosted_order_transaction WHERE bluepay_hosted_order_id = '" . (int)$bluepay_hosted_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM " . DB_PREFIX . "bluepay_hosted_order_transaction WHERE bluepay_hosted_order_id = '" . (int)$bluepay_hosted_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
 
 		return (float)$query->row['total'];
 	}
 
 	public function getTotalRebated($bluepay_hosted_order_id) {
-		$query = $this->db->query("SELECT SUM(`amount`) AS total FROM " . DB_PREFIX . "bluepay_hosted_order_transaction WHERE bluepay_hosted_order_id = '" . (int)$bluepay_hosted_order_id . "' AND 'rebate'");
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM " . DB_PREFIX . "bluepay_hosted_order_transaction WHERE bluepay_hosted_order_id = '" . (int)$bluepay_hosted_order_id . "' AND 'rebate'");
 
 		return (float)$query->row['total'];
 	}

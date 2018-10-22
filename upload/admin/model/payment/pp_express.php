@@ -136,7 +136,7 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function updateTransactionStatus($transaction_id, $transaction_status) {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 1");
+		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
 	}
 
 	public function getCurrencies() {
@@ -208,7 +208,7 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function getOrder($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order WHERE order_id = '" . (int)$order_id . "' LIMIT 1");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
 			$order = $query->row;
@@ -223,7 +223,7 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function getOrderId($transaction_id) {
-		$query = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "paypal_order_transaction ot LEFT JOIN " . DB_PREFIX . "paypal_order o ON (o.paypal_order_id = ot.paypal_order_id) WHERE ot.transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 1");
+		$query = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "paypal_order_transaction ot LEFT JOIN " . DB_PREFIX . "paypal_order o ON (o.paypal_order_id = ot.paypal_order_id) WHERE ot.transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
 			return $query->row['order_id'];
@@ -318,7 +318,7 @@ class ModelPaymentPPExpress extends Model {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_FORBID_REUSE   => true,
 			CURLOPT_FRESH_CONNECT  => true,
-			CURLOPT_URL            => $endpoint,
+			CURLOPT_URL            => $endpoint
 		);
 
 		$ch = curl_init($endpoint);

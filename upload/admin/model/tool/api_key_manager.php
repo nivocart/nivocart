@@ -2,7 +2,7 @@
 class ModelToolApiKeyManager extends Model {
 
 	public function addApiKey($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "api_key SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . $this->db->escape($data['status']) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "api_key SET `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . $this->db->escape($data['status']) . "'");
 
 		$api_key_id = $this->db->getLastId();
 
@@ -11,7 +11,7 @@ class ModelToolApiKeyManager extends Model {
 	}
 
 	public function editApiKey($api_key_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "api_key SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . $this->db->escape($data['status']) . "' WHERE api_key_id = '" . (int)$api_key_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "api_key SET `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . $this->db->escape($data['status']) . "' WHERE api_key_id = '" . (int)$api_key_id . "'");
 	}
 
 	public function deleteApiKey($api_key_id) {
@@ -63,7 +63,7 @@ class ModelToolApiKeyManager extends Model {
 	}
 
 	public function getTotalApiKeys() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "api_key");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "api_key");
 
 		return $query->row['total'];
 	}

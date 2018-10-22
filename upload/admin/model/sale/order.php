@@ -903,13 +903,13 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getTotalOrderHistories($order_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_history WHERE order_id = '" . (int)$order_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "order_history WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalOrderHistoriesByOrderStatusId($order_status_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_history WHERE order_status_id = '" . (int)$order_status_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "order_history WHERE order_status_id = '" . (int)$order_status_id . "'");
 
 		return $query->row['total'];
 	}

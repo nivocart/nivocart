@@ -119,7 +119,7 @@ class ModelReportAbandonedCarts extends Model {
 	public function getTotalOrders($data = array()) {
 		$days = ($this->config->get('config_abandoned_cart')) ? $this->config->get('config_abandoned_cart') : 7;
 
-		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE o.date_added >= DATE_SUB(NOW(), INTERVAL " . $days . " DAY) AND o.order_status_id = '0'";
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` o WHERE o.date_added >= DATE_SUB(NOW(), INTERVAL " . $days . " DAY) AND o.order_status_id = '0'";
 
 		if (isset($data['filter_name'])) {
 			$sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";

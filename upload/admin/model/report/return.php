@@ -66,17 +66,17 @@ class ModelReportReturn extends Model {
 
 		switch ($group) {
 			case 'day';
-				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `" . DB_PREFIX . "return`";
+				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
 				break;
 			default:
 			case 'week':
-				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `" . DB_PREFIX . "return`";
+				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
 				break;
 			case 'month':
-				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `" . DB_PREFIX . "return`";
+				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
 				break;
 			case 'year':
-				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `" . DB_PREFIX . "return`";
+				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
 				break;
 		}
 

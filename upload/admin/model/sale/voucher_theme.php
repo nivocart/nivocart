@@ -10,7 +10,7 @@ class ModelSaleVoucherTheme extends Model {
 		$this->session->data['new_voucher_theme_id'] = $voucher_theme_id;
 
 		foreach ($data['voucher_theme_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "voucher_theme_description SET voucher_theme_id = '" . (int)$voucher_theme_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "voucher_theme_description SET voucher_theme_id = '" . (int)$voucher_theme_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "'");
 		}
 
 		$this->cache->delete('voucher_theme');
@@ -22,7 +22,7 @@ class ModelSaleVoucherTheme extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "voucher_theme_description WHERE voucher_theme_id = '" . (int)$voucher_theme_id . "'");
 
 		foreach ($data['voucher_theme_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "voucher_theme_description SET voucher_theme_id = '" . (int)$voucher_theme_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "voucher_theme_description SET voucher_theme_id = '" . (int)$voucher_theme_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "'");
 		}
 
 		$this->cache->delete('voucher_theme');
@@ -101,7 +101,7 @@ class ModelSaleVoucherTheme extends Model {
 	}
 
 	public function getTotalVoucherThemes() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "voucher_theme");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "voucher_theme");
 
 		return $query->row['total'];
 	}

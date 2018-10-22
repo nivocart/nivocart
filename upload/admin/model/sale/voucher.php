@@ -113,7 +113,7 @@ class ModelSaleVoucher extends Model {
 				$voucher_theme_info = $this->model_sale_voucher_theme->getVoucherTheme($voucher_info['voucher_theme_id']);
 
 				if ($voucher_info && file_exists(DIR_IMAGE . $voucher_theme_info['image'])) {
-					$template->data['image'] = HTTP_CATALOG . 'image/' . $voucher_theme_info['image'];
+					$template->data['image'] = HTTPS_CATALOG . 'image/' . $voucher_theme_info['image'];
 				} else {
 					$template->data['image'] = '';
 				}
@@ -157,13 +157,13 @@ class ModelSaleVoucher extends Model {
 				$voucher_theme_info = $this->model_sale_voucher_theme->getVoucherTheme($voucher_info['voucher_theme_id']);
 
 				if ($voucher_info && file_exists(DIR_IMAGE . $voucher_theme_info['image'])) {
-					$template->data['image'] = HTTP_CATALOG . 'image/' . $voucher_theme_info['image'];
+					$template->data['image'] = HTTPS_CATALOG . 'image/' . $voucher_theme_info['image'];
 				} else {
 					$template->data['image'] = '';
 				}
 
 				$template->data['store_name'] = $this->config->get('config_name');
-				$template->data['store_url'] = HTTP_CATALOG;
+				$template->data['store_url'] = HTTPS_CATALOG;
 				$template->data['message'] = nl2br($voucher_info['message']);
 
 				$mail = new Mail();
@@ -186,13 +186,13 @@ class ModelSaleVoucher extends Model {
 	}
 
 	public function getTotalVouchers() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "voucher");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "voucher");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalVouchersByVoucherThemeId($voucher_theme_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "voucher WHERE voucher_theme_id = '" . (int)$voucher_theme_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "voucher WHERE voucher_theme_id = '" . (int)$voucher_theme_id . "'");
 
 		return $query->row['total'];
 	}
@@ -212,7 +212,7 @@ class ModelSaleVoucher extends Model {
 	}
 
 	public function getTotalVoucherHistories($voucher_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "voucher_history WHERE voucher_id = '" . (int)$voucher_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "voucher_history WHERE voucher_id = '" . (int)$voucher_id . "'");
 
 		return $query->row['total'];
 	}

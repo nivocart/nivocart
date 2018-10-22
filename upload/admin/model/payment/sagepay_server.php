@@ -229,13 +229,13 @@ class ModelPaymentSagepayServer extends Model {
 	}
 
 	public function getTotalReleased($sagepay_server_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "sagepay_server_order_transaction WHERE sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "sagepay_server_order_transaction WHERE sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
 
 		return (double)$query->row['total'];
 	}
 
 	public function getTotalRebated($sagepay_server_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "sagepay_server_order_transaction WHERE sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "' AND 'rebate'");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "sagepay_server_order_transaction WHERE sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "' AND 'rebate'");
 
 		return (double)$query->row['total'];
 	}

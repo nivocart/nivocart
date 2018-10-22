@@ -62,8 +62,8 @@ class ModelFraudFraudLabsPro extends Model {
 		$language_query = $this->db->query("SELECT language_id FROM `" . DB_PREFIX . "language`");
 
 		foreach ($language_query->rows as $language) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "order_status SET language_id = '" . (int)$language['language_id'] . "', name = 'Fraud'");
-			$this->db->query("INSERT INTO " . DB_PREFIX . "order_status SET language_id = '" . (int)$language['language_id'] . "', name = 'Fraud Review'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "order_status SET language_id = '" . (int)$language['language_id'] . "', `name` = 'Fraud'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "order_status SET language_id = '" . (int)$language['language_id'] . "', `name` = 'Fraud Review'");
 		}
 
 		$this->cache->delete('order_status');
@@ -72,8 +72,8 @@ class ModelFraudFraudLabsPro extends Model {
 	}
 
 	public function uninstall() {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "order_status WHERE name = 'Fraud'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "order_status WHERE name = 'Fraud Review'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "order_status WHERE `name` = 'Fraud'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "order_status WHERE `name` = 'Fraud Review'");
 
 		$this->cache->delete('order_status');
 

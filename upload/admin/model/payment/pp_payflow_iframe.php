@@ -253,7 +253,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			'VENDOR'       => html_entity_decode($this->config->get('pp_payflow_iframe_vendor'), ENT_QUOTES, 'UTF-8'),
 			'PWD'          => html_entity_decode($this->config->get('pp_payflow_iframe_password'), ENT_QUOTES, 'UTF-8'),
 			'PARTNER'      => html_entity_decode($this->config->get('pp_payflow_iframe_partner'), ENT_QUOTES, 'UTF-8'),
-			'BUTTONSOURCE' => 'OpenCart_Cart_PFP' // (Optional) Identification code for use by third-party applications to identify transactions.
+			'BUTTONSOURCE' => 'NivoCart_Cart_PFP' // (Optional) Identification code for use by third-party applications to identify transactions.
 		);
 
 		$call_parameters = array_merge($data, $user_parameters);
@@ -280,7 +280,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		$headers[] = 'X-VPS-REQUEST-ID: ' . md5($post_fields . time());  // Unique ID to prevent duplicate requests. Append time to separate between multiple errors/requests on same shopping cart checkout attempt
 		$headers[] = 'X-VPS-CLIENT-TIMEOUT: ' . $timeout;  // Should be less than cURL timeout.
 		// Optional Headers
-		$headers[] = 'X-VPS-VIT-INTEGRATION-PRODUCT: OpenCart Overclocked with PPPayflowIframe Extension';
+		$headers[] = 'X-VPS-VIT-INTEGRATION-PRODUCT: N with PPPayflowIframe Extension';
 
 		$options = array(
 			CURLOPT_URL            => 'https://' . $host,

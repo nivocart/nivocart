@@ -10,7 +10,7 @@ class ModelDesignFooter extends Model {
 		$this->session->data['new_footer_id'] = $footer_id;
 
 		foreach ($data['footer_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "footer_description SET footer_id = '" . (int)$footer_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "footer_description SET footer_id = '" . (int)$footer_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "'");
 		}
 
 		if (isset($data['footer_store'])) {
@@ -42,7 +42,7 @@ class ModelDesignFooter extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "footer_description WHERE footer_id = '" . (int)$footer_id . "'");
 
 		foreach ($data['footer_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "footer_description SET footer_id = '" . (int)$footer_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "footer_description SET footer_id = '" . (int)$footer_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "'");
 		}
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "footer_to_store WHERE footer_id = '" . (int)$footer_id . "'");
@@ -156,7 +156,7 @@ class ModelDesignFooter extends Model {
 	}
 
 	public function getFooterName($footer_id) {
-		$query = $this->db->query("SELECT DISTINCT fd.name AS name FROM " . DB_PREFIX . "footer_description fd LEFT JOIN " . DB_PREFIX . "footer f ON (fd.footer_id = f.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY f.footer_id");
+		$query = $this->db->query("SELECT DISTINCT fd.name AS `name` FROM " . DB_PREFIX . "footer_description fd LEFT JOIN " . DB_PREFIX . "footer f ON (fd.footer_id = f.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY f.footer_id");
 
 		return $query->row['name'];
 	}
@@ -211,7 +211,7 @@ class ModelDesignFooter extends Model {
 	}
 
 	public function getTotalFooters() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "footer");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "footer");
 
 		return $query->row['total'];
 	}

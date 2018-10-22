@@ -378,7 +378,7 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function getTotalCategories($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT c.category_id) AS total FROM `" . DB_PREFIX . "category` c LEFT JOIN `" . DB_PREFIX . "category_description` cd ON (c.category_id = cd.category_id)";
+		$sql = "SELECT COUNT(DISTINCT c.category_id) AS `total` FROM `" . DB_PREFIX . "category` c LEFT JOIN `" . DB_PREFIX . "category_description` cd ON (c.category_id = cd.category_id)";
 
 		$sql .= " WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
@@ -392,13 +392,13 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function getTotalCategoriesByImageId($image_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "category` WHERE image_id = '" . (int)$image_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "category` WHERE image_id = '" . (int)$image_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalCategoriesByLayoutId($layout_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "category_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "category_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
 
 		return $query->row['total'];
 	}

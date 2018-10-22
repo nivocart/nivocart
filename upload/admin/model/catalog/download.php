@@ -133,7 +133,7 @@ class ModelCatalogDownload extends Model {
 	}
 
 	public function getTotalDownloads($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT d.download_id) AS total FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id)";
+		$sql = "SELECT COUNT(DISTINCT d.download_id) AS `total` FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id)";
 
 		$sql .= " WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 

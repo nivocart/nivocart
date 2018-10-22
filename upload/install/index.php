@@ -24,7 +24,7 @@ define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 
 // Version
-define('NC_VERSION', '1.0.0 Beta');
+define('NC_VERSION', '1.0.0 RC');
 
 // Startup
 require_once(DIR_SYSTEM . 'startup.php');

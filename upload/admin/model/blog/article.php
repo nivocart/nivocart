@@ -10,11 +10,7 @@ class ModelBlogArticle extends Model {
 		$this->session->data['new_blog_article_id'] = $blog_article_id;
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET image = '" . $this->db->escape($data['image']) . "' WHERE blog_article_id = '" . (int)$blog_article_id . "'");
-		}
-
-		if (isset($data['featured_image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET featured_image = '" . $this->db->escape($data['featured_image']) . "' WHERE blog_article_id = '" . (int)$blog_article_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 		}
 
 		foreach ($data['article_description'] as $language_id => $value) {
@@ -114,11 +110,7 @@ class ModelBlogArticle extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET blog_author_id = '" . (int)$data['blog_author_id'] . "', allow_comment = '" . (int)$data['allow_comment'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_modified=NOW() WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET image = '" . $this->db->escape($data['image']) . "' WHERE blog_article_id = '" . (int)$blog_article_id . "'");
-		}
-
-		if (isset($data['featured_image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET featured_image = '" . $this->db->escape($data['featured_image']) . "' WHERE blog_article_id = '" . (int)$blog_article_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 		}
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_article_description` WHERE blog_article_id = '" . (int)$blog_article_id . "'");

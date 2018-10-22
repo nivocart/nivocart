@@ -2,7 +2,7 @@
 class ModelLocalisationLanguage extends Model {
 
 	public function addLanguage($data) {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "language` SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "language` SET `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "'");
 
 		$this->cache->delete('language');
 
@@ -15,14 +15,14 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "attribute_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $attribute) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($attribute['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($attribute['name']) . "'");
 		}
 
 		// Attribute Group
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "attribute_group_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $attribute_group) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group_description SET attribute_group_id = '" . (int)$attribute_group['attribute_group_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($attribute_group['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group_description SET attribute_group_id = '" . (int)$attribute_group['attribute_group_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($attribute_group['name']) . "'");
 		}
 
 		$this->cache->delete('attribute.group');
@@ -60,7 +60,7 @@ class ModelLocalisationLanguage extends Model {
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_category_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 			foreach ($query->rows as $blog_category) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category_description` SET blog_category_id = '" . (int)$blog_category['blog_category_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($blog_category['name']) . "', meta_description = '" . $this->db->escape($blog_category['meta_description']) . "', meta_keyword = '" . $this->db->escape($blog_category['meta_keyword']) . "', description = '" . $this->db->escape($blog_category['description']) . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category_description` SET blog_category_id = '" . (int)$blog_category['blog_category_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($blog_category['name']) . "', meta_description = '" . $this->db->escape($blog_category['meta_description']) . "', meta_keyword = '" . $this->db->escape($blog_category['meta_keyword']) . "', description = '" . $this->db->escape($blog_category['description']) . "'");
 			}
 
 			$this->cache->delete('blog_category');
@@ -70,7 +70,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $category) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "category_description SET category_id = '" . (int)$category['category_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($category['name']) . "', meta_description = '" . $this->db->escape($category['meta_description']) . "', meta_keyword = '" . $this->db->escape($category['meta_keyword']) . "', description = '" . $this->db->escape($category['description']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "category_description SET category_id = '" . (int)$category['category_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($category['name']) . "', meta_description = '" . $this->db->escape($category['meta_description']) . "', meta_keyword = '" . $this->db->escape($category['meta_keyword']) . "', description = '" . $this->db->escape($category['description']) . "'");
 		}
 
 		$this->cache->delete('category');
@@ -79,7 +79,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "country_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $country) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "country_description SET country_id = '" . (int)$country['country_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($country['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "country_description SET country_id = '" . (int)$country['country_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($country['name']) . "'");
 		}
 
 		$this->cache->delete('country');
@@ -88,14 +88,14 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_group_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $customer_group) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "customer_group_description SET customer_group_id = '" . (int)$customer_group['customer_group_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($customer_group['name']) . "', description = '" . $this->db->escape($customer_group['description']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "customer_group_description SET customer_group_id = '" . (int)$customer_group['customer_group_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($customer_group['name']) . "', description = '" . $this->db->escape($customer_group['description']) . "'");
 		}
 
 		// Download
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "download_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $download) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download['download_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($download['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download['download_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($download['name']) . "'");
 		}
 
 		$this->cache->delete('download');
@@ -122,7 +122,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "filter_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $filter) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "filter_description SET filter_id = '" . (int)$filter['filter_id'] . "', language_id = '" . (int)$language_id . "', filter_group_id = '" . (int)$filter['filter_group_id'] . "', name = '" . $this->db->escape($filter['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "filter_description SET filter_id = '" . (int)$filter['filter_id'] . "', language_id = '" . (int)$language_id . "', filter_group_id = '" . (int)$filter['filter_group_id'] . "', `name` = '" . $this->db->escape($filter['name']) . "'");
 		}
 
 		$this->cache->delete('filter');
@@ -131,7 +131,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "filter_group_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $filter_group) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "filter_group_description SET filter_group_id = '" . (int)$filter_group['filter_group_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($filter_group['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "filter_group_description SET filter_group_id = '" . (int)$filter_group['filter_group_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($filter_group['name']) . "'");
 		}
 
 		// Footer
@@ -174,7 +174,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $manufacturer) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($manufacturer['name']) . "', description = '" . $this->db->escape($manufacturer['description']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($manufacturer['name']) . "', description = '" . $this->db->escape($manufacturer['description']) . "'");
 		}
 
 		$this->cache->delete('manufacturer');
@@ -201,21 +201,21 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "option_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $option) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "option_description SET option_id = '" . (int)$option['option_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($option['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "option_description SET option_id = '" . (int)$option['option_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($option['name']) . "'");
 		}
 
 		// Option Value
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "option_value_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $option_value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "option_value_description SET option_value_id = '" . (int)$option_value['option_value_id'] . "', language_id = '" . (int)$language_id . "', option_id = '" . (int)$option_value['option_id'] . "', name = '" . $this->db->escape($option_value['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "option_value_description SET option_value_id = '" . (int)$option_value['option_value_id'] . "', language_id = '" . (int)$language_id . "', option_id = '" . (int)$option_value['option_id'] . "', `name` = '" . $this->db->escape($option_value['name']) . "'");
 		}
 
 		// Order Status
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $order_status) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "order_status SET order_status_id = '" . (int)$order_status['order_status_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($order_status['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "order_status SET order_status_id = '" . (int)$order_status['order_status_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($order_status['name']) . "'");
 		}
 
 		$this->cache->delete('order_status');
@@ -233,7 +233,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $product) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$product['product_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($product['name']) . "', meta_description = '" . $this->db->escape($product['meta_description']) . "', meta_keyword = '" . $this->db->escape($product['meta_keyword']) . "', description = '" . $this->db->escape($product['description']) . "', tag = '" . $this->db->escape($product['tag']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$product['product_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($product['name']) . "', meta_description = '" . $this->db->escape($product['meta_description']) . "', meta_keyword = '" . $this->db->escape($product['meta_keyword']) . "', description = '" . $this->db->escape($product['description']) . "', tag = '" . $this->db->escape($product['tag']) . "'");
 		}
 
 		$this->cache->delete('product');
@@ -242,7 +242,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_attribute WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $product_attribute) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_attribute['product_id'] . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" . $this->db->escape($product_attribute['text']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_attribute['product_id'] . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', `text` = '" . $this->db->escape($product_attribute['text']) . "'");
 		}
 
 		// Product Tag
@@ -256,7 +256,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "profile_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $profile) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "profile_description SET profile_id = '" . (int)$profile['profile_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($profile['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "profile_description SET profile_id = '" . (int)$profile['profile_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($profile['name']) . "'");
 		}
 
 		$this->cache->delete('profile');
@@ -265,7 +265,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "return_action WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $return_action) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "return_action SET return_action_id = '" . (int)$return_action['return_action_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($return_action['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "return_action SET return_action_id = '" . (int)$return_action['return_action_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($return_action['name']) . "'");
 		}
 
 		$this->cache->delete('return_action');
@@ -274,7 +274,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "return_reason WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $return_reason) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "return_reason SET return_reason_id = '" . (int)$return_reason['return_reason_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($return_reason['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "return_reason SET return_reason_id = '" . (int)$return_reason['return_reason_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($return_reason['name']) . "'");
 		}
 
 		$this->cache->delete('return_reason');
@@ -283,7 +283,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "return_status WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $return_status) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "return_status SET return_status_id = '" . (int)$return_status['return_status_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($return_status['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "return_status SET return_status_id = '" . (int)$return_status['return_status_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($return_status['name']) . "'");
 		}
 
 		$this->cache->delete('return_status');
@@ -292,7 +292,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "stock_status WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $stock_status) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "stock_status SET stock_status_id = '" . (int)$stock_status['stock_status_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($stock_status['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "stock_status SET stock_status_id = '" . (int)$stock_status['stock_status_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($stock_status['name']) . "'");
 		}
 
 		$this->cache->delete('stock_status');
@@ -301,7 +301,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_group_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $supplier_group) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_group_description SET supplier_group_id = '" . (int)$supplier_group['supplier_group_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($supplier_group['name']) . "', description = '" . $this->db->escape($supplier_group['description']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_group_description SET supplier_group_id = '" . (int)$supplier_group['supplier_group_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($supplier_group['name']) . "', description = '" . $this->db->escape($supplier_group['description']) . "'");
 		}
 
 		$this->cache->delete('supplier_group');
@@ -310,7 +310,7 @@ class ModelLocalisationLanguage extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "voucher_theme_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $voucher_theme) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "voucher_theme_description SET voucher_theme_id = '" . (int)$voucher_theme['voucher_theme_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($voucher_theme['name']) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "voucher_theme_description SET voucher_theme_id = '" . (int)$voucher_theme['voucher_theme_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($voucher_theme['name']) . "'");
 		}
 
 		$this->cache->delete('voucher_theme');
@@ -340,7 +340,7 @@ class ModelLocalisationLanguage extends Model {
 	}
 
 	public function editLanguage($language_id, $data) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "language` SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "' WHERE language_id = '" . (int)$language_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "language` SET `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "' WHERE language_id = '" . (int)$language_id . "'");
 
 		$this->cache->delete('language');
 	}

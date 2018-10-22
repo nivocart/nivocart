@@ -2,7 +2,7 @@
 class ModelDesignLayout extends Model {
 
 	public function addLayout($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "layout SET name = '" . $this->db->escape($data['name']) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "layout SET `name` = '" . $this->db->escape($data['name']) . "'");
 
 		$layout_id = $this->db->getLastId();
 
@@ -19,7 +19,7 @@ class ModelDesignLayout extends Model {
 	}
 
 	public function editLayout($layout_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "layout SET name = '" . $this->db->escape($data['name']) . "' WHERE layout_id = '" . (int)$layout_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "layout SET `name` = '" . $this->db->escape($data['name']) . "' WHERE layout_id = '" . (int)$layout_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "layout_route WHERE layout_id = '" . (int)$layout_id . "'");
 

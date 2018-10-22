@@ -102,7 +102,7 @@ class ModelSaleRecurring extends Model {
 	}
 
 	public function getProfileTransactions($order_recurring_id) {
-		$results = $this->db->query("SELECT amount, type, created FROM " . DB_PREFIX . "order_recurring_transaction WHERE order_recurring_id = " . (int)$order_recurring_id . " ORDER BY created DESC")->rows;
+		$results = $this->db->query("SELECT amount, `type`, created FROM " . DB_PREFIX . "order_recurring_transaction WHERE order_recurring_id = " . (int)$order_recurring_id . " ORDER BY created DESC")->rows;
 
 		$transactions = array();
 
@@ -218,6 +218,6 @@ class ModelSaleRecurring extends Model {
 	}
 
 	public function updateOrderRecurringStatus($order_recurring_id, $status) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = '" . (int)$status . "' WHERE `order_recurring_id` = '" . (int)$order_recurring_id . "' LIMIT 1");
+		$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = '" . (int)$status . "' WHERE `order_recurring_id` = '" . (int)$order_recurring_id . "' LIMIT 0,1");
 	}
 }

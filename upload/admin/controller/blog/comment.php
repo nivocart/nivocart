@@ -483,7 +483,6 @@ class ControllerBlogComment extends Controller {
 		}
 
 		$this->template = 'blog/comment_form.tpl';
-
 		$this->children = array(
 			'common/header',
 			'common/footer'

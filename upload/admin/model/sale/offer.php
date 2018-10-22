@@ -44,7 +44,7 @@ class ModelSaleOffer extends Model {
 	}
 
 	public function getTotalOfferProductProduct() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "offer_product_product");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_product_product");
 
 		return $query->row['total'];
 	}
@@ -92,7 +92,7 @@ class ModelSaleOffer extends Model {
 	}
 
 	public function getTotalOfferProductCategory() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "offer_product_category");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_product_category");
 
 		return $query->row['total'];
 	}
@@ -140,7 +140,7 @@ class ModelSaleOffer extends Model {
 	}
 
 	public function getTotalOfferCategoryProduct() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "offer_category_product");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_category_product");
 
 		return $query->row['total'];
 	}
@@ -188,14 +188,14 @@ class ModelSaleOffer extends Model {
 	}
 
 	public function getTotalOfferCategoryCategory() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "offer_category_category");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_category_category");
 
 		return $query->row['total'];
 	}
 
 	// Discount Products
 	public function getTotalProductDiscounts() {
-		$query = $this->db->query("SELECT COUNT(DISTINCT product_id) AS total FROM " . DB_PREFIX . "product_discount WHERE (date_start = '0000-00-00' OR date_start <= CURDATE()) AND (date_end = '0000-00-00' OR date_end > CURDATE()) GROUP BY product_id");
+		$query = $this->db->query("SELECT COUNT(DISTINCT product_id) AS `total` FROM " . DB_PREFIX . "product_discount WHERE (date_start = '0000-00-00' OR date_start <= CURDATE()) AND (date_end = '0000-00-00' OR date_end > CURDATE()) GROUP BY product_id");
 
 		if (!empty($query->row['total'])) {
 			return $query->row['total'];
@@ -206,7 +206,7 @@ class ModelSaleOffer extends Model {
 
 	// Special Products
 	public function getTotalProductSpecials() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_special WHERE (date_start = '0000-00-00' OR date_start <= CURDATE()) AND (date_end = '0000-00-00' OR date_end > CURDATE())");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "product_special WHERE (date_start = '0000-00-00' OR date_start <= CURDATE()) AND (date_end = '0000-00-00' OR date_end > CURDATE())");
 
 		return $query->row['total'];
 	}

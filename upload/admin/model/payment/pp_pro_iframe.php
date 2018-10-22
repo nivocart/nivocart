@@ -140,23 +140,23 @@ class ModelPaymentPPProIframe extends Model {
 	}
 
 	public function updateTransactionStatus($transaction_id, $transaction_status) {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_iframe_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 1");
+		$this->db->query("UPDATE " . DB_PREFIX . "paypal_iframe_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
 	}
 
 	public function getTotalCaptured($paypal_iframe_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "paypal_iframe_order_transaction WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " AND pending_reason != 'authorization' AND (payment_status = 'Partially-Refunded' OR payment_status = 'Completed' OR payment_status = 'Pending') AND transaction_entity = 'payment'");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "paypal_iframe_order_transaction WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " AND pending_reason != 'authorization' AND (payment_status = 'Partially-Refunded' OR payment_status = 'Completed' OR payment_status = 'Pending') AND transaction_entity = 'payment'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalRefunded($paypal_iframe_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "paypal_iframe_order_transaction WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " AND payment_status = 'Refunded'");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "paypal_iframe_order_transaction WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " AND payment_status = 'Refunded'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalRefundedByParentId($parent_transaction_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "paypal_iframe_order_transaction WHERE parent_transaction_id = '" . $this->db->escape($parent_transaction_id) . "' AND payment_type = 'refund'");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "paypal_iframe_order_transaction WHERE parent_transaction_id = '" . $this->db->escape($parent_transaction_id) . "' AND payment_type = 'refund'");
 
 		return $query->row['total'];
 	}
@@ -182,9 +182,9 @@ class ModelPaymentPPProIframe extends Model {
 	}
 
 	public function getOrder($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_iframe_order WHERE order_id = " . (int)$order_id . " LIMIT 1");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_iframe_order WHERE order_id = " . (int)$order_id . " LIMIT 0,1");
 
-		if ($query->num_rows) {
+		if ($query->row) {
 			$order = $query->row;
 
 			$order['transactions'] = $this->getTransactions($order['paypal_iframe_order_id']);
@@ -197,7 +197,7 @@ class ModelPaymentPPProIframe extends Model {
 	}
 
 	public function getOrderId($transaction_id) {
-		$query = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "paypal_iframe_order_transaction ot LEFT JOIN " . DB_PREFIX . "paypal_iframe_order o ON (o.paypal_iframe_order_id = ot.paypal_iframe_order_id) WHERE ot.transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 1");
+		$query = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "paypal_iframe_order_transaction ot LEFT JOIN " . DB_PREFIX . "paypal_iframe_order o ON (o.paypal_iframe_order_id = ot.paypal_iframe_order_id) WHERE ot.transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
 			return $query->row['order_id'];
@@ -211,7 +211,7 @@ class ModelPaymentPPProIframe extends Model {
 		// children unused
 		$query = $this->db->query("SELECT ot.*, (SELECT COUNT(ot2.paypal_iframe_order_id) FROM " . DB_PREFIX . "paypal_iframe_order_transaction ot2 WHERE ot2.parent_transaction_id = ot.transaction_id) AS children FROM " . DB_PREFIX . "paypal_iframe_order_transaction ot WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " ORDER BY paypal_iframe_order_transaction_id ASC");
 
-		if ($query->num_rows) {
+		if ($query->rows) {
 			foreach ($query->rows as $result) {
 				$transactions[] = $result;
 			}

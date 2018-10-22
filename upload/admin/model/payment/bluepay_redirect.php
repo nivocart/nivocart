@@ -59,9 +59,9 @@ class ModelPaymentBluepayRedirect extends Model {
 			$void_data["MODE"] = strtoupper($this->config->get('bluepay_redirect_test'));
 			$void_data["RRNO"] = $bluepay_redirect_order['transaction_id'];
 
-			$void_data['APPROVED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
-			$void_data['DECLINED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
-			$void_data['MISSING_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$void_data['APPROVED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$void_data['DECLINED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$void_data['MISSING_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
 
 			if (isset($this->request->server["REMOTE_ADDR"])) {
 				$void_data["REMOTE_IP"] = $this->request->server["REMOTE_ADDR"];
@@ -96,9 +96,9 @@ class ModelPaymentBluepayRedirect extends Model {
 			$release_data["MODE"] = strtoupper($this->config->get('bluepay_redirect_test'));
 			$release_data["RRNO"] = $bluepay_redirect_order['transaction_id'];
 
-			$release_data['APPROVED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
-			$release_data['DECLINED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
-			$release_data['MISSING_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$release_data['APPROVED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$release_data['DECLINED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$release_data['MISSING_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
 
 			if (isset($this->request->server["REMOTE_ADDR"])) {
 				$release_data["REMOTE_IP"] = $this->request->server["REMOTE_ADDR"];
@@ -131,9 +131,9 @@ class ModelPaymentBluepayRedirect extends Model {
 			$rebate_data["MODE"] = strtoupper($this->config->get('bluepay_redirect_test'));
 			$rebate_data["RRNO"] = $bluepay_redirect_order['transaction_id'];
 			$rebate_data["AMOUNT"] = $amount;
-			$rebate_data['APPROVED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
-			$rebate_data['DECLINED_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
-			$rebate_data['MISSING_URL'] = HTTP_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$rebate_data['APPROVED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$rebate_data['DECLINED_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
+			$rebate_data['MISSING_URL'] = HTTPS_CATALOG . 'index.php?route=payment/bluepay_redirect/callback';
 
 			if (isset($this->request->server["REMOTE_ADDR"])) {
 				$rebate_data["REMOTE_IP"] = $this->request->server["REMOTE_ADDR"];
@@ -160,7 +160,7 @@ class ModelPaymentBluepayRedirect extends Model {
 	}
 
 	public function getOrder($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bluepay_redirect_order WHERE order_id = '" . (int)$order_id . "' LIMIT 1");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "bluepay_redirect_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
 			$order = $query->row;
@@ -188,13 +188,13 @@ class ModelPaymentBluepayRedirect extends Model {
 	}
 
 	public function getTotalReleased($bluepay_redirect_order_id) {
-		$query = $this->db->query("SELECT SUM(`amount`) AS total FROM " . DB_PREFIX . "bluepay_redirect_order_transaction WHERE bluepay_redirect_order_id = '" . (int)$bluepay_redirect_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM " . DB_PREFIX . "bluepay_redirect_order_transaction WHERE bluepay_redirect_order_id = '" . (int)$bluepay_redirect_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
 
 		return (float)$query->row['total'];
 	}
 
 	public function getTotalRebated($bluepay_redirect_order_id) {
-		$query = $this->db->query("SELECT SUM(`amount`) AS total FROM " . DB_PREFIX . "bluepay_redirect_order_transaction WHERE bluepay_redirect_order_id = '" . (int)$bluepay_redirect_order_id . "' AND 'rebate'");
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM " . DB_PREFIX . "bluepay_redirect_order_transaction WHERE bluepay_redirect_order_id = '" . (int)$bluepay_redirect_order_id . "' AND 'rebate'");
 
 		return (float)$query->row['total'];
 	}

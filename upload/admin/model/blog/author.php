@@ -2,7 +2,7 @@
 class ModelBlogAuthor extends Model {
 
 	public function addAuthor($data) {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_author` SET name = '" . $this->db->escape($data['name']) . "', status='" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_author` SET `name` = '" . $this->db->escape($data['name']) . "', status='" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$blog_author_id = $this->db->getLastId();
 
@@ -21,7 +21,7 @@ class ModelBlogAuthor extends Model {
 	}
 
 	public function editAuthor($blog_author_id, $data) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "blog_author` SET name = '" . $this->db->escape($data['name']) . "', status='" . (int)$data['status'] . "', date_modified = NOW() WHERE blog_author_id = '" . (int)$blog_author_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "blog_author` SET `name` = '" . $this->db->escape($data['name']) . "', status='" . (int)$data['status'] . "', date_modified = NOW() WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "blog_author` SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE blog_author_id = '" . (int)$blog_author_id . "'");

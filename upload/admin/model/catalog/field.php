@@ -35,14 +35,14 @@ class ModelCatalogField extends Model {
     }
 
 	public function deleteField($field_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "field WHERE field_id = '" . (int)$field_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "field_description WHERE field_id = '" . (int)$field_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "field` WHERE field_id = '" . (int)$field_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "field_description` WHERE field_id = '" . (int)$field_id . "'");
 
 		$this->cache->delete('field');
 	}
 
 	public function getField($field_id) {
-		$query = $this->db->query("SELECT DISTINCT *, fd.title AS title FROM " . DB_PREFIX . "field f LEFT JOIN " . DB_PREFIX . "field_description fd ON (f.field_id = fd.field_id) WHERE f.field_id = '" . (int)$field_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$query = $this->db->query("SELECT DISTINCT *, fd.title AS title FROM `" . DB_PREFIX . "field` f LEFT JOIN " . DB_PREFIX . "field_description fd ON (f.field_id = fd.field_id) WHERE f.field_id = '" . (int)$field_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
@@ -126,7 +126,7 @@ class ModelCatalogField extends Model {
 	}
 
 	public function getTotalFields() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "field`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "field`");
 
 		return $query->row['total'];
 	}

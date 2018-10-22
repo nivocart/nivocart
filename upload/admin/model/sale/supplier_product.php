@@ -119,13 +119,13 @@ class ModelSaleSupplierProduct extends Model {
 	}
 
 	public function getSupplierProductsBySupplierId($supplier_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_product WHERE supplier_id = '" . (int)$supplier_id . "' ORDER BY name ASC");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_product WHERE supplier_id = '" . (int)$supplier_id . "' ORDER BY `name` ASC");
 
 		return $query->rows;
 	}
 
 	public function getSupplierNameBySupplierId($supplier_id) {
-		$query = $this->db->query("SELECT DISTINCT company AS name FROM " . DB_PREFIX . "supplier WHERE supplier_id = '" . (int)$supplier_id . "'");
+		$query = $this->db->query("SELECT DISTINCT company AS `name` FROM " . DB_PREFIX . "supplier WHERE supplier_id = '" . (int)$supplier_id . "'");
 
 		if (!empty($query->row['name'])) {
 			return $query->row['name'];
@@ -159,7 +159,7 @@ class ModelSaleSupplierProduct extends Model {
 	}
 
 	public function getTotalSupplierProducts($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT sp.supplier_product_id) AS total FROM " . DB_PREFIX . "supplier_product sp LEFT JOIN " . DB_PREFIX . "supplier s ON (s.supplier_id = sp.supplier_id)";
+		$sql = "SELECT COUNT(DISTINCT sp.supplier_product_id) AS `total` FROM " . DB_PREFIX . "supplier_product sp LEFT JOIN " . DB_PREFIX . "supplier s ON (s.supplier_id = sp.supplier_id)";
 
 		$implode = array();
 
@@ -193,25 +193,25 @@ class ModelSaleSupplierProduct extends Model {
 	}
 
 	public function getTotalSupplierProductsByManufacturerId($manufacturer_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "supplier_product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalSupplierProductsByTaxClassId($tax_class_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "supplier_product WHERE tax_class_id = '" . (int)$tax_class_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalSupplierProductsByWeightClassId($weight_class_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "supplier_product WHERE weight_class_id = '" . (int)$weight_class_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE weight_class_id = '" . (int)$weight_class_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalSupplierProductsByLengthClassId($length_class_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "supplier_product WHERE length_class_id = '" . (int)$length_class_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE length_class_id = '" . (int)$length_class_id . "'");
 
 		return $query->row['total'];
 	}

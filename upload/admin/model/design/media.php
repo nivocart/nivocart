@@ -68,7 +68,7 @@ class ModelDesignMedia extends Model {
 	}
 
 	public function getTotalMedias() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "media`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "media`");
 
 		return $query->row['total'];
 	}

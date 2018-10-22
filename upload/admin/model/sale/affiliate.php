@@ -160,7 +160,7 @@ class ModelSaleAffiliate extends Model {
 	}
 
 	public function getTotalAffiliates($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "affiliate";
+		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate";
 
 		$implode = array();
 
@@ -194,19 +194,19 @@ class ModelSaleAffiliate extends Model {
 	}
 
 	public function getTotalAffiliatesAwaitingApproval() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "affiliate WHERE status = '0' OR approved = '0'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate WHERE status = '0' OR approved = '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalAffiliatesByCountryId($country_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "affiliate WHERE country_id = '" . (int)$country_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate WHERE country_id = '" . (int)$country_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalAffiliatesByZoneId($zone_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "affiliate WHERE zone_id = '" . (int)$zone_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate WHERE zone_id = '" . (int)$zone_id . "'");
 
 		return $query->row['total'];
 	}
@@ -219,7 +219,7 @@ class ModelSaleAffiliate extends Model {
 	}
 
 	public function getTotalAffiliateProducts($affiliate_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "affiliate_product WHERE affiliate_id = '" . (int)$affiliate_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate_product WHERE affiliate_id = '" . (int)$affiliate_id . "'");
 
 		return $query->row['total'];
 	}
@@ -290,19 +290,19 @@ class ModelSaleAffiliate extends Model {
 	}
 
 	public function getTotalTransactions($affiliate_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total  FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$affiliate_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total`  FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$affiliate_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTransactionTotal($affiliate_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$affiliate_id . "'");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$affiliate_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalTransactionsByOrderId($order_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "affiliate_transaction WHERE order_id = '" . (int)$order_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate_transaction WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row['total'];
 	}

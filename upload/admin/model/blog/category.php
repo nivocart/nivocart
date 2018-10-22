@@ -10,11 +10,11 @@ class ModelBlogCategory extends Model {
 		$this->session->data['new_blog_category_id'] = $blog_category_id;
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "blog_category` SET image = '" . $this->db->escape($data['image']) . "' WHERE blog_category_id = '" . (int)$blog_category_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "blog_category` SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 		}
 
 		foreach ($data['category_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category_description` SET blog_category_id = '" . (int)$blog_category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category_description` SET blog_category_id = '" . (int)$blog_category_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
 		if (isset($data['category_store'])) {
@@ -42,13 +42,13 @@ class ModelBlogCategory extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "blog_category` SET parent_id = '" . (int)$data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', `column` = '" . (isset($data['column']) ? (int)$data['column'] : 0) . "', blog_category_column = '" . (int)$data['blog_category_column'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "blog_category` SET image = '" . $this->db->escape($data['image']) . "' WHERE blog_category_id = '" . (int)$blog_category_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "blog_category` SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 		}
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_category_description` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 
 		foreach ($data['category_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category_description` SET blog_category_id = '" . (int)$blog_category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category_description` SET blog_category_id = '" . (int)$blog_category_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_category_to_store` WHERE blog_category_id = '" . (int)$blog_category_id . "'");

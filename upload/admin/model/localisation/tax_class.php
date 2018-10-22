@@ -89,7 +89,7 @@ class ModelLocalisationTaxClass extends Model {
 	}
 
 	public function getTotalTaxClasses() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "tax_class");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "tax_class");
 
 		return $query->row['total'];
 	}
@@ -101,7 +101,7 @@ class ModelLocalisationTaxClass extends Model {
 	}
 
 	public function getTotalTaxRulesByTaxRateId($tax_rate_id) {
-		$query = $this->db->query("SELECT COUNT(DISTINCT tax_class_id) AS total FROM " . DB_PREFIX . "tax_rule WHERE tax_rate_id = '" . (int)$tax_rate_id . "'");
+		$query = $this->db->query("SELECT COUNT(DISTINCT tax_class_id) AS `total` FROM " . DB_PREFIX . "tax_rule WHERE tax_rate_id = '" . (int)$tax_rate_id . "'");
 
 		return $query->row['total'];
 	}

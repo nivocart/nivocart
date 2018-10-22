@@ -141,7 +141,7 @@ class ModelModificationEutaxes extends Model {
 	}
 
 	public function getTotalEUCountries() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "eucountry`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "eucountry`");
 
 		return $query->row['total'];
 	}

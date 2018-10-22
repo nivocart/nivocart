@@ -120,13 +120,13 @@ class ModelPaymentWorldpayOnline extends Model {
 	}
 
 	public function getTotalReleased($worldpay_online_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "worldpay_online_order_transaction WHERE worldpay_online_order_id = '" . (int)$worldpay_online_order_id . "' AND (`type` = 'payment' OR `type` = 'refund')");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "worldpay_online_order_transaction WHERE worldpay_online_order_id = '" . (int)$worldpay_online_order_id . "' AND (`type` = 'payment' OR `type` = 'refund')");
 
 		return (double)$query->row['total'];
 	}
 
 	public function getTotalRefunded($worldpay_online_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "worldpay_online_order_transaction WHERE worldpay_online_order_id = '" . (int)$worldpay_online_order_id . "' AND 'refund'");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "worldpay_online_order_transaction WHERE worldpay_online_order_id = '" . (int)$worldpay_online_order_id . "' AND 'refund'");
 
 		return (double)$query->row['total'];
 	}

@@ -2,7 +2,7 @@
 class ModelCatalogReview extends Model {
 
 	public function addReview($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "review` SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', `text` = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$review_id = $this->db->getLastId();
 
@@ -13,13 +13,13 @@ class ModelCatalogReview extends Model {
 	}
 
 	public function editReview($review_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE review_id = '" . (int)$review_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "review` SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', `text` = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE review_id = '" . (int)$review_id . "'");
 
 		$this->cache->delete('product');
 	}
 
 	public function deleteReview($review_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE review_id = '" . (int)$review_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "review` WHERE review_id = '" . (int)$review_id . "'");
 
 		$this->cache->delete('product');
 	}
@@ -31,7 +31,7 @@ class ModelCatalogReview extends Model {
 	}
 
 	public function getReviews($data = array()) {
-		$sql = "SELECT r.review_id, pd.name, r.author, r.product_id, r.date_added, r.rating, r.status FROM " . DB_PREFIX . "review r LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT r.review_id, pd.name, r.author, r.product_id, r.date_added, r.rating, r.status FROM `" . DB_PREFIX . "review` r LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -92,7 +92,7 @@ class ModelCatalogReview extends Model {
 	}
 
 	public function getTotalReviews($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT r.review_id) AS total FROM " . DB_PREFIX . "review r LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT COUNT(DISTINCT r.review_id) AS `total` FROM `" . DB_PREFIX . "review` r LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -120,13 +120,13 @@ class ModelCatalogReview extends Model {
 	}
 
 	public function getTotalReviewsAwaitingApproval() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review WHERE status = '0'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "review` WHERE status = '0'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalProductReviews($product_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review WHERE product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "review` WHERE product_id = '" . (int)$product_id . "'");
 
 		return $query->row['total'];
 	}

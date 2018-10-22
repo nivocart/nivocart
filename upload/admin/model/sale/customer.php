@@ -743,7 +743,7 @@ class ModelSaleCustomer extends Model {
 	}
 
 	public function getTotalCustomerPurchasedProducts($customer_id, $data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_product op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE o.order_status_id > '0' AND o.customer_id = '" . (int)$customer_id . "'";
+		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "order_product op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE o.order_status_id > '0' AND o.customer_id = '" . (int)$customer_id . "'";
 
 		$sort_data = array(
 			'o.order_id',
@@ -820,7 +820,7 @@ class ModelSaleCustomer extends Model {
 	}
 
 	public function getTotalCustomersByIp($ip) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer_ip WHERE ip = '" . $this->db->escape($ip) . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_ip WHERE ip = '" . $this->db->escape($ip) . "'");
 
 		return $query->row['total'];
 	}

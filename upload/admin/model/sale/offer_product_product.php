@@ -91,7 +91,7 @@ class ModelSaleOfferProductProduct extends Model {
 	}
 
 	public function getTotalOfferProductProduct() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "offer_product_product");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_product_product");
 
 		return $query->row['total'];
 	}

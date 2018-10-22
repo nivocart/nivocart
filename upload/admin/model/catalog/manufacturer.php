@@ -166,13 +166,13 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function getTotalManufacturersByImageId($image_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "manufacturer WHERE image_id = '" . (int)$image_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "manufacturer WHERE image_id = '" . (int)$image_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalManufacturers($data = array()) {
-		$sql = "SELECT COUNT(DISTINCT m.manufacturer_id) AS total FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id)";
+		$sql = "SELECT COUNT(DISTINCT m.manufacturer_id) AS `total` FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id)";
 
 		$sql .= " WHERE md.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
