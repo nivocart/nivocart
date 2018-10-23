@@ -43,14 +43,8 @@ class ModelBlogComment extends Model {
 		return $query->row;
 	}
 
-	public function getTotalArticleComment($data = array()) {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "blog_comment` WHERE blog_article_reply_id = '" . $data['blog_article_reply_id'] . "'");
-
-		return $query->row['total'];
-	}
-
 	public function getArticleComments($data = array()) {
-		$sql = "SELECT bc.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bc.blog_article_reply_id = '" . $data['blog_article_reply_id'] . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT bc.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$sort_data = array(
 			'bad.article_title',
@@ -62,7 +56,7 @@ class ModelBlogComment extends Model {
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY sbc.date_added";
+			$sql .= " ORDER BY bc.date_added";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'ASC')) {
@@ -106,8 +100,20 @@ class ModelBlogComment extends Model {
 		return $comment_reply;
 	}
 
-	public function getCommentsAwaitingApproval() {
+	public function getTotalArticleComments($data = array()) {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+		return $query->row['total'];
+	}
+
+	public function getTotalCommentsAwaitingApproval() {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "blog_comment` WHERE status = '0'");
+
+		return $query->row['total'];
+	}
+
+	public function getTotalCommentReplies($blog_comment_id) {
+		$query = $this->db->query("SELECT COUNT(blog_article_reply_id) AS `total` FROM `" . DB_PREFIX . "blog_comment` WHERE blog_comment_id = '" . (int)$blog_comment_id . "' AND status = '1'");
 
 		return $query->row['total'];
 	}

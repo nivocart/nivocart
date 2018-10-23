@@ -32,22 +32,23 @@
             <td class="left"><?php if ($sort == 'bad.article_title') { ?>
               <a href="<?php echo $sort_article_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_article_title; ?></a>
             <?php } else { ?>
-              <a href="<?php echo $sort_article_title; ?>"><?php echo $column_article_title; ?></a>
+              <a href="<?php echo $sort_article_title; ?>"><?php echo $column_article_title; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
             <td class="left"><?php if ($sort == 'bc.author_name') { ?>
               <a href="<?php echo $sort_author_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author_name; ?></a>
             <?php } else { ?>
-              <a href="<?php echo $sort_author_name; ?>"><?php echo $column_author_name; ?></a>
+              <a href="<?php echo $sort_author_name; ?>"><?php echo $column_author_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
             <td class="left"><?php if ($sort == 'bc.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
-              <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
+              <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
+            <td class="left"><?php echo $column_replies; ?></td>
             <td class="left"><?php if ($sort == 'bc.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
-              <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+              <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
             <td class="right"><?php echo $column_action; ?></td>
           </tr>
@@ -70,6 +71,7 @@
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
             <?php } ?>
+            <td class="center"><?php echo $comment['replies']; ?></td>
             <td class="center"><?php echo $comment['date_added']; ?></td>
             <td class="right">
               <?php foreach ($comment['action'] as $action) { ?>
@@ -80,7 +82,7 @@
         <?php } ?>
       <?php } else { ?>
           <tr class="even">
-            <td class="center" colspan="6"><?php echo $text_no_results; ?></td>
+            <td class="center" colspan="7"><?php echo $text_no_results; ?></td>
           </tr>
       <?php } ?>
         </tbody>

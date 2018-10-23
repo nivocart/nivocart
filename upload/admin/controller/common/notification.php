@@ -248,7 +248,7 @@ class ControllerCommonNotification extends Controller {
 		$this->load->model('blog/comment');
 
 		if ($blog_tables && $notification_comment) {
-			$comment_total = $this->model_blog_comment->getCommentsAwaitingApproval();
+			$comment_total = $this->model_blog_comment->getTotalCommentsAwaitingApproval();
 		} else {
 			$comment_total = 0;
 		}

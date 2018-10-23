@@ -233,11 +233,10 @@ class ControllerBlogComment extends Controller {
 			'sort' => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit' => $this->config->get('config_admin_limit'),
-			'blog_article_reply_id' => 0
+			'limit' => $this->config->get('config_admin_limit')
 		);
 
-		$comment_total = $this->model_blog_comment->getTotalArticleComment($data);
+		$comment_total = $this->model_blog_comment->getTotalArticleComments($data);
 
 		$results = $this->model_blog_comment->getArticleComments($data);
 
@@ -249,12 +248,15 @@ class ControllerBlogComment extends Controller {
 				'href' => $this->url->link('blog/comment/update', 'token=' . $this->session->data['token'] . '&blog_comment_id=' . $result['blog_comment_id'] . $url, 'SSL')
 			);
 
+			$replies = $this->model_blog_comment->getTotalCommentReplies($result['blog_comment_id']);
+
 			$this->data['comments'][] = array(
 				'blog_comment_id' => $result['blog_comment_id'],
 				'blog_article_id' => $result['blog_article_id'],
 				'article_title'   => $result['article_title'],
 				'author_name'     => $result['author'],
 				'status'          => $result['status'],
+				'replies'         => ($replies == 0) ? '<span style="color:#F50;">' . (int)$replies . '</span>' : (int)$replies,
 				'date_added'      => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'selected'        => isset($this->request->post['selected']) && in_array($result['blog_comment_id'], $this->request->post['selected']),
 				'action'          => $action
@@ -272,6 +274,7 @@ class ControllerBlogComment extends Controller {
 		$this->data['column_article_title'] = $this->language->get('column_article_title');
 		$this->data['column_author_name'] = $this->language->get('column_author_name');
 		$this->data['column_status'] = $this->language->get('column_status');
+		$this->data['column_replies'] = $this->language->get('column_replies');
 		$this->data['column_date_added'] = $this->language->get('column_date_added');
 		$this->data['column_action'] = $this->language->get('column_action');
 
