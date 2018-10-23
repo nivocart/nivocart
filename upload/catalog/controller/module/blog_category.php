@@ -16,50 +16,35 @@ class ControllerModuleBlogCategory extends Controller {
 		}
 
 		$this->load->model('blog/article');
+		$this->load->model('blog/status');
 
-		if (isset($this->request->get['blog_category_id'])) {
-			$parts = explode('_', (string)$this->request->get['blog_category_id']);
-		} else {
-			$parts = array();
-		}
+		$blog_tables = $this->model_blog_status->checkBlog();
 
-		if (isset($parts[0])) {
-			$this->data['category_id'] = $parts[0];
-		} else {
-			$this->data['category_id'] = 0;
-		}
+		if ($blog_tables) {
+			$this->data['blog_categories'] = array();
 
-		if (isset($parts[1])) {
-			$this->data['child_id'] = $parts[1];
-		} else {
-			$this->data['child_id'] = 0;
-		}
+			$blog_categories_1 = $this->model_blog_article->getCategories(0);
 
-		$this->data['categories'] = array();
+			foreach ($blog_categories_1 as $blog_category_1) {
+				$level_2_data = array();
 
-		$categories = $this->model_blog_article->getCategories(0);
+				$blog_categories_2 = $this->model_blog_article->getCategories($blog_category_1['blog_category_id']);
 
-		foreach ($categories as $category) {
-			$children_data = array();
+				foreach ($blog_categories_2 as $blog_category_2) {
+					$level_2_data[] = array(
+						'blog_category_id' => $blog_category_2['blog_category_id'],
+						'name'             => $blog_category_2['name'],
+						'href'             => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_2['blog_category_id'], 'SSL')
+					);
+				}
 
-			$children = $this->model_blog_article->getCategories($category['blog_category_id']);
-
-			foreach ($children as $child) {
-				$article_total = $this->model_blog_article->getTotalArticles($child['blog_category_id']);
-
-				$children_data[] = array(
-					'category_id' => $child['blog_category_id'],
-					'name'        => $child['name'],
-					'href'        => $this->url->link('blog/category', 'blog_category_id=' . $category['blog_category_id'] . '_' . $child['blog_category_id'], 'SSL')
+				$this->data['blog_categories'][] = array(
+					'blog_category_id' => $blog_category_1['blog_category_id'],
+					'name'             => $blog_category_1['name'],
+					'children'         => $level_2_data,
+					'href'             => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_1['blog_category_id'], 'SSL')
 				);
 			}
-
-			$this->data['categories'][] = array(
-				'blog_category_id' => $category['blog_category_id'],
-				'name'             => $category['name'],
-				'children'         => $children_data,
-				'href'             => $this->url->link('blog/category', 'blog_category_id=' . $category['blog_category_id'], 'SSL')
-			);
 		}
 
 		// Template

@@ -159,7 +159,7 @@ class ModelBlogCategory extends Model {
 	}
 
 	public function getPath($blog_category_id) {
-		$query = $this->db->query("SELECT scd.name AS name, sc.parent_id AS parent_id FROM `" . DB_PREFIX . "blog_category` sc LEFT JOIN " . DB_PREFIX . "blog_category_description scd ON (sc.blog_category_id = scd.blog_category_id) WHERE sc.blog_category_id = '" . (int)$blog_category_id . "' AND scd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY sc.sort_order, scd.name ASC");
+		$query = $this->db->query("SELECT bcd.name AS name, bc.parent_id AS parent_id FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY bc.sort_order, bcd.name ASC");
 
 		if ($query->row['parent_id']) {
 			return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('text_separator') . $query->row['name'];

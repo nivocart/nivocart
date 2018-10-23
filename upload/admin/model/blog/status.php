@@ -2,7 +2,7 @@
 class ModelBlogStatus extends Model {
 
 	public function checkBlog() {
-		$table_name = $this->db->escape('blog_article');
+		$table_name = $this->db->escape('blog_%');
 
 		$table = DB_PREFIX . $table_name;
 

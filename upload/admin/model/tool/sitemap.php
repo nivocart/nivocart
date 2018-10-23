@@ -6,7 +6,7 @@ class ModelToolSitemap extends Model {
 
 		$output = '';
 
-		//Generating TEXT sitemap
+		// Generating TEXT sitemap
 		$fp = fopen('../sitemap.txt', 'w+');
 		fwrite($fp, $this->getTextLinks());
 		fwrite($fp, $this->getTextCategories(0));
@@ -22,7 +22,7 @@ class ModelToolSitemap extends Model {
 
 		$output = '';
 
-		//Generating XML sitemap
+		// Generating XML sitemap
 		$fp = fopen('../sitemap.xml', 'w+');
 		fwrite($fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r");
 		fwrite($fp, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r");
@@ -32,6 +32,7 @@ class ModelToolSitemap extends Model {
 		fwrite($fp, $this->getManufacturers());
 		fwrite($fp, $this->getNews());
 		fwrite($fp, $this->getInformationPages());
+		fwrite($fp, $this->getBlogArticles());
 		fwrite($fp, "</urlset>");
 		fclose($fp);
 
@@ -62,25 +63,40 @@ class ModelToolSitemap extends Model {
 		return $output;
 	}
 
+	// Base
+	protected function getBase() {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+			$base = HTTPS_CATALOG;
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+			$base = HTTPS_CATALOG;
+		} else {
+			$base = HTTP_CATALOG;
+		}
+
+		return $base;
+	}
+
 	// Generators
 	protected function getCommonPages() {
-		$output = '';
-
 		$this->load->model('catalog/sitemap');
 
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=common/home');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=information/contact');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=information/quote');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=information/sitemap');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=account/login');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=account/register');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=product/search');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=product/special');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=product/product_list');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=product/product_wall');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=product/review_list');
-		$output .= $this->standardLinkNode(HTTP_CATALOG . 'index.php?route=product/category_list');
+		$base = $this->getBase();
+
+		$output = '';
+
+		$output .= $this->standardLinkNode($base . 'index.php');
+		$output .= $this->standardLinkNode($base . 'index.php?route=common/home');
+		$output .= $this->standardLinkNode($base . 'index.php?route=information/contact');
+		$output .= $this->standardLinkNode($base . 'index.php?route=information/quote');
+		$output .= $this->standardLinkNode($base . 'index.php?route=information/sitemap');
+		$output .= $this->standardLinkNode($base . 'index.php?route=account/login');
+		$output .= $this->standardLinkNode($base . 'index.php?route=account/register');
+		$output .= $this->standardLinkNode($base . 'index.php?route=product/search');
+		$output .= $this->standardLinkNode($base . 'index.php?route=product/special');
+		$output .= $this->standardLinkNode($base . 'index.php?route=product/product_list');
+		$output .= $this->standardLinkNode($base . 'index.php?route=product/product_wall');
+		$output .= $this->standardLinkNode($base . 'index.php?route=product/review_list');
+		$output .= $this->standardLinkNode($base . 'index.php?route=product/category_list');
 
 		$stores_pag = $this->model_catalog_sitemap->getAllStores();
 
@@ -110,11 +126,13 @@ class ModelToolSitemap extends Model {
 	}
 
 	protected function getCategories($parent_id, $current_path = '') {
-		$output = '';
-
 		$this->load->model('catalog/sitemap');
 
+		$base = $this->getBase();
+
 		$store_id = 0;
+
+		$output = '';
 
 		$results = $this->model_catalog_sitemap->getAllCategories($parent_id, $store_id);
 
@@ -125,8 +143,7 @@ class ModelToolSitemap extends Model {
 				$new_path = $current_path . '_' . $result['category_id'];
 			}
 
-			$output .= $this->generateLinkNode(HTTP_CATALOG . 'index.php?route=product/category&path=' . $new_path, "monthly", "1.0");
-
+			$output .= $this->generateLinkNode($base . 'index.php?route=product/category&path=' . $new_path, "monthly", "1.0");
 			$output .= $this->getCategories($result['category_id'], $new_path);
 		}
 
@@ -147,7 +164,6 @@ class ModelToolSitemap extends Model {
 						}
 
 						$output .= $this->generateLinkNode($store_url . 'index.php?route=product/category&path=' . $new_path, "monthly", "1.0");
-
 						$output .= $this->getCategories($result['category_id'], $new_path);
 					}
 				}
@@ -158,17 +174,18 @@ class ModelToolSitemap extends Model {
 	}
 
 	protected function getProducts() {
-		$output = '';
-
 		$this->load->model('catalog/sitemap');
 
+		$base = $this->getBase();
+
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
+
+		$output = '';
 
 		$results = $this->model_catalog_sitemap->getAllProducts($store_id);
 
 		foreach ($results as $result) {
-			$output .= $this->generateLinkNode($store_url . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0");
+			$output .= $this->generateLinkNode($base . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0");
 		}
 
 		$stores_pro = $this->model_catalog_sitemap->getAllStores();
@@ -191,17 +208,18 @@ class ModelToolSitemap extends Model {
 	}
 
 	protected function getManufacturers() {
-		$output = '';
-
 		$this->load->model('catalog/sitemap');
 
+		$base = $this->getBase();
+
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
+
+		$output = '';
 
 		$results = $this->model_catalog_sitemap->getAllManufacturers($store_id);
 
 		foreach ($results as $result) {
-			$output .= $this->generateLinkNode($store_url . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $result['manufacturer_id'], "weekly", "1.0");
+			$output .= $this->generateLinkNode($base . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $result['manufacturer_id'], "weekly", "1.0");
 		}
 
 		$stores_man = $this->model_catalog_sitemap->getAllStores();
@@ -224,17 +242,18 @@ class ModelToolSitemap extends Model {
 	}
 
 	protected function getNews() {
-		$output = '';
-
 		$this->load->model('catalog/sitemap');
 
+		$base = $this->getBase();
+
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
+
+		$output = '';
 
 		$results = $this->model_catalog_sitemap->getAllNews($store_id);
 
 		foreach ($results as $result) {
-			$output .= $this->generateLinkNode($store_url . 'index.php?route=information/news&news_id=' . $result['news_id'], "weekly", "1.0");
+			$output .= $this->generateLinkNode($base . 'index.php?route=information/news&news_id=' . $result['news_id'], "weekly", "1.0");
 		}
 
 		$stores_new = $this->model_catalog_sitemap->getAllStores();
@@ -257,16 +276,18 @@ class ModelToolSitemap extends Model {
 	}
 
 	protected function getInformationPages() {
-		$output = '';
-
 		$this->load->model('catalog/sitemap');
 
-		$store_url = HTTP_CATALOG;
+		$base = $this->getBase();
+
+		$store_id = 0;
+
+		$output = '';
 
 		$results = $this->model_catalog_sitemap->getAllInformations();
 
 		foreach ($results as $result) {
-			$output .= $this->generateLinkNode($store_url . 'index.php?route=information/information&information_id=' . $result['information_id'], "monthly", "1.0");
+			$output .= $this->generateLinkNode($base . 'index.php?route=information/information&information_id=' . $result['information_id'], "monthly", "1.0");
 		}
 
 		$stores_inf = $this->model_catalog_sitemap->getAllStores();
@@ -296,29 +317,70 @@ class ModelToolSitemap extends Model {
 		return $output;
 	}
 
-	// Text Sitemap - Links
-	protected function getTextLinks() {
-		$output = '';
+	protected function getBlogArticles() {
+		$this->load->model('catalog/sitemap');
+		$this->load->model('blog/status');
+
+		$base = $this->getBase();
 
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
 
+		$output = '';
+
+		// Check Blog Tables
+		$blog_tables = $this->model_blog_status->checkBlog();
+
+		if ($blog_tables) {
+			$results = $this->model_catalog_sitemap->getAllBlogArticles($store_id);
+
+			foreach ($results as $result) {
+				$output .= $this->generateLinkNode($base . 'index.php?route=blog/article_info&blog_article_id=' . $result['blog_article_id'], "weekly", "1.0");
+			}
+
+			$stores_blog = $this->model_catalog_sitemap->getAllStores();
+
+			if ($stores_blog) {
+				foreach ($stores_blog as $store_blog) {
+					if ($store_blog['store_id'] != 0) {
+						$results = $this->model_catalog_sitemap->getAllBlogArticles($store_blog['store_id']);
+
+						foreach ($results as $result) {
+							$store_url = $store_blog['url'];
+
+							$output .= $this->generateLinkNode($store_url . 'index.php?route=blog/article_info&blog_article_id=' . $result['blog_article_id'], "weekly", "1.0");
+						}
+					}
+				}
+			}
+		}
+
+		return $output;
+	}
+
+	// Text Sitemap - Links
+	protected function getTextLinks() {
 		$this->load->model('catalog/sitemap');
 
+		$base = $this->getBase();
+
+		$store_id = 0;
+
+		$output = '';
+
 		// Common Pages
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=common/home') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=information/contact') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=information/quote') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=information/sitemap') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=account/login') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=account/register') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=product/search') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=product/special') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=product/product_list') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=product/product_wall') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=product/review_list') . "\r";
-		$output .= utf8_encode(HTTP_CATALOG . 'index.php?route=product/category_list') . "\r";
+		$output .= utf8_encode($base . 'index.php') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=common/home') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=information/contact') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=information/quote') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=information/sitemap') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=account/login') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=account/register') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=product/search') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=product/special') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=product/product_list') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=product/product_wall') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=product/review_list') . "\r";
+		$output .= utf8_encode($base . 'index.php?route=product/category_list') . "\r";
 
 		$stores_pag = $this->model_catalog_sitemap->getAllStores();
 
@@ -348,12 +410,11 @@ class ModelToolSitemap extends Model {
 
 		// Products
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
 
 		$products = $this->model_catalog_sitemap->getAllProducts($store_id);
 
 		foreach ($products as $product) {
-			$link_product = utf8_encode($store_url . 'index.php?route=product/product&product_id=' . $product['product_id']);
+			$link_product = utf8_encode($base . 'index.php?route=product/product&product_id=' . $product['product_id']);
 
 			$link = $this->model_tool_seo_url->rewrite($link_product);
 
@@ -382,12 +443,11 @@ class ModelToolSitemap extends Model {
 
 		// Manufacturers
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
 
 		$manufacturers = $this->model_catalog_sitemap->getAllManufacturers($store_id);
 
 		foreach ($manufacturers as $manufacturer) {
-			$link_manufacturer = utf8_encode($store_url . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $manufacturer['manufacturer_id']);
+			$link_manufacturer = utf8_encode($base . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $manufacturer['manufacturer_id']);
 
 			$link = $this->model_tool_seo_url->rewrite($link_manufacturer);
 
@@ -416,12 +476,11 @@ class ModelToolSitemap extends Model {
 
 		// News
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
 
 		$news = $this->model_catalog_sitemap->getAllNews($store_id);
 
 		foreach ($news as $new) {
-			$link_news = utf8_encode($store_url . 'index.php?route=information/news&news_id=' . $new['news_id']);
+			$link_news = utf8_encode($base . 'index.php?route=information/news&news_id=' . $new['news_id']);
 
 			$link = $this->model_tool_seo_url->rewrite($link_news);
 
@@ -450,12 +509,11 @@ class ModelToolSitemap extends Model {
 
 		// Information
 		$store_id = 0;
-		$store_url = HTTP_CATALOG;
 
 		$informations = $this->model_catalog_sitemap->getAllInformations();
 
 		foreach ($informations as $information) {
-			$link_information = utf8_encode($store_url . 'index.php?route=information/information&information_id=' . $information['information_id']);
+			$link_information = utf8_encode($base . 'index.php?route=information/information&information_id=' . $information['information_id']);
 
 			$link = $this->model_tool_seo_url->rewrite($link_information);
 
@@ -490,17 +548,58 @@ class ModelToolSitemap extends Model {
 			}
 		}
 
+		// Blog Articles
+		$this->load->model('blog/status');
+
+		$blog_tables = $this->model_blog_status->checkBlog();
+
+		if ($blog_tables) {
+			$store_id = 0;
+
+			$blog_articles = $this->model_catalog_sitemap->getAllBlogArticles($store_id);
+
+			foreach ($blog_articles as $blog_article) {
+				$link_blogs = utf8_encode($base . 'index.php?route=blog/article_info&blog_article_id=' . $blog_article['blog_article_id']);
+
+				$link = $this->model_tool_seo_url->rewrite($link_blogs);
+
+				$output .= str_replace("&", "&amp;", $link) . "\r";
+			}
+
+			$stores_blog_article = $this->model_catalog_sitemap->getAllStores();
+
+			if ($stores_blog_article) {
+				foreach ($stores_blog_article as $store_blog_article) {
+					if ($store_blog_article['store_id'] != 0) {
+						$store_url = $store_blog_article['url'];
+
+						$blog_articles = $this->model_catalog_sitemap->getAllBlogArticles($store_article['store_id']);
+
+						foreach ($blog_articles as $blog_article) {
+							$link_blogs = utf8_encode($store_url . 'index.php?route=blog/article_info&blog_article_id=' . $blog_article['blog_article_id']);
+
+							$link = $this->model_tool_seo_url->rewrite($link_blogs);
+
+							$output .= str_replace("&", "&amp;", $link) . "\r";
+						}
+					}
+				}
+			}
+		}
+
 		return $output;
 	}
 
 	// Text Sitemap - Categories
 	protected function getTextCategories($parent_id, $current_path = '') {
-		$output = '';
-
 		$this->load->model('catalog/sitemap');
 		$this->load->model('tool/seo_url');
 
+		$base = $this->getBase();
+
 		$store_id = 0;
+
+		$output = '';
 
 		$results = $this->model_catalog_sitemap->getAllCategories($parent_id, $store_id);
 
@@ -511,7 +610,7 @@ class ModelToolSitemap extends Model {
 				$new_path = $current_path . '_' . $result['category_id'];
 			}
 
-			$link_category = utf8_encode(HTTP_CATALOG . 'index.php?route=product/category&path=' . $new_path);
+			$link_category = utf8_encode($base . 'index.php?route=product/category&path=' . $new_path);
 
 			$link = $this->model_tool_seo_url->rewrite($link_category);
 

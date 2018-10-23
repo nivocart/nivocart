@@ -67,6 +67,7 @@ class ControllerInformationSitemap extends Controller {
 
 		$this->data['sitemap_links'] = $this->config->get('config_sitemap_links');
 
+		// Product Categories
 		$empty_category = $this->config->get('config_empty_category');
 
 		$this->data['categories'] = array();
@@ -115,6 +116,37 @@ class ControllerInformationSitemap extends Controller {
 				'children' => $level_2_data,
 				'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'], 'SSL')
 			);
+		}
+
+		// Blog Categories
+		$this->load->model('blog/article');
+		$this->load->model('blog/status');
+
+		$blog_tables = $this->model_blog_status->checkBlog();
+
+		if ($blog_tables) {
+			$this->data['blog_categories'] = array();
+
+			$blog_categories_1 = $this->model_blog_article->getCategories(0);
+
+			foreach ($blog_categories_1 as $blog_category_1) {
+				$level_2_data = array();
+
+				$blog_categories_2 = $this->model_blog_article->getCategories($blog_category_1['blog_category_id']);
+
+				foreach ($blog_categories_2 as $blog_category_2) {
+					$level_2_data[] = array(
+						'name'     => $blog_category_2['name'],
+						'href'     => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_2['blog_category_id'], 'SSL')
+					);
+				}
+
+				$this->data['blog_categories'][] = array(
+					'name'     => $blog_category_1['name'],
+					'children' => $level_2_data,
+					'href'     => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_1['blog_category_id'], 'SSL')
+				);
+			}
 		}
 
 		$this->data['cart'] = $this->url->link('checkout/cart', '', 'SSL');

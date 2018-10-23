@@ -76,7 +76,6 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_account'] = $this->language->get('text_account');
 		$this->data['text_checkout'] = $this->language->get('text_checkout');
 		$this->data['text_search'] = $this->language->get('text_search');
-		$this->data['text_blog_search'] = $this->language->get('text_blog_search');
 
 		$this->data['home'] = $this->url->link('common/home', '', 'SSL');
 		$this->data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
@@ -133,15 +132,6 @@ class ControllerCommonHeader extends Controller {
 			$this->data['search'] = $this->request->get['search'];
 		} else {
 			$this->data['search'] = '';
-		}
-
-		// Blog Search
-		$this->data['blog_routes'] = array('blog/article', 'blog/article/view', 'blog/category', 'blog/author', 'blog/search');
-
-		if (isset($this->request->get['blog_search'])) {
-			$this->data['blog_search'] = $this->request->get['blog_search'];
-		} else {
-			$this->data['blog_search'] = '';
 		}
 
 		// Rss

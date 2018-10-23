@@ -37,6 +37,12 @@ class ModelCatalogSitemap extends Model {
 		return $query->rows;
 	}
 
+	public function getAllBlogArticles($store_id) {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN " . DB_PREFIX . "blog_article_description bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN " . DB_PREFIX . "blog_article_to_store ba2s ON (ba.blog_article_id = ba2s.blog_article_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND ba2s.store_id = '" . (int)$store_id . "' AND ba.status = '1' ORDER BY ba.sort_order, LCASE(bad.article_title) ASC");
+
+		return $query->rows;
+	}
+
 	public function getInformationStores($information_id) {
 		$information_store_data = array();
 

@@ -35,6 +35,22 @@
       <?php } ?>
       </ul>
     <?php } ?>
+    <br />
+    <?php if ($blog_categories) { ?>
+      <ul>
+      <?php foreach ($blog_categories as $blog_category_1) { ?>
+        <li><a href="<?php echo $blog_category_1['href']; ?>"><?php echo $blog_category_1['name']; ?></a>
+        <?php if ($blog_category_1['children']) { ?>
+          <ul>
+          <?php foreach ($blog_category_1['children'] as $blog_category_2) { ?>
+            <li><a href="<?php echo $blog_category_2['href']; ?>"><?php echo $blog_category_2['name']; ?></a></li>
+          <?php } ?>
+          </ul>
+        <?php } ?>
+        </li>
+      <?php } ?>
+      </ul>
+    <?php } ?>
     </div>
     <div class="right">
       <ul>
