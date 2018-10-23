@@ -1883,6 +1883,20 @@
               <label for="notification-affiliate-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
+          <tr>
+            <td><?php echo $entry_notification_comment; ?><span class="help"><?php echo $help_notification_comment; ?></span></td>
+            <td><?php if ($config_notification_comment) { ?>
+              <input type="radio" name="config_notification_comment" value="1" id="notification-comment-on" class="radio" checked />
+              <label for="notification-comment-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_notification_comment" value="0" id="notification-comment-off" class="radio" />
+              <label for="notification-comment-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_notification_comment" value="1" id="notification-comment-on" class="radio" />
+              <label for="notification-comment-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_notification_comment" value="0" id="notification-comment-off" class="radio" checked />
+              <label for="notification-comment-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
         </table>
       </div>
       <div id="tab-image">

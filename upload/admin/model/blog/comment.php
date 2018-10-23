@@ -106,6 +106,12 @@ class ModelBlogComment extends Model {
 		return $comment_reply;
 	}
 
+	public function getCommentsAwaitingApproval() {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "blog_comment` WHERE status = '0'");
+
+		return $query->row['total'];
+	}
+
 	public function checkArticleTitle($article_title) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE article_title = '" . $this->db->escape($article_title) . "'");
 

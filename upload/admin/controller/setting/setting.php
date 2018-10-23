@@ -247,6 +247,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_notification_low'] = $this->language->get('entry_notification_low');
 		$this->data['entry_notification_review'] = $this->language->get('entry_notification_review');
 		$this->data['entry_notification_affiliate'] = $this->language->get('entry_notification_affiliate');
+		$this->data['entry_notification_comment'] = $this->language->get('entry_notification_comment');
 		$this->data['entry_logo'] = $this->language->get('entry_logo');
 		$this->data['entry_icon'] = $this->language->get('entry_icon');
 		$this->data['entry_image_category'] = $this->language->get('entry_image_category');
@@ -415,6 +416,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_notification_online'] = $this->language->get('help_notification_online');
 		$this->data['help_notification_review'] = $this->language->get('help_notification_review');
 		$this->data['help_notification_affiliate'] = $this->language->get('help_notification_affiliate');
+		$this->data['help_notification_comment'] = $this->language->get('help_notification_comment');
 		$this->data['help_icon'] = $this->language->get('help_icon');
 		$this->data['help_image_category'] = $this->language->get('help_image_category');
 		$this->data['help_image_thumb'] = $this->language->get('help_image_thumb');
@@ -1737,6 +1739,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_notification_affiliate'] = $this->request->post['config_notification_affiliate'];
 		} else {
 			$this->data['config_notification_affiliate'] = $this->config->get('config_notification_affiliate');
+		}
+
+		if (isset($this->request->post['config_notification_comment'])) {
+			$this->data['config_notification_comment'] = $this->request->post['config_notification_comment'];
+		} else {
+			$this->data['config_notification_comment'] = $this->config->get('config_notification_comment');
 		}
 
 		// Image

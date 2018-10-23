@@ -6,6 +6,7 @@ $_['text_date_format']           = 'F jS, Y';
 $_['text_date_format_long']      = 'F jS, Y  g:i A';
 
 // Text
+$_['text_refine']                = 'Refine Search';
 $_['text_not_found']             = 'No blog at this time!';
 $_['text_related_product']       = 'Blog Related Products';
 $_['text_related_comment']       = 'Blog Related Comments';

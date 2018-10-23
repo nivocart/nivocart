@@ -1190,8 +1190,7 @@ EOT;
 
                     if ($this->encrypted) {
                         $v = $this->ARC4($v);
-                    } // dates must be outputted as-is, without Unicode transformations
-                    elseif (!in_array($k, array('CreationDate', 'ModDate'))) {
+                    } elseif (!in_array($k, array('CreationDate', 'ModDate'))) {
                         $v = $this->filterText($v);
                     }
 
@@ -3970,8 +3969,7 @@ EOT;
             $color_channels->writeimage($tempfile_plain);
 
             $imgplain = imagecreatefrompng($tempfile_plain);
-        } // Use PECL imagick + ImageMagic to process transparent PNG images
-        elseif (extension_loaded("imagick")) {
+        } elseif (extension_loaded("imagick")) {
             // Native cloning was added to pecl-imagick in svn commit 263814
             // the first version containing it was 3.0.1RC1
             static $imagickClonable = null;

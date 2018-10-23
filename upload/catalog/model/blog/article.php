@@ -39,6 +39,12 @@ class ModelBlogArticle extends Model {
 		return $query->row;
 	}
 
+	public function getCategoryByName($blog_category_id) {
+		$query = $this->db->query("SELECT DISTINCT bcd.name AS `name` FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc.status = '1'");
+
+		return $query->row['name'];
+	}
+
 	public function getCategories($parent_id = 0) {
 		if ($parent_id == 0) {
 			$blog_category_data = array();
@@ -59,10 +65,7 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getTotalCategories($parent_id = 0) {
-		$sql = "SELECT COUNT(DISTINCT(bc.blog_category_id)) AS `total` FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN " . DB_PREFIX . "blog_category_to_store bc2s ON (bc.blog_category_id = bc2s.blog_category_id)";
-		$sql .= " WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1' ORDER BY bc.sort_order, LCASE(bcd.name) ASC";
-
-		$query = $this->db->query($sql);
+		$query = $this->db->query("SELECT COUNT(DISTINCT(bc.blog_category_id)) AS `total` FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN " . DB_PREFIX . "blog_category_to_store bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'");
 
 		return $query->row['total'];
 	}
@@ -167,13 +170,13 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getTotalArticleCategoryWise($data = array()) {
-		$query = $this->db->query("SELECT COUNT(DISTINCT(ba.blog_article_id)) AS `total` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_category` bac ON (ba.blog_article_id = bac.blog_article_id) WHERE bac.blog_category_id = '" . (int)$data['blog_article_id'] . "' AND ba.status = '1' AND bau.status = '1' AND ba2s.store_id='" . (int)$this->config->get('config_store_id') . "'");
+		$query = $this->db->query("SELECT COUNT(DISTINCT(ba.blog_article_id)) AS `total` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_category` bac ON (ba.blog_article_id = bac.blog_article_id) WHERE bac.blog_category_id = '" . (int)$data['blog_category_id'] . "' AND ba.status = '1' AND bau.status = '1' AND ba2s.store_id='" . (int)$this->config->get('config_store_id') . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getArticleCategoryWise($data = array()) {
-		$sql = "SELECT ba.*, bad.*, bau.name AS author_name FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_category` bac ON (ba.blog_article_id = bac.blog_article_id) WHERE bac.blog_category_id = '" . (int)$data['blog_article_id'] . "' AND ba.status = '1' AND bau.status = '1' AND ba2s.store_id='" . (int)$this->config->get('config_store_id') . "' ORDER BY ba.date_modified DESC";
+		$sql = "SELECT ba.*, bad.*, bau.name AS author_name FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_category` bac ON (ba.blog_article_id = bac.blog_article_id) WHERE bac.blog_category_id = '" . (int)$data['blog_category_id'] . "' AND ba.status = '1' AND bau.status = '1' AND ba2s.store_id='" . (int)$this->config->get('config_store_id') . "' ORDER BY ba.date_modified DESC";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {

@@ -57,7 +57,7 @@ h3 {
 	font-size: 18px;
 	font-weight: normal;
 	text-transform: uppercase;
-	margin: 0 0 10px 0;
+	margin: 0 0 10px 6px;
 }
 p {
 	color: #111;
@@ -1499,7 +1499,8 @@ ul.box-filter > li ul {
 }
 .category-list > ul.refine > li a {
 	text-decoration: none;
-	line-height: 16px;
+	line-height: 17px;
+	font-size: 15px;
 }
 .category-list > ul.refine > li a:hover {
 	color: #0D6D98;

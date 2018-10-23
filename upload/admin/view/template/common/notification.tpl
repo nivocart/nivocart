@@ -41,6 +41,10 @@
       <li><a href="<?php echo $affiliate; ?>" style="font-weight:bold; font-size:14px;"><?php echo ($icons) ? '<i class="fa fa-street-view"></i>' : ''; ?><?php echo $text_affiliate; ?></a></li>
       <li><a href="<?php echo $affiliate_approval; ?>"><span class="admin-notify-li" style="background-color:#DE5954;"><?php echo $affiliate_total; ?></span> &nbsp;<?php echo $text_approval; ?></a></li>
     <?php } ?>
+    <?php if ($allow_comment && $notification_comment) { ?>
+      <li><a href="<?php echo $blog; ?>" style="font-weight:bold; font-size:14px;"><?php echo ($icons) ? '<i class="fa fa-pencil"></i>' : ''; ?><?php echo $text_article; ?></a></li>
+      <li><a href="<?php echo $comment_approval; ?>"><span class="admin-notify-li" style="background-color:#DE5954;"><?php echo $comment_total; ?></span> &nbsp;<?php echo $text_approval; ?></a></li>
+    <?php } ?>
     </ul>
   </li>
 <?php } ?>

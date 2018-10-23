@@ -20,11 +20,13 @@ class ControllerCommonNotification extends Controller {
 		$this->data['text_low_stock'] = $this->language->get('text_low_stock');
 		$this->data['text_review'] = $this->language->get('text_review');
 		$this->data['text_affiliate'] = $this->language->get('text_affiliate');
+		$this->data['text_article'] = $this->language->get('text_article');
 
 		$this->data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['affiliate'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['blog'] = $this->url->link('blog/comment', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Menu Icons
 		$this->data['icons'] = $this->config->get('config_admin_menu_icons');
@@ -42,9 +44,10 @@ class ControllerCommonNotification extends Controller {
 		$notification_low = $this->config->get('config_notification_low');
 		$notification_review = $this->config->get('config_notification_review');
 		$notification_affiliate = $this->config->get('config_notification_affiliate');
+		$notification_comment = $this->config->get('config_notification_comment');
 
 		if ($notifications) {
-			if (!$notification_pending && !$notification_complete && !$notification_return && !$notification_online && !$notification_deleted && !$notification_approval && !$notification_stock && !$notification_low && !$notification_review && !$notification_affiliate) {
+			if (!$notification_pending && !$notification_complete && !$notification_return && !$notification_online && !$notification_deleted && !$notification_approval && !$notification_stock && !$notification_low && !$notification_review && !$notification_affiliate && !$notification_comment) {
 				$this->data['notifications'] = false;
 			} else {
 				$this->data['notifications'] = true;
@@ -84,6 +87,8 @@ class ControllerCommonNotification extends Controller {
 		$this->data['notification_review'] = $notification_review;
 
 		$this->data['notification_affiliate'] = $notification_affiliate;
+
+		$this->data['notification_comment'] = $notification_comment;
 
 		// Orders
 		$this->load->model('sale/order');
@@ -229,10 +234,33 @@ class ControllerCommonNotification extends Controller {
 
 		$this->data['affiliate_approval'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&filter_approved=0', 'SSL');
 
+		// Blog Articles
+		$this->load->model('blog/status');
+
+		$blog_tables = $this->model_blog_status->checkBlog();
+
+		if ($blog_tables) {
+			$this->data['allow_comment'] = true;
+		} else {
+			$this->data['allow_comment'] = false;
+		}
+
+		$this->load->model('blog/comment');
+
+		if ($blog_tables && $notification_comment) {
+			$comment_total = $this->model_blog_comment->getCommentsAwaitingApproval();
+		} else {
+			$comment_total = 0;
+		}
+
+		$this->data['comment_total'] = $comment_total;
+
+		$this->data['comment_approval'] = $this->url->link('blog/comment', 'token=' . $this->session->data['token'], 'SSL');
+
 		// Notification totals
 		$this->data['alerts_complete'] = number_format($complete_status_total + $online_total);
 		$this->data['alerts_attention'] = number_format($pending_status_total + $product_total_low + $deleted_total + $review_total);
-		$this->data['alerts_warning'] = number_format($return_total + $customer_total + $product_total + $affiliate_total);
+		$this->data['alerts_warning'] = number_format($return_total + $customer_total + $product_total + $affiliate_total + $comment_total);
 
 		$this->template = 'common/notification.tpl';
 		$this->render();

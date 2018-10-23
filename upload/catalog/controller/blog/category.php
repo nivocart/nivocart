@@ -1,15 +1,10 @@
 <?php
 class ControllerBlogCategory extends Controller {
 
-    public function index() {
-    	$this->language->load('blog/article');
-
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
+	public function index() {
+		$this->language->load('blog/article');
 
 		$this->load->model('blog/article');
-		$this->load->model('tool/image');
 
 		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
 			$this->request->get['limit'] = $this->config->get('config_catalog_limit');
@@ -38,40 +33,7 @@ class ControllerBlogCategory extends Controller {
 		);
 
 		if (isset($this->request->get['blog_category_id'])) {
-			$url = '';
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$path = '';
-
-			$parts = explode('_', (string)$this->request->get['blog_category_id']);
-
-			$blog_category_id = (int)array_pop($parts);
-
-			foreach ($parts as $path_id) {
-				if (!$path) {
-					$path = (int)$path_id;
-				} else {
-					$path .= '_' . (int)$path_id;
-				}
-
-				$category_info = $this->model_blog_article->getCategory($path_id);
-
-				if ($category_info) {
-					$this->data['breadcrumbs'][] = array(
-						'text'      => $category_info['name'],
-						'href'      => $this->url->link('blog/category', 'blog_category_id=' . $path . $url, 'SSL'),
-						'separator' => $this->language->get('text_separator')
-					);
-				}
-			}
-
+			$blog_category_id = $this->request->get['blog_category_id'];
 		} else {
 			$blog_category_id = 0;
 		}
@@ -84,7 +46,15 @@ class ControllerBlogCategory extends Controller {
 			$this->document->setDescription($category_info['meta_description']);
 			$this->document->setKeywords($category_info['meta_keyword']);
 
+			$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
+
+			$this->load->model('tool/image');
+
 			$this->data['heading_title'] = $category_info['name'];
+
+			$this->data['text_refine'] = $this->language->get('text_refine');
+
+			$this->data['button_continue'] = $this->language->get('button_continue');
 
 			$this->data['author_details'] = $this->config->get('blog_author_details');
 
@@ -99,11 +69,34 @@ class ControllerBlogCategory extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
-				'text'      => $category_info['name'],
-				'href'      => $this->url->link('blog/category', 'blog_category_id=' . $this->request->get['blog_category_id'], 'SSL'),
-				'separator' => $this->language->get('text_separator')
-			);
+			if ($category_info['parent_id'] > 0) {
+				$parent_name = $this->model_blog_article->getCategoryByName($category_info['parent_id']);
+
+				$this->data['breadcrumbs'][] = array(
+					'text'      => $parent_name,
+					'href'      => $this->url->link('blog/category', 'blog_category_id=' . $category_info['parent_id'], 'SSL'),
+					'separator' => $this->language->get('text_separator')
+				);
+
+				$this->data['breadcrumbs'][] = array(
+					'text'      => $category_info['name'],
+					'href'      => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_id . $url, 'SSL'),
+					'separator' => $this->language->get('text_separator')
+				);
+
+			} else {
+				$this->data['breadcrumbs'][] = array(
+					'text'      => $category_info['name'],
+					'href'      => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_id . $url, 'SSL'),
+					'separator' => $this->language->get('text_separator')
+				);
+			}
+
+			if ($category_info['image']) {
+				$this->data['thumb'] = $this->model_tool_image->resize($category_info['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+			} else {
+				$this->data['thumb'] = '';
+			}
 
 			if ($category_info['description']) {
 				$this->data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
@@ -111,32 +104,34 @@ class ControllerBlogCategory extends Controller {
 				$this->data['description'] = '';
 			}
 
-			// Get blogs according to category wise.
+			// Blog Category Sub-categories
 			$this->data['categories'] = array();
 
 			$results = $this->model_blog_article->getCategories($blog_category_id);
 
 			foreach ($results as $result) {
+				$category_name = $this->model_blog_article->getCategoryByName($result['blog_category_id']);
 				$article_total = $this->model_blog_article->getTotalArticles($result['blog_category_id']);
 
-				$this->data['categories'] = array(
-					'name' => $result['name'] . ' (' . $article_total . ')',
-					'href' => $this->url->link('blog/category', 'blog_category_id=' . $this->request->get['blog_category_id'] . '_' . $result['blog_category_id'], 'SSL')
+				$this->data['categories'][] = array(
+					'name' => $category_name . ' (' . $article_total . ')',
+					'href' => $this->url->link('blog/category', 'blog_category_id=' . $result['blog_category_id'] . $url, 'SSL')
 				);
 			}
 
+			// Blog Category articles
 			$this->data['articles'] = array();
 
 			if ($category_info['blog_category_column']) {
 				$limit = $category_info['blog_category_column'];
 			} else {
-				$limit = 3;
+				$limit = 5;
 			}
 
 			$data = array(
-				'blog_article_id' => $blog_category_id,
-				'start'           => ($page - 1) * $limit,
-				'limit'           => $limit
+				'blog_category_id' => $blog_category_id,
+				'start'            => ($page - 1) * $limit,
+				'limit'            => $limit
 			);
 
 			$blog_total = $this->model_blog_article->getTotalArticleCategoryWise($data);
@@ -198,6 +193,10 @@ class ControllerBlogCategory extends Controller {
 
 			$this->data['pagination'] = $pagination->render();
 
+			$this->data['limit'] = $limit;
+
+			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
+
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
@@ -231,15 +230,11 @@ class ControllerBlogCategory extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'] = array();
-
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_category_error'),
 				'href'      => $this->url->link('blog/article_list', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			);
-
-			$this->document->setTitle($this->language->get('text_category_error'));
 
 			$this->data['heading_title'] = $this->language->get('text_category_error');
 
