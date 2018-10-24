@@ -4,8 +4,6 @@ class ControllerBlogCategory extends Controller {
 	public function index() {
 		$this->language->load('blog/article');
 
-		$this->load->model('blog/article');
-
 		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
 			$this->request->get['limit'] = $this->config->get('config_catalog_limit');
 		} elseif (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] > 100)) {
@@ -31,6 +29,8 @@ class ControllerBlogCategory extends Controller {
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
 		);
+
+		$this->load->model('blog/article');
 
 		if (isset($this->request->get['blog_category_id'])) {
 			$blog_category_id = $this->request->get['blog_category_id'];
@@ -231,10 +231,18 @@ class ControllerBlogCategory extends Controller {
 			}
 
 			$this->data['breadcrumbs'][] = array(
+				'text'      => $this->language->get('text_home'),
+				'href'      => $this->url->link('common/home', '', 'SSL'),
+				'separator' => false
+			);
+
+			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_category_error'),
-				'href'      => $this->url->link('blog/article_list', $url, 'SSL'),
+				'href'      => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_id . $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			);
+
+			$this->document->setTitle($this->language->get('text_category_error'));
 
 			$this->data['heading_title'] = $this->language->get('text_category_error');
 

@@ -2,9 +2,6 @@
 // Heading
 $_['heading_title']              = 'Blog';
 
-$_['text_date_format']           = 'F jS, Y';
-$_['text_date_format_long']      = 'F jS, Y  g:i A';
-
 // Text
 $_['text_refine']                = 'Refine Search';
 $_['text_not_found']             = 'No blog at this time!';
@@ -30,6 +27,11 @@ $_['text_said']                  = 'said:';
 $_['text_authors']               = 'Authors';
 $_['text_from']                  = 'From';
 
+// Text Date
+$_['text_date_format']           = 'F jS, Y';
+$_['text_date_format_long']      = 'F jS, Y  g:i A';
+
+// Text Error
 $_['text_category_error']        = 'Blog Category Not Found!';
 $_['text_author_error']          = 'Blog Author Not Found!';
 $_['text_article_error']         = 'Blog Not Found!';

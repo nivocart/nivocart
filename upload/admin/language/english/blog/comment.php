@@ -12,7 +12,6 @@ $_['tab_comment']                   = 'Comment';
 $_['column_article_title']          = 'Article Title';
 $_['column_author_name']            = 'Author Name';
 $_['column_status']                 = 'Status';
-$_['column_replies']                = 'Reply Status';
 $_['column_date_added']             = 'Date Added';
 $_['column_action']                 = 'Action';
 

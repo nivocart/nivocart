@@ -11,7 +11,7 @@
         <?php foreach ($comment['comment_reply'] as $comment_reply) { ?>
           <div class="article-reply">
             <div class="author"><b><?php echo ucwords($comment_reply['author']); ?></b></div>
-            <div class="comment-date"><?php echo date($this->language->get('text_date_format'), strtotime($comment_reply['date_added'])); ?></div>
+            <div class="comment-date"><?php echo date($this->language->get('text_date_format_long'), strtotime($comment_reply['date_added'])); ?></div>
             <div class="text"><?php echo $comment_reply['comment']; ?></div>
           </div>
         <?php } ?>

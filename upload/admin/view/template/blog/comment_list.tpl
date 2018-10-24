@@ -44,7 +44,6 @@
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php echo $column_replies; ?></td>
             <td class="left"><?php if ($sort == 'bc.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
@@ -71,7 +70,6 @@
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
             <?php } ?>
-            <td class="center"><?php echo $comment['replies']; ?></td>
             <td class="center"><?php echo $comment['date_added']; ?></td>
             <td class="right">
               <?php foreach ($comment['action'] as $action) { ?>
@@ -82,7 +80,7 @@
         <?php } ?>
       <?php } else { ?>
           <tr class="even">
-            <td class="center" colspan="7"><?php echo $text_no_results; ?></td>
+            <td class="center" colspan="6"><?php echo $text_no_results; ?></td>
           </tr>
       <?php } ?>
         </tbody>

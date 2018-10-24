@@ -244,7 +244,7 @@ function removeCommentId() {
 //--></script>
 
 <script type="text/javascript"><!--
-$('#comment-list .pagination a').live('click', function() {
+$('#comment-list .pagination a').on('click', function() {
 	$('#comment-list').fadeOut('slow');
 	$('#comment-list').load(this.href);
 	$('#comment-list').fadeIn('slow');
@@ -256,7 +256,7 @@ $('#comment-list').load('index.php?route=blog/article_info/comment&blog_article_
 //--></script>
 
 <script type="text/javascript"><!--
-$('#button-comment').bind('click', function() {
+$('#button-comment').on('click', function() {
 	$.ajax({
 		type: 'POST',
 		url: 'index.php?route=blog/article_info/writeComment&blog_article_id=<?php echo $blog_article_id; ?>',

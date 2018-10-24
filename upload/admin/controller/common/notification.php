@@ -255,7 +255,7 @@ class ControllerCommonNotification extends Controller {
 
 		$this->data['comment_total'] = $comment_total;
 
-		$this->data['comment_approval'] = $this->url->link('blog/comment', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['comment_approval'] = $this->url->link('blog/comment', 'token=' . $this->session->data['token'] . '&sort=bc.status&order=ASC', 'SSL');
 
 		// Notification totals
 		$this->data['alerts_complete'] = number_format($complete_status_total + $online_total);
