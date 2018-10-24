@@ -622,13 +622,13 @@ class ModelToolExportImport extends Model {
 			$password = (is_string($password) && utf8_strlen($password) > 0) ? $password : '';
 			$salt = trim($this->getCell($data, $i, $j++));
 			if ($password == '') {
-				// Generate a default password 'overclock'
+				// Generate a default password 'nivocart'
 				if ($salt == '') {
 					$salt = substr(md5(uniqid(rand(), true)), 0, 9);
 				}
-				$password = sha1($salt . sha1($salt . sha1('overclock')));
+				$password = sha1($salt . sha1($salt . sha1('nivocart')));
 			} else {
-				$password = md5('overclock');
+				$password = md5('nivocart');
 			}
 			$cart = $this->getCell($data, $i, $j++);
 			$wishlist = $this->getCell($data, $i, $j++);

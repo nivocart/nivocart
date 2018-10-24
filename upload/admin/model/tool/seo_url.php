@@ -53,8 +53,24 @@ class ModelToolSeoUrl extends Controller {
 						$this->request->get['news_id'] = $url[1];
 					}
 
+					if ($url[0] == 'blog_article_id') {
+						$this->request->get['blog_article_id'] = $url[1];
+					}
+
+					if ($url[0] == 'blog_author_id') {
+						$this->request->get['blog_author_id'] = $url[1];
+					}
+
+					if ($url[0] == 'blog_category_id') {
+						if (!isset($this->request->get['blog_category_id'])) {
+							$this->request->get['blog_category_id'] = $url[1];
+						} else {
+							$this->request->get['blog_category_id'] .= '_' . $url[1];
+						}
+					}
+
 					if ($this->config->get('config_seo_url')) {
-						if ($query->row['query'] && $url[0] != 'news_id' && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id') {
+						if ($query->row['query'] && $url[0] != 'blog_category_id' && $url[0] != 'blog_author_id' && $url[0] != 'blog_article_id' && $url[0] != 'news_id' && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id') {
 							$this->request->get['route'] = $query->row['query'];
 						} else {
 							$this->request->get['route'] = 'error/not_found';
@@ -73,6 +89,12 @@ class ModelToolSeoUrl extends Controller {
 				$this->request->get['route'] = 'information/information';
 			} elseif (isset($this->request->get['news_id'])) {
 				$this->request->get['route'] = 'information/news';
+			} elseif (isset($this->request->get['blog_article_id'])) {
+				$this->request->get['route'] = 'blog/article_info';
+			} elseif (isset($this->request->get['blog_author_id'])) {
+				$this->request->get['route'] = 'blog/article_author';
+			} elseif (isset($this->request->get['blog_category_id'])) {
+				$this->request->get['route'] = 'blog/category';
 			}
 
 			if (isset($this->request->get['route'])) {
@@ -105,9 +127,29 @@ class ModelToolSeoUrl extends Controller {
 
 					if ($query->num_rows && $query->row['keyword']) {
 						$url .= '/' . $query->row['keyword'];
-
 						unset($data[$key]);
 					}
+
+				} elseif (($data['route'] == 'blog/article_info' && $key == 'blog_article_id') || ($data['route'] == 'blog/article_author' && $key == 'blog_author_id')) {
+					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
+
+					if ($query->num_rows) {
+						$url .= '/' . $query->row['keyword'];
+						unset($data[$key]);
+					}
+
+				} elseif ($data['route'] == 'blog/category' && $key == 'blog_category_id') {
+					$blog_categories = explode("_", $value);
+
+					foreach ($blog_categories as $blog_category) {
+						$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_category_id=" . (int)$blog_category . "'");
+
+						if ($query->num_rows) {
+							$url .= '/' . $query->row['keyword'];
+						}
+					}
+
+					unset($data[$key]);
 
 				} elseif ($key == 'path') {
 					$categories = explode('_', $value);
@@ -119,7 +161,6 @@ class ModelToolSeoUrl extends Controller {
 							$url .= '/' . $query->row['keyword'];
 						} else {
 							$url = '';
-
 							break;
 						}
 					}

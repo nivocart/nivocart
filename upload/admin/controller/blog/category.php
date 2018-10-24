@@ -545,8 +545,12 @@ class ControllerBlogCategory extends Controller {
 			$this->data['status'] = 1;
 		}
 
+		$blog_layout_id = $this->model_blog_category->getBlogCategoryLayoutName();
+
 		if (isset($this->request->post['category_layout'])) {
 			$this->data['category_layout'] = $this->request->post['category_layout'];
+		} elseif (isset($blog_layout_id)) {
+			$this->data['category_layout'] = $blog_layout_id;
 		} elseif (isset($this->request->get['blog_category_id'])) {
 			$this->data['category_layout'] = $this->model_blog_category->getCategoryLayouts($this->request->get['blog_category_id']);
 		} else {
