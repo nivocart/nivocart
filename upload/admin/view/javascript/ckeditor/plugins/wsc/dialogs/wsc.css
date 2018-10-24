@@ -13,15 +13,15 @@ body {
 }
 body, td, input, select, textarea {
 	font-size: 11px;
-	font-family: 'Microsoft Sans Serif' , Arial, Helvetica, Verdana;
+	font-family: 'Microsoft Sans Serif', Arial, Helvetica, Verdana;
 }
 .midtext {
-	padding:0;
-	margin:10px;
+	padding: 0;
+	margin: 10px;
 }
 .midtext p {
-	padding:0;
-	margin:10px;
+	padding: 0;
+	margin: 10px;
 }
 .Button {
 	border: #737357 1px solid;

@@ -15,10 +15,9 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 	font-size: 12px;
 	cursor: default;
 	color: #484848;
-	padding: 12px 30px 12px 12px; /* Let's the title and close don't overlap each other - padding-right. */
+	padding: 12px 30px 12px 12px;
 	background: #f8f8f8;
 }
-
 /* The close button at the top of the panel. */
 a.cke_balloon_close_button {
 	background-image: url(images/close.png);
@@ -93,6 +92,7 @@ a.cke_balloon_close_button:active {
 .cke_balloon_triangle_outer.cke_balloon_triangle_top {
 	border-color: #999 transparent;
 }
+
 .cke_balloon_triangle_inner.cke_balloon_triangle_bottom,
 .cke_balloon_triangle_inner.cke_balloon_triangle_top {
 	left: -20px;
@@ -103,6 +103,7 @@ a.cke_balloon_close_button:active {
 	border-width: 20px 20px 0;
 	bottom: -20px;
 }
+
 .cke_balloon_triangle_inner.cke_balloon_triangle_bottom {
 	border-color: #fff transparent;
 	border-width: 20px 20px 0;
@@ -114,6 +115,7 @@ a.cke_balloon_close_button:active {
 	border-width: 0 20px 20px;
 	top: -20px;
 }
+
 .cke_balloon_triangle_inner.cke_balloon_triangle_top {
 	border-color: #f8f8f8 transparent;
 	border-width: 0 20px 20px;
@@ -125,6 +127,7 @@ a.cke_balloon_close_button:active {
 .cke_balloon_triangle_outer.cke_balloon_triangle_right {
 	border-color: transparent #999;
 }
+
 .cke_balloon_triangle_inner.cke_balloon_triangle_left,
 .cke_balloon_triangle_inner.cke_balloon_triangle_right {
 	border-color: transparent #fff;
@@ -136,6 +139,7 @@ a.cke_balloon_close_button:active {
 	border-width: 20px 20px 20px 0;
 	left: -20px;
 }
+
 .cke_balloon_triangle_inner.cke_balloon_triangle_left {
 	border-color: transparent #fff;
 	border-width: 20px 20px 20px 0;
@@ -147,6 +151,7 @@ a.cke_balloon_close_button:active {
 	border-width: 20px 0 20px 20px;
 	right: -20px;
 }
+
 .cke_balloon_triangle_inner.cke_balloon_triangle_right {
 	border-width: 20px 0 20px 20px;
 	right: 2px;

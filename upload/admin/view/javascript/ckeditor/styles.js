@@ -13,7 +13,7 @@
 // ignore it. Otherwise it is strongly recommended to customize this file to match your
 // website requirements and design properly.
 //
-// For more information refer to: https://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_styles-section-style-rules
+// For more information refer to: https://ckeditor.com/docs/ckeditor4/latest/guide/dev_styles.html#style-rules
 
 CKEDITOR.stylesSet.add( 'default', [
 	/* Block styles */
@@ -52,7 +52,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	// (This requires the "stylescombo" plugin.)
 	/*
 	{ name: 'Strong', element: 'strong', overrides: 'b' },
-	{ name: 'Emphasis', element: 'em'	, overrides: 'i' },
+	{ name: 'Emphasis', element: 'em', overrides: 'i' },
 	{ name: 'Underline', element: 'u' },
 	{ name: 'Strikethrough', element: 'strike' },
 	{ name: 'Subscript', element: 'sub' },
@@ -74,13 +74,12 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: 'Inserted Text', element: 'ins' },
 
 	{ name: 'Cited Work', element: 'cite' },
-	{ name: 'Inline Quotation',	element: 'q' },
+	{ name: 'Inline Quotation', element: 'q' },
 
 	{ name: 'Language: RTL', element: 'span', attributes: { 'dir': 'rtl' } },
 	{ name: 'Language: LTR', element: 'span', attributes: { 'dir': 'ltr' } },
 
 	/* Object styles */
-
 	{
 		name: 'Styled Image (left)',
 		element: 'img',

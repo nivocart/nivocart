@@ -4,7 +4,7 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
 
 .cke_tpl_list {
-	border: 2px solid #dcdcdc;
+	border: #dcdcdc 2px solid;
 	background-color: #fff;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -14,7 +14,7 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 .cke_tpl_item {
 	margin: 5px;
 	padding: 7px;
-	border: 1px solid #eee;
+	border: #eee 1px solid;
 	*width: 88%;
 }
 .cke_tpl_preview {
@@ -38,7 +38,7 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 .cke_tpl_list a:hover .cke_tpl_item,
 .cke_tpl_list a:focus .cke_tpl_item,
 .cke_tpl_list a:active .cke_tpl_item {
-	border: 1px solid #ff9933;
+	border: #ff9933 1px solid;
 	background-color: #fffacd;
 }
 .cke_tpl_list a:hover *,

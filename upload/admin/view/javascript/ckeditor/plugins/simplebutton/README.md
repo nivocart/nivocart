@@ -9,7 +9,6 @@ If you use `sourcedialog` plugin, you need to enable `allowedContent` option
 config.allowedContent = true;
 ```
 
-
 #  Add item with custom toolbar
 ```
 config.toolbar = [

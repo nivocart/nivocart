@@ -5,41 +5,40 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 -->
 <html>
 <head>
-	<title></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<script type="text/javascript">
-
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript">
 function gup( name ) {
-	name = name.replace( /[\[]/, '\\\[' ).replace( /[\]]/, '\\\]' ) ;
+	name = name.replace( /[\[]/, '\\\[' ).replace( /[\]]/, '\\\]' );
 
-	var regexS = '[\\?&]' + name + '=([^&#]*)' ;
-	var regex = new RegExp( regexS ) ;
-	var results = regex.exec( window.location.href ) ;
+	var regexS = '[\\?&]' + name + '=([^&#]*)';
+	var regex = new RegExp( regexS );
+	var results = regex.exec( window.location.href );
 
 	if ( results ) {
-		return results[ 1 ] ;
+		return results[ 1 ];
 	} else {
-		return '' ;
+		return '';
 	}
 }
 
 var interval;
 
 function sendData2Master() {
-	var destination = window.parent.parent ;
+	var destination = window.parent.parent;
 	try {
 		if ( destination.XDTMaster ) {
-			var t = destination.XDTMaster.read( [ gup( 'cmd' ), gup( 'data' ) ] ) ;
-			window.clearInterval( interval ) ;
+			var t = destination.XDTMaster.read( [ gup( 'cmd' ), gup( 'data' ) ] );
+			window.clearInterval( interval );
 		}
 	}
 	catch (e) {}
 }
 
-function OnMessage (event) {
+function OnMessage(event) {
 	var message = event.data;
 	var destination = window.parent.parent;
-	destination.XDTMaster.read( [ 'end', message, 'fpm' ] ) ;
+	destination.XDTMaster.read( [ 'end', message, 'fpm' ] );
 }
 
 function listenPostMessage() {
@@ -56,8 +55,7 @@ function onLoad() {
 	interval = window.setInterval( sendData2Master, 100 );
 	listenPostMessage();
 }
-
 </script>
 </head>
-<body onload="onLoad()"><p></p></body>
+<body onload="onLoad();"><p></p></body>
 </html>

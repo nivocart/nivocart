@@ -41,13 +41,13 @@ blockquote {
 a {
 	color: #0782C1;
 }
-ol,ul,dl {
+ol, ul, dl {
 	/* IE7: reset rtl list margin. (#7334) */
 	*margin-right: 0;
 	/* Preserved spaces for list items with text direction different than the list. (#6249,#8049)*/
 	padding: 0 40px;
 }
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
 	font-weight: normal;
 	line-height: 1.2;
 }
@@ -82,7 +82,7 @@ span[lang] {
 figure {
 	text-align: center;
 	outline: solid 1px #ccc;
-	background: rgba(0,0,0,0.05);
+	background: rgba(0, 0, 0, 0.05);
 	padding: 10px;
 	margin: 10px 20px;
 	display: inline-block;
