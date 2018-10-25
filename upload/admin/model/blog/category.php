@@ -209,10 +209,10 @@ class ModelBlogCategory extends Model {
 		return $category_layout_data;
 	}
 
-	public function getBlogCategoryLayoutName() {
-		$query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'Blog'");
+	public function getBlogCategoryLayoutId() {
+		$query = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'Default'");
 
-		return $query->row;
+		return $query->row['layout_id'];
 	}
 
 	public function getTotalArticleCategoryWise($blog_category_id) {

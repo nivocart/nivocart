@@ -304,7 +304,7 @@ class ControllerBlogCategory extends Controller {
 
 		$this->data['sort_name'] = $this->url->link('blog/category', 'token=' . $this->session->data['token'] . '&sort=bcd.name' . $url, 'SSL');
 		$this->data['sort_status'] = $this->url->link('blog/category', 'token=' . $this->session->data['token'] . '&sort=bc.status' . $url, 'SSL');
-		$this->data['sort_sortorder'] = $this->url->link('blog/category', 'token=' . $this->session->data['token'] . '&sort=bc.sort_order' . $url, 'SSL');
+		$this->data['sort_sort_order'] = $this->url->link('blog/category', 'token=' . $this->session->data['token'] . '&sort=bc.sort_order' . $url, 'SSL');
 
 		$url = '';
 
@@ -545,14 +545,14 @@ class ControllerBlogCategory extends Controller {
 			$this->data['status'] = 1;
 		}
 
-		$blog_layout_id = $this->model_blog_category->getBlogCategoryLayoutName();
+		$blog_layout_id = $this->model_blog_category->getBlogCategoryLayoutId();
 
 		if (isset($this->request->post['category_layout'])) {
 			$this->data['category_layout'] = $this->request->post['category_layout'];
-		} elseif (isset($blog_layout_id)) {
-			$this->data['category_layout'] = $blog_layout_id;
 		} elseif (isset($this->request->get['blog_category_id'])) {
 			$this->data['category_layout'] = $this->model_blog_category->getCategoryLayouts($this->request->get['blog_category_id']);
+		} elseif (isset($blog_layout_id)) {
+			$this->data['category_layout'] = $blog_layout_id;
 		} else {
 			$this->data['category_layout'] = array();
 		}

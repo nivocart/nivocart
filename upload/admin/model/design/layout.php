@@ -39,6 +39,13 @@ class ModelDesignLayout extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "information_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
 
+		$blog_tables = $this->checkBlogStatus();
+
+		if ($blog_tables) {
+			$this->db->query("DELETE FROM " . DB_PREFIX . "blog_article_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "blog_category_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
+		}
+
 		$this->cache->delete('store');
 	}
 
@@ -98,5 +105,20 @@ class ModelDesignLayout extends Model {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "layout_route WHERE layout_id = '" . (int)$layout_id . "'");
 
 		return $query->row['total'];
+	}
+
+	// Blog
+	protected function checkBlogStatus() {
+		$table_name = $this->db->escape('blog_%');
+
+		$table = DB_PREFIX . $table_name;
+
+		$query = $this->db->query("SHOW TABLES LIKE '{$table}'");
+
+		if ($query->num_rows) {
+			return true;
+		}
+
+		return false;
 	}
 }
