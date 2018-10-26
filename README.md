@@ -1,12 +1,12 @@
 # NivoCart
 
-[![pipeline status](https://gitlab.com/nivocart/nivocart/badges/master/pipeline.svg)](https://gitlab.com/nivocart/nivocart/commits/master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f083a576fade4a7f83d5459569f0fe96)](https://www.codacy.com/app/nivocart/nivocart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nivocart/nivocart&amp;utm_campaign=Badge_Grade)[![License](https://poser.pugx.org/nivocart/nivocart/license)](https://packagist.org/packages/nivocart/nivocart)[![License](https://poser.pugx.org/nivocart/nivocart/license)](https://packagist.org/packages/nivocart/nivocart)[![Latest Stable Version](https://poser.pugx.org/nivocart/nivocart/v/stable)](https://packagist.org/packages/nivocart/nivocart)
+[![pipeline status](https://gitlab.com/nivocart/nivocart/badges/master/pipeline.svg)](https://gitlab.com/nivocart/nivocart/commits/master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f083a576fade4a7f83d5459569f0fe96)](https://www.codacy.com/app/nivocart/nivocart?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nivocart/nivocart&amp;utm_campaign=Badge_Grade) [![License](https://poser.pugx.org/nivocart/nivocart/license)](https://packagist.org/packages/nivocart/nivocart) [![Latest Stable Version](https://poser.pugx.org/nivocart/nivocart/v/stable)](https://packagist.org/packages/nivocart/nivocart)
 
 ADVANCED SHOPPING CART SYSTEM
 
-NivoCart is a fully featured shopping cart solution written in PHP, Html5, CSS3 and jQuery.
-NivoCart is completely self-contained (no remote dependencies) and does NOT use any frameworks such as Bootstrap, or template engines such as Twig. It uses the simple yet very efficient <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" title="MVC">MVC + L</a> (Model-View-Controller + Language) file structure, for both the backend and the frontend.
-NivoCart is primarily designed for small and medium online business entrepreneurs, giving them an easy to use and reliable all-in-one application to strengthen their online presence. The second objective of NivoCart is to give developers and web-design agencies a strong platform to work with, for the benefit of their respective customers.
+NivoCart is a fully featured shopping cart solution written in pure PHP, Html5, CSS3 and jQuery.<br />
+NivoCart is completely self-contained (no remote dependencies) and does NOT use any frameworks such as Bootstrap, or template engines such as Twig. It uses the simple yet very efficient <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" title="MVC">MVC</a> + L (Model-View-Controller + Language) file structure, for both the backend and the frontend.<br />
+NivoCart is primarily designed for small and medium online business entrepreneurs, giving them an easy to use and reliable all-in-one application to strengthen their online presence. The second objective of NivoCart is to give developers and web-design agencies a strong platform to work with, for the benefit of their respective customers.<br />
 NivoCart is a community based project where everybody is welcome. Feel free to download it, clone it, test it and contribute to it. Help and support can be found by visiting the <a href="http://forum.nivocart.com" title="Forum">NivoCart Community Forums</a>.
 
 REQUIREMENTS:
