@@ -393,7 +393,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 			$routes = array('blog/article_info', 'blog/article_list', 'blog/article_author', 'blog/category');
 
 			foreach ($routes as $route) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', `route` = '" . $route . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', route = '" . $route . "'");
 			}
 		}
 	}

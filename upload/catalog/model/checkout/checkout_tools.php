@@ -26,7 +26,7 @@ class ModelCheckoutCheckoutTools extends Model {
 			"trinity", "online", "chicken", "junior", "sparky", "merlin", "google", "friends", "hope",
 			"nintendo", "harley", "smokey", "lucky", "digital", "thunder", "spirit", "enter", "corvette",
 			"hockey", "power", "viper", "genesis", "knight", "creative", "adidas", "slayer", "wisdom",
-			"praise", "dallas", "green", "maverick", "mylove", "friend", "destiny", "bubbles", "cocacola",
+			"praise", "dallas", "green", "maverick", "morpheus", "friend", "destiny", "bubbles", "mustang",
 			"loving", "scooby", "maxwell", "baby", "prince", "chelsea", "dexter", "kitten", "stella",
 			"prayer", "hotdog", "zappa", "macadam", "ginseng", "orinoco", "chocolat", "mint"
 		);

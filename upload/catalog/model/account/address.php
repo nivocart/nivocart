@@ -135,7 +135,7 @@ class ModelAccountAddress extends Model {
 	}
 
 	public function getTotalAddresses() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if ($query->num_rows) {
 			return $query->row['total'];

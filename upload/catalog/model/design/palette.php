@@ -155,7 +155,7 @@ class ModelDesignPalette extends Model {
 	}
 
 	public function getTotalPalettes() {
-		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "palette";
+		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "palette";
 
 		$cache_id = 'palette.total';
 

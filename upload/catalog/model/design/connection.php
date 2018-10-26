@@ -2,13 +2,13 @@
 class ModelDesignConnection extends Model {
 
 	public function getConnection($connection_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "connection WHERE connection_id = '" . (int)$connection_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->row;
 	}
 
 	public function getConnections($data = array()) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "connection";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "connection`";
 
 		$sort_data = array(
 			'name',
@@ -51,7 +51,7 @@ class ModelDesignConnection extends Model {
 		if (!$connection_data) {
 			$connection_data = array();
 
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "connection");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "connection`");
 
 			foreach ($query->rows as $result) {
 				$connection_data[] = array('connection_id' => $result['connection_id']);
@@ -70,13 +70,13 @@ class ModelDesignConnection extends Model {
 	}
 
 	public function getConnectionName($connection_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "connection WHERE connection_id = '" . (int)$connection_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->row['name'];
 	}
 
 	public function getTotalConnections() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "connection");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "connection`");
 
 		if (isset($query->row['total'])) {
 			return $query->row['total'];

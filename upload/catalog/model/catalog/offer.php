@@ -335,14 +335,14 @@ class ModelCatalogOffer extends Model {
 
 	// Product Image
 	public function getOfferProductImage($product_id) {
-		$query = $this->db->query("SELECT image FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "' AND status = '1'");
+		$query = $this->db->query("SELECT image FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "' AND status = '1'");
 
 		return $query->row['image'];
 	}
 
 	// Product Name
 	public function getOfferProductName($product_id) {
-		$query = $this->db->query("SELECT pd.name AS name FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.product_id = '" . (int)$product_id . "' AND p.status = '1'");
+		$query = $this->db->query("SELECT pd.name AS name FROM `" . DB_PREFIX . "product` p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.product_id = '" . (int)$product_id . "' AND p.status = '1'");
 
 		return $query->row['name'];
 	}

@@ -71,7 +71,7 @@ $_['text_description']       = '<p>The Administration User Log allows you to rec
 // Help
 $_['help_user_log_enable']   = 'Recommended!';
 $_['help_user_log_hacklog']  = 'Recommended!';
-$_['help_user_log_access']   = 'Enabling this will generate a large amount of data.';
+$_['help_user_log_access']   = 'Enabling this option will generate a large amount of data.';
 
 // Buttons
 $_['button_settings']        = 'Update Settings';

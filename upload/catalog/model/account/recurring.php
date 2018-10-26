@@ -2,7 +2,7 @@
 class ModelAccountRecurring extends Model {
 
 	public function getProfile($id) {
-		$result = $this->db->query("SELECT `or`.*, o.payment_method, o.payment_code, o.currency_code FROM `" . DB_PREFIX . "order_recurring` `or` LEFT JOIN `" . DB_PREFIX . "order` o ON (`or`.`order_id` = o.order_id) WHERE `or`.`order_recurring_id` = '" . (int)$id . "' AND o.customer_id = '" . (int)$this->customer->getId() . "' LIMIT 0,1");
+		$result = $this->db->query("SELECT orc.*, o.payment_method, o.payment_code, o.currency_code FROM `" . DB_PREFIX . "order_recurring` orc LEFT JOIN `" . DB_PREFIX . "order` o ON (orc.order_id = o.order_id) WHERE orc.order_recurring_id = '" . (int)$id . "' AND o.customer_id = '" . (int)$this->customer->getId() . "' LIMIT 0,1");
 
 		if ($result->num_rows > 0) {
 			$profile = $result->row;
@@ -52,7 +52,7 @@ class ModelAccountRecurring extends Model {
 			$limit = 1;
 		}
 
-		$result = $this->db->query("SELECT `or`.*, o.payment_method, o.currency_id, o.currency_value FROM `" . DB_PREFIX . "order_recurring` `or` LEFT JOIN `" . DB_PREFIX . "order` o ON (`or`.`order_id` = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
+		$result = $this->db->query("SELECT orc.*, o.payment_method, o.currency_id, o.currency_value FROM `" . DB_PREFIX . "order_recurring` orc LEFT JOIN `" . DB_PREFIX . "order` o ON (orc.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
 
 		if ($result->num_rows > 0) {
 			$profiles = array();
@@ -68,7 +68,7 @@ class ModelAccountRecurring extends Model {
 	}
 
 	public function getTotalRecurring() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order_recurring` `or` LEFT JOIN `" . DB_PREFIX . "order` o ON (`or`.`order_id` = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order_recurring` orc LEFT JOIN `" . DB_PREFIX . "order` o ON (orc.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if ($query->num_rows) {
 			return $query->row['total'];
@@ -78,10 +78,10 @@ class ModelAccountRecurring extends Model {
 	}
 
 	public function addOrderRecurringTransaction($order_recurring_id, $type, $amount = 0) {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$order_recurring_id . "', `created` = NOW(), `amount` = '" . (double)$amount . "', `type` = '" . (int)$type . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET order_recurring_id = '" . (int)$order_recurring_id . "', created = NOW(), amount = '" . (double)$amount . "', `type` = '" . (int)$type . "'");
 	}
 
 	public function updateOrderRecurringStatus($order_recurring_id, $status) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = '" . (int)$status . "' WHERE `order_recurring_id` = '" . (int)$order_recurring_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET status = '" . (int)$status . "' WHERE order_recurring_id = '" . (int)$order_recurring_id . "'");
 	}
 }
