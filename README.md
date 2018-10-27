@@ -4,10 +4,16 @@
 
 ADVANCED SHOPPING CART SYSTEM
 
-NivoCart is a fully featured shopping cart solution written in pure PHP, Html5, CSS3 and jQuery. It is a user friendly all-in-one application developed for small or medium businesses wanting to have a strong and secure online presence.<br />
-NivoCart is completely self-contained, does not have any remote dependencies and does not use any template engines or frameworks, other than jQuery UI. It is "built" using the simple yet very effective <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" title="MVC">MVC</a>+L (Model-View-Controller + Language) architecture, for both the backend administration and the frontend store(s).<br />
+NivoCart is a fully featured shopping cart solution written in pure PHP, Html5, CSS3 and jQuery.<br />
+NivoCart is a user friendly all-in-one application that does not have any remote dependencies and does not use any template engines or frameworks.<br />
 NivoCart is a community based project, so feel free to download it, clone it, test it and contribute to it.<br />
-Help and support can be found by visiting the <a href="http://forum.nivocart.com" title="Forum">NivoCart Community Forums</a>.
+Help and support can be found by visiting the <a href="http://forum.nivocart.com" title="Forum">NivoCart Forum</a>.
+
+_____________________________________________________________________________________________
+
+DEMONSTRATION: Click <a href="https://nivocart.com/index.php?route=demonstration/demonstration" title="Demos">HERE</a> to test the current version of NivoCart.
+_____________________________________________________________________________________________
+
 
 REQUIREMENTS:
 - Server: Apache Linux Server
@@ -63,6 +69,8 @@ WANT TO CONTRIBUTE?
 LICENCE: <a href="https://opensource.org/licenses/OSL-3.0" title="License">Open Software License version 3.0 (OSL-3.0)</a>
 
 FORUM: <a href="http://forum.nivocart.com" title="Forum">NivoCart Community Forums</a>
+
+HOME: <a href="https://nivocart.com" title="Home">NivoCart Home</a>
 
 EMAIL: contact@nivocart.com
 
