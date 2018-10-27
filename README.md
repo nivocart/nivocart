@@ -4,9 +4,8 @@
 
 ADVANCED SHOPPING CART SYSTEM
 
-NivoCart is a fully featured shopping cart solution written in pure PHP, Html5, CSS3 and jQuery.<br />
-NivoCart is completely self-contained, does not have any remote dependencies and does not use any frameworks, such as Bootstrap, or template engines, such as Twig. It uses the simple yet very efficient <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" title="MVC">MVC</a> + L (Model-View-Controller + Language) file structure, for both the backend administration and the store(s) frontend.<br />
-NivoCart is designed primarily for small and medium online business entrepreneurs, presenting them with an easy to use and reliable all-in-one shopping cart application to strengthen their online presence. The second objective of NivoCart is to give developers and web-design agencies a solid platform to work with, for the benefit of their respective clients.<br />
+NivoCart is a fully featured shopping cart solution written in pure PHP, Html5, CSS3 and jQuery. It is a user friendly all-in-one application developed for small or medium businesses wanting to have a strong and secure presence online.<br />
+NivoCart is completely self-contained, does not have any remote dependencies and does not use any frameworks or template engines. It is built using the simple yet very effective <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" title="MVC">MVC</a>+L (Model-View-Controller + Language) architecture, for both the backend administration and the store(s) frontend.<br />
 NivoCart is a community based project where everybody is welcome.<br />
 Feel free to download it, clone it, test it and contribute to it.<br />
 Help and support can be found by visiting the <a href="http://forum.nivocart.com" title="Forum">NivoCart Community Forums</a>.
@@ -45,6 +44,16 @@ Just click "Upgrade". Done!
 _____________________________________________________________________________________________
 
 
+VERSIONING:
+
+NivoCart adheres to the Semantic Versioning guidelines.
+Releases will be numbered as follow:
+<p><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code></p>
+For more information, please visit <a href="https://semver.org" rel="nofollow">https://semver.org</a>.
+
+_____________________________________________________________________________________________
+
+
 WANT TO CONTRIBUTE?
 - Test and report bugs, typos or improvements.
 - Design new Extensions and Themes.
@@ -57,3 +66,5 @@ LICENCE: <a href="https://opensource.org/licenses/OSL-3.0" title="License">Open 
 FORUM: <a href="http://forum.nivocart.com" title="Forum">NivoCart Community Forums</a>
 
 EMAIL: contact@nivocart.com
+
+Copyright &copy; 2018 - nivocart.com</p>
