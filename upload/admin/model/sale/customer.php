@@ -247,10 +247,10 @@ class ModelSaleCustomer extends Model {
 	public function getDeletedByCustomerId($customer_id) {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_deleted WHERE customer_id = '" . (int)$customer_id . "'");
 
-		if ($query->row['total'] == 0) {
-			return false;
-		} else {
+		if ($query->row['total'] > 0) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 

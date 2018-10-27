@@ -41,8 +41,8 @@ class Captcha {
 
 		imagefilledrectangle($image, 0, 0, 292, 42, $background);
 
-		imagettftext($image, 25, 0, 7, 29, $text_shadow, $file, $this->code);
-		imagettftext($image, 25, 0, 6, 28, $text_color, $file, $this->code);
+		imagettftext($image, 24, 0, 7, 29, $text_shadow, $file, $this->code);
+		imagettftext($image, 24, 0, 6, 28, $text_color, $file, $this->code);
 
 		header('Content-Disposition: Attachment;filename=image.png');
 		header('Content-type: image/png');

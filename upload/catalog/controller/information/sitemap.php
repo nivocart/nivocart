@@ -122,11 +122,11 @@ class ControllerInformationSitemap extends Controller {
 		$this->load->model('blog/article');
 		$this->load->model('blog/status');
 
+		$this->data['blog_categories'] = array();
+
 		$blog_tables = $this->model_blog_status->checkBlog();
 
 		if ($blog_tables) {
-			$this->data['blog_categories'] = array();
-
 			$blog_categories_1 = $this->model_blog_article->getCategories(0);
 
 			foreach ($blog_categories_1 as $blog_category_1) {

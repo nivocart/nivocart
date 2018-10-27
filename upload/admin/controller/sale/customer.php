@@ -718,7 +718,11 @@ class ControllerSaleCustomer extends Controller {
 		$this->data['tab_ip'] = $this->language->get('tab_ip');
 
 		// Customer deleted
-		$this->data['customer_deleted'] = $this->model_sale_customer->getDeletedByCustomerId($this->request->get['customer_id']);
+		if (isset($this->request->get['customer_id'])) {
+			$this->data['customer_deleted'] = $this->model_sale_customer->getDeletedByCustomerId($this->request->get['customer_id']);
+		} else {
+			$this->data['customer_deleted'] = false;
+		}
 
 		$this->data['customer_warning'] = $this->language->get('customer_warning');
 
