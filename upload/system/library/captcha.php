@@ -34,13 +34,15 @@ class Captcha {
 
 		$image = imagecreatetruecolor($this->width, $this->height);
 
-		$color = imagecolorallocate($image, 10, 10, 10);
-
 		$background = imagecolorallocate($image, 250, 250, 250);
 
-		imagefilledrectangle($image, 0, 0, 262, 42, $background);
+		$text_color = imagecolorallocate($image, 10, 10, 10);
+		$text_shadow = imagecolorallocate($image, 128, 128, 128);
 
-		imagettftext($image, 22, 0, 2, 28, $color, $file, $this->code);
+		imagefilledrectangle($image, 0, 0, 292, 42, $background);
+
+		imagettftext($image, 25, 0, 7, 29, $text_shadow, $file, $this->code);
+		imagettftext($image, 25, 0, 6, 28, $text_color, $file, $this->code);
 
 		header('Content-Disposition: Attachment;filename=image.png');
 		header('Content-type: image/png');
