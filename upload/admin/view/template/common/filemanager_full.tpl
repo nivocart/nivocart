@@ -1,6 +1,6 @@
 <?php echo $header; ?>
-<link type="text/css" href="view/stylesheet/filemanager_full.css" rel="stylesheet" />
-<link type="text/css" href="view/javascript/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="view/stylesheet/filemanager_full.css" />
+<link rel="stylesheet" type="text/css" href="view/javascript/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" />
 
 <script type="text/javascript" src="view/javascript/jquery/ui/external/jquery.bgiframe-2.1.2.js"></script>
 <script type="text/javascript" src="view/javascript/jquery/jstree/jquery.tree.min.js"></script>

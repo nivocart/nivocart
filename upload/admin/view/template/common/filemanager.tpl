@@ -4,9 +4,10 @@
 <meta charset="UTF-8" />
 <title><?php echo $title; ?></title>
 <base href="<?php echo $base; ?>" />
-<link type="text/css" href="view/stylesheet/filemanager.css" rel="stylesheet" />
-<link type="text/css" href="view/javascript/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" rel="stylesheet" />
-<link type="text/css" href="view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="view/stylesheet/filemanager.css" />
+<link rel="stylesheet" type="text/css" href="view/javascript/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" />
+<link rel="stylesheet" type="text/css" href="view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" />
+<link rel="stylesheet" type="text/css" href="view/stylesheet/font-awesome.min.css" />
 
 <script type="text/javascript" src="view/javascript/jquery/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="view/javascript/jquery/jquery-migrate-1.4.1.min.js"></script>
