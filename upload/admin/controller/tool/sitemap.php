@@ -245,7 +245,6 @@ class ControllerToolSitemap extends Controller {
 
 	// Master XML Sitemap
 	public function generateXml() {
-
 		$this->language->load('tool/' . $this->_name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
