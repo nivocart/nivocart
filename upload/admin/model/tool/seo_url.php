@@ -196,7 +196,11 @@ class ModelToolSeoUrl extends Controller {
 				}
 			}
 
-			return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
+			if (isset($url_info['scheme']) && isset($url_info['host'])) {
+				return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
+			} else {
+				return rtrim(HTTPS_CATALOG, '/') . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
+			}
 		} else {
 			return $link;
 		}
