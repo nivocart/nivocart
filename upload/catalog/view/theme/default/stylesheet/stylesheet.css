@@ -9,7 +9,6 @@
   font-style: normal;
   font-weight: 400;
   src: local('Roboto'), local('Roboto-Regular'),
-    url('fonts/roboto-v18-cyrillic_greek_latin-regular.eot') format('embedded-opentype'),
     url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff2') format('woff2'),
     url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff') format('woff'),
     url('fonts/roboto-v18-cyrillic_greek_latin-regular.ttf') format('truetype'),
@@ -234,12 +233,12 @@ span.from {
 /* Top Links */
 a.top-link, a.top-link:visited, a.top-link:hover {
 	text-align: right;
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: normal;
 	text-decoration: none;
 	text-shadow: 0 1px 0 #EEE;
 	line-height: 40px;
-	margin-right: 10px;
+	margin-right: 12px;
 }
 a.top-link:first-child {
 	margin-left: 10px;
@@ -3002,6 +3001,12 @@ table.order-options tr td #payment-method h2 {
 	#content-right + #content {
 		margin-right: 5px;
 	}
+	/* Top Links */
+	a.top-link, a.top-link:visited, a.top-link:hover {
+		font-size: 24px;
+		padding-left: 5px;
+		margin-right: 15px;
+	}
 	/* Header */
 	#header {
 		height: 180px;
@@ -3176,6 +3181,12 @@ table.order-options tr td #payment-method h2 {
 	}
 	#content-right + #content {
 		margin-right: 5px;
+	}
+	/* Top Links */
+	a.top-link, a.top-link:visited, a.top-link:hover {
+		font-size: 24px;
+		padding-left: 5px;
+		margin-right: 15px;
 	}
 	/* Header */
 	#header {
@@ -3377,6 +3388,12 @@ table.order-options tr td #payment-method h2 {
 	}
 	#content-right + #content {
 		margin-right: 5px;
+	}
+	/* Top Links */
+	a.top-link, a.top-link:visited, a.top-link:hover {
+		font-size: 24px;
+		padding-left: 5px;
+		margin-right: 15px;
 	}
 	/* Header */
 	#header {

@@ -306,11 +306,11 @@
             </tr>
             <tr>
               <td>WEBP Support:</td>
-              <td><?php echo ($php_webp) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/attention.png" alt="" /> PHP 7.0.10 +'; ?></td>
+              <td><?php echo ($php_webp) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/attention.png" alt="" />'; ?></td>
             </tr>
             <tr>
               <td>BMP Support:</td>
-              <td><?php echo ($php_bmp) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/attention.png" alt="" /> PHP 7.2.0 +'; ?></td>
+              <td><?php echo ($php_bmp) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/attention.png" alt="" />'; ?></td>
             </tr>
           </table>
         </div>
