@@ -48,27 +48,29 @@
   <div class="product-filter">
     <div class="display"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-active.png" alt="" /> <a onclick="display('grid');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-off.png" alt="" /></a></div>
     <div class="product-compare"><a href="<?php echo $compare; ?>" id="compare-total"><i class="fa fa-random"></i><span class="hide-tablet"> &nbsp;<?php echo $text_compare; ?></span></a></div>
-    <div class="limit"><?php echo $text_limit; ?>
-      <select onchange="location = this.value;">
-      <?php foreach ($limits as $limits) { ?>
-        <?php if ($limits['value'] == $limit) { ?>
-          <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
-        <?php } else { ?>
-          <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
+    <div class="selectors">
+      <div class="limit"><?php echo $text_limit; ?>
+        <select onchange="location = this.value;">
+        <?php foreach ($limits as $limits) { ?>
+          <?php if ($limits['value'] == $limit) { ?>
+            <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
+          <?php } else { ?>
+            <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
+          <?php } ?>
         <?php } ?>
-      <?php } ?>
-      </select>
-    </div>
-    <div class="sort"><?php echo $text_sort; ?>
-      <select onchange="location = this.value;">
-      <?php foreach ($sorts as $sorts) { ?>
-        <?php if ($sorts['value'] == $sort . '-' . $order) { ?>
-          <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
-        <?php } else { ?>
-          <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
+        </select>
+      </div>
+      <div class="sort"><?php echo $text_sort; ?>
+        <select onchange="location = this.value;">
+        <?php foreach ($sorts as $sorts) { ?>
+          <?php if ($sorts['value'] == $sort . '-' . $order) { ?>
+            <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
+          <?php } else { ?>
+            <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
+          <?php } ?>
         <?php } ?>
-      <?php } ?>
-      </select>
+        </select>
+      </div>
     </div>
   </div>
   <div class="product-list">

@@ -1554,14 +1554,22 @@ ul.box-filter > li ul {
 .product-filter .display a {
 	font-weight: bold;
 }
-.product-filter .sort {
+.product-filter .selectors {
+	position: relative;
+	top: 5px;
 	float: right;
 	color: #333;
+	display: inline-block;
 }
-.product-filter .limit {
+.product-filter .selectors > .sort {
+	position: relative;
+	right: 30px;
 	float: right;
-	margin: 0 5px 0 15px;
-	color: #333;
+}
+.product-filter .selectors > .limit {
+	position: relative;
+	right: 5px;
+	float: right;
 }
 /* Product Compare */
 .product-compare {
@@ -1569,11 +1577,11 @@ ul.box-filter > li ul {
 	padding: 4px 0 0 8px;
 }
 .product-compare a {
+	display: block;
 	color: #777;
-	font-size: 15px;
+	font-size: 16px;
 	line-height: 30px;
 	text-decoration: none;
-	display: block;
 }
 .product-compare a:hover {
 	color: #36AAD8;
@@ -1613,6 +1621,7 @@ ul.box-filter > li ul {
 }
 .product-list .name a {
 	color: #36AAD8;
+	font-size: 16px;
 	font-weight: bold;
 	text-decoration: none;
 }
@@ -1624,7 +1633,7 @@ ul.box-filter > li ul {
 }
 .product-list .description {
 	color: #4D4D4D;
-	line-height: 15px;
+	line-height: 20px;
 	margin-bottom: 5px;
 	overflow-wrap: break-word;
 }
@@ -1647,7 +1656,7 @@ ul.box-filter > li ul {
 	float: right;
 	height: 52px;
 	color: #444;
-	font-size: 15px;
+	font-size: 18px;
 	font-weight: bold;
 	text-shadow: 0 1px 0 #CCC;
 	text-align: right;
@@ -1661,7 +1670,7 @@ ul.box-filter > li ul {
 .product-list .price-new {
 }
 .product-list .price-tax {
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: normal;
 	color: #BBB;
 }
@@ -1669,11 +1678,11 @@ ul.box-filter > li ul {
 	float: right;
 	clear: right;
 	display: inline-block;
-	margin: 5px 1px;
+	margin: 5px 1px 8px 0;
 }
 .product-list .addons a i {
-	font-size: 21px;
-	padding: 1px;
+	font-size: 22px;
+	padding: 4px;
 }
 .product-list .cart {
 	float: right;
@@ -1686,6 +1695,7 @@ ul.box-filter > li ul {
 	color: #CC2626;
 	font-weight: bold;
 	text-decoration: none;
+	padding: 3px;
 }
 /* Product grid */
 .product-grid {
@@ -1724,6 +1734,7 @@ ul.box-filter > li ul {
 .product-grid .name a {
 	display: block;
 	color: #36AAD8;
+	font-size: 16px;
 	font-weight: bold;
 	text-decoration: none;
 	margin-bottom: 4px;
@@ -1745,7 +1756,7 @@ ul.box-filter > li ul {
 .product-grid .price {
 	display: block;
 	color: #444;
-	font-size: 15px;
+	font-size: 18px;
 	font-weight: bold;
 	text-shadow: 0 1px 0 #CCC;
 	margin-bottom: 4px;
@@ -1771,11 +1782,11 @@ ul.box-filter > li ul {
 }
 .product-grid .addons {
 	display: inline-block;
-	margin: 5px 1px;
+	margin: 5px 0 8px 0;
 }
 .product-grid .addons a i {
-	font-size: 21px;
-	padding: 1px;
+	font-size: 22px;
+	padding: 4px;
 }
 .product-grid .cart {
 	margin-bottom: 3px;
@@ -1783,8 +1794,10 @@ ul.box-filter > li ul {
 .product-grid .cart span.stock-status, span.stock-status {
 	display: block;
 	color: #CC2626;
+	font-size: 15px;
 	font-weight: bold;
 	text-decoration: none;
+	padding: 5px 3px;
 }
 /* Product info */
 .product-info {
@@ -3093,6 +3106,10 @@ table.order-options tr td #payment-method h2 {
 		clear: left;
 		padding: 4px 0 0 2px;
 	}
+	.product-filter .selectors {
+		clear: left;
+		margin-bottom: 10px;
+	}
 	/* Reviews */
 	#review {
 		float: left;
@@ -3273,6 +3290,16 @@ table.order-options tr td #payment-method h2 {
 	#content-left + #content-right + #content .product-filter .product-compare {
 		clear: left;
 		padding: 4px 0 0 2px;
+	}
+	.product-filter .selectors {
+		clear: left;
+		margin-bottom: 10px;
+	}
+	.product-filter .selectors > .sort {
+		right: 15px;
+	}
+	.product-filter .selectors > .limit {
+		right: 2px;
 	}
 	/* Search Button */
 	#button-search {
@@ -3480,6 +3507,16 @@ table.order-options tr td #payment-method h2 {
 	#content-left + #content-right + #content .product-filter .product-compare {
 		clear: left;
 		padding: 4px 0 0 2px;
+	}
+	.product-filter .selectors {
+		clear: left;
+		margin-bottom: 10px;
+	}
+	.product-filter .selectors > .sort {
+		right: 10px;
+	}
+	.product-filter .selectors > .limit {
+		right: 0;
 	}
 	/* Product Info */
 	#product-info > span #price-button-add {
