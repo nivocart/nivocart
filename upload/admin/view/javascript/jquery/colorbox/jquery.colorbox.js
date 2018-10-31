@@ -4,16 +4,12 @@
 	http://www.jacklmoore.com/colorbox
 */
 (function($, document, window) {
-	var
-	// Default settings object.
-	// See http://jacklmoore.com/colorbox for details.
-	defaults = {
+	var defaults = {
 		// data sources
 		html: false,
 		photo: false,
 		iframe: false,
 		inline: false,
-
 		// behavior and appearance
 		transition: "elastic",
 		speed: 300,
@@ -51,12 +47,10 @@
 		slideshowStart: "start slideshow",
 		slideshowStop: "stop slideshow",
 		photoRegex: /\.(gif|png|jp(e|g|eg)|bmp|ico|webp|jxr|svg)((#|\?).*)?$/i,
-
 		// alternate image paths for high-res displays
 		retinaImage: false,
 		retinaUrl: false,
 		retinaSuffix: '@2x.$1',
-
 		// internationalization
 		current: "image {current} of {total}",
 		previous: "previous",
@@ -64,18 +58,15 @@
 		close: "close",
 		xhrError: "This content failed to load.",
 		imgError: "This image failed to load.",
-
 		// accessbility
 		returnFocus: true,
 		trapFocus: true,
-
 		// callbacks
 		onOpen: false,
 		onLoad: false,
 		onComplete: false,
 		onCleanup: false,
 		onClosed: false,
-
 		rel: function() {
 			return this.rel;
 		},
@@ -95,7 +86,6 @@
 					img[key] = val;
 				});
 			}
-
 			return img;
 		},
 		createIframe: function() {
@@ -107,25 +97,22 @@
 					iframe[key] = val;
 				});
 			}
-
 			if ('frameBorder' in iframe) {
 				iframe.frameBorder = 0;
 			}
 			if ('allowTransparency' in iframe) {
 				iframe.allowTransparency = "true";
 			}
+
 			iframe.name = (new Date()).getTime(); // give the iframe a unique name to prevent caching
 			iframe.allowFullscreen = true;
-
 			return iframe;
 		}
 	},
-
 	// Abstracting the HTML and event identifiers for easy rebranding
 	colorbox = 'colorbox',
 	prefix = 'cbox',
 	boxElement = prefix + 'Element',
-
 	// Events
 	event_open = prefix + '_open',
 	event_load = prefix + '_load',
@@ -133,7 +120,6 @@
 	event_cleanup = prefix + '_cleanup',
 	event_closed = prefix + '_closed',
 	event_purge = prefix + '_purge',
-
 	// Cached jQuery Object Variables
 	$overlay,
 	$box,
@@ -155,8 +141,7 @@
 	$prev,
 	$close,
 	$groupControls,
-	$events = $('<a/>'), // $({}) would be prefered, but there is an issue with jQuery 1.4.2
-
+	$events = $('<a/>'),
 	// Variables for cached values or use across multiple functions
 	settings,
 	interfaceHeight,
@@ -178,7 +163,6 @@
 	// ****************
 	// HELPER FUNCTIONS
 	// ****************
-
 	// Convenience function for creating new jQuery objects
 	function $tag(tag, id, css) {
 		var element = document.createElement(tag);
@@ -186,7 +170,6 @@
 		if (id) {
 			element.id = prefix + id;
 		}
-
 		if (css) {
 			element.style.cssText = css;
 		}
@@ -222,7 +205,6 @@
 					this.cache[key] = defaults[key];
 				}
 			}
-
 			return this.cache[key];
 		};
 
@@ -299,12 +281,9 @@
 	}
 
 	var slideshow = (function() {
-		var active,
-			className = prefix + "Slideshow_",
-			click = "click." + prefix,
-			timeOut;
+		var active, className = prefix + "Slideshow_", click = "click." + prefix, timeOut;
 
-		function clear () {
+		function clear() {
 			clearTimeout(timeOut);
 		}
 
@@ -316,14 +295,9 @@
 		}
 
 		function start() {
-			$slideshow
-				.html(settings.get('slideshowStop'))
-				.unbind(click)
-				.one(click, stop);
+			$slideshow.html(settings.get('slideshowStop')).unbind(click).one(click, stop);
 
-			$events
-				.bind(event_complete, set)
-				.bind(event_load, clear);
+			$events.bind(event_complete, set).bind(event_load, clear);
 
 			$box.removeClass(className + "off").addClass(className + "on");
 		}
@@ -331,17 +305,12 @@
 		function stop() {
 			clear();
 
-			$events
-				.unbind(event_complete, set)
-				.unbind(event_load, clear);
+			$events.unbind(event_complete, set).unbind(event_load, clear);
 
-			$slideshow
-				.html(settings.get('slideshowStart'))
-				.unbind(click)
-				.one(click, function() {
-					publicMethod.next();
-					start();
-				});
+			$slideshow.html(settings.get('slideshowStart')).unbind(click).one(click, function() {
+				publicMethod.next();
+				start();
+			});
 
 			$box.removeClass(className + "on").addClass(className + "off");
 		}
@@ -350,9 +319,7 @@
 			active = false;
 			$slideshow.hide();
 			clear();
-			$events
-				.unbind(event_complete, set)
-				.unbind(event_load, clear);
+			$events.unbind(event_complete, set).unbind(event_load, clear);
 			$box.removeClass(className + "off " + className + "on");
 		}
 
@@ -426,10 +393,8 @@
 				$box.focus();
 
 				if (settings.get('trapFocus')) {
-					// Confine focus to the modal
-					// Uses event capturing that is not supported in IE8-
+					// Confine focus to the modal. Not supported in IE8-.
 					if (document.addEventListener) {
-
 						document.addEventListener('focus', trapFocus, true);
 
 						$events.one(event_closed, function() {
@@ -477,18 +442,18 @@
 				tabindex: '-1'
 			}).hide();
 			$overlay = $tag(div, "Overlay").hide();
-			$loadingOverlay = $([$tag(div, "LoadingOverlay")[0],$tag(div, "LoadingGraphic")[0]]);
+			$loadingOverlay = $([$tag(div, "LoadingOverlay")[0], $tag(div, "LoadingGraphic")[0]]);
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
-				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
-				$next = $('<button type="button"/>').attr({id:prefix+'Next'}),
-				$slideshow = $('<button type="button"/>').attr({id:prefix+'Slideshow'}),
+				$prev = $('<button type="button" />').attr({id:prefix + 'Previous'}),
+				$next = $('<button type="button" />').attr({id:prefix + 'Next'}),
+				$slideshow = $('<button type="button" />').attr({id:prefix + 'Slideshow'}),
 				$loadingOverlay
 			);
 
-			$close = $('<button type="button"/>').attr({id:prefix+'Close'});
+			$close = $('<button type="button" />').attr({id:prefix + 'Close'});
 
 			$wrap.append( // The 3x3 Grid that makes up Colorbox
 				$tag(div).append(
@@ -573,7 +538,6 @@
 					// For jQuery 1.7+
 					$(document).on('click.'+prefix, '.'+boxElement, clickHandler);
 				} else {
-					// For jQuery 1.3.x -> 1.6.x
 					// This code is never reached in jQuery 1.9, so do not contact me about 'live' being removed.
 					// This is not here for jQuery 1.9, it's here for legacy users.
 					$('.'+boxElement).live('click.'+prefix, clickHandler);
@@ -598,7 +562,6 @@
 	// Usage format: $.colorbox.close();
 	// Usage from within an iframe: parent.jQuery.colorbox.close();
 	// ****************
-
 	publicMethod = $.fn[colorbox] = $[colorbox] = function(options, callback) {
 		var settings;
 		var $obj = this;
@@ -680,7 +643,7 @@
 			top += Math.round(Math.max(winheight() - settings.h - loadedHeight - interfaceHeight, 0) / 2);
 		}
 
-		$box.css({ top: offset.top, left: offset.left, visibility:'visible' });
+		$box.css({ top:offset.top, left:offset.left, visibility:'visible' });
 
 		// this gives the wrapper plenty of breathing room so it's floated contents can move around smoothly,
 		// but it has to be shrank down around the size of div#colorbox when it's done.  If not,
@@ -725,7 +688,7 @@
 				$wrap[0].style.height = (settings.h + loadedHeight + interfaceHeight) + "px";
 
 				if (settings.get('reposition')) {
-					setTimeout(function() {  // small delay before binding onresize due to an IE8 bug.
+					setTimeout(function() {
 						$window.bind('resize.' + prefix, publicMethod.position);
 					}, 1);
 				}
@@ -815,9 +778,7 @@
 		setClass(settings.get('className'));
 
 		callback = function() {
-			var total = $related.length,
-				iframe,
-				complete;
+			var total = $related.length, iframe, complete;
 
 			if (!open) {
 				return;
@@ -1088,9 +1049,7 @@
 		$overlay.remove();
 		closing = false;
 		$box = null;
-		$('.' + boxElement)
-			.removeData(colorbox)
-			.removeClass(boxElement);
+		$('.' + boxElement).removeData(colorbox).removeClass(boxElement);
 
 		$(document).unbind('click.' + prefix).unbind('keydown.' + prefix);
 	};

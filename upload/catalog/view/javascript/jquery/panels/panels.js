@@ -1,5 +1,5 @@
 /*
- panels.js v1.0.2 | @villagedefrance | Overclocked Edition | GNU GPL3 Licensed
+ panels.js v1.0.3 | @nivocart | NivoCart | OSLv3 Licensed
  ---------------------------------------------------------------------------
  Panels.js file for development. Use minified version for production.
  ---------------------------------------------------------------------------
@@ -91,7 +91,9 @@ function animateStep(panelContent, iteration, stepHeight, direction) {
 	if (iteration < PANEL_ANIMATION_STEPS) {
 		panelContent.style.height = Math.round(((direction > 0) ? iteration : 10 - iteration) * stepHeight) + "px";
 		iteration++;
-		setTimeout(function() {animateStep(panelContent,iteration,stepHeight,direction)}, PANEL_ANIMATION_DELAY);
+		setTimeout(function() {
+			animateStep(panelContent,iteration,stepHeight,direction)
+		}, PANEL_ANIMATION_DELAY);
 	} else {
 		// set class for the panel
 		panelContent.parentNode.className = (direction < 0) ? PANEL_COLLAPSED_CLASS : PANEL_NORMAL_CLASS;
@@ -108,14 +110,18 @@ function loadSettings() {
 
 	// find the cookie name
 	var start = document.cookie.indexOf(PANEL_COOKIE_NAME + "=");
-	if (start == -1) return;
+	if (start == -1) {
+		return;
+	}
 
 	// starting point of the value
 	start += PANEL_COOKIE_NAME.length+1;
 
 	// find end point of the value
 	var end = document.cookie.indexOf(";", start);
-	if (end == -1) end = document.cookie.length;
+	if (end == -1) {
+		end = document.cookie.length;
+	}
 
 	// get the value, split into key:value pairs
 	var cookieValue = unescape(document.cookie.substring(start, end));
@@ -164,10 +170,8 @@ function saveSettings(key, value) {
 }
 
 // Register setUpPanels to be executed on load
-if (window.addEventListener) {
-	// the "proper" way
-	window.addEventListener("load", setUpPanels, false);
-} else if (window.attachEvent) {
-	// the IE way
+if ("undefined" != typeof(window.attachEvent)) {
 	window.attachEvent("onload", setUpPanels);
+} else if (window.addEventListener) {
+	window.addEventListener("load", setUpPanels, false);
 }
