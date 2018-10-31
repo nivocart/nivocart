@@ -8,7 +8,9 @@
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
+  src: url('../fonts/roboto-v18-cyrillic_greek_latin-regular.eot');
   src: local('Roboto'), local('Roboto-Regular'),
+    url('../fonts/roboto-v18-cyrillic_greek_latin-regular.eot?#iefix') format('embedded-opentype'),
     url('../fonts/roboto-v18-cyrillic_greek_latin-regular.woff2') format('woff2'),
     url('../fonts/roboto-v18-cyrillic_greek_latin-regular.woff') format('woff'),
     url('../fonts/roboto-v18-cyrillic_greek_latin-regular.ttf') format('truetype'),
@@ -41,7 +43,7 @@
 }
 .footer-light #footer h3 {
 	color: #444;
-	font-size: 15px;
+	font-size: 16px;
 	margin: 0 0 0 18px;
 	text-shadow: 0 1px 0 #FFF;
 }
@@ -64,7 +66,7 @@
 .footer-light #footer > .column-one a, .footer-light #footer > .column-two a, .footer-light #footer > .column-three a, .footer-light #footer > .column-four a {
 	text-decoration: none;
 	color: #444;
-	font-size: 14px;
+	font-size: 15px;
 	text-shadow: 0 1px 0 #FFF;
 }
 .footer-light #footer > .column-one a:hover, .footer-light #footer > .column-two a:hover, .footer-light #footer > .column-three a:hover, .footer-light #footer > .column-four a:hover {
@@ -109,7 +111,7 @@
 }
 .footer-dark #footer h3 {
 	color: #EFEFEF;
-	font-size: 15px;
+	font-size: 16px;
 	margin: 0 0 0 18px;
 	text-shadow: 0 -1px 0 #111;
 }
@@ -132,7 +134,7 @@
 .footer-dark #footer > .column-one a, .footer-dark #footer > .column-two a, .footer-dark #footer > .column-three a, .footer-dark #footer > .column-four a {
 	text-decoration: none;
 	color: #EFEFEF;
-	font-size: 14px;
+	font-size: 15px;
 	text-shadow: 0 -1px 0 #111;
 }
 .footer-dark #footer > .column-one a:hover, .footer-dark #footer > .column-two a:hover, .footer-dark #footer > .column-three a:hover, .footer-dark #footer > .column-four a:hover {
@@ -156,7 +158,7 @@
 }
 /* Footer Icons*/
 p.icon-location-footer-light, p.icon-location-footer-dark {
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 24px;
 	padding: 0 0 0 32px;
 	text-shadow: 0 1px 0 #FCFCFC;
@@ -169,7 +171,7 @@ p.icon-location-footer-dark {
 	background: url('../../image/icon_location_light.png') left top no-repeat;
 }
 p.icon-phone-footer-light, p.icon-phone-footer-dark {
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 24px;
 	padding: 0 0 0 32px;
 	text-shadow: 0 1px 0 #FCFCFC;
@@ -182,7 +184,7 @@ p.icon-phone-footer-dark {
 	background: url('../../image/icon_phone_light.png') left top no-repeat;
 }
 p.icon-mail-footer-light, p.icon-mail-footer-dark {
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 24px;
 	padding: 0 0 0 32px;
 	text-shadow: 0 1px 0 #FCFCFC;
