@@ -170,7 +170,7 @@
 	display: none;
 }
 /* Desktops */
-@media only screen and (min-width: 1161px) and (max-width: 1281px) {
+@media only screen and (min-width: 1025px) and (max-width: 1281px) {
 	.menu-dark #menu {
 		display: block;
 	}
@@ -183,7 +183,7 @@
 	}
 }
 /* Laptops */
-@media only screen and (min-width: 981px) and (max-width: 1161px) {
+@media only screen and (min-width: 961px) and (max-width: 1025px) {
 	.menu-dark #menu {
 		display: block;
 	}
@@ -196,7 +196,7 @@
 	}
 }
 /* Tablets */
-@media only screen and (min-width: 641px) and (max-width: 981px) {
+@media only screen and (min-width: 641px) and (max-width: 961px) {
 	.menu-dark, #menu {
 		display: none;
 	}
