@@ -1,7 +1,7 @@
 /* Plugin for jQuery for working with colors.
- * 
+ *
  * Version 1.1.
- * 
+ *
  * Inspiration from jQuery color animation plugin by John Resig.
  *
  * Released under the MIT license by Ole Laursen, October 2009.
@@ -18,7 +18,7 @@
  *
  * V. 1.1: Fix error handling so e.g. parsing an empty string does
  * produce a color rather than just crashing.
- */ 
+ */
 
 (function($) {
     $.color = {};
@@ -37,14 +37,14 @@
             }
             return o.normalize();
         };
-        
+
         o.scale = function(c, f) {
             for (var i = 0; i < c.length; ++i) {
                 o[c.charAt(i)] *= f;
             }
             return o.normalize();
         };
-        
+
         o.toString = function() {
             if (o.a >= 1.0) {
                 return "rgb("+[o.r, o.g, o.b].join(",")+")";
@@ -57,7 +57,7 @@
             function clamp(min, value, max) {
                 return value < min ? min: (value > max ? max: value);
             }
-            
+
             o.r = clamp(0, parseInt(o.r), 255);
             o.g = clamp(0, parseInt(o.g), 255);
             o.b = clamp(0, parseInt(o.b), 255);
@@ -93,7 +93,7 @@
         }
         return $.color.parse(c);
     }
-    
+
     // parse CSS color string (like "rgb(10, 32, 43)" or "#fff"),
     // returns color object, if parsing failed, you get black (0, 0,
     // 0) out

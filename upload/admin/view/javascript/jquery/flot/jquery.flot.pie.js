@@ -57,7 +57,6 @@ More detail and specific examples can be found in the included HTML file.
 
 (function($) {
 	// Maximum redraw attempts when fitting labels within the plot
-
 	var REDRAW_ATTEMPTS = 10;
 
 	// Factor by which to shrink the pie when fitting labels within the plot
@@ -65,7 +64,6 @@ More detail and specific examples can be found in the included HTML file.
 	var REDRAW_SHRINK = 0.95;
 
 	function init(plot) {
-
 		var canvas = null,
 			target = null,
 			options = null,
@@ -76,14 +74,11 @@ More detail and specific examples can be found in the included HTML file.
 			ctx = null;
 
 		// interactive variables
-
 		var highlights = [];
 
 		// add hook to determine if pie plugin in enabled, and then perform necessary operations
-
 		plot.hooks.processOptions.push(function(plot, options) {
 			if (options.series.pie.show) {
-
 				options.grid.show = false;
 
 				// set labels.show
@@ -147,7 +142,7 @@ More detail and specific examples can be found in the included HTML file.
 		});
 
 		function processDatapoints(plot, series, datapoints) {
-			if (!processed)	{
+			if (!processed) {
 				processed = true;
 				canvas = plot.getCanvas();
 				target = $(canvas).parent();
@@ -173,7 +168,6 @@ More detail and specific examples can be found in the included HTML file.
 				// Note how we use the original array, rather than creating a
 				// new one; this is more efficient and preserves any extra data
 				// that the user may have stored in higher indexes.
-
 				if ($.isArray(value) && value.length == 1) {
     				value = value[0];
 				}
@@ -195,7 +189,6 @@ More detail and specific examples can be found in the included HTML file.
 			}
 
 			// Sum up all the slices, so we can calculate percentages for each
-
 			for (var i = 0; i < data.length; ++i) {
 				total += data[i].data[0][1];
 			}
@@ -243,7 +236,6 @@ More detail and specific examples can be found in the included HTML file.
 		}
 
 		function draw(plot, newCtx) {
-
 			if (!target) {
 				return; // if no series were passed
 			}
@@ -298,12 +290,10 @@ More detail and specific examples can be found in the included HTML file.
 				centerLeft += options.series.pie.offset.left;
 			}
 
-			var slices = plot.getData(),
-				attempts = 0;
+			var slices = plot.getData(), attempts = 0;
 
 			// Keep shrinking the pie's radius until drawPie returns true,
 			// indicating that all the labels fit, or we try too many times.
-
 			do {
 				if (attempts > 0) {
 					maxRadius *= REDRAW_SHRINK;
@@ -326,7 +316,6 @@ More detail and specific examples can be found in the included HTML file.
 			}
 
 			// we're actually done at this point, just defining internal functions at this point
-
 			function clear() {
 				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 				target.children().filter(".pieLabel, .pieLabelBackground").remove();
@@ -353,7 +342,6 @@ More detail and specific examples can be found in the included HTML file.
 				ctx.scale(1, options.series.pie.tilt);
 
 				// radius -= edge;
-
 				for (var i = 1; i <= edge; i++) {
 					ctx.beginPath();
 					ctx.arc(0, 0, radius, 0, Math.PI * 2, false);
@@ -365,7 +353,6 @@ More detail and specific examples can be found in the included HTML file.
 			}
 
 			function drawPie() {
-
 				var startAngle = Math.PI * options.series.pie.startAngle;
 				var radius = options.series.pie.radius > 1 ? options.series.pie.radius : maxRadius * options.series.pie.radius;
 
@@ -378,10 +365,12 @@ More detail and specific examples can be found in the included HTML file.
 				// draw slices
 				ctx.save();
 				var currentAngle = startAngle;
+
 				for (var i = 0; i < slices.length; ++i) {
 					slices[i].startAngle = currentAngle;
 					drawSlice(slices[i].angle, slices[i].color, true);
 				}
+
 				ctx.restore();
 
 				// draw slice outlines
@@ -389,9 +378,11 @@ More detail and specific examples can be found in the included HTML file.
 					ctx.save();
 					ctx.lineWidth = options.series.pie.stroke.width;
 					currentAngle = startAngle;
+
 					for (var i = 0; i < slices.length; ++i) {
 						drawSlice(slices[i].angle, options.series.pie.stroke.color, false);
 					}
+
 					ctx.restore();
 				}
 
@@ -420,6 +411,7 @@ More detail and specific examples can be found in the included HTML file.
 					}
 
 					ctx.beginPath();
+
 					if (Math.abs(angle - Math.PI * 2) > 0.000000001) {
 						ctx.moveTo(0, 0); // Center of the pie
 					}
@@ -493,7 +485,6 @@ More detail and specific examples can be found in the included HTML file.
 
 						if (options.series.pie.label.background.opacity != 0) {
 							// put in the transparent background separately to avoid blended labels and label boxes
-
 							var c = options.series.pie.label.background.color;
 
 							if (c == null) {
@@ -516,7 +507,6 @@ More detail and specific examples can be found in the included HTML file.
 
 		function drawDonutHole(layer) {
 			if (options.series.pie.innerRadius > 0) {
-
 				// subtract the center
 				layer.save();
 				var innerRadius = options.series.pie.innerRadius > 1 ? options.series.pie.innerRadius : maxRadius * options.series.pie.innerRadius;
@@ -527,7 +517,6 @@ More detail and specific examples can be found in the included HTML file.
 				layer.fill();
 				layer.closePath();
 				layer.restore();
-
 				// add inner stroke
 				layer.save();
 				layer.beginPath();
@@ -536,17 +525,16 @@ More detail and specific examples can be found in the included HTML file.
 				layer.stroke();
 				layer.closePath();
 				layer.restore();
-
 				// Add extra shadow inside hole (with a mask) if the pie is tilted.
 			}
 		}
 
 		//-- Additional Interactive related functions --
 		function isPointInPoly(poly, pt) {
-			for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-				((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1]< poly[i][1]))
-				&& (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0])
-				&& (c = !c);
+			for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i) {
+				((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1]< poly[i][1])) && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]) && (c = !c);
+			}
+
 			return c;
 		}
 
@@ -557,11 +545,9 @@ More detail and specific examples can be found in the included HTML file.
 				x, y;
 
 			for (var i = 0; i < slices.length; ++i) {
-
 				var s = slices[i];
 
 				if (s.pie.show) {
-
 					ctx.save();
 					ctx.beginPath();
 					ctx.moveTo(0, 0); // Center of the pie
@@ -656,7 +642,6 @@ More detail and specific examples can be found in the included HTML file.
 			//if (typeof s == "number") {
 			//	s = series[s];
 			//}
-
 			var i = indexOfHighlight(s);
 
 			if (i == -1) {
@@ -688,8 +673,9 @@ More detail and specific examples can be found in the included HTML file.
 		function indexOfHighlight(s) {
 			for (var i = 0; i < highlights.length; ++i) {
 				var h = highlights[i];
-				if (h.series == s)
+				if (h.series == s) {
 					return i;
+				}
 			}
 			return -1;
 		}
@@ -783,5 +769,4 @@ More detail and specific examples can be found in the included HTML file.
 		name: "pie",
 		version: "1.1"
 	});
-
 })(jQuery);

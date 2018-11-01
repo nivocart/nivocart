@@ -29,8 +29,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 
 */
 
-(function ( $ ) {
-
+(function ($) {
 	var options = {
 		series: {
 			fillBetween: null	// or number
@@ -38,9 +37,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 	};
 
 	function init( plot ) {
-
 		function findBottomSeries( s, allseries ) {
-
 			var i;
 
 			for ( i = 0; i < allseries.length; ++i ) {
@@ -60,7 +57,6 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 		}
 
 		function computeFillBottoms( plot, s, datapoints ) {
-
 			if ( s.fillBetween == null ) {
 				return;
 			}
@@ -86,7 +82,6 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 				l, m;
 
 			while ( true ) {
-
 				if ( i >= points.length ) {
 					break;
 				}
@@ -94,9 +89,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 				l = newpoints.length;
 
 				if ( points[ i ] == null ) {
-
 					// copy gaps
-
 					for ( m = 0; m < ps; ++m ) {
 						newpoints.push( points[ i + m ] );
 					}
@@ -104,9 +97,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 					i += ps;
 
 				} else if ( j >= otherpoints.length ) {
-
 					// for lines, we can't use the rest of the points
-
 					if ( !withlines ) {
 						for ( m = 0; m < ps; ++m ) {
 							newpoints.push( points[ i + m ] );
@@ -116,9 +107,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 					i += ps;
 
 				} else if ( otherpoints[ j ] == null ) {
-
 					// oops, got a gap
-
 					for ( m = 0; m < ps; ++m ) {
 						newpoints.push( null );
 					}
@@ -127,9 +116,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 					j += otherps;
 
 				} else {
-
 					// cases where we actually got two points
-
 					px = points[ i ];
 					py = points[ i + 1 ];
 					qx = otherpoints[ j ];
@@ -137,22 +124,17 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 					bottom = 0;
 
 					if ( px === qx ) {
-
 						for ( m = 0; m < ps; ++m ) {
 							newpoints.push( points[ i + m ] );
 						}
-
-						//newpoints[ l + 1 ] += qy;
+						// newpoints[ l + 1 ] += qy;
 						bottom = qy;
 
 						i += ps;
 						j += otherps;
 
 					} else if ( px > qx ) {
-
-						// we got past point below, might need to
-						// insert interpolated extra point
-
+						// we got past point below, might need to insert interpolated extra point
 						if ( withlines && i > 0 && points[ i - ps ] != null ) {
 							intery = py + ( points[ i - ps + 1 ] - py ) * ( qx - px ) / ( points[ i - ps ] - px );
 							newpoints.push( qx );
@@ -166,9 +148,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 						j += otherps;
 
 					} else { // px < qx
-
 						// if we come from a gap, we just skip this point
-
 						if ( fromgap && withlines ) {
 							i += ps;
 							continue;
@@ -178,15 +158,11 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 							newpoints.push( points[ i + m ] );
 						}
 
-						// we might be able to interpolate a point below,
-						// this can give us a better y
-
+						// we might be able to interpolate a point below, this can give us a better y
 						if ( withlines && j > 0 && otherpoints[ j - otherps ] != null ) {
 							bottom = qy + ( otherpoints[ j - otherps + 1 ] - qy ) * ( px - qx ) / ( otherpoints[ j - otherps ] - qx );
 						}
-
-						//newpoints[l + 1] += bottom;
-
+						// newpoints[l + 1] += bottom;
 						i += ps;
 					}
 
@@ -198,11 +174,7 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 				}
 
 				// maintain the line steps invariant
-
-				if ( withsteps && l !== newpoints.length && l > 0 &&
-					newpoints[ l ] !== null &&
-					newpoints[ l ] !== newpoints[ l - ps ] &&
-					newpoints[ l + 1 ] !== newpoints[ l - ps + 1 ] ) {
+				if ( withsteps && l !== newpoints.length && l > 0 && newpoints[ l ] !== null && newpoints[ l ] !== newpoints[ l - ps ] && newpoints[ l + 1 ] !== newpoints[ l - ps + 1 ] ) {
 					for (m = 0; m < ps; ++m) {
 						newpoints[ l + ps + m ] = newpoints[ l + m ];
 					}
@@ -222,5 +194,4 @@ jquery.flot.stack.js plugin, possibly some code could be shared.
 		name: "fillbetween",
 		version: "1.0"
 	});
-
 })(jQuery);

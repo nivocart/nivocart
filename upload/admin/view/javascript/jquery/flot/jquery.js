@@ -8245,6 +8245,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 		return "script";
 	}
 });
+
 // Install script dataType
 jQuery.ajaxSetup({
 	accepts: {
@@ -8266,6 +8267,7 @@ jQuery.ajaxPrefilter( "script", function( s ) {
 	if ( s.cache === undefined ) {
 		s.cache = false;
 	}
+
 	if ( s.crossDomain ) {
 		s.type = "GET";
 		s.global = false;
@@ -8274,7 +8276,6 @@ jQuery.ajaxPrefilter( "script", function( s ) {
 
 // Bind script tag hack transport
 jQuery.ajaxTransport( "script", function(s) {
-
 	// This transport only deals with cross domain requests
 	if ( s.crossDomain ) {
 
@@ -8282,9 +8283,7 @@ jQuery.ajaxTransport( "script", function(s) {
 			head = document.head || document.getElementsByTagName( "head" )[0] || document.documentElement;
 
 		return {
-
 			send: function( _, callback ) {
-
 				script = document.createElement( "script" );
 
 				script.async = "async";
@@ -8297,9 +8296,7 @@ jQuery.ajaxTransport( "script", function(s) {
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function( _, isAbort ) {
-
 					if ( isAbort || !script.readyState || /loaded|complete/.test( script.readyState ) ) {
-
 						// Handle memory leak in IE
 						script.onload = script.onreadystatechange = null;
 
@@ -8344,13 +8341,13 @@ var xhrCallbacks,
 function createStandardXHR() {
 	try {
 		return new window.XMLHttpRequest();
-	} catch( e ) {}
+	} catch ( e ) {}
 }
 
 function createActiveXHR() {
 	try {
 		return new window.ActiveXObject( "Microsoft.XMLHTTP" );
-	} catch( e ) {}
+	} catch ( e ) {}
 }
 
 // Create the request object
@@ -8378,16 +8375,13 @@ jQuery.ajaxSettings.xhr = window.ActiveXObject ?
 
 // Create transport if the browser can provide an xhr
 if ( jQuery.support.ajax ) {
-
 	jQuery.ajaxTransport(function( s ) {
 		// Cross domain only allowed if supported through XMLHttpRequest
 		if ( !s.crossDomain || jQuery.support.cors ) {
-
 			var callback;
 
 			return {
 				send: function( headers, complete ) {
-
 					// Get a new xhr
 					var handle, i,
 						xhr = s.xhr();
@@ -8426,7 +8420,7 @@ if ( jQuery.support.ajax ) {
 						for ( i in headers ) {
 							xhr.setRequestHeader( i, headers[ i ] );
 						}
-					} catch( _ ) {}
+					} catch ( _ ) {}
 
 					// Do send the request
 					// This may raise an exception which is actually
@@ -8446,10 +8440,8 @@ if ( jQuery.support.ajax ) {
 						// of an xhr when a network error occurred
 						// http://helpful.knobs-dials.com/index.php/Component_returned_failure_code:_0x80040111_(NS_ERROR_NOT_AVAILABLE)
 						try {
-
 							// Was never called and is aborted or complete
 							if ( callback && ( isAbort || xhr.readyState === 4 ) ) {
-
 								// Only called once
 								callback = undefined;
 
@@ -8482,14 +8474,14 @@ if ( jQuery.support.ajax ) {
 									// on any attempt to access responseText (#11426)
 									try {
 										responses.text = xhr.responseText;
-									} catch( e ) {
+									} catch ( e ) {
 									}
 
 									// Firefox throws an exception when accessing
 									// statusText for faulty cross-domain requests
 									try {
 										statusText = xhr.statusText;
-									} catch( e ) {
+									} catch ( e ) {
 										// We normalize with Webkit giving an empty statusText
 										statusText = "";
 									}
@@ -8507,7 +8499,7 @@ if ( jQuery.support.ajax ) {
 									}
 								}
 							}
-						} catch( firefoxAccessException ) {
+						} catch ( firefoxAccessException ) {
 							if ( !isAbort ) {
 								complete( -1, firefoxAccessException );
 							}
@@ -8551,6 +8543,7 @@ if ( jQuery.support.ajax ) {
 		}
 	});
 }
+
 var fxNow, timerId,
 	rfxtypes = /^(?:toggle|show|hide)$/,
 	rfxnum = new RegExp( "^(?:([-+])=|)(" + core_pnum + ")([a-z%]*)$", "i" ),
@@ -8596,6 +8589,7 @@ var fxNow, timerId,
 				// If a +=/-= token was provided, we're doing a relative animation
 				tween.end = parts[1] ? start + ( parts[1] + 1 ) * end : end;
 			}
+
 			return tween;
 		}]
 	};
@@ -8605,6 +8599,7 @@ function createFxNow() {
 	setTimeout(function() {
 		fxNow = undefined;
 	}, 0 );
+
 	return ( fxNow = jQuery.now() );
 }
 
@@ -8615,7 +8610,6 @@ function createTweens( animation, props ) {
 			length = collection.length;
 		for ( ; index < length; index++ ) {
 			if ( collection[ index ].call( animation, prop, value ) ) {
-
 				// we're done with this property
 				return;
 			}
@@ -8729,6 +8723,7 @@ function propFilter( props, specialEasing ) {
 		name = jQuery.camelCase( index );
 		easing = specialEasing[ name ];
 		value = props[ index ];
+
 		if ( jQuery.isArray( value ) ) {
 			easing = value[ 1 ];
 			value = props[ index ] = value[ 0 ];
@@ -8759,7 +8754,6 @@ function propFilter( props, specialEasing ) {
 }
 
 jQuery.Animation = jQuery.extend( Animation, {
-
 	tweener: function( props, callback ) {
 		if ( jQuery.isFunction( props ) ) {
 			callback = props;
@@ -8808,6 +8802,7 @@ function defaultPrefilter( elem, props, opts ) {
 				}
 			};
 		}
+
 		hooks.unqueued++;
 
 		anim.always(function() {
@@ -8832,14 +8827,11 @@ function defaultPrefilter( elem, props, opts ) {
 
 		// Set display property to inline-block for height/width
 		// animations on inline elements that are having width/height animated
-		if ( jQuery.css( elem, "display" ) === "inline" &&
-				jQuery.css( elem, "float" ) === "none" ) {
-
+		if ( jQuery.css( elem, "display" ) === "inline" && jQuery.css( elem, "float" ) === "none" ) {
 			// inline-level elements accept inline-block;
 			// block-level elements need to be inline with layout
 			if ( !jQuery.support.inlineBlockNeedsLayout || css_defaultDisplay( elem.nodeName ) === "inline" ) {
 				style.display = "inline-block";
-
 			} else {
 				style.zoom = 1;
 			}
@@ -8848,6 +8840,7 @@ function defaultPrefilter( elem, props, opts ) {
 
 	if ( opts.overflow ) {
 		style.overflow = "hidden";
+
 		if ( !jQuery.support.shrinkWrapBlocks ) {
 			anim.done(function() {
 				style.overflow = opts.overflow[ 0 ];
@@ -8857,10 +8850,10 @@ function defaultPrefilter( elem, props, opts ) {
 		}
 	}
 
-
 	// show/hide pass
 	for ( index in props ) {
 		value = props[ index ];
+
 		if ( rfxtypes.exec( value ) ) {
 			delete props[ index ];
 			toggle = toggle || value === "toggle";
@@ -8872,8 +8865,10 @@ function defaultPrefilter( elem, props, opts ) {
 	}
 
 	length = handled.length;
+
 	if ( length ) {
 		dataShow = jQuery._data( elem, "fxshow" ) || jQuery._data( elem, "fxshow", {} );
+
 		if ( "hidden" in dataShow ) {
 			hidden = dataShow.hidden;
 		}
@@ -8882,6 +8877,7 @@ function defaultPrefilter( elem, props, opts ) {
 		if ( toggle ) {
 			dataShow.hidden = !hidden;
 		}
+
 		if ( hidden ) {
 			jQuery( elem ).show();
 		} else {
@@ -8889,6 +8885,7 @@ function defaultPrefilter( elem, props, opts ) {
 				jQuery( elem ).hide();
 			});
 		}
+
 		anim.done(function() {
 			var prop;
 			jQuery.removeData( elem, "fxshow", true );
@@ -8896,6 +8893,7 @@ function defaultPrefilter( elem, props, opts ) {
 				jQuery.style( elem, prop, orig[ prop ] );
 			}
 		});
+
 		for ( index = 0 ; index < length ; index++ ) {
 			prop = handled[ index ];
 			tween = anim.createTween( prop, hidden ? dataShow[ prop ] : 0 );
@@ -8915,6 +8913,7 @@ function defaultPrefilter( elem, props, opts ) {
 function Tween( elem, options, prop, end, easing ) {
 	return new Tween.prototype.init( elem, options, prop, end, easing );
 }
+
 jQuery.Tween = Tween;
 
 Tween.prototype = {
@@ -8936,8 +8935,7 @@ Tween.prototype = {
 			Tween.propHooks._default.get( this );
 	},
 	run: function( percent ) {
-		var eased,
-			hooks = Tween.propHooks[ this.prop ];
+		var eased, hooks = Tween.propHooks[ this.prop ];
 
 		if ( this.options.duration ) {
 			this.pos = eased = jQuery.easing[ this.easing ](
@@ -8946,6 +8944,7 @@ Tween.prototype = {
 		} else {
 			this.pos = eased = percent;
 		}
+
 		this.now = ( this.end - this.start ) * eased + this.start;
 
 		if ( this.options.step ) {
@@ -8957,6 +8956,7 @@ Tween.prototype = {
 		} else {
 			Tween.propHooks._default.set( this );
 		}
+
 		return this;
 	}
 };
@@ -8968,8 +8968,7 @@ Tween.propHooks = {
 		get: function( tween ) {
 			var result;
 
-			if ( tween.elem[ tween.prop ] != null &&
-				(!tween.elem.style || tween.elem.style[ tween.prop ] == null) ) {
+			if ( tween.elem[ tween.prop ] != null && (!tween.elem.style || tween.elem.style[ tween.prop ] == null) ) {
 				return tween.elem[ tween.prop ];
 			}
 
@@ -8997,7 +8996,6 @@ Tween.propHooks = {
 
 // Remove in 2.0 - this supports IE8's panic based approach
 // to setting things on disconnected nodes
-
 Tween.propHooks.scrollTop = Tween.propHooks.scrollLeft = {
 	set: function( tween ) {
 		if ( tween.elem.nodeType && tween.elem.parentNode ) {
@@ -9008,6 +9006,7 @@ Tween.propHooks.scrollTop = Tween.propHooks.scrollLeft = {
 
 jQuery.each([ "toggle", "show", "hide" ], function( i, name ) {
 	var cssFn = jQuery.fn[ name ];
+
 	jQuery.fn[ name ] = function( speed, easing, callback ) {
 		return speed == null || typeof speed === "boolean" ||
 			// special check for .toggle( handler, handler, ... )
@@ -9019,12 +9018,8 @@ jQuery.each([ "toggle", "show", "hide" ], function( i, name ) {
 
 jQuery.fn.extend({
 	fadeTo: function( speed, to, easing, callback ) {
-
 		// show any hidden elements after setting opacity to 0
-		return this.filter( isHidden ).css( "opacity", 0 ).show()
-
-			// animate to the value specified
-			.end().animate({ opacity: to }, speed, easing, callback );
+		return this.filter( isHidden ).css( "opacity", 0 ).show() .end().animate({ opacity: to }, speed, easing, callback );
 	},
 	animate: function( prop, speed, easing, callback ) {
 		var empty = jQuery.isEmptyObject( prop ),
@@ -9039,9 +9034,7 @@ jQuery.fn.extend({
 				}
 			};
 
-		return empty || optall.queue === false ?
-			this.each( doAnimation ) :
-			this.queue( optall.queue, doAnimation );
+		return empty || optall.queue === false ? this.each( doAnimation ) : this.queue( optall.queue, doAnimation );
 	},
 	stop: function( type, clearQueue, gotoEnd ) {
 		var stopQueue = function( hooks ) {
@@ -9055,6 +9048,7 @@ jQuery.fn.extend({
 			clearQueue = type;
 			type = undefined;
 		}
+
 		if ( clearQueue && type !== false ) {
 			this.queue( type || "fx", [] );
 		}
@@ -9097,9 +9091,7 @@ jQuery.fn.extend({
 
 // Generate parameters to create a standard animation
 function genFx( type, includeWidth ) {
-	var which,
-		attrs = { height: type },
-		i = 0;
+	var which, attrs = { height: type }, i = 0;
 
 	// if we include width, step value is 1 to do all cssExpand values,
 	// if we don't include width, step value is 2 to skip over Left and Right
@@ -9174,9 +9166,7 @@ jQuery.easing = {
 jQuery.timers = [];
 jQuery.fx = Tween.prototype.init;
 jQuery.fx.tick = function() {
-	var timer,
-		timers = jQuery.timers,
-		i = 0;
+	var timer, timers = jQuery.timers, i = 0;
 
 	fxNow = jQuery.now();
 
@@ -9191,6 +9181,7 @@ jQuery.fx.tick = function() {
 	if ( !timers.length ) {
 		jQuery.fx.stop();
 	}
+
 	fxNow = undefined;
 };
 
@@ -9255,8 +9246,7 @@ jQuery.fn.offset = function( options ) {
 		return box;
 	}
 
-	// If we don't have gBCR, just use 0,0 rather than error
-	// BlackBerry 5, iOS 3 (original iPhone)
+	// If we don't have gBCR, just use 0,0 rather than error BlackBerry 5, iOS 3 (original iPhone)
 	if ( typeof elem.getBoundingClientRect !== "undefined" ) {
 		box = elem.getBoundingClientRect();
 	}
@@ -9272,7 +9262,6 @@ jQuery.fn.offset = function( options ) {
 };
 
 jQuery.offset = {
-
 	bodyOffset: function( body ) {
 		var top = body.offsetTop,
 			left = body.offsetLeft;
@@ -9317,6 +9306,7 @@ jQuery.offset = {
 		if ( options.top != null ) {
 			props.top = ( options.top - curOffset.top ) + curTop;
 		}
+
 		if ( options.left != null ) {
 			props.left = ( options.left - curOffset.left ) + curLeft;
 		}
@@ -9329,9 +9319,7 @@ jQuery.offset = {
 	}
 };
 
-
 jQuery.fn.extend({
-
 	position: function() {
 		if ( !this[0] ) {
 			return;
@@ -9362,18 +9350,18 @@ jQuery.fn.extend({
 			left: offset.left - parentOffset.left
 		};
 	},
-
 	offsetParent: function() {
 		return this.map(function() {
 			var offsetParent = this.offsetParent || document.body;
+
 			while ( offsetParent && (!rroot.test(offsetParent.nodeName) && jQuery.css(offsetParent, "position") === "static") ) {
 				offsetParent = offsetParent.offsetParent;
 			}
+
 			return offsetParent || document.body;
 		});
 	}
 });
-
 
 // Create scrollLeft and scrollTop methods
 jQuery.each( {scrollLeft: "pageXOffset", scrollTop: "pageYOffset"}, function( method, prop ) {
@@ -9394,7 +9382,6 @@ jQuery.each( {scrollLeft: "pageXOffset", scrollTop: "pageYOffset"}, function( me
 					!top ? val : jQuery( win ).scrollLeft(),
 					 top ? val : jQuery( win ).scrollTop()
 				);
-
 			} else {
 				elem[ method ] = val;
 			}
@@ -9414,8 +9401,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name }, function( defaultExtra, funcName ) {
 		// margin is only for outerHeight, outerWidth
 		jQuery.fn[ funcName ] = function( margin, value ) {
-			var chainable = arguments.length && ( defaultExtra || typeof margin !== "boolean" ),
-				extra = defaultExtra || ( margin === true || value === true ? "margin" : "border" );
+			var chainable = arguments.length && ( defaultExtra || typeof margin !== "boolean" ), extra = defaultExtra || ( margin === true || value === true ? "margin" : "border" );
 
 			return jQuery.access( this, function( elem, type, value ) {
 				var doc;
@@ -9440,12 +9426,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 					);
 				}
 
-				return value === undefined ?
-					// Get width or height on the element, requesting but not forcing parseFloat
-					jQuery.css( elem, type, value, extra ) :
-
-					// Set width or height on the element
-					jQuery.style( elem, type, value, extra );
+				return value === undefined ? jQuery.css( elem, type, value, extra ) : jQuery.style( elem, type, value, extra );
 			}, type, chainable ? margin : undefined, chainable, null );
 		};
 	});
@@ -9465,8 +9446,10 @@ window.jQuery = window.$ = jQuery;
 // file names, and jQuery is normally delivered in a lowercase file name.
 // Do this after creating the global so that if an AMD module wants to call
 // noConflict to hide this version of jQuery, it will work.
-if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
-	define( "jquery", [], function () { return jQuery; } );
+if (typeof define === "function" && define.amd && define.amd.jQuery) {
+	define("jquery", [], function() {
+		return jQuery;
+	});
 }
 
 })( window );

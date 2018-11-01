@@ -52,7 +52,7 @@ as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
             categories: null
         }
     };
-    
+
     function processRawData(plot, series, data, datapoints) {
         // if categories are enabled, we need to disable
         // auto-transformation to numbers so the strings are intact
@@ -60,7 +60,7 @@ as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
 
         var xCategories = series.xaxis.options.mode == "categories",
             yCategories = series.yaxis.options.mode == "categories";
-        
+
         if (!(xCategories || yCategories)) {
             return;
         }
@@ -82,7 +82,7 @@ as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
                     format[format.length - 1].x = true;
                 }
             }
-            
+
             datapoints.format = format;
         }
 
@@ -189,7 +189,7 @@ as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
         plot.hooks.processRawData.push(processRawData);
         plot.hooks.processDatapoints.push(processDatapoints);
     }
-    
+
     $.plot.plugins.push({
         init: init,
         options: options,

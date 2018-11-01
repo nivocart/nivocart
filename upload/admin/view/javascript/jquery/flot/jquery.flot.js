@@ -1,12 +1,10 @@
 /* Javascript plotting library for jQuery, version 0.8.3.
-
-Copyright (c) 2007-2014 IOLA and Ole Laursen.
-Licensed under the MIT license.
-
-*/
-
-// first an inline dependency, jquery.colorhelpers.js, we inline it here
-// for convenience
+ *
+ * Copyright (c) 2007-2014 IOLA and Ole Laursen.
+ * Licensed under the MIT license.
+ *
+ * NivoCart © 2018
+ */
 
 /* Plugin for jQuery for working with colors.
  *
@@ -33,9 +31,7 @@ Licensed under the MIT license.
 
 // the actual Flot code
 (function($) {
-
 	// Cache the prototype hasOwnProperty for faster access
-
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 	// A shim to provide 'detach' to jQuery versions prior to 1.4.  Using a DOM
@@ -43,7 +39,6 @@ Licensed under the MIT license.
 	// without touching its jQuery data.
 
 	// Do not merge this into Flot 0.9, since it requires jQuery 1.4.4+.
-
 	if (!$.fn.detach) {
 		$.fn.detach = function() {
 			return this.each(function() {
@@ -54,7 +49,6 @@ Licensed under the MIT license.
 		};
 	}
 
-	///////////////////////////////////////////////////////////////////////////
 	// The Canvas object is a wrapper around an HTML5 <canvas> tag.
 	//
 	// @constructor
@@ -71,11 +65,9 @@ Licensed under the MIT license.
 			element = document.createElement("canvas");
 			element.className = cls;
 
-			$(element).css({ direction: "ltr", position: "absolute", left: 0, top: 0 })
-				.appendTo(container);
+			$(element).css({ direction: "ltr", position: "absolute", left: 0, top: 0 }).appendTo(container);
 
 			// If HTML5 Canvas isn't available, fall back to [Ex|Flash]canvas
-
 			if (!element.getContext) {
 				if (window.G_vmlCanvasManager) {
 					element = window.G_vmlCanvasManager.initElement(element);
@@ -108,17 +100,14 @@ Licensed under the MIT license.
 		this.pixelRatio = devicePixelRatio / backingStoreRatio;
 
 		// Size the canvas to match the internal dimensions of its container
-
 		this.resize(container.width(), container.height());
 
 		// Collection of HTML div layers for text overlaid onto the canvas
-
 		this.textContainer = null;
 		this.text = {};
 
 		// Cache of text fragments and metrics, so we can avoid expensively
 		// re-calculating them when the plot is re-rendered in a loop.
-
 		this._textCache = {};
 	}
 
@@ -140,7 +129,6 @@ Licensed under the MIT license.
 		// displays have that many more pixels in the same advertised space.
 
 		// Resizing should reset the state (excanvas seems to be buggy though)
-
 		if (this.width != width) {
 			element.width = width * pixelRatio;
 			element.style.width = width + "px";
@@ -156,44 +144,38 @@ Licensed under the MIT license.
 		// Save the context, so we can reset in case we get replotted.  The
 		// restore ensure that we're really back at the initial state, and
 		// should be safe even if we haven't saved the initial state yet.
-
 		context.restore();
 		context.save();
 
 		// Scale the coordinate space to match the display density; so even though we
 		// may have twice as many pixels, we still want lines and other drawing to
 		// appear at the same size; the extra pixels will just make them crisper.
-
 		context.scale(pixelRatio, pixelRatio);
 	};
 
 	// Clears the entire canvas area, not including any overlaid HTML text
-
 	Canvas.prototype.clear = function() {
 		this.context.clearRect(0, 0, this.width, this.height);
 	};
 
 	// Finishes rendering the canvas, including managing the text overlay.
-
 	Canvas.prototype.render = function() {
 		var cache = this._textCache;
 
 		// For each text layer, add elements marked as active that haven't
 		// already been rendered, and remove those that are no longer active.
-
 		for (var layerKey in cache) {
 			if (hasOwnProperty.call(cache, layerKey)) {
-				var layer = this.getTextLayer(layerKey),
-					layerCache = cache[layerKey];
+				var layer = this.getTextLayer(layerKey), layerCache = cache[layerKey];
 
 				layer.hide();
 
 				for (var styleKey in layerCache) {
 					if (hasOwnProperty.call(layerCache, styleKey)) {
 						var styleCache = layerCache[styleKey];
+
 						for (var key in styleCache) {
 							if (hasOwnProperty.call(styleCache, key)) {
-
 								var positions = styleCache[key].positions;
 
 								for (var i = 0, position; position = positions[i]; i++) {
@@ -225,19 +207,15 @@ Licensed under the MIT license.
 
 	// Creates (if necessary) and returns the text overlay container.
 	//
-	// @param {string} classes String of space-separated CSS classes used to
-	//     uniquely identify the text layer.
+	// @param {string} classes String of space-separated CSS classes used to uniquely identify the text layer.
 	// @return {object} The jQuery-wrapped text-layer div.
 
 	Canvas.prototype.getTextLayer = function(classes) {
-
 		var layer = this.text[classes];
 
 		// Create the text layer if it doesn't exist
-
 		if (layer == null) {
 			// Create the text layer container, if it doesn't exist
-
 			if (this.textContainer == null) {
 				this.textContainer = $("<div class='flot-text'></div>")
 					.css({
@@ -311,11 +289,9 @@ Licensed under the MIT license.
 		var textStyle, layerCache, styleCache, info;
 
 		// Cast the value to a string, in case we were given a number or such
-
 		text = "" + text;
 
 		// If the font is a font-spec object, generate a CSS font definition
-
 		if (typeof font === "object") {
 			textStyle = font.style + " " + font.variant + " " + font.weight + " " + font.size + "px/" + font.lineHeight + "px " + font.family;
 		} else {
@@ -323,7 +299,6 @@ Licensed under the MIT license.
 		}
 
 		// Retrieve (or create) the cache for the text's layer and styles
-
 		layerCache = this._textCache[layer];
 
 		if (layerCache == null) {
@@ -339,9 +314,7 @@ Licensed under the MIT license.
 		info = styleCache[text];
 
 		// If we can't find a matching element in our cache, create a new one
-
 		if (info == null) {
-
 			var element = $("<div></div>").html(text)
 				.css({
 					position: "absolute",
@@ -393,11 +366,9 @@ Licensed under the MIT license.
 	//     "middle" or "bottom".
 
 	Canvas.prototype.addText = function(layer, x, y, text, font, angle, width, halign, valign) {
-		var info = this.getTextInfo(layer, text, font, angle, width),
-			positions = info.positions;
+		var info = this.getTextInfo(layer, text, font, angle, width), positions = info.positions;
 
 		// Tweak the div's position to match the text's alignment
-
 		if (halign == "center") {
 			x -= info.width / 2;
 		} else if (halign == "right") {
@@ -412,7 +383,6 @@ Licensed under the MIT license.
 
 		// Determine whether this text already exists at this position.
 		// If so, mark it for inclusion in the next render pass.
-
 		for (var i = 0, position; position = positions[i]; i++) {
 			if (position.x == x && position.y == y) {
 				position.active = true;
@@ -421,10 +391,8 @@ Licensed under the MIT license.
 		}
 
 		// If the text doesn't exist at this position, create a new entry
-
 		// For the very first position we'll re-use the original element,
 		// while for subsequent ones we'll clone it.
-
 		position = {
 			active: true,
 			rendered: false,
@@ -436,7 +404,6 @@ Licensed under the MIT license.
 		positions.push(position);
 
 		// Move the element to its final position within the container
-
 		position.element.css({
 			top: Math.round(y),
 			left: Math.round(x),
@@ -467,13 +434,16 @@ Licensed under the MIT license.
 	Canvas.prototype.removeText = function(layer, x, y, text, font, angle) {
 		if (text == null) {
 			var layerCache = this._textCache[layer];
+
 			if (layerCache != null) {
 				for (var styleKey in layerCache) {
 					if (hasOwnProperty.call(layerCache, styleKey)) {
 						var styleCache = layerCache[styleKey];
+
 						for (var key in styleCache) {
 							if (hasOwnProperty.call(styleCache, key)) {
 								var positions = styleCache[key].positions;
+
 								for (var i = 0, position; position = positions[i]; i++) {
 									position.active = false;
 								}
@@ -484,6 +454,7 @@ Licensed under the MIT license.
 			}
 		} else {
 			var positions = this.getTextInfo(layer, text, font, angle).positions;
+
 			for (var i = 0, position; position = positions[i]; i++) {
 				if (position.x == x && position.y == y) {
 					position.active = false;
@@ -492,926 +463,978 @@ Licensed under the MIT license.
 		}
 	};
 
-	///////////////////////////////////////////////////////////////////////////
 	// The top-level container for the entire plot.
-
-    function Plot(placeholder, data_, options_, plugins) {
-        // data is on the form:
-        //   [ series1, series2 ... ]
-        // where series is either just the data as [ [x1, y1], [x2, y2], ... ]
-        // or { data: [ [x1, y1], [x2, y2], ... ], label: "some label", ... }
-
-        var series = [],
-            options = {
-                // the color theme used for graphs
-                colors: ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"],
-                legend: {
-                    show: true,
-                    noColumns: 1, // number of colums in legend table
-                    labelFormatter: null, // fn: string -> string
-                    labelBoxBorderColor: "#ccc", // border color for the little label boxes
-                    container: null, // container (as jQuery object) to put legend in, null means default on top of graph
-                    position: "ne", // position of default legend container within plot
-                    margin: 5, // distance from grid edge to default legend container within plot
-                    backgroundColor: null, // null means auto-detect
-                    backgroundOpacity: 0.85, // set to 0 to avoid background
-                    sorted: null    // default to no legend sorting
-                },
-                xaxis: {
-                    show: null, // null = auto-detect, true = always, false = never
-                    position: "bottom", // or "top"
-                    mode: null, // null or "time"
-                    font: null, // null (derived from CSS in placeholder) or object like { size: 11, lineHeight: 13, style: "italic", weight: "bold", family: "sans-serif", variant: "small-caps" }
-                    color: null, // base color, labels, ticks
-                    tickColor: null, // possibly different color of ticks, e.g. "rgba(0,0,0,0.15)"
-                    transform: null, // null or f: number -> number to transform axis
-                    inverseTransform: null, // if transform is set, this should be the inverse function
-                    min: null, // min. value to show, null means set automatically
-                    max: null, // max. value to show, null means set automatically
-                    autoscaleMargin: null, // margin in % to add if auto-setting min/max
-                    ticks: null, // either [1, 3] or [[1, "a"], 3] or (fn: axis info -> ticks) or app. number of ticks for auto-ticks
-                    tickFormatter: null, // fn: number -> string
-                    labelWidth: null, // size of tick labels in pixels
-                    labelHeight: null,
-                    reserveSpace: null, // whether to reserve space even if axis isn't shown
-                    tickLength: null, // size in pixels of ticks, or "full" for whole line
-                    alignTicksWithAxis: null, // axis number or null for no sync
-                    tickDecimals: null, // no. of decimals, null means auto
-                    tickSize: null, // number or [number, "unit"]
-                    minTickSize: null // number or [number, "unit"]
-                },
-                yaxis: {
-                    autoscaleMargin: 0.02,
-                    position: "left" // or "right"
-                },
-                xaxes: [],
-                yaxes: [],
-                series: {
-                    points: {
-                        show: false,
-                        radius: 3,
-                        lineWidth: 2, // in pixels
-                        fill: true,
-                        fillColor: "#ffffff",
-                        symbol: "circle" // or callback
-                    },
-                    lines: {
-                        // we don't put in show: false so we can see
-                        // whether lines were actively disabled
-                        lineWidth: 2, // in pixels
-                        fill: false,
-                        fillColor: null,
-                        steps: false
-                        // Omit 'zero', so we can later default its value to
-                        // match that of the 'fill' option.
-                    },
-                    bars: {
-                        show: false,
-                        lineWidth: 2, // in pixels
-                        barWidth: 1, // in units of the x axis
-                        fill: true,
-                        fillColor: null,
-                        align: "left", // "left", "right", or "center"
-                        horizontal: false,
-                        zero: true
-                    },
-                    shadowSize: 3,
-                    highlightColor: null
-                },
-                grid: {
-                    show: true,
-                    aboveData: false,
-                    color: "#545454", // primary color used for outline and labels
-                    backgroundColor: null, // null for transparent, else color
-                    borderColor: null, // set if different from the grid color
-                    tickColor: null, // color for the ticks, e.g. "rgba(0,0,0,0.15)"
-                    margin: 0, // distance from the canvas edge to the grid
-                    labelMargin: 5, // in pixels
-                    axisMargin: 8, // in pixels
-                    borderWidth: 2, // in pixels
-                    minBorderMargin: null, // in pixels, null means taken from points radius
-                    markings: null, // array of ranges or fn: axes -> array of ranges
-                    markingsColor: "#f4f4f4",
-                    markingsLineWidth: 2,
-                    // interactive stuff
-                    clickable: false,
-                    hoverable: false,
-                    autoHighlight: true, // highlight in case mouse is near
-                    mouseActiveRadius: 10 // how far the mouse can be away to activate an item
-                },
-                interaction: {
-                    redrawOverlayInterval: 1000/60 // time between updates, -1 means in same flow
-                },
-                hooks: {}
-            },
-        surface = null,     // the canvas for the plot itself
-        overlay = null,     // canvas for interactive stuff on top of plot
-        eventHolder = null, // jQuery object that events should be bound to
-        ctx = null, octx = null,
-        xaxes = [], yaxes = [],
-        plotOffset = { left: 0, right: 0, top: 0, bottom: 0},
-        plotWidth = 0, plotHeight = 0,
-        hooks = {
-            processOptions: [],
-            processRawData: [],
-            processDatapoints: [],
-            processOffset: [],
-            drawBackground: [],
-            drawSeries: [],
-            draw: [],
-            bindEvents: [],
-            drawOverlay: [],
-            shutdown: []
-        },
-        plot = this;
-
-        // public functions
-        plot.setData = setData;
-        plot.setupGrid = setupGrid;
-        plot.draw = draw;
-        plot.getPlaceholder = function() { return placeholder; };
-        plot.getCanvas = function() { return surface.element; };
-        plot.getPlotOffset = function() { return plotOffset; };
-        plot.width = function() { return plotWidth; };
-        plot.height = function() { return plotHeight; };
-        plot.offset = function() {
-            var o = eventHolder.offset();
-            o.left += plotOffset.left;
-            o.top += plotOffset.top;
-            return o;
-        };
-        plot.getData = function() { return series; };
-        plot.getAxes = function() {
-            var res = {}, i;
-            $.each(xaxes.concat(yaxes), function (_, axis) {
-                if (axis)
-                    res[axis.direction + (axis.n != 1 ? axis.n : "") + "axis"] = axis;
-            });
-            return res;
-        };
-        plot.getXAxes = function() { return xaxes; };
-        plot.getYAxes = function() { return yaxes; };
-        plot.c2p = canvasToAxisCoords;
-        plot.p2c = axisToCanvasCoords;
-        plot.getOptions = function() { return options; };
-        plot.highlight = highlight;
-        plot.unhighlight = unhighlight;
-        plot.triggerRedrawOverlay = triggerRedrawOverlay;
-        plot.pointOffset = function(point) {
-            return {
-                left: parseInt(xaxes[axisNumber(point, "x") - 1].p2c(+point.x) + plotOffset.left, 10),
-                top: parseInt(yaxes[axisNumber(point, "y") - 1].p2c(+point.y) + plotOffset.top, 10)
-            };
-        };
-        plot.shutdown = shutdown;
-        plot.destroy = function() {
-            shutdown();
-            placeholder.removeData("plot").empty();
-
-            series = [];
-            options = null;
-            surface = null;
-            overlay = null;
-            eventHolder = null;
-            ctx = null;
-            octx = null;
-            xaxes = [];
-            yaxes = [];
-            hooks = null;
-            highlights = [];
-            plot = null;
-        };
-        plot.resize = function() {
-        	var width = placeholder.width(),
-        		height = placeholder.height();
-            surface.resize(width, height);
-            overlay.resize(width, height);
-        };
-
-        // public attributes
-        plot.hooks = hooks;
-
-        // initialize
-        initPlugins(plot);
-        parseOptions(options_);
-        setupCanvases();
-        setData(data_);
-        setupGrid();
-        draw();
-        bindEvents();
-
-        function executeHooks(hook, args) {
-            args = [plot].concat(args);
-            for (var i = 0; i < hook.length; ++i)
-                hook[i].apply(this, args);
-        }
-
-        function initPlugins() {
-
-            // References to key classes, allowing plugins to modify them
-
-            var classes = {
-                Canvas: Canvas
-            };
-
-            for (var i = 0; i < plugins.length; ++i) {
-                var p = plugins[i];
-                p.init(plot, classes);
-                if (p.options)
-                    $.extend(true, options, p.options);
-            }
-        }
-
-        function parseOptions(opts) {
-
-            $.extend(true, options, opts);
-
-            // $.extend merges arrays, rather than replacing them.  When less
-            // colors are provided than the size of the default palette, we
-            // end up with those colors plus the remaining defaults, which is
-            // not expected behavior; avoid it by replacing them here.
-
-            if (opts && opts.colors) {
-            	options.colors = opts.colors;
-            }
-
-            if (options.xaxis.color == null)
-                options.xaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-            if (options.yaxis.color == null)
-                options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-
-            if (options.xaxis.tickColor == null) // grid.tickColor for back-compatibility
-                options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
-            if (options.yaxis.tickColor == null) // grid.tickColor for back-compatibility
-                options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
-
-            if (options.grid.borderColor == null)
-                options.grid.borderColor = options.grid.color;
-            if (options.grid.tickColor == null)
-                options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-
-            // Fill in defaults for axis options, including any unspecified
-            // font-spec fields, if a font-spec was provided.
-
-            // If no x/y axis options were provided, create one of each anyway,
-            // since the rest of the code assumes that they exist.
-
-            var i, axisOptions, axisCount,
-                fontSize = placeholder.css("font-size"),
-                fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13,
-                fontDefaults = {
-                    style: placeholder.css("font-style"),
-                    size: Math.round(0.8 * fontSizeDefault),
-                    variant: placeholder.css("font-variant"),
-                    weight: placeholder.css("font-weight"),
-                    family: placeholder.css("font-family")
-                };
-
-            axisCount = options.xaxes.length || 1;
-            for (i = 0; i < axisCount; ++i) {
-
-                axisOptions = options.xaxes[i];
-                if (axisOptions && !axisOptions.tickColor) {
-                    axisOptions.tickColor = axisOptions.color;
-                }
-
-                axisOptions = $.extend(true, {}, options.xaxis, axisOptions);
-                options.xaxes[i] = axisOptions;
-
-                if (axisOptions.font) {
-                    axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
-                    if (!axisOptions.font.color) {
-                        axisOptions.font.color = axisOptions.color;
-                    }
-                    if (!axisOptions.font.lineHeight) {
-                        axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
-                    }
-                }
-            }
-
-            axisCount = options.yaxes.length || 1;
-            for (i = 0; i < axisCount; ++i) {
-
-                axisOptions = options.yaxes[i];
-                if (axisOptions && !axisOptions.tickColor) {
-                    axisOptions.tickColor = axisOptions.color;
-                }
-
-                axisOptions = $.extend(true, {}, options.yaxis, axisOptions);
-                options.yaxes[i] = axisOptions;
-
-                if (axisOptions.font) {
-                    axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
-                    if (!axisOptions.font.color) {
-                        axisOptions.font.color = axisOptions.color;
-                    }
-                    if (!axisOptions.font.lineHeight) {
-                        axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
-                    }
-                }
-            }
-
-            // backwards compatibility, to be removed in future
-            if (options.xaxis.noTicks && options.xaxis.ticks == null)
-                options.xaxis.ticks = options.xaxis.noTicks;
-            if (options.yaxis.noTicks && options.yaxis.ticks == null)
-                options.yaxis.ticks = options.yaxis.noTicks;
-            if (options.x2axis) {
-                options.xaxes[1] = $.extend(true, {}, options.xaxis, options.x2axis);
-                options.xaxes[1].position = "top";
-                // Override the inherit to allow the axis to auto-scale
-                if (options.x2axis.min == null) {
-                    options.xaxes[1].min = null;
-                }
-                if (options.x2axis.max == null) {
-                    options.xaxes[1].max = null;
-                }
-            }
-            if (options.y2axis) {
-                options.yaxes[1] = $.extend(true, {}, options.yaxis, options.y2axis);
-                options.yaxes[1].position = "right";
-                // Override the inherit to allow the axis to auto-scale
-                if (options.y2axis.min == null) {
-                    options.yaxes[1].min = null;
-                }
-                if (options.y2axis.max == null) {
-                    options.yaxes[1].max = null;
-                }
-            }
-            if (options.grid.coloredAreas)
-                options.grid.markings = options.grid.coloredAreas;
-            if (options.grid.coloredAreasColor)
-                options.grid.markingsColor = options.grid.coloredAreasColor;
-            if (options.lines)
-                $.extend(true, options.series.lines, options.lines);
-            if (options.points)
-                $.extend(true, options.series.points, options.points);
-            if (options.bars)
-                $.extend(true, options.series.bars, options.bars);
-            if (options.shadowSize != null)
-                options.series.shadowSize = options.shadowSize;
-            if (options.highlightColor != null)
-                options.series.highlightColor = options.highlightColor;
-
-            // save options on axes for future reference
-            for (i = 0; i < options.xaxes.length; ++i)
-                getOrCreateAxis(xaxes, i + 1).options = options.xaxes[i];
-            for (i = 0; i < options.yaxes.length; ++i)
-                getOrCreateAxis(yaxes, i + 1).options = options.yaxes[i];
-
-            // add hooks from options
-            for (var n in hooks)
-                if (options.hooks[n] && options.hooks[n].length)
-                    hooks[n] = hooks[n].concat(options.hooks[n]);
-
-            executeHooks(hooks.processOptions, [options]);
-        }
-
-        function setData(d) {
-            series = parseData(d);
-            fillInSeriesOptions();
-            processData();
-        }
-
-        function parseData(d) {
-            var res = [];
-            for (var i = 0; i < d.length; ++i) {
-                var s = $.extend(true, {}, options.series);
-
-                if (d[i].data != null) {
-                    s.data = d[i].data; // move the data instead of deep-copy
-                    delete d[i].data;
-
-                    $.extend(true, s, d[i]);
-
-                    d[i].data = s.data;
-                }
-                else
-                    s.data = d[i];
-                res.push(s);
-            }
-
-            return res;
-        }
-
-        function axisNumber(obj, coord) {
-            var a = obj[coord + "axis"];
-            if (typeof a == "object") // if we got a real axis, extract number
-                a = a.n;
-            if (typeof a != "number")
-                a = 1; // default to first axis
-            return a;
-        }
-
-        function allAxes() {
-            // return flat array without annoying null entries
-            return $.grep(xaxes.concat(yaxes), function (a) { return a; });
-        }
-
-        function canvasToAxisCoords(pos) {
-            // return an object with x/y corresponding to all used axes
-            var res = {}, i, axis;
-            for (i = 0; i < xaxes.length; ++i) {
-                axis = xaxes[i];
-                if (axis && axis.used)
-                    res["x" + axis.n] = axis.c2p(pos.left);
-            }
-
-            for (i = 0; i < yaxes.length; ++i) {
-                axis = yaxes[i];
-                if (axis && axis.used)
-                    res["y" + axis.n] = axis.c2p(pos.top);
-            }
-
-            if (res.x1 !== undefined)
-                res.x = res.x1;
-            if (res.y1 !== undefined)
-                res.y = res.y1;
-
-            return res;
-        }
-
-        function axisToCanvasCoords(pos) {
-            // get canvas coords from the first pair of x/y found in pos
-            var res = {}, i, axis, key;
-
-            for (i = 0; i < xaxes.length; ++i) {
-                axis = xaxes[i];
-                if (axis && axis.used) {
-                    key = "x" + axis.n;
-                    if (pos[key] == null && axis.n == 1)
-                        key = "x";
-
-                    if (pos[key] != null) {
-                        res.left = axis.p2c(pos[key]);
-                        break;
-                    }
-                }
-            }
-
-            for (i = 0; i < yaxes.length; ++i) {
-                axis = yaxes[i];
-                if (axis && axis.used) {
-                    key = "y" + axis.n;
-                    if (pos[key] == null && axis.n == 1)
-                        key = "y";
-
-                    if (pos[key] != null) {
-                        res.top = axis.p2c(pos[key]);
-                        break;
-                    }
-                }
-            }
-
-            return res;
-        }
-
-        function getOrCreateAxis(axes, number) {
-            if (!axes[number - 1])
-                axes[number - 1] = {
-                    n: number, // save the number for future reference
-                    direction: axes == xaxes ? "x" : "y",
-                    options: $.extend(true, {}, axes == xaxes ? options.xaxis : options.yaxis)
-                };
-
-            return axes[number - 1];
-        }
-
-        function fillInSeriesOptions() {
-
-            var neededColors = series.length, maxIndex = -1, i;
-
-            // Subtract the number of series that already have fixed colors or
-            // color indexes from the number that we still need to generate.
-
-            for (i = 0; i < series.length; ++i) {
-                var sc = series[i].color;
-                if (sc != null) {
-                    neededColors--;
-                    if (typeof sc == "number" && sc > maxIndex) {
-                        maxIndex = sc;
-                    }
-                }
-            }
-
-            // If any of the series have fixed color indexes, then we need to
-            // generate at least as many colors as the highest index.
-
-            if (neededColors <= maxIndex) {
-                neededColors = maxIndex + 1;
-            }
-
-            // Generate all the colors, using first the option colors and then
-            // variations on those colors once they're exhausted.
-
-            var c, colors = [], colorPool = options.colors,
-                colorPoolSize = colorPool.length, variation = 0;
-
-            for (i = 0; i < neededColors; i++) {
-
-                c = $.color.parse(colorPool[i % colorPoolSize] || "#666");
-
-                // Each time we exhaust the colors in the pool we adjust
-                // a scaling factor used to produce more variations on
-                // those colors. The factor alternates negative/positive
-                // to produce lighter/darker colors.
-
-                // Reset the variation after every few cycles, or else
-                // it will end up producing only white or black colors.
-
-                if (i % colorPoolSize == 0 && i) {
-                    if (variation >= 0) {
-                        if (variation < 0.5) {
-                            variation = -variation - 0.2;
-                        } else variation = 0;
-                    } else variation = -variation;
-                }
-
-                colors[i] = c.scale('rgb', 1 + variation);
-            }
-
-            // Finalize the series options, filling in their colors
-
-            var colori = 0, s;
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-
-                // assign colors
-                if (s.color == null) {
-                    s.color = colors[colori].toString();
-                    ++colori;
-                }
-                else if (typeof s.color == "number")
-                    s.color = colors[s.color].toString();
-
-                // turn on lines automatically in case nothing is set
-                if (s.lines.show == null) {
-                    var v, show = true;
-                    for (v in s)
-                        if (s[v] && s[v].show) {
-                            show = false;
-                            break;
-                        }
-                    if (show)
-                        s.lines.show = true;
-                }
-
-                // If nothing was provided for lines.zero, default it to match
-                // lines.fill, since areas by default should extend to zero.
-
-                if (s.lines.zero == null) {
-                    s.lines.zero = !!s.lines.fill;
-                }
-
-                // setup axes
-                s.xaxis = getOrCreateAxis(xaxes, axisNumber(s, "x"));
-                s.yaxis = getOrCreateAxis(yaxes, axisNumber(s, "y"));
-            }
-        }
-
-        function processData() {
-            var topSentry = Number.POSITIVE_INFINITY,
-                bottomSentry = Number.NEGATIVE_INFINITY,
-                fakeInfinity = Number.MAX_VALUE,
-                i, j, k, m, length,
-                s, points, ps, x, y, axis, val, f, p,
-                data, format;
-
-            function updateAxis(axis, min, max) {
-                if (min < axis.datamin && min != -fakeInfinity)
-                    axis.datamin = min;
-                if (max > axis.datamax && max != fakeInfinity)
-                    axis.datamax = max;
-            }
-
-            $.each(allAxes(), function (_, axis) {
-                // init axis
-                axis.datamin = topSentry;
-                axis.datamax = bottomSentry;
-                axis.used = false;
-            });
-
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-                s.datapoints = { points: [] };
-
-                executeHooks(hooks.processRawData, [ s, s.data, s.datapoints ]);
-            }
-
-            // first pass: clean and copy data
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-
-                data = s.data;
-                format = s.datapoints.format;
-
-                if (!format) {
-                    format = [];
-                    // find out how to copy
-                    format.push({ x: true, number: true, required: true });
-                    format.push({ y: true, number: true, required: true });
-
-                    if (s.bars.show || (s.lines.show && s.lines.fill)) {
-                        var autoscale = !!((s.bars.show && s.bars.zero) || (s.lines.show && s.lines.zero));
-                        format.push({ y: true, number: true, required: false, defaultValue: 0, autoscale: autoscale });
-                        if (s.bars.horizontal) {
-                            delete format[format.length - 1].y;
-                            format[format.length - 1].x = true;
-                        }
-                    }
-
-                    s.datapoints.format = format;
-                }
-
-                if (s.datapoints.pointsize != null)
-                    continue; // already filled in
-
-                s.datapoints.pointsize = format.length;
-
-                ps = s.datapoints.pointsize;
-                points = s.datapoints.points;
-
-                var insertSteps = s.lines.show && s.lines.steps;
-                s.xaxis.used = s.yaxis.used = true;
-
-                for (j = k = 0; j < data.length; ++j, k += ps) {
-                    p = data[j];
-
-                    var nullify = p == null;
-                    if (!nullify) {
-                        for (m = 0; m < ps; ++m) {
-                            val = p[m];
-                            f = format[m];
-
-                            if (f) {
-                                if (f.number && val != null) {
-                                    val = +val; // convert to number
-                                    if (isNaN(val))
-                                        val = null;
-                                    else if (val == Infinity)
-                                        val = fakeInfinity;
-                                    else if (val == -Infinity)
-                                        val = -fakeInfinity;
-                                }
-
-                                if (val == null) {
-                                    if (f.required)
-                                        nullify = true;
-
-                                    if (f.defaultValue != null)
-                                        val = f.defaultValue;
-                                }
-                            }
-
-                            points[k + m] = val;
-                        }
-                    }
-
-                    if (nullify) {
-                        for (m = 0; m < ps; ++m) {
-                            val = points[k + m];
-                            if (val != null) {
-                                f = format[m];
-                                // extract min/max info
-                                if (f.autoscale !== false) {
-                                    if (f.x) {
-                                        updateAxis(s.xaxis, val, val);
-                                    }
-                                    if (f.y) {
-                                        updateAxis(s.yaxis, val, val);
-                                    }
-                                }
-                            }
-                            points[k + m] = null;
-                        }
-                    }
-                    else {
-                        // a little bit of line specific stuff that
-                        // perhaps shouldn't be here, but lacking
-                        // better means...
-                        if (insertSteps && k > 0
-                            && points[k - ps] != null
-                            && points[k - ps] != points[k]
-                            && points[k - ps + 1] != points[k + 1]) {
-                            // copy the point to make room for a middle point
-                            for (m = 0; m < ps; ++m)
-                                points[k + ps + m] = points[k + m];
-
-                            // middle point has same y
-                            points[k + 1] = points[k - ps + 1];
-
-                            // we've added a point, better reflect that
-                            k += ps;
-                        }
-                    }
-                }
-            }
-
-            // give the hooks a chance to run
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-
-                executeHooks(hooks.processDatapoints, [ s, s.datapoints]);
-            }
-
-            // second pass: find datamax/datamin for auto-scaling
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-                points = s.datapoints.points;
-                ps = s.datapoints.pointsize;
-                format = s.datapoints.format;
-
-                var xmin = topSentry, ymin = topSentry,
-                    xmax = bottomSentry, ymax = bottomSentry;
-
-                for (j = 0; j < points.length; j += ps) {
-                    if (points[j] == null)
-                        continue;
-
-                    for (m = 0; m < ps; ++m) {
-                        val = points[j + m];
-                        f = format[m];
-                        if (!f || f.autoscale === false || val == fakeInfinity || val == -fakeInfinity)
-                            continue;
-
-                        if (f.x) {
-                            if (val < xmin)
-                                xmin = val;
-                            if (val > xmax)
-                                xmax = val;
-                        }
-                        if (f.y) {
-                            if (val < ymin)
-                                ymin = val;
-                            if (val > ymax)
-                                ymax = val;
-                        }
-                    }
-                }
-
-                if (s.bars.show) {
-                    // make sure we got room for the bar on the dancing floor
-                    var delta;
-
-                    switch (s.bars.align) {
-                        case "left":
-                            delta = 0;
-                            break;
-                        case "right":
-                            delta = -s.bars.barWidth;
-                            break;
-                        default:
-                            delta = -s.bars.barWidth / 2;
-                    }
-
-                    if (s.bars.horizontal) {
-                        ymin += delta;
-                        ymax += delta + s.bars.barWidth;
-                    }
-                    else {
-                        xmin += delta;
-                        xmax += delta + s.bars.barWidth;
-                    }
-                }
-
-                updateAxis(s.xaxis, xmin, xmax);
-                updateAxis(s.yaxis, ymin, ymax);
-            }
-
-            $.each(allAxes(), function (_, axis) {
-                if (axis.datamin == topSentry)
-                    axis.datamin = null;
-                if (axis.datamax == bottomSentry)
-                    axis.datamax = null;
-            });
-        }
-
-        function setupCanvases() {
-
-            // Make sure the placeholder is clear of everything except canvases
-            // from a previous plot in this container that we'll try to re-use.
-
-            placeholder.css("padding", 0) // padding messes up the positioning
-                .children().filter(function(){
-                    return !$(this).hasClass("flot-overlay") && !$(this).hasClass('flot-base');
-                }).remove();
-
-            if (placeholder.css("position") == 'static')
-                placeholder.css("position", "relative"); // for positioning labels and overlay
-
-            surface = new Canvas("flot-base", placeholder);
-            overlay = new Canvas("flot-overlay", placeholder); // overlay canvas for interactive features
-
-            ctx = surface.context;
-            octx = overlay.context;
-
-            // define which element we're listening for events on
-            eventHolder = $(overlay.element).unbind();
-
-            // If we're re-using a plot object, shut down the old one
-
-            var existing = placeholder.data("plot");
-
-            if (existing) {
-                existing.shutdown();
-                overlay.clear();
-            }
-
-            // save in case we get replotted
-            placeholder.data("plot", plot);
-        }
-
-        function bindEvents() {
-            // bind events
-            if (options.grid.hoverable) {
-                eventHolder.mousemove(onMouseMove);
-
-                // Use bind, rather than .mouseleave, because we officially
-                // still support jQuery 1.2.6, which doesn't define a shortcut
-                // for mouseenter or mouseleave.  This was a bug/oversight that
-                // was fixed somewhere around 1.3.x.  We can return to using
-                // .mouseleave when we drop support for 1.2.6.
-
-                eventHolder.bind("mouseleave", onMouseLeave);
-            }
-
-            if (options.grid.clickable)
-                eventHolder.click(onClick);
-
-            executeHooks(hooks.bindEvents, [eventHolder]);
-        }
-
-        function shutdown() {
-            if (redrawTimeout)
-                clearTimeout(redrawTimeout);
-
-            eventHolder.unbind("mousemove", onMouseMove);
-            eventHolder.unbind("mouseleave", onMouseLeave);
-            eventHolder.unbind("click", onClick);
-
-            executeHooks(hooks.shutdown, [eventHolder]);
-        }
-
-        function setTransformationHelpers(axis) {
-            // set helper functions on the axis, assumes plot area
-            // has been computed already
-
-            function identity(x) { return x; }
-
-            var s, m, t = axis.options.transform || identity,
-                it = axis.options.inverseTransform;
-
-            // precompute how much the axis is scaling a point
-            // in canvas space
-            if (axis.direction == "x") {
-                s = axis.scale = plotWidth / Math.abs(t(axis.max) - t(axis.min));
-                m = Math.min(t(axis.max), t(axis.min));
-            }
-            else {
-                s = axis.scale = plotHeight / Math.abs(t(axis.max) - t(axis.min));
-                s = -s;
-                m = Math.max(t(axis.max), t(axis.min));
-            }
-
-            // data point to canvas coordinate
-            if (t == identity) // slight optimization
-                axis.p2c = function (p) { return (p - m) * s; };
-            else
-                axis.p2c = function (p) { return (t(p) - m) * s; };
-            // canvas coordinate to data point
-            if (!it)
-                axis.c2p = function (c) { return m + c / s; };
-            else
-                axis.c2p = function (c) { return it(m + c / s); };
-        }
-
-        function measureTickLabels(axis) {
-
-            var opts = axis.options,
-                ticks = axis.ticks || [],
-                labelWidth = opts.labelWidth || 0,
-                labelHeight = opts.labelHeight || 0,
-                maxWidth = labelWidth || (axis.direction == "x" ? Math.floor(surface.width / (ticks.length || 1)) : null),
-                legacyStyles = axis.direction + "Axis " + axis.direction + axis.n + "Axis",
-                layer = "flot-" + axis.direction + "-axis flot-" + axis.direction + axis.n + "-axis " + legacyStyles,
-                font = opts.font || "flot-tick-label tickLabel";
-
-            for (var i = 0; i < ticks.length; ++i) {
-
-                var t = ticks[i];
-
-                if (!t.label)
-                    continue;
-
-                var info = surface.getTextInfo(layer, t.label, font, null, maxWidth);
-
-                labelWidth = Math.max(labelWidth, info.width);
-                labelHeight = Math.max(labelHeight, info.height);
-            }
-
-            axis.labelWidth = opts.labelWidth || labelWidth;
-            axis.labelHeight = opts.labelHeight || labelHeight;
-        }
+	function Plot(placeholder, data_, options_, plugins) {
+		// data is on the form:
+		//   [ series1, series2 ... ]
+		// where series is either just the data as [ [x1, y1], [x2, y2], ... ]
+		// or { data: [ [x1, y1], [x2, y2], ... ], label: "some label", ... }
+
+		var series = [],
+			options = {
+				// the color theme used for graphs
+				colors: ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"],
+				legend: {
+					show: true,
+					noColumns: 1, // number of colums in legend table
+					labelFormatter: null, // fn: string -> string
+					labelBoxBorderColor: "#ccc", // border color for the little label boxes
+					container: null, // container (as jQuery object) to put legend in, null means default on top of graph
+					position: "ne", // position of default legend container within plot
+					margin: 5, // distance from grid edge to default legend container within plot
+					backgroundColor: null, // null means auto-detect
+					backgroundOpacity: 0.85, // set to 0 to avoid background
+					sorted: null    // default to no legend sorting
+				},
+				xaxis: {
+					show: null, // null = auto-detect, true = always, false = never
+					position: "bottom", // or "top"
+					mode: null, // null or "time"
+					font: null, // null (derived from CSS in placeholder) or object like { size: 11, lineHeight: 13, style: "italic", weight: "bold", family: "sans-serif", variant: "small-caps" }
+					color: null, // base color, labels, ticks
+					tickColor: null, // possibly different color of ticks, e.g. "rgba(0,0,0,0.15)"
+					transform: null, // null or f: number -> number to transform axis
+					inverseTransform: null, // if transform is set, this should be the inverse function
+					min: null, // min. value to show, null means set automatically
+					max: null, // max. value to show, null means set automatically
+					autoscaleMargin: null, // margin in % to add if auto-setting min/max
+					ticks: null, // either [1, 3] or [[1, "a"], 3] or (fn: axis info -> ticks) or app. number of ticks for auto-ticks
+					tickFormatter: null, // fn: number -> string
+					labelWidth: null, // size of tick labels in pixels
+					labelHeight: null,
+					reserveSpace: null, // whether to reserve space even if axis isn't shown
+					tickLength: null, // size in pixels of ticks, or "full" for whole line
+					alignTicksWithAxis: null, // axis number or null for no sync
+					tickDecimals: null, // no. of decimals, null means auto
+					tickSize: null, // number or [number, "unit"]
+					minTickSize: null // number or [number, "unit"]
+				},
+				yaxis: {
+					autoscaleMargin: 0.02,
+					position: "left" // or "right"
+				},
+				xaxes: [],
+				yaxes: [],
+				series: {
+					points: {
+						show: false,
+						radius: 3,
+						lineWidth: 2, // in pixels
+						fill: true,
+						fillColor: "#ffffff",
+						symbol: "circle" // or callback
+					},
+					lines: {
+						// we don't put in show: false so we can see whether lines were actively disabled
+						lineWidth: 2, // in pixels
+						fill: false,
+						fillColor: null,
+						steps: false
+						// Omit 'zero', so we can later default its value to match that of the 'fill' option.
+					},
+					bars: {
+						show: false,
+						lineWidth: 2, // in pixels
+						barWidth: 1, // in units of the x axis
+						fill: true,
+						fillColor: null,
+						align: "left", // "left", "right", or "center"
+						horizontal: false,
+						zero: true
+					},
+					shadowSize: 3,
+					highlightColor: null
+				},
+				grid: {
+					show: true,
+					aboveData: false,
+					color: "#545454", // primary color used for outline and labels
+					backgroundColor: null, // null for transparent, else color
+					borderColor: null, // set if different from the grid color
+					tickColor: null, // color for the ticks, e.g. "rgba(0,0,0,0.15)"
+					margin: 0, // distance from the canvas edge to the grid
+					labelMargin: 5, // in pixels
+					axisMargin: 8, // in pixels
+					borderWidth: 2, // in pixels
+					minBorderMargin: null, // in pixels, null means taken from points radius
+					markings: null, // array of ranges or fn: axes -> array of ranges
+					markingsColor: "#f4f4f4",
+					markingsLineWidth: 2,
+					// interactive stuff
+					clickable: false,
+					hoverable: false,
+					autoHighlight: true, // highlight in case mouse is near
+					mouseActiveRadius: 10 // how far the mouse can be away to activate an item
+				},
+				interaction: {
+					redrawOverlayInterval: 1000/60 // time between updates, -1 means in same flow
+				},
+				hooks: {}
+			},
+		surface = null,     // the canvas for the plot itself
+		overlay = null,     // canvas for interactive stuff on top of plot
+		eventHolder = null, // jQuery object that events should be bound to
+		ctx = null, octx = null,
+		xaxes = [], yaxes = [],
+		plotOffset = { left: 0, right: 0, top: 0, bottom: 0},
+		plotWidth = 0, plotHeight = 0,
+		hooks = {
+			processOptions: [],
+			processRawData: [],
+			processDatapoints: [],
+			processOffset: [],
+			drawBackground: [],
+			drawSeries: [],
+			draw: [],
+			bindEvents: [],
+			drawOverlay: [],
+			shutdown: []
+		},
+		plot = this;
+
+		// Public functions
+		plot.setData = setData;
+		plot.setupGrid = setupGrid;
+		plot.draw = draw;
+		plot.getPlaceholder = function() {
+			return placeholder;
+		};
+		plot.getCanvas = function() {
+			return surface.element;
+		};
+		plot.getPlotOffset = function() {
+			return plotOffset;
+		};
+		plot.width = function() {
+			return plotWidth;
+		};
+		plot.height = function() {
+			return plotHeight;
+		};
+		plot.offset = function() {
+			var o = eventHolder.offset();
+			o.left += plotOffset.left;
+			o.top += plotOffset.top;
+			return o;
+		};
+		plot.getData = function() {
+			return series;
+		};
+		plot.getAxes = function() {
+			var res = {}, i;
+			$.each(xaxes.concat(yaxes), function(_, axis) {
+				if (axis) {
+					res[axis.direction + (axis.n != 1 ? axis.n : "") + "axis"] = axis;
+				}
+			});
+			return res;
+		};
+		plot.getXAxes = function() {
+			return xaxes;
+		};
+		plot.getYAxes = function() {
+			return yaxes;
+		};
+		plot.c2p = canvasToAxisCoords;
+		plot.p2c = axisToCanvasCoords;
+		plot.getOptions = function() {
+			return options;
+		};
+		plot.highlight = highlight;
+		plot.unhighlight = unhighlight;
+		plot.triggerRedrawOverlay = triggerRedrawOverlay;
+		plot.pointOffset = function(point) {
+			return {
+				left: parseInt(xaxes[axisNumber(point, "x") - 1].p2c(+point.x) + plotOffset.left, 10),
+				top: parseInt(yaxes[axisNumber(point, "y") - 1].p2c(+point.y) + plotOffset.top, 10)
+			};
+		};
+		plot.shutdown = shutdown;
+		plot.destroy = function() {
+			shutdown();
+			placeholder.removeData("plot").empty();
+
+			series = [];
+			options = null;
+			surface = null;
+			overlay = null;
+			eventHolder = null;
+			ctx = null;
+			octx = null;
+			xaxes = [];
+			yaxes = [];
+			hooks = null;
+			highlights = [];
+			plot = null;
+		};
+		plot.resize = function() {
+			var width = placeholder.width(), height = placeholder.height();
+
+			surface.resize(width, height);
+			overlay.resize(width, height);
+		};
+
+		// public attributes
+		plot.hooks = hooks;
+
+		// initialize
+		initPlugins(plot);
+		parseOptions(options_);
+		setupCanvases();
+		setData(data_);
+		setupGrid();
+		draw();
+		bindEvents();
+
+		function executeHooks(hook, args) {
+			args = [plot].concat(args);
+			for (var i = 0; i < hook.length; ++i) {
+				hook[i].apply(this, args);
+			}
+		}
+
+		function initPlugins() {
+			// References to key classes, allowing plugins to modify them
+			var classes = {
+				Canvas: Canvas
+			};
+
+			for (var i = 0; i < plugins.length; ++i) {
+				var p = plugins[i];
+				p.init(plot, classes);
+				if (p.options) {
+					$.extend(true, options, p.options);
+				}
+			}
+		}
+
+		function parseOptions(opts) {
+			$.extend(true, options, opts);
+
+			// $.extend merges arrays, rather than replacing them.  When less
+			// colors are provided than the size of the default palette, we
+			// end up with those colors plus the remaining defaults, which is
+			// not expected behavior; avoid it by replacing them here.
+			if (opts && opts.colors) {
+				options.colors = opts.colors;
+			}
+
+			if (options.xaxis.color == null) {
+				options.xaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+			}
+			if (options.yaxis.color == null) {
+				options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+			}
+
+			if (options.xaxis.tickColor == null) {
+				options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
+			}
+			if (options.yaxis.tickColor == null) {
+				options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
+			}
+
+			if (options.grid.borderColor == null) {
+				options.grid.borderColor = options.grid.color;
+			}
+			if (options.grid.tickColor == null) {
+				options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+			}
+
+			// Fill in defaults for axis options, including any unspecified font-spec fields, if a font-spec was provided.
+			// If no x/y axis options were provided, create one of each anyway, since the rest of the code assumes that they exist.
+			var i, axisOptions, axisCount,
+				fontSize = placeholder.css("font-size"),
+				fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13,
+				fontDefaults = {
+					style: placeholder.css("font-style"),
+					size: Math.round(0.8 * fontSizeDefault),
+					variant: placeholder.css("font-variant"),
+					weight: placeholder.css("font-weight"),
+					family: placeholder.css("font-family")
+				};
+
+			axisCount = options.xaxes.length || 1;
+
+			for (i = 0; i < axisCount; ++i) {
+				axisOptions = options.xaxes[i];
+
+				if (axisOptions && !axisOptions.tickColor) {
+					axisOptions.tickColor = axisOptions.color;
+				}
+
+				axisOptions = $.extend(true, {}, options.xaxis, axisOptions);
+
+				options.xaxes[i] = axisOptions;
+
+				if (axisOptions.font) {
+					axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
+
+					if (!axisOptions.font.color) {
+						axisOptions.font.color = axisOptions.color;
+					}
+					if (!axisOptions.font.lineHeight) {
+						axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
+					}
+				}
+			}
+
+			axisCount = options.yaxes.length || 1;
+
+			for (i = 0; i < axisCount; ++i) {
+				axisOptions = options.yaxes[i];
+
+				if (axisOptions && !axisOptions.tickColor) {
+					axisOptions.tickColor = axisOptions.color;
+				}
+
+				axisOptions = $.extend(true, {}, options.yaxis, axisOptions);
+
+				options.yaxes[i] = axisOptions;
+
+				if (axisOptions.font) {
+					axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
+
+					if (!axisOptions.font.color) {
+						axisOptions.font.color = axisOptions.color;
+					}
+					if (!axisOptions.font.lineHeight) {
+						axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
+					}
+				}
+			}
+
+			// backwards compatibility, to be removed in future
+			if (options.xaxis.noTicks && options.xaxis.ticks == null) {
+				options.xaxis.ticks = options.xaxis.noTicks;
+			}
+			if (options.yaxis.noTicks && options.yaxis.ticks == null) {
+				options.yaxis.ticks = options.yaxis.noTicks;
+			}
+
+			if (options.x2axis) {
+				options.xaxes[1] = $.extend(true, {}, options.xaxis, options.x2axis);
+				options.xaxes[1].position = "top";
+				// Override the inherit to allow the axis to auto-scale
+				if (options.x2axis.min == null) {
+					options.xaxes[1].min = null;
+				}
+				if (options.x2axis.max == null) {
+					options.xaxes[1].max = null;
+				}
+			}
+
+			if (options.y2axis) {
+				options.yaxes[1] = $.extend(true, {}, options.yaxis, options.y2axis);
+				options.yaxes[1].position = "right";
+				// Override the inherit to allow the axis to auto-scale
+				if (options.y2axis.min == null) {
+					options.yaxes[1].min = null;
+				}
+				if (options.y2axis.max == null) {
+					options.yaxes[1].max = null;
+				}
+			}
+			if (options.grid.coloredAreas) {
+				options.grid.markings = options.grid.coloredAreas;
+			}
+			if (options.grid.coloredAreasColor) {
+				options.grid.markingsColor = options.grid.coloredAreasColor;
+			}
+			if (options.lines) {
+				$.extend(true, options.series.lines, options.lines);
+			}
+			if (options.points) {
+				$.extend(true, options.series.points, options.points);
+			}
+			if (options.bars) {
+				$.extend(true, options.series.bars, options.bars);
+			}
+			if (options.shadowSize != null) {
+				options.series.shadowSize = options.shadowSize;
+			}
+			if (options.highlightColor != null) {
+				options.series.highlightColor = options.highlightColor;
+			}
+
+			// save options on axes for future reference
+			for (i = 0; i < options.xaxes.length; ++i) {
+				getOrCreateAxis(xaxes, i + 1).options = options.xaxes[i];
+			}
+			for (i = 0; i < options.yaxes.length; ++i) {
+				getOrCreateAxis(yaxes, i + 1).options = options.yaxes[i];
+			}
+
+			// add hooks from options
+			for (var n in hooks) {
+				if (options.hooks[n] && options.hooks[n].length) {
+					hooks[n] = hooks[n].concat(options.hooks[n]);
+				}
+			}
+
+			executeHooks(hooks.processOptions, [options]);
+		}
+
+		function setData(d) {
+			series = parseData(d);
+			fillInSeriesOptions();
+			processData();
+		}
+
+		function parseData(d) {
+			var res = [];
+
+			for (var i = 0; i < d.length; ++i) {
+				var s = $.extend(true, {}, options.series);
+
+				if (d[i].data != null) {
+					s.data = d[i].data; // move the data instead of deep-copy
+					delete d[i].data;
+
+					$.extend(true, s, d[i]);
+
+					d[i].data = s.data;
+				} else {
+					s.data = d[i];
+				}
+
+				res.push(s);
+			}
+
+			return res;
+		}
+
+		function axisNumber(obj, coord) {
+			var a = obj[coord + "axis"];
+
+			if (typeof a == "object") {
+				a = a.n;
+			}
+			if (typeof a != "number") {
+				a = 1;
+			}
+			return a;
+		}
+
+		function allAxes() {
+			// return flat array without annoying null entries
+			return $.grep(xaxes.concat(yaxes), function(a) { return a; });
+		}
+
+		function canvasToAxisCoords(pos) {
+			// return an object with x/y corresponding to all used axes
+			var res = {}, i, axis;
+
+			for (i = 0; i < xaxes.length; ++i) {
+				axis = xaxes[i];
+				if (axis && axis.used) {
+				res["x" + axis.n] = axis.c2p(pos.left);
+				}
+			}
+
+			for (i = 0; i < yaxes.length; ++i) {
+				axis = yaxes[i];
+				if (axis && axis.used) {
+					res["y" + axis.n] = axis.c2p(pos.top);
+				}
+			}
+
+			if (res.x1 !== undefined) {
+				res.x = res.x1;
+			}
+			if (res.y1 !== undefined) {
+				res.y = res.y1;
+			}
+
+			return res;
+		}
+
+		function axisToCanvasCoords(pos) {
+			// get canvas coords from the first pair of x/y found in pos
+			var res = {}, i, axis, key;
+
+			for (i = 0; i < xaxes.length; ++i) {
+				axis = xaxes[i];
+				if (axis && axis.used) {
+					key = "x" + axis.n;
+					if (pos[key] == null && axis.n == 1) {
+						key = "x";
+					}
+
+					if (pos[key] != null) {
+						res.left = axis.p2c(pos[key]);
+						break;
+					}
+				}
+			}
+
+			for (i = 0; i < yaxes.length; ++i) {
+				axis = yaxes[i];
+
+				if (axis && axis.used) {
+					key = "y" + axis.n;
+					if (pos[key] == null && axis.n == 1) {
+						key = "y";
+					}
+
+					if (pos[key] != null) {
+						res.top = axis.p2c(pos[key]);
+						break;
+					}
+				}
+			}
+
+			return res;
+		}
+
+		function getOrCreateAxis(axes, number) {
+			if (!axes[number - 1]) {
+				axes[number - 1] = {
+					n: number,
+					direction: axes == xaxes ? "x" : "y",
+					options: $.extend(true, {}, axes == xaxes ? options.xaxis : options.yaxis)
+				};
+			}
+
+			return axes[number - 1];
+		}
+
+		function fillInSeriesOptions() {
+			var neededColors = series.length, maxIndex = -1, i;
+
+			// Subtract the number of series that already have fixed colors or
+			// color indexes from the number that we still need to generate.
+			for (i = 0; i < series.length; ++i) {
+				var sc = series[i].color;
+				if (sc != null) {
+					neededColors--;
+					if (typeof sc == "number" && sc > maxIndex) {
+						maxIndex = sc;
+					}
+				}
+			}
+
+			// If any of the series have fixed color indexes, then we need to
+			// generate at least as many colors as the highest index.
+			if (neededColors <= maxIndex) {
+				neededColors = maxIndex + 1;
+			}
+
+			// Generate all the colors, using first the option colors and then
+			// variations on those colors once they're exhausted.
+			var c, colors = [], colorPool = options.colors, colorPoolSize = colorPool.length, variation = 0;
+
+			for (i = 0; i < neededColors; i++) {
+				c = $.color.parse(colorPool[i % colorPoolSize] || "#666");
+
+				// Each time we exhaust the colors in the pool we adjust a scaling factor used to produce more variations on
+				// those colors. The factor alternates negative/positive to produce lighter/darker colors.
+
+				// Reset the variation after every few cycles, or else it will end up producing only white or black colors.
+				if (i % colorPoolSize == 0 && i) {
+					if (variation >= 0) {
+						if (variation < 0.5) {
+							variation = -variation - 0.2;
+						} else {
+							variation = 0;
+						}
+					} else {
+						variation = -variation;
+					}
+				}
+
+				colors[i] = c.scale('rgb', 1 + variation);
+			}
+
+			// Finalize the series options, filling in their colors
+			var colori = 0, s;
+
+			for (i = 0; i < series.length; ++i) {
+				s = series[i];
+
+				// assign colors
+				if (s.color == null) {
+					s.color = colors[colori].toString();
+					++colori;
+				} else if (typeof s.color == "number") {
+					s.color = colors[s.color].toString();
+				}
+
+				// turn on lines automatically in case nothing is set
+				if (s.lines.show == null) {
+					var v, show = true;
+					for (v in s) {
+						if (s[v] && s[v].show) {
+							show = false;
+							break;
+						}
+					}
+
+					if (show) {
+						s.lines.show = true;
+					}
+				}
+
+				// If nothing was provided for lines.zero, default it to match lines.fill, since areas by default should extend to zero.
+				if (s.lines.zero == null) {
+					s.lines.zero = !!s.lines.fill;
+				}
+
+				// setup axes
+				s.xaxis = getOrCreateAxis(xaxes, axisNumber(s, "x"));
+				s.yaxis = getOrCreateAxis(yaxes, axisNumber(s, "y"));
+			}
+		}
+
+		function processData() {
+			var topSentry = Number.POSITIVE_INFINITY,
+				bottomSentry = Number.NEGATIVE_INFINITY,
+				fakeInfinity = Number.MAX_VALUE,
+				i, j, k, m, length,
+				s, points, ps, x, y, axis, val, f, p,
+				data, format;
+
+			function updateAxis(axis, min, max) {
+				if (min < axis.datamin && min != -fakeInfinity) {
+					axis.datamin = min;
+				}
+				if (max > axis.datamax && max != fakeInfinity) {
+					axis.datamax = max;
+				}
+			}
+
+			$.each(allAxes(), function(_, axis) {
+				// init axis
+				axis.datamin = topSentry;
+				axis.datamax = bottomSentry;
+				axis.used = false;
+			});
+
+			for (i = 0; i < series.length; ++i) {
+				s = series[i];
+				s.datapoints = { points: [] };
+
+				executeHooks(hooks.processRawData, [ s, s.data, s.datapoints ]);
+			}
+
+			// first pass: clean and copy data
+			for (i = 0; i < series.length; ++i) {
+				s = series[i];
+
+				data = s.data;
+				format = s.datapoints.format;
+
+				if (!format) {
+					format = [];
+					// find out how to copy
+					format.push({ x: true, number: true, required: true });
+					format.push({ y: true, number: true, required: true });
+
+					if (s.bars.show || (s.lines.show && s.lines.fill)) {
+						var autoscale = !!((s.bars.show && s.bars.zero) || (s.lines.show && s.lines.zero));
+						format.push({ y: true, number: true, required: false, defaultValue: 0, autoscale: autoscale });
+
+						if (s.bars.horizontal) {
+							delete format[format.length - 1].y;
+							format[format.length - 1].x = true;
+						}
+					}
+
+					s.datapoints.format = format;
+				}
+
+				if (s.datapoints.pointsize != null) {
+					continue;
+				}
+
+				s.datapoints.pointsize = format.length;
+
+				ps = s.datapoints.pointsize;
+				points = s.datapoints.points;
+
+				var insertSteps = s.lines.show && s.lines.steps;
+				s.xaxis.used = s.yaxis.used = true;
+
+				for (j = k = 0; j < data.length; ++j, k += ps) {
+					p = data[j];
+
+					var nullify = p == null;
+
+					if (!nullify) {
+						for (m = 0; m < ps; ++m) {
+							val = p[m];
+							f = format[m];
+
+							if (f) {
+								if (f.number && val != null) {
+									val = +val; // convert to number
+									if (isNaN(val)) {
+										val = null;
+									} else if (val == Infinity) {
+										val = fakeInfinity;
+									} else if (val == -Infinity) {
+										val = -fakeInfinity;
+									}
+								}
+
+								if (val == null) {
+									if (f.required) {
+										nullify = true;
+									}
+
+									if (f.defaultValue != null) {
+										val = f.defaultValue;
+									}
+								}
+							}
+
+							points[k + m] = val;
+						}
+					}
+
+					if (nullify) {
+						for (m = 0; m < ps; ++m) {
+							val = points[k + m];
+
+							if (val != null) {
+								f = format[m];
+								// extract min/max info
+								if (f.autoscale !== false) {
+									if (f.x) {
+										updateAxis(s.xaxis, val, val);
+									}
+									if (f.y) {
+										updateAxis(s.yaxis, val, val);
+									}
+								}
+							}
+
+							points[k + m] = null;
+						}
+					} else {
+						// a little bit of line specific stuff that perhaps shouldn't be here, but lacking better means...
+						if (insertSteps && k > 0 && points[k - ps] != null && points[k - ps] != points[k] && points[k - ps + 1] != points[k + 1]) {
+							// copy the point to make room for a middle point
+							for (m = 0; m < ps; ++m) {
+								points[k + ps + m] = points[k + m];
+							}
+							// middle point has same y
+							points[k + 1] = points[k - ps + 1];
+							// we've added a point, better reflect that
+							k += ps;
+						}
+					}
+				}
+			}
+
+			// give the hooks a chance to run
+			for (i = 0; i < series.length; ++i) {
+				s = series[i];
+
+				executeHooks(hooks.processDatapoints, [ s, s.datapoints]);
+			}
+
+			// second pass: find datamax/datamin for auto-scaling
+			for (i = 0; i < series.length; ++i) {
+				s = series[i];
+				points = s.datapoints.points;
+				ps = s.datapoints.pointsize;
+				format = s.datapoints.format;
+
+				var xmin = topSentry, ymin = topSentry, xmax = bottomSentry, ymax = bottomSentry;
+
+				for (j = 0; j < points.length; j += ps) {
+					if (points[j] == null) {
+						continue;
+					}
+
+					for (m = 0; m < ps; ++m) {
+						val = points[j + m];
+						f = format[m];
+						if (!f || f.autoscale === false || val == fakeInfinity || val == -fakeInfinity) {
+							continue;
+						}
+
+						if (f.x) {
+							if (val < xmin) {
+								xmin = val;
+							}
+							if (val > xmax) {
+								xmax = val;
+							}
+						}
+
+						if (f.y) {
+							if (val < ymin) {
+								ymin = val;
+							}
+							if (val > ymax) {
+								ymax = val;
+							}
+						}
+					}
+				}
+
+				if (s.bars.show) {
+					// make sure we got room for the bar on the dancing floor
+					var delta;
+
+					switch (s.bars.align) {
+						case "left":
+							delta = 0;
+							break;
+						case "right":
+							delta = -s.bars.barWidth;
+							break;
+						default:
+							delta = -s.bars.barWidth / 2;
+					}
+
+					if (s.bars.horizontal) {
+						ymin += delta;
+						ymax += delta + s.bars.barWidth;
+					} else {
+						xmin += delta;
+						xmax += delta + s.bars.barWidth;
+					}
+				}
+
+				updateAxis(s.xaxis, xmin, xmax);
+				updateAxis(s.yaxis, ymin, ymax);
+			}
+
+			$.each(allAxes(), function(_, axis) {
+				if (axis.datamin == topSentry) {
+					axis.datamin = null;
+				}
+				if (axis.datamax == bottomSentry) {
+					axis.datamax = null;
+				}
+			});
+		}
+
+		function setupCanvases() {
+			// Make sure the placeholder is clear of everything except canvases
+			// from a previous plot in this container that we'll try to re-use.
+
+			placeholder.css("padding", 0).children().filter(function() {
+				return !$(this).hasClass("flot-overlay") && !$(this).hasClass('flot-base');
+			}).remove();
+
+			if (placeholder.css("position") == 'static') {
+				placeholder.css("position", "relative");
+			}
+
+			surface = new Canvas("flot-base", placeholder);
+			overlay = new Canvas("flot-overlay", placeholder);
+
+			ctx = surface.context;
+			octx = overlay.context;
+
+			// define which element we're listening for events on
+			eventHolder = $(overlay.element).unbind();
+
+			// If we're re-using a plot object, shut down the old one
+			var existing = placeholder.data("plot");
+
+			if (existing) {
+				existing.shutdown();
+				overlay.clear();
+			}
+
+			// save in case we get replotted
+			placeholder.data("plot", plot);
+		}
+
+		function bindEvents() {
+			// bind events
+			if (options.grid.hoverable) {
+				eventHolder.mousemove(onMouseMove);
+
+				// Use bind, rather than .mouseleave, because we officially
+				// still support jQuery 1.2.6, which doesn't define a shortcut
+				// for mouseenter or mouseleave.  This was a bug/oversight that
+				// was fixed somewhere around 1.3.x.  We can return to using
+				// .mouseleave when we drop support for 1.2.6.
+				eventHolder.bind("mouseleave", onMouseLeave);
+			}
+
+			if (options.grid.clickable) {
+				eventHolder.click(onClick);
+			}
+
+			executeHooks(hooks.bindEvents, [eventHolder]);
+		}
+
+		function shutdown() {
+			if (redrawTimeout) {
+				clearTimeout(redrawTimeout);
+			}
+
+			eventHolder.unbind("mousemove", onMouseMove);
+			eventHolder.unbind("mouseleave", onMouseLeave);
+			eventHolder.unbind("click", onClick);
+
+			executeHooks(hooks.shutdown, [eventHolder]);
+		}
+
+		function setTransformationHelpers(axis) {
+			// set helper functions on the axis, assumes plot area has been computed already
+			function identity(x) {
+				return x;
+			}
+
+			var s, m, t = axis.options.transform || identity, it = axis.options.inverseTransform;
+
+			// precompute how much the axis is scaling a point in canvas space
+			if (axis.direction == "x") {
+				s = axis.scale = plotWidth / Math.abs(t(axis.max) - t(axis.min));
+				m = Math.min(t(axis.max), t(axis.min));
+			} else {
+				s = axis.scale = plotHeight / Math.abs(t(axis.max) - t(axis.min));
+				s = -s;
+				m = Math.max(t(axis.max), t(axis.min));
+			}
+
+			// data point to canvas coordinate
+			if (t == identity) {
+				axis.p2c = function (p) { return (p - m) * s; };
+			} else {
+				axis.p2c = function (p) { return (t(p) - m) * s; };
+			}
+			// canvas coordinate to data point
+			if (!it) {
+				axis.c2p = function (c) { return m + c / s; };
+			} else {
+				axis.c2p = function (c) { return it(m + c / s); };
+			}
+		}
+
+		function measureTickLabels(axis) {
+			var opts = axis.options,
+				ticks = axis.ticks || [],
+				labelWidth = opts.labelWidth || 0,
+				labelHeight = opts.labelHeight || 0,
+				maxWidth = labelWidth || (axis.direction == "x" ? Math.floor(surface.width / (ticks.length || 1)) : null),
+				legacyStyles = axis.direction + "Axis " + axis.direction + axis.n + "Axis",
+				layer = "flot-" + axis.direction + "-axis flot-" + axis.direction + axis.n + "-axis " + legacyStyles,
+				font = opts.font || "flot-tick-label tickLabel";
+
+			for (var i = 0; i < ticks.length; ++i) {
+				var t = ticks[i];
+
+				if (!t.label) {
+					continue;
+				}
+
+				var info = surface.getTextInfo(layer, t.label, font, null, maxWidth);
+
+				labelWidth = Math.max(labelWidth, info.width);
+				labelHeight = Math.max(labelHeight, info.height);
+			}
+
+			axis.labelWidth = opts.labelWidth || labelWidth;
+			axis.labelHeight = opts.labelHeight || labelHeight;
+		}
 
         function allocateAxisBoxFirstPhase(axis) {
             // find the bounding box of the axis by looking at label
@@ -1445,6 +1468,7 @@ Licensed under the MIT license.
                             innermost = false;
                         }
                     }
+
                     if (!found) {
                         first = false;
                     }
@@ -1452,13 +1476,11 @@ Licensed under the MIT license.
             });
 
             // The outermost axis on each side has no margin
-
             if (outermost) {
                 axisMargin = 0;
             }
 
             // The ticks for the first axis in each direction stretch across
-
             if (tickLength == null) {
                 tickLength = first ? "full" : 5;
             }
@@ -1999,7 +2021,7 @@ Licensed under the MIT license.
                             ctx.lineTo(xrange.to + subPixel, yrange.to);
                         } else {
                             ctx.moveTo(xrange.from, yrange.to + subPixel);
-                            ctx.lineTo(xrange.to, yrange.to + subPixel);                            
+                            ctx.lineTo(xrange.to, yrange.to + subPixel);
                         }
                         ctx.stroke();
                     } else {
@@ -2513,9 +2535,9 @@ Licensed under the MIT license.
                 radius = series.points.radius,
                 symbol = series.points.symbol;
 
-            // If the user sets the line width to 0, we change it to a very 
+            // If the user sets the line width to 0, we change it to a very
             // small value. A line width of 0 seems to force the default of 1.
-            // Doing the conditional here allows the shadow setting to still be 
+            // Doing the conditional here allows the shadow setting to still be
             // optional even with a lineWidth of 0.
 
             if( lw == 0 )
@@ -3096,27 +3118,27 @@ Licensed under the MIT license.
             octx.lineWidth = series.bars.lineWidth;
             octx.strokeStyle = highlightColor;
 
-            drawBar(point[0], point[1], point[2] || 0, barLeft, barLeft + series.bars.barWidth,
-                    function () { return fillStyle; }, series.xaxis, series.yaxis, octx, series.bars.horizontal, series.bars.lineWidth);
+            drawBar(point[0], point[1], point[2] || 0, barLeft, barLeft + series.bars.barWidth, function() { return fillStyle; }, series.xaxis, series.yaxis, octx, series.bars.horizontal, series.bars.lineWidth);
         }
 
-        function getColorOrGradient(spec, bottom, top, defaultColor) {
-            if (typeof spec == "string")
-                return spec;
-            else {
+		function getColorOrGradient(spec, bottom, top, defaultColor) {
+			if (typeof spec == "string") {
+				return spec;
+			} else {
                 // assume this is a gradient spec; IE currently only
-                // supports a simple vertical gradient properly, so that's
-                // what we support too
+                // supports a simple vertical gradient properly, so that's what we support too
                 var gradient = ctx.createLinearGradient(0, top, 0, bottom);
 
                 for (var i = 0, l = spec.colors.length; i < l; ++i) {
                     var c = spec.colors[i];
                     if (typeof c != "string") {
                         var co = $.color.parse(defaultColor);
-                        if (c.brightness != null)
+                        if (c.brightness != null) {
                             co = co.scale('rgb', c.brightness);
-                        if (c.opacity != null)
+						}
+                        if (c.opacity != null) {
                             co.a *= c.opacity;
+						}
                         c = co.toString();
                     }
                     gradient.addColorStop(i / (l - 1), c);
@@ -3128,7 +3150,6 @@ Licensed under the MIT license.
     }
 
     // Add the plot function to the top level of the jQuery object
-
     $.plot = function(placeholder, data, options) {
         //var t0 = new Date();
         var plot = new Plot($(placeholder), data, options, $.plot.plugins);
@@ -3137,11 +3158,9 @@ Licensed under the MIT license.
     };
 
     $.plot.version = "0.8.3";
-
     $.plot.plugins = [];
 
     // Also add the plot function as a chainable property
-
     $.fn.plot = function(data, options) {
         return this.each(function() {
             $.plot(this, data, options);
@@ -3152,5 +3171,4 @@ Licensed under the MIT license.
     function floorInBase(n, base) {
         return base * Math.floor(n / base);
     }
-
 })(jQuery);

@@ -64,29 +64,61 @@ API.txt for details.
 
 			if (escape) {
 				switch (c) {
-					case 'a': c = "" + dayNames[d.getDay()]; break;
-					case 'b': c = "" + monthNames[d.getMonth()]; break;
-					case 'd': c = leftPad(d.getDate()); break;
-					case 'e': c = leftPad(d.getDate(), " "); break;
-					case 'h':	// For back-compat with 0.7; remove in 1.0
-					case 'H': c = leftPad(hours); break;
-					case 'I': c = leftPad(hours12); break;
-					case 'l': c = leftPad(hours12, " "); break;
-					case 'm': c = leftPad(d.getMonth() + 1); break;
-					case 'M': c = leftPad(d.getMinutes()); break;
+					case 'a':
+						c = "" + dayNames[d.getDay()];
+						break;
+					case 'b':
+						c = "" + monthNames[d.getMonth()];
+						break;
+					case 'd':
+						c = leftPad(d.getDate());
+						break;
+					case 'e':
+						c = leftPad(d.getDate(), " ");
+						break;
+					case 'h': // For back-compat with 0.7; remove in 1.0
+					case 'H':
+						c = leftPad(hours);
+						break;
+					case 'I':
+						c = leftPad(hours12);
+						break;
+					case 'l':
+						c = leftPad(hours12, " ");
+						break;
+					case 'm':
+						c = leftPad(d.getMonth() + 1);
+						break;
+					case 'M':
+						c = leftPad(d.getMinutes());
+						break;
 					// quarters not in Open Group's strftime specification
 					case 'q':
-						c = "" + (Math.floor(d.getMonth() / 3) + 1); break;
-					case 'S': c = leftPad(d.getSeconds()); break;
-					case 'y': c = leftPad(d.getFullYear() % 100); break;
-					case 'Y': c = "" + d.getFullYear(); break;
-					case 'p': c = (isAM) ? ("" + "am") : ("" + "pm"); break;
-					case 'P': c = (isAM) ? ("" + "AM") : ("" + "PM"); break;
-					case 'w': c = "" + d.getDay(); break;
+						c = "" + (Math.floor(d.getMonth() / 3) + 1);
+						break;
+					case 'S':
+						c = leftPad(d.getSeconds());
+						break;
+					case 'y':
+						c = leftPad(d.getFullYear() % 100);
+						break;
+					case 'Y':
+						c = "" + d.getFullYear();
+						break;
+					case 'p':
+						c = (isAM) ? ("" + "am") : ("" + "pm");
+						break;
+					case 'P':
+						c = (isAM) ? ("" + "AM") : ("" + "PM");
+						break;
+					case 'w':
+						c = "" + d.getDay();
+						break;
 				}
-				r.push(c);
-				escape = false;
 
+				r.push(c);
+
+				escape = false;
 			} else {
 				if (c == "%") {
 					escape = true;
@@ -164,9 +196,9 @@ API.txt for details.
 	// the allowed tick sizes, after 1 year we use an integer algorithm
 	var baseSpec = [
 		[1, "second"], [2, "second"], [5, "second"], [10, "second"],
-		[30, "second"], 
+		[30, "second"],
 		[1, "minute"], [2, "minute"], [5, "minute"], [10, "minute"],
-		[30, "minute"], 
+		[30, "minute"],
 		[1, "hour"], [2, "hour"], [4, "hour"],
 		[8, "hour"], [12, "hour"],
 		[1, "day"], [2, "day"], [3, "day"],
@@ -189,8 +221,7 @@ API.txt for details.
 						var d = dateGenerator(axis.min, opts);
 						var minSize = 0;
 
-						// make quarter use a possibility if quarters are
-						// mentioned in either of these options
+						// make quarter use a possibility if quarters are mentioned in either of these options
 						var spec = (opts.tickSize && opts.tickSize[1] ===
 							"quarter") ||
 							(opts.minTickSize && opts.minTickSize[1] ===
@@ -212,12 +243,9 @@ API.txt for details.
 
 						var size = spec[i][0];
 						var unit = spec[i][1];
-
 						// special-case the possibility of several years
 						if (unit == "year") {
-							// if given a minTickSize in years, just use it,
-							// ensuring that it's an integer
-
+							// if given a minTickSize in years, just use it, ensuring that it's an integer
 							if (opts.minTickSize != null && opts.minTickSize[1] == "year") {
 								size = Math.floor(opts.minTickSize[0]);
 							} else {
@@ -305,15 +333,13 @@ API.txt for details.
 									// the middle of a day
 									d.setDate(1);
 									var start = d.getTime();
-									d.setMonth(d.getMonth() +
-										(unit == "quarter" ? 3 : 1));
+									d.setMonth(d.getMonth() + (unit == "quarter" ? 3 : 1));
 									var end = d.getTime();
 									d.setTime(v + carry * timeUnitSize.hour + (end - start) * tickSize);
 									carry = d.getHours();
 									d.setHours(0);
 								} else {
-									d.setMonth(d.getMonth() +
-										tickSize * (unit == "quarter" ? 3 : 1));
+									d.setMonth(d.getMonth() + tickSize * (unit == "quarter" ? 3 : 1));
 								}
 							} else if (unit == "year") {
 								d.setFullYear(d.getFullYear() + tickSize);
@@ -334,10 +360,7 @@ API.txt for details.
 						}
 
 						// possibly use quarters if quarters are mentioned in any of these places
-						var useQuarters = (axis.options.tickSize &&
-								axis.options.tickSize[1] == "quarter") ||
-							(axis.options.minTickSize &&
-								axis.options.minTickSize[1] == "quarter");
+						var useQuarters = (axis.options.tickSize && axis.options.tickSize[1] == "quarter") || (axis.options.minTickSize && axis.options.minTickSize[1] == "quarter");
 
 						var t = axis.tickSize[0] * timeUnitSize[axis.tickSize[1]];
 						var span = axis.max - axis.min;
@@ -355,8 +378,7 @@ API.txt for details.
 							}
 						} else if (t < timeUnitSize.month) {
 							fmt = "%b %d";
-						} else if ((useQuarters && t < timeUnitSize.quarter) ||
-							(!useQuarters && t < timeUnitSize.year)) {
+						} else if ((useQuarters && t < timeUnitSize.quarter) || (!useQuarters && t < timeUnitSize.year)) {
 							if (span < timeUnitSize.year) {
 								fmt = "%b";
 							} else {
@@ -389,7 +411,7 @@ API.txt for details.
 	});
 
 	// Time-axis support used to be in Flot core, which exposed the
-	// formatDate function on the plot object.  Various plugins depend
+	// formatDate function on the plot object. Various plugins depend
 	// on the function, so we need to re-expose it here.
 	$.plot.formatDate = formatDate;
 	$.plot.dateGenerator = dateGenerator;

@@ -328,5 +328,4 @@ browser, but needs to redraw with canvas text when exporting as an image.
 		name: "canvas",
 		version: "1.0"
 	});
-
 })(jQuery);

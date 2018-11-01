@@ -173,9 +173,10 @@ The plugin allso adds the following methods to the plot object:
             }
 
             var r = {}, c1 = selection.first, c2 = selection.second;
+
             $.each(plot.getAxes(), function (name, axis) {
                 if (axis.used) {
-                    var p1 = axis.c2p(c1[axis.direction]), p2 = axis.c2p(c2[axis.direction]); 
+                    var p1 = axis.c2p(c1[axis.direction]), p2 = axis.c2p(c2[axis.direction]);
                     r[name] = { from: Math.min(p1, p2), to: Math.max(p1, p2) };
                 }
             });
@@ -202,6 +203,7 @@ The plugin allso adds the following methods to the plot object:
             var o = plot.getOptions();
             var offset = plot.getPlaceholder().offset();
             var plotOffset = plot.getPlotOffset();
+
             pos.x = clamp(0, e.pageX - offset.left - plotOffset.left, plot.width());
             pos.y = clamp(0, e.pageY - offset.top - plotOffset.top, plot.height());
 
@@ -245,6 +247,7 @@ The plugin allso adds the following methods to the plot object:
 
             for (var k in axes) {
                 axis = axes[k];
+
                 if (axis.direction == coord) {
                     key = coord + axis.n + "axis";
                     // support x1axis as xaxis

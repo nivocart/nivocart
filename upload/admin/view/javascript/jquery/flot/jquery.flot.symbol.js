@@ -15,9 +15,7 @@ The symbols are accessed as strings through the standard symbol options:
 
 (function ($) {
     function processRawData(plot, series, datapoints) {
-        // we normalize the area of each symbol so it is approximately the
-        // same as a circle of the given radius
-
+        // we normalize the area of each symbol so it is approximately the same as a circle of the given radius
         var handlers = {
             square: function (ctx, x, y, radius, shadow) {
                 // pi * r^2 = (2s)^2  =>  s = r * sqrt(pi)/2
@@ -55,14 +53,16 @@ The symbols are accessed as strings through the standard symbol options:
         };
 
         var s = series.points.symbol;
-        if (handlers[s])
+
+        if (handlers[s]) {
             series.points.symbol = handlers[s];
+        }
     }
-    
+
     function init(plot) {
         plot.hooks.processDatapoints.push(processRawData);
     }
-    
+
     $.plot.plugins.push({
         init: init,
         name: 'symbols',
