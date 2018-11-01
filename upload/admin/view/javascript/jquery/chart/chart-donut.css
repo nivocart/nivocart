@@ -39,14 +39,14 @@
 	border-radius: 50%;
 }
 .donut-chart.fill {
-	background: #83AFC4;
+	background: transparent;
 }
 .donut-chart:after {
 	content: "";
 	position: absolute;
 	width: 86%;
 	height: 86%;
-	background: #FCFCFC;
+	background: rgba(251, 251, 251, 0.9);
 	left: 50%;
 	top: 50%;
 	z-index: 400;
@@ -73,13 +73,13 @@
 	pointer-events: none;
 	font-size: 30px;
 	font-weight: 400;
-	color: rgb(255,128,43);
+	color: rgba(255, 124, 38, 0.9);
 }
 .donut-chart h6 span, .donut-chart.fill h6 span {
 	display: block;
 	width: 100%;
 	font-size: 15px;
-	color: rgb(143,143,143);
+	color: rgba(143, 143, 143, 1);
 	margin-top: -10px;
 }
 .donut-chart .spinner {
@@ -139,7 +139,7 @@
 	transform-origin: 100% 50%;
 }
 .donut-chart .mask {
-	background: rgb(248,248,248);
+	background: rgba(248, 248, 248, 1);
 	z-index: 400;
 	margin-left: -1px;
 }
@@ -147,26 +147,31 @@
 	display: none;
 }
 .chart.donut .pie-chart h2, .chart.donut .pie-chart h2 span {
-	color: #FCFCFC;
+	color: rgba(251, 251, 251, 1);
 }
 
 /* Desktops */
-@media only screen and (min-width: 940px) and (max-width: 1240px) {
-	.chart.donut{width:200px;height:200px}
+@media only screen and (min-width: 961px) and (max-width: 1281px) {
+	.chart.donut{width:200px; height:200px}
 	.donut-chart h6,.donut-chart.fill h6{font-size:28px}
 }
 /* Laptops */
-@media only screen and (min-width: 790px) and (max-width: 940px) {
-	.chart.donut{width:180px;height:180px}
+@media only screen and (min-width: 801px) and (max-width: 961px) {
+	.chart.donut{width:180px; height:180px}
 	.donut-chart h6,.donut-chart.fill h6{font-size:26px}
 }
 /* Tablets */
-@media only screen and (min-width: 640px) and (max-width: 790px) {
-	.chart.donut{width:160px;height:160px}
+@media only screen and (min-width: 641px) and (max-width: 801px) {
+	.chart.donut{width:160px; height:160px}
 	.donut-chart h6,.donut-chart.fill h6{font-size:24px}
 }
-/* Phones */
-@media only screen and (max-width: 640px) {
-	.chart.donut{width:140px;height:140px}
+/* Phones Landscape*/
+@media only screen and (min-width: 320px) and (max-width: 641px) {
+	.chart.donut{width:135px; height:135px}
 	.donut-chart h6,.donut-chart.fill h6{font-size:22px}
+}
+/* Phones Portrait*/
+@media only screen and (max-width: 320px) {
+	.chart.donut{width:70px; height:70px}
+	.donut-chart h6,.donut-chart.fill h6{font-size:16px}
 }

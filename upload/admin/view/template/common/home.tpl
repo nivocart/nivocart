@@ -190,7 +190,7 @@
             <div style="width:26%; float:right;">
               <h2><?php echo $text_topcountry; ?> &nbsp; <?php echo (!empty($top_flag)) ? "<img src='" . $top_flag . "' alt='' />" : ''; ?></h2>
               <br /><br />
-              <div class="chart">
+              <div class="chart animated fadeIn">
               <?php foreach ($top_countries as $top_country) { ?>
                 <div class="donut-chart fill" data-percent="<?php echo $top_country['amount']; ?>" data-title="<?php echo $top_country['country']; ?> %"></div>
               <?php } ?>
