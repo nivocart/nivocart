@@ -15,7 +15,7 @@
       <div class="display"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-active.png" alt="" /> <a onclick="display('grid');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-off.png" alt="" /></a></div>
       <div class="product-compare"><a href="<?php echo $compare; ?>" id="compare-total"><i class="fa fa-random"></i><span class="hide-phone"> &nbsp;<?php echo $text_compare; ?></span></a></div>
       <div class="selectors">
-        <div class="limit"><?php echo $text_limit; ?>
+        <div class="limit"><span class="hide-phone"><?php echo $text_limit; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($limits as $limits) { ?>
             <?php if ($limits['value'] == $limit) { ?>
@@ -26,7 +26,7 @@
           <?php } ?>
           </select>
         </div>
-        <div class="sort"><?php echo $text_sort; ?>
+        <div class="sort"><span class="hide-phone"><?php echo $text_sort; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($sorts as $sorts) { ?>
             <?php if ($sorts['value'] == $sort . '-' . $order) { ?>

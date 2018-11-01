@@ -5,9 +5,9 @@
 ADVANCED SHOPPING CART SYSTEM
 
 NivoCart is a fully featured shopping cart solution written in pure PHP, Html5, CSS3 and jQuery.<br />
-NivoCart is a user friendly all-in-one application that does not have any remote dependencies and does not use any template engines or frameworks.<br />
-NivoCart is a community based project, so feel free to download it, clone it, test it and contribute to it.<br />
-Help and support can be found by visiting the <a href="http://forum.nivocart.com" title="Forum">NivoCart Forum</a>.
+NivoCart is a powerful and user friendly all-in-one shopping cart application. NivoCart is completely self-contained, does not use any framework or template engine, and has no remote dependencies.<br />
+NivoCart is a free opensource community project, so feel free to download it, clone it, test it and contribute to it!<br />
+Help and support is available through the <a href="http://forum.nivocart.com" title="Forum">NivoCart Forum</a>.
 
 _____________________________________________________________________________________________
 
