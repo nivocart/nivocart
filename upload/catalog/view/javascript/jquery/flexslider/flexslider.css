@@ -127,19 +127,19 @@ html[xmlns] .flexslider .slides {
 	top: 50%;
 	z-index: 10;
 	overflow: hidden;
+	color: rgba(0, 0, 0, 0.8);
+	text-decoration: none;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
 	filter: alpha(opacity=0);
 	-khtml-opacity: 0;
 	-moz-opacity: 0;
 	opacity: 0;
-	cursor: pointer;
-	color: rgba(0, 0, 0, 0.8);
-	text-decoration: none;
-	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
+	cursor: pointer;
 }
 .flex-direction-nav a:before {
 	font-family: "flexslider-icon";
@@ -307,19 +307,19 @@ html[xmlns] .flexslider .slides {
 /* ====================================
  * RESPONSIVE
  * ====================================*/
-@media screen and (max-width: 801px) {
+@media screen and (max-width: 1360px) {
 	.flex-direction-nav .flex-prev {
-		filter: alpha(opacity=100);
-		-khtml-opacity: 1;
-		-moz-opacity: 1;
-		opacity: 1;
+		filter: alpha(opacity=0);
+		-khtml-opacity: 0;
+		-moz-opacity: 0;
+		opacity: 0;
 		left: 10px;
 	}
 	.flex-direction-nav .flex-next {
-		filter: alpha(opacity=100);
-		-khtml-opacity: 1;
-		-moz-opacity: 1;
-		opacity: 1;
+		filter: alpha(opacity=0);
+		-khtml-opacity: 0;
+		-moz-opacity: 0;
+		opacity: 0;
 		right: 10px;
 	}
 }

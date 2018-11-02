@@ -10,7 +10,6 @@ class ControllerModuleBanner extends Controller {
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$this->document->addStyle('catalog/view/javascript/jquery/flexslider/flexslider.min.css');
-
 		$this->document->addScript('catalog/view/javascript/jquery/flexslider/jquery.flexslider-min.js');
 
 		// Module
@@ -35,8 +34,8 @@ class ControllerModuleBanner extends Controller {
 			$this->data['direction'] = 'vertical';
 		}
 
-		$this->data['duration'] = ($this->config->get($this->_name . '_duration')) ? $this->config->get($this->_name . '_duration') : 3000;
-		$this->data['speed'] = ($this->config->get($this->_name . '_speed')) ? $this->config->get($this->_name . '_speed') : 300;
+		$this->data['duration'] = ($this->config->get($this->_name . '_duration')) ? $this->config->get($this->_name . '_duration') : 5000;
+		$this->data['speed'] = ($this->config->get($this->_name . '_speed')) ? $this->config->get($this->_name . '_speed') : 500;
 
 		$this->load->model('design/banner');
 		$this->load->model('tool/image');
