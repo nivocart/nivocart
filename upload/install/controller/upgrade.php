@@ -78,6 +78,8 @@ class ControllerUpgrade extends Controller {
 		if ($status) {
 			$step1 = false;
 			$step2 = false;
+			$step3 = false;
+			$step4 = false;
 
 			$this->model_upgrade->dataTables($step1);
 
@@ -86,8 +88,17 @@ class ControllerUpgrade extends Controller {
 			}
 
 			if (isset($step2) && $step2 == true) {
-				$this->model_upgrade->repairCategories(0);
+				$this->model_upgrade->repairCategories(0, $step3);
 			}
+
+			if (isset($step3) && $step3 == true) {
+				$this->model_upgrade->updateConfig($step4);
+			}
+
+			if (isset($step4) && $step4 == true) {
+				$this->model_upgrade->updateLayouts();
+			}
+
 		} else {
 			return;
 		}

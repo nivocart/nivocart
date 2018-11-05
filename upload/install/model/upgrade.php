@@ -2,6 +2,9 @@
 // ---------------------------------
 // NivoCart Upgrade Script
 // ---------------------------------
+// Upgrading directly from OpenCart
+// Min. version supported: v1.5.5.1
+// ---------------------------------
 
 class ModelUpgrade extends Model {
 
@@ -367,6 +370,65 @@ class ModelUpgrade extends Model {
 			}
 		}
 
+		// Update the country table (OCE)
+		if (isset($table_old_data[DB_PREFIX . 'country']) && in_array('name', $table_old_data[DB_PREFIX . 'country'])) {
+			// Country 'name' field moved to new country_description table. Need to loop through and move over
+			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country`");
+
+			foreach ($country_query->rows as $country) {
+				$language_query = $this->db->query("SELECT language_id FROM `" . DB_PREFIX . "language`");
+
+				foreach ($language_query->rows as $language) {
+					$this->db->query("REPLACE INTO `" . DB_PREFIX . "country_description` SET country_id = '" . (int)$country['country_id'] . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($country['name']) . "'");
+				}
+			}
+
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "country` DROP name");
+		}
+
+		// Update the manufacturer table (OCE)
+		if (isset($table_old_data[DB_PREFIX . 'manufacturer']) && in_array('name', $table_old_data[DB_PREFIX . 'manufacturer'])) {
+			// Manufacturer 'name' field moved to new manufacturer_description table. Need to loop through and move over
+			$manufacturer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer`");
+
+			foreach ($manufacturer_query->rows as $manufacturer) {
+				$language_query = $this->db->query("SELECT language_id FROM `" . DB_PREFIX . "language`");
+
+				foreach ($language_query->rows as $language) {
+					$this->db->query("REPLACE INTO `" . DB_PREFIX . "manufacturer_description` SET manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($manufacturer['name']) . "', description = '" . $this->db->escape($manufacturer['description']) . "'");
+				}
+			}
+
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP name");
+		}
+
+		// Move customer IP blacklist to customer ban IP table (OC)
+		$ip_query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "customer_ip_blacklist'");
+
+		if ($ip_query->num_rows) {
+			$blacklist_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_ip_blacklist`");
+
+			foreach ($blacklist_query->rows as $result) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_ban_ip` SET ip = '" . $this->db->escape($result['ip']) . "'");
+			}
+
+			// Drop unused table
+			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "customer_ip_blacklist`");
+		}
+
+		// Update the news description table. News 'keyword' field is redundant. (OCE)
+		if (isset($table_old_data[DB_PREFIX . 'news_description']) && in_array('keyword', $table_old_data[DB_PREFIX . 'news_description'])) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "news_description` DROP keyword");
+		}
+
+		// Product tag table to product description tag (OCE)
+		if (isset($table_old_data[DB_PREFIX . 'product_tag']) && !in_array('tag', $table_old_data[DB_PREFIX . 'product_description'])) {
+			$this->db->query("UPDATE `" . DB_PREFIX . "product_description` pd SET tag = (SELECT GROUP_CONCAT(DISTINCT pt.tag ORDER BY pt.product_tag_id) FROM `" . DB_PREFIX . "product_tag` pt WHERE pd.product_id = pt.product_id AND pd.language_id = pt.language_id GROUP BY pt.product_id, pt.language_id)");
+		}
+
+		// Delete unused order_fraud table (OCE)
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "order_fraud`");
+
 		flush();
 
 		$step2 = true;
@@ -377,7 +439,7 @@ class ModelUpgrade extends Model {
 	// --------------------------------------------------------------------------------
 	// Function to repair any erroneous categories that are not in the category path table
 	// --------------------------------------------------------------------------------
-	public function repairCategories($parent_id = 0) {
+	public function repairCategories($parent_id = 0, $step3) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category` WHERE parent_id = '" . (int)$parent_id . "'");
 
 		foreach ($query->rows as $category) {
@@ -400,8 +462,168 @@ class ModelUpgrade extends Model {
 			$this->repairCategories($category['category_id']);
 		}
 
+		// Create system/upload directory
+		$upload_directory = DIR_SYSTEM . 'upload/';
+
+		if (!is_dir($upload_directory)) {
+			mkdir(DIR_SYSTEM . 'upload', 0777);
+		}
+
 		$step3 = true;
 
 		return $step3;
+	}
+
+	// -----------------------------------------------
+	// Function to update the existing "config.php" files
+	// -----------------------------------------------
+	public function updateConfig($step4) {
+		set_time_limit(30);
+
+		$upload = 'define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');';
+		$vqmod = 'define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');';
+		$port = 'define(\'DB_PREFIX\', \'' . DB_PREFIX . '\');';
+
+		$check_upload = 'define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');';
+		$check_vqmod = 'define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');';
+		$check_port = 'define(\'DB_PORT\', \'3306\');';
+
+		$output_upload = '
+define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');
+define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');';
+
+		$output_vqmod = '
+define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');
+define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');';
+
+		$output_port = '
+define(\'DB_PORT\', \'3306\');
+define(\'DB_PREFIX\', \'' . DB_PREFIX . '\');';
+
+		// Catalog
+		if (file_exists('../config.php') && filesize('../config.php') > 0) {
+			$catalog = '../config.php';
+
+			$fh1 = fopen($catalog, 'r+');
+
+			$catalog_data = file_get_contents($catalog);
+
+			$catalog_string = implode('', file($catalog));
+
+			if (strpos($catalog_data, $check_upload) == false) {
+				$catalog_string .= str_replace($upload, $output_upload, $catalog_string);
+			}
+
+			if (strpos($catalog_data, $check_vqmod) == false) {
+				$catalog_string .= str_replace($vqmod, $output_vqmod, $catalog_string);
+			}
+
+			if (strpos($catalog_data, $check_port) == false) {
+				$catalog_string .= str_replace($port, $output_port, $catalog_string);
+			}
+
+			fwrite($fh1, $catalog_string, strlen($catalog_string));
+
+			fclose($fh1);
+		}
+
+		// Admin
+		if (file_exists('../admin/config.php') && filesize('../admin/config.php') > 0) {
+			$admin = '../admin/config.php';
+
+			$fh2 = fopen($admin, 'r+');
+
+			$admin_data = file_get_contents($admin);
+
+			$admin_string = implode('', file($admin));
+
+			if (strpos($admin_data, $check_upload) == false) {
+				$admin_string .= str_replace($upload, $output_upload, $admin_string);
+			}
+
+			if (strpos($admin_data, $check_vqmod) == false) {
+				$admin_string .= str_replace($vqmod, $output_vqmod, $admin_string);
+			}
+
+			if (strpos($admin_data, $check_port) == false) {
+				$admin_string .= str_replace($port, $output_port, $admin_string);
+			}
+
+			fwrite($fh2, $admin_string, strlen($admin_string));
+
+			fclose($fh2);
+		}
+
+		clearstatcache();
+
+		flush();
+
+		$step4 = true;
+
+		return $step4;
+	}
+
+	// ------------------------------------
+	// Function to update the layout routes
+	// ------------------------------------
+	public function updateLayouts() {
+		// Get stores
+		$stores = array(0);
+
+		$sql = "SELECT store_id FROM " . DB_PREFIX . "store";
+
+		$query_store = $this->db->query($sql);
+
+		foreach ($query_store->rows as $store) {
+			$stores[] = $store['store_id'];
+		}
+
+		// Create News layout
+		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'News' LIMIT 0,1";
+
+		$query_name = $this->db->query($sql);
+
+		if ($query_name->num_rows == 0) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET name = 'News'");
+		}
+
+		// Add News routes
+		$news_routes = array('information/news', 'information/news_list');
+
+		foreach ($stores as $store_id) {
+			foreach ($news_routes as $news_route) {
+				$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` LIKE '" . $news_route . "' LIMIT 0,1";
+
+				$query = $this->db->query($sql);
+
+				if ($query->num_rows == 0) {
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE name = 'News'), store_id = '" . (int)$store_id . "', `route` = '" . $news_route . "'");
+				}
+			}
+		}
+
+		// Create Special layout
+		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Special' LIMIT 0,1";
+
+		$query_name = $this->db->query($sql);
+
+		if ($query_name->num_rows == 0) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET name = 'Special'");
+		}
+
+		// Add Special routes
+		$special_routes = array('product/special');
+
+		foreach ($stores as $store_id) {
+			foreach ($special_routes as $special_route) {
+				$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` LIKE '" . $special_route . "' LIMIT 0,1";
+
+				$query = $this->db->query($sql);
+
+				if ($query->num_rows == 0) {
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE name = 'Special'), store_id = '" . (int)$store_id . "', `route` = '" . $special_route . "'");
+				}
+			}
+		}
 	}
 }
