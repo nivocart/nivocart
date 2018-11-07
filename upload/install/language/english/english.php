@@ -18,7 +18,7 @@ $_['help_setting']           = 'Log into your Administration by clicking the "Go
 $_['help_security']          = 'Check "users" and "user group permissions" under "System > Users", then activate and configure the "User Log".<br />Block harmful IPs: if you already have a list of harmful IP addresses, enter them now under "System > Server > Block IPs".';
 $_['help_server']            = 'Go to your Host and check that everything is setup correctly. Adjust your PHP.ini settings if necessary.';
 $_['help_installer']         = 'For security reasons, the install directory will be deleted automatically at the first login.';
-$_['help_update']            = 'Log into your Administration by clicking the "Go to my Dashboard" button below.<br />Go to "System > Settings > (Your Store)", check that all your parameters are set correctly. Save.';
+$_['help_update']            = 'Log into your Administration by clicking the "Go to my Dashboard" button below.<br />Check "user group permissions" under "System > Users" to update your Access and Modify permissions.<br />Go to "System > Settings > (Your Store)", check that all your parameters are set correctly. Save.';
 
 // Text
 $_['text_follow_steps']      = 'Follow these steps carefully!';
@@ -76,6 +76,7 @@ $_['text_project_forum']     = 'Project Forum';
 $_['text_footer']            = 'Copyright © 2018 NivoCart - All rights reserved';
 
 // Entry
+$_['entry_agree']            = 'I agree to the license ';
 $_['entry_db_driver']        = 'DB Driver';
 $_['entry_db_hostname']      = 'Hostname';
 $_['entry_db_username']      = 'Username';
@@ -113,6 +114,7 @@ $_['error_image_write']      = 'Warning: Image directory needs to be writable fo
 $_['error_imagecache_write'] = 'Warning: Image cache directory needs to be writable for NivoCart to work!';
 $_['error_imagedata_write']  = 'Warning: Image data directory needs to be writable for NivoCart to work!';
 
+$_['error_license']          = 'You must agree to the license before you can install NivoCart!';
 $_['error_db_hostname']      = 'Hostname is required!';
 $_['error_db_username']      = 'Username is required!';
 $_['error_db_database']      = 'Database Name is required!';

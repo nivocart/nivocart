@@ -4,7 +4,7 @@ class ControllerStep2 extends Controller {
 
 	public function index() {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->response->redirect($this->url->link('step_3'));
+			$this->response->redirect($this->url->link('step_3', '', 'SSL'));
 		}
 
 		$this->document->setTitle($this->language->get('heading_step_2'));
@@ -92,7 +92,7 @@ class ControllerStep2 extends Controller {
 		$this->data['vqmod'] = DIR_NIVOCART . 'vqmod';
 		$this->data['vqmod_xml'] = DIR_NIVOCART . 'vqmod/xml';
 
-		$this->data['back'] = $this->url->link('step_1');
+		$this->data['back'] = $this->url->link('step_1', '', 'SSL');
 
 		$this->template = 'step_2.tpl';
 		$this->children = array(

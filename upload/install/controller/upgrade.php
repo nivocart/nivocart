@@ -41,7 +41,7 @@ class ControllerUpgrade extends Controller {
 
 			$this->data['button_upgrade'] = $this->language->get('button_upgrade');
 
-			$this->data['action'] = $this->url->link('upgrade');
+			$this->data['action'] = $this->url->link('upgrade', '', 'SSL');
 
 			if (isset($this->error['warning'])) {
 				$this->data['error_warning'] = $this->error['warning'];
@@ -80,23 +80,28 @@ class ControllerUpgrade extends Controller {
 			$step2 = false;
 			$step3 = false;
 			$step4 = false;
+			$step5 = false;
 
 			$this->model_upgrade->dataTables($step1);
 
-			if (isset($step1) && $step1 == true) {
+			if (isset($step1) && $step1 = true) {
 				$this->model_upgrade->additionalTables($step2);
 			}
 
-			if (isset($step2) && $step2 == true) {
-				$this->model_upgrade->repairCategories(0, $step3);
+			if (isset($step2) && $step2 = true) {
+				$this->model_upgrade->repairCategories(0, false);
 			}
 
-			if (isset($step3) && $step3 == true) {
+			if (isset($step3) && $step3 = true) {
 				$this->model_upgrade->updateConfig($step4);
 			}
 
-			if (isset($step4) && $step4 == true) {
-				$this->model_upgrade->updateLayouts();
+			if (isset($step4) && $step4 = true) {
+				$this->model_upgrade->updateLayouts($step5);
+			}
+
+			if (isset($step5) && $step5 = true) {
+				$this->model_upgrade->updateFields();
 			}
 
 		} else {

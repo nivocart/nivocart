@@ -179,7 +179,7 @@ class ModelUpgrade extends Model {
 
 				set_time_limit(60);
 
-				// Loop through all tables and adjust based on nivocart-clean.sql file
+				// Loop through all tables and adjust based on nivocart-upgrade.sql file
 				$i = 0;
 
 				foreach ($table['field'] as $field) {
@@ -265,7 +265,7 @@ class ModelUpgrade extends Model {
 
 				$status = false;
 
-				// Drop primary keys and indexes.
+				// Drop primary keys and indexes
 				$query = $this->db->query("SHOW INDEXES FROM `" . $table['name'] . "`");
 
 				$last_key_name = '';
@@ -286,7 +286,7 @@ class ModelUpgrade extends Model {
 					$this->db->query("ALTER TABLE `" . $table['name'] . "` DROP PRIMARY KEY");
 				}
 
-				// Add a new primary key.
+				// Add a new primary key
 				$primary_data = array();
 
 				foreach ($table['primary'] as $primary) {
@@ -357,7 +357,7 @@ class ModelUpgrade extends Model {
 	// Function to update additional tables
 	// -----------------------------------
 	public function additionalTables($step2) {
-		set_time_limit(30);
+		set_time_limit(60);
 
 		// Add serialized to Setting
 		$setting_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE store_id = '0' ORDER BY store_id ASC");
@@ -371,7 +371,9 @@ class ModelUpgrade extends Model {
 		}
 
 		// Update the country table (OCE)
-		if (isset($table_old_data[DB_PREFIX . 'country']) && in_array('name', $table_old_data[DB_PREFIX . 'country'])) {
+		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "country' AND COLUMN_NAME = 'name'");
+
+		if ($query->num_rows) {
 			// Country 'name' field moved to new country_description table. Need to loop through and move over
 			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country`");
 
@@ -382,12 +384,12 @@ class ModelUpgrade extends Model {
 					$this->db->query("REPLACE INTO `" . DB_PREFIX . "country_description` SET country_id = '" . (int)$country['country_id'] . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($country['name']) . "'");
 				}
 			}
-
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "country` DROP name");
 		}
 
 		// Update the manufacturer table (OCE)
-		if (isset($table_old_data[DB_PREFIX . 'manufacturer']) && in_array('name', $table_old_data[DB_PREFIX . 'manufacturer'])) {
+		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "manufacturer' AND COLUMN_NAME = 'name'");
+
+		if ($query->num_rows) {
 			// Manufacturer 'name' field moved to new manufacturer_description table. Need to loop through and move over
 			$manufacturer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer`");
 
@@ -395,11 +397,9 @@ class ModelUpgrade extends Model {
 				$language_query = $this->db->query("SELECT language_id FROM `" . DB_PREFIX . "language`");
 
 				foreach ($language_query->rows as $language) {
-					$this->db->query("REPLACE INTO `" . DB_PREFIX . "manufacturer_description` SET manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($manufacturer['name']) . "', description = '" . $this->db->escape($manufacturer['description']) . "'");
+					$this->db->query("REPLACE INTO `" . DB_PREFIX . "manufacturer_description` SET manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($manufacturer['name']) . "'");
 				}
 			}
-
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP name");
 		}
 
 		// Move customer IP blacklist to customer ban IP table (OC)
@@ -416,17 +416,24 @@ class ModelUpgrade extends Model {
 			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "customer_ip_blacklist`");
 		}
 
-		// Update the news description table. News 'keyword' field is redundant. (OCE)
-		if (isset($table_old_data[DB_PREFIX . 'news_description']) && in_array('keyword', $table_old_data[DB_PREFIX . 'news_description'])) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "news_description` DROP keyword");
-		}
-
 		// Product tag table to product description tag (OCE)
-		if (isset($table_old_data[DB_PREFIX . 'product_tag']) && !in_array('tag', $table_old_data[DB_PREFIX . 'product_description'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "product_description` pd SET tag = (SELECT GROUP_CONCAT(DISTINCT pt.tag ORDER BY pt.product_tag_id) FROM `" . DB_PREFIX . "product_tag` pt WHERE pd.product_id = pt.product_id AND pd.language_id = pt.language_id GROUP BY pt.product_id, pt.language_id)");
+		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_tag'");
+
+		if ($query->num_rows) {
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language`");
+
+			foreach ($query->rows as $language) {
+				$query = $this->db->query("SELECT p.product_id, GROUP_CONCAT(DISTINCT pt.tag order by pt.tag ASC SEPARATOR ',') AS tags FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_tag pt ON (p.product_id = pt.product_id) WHERE pt.language_id = '" . (int)$language['language_id'] . "' GROUP BY p.product_id");
+
+				if ($query->num_rows) {
+					foreach ($query->rows as $row) {
+						$this->db->query("UPDATE " . DB_PREFIX . "product_description SET tag = '" . $this->db->escape(strtolower($row['tags'])) . "' WHERE product_id = '" . (int)$row['product_id'] . "' AND language_id = '" . (int)$language['language_id'] . "'");
+					}
+				}
+			}
 		}
 
-		// Delete unused order_fraud table (OCE)
+		// Drop unused order_fraud table (OCE)
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "order_fraud`");
 
 		flush();
@@ -459,7 +466,7 @@ class ModelUpgrade extends Model {
 
 			$this->db->query("REPLACE INTO `" . DB_PREFIX . "category_path` SET category_id = '" . (int)$category['category_id'] . "', path_id = '" . (int)$category['category_id'] . "', `level` = '" . (int)$level . "'");
 
-			$this->repairCategories($category['category_id']);
+			$this->repairCategories($category['category_id'], false);
 		}
 
 		// Create system/upload directory
@@ -476,82 +483,263 @@ class ModelUpgrade extends Model {
 
 	// -----------------------------------------------
 	// Function to update the existing "config.php" files
+	//
+	// If missing, deprecated or redundant:
+	// -----------------------------------
+	// Add constant: 'HTTP_IMAGE'
+	// Add constant: 'HTTPS_IMAGE'
+	// Add constant: 'DIR_UPLOAD'
+	// Add constant: 'DIR_VQMOD'
+	// Add constant: 'DB_PORT'
+	// Replace DB_DRIVER: 'mysql' with 'mysqli'
+	// Replace backslashes with slashes
+	// Remove PHP closing tag
 	// -----------------------------------------------
 	public function updateConfig($step4) {
-		set_time_limit(30);
+		set_time_limit(60);
 
-		$upload = 'define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');';
-		$vqmod = 'define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');';
-		$port = 'define(\'DB_PREFIX\', \'' . DB_PREFIX . '\');';
+		if (is_file(DIR_NIVOCART . 'config.php')) {
+			$files = glob(DIR_NIVOCART . '{config.php,admin/config.php}', GLOB_BRACE);
 
-		$check_upload = 'define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');';
-		$check_vqmod = 'define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');';
-		$check_port = 'define(\'DB_PORT\', \'3306\');';
-
-		$output_upload = '
-define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');
-define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');';
-
-		$output_vqmod = '
-define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');
-define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');';
-
-		$output_port = '
-define(\'DB_PORT\', \'3306\');
-define(\'DB_PREFIX\', \'' . DB_PREFIX . '\');';
-
-		// Catalog
-		if (file_exists('../config.php') && filesize('../config.php') > 0) {
-			$catalog = '../config.php';
-
-			$fh1 = fopen($catalog, 'r+');
-
-			$catalog_data = file_get_contents($catalog);
-
-			$catalog_string = implode('', file($catalog));
-
-			if (strpos($catalog_data, $check_upload) == false) {
-				$catalog_string .= str_replace($upload, $output_upload, $catalog_string);
+			// Check if config files are writeable
+			foreach ($files as $file) {
+				if (!is_writable($file)) {
+					exit('ATTENTION: ' . $file . ' file is read only. Please adjust and try again.');
+				}
 			}
 
-			if (strpos($catalog_data, $check_vqmod) == false) {
-				$catalog_string .= str_replace($vqmod, $output_vqmod, $catalog_string);
+			// Add HTTP_IMAGE if missing
+			foreach ($files as $file) {
+				$upgrade_http = true;
+
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos($line, 'HTTP_IMAGE') !== false) {
+						$upgrade_http = false;
+						break;
+					}
+				}
+
+				if ($upgrade_http) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, 'HTTP_SERVER') !== false) {
+							$new_line = "define('HTTP_IMAGE', '" . str_replace("\\", "/", HTTP_SERVER) . 'image/' . "');";
+							$strip_line = str_replace("/install", "", $new_line);
+							$output .= $strip_line . "\n";
+							$output .= $line;
+						} else {
+							$output .= $line;
+						}
+					}
+
+					file_put_contents($file, $output);
+				}
 			}
 
-			if (strpos($catalog_data, $check_port) == false) {
-				$catalog_string .= str_replace($port, $output_port, $catalog_string);
+			// Add HTTPS_IMAGE if missing
+			foreach ($files as $file) {
+				$upgrade_https = true;
+
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos($line, 'HTTPS_IMAGE') !== false) {
+						$upgrade_https = false;
+						break;
+					}
+				}
+
+				if ($upgrade_https) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, 'HTTPS_SERVER') !== false) {
+							$new_line = "define('HTTPS_IMAGE', '" . str_replace("\\", "/", HTTP_SERVER) . 'image/' . "');";
+							$strip_line = str_replace("/install", "", $new_line);
+							$output .= $strip_line . "\n";
+							$output .= $line;
+						} else {
+							$output .= $line;
+						}
+					}
+
+					file_put_contents($file, $output);
+				}
 			}
 
-			fwrite($fh1, $catalog_string, strlen($catalog_string));
+			// Add DIR_UPLOAD if missing
+			foreach ($files as $file) {
+				$upgrade_upload = true;
 
-			fclose($fh1);
-		}
+				$lines = file($file);
 
-		// Admin
-		if (file_exists('../admin/config.php') && filesize('../admin/config.php') > 0) {
-			$admin = '../admin/config.php';
+				foreach ($lines as $line) {
+					if (strpos($line, 'DIR_UPLOAD') !== false) {
+						$upgrade_upload = false;
+						break;
+					}
+				}
 
-			$fh2 = fopen($admin, 'r+');
+				if ($upgrade_upload) {
+					$output = '';
 
-			$admin_data = file_get_contents($admin);
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, 'DIR_DOWNLOAD') !== false) {
+							$new_line = "define('DIR_UPLOAD', '" . str_replace("\\", "/", DIR_SYSTEM) . 'upload/' . "');";
+							$output .= $new_line . "\n";
+							$output .= $line;
+						} else {
+							$output .= $line;
+						}
+					}
 
-			$admin_string = implode('', file($admin));
-
-			if (strpos($admin_data, $check_upload) == false) {
-				$admin_string .= str_replace($upload, $output_upload, $admin_string);
+					file_put_contents($file, $output);
+				}
 			}
 
-			if (strpos($admin_data, $check_vqmod) == false) {
-				$admin_string .= str_replace($vqmod, $output_vqmod, $admin_string);
+			// Add DIR_VQMOD if missing
+			foreach ($files as $file) {
+				$upgrade_vqmod = true;
+
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos($line, 'DIR_VQMOD') !== false) {
+						$upgrade_vqmod = false;
+						break;
+					}
+				}
+
+				if ($upgrade_vqmod) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, 'DIR_LOGS') !== false) {
+							$new_line = "define('DIR_VQMOD', '" . str_replace("\\", "/", DIR_NIVOCART) . 'vqmod/' . "');";
+							$output .= $new_line . "\n";
+							$output .= $line;
+						} else {
+							$output .= $line;
+						}
+					}
+
+					file_put_contents($file, $output);
+				}
 			}
 
-			if (strpos($admin_data, $check_port) == false) {
-				$admin_string .= str_replace($port, $output_port, $admin_string);
+			// Add DB_PORT if missing
+			foreach ($files as $file) {
+				$upgrade_port = true;
+
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos(strtoupper($line), 'DB_PORT') !== false) {
+						$upgrade_port = false;
+						break;
+					}
+				}
+
+				if ($upgrade_port) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, 'DB_PREFIX') !== false) {
+							$new_line = "define('DB_PORT', '" . ini_get('mysqli.default_port') . "');";
+							$output .= $new_line . "\n";
+							$output .= $line;
+						} else {
+							$output .= $line;
+						}
+					}
+
+					file_put_contents($file, $output);
+				}
 			}
 
-			fwrite($fh2, $admin_string, strlen($admin_string));
+			// Replace deprecated mysql with mysqli
+			foreach ($files as $file) {
+				$upgrade_mysql = false;
 
-			fclose($fh2);
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos($line, "'mysql'") !== false) {
+						$upgrade_mysql = true;
+						break;
+					}
+				}
+
+				if ($upgrade_mysql) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, "'mysql'") !== false) {
+							$new_line = "define('DB_DRIVER', 'mysqli');";
+							$output .= $new_line . "\n";
+						} else {
+							$output .= $line;
+						}
+					}
+
+					file_put_contents($file, $output);
+				}
+			}
+
+			// Replace all "\" in URLs with "/"
+			foreach ($files as $file) {
+				$upgrade_slashes = false;
+
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos($line, "\\") !== false) {
+						$upgrade_slashes = true;
+						break;
+					}
+				}
+
+				if ($upgrade_slashes) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						$output .= str_replace("\\", "/", $line);
+					}
+
+					file_put_contents($file, $output);
+				}
+			}
+
+			// Remove redundant PHP closing tag
+			foreach ($files as $file) {
+				$upgrade_tag = false;
+
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos($line, "?>") !== false) {
+						$upgrade_tag = true;
+						break;
+					}
+				}
+
+				if ($upgrade_tag) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, "?>") !== false) {
+							$output .= str_replace("?>", "", $line);
+						} else {
+							$output .= $line;
+						}
+					}
+
+					file_put_contents($file, $output);
+				}
+			}
 		}
 
 		clearstatcache();
@@ -566,7 +754,7 @@ define(\'DB_PREFIX\', \'' . DB_PREFIX . '\');';
 	// ------------------------------------
 	// Function to update the layout routes
 	// ------------------------------------
-	public function updateLayouts() {
+	public function updateLayouts($step5) {
 		// Get stores
 		$stores = array(0);
 
@@ -624,6 +812,27 @@ define(\'DB_PREFIX\', \'' . DB_PREFIX . '\');';
 					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE name = 'Special'), store_id = '" . (int)$store_id . "', `route` = '" . $special_route . "'");
 				}
 			}
+		}
+
+		$step5 = true;
+
+		return $step5;
+	}
+
+	// ------------------------------------
+	// Function to update fields and finalize
+	// ------------------------------------
+	public function updateFields() {
+		$country_query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "country' AND COLUMN_NAME = 'name'");
+
+		if ($country_query->num_rows) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "country` DROP name");
+		}
+
+		$manufacturer_query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "manufacturer' AND COLUMN_NAME = 'name'");
+
+		if ($manufacturer_query->num_rows) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP name");
 		}
 	}
 }

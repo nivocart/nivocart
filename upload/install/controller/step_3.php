@@ -8,7 +8,7 @@ class ControllerStep3 extends Controller {
 
 			$this->model_install->database($this->request->post);
 
-			$this->redirect($this->url->link('step_4'));
+			$this->redirect($this->url->link('step_4', '', 'SSL'));
 		}
 
 		$this->document->setTitle($this->language->get('heading_step_3'));
@@ -102,7 +102,7 @@ class ControllerStep3 extends Controller {
 			$this->data['error_email'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('step_3');
+		$this->data['action'] = $this->url->link('step_3', '', 'SSL');
 
 		// Database
 		if (isset($this->request->post['db_driver'])) {
@@ -196,7 +196,7 @@ class ControllerStep3 extends Controller {
 			$this->data['demo_data'] = '';
 		}
 
-		$this->data['back'] = $this->url->link('step_2');
+		$this->data['back'] = $this->url->link('step_2', '', 'SSL');
 
 		$this->template = 'step_3.tpl';
 		$this->children = array(
