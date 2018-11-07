@@ -410,7 +410,7 @@ class ControllerCatalogProduct extends Controller {
 
 			foreach ($product_specials as $product_special) {
 				if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] <= date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
-					$special = $product_special['price'];
+					$special = (float)$product_special['price'];
 					break;
 				}
 			}
@@ -425,7 +425,7 @@ class ControllerCatalogProduct extends Controller {
 				$discounts[] = array(
 					'product_id' => $result['product_id'],
 					'quantity'   => (int)$product_discount['quantity'],
-					'price'      => $this->currency->format((float)$product_discount['price'])
+					'price'      => (float)$product_discount['price']
 				);
 			}
 
@@ -435,7 +435,7 @@ class ControllerCatalogProduct extends Controller {
 				'name'       => $result['name'],
 				'barcode'    => ($admin_barcode) ? $this->model_tool_barcode->getBarcode($result['model'], strtoupper($barcode_type), 1, 20) : '',
 				'model'      => $result['model'],
-				'price'      => $result['price'],
+				'price'      => (float)$result['price'],
 				'special'    => $special,
 				'discount'   => $discounts,
 				'discounts'  => (int)$total_discounts,

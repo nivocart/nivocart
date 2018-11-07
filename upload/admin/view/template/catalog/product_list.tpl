@@ -127,14 +127,14 @@
                 <span style="color:#E53030;"><?php echo number_format($product['special'], 2, '.', ''); ?></span><br />
                 <?php if ($product['discount']) { ?>
                   <?php foreach ($product['discount'] as $discount) { ?>
-                    <span style="color:#558899; font-size:10px;"><?php echo number_format($discount['price'], 2, '.', ''); ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
+                    <span style="color:#558899; font-size:10px;"><?php echo $this->currency->format($discount['price']); ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
                   <?php } ?>
                 <?php } ?>
               <?php } else { ?>
                 <?php echo number_format($product['price'], 2, '.', ''); ?><br />
                 <?php if ($product['discount']) { ?>
                   <?php foreach ($product['discount'] as $discount) { ?>
-                    <span style="color:#558899; font-size:10px;"><?php echo number_format($discount['price'], 2, '.', ''); ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
+                    <span style="color:#558899; font-size:10px;"><?php echo $this->currency->format($discount['price']); ?>(<?php echo $discount['quantity']; ?>)</span>&nbsp;
                   <?php } ?>
                 <?php } ?>
               <?php } ?></td>
