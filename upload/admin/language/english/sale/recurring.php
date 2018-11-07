@@ -48,4 +48,3 @@ $_['entry_quantity']                       = 'Quantity:';
 $_['entry_amount']                         = 'Amount:';
 $_['entry_profile']                        = 'Profile:';
 $_['entry_payment_type']                   = 'Payment method:';
-
