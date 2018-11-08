@@ -23,8 +23,8 @@ html {
 	padding: 0;
 }
 body {
+	background: #191919;
 	height: 100%;
-	background: #000;
 	margin: 0;
 	padding: 0;
 }
@@ -624,7 +624,10 @@ ul.menu ul {
 }
 /* Content */
 #content {
-	background: #191919 url('../image/theme-dark/background.png') 0 1px repeat-x;
+	background-image: url('../image/theme-dark/background.png');
+	background-repeat: repeat-x;
+	background-color: #191919;
+	background-size: auto;
 	padding: 10px 30px 128px 30px;
 	min-width: 640px;
 }

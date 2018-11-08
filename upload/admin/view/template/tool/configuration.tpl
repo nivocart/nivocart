@@ -43,7 +43,7 @@
             <td><?php echo $text_theme; ?></td>
             <td><?php foreach ($templates as $template) { ?>
               <?php if ($template == $config_template) { ?>
-                <span style="color:#5DC15E;"><b><?php echo $template; ?></b></span> 
+                <span style="color:#36AAD8;"><b><?php echo $template; ?></b></span> 
               <?php } ?>
             <?php } ?></td>
           </tr>
