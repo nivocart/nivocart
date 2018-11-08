@@ -1,5 +1,5 @@
 // ---------------------------------------
-//  NivoCart Shopping Cart v1.0.0
+//  NivoCart Shopping Cart v1.x.x
 //
 //  UPGRADE INSTRUCTIONS
 //
@@ -11,7 +11,9 @@ NOTE: THIS IS FOR UPGRADE ON EXISTING INSTALLS ONLY!
 IF INSTALLING NEW, BE SURE TO READ THE INSTALL.TXT FILE INSTEAD.
 
 ##############################################
-THIS IS FOR UPGRADING EXISTING NIVOCART v1.x.x STORES ONLY!
+THIS IS FOR UPGRADING EXISTING NIVOCART v1.x.x STORES,
+AND OPENCART STORES STARTING FROM v1.5.5.1 AND UP.
+NOTE: OPENCART v2.x.x and v3.x.x ARE NOT SUPPORTED!
 ##############################################
 
 1. BACKUP YOUR EXISTING STORE FILES AND DATABASE!!

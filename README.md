@@ -66,8 +66,6 @@ WANT TO CONTRIBUTE?
 - Star the project.
 
 
-LICENCE: <a href="https://opensource.org/licenses/OSL-3.0" title="License">Open Software License version 3.0 (OSL-3.0)</a>
-
 FORUM: <a href="http://forum.nivocart.com" title="Forum">NivoCart Community Forums</a>
 
 HOME: <a href="https://nivocart.com" title="Home">NivoCart Home</a>
