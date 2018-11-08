@@ -2,7 +2,6 @@
 <h1>4<span style="font-size:16px;">/4</span> - <?php echo $heading_step_4; ?></h1>
 <div id="content">
   <div class="success"><?php echo $text_congratulation; ?></div>
-  <div class="tooltip"><?php echo $help_installer; ?></div>
   <h2><?php echo $heading_next; ?></h2>
   <fieldset>
     <p><b><?php echo $heading_setting; ?></b></p>
