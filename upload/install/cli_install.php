@@ -31,7 +31,7 @@ define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 
 // Version
-define('NC_VERSION', '1.0.0 RC');
+define('NC_VERSION', '1.0.0');
 
 // Startup
 require_once(DIR_SYSTEM . 'startup.php');
@@ -162,7 +162,7 @@ function checkRequirements() {
 		$error = 'Warning: NivoCart will not work with session.auto_start enabled!';
 	}
 
-	if (phpversion() < '7.0' && !extension_loaded('mysql')) {
+	if (!extension_loaded('mysqli')) {
 		$error = 'Warning: MySQLi extension needs to be loaded for NivoCart to work!';
 	}
 
@@ -271,21 +271,21 @@ function setupDb($data) {
 
 		$db->query("SET CHARACTER SET utf8");
 
-			$db->query("SET @@session.sql_mode = 'MYSQL40'");
+		$db->query("SET @@session.sql_mode = 'MYSQL40'");
 
-			$db->query("DELETE FROM `" . $data['db_prefix'] . "user` WHERE user_id = '1'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape($data['username']) . "', salt = '" . $db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '1', email = '" . $db->escape($data['email']) . "', date_added = NOW()");
+		$db->query("DELETE FROM `" . $data['db_prefix'] . "user` WHERE user_id = '1'");
+		$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape($data['username']) . "', salt = '" . $db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '1', email = '" . $db->escape($data['email']) . "', date_added = NOW()");
 
-			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_email'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_email', `value` = '" . $db->escape($data['email']) . "'");
+		$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_email'");
+		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_email', `value` = '" . $db->escape($data['email']) . "'");
 
-			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_url'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_url', `value` = '" . $db->escape(HTTP_NIVOCART) . "'");
+		$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_url'");
+		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_url', `value` = '" . $db->escape(HTTP_NIVOCART) . "'");
 
-			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_encryption'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(hash_rand('ripemd128')) . "'");
+		$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_encryption'");
+		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(hash_rand('ripemd128')) . "'");
 
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "version` SET `version` = '" . $db->escape(NC_VERSION) . "', date_added = NOW()");
+		$db->query("INSERT INTO `" . $data['db_prefix'] . "version` SET `version` = '" . $db->escape(NC_VERSION) . "', date_added = NOW()");
 	}
 }
 
@@ -411,7 +411,6 @@ switch ($subcommand) {
 
 			echo "Store link: " . $options['http_server'] . "\n";
 			echo "Admin link: " . $options['http_server'] . "admin/\n\n";
-
 		} catch (ErrorException $e) {
 			echo 'FAILED!: ' . $e->getMessage() . "\n";
 			exit(1);
