@@ -3581,7 +3581,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (140, 0, 'config', 'config_admin_limit', '20', 0),
 (141, 0, 'config', 'config_admin_menu_icons', '1', 0),
 (142, 0, 'config', 'config_admin_width_limit', '0', 0),
-(143, 0, 'config', 'config_admin_stylesheet', 'dark', 0),
+(143, 0, 'config', 'config_admin_stylesheet', 'light', 0),
 (144, 0, 'config', 'config_voucher_max', '1000', 0),
 (145, 0, 'config', 'config_voucher_min', '1', 0),
 (146, 0, 'config', 'config_coupon_special', '0', 0),
