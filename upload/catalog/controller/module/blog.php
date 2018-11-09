@@ -7,7 +7,7 @@ class ControllerModuleBlog extends Controller {
 
 		$this->language->load('module/' . $this->_name);
 
-		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
+		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/blog-system.css');
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
