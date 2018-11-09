@@ -834,5 +834,7 @@ class ModelUpgrade extends Model {
 		if ($manufacturer_query->num_rows) {
 			$this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP name");
 		}
+
+		return;
 	}
 }
