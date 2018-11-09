@@ -184,11 +184,13 @@
 	border-radius: 5px;
 	padding: 3px;
 }
-.module-info > .left + .right {
-	margin: 0 10px 0 150px;
+.module-info > .right {
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	font-weight: normal;
 	color: #333;
+}
+.module-info > .left + .right {
+	margin: 0 10px 0 150px;
 }
 /* Related Bloks */
 .related-article-blok-1 {
