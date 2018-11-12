@@ -18,7 +18,7 @@ ________________________________________________________________________________
 REQUIREMENTS:
 - Server: Apache Linux Server
 - Database: MySQLi, PDO MySQL
-- Extension: OpenSSL + Curl
+- Extensions: OpenSSL Encrypt + cURL
 - PHP: PHP 7.0+
 
 _____________________________________________________________________________________________
