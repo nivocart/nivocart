@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Search</title>
+<link rel="stylesheet" type="text/css" href="../security/css/security.css" />
+<link rel="icon" href="../security/image/search.png" />
+</head>
+<body>
+<div id="container-search">
+  <div class="search">
+    <form action="search" method="post" enctype="multipart/form-data" name="search">
+    <div class="search-form">
+      <div>
+        <input type="text" name="searchText" size="35" />
+      </div>
+      <div><select name="searchService">
+        <option selected>Google</option>
+        <option> Bing </option>
+        <option> Yandex </option>
+        <option> Baidu </option>
+        <option> Lycos </option>
+      </select></div>
+      <div>
+        <a onclick="startSearch();"><img src="../security/image/go.png" alt="" style="width:30px; height:30px;" /></a>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+<div id="footer">
+  <a title="">Search - Copyright &copy; 2018</a>
+</div>
+
+<script type="text/javascript"><!--
+function startSearch() {
+	searchString = document.searchForm.searchText.value; 
+
+	if (searchString != "") {
+		searchEngine = document.searchForm.searchService.selectedIndex + 1;
+
+		finalSearchString = "";
+
+		if (searchEngine == 1) {
+			finalSearchString = "https://www.google.co.uk/?gws_rd=ssl#safe=active&q=" + searchString;
+		}
+		if (searchEngine == 2) {
+			finalSearchString = "https://www.bing.com/search?q=" + searchString + "&qs=n";
+		}
+		if (searchEngine == 3) {
+			finalSearchString = "https://www.yandex.com/search/?text=" + searchString;
+		}
+		if (searchEngine == 4) {
+			finalSearchString = "http://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=" + searchString;
+		}
+		if (searchEngine == 5) {
+			finalSearchString = "http://search.lycos.co.uk/web/?q=" + searchString;
+		}
+
+		location.href = finalSearchString;
+	}
+}
+//--></script>
+
+</body>
+</html>

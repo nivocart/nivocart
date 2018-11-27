@@ -4,8 +4,6 @@ admin/config.php
 
 !index.html
 
-security/
-download/
 image/data/
 image/cache/
 system/cache/
