@@ -23,7 +23,6 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
  * @version    v1.8.1, released: 01-05-2015
- * @edition     Overclocked Edition
  */
 
 /**
@@ -33,8 +32,7 @@
  * @package    PHPExcel_Worksheet
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Worksheet_ColumnDimension
-{
+class PHPExcel_Worksheet_ColumnDimension {
 	/**
 	 * Column index
 	 *
@@ -91,8 +89,7 @@ class PHPExcel_Worksheet_ColumnDimension
      *
      * @param string $pIndex Character column index
      */
-    public function __construct($pIndex = 'A')
-    {
+    public function __construct($pIndex = 'A') {
     	// Initialise values
     	$this->_columnIndex = $pIndex;
 
@@ -232,8 +229,7 @@ class PHPExcel_Worksheet_ColumnDimension
 	 *
 	 * @return int
 	 */
-	public function getXfIndex()
-	{
+	public function getXfIndex() {
 		return $this->_xfIndex;
 	}
 
@@ -243,8 +239,7 @@ class PHPExcel_Worksheet_ColumnDimension
 	 * @param int $pValue
 	 * @return PHPExcel_Worksheet_ColumnDimension
 	 */
-	public function setXfIndex($pValue = 0)
-	{
+	public function setXfIndex($pValue = 0) {
 		$this->_xfIndex = $pValue;
 		return $this;
 	}
@@ -254,6 +249,7 @@ class PHPExcel_Worksheet_ColumnDimension
 	 */
 	public function __clone() {
 		$vars = get_object_vars($this);
+
 		foreach ($vars as $key => $value) {
 			if (is_object($value)) {
 				$this->$key = clone $value;

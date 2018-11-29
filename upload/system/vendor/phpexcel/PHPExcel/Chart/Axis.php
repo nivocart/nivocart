@@ -9,7 +9,6 @@ require_once 'Properties.php';
  */
 
 class PHPExcel_Chart_Axis extends PHPExcel_Properties {
-
   /**
    * Axis Number
    *
@@ -466,10 +465,7 @@ class PHPExcel_Chart_Axis extends PHPExcel_Properties {
    * @param string $color_type
    */
   public function setGlowProperties($size, $color_value = null, $color_alpha = null, $color_type = null) {
-    $this->_setGlowSize($size)->_setGlowColor(
-            is_null($color_value) ? $this->_glow_properties['color']['value'] : $color_value
-            , is_null($color_alpha) ? (int) $this->_glow_properties['color']['alpha'] : $color_alpha
-            , is_null($color_type) ? $this->_glow_properties['color']['type'] : $color_type);
+    $this->_setGlowSize($size)->_setGlowColor(is_null($color_value) ? $this->_glow_properties['color']['value'] : $color_value, is_null($color_alpha) ? (int) $this->_glow_properties['color']['alpha'] : $color_alpha, is_null($color_type) ? $this->_glow_properties['color']['type'] : $color_type);
   }
 
   /**
