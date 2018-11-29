@@ -16,7 +16,7 @@
  * Optionally:
  *	jquery.ui.sortable.js
  *
- * Overclocked Edition © 2018 | Villagedefrance
+ * NivoCart © 2018
  */
 
  /* global jQuery:true */
