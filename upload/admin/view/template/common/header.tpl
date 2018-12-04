@@ -18,19 +18,19 @@
 <?php } ?>
 <link rel="stylesheet" type="text/css" href="view/stylesheet/stylesheet_<?php echo $admin_css; ?>.css" />
 <link rel="stylesheet" type="text/css" href="view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" />
-<link rel="stylesheet" type="text/css" href="view/javascript/jquery/confirm/jquery-confirm.min.css" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/animate-custom.min.css" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/font-awesome.min.css" />
+<link rel="preload" type="text/css" href="view/javascript/jquery/confirm/jquery-confirm.min.css" as="style" />
 <?php foreach ($styles as $style) { ?>
 <link rel="<?php echo $style['rel']; ?>" type="text/css" href="<?php echo $style['href']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
 <script type="text/javascript" src="view/javascript/jquery/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="view/javascript/jquery/jquery-migrate-1.4.1.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-1.12.1.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/confirm/jquery-confirm.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/tabs.min.js"></script>
-<script type="text/javascript" src="view/javascript/common.min.js"></script>
+<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-1.12.1.min.js" async></script>
+<script type="text/javascript" src="view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js" async></script>
+<script type="text/javascript" src="view/javascript/jquery/confirm/jquery-confirm.min.js" async></script>
+<script type="text/javascript" src="view/javascript/jquery/tabs.min.js" async></script>
+<script type="text/javascript" src="view/javascript/common.min.js" async></script>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="view/javascript/html5shiv.min.js"></script>
 <script type="text/javascript" src="view/javascript/respond.min.js"></script>

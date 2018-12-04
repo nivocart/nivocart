@@ -27,18 +27,18 @@
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/stylesheet.css" />
-<link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/stylesheet-modifiers.min.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="catalog/view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" />
+<link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/stylesheet-modifiers.min.css" />
+<link rel="preload" type="text/css" href="catalog/view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" as="style" />
 <?php foreach ($styles as $style) { ?>
 <link rel="<?php echo $style['rel']; ?>" type="text/css" href="<?php echo $style['href']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
 <script type="text/javascript" src="catalog/view/javascript/jquery/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" src="catalog/view/javascript/jquery/jquery-migrate-1.4.1.min.js"></script>
-<script type="text/javascript" src="catalog/view/javascript/jquery/ui/jquery-ui-1.12.1.min.js"></script>
-<script type="text/javascript" src="catalog/view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js"></script>
-<script type="text/javascript" src="catalog/view/javascript/livesearch.min.js"></script>
-<script type="text/javascript" src="catalog/view/javascript/common.min.js"></script>
+<script type="text/javascript" src="catalog/view/javascript/jquery/ui/jquery-ui-1.12.1.min.js" async></script>
+<script type="text/javascript" src="catalog/view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js" async></script>
+<script type="text/javascript" src="catalog/view/javascript/livesearch.min.js" async></script>
+<script type="text/javascript" src="catalog/view/javascript/common.min.js" async></script>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="catalog/view/javascript/html5shiv.min.js"></script>
 <script type="text/javascript" src="catalog/view/javascript/respond.min.js"></script>
@@ -53,8 +53,8 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 <?php if ($cookie_consent) { ?>
-<link rel="stylesheet" type="text/css" href="catalog/view/javascript/jquery/consent/css/cookieconsent.min.css" />
-<script type="text/javascript" src="catalog/view/javascript/jquery/consent/js/cookieconsent.min.js"></script>
+<link rel="preload" type="text/css" href="catalog/view/javascript/jquery/consent/css/cookieconsent.min.css" as="style" />
+<script type="text/javascript" src="catalog/view/javascript/jquery/consent/js/cookieconsent.min.js" async></script>
 <script type="text/javascript"><!--
 window.addEventListener("load", function() {
 window.cookieconsent.initialise({
@@ -110,8 +110,7 @@ window.cookieconsent.initialise({
   <div id="header-bottom">
     <div id="search">
       <div class="search-inside">
-        <label for="search" class="hidden"><?php echo $text_search; ?></label>
-        <input type="text" name="search" placeholder="<?php echo $text_search; ?>" value="" autocomplete="off" />
+        <input type="text" name="search" placeholder="<?php echo $text_search; ?>" value="" autocomplete="off" aria-label="search" />
         <div class="button-search"></div>
       </div>
     </div>
