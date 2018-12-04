@@ -29,7 +29,7 @@
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/stylesheet.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/stylesheet-modifiers.min.css" />
-<link rel="preload" type="text/css" href="catalog/view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" as="style" />
+<link rel="stylesheet" type="text/css" href="catalog/view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" />
 <?php foreach ($styles as $style) { ?>
 <link rel="<?php echo $style['rel']; ?>" type="text/css" href="<?php echo $style['href']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
@@ -53,7 +53,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 <?php if ($cookie_consent) { ?>
-<link rel="preload" type="text/css" href="catalog/view/javascript/jquery/consent/css/cookieconsent.min.css" as="style" />
+<link rel="stylesheet" type="text/css" href="catalog/view/javascript/jquery/consent/css/cookieconsent.min.css" />
 <script type="text/javascript" src="catalog/view/javascript/jquery/consent/js/cookieconsent.min.js" async></script>
 <script type="text/javascript"><!--
 window.addEventListener("load", function() {
