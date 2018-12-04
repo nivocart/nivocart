@@ -143,16 +143,12 @@ class ControllerToolConfiguration extends Controller {
 		// Database
 		$database_name = DB_DRIVER;
 
-		if ($database_name == 'mysql') {
-			$this->data['database_name'] = 'MySQL';
-		} elseif ($database_name == 'mysqli') {
+		if ($database_name == 'mysqli') {
 			$this->data['database_name'] = 'MySQLi';
 		} elseif ($database_name == 'mpdo') {
 			$this->data['database_name'] = 'PDO (MySQL)';
 		} elseif ($database_name == 'pgsql') {
 			$this->data['database_name'] = 'PgSQL';
-		} elseif ($database_name == 'mssql') {
-			$this->data['database_name'] = 'MsSQL';
 		} else {
 			$this->data['database_name'] = 'SQL';
 		}
@@ -256,8 +252,6 @@ class ControllerToolConfiguration extends Controller {
 
 		$this->data['database_files'] = array(
 			'mpdo'   => DIR_SYSTEM . 'database/mpdo.php',
-			'mssql'  => DIR_SYSTEM . 'database/mssql.php',
-			'mysql'  => DIR_SYSTEM . 'database/mysql.php',
 			'mysqli' => DIR_SYSTEM . 'database/mysqli.php',
 			'pgsql'  => DIR_SYSTEM . 'database/pgsql.php'
 		);
@@ -309,20 +303,16 @@ class ControllerToolConfiguration extends Controller {
 
 		$this->data['library_files'] = array(
 			'affiliate'  => DIR_SYSTEM . 'library/affiliate.php',
-			'amazon'     => DIR_SYSTEM . 'library/amazon.php',
-			'amazonus'   => DIR_SYSTEM . 'library/amazonus.php',
 			'browser'    => DIR_SYSTEM . 'library/browser.php',
 			'cache'      => DIR_SYSTEM . 'library/cache.php',
 			'captcha'    => DIR_SYSTEM . 'library/captcha.php',
 			'cart'       => DIR_SYSTEM . 'library/cart.php',
-			'cba'        => DIR_SYSTEM . 'library/cba.php',
 			'config'     => DIR_SYSTEM . 'library/config.php',
 			'currency'   => DIR_SYSTEM . 'library/currency.php',
 			'customer'   => DIR_SYSTEM . 'library/customer.php',
 			'db'         => DIR_SYSTEM . 'library/db.php',
 			'dbmemory'   => DIR_SYSTEM . 'library/dbmemory.php',
 			'document'   => DIR_SYSTEM . 'library/document.php',
-			'ebay'       => DIR_SYSTEM . 'library/ebay.php',
 			'encryption' => DIR_SYSTEM . 'library/encryption.php',
 			'eway'       => DIR_SYSTEM . 'library/eway.php',
 			'image'      => DIR_SYSTEM . 'library/image.php',
@@ -330,7 +320,6 @@ class ControllerToolConfiguration extends Controller {
 			'length'     => DIR_SYSTEM . 'library/length.php',
 			'log'        => DIR_SYSTEM . 'library/log.php',
 			'mail'       => DIR_SYSTEM . 'library/mail.php',
-			'openbay'    => DIR_SYSTEM . 'library/openbay.php',
 			'pagination' => DIR_SYSTEM . 'library/pagination.php',
 			'request'    => DIR_SYSTEM . 'library/request.php',
 			'response'   => DIR_SYSTEM . 'library/response.php',
