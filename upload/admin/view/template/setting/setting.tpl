@@ -557,20 +557,6 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_express_postcode; ?><span class="help"><?php echo $help_express_postcode; ?></span></td>
-            <td><?php if ($config_express_postcode) { ?>
-              <input type="radio" name="config_express_postcode" value="1" id="express-postcode-on" class="radio" checked />
-              <label for="express-postcode-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_postcode" value="0" id="express-postcode-off" class="radio" />
-              <label for="express-postcode-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_express_postcode" value="1" id="express-postcode-on" class="radio" />
-              <label for="express-postcode-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_postcode" value="0" id="express-postcode-off" class="radio" checked />
-              <label for="express-postcode-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
             <td><?php echo $entry_express_comment; ?><span class="help"><?php echo $help_express_comment; ?></span></td>
             <td><?php if ($config_express_comment) { ?>
               <input type="radio" name="config_express_comment" value="1" id="express-comment-on" class="radio" checked />

@@ -3636,7 +3636,6 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (195, 0, 'config', 'config_express_coupon', '1', 0),
 (196, 0, 'config', 'config_express_newsletter', '0', 0),
 (197, 0, 'config', 'config_express_comment', '1', 0),
-(198, 0, 'config', 'config_express_postcode', '0', 0),
 (199, 0, 'config', 'config_express_billing', '1', 0),
 (200, 0, 'config', 'config_express_phone', '0', 0),
 (201, 0, 'config', 'config_express_password', '1', 0),

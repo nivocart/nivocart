@@ -2,10 +2,10 @@
 class ControllerCheckoutExpressRegister extends Controller {
 
 	public function index() {
-		$this->language->load('checkout/checkout_express');
-
 		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.min.css');
 		$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
+
+		$this->language->load('checkout/checkout_express');
 
 		$this->data['text_account_already'] = sprintf($this->language->get('text_account_already'), $this->url->link('checkout_express/checkout', '', 'SSL'));
 
@@ -50,8 +50,6 @@ class ControllerCheckoutExpressRegister extends Controller {
 
 		$this->data['button_express_go'] = $this->language->get('button_express_go');
 
-		$this->data['email'] = $this->request->get['mail'];
-
 		if (isset($this->session->data['firstname'])) {
 			$this->data['firstname'] = $this->session->data['firstname'];
 		} else {
@@ -64,7 +62,29 @@ class ControllerCheckoutExpressRegister extends Controller {
 			$this->data['lastname'] = '';
 		}
 
-		$this->data['gender'] = 0;
+		if (isset($this->session->data['email'])) {
+			$this->data['email'] = $this->session->data['email'];
+		} else {
+			$this->data['email'] = $this->request->get['mail'];
+		}
+
+		if (isset($this->session->data['telephone'])) {
+			$this->data['telephone'] = $this->session->data['telephone'];
+		} else {
+			$this->data['telephone'] = '000';
+		}
+
+		if (isset($this->session->data['gender'])) {
+			$this->data['gender'] = $this->session->data['gender'];
+		} else {
+			$this->data['gender'] = 0;
+		}
+
+		if (isset($this->session->data['date_of_birth'])) {
+			$this->data['date_of_birth'] = $this->session->data['date_of_birth'];
+		} else {
+			$this->data['date_of_birth'] = '1970-01-01';
+		}
 
 		if ($this->config->get('config_express_password')) {
 			$this->load->model('checkout/checkout_tools');
@@ -148,7 +168,7 @@ class ControllerCheckoutExpressRegister extends Controller {
 
 		// Validate if customer is already logged in
 		if ($this->customer->isLogged()) {
-			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+			$json['redirect'] = $this->url->link('checkout_express/checkout', '', 'SSL');
 		}
 
 		// Validate cart has products and has stock
@@ -180,19 +200,38 @@ class ControllerCheckoutExpressRegister extends Controller {
 			$this->request->post['newsletter'] = $this->config->get('config_express_newsletter');
 		}
 
-		$this->request->post['fax'] = '';
-
 		if (!$json) {
-			if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+			if (isset($this->request->post['firstname']) && ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32))) {
 				$json['error']['firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+			if (isset($this->request->post['lastname']) && ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32))) {
 				$json['error']['lastname'] = $this->language->get('error_lastname');
 			}
 
-			if ($this->config->get('config_express_phone') == 2) {
-				if ((utf8_strlen($this->request->post['telephone']) < 1) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+			if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+				$json['error']['email'] = $this->language->get('error_email');
+			}
+
+			// Email exists check
+			$this->load->model('account/customer');
+
+			if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+				$json['error']['warning'] = $this->language->get('error_exists');
+			}
+
+			// Email MX Record check
+			$this->load->model('tool/email');
+
+			$email_valid = $this->model_tool_email->verifyMail($this->request->post['email']);
+
+			if (!$email_valid) {
+				$json['error']['email'] = $this->language->get('error_email');
+			}
+
+			// Telephone
+			if ($this->config->get('config_express_phone') > 0) {
+				if (isset($this->request->post['telephone']) && ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32))) {
 					$json['error']['telephone'] = $this->language->get('error_telephone');
 				}
 			}
@@ -205,32 +244,6 @@ class ControllerCheckoutExpressRegister extends Controller {
 				} else {
 					$json['error']['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
-			}
-
-			if (isset($this->request->post['email'])) {
-				if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
-					$json['error']['email'] = $this->language->get('error_email');
-				}
-
-				// Email exists check
-				$this->load->model('checkout/checkout_express');
-
-				if ($this->model_checkout_checkout_express->getTotalCustomersByEmail($this->request->post['email'])) {
-					$json['error']['warning'] = $this->language->get('error_exists');
-				}
-
-				// Email MX Record check
-				$this->load->model('tool/email');
-
-				$email_valid = $this->model_tool_email->verifyMail($this->request->post['email']);
-
-				if (!$email_valid) {
-					$json['error']['email'] = $this->language->get('error_email');
-				}
-			}
-
-			if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
-				$json['error']['password'] = $this->language->get('error_password');
 			}
 
 			// Customer Group
@@ -278,7 +291,7 @@ class ControllerCheckoutExpressRegister extends Controller {
 					if ($customer_group && $customer_group['tax_id_display']) {
 						$this->load->helper('vat');
 
-						if ($this->config->get('config_vat') && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+						if ($this->config->get('config_vat') && ($this->request->post['tax_id'] != '') && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
 							$json['error']['tax_id'] = $this->language->get('error_vat');
 						}
 					}
@@ -293,6 +306,10 @@ class ControllerCheckoutExpressRegister extends Controller {
 				}
 			}
 
+			if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+				$json['error']['password'] = $this->language->get('error_password');
+			}
+
 			if ($this->config->get('config_account_id')) {
 				$this->load->model('catalog/information');
 
@@ -302,9 +319,6 @@ class ControllerCheckoutExpressRegister extends Controller {
 					$json['error']['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
 				}
 			}
-
-		} else {
-			$json = array();
 		}
 
 		if (!$json) {
@@ -314,36 +328,39 @@ class ControllerCheckoutExpressRegister extends Controller {
 
 			$this->session->data['account'] = 'register';
 
+			// Customer Group
 			$this->load->model('account/customer_group');
 
-			$customer_group = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
-
-			if (!isset($customer_group)) {
-				$customer_group = 0;
+			if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+				$customer_group_id = $this->request->post['customer_group_id'];
+			} else {
+				$customer_group_id = $this->config->get('config_customer_group_id');
 			}
+
+			$customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 
 			// Always approved
-			if ($customer_group['approval'] || $customer_group['approval'] != 0) {
-				$customer_group['approval'] = 0;
-			}
-
-			if (!$customer_group['approval']) {
+			if ($customer_group_info && !$customer_group_info['approval']) {
 				$this->customer->login($this->request->post['email'], $this->request->post['password']);
 
-				$this->session->data['payment_firstname'] = $this->request->post['firstname'];
-				$this->session->data['payment_lastname'] = $this->request->post['lastname'];
-				$this->session->data['payment_address_id'] = $this->customer->getAddressId();
-				$this->session->data['payment_country_id'] = $this->request->post['country_id'];
-				$this->session->data['payment_zone_id'] = $this->request->post['zone_id'];
-				$this->session->data['payment_postcode'] = $this->request->post['postcode'];
+				$this->session->data['payment_firstname'] = (isset($this->request->post['firstname'])) ? $this->request->post['firstname'] : '';
+				$this->session->data['payment_lastname'] = (isset($this->request->post['lastname'])) ? $this->request->post['lastname'] : '';
+
+				if ($this->config->get('config_express_billing')) {
+					$this->session->data['payment_address_id'] = $this->customer->getAddressId();
+					$this->session->data['payment_country_id'] = $this->request->post['country_id'];
+					$this->session->data['payment_zone_id'] = $this->request->post['zone_id'];
+					$this->session->data['payment_postcode'] = (isset($this->request->post['postcode'])) ? $this->request->post['postcode'] : '';
+				}
 
 				if (!empty($this->request->post['shipping_address'])) {
-					$this->session->data['shipping_firstname'] = $this->request->post['firstname'];
-					$this->session->data['shipping_lastname'] = $this->request->post['lastname'];
+					$this->session->data['shipping_firstname'] = (isset($this->request->post['firstname'])) ? $this->request->post['firstname'] : '';
+					$this->session->data['shipping_lastname'] = (isset($this->request->post['lastname'])) ? $this->request->post['lastname'] : '';
+
 					$this->session->data['shipping_address_id'] = $this->customer->getAddressId();
 					$this->session->data['shipping_country_id'] = $this->request->post['country_id'];
 					$this->session->data['shipping_zone_id'] = $this->request->post['zone_id'];
-					$this->session->data['shipping_postcode'] = $this->request->post['postcode'];
+					$this->session->data['shipping_postcode'] = (isset($this->request->post['postcode'])) ? $this->request->post['postcode'] : '';
 				}
 
 			} else {

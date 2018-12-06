@@ -158,7 +158,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_express_phone'] = $this->language->get('entry_express_phone');
 		$this->data['entry_express_autofill'] = $this->language->get('entry_express_autofill');
 		$this->data['entry_express_billing'] = $this->language->get('entry_express_billing');
-		$this->data['entry_express_postcode'] = $this->language->get('entry_express_postcode');
 		$this->data['entry_express_comment'] = $this->language->get('entry_express_comment');
 		$this->data['entry_express_newsletter'] = $this->language->get('entry_express_newsletter');
 		$this->data['entry_express_coupon'] = $this->language->get('entry_express_coupon');
@@ -1104,12 +1103,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_express_billing'] = $this->request->post['config_express_billing'];
 		} else {
 			$this->data['config_express_billing'] = $this->config->get('config_express_billing');
-		}
-
-		if (isset($this->request->post['config_express_postcode'])) {
-			$this->data['config_express_postcode'] = $this->request->post['config_express_postcode'];
-		} else {
-			$this->data['config_express_postcode'] = $this->config->get('config_express_postcode');
 		}
 
 		if (isset($this->request->post['config_express_comment'])) {

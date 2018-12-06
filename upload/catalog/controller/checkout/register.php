@@ -4,7 +4,7 @@ class ControllerCheckoutRegister extends Controller {
 	public function index() {
 		// Express checkout redirect
 		if ($this->config->get('config_express_checkout')) {
-			$this->redirect($this->url->link('checkout_express/signup', '', 'SSL'));
+			$this->redirect($this->url->link('checkout_express/register', '', 'SSL'));
 		}
 
 		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.min.css');
@@ -57,7 +57,7 @@ class ControllerCheckoutRegister extends Controller {
 
 			$customer_groups = $this->model_account_customer_group->getCustomerGroups();
 
-			foreach ($customer_groups  as $customer_group) {
+			foreach ($customer_groups as $customer_group) {
 				if (in_array($customer_group['customer_group_id'], $this->config->get('config_customer_group_display'))) {
 					$this->data['customer_groups'][] = $customer_group;
 				}
@@ -275,7 +275,14 @@ class ControllerCheckoutRegister extends Controller {
 
 			$this->session->data['account'] = 'register';
 
+			// Customer Group
 			$this->load->model('account/customer_group');
+
+			if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+				$customer_group_id = $this->request->post['customer_group_id'];
+			} else {
+				$customer_group_id = $this->config->get('config_customer_group_id');
+			}
 
 			$customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 

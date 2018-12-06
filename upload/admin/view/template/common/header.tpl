@@ -28,9 +28,9 @@
 <script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-1.12.1.min.js"></script>
 <script type="text/javascript" src="view/javascript/jquery/jquery-migrate-1.4.1.min.js"></script>
 <script type="text/javascript" src="view/javascript/jquery/confirm/jquery-confirm.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js" async></script>
-<script type="text/javascript" src="view/javascript/jquery/tabs.min.js" async></script>
-<script type="text/javascript" src="view/javascript/common.min.js" async></script>
+<script type="text/javascript" src="view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="view/javascript/jquery/tabs.min.js"></script>
+<script type="text/javascript" src="view/javascript/common.min.js"></script>
 <!--[if lt IE 9]>
 <script type="text/javascript" src="view/javascript/html5shiv.min.js"></script>
 <script type="text/javascript" src="view/javascript/respond.min.js"></script>

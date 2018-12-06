@@ -36,7 +36,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 			// Validate minimum age
 			if ($this->config->get('config_customer_dob') && ($product['age_minimum'] > 0)) {
 				if (!$this->customer->isLogged() || !$this->customer->isSecure()) {
-					$this->redirect($this->url->link('checkout/login', '', 'SSL'));
+					$this->redirect($this->url->link('account/login', '', 'SSL'));
 				}
 			}
 		}
@@ -90,7 +90,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 			$this->session->data['wrapping'] = $this->request->post['add_wrapping'];
 			$this->session->data['success'] = $this->language->get('text_add_wrapping');
 
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout_express/checkout', '', 'SSL'));
 		}
 
 		// Remove Wrapping
@@ -100,7 +100,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_remove_wrapping');
 
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout_express/checkout', '', 'SSL'));
 		}
 
 		$this->data['breadcrumbs'] = array();

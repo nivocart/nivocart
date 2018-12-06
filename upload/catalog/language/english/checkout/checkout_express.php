@@ -55,8 +55,8 @@ $_['column_tax_percent']                      = 'Tax %';
 $_['column_total']                            = 'Total';
 
 // Entry
-$_['entry_email_address']                     = 'E-Mail Address:';
-$_['entry_email']                             = 'E-Mail:';
+$_['entry_email_address']                     = 'Email Address:';
+$_['entry_email']                             = 'Email:';
 $_['entry_password']                          = 'Password:';
 $_['entry_confirm']                           = 'Password Confirm:';
 $_['entry_firstname']                         = 'First Name:';
@@ -96,8 +96,8 @@ $_['text_express_voucher']                    = 'Gift Voucher';
 $_['text_express_reward']                     = 'Reward Points (%s)';
 
 // Entry
-$_['entry_express_email']                     = 'Enter your Email:';
-$_['entry_express_password']                  = 'Enter your password:';
+$_['entry_express_email']                     = 'Enter your Email Address:';
+$_['entry_express_password']                  = 'Enter your Password:';
 $_['entry_express_newsletter']                = 'Subscribe to the newsletter';
 $_['entry_coupon']                            = 'Enter your coupon here:';
 $_['entry_voucher']                           = 'Enter your gift voucher code here:';
@@ -115,13 +115,13 @@ $_['text_express_password']                   = 'Password :';
 
 // Error
 $_['error_warning']                           = 'There was a problem while trying to process your order! If the problem persists please try selecting a different payment method or you can contact the store owner by <a href="%s">clicking here</a>.';
-$_['error_login']                             = 'Warning: No match for E-Mail Address and/or Password.';
+$_['error_login']                             = 'Warning: No match for Email Address and/or Password.';
 $_['error_approved']                          = 'Warning: Your account requires approval before you can login.';
-$_['error_exists']                            = 'Warning: E-Mail Address is already registered!';
+$_['error_exists']                            = 'Warning: Email Address is already registered!';
 $_['error_fullname']                          = 'Warning: Name must be between 1 and 32 characters!';
 $_['error_firstname']                         = 'First Name must be between 1 and 32 characters!';
 $_['error_lastname']                          = 'Last Name must be between 1 and 32 characters!';
-$_['error_email']                             = 'E-Mail Address does not appear to be valid!';
+$_['error_email']                             = 'Email Address does not appear to be valid!';
 $_['error_telephone']                         = 'Telephone must be between 3 and 32 characters!';
 $_['error_date_of_birth']                     = 'Date of Birth is required and must be valid!';
 $_['error_password']                          = 'Password must be between 3 and 20 characters!';

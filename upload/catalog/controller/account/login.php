@@ -101,7 +101,7 @@ class ControllerAccountLogin extends Controller {
 				unset($this->session->data['payment_zone_id']);
 			}
 
-			// Added strpos check to pass McAfee PCI compliance test (http://forum.opencart.com/viewtopic.php?f=10&t=12043&p=151494#p151295)
+			// Added strpos check to pass McAfee PCI compliance test
 			if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) === 0 || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) === 0)) {
 				$this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
 			} elseif ($this->cart->hasProducts() && !$this->config->get('config_customer_redirect')) {

@@ -29,7 +29,7 @@
   <span <?php echo ($this->config->get('config_express_phone') == 0) ? 'style="display:none;"' : ''; ?>>
     <?php echo ($this->config->get('config_express_phone') == 2) ? '<span class="required">* </span>' : ''; ?>
     <?php echo $entry_telephone; ?><br />
-    <input type="text" name="telephone" value="" class="large-field" />
+    <input type="text" name="telephone" value="<?php echo $telephone; ?>" class="large-field" />
     <br />
     <br />
   </span>
@@ -47,14 +47,14 @@
   </span>
   <span <?php echo ($this->config->get('config_customer_dob') == 0) ? 'style="display:none;"' : ''; ?>>
   <span class="required">*</span> <?php echo $entry_date_of_birth; ?><br />
-  <input type="text" name="date_of_birth" value="" id="date-of-birth" size="12" />
+  <input type="text" name="date_of_birth" value="<?php echo $date_of_birth; ?>" id="date-of-birth" size="12" />
   <br />
   <br />
   </span>
-  <?php if ($this->config->get('config_express_newsletter') == 2) { ?>
-    <input type="checkbox" name="newsletter" value="1" checked="true" id="newsletter" />
-    <label for="newsletter"><?php echo $entry_express_newsletter; ?></label>
-  <?php } ?>
+<?php if ($this->config->get('config_express_newsletter') == 2) { ?>
+  <input type="checkbox" name="newsletter" value="1" id="newsletter" checked="checked" />
+  <label for="newsletter"><?php echo $entry_express_newsletter; ?></label>
+<?php } ?>
   <br/>
   <br/>
 </div>
@@ -128,18 +128,17 @@
     <input type="text" name="city" value="" class="large-field" />
     <br />
     <br />
-    <span id="payment-postcode-required<?php echo ($this->config->get('config_express_postcode')) ? '-disabled' : ''; ?>">
-    <span id="payment-postcode-required<?php echo (!$this->config->get('config_express_postcode')) ? '-disabled' : ''; ?>" class="required">* </span><?php echo $entry_postcode; ?><br />
+    <span id="payment-postcode-required" class="required">* </span><?php echo $entry_postcode; ?><br />
     <input type="text" name="postcode" value="<?php echo $postcode; ?>" class="large-field" />
     <br />
     <br />
     </span>
   </div>
-  <?php if ($shipping_required && $this->config->get('config_express_billing')) { ?>
-    <input type="checkbox" name="shipping_address" value="1" id="shipping" checked="checked" />
-    <label for="shipping"><?php echo $entry_shipping; ?></label>
-    <br />
-  <?php } ?>
+<?php if ($shipping_required && $this->config->get('config_express_billing')) { ?>
+  <input type="checkbox" name="shipping_address" value="1" id="shipping" checked="checked" />
+  <label for="shipping"><?php echo $entry_shipping; ?></label>
+  <br />
+<?php } ?>
   <br />
 </div>
 <?php if ($text_agree) { ?>
@@ -152,6 +151,7 @@
 <?php } else { ?>
   <div class="buttons">
     <div class="left">
+      <input type="hidden" name="agree" value="1" />
       <input type="button" value="<?php echo $button_express_go; ?>" id="button-register" class="button" />
     </div>
   </div>

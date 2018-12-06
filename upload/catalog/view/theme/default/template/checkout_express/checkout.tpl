@@ -125,87 +125,82 @@ $('#checkout .checkout-content input[name=\'account\']').on('change', function()
 	}
 });
 
-$('.checkout-heading').on('click', 'a', function() {
-	$('.checkout-content').fadeOut(100);
-
-	$(this).parent().parent().find('.checkout-content').fadeIn(500);
-});
-
 <?php if (!$logged) { ?> 
 $(document).ready(function() {
+<?php if (isset($quickconfirm)) { ?>
+	quickConfirm();
+<?php } else { ?>
+	$.ajax({
+		url: 'index.php?route=checkout_express/login',
+		dataType: 'html',
+		success: function(html) {
+			$('#checkout .checkout-content').html(html);
+			$('#checkout .checkout-content').fadeIn(100);
+
+			$('#email').focus();
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+<?php } ?>
+});
+<?php } ?>
+
+<?php if ($logged) { ?>
+<?php if ($express_billing) { ?>
+	$(document).ready(function() {
 	<?php if (isset($quickconfirm)) { ?>
 		quickConfirm();
 	<?php } else { ?>
 		$.ajax({
-			url: 'index.php?route=checkout_express/login',
+			url: 'index.php?route=checkout_express/payment_address',
 			dataType: 'html',
 			success: function(html) {
-				$('#checkout .checkout-content').html(html);
-				$('#checkout .checkout-content').fadeIn(100);
-
-				$('#email').focus();
+				$('#payment-address .checkout-content').html(html);
+				$('#payment-address .checkout-content').fadeIn(100);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 			}
 		});
 	<?php } ?>
-});
-<?php } ?>
-
-<?php if ($logged) { ?>
-	<?php if ($express_billing) { ?>
-		$(document).ready(function() {
-		<?php if (isset($quickconfirm)) { ?>
-			quickConfirm();
-		<?php } else { ?>
-			$.ajax({
-				url: 'index.php?route=checkout_express/payment_address',
-				dataType: 'html',
-				success: function(html) {
-					$('#payment-address .checkout-content').html(html);
-					$('#payment-address .checkout-content').fadeIn(100);
-				},
-				error: function(xhr, ajaxOptions, thrownError) {
-					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-				}
-			});
-		<?php } ?>
-		});
+	});
+<?php } else { ?>
+	$(document).ready(function() {
+	<?php if (isset($quickconfirm)) { ?>
+		quickConfirm();
 	<?php } else { ?>
-		$(document).ready(function() {
-		<?php if (isset($quickconfirm)) { ?>
-			quickConfirm();
-		<?php } else { ?>
-			$.ajax({
-				url: 'index.php?route=checkout_express/<?php if ($shipping_required) { ?>shipping_address<?php } else { ?>payment_method<?php } ?>',
-				dataType: 'html',
-				success: function(html) {
-				<?php if ($shipping_required) { ?>
-					$('#shipping-address .checkout-content').html(html);
-					$('#shipping-address .checkout-content').fadeIn(100);
-				<?php } else { ?>
-					$('#payment-method .checkout-content').html(html);
-					$('#payment-method .checkout-content').fadeIn(100);
-				<?php } ?>
-				},
-				error: function(xhr, ajaxOptions, thrownError) {
-					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-				}
-			});
-		<?php } ?>
+		$.ajax({
+			url: 'index.php?route=checkout_express/<?php if ($shipping_required) { ?>shipping_address<?php } else { ?>payment_method<?php } ?>',
+			dataType: 'html',
+			success: function(html) {
+			<?php if ($shipping_required) { ?>
+				$('#shipping-address .checkout-content').html(html);
+				$('#shipping-address .checkout-content').fadeIn(100);
+			<?php } else { ?>
+				$('#payment-method .checkout-content').html(html);
+				$('#payment-method .checkout-content').fadeIn(100);
+			<?php } ?>
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
 		});
 	<?php } ?>
+	});
+<?php } ?>
 <?php } ?>
 
 // Checkout Express
 $('body').on('click', '#button-express', function() {
 	$.ajax({
-		url: 'index.php?route=checkout_express/login/validate',
+		url: 'index.php?route=checkout_express/login/validateEmail',
 		type: 'post',
-		data: $('#checkout #login :input'),
+		data: $('#checkout #login :input[name=\'email\']'),
 		dataType: 'json',
 		beforeSend: function() {
+			$('#check-email').hide();
 			$('#button-express').attr('disabled', true);
 			$('#button-express').after('<span class="wait">&nbsp;<img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /></span>');
 		},
@@ -221,6 +216,8 @@ $('body').on('click', '#button-express', function() {
 				$('#express-name').html(json['name']);
 				$('#express-hide1').fadeIn(500);
 				$('#express-hide2').fadeIn(500);
+				$('#check-email').hide();
+				$('#check-login').show();
 			}
 
 			if (json['mail']) {
@@ -329,15 +326,17 @@ $('body').on('click', '#button-account', function() {
 // Login
 $('body').on('click', '#button-login', function() {
 	$.ajax({
-		url: 'index.php?route=checkout_express/login/validate',
+		url: 'index.php?route=checkout_express/login/validateLogin',
 		type: 'post',
 		data: $('#checkout #login :input'),
 		dataType: 'json',
 		beforeSend: function() {
+			$('#check-login').hide();
 			$('#button-login').attr('disabled', true);
 			$('#button-login').after('<span class="wait">&nbsp;<img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /></span>');
 		},
 		complete: function() {
+			$('#check-login').show();
 			$('#button-login').attr('disabled', false);
 			$('.wait').remove();
 		},
@@ -383,6 +382,9 @@ function Registration() {
 			if (json['redirect']) {
 				location = json['redirect'];
 			} else if (json['error']) {
+				$('#button-register').show();
+				$('.wait').remove();
+
 				if (json['error']['warning']) {
 					$('#payment-address .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>');
 
@@ -435,10 +437,6 @@ function Registration() {
 
 				if (json['error']['password']) {
 					$('#payment-address input[name=\'password\'] + br').after('<span class="error">' + json['error']['password'] + '</span>');
-				}
-
-				if (json['error']['confirm']) {
-					$('#payment-address input[name=\'confirm\'] + br').after('<span class="error">' + json['error']['confirm'] + '</span>');
 				}
 
 			} else {

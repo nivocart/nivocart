@@ -33,7 +33,7 @@ class ControllerCheckoutExpressLogin extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	public function validate() {
+	public function validateEmail() {
 		$this->language->load('checkout/checkout_express');
 
 		$json = array();
@@ -47,26 +47,49 @@ class ControllerCheckoutExpressLogin extends Controller {
 		}
 
 		if (!$json) {
-			$this->load->model('checkout/checkout_express');
-			$this->load->model('checkout/checkout_tools');
-
 			if (!$this->request->post['email'] || (utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				$json['error']['warning'] = $this->language->get('error_email');
 			}
 
-			$customer_info = $this->model_checkout_checkout_express->getCustomerByEmail($this->request->post['email']);
+			$this->request->post['password'] = '';
 
-			if (!isset($this->request->post['password'])) {
-				$this->request->post['password'] = '';
+			$this->load->model('account/customer');
+			$this->load->model('checkout/checkout_tools');
+
+			$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+
+			if ($customer_info) {
+				$json['name'] = $this->model_checkout_checkout_tools->getJoinName($customer_info);
+			} else {
+				$json['mail'] = $this->request->post['email'];
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function validateLogin() {
+		$this->language->load('checkout/checkout_express');
+
+		$json = array();
+
+		if ($this->customer->isLogged()) {
+			$json['redirect'] = $this->url->link('checkout_express/checkout', '', 'SSL');
+		}
+
+		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
+			$json['redirect'] = $this->url->link('checkout/cart', '', 'SSL');
+		}
+
+		if (!$json) {
+			if (!$this->request->post['email'] || (utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+				$json['error']['warning'] = $this->language->get('error_email');
 			}
 
-			if (!$this->request->post['password']) {
-                if ($customer_info) {
-					$json['name'] = $this->model_checkout_checkout_tools->getJoinName($customer_info);
-				} else {
-					$json['mail'] = $this->request->post['email'];
-				}
-            }
+			$this->load->model('account/customer');
+
+			$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
 
 			if ($this->request->post['email'] && $this->request->post['password']) {
 				if (!$this->customer->login($this->request->post['email'], $this->request->post['password'])) {
