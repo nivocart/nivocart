@@ -36,7 +36,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 			$menu_class = 'menu-' . $menu_direction;
 
 		} else {
-			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-' . $menu_theme . '-' . $menu_direction . '.css');
+			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-' . $menu_theme . '-' . $menu_direction . '.min.css');
 
 			$menu_class = 'menu-' . $menu_theme;
 		}
