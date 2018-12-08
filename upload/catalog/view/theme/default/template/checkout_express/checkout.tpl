@@ -200,12 +200,12 @@ $('body').on('click', '#button-express', function() {
 		data: $('#checkout #login :input[name=\'email\']'),
 		dataType: 'json',
 		beforeSend: function() {
-			$('#check-email').hide();
 			$('#button-express').attr('disabled', true);
 			$('#button-express').after('<span class="wait">&nbsp;<img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /></span>');
 		},
 		complete: function() {
 			$('#button-express').attr('disabled', false);
+			$('#check-email').hide();
 			$('.wait').remove();
 		},
 		success: function(json) {
@@ -216,7 +216,6 @@ $('body').on('click', '#button-express', function() {
 				$('#express-name').html(json['name']);
 				$('#express-hide1').fadeIn(500);
 				$('#express-hide2').fadeIn(500);
-				$('#check-email').hide();
 				$('#check-login').show();
 			}
 
@@ -331,23 +330,22 @@ $('body').on('click', '#button-login', function() {
 		data: $('#checkout #login :input'),
 		dataType: 'json',
 		beforeSend: function() {
-			$('#check-login').hide();
 			$('#button-login').attr('disabled', true);
 			$('#button-login').after('<span class="wait">&nbsp;<img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /></span>');
 		},
 		complete: function() {
-			$('#check-login').show();
 			$('#button-login').attr('disabled', false);
 			$('.wait').remove();
 		},
 		success: function(json) {
 			$('.attention, .warning, .error').remove();
+			$('#check-login').hide();
 
 			if (json['redirect']) {
 				location = json['redirect'];
 			} else if (json['error']) {
 				$('#checkout .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '</div>');
-
+				$('#check-login').show();
 				$('.warning').fadeIn(500);
 			}
 		},
