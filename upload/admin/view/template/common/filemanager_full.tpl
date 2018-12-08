@@ -127,7 +127,6 @@ $(document).ready(function() {
 						html += '</div>';
 
 						$('#column-right').html(html);
-
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
 						alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -318,7 +317,6 @@ $(document).ready(function() {
 					success: function(json) {
 						if (json.success) {
 							$('#dialog').remove();
-
 							tree.refresh(tree.selected);
 						} else {
 							alert(json.error);
@@ -354,7 +352,7 @@ $(document).ready(function() {
 
 			$('#dialog').dialog({
 				resizable: true,
-				height: 220,
+				height: 230,
 				width: 400,
 				modal: true,
 				title: '<?php echo $text_folder_delete; ?>',
@@ -371,9 +369,7 @@ $(document).ready(function() {
 								success: function(json) {
 									if (json.success) {
 										var tt = tree.prev(tree.selected);
-
 										tree.refresh(tree.parent(tree.selected));
-
 										tree.select_branch(tt);
 									}
 
@@ -409,7 +405,7 @@ $(document).ready(function() {
 
 			$('#dialog').dialog({
 				resizable: false,
-				height: 220,
+				height: 230,
 				width: 400,
 				modal: true,
 				title: '<?php echo $text_file_delete; ?>',
@@ -425,7 +421,6 @@ $(document).ready(function() {
 							success: function(json) {
 								if (json.success) {
 									var tree = $.tree.focused();
-
 									tree.select_branch(tree.selected);
 								}
 
@@ -477,9 +472,7 @@ $(document).ready(function() {
 					success: function(json) {
 						if (json.success) {
 							$('#dialog').remove();
-
 							var tree = $.tree.focused();
-
 							tree.select_branch(tree.selected);
 						}
 
@@ -503,9 +496,7 @@ $(document).ready(function() {
 					success: function(json) {
 						if (json.success) {
 							$('#dialog').remove();
-
 							tree.select_branch('#top');
-
 							tree.refresh(tree.selected);
 						}
 
@@ -550,9 +541,7 @@ $(document).ready(function() {
 					success: function(json) {
 						if (json.success) {
 							$('#dialog').remove();
-
 							var tree = $.tree.focused();
-
 							tree.select_branch(tree.selected);
 						}
 
@@ -576,9 +565,7 @@ $(document).ready(function() {
 					success: function(json) {
 						if (json.success) {
 							$('#dialog').remove();
-
 							tree.select_branch(tree.parent(tree.selected));
-
 							tree.refresh(tree.selected);
 						}
 
@@ -621,9 +608,7 @@ $(document).ready(function() {
 					success: function(json) {
 						if (json.success) {
 							$('#dialog').remove();
-
 							var tree = $.tree.focused();
-
 							tree.select_branch(tree.selected);
 						}
 
@@ -647,9 +632,7 @@ $(document).ready(function() {
 					success: function(json) {
 						if (json.success) {
 							$('#dialog').remove();
-
 							tree.select_branch(tree.parent(tree.selected));
-
 							tree.refresh(tree.selected);
 						}
 
@@ -673,7 +656,7 @@ $(document).ready(function() {
 		$('#column-left').prepend(html);
 
 		$('#upload-multi').dialog({
-			height: 355,
+			height: 360,
 			width: <?php echo ($this->browser->checkMobile()) ? 600 : 730; ?>,
 			modal: true,
 			resizable: false,
@@ -707,16 +690,13 @@ $(document).ready(function() {
 						uploader.start();
 					} else {
 						alert('<?php echo $text_no_selection; ?>');
-
 						return false;
 					}
 				});
 			},
 			close: function(event, ui) {
 				var tree = $.tree.focused();
-
 				tree.select_branch(tree.selected);
-
 				$('#upload-multi').remove();
 			}
 		});
@@ -724,7 +704,6 @@ $(document).ready(function() {
 
 	$('#refresh').on('click', function() {
 		var tree = $.tree.focused();
-
 		tree.select_branch(tree.selected);
 	});
 
@@ -741,7 +720,7 @@ $(document).ready(function() {
 					$('#information-dialog').dialog({
 						title: '<?php echo $heading_info; ?>',
 						width: 620,
-						height: 260,
+						height: 265,
 						resizable: false,
 						modal: true
 					});
@@ -755,7 +734,6 @@ $(document).ready(function() {
 		});
 
 		var tree = $.tree.focused();
-
 		tree.select_branch(tree.selected);
 	});
 });
