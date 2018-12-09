@@ -136,7 +136,6 @@ $(document).ready(function() {
 		success: function(html) {
 			$('#checkout .checkout-content').html(html);
 			$('#checkout .checkout-content').fadeIn(100);
-
 			$('#email').focus();
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -235,11 +234,8 @@ $('body').on('click', '#button-express', function() {
 						$('.attention, .warning, .error').remove();
 
 						$('#payment-address .checkout-content').html(html);
-
 						$('#checkout .checkout-content').fadeOut(100);
-
 						$('#payment-address .checkout-content').fadeIn(500);
-
 						$('.checkout-heading').remove();
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
@@ -253,7 +249,6 @@ $('body').on('click', '#button-express', function() {
 			} else if (json['error']) {
 				$('.wait').remove();
 				$('#checkout .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '</div>');
-
 				$('.warning').fadeIn(500);
 			}
 		},
@@ -280,11 +275,8 @@ $('body').on('click', '#button-account', function() {
 			$('.attention, .warning, .error').remove();
 
 			$('#payment-address .checkout-content').html(html);
-
 			$('#checkout .checkout-content').fadeOut(100);
-
 			$('#payment-address .checkout-content').fadeIn(500);
-
 			$('.checkout-heading').remove();
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -308,11 +300,8 @@ $('body').on('click', '#button-account', function() {
 				$('.warning, .error').remove();
 
 				$('#payment-address .checkout-content').html(html);
-
 				$('#checkout .checkout-content').fadeOut(100);
-
 				$('#payment-address .checkout-content').fadeIn(100);
-
 				$('.checkout-heading').remove();
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
@@ -339,7 +328,6 @@ $('body').on('click', '#button-login', function() {
 		},
 		success: function(json) {
 			$('.attention, .warning, .error').remove();
-			$('#check-login').hide();
 
 			if (json['redirect']) {
 				location = json['redirect'];
@@ -385,7 +373,6 @@ function Registration() {
 
 				if (json['error']['warning']) {
 					$('#payment-address .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>');
-
 					$('.warning').fadeIn(500);
 				}
 
@@ -449,7 +436,6 @@ function Registration() {
 							$('#shipping-method .checkout-content').html(html);
 
 							$('#payment-address .checkout-content').fadeOut(100);
-
 							$('#shipping-method .checkout-content').fadeIn(500);
 
 							$('.wait').remove();
@@ -477,7 +463,6 @@ function Registration() {
 							$('#shipping-address .checkout-content').html(html);
 
 							$('#payment-address .checkout-content').fadeOut(100);
-
 							$('#shipping-address .checkout-content').fadeIn(500);
 
 							$('.wait').remove();
@@ -495,7 +480,6 @@ function Registration() {
 						$('#payment-method .checkout-content').html(html);
 
 						$('#payment-address .checkout-content').fadeOut(100);
-
 						$('#payment-method .checkout-content').fadeIn(500);
 
 						$('.wait').remove();
@@ -546,7 +530,6 @@ $('body').on('click', '#button-payment-address', function() {
 			} else if (json['error']) {
 				if (json['error']['warning']) {
 					$('#payment-address .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>');
-
 					$('.warning').fadeIn(500);
 				}
 
@@ -599,7 +582,6 @@ $('body').on('click', '#button-payment-address', function() {
 						$('#shipping-address .checkout-content').html(html);
 
 						$('#payment-address .checkout-content').fadeOut(100);
-
 						$('#shipping-address .checkout-content').fadeIn(500);
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
@@ -614,7 +596,6 @@ $('body').on('click', '#button-payment-address', function() {
 						$('#payment-method .checkout-content').html(html);
 
 						$('#payment-address .checkout-content').fadeOut(100);
-
 						$('#payment-method .checkout-content').fadeIn(500);
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
@@ -663,7 +644,6 @@ $('body').on('click', '#button-shipping-address', function() {
 			} else if (json['error']) {
 				if (json['error']['warning']) {
 					$('#shipping-address .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>');
-
 					$('.warning').fadeIn(500);
 				}
 
@@ -711,7 +691,6 @@ $('body').on('click', '#button-shipping-address', function() {
 						$('#shipping-method .checkout-content').html(html);
 
 						$('#shipping-address .checkout-content').fadeOut(100);
-
 						$('#shipping-method .checkout-content').fadeIn(500);
 
 						$.ajax({
@@ -759,7 +738,6 @@ $('body').on('click', '#button-shipping-method', function() {
 			} else if (json['error']) {
 				if (json['error']['warning']) {
 					$('#shipping-method .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>');
-
 					$('.warning').fadeIn(500);
 				}
 			} else {
@@ -770,7 +748,6 @@ $('body').on('click', '#button-shipping-method', function() {
 						$('#payment-method .checkout-content').html(html);
 
 						$('#shipping-method .checkout-content').fadeOut(100);
-
 						$('#payment-method .checkout-content').fadeIn(500);
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
@@ -807,7 +784,6 @@ $('body').on('click', '#button-payment-method', function() {
 			} else if (json['error']) {
 				if (json['error']['warning']) {
 					$('#payment-method .checkout-content').prepend('<div class="warning" style="display:none;">' + json['error']['warning'] + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>');
-
 					$('.warning').fadeIn(500);
 				}
 			} else {
@@ -818,7 +794,6 @@ $('body').on('click', '#button-payment-method', function() {
 						$('#confirm .checkout-content').html(html);
 
 						$('#payment-method .checkout-content').fadeOut(100);
-
 						$('#confirm .checkout-content').fadeIn(500);
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
