@@ -1,5 +1,13 @@
 <?php
 class ControllerProductProduct extends Controller {
+	private $image_thumb_width;
+	private $image_thumb_height;
+	private $image_popup_width;
+	private $image_popup_height;
+	private $image_additional_width;
+	private $image_additional_height;
+	private $image_related_width;
+	private $image_related_height;
 
 	public function index() {
 		$this->language->load('product/product');
@@ -312,6 +320,16 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['buy_it_now'] = $this->url->link('checkout/checkout', '', 'SSL');
 
+			// Image Size Variables
+			$this->image_thumb_width = $this->config->get('config_image_thumb_width');
+			$this->image_thumb_height = $this->config->get('config_image_thumb_height');
+			$this->image_popup_width = $this->config->get('config_image_popup_width');
+			$this->image_popup_height = $this->config->get('config_image_popup_height');
+			$this->image_additional_width = $this->config->get('config_image_additional_width');
+			$this->image_additional_height = $this->config->get('config_image_additional_height');
+			$this->image_related_width = $this->config->get('config_image_related_width');
+			$this->image_related_height = $this->config->get('config_image_related_height');
+
 			// Product
 			$this->data['product_id'] = (int)$this->request->get['product_id'];
 
@@ -324,12 +342,12 @@ class ControllerProductProduct extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.js');
 
 				if ($product_info['image']) {
-					$this->data['zoom'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_popup_width') * 2, $this->config->get('config_image_popup_height') * 2);
+					$this->data['zoom'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width * 2, $this->image_popup_height * 2);
 					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 232, 232);
 					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], 58, 58);
 					$this->data['label_style'] = 176;
 					$this->data['label_height'] = 61;
-					$this->data['gallery_thumb'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'));
+					$this->data['gallery_thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_additional_width, $this->image_additional_height);
 				} else {
 					$this->data['zoom'] = '';
 					$this->data['thumb'] = '';
@@ -346,10 +364,10 @@ class ControllerProductProduct extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/viewbox/jquery.viewbox.min.js');
 
 				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->config->get('config_image_thumb_width') / 4), 0), round(($this->config->get('config_image_thumb_height') / 4), 0));
-					$this->data['label_style'] = round(($this->config->get('config_image_thumb_width') * 0.75), 0);
-					$this->data['label_height'] = round(($this->config->get('config_image_thumb_height') * 0.25), 0);
+					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -364,10 +382,10 @@ class ControllerProductProduct extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/magnific/magnific.min.js');
 
 				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->config->get('config_image_thumb_width') / 4), 0), round(($this->config->get('config_image_thumb_height') / 4), 0));
-					$this->data['label_style'] = round(($this->config->get('config_image_thumb_width') * 0.75), 0);
-					$this->data['label_height'] = round(($this->config->get('config_image_thumb_height') * 0.25), 0);
+					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -382,10 +400,10 @@ class ControllerProductProduct extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/fancybox-plus/js/jquery.fancybox-plus.min.js');
 
 				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->config->get('config_image_thumb_width') / 4), 0), round(($this->config->get('config_image_thumb_height') / 4), 0));
-					$this->data['label_style'] = round(($this->config->get('config_image_thumb_width') * 0.75), 0);
-					$this->data['label_height'] = round(($this->config->get('config_image_thumb_height') * 0.25), 0);
+					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -400,10 +418,10 @@ class ControllerProductProduct extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
 
 				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->config->get('config_image_thumb_width') / 4), 0), round(($this->config->get('config_image_thumb_height') / 4), 0));
-					$this->data['label_style'] = round(($this->config->get('config_image_thumb_width') * 0.75), 0);
-					$this->data['label_height'] = round(($this->config->get('config_image_thumb_height') * 0.25), 0);
+					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -415,8 +433,8 @@ class ControllerProductProduct extends Controller {
 			}
 
 			if ($product_info['image']) {
-				$label_ratio = round((($this->config->get('config_image_thumb_width') * $this->config->get('config_label_size_ratio')) / 100), 0);
-				$this->data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
+				$label_ratio = round((($this->image_thumb_width * $this->config->get('config_label_size_ratio')) / 100), 0);
+				$this->data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width, $this->image_popup_height);
 			} else {
 				$label_ratio = 90;
 				$this->data['popup'] = '';
@@ -428,9 +446,9 @@ class ControllerProductProduct extends Controller {
 
 			foreach ($results as $result) {
 				$this->data['images'][] = array(
-					'zoom'  => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_popup_width') * 2, $this->config->get('config_image_popup_height') * 2),
-					'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
-					'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+					'zoom'  => $this->model_tool_image->resize($result['image'], $this->image_popup_width * 2, $this->image_popup_height * 2),
+					'popup' => $this->model_tool_image->resize($result['image'], $this->image_popup_width, $this->image_popup_height),
+					'thumb' => $this->model_tool_image->resize($result['image'], $this->image_additional_width, $this->image_additional_height)
 				);
 			}
 
@@ -441,8 +459,8 @@ class ControllerProductProduct extends Controller {
 				$this->data['video_code'] = false;
 			}
 
-			$this->data['video_width'] = $this->config->get('config_image_thumb_width');
-			$this->data['video_height'] = $this->config->get('config_image_thumb_height');
+			$this->data['video_width'] = $this->image_thumb_width;
+			$this->data['video_height'] = $this->image_thumb_height;
 
 			// Barcode
 			$this->load->model('tool/barcode');
@@ -683,7 +701,7 @@ class ControllerProductProduct extends Controller {
 			if ($product_offers) {
 				$this->data['offer_label_large'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
 
-				$label_ratio_medium = round((($this->config->get('config_image_related_width') * $this->config->get('config_label_size_ratio')) / 100), 0);
+				$label_ratio_medium = round((($this->image_related_width * $this->config->get('config_label_size_ratio')) / 100), 0);
 
 				$this->data['offer_label_medium'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio_medium, $label_ratio_medium);
 
@@ -692,7 +710,7 @@ class ControllerProductProduct extends Controller {
 						$product_offer_image = $this->model_catalog_offer->getOfferProductImage($product_offer['two']);
 
 						if ($product_offer_image) {
-							$offer_image = $this->model_tool_image->resize($product_offer_image, $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height'));
+							$offer_image = $this->model_tool_image->resize($product_offer_image, $this->image_related_width, $this->image_related_height);
 						} else {
 							$offer_image = false;
 						}
@@ -706,7 +724,7 @@ class ControllerProductProduct extends Controller {
 						$product_offer_image = $this->model_catalog_offer->getOfferProductImage($product_offer['one']);
 
 						if ($product_offer_image) {
-							$offer_image = $this->model_tool_image->resize($product_offer_image, $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height'));
+							$offer_image = $this->model_tool_image->resize($product_offer_image, $this->image_related_width, $this->image_related_height);
 						} else {
 							$offer_image = false;
 						}
@@ -784,16 +802,16 @@ class ControllerProductProduct extends Controller {
 
 			foreach ($results as $result) {
 				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height'));
-					$label_ratio = round((($this->config->get('config_image_related_width') * $this->config->get('config_label_size_ratio')) / 100), 0);
+					$image = $this->model_tool_image->resize($result['image'], $this->image_related_width, $this->image_related_height);
+					$label_ratio = round((($this->image_related_width * $this->config->get('config_label_size_ratio')) / 100), 0);
 				} else {
 					$image = false;
 					$label_ratio = 50;
 				}
 
 				if ($result['label']) {
-					$label = $this->model_tool_image->resize($result['label'], round(($this->config->get('config_image_related_width') / 3), 0), round(($this->config->get('config_image_related_height') / 3), 0));
-					$label_style = round(($this->config->get('config_image_related_width') / 3), 0);
+					$label = $this->model_tool_image->resize($result['label'], round(($this->image_related_width / 3), 0), round(($this->image_related_height / 3), 0));
+					$label_style = round(($this->image_related_width / 3), 0);
 				} else {
 					$label = '';
 					$label_style = '';
