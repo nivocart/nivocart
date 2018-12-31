@@ -4,7 +4,7 @@
  * author: Cedric Dugas, http://www.position-absolute.com
  * licence: MIT
  *
- * NivoCart © 2018
+ * NivoCart © 2019
  */
 
 (function($) {
@@ -25,7 +25,7 @@
 	* Load & show message box, call iframe
 	* param {jQuery} el - The button calling the plugin
 	* param {Object} pluginOptions - options for this print button
-	*/   
+	*/
 	function loadPrintDocument(el, pluginOptions) {
 		$("body").append(components.messageBox(pluginOptions.message));
 		$("#printMessageBox").css("opacity", 0);

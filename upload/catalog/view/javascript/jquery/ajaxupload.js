@@ -4,7 +4,7 @@
  * Licensed under the MIT license ( http://valums.com/mit-license/ )
  * Thanks to Gary Haran, David Mark, Corey Burns and others for contributions 
  *
- * ajaxupload.js - NivoCart © 2018
+ * ajaxupload.js - NivoCart © 2019
  */
 
 (function() {

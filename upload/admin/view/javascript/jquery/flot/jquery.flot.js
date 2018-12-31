@@ -3,7 +3,7 @@
  * Copyright (c) 2007-2014 IOLA and Ole Laursen.
  * Licensed under the MIT license.
  *
- * NivoCart © 2018
+ * NivoCart © 2019
  */
 
 /* Plugin for jQuery for working with colors.

@@ -72,7 +72,7 @@ $_['button_view_thumb']   = 'Thumb View';
 
 // Info
 $_['info_title']          = 'File Manager - NivoCart';
-$_['info_copyright']      = 'Copyright &copy; 2018 - All rights reserved';
+$_['info_copyright']      = 'Copyright &copy; ' . date('Y') . ' - All rights reserved';
 
 $_['text_info_version']   = 'Version:';
 $_['text_info_author']    = 'Author:';

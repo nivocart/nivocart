@@ -58,7 +58,7 @@ The plugin also adds four public methods:
     Free the crosshair to move again after locking it.
 */
 
-(function ($) {
+(function($) {
     var options = {
         crosshair: {
             mode: null, // one of null, "x", "y" or "xy",

@@ -1,4 +1,10 @@
 /*
+ * Colorbox 1.6.4
+ * license: MIT
+ * http://www.jacklmoore.com/colorbox
+ * NivoCart © 2019 - CSS. Use minified version for production.
+*/
+/*
 	Colorbox Core Style:
 	The following CSS is consistent between example themes and should not be altered.
 */
@@ -19,7 +25,6 @@
 	User Style: 
 	Change the following styles to modify the appearance of Colorbox. They are
 	ordered & tabbed in a way that represents the nesting of the generated HTML.
-	NivoCart CSS. Use minified version for production.
 */
 #cboxOverlay{background:#FCFCFC; filter: alpha(opacity=40); -khtml-opacity: .4; -moz-opacity: .4; opacity: .4;}
 #colorbox{outline:0;}

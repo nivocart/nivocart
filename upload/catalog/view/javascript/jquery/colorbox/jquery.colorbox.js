@@ -1,7 +1,8 @@
-/*!
-	Colorbox 1.6.4
-	license: MIT
-	http://www.jacklmoore.com/colorbox
+/*
+ * Colorbox 1.6.4
+ * license: MIT
+ * http://www.jacklmoore.com/colorbox
+ * NivoCart © 2019
 */
 (function($, document, window) {
 	var defaults = {

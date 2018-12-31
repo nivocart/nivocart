@@ -52,7 +52,7 @@ Google Maps).
 
 */
 
-(function ($) {
+(function($) {
     var options = {
         series: {
             images: {

@@ -6,7 +6,7 @@
  * Sultan Tarimo © 2015 - sultantarimo@me.com
  * Released under the MIT license
  * 
- * NivoCart © 2018
+ * NivoCart © 2019
  */
 !(function($) {
 	$.fn.extend({

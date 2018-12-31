@@ -7,7 +7,7 @@
  *
  * Dual licensed under the MIT and GPL licenses.
  *
- * NivoCart © 2018
+ * NivoCart © 2019
  */
 
 (function($) {

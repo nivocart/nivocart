@@ -4,7 +4,7 @@
  * author: Cedric Dugas, http://www.position-absolute.com
  * licence: MIT
  *
- * NivoCart © 2018
+ * NivoCart © 2019
  */
 
 (function($) {
