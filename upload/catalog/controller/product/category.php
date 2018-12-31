@@ -1,5 +1,8 @@
 <?php
 class ControllerProductCategory extends Controller {
+	private $image_product_width;
+	private $image_product_height;
+	private $label_size_ratio;
 
 	public function index() {
 		$this->language->load('product/category');
@@ -217,6 +220,11 @@ class ControllerProductCategory extends Controller {
 			$empty_category = $this->config->get('config_empty_category');
 			$product_count = $this->config->get('config_product_count');
 
+			// Image Size Variables
+			$this->image_product_width = $this->config->get('config_image_product_width');
+			$this->image_product_height = $this->config->get('config_image_product_height');
+			$this->label_size_ratio = $this->config->get('config_label_size_ratio');
+
 			$this->data['categories'] = array();
 
 			$results = $this->model_catalog_category->getCategories($category_id);
@@ -262,16 +270,16 @@ class ControllerProductCategory extends Controller {
 
 			foreach ($results as $result) {
 				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-					$label_ratio = round((($this->config->get('config_image_product_width') * $this->config->get('config_label_size_ratio')) / 100), 0);
+					$image = $this->model_tool_image->resize($result['image'], $this->image_product_width, $this->image_product_height);
+					$label_ratio = round((($this->image_product_width * $this->label_size_ratio) / 100), 0);
 				} else {
 					$image = false;
 					$label_ratio = 50;
 				}
 
 				if ($result['label']) {
-					$label = $this->model_tool_image->resize($result['label'], round(($this->config->get('config_image_product_width') / 3), 0), round(($this->config->get('config_image_product_height') / 3), 0));
-					$label_style = round(($this->config->get('config_image_product_width') / 3), 0);
+					$label = $this->model_tool_image->resize($result['label'], round(($this->image_product_width / 3), 0), round(($this->image_product_height / 3), 0));
+					$label_style = round(($this->image_product_width / 3), 0);
 				} else {
 					$label = '';
 					$label_style = '';

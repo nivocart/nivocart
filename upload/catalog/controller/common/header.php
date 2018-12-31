@@ -186,7 +186,7 @@ class ControllerCommonHeader extends Controller {
 		}
 
 		// Template
-		$this->data['template'] = $this->config->get('config_template');
+		$this->data['template'] = $template;
 
 		$this->children = array(
 			'module/language',
