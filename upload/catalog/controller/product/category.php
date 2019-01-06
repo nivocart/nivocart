@@ -595,7 +595,7 @@ class ControllerProductCategory extends Controller {
 
 			$this->data['heading_title'] = $this->language->get('text_error');
 
-			$this->data['text_error'] = $this->language->get('text_error');
+			$this->data['text_error'] = $this->language->get('text_empty');
 
 			$this->data['button_continue'] = $this->language->get('button_continue');
 

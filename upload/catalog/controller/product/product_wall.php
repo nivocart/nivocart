@@ -438,9 +438,9 @@ class ControllerProductProductWall extends Controller {
 				'separator' => $this->language->get('text_separator')
 			);
 
-			$this->data['heading_title'] = $this->language->get('text_error');
+			$this->data['heading_title'] = $this->language->get('heading_title');
 
-			$this->data['text_error'] = $this->language->get('text_error');
+			$this->data['text_error'] = $this->language->get('text_empty');
 
 			$this->data['button_continue'] = $this->language->get('button_continue');
 
