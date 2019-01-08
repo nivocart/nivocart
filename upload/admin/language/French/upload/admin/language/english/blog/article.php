@@ -34,22 +34,22 @@ $_['entry_meta_keyword']           = 'Mot clé Meta :<span class="help">génér
 $_['entry_description']            = 'Description :';
 $_['entry_allow_comment']          = 'Autoriser les commentaires pour cet article :';
 $_['entry_keyword']                = 'Mot-clef SEO:<br /><span class="help">N\'utilisez pas d\'espaces, mais remplacez-les par des "-" et assurez-vous que le mot-clef soit absolument unique.</span>';
-$_['entry_image']                  = 'Image principale:<span class="help">principal article images.</span>';
+$_['entry_image']                  = 'Image principale :<span class="help">principal article images.</span>';
 $_['entry_sort_order']             = 'Classement:';
 $_['entry_status']                 = 'État :';
-$_['entry_category']               = 'Catégorie:';
-$_['entry_manufacturer']           = 'Fabricant:';
-$_['entry_product']                = 'Produit:';
-$_['entry_productwise']            = '<span class="help"><b>nom du produit :</b><br />(Autocomplete)</span>';
-$_['entry_store']                  = 'Boutique:';
-$_['entry_layout']                 = 'Override de mise en page:';
+$_['entry_category']               = 'Catégorie :';
+$_['entry_manufacturer']           = 'Fabricant :';
+$_['entry_product']                = 'Produit :';
+$_['entry_productwise']            = '<span class="help"><b>nom du produit :</b><br />(Auto-complétion)</span>';
+$_['entry_store']                  = 'Boutique :';
+$_['entry_layout']                 = 'Override de mise en page :';
 $_['entry_additional_description'] = 'Description complémentaire';
 $_['entry_article_related_method'] = 'Produits connexes de l’article :<span class="help">, cet article est lié à un seul produit, une catégorie de produit ou un fabricant de produit, sélectionnez en conséquence.</span>';
 $_['entry_blog_related_articles']  = 'Articles Apparentés';
 $_['entry_category_wise']          = 'Catégorie Wise';
-$_['entry_manufacturer_wise']      = 'Référence du fabricant Wise';
+$_['entry_manufacturer_wise']      = 'Fabricant Wise';
 $_['entry_product_wise']           = 'Produit Wise';
-$_['entry_related_article_name']   = 'Nom d’article :<span class="help">(Autocomplete)</span>';
+$_['entry_related_article_name']   = 'Nom d’article :<span class="help">(Auto-complétion)</span>';
 
 // Error
 $_['error_warning']                = 'Attention: veuillez vérifier si le formulaire ne contient pas d\'erreurs !';
@@ -60,4 +60,4 @@ $_['error_description']            = 'Description doit être supérieure à 3 ca
 $_['error_author_name']            = 'Nom de l’auteur ne peut pas être vide !';
 $_['error_author_not_found_list']  = 'Auteur ne figure pas dans notre liste !';
 $_['error_author_not_found']       = 'Désolé, cet auteur ne figure pas dans notre liste, veuillez insérer un nom d\'auteur valide !';
-$_['error_article_related']        = 'Attention : Vous ne pouvez pas supprimer l’article parce qu’actuellement il se rapportent a %s articles !';
+$_['error_article_related']        = 'Attention : Vous ne pouvez pas supprimer l’article parce qu’actuellement il se rapportent à %s articles !';
