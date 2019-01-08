@@ -52,12 +52,12 @@ $_['entry_product_wise']           = 'Produit Wise';
 $_['entry_related_article_name']   = 'Nom d’article :<span class="help">(Autocomplete)</span>';
 
 // Error
-$_['error_warning']                = 'Warning: Please check the form carefully for errors!';
-$_['error_permission']             = 'Warning: You do not have permission to modify article!';
-$_['error_title']                  = 'Article Title must be greater than 3 and less than 100 characters!';
-$_['error_title_found']            = 'Article Title already exists, article title must be unique!';
-$_['error_description']            = 'Description must be greater than 3 characters!';
-$_['error_author_name']            = 'Author name can not be blank!';
-$_['error_author_not_found_list']  = 'Author not found in our list!';
-$_['error_author_not_found']       = 'Sorry Author not found in our list, please insert valid author name!';
-$_['error_article_related']        = 'Warning: You can not delete article because currently it relate %s articles!';
+$_['error_warning']                = 'Attention: veuillez vérifier si le formulaire ne contient pas d\'erreurs !';
+$_['error_permission']             = 'Avertissement : Vous n’êtes pas autorisé à modifier l’article !';
+$_['error_title']                  = 'Titre de l’article doit être supérieur à 3 et à moins de 100 caractères !';
+$_['error_title_found']            = 'Titre de l’article existe déjà, le titre de l’article doit être unique !';
+$_['error_description']            = 'Description doit être supérieure à 3 caractères !';
+$_['error_author_name']            = 'Nom de l’auteur ne peut pas être vide !';
+$_['error_author_not_found_list']  = 'Auteur ne figure pas dans notre liste !';
+$_['error_author_not_found']       = 'Désolé, cet auteur ne figure pas dans notre liste, veuillez insérer un nom d\'auteur valide !';
+$_['error_article_related']        = 'Attention : Vous ne pouvez pas supprimer l’article parce qu’actuellement il se rapportent a %s articles !';
