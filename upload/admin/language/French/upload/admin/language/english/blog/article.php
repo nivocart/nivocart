@@ -33,7 +33,7 @@ $_['entry_meta_description']       = 'Meta Description :<span class="help">le n
 $_['entry_meta_keyword']           = 'Mot clé Meta :<span class="help">généralement ignorés par les moteurs de recherche.<br />SEO importance : faible.</span>';
 $_['entry_description']            = 'Description :';
 $_['entry_allow_comment']          = 'Autoriser les commentaires pour cet article :';
-$_['entry_keyword']                = 'Mot-clef SEO:<br /><span class="help">N\'utilisez pas d\'espaces, mais remplacez-les par des "-" et assurez-vous que le mot-clef soit absolument unique.</span>';
+$_['entry_keyword']                = 'Mot-clef SEO :<span class="help">N\'utilisez pas d\'espaces, mais remplacez-les par des "-" et assurez-vous que le mot-clef soit absolument unique.</span>';
 $_['entry_image']                  = 'Image principale :<span class="help">principal article images.</span>';
 $_['entry_sort_order']             = 'Classement:';
 $_['entry_status']                 = 'État :';
