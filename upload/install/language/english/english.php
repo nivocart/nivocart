@@ -73,7 +73,7 @@ $_['text_is_upgrading']      = 'Please wait while NivoCart is being upgraded ...
 $_['text_login']             = 'Go to my Dashboard';
 $_['text_project_home']      = 'Project Homepage';
 $_['text_project_forum']     = 'Project Forum';
-$_['text_footer']            = 'Copyright © 2018 NivoCart - All rights reserved';
+$_['text_footer']            = 'Copyright © 2019 NivoCart - All rights reserved';
 
 // Entry
 $_['entry_agree']            = 'I agree to the license ';
