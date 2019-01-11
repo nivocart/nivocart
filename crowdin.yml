@@ -1,5 +1,9 @@
 files:
   - source: /upload/admin/language/english/*/*.php
     translation: /upload/admin/language/%language%/%original_path%/%original_file_name%
+  - source: /upload/admin/language/english/*.php
+    translation: /upload/admin/language/%language%/%original_file_name%
   - source: /upload/catalog/language/english/*/*.php
     translation: /upload/catalog/language/%language%/%original_path%/%original_file_name%
+  - source: /upload/catalog/language/english/*.php
+    translation: /upload/catalog/language/%language%/%original_file_name%
