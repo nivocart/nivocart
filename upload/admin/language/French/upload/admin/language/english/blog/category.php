@@ -24,13 +24,13 @@ $_['entry_parent']           = 'Catégorie parente :';
 $_['entry_store']            = 'Boutiques :';
 $_['entry_keyword']          = 'Mot-clef SEO:<span class="help">N\'utilisez pas d\'espaces, mais remplacez-les par des "-" et assurez-vous que le mot-clef soit absolument unique.</span>';
 $_['entry_image']            = 'Image :';
-$_['entry_article_limit']    = 'Article limit per page:<span class="help">Number of articles displayed on page in this category.</span>';
-$_['entry_sort_order']       = 'Sort Order:';
-$_['entry_status']           = 'Status:';
-$_['entry_layout']           = 'Layout Override:';
+$_['entry_article_limit']    = 'Limite d’article par page :<span class="help">nombre d’articles affichés sur la page de cette catégorie.</span>';
+$_['entry_sort_order']       = 'Classement : ';
+$_['entry_status']           = 'État :';
+$_['entry_layout']           = 'Override de mise en page :';
 
 // Error
-$_['error_warning']          = 'Warning: Please check the form carefully for errors!';
-$_['error_permission']       = 'Warning: You do not have permission to modify categories!';
-$_['error_name']             = 'Category Name must be between 2 and 255 characters!';
-$_['error_article']          = 'Warning: This Category cannot be deleted as it is currently assigned to %s articles!';
+$_['error_warning']          = 'Attention: veuillez vérifier si le formulaire ne contient pas d\'erreurs !';
+$_['error_permission']       = 'Attention : vous n’êtes pas autorisé à modifier les catégories !';
+$_['error_name']             = 'Le nom de la catégorie doit contenir entre 2 et 255 caractères !';
+$_['error_article']          = 'Attention : cet Catégorie ne peut être supprimée car elle est actuellement attribuée à %s articles !';
