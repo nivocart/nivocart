@@ -3,7 +3,7 @@
 $_['heading_title']      = 'Emplacements de boutiques';
 
 // Text
-$_['text_success']       = 'Succès : vous avez modifié les emplacements de boutiques !';
+$_['text_success']       = 'Succès : vous avez modifié les <b>emplacements de boutiques</b> !';
 $_['text_default']       = 'Par défaut';
 $_['text_image_manager'] = 'Gestionnaire de fichiers';
 $_['text_browse']        = 'Parcourir';
