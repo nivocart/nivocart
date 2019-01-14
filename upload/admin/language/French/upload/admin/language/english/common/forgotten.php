@@ -1,20 +1,20 @@
 <?php
 // header
-$_['heading_title']   = 'Forgot Your Password ?';
+$_['heading_title']   = 'Mot de passe oublié ?';
 
 // Text
-$_['text_forgotten']  = 'Forgotten Password';
-$_['text_your_email'] = 'Your Email Address';
-$_['text_email']      = 'Enter the Email address associated with your account. Click Reset to have a password reset link sent to you.';
-$_['text_success']    = 'An Email with a confirmation link has been sent to your admin email address.';
+$_['text_forgotten']  = 'Mot de passe oublié';
+$_['text_your_email'] = 'Votre Adresse Email';
+$_['text_email']      = 'Entrez l’adresse Email associée à votre compte. Cliquez sur réinitialiser pour avoir un lien de réinitialisation de mot de passe envoyé à vous.';
+$_['text_success']    = 'Un email contenant le lien de vérification a été envoyé à votre adresse email.';
 
 // Entry
-$_['entry_email']     = 'Email Address:';
-$_['entry_password']  = 'New Password:';
-$_['entry_confirm']   = 'Confirm:';
+$_['entry_email']     = 'Votre Adresse Email:';
+$_['entry_password']  = 'Nouveau mot de passe:';
+$_['entry_confirm']   = 'Confirmer:';
 
 // Error
-$_['error_email']     = 'Email Address does not appear to be valid!';
-$_['error_record']    = 'Email Address was not found in our records, please try again!';
+$_['error_email']     = 'L`adresse Email ne semble pas être valide!';
+$_['error_record']    = 'Adresse Email est introuvable dans nos dossiers, veuillez essayer à nouveau !';
 $_['error_password']  = 'Password must be between 3 and 20 characters!';
-$_['error_confirm']   = 'Password and password confirmation do not match!';
+$_['error_confirm']   = 'Le mot de passe et la confirmation du mot de passe ne correspondent pas!';
