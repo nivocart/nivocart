@@ -1046,6 +1046,7 @@ a.button-add:hover {
 	text-decoration: line-through;
 }
 .box-product .price-new {
+	color: #444;
 }
 .box-product .brand {
 	display: block;

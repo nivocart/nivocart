@@ -30,6 +30,8 @@ class ControllerModuleLatest extends Controller {
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_yes'] = $this->language->get('text_yes');
 		$this->data['text_no'] = $this->language->get('text_no');
+		$this->data['text_box'] = $this->language->get('text_box');
+		$this->data['text_list'] = $this->language->get('text_list');
 
 		$this->data['text_content_higher'] = $this->language->get('text_content_higher');
 		$this->data['text_content_high'] = $this->language->get('text_content_high');
@@ -43,6 +45,7 @@ class ControllerModuleLatest extends Controller {
 		$this->data['entry_viewproduct'] = $this->language->get('entry_viewproduct');
 		$this->data['entry_addproduct'] = $this->language->get('entry_addproduct');
 
+		$this->data['entry_style'] = $this->language->get('entry_style');
 		$this->data['entry_limit'] = $this->language->get('entry_limit');
 		$this->data['entry_image'] = $this->language->get('entry_image');
 		$this->data['entry_layout'] = $this->language->get('entry_layout');

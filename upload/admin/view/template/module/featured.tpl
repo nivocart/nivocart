@@ -174,6 +174,7 @@
         <table id="module" class="list">
           <thead>
             <tr>
+              <td class="left"><?php echo $entry_style; ?></td>
               <td class="left"><span class="required">*</span> <?php echo $entry_image; ?></td>
               <td class="left"><?php echo $entry_layout; ?></td>
               <td class="left"><?php echo $entry_position; ?></td>
@@ -186,6 +187,18 @@
         <?php foreach ($modules as $module) { ?>
           <tbody id="module-row<?php echo $module_row; ?>">
             <tr>
+              <td class="left"><select name="featured_module[<?php echo $module_row; ?>][style]">
+                <?php if ($module['style'] == 'box') { ?>
+                  <option value="box" selected="selected"><?php echo $text_box; ?></option>
+                <?php } else { ?>
+                  <option value="box"><?php echo $text_box; ?></option>
+                <?php } ?>
+                <?php if ($module['style'] == 'list') { ?>
+                  <option value="list" selected="selected"><?php echo $text_list; ?></option>
+                <?php } else { ?>
+                  <option value="list"><?php echo $text_list; ?></option>
+                <?php } ?>
+              </select></td>
               <td class="left">
                 <input type="text" name="featured_module[<?php echo $module_row; ?>][image_width]" value="<?php echo $module['image_width']; ?>" size="3" /> x 
                 <input type="text" name="featured_module[<?php echo $module_row; ?>][image_height]" value="<?php echo $module['image_height']; ?>" size="3" /> px
@@ -255,7 +268,7 @@
         <?php } ?>
           <tfoot>
             <tr>
-              <td colspan="5"></td>
+              <td colspan="6"></td>
               <td class="center"><a onclick="addModule();" class="button ripple"><?php echo $button_add_module; ?></a></td>
             </tr>
           </tfoot>
@@ -320,6 +333,10 @@ var module_row = <?php echo $module_row; ?>;
 function addModule() {
 	html  = '<tbody id="module-row' + module_row + '">';
 	html += '  <tr>';
+	html += '    <td class="left"><select name="featured_module[' + module_row + '][style]">';
+	html += '      <option value="box"><?php echo $text_box; ?></option>';
+	html += '      <option value="list"><?php echo $text_list; ?></option>';
+	html += '    </select></td>';
 	html += '    <td class="left">';
 	html += '      <input type="text" name="featured_module[' + module_row + '][image_width]" value="150" size="3" /> x ';
 	html += '      <input type="text" name="featured_module[' + module_row + '][image_height]" value="150" size="3" /> px';

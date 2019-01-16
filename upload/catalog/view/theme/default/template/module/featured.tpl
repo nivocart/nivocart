@@ -55,6 +55,7 @@
         <?php if ($product['stock_remaining'] && $this->config->get($template . '_product_stock_low') && ($product['stock_quantity'] > 0) && ($product['stock_quantity'] <= $this->config->get($template . '_product_stock_limit'))) { ?>
           <div class="remaining"><?php echo $product['stock_remaining']; ?></div>
         <?php } ?>
+        <?php if ($boxed) { ?>
         <div class="box-product-bottom">
         <?php if ($addproduct) { ?>
           <?php if ($product['quote']) { ?>
@@ -72,6 +73,7 @@
           <div><a href="<?php echo $product['href']; ?>" title="<?php echo $button_view; ?>"><i class="fa fa-eye"></i></a></div>
         <?php } ?>
         </div>
+        <?php } ?>
       </div>
     <?php } ?>
   </div>
@@ -132,6 +134,7 @@
         <?php if ($product['stock_remaining'] && $this->config->get($template . '_product_stock_low') && ($product['stock_quantity'] > 0) && ($product['stock_quantity'] <= $this->config->get($template . '_product_stock_limit'))) { ?>
           <div class="remaining"><?php echo $product['stock_remaining']; ?></div>
         <?php } ?>
+        <?php if ($boxed) { ?>
         <div class="box-product-bottom">
         <?php if ($addproduct) { ?>
           <?php if ($product['quote']) { ?>
@@ -149,6 +152,7 @@
           <div><a href="<?php echo $product['href']; ?>" title="<?php echo $button_view; ?>"><i class="fa fa-eye"></i></a></div>
         <?php } ?>
         </div>
+        <?php } ?>
       </div>
     <?php } ?>
   </div>

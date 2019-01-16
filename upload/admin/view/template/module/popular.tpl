@@ -75,6 +75,7 @@
         <table id="module" class="list">
           <thead>
             <tr>
+              <td class="left"><?php echo $entry_style; ?></td>
               <td class="left"><?php echo $entry_limit; ?></td>
               <td class="left"><span class="required">*</span> <?php echo $entry_image; ?></td>
               <td class="left"><?php echo $entry_layout; ?></td>
@@ -88,6 +89,18 @@
         <?php foreach ($modules as $module) { ?>
           <tbody id="module-row<?php echo $module_row; ?>">
             <tr>
+              <td class="left"><select name="popular_module[<?php echo $module_row; ?>][style]">
+                <?php if ($module['style'] == 'box') { ?>
+                  <option value="box" selected="selected"><?php echo $text_box; ?></option>
+                <?php } else { ?>
+                  <option value="box"><?php echo $text_box; ?></option>
+                <?php } ?>
+                <?php if ($module['style'] == 'list') { ?>
+                  <option value="list" selected="selected"><?php echo $text_list; ?></option>
+                <?php } else { ?>
+                  <option value="list"><?php echo $text_list; ?></option>
+                <?php } ?>
+              </select></td>
               <td class="left">
                 <input type="text" name="popular_module[<?php echo $module_row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
               </td>
@@ -158,14 +171,14 @@
           </tbody>
         <?php $module_row++; ?>
         <?php } ?>
-        <tfoot>
-          <tr>
-            <td colspan="6"></td>
-            <td class="center"><a onclick="addModule();" class="button ripple"><?php echo $button_add_module; ?></a></td>
-          </tr>
-        </tfoot>
-      </table>
-    </form>
+          <tfoot>
+            <tr>
+              <td colspan="7"></td>
+              <td class="center"><a onclick="addModule();" class="button ripple"><?php echo $button_add_module; ?></a></td>
+            </tr>
+          </tfoot>
+        </table>
+      </form>
     </div>
   </div>
 </div>
@@ -176,6 +189,10 @@ var module_row = <?php echo $module_row; ?>;
 function addModule() {
 	html  = '<tbody id="module-row' + module_row + '">';
 	html += '  <tr>';
+	html += '    <td class="left"><select name="popular_module[' + module_row + '][style]">';
+	html += '      <option value="box"><?php echo $text_box; ?></option>';
+	html += '      <option value="list"><?php echo $text_list; ?></option>';
+	html += '    </select></td>';
 	html += '    <td class="left"><input type="text" name="popular_module[' + module_row + '][limit]" value="5" size="1" /></td>';
 	html += '    <td class="left">';
 	html += '      <input type="text" name="popular_module[' + module_row + '][image_width]" value="150" size="3" /> x ';

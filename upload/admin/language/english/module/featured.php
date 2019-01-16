@@ -5,6 +5,8 @@ $_['heading_title']       = 'Featured';
 // Text
 $_['text_module']         = 'Modules';
 $_['text_success']        = 'Success: You have modified module <b>Featured</b> !';
+$_['text_box']            = 'Box';
+$_['text_list']           = 'List';
 
 // Tab
 $_['tab_general']         = 'General';
@@ -21,9 +23,10 @@ $_['entry_reward']        = 'Show Rewards:<span class="help">(if any)</span>';
 $_['entry_point']         = 'Show Points:<span class="help">(if any)</span>';
 $_['entry_review']        = 'Show Product Star Rating:<span class="help">(if any)</span>';
 
-$_['entry_viewproduct']   = 'Show View Product Button:';
-$_['entry_addproduct']    = 'Show Add to Cart Button:<br /><span class="help">Not recommended if some products have age restrictions.</span>';
+$_['entry_viewproduct']   = 'Show View Product Button:<span class="help">Box style only.</span>';
+$_['entry_addproduct']    = 'Show Add to Cart Button:<span class="help">Not recommended if some products have age restrictions. Box style only.</span>';
 
+$_['entry_style']         = 'Style';
 $_['entry_image']         = 'Image (W x H)';
 $_['entry_layout']        = 'Layout';
 $_['entry_position']      = 'Position';

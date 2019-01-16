@@ -43,6 +43,10 @@ class ControllerModuleFeatured extends Controller {
 		$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 		$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
 
+		$display_style = $setting['style'] ? $setting['style'] : 'box';
+
+		$this->data['boxed'] = ($display_style == 'box') ? true : false;
+
 		$this->load->model('catalog/manufacturer');
 		$this->load->model('catalog/product');
 		$this->load->model('catalog/offer');
