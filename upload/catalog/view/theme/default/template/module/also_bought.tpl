@@ -3,6 +3,7 @@
 <div class="box">
   <div class="box-heading"><?php echo $title; ?></div>
   <div class="box-content">
+  <?php if ($boxed) { ?>
     <div class="box-product" style="text-align:center;">
     <?php foreach ($products as $product) { ?>
       <div>
@@ -44,7 +45,6 @@
         <?php if ($product['stock_remaining'] && $this->config->get($template . '_product_stock_low') && ($product['stock_quantity'] > 0) && ($product['stock_quantity'] <= $this->config->get($template . '_product_stock_limit'))) { ?>
           <div class="remaining"><?php echo $product['stock_remaining']; ?></div>
         <?php } ?>
-        <?php if ($boxed) { ?>
         <div class="box-product-bottom">
         <?php if ($addproduct) { ?>
           <?php if ($product['quote']) { ?>
@@ -62,14 +62,36 @@
           <div><a href="<?php echo $product['href']; ?>" title="<?php echo $button_view; ?>"><i class="fa fa-eye"></i></a></div>
         <?php } ?>
         </div>
-        <?php } ?>
       </div>
     <?php } ?>
     </div>
+  <?php } else { ?>
+    <ul class="box-product-list">
+    <?php foreach ($products as $product) { ?>
+      <li>
+        <a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a>
+        <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a><br />
+      <?php if ($product['price'] && !$price_hide) { ?>
+        <a href="<?php echo $product['href']; ?>" class="list-price">
+        <?php if ($product['price_option']) { ?>
+          <span class="from"><?php echo $text_from; ?></span>
+        <?php } ?>
+        <?php if (!$product['special']) { ?>
+          <?php echo $product['price']; ?>
+        <?php } else { ?>
+          <span class="list-price-old"><?php echo $product['price']; ?></span> <span class="list-price-new"><?php echo $product['special']; ?></span>
+        <?php } ?>
+        </a>
+      <?php } ?>
+      </li>
+    <?php } ?>
+    </ul>
+  <?php } ?>
   </div>
   </div>
 <?php } else { ?>
   <div style="margin-bottom:20px;">
+  <?php if ($boxed) { ?>
     <div class="box-product" style="text-align:center;">
     <?php foreach ($products as $product) { ?>
       <div>
@@ -111,7 +133,6 @@
         <?php if ($product['stock_remaining'] && $this->config->get($template . '_product_stock_low') && ($product['stock_quantity'] > 0) && ($product['stock_quantity'] <= $this->config->get($template . '_product_stock_limit'))) { ?>
           <div class="remaining"><?php echo $product['stock_remaining']; ?></div>
         <?php } ?>
-        <?php if ($boxed) { ?>
         <div class="box-product-bottom">
         <?php if ($addproduct) { ?>
           <?php if ($product['quote']) { ?>
@@ -129,10 +150,31 @@
           <div><a href="<?php echo $product['href']; ?>" title="<?php echo $button_view; ?>"><i class="fa fa-eye"></i></a></div>
         <?php } ?>
         </div>
-        <?php } ?>
       </div>
     <?php } ?>
     </div>
+  <?php } else { ?>
+    <ul class="box-product-list">
+    <?php foreach ($products as $product) { ?>
+      <li>
+        <a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a>
+        <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a><br />
+      <?php if ($product['price'] && !$price_hide) { ?>
+        <a href="<?php echo $product['href']; ?>" class="list-price">
+        <?php if ($product['price_option']) { ?>
+          <span class="from"><?php echo $text_from; ?></span>
+        <?php } ?>
+        <?php if (!$product['special']) { ?>
+          <?php echo $product['price']; ?>
+        <?php } else { ?>
+          <span class="list-price-old"><?php echo $product['price']; ?></span> <span class="list-price-new"><?php echo $product['special']; ?></span>
+        <?php } ?>
+        </a>
+      <?php } ?>
+      </li>
+    <?php } ?>
+    </ul>
+  <?php } ?>
   </div>
 <?php } ?>
 <?php } ?>

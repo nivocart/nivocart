@@ -4313,7 +4313,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (258, 0, 'carousel', 'carousel_duration', '5000', 0),
 (259, 0, 'carousel', 'carousel_speed', '500', 0),
 (260, 0, 'carousel', 'carousel_random', '1', 0),
-(261, 0, 'featured', 'featured_module', 'a:1:{i:0;a:6:{s:11:\"image_width\";s:3:\"200\";s:12:\"image_height\";s:3:\"200\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:12:\"content_high\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"2\";}}', 1),
+(261, 0, 'featured', 'featured_module', 'a:1:{i:0;a:7:{s:5:\"style\";s:3:\"box\";s:11:\"image_width\";s:3:\"200\";s:12:\"image_height\";s:3:\"200\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:12:\"content_high\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"2\";}}', 1),
 (262, 0, 'featured', 'featured_addproduct', '1', 0),
 (263, 0, 'featured', 'featured_viewproduct', '1', 0),
 (264, 0, 'featured', 'featured_review', '0', 0),
