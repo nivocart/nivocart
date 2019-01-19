@@ -73,4 +73,4 @@ HOME: <a href="https://nivocart.com" title="Home">NivoCart Home</a>
 EMAIL: contact@nivocart.com
 
 
-Copyright &copy; 2018 - nivocart.com
+Copyright &copy; 2019 - nivocart.com
