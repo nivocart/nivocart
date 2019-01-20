@@ -29,7 +29,7 @@
             <input type="text" name="name" value="<?php echo $name; ?>" />
           <?php  } ?></td>
         </tr>
-        <tr>
+        <tr class="form-counter">
           <td><?php echo $entry_access; ?></td>
           <td><div class="scrollbox" style="height:230px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
@@ -46,10 +46,10 @@
               </div>
             <?php } ?>
           </div>
-          <a onclick="$(this).parent().find(':checkbox').prop('checked', true);" class="button-select"></a><a onclick="$(this).parent().find(':checkbox').prop('checked', false);" class="button-unselect"></a>
+          <a onclick="$(this).parent().find(':checkbox').prop('checked', true); counter();" class="button-select"></a><a onclick="$(this).parent().find(':checkbox').prop('checked', false); counter();" class="button-unselect"></a>
           </td>
         </tr>
-        <tr>
+        <tr class="form-counter">
           <td><?php echo $entry_modify; ?></td>
           <td><div class="scrollbox" style="height:230px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
@@ -66,7 +66,7 @@
               </div>
             <?php } ?>
           </div>
-          <a onclick="$(this).parent().find(':checkbox').prop('checked', true);" class="button-select"></a><a onclick="$(this).parent().find(':checkbox').prop('checked', false);" class="button-unselect"></a>
+          <a onclick="$(this).parent().find(':checkbox').prop('checked', true); counter();" class="button-select"></a><a onclick="$(this).parent().find(':checkbox').prop('checked', false); counter();" class="button-unselect"></a>
           </td>
         </tr>
       </table>
@@ -74,4 +74,24 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript"><!--
+function counter() {
+	for (var n in { access:null, modify:null, hidden:null }) {
+		var e = $('[name^="permission[' + n + ']"]'), i = che=0; e.each(function(n) { 1 == $(this).prop("checked") && (che += 1), i = n+1 }),
+		$("." + n + "_cnt").remove(),
+		$("#" + n).append(' <cnt class="' + n + '_cnt" style="display:block;"> ' + che + " / " + i + "</cnt>")
+	}
+}
+
+$(document).ready(function() {
+	$('[name^="permission[access]"]').first().parentsUntil(".form-counter").parent().find("td").first().attr("id","access"),
+	$('[name^="permission[modify]"]').first().parentsUntil(".form-counter").parent().find("td").first().attr("id","modify"),
+	$('[name^="permission[hidden]"]').first().parentsUntil(".form-counter").parent().find("td").first().attr("id","hidden"), counter()
+}),
+$("input[type=checkbox]").on("change", function() {
+	counter()
+});
+//--></script>
+
 <?php echo $footer; ?> 
