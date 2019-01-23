@@ -89,4 +89,17 @@ class ModelToolBlockIp extends Model {
 
 		return $query->row['total'];
 	}
+
+	// Ban
+	public function isBlockedIp($ip) {
+		$status = false;
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "block_ip WHERE INET_ATON('" . $ip . "') BETWEEN INET_ATON(from_ip) AND INET_ATON(to_ip)");
+
+		if ($query->num_rows) {
+			$status = true;
+		}
+
+		return $status;
+	}
 }

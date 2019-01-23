@@ -12,6 +12,17 @@ class ControllerCommonHeader extends Controller {
 			$this->data['base'] = HTTP_SERVER;
 		}
 
+		// Ip Blocking
+		$this->load->model('tool/block_ip');
+
+		if (isset($this->request->server['REMOTE_ADDR'])) {
+			$is_blocked = $this->model_tool_block_ip->isBlockedIp($this->request->server['REMOTE_ADDR']);
+
+			if ($is_blocked) {
+				$this->redirect($this->url->link('error/forbidden', '', 'SSL'));
+			}
+		}
+
 		$this->data['description'] = $this->document->getDescription();
 		$this->data['keywords'] = $this->document->getKeywords();
 		$this->data['links'] = $this->document->getLinks();
