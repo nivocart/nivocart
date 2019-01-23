@@ -2,11 +2,6 @@
 class ControllerErrorForbidden extends Controller {
 
 	public function index() {
-		// Show site if logged in
-		$this->load->library('user');
-
-		$this->user = new User($this->registry);
-
 		if (!$this->user->isLogged()) {
 			$ban_page = $this->config->get('config_ban_page');
 
