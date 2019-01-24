@@ -1,0 +1,54 @@
+
+---------------
+  CHANGE LOG
+---------------
+
+NivoCart v1.0.4
+---------------
+Released: 24/01/2019
+
+- Added Blocked IPs redirect for Administration.
+- Added User Group form Access and Modify counters.
+- Added List style for product modules (optional).
+- Updated Security Html pages.
+- Fixed Security Html Search page button.
+- Updated NivoCart Logo.
+- Updated Plyr Player to latest v3.4.7.
+- Rolled date (2019) for installer.
+
+
+NivoCart v1.0.3
+---------------
+Released: 06/01/2019
+
+- Admin and Catalog page loading optimizations.
+- CKEditor v4.11.1, with Accessibility Checker.
+- Checkout Express bug fixes.
+- Removed some old files.
+- Minor language definitions changes.
+
+
+NivoCart v1.0.2
+---------------
+Released: 29/11/2018
+
+- Fixes missing folders (Download + Security).
+- Removed some old definitions.
+- Some minor style changes.
+
+
+NivoCart v1.0.1
+---------------
+Released: 10/11/2018
+
+- Fixes bug in Upgrade model.
+- Fixes bug in Seo Url model
+- Some minor style changes
+
+
+NivoCart v1.0.0
+---------------
+Released: 08/11/2018
+
+- Initial Release
+
