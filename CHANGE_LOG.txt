@@ -3,6 +3,15 @@
   CHANGE LOG
 ---------------
 
+NivoCart v1.0.5 (Beta)
+---------------
+Released: no
+
+- CKEditor v4.12.1, with Accessibility Checker.
+- Re-instated mCrypt function for php 7.0.x support.
+- Minor language definitions changes.
+
+
 NivoCart v1.0.4
 ---------------
 Released: 24/01/2019

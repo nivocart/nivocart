@@ -220,7 +220,7 @@
             <img src="view/image/bad.png" alt="Bad" />
           <?php } ?></td>
         </tr>
-        <?php if (!$iconv) { ?>
+      <?php if (!$iconv) { ?>
         <tr>
           <td><?php echo $text_mbstring; ?></td>
           <td><?php if ($mbstring) { ?>
@@ -235,7 +235,7 @@
             <img src="view/image/bad.png" alt="Bad" />
           <?php } ?></td>
         </tr>
-        <?php } ?>
+      <?php } ?>
       </table>
     </fieldset>
     <p><?php echo $text_install_file; ?></p>
