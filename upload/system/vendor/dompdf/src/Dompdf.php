@@ -607,8 +607,8 @@ class Dompdf {
                             }
 
                             if (!$accept) {
-                                //found at least one mediatype, but none of the accepted ones. Skip this css file.
-                                continue;
+                                // Found at least one mediatype, but none of the accepted ones. Skip this css file.
+                                continue 2;
                             }
                         }
 
@@ -625,7 +625,7 @@ class Dompdf {
                     // http://www.w3.org/TR/REC-html40/present/styles.html#adef-media
                     // which states that the default media type is 'screen'
                     if ($tag->hasAttributes() && ($media = $tag->getAttribute("media")) && !in_array($media, $acceptedmedia)) {
-                        continue;
+                        continue 2;
                     }
 
                     $css = "";
