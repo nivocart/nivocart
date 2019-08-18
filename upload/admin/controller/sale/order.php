@@ -2901,6 +2901,8 @@ class ControllerSaleOrder extends Controller {
 		$this->data['column_comment'] = $this->language->get('column_comment');
 		$this->data['column_notify'] = $this->language->get('column_notify');
 
+		$this->data['token'] = $this->session->data['token'];
+
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
 		} else {
