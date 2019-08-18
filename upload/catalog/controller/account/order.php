@@ -718,7 +718,7 @@ class ControllerAccountOrder extends Controller {
 		$this->data['column_tax_percent'] = $this->language->get('column_tax_percent');
 		$this->data['column_total'] = $this->language->get('column_total');
 
-		$this->data['token'] = $this->request->get['token'];
+		$this->data['token'] = $this->customer->setToken();
 
 		// Get tax breakdown
 		if ($this->config->get('config_tax_breakdown')) {
