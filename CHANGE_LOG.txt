@@ -5,10 +5,11 @@
 
 NivoCart v1.0.5 (Beta)
 ---------------
-Released: no
+Released: not yet!
 
 - CKEditor v4.12.1, with Accessibility Checker.
 - jQuery UI timepicker addon update to v1.6.3. Fix issue #20
+- DomPDF updates to fix broken downloaded files. Fix issue #18
 - Re-instated mCrypt function for php 7.0.x support. Fix issue #16
 - Minor language definitions changes.
 
