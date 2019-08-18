@@ -17,7 +17,7 @@ class ModelUserUser extends Model {
 	public function editUser($user_id, $data) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
 
-		if ($data['password']) {
+		if (isset($data['password']) && !$this->checkTopAdministrator()) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = substr(hash_rand('md5'), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 
@@ -123,7 +123,7 @@ class ModelUserUser extends Model {
 
 	// Checks
 	public function checkUserPassword($password, $user_id, $username) {
-		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "')))))) THEN 0 ELSE 1 END AS result FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "' AND username = '" . $this->db->escape($username) . "' AND status = '1'");
+		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "')))))) THEN 0 ELSE 1 END AS `result` FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "' AND username = '" . $this->db->escape($username) . "' AND status = '1'");
 
 		if ($query->row['result']) {
 			return $query->row['result'];
@@ -132,21 +132,33 @@ class ModelUserUser extends Model {
 		}
 	}
 
+	protected function checkTopAdministrator() {
+		$this->getUserGroup($this->user->getId(), $this->user->getUserGroupId());
+
+		if ($user_group_name == 'Top Administrator') {
+			$top_administrator = true;
+		} else {
+			$top_administrator = false;
+		}
+
+		return $top_administrator;
+	}
+
 	// Totals
 	public function getTotalUsers() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user`");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalUsersByGroupId($user_group_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user` WHERE user_group_id = '" . (int)$user_group_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user` WHERE user_group_id = '" . (int)$user_group_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalUsersByEmail($email) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
 		return $query->row['total'];
 	}

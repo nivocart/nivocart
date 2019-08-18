@@ -78,7 +78,7 @@
           <?php } ?>
           </select></td>
         </tr>
-      <?php if ($user_exist) { ?>
+      <?php if ($user_exist && !$top_administrator) { ?>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_old_password; ?></td>
           <td><?php if ($error_old_password) { ?>
@@ -89,6 +89,7 @@
           <?php } ?></td>
         </tr>
       <?php } ?>
+      <?php if (!$user_exist || !$top_administrator) { ?>
         <tr>
           <td><span class="<?php echo $is_required; ?>">*</span> <?php echo $entry_password; ?></td>
           <td><?php if ($error_password) { ?>
@@ -107,6 +108,7 @@
             <input type="password" name="confirm" value="<?php echo $confirm; ?>" />
           <?php } ?></td>
         </tr>
+      <?php } ?>
         <tr>
           <td><?php echo $entry_status; ?></td>
           <td><select name="status">
