@@ -8,7 +8,8 @@ NivoCart v1.0.5 (Beta)
 Released: no
 
 - CKEditor v4.12.1, with Accessibility Checker.
-- Re-instated mCrypt function for php 7.0.x support.
+- jQuery UI timepicker addon update to v1.6.3. Fix issue #20
+- Re-instated mCrypt function for php 7.0.x support. Fix issue #15
 - Minor language definitions changes.
 
 
