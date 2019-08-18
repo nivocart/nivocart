@@ -9,7 +9,7 @@ Released: no
 
 - CKEditor v4.12.1, with Accessibility Checker.
 - jQuery UI timepicker addon update to v1.6.3. Fix issue #20
-- Re-instated mCrypt function for php 7.0.x support. Fix issue #15
+- Re-instated mCrypt function for php 7.0.x support. Fix issue #16
 - Minor language definitions changes.
 
 
