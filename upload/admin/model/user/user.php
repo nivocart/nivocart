@@ -17,7 +17,7 @@ class ModelUserUser extends Model {
 	public function editUser($user_id, $data) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
 
-		if (isset($data['password']) && !$this->checkTopAdministrator()) {
+		if (isset($data['password'])) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = substr(hash_rand('md5'), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 
@@ -132,8 +132,8 @@ class ModelUserUser extends Model {
 		}
 	}
 
-	protected function checkTopAdministrator() {
-		$this->getUserGroup($this->user->getId(), $this->user->getUserGroupId());
+	public function checkTopAdministrator() {
+		$user_group_name = $this->getUserGroup($this->user->getId(), $this->user->getUserGroupId());
 
 		if ($user_group_name == 'Top Administrator') {
 			$top_administrator = true;

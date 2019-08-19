@@ -376,8 +376,6 @@ class ControllerUserUser extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
-		$this->data['top_administrator'] = $this->checkTopAdministrator();
-
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -501,31 +499,6 @@ class ControllerUserUser extends Controller {
 			$this->data['username'] = '';
 		}
 
-		$this->data['user_exist'] = isset($this->request->get['user_id']) ? true : false;
-		$this->data['is_required'] = isset($this->request->get['user_id']) ? 'advised' : 'required';
-
-		if (isset($this->request->post['old_password'])) {
-			$this->data['old_password'] = $this->request->post['old_password'];
-		} else {
-			$this->data['old_password'] = '';
-		}
-
-		if (isset($this->request->post['password'])) {
-			$this->data['password'] = $this->request->post['password'];
-		} elseif (!empty($user_info) && $this->checkTopAdministrator()) {
-			$this->data['password'] = '';
-		} else {
-			$this->data['password'] = '';
-		}
-
-		if (isset($this->request->post['confirm'])) {
-			$this->data['confirm'] = $this->request->post['confirm'];
-		} elseif (!empty($user_info) && $this->checkTopAdministrator()) {
-			$this->data['confirm'] = '';
-		} else {
-			$this->data['confirm'] = '';
-		}
-
 		if (isset($this->request->post['firstname'])) {
 			$this->data['firstname'] = $this->request->post['firstname'];
 		} elseif (!empty($user_info)) {
@@ -581,6 +554,28 @@ class ControllerUserUser extends Controller {
 		$this->load->model('user/user_group');
 
 		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups();
+		$this->data['top_administrator'] = $this->model_user_user->checkTopAdministrator();
+
+		$this->data['user_exist'] = isset($this->request->get['user_id']) ? true : false;
+		$this->data['is_required'] = isset($this->request->get['user_id']) ? 'advised' : 'required';
+
+		if (isset($this->request->post['old_password'])) {
+			$this->data['old_password'] = $this->request->post['old_password'];
+		} else {
+			$this->data['old_password'] = '';
+		}
+
+		if (isset($this->request->post['password'])) {
+			$this->data['password'] = $this->request->post['password'];
+		} else {
+			$this->data['password'] = '';
+		}
+
+		if (isset($this->request->post['confirm'])) {
+			$this->data['confirm'] = $this->request->post['confirm'];
+		} else {
+			$this->data['confirm'] = '';
+		}
 
 		if (isset($this->request->post['status'])) {
 			$this->data['status'] = $this->request->post['status'];
@@ -616,7 +611,7 @@ class ControllerUserUser extends Controller {
 			}
 		}
 
-		$top_administrator = $this->checkTopAdministrator();
+		$top_administrator = $this->model_user_user->checkTopAdministrator();
 
 		if (isset($this->request->get['user_id']) && $user_info) {
 			// Existing user
@@ -706,8 +701,8 @@ class ControllerUserUser extends Controller {
 				}
 			}
 
-			if (!$top_administrator) {
-				if ($this->request->post['password'] != "") {
+			if ($this->request->post['password'] != "") {
+				if (!$top_administrator) {
 					// Current Password Check
 					if ($this->request->post['old_password'] && (utf8_strlen($this->request->post['old_password']) > 3) && (utf8_strlen($this->request->post['old_password']) < 21)) {
 						$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
@@ -718,11 +713,19 @@ class ControllerUserUser extends Controller {
 					} else {
 						$this->error['old_password'] = $this->language->get('error_old_password');
 					}
+				}
 
+				if ($top_administrator && $this->request->post['password'] != "") {
 					if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
 						$this->error['password'] = $this->language->get('error_password');
 					}
+				} else {
+					if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+						$this->error['password'] = $this->language->get('error_password');
+					}
+				}
 
+				if (!$top_administrator) {
 					if ($this->request->post['confirm'] != $this->request->post['password']) {
 						$this->error['confirm'] = $this->language->get('error_confirm');
 					}
@@ -779,20 +782,6 @@ class ControllerUserUser extends Controller {
 		}
 
 		return empty($this->error);
-	}
-
-	protected function checkTopAdministrator() {
-		$this->load->model('user/user');
-
-		$user_group_name = $this->model_user_user->getUserGroup($this->user->getId(), $this->user->getUserGroupId());
-
-		if ($user_group_name == 'Top Administrator') {
-			$top_administrator = true;
-		} else {
-			$top_administrator = false;
-		}
-
-		return $top_administrator;
 	}
 
 	protected function validateDelete() {
