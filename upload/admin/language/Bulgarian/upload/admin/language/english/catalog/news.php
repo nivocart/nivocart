@@ -28,7 +28,7 @@ $_['tab_related']             = 'Сродни';
 // Entry
 $_['entry_title']             = 'News Headline:';
 $_['entry_meta_description']  = 'Article Meta Description:';
-$_['entry_description']       = 'Article Content:';
+$_['entry_description']       = 'Съдържание на статията:';
 $_['entry_image']             = 'Article Image:';
 $_['entry_keyword']           = 'News SEO Keyword:';
 $_['entry_download']          = 'Тегления:';
@@ -47,16 +47,16 @@ $_['entry_manufacturer_wise'] = 'Производители';
 
 // Help
 $_['help_meta_description']   = 'The optimal number of characters is around 155, including spaces.<br />SEO importance: High.';
-$_['help_image']              = 'Select an image (optional).';
+$_['help_image']              = 'Изберете изображение (по избор).';
 $_['help_keyword']            = 'Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.';
 $_['help_store']              = 'Select Store(s) where this article is to appear.';
 $_['help_lightbox']           = 'Select a preferred image viewer.';
 $_['help_related_method']     = 'This article can be linked to individual products, categories, or manufacturers.';
 
 // Button
-$_['button_module']           = 'News Module';
-$_['button_reset']            = 'Reset Views';
-$_['button_downloads']        = 'Downloads';
+$_['button_module']           = 'Модул новини';
+$_['button_reset']            = 'Зануляване на прегледите';
+$_['button_downloads']        = 'Тегления';
 $_['button_new_download']     = 'New download ?';
 
 // Error
