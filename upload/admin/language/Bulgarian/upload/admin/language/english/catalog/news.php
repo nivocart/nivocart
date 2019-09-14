@@ -1,29 +1,29 @@
 <?php
 // Heading
-$_['heading_title']           = 'News';
+$_['heading_title']           = 'Новини';
 
 // Text
-$_['text_module']             = 'Module';
-$_['text_success']            = 'Success: You have modified <b>News</b> !';
-$_['text_yes']                = 'Yes';
-$_['text_no']                 = 'No';
+$_['text_module']             = 'Модул';
+$_['text_success']            = 'Готово: Успешно променихте <b>новините</b> !';
+$_['text_yes']                = 'Да';
+$_['text_no']                 = 'Не';
 $_['text_default']            = 'Default';
-$_['text_image_manager']      = 'File Manager';
-$_['text_browse']             = 'Browse';
-$_['text_clear']              = 'Clear';
-$_['text_edit']               = 'Edit';
+$_['text_image_manager']      = 'Управител на файлове';
+$_['text_browse']             = 'Разглеждане';
+$_['text_clear']              = 'Изчистване';
+$_['text_edit']               = 'Редактиране';
 
 // Column
-$_['column_image']            = 'Image';
+$_['column_image']            = 'Изображение';
 $_['column_title']            = 'Headline';
-$_['column_date_added']       = 'Date Added';
+$_['column_date_added']       = 'Дата на добавяне';
 $_['column_sort_order']       = 'Sort Order';
-$_['column_status']           = 'Status';
-$_['column_viewed']           = 'Viewed';
-$_['column_action']           = 'Action';
+$_['column_status']           = 'Състояние';
+$_['column_viewed']           = 'Прегледано';
+$_['column_action']           = 'Действие';
 
 // Tab
-$_['tab_related']             = 'Related';
+$_['tab_related']             = 'Сродни';
 
 // Entry
 $_['entry_title']             = 'News Headline:';
@@ -31,19 +31,19 @@ $_['entry_meta_description']  = 'Article Meta Description:';
 $_['entry_description']       = 'Article Content:';
 $_['entry_image']             = 'Article Image:';
 $_['entry_keyword']           = 'News SEO Keyword:';
-$_['entry_download']          = 'Downloads:';
-$_['entry_store']             = 'Stores:';
+$_['entry_download']          = 'Тегления:';
+$_['entry_store']             = 'Магазини:';
 $_['entry_lightbox']          = 'Image Viewer:';
 $_['entry_sort_order']        = 'Sort Order:';
-$_['entry_status']            = 'Status:';
-$_['entry_product']           = 'Product:';
+$_['entry_status']            = 'Състояние:';
+$_['entry_product']           = 'Продукт:';
 $_['entry_product_search']    = '<span class="help">Product Name:<br />(Autocomplete)</span>';
-$_['entry_category']          = 'Category:';
-$_['entry_manufacturer']      = 'Manufacturer:';
+$_['entry_category']          = 'Категория:';
+$_['entry_manufacturer']      = 'Производител:';
 $_['entry_related_method']    = 'News Related Products:';
-$_['entry_product_wise']      = 'Products';
-$_['entry_category_wise']     = 'Categories';
-$_['entry_manufacturer_wise'] = 'Manufacturers';
+$_['entry_product_wise']      = 'Продукти';
+$_['entry_category_wise']     = 'Категории';
+$_['entry_manufacturer_wise'] = 'Производители';
 
 // Help
 $_['help_meta_description']   = 'The optimal number of characters is around 155, including spaces.<br />SEO importance: High.';
