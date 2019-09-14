@@ -1,20 +1,20 @@
 <?php
 // Heading
-$_['heading_title']     = 'Language';
+$_['heading_title']     = 'Език';
 
 // Text
 $_['text_success']      = 'Success: You have modified <b>Languages</b> !';
 
 // Column
-$_['column_name']       = 'Language Name';
-$_['column_code']       = 'Code';
-$_['column_image']      = 'Image';
-$_['column_sort_order'] = 'Sort Order';
-$_['column_status']     = 'Status';
-$_['column_action']     = 'Action';
+$_['column_name']       = 'Име на език';
+$_['column_code']       = 'Код';
+$_['column_image']      = 'Изображение';
+$_['column_sort_order'] = 'Ред на подреждане';
+$_['column_status']     = 'Състояние';
+$_['column_action']     = 'Действие';
 
 // Entry
-$_['entry_name']        = 'Language Name:';
+$_['entry_name']        = 'Име на език:';
 $_['entry_code']        = 'Code:<span class="help">Example: en. Do not change if this is your default language.</span>';
 $_['entry_locale']      = 'Locale:<span class="help">Example: en-US,en_US.UTF-8,en_US,en-gb,english</span>';
 $_['entry_image']       = 'Image:<span class="help">Example: gb.png</span>';
