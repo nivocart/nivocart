@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']          = 'Blog Author';
+$_['heading_title']          = 'Автор на блога';
 
 // Columns
 $_['column_author_name']     = 'Author Name';
