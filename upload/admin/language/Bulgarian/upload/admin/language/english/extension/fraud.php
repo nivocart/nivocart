@@ -8,7 +8,7 @@ $_['text_uninstall']   = 'Uninstall';
 
 // Column
 $_['column_name']      = 'Module Name';
-$_['column_action']    = 'Action';
+$_['column_action']    = 'Действие';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify <b>Fraud</b> !';
