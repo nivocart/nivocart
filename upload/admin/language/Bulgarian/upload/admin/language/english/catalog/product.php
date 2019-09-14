@@ -1,20 +1,20 @@
 <?php
 // Heading
-$_['heading_title']           = 'Products';
+$_['heading_title']           = 'Продукти';
 $_['heading_inventory']       = 'Stock Control';
-$_['heading_dimension']       = 'Measurements';
+$_['heading_dimension']       = 'Измерване';
 
 // Text
 $_['text_success']            = 'Success: You have modified <b>Products</b> !';
 $_['text_plus']               = '+';
 $_['text_minus']              = '-';
-$_['text_default']            = 'Default';
-$_['text_image_manager']      = 'File Manager';
-$_['text_browse']             = 'Browse';
-$_['text_clear']              = 'Clear';
-$_['text_option']             = 'Option';
-$_['text_option_value']       = 'Option Value';
-$_['text_percent']            = 'Percentage';
+$_['text_default']            = 'По подразбиране';
+$_['text_image_manager']      = 'Управител на файлове';
+$_['text_browse']             = 'Разглеждане';
+$_['text_clear']              = 'Изчистване';
+$_['text_option']             = 'Опция';
+$_['text_option_value']       = 'Стойност на опция';
+$_['text_percent']            = 'Процент';
 $_['text_amount']             = 'Fixed Amount';
 $_['text_exc_vat']            = 'Excluding Tax';
 $_['text_inc_vat']            = 'Including Tax';
@@ -47,33 +47,33 @@ $_['column_store']            = 'Stores';
 $_['column_layout']           = 'Layout Override';
 
 // Column List
-$_['column_id']               = 'ID';
-$_['column_name']             = 'Product Name';
-$_['column_model']            = 'Model';
-$_['column_status']           = 'Status';
-$_['column_action']           = 'Action';
+$_['column_id']               = 'Ид. №';
+$_['column_name']             = 'Име на продукта';
+$_['column_model']            = 'Модел';
+$_['column_status']           = 'Състояние';
+$_['column_action']           = 'Действие';
 
 // Entry
-$_['entry_name']              = 'Product Name:';
+$_['entry_name']              = 'Име на продукта:';
 $_['entry_meta_description']  = 'Meta Tag Description:<span class="help">The optimal number of characters is around 155, including spaces.<br />SEO importance: High.</span>';
 $_['entry_meta_keyword']      = 'Meta Tag Keywords:<span class="help">Usually ignored by search engines.<br />SEO importance: Low.</span>';
-$_['entry_description']       = 'Product Description:';
+$_['entry_description']       = 'Описание на продукта:';
 $_['entry_tag']               = 'Product Tags:<span class="help">Comma separated.</span>';
 
-$_['entry_model']             = 'Model:';
+$_['entry_model']             = 'Модел:';
 $_['entry_image']             = 'Main Image:<span class="help">The main image will represent this product in both Administration and Catalog.</span>';
 $_['entry_label']             = 'Main Image Label:<span class="help">The main image label will be applied in the top right hand corner of the main image.</span>';
 $_['entry_video_code']        = 'YouTube Video:<span class="help">Enter a YouTube video code. (optional)</span>';
 $_['entry_keyword']           = 'SEO Keyword:<span class="help">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>';
 $_['entry_local_tax_rate']    = 'Price Local Tax Rate:<span class="help">Select a local tax rate for this product in order to view the price excluding / including tax below.</span>';
-$_['entry_price']             = 'Price (%s):';
+$_['entry_price']             = 'Цена (%s):';
 $_['entry_cost']              = 'Average Cost:';
 $_['entry_tax_class']         = 'Tax Class:<span class="help">Select the tax class to use in the store.</span>';
 $_['entry_quote']             = 'Request a Quote:<span class="help">Select if the product is made to order or only available on request. The customer will be redirected to the quotation form.</span>';
 $_['entry_age_minimum']       = 'Minimum Age:<span class="help">Minimum age a customer must be to purchase this product. Enter 0 for no minimum.</span>';
 $_['entry_date_available']    = 'Date Available:';
 $_['entry_sort_order']        = 'Sort Order:';
-$_['entry_status']            = 'Status:';
+$_['entry_status']            = 'Състояние:';
 $_['entry_quantity']          = 'Total Quantity in Stock:';
 $_['entry_minimum']           = 'Minimum Quantity:<span class="help">Force a minimum ordered amount.</span>';
 $_['entry_subtract']          = 'Subtract Stock:';
@@ -89,14 +89,14 @@ $_['entry_mpn']               = 'MPN:<span class="help">Manufacturer Part Number
 $_['entry_location']          = 'Location (Bin):<span class="help">(Optional)</span>';
 $_['entry_dimension']         = 'Dimensions (L x W x H):';
 $_['entry_length']            = 'Length Class:';
-$_['entry_weight']            = 'Weight:';
-$_['entry_weight_class']      = 'Weight Class:';
+$_['entry_weight']            = 'Тегло:';
+$_['entry_weight_class']      = 'Клас тегло:';
 
-$_['entry_store']             = 'Stores:';
-$_['entry_category']          = 'Categories:';
-$_['entry_manufacturer']      = 'Manufacturer:';
-$_['entry_filter']            = 'Filters:';
-$_['entry_download']          = 'Downloads:';
+$_['entry_store']             = 'Магазини:';
+$_['entry_category']          = 'Категории:';
+$_['entry_manufacturer']      = 'Производител:';
+$_['entry_filter']            = 'Филтри:';
+$_['entry_download']          = 'Тегления:';
 $_['entry_related']           = 'Related Products:';
 $_['entry_points']            = 'Points<span class="help">Number of points needed to buy this item. If you don\'t want this product to be purchased with points, leave as 0.</span>';
 $_['entry_option']            = 'Option';
@@ -142,11 +142,11 @@ $_['entry_di_period']         = 'Validity Period:';
 $_['entry_di_quantity']       = 'Discount Quantity:';
 $_['entry_di_discount']       = 'Discount Price:';
 
-$_['button_refresh']          = 'Refresh';
-$_['button_update_price']     = 'Prices';
-$_['button_update_quantity']  = 'Quantities';
+$_['button_refresh']          = 'Опресняване';
+$_['button_update_price']     = 'Цени';
+$_['button_update_quantity']  = 'Количества';
 $_['button_update_special']   = 'Specials';
-$_['button_update_discount']  = 'Discounts';
+$_['button_update_discount']  = 'Отстъпки';
 
 $_['error_selected']          = 'No products are currently selected!';
 $_['error_price']             = 'Price is required and cannot be negative!';
@@ -155,24 +155,24 @@ $_['error_quantity']          = 'Quantity is required and cannot be negative!';
 // Recurring
 $_['text_recurring_help']     = '<u>Recurring amounts are calculated by the frequency and cycles.</u><br />For example if you use a frequency of "week" and a cycle of "2", then the user will be billed every 2 weeks.<br />The length is the number of times the user will make a payment, set this to 0 if you want payments until they are cancelled.';
 $_['text_recurring_title']    = 'Recurring payments';
-$_['text_recurring_trial']    = 'Trial period';
+$_['text_recurring_trial']    = 'Пробен период';
 
 $_['entry_recurring']         = 'Recurring billing:';
 $_['entry_recurring_price']   = 'Recurring price:';
 $_['entry_recurring_freq']    = 'Recurring frequency:';
 $_['entry_recurring_cycle']   = 'Recurring cycles:<span class="help">How often it is billed, must be 1 or more.</span>';
 $_['entry_recurring_length']  = 'Recurring length:<span class="help">0 = until cancelled.</span>';
-$_['entry_trial']             = 'Trial period:';
+$_['entry_trial']             = 'Пробен период:';
 $_['entry_trial_price']       = 'Trial recurring price:';
 $_['entry_trial_freq']        = 'Trial recurring frequency:';
 $_['entry_trial_cycle']       = 'Trial recurring cycles:<span class="help">How often it is billed, must be 1 or more.</span>';
 $_['entry_trial_length']      = 'Trial recurring length:';
 
-$_['text_length_day']         = 'Day';
-$_['text_length_week']        = 'Week';
-$_['text_length_month']       = 'Month';
-$_['text_length_month_semi']  = 'Semi Month';
-$_['text_length_year']        = 'Year';
+$_['text_length_day']         = 'Ден';
+$_['text_length_week']        = 'Седмица';
+$_['text_length_month']       = 'Месец';
+$_['text_length_month_semi']  = 'Половин месец';
+$_['text_length_year']        = 'Година';
 
 // Error
 $_['error_permission']        = 'Warning: You do not have permission to modify <b>Products</b> !';
