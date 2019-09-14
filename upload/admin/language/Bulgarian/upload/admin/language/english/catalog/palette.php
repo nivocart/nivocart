@@ -9,17 +9,17 @@ $_['text_info']        = '<b>Setup color palettes for the product pages.</b><br 
 
 // Column
 $_['column_name']      = 'Palette Name';
-$_['column_colors']    = 'Colors';
-$_['column_action']    = 'Action';
+$_['column_colors']    = 'Цветове';
+$_['column_action']    = 'Действие';
 
 // Entry
 $_['entry_name']       = 'Palette Name:';
-$_['entry_title']      = 'Color Title';
+$_['entry_title']      = 'Цвят на заглавие';
 $_['entry_color']      = 'Hexadecimal Color';
 $_['entry_skin']       = 'Search Group';
 
 // Button
-$_['button_info']      = 'Information';
+$_['button_info']      = 'Информация';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify <b>Palettes</b> !';
