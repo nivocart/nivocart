@@ -1,16 +1,16 @@
 <?php
 // Heading
-$_['heading_title']       = 'Payments';
+$_['heading_title']       = 'Плащания';
 
 // Text
 $_['text_success']        = 'Success: You have modified <b>Payments</b> !';
-$_['text_image_manager']  = 'File Manager';
-$_['text_browse']         = 'Browse';
-$_['text_clear']          = 'Clear';
+$_['text_image_manager']  = 'Управител на файлове';
+$_['text_browse']         = 'Разглеждане';
+$_['text_clear']          = 'Изчистване';
 
 // Column
-$_['column_image']        = 'Image';
-$_['column_name']         = 'Name';
+$_['column_image']        = 'Изображение';
+$_['column_name']         = 'Име';
 $_['column_method']       = 'Payment Status';
 $_['column_status']       = 'Image Status';
 $_['column_action']       = 'Action';
