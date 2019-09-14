@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']      = 'Geo Zones';
+$_['heading_title']      = 'Гео зони';
 
 // Text
 $_['text_success']       = 'Success: You have modified <b>Geo Zones</b> !';
