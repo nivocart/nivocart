@@ -1,15 +1,15 @@
 <?php
 // Heading
-$_['heading_title']        = 'Currency';
+$_['heading_title']        = 'Валута';
 
 // Text
 $_['text_success']         = 'Success: You have modified <b>Currencies</b> !';
 
 // Column
 $_['column_title']         = 'Currency Title';
-$_['column_code']          = 'Code';
+$_['column_code']          = 'Код';
 $_['column_status']        = 'Status';
-$_['column_value']         = 'Value';
+$_['column_value']         = 'Стойност';
 $_['column_date_modified'] = 'Last Update';
 $_['column_action']        = 'Action';
 
@@ -20,7 +20,7 @@ $_['entry_value']          = 'Value:<span class="help">Set to 1.00000 if this is
 $_['entry_symbol_left']    = 'Symbol Left:';
 $_['entry_symbol_right']   = 'Symbol Right:';
 $_['entry_decimal_place']  = 'Decimal Places:';
-$_['entry_status']         = 'Status:';
+$_['entry_status']         = 'Състояние:';
 
 // Help
 $_['help_currencies']      = 'Latest currency rates will be available daily at 12:01 GMT.';
