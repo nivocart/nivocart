@@ -10,9 +10,9 @@ $_['text_update_success']    = 'Success: You have modified a <b>Menu Item</b> !'
 $_['text_delete_success']    = 'Success: You have Deleted a <b>Menu Item</b> !';
 $_['text_enabled']           = 'Enabled';
 $_['text_disabled']          = 'Disabled';
-$_['text_yes']               = 'Yes';
-$_['text_no']                = 'No';
-$_['text_menu']              = 'Menus';
+$_['text_yes']               = 'Да';
+$_['text_no']                = 'Не';
+$_['text_menu']              = 'Менюта';
 $_['text_separator']         = ' > ';
 $_['text_info']              = 'Click <a class="colorbox" href="%s" title="List of internal links"><b>Here</b></a> to see a list of internal links.';
 
@@ -20,24 +20,24 @@ $_['text_info']              = 'Click <a class="colorbox" href="%s" title="List 
 $_['column_name']            = 'Menu Item Name';
 $_['column_external']        = 'External Link';
 $_['column_sort_order']      = 'Sort Order';
-$_['column_status']          = 'Status';
-$_['column_action']          = 'Action';
+$_['column_status']          = 'Състояние';
+$_['column_action']          = 'Действие';
 
 // Entry
 $_['entry_name']             = 'Menu Item Name:';
 $_['entry_meta_description'] = 'Meta Tag Description:<span class="help">The optimal number of characters is around 155, including spaces.<br />SEO importance: High.</span>';
 $_['entry_meta_keyword']     = 'Meta Tag Keywords:<span class="help">Usually ignored by search engines.<br />SEO importance: Low.</span>';
-$_['entry_parent']           = 'Parent Menu:';
+$_['entry_parent']           = 'Родителско меню:';
 $_['entry_link']             = 'Menu Item Link:<span class="help">External links require a complete Url, including the "http://". Leave empty if a link is not needed.</span>';
 $_['entry_external_link']    = 'External Link:<span class="help">Must be selected if the link is External.</span>';
 $_['entry_sort_order']       = 'Sort Order:';
-$_['entry_status']           = 'Status:';
+$_['entry_status']           = 'Състояние:';
 
 // Info
-$_['info_title']             = 'List of internal links';
+$_['info_title']             = 'Списък с външните препратки';
 
 // Button
-$_['button_back']            = 'Menus';
+$_['button_back']            = 'Менюта';
 
 // Error
 $_['error_permission']       = 'Warning: You do not have permission to modify <b>Menu Items</b> !';
