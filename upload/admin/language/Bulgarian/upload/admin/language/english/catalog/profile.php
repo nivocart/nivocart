@@ -43,5 +43,5 @@ $_['button_info']           = 'Информация';
 
 // Error
 $_['error_warning']         = 'Внимание: Проверете си внимателно формуляра за грешки!';
-$_['error_permission']      = 'Warning: You do not have permission to modify <b>Profiles</b> !';
-$_['error_name']            = 'Profile Name must be greater than 3 and less than 255 characters!';
+$_['error_permission']      = 'Внимание: Нямате права да променяте <b>профили</b>!';
+$_['error_name']            = 'Името на профила трябва да бъде по-голямо от 3 и по-малко от 255 знака!';
