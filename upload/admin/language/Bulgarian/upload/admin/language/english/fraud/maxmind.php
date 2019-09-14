@@ -8,9 +8,9 @@ $_['text_success']                            = 'Success: You have modified <b>M
 $_['text_edit']                               = 'Edit';
 $_['text_signup']                             = 'MaxMind is a fraud detection service. If you don\'t have a license key you can <a onclick="window.open(\'http://www.maxmind.com/?rId=opencart\');"><u>sign up here</u></a>.';
 $_['text_country_match']                      = 'Country Match:';
-$_['text_country_code']                       = 'Country Code:';
+$_['text_country_code']                       = 'Код на държавата:';
 $_['text_high_risk_country']                  = 'High Risk Country:';
-$_['text_distance']                           = 'Distance:';
+$_['text_distance']                           = 'Разстояние:';
 $_['text_ip_region']                          = 'IP Region:';
 $_['text_ip_city']                            = 'IP City:';
 $_['text_ip_latitude']                        = 'IP Latitude:';
@@ -56,13 +56,13 @@ $_['text_explanation']                        = 'Explanation:';
 $_['text_risk_score']                         = 'Risk Score:';
 $_['text_queries_remaining']                  = 'Queries Remaining:';
 $_['text_maxmind_id']                         = 'Maxmind ID:';
-$_['text_error']                              = 'Error:';
+$_['text_error']                              = 'Грешка:';
 
 // Entry
 $_['entry_key']                               = 'MaxMind License Key';
 $_['entry_score']                             = 'Risk Score<span class="help">The higher the score the more likely the order is fraudulent. Set a score between 0 - 100.</span>';
 $_['entry_order_status']                      = 'Order Status<span class="help">Orders that have a score over your set risk score will be assigned this order status and will not be allowed to reach the complete status automatically.</span>';
-$_['entry_status']                            = 'Status';
+$_['entry_status']                            = 'Състояние';
 
 // Help
 $_['help_country_match']                      = 'Whether country of IP address matches billing address country (mismatch = higher risk).';
