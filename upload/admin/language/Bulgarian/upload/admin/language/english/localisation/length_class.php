@@ -8,8 +8,8 @@ $_['text_success']     = 'Success: You have modified <b>Length Classes</b> !';
 // Column
 $_['column_title']     = 'Length Title';
 $_['column_unit']      = 'Length Unit';
-$_['column_value']     = 'Value';
-$_['column_action']    = 'Action';
+$_['column_value']     = 'Стойност';
+$_['column_action']    = 'Действие';
 
 // Entry
 $_['entry_title']      = 'Length Title:';
