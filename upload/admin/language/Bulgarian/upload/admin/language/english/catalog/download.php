@@ -1,24 +1,24 @@
 <?php
 // Heading
-$_['heading_title']        = 'Downloads';
+$_['heading_title']        = 'Тегления';
 
 // Text
-$_['text_success']         = 'Success: You have modified <b>Downloads</b> !';
+$_['text_success']         = 'Готово: Успешно модифицирахте <b>тегленията</b> !';
 $_['text_upload']          = 'Your file was successfully uploaded!';
 $_['text_upload_limit']    = 'Maximum File Size set in store Settings is: %s bytes.';
 
 // Column
 $_['column_name']          = 'Download Name';
-$_['column_filetype']      = 'File Type';
-$_['column_filesize']      = 'File Size';
-$_['column_remaining']     = 'Total Downloads Allowed';
-$_['column_action']        = 'Action';
+$_['column_filetype']      = 'Вид на файла';
+$_['column_filesize']      = 'Големина на файла';
+$_['column_remaining']     = 'Общо позволени сваляния';
+$_['column_action']        = 'Действие';
 
 // Entry
 $_['entry_name']           = 'Download Name:';
-$_['entry_filename']       = 'File:';
-$_['entry_mask']           = 'Mask:';
-$_['entry_remaining']      = 'Total Downloads Allowed:';
+$_['entry_filename']       = 'Файл:';
+$_['entry_mask']           = 'Маска:';
+$_['entry_remaining']      = 'Общо позволени сваляния:';
 $_['entry_update']         = 'Push to Previous Customers:';
 
 // Help
