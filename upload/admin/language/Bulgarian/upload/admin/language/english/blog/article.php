@@ -52,11 +52,11 @@ $_['entry_product_wise']           = 'Product Wise';
 $_['entry_related_article_name']   = 'Article Name:<span class="help">(Autocomplete)</span>';
 
 // Error
-$_['error_warning']                = 'Warning: Please check the form carefully for errors!';
-$_['error_permission']             = 'Warning: You do not have permission to modify article!';
+$_['error_warning']                = 'Внимание: Проверете си внимателно формуляра за грешки!';
+$_['error_permission']             = 'Внимание: Нямате права да променяте статията!';
 $_['error_title']                  = 'Article Title must be greater than 3 and less than 100 characters!';
-$_['error_title_found']            = 'Article Title already exists, article title must be unique!';
-$_['error_description']            = 'Description must be greater than 3 characters!';
+$_['error_title_found']            = 'Заглавието на статията вече съществува, заглавието на статията трябва да е неповторимо!';
+$_['error_description']            = 'Описанието трябва да бъде повече от 3 символа!';
 $_['error_author_name']            = 'Името на автора не може да е празно!';
 $_['error_author_not_found_list']  = 'Авторът не е открит в списъка ни!';
 $_['error_author_not_found']       = 'Sorry Author not found in our list, please insert valid author name!';
