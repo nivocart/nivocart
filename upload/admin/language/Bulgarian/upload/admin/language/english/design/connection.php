@@ -18,7 +18,7 @@ $_['entry_backend']    = 'Администрация (админ):';
 $_['entry_frontend']   = 'Store Front (Catalog):';
 $_['entry_icon']       = 'Икона';
 $_['entry_title']      = 'Заглавие';
-$_['entry_route']      = 'Address (Url)';
+$_['entry_route']      = 'Адрес (Url)';
 
 // Button
 $_['button_module']    = 'Module Links';
