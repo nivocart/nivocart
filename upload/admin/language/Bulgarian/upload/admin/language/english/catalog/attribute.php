@@ -1,12 +1,12 @@
 <?php
 // Heading
-$_['heading_title']          = 'Attributes';
+$_['heading_title']          = 'Атрибути';
 
 // Text
-$_['text_success']           = 'Success: You have modified <b>Attributes</b> !';
+$_['text_success']           = 'Готово: Успешно модифицирахте <b>атрибутите</b> !';
 
 // Column
-$_['column_name']            = 'Attribute Name';
+$_['column_name']            = 'Име на атрибута';
 $_['column_attribute_group'] = 'Attribute Group';
 $_['column_sort_order']      = 'Sort Order';
 $_['column_action']          = 'Action';
