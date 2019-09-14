@@ -9,12 +9,12 @@ $_['text_email']      = 'Enter the Email address associated with your account. C
 $_['text_success']    = 'An Email with a confirmation link has been sent to your admin email address.';
 
 // Entry
-$_['entry_email']     = 'Email Address:';
-$_['entry_password']  = 'New Password:';
-$_['entry_confirm']   = 'Confirm:';
+$_['entry_email']     = 'Имейл адрес:';
+$_['entry_password']  = 'Нова парола:';
+$_['entry_confirm']   = 'Потвърждаване:';
 
 // Error
 $_['error_email']     = 'Email Address does not appear to be valid!';
 $_['error_record']    = 'Email Address was not found in our records, please try again!';
 $_['error_password']  = 'Password must be between 3 and 20 characters!';
-$_['error_confirm']   = 'Password and password confirmation do not match!';
+$_['error_confirm']   = 'Паролата и потвърждаването на паролата не съвпаднаха!';
