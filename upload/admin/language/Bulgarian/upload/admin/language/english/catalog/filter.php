@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']     = 'Filters';
+$_['heading_title']     = 'Филтри';
 
 // Text
 $_['text_success']      = 'Success: You have modified <b>Filters</b> !';
@@ -8,11 +8,11 @@ $_['text_success']      = 'Success: You have modified <b>Filters</b> !';
 // Column
 $_['column_group']      = 'Filter Group';
 $_['column_sort_order'] = 'Sort Order';
-$_['column_action']     = 'Action';
+$_['column_action']     = 'Действие';
 
 // Entry
 $_['entry_group']       = 'Filter Group Name:';
-$_['entry_name']        = 'Filter Name:';
+$_['entry_name']        = 'Име на филтър:';
 $_['entry_sort_order']  = 'Sort Order:';
 
 // Error
