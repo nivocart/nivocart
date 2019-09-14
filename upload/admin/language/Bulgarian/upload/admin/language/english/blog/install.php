@@ -1,10 +1,10 @@
 <?php
 // Heading
-$_['heading_title']        = 'Install';
+$_['heading_title']        = 'Инсталиране';
 
 // Text
 $_['text_install_message'] = 'Missing Database Tables!';
 $_['text_upgrade']         = 'Go to "modification/blog" to Install';
 
 // Error
-$_['error_database']       = 'Database Not Found!';
+$_['error_database']       = 'Няма намерена база от данни!';
