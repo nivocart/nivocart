@@ -29,9 +29,9 @@ $_['entry_name']            = 'Име:';
 $_['entry_sort_order']      = 'Sort Order:';
 $_['entry_status']          = 'Състояние:';
 $_['entry_price']           = 'Цена:';
-$_['entry_duration']        = 'Duration:';
-$_['entry_cycle']           = 'Cycle:';
-$_['entry_frequency']       = 'Frequency:';
+$_['entry_duration']        = 'Времетраене:';
+$_['entry_cycle']           = 'Цикъл:';
+$_['entry_frequency']       = 'Честота:';
 $_['entry_trial_status']    = 'Trial status:';
 $_['entry_trial_price']     = 'Trial price:';
 $_['entry_trial_duration']  = 'Trial duration:';
@@ -39,9 +39,9 @@ $_['entry_trial_cycle']     = 'Trial cycle:';
 $_['entry_trial_frequency'] = 'Trial frequency:';
 
 // Button
-$_['button_info']           = 'Information';
+$_['button_info']           = 'Информация';
 
 // Error
-$_['error_warning']         = 'Warning: Please check the form carefully for errors!';
+$_['error_warning']         = 'Внимание: Проверете си внимателно формуляра за грешки!';
 $_['error_permission']      = 'Warning: You do not have permission to modify <b>Profiles</b> !';
 $_['error_name']            = 'Profile Name must be greater than 3 and less than 255 characters!';
