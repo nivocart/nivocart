@@ -6,11 +6,11 @@ $_['heading_title']       = 'Blog Viewed Report';
 $_['text_success']        = 'Success: You have modified Blog Viewed report!';
 
 // Column
-$_['column_article_name'] = 'Article Name';
-$_['column_author_name']  = 'Author Name';
-$_['column_viewed']       = 'Viewed';
-$_['column_percent']      = 'Percent';
+$_['column_article_name'] = 'Име на статия';
+$_['column_author_name']  = 'Име на автора';
+$_['column_viewed']       = 'Прегледано';
+$_['column_percent']      = 'Процент';
 
 // Entry
-$_['entry_date_start']    = 'Date Start:';
-$_['entry_date_end']      = 'Date End:';
+$_['entry_date_start']    = 'Начална дата:';
+$_['entry_date_end']      = 'Крайна дата:';
