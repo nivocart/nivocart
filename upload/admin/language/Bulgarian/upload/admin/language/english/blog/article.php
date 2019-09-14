@@ -1,10 +1,10 @@
 <?php
 // Heading
-$_['heading_title']                = 'Blog Article';
+$_['heading_title']                = 'Блогова статия';
 
 // Text
-$_['text_success']                 = 'Success: You have modified Blog articles!';
-$_['text_browse']                  = 'Browse';
+$_['text_success']                 = 'Готово: Успешно модифицирахте блогови статии!';
+$_['text_browse']                  = 'Разглеждане';
 $_['text_clear']                   = 'Изчистване';
 $_['text_default']                 = 'Default';
 $_['text_image_manager']           = 'Управител на файлове';
@@ -17,7 +17,7 @@ $_['button_add_articles']          = 'Добавяне на статия';
 $_['column_article_title']         = 'Заглавие на статия';
 $_['column_author_name']           = 'Име на автора';
 $_['column_sort_order']            = 'Sort Order';
-$_['column_status']                = 'Status';
+$_['column_status']                = 'Състояние';
 $_['column_date_added']            = 'Дата на добавяне';
 $_['column_action']                = 'Действие';
 
@@ -36,7 +36,7 @@ $_['entry_allow_comment']          = 'Allow comments for this article:';
 $_['entry_keyword']                = 'SEO Keyword:<span class="help">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>';
 $_['entry_image']                  = 'Image:<span class="help">Main article image.</span>';
 $_['entry_sort_order']             = 'Sort Order:';
-$_['entry_status']                 = 'Status:';
+$_['entry_status']                 = 'Състояние:';
 $_['entry_category']               = 'Категория:';
 $_['entry_manufacturer']           = 'Производител:';
 $_['entry_product']                = 'Продукт:';
@@ -58,6 +58,6 @@ $_['error_title']                  = 'Article Title must be greater than 3 and l
 $_['error_title_found']            = 'Article Title already exists, article title must be unique!';
 $_['error_description']            = 'Description must be greater than 3 characters!';
 $_['error_author_name']            = 'Името на автора не може да е празно!';
-$_['error_author_not_found_list']  = 'Author not found in our list!';
+$_['error_author_not_found_list']  = 'Авторът не е открит в списъка ни!';
 $_['error_author_not_found']       = 'Sorry Author not found in our list, please insert valid author name!';
 $_['error_article_related']        = 'Warning: You can not delete article because currently it relate %s articles!';
