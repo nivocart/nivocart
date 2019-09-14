@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']         = 'Profiles';
+$_['heading_title']         = 'Профили';
 
 // Text
 $_['text_success']          = 'Success: You have modified <b>Profiles</b> !';
@@ -10,25 +10,25 @@ $_['text_enabled']          = 'Enabled';
 $_['text_disabled']         = 'Disabled';
 
 $_['text_day']              = 'Day';
-$_['text_week']             = 'Week';
+$_['text_week']             = 'Седмица';
 $_['text_semi_month']       = 'Semi Month';
-$_['text_month']            = 'Month';
-$_['text_year']             = 'Year';
+$_['text_month']            = 'Месец';
+$_['text_year']             = 'Година';
 
 // Help
 $_['text_recurring_help']   = 'Recurring amounts are calculated by the frequency and cycles.<br />For example, if you use a frequency of "week" and a cycle of "2", then the user will be billed every 2 weeks.<br />The duration is the number of times the user will make a payment, set this to 0 if you want payments until they are cancelled.<br />Please note that Paypal Express Checkout payment method must be setup to receive profile payments.';
 
 // Column
-$_['column_name']           = 'Name';
-$_['column_status']         = 'Status';
+$_['column_name']           = 'Име';
+$_['column_status']         = 'Състояние';
 $_['column_sort_order']     = 'Sort Order';
-$_['column_action']         = 'Action';
+$_['column_action']         = 'Действие';
 
 // Entry
-$_['entry_name']            = 'Name:';
+$_['entry_name']            = 'Име:';
 $_['entry_sort_order']      = 'Sort Order:';
-$_['entry_status']          = 'Status:';
-$_['entry_price']           = 'Price:';
+$_['entry_status']          = 'Състояние:';
+$_['entry_price']           = 'Цена:';
 $_['entry_duration']        = 'Duration:';
 $_['entry_cycle']           = 'Cycle:';
 $_['entry_frequency']       = 'Frequency:';
