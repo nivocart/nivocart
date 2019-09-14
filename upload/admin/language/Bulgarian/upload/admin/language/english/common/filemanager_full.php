@@ -1,11 +1,11 @@
 <?php
 // Heading
-$_['heading_title']       = 'File Manager';
-$_['heading_info']        = 'About File Manager';
+$_['heading_title']       = 'Управител на файлове';
+$_['heading_info']        = 'За управителя на файлове';
 
 // Text
 $_['text_uploaded']       = 'Success: Your file has been uploaded!';
-$_['text_file_delete']    = 'File has been deleted!';
+$_['text_file_delete']    = 'Файлът е изтрит!';
 $_['text_create']         = 'Success: Directory created!';
 $_['text_delete']         = 'Success: Your file or directory has been deleted!';
 $_['text_move']           = 'Success: Your file or directory has been moved!';
@@ -13,10 +13,10 @@ $_['text_copy']           = 'Success: Your file or directory has been copied!';
 $_['text_rename']         = 'Success: Your file or directory has been renamed!';
 
 // Entry
-$_['entry_folder']        = 'New Folder:';
-$_['entry_move']          = 'Move:';
-$_['entry_copy']          = 'Copy:';
-$_['entry_rename']        = 'Rename:';
+$_['entry_folder']        = 'Добавяне на нова папка:';
+$_['entry_move']          = 'Преместване:';
+$_['entry_copy']          = 'Копиране:';
+$_['entry_rename']        = 'Преименуване:';
 
 // Message
 $_['text_loading']        = 'Loading ...';
@@ -56,33 +56,33 @@ $_['error_uploaded']      = 'Warning: File could not be uploaded for an unknown 
 $_['error_permission']    = 'Warning: Permission Denied!';
 
 // Button
-$_['button_exit']         = 'Close';
+$_['button_exit']         = 'Затваряне';
 $_['button_folder']       = 'New Folder';
-$_['button_delete']       = 'Delete';
-$_['button_move']         = 'Move';
-$_['button_copy']         = 'Copy';
-$_['button_rename']       = 'Rename';
-$_['button_upload']       = 'Upload';
-$_['button_refresh']      = 'Refresh';
-$_['button_info']         = 'Info';
-$_['button_expand']       = 'Expand Tree';
-$_['button_collapse']     = 'Collapse Tree';
+$_['button_delete']       = 'Изтриване';
+$_['button_move']         = 'Преместване';
+$_['button_copy']         = 'Копиране';
+$_['button_rename']       = 'Преименуване';
+$_['button_upload']       = 'Качване';
+$_['button_refresh']      = 'Опресняване';
+$_['button_info']         = 'Инфо';
+$_['button_expand']       = 'Разгъване на дървото';
+$_['button_collapse']     = 'Сгъване на дървото';
 $_['button_view_text']    = 'Text View';
 $_['button_view_list']    = 'List View';
 $_['button_view_thumb']   = 'Thumb View';
 
 // Info
 $_['info_title']          = 'File Manager - NivoCart';
-$_['info_copyright']      = 'Copyright &copy; ' . date('Y') . ' - All rights reserved';
+$_['info_copyright']      = 'Авторско право &copy; ' . date('Y') . ' - Всички права запазени';
 
-$_['text_info_version']   = 'Version:';
-$_['text_info_author']    = 'Author:';
+$_['text_info_version']   = 'Версия:';
+$_['text_info_author']    = 'Автор:';
 $_['text_info_credit']    = 'Credits:';
-$_['text_info_scripts']   = 'Scripts:';
-$_['text_info_license']   = 'License:';
-$_['text_info_files']     = 'Formats:';
+$_['text_info_scripts']   = 'Скриптове:';
+$_['text_info_license']   = 'Лиценз:';
+$_['text_info_files']     = 'Формати:';
 
-$_['info_version']        = 'v2.0.0';
+$_['info_version']        = 'вер. 2.0.0';
 $_['info_author']         = 'Nivocart (contact@nivocart.com)';
 $_['info_credit']         = 'Kay Lohn (Original script), Dhaupin (Performance).';
 $_['info_scripts']        = 'jsTree v0.9.9a and Plupload v2.3.6.';
