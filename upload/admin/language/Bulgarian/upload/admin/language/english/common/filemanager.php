@@ -1,7 +1,7 @@
 <?php
 // Heading
-$_['heading_title']       = 'File Manager';
-$_['heading_info']        = 'About File Manager';
+$_['heading_title']       = 'Управител на файлове';
+$_['heading_info']        = 'За управителя на файлове';
 
 // Text
 $_['text_uploaded']       = 'Success: Your file has been uploaded!';
