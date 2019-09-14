@@ -6,21 +6,21 @@ $_['heading_title']                 = 'Blog Comment';
 $_['text_success']                  = 'Success: You have modified Blog Comments!';
 
 // Tab
-$_['tab_comment']                   = 'Comment';
+$_['tab_comment']                   = 'Коментар';
 
 // Column
-$_['column_article_title']          = 'Article Title';
-$_['column_author_name']            = 'Author Name';
-$_['column_status']                 = 'Status';
-$_['column_date_added']             = 'Date Added';
-$_['column_action']                 = 'Action';
+$_['column_article_title']          = 'Заглавие на статия';
+$_['column_author_name']            = 'Име на автора';
+$_['column_status']                 = 'Състояние';
+$_['column_date_added']             = 'Дата на добавяне';
+$_['column_action']                 = 'Действие';
 
 // Entry
-$_['entry_author']                  = 'Author Name:';
+$_['entry_author']                  = 'Име на автора:';
 $_['entry_article']                 = 'Article Name:<span class="help">(Autocomplete)</span>';
-$_['entry_status']                  = 'Status:';
-$_['entry_comment']                 = 'Comment:';
-$_['entry_reply_comment']           = 'Reply:';
+$_['entry_status']                  = 'Състояние:';
+$_['entry_comment']                 = 'Коментар:';
+$_['entry_reply_comment']           = 'Отговор:';
 
 // Button
 $_['button_add_reply']              = 'Add Comment Reply';
