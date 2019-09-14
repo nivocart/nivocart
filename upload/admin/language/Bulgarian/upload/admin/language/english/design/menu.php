@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']       = 'Menus';
+$_['heading_title']       = 'Менюта';
 
 // Text
 $_['text_insert_success'] = 'Success: Your <b>Menu</b> has been Created !';
