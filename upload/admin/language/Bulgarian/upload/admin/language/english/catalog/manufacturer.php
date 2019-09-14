@@ -1,18 +1,18 @@
 <?php
 // Heading
-$_['heading_title']      = 'Manufacturer';
+$_['heading_title']      = 'Производител';
 
 // Text
 $_['text_success']       = 'Success: You have modified <b>Manufacturers</b> !';
 $_['text_default']       = 'Default';
-$_['text_image_manager'] = 'File Manager';
-$_['text_browse']        = 'Browse';
-$_['text_clear']         = 'Clear';
+$_['text_image_manager'] = 'Управител на файлове';
+$_['text_browse']        = 'Разглеждане';
+$_['text_clear']         = 'Изчистване';
 
 // Column
-$_['column_id']          = 'ID';
-$_['column_image']       = 'Image';
-$_['column_name']        = 'Manufacturer\'s Name';
+$_['column_id']          = 'Ид. №';
+$_['column_image']       = 'Изображение';
+$_['column_name']        = 'Име на производителя';
 $_['column_sort_order']  = 'Sort Order';
 $_['column_status']      = 'Status';
 $_['column_action']      = 'Action';
