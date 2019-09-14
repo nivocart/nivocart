@@ -1,17 +1,17 @@
 <?php
 // Heading
-$_['heading_title']     = 'Payments';
+$_['heading_title']     = 'Плащания';
 
 // Text
-$_['text_install']      = 'Install';
-$_['text_uninstall']    = 'Uninstall';
+$_['text_install']      = 'Инсталиране';
+$_['text_uninstall']    = 'Деинсталиране';
 $_['text_is_recurring'] = 'Accepts recurring transactions';
 
 // Column
-$_['column_name']       = 'Payment Method';
-$_['column_status']     = 'Status';
+$_['column_name']       = 'Начин на плащане';
+$_['column_status']     = 'Състояние';
 $_['column_sort_order'] = 'Sort Order';
-$_['column_action']     = 'Action';
+$_['column_action']     = 'Действие';
 
 // Button
 $_['button_images']     = 'Payment Images';
