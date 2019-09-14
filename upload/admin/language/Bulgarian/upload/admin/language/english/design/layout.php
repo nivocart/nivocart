@@ -4,17 +4,17 @@ $_['heading_title']     = 'Layouts';
 
 // Text
 $_['text_success']      = 'Success: You have modified <b>Layouts</b> !';
-$_['text_default']      = 'Default';
+$_['text_default']      = 'По подразбиране';
 
 // Column
 $_['column_name']       = 'Layout Name';
-$_['column_routes']     = 'Routes';
-$_['column_action']     = 'Action';
+$_['column_routes']     = 'Маршрути';
+$_['column_action']     = 'Действие';
 
 // Entry
 $_['entry_name']        = 'Layout Name:';
-$_['entry_store']       = 'Store';
-$_['entry_route']       = 'Route';
+$_['entry_store']       = 'Магазин';
+$_['entry_route']       = 'Маршрут';
 
 // Error
 $_['error_permission']  = 'Warning: You do not have permission to modify <b>Layouts</b> !';
