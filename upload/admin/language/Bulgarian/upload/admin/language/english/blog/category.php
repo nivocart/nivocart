@@ -19,14 +19,14 @@ $_['column_action']          = 'Action';
 $_['entry_name']             = 'Category Name:';
 $_['entry_meta_description'] = 'Meta Tag Description:<span class="help">The optimal number of characters is around 155, including spaces.<br />SEO importance: High.</span>';
 $_['entry_meta_keyword']     = 'Meta Tag Keywords:<span class="help">Usually ignored by search engines.<br />SEO importance: Low.</span>';
-$_['entry_description']      = 'Description:';
-$_['entry_parent']           = 'Parent Category:';
-$_['entry_store']            = 'Stores:';
+$_['entry_description']      = 'Описание:';
+$_['entry_parent']           = 'Родителска категория:';
+$_['entry_store']            = 'Магазини:';
 $_['entry_keyword']          = 'SEO Keyword:<span class="help">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>';
-$_['entry_image']            = 'Image:';
+$_['entry_image']            = 'Изображение:';
 $_['entry_article_limit']    = 'Article limit per page:<span class="help">Number of articles displayed on page in this category.</span>';
 $_['entry_sort_order']       = 'Sort Order:';
-$_['entry_status']           = 'Status:';
+$_['entry_status']           = 'Състояние:';
 $_['entry_layout']           = 'Layout Override:';
 
 // Error
