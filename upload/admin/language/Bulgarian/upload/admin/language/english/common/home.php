@@ -1,22 +1,22 @@
 <?php
 // Heading
-$_['heading_title']                 = 'Dashboard';
+$_['heading_title']                 = 'Табло';
 
 // Text
-$_['text_overview']                 = 'Overview';
-$_['text_statistics']               = 'Statistics';
-$_['text_latest']                   = 'Latest Activity';
+$_['text_overview']                 = 'Общ преглед';
+$_['text_statistics']               = 'Статистика';
+$_['text_latest']                   = 'Последна активност';
 $_['text_order_today']              = 'Orders';
-$_['text_customer_today']           = 'Customers';
-$_['text_sale_today']               = 'Sales';
-$_['text_online']                   = 'Online';
-$_['text_total_sale']               = 'Total Sales:';
-$_['text_total_sale_year']          = 'Total Sales This Year:';
-$_['text_total_sale_month']         = 'Total Sales This Month:';
-$_['text_total_order']              = 'Total Orders:';
-$_['text_total_customer']           = 'Total Customers:';
+$_['text_customer_today']           = 'Клиенти';
+$_['text_sale_today']               = 'Продажби';
+$_['text_online']                   = 'Онлайн';
+$_['text_total_sale']               = 'Общо продажби:';
+$_['text_total_sale_year']          = 'Общо тазгодишните продажби:';
+$_['text_total_sale_month']         = 'Общо тазмесечните продажби:';
+$_['text_total_order']              = 'Общо поръчки:';
+$_['text_total_customer']           = 'Общо клиенти:';
 $_['text_total_customer_approval']  = 'Customers Awaiting Approval:';
-$_['text_total_review']             = 'Total Reviews:';
+$_['text_total_review']             = 'Общо отзиви:';
 $_['text_total_review_approval']    = 'Reviews Awaiting Approval:';
 $_['text_total_affiliate']          = 'Total Affiliates:';
 $_['text_total_affiliate_approval'] = 'Affiliates Awaiting Approval:';
@@ -54,32 +54,32 @@ $_['tab_upload']                    = 'Uploads';
 $_['column_order']                  = 'Order ID';
 $_['column_customer']               = 'Customer';
 $_['column_conversion']             = 'Cart Conversion Rate';
-$_['column_date_added']             = 'Date Added';
-$_['column_status']                 = 'Status';
+$_['column_date_added']             = 'Дата на добавяне';
+$_['column_status']                 = 'Състояние';
 $_['column_total']                  = 'Total';
 $_['column_firstname']              = 'First Name';
 $_['column_lastname']               = 'Last Name';
-$_['column_name']                   = 'Name';
-$_['column_email']                  = 'Email';
+$_['column_name']                   = 'Име';
+$_['column_email']                  = 'Имейл';
 $_['column_customer_group']         = 'Customer Group';
 $_['column_orders_passed']          = 'Passed Orders';
 $_['column_orders_missed']          = 'Missed Orders';
-$_['column_product']                = 'Product';
-$_['column_author']                 = 'Author';
-$_['column_rating']                 = 'Rating';
+$_['column_product']                = 'Продукт';
+$_['column_author']                 = 'Автор';
+$_['column_rating']                 = 'Оценка';
 $_['column_rating_total']           = 'Reviews Total';
 $_['column_affiliate']              = 'Affiliate';
-$_['column_tracking']               = 'Code';
+$_['column_tracking']               = 'Код';
 $_['column_balance']                = 'Balance';
-$_['column_approved']               = 'Approved';
+$_['column_approved']               = 'Одобрено';
 $_['column_return_id']              = 'Return ID';
-$_['column_return_history']         = 'History';
+$_['column_return_history']         = 'История';
 $_['column_upload_id']              = 'Upload ID';
-$_['column_filename']               = 'Filename';
-$_['column_action']                 = 'Action';
+$_['column_filename']               = 'Име на файл';
+$_['column_action']                 = 'Действие';
 
 // Entry
-$_['entry_range']                   = 'Select Range:';
+$_['entry_range']                   = 'Избор на граница:';
 
 // Error
 $_['error_image']                   = 'Warning: Image directory %s not writeable!';
