@@ -46,40 +46,40 @@ $_['error_delete']        = 'Warning: You can not delete this directory!';
 $_['error_filename']      = 'Warning: Filename must be a between 3 and 255 characters!';
 $_['error_missing']       = 'Warning: File or directory does not exist!';
 $_['error_exists']        = 'Warning: A file or directory with the same name already exists!';
-$_['error_name']          = 'Warning: Please enter a new name!';
-$_['error_move']          = 'Warning: Move to directory does not exists!';
+$_['error_name']          = 'Внимание: Въведете друго име!';
+$_['error_move']          = 'Внимание: Преместването в директорията не съществува!';
 $_['error_copy']          = 'Warning: You can not copy this file or directory!';
 $_['error_rename']        = 'Warning: You can not rename this directory!';
-$_['error_file_type']     = 'Warning: Incorrect file type!';
+$_['error_file_type']     = 'Внимание: Неправилен тип на файла!';
 $_['error_file_size']     = 'Warning: File too big! please keep below 2000kb and no more than 1000px height or width!';
 $_['error_uploaded']      = 'Warning: File could not be uploaded for an unknown reason!';
 $_['error_permission']    = 'Warning: Permission Denied!';
 
 // Button
-$_['button_folder']       = 'New Folder';
-$_['button_delete']       = 'Delete';
-$_['button_move']         = 'Move';
-$_['button_copy']         = 'Copy';
-$_['button_rename']       = 'Rename';
-$_['button_upload']       = 'Upload';
-$_['button_refresh']      = 'Refresh';
-$_['button_info']         = 'Info';
-$_['button_expand']       = 'Expand Tree';
-$_['button_collapse']     = 'Collapse Tree';
+$_['button_folder']       = 'Добавяне на нова папка';
+$_['button_delete']       = 'Изтриване';
+$_['button_move']         = 'Преместване';
+$_['button_copy']         = 'Копиране';
+$_['button_rename']       = 'Преименуване';
+$_['button_upload']       = 'Качване';
+$_['button_refresh']      = 'Опресняване';
+$_['button_info']         = 'Инфо';
+$_['button_expand']       = 'Разгъване на дървото';
+$_['button_collapse']     = 'Сгъване на дървото';
 $_['button_view_text']    = 'Text View';
 $_['button_view_list']    = 'List View';
 $_['button_view_thumb']   = 'Thumb View';
 
 // Info
-$_['info_title']          = 'File Manager - NivoCart';
-$_['info_copyright']      = 'Copyright &copy; ' . date('Y') . ' - All rights reserved';
+$_['info_title']          = 'Управител на файлове - NivoCart';
+$_['info_copyright']      = 'Авторско право &copy; ' . date('Y') . ' - Всички права запазени';
 
-$_['text_info_version']   = 'Version:';
-$_['text_info_author']    = 'Author:';
+$_['text_info_version']   = 'Версия:';
+$_['text_info_author']    = 'Автор:';
 $_['text_info_credit']    = 'Credits:';
-$_['text_info_scripts']   = 'Scripts:';
-$_['text_info_license']   = 'License:';
-$_['text_info_files']     = 'Formats:';
+$_['text_info_scripts']   = 'Скриптове:';
+$_['text_info_license']   = 'Лиценз:';
+$_['text_info_files']     = 'Формати:';
 
 $_['info_version']        = 'v2.0.0';
 $_['info_author']         = 'Nivocart (contact@nivocart.com)';
