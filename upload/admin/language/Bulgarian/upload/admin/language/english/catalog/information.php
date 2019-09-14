@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']          = 'Information';
+$_['heading_title']          = 'Информация';
 
 // Text
 $_['text_success']           = 'Success: You have modified <b>Information</b> !';
@@ -10,18 +10,18 @@ $_['text_default']           = 'Default';
 $_['column_title']           = 'Information Title';
 $_['column_sort_order']      = 'Sort Order';
 $_['column_bottom']          = 'Footer';
-$_['column_status']          = 'Status';
-$_['column_action']          = 'Action';
+$_['column_status']          = 'Състояние';
+$_['column_action']          = 'Действие';
 
 // Entry
 $_['entry_title']            = 'Information Title:';
 $_['entry_meta_description'] = 'Meta Tag Description:';
 $_['entry_meta_keyword']     = 'Meta Tag Keywords:';
 $_['entry_description']      = 'Description:';
-$_['entry_store']            = 'Stores:';
+$_['entry_store']            = 'Магазини:';
 $_['entry_keyword']          = 'SEO Keyword:';
 $_['entry_bottom']           = 'Bottom:';
-$_['entry_status']           = 'Status:';
+$_['entry_status']           = 'Състояние:';
 $_['entry_sort_order']       = 'Sort Order:';
 $_['entry_layout']           = 'Layout Override:';
 
