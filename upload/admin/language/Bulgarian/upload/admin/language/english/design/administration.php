@@ -15,7 +15,7 @@ $_['column_name']          = 'Stylesheet\'s Name';
 $_['column_status']        = 'Status';
 $_['column_date_added']    = 'Added';
 $_['column_date_modified'] = 'Modified';
-$_['column_action']        = 'Action';
+$_['column_action']        = 'Действие';
 
 // Entry
 $_['entry_name']           = 'Stylesheet\'s Name:';
@@ -25,8 +25,8 @@ $_['entry_contrast']       = 'Theme\'s Contrast:';
 $_['help_contrast']        = 'Select a contrast value for the secondary styles and scripts.';
 
 // Button
-$_['button_settings']      = 'Settings';
-$_['button_info']          = 'Information';
+$_['button_settings']      = 'Настройки';
+$_['button_info']          = 'Информация';
 
 
 // Error
