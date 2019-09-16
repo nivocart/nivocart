@@ -8,10 +8,13 @@ NivoCart v1.0.5 (Beta)
 Released: not yet!
 
 - CKEditor v4.12.1, with Accessibility Checker.
+- Cookie Consent button text underline. Style. Fix issue #22
+- Improved Admin user accounts management. Fix issue #21
 - jQuery UI timepicker addon update to v1.6.3. Fix issue #20
 - Admin order history/order status update. Bug. Fix issue #19
 - DomPDF updates to fix broken downloaded files. Fix issue #18
-- Re-instated mCrypt function for php 7.0.x support. Fix issue #16
+- Re-instated mCrypt function for Php 7.0.x support. Fix issue #16
+- Improved support for latest Php versions up to 7.3.8.
 - Minor language definitions changes.
 
 
