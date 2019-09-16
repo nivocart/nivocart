@@ -3,9 +3,9 @@
   CHANGE LOG
 ---------------
 
-NivoCart v1.0.5 (Beta)
+NivoCart v1.0.5
 ---------------
-Released: not yet!
+Released: 16/09/2019
 
 - CKEditor v4.12.1, with Accessibility Checker.
 - Cookie Consent button text underline. Style. Fix issue #22
