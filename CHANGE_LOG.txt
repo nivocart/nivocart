@@ -3,6 +3,14 @@
   CHANGE LOG
 ---------------
 
+NivoCart v1.0.6
+---------------
+Released: N/A
+
+- User passwords cannot no longer be empty/null. Fix.
+- User Groups cannot be created if the Name already exists. Fix.
+
+
 NivoCart v1.0.5
 ---------------
 Released: 16/09/2019
