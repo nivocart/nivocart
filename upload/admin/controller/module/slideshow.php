@@ -3,7 +3,7 @@ class ControllerModuleSlideshow extends Controller {
 	private $error = array();
 	private $_name = 'slideshow';
 	private $_plugin = 'flexslider';
-	private $_version = 'v2.7.0';
+	private $_version = 'v2.7.2';
 
 	public function index() {
 		$this->language->load('module/' . $this->_name);

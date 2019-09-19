@@ -7,8 +7,9 @@ NivoCart v1.0.6
 ---------------
 Released: N/A
 
-- User passwords cannot no longer be empty/null. Fix.
-- User Groups cannot be created if the Name already exists. Fix.
+- FlexSlider updated to v2.7.2 (current latest)
+- User passwords can no longer be empty/null. Fix issue #21.
+- User Groups cannot be created if the Name already exists.
 
 
 NivoCart v1.0.5

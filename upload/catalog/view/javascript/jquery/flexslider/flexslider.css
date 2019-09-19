@@ -1,6 +1,6 @@
 /**
- * jQuery FlexSlider v2.7.0
- * http://www.woothemes.com/flexslider/
+ * jQuery FlexSlider v2.7.2
+ * https://www.woocommerce.com/flexslider/
  *
  * Copyright 2012 WooThemes
  * Free to use under the GPLv2 and later license.
@@ -12,9 +12,9 @@
  * Development file. Use minified version for production.
  * ---------------------------------------------------
  */
-/* ==========================================
+/* =======================================
  * FONT-FACE
- * =========================================*/
+ * ======================================*/
 @font-face {
 	font-family: 'flexslider-icon';
 	src: url('fonts/flexslider-icon.eot');
@@ -22,9 +22,9 @@
 	font-weight: normal;
 	font-style: normal;
 }
-/* ==========================================
+/* =======================================
  * RESETS
- * =========================================*/
+ * ======================================*/
 .flex-container a:hover,
 .flex-slider a:hover {
 	outline: none;
@@ -40,9 +40,9 @@
 .flex-pauseplay span {
 	text-transform: capitalize;
 }
-/* ==========================================
+/* ========================================
  * BASE STYLES
- * =========================================*/
+ * =======================================*/
 .flexslider {
 	margin: 0;
 	padding: 0;
@@ -72,9 +72,9 @@ html[xmlns] .flexslider .slides {
 .no-js .flexslider .slides > li:first-child {
 	display: block;
 }
-/* ==========================================
+/* ===========================================
  * DEFAULT THEME
- * =========================================*/
+ * ==========================================*/
 .flexslider {
 	margin: 0 0 60px;
 	background: #FFF;
@@ -112,6 +112,11 @@ html[xmlns] .flexslider .slides {
 .loading .flex-viewport {
 	max-height: 300px;
 }
+@-moz-document url-prefix() {
+	.loading .flex-viewport {
+		max-height: none;
+	}
+}
 .carousel li {
 	margin-right: 5px;
 }
@@ -120,8 +125,8 @@ html[xmlns] .flexslider .slides {
 }
 .flex-direction-nav a {
 	display: block;
-	width: 36px;
-	height: 36px;
+	width: 40px;
+	height: 40px;
 	margin: -20px 0 0;
 	position: absolute;
 	top: 50%;
@@ -304,22 +309,22 @@ html[xmlns] .flexslider .slides {
 	opacity: 1;
 	cursor: default;
 }
-/* ====================================
+/* ==========================================
  * RESPONSIVE
- * ====================================*/
-@media screen and (max-width: 1360px) {
+ * =========================================*/
+@media screen and (max-width: 860px) {
 	.flex-direction-nav .flex-prev {
-		filter: alpha(opacity=0);
-		-khtml-opacity: 0;
-		-moz-opacity: 0;
-		opacity: 0;
+		filter: alpha(opacity=100);
+		-khtml-opacity: 1;
+		-moz-opacity: 1;
+		opacity: 1;
 		left: 10px;
 	}
 	.flex-direction-nav .flex-next {
-		filter: alpha(opacity=0);
-		-khtml-opacity: 0;
-		-moz-opacity: 0;
-		opacity: 0;
+		filter: alpha(opacity=100);
+		-khtml-opacity: 1;
+		-moz-opacity: 1;
+		opacity: 1;
 		right: 10px;
 	}
 }
