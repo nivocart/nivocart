@@ -2,7 +2,7 @@
 class ModelUserUserGroup extends Model {
 
 	public function addUserGroup($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET name = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
 
 		$user_group_id = $this->db->getLastId();
 
@@ -11,7 +11,7 @@ class ModelUserUserGroup extends Model {
 	}
 
 	public function editUserGroup($user_group_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "user_group SET name = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' WHERE user_group_id = '" . (int)$user_group_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "user_group SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' WHERE user_group_id = '" . (int)$user_group_id . "'");
 	}
 
 	public function deleteUserGroup($user_group_id) {
@@ -48,7 +48,7 @@ class ModelUserUserGroup extends Model {
 	public function getUserGroups($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "user_group";
 
-		$sql .= " ORDER BY name";
+		$sql .= " ORDER BY `name`";
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
 			$sql .= " DESC";
@@ -71,6 +71,14 @@ class ModelUserUserGroup extends Model {
 		$query = $this->db->query($sql);
 
 		return $query->rows;
+	}
+
+	public function getUserGroupNames() {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "user_group ORDER BY `name` ASC");
+
+		$user_group_names = array_column($query->rows, 'name');
+
+		return $user_group_names;
 	}
 
 	public function getTotalUserGroups() {

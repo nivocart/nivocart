@@ -308,6 +308,12 @@ class ControllerUserUserPermission extends Controller {
 			$this->data['error_name'] = '';
 		}
 
+		if (isset($this->error['exists'])) {
+			$this->data['error_exists'] = $this->error['exists'];
+		} else {
+			$this->data['error_exists'] = '';
+		}
+
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -413,6 +419,17 @@ class ControllerUserUserPermission extends Controller {
 	protected function validateForm() {
 		if (!$this->user->hasPermission('modify', 'user/user_permission')) {
 			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		// Check if name already exists
+		if (!isset($this->request->get['user_group_id'])) {
+			$this->load->model('user/user_group');
+
+			$user_group_names = $this->model_user_user_group->getUserGroupNames();
+
+			if (in_array($this->request->post['name'], $user_group_names)) {
+				$this->error['exists'] = $this->language->get('error_exists');
+			}
 		}
 
 		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 64)) {
