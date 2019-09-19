@@ -18,4 +18,5 @@ $_['entry_modify']     = 'Modify Permission:';
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify <b>User Groups</b> !';
 $_['error_name']       = 'User Group Name must be between 3 and 64 characters!';
+$_['error_exists']     = 'Warning: This User Group Name already exists!';
 $_['error_user']       = 'Warning: This user group cannot be deleted as it is currently assigned to %s users!';
