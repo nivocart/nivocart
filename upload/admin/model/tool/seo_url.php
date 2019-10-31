@@ -103,7 +103,12 @@ class ModelToolSeoUrl extends Controller {
 		}
 
 		if ((isset($this->request->get['route'])) && ($this->config->get('config_seo_url'))) {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->request->get['route'] . "'");
+			$route = (string)$this->request->get['route'];
+
+			// Sanitize the call
+			$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);
+
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $route . "'");
 
 			if ($query->num_rows) {
 				header('Location:/' . $query->row['keyword'], true, 301);
