@@ -1,30 +1,30 @@
 <?php
 class Url {
 	private $url;
+	private $ssl;
 	private $rewrite = array();
 
-	public function __construct($url) {
+	public function __construct($url, $ssl = '') {
 		$this->url = $url;
+		$this->ssl = $ssl;
 	}
 
 	public function addRewrite($rewrite) {
 		$this->rewrite[] = $rewrite;
 	}
 
-	public function link($route, $args = '', $js = false) {
-		$url = $this->url . 'index.php?route=' . (string)$route;
+	public function link($route, $args = '', $connection = 'NONSSL') {
+		if ($connection == 'NONSSL') {
+			$url = $this->url . 'index.php?route=' . $route;
+		} else {
+			$url = $this->ssl . 'index.php?route=' . $route;
+		}
 
 		if ($args) {
-			if (!$js) {
-				$amp = '&amp;';
-			} else {
-				$amp = '&';
-			}
-
 			if (is_array($args)) {
-				$url .= $amp . http_build_query($args, '', $amp);
+				$url .= '&amp;' . http_build_query($args, '', '&amp;');
 			} else {
-				$url .= str_replace('&', $amp, '&' . ltrim($args, '&'));
+				$url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
 			}
 		}
 

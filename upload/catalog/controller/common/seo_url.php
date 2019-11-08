@@ -188,8 +188,11 @@ class ControllerCommonSeoUrl extends Controller {
 					unset($data[$key]);
 
 				} else {
+					// Sanitize the call
+					$clean_route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$data['route']);
+
 					if ($this->config->get('config_seo_url')) {
-						$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $data['route'] . "'");
+						$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $clean_route . "'");
 
 						if ($query->num_rows && $query->row['keyword']) {
 							$url .= '/' . $query->row['keyword'];
