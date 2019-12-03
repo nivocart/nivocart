@@ -53,9 +53,8 @@ $('input[name=\'name\']').autocomplete({
 		});
 	},
 	select: function(event, ui) {
-		$('input[name=\'name\']').attr('value', ui.item.label);
-		$('input[name=\'product_id\']').attr('value', ui.item.value);
-
+		$('input[name=\'name\']').val(ui.item.label);
+		$('input[name=\'product_id\']').val(ui.item.value);
 		return false;
 	},
 	focus: function(event, ui) {

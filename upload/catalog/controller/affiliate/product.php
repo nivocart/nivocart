@@ -143,7 +143,7 @@ class ControllerAffiliateProduct extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/affiliate', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -230,7 +230,7 @@ class ControllerAffiliateProduct extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/affiliate', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -337,13 +337,13 @@ class ControllerAffiliateProduct extends Controller {
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/product');
 
-			$data = array(
+			$filter_data = array(
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
-				'limit'       => 20
+				'limit'       => 5
 			);
 
-			$results = $this->model_catalog_product->getProducts($data);
+			$results = $this->model_catalog_product->getProducts($filter_data);
 
 			foreach ($results as $result) {
 				$json[] = array(
@@ -352,14 +352,6 @@ class ControllerAffiliateProduct extends Controller {
 				);
 			}
 		}
-
-		$sort_order = array();
-
-		foreach ($json as $key => $value) {
-			$sort_order[$key] = $value['name'];
-		}
-
-		array_multisort($sort_order, SORT_ASC, $json);
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
