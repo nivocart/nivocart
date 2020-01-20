@@ -133,7 +133,7 @@ $_['error_filter_name'] .= 'In the Settings-tab please activate the following:<b
 $_['error_filter_name'] .= "Use <em>filter_id</em> instead of <em>filter name</em> in worksheet 'ProductFilters'";
 
 $_['error_missing_customer_group']                      = 'Export/Import: Missing customer_groups in worksheet \'%1\'!';
-$_['error_invalid_customer_group']                      = 'Export/Import: Undefined customer_group \'%2\' used in worksheet \'%1\\;!';
+$_['error_invalid_customer_group']                      = 'Export/Import: Undefined customer_group \'%2\' used in worksheet \'%1\;!';
 $_['error_addresses']                                   = 'Export/Import: Missing Customers worksheet, or Customers worksheet not listed before Addresses!';
 $_['error_addresses_2']                                 = 'Export/Import: Addresses worksheet also expected after Customers worksheet';
 $_['error_missing_product_id']                          = 'Export/Import: Missing product_ids in worksheet \'%1\'!';
