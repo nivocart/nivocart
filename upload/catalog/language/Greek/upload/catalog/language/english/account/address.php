@@ -1,10 +1,10 @@
 <?php
 // Heading
-$_['heading_title']     = 'Address Book';
+$_['heading_title']     = 'Βιβλίο Διευθύνσεων';
 
 // Text
-$_['text_account']      = 'Account';
-$_['text_address_book'] = 'Address Book Entries';
+$_['text_account']      = 'Λογαριασμός';
+$_['text_address_book'] = 'Εγγραφές στο βιβλίο διευθύνσεων';
 $_['text_edit_address'] = 'Edit Address';
 $_['text_insert']       = 'Your address has been successfully inserted';
 $_['text_update']       = 'Your address has been successfully updated';
