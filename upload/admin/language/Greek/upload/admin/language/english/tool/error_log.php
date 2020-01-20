@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title'] = 'Error Log';
+$_['heading_title'] = 'Αρχείο Σφαλμάτων';
 
 // Text
-$_['text_success']  = 'Success: You have successfully cleared your <b>Error Log</b> !';
+$_['text_success']  = 'Επιτυχία: Έχετε διαγράψει επιτυχώς το <b> Αρχείο καταγραφής σφαλμάτων </ b>!';
