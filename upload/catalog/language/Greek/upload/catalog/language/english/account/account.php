@@ -1,25 +1,25 @@
 <?php
 // Heading
-$_['heading_title']      = 'My Account';
+$_['heading_title']      = 'Ο Λογαριασμός μου';
 
 // Text
-$_['text_account']       = 'Account';
-$_['text_my_account']    = 'My account';
-$_['text_my_orders']     = 'My orders';
-$_['text_my_newsletter'] = 'Newsletter';
-$_['text_edit']          = 'Edit your account information';
-$_['text_password']      = 'Change your password';
-$_['text_address']       = 'Modify your address book';
-$_['text_no_address']    = 'There is no address linked to your account. Please provide at least one valid Address!';
-$_['text_wishlist']      = 'Modify your wish list';
-$_['text_order']         = 'View your order history';
-$_['text_download']      = 'Your downloads';
-$_['text_reward']        = 'Your reward points';
-$_['text_transaction']   = 'Your transactions';
-$_['text_return']        = 'View your return requests';
-$_['text_addreturn']     = 'Add a return request';
-$_['text_recurring']     = 'Your recurring payments';
-$_['text_newsletter']    = 'Subscribe / unsubscribe to newsletter';
+$_['text_account']       = 'Λογαριασμός';
+$_['text_my_account']    = 'Ο λογαριασμός μου';
+$_['text_my_orders']     = 'Οι παραγγελίες μου';
+$_['text_my_newsletter'] = 'Ενημερωτικό δελτίο';
+$_['text_edit']          = 'Επεξεργαστείτε τα στοιχεία του λογαριασμού σας';
+$_['text_password']      = 'Αλλαγή κωδικού πρόσβασης';
+$_['text_address']       = 'Τροποποιήσετε εγγραφές στο βιβλίο διευθύνσεων σας';
+$_['text_no_address']    = 'Δεν υπάρχει διεύθυνση που να συνδέεται με το λογαριασμό σας. Καταχωρίστε τουλάχιστον μία έγκυρη διεύθυνση!';
+$_['text_wishlist']      = 'Τροποποιήστε τα αγαπημένα σας';
+$_['text_order']         = 'Δείτε το ιστορικό παραγγελιών σας';
+$_['text_download']      = 'Λήψης';
+$_['text_reward']        = 'Οι πόντοι ανταμοιβής σας';
+$_['text_transaction']   = 'Οι συναλλαγές σας';
+$_['text_return']        = 'Προβολή αιτήσεων επιστροφής';
+$_['text_addreturn']     = 'Υποβολή αίτησης επιστροφής';
+$_['text_recurring']     = 'Επαναλαμβανόμενες πληρωμές';
+$_['text_newsletter']    = 'Εγγραφείτε / διαγραφείτε από το ενημερωτικό δελτίο';
 
 // Button
-$_['button_my_cart']     = 'My Cart';
+$_['button_my_cart']     = 'Το καλάθι μου';
