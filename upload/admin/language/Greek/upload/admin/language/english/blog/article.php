@@ -4,13 +4,13 @@ $_['heading_title']                = 'Blog Article';
 
 // Text
 $_['text_success']                 = 'Success: You have modified Blog articles!';
-$_['text_browse']                  = 'Browse';
-$_['text_clear']                   = 'Clear';
-$_['text_default']                 = 'Default';
-$_['text_image_manager']           = 'File Manager';
+$_['text_browse']                  = 'Περιήγηση';
+$_['text_clear']                   = 'Εκκαθάριση';
+$_['text_default']                 = 'Προεπιλογή';
+$_['text_image_manager']           = 'Διαχείριση Αρχείων';
 
 // Button
-$_['button_add_description']       = 'Add Description';
+$_['button_add_description']       = 'Προσθήκη περιγραφής';
 $_['button_add_articles']          = 'Add Article';
 
 // Column
@@ -45,7 +45,7 @@ $_['entry_store']                  = 'Store:';
 $_['entry_layout']                 = 'Layout Override:';
 $_['entry_additional_description'] = 'Additional Description';
 $_['entry_article_related_method'] = 'Article Related Products:<span class="help">This article is related to a single product, a product category, or a product manufacturer, select accordingly.</span>';
-$_['entry_blog_related_articles']  = 'Related Articles';
+$_['entry_blog_related_articles']  = 'Σχετικά Άρθρα';
 $_['entry_category_wise']          = 'Category Wise';
 $_['entry_manufacturer_wise']      = 'Manufacturer Wise';
 $_['entry_product_wise']           = 'Product Wise';
