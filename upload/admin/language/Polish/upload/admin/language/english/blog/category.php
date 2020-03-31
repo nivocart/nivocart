@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']          = 'Blog Category';
+$_['heading_title']          = 'Kategoria bloga';
 
 // Text
 $_['text_success']           = 'Success: You have modified Blog Categories!';
