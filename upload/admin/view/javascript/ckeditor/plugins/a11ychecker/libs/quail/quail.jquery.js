@@ -6,18 +6,27 @@
 Function.prototype.bind=Function.prototype.bind||function(b){if(typeof this!=="function"){throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");}var a=Array.prototype.slice,f=a.call(arguments,1),e=this,c=function(){},d=function(){return e.apply(this instanceof c?this:b||window,f.concat(a.call(arguments)));};c.prototype=this.prototype;d.prototype=new c();return d;};
 
 var quail = {
+
   options : { },
+
   components : { },
+
   lib : { },
+
   testabilityTranslation : {
-    0 : 'suggestion',
-    0.5 : 'moderate',
-    1 : 'severe'
+    0      : 'suggestion',
+    0.5    : 'moderate',
+    1      : 'severe'
   },
+
   html : null,
+
   strings : { },
+
   accessibilityResults : { },
+
   accessibilityTests : null,
+
   guidelines: {
     wcag: {
       /**
@@ -43,6 +52,7 @@ var quail = {
       successCriteria: { }
     }
   },
+
   // @var TestCollection
   tests : { },
 
@@ -77,6 +87,7 @@ var quail = {
    */
   selfClosingTags : ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'],
 
+
   /**
    * A list of tags that optionally can be closed
    */
@@ -86,18 +97,17 @@ var quail = {
    * Main run function for quail. It bundles up some accessibility tests,
    * and if tests are not passed, it instead fetches them using getJSON.
    */
-  run : function(options) {
+  run : function (options) {
     if (options.reset) {
       quail.accessibilityResults = { };
     }
 
-    function buildTests(quail, data, options) {
+    function buildTests (quail, data, options) {
       // Filter for specific tests.
       if (options.guideline && options.guideline.length) {
         quail.tests = quail.lib.TestCollection([], {
           scope: quail.html || null
         });
-
         for (var i = 0, il = options.guideline.length; i < il; ++i) {
           var t = options.guideline[i];
           if (data[t]) {
@@ -120,7 +130,7 @@ var quail = {
      * This function is called when the tests are collected, which might occur
      * after an AJAX request for a test JSON file.
      */
-    function _run() {
+    function _run () {
       // Push custom tests into the test collection.
       if (typeof options.customTests !== 'undefined') {
         for (var testName in options.customTests) {
@@ -132,7 +142,7 @@ var quail = {
       }
 
       // Set up Guideline-specific behaviors.
-      var noop = function() {};
+      var noop = function () {};
       for (var guideline in quail.guidelines) {
         if (quail.guidelines[guideline] && typeof quail.guidelines[guideline].setup === 'function') {
           quail.guidelines[guideline].setup(quail.tests, this, {
@@ -143,11 +153,11 @@ var quail = {
 
       // Invoke all the registered tests.
       quail.tests.run({
-        preFilter: options.preFilter || function() {},
-        caseResolve: options.caseResolve || function() {},
-        testComplete: options.testComplete || function() {},
-        testCollectionComplete: options.testCollectionComplete || function() {},
-        complete: options.complete || function() {}
+        preFilter: options.preFilter || function () {},
+        caseResolve: options.caseResolve || function () {},
+        testComplete: options.testComplete || function () {},
+        testCollectionComplete: options.testCollectionComplete || function () {},
+        complete: options.complete || function () {}
       });
     }
 
@@ -161,12 +171,21 @@ var quail = {
         scope: quail.html || null
       });
       _run.call(quail);
-    } else if (options.guideline === 'wcag2') {
+    }
+    // Let wcag2 run itself, will call quail again when it knows what
+    // to
+    else if (options.guideline === 'wcag2') {
       quail.lib.wcag2.run(options);
-    } else if (options.accessibilityTests) {
+    }
+
+    // If a list of specific tests is provided, use them.
+    else if (options.accessibilityTests) {
       buildTests(quail, options.accessibilityTests, options);
       _run.call(quail);
-    } else {
+    }
+
+    // Otherwise get the tests from the json data list.
+    else {
       var url = options.jsonPath;
       // Get a specific guideline.
       if (typeof options.guideline === 'string') {
@@ -176,20 +195,22 @@ var quail = {
       $.ajax({
         url : url + '/tests.json',
         dataType : 'json',
-        success : function(data) {
+        success : function (data) {
           if (typeof data === 'object') {
             buildTests(quail, data, options);
             _run.call(quail);
           }
         },
-        error : function() {
+        error : function () {
           throw new Error('Tests could not be loaded');
         }
       });
     }
   },
 
-  listenTo: function(dispatcher, eventName, handler) {
+  // @todo, make this a set of methods that all classes extend.
+  listenTo: function (dispatcher, eventName, handler) {
+    // @todo polyfill Function.prototype.bind.
     handler = handler.bind(this);
     dispatcher.registerListener.call(dispatcher, eventName, handler);
   },
@@ -207,7 +228,7 @@ var quail = {
 
   /**
    * Helper function to determine if a string of text is even readable.
-   * This will be added to in the future... we should also include
+   * @todo - This will be added to in the future... we should also include
    * phonetic tests.
    */
   isUnreadable : function(text) {
@@ -355,7 +376,7 @@ quail.components.acronym = function(quail, test, Case) {
     });
 
     // Consider all block-level html elements that contain text.
-    $scope.find('p, div, h1, h2, h3, h4, h5').each(function() {
+    $scope.find('p, div, h1, h2, h3, h4, h5').each(function(){
       var el = this;
       var $el = $(el);
 
@@ -389,14 +410,16 @@ quail.components.acronym = function(quail, test, Case) {
             info: {acronyms : infractions},
             status: 'failed'
           }));
-        } else {
+        }
+        else {
           test.add(Case({
             element: el,
             expected: $el.closest('.quail-test').data('expected'),
             status: 'passed'
           }));
         }
-      } else {
+      }
+      else {
         test.add(Case({
           element: el,
           expected: $el.closest('.quail-test').data('expected'),
@@ -404,14 +427,16 @@ quail.components.acronym = function(quail, test, Case) {
         }));
       }
     });
+
   });
 };
 
-quail.components.color = (function() {
+quail.components.color = (function () {
+
   function buildCase(test, Case, element, status, id, message) {
     test.add(Case({
       element: element,
-      expected: (function(element, id) {
+      expected: (function (element, id) {
         return quail.components.resolveExpectation(element, id);
       }(element, id)),
       message: message,
@@ -422,6 +447,8 @@ quail.components.color = (function() {
   function notempty(s) {
     return $.trim(s) !== '';
   }
+
+
 
   var colors = {
     cache: {},
@@ -473,12 +500,12 @@ quail.components.color = (function() {
       return 'rgb(' + data[0] + ',' + data[1] + ',' + data[2] + ')';
     },
 
-    testElmContrast: function(algorithm, element, level) {
+    testElmContrast: function (algorithm, element, level) {
       var background = colors.getColor(element, 'background');
       return colors.testElmBackground(algorithm, element, background, level);
     },
 
-    testElmBackground: function(algorithm, element, background, level) {
+    testElmBackground: function (algorithm, element, background, level) {
       var foreground = colors.getColor(element, 'foreground');
       var res;
       if (algorithm === 'wcag') {
@@ -498,11 +525,13 @@ quail.components.color = (function() {
       if (typeof level === 'undefined') {
         if (pxfsize >= 18) {
           level = 3;
-        } else {
+        }
+        else {
           var fweight = element.css('fontWeight');
           if (pxfsize >= 14 &&  (fweight === 'bold' || parseInt(fweight, 10) >= 700)) {
             level = 3;
-          } else {
+          }
+          else {
             level = 4.5;
           }
         }
@@ -515,7 +544,7 @@ quail.components.color = (function() {
      * WAI brightness levels.
      */
     passesWAIColor : function(foreground, background) {
-      var contrast = colors.getWAIErtContrast(foreground, background);
+      var contrast   = colors.getWAIErtContrast(foreground, background);
       var brightness = colors.getWAIErtBrightness(foreground, background);
 
       return (contrast > 500 && brightness > 125);
@@ -537,6 +566,7 @@ quail.components.color = (function() {
     getWAIErtBrightness : function(foreground, background) {
       var diffs = colors.getWAIDiffs(foreground, background);
       return ((diffs.red * 299) + (diffs.green * 587) + (diffs.blue * 114)) / 1000;
+
     },
 
     /**
@@ -544,9 +574,9 @@ quail.components.color = (function() {
      */
     getWAIDiffs : function(foreground, background) {
       return {
-        red: Math.abs(foreground.r - background.r),
+        red:   Math.abs(foreground.r - background.r),
         green: Math.abs(foreground.g - background.g),
-        blue: Math.abs(foreground.b - background.b)
+        blue:  Math.abs(foreground.b - background.b)
       };
     },
 
@@ -560,7 +590,6 @@ quail.components.color = (function() {
       if (!element.attr('data-cacheId')) {
         element.attr('data-cacheId', 'id_' + Math.random());
       }
-
       var cacheKey = 'getColor_' + type + '_' + element.attr('data-cacheId');
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
@@ -577,7 +606,7 @@ quail.components.color = (function() {
         return colors.cache[cacheKey];
       }
 
-      element.parents().each(function() {
+      element.parents().each(function(){
         var pcolor = $(this).css('background-color');
         if (colors.hasBackgroundColor(pcolor)) {
           return self.cache[cacheKey] = pcolor;
@@ -631,7 +660,7 @@ quail.components.color = (function() {
         return colors.cache[cacheKey];
       }
       element = element[0];
-      while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
+      while(element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
         var bimage = $(element).css('background-image');
         if (bimage && bimage !== 'none' && bimage.search(/^(.*?)url(.*?)$/i) !== -1) {
           colors.cache[cacheKey] = bimage.replace('url(', '').replace(/['"]/g, '').replace(')', '');
@@ -660,7 +689,7 @@ quail.components.color = (function() {
         return $.trim(s) !== '';
       };
       element = element[0];
-      while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
+      while(element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
         // Exit if element has a background color.
         if (colors.hasBackgroundColor($(element).css('background-color'))) {
           colors.cache[cacheKey] = false;
@@ -711,7 +740,7 @@ quail.components.color = (function() {
 
       try {
         data = context.getImageData(0, 0, width, height);
-      } catch (e) {
+      } catch(e) {
         colors.cache[cacheKey] = defaultRGB;
         return defaultRGB;
       }
@@ -829,7 +858,7 @@ quail.components.color = (function() {
       }
 
       // Reset visibility.
-      for (var i = 0; i < scannedElements.length; i++) {
+      for(var i = 0; i < scannedElements.length; i++){
         scannedElements[i].element.css('visibility', scannedElements[i].visibility);
       }
 
@@ -870,13 +899,16 @@ quail.components.color = (function() {
     // if Firefox.
     if (element.nodeType !== 1) {
       return false;
+
     // Ignore elements whose content isn't displayed to the page.
     } else if (['script', 'style', 'title', 'object', 'applet', 'embed', 'template', 'noscript']
     .indexOf(element.nodeName.toLowerCase()) !== -1)  {
       return false;
+
     // Bail out if the text is not readable.
     } else if (quail.isUnreadable($this.text())) {
       return false;
+
     } else {
       return true;
     }
@@ -899,7 +931,7 @@ quail.components.color = (function() {
      * @return number
      *   The size of the object determined by the number of keys.
      */
-    function size(obj) {
+    function size (obj) {
       return Object.keys(obj).length;
     }
 
@@ -917,6 +949,7 @@ quail.components.color = (function() {
         });
       }
     }
+
     return size(passed) === size(groupsBySelector);
   }
 
@@ -926,9 +959,11 @@ quail.components.color = (function() {
     postInvoke: postInvoke,
     buildCase: buildCase
   };
+
 }());
 
 quail.components.content = {
+
   /**
    * Iterates over elments in the given context and looks
    * for elements that could be considered the main content area.
@@ -955,13 +990,14 @@ quail.components.content = {
       var $parent = $(this).parent();
       var element = $parent.get(0);
       var contentScore = $parent.data('content-score') || 0;
-
       if (!$parent.data('content-score')) {
+
         contentScore = $parent.find('p').length;
 
         if (element.className.match(/(comment|meta|footer|footnote)/)) {
           contentScore -= 50;
-        } else {
+        }
+        else {
           if (element.className.match(/((^|\\s)(post|hentry|entry[-]?(content|text|body)?|article[-]?(content|text|body)?)(\\s|$))/)) {
             contentScore += 25;
           }
@@ -969,7 +1005,8 @@ quail.components.content = {
 
         if (element.id.match(/(comment|meta|footer|footnote)/)) {
           contentScore -= 50;
-        } else {
+        }
+        else {
           if (element.id.match(/^(post|hentry|entry[-]?(content|text|body)?|article[-]?(content|text|body)?)$/)) {
             contentScore += 25;
           }
@@ -1000,7 +1037,6 @@ quail.components.event = function(quail, test, Case, options) {
   var $items = options.selector && $scope.find(options.selector) || $scope.find('*');
   var searchEvent = options.searchEvent || '';
   var correspondingEvent = options.correspondingEvent || '';
-
   $items.each(function() {
     var eventName = searchEvent.replace('on', '');
     var hasOnListener = quail.components.hasEventListener($(this), eventName);
@@ -1017,10 +1053,10 @@ quail.components.event = function(quail, test, Case, options) {
       element: this,
       expected: expected
     }));
-
     if ((hasOnListener || hasjQueryOnListener) && (!hasCorrespondingEvent || !hasSpecificCorrespondingEvent)) {
       _case.set({status: 'failed'});
-    } else {
+    }
+    else {
       _case.set({status: 'passed'});
     }
   });
@@ -1056,7 +1092,7 @@ quail.components.headingLevel = function(quail, test, Case, options) {
         element: element,
         // @todo, make the expected property retrievable through a callback so
         //   that we don't need to overload a test with this kind of logic.
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(element)),
         status: 'failed'
@@ -1065,7 +1101,7 @@ quail.components.headingLevel = function(quail, test, Case, options) {
     else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(element)),
         status: 'passed'
@@ -1115,18 +1151,18 @@ quail.components.htmlSource = {
     if (element.type !== 'tag' || typeof element.name === 'undefined') {
       return;
     }
-
     if (typeof element.selector === 'undefined') {
       element.selector = (parent && typeof parent.selector !== 'undefined') ? parent.selector.slice() : [];
-    } else {
+    }
+    else {
       return;
     }
-
     var selector = element.name;
     if (typeof element.attributes !== 'undefined') {
       if (typeof element.attributes.id !== 'undefined') {
         selector += '#' + element.attributes.id[0];
-      } else {
+      }
+      else {
         if (typeof element.attributes.class !== 'undefined') {
           selector += '.' + element.attributes.class[0].replace(/\s/, '.');
         }
@@ -1171,20 +1207,17 @@ if (typeof Tautologistics !== 'undefined') {
     if (this._done) {
       this.handleCallback(new Error("Writing to the builder after done() called is not allowed without a reset()"));
     }
-
     if (this._options.includeLocation) {
       if (element.type !== Mode.Attr) {
         element.location = this._getLocation();
         this._updateLocation(element);
       }
     }
-
     if (element.type === Mode.Text && this._options.ignoreWhitespace) {
       if (HtmlBuilder.reWhitespace.test(element.data)) {
         return;
       }
     }
-
     var parent;
     var node;
     if (!this._tagStack.last()) { // There are no parent elements
@@ -1210,7 +1243,8 @@ if (typeof Tautologistics !== 'undefined') {
       } else { // Otherwise just add to the top level list
         this.dom.push(this._copyElement(element));
       }
-    } else {
+    }
+    else {
       parent = this._tagStack.last();
 
       // There are parent elements
@@ -1236,7 +1270,8 @@ if (typeof Tautologistics !== 'undefined') {
               }
             }
           }
-        } else { // This is not a closing tag
+        }
+        else { // This is not a closing tag
           if (element.type === Mode.Attr) {
             if (!parent.attributes) {
               parent.attributes = {};
@@ -1259,7 +1294,8 @@ if (typeof Tautologistics !== 'undefined') {
             }
           }
         }
-      } else { // This is not a container element
+      }
+      else { // This is not a container element
         parent = this._tagStack.last();
         if (element.type === Mode.Attr) {
           if (!parent.attributes) {
@@ -1280,19 +1316,20 @@ if (typeof Tautologistics !== 'undefined') {
   };
 }
 
-var htmlTagValidator = function() {
-  var startingTagFirstChar = "<",
-    startingTagLastChar = ">",
-    closingTagSecondChar = "/",
-    selfClosingTagSecondToLastChar = "/",
-    commentSecondCharacter = "!",
-    doctypeSecondCharacterPattern = new RegExp("[dD]"),
-    startTagPattern = new RegExp("[a-z0-9-]"),
-    commentPattern = new RegExp("^<!--.*-->");
+var htmlTagValidator=function(){
+  var startingTagFirstChar="<",
+    startingTagLastChar=">",
+    closingTagSecondChar="/",
+    selfClosingTagSecondToLastChar="/",
+    commentSecondCharacter="!",
+    doctypeSecondCharacterPattern=new RegExp("[dD]"),
+    startTagPattern=new RegExp("[a-z0-9-]"),
+    commentPattern=new RegExp("^<!--.*-->");
 
-  var parserFunc, previousParserFunc, currentTagName, startingTags, characterIndex, currentComment, options;
+  var parserFunc, previousParserFunc, currentTagName, startingTags,
+    characterIndex, currentComment, options;
 
-  var selfClosing = [
+  var selfClosing=[
     "area",
     "base",
     "br",
@@ -1311,7 +1348,7 @@ var htmlTagValidator = function() {
     "wbr"
   ];
 
-  var ignoreWithin = [
+  var ignoreWithin=[
     "pre",
     "code",
     "textarea",
@@ -1319,7 +1356,7 @@ var htmlTagValidator = function() {
     "style"
   ];
 
-  var optionalClosing = [
+  var optionalClosing=[
     "p",
     "li",
     "tr",
@@ -1327,39 +1364,39 @@ var htmlTagValidator = function() {
     "td"
   ];
 
-  var tagObject = function(lIndex, cIndex) {
+  var tagObject=function(lIndex, cIndex){
     return {name: currentTagName, line: lIndex + 1, char: cIndex};
   };
 
-  var throwEndingTagError=function(tagObj) {
-    var newError = new Error("Ending tag not found for: " + tagObj.name + " at line: " + tagObj.line + " char: " + tagObj.char + " starting tags: " + startingTags[0].name);
-    newError.lineData = tagObj;
+  var throwEndingTagError=function(tagObj){
+    var newError=new Error("Ending tag not found for: " + tagObj.name + " at line: " + tagObj.line + " char: " + tagObj.char + " starting tags: " + startingTags[0].name);
+    newError.lineData=tagObj;
     throw newError;
   };
 
-  var throwEndingCommentError=function(commentObj) {
-    var newError = new Error("Comment ending not found for: `comment` at line: " + commentObj.line + " char: " + commentObj.char);
-    newError.lineData = commentObj;
+  var throwEndingCommentError=function(commentObj){
+    var newError=new Error("Comment ending not found for: `comment` at line: " + commentObj.line + " char: " + commentObj.char);
+    newError.lineData=commentObj;
     throw newError;
   };
 
-  var throwSelfClosingFormatError = function(tagObj) {
-    var newError = new Error("Ending `/` not found for: `" + tagObj.name + "` at line: " + tagObj.line + " char: " + tagObj.char);
-    newError.lineData = tagObj.name;
+  var throwSelfClosingFormatError=function(tagObj){
+    var newError=new Error("Ending `/` not found for: `" + tagObj.name + "` at line: " + tagObj.line + " char: " + tagObj.char);
+    newError.lineData=tagObj.name;
     throw newError;
   };
 
-  var setParserFunc = function(func) {
-    previousParserFunc = parserFunc;
-    parserFunc = func;
+  var setParserFunc=function(func){
+    previousParserFunc=parserFunc;
+    parserFunc=func;
   };
 
-  var goBackNumChars = function(num) {
+  var goBackNumChars=function(num){
     characterIndex-=num;
   };
 
   // Handle starting html tags
-  var startingTagNameFinder = function startingTagNameFinder(character, lIndex, cIndex) {
+  var startingTagNameFinder=function startingTagNameFinder(character, lIndex, cIndex){
     // If the character matches the matcher for approved tag name characters add it to
     // the currentTagName
     if (startTagPattern.test(character)) {
@@ -1371,15 +1408,16 @@ var htmlTagValidator = function() {
       // If the character looks like a commentSecondCharacter(!) then check to see if it's
       // really a comment or a comment with the commentOrDoctypeFinder
     } else if (character === commentSecondCharacter) {
-      currentTagName = "";
+      currentTagName="";
       setParserFunc(commentOrDoctypeFinder);
+
       // If the current tag name is a self closing tag, start looking for a new
       // tag name with startingTagBeginningFinder
     } else if (selfClosing.indexOf(currentTagName) > -1) {
       if (options['strict_self_closing_tags']) {
         setParserFunc(selfClosingEndingSlashFinder);
       } else {
-        currentTagName = "";
+        currentTagName="";
         setParserFunc(startingTagBeginningFinder);
       }
 
@@ -1392,61 +1430,68 @@ var htmlTagValidator = function() {
       startingTags.push(tagObj);
 
       if (ignoreWithin.indexOf(currentTagName) > -1) {
-        currentTagName = "";
+        currentTagName="";
         goBackNumChars(1);
         setParserFunc(ignoredWithinEndingTagStartFinder);
       } else {
-        currentTagName = "";
+        currentTagName="";
         goBackNumChars(1);
         setParserFunc(startingTagEndingFinder);
       }
     }
   };
 
-  var selfClosingEndingSlashFinder = function selfClosingEndingSlashFinder(character, lIndex, cIndex) {
+  var selfClosingEndingSlashFinder=function selfClosingEndingSlashFinder(character, lIndex, cIndex){
     if (character === selfClosingTagSecondToLastChar) {
-      currentTagName = '';
+      currentTagName='';
       setParserFunc(endingTagBeginningFinder);
     } else if (character === startingTagLastChar) {
       throwSelfClosingFormatError(tagObject(lIndex, cIndex));
     }
   };
 
-  var startingTagEndingFinder = function startingTagEndingFinder(character) {
+  var startingTagEndingFinder=function startingTagEndingFinder(character){
     if (character === startingTagLastChar) {
       setParserFunc(endingTagBeginningFinder);
     }
   };
 
-  var startingTagBeginningFinder = function startingTagBeginningFinder(character) {
+  var startingTagBeginningFinder=function startingTagBeginningFinder(character){
     if (character === startingTagFirstChar) {
       setParserFunc(startingTagNameFinder);
     }
   };
 
-  var endingTagNameFinder = function endingTagNameFinder(character) {
-    function loopThroughTags() {
+  var endingTagNameFinder=function endingTagNameFinder(character){
+
+    function loopThroughTags () {
       var lastStartTag=startingTags.pop();
 
       // If the next tag in the startTags stack is the current tag, then we move on.
       if (lastStartTag.name === currentTagName) {
         setParserFunc(startingTagBeginningFinder);
-      } else if (optionalClosing.indexOf(lastStartTag.name) > -1) {
+      }
+      // If the next tag in the startingTags is an optional tag, try popping it
+      // and repeating this process.
+      else if(optionalClosing.indexOf(lastStartTag.name) > -1) {
         loopThroughTags();
-      } else {
+      }
+      // If this is not an optional closing tag, then the mismatch is an error.
+      else {
         throwEndingTagError(lastStartTag);
       }
     }
 
     if (startTagPattern.test(character)) {
       currentTagName+=character;
-    } else {
+    }
+    else {
       loopThroughTags();
       currentTagName="";
     }
   };
 
-  var endingTagSlashFinder = function endingTagSlashFinder(character) {
+  var endingTagSlashFinder=function endingTagSlashFinder(character){
     if (character === closingTagSecondChar) {
       setParserFunc(endingTagNameFinder);
     } else {
@@ -1455,46 +1500,46 @@ var htmlTagValidator = function() {
     }
   };
 
-  var endingTagBeginningFinder = function endingTagBeginningFinder(character) {
+  var endingTagBeginningFinder=function endingTagBeginningFinder(character){
     if (character === startingTagFirstChar) {
       setParserFunc(endingTagSlashFinder);
     }
   };
 
   // Ignore with ignored tag list ex. pre, script, code
-  var ignoredWithinEndingTagStartFinder = function ignoredWithinEndingTagStartFinder(character) {
+  var ignoredWithinEndingTagStartFinder=function ignoredWithinEndingTagStartFinder(character){
     if (character === startingTagFirstChar) {
       setParserFunc(ignoredWithinEndingTagSlashFinder);
     }
   };
 
-  var ignoredWithinEndingTagSlashFinder = function ignoredWithinEndingTagSlashFinder(character) {
+  var ignoredWithinEndingTagSlashFinder=function ignoredWithinEndingTagSlashFinder(character){
     if (character === closingTagSecondChar) {
       setParserFunc(ignoredWithinEndingTagNameFinder);
     }
   };
 
-  var ignoredWithinEndingTagNameFinder = function ignoredWithinEndingTagNameFinder(character) {
+  var ignoredWithinEndingTagNameFinder=function ignoredWithinEndingTagNameFinder(character){
     if (startTagPattern.test(character)) {
       currentTagName+=character;
     } else {
-      var lastStartTag = startingTags.pop();
+      var lastStartTag=startingTags.pop();
 
       if (lastStartTag.name === currentTagName) {
         setParserFunc(startingTagBeginningFinder);
       } else {
         throwEndingTagError(lastStartTag);
       }
-      currentTagName = "";
+      currentTagName="";
     }
   };
 
   // Comments and doctypes both start with `<!` So we needed a custom finder to determine what it
   // really is. If it's a doctype we want to ignore it and look for a new starting tag character,
   // while if it's a comment, we want to look for a full comment.
-  var commentOrDoctypeFinder = function commentOrDoctypeFinder(character) {
+  var commentOrDoctypeFinder=function commentOrDoctypeFinder(character){
     if (doctypeSecondCharacterPattern.test(character)) {
-      currentTagName = "";
+      currentTagName="";
       setParserFunc(startingTagBeginningFinder);
     } else {
       goBackNumChars(3);
@@ -1505,25 +1550,26 @@ var htmlTagValidator = function() {
   // comment finding
   // Look through the incoming characters until a full matching comment has been built,
   // then reset the finder back to the startingTagBeginningFinder and clear the currentComment
-  var commentFinder = function commentFinder(character, lIndex, cIndex) {
+  var commentFinder=function commentFinder(character, lIndex, cIndex){
     if (!currentComment) {
-      currentComment = {content: "", line: lIndex + 1, char: cIndex + 1, name: "comment"};
+      currentComment={content: "", line: lIndex + 1, char: cIndex + 1, name: "comment"};
     }
 
-    currentComment.content += character;
+    currentComment.content+=character;
 
     if (commentPattern.test(currentComment.content)) {
-      currentComment = null;
+      currentComment=null;
       setParserFunc(startingTagBeginningFinder);
     }
   };
 
   // Main entry point to the validator, it starts with the `startingTagBeginningFinder` first
-  var checkTags = function(string, opts) {
+  var checkTags=function(string, opts){
+
     var returnState = null;
 
     try {
-      var lines = string.split("\n");
+      var lines=string.split("\n");
       var ll;
       setParserFunc(startingTagBeginningFinder);
       currentTagName="";
@@ -1533,9 +1579,7 @@ var htmlTagValidator = function() {
 
       for (var lineIndex=0, l=lines.length; lineIndex < l; lineIndex++) {
         for (characterIndex=0, ll=lines[lineIndex].length; characterIndex < ll; characterIndex++) {
-          if (!parserFunc) {
-            break;
-          }
+          if (!parserFunc) {break;}
 
           parserFunc(lines[lineIndex][characterIndex], lineIndex, characterIndex);
         }
@@ -1553,7 +1597,7 @@ var htmlTagValidator = function() {
       } else if (startingTags.length > 0) {
         var lastStartTag=startingTags[startingTags.length - 1];
 
-        if (optionalClosing.indexOf(lastStartTag.name) === -1) {
+        if(optionalClosing.indexOf(lastStartTag.name) === -1) {
           throwEndingTagError(lastStartTag);
         }
       }
@@ -1575,13 +1619,17 @@ quail.components.label = function(quail, test, Case, options) {
   $scope.each(function() {
     var $local = $(this);
     $local.find(options.selector).each(function() {
-      if ((!$(this).parent('label').length || !$local.find('label[for=' + $(this).attr('id') + ']').length || !quail.containsReadableText($(this).parent('label'))) && (!quail.containsReadableText($local.find('label[for=' + $(this).attr('id') + ']')))) {
+      if ((!$(this).parent('label').length ||
+        !$local.find('label[for=' + $(this).attr('id') + ']').length ||
+          !quail.containsReadableText($(this).parent('label'))) &&
+          (!quail.containsReadableText($local.find('label[for=' + $(this).attr('id') + ']')))) {
         test.add(Case({
           element: this,
           expected: $(this).closest('.quail-test').data('expected'),
           status: 'failed'
         }));
-      } else {
+      }
+      else {
         test.add(Case({
           element: this,
           expected: $(this).closest('.quail-test').data('expected'),
@@ -1602,13 +1650,15 @@ quail.components.labelProximity = function(quail, test, Case, options) {
         expected: $(this).closest('.quail-test').data('expected'),
         status: 'failed'
       }));
-    } else if (!$(this).parent().is($label.parent())) {
+    }
+    else if (!$(this).parent().is($label.parent())) {
       test.add(Case({
         element: this,
         expected: $(this).closest('.quail-test').data('expected'),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
         expected: $(this).closest('.quail-test').data('expected'),
@@ -1619,6 +1669,7 @@ quail.components.labelProximity = function(quail, test, Case, options) {
 };
 
 quail.components.language = {
+
   /**
    * The maximum distance possible between two trigram models.
    */
@@ -1776,7 +1827,8 @@ quail.components.language = {
 };
 
 quail.components.placeholder = function(quail, test, Case, options) {
-  var resolve = function(element, resolution) {
+
+  var resolve = function (element, resolution) {
     test.add(Case({
       element: element,
       expected: $(element).closest('.quail-test').data('expected'),
@@ -1786,21 +1838,27 @@ quail.components.placeholder = function(quail, test, Case, options) {
 
   test.get('$scope').find(options.selector).each(function() {
     var text = '';
-    if ($(this).css('display') === 'none' && !$(this).is('title')) {
+    if($(this).css('display') === 'none' && !$(this).is('title')){
       resolve(this, 'inapplicable');
       return;
     }
     if (typeof options.attribute !== 'undefined') {
-      if ((typeof $(this).attr(options.attribute) === 'undefined' || (options.attribute === 'tabindex' && $(this).attr(options.attribute) <= 0)) && !options.content) {
+      if ((typeof $(this).attr(options.attribute) === 'undefined' ||
+            (options.attribute === 'tabindex' &&
+              $(this).attr(options.attribute) <= 0
+            )
+         ) &&
+         !options.content
+        ) {
         resolve(this, 'failed');
         return;
-      } else {
+      }
+      else {
         if ($(this).attr(options.attribute) && $(this).attr(options.attribute) !== 'undefined') {
           text += $(this).attr(options.attribute);
         }
       }
     }
-
     if (typeof options.attribute === 'undefined' ||
       !options.attribute ||
       options.content) {
@@ -1809,22 +1867,25 @@ quail.components.placeholder = function(quail, test, Case, options) {
         text += $(this).attr('alt');
       });
     }
-
     if (typeof text === 'string' && text.length > 0) {
       text = quail.cleanString(text);
       var regex = /^([0-9]*)(k|kb|mb|k bytes|k byte)$/g;
       var regexResults = regex.exec(text.toLowerCase());
-
       if (regexResults && regexResults[0].length) {
         resolve(this, 'failed');
-      } else if (options.empty && quail.isUnreadable(text)) {
+      }
+      else if (options.empty && quail.isUnreadable(text)) {
         resolve(this, 'failed');
-      } else if (quail.strings.placeholders.indexOf(text) > -1 ) {
+      }
+      else if (quail.strings.placeholders.indexOf(text) > -1 ) {
         resolve(this, 'failed');
-      } else {
+      }
+      // It passes.
+      else {
         resolve(this, 'passed');
       }
-    } else {
+    }
+    else {
       if (options.empty && typeof text !== 'number') {
         resolve(this, 'failed');
       }
@@ -1857,17 +1918,21 @@ quail.components.resolveExpectation = function(element, caseID) {
         if (condition[0] === caseID) {
           if (!condition[1] || condition[1] === 'ignore') {
             return;
-          } else {
+          }
+          else {
             // Retrieve the expectation for this element.
             result = condition[1];
           }
         }
-      } else {
+      }
+      // Try to use the condition zero element as a selector.
+      else {
         $el = $(condition[0], $scope);
         if ($el.length === 1 && element === $el.get(0)) {
           if (!condition[1] || condition[1] === 'ignore') {
             return;
-          } else {
+          }
+          else {
             // Retrieve the expectation for this element.
             result = condition[1];
           }
@@ -1879,7 +1944,7 @@ quail.components.resolveExpectation = function(element, caseID) {
   return result;
 };
 
-quail.components.selector = function(quail, test, Case, options) {
+quail.components.selector = function (quail, test, Case, options) {
   this.get('$scope').each(function() {
     var $scope = $(this);
     var candidates = $(this).find(options.selector);
@@ -1892,9 +1957,10 @@ quail.components.selector = function(quail, test, Case, options) {
         // status: 'passed'
         status: (options.test ? 'inapplicable' : 'passed')
       }));
-    } else {
+    }
+    else {
       // Fails.
-      candidates.each(function() {
+      candidates.each(function () {
         var status,
         $this = $(this);
 
@@ -1916,37 +1982,41 @@ quail.components.selector = function(quail, test, Case, options) {
 };
 
 quail.statistics = {
-  setDecimal : function( num, numOfDec ) {
+
+  setDecimal : function( num, numOfDec ){
     var pow10s = Math.pow( 10, numOfDec || 0 );
     return ( numOfDec ) ? Math.round( pow10s * num ) / pow10s : num;
   },
 
-  average : function( numArr, numOfDec ) {
+  average : function( numArr, numOfDec ){
     var i = numArr.length,
       sum = 0;
-    while ( i-- ) {
+    while( i-- ){
       sum += numArr[ i ];
     }
     return quail.statistics.setDecimal( (sum / numArr.length ), numOfDec );
   },
 
-  variance : function( numArr, numOfDec ) {
-    var avg = quail.statistics.average( numArr, numOfDec ), i = numArr.length, v = 0;
+  variance : function( numArr, numOfDec ){
+    var avg = quail.statistics.average( numArr, numOfDec ),
+      i = numArr.length,
+      v = 0;
 
-    while ( i-- ) {
+    while( i-- ){
       v += Math.pow( (numArr[ i ] - avg), 2 );
     }
     v /= numArr.length;
     return quail.statistics.setDecimal( v, numOfDec );
   },
 
-  standardDeviation : function( numArr, numOfDec ) {
+  standardDeviation : function( numArr, numOfDec ){
     var stdDev = Math.sqrt( quail.statistics.variance( numArr, numOfDec ) );
     return quail.statistics.setDecimal( stdDev, numOfDec );
   }
 };
 
 quail.components.textStatistics = {
+
   cleanText : function(text) {
     return text.replace(/[,:;()\-]/, ' ')
                .replace(/[\.!?]/, '.')
@@ -1984,16 +2054,16 @@ quail.components.textStatistics = {
   },
 
   syllableCount : function(word) {
-    var matchedWord = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '').match(/[aeiouy]{1,2}/g);
-
+    var matchedWord = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '')
+                          .match(/[aeiouy]{1,2}/g);
     if (!matchedWord || matchedWord.length === 0) {
       return 1;
     }
     return matchedWord.length;
   }
 };
-
 quail.components.video = {
+
   /**
    * Iterates over listed video providers and runs their `isVideo` method.
    * @param jQuery $element
@@ -2024,9 +2094,13 @@ quail.components.video = {
   },
 
   providers : {
+
     youTube : {
+
       selector : 'a, iframe',
+
       apiUrl : 'http://gdata.youtube.com/feeds/api/videos/?q=%video&caption&v=2&alt=json',
+
       isVideo : function(element) {
         return (this.getVideoId(element) !== false) ? true : false;
       },
@@ -2035,7 +2109,6 @@ quail.components.video = {
         var attribute = (element.is('iframe')) ? 'src' : 'href';
         var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
         var match = element.attr(attribute).match(regExp);
-
         if (match && match[7].length === 11) {
           return match[7];
         }
@@ -2055,7 +2128,9 @@ quail.components.video = {
     },
 
     flash : {
+
       selector : 'object',
+
       isVideo : function(element) {
         var isVideo = false;
         if (element.find('param').length === 0) {
@@ -2083,7 +2158,9 @@ quail.components.video = {
     },
 
     videoElement : {
+
       selector : 'video',
+
       isVideo : function(element) {
         return element.is('video');
       },
@@ -2094,17 +2171,15 @@ quail.components.video = {
           callback(element, false);
           return;
         }
-
         var language = quail.components.language.getDocumentLanguage(element, true);
         if (element.parents('[lang]').length) {
           language = element.parents('[lang]').first().attr('lang').split('-')[0];
         }
-
         var foundLanguage = false;
         $captions.each(function() {
           if (!$(this).attr('srclang') || $(this).attr('srclang').toLowerCase() === language) {
             foundLanguage = true;
-            try {
+            try{
               var request = $.ajax({ url: $(this).attr('src'),
                         type: 'HEAD',
                         async: false,
@@ -2119,7 +2194,6 @@ quail.components.video = {
             }
           }
         });
-
         if (!foundLanguage) {
           callback(element, false);
           return;
@@ -2273,7 +2347,6 @@ quail.strings.colors = {
   "yellow": "ffff00",
   "yellowgreen": "9acd32"
 };
-
 quail.strings.languageCodes = [
   "bh",
   "bi",
@@ -2476,12 +2549,10 @@ quail.strings.languageCodes = [
   "za",
   "zu"
 ];
-
 quail.strings.newWindow = [
   /new (browser )?(window|frame)/,
   /popup (window|frame)/
 ];
-
 quail.strings.placeholders = [
   "title",
   "untitled",
@@ -2504,7 +2575,6 @@ quail.strings.placeholders = [
   "iframe title",
   "legend"
 ];
-
 quail.strings.redundant = {
   "inputImage":[
     "submit",
@@ -2523,17 +2593,14 @@ quail.strings.redundant = {
     "*"
   ]
 };
-
 quail.strings.siteMap = [
   "site map",
   "map",
   "sitemap"
 ];
-
 quail.strings.skipContent = [
   /(jump|skip) (.*) (content|main|post)/i
 ];
-
 quail.strings.suspiciousLinks = [
   "click here",
   "click",
@@ -2554,7 +2621,6 @@ quail.strings.suspiciousLinks = [
   "aqu&iacute;",
   "image"
 ];
-
 quail.strings.symbols = [
   "|",
   "*",
@@ -2576,13 +2642,12 @@ quail.strings.symbols = [
   '◾'
 ];
 
-quail.KINGStrongList = function(quail, test, Case) {
+quail.KINGStrongList = function (quail, test, Case) {
   test.get('$scope').find('strong').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
     _case.set({
       'status': $(this).parent().is('li') ? 'passed' : 'failed'
@@ -2590,7 +2655,7 @@ quail.KINGStrongList = function(quail, test, Case) {
   });
 };
 
-quail.KINGUseCurrencyAsSymbol = function(quail, test, Case) {
+quail.KINGUseCurrencyAsSymbol = function (quail, test, Case) {
   function testCurrencyFormat(index, element) {
     // Detect dates with several separators.
     var currencyNames = [
@@ -2620,7 +2685,8 @@ quail.KINGUseCurrencyAsSymbol = function(quail, test, Case) {
   test.get('$scope').find('p').each(testCurrencyFormat);
 };
 
-quail.KINGUseLongDateFormat = function(quail, test, Case) {
+quail.KINGUseLongDateFormat = function (quail, test, Case) {
+
   function testDateFormat(index, element) {
     // Detect dates with several separators.
     var dateReg = /\d{1,2}([./-])\d{1,2}\1\d{2,4}/g;
@@ -2667,7 +2733,7 @@ quail.KINGUseLongDateFormat = function(quail, test, Case) {
   test.get('$scope').find(appliableElements).each(testDateFormat);
 };
 
-quail.KINGUsePercentageWithSymbol = function(quail, test, Case) {
+quail.KINGUsePercentageWithSymbol = function (quail, test, Case) {
   function testPercentFormat(index, element) {
     // Detect dates with several separators.
     var percentName = [
@@ -2702,7 +2768,8 @@ quail.aAdjacentWithSameResourceShouldBeCombined = function(quail, test, Case) {
     // no adjacent links, exclude all.
     if (!adjacentLinks) {
       $links.each(excludeSingleLinks);
-    } else {
+    }
+    else {
       $links.each(checkNextLink);
     }
   }
@@ -2711,19 +2778,16 @@ quail.aAdjacentWithSameResourceShouldBeCombined = function(quail, test, Case) {
     var $element = $(element);
     var thisHref = element.getAttribute('href');
     var $nextLink = $element.find('+ a');
-
     if (!$nextLink.length) {
       // We're going over the second link.
       return;
     }
-
     var nextHref = $nextLink[0].getAttribute('href');
     var status = 'passed';
     var _case = Case({
       element: element,
       expected: $element.closest('.quail-test').data('expected')
     });
-
     if (thisHref === nextHref) {
       status = 'failed';
     }
@@ -2749,14 +2813,14 @@ quail.aImgAltNotRepetitive = function(quail, test, Case) {
     var _case = test.add(Case({
       element: this
     }));
-
     var expected = $(this).closest('.quail-test').data('expected');
     if (quail.cleanString($(this).attr('alt')) === quail.cleanString($(this).parent('a').text())) {
       _case.set({
         'expected': expected,
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'expected': expected,
         'status': 'passed'
@@ -2797,7 +2861,7 @@ quail.aInPHasADistinctStyle=function(quail, test, Case){
       styleProperties.push('background');
     }
 
-    $.each(styleProperties, function(i, styleProp) {
+    $.each(styleProperties, function (i, styleProp) {
       if (!result && $elm.css(styleProp) !== $parent.css(styleProp)) {
         result = true;
       }
@@ -2816,11 +2880,11 @@ quail.aInPHasADistinctStyle=function(quail, test, Case){
   // Ignore links where the p only contains white space, <, >, |, \, / and - chars
   var allowedPText = /^([\s|-]|>|<|\\|\/|&(gt|lt);)*$/i;
 
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
     var $scope = $(this);
     var anchors = $scope.find('p a[href]:visible');
 
-    anchors.each(function() {
+    anchors.each(function () {
       var $this = $(this);
       var $p = $this.closest('p');
       var $parent = $this.parent();
@@ -2838,17 +2902,23 @@ quail.aInPHasADistinctStyle=function(quail, test, Case){
 
       if (aText === '' || pText.match(allowedPText)) {
         _case.set('status', 'inapplicable');
+
       } else if ($this.css('color') === $p.css('color')) {
         _case.set('status', 'passed');
+
       } else if (elmHasDistinctStyle($this, $p)) {
         _case.set('status', 'passed');
+
       } else if (elmHasDistinctPosition($this)) {
         _case.set('status', 'passed');
+
       } else if ($this.find('img').length > 0) {
         _case.set('status', 'passed');
+
       } else if ($parent.text().trim() === aText &&
       elmHasDistinctStyle($parent, $p)) {
         _case.set('status', 'passed');
+
       } else {
         _case.set('status', 'failed');
       }
@@ -2862,11 +2932,9 @@ quail.aLinkTextDoesNotBeginWithRedundantWord = function(quail, test, Case) {
   test.get('$scope').find('a').each(function() {
     var $link = $(this);
     var text = '';
-
     if ($(this).find('img[alt]').length) {
       text = text + $(this).find('img[alt]:first').attr('alt');
     }
-
     text = text + $(this).text();
     text = text.toLowerCase();
     var _case;
@@ -2897,21 +2965,18 @@ quail.aLinkWithNonText = function(quail, test, Case) {
       expected: $(this).closest('.quail-test').data('expected')
     });
     test.add(_case);
-
     if (!$(this).is('a:has(img, object, embed)[href]')) {
       _case.set({
         'status': 'inapplicable'
       });
       return;
     }
-
     if (!quail.isUnreadable($(this).text())) {
       _case.set({
         'status': 'passed'
       });
       return;
     }
-
     var unreadable = 0;
     $(this).find('img, object, embed').each(function() {
       if (($(this).is('img') && quail.isUnreadable($(this).attr('alt'))) ||
@@ -2919,12 +2984,12 @@ quail.aLinkWithNonText = function(quail, test, Case) {
         unreadable++;
       }
     });
-
     if ($(this).find('img, object, embed').length === unreadable) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -2937,7 +3002,6 @@ quail.aLinksAreSeparatedByPrintableCharacters = function(quail, test, Case) {
     var _case = test.add(Case({
       element: this
     }));
-
     var expected = $(this).closest('.quail-test').data('expected');
     // Only test if there's another a tag.
     if ($(this).next('a').length) {
@@ -2946,7 +3010,8 @@ quail.aLinksAreSeparatedByPrintableCharacters = function(quail, test, Case) {
           'expected': expected,
           'status': 'failed'
         });
-      } else {
+      }
+      else {
         _case.set({
           'expected': expected,
           'status': 'passed'
@@ -2958,7 +3023,7 @@ quail.aLinksAreSeparatedByPrintableCharacters = function(quail, test, Case) {
 
 quail.aLinksDontOpenNewWindow = function(quail, test, Case) {
   // Links without a target attribute pass.
-  test.get('$scope').find('a').not('[target=_new], [target=_blank]').each(function() {
+  test.get('$scope').find('a').not('[target=_new], [target=_blank]').each(function () {
     test.add(Case({
       element: this,
       'expected': $(this).closest('.quail-test').data('expected'),
@@ -2990,7 +3055,8 @@ quail.aLinksDontOpenNewWindow = function(quail, test, Case) {
         'expected': $link.closest('.quail-test').data('expected'),
         'status': 'passed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
         'expected': $link.closest('.quail-test').data('expected'),
@@ -3003,7 +3069,6 @@ quail.aLinksDontOpenNewWindow = function(quail, test, Case) {
 quail.aLinksNotSeparatedBySymbols = function(quail, test, Case) {
   test.get('$scope').find('a').each(function() {
     var $link = $(this);
-
     if ($link.next('a').length) {
       var text = $link.get(0).nextSibling.wholeText;
       if (typeof text === 'string') {
@@ -3015,14 +3080,18 @@ quail.aLinksNotSeparatedBySymbols = function(quail, test, Case) {
             'status': 'failed'
           }));
         }
-      } else {
+      }
+      // The string between the links is composed of words.
+      else {
         test.add(Case({
           element: this,
           'expected': $link.closest('.quail-test').data('expected'),
           'status': 'passed'
         }));
       }
-    } else {
+    }
+    // If nothing follows the link, then there is nothing to test.
+    else {
       test.add(Case({
         'status': 'inapplicable'
       }));
@@ -3046,11 +3115,12 @@ quail.aMustContainText = function(quail, test, Case) {
       return;
     }
 
-    if (quail.containsReadableText($(this), true)) {
+    if (quail.containsReadableText($(this), true)){
       _case.set({
         'status': 'passed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'failed'
       });
@@ -3064,7 +3134,6 @@ quail.aSuspiciousLinkText = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
     if (!$(this).attr('href')) {
       _case.set({
@@ -3072,17 +3141,16 @@ quail.aSuspiciousLinkText = function(quail, test, Case) {
       });
       return;
     }
-
     var text = $(this).text();
     $(this).find('img[alt]').each(function() {
       text = text + $(this).attr('alt');
     });
-
     if (quail.strings.suspiciousLinks.indexOf(quail.cleanString(text)) > -1) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -3090,7 +3158,8 @@ quail.aSuspiciousLinkText = function(quail, test, Case) {
   });
 };
 
-quail.animatedGifMayBePresent=function(quail, test, Case) {
+quail.animatedGifMayBePresent=function(quail, test, Case){
+
   /**
    * Test if gif is animated
    * Implemented from: https://gist.github.com/3012623.git
@@ -3098,21 +3167,24 @@ quail.animatedGifMayBePresent=function(quail, test, Case) {
    * @param ext
    * @param cb
    */
-  function isAnimatedGif(src, ext, cb) {
-    if (ext !== 'gif'){
+  function isAnimatedGif(src, ext, cb){
+
+    if(ext !== 'gif'){
       cb(false);
       return;
     }
 
-    var request = new XMLHttpRequest();
+    var request=new XMLHttpRequest();
     request.open('GET', src, true);
     request.responseType='arraybuffer';
-    request.addEventListener('load', function() {
+    request.addEventListener('load', function () {
       var arr = new Uint8Array(request.response);
       var frames = 0;
 
       // make sure it's a gif (GIF8)
-      if (arr[0] !== 0x47 || arr[1] !== 0x49 || arr[2] !== 0x46 || arr[3] !== 0x38) {
+      if (arr[0] !== 0x47 || arr[1] !== 0x49 ||
+        arr[2] !== 0x46 || arr[3] !== 0x38)
+      {
         cb(false);
         return;
       }
@@ -3126,11 +3198,14 @@ quail.animatedGifMayBePresent=function(quail, test, Case) {
       // We read through the file til we reach the end of the file, or we've found
       // at least 2 frame headers
       for (var i=0; i < arr.length -9; i++) {
-        if (arr[i] === 0x00 && arr[i+1] === 0x21 && arr[i+2] === 0xF9 && arr[i+3] === 0x04 && arr[i+8] === 0x00 && (arr[i+9] === 0x2C || arr[i+9] === 0x21)) {
+        if (arr[i] === 0x00 && arr[i+1] === 0x21 &&
+          arr[i+2] === 0xF9 && arr[i+3] === 0x04 &&
+          arr[i+8] === 0x00 &&
+          (arr[i+9] === 0x2C || arr[i+9] === 0x21))
+        {
           frames++;
         }
-
-        if (frames > 1) {
+        if(frames > 1){
           cb(true);
           return;
         }
@@ -3141,7 +3216,8 @@ quail.animatedGifMayBePresent=function(quail, test, Case) {
     request.send();
   }
 
-  test.get('$scope').find('img').each(function() {
+  test.get('$scope').find('img').each(function(){
+
     var _case=Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
@@ -3158,13 +3234,13 @@ quail.animatedGifMayBePresent=function(quail, test, Case) {
       return;
     }
 
-    isAnimatedGif(imgSrc, ext, function(animated) {
+    isAnimatedGif(imgSrc, ext, function(animated){
       if (animated) {
         _case.set({
           'status': 'cantTell'
         });
         return;
-      } else {
+      } else{
         _case.set({
           'status': 'inapplicable'
         });
@@ -3185,7 +3261,8 @@ quail.appletContainsTextEquivalent = function(quail, test, Case) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -3219,7 +3296,9 @@ quail.ariaOrphanedContent = function(quail, test, Case) {
         expected: $local.data('expected'),
         status: 'passed'
       }));
-    } else {
+    }
+    // Otherwise, fail the content that falls outside a role.
+    else {
       $orphans.each(function() {
         test.add(Case({
           element: this,
@@ -3231,7 +3310,7 @@ quail.ariaOrphanedContent = function(quail, test, Case) {
   });
 };
 
-quail.audioMayBePresent=function(quail, test, Case) {
+quail.audioMayBePresent=function(quail, test, Case){
   var audioExtensions = ['mp3', 'm4p', 'ogg', 'oga', 'opus', 'wav', 'wma', 'wv'];
 
   test.get('$scope').each(function() {
@@ -3239,7 +3318,7 @@ quail.audioMayBePresent=function(quail, test, Case) {
     var hasCase = false; // Test if a case has been created
 
     // Audio is definately an audio, and objects could be too.
-    $this.find('object, audio').each(function() {
+    $this.find('object, audio').each(function () {
       hasCase = true;
       test.add(Case({
         element: this,
@@ -3249,10 +3328,9 @@ quail.audioMayBePresent=function(quail, test, Case) {
     });
 
     // Links refering to files with an audio extensions are good indicators too
-    $this.find('a[href]').each(function() {
+    $this.find('a[href]').each(function () {
       var $this = $(this);
       var extension = $this.attr('href').split('.').pop();
-
       if ($.inArray(extension, audioExtensions) !== -1) {
         hasCase = true;
         test.add(Case({
@@ -3280,7 +3358,6 @@ quail.blockquoteUseForQuotations = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
     if ($(this).parents('blockquote').length > 0) {
       _case.set({
@@ -3288,12 +3365,13 @@ quail.blockquoteUseForQuotations = function(quail, test, Case) {
       });
       return;
     }
-
-    if ($(this).text().substr(0, 1).search(/'|"|«|“|「/) > -1 && $(this).text().substr(-1, 1).search(/'|"|»|„|」/) > -1) {
+    if ($(this).text().substr(0, 1).search(/'|"|«|“|「/) > -1 &&
+       $(this).text().substr(-1, 1).search(/'|"|»|„|」/) > -1) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -3311,7 +3389,9 @@ quail.closingTagsAreUsed = function(quail, test, Case) {
       // Use the element's ID if it has one.
       if (/#/.test(element.selector.slice(-1)[0])) {
         selector = element.selector.slice(-1)[0];
-      } else {
+      }
+      // Otherwise construct the path from the selector pieces.
+      else {
         selector = element.selector.join(' > ');
       }
 
@@ -3324,7 +3404,9 @@ quail.closingTagsAreUsed = function(quail, test, Case) {
         node = element.raw || selector;
       }
 
-      if (typeof element.closingTag === 'undefined' && !element.closingTag && quail.selfClosingTags.indexOf(element.name.toLowerCase()) === -1) {
+      if (typeof element.closingTag === 'undefined' &&
+            !element.closingTag &&
+            quail.selfClosingTags.indexOf(element.name.toLowerCase()) === -1) {
         test.add(Case({
           element: node,
           // Only attempt to get an expectation for the testrunner if the node
@@ -3332,7 +3414,8 @@ quail.closingTagsAreUsed = function(quail, test, Case) {
           expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
           status: 'failed'
         }));
-      } else {
+      }
+      else {
         test.add(Case({
           element: node,
           // Only attempt to get an expectation for the testrunner if the node
@@ -3346,9 +3429,10 @@ quail.closingTagsAreUsed = function(quail, test, Case) {
 };
 
 quail.colorBackgroundGradientContrast = function (quail, test, Case, options) {
-  var colors = quail.components.color.colors;
-  var buildCase = quail.components.color.buildCase;
-  var id = 'colorBackgroundGradientContrast';
+
+  var colors    = quail.components.color.colors;
+  var buildCase =  quail.components.color.buildCase;
+  var id        = 'colorBackgroundGradientContrast';
 
   /**
    *
@@ -3379,7 +3463,8 @@ quail.colorBackgroundGradientContrast = function (quail, test, Case, options) {
     // Check each color.
     failureFound = false;
     for (i = 0; !failureFound && i < numberOfSamples; i++) {
-      var testResult = colors.testElmBackground(options.algorithm, $this, '#' + rainbow.colourAt(i));
+      var testResult = colors.testElmBackground(options.algorithm, $this,
+            '#' + rainbow.colourAt(i));
 
       if (!testResult) {
         buildCase(test, Case, element, 'failed', id, 'The background gradient makes the text unreadable');
@@ -3394,7 +3479,76 @@ quail.colorBackgroundGradientContrast = function (quail, test, Case, options) {
   }
 
 
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
+    var textNodes = document.evaluate('descendant::text()[normalize-space()]', this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+    var nodes     = [];
+    var textNode  = textNodes.iterateNext();
+
+    // Loop has to be separated. If we try to iterate and rund testCandidates
+    // the xpath thing will crash because document is being modified.
+    while (textNode) {
+      if (quail.components.color.textShouldBeTested(textNode)) {
+        nodes.push(textNode.parentNode);
+      }
+      textNode = textNodes.iterateNext();
+    }
+
+    if (nodes.length === 0) {
+      buildCase(test, Case, null, 'inapplicable', '', 'There is no text to evaluate');
+    }
+
+    nodes.forEach(function (element) {
+      colorBackgroundGradientContrast(test, Case, options, $(element), element);
+    });
+
+  });
+};
+
+quail.colorBackgroundImageContrast = function (quail, test, Case, options) {
+
+  var colors    = quail.components.color.colors;
+  var buildCase =  quail.components.color.buildCase;
+  var id        = 'colorBackgroundImageContrast';
+
+  /**
+   *
+   */
+  function colorBackgroundImageContrast(test, Case, options, $this, element) {
+    // Check if there's a backgroundImage using DOM.
+    var backgroundImage = colors.getBackgroundImage($this);
+    if (!backgroundImage) {
+      return;
+    }
+
+    var img = document.createElement('img');
+    img.crossOrigin = "Anonymous";
+
+    // Get average color of the background image. The image must first load
+    // before information about it is available to the DOM.
+    img.onload = function () {
+      var averageColorBackgroundImage = colors.getAverageRGB(img);
+      var testResult = colors.testElmBackground(options.algorithm, $this,
+            averageColorBackgroundImage);
+
+      // Build a case.
+      if (!testResult) {
+        buildCase(test, Case, element, 'failed', id, 'The element\'s background image makes the text unreadable');
+
+      } else {
+        buildCase(test, Case, element, 'passed', id, 'The element\'s background image does not affect readability');
+      }
+    };
+
+    img.onerror = img.onabort = function () {
+      buildCase(test, Case, element, 'cantTell', id, 'The element\'s background image could not be loaded (' + backgroundImage + ')');
+    };
+
+    // Load the image.
+    img.src = backgroundImage;
+  }
+
+
+  test.get('$scope').each(function () {
     var textNodes = document.evaluate('descendant::text()[normalize-space()]', this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
     var nodes = [];
     var textNode = textNodes.iterateNext();
@@ -3413,81 +3567,17 @@ quail.colorBackgroundGradientContrast = function (quail, test, Case, options) {
     }
 
     nodes.forEach(function (element) {
-      colorBackgroundGradientContrast(test, Case, options, $(element), element);
-    });
-  });
-};
-
-quail.colorBackgroundImageContrast = function (quail, test, Case, options) {
-  var colors = quail.components.color.colors;
-  var buildCase = quail.components.color.buildCase;
-  var id = 'colorBackgroundImageContrast';
-
-  /**
-   *
-   */
-  function colorBackgroundImageContrast(test, Case, options, $this, element) {
-    // Check if there's a backgroundImage using DOM.
-    var backgroundImage = colors.getBackgroundImage($this);
-    if (!backgroundImage) {
-      return;
-    }
-
-    var img = document.createElement('img');
-    img.crossOrigin = "Anonymous";
-
-    // Get average color of the background image. The image must first load
-    // before information about it is available to the DOM.
-    img.onload = function() {
-      var averageColorBackgroundImage = colors.getAverageRGB(img);
-      var testResult = colors.testElmBackground(options.algorithm, $this,
-            averageColorBackgroundImage);
-
-      // Build a case.
-      if (!testResult) {
-        buildCase(test, Case, element, 'failed', id, 'The element\'s background image makes the text unreadable');
-      } else {
-        buildCase(test, Case, element, 'passed', id, 'The element\'s background image does not affect readability');
-      }
-    };
-
-    img.onerror = img.onabort = function() {
-      buildCase(test, Case, element, 'cantTell', id, 'The element\'s background image could not be loaded (' + backgroundImage + ')');
-    };
-
-    // Load the image.
-    img.src = backgroundImage;
-  }
-
-
-  test.get('$scope').each(function() {
-    var textNodes = document.evaluate('descendant::text()[normalize-space()]', this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-    var nodes = [];
-    var textNode = textNodes.iterateNext();
-
-    // Loop has to be separated. If we try to iterate and rund testCandidates
-    // the xpath thing will crash because document is being modified.
-    while (textNode) {
-      if (quail.components.color.textShouldBeTested(textNode)) {
-        nodes.push(textNode.parentNode);
-      }
-      textNode = textNodes.iterateNext();
-    }
-
-    if (nodes.length === 0) {
-      buildCase(test, Case, null, 'inapplicable', '', 'There is no text to evaluate');
-    }
-
-    nodes.forEach(function(element) {
       colorBackgroundImageContrast(test, Case, options, $(element), element);
     });
   });
 };
 
-quail.colorElementBehindBackgroundGradientContrast = function(quail, test, Case, options) {
-  var colors = quail.components.color.colors;
-  var buildCase = quail.components.color.buildCase;
-  var id = 'colorElementBehindBackgroundGradientContrast';
+quail.colorElementBehindBackgroundGradientContrast = function (quail, test, Case, options) {
+
+  var colors    = quail.components.color.colors;
+  var buildCase =  quail.components.color.buildCase;
+  var id        = 'colorElementBehindBackgroundGradientContrast';
+
 
   /**
    *
@@ -3533,7 +3623,8 @@ quail.colorElementBehindBackgroundGradientContrast = function(quail, test, Case,
     }
   }
 
-  test.get('$scope').each(function() {
+
+  test.get('$scope').each(function () {
     var textNodes = document.evaluate('descendant::text()[normalize-space()]', this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
     var nodes = [];
     var textNode = textNodes.iterateNext();
@@ -3555,12 +3646,14 @@ quail.colorElementBehindBackgroundGradientContrast = function(quail, test, Case,
       colorElementBehindBackgroundGradientContrast(test, Case, options, $(element), element);
     });
   });
+
 };
 
-quail.colorElementBehindBackgroundImageContrast = function(quail, test, Case, options) {
-  var colors = quail.components.color.colors;
-  var buildCase = quail.components.color.buildCase;
-  var id = 'colorElementBehindBackgroundImageContrast';
+quail.colorElementBehindBackgroundImageContrast = function (quail, test, Case, options) {
+
+  var colors    = quail.components.color.colors;
+  var buildCase =  quail.components.color.buildCase;
+  var id        = 'colorElementBehindBackgroundImageContrast';
 
   /**
    *
@@ -3582,19 +3675,20 @@ quail.colorElementBehindBackgroundImageContrast = function(quail, test, Case, op
     img.crossOrigin = "Anonymous";
     // The image must first load before information about it is available to
     // the DOM.
-    img.onload = function() {
+    img.onload = function () {
+
       // Get average color of the background image.
       var averageColorBehindBackgroundImage = colors.getAverageRGB(img);
-      var testResult = colors.testElmBackground(options.algorithm, $this, averageColorBehindBackgroundImage);
-
+      var testResult = colors.testElmBackground(options.algorithm, $this,
+            averageColorBehindBackgroundImage);
       if (!testResult) {
         buildCase(test, Case, element, 'failed', id, 'The background image of the element behind this element makes the text unreadable');
+
       } else {
         buildCase(test, Case, element, 'passed', id, 'The background image of the element behind this element does not affect readability');
       }
     };
-
-    img.onerror = img.onabort = function() {
+    img.onerror = img.onabort = function () {
       buildCase(test, Case, element, 'cantTell', id, 'The background image of the element behind this element could not be loaded (' + behindBackgroundImage + ')');
     };
     // Load the image.
@@ -3602,7 +3696,7 @@ quail.colorElementBehindBackgroundImageContrast = function(quail, test, Case, op
   }
 
 
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
     var textNodes = document.evaluate('descendant::text()[normalize-space()]', this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
     var nodes = [];
     var textNode = textNodes.iterateNext();
@@ -3627,9 +3721,10 @@ quail.colorElementBehindBackgroundImageContrast = function(quail, test, Case, op
 };
 
 quail.colorElementBehindContrast = function (quail, test, Case, options) {
-  var colors = quail.components.color.colors;
-  var buildCase = quail.components.color.buildCase;
-  var id = 'colorElementBehindContrast';
+
+  var colors    = quail.components.color.colors;
+  var buildCase =  quail.components.color.buildCase;
+  var id        = 'colorElementBehindContrast';
 
   function colorElementBehindContrast(test, Case, options, $this, element) {
     // Check text and background using element behind current element.
@@ -3642,17 +3737,20 @@ quail.colorElementBehindContrast = function (quail, test, Case, options) {
       return;
     }
 
-    var testResult = colors.testElmBackground(options.algorithm, $this, backgroundColorBehind);
+    var testResult = colors.testElmBackground(options.algorithm, $this,
+          backgroundColorBehind);
 
     // Build a case.
     if (!testResult) {
       buildCase(test, Case, element, 'failed', id, 'The element behind this element makes the text unreadable');
-    } else {
+    }
+    else {
       buildCase(test, Case, element, 'passed', id, 'The element behind this element does not affect readability');
     }
   }
 
-  test.get('$scope').each(function() {
+
+  test.get('$scope').each(function () {
     var textNodes = document.evaluate('descendant::text()[normalize-space()]', this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
     var nodes = [];
     var textNode = textNodes.iterateNext();
@@ -3673,13 +3771,15 @@ quail.colorElementBehindContrast = function (quail, test, Case, options) {
     nodes.forEach(function (element) {
       colorElementBehindContrast(test, Case, options, $(element), element);
     });
+
   });
 };
 
-quail.colorFontContrast = function(quail, test, Case, options) {
-  var colors = quail.components.color.colors;
-  var buildCase = quail.components.color.buildCase;
-  var id = 'colorFontContrast';
+quail.colorFontContrast = function (quail, test, Case, options) {
+
+  var colors    = quail.components.color.colors;
+  var buildCase =  quail.components.color.buildCase;
+  var id        = 'colorFontContrast';
 
   /**
    *
@@ -3689,13 +3789,14 @@ quail.colorFontContrast = function(quail, test, Case, options) {
     // Build a case.
     if (!colors.testElmContrast(options.algorithm, $this)) {
       buildCase(test, Case, element, 'failed', id, 'The font contrast of the text impairs readability');
-    } else {
+    }
+    else {
       buildCase(test, Case, element, 'passed', id, 'The font contrast of the text is sufficient for readability');
     }
   }
 
 
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
     var textNodes = document.evaluate('descendant::text()[normalize-space()]', this, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
     var nodes = [];
     var textNode = textNodes.iterateNext();
@@ -3713,7 +3814,7 @@ quail.colorFontContrast = function(quail, test, Case, options) {
       buildCase(test, Case, null, 'inapplicable', '', 'There is no text to evaluate');
     }
 
-    nodes.forEach(function(element) {
+    nodes.forEach(function (element) {
       colorFontContrast(test, Case, options, $(element), element);
     });
   });
@@ -3728,7 +3829,6 @@ quail.contentPositioningShouldNotChangeMeaning = function(quail, test, Case) {
     coordinates = {top: {}, left: {}, right: {}, bottom: {}};
     failed = false;
     var $container = $(this);
-
     $container.find('h1, h2, h3, h4, h5, h6, p, blockquote, ol, li, ul, dd, dt').filter(':quailCss(position=absolute)').each(function() {
       for (var i = 0; i < positions.length; i++) {
         if (typeof $(this).css(positions[i]) !== 'undefined' && $(this).css(positions[i]) !== 'auto') {
@@ -3766,7 +3866,6 @@ quail.definitionListsAreUsed = function(quail, test, Case) {
       'status': 'inapplicable'
     });
   });
-
   test.get('$scope').find('p, li').each(function() {
     var _case = Case({
       element: this,
@@ -3774,7 +3873,6 @@ quail.definitionListsAreUsed = function(quail, test, Case) {
     });
     test.add(_case);
     var $item = $(this);
-
     $(this).find('span, strong, em, b, i').each(function() {
       if ($(this).text().length < 50 && $item.text().search($(this).text()) === 0) {
         if ($(this).is('span')) {
@@ -3799,8 +3897,10 @@ quail.doNotUseGraphicalSymbolToConveyInformation = function(quail, test, Case) {
   test.get('$scope').find(quail.textSelector + ':not(abbr, acronym)').each(function() {
     var whiteList = '✓';
     var blackList = '?xo[]()+-!*xX';
+
     var text = $(this).text();
 
+    // @todo add support for other languages.
     // Remove all alphanumeric characters.
     var textLeft = text.replace(/[\W\s]+/g, '');
     // If we have an empty string something is wrong.
@@ -3809,24 +3909,27 @@ quail.doNotUseGraphicalSymbolToConveyInformation = function(quail, test, Case) {
       if (whiteList.indexOf(text) === -1) {
         test.add(Case({
           element: this,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(this)),
           status: 'failed'
         }));
       }
-    } else if (text.length === 1 && blackList.indexOf(text) >= 0) {
+    }
+    // Check regularly used single character symbols.
+    else if (text.length === 1 && blackList.indexOf(text) >= 0) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'passed'
@@ -3837,7 +3940,7 @@ quail.doNotUseGraphicalSymbolToConveyInformation = function(quail, test, Case) {
   test.get('$scope').find(quail.textSelector).filter('abbr, acronym').each(function() {
     test.add(Case({
       element: this,
-      expected: (function(element) {
+      expected: (function (element) {
         return quail.components.resolveExpectation(element);
       }(this)),
       status: 'inapplicable'
@@ -3853,7 +3956,8 @@ quail.doctypeProvided = function(quail, test, Case) {
       expected: 'fail',
       status: 'failed'
     }));
-  } else {
+  }
+  else {
     test.add(Case({
       element: doc,
       expected: 'pass',
@@ -3871,8 +3975,8 @@ quail.documentAcronymsHaveElement = function(quail, test, Case) {
 };
 
 quail.documentIDsMustBeUnique = function(quail, test, Case) {
-  test.get('$scope').each(function() {
-    if ($(this).children().length === 0) {
+  test.get('$scope').each(function(){
+    if($(this).children().length === 0) {
       test.add(Case({
         element: this,
         'status': 'inapplicable',
@@ -3887,7 +3991,7 @@ quail.documentIDsMustBeUnique = function(quail, test, Case) {
       expected: $(this).closest('.quail-test').data('expected')
     }));
   });
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function(){
     var ids = {};
     $(this).find('[id]').each(function() {
       var _case = Case({
@@ -3896,20 +4000,19 @@ quail.documentIDsMustBeUnique = function(quail, test, Case) {
           return quail.components.resolveExpectation(element);
         }(this))
       });
-
       test.add(_case);
-
-      if (typeof ids[$(this).attr('id')] === 'undefined' && Object.keys(ids).length === 0) {
+      if(typeof ids[$(this).attr('id')] === 'undefined' && Object.keys(ids).length === 0){
         _case.set({
           'status': 'inapplicable'
         });
         ids[$(this).attr('id')] = $(this).attr('id');
-      } else if (typeof ids[$(this).attr('id')] === 'undefined') {
+      }else if (typeof ids[$(this).attr('id')] === 'undefined') {
         _case.set({
           'status': 'passed'
         });
         ids[$(this).attr('id')] = $(this).attr('id');
-      } else {
+      }
+      else {
         _case.set({
           'status': 'failed'
         });
@@ -3925,21 +4028,19 @@ quail.documentIsWrittenClearly = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (quail.isUnreadable(text)) {
       _case.set({
         'status' : 'inapplicable'
       });
       return;
     }
-
     if (Math.round((206.835 - (1.015 * quail.components.textStatistics.averageWordsPerSentence(text)) - (84.6 * quail.components.textStatistics.averageSyllablesPerWord(text)))) < 60) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -3963,7 +4064,6 @@ quail.documentLangIsISO639Standard = function(quail, test, Case) {
   var matchedLang = false; // Check to see if a languagecode was matched
 
   test.add(_case);
-
   if (!$element.is('html') || typeof langAttr === 'undefined') {
     _case.set({
       'status' : 'inapplicable'
@@ -3979,12 +4079,15 @@ quail.documentLangIsISO639Standard = function(quail, test, Case) {
 
     if (!matchedLang) {
       _case.set({'status': 'failed'});
+
     } else if (langAttr.match(/^[a-z]{2}(-[A-Z]{2})?$/) === null) {
       _case.set({'status': 'failed'});
+
     } else {
       _case.set({'status': 'passed'});
     }
   }
+
 };
 
 quail.documentStrictDocType = function(quail, test, Case) {
@@ -3996,7 +4099,8 @@ quail.documentStrictDocType = function(quail, test, Case) {
       expected: test.get('$scope').data('expected'),
       status: 'failed'
     }));
-  } else {
+  }
+  else {
     test.add(Case({
       element: document,
       expected: test.get('$scope').data('expected'),
@@ -4020,7 +4124,9 @@ quail.documentTitleIsShort = function(quail, test, Case) {
     return;
   }
   _case.set({
-    'status': $title.text().length > 150 ? 'failed' : 'passed'
+    'status': $title.text().length > 150 ?
+      'failed' :
+      'passed'
   });
 };
 
@@ -4031,6 +4137,7 @@ quail.documentValidatesToDocType = function() {
 };
 
 quail.documentVisualListsAreMarkedUp = function(quail, test, Case) {
+
   var itemStarters = [
     '♦', '›', '»', '‣', '▶', '◦', '✓', '◽', '•', '—', '◾', // single characters
     '-\\D',                       // dash, except for negative numbers
@@ -4055,9 +4162,7 @@ quail.documentVisualListsAreMarkedUp = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     var matches = $(this).html().match(symbols);
     _case.set({
       'status': (matches && matches.length > 2) ?
@@ -4068,20 +4173,22 @@ quail.documentVisualListsAreMarkedUp = function(quail, test, Case) {
 };
 
 quail.elementAttributesAreValid = function(quail, test, Case) {
-  quail.components.htmlSource.getHtml(function(html, parsed) {
-    if (!parsed) {
-      return;
-    }
-    quail.components.htmlSource.traverse(parsed, function(element) {
-      if (typeof element.raw === 'undefined' || !$.isArray(element.selector)) {
-        return;
-      }
+	quail.components.htmlSource.getHtml(function(html, parsed) {
+		if (!parsed) {
+			return;
+		}
+		quail.components.htmlSource.traverse(parsed, function(element) {
+			if (typeof element.raw === 'undefined' || !$.isArray(element.selector)) {
+				return;
+			}
 
       var failed = false, selector;
       // Use the element's ID if it has one.
       if (/#/.test(element.selector.slice(-1)[0])) {
         selector = element.selector.slice(-1)[0];
-      } else {
+      }
+      // Otherwise construct the path from the selector pieces.
+      else {
         selector = element.selector.join(' > ');
       }
 
@@ -4094,52 +4201,51 @@ quail.elementAttributesAreValid = function(quail, test, Case) {
         node = element.raw || selector;
       }
 
-      // Element has mis-matched quotes
-      var quotes = element.raw.match(/\'|\"/g);
+			//Element has mis-matched quotes
+			var quotes = element.raw.match(/\'|\"/g);
+			if (quotes && quotes.length % 2 !== 0) {
+				test.add(Case({
+					element: node,
+					expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
+					status: 'failed'
+				}));
+				failed = true;
+			}
 
-      if (quotes && quotes.length % 2 !== 0) {
-        test.add(Case({
-          element: node,
-          expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
-          status: 'failed'
-        }));
-        failed = true;
-      }
+			//Element attributes not separated by a space
+			if (element.raw.search(/([a-z]*)=(\'|\")([a-z\.]*)(\'|\")[a-z]/i) > -1) {
+				test.add(Case({
+					element: node,
+					expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
+					status: 'failed'
+				}));
+				failed = true;
+			}
 
-      // Element attributes not separated by a space
-      if (element.raw.search(/([a-z]*)=(\'|\")([a-z\.]*)(\'|\")[a-z]/i) > -1) {
-        test.add(Case({
-          element: node,
-          expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
-          status: 'failed'
-        }));
-        failed = true;
-      }
+			//Element with space as an attribute is not surrounded by quotes
+			var splitElement = element.raw.split('=');
+			splitElement.shift();
+			$.each(splitElement, function() {
+				if (this.search(/\'|\"/) === -1 && this.search(/\s/i) > -1) {
+					test.add(Case({
+						element: node,
+						expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
+						status: 'failed'
+					}));
+					failed = true;
+				}
+			});
 
-      // Element with space as an attribute is not surrounded by quotes
-      var splitElement = element.raw.split('=');
-      splitElement.shift();
-      $.each(splitElement, function() {
-        if (this.search(/\'|\"/) === -1 && this.search(/\s/i) > -1) {
-          test.add(Case({
-            element: node,
-            expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
-            status: 'failed'
-          }));
-          failed = true;
-        }
-      });
-
-      // Passes.
-      if (!failed) {
-        test.add(Case({
-          element: node,
-          expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
-          status: 'passed'
-        }));
-      }
-    });
-  });
+			// Passes.
+			if (!failed) {
+				test.add(Case({
+					element: node,
+					expected: (typeof node === 'object') && (node.nodeType === 1) && $(node).closest('.quail-test').data('expected') || null,
+					status: 'passed'
+				}));
+			}
+		});
+	});
 };
 
 quail.elementsDoNotHaveDuplicateAttributes = function(quail, test, Case) {
@@ -4147,7 +4253,6 @@ quail.elementsDoNotHaveDuplicateAttributes = function(quail, test, Case) {
     if (!parsed) {
       return;
     }
-
     quail.components.htmlSource.traverse(parsed, function(element) {
       if (element.type !== 'tag' || !$.isArray(element.selector)) {
         return;
@@ -4156,7 +4261,9 @@ quail.elementsDoNotHaveDuplicateAttributes = function(quail, test, Case) {
       // Use the element's ID if it has one.
       if (/#/.test(element.selector.slice(-1)[0])) {
         selector = element.selector.slice(-1)[0];
-      } else {
+      }
+      // Otherwise construct the path from the selector pieces.
+      else {
         selector = element.selector.join(' > ');
       }
       // If selector matches a DOM node in the scope, get a reference to the
@@ -4167,7 +4274,6 @@ quail.elementsDoNotHaveDuplicateAttributes = function(quail, test, Case) {
       if (!node) {
         node = element.raw || selector;
       }
-
       if (typeof element.attributes !== 'undefined') {
         var attrs = [];
         $.each(element.attributes, function(index, attribute) {
@@ -4185,7 +4291,9 @@ quail.elementsDoNotHaveDuplicateAttributes = function(quail, test, Case) {
             info: attrs,
             status: 'failed'
           }));
-        } else {
+        }
+        // Otherwise it passes.
+        else {
           test.add(Case({
             element: node,
             // Only attempt to get an expectation for the testrunner if the node
@@ -4206,9 +4314,7 @@ quail.embedHasAssociatedNoEmbed = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     _case.set({
       'status': ($(this).find('noembed').length || $(this).next().is('noembed')) ?
         'passed' :
@@ -4224,20 +4330,18 @@ quail.emoticonsExcessiveUse = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     $.each($(this).text().split(' '), function(index, word) {
       if (word.search(quail.emoticonRegex) > -1 ) {
         count++;
       }
     });
-
     if (count === 0) {
       _case.set({
         'status': 'inapplicable'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': (count > 4) ?
           'failed' :
@@ -4255,20 +4359,16 @@ quail.emoticonsMissingAbbr = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     $clone.find('abbr, acronym').each(function() {
       $(this).remove();
     });
-
     var status = 'passed';
     $.each($clone.text().split(' '), function(index, word) {
       if (word.search(quail.emoticonRegex) > -1 ) {
         status = 'failed';
       }
     });
-
     _case.set({
       'status': status
     });
@@ -4281,16 +4381,13 @@ quail.focusIndicatorVisible = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     var noFocus = {
       borderWidth : $(this).css('border-width'),
       borderColor : $(this).css('border-color'),
       backgroundColor : $(this).css('background-color'),
       boxShadow : $(this).css('box-shadow')
     };
-
     $(this).focus();
     if (noFocus.backgroundColor.trim() !== $(this).css('background-color').trim()) {
       $(this).blur();
@@ -4317,7 +4414,6 @@ quail.focusIndicatorVisible = function(quail, test, Case) {
       });
       return;
     }
-
     $(this).blur();
     _case.set({
       'status': 'failed'
@@ -4329,10 +4425,8 @@ quail.formWithRequiredLabel = function(quail, test, Case) {
   var redundant = quail.strings.redundant;
   var lastStyle, currentStyle = false;
   redundant.required[redundant.required.indexOf('*')] = /\*/g;
-
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
     var $local = $(this);
-
     $local.find('label').each(function() {
       var text = $(this).text().toLowerCase();
       var $label = $(this);
@@ -4342,7 +4436,6 @@ quail.formWithRequiredLabel = function(quail, test, Case) {
           return quail.components.resolveExpectation(element);
         }(this))
       }));
-
       for (var word in redundant.required) {
         if (text.search(word) >= 0 && !test.get('$scope').find('#' + $label.attr('for')).attr('aria-required')) {
           _case.set({
@@ -4350,7 +4443,6 @@ quail.formWithRequiredLabel = function(quail, test, Case) {
           });
         }
       }
-
       currentStyle = $label.css('color') + $label.css('font-weight') + $label.css('background-color');
       if (lastStyle && currentStyle !== lastStyle) {
         _case.set({
@@ -4383,16 +4475,16 @@ quail.headerTextIsTooLong = function(quail, test, Case) {
 };
 
 quail.headersAttrRefersToATableCell = function(quail, test, Case) {
+
   // Table cell headers without referred ids
   test.get('$scope').find('table').each(function() {
+
     var element = this;
     var _case = Case({
-      element: element,
-      expected: $(this).closest('.quail-test').data('expected')
-    });
-
+        element: element,
+        expected: $(this).closest('.quail-test').data('expected')
+      });
     test.add(_case);
-
     var elmHeaders = $(element).find('th[headers], td[headers]');
 
     if (elmHeaders.length === 0) {
@@ -4427,9 +4519,7 @@ quail.headersUseToMarkSections = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     var $paragraph = $(this);
     $paragraph.find('strong:first, em:first, i:first, b:first').each(function() {
       _case.set({
@@ -4445,9 +4535,7 @@ quail.headersUseToMarkSections = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     var $list = $(this);
     if ($list.prevAll(':header').length ||
       $list.find('li').length !== $list.find('li:has(a)').length) {
@@ -4462,7 +4550,6 @@ quail.headersUseToMarkSections = function(quail, test, Case) {
         isNavigation = false;
       }
     });
-
     if (isNavigation) {
       _case.set({
         'status': 'failed'
@@ -4476,13 +4563,17 @@ quail.headersUsedToIndicateMainContent = function(quail, test, Case) {
     var $local = $(this);
     var $content = quail.components.content.findContent($local);
 
-    if (typeof $content !== 'undefined' && ($content.find(':header').length === 0 || !$content.find(quail.textSelector).first().is(':header'))) {
+    if (typeof $content !== 'undefined' && (
+      $content.find(':header').length === 0 ||
+      !$content.find(quail.textSelector).first().is(':header')
+      )) {
       test.add(Case({
         element: $content.get(0),
         expected: $content.closest('.quail-test').data('expected'),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: $content.get(0),
         expected: $content.closest('.quail-test').data('expected'),
@@ -4499,7 +4590,6 @@ quail.idRefHasCorrespondingId = function(quail, test, Case) {
       element: this,
       expected: $this.closest('.quail-test').data('expected')
     });
-
     test.add(_case);
 
     var find = $this.attr('for') || $this.attr('aria-activedescendant');
@@ -4507,7 +4597,8 @@ quail.idRefHasCorrespondingId = function(quail, test, Case) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4516,14 +4607,16 @@ quail.idRefHasCorrespondingId = function(quail, test, Case) {
 };
 
 quail.idrefsHasCorrespondingId = function( quail, test, Case ) {
-  function getAttribute($element) {
+
+  function getAttribute($element){
     var attribute = [];
     var attributeList = ['headers', 'aria-controls', 'aria-describedby', 'aria-flowto', 'aria-labelledby', 'aria-owns'];
 
-    $.each(attributeList, function(index, item) {
+    $.each(attributeList, function(index, item){
+
       var attr =  $element.attr(item);
 
-      if (typeof attr !== typeof undefined && attr !== false) {
+      if(typeof attr !== typeof undefined && attr !== false){
         attribute = attr;
         return;
       }
@@ -4532,9 +4625,13 @@ quail.idrefsHasCorrespondingId = function( quail, test, Case ) {
   }
 
   test.get('$scope').each(function() {
-      var testableElements = $(this).find('td[headers], th[headers], [aria-controls], [aria-describedby], [aria-flowto], ' + '[aria-labelledby], [aria-owns]');
+
+      var testableElements = $(this).find(
+        'td[headers], th[headers], [aria-controls], [aria-describedby], [aria-flowto], ' +
+        '[aria-labelledby], [aria-owns]');
 
       if (testableElements.length === 0) {
+
         test.add(Case({
           element: this,
           expected: $(this).closest('.quail-test').data('expected'),
@@ -4542,6 +4639,7 @@ quail.idrefsHasCorrespondingId = function( quail, test, Case ) {
         }));
         return;
       } else {
+
         testableElements.each(function() {
           var element = this;
           var _case = test.add(Case({
@@ -4553,6 +4651,7 @@ quail.idrefsHasCorrespondingId = function( quail, test, Case ) {
           var status = 'passed';
 
           $.each(attributes, function(index, item) {
+
             if (item !== "" && $('#' + item).length === 0) {
               status = 'failed';
               return;
@@ -4564,10 +4663,10 @@ quail.idrefsHasCorrespondingId = function( quail, test, Case ) {
           });
         });
       }
+
     }
   );
 };
-
 quail.imgAltIsDifferent = function(quail, test, Case) {
   test.get('$scope').find('img:not([src])').each(function() {
     var _case = Case({
@@ -4575,23 +4674,20 @@ quail.imgAltIsDifferent = function(quail, test, Case) {
       expected: $(this).closest('.quail-test').data('expected'),
       'status': 'inapplicable'
     });
-
     test.add(_case);
   });
-
   test.get('$scope').find('img[alt][src]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).attr('src') === $(this).attr('alt') || $(this).attr('src').split('/').pop() === $(this).attr('alt')) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4605,9 +4701,7 @@ quail.imgAltIsTooLong = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     _case.set({
       'status': ($(this).attr('alt').length > 100) ?
         'failed' :
@@ -4625,11 +4719,10 @@ quail.imgAltNotEmptyInAnchor = function(quail, test, Case) {
       element: this,
       expected: $a.closest('.quail-test').data('expected')
     });
-
     test.add(_case);
 
     // Concat all alt attributes of images to the text of the paragraph
-    $a.find('img[alt]').each(function() {
+    $a.find('img[alt]').each(function () {
       text += ' ' + $(this).attr('alt');
     });
 
@@ -4637,7 +4730,8 @@ quail.imgAltNotEmptyInAnchor = function(quail, test, Case) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4652,17 +4746,17 @@ quail.imgAltTextNotRedundant = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (typeof altText[$(this).attr('alt')] === 'undefined') {
       altText[$(this).attr('alt')] = $(this).attr('src');
-    } else {
+    }
+    else {
       if (altText[$(this).attr('alt')] !== $(this).attr('src')) {
         _case.set({
           'status': 'failed'
         });
-      } else {
+      }
+      else {
         _case.set({
           'status': 'passed'
         });
@@ -4678,9 +4772,7 @@ quail.imgGifNoFlicker = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     $.ajax({
       url: $image.attr('src'),
       dataType: 'text',
@@ -4689,7 +4781,8 @@ quail.imgGifNoFlicker = function(quail, test, Case) {
           _case.set({
             'status' : 'failed'
           });
-        } else {
+        }
+        else {
           _case.set({
             'status' : 'inapplicable'
           });
@@ -4699,21 +4792,20 @@ quail.imgGifNoFlicker = function(quail, test, Case) {
   });
 };
 
-quail.imgHasLongDesc = function(quail, test, Case) {
+quail.imgHasLongDesc = function (quail, test, Case) {
   test.get('$scope').find('img[longdesc]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).attr('longdesc') === $(this).attr('alt') ||
         !quail.validURL($(this).attr('longdesc'))) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4721,7 +4813,7 @@ quail.imgHasLongDesc = function(quail, test, Case) {
   });
 };
 
-quail.imgImportantNoSpacerAlt = function(quail, test, Case) {
+quail.imgImportantNoSpacerAlt = function (quail, test, Case) {
   test.get('$scope').find('img[alt]').each(function() {
     var width = ($(this).width()) ? $(this).width() : parseInt($(this).attr('width'), 10);
     var height = ($(this).height()) ? $(this).height() : parseInt($(this).attr('height'), 10);
@@ -4729,9 +4821,7 @@ quail.imgImportantNoSpacerAlt = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (quail.isUnreadable($(this).attr('alt').trim()) &&
         $(this).attr('alt').length > 0 &&
         width > 50 &&
@@ -4739,7 +4829,8 @@ quail.imgImportantNoSpacerAlt = function(quail, test, Case) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4747,40 +4838,37 @@ quail.imgImportantNoSpacerAlt = function(quail, test, Case) {
   });
 };
 
-quail.imgMapAreasHaveDuplicateLink = function(quail, test, Case) {
+quail.imgMapAreasHaveDuplicateLink = function (quail, test, Case) {
   var links = { };
   test.get('$scope').find('a').each(function() {
     links[$(this).attr('href')] = $(this).attr('href');
   });
-
   test.get('$scope').find('img[usemap]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     var $image = $(this);
     var $map = test.get('$scope').find($image.attr('usemap'));
-
     if (!$map.length) {
       $map = test.get('$scope').find('map[name="' + $image.attr('usemap').replace('#', '') + '"]');
     }
-
     if ($map.length) {
       $map.find('area').each(function() {
         if (typeof links[$(this).attr('href')] === 'undefined') {
           _case.set({
             'status': 'failed'
           });
-        } else {
+        }
+        else {
           _case.set({
             'status': 'passed'
           });
         }
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'inapplicable'
       });
@@ -4788,21 +4876,20 @@ quail.imgMapAreasHaveDuplicateLink = function(quail, test, Case) {
   });
 };
 
-quail.imgNonDecorativeHasAlt = function(quail, test, Case) {
+quail.imgNonDecorativeHasAlt = function (quail, test, Case) {
   test.get('$scope').find('img[alt]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (quail.isUnreadable($(this).attr('alt')) &&
         ($(this).width() > 100 || $(this).height() > 100)) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4810,15 +4897,13 @@ quail.imgNonDecorativeHasAlt = function(quail, test, Case) {
   });
 };
 
-quail.imgWithMathShouldHaveMathEquivalent = function(quail, test, Case) {
+quail.imgWithMathShouldHaveMathEquivalent = function (quail, test, Case) {
   test.get('$scope').find('img:not(img:has(math), img:has(tagName))').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (!$(this).parent().find('math').length) {
       _case.set({
         'status': 'failed'
@@ -4827,20 +4912,19 @@ quail.imgWithMathShouldHaveMathEquivalent = function(quail, test, Case) {
   });
 };
 
-quail.inputCheckboxRequiresFieldset = function(quail, test, Case) {
+quail.inputCheckboxRequiresFieldset = function (quail, test, Case) {
   test.get('$scope').find(':checkbox').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (!$(this).parents('fieldset').length) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4848,20 +4932,19 @@ quail.inputCheckboxRequiresFieldset = function(quail, test, Case) {
   });
 };
 
-quail.inputImageAltIsNotFileName = function(quail, test, Case) {
+quail.inputImageAltIsNotFileName = function (quail, test, Case) {
   test.get('$scope').find('input[type=image][alt]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).attr('src') === $(this).attr('alt')) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4869,20 +4952,19 @@ quail.inputImageAltIsNotFileName = function(quail, test, Case) {
   });
 };
 
-quail.inputImageAltIsShort = function(quail, test, Case) {
+quail.inputImageAltIsShort = function (quail, test, Case) {
   test.get('$scope').find('input[type=image]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).attr('alt').length > 100) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4890,20 +4972,19 @@ quail.inputImageAltIsShort = function(quail, test, Case) {
   });
 };
 
-quail.inputImageAltNotRedundant = function(quail, test, Case) {
+quail.inputImageAltNotRedundant = function (quail, test, Case) {
   test.get('$scope').find('input[type=image][alt]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (quail.strings.redundant.inputImage.indexOf(quail.cleanString($(this).attr('alt'))) > -1) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -4911,11 +4992,13 @@ quail.inputImageAltNotRedundant = function(quail, test, Case) {
   });
 };
 
-quail.inputWithoutLabelHasTitle = function(quail, test, Case) {
-  test.get('$scope').each(function() {
+quail.inputWithoutLabelHasTitle = function (quail, test, Case) {
+
+  test.get('$scope').each(function(){
+
     var testableElements = $(this).find('input, select, textarea');
 
-    if (testableElements.length === 0) {
+    if(testableElements.length === 0){
       var _case = Case({
         element: this,
         expected: $(this).closest('.quail-test').data('expected'),
@@ -4923,27 +5006,27 @@ quail.inputWithoutLabelHasTitle = function(quail, test, Case) {
       });
       test.add(_case);
       return;
-    } else {
+    }else{
       testableElements.each(function() {
         var _case = Case({
           element: this,
           expected: $(this).closest('.quail-test').data('expected')
         });
-
         test.add(_case);
 
-        if ($(this).css('display') === 'none') {
+        if($(this).css('display') === 'none'){
           _case.set({
             'status': 'inapplicable'
           });
           return;
         }
-
-        if (!test.get('$scope').find('label[for=' + $(this).attr('id') + ']').length && (!$(this).attr('title') || quail.isUnreadable($(this).attr('title')))) {
+        if (!test.get('$scope').find('label[for=' + $(this).attr('id') + ']').length &&
+          (!$(this).attr('title') || quail.isUnreadable($(this).attr('title')))) {
           _case.set({
             'status': 'failed'
           });
-        } else {
+        }
+        else {
           _case.set({
             'status': 'passed'
           });
@@ -4952,8 +5035,7 @@ quail.inputWithoutLabelHasTitle = function(quail, test, Case) {
     }
   });
 };
-
-quail.labelMustBeUnique = function(quail, test, Case) {
+quail.labelMustBeUnique = function (quail, test, Case) {
   var labels = { };
   test.get('$scope').find('label[for]').each(function() {
     if (typeof labels[$(this).attr('for')] === 'undefined') {
@@ -4961,7 +5043,6 @@ quail.labelMustBeUnique = function(quail, test, Case) {
     }
     labels[$(this).attr('for')]++;
   });
-
   test.get('$scope').find('label[for]').each(function() {
     var _case = Case({
       element: this,
@@ -4970,7 +5051,6 @@ quail.labelMustBeUnique = function(quail, test, Case) {
         'passed' :
         'failed'
     });
-
     test.add(_case);
   });
 };
@@ -4981,19 +5061,20 @@ quail.labelsAreAssignedToAnInput = function(quail, test, Case) {
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if (!$(this).attr('for')) {
       _case.set({
         'status': 'failed'
       });
-    } else {
-      if (!test.get('$scope').find('#' + $(this).attr('for')).length || !test.get('$scope').find('#' + $(this).attr('for')).is(':input')) {
+    }
+    else {
+      if (!test.get('$scope').find('#' + $(this).attr('for')).length ||
+         !test.get('$scope').find('#' + $(this).attr('for')).is(':input')) {
         _case.set({
           'status': 'failed'
         });
-      } else {
+      }
+      else {
         _case.set({
           'status': 'passed'
         });
@@ -5049,7 +5130,7 @@ quail.languageChangesAreIdentified = function(quail, test, Case) {
       //debugger;
         test.add(Case({
           element: element,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(element)),
           info: { language : code },
@@ -5058,7 +5139,6 @@ quail.languageChangesAreIdentified = function(quail, test, Case) {
         failed = true;
       }
     });
-
     $.each(quail.components.language.scripts, function(code, script) {
       if (script.languages.indexOf(currentLanguage) !== -1) {
         return;
@@ -5068,7 +5148,7 @@ quail.languageChangesAreIdentified = function(quail, test, Case) {
       //debugger;
         test.add(Case({
           element: element,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(element)),
           info: { language : code },
@@ -5077,14 +5157,13 @@ quail.languageChangesAreIdentified = function(quail, test, Case) {
         failed = true;
       }
     });
-
     if (typeof guessLanguage !== 'undefined' && !$element.find('[lang]').length && $element.text().trim().length > 400) {
       guessLanguage.info($element.text(), function(info) {
         if (info[0] !== currentLanguage) {
       //debugger;
           test.add(Case({
             element: element,
-            expected: (function(element) {
+            expected: (function (element) {
               return quail.components.resolveExpectation(element);
             }(element)),
             info: { language : info[0] },
@@ -5098,7 +5177,7 @@ quail.languageChangesAreIdentified = function(quail, test, Case) {
     if (!failed) {
       test.add(Case({
         element: element,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(element)),
         status: 'passed'
@@ -5108,6 +5187,7 @@ quail.languageChangesAreIdentified = function(quail, test, Case) {
 };
 
 quail.languageDirAttributeIsUsed = function(quail, test, Case) {
+
   var textDirection = quail.components.language.textDirection;
 
   function countDirAttributes() {
@@ -5147,7 +5227,7 @@ quail.languageDirAttributeIsUsed = function(quail, test, Case) {
     _case.set({status: (matches > 0) ? 'failed' : 'passed'});
   }
 
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
     $(this).find(quail.textSelector).each(countDirAttributes);
   });
 };
@@ -5159,14 +5239,14 @@ quail.languageDirectionPunctuation = function(quail, test, Case) {
   var currentDirection = ($scope.attr('dir')) ? $scope.attr('dir').toLowerCase() : 'ltr';
   var oppositeDirection = (currentDirection === 'ltr') ? 'rtl' : 'ltr';
   var textDirection = quail.components.language.textDirection;
-
-  $scope.each(function() {
+  $scope.each(function () {
     var $local = $(this);
     $local.find(quail.textSelector).each(function() {
       var $el = $(this);
       if ($el.attr('dir')) {
         currentDirection = $el.attr('dir').toLowerCase();
-      } else {
+      }
+      else {
         currentDirection = ($el.parent('[dir]').first().attr('dir')) ? $el.parent('[dir]').first().attr('dir').toLowerCase() : currentDirection;
       }
       if (typeof textDirection[currentDirection] === 'undefined') {
@@ -5181,7 +5261,6 @@ quail.languageDirectionPunctuation = function(quail, test, Case) {
           return quail.components.resolveExpectation(element);
         }(this))
       }));
-
       if (!matches) {
         _case.set({status : 'inapplicable'});
         return;
@@ -5189,7 +5268,8 @@ quail.languageDirectionPunctuation = function(quail, test, Case) {
       var first = text.search(textDirection[oppositeDirection]);
       var last = text.lastIndexOf(matches.pop());
       while (punctuation = punctuationRegex.exec(text)) {
-        if (punctuation.index === first - 1 || punctuation.index === last + 1) {
+        if(punctuation.index === first - 1 ||
+          punctuation.index === last + 1) {
           _case.set({status: 'failed'});
           return;
         }
@@ -5203,8 +5283,7 @@ quail.languageUnicodeDirection = function(quail, test, Case) {
   var $scope = test.get('$scope');
   var textDirection = quail.components.language.textDirection;
   var textDirectionChanges = quail.components.language.textDirectionChanges;
-
-  $scope.each(function() {
+  $scope.each(function () {
     var $local = $(this);
     $local.find(quail.textSelector).each(function() {
       var _case = test.add(Case({
@@ -5213,17 +5292,19 @@ quail.languageUnicodeDirection = function(quail, test, Case) {
           return quail.components.resolveExpectation(element);
         }(this))
       }));
-
       var $el = $(this);
       var text = $el.text().trim();
-      var otherDirection = (text.substr(0, 1).search(textDirection['ltr']) !== -1) ? 'rtl' : 'ltr';
-
+      var otherDirection = (text.substr(0, 1).search(textDirection['ltr']) !== -1) ?
+        'rtl' :
+        'ltr';
       if (text.search(textDirection[otherDirection]) === -1) {
         _case.set({status: 'inapplicable'});
-      } else {
-        if (text.search(textDirectionChanges[otherDirection]) !== -1) {
+      }
+      else {
+        if(text.search(textDirectionChanges[otherDirection]) !== -1) {
           _case.set({status: 'passed'});
-        } else {
+        }
+        else {
           _case.set({status: 'failed'});
         }
       }
@@ -5231,7 +5312,8 @@ quail.languageUnicodeDirection = function(quail, test, Case) {
   });
 };
 
-quail.linkHasAUniqueContext = function(quail, test, Case) {
+quail.linkHasAUniqueContext = function (quail, test, Case) {
+
   var blockStyle = [
     'block',
     'flex',
@@ -5241,13 +5323,13 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
     'table-cell'
   ];
 
-  function getLinkSentence(link) {
+  function getLinkSentence (link) {
     // Find the closest block-like element
     var $link = $(link);
     var block = $link;
     var text = simplifyText($link.text());
 
-    while (!block.is('body, html') && blockStyle.indexOf(block.css('display')) === -1) {
+    while(!block.is('body, html') && blockStyle.indexOf(block.css('display')) === -1) {
       block = block.parent();
     }
 
@@ -5263,7 +5345,7 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
     }
   }
 
-  function simplifyText(text) {
+  function simplifyText (text) {
     var tmp = text.match(/\w+/g);
     if (tmp !== null) {
       text = tmp.join(' ');
@@ -5271,13 +5353,16 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
     return text.toLowerCase();
   }
 
-  function txtNotAlike(a, b) {
+  function txtNotAlike (a, b) {
     return simplifyText("" + a) !== simplifyText("" + b);
   }
 
-  function shareContext(linkA, linkB) {
+
+  function shareContext (linkA, linkB) {
+
     if (linkA.href === linkB.href) {
       return false;
+
     } else if (txtNotAlike(linkA.title, linkB.title)) {
       return false;
     }
@@ -5287,35 +5372,37 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
     var linkBCtxt = $(linkB).closest('p, li, dd, dt, td, th');
 
     // check if they are different
-    if (linkACtxt.length !== 0 && linkBCtxt.length !== 0 && txtNotAlike(getLinkText(linkACtxt), getLinkText(linkBCtxt))) {
+    if (linkACtxt.length !== 0 && linkBCtxt.length !== 0 &&
+    txtNotAlike(getLinkText(linkACtxt), getLinkText(linkBCtxt))) {
       return false;
     }
 
     // If one is a table cell and the other isn't, allow it
     if (linkACtxt.is('td, th') && !linkBCtxt.is('td, th')) {
       return false;
+
     } else if (linkACtxt.is('td, th') && linkBCtxt.is('td, th')) {
       var headerDiff = false;
       var headersA = [];
 
       // Make a list with the simplified text of link A
-      linkACtxt.tableHeaders().each(function() {
+      linkACtxt.tableHeaders().each(function () {
         headersA.push(simplifyText($(this).text()));
       });
 
       // Compare it to the header context of link B
-      linkBCtxt.tableHeaders().each(function() {
+      linkBCtxt.tableHeaders().each(function () {
         var text = simplifyText($(this).text());
         var pos = headersA.indexOf(text);
         // Link B has something not part of link A's context, pass
         if (pos === -1) {
           headerDiff = true;
+
         // Remove items part of both header lists
         } else {
           headersA.splice(pos, 1);
         }
       });
-
       // Pass if A or B had a header not part of the other.
       if (headerDiff || headersA.length > 0) {
         return false;
@@ -5329,14 +5416,15 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
     return true;
   }
 
+
   /**
    * Get the text value of the link, including alt attributes
    * @param  {jQuery} $link
    * @return {string}
    */
-  function getLinkText($link) {
+  function getLinkText ($link) {
     var text = $link.text();
-    $link.find('img[alt]').each(function() {
+    $link.find('img[alt]').each(function () {
       text += ' ' + this.alt.trim();
     });
     return simplifyText(text);
@@ -5346,6 +5434,7 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
     var $scope = $(this);
     var $links = $scope.find('a[href]:visible');
     var linkMap = {};
+
 
     if ($links.length === 0) {
       var _case = Case({
@@ -5358,7 +5447,7 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
 
     // Make a map with the link text as key and an array of links with
     // that link text as it's value
-    $links.each(function() {
+    $links.each(function () {
       var text = getLinkText($(this));
       if (typeof linkMap[text] === 'undefined') {
         linkMap[text] = [];
@@ -5366,8 +5455,10 @@ quail.linkHasAUniqueContext = function(quail, test, Case) {
       linkMap[text].push(this);
     });
 
+
     // Iterate over each item in the linkMap
     $.each(linkMap, function (linkText, links) {
+
       // Link text is not unique, so the context should be checked
       while (links.length > 1) {
         var linkA = links.pop();
@@ -5410,14 +5501,13 @@ quail.listNotUsedForFormatting = function(quail, test, Case) {
       element : this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).find('li').length < 2) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -5431,7 +5521,6 @@ quail.listOfLinksUseList = function(quail, test, Case) {
     var _case = test.add(Case({
       element: this
     }));
-
     var expected = $(this).closest('.quail-test').data('expected');
     // Only test if there's another a tag.
     if ($(this).next('a').length) {
@@ -5441,7 +5530,8 @@ quail.listOfLinksUseList = function(quail, test, Case) {
           'expected': expected,
           'status': 'failed'
         });
-      } else {
+      }
+      else {
         _case.set({
           'expected': expected,
           'status': 'passed'
@@ -5452,10 +5542,11 @@ quail.listOfLinksUseList = function(quail, test, Case) {
 };
 
 quail.newWindowIsOpened = function(quail, test, Case) {
+
   var fenestrate = window.open;
   var _case;
 
-  window.open = function(event) {
+  window.open = function (event) {
     test.each(function (index, _case) {
       var href = _case.get('element').href;
       if (href.indexOf(event) > -1) {
@@ -5464,17 +5555,15 @@ quail.newWindowIsOpened = function(quail, test, Case) {
     });
   };
 
-  test.get('$scope').find('a').each(function() {
+  test.get('$scope').find('a').each(function () {
     // Save a reference to this clicked tag.
     _case = Case({
       element: this,
-      expected: (function(element) {
+      expected: (function (element) {
         return quail.components.resolveExpectation(element);
       }(this))
     });
-
     test.add(_case);
-
     $(this).trigger('click');
   });
 
@@ -5487,18 +5576,16 @@ quail.pNotUsedAsHeader = function(quail, test, Case) {
       element : this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).text().search('.') >= 1) {
       _case.set({
         'status': 'inapplicable'
       });
     }
-
     var failed = false;
     if ($(this).text().search('.') < 1) {
-      var $paragraph = $(this), priorParagraph = $paragraph.prev('p');
+      var $paragraph = $(this),
+        priorParagraph = $paragraph.prev('p');
       // Checking if any of suspectPHeaderTags has exact the same text as a paragraph.
       $.each(quail.suspectPHeaderTags, function(index, tag) {
         if ($paragraph.find(tag).length) {
@@ -5525,7 +5612,6 @@ quail.pNotUsedAsHeader = function(quail, test, Case) {
           }
         });
       }
-
       if ($paragraph.css('font-weight') === 'bold') {
         _case.set({
           'status': 'failed'
@@ -5533,7 +5619,6 @@ quail.pNotUsedAsHeader = function(quail, test, Case) {
         failed = true;
       }
     }
-
     if (!failed) {
       _case.set({
         'status': 'passed'
@@ -5542,21 +5627,20 @@ quail.pNotUsedAsHeader = function(quail, test, Case) {
   });
 };
 
-quail.paragraphIsWrittenClearly = function(quail, test, Case) {
+quail.paragraphIsWrittenClearly = function (quail, test, Case) {
   test.get('$scope').find('p').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     var text = quail.components.textStatistics.cleanText($(this).text());
     if (Math.round((206.835 - (1.015 * quail.components.textStatistics.averageWordsPerSentence(text)) - (84.6 * quail.components.textStatistics.averageSyllablesPerWord(text)))) < 60) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -5570,9 +5654,7 @@ quail.preShouldNotBeUsedForTabularLayout = function(quail, test, Case) {
       element : this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     var rows = $(this).text().split(/[\n\r]+/);
     _case.set({
       'status': (rows.length > 1 && $(this).text().search(/\t/) > -1) ?
@@ -5584,6 +5666,7 @@ quail.preShouldNotBeUsedForTabularLayout = function(quail, test, Case) {
 
 quail.scriptFocusIndicatorVisible = function() {
   quail.html.find(quail.focusElements).each(function() {
+
     // Preparation for test: remove focus indicators done with CSS
     var sheet, rules, rulesCache, rule;
 
@@ -5626,6 +5709,8 @@ quail.scriptFocusIndicatorVisible = function() {
     }
 
     // in any other case, it is acceptable to change other visual components
+
+
     if (noFocus.backgroundColor !== $(this).css('background-color')) {
       $(this).blur();
       return;
@@ -5656,7 +5741,6 @@ quail.scriptFocusIndicatorVisible = function() {
     quail.testFails('scriptFocusIndicatorVisible', $(this));
   });
 };
-
 quail.selectJumpMenu = function(quail, test, Case) {
   var $scope = test.get('$scope');
   if ($scope.find('select').length === 0) {
@@ -5664,13 +5748,15 @@ quail.selectJumpMenu = function(quail, test, Case) {
   }
 
   $scope.find('select').each(function() {
-    if ($(this).parent('form').find(':submit').length === 0 && quail.components.hasEventListener($(this), 'change')) {
+    if ($(this).parent('form').find(':submit').length === 0 &&
+        quail.components.hasEventListener($(this), 'change')) {
       test.add(Case({
         element: this,
         expected: $(this).closest('.quail-test').data('expected'),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
         expected: $(this).closest('.quail-test').data('expected'),
@@ -5686,9 +5772,7 @@ quail.siteMap = function(quail, test, Case) {
     element: test.get('$scope').get(0),
     expected: test.get('$scope').data('expected')
   });
-
   test.add(_case);
-
   test.get('$scope').find('a').each(function() {
     if (_case.get('status') === 'passed') {
       return;
@@ -5700,7 +5784,6 @@ quail.siteMap = function(quail, test, Case) {
         return;
       }
     });
-
     if (set === false) {
       _case.set({
         'status': 'failed'
@@ -5717,7 +5800,7 @@ quail.siteMap = function(quail, test, Case) {
 };
 
 quail.skipToContentLinkProvided = function(quail, test, Case) {
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
     var $local = $(this);
     var skipLinkFound = false;
 
@@ -5730,7 +5813,6 @@ quail.skipToContentLinkProvided = function(quail, test, Case) {
       var fragment = $link.attr('href').split('#').pop();
       var $target = $local.find('#' + fragment);
       var strs = quail.strings.skipContent.slice();
-
       while (!skipLinkFound && strs.length) {
         var str = strs.pop();
         if ($link.text().search(str) > -1 && $target.length) {
@@ -5748,7 +5830,6 @@ quail.skipToContentLinkProvided = function(quail, test, Case) {
         }
       }
     });
-
     if (!skipLinkFound) {
       test.add(Case({
         expected: $local.data('expected') || $local.find('[data-expected]').data('expected'),
@@ -5758,14 +5839,13 @@ quail.skipToContentLinkProvided = function(quail, test, Case) {
   });
 };
 
-quail.tabIndexFollowsLogicalOrder = function(quail, test, Case) {
-  test.get('$scope').each(function() {
+quail.tabIndexFollowsLogicalOrder = function (quail, test, Case) {
+  test.get('$scope').each(function () {
     var $local = $(this);
     var index = 0;
     $local.find('[tabindex]').each(function() {
       var $el = $(this);
       var tabindex = $el.attr('tabindex');
-
       if (parseInt(tabindex, 10) >= 0 && parseInt(tabindex, 10) !== index + 1) {
         test.add(Case({
           element: this,
@@ -5774,7 +5854,8 @@ quail.tabIndexFollowsLogicalOrder = function(quail, test, Case) {
           }(this)),
           status: 'failed'
         }));
-      } else {
+      }
+      else {
         test.add(Case({
           element: this,
           expected: (function (element) {
@@ -5788,15 +5869,13 @@ quail.tabIndexFollowsLogicalOrder = function(quail, test, Case) {
   });
 };
 
-quail.tableAxisHasCorrespondingId = function(quail, test, Case) {
+quail.tableAxisHasCorrespondingId = function (quail, test, Case) {
   test.get('$scope').find('[axis]').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).parents('table').first().find('th#' + $(this).attr('axis')).length === 0) {
       _case.set({
         'status': 'failed'
@@ -5810,21 +5889,20 @@ quail.tableAxisHasCorrespondingId = function(quail, test, Case) {
   });
 };
 
-quail.tableHeaderLabelMustBeTerse = function(quail, test, Case) {
+quail.tableHeaderLabelMustBeTerse = function (quail, test, Case) {
   test.get('$scope').find('th, table tr:first td').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
-
     if ($(this).text().length > 20 &&
        (!$(this).attr('abbr') || $(this).attr('abbr').length > 20)) {
       _case.set({
         'status': 'failed'
       });
-    } else {
+    }
+    else {
       _case.set({
         'status': 'passed'
       });
@@ -5832,13 +5910,12 @@ quail.tableHeaderLabelMustBeTerse = function(quail, test, Case) {
   });
 };
 
-quail.tableLayoutDataShouldNotHaveTh = function(quail, test, Case) {
+quail.tableLayoutDataShouldNotHaveTh = function (quail, test, Case) {
   test.get('$scope').find('table').each(function() {
     var _case = Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
 
     if ($(this).find('th').length !== 0) {
@@ -5846,12 +5923,14 @@ quail.tableLayoutDataShouldNotHaveTh = function(quail, test, Case) {
         _case.set({
           'status': 'failed'
         });
-      } else {
+      }
+      else {
         _case.set({
           'status': 'passed'
         });
       }
-    } else {
+    }
+    else {
       _case.set({
         'status': 'inapplicable'
       });
@@ -5859,30 +5938,32 @@ quail.tableLayoutDataShouldNotHaveTh = function(quail, test, Case) {
   });
 };
 
-quail.tableLayoutHasNoCaption = function(quail, test, Case) {
+quail.tableLayoutHasNoCaption = function (quail, test, Case) {
   test.get('$scope').find('table').each(function() {
     if ($(this).find('caption').length) {
       if (!quail.isDataTable($(this))) {
         test.add(Case({
           element: this,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(this)),
           status: 'failed'
         }));
-      } else {
+      }
+      else {
         test.add(Case({
           element: this,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(this)),
           status: 'passed'
         }));
       }
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         'status': 'inapplicable'
@@ -5892,18 +5973,17 @@ quail.tableLayoutHasNoCaption = function(quail, test, Case) {
 };
 
 quail.tableLayoutHasNoSummary = function(quail, test, Case) {
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function () {
     var $local = $(this);
-
     $local.find('table[summary]').each(function() {
       var _case = test.add(Case({
         element: this,
         expected: $(this).closest('.quail-test').data('expected')
       }));
-
       if (!quail.isDataTable($(this)) && !quail.isUnreadable($(this).attr('summary'))) {
         _case.set({status: 'failed'});
-      } else {
+      }
+      else {
         _case.set({status: 'passed'});
       }
     });
@@ -5915,7 +5995,7 @@ quail.tableLayoutMakesSenseLinearized = function(quail, test, Case) {
     if (!quail.isDataTable($(this))) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
@@ -5929,15 +6009,16 @@ quail.tableNotUsedForLayout = function(quail, test, Case) {
     if (!quail.isDataTable($(this))) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'passed'
@@ -5950,7 +6031,6 @@ quail.tableShouldUseHeaderIDs = function(quail, test, Case) {
   test.get('$scope').find('table').each(function() {
     var $table = $(this);
     var tableFailed = false;
-
     if (quail.isDataTable($table)) {
       $table.find('th').each(function() {
         if (!tableFailed && !$(this).attr('id')) {
@@ -5964,7 +6044,6 @@ quail.tableShouldUseHeaderIDs = function(quail, test, Case) {
           }));
         }
       });
-
       if (!tableFailed) {
         $table.find('td[header]').each(function() {
           if (!tableFailed) {
@@ -5973,7 +6052,7 @@ quail.tableShouldUseHeaderIDs = function(quail, test, Case) {
                 tableFailed = true;
                 test.add(Case({
                   element: this,
-                  expected: (function(element) {
+                  expected: (function (element) {
                     return quail.components.resolveExpectation(element);
                   }(this)),
                   status: 'failed'
@@ -5992,15 +6071,16 @@ quail.tableSummaryDoesNotDuplicateCaption = function(quail, test, Case) {
     if (quail.cleanString($(this).attr('summary')) === quail.cleanString($(this).find('caption:first').text())) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'passed'
@@ -6014,7 +6094,7 @@ quail.tableSummaryIsNotTooLong = function(quail, test, Case) {
     if ($(this).attr('summary').trim().length > 100) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
@@ -6028,7 +6108,7 @@ quail.tableUseColGroup = function(quail, test, Case) {
     if (quail.isDataTable($(this)) && !$(this).find('colgroup').length) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
@@ -6042,7 +6122,7 @@ quail.tableUsesAbbreviationForHeader = function(quail, test, Case) {
     if ($(this).text().length > 20) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
@@ -6059,21 +6139,20 @@ quail.tableUsesScopeForRow = function(quail, test, Case) {
            ($(this).find('strong').length && !$next.find('strong').length)) {
         test.add(Case({
           element: this,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(this)),
           status: 'failed'
         }));
       }
     });
-
     $(this).find('td:last-child').each(function() {
       var $prev = $(this).prev('td');
-
-      if (($(this).css('font-weight') === 'bold' && $prev.css('font-weight') !== 'bold') || ($(this).find('strong').length && !$prev.find('strong').length)) {
+      if (($(this).css('font-weight') === 'bold' && $prev.css('font-weight') !== 'bold') ||
+          ($(this).find('strong').length && !$prev.find('strong').length)) {
         test.add(Case({
           element: this,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(this)),
           status: 'failed'
@@ -6087,16 +6166,14 @@ quail.tableWithMoreHeadersUseID = function(quail, test, Case) {
   test.get('$scope').find('table:has(th)').each(function() {
     var $table = $(this);
     var rows = 0;
-
     $table.find('tr').each(function() {
       if ($(this).find('th').length) {
         rows++;
       }
-
       if (rows > 1 && !$(this).find('th[id]').length) {
         test.add(Case({
           element: this,
-          expected: (function(element) {
+          expected: (function (element) {
             return quail.components.resolveExpectation(element);
           }(this)),
           status: 'failed'
@@ -6111,15 +6188,16 @@ quail.tabularDataIsInTable = function(quail, test, Case) {
     if ($(this).html().search('\t') >= 0) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'passed'
@@ -6128,9 +6206,12 @@ quail.tabularDataIsInTable = function(quail, test, Case) {
   });
 };
 
-quail.tagsAreNestedCorrectly=function(quail, test, Case) {
+quail.tagsAreNestedCorrectly=function(quail, test, Case){
+
   quail.components.htmlSource.getHtml(function(html) {
+
     var validationResults = quail.components.htmlTagValidator(html);
+
     var _case = Case({
       // This is just for internal Quail testing. Get the first quail test element
       // and then its expected attribute value. This will return 'undefined' for
@@ -6166,15 +6247,16 @@ quail.textIsNotSmall = function(quail, test, Case) {
     if (fontSize < 10) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'passed'
@@ -6183,34 +6265,34 @@ quail.textIsNotSmall = function(quail, test, Case) {
   });
 };
 
-quail.userInputMayBeRequired=function(quail, test, Case) {
-  test.get('$scope').each(function() {
+quail.userInputMayBeRequired=function(quail, test, Case){
+  test.get('$scope').each(function(){
+
     var _case=Case({
       element: this,
       expected: $(this).closest('.quail-test').data('expected')
     });
-
     test.add(_case);
 
     var forms = $(this).find('form');
     var formInputs = 0;
     var inputsOutsideForm = $(this).find('input:not(form input, [type=button],[type=reset],[type=image],[type=submit],[type=hidden])');
 
-    forms.each(function() {
+    forms.each(function(){
       var inputs=$(this).find('input:not([type=button],[type=reset],[type=image],[type=submit],[type=hidden])');
       if (inputs.length > 1) {
         formInputs = inputs.length;
       }
     });
 
-    if (formInputs > 0) {
+    if(formInputs > 0){
       _case.set({
         'status': 'cantTell'
       });
       return;
     }
 
-    if (inputsOutsideForm.length > 1) {
+    if(inputsOutsideForm.length > 1) {
       _case.set({
         'status': 'cantTell'
       });
@@ -6220,19 +6302,22 @@ quail.userInputMayBeRequired=function(quail, test, Case) {
     _case.set({
       'status': 'inapplicable'
     });
+
   });
 };
 
-quail.videoMayBePresent = function(quail, test, Case) {
-  var videoExtensions = ['webm', 'flv', 'ogv', 'ogg', 'avi', 'mov', 'qt', 'wmv', 'asf', 'mp4', 'm4p', 'm4v', 'mpg', 'mp2', 'mpeg', 'mpg', 'mpe', 'mpv', 'm2v', '3gp', '3g2'];
+quail.videoMayBePresent=function(quail, test, Case){
+
+  var videoExtensions = ['webm', 'flv', 'ogv', 'ogg', 'avi', 'mov', 'qt', 'wmv', 'asf',
+  'mp4', 'm4p', 'm4v', 'mpg', 'mp2', 'mpeg', 'mpg', 'mpe', 'mpv', 'm2v', '3gp', '3g2'];
   var videoHosts = ['//www.youtube.com/embed/', '//player.vimeo.com/video/'];
 
-  test.get('$scope').each(function() {
+  test.get('$scope').each(function(){
     var $this = $(this);
     var hasCase = false; // Test if a case has been created
 
     // video elm is definately a video, and objects could be too.
-    $this.find('object, video').each(function() {
+    $this.find('object, video').each(function () {
       hasCase = true;
       test.add(Case({
         element: this,
@@ -6241,8 +6326,9 @@ quail.videoMayBePresent = function(quail, test, Case) {
       }));
     });
 
-    // Links refering to files with an video extensions are probably video though the file may not exist.
-    $this.find('a[href]').each(function() {
+    // Links refering to files with an video extensions are probably video
+    // though the file may not exist.
+    $this.find('a[href]').each(function () {
       var $this = $(this);
       var extension = $this.attr('href').split('.').pop();
       if ($.inArray(extension, videoExtensions) !== -1) {
@@ -6256,7 +6342,7 @@ quail.videoMayBePresent = function(quail, test, Case) {
     });
 
     // some iframes with URL's of known video providers are also probably videos
-    $this.find('iframe').each(function() {
+    $this.find('iframe').each(function () {
       if (this.src.indexOf(videoHosts[0]) !== -1 ||
       this.src.indexOf(videoHosts[1]) !== -1) {
         hasCase = true;
@@ -6276,23 +6362,26 @@ quail.videoMayBePresent = function(quail, test, Case) {
         expected: $(this).closest('.quail-test').data('expected')
       }));
     }
+
   });
 };
 
-quail.videosEmbeddedOrLinkedNeedCaptions = function(quail, test, Case) {
+quail.videosEmbeddedOrLinkedNeedCaptions = function (quail, test, Case) {
+
   quail.components.video.findVideos(test.get('$scope'), function(element, pass) {
     if (!pass) {
       test.add(Case({
         element: element[0],
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(element)),
         status: 'failed'
       }));
-    } else {
+    }
+    else {
       test.add(Case({
         element: element[0],
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(element)),
         status: 'passed'
@@ -6303,14 +6392,16 @@ quail.videosEmbeddedOrLinkedNeedCaptions = function(quail, test, Case) {
 
 quail.whiteSpaceInWord = function(quail, test, Case) {
   var whitespaceGroup, nonWhitespace;
-
   test.get('$scope').find(quail.textSelector).each(function() {
     nonWhitespace = ($(this).text()) ? $(this).text().match(/[^\s\\]/g) : false;
     whitespaceGroup = ($(this).text()) ? $(this).text().match(/[^\s\\]\s[^\s\\]/g) : false;
-    if (nonWhitespace && whitespaceGroup && whitespaceGroup.length > 3 && whitespaceGroup.length >= (nonWhitespace.length / 2) - 2) {
+    if (nonWhitespace &&
+        whitespaceGroup &&
+        whitespaceGroup.length > 3 &&
+        whitespaceGroup.length >= (nonWhitespace.length / 2) - 2) {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'failed'
@@ -6319,7 +6410,7 @@ quail.whiteSpaceInWord = function(quail, test, Case) {
     else {
       test.add(Case({
         element: this,
-        expected: (function(element) {
+        expected: (function (element) {
           return quail.components.resolveExpectation(element);
         }(this)),
         status: 'passed'
@@ -6333,16 +6424,14 @@ quail.whiteSpaceNotUsedForFormatting = function(quail, test, Case) {
   test.get('$scope').find(quail.textSelector).each(function() {
     var _case = test.add(Case({
       element: this,
-      expected: (function(element) {
+      expected: (function (element) {
         return quail.components.resolveExpectation(element);
       }(this))
     }));
-
     if ($(this).find('br').length === 0) {
       _case.set({status: 'passed'});
       return;
     }
-
     var lines = $(this).html().toLowerCase().split(/(<br\ ?\/?>)+/);
     var lineCount = 0;
     $.each(lines, function(index, line) {
@@ -6350,16 +6439,17 @@ quail.whiteSpaceNotUsedForFormatting = function(quail, test, Case) {
         lineCount++;
       }
     });
-
     if(lineCount > 1) {
       _case.set({status: 'failed'});
-    } else {
+    }
+    else {
       _case.set({status: 'cantTell'});
     }
   });
 };
 
-quail.lib.Case = (function() {
+quail.lib.Case = (function () {
+
   /**
    * A Case is a test against an element.
    */
@@ -6370,7 +6460,7 @@ quail.lib.Case = (function() {
   // Prototype object of the Case.
   Case.fn = Case.prototype = {
     constructor: Case,
-    init: function(attributes) {
+    init: function (attributes) {
       this.listeners = {};
       this.timeout = null;
       this.attributes = attributes || {};
@@ -6383,9 +6473,11 @@ quail.lib.Case = (function() {
         setTimeout(function() {
           that.resolve();
         }, 0);
-      } else {
+      }
+      // Set up a time out for this case to resolve within.
+      else {
         this.attributes.status = 'untested';
-        this.timeout = setTimeout(function() {
+        this.timeout = setTimeout(function () {
           that.giveup();
         }, 350);
       }
@@ -6394,10 +6486,10 @@ quail.lib.Case = (function() {
     },
     // Details of the Case.
     attributes: null,
-    get: function(attr) {
+    get: function (attr) {
       return this.attributes[attr];
     },
-    set: function(attr, value) {
+    set: function (attr, value) {
       var isStatusChanged = false;
       // Allow an object of attributes to be passed in.
       if (typeof attr === 'object') {
@@ -6409,7 +6501,9 @@ quail.lib.Case = (function() {
             this.attributes[prop] = attr[prop];
           }
         }
-      } else {
+      }
+      // Assign a single attribute value.
+      else {
         if (attr === 'status') {
           isStatusChanged = true;
         }
@@ -6427,7 +6521,7 @@ quail.lib.Case = (function() {
      * @return boolean
      *   A bit that indicates if the case has one of the supplied statuses.
      */
-    hasStatus: function(statuses) {
+    hasStatus: function (statuses) {
       // This is a rought test of arrayness.
       if (typeof statuses !== 'object') {
         statuses = [statuses];
@@ -6443,7 +6537,7 @@ quail.lib.Case = (function() {
     /**
      * Dispatches the resolve event; clears the timeout fallback event.
      */
-    resolve: function() {
+    resolve: function () {
       clearTimeout(this.timeout);
 
       var el = this.attributes.element;
@@ -6454,17 +6548,21 @@ quail.lib.Case = (function() {
         // Allow a test to provide a selector. Programmatically find one if none
         // is provided.
         this.attributes.selector = this.defineUniqueSelector(el);
+
         // Get a serialized HTML representation of the element the raised the error
         // if the Test did not provide it.
         if (!this.attributes.html) {
           this.attributes.html = '';
+
           // If the element is either the <html> or <body> elements,
-          // just report that. Otherwise we might be returning the entire page as a string.
+          // just report that. Otherwise we might be returning the entire page
+          // as a string.
           if (el.nodeName === 'HTML' || el.nodeName === 'BODY') {
             this.attributes.html = '<' + el.nodeName + '>';
+          }
           // Get the parent node in order to get the innerHTML for the selected
           // element. Trim wrapping whitespace, remove linebreaks and spaces.
-		  } else if (typeof el.outerHTML === 'string') {
+          else if (typeof el.outerHTML === 'string') {
             outerEl = el.outerHTML.trim().replace(/(\r\n|\n|\r)/gm,"").replace(/>\s+</g, '><');
             // Guard against insanely long elements.
             // @todo, make this length configurable eventually.
@@ -6481,28 +6579,28 @@ quail.lib.Case = (function() {
     /**
      * Abandons the Case if it not resolved within the timeout period.
      */
-    giveup: function() {
+    giveup: function () {
       clearTimeout(this.timeout);
       // @todo, the set method should really have a 'silent' option.
       this.attributes.status = 'notTested';
       this.dispatch('timeout', this);
     },
     // @todo, make this a set of methods that all classes extend.
-    listenTo: function(dispatcher, eventName, handler) {
+    listenTo: function (dispatcher, eventName, handler) {
       // @todo polyfill Function.prototype.bind.
       handler = handler.bind(this);
       dispatcher.registerListener.call(dispatcher, eventName, handler);
     },
-    registerListener: function(eventName, handler) {
+    registerListener: function (eventName, handler) {
       if (!this.listeners[eventName]) {
         this.listeners[eventName] = [];
       }
       this.listeners[eventName].push(handler);
     },
-    dispatch: function(eventName) {
+    dispatch: function (eventName) {
       if (this.listeners[eventName] && this.listeners[eventName].length) {
         var eventArgs = [].slice.call(arguments);
-        this.listeners[eventName].forEach(function(handler) {
+        this.listeners[eventName].forEach(function (handler) {
           // Pass any additional arguments from the event dispatcher to the
           // handler function.
           handler.apply(null, eventArgs);
@@ -6519,7 +6617,7 @@ quail.lib.Case = (function() {
      * @return {string}
      *   A unique selector for this element.
      */
-    defineUniqueSelector: function(element) {
+    defineUniqueSelector: function (element) {
       /**
        * Indicates whether the selector string represents a unique DOM element.
        *
@@ -6529,7 +6627,7 @@ quail.lib.Case = (function() {
        * @return Boolean
        *   Whether or not the selector string represents a unique DOM element.
        */
-      function isUniquePath(selector) {
+      function isUniquePath (selector) {
         return $(selector).length === 1;
       }
 
@@ -6543,7 +6641,7 @@ quail.lib.Case = (function() {
        * @return {string}
        *   An id selector or an empty string.
        */
-      function applyID(element) {
+      function applyID (element) {
         var selector = '';
         var id = element.id || '';
         if (id.length > 0) {
@@ -6563,7 +6661,7 @@ quail.lib.Case = (function() {
        * @return {string}
        *   A selector of classes or an empty string.
        */
-      function applyClasses(element) {
+      function applyClasses (element) {
         var selector = '';
         // Try to make a selector from the element's classes.
         var classes = element.className || '';
@@ -6573,7 +6671,6 @@ quail.lib.Case = (function() {
           classes = reject(classes, function (cl) {
             return (/active|enabled|disabled|first|last|only|collapsed|open|clearfix|processed/).test(cl);
           });
-
           if (classes.length > 0) {
             return '.' + classes.join('.');
           }
@@ -6589,11 +6686,10 @@ quail.lib.Case = (function() {
        * @return {string}
        *   A selector of attributes or an empty string.
        */
-      function applyAttributes(element) {
+      function applyAttributes (element) {
         var selector = '';
         var attributes = ['href', 'type'];
         var value;
-
         if (typeof element === 'undefined' ||
           typeof element.attributes === 'undefined' ||
           element.attributes === null) {
@@ -6623,7 +6719,7 @@ quail.lib.Case = (function() {
        * @return {string}
        *   A unique selector for the element.
        */
-      function generateSelector(element) {
+      function generateSelector (element) {
         var selector = '';
         var scopeSelector = '';
         var pseudoUnique = false;
@@ -6685,7 +6781,7 @@ quail.lib.Case = (function() {
        * @return array
        *   A list of items the excludes items that passed the comparator test.
        */
-      function reject(list, comparator) {
+      function reject (list, comparator) {
         var keepers = [];
         for (var i = 0, il = list.length; i < il; i++) {
           if (!comparator.call(null, list[i])) {
@@ -6709,7 +6805,8 @@ quail.lib.Case = (function() {
   return Case;
 }());
 
-quail.lib.Section = (function() {
+quail.lib.Section = (function () {
+
   /**
    * A Collection of Tests.
    */
@@ -6737,7 +6834,7 @@ quail.lib.Section = (function() {
     // Setting a length property makes it behave like an array.
     length: 0,
     // Execute a callback for every element in the matched set.
-    each: function(iterator) {
+    each: function (iterator) {
       var args = [].slice.call(arguments, 1);
       for (var i = 0, len = this.length; i < len; ++i) {
         args.unshift(this[i]);
@@ -6746,7 +6843,7 @@ quail.lib.Section = (function() {
       }
       return this;
     },
-    find: function(testname) {
+    find: function (testname) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('name') === testname) {
           return this[i];
@@ -6755,7 +6852,7 @@ quail.lib.Section = (function() {
       // Return an empty Section for chaining.
       return null;
     },
-    set: function(testname, details) {
+    set: function (testname, details) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('name') === testname) {
           this[i].set(details);
@@ -6766,12 +6863,12 @@ quail.lib.Section = (function() {
       this.push(test);
       return test;
     },
-    addTechnique: function(technique) {
+    addTechnique: function (technique) {
       // Register for result events on the technique.
       //this.listenTo(technique, 'result', this.regiterTechniqueTestResult);
       this.push(technique);
     },
-    regiterTechniqueTestResult: function() {
+    regiterTechniqueTestResult: function () {
 
     },
     push: [].push,
@@ -6785,7 +6882,7 @@ quail.lib.Section = (function() {
   return Section;
 }());
 
-quail.lib.SuccessCriteria = (function() {
+quail.lib.SuccessCriteria = (function () {
 
   /**
    * A Collection of Tests.
@@ -6797,7 +6894,7 @@ quail.lib.SuccessCriteria = (function() {
   // Prototype object of the SuccessCriteria.
   SuccessCriteria.fn = SuccessCriteria.prototype = {
     constructor: SuccessCriteria,
-    init: function(options) {
+    init: function (options) {
       // Event listeners.
       this.listeners = {};
 
@@ -6817,7 +6914,7 @@ quail.lib.SuccessCriteria = (function() {
     length: 0,
     // Details of the test.
     attributes: null,
-    get: function(attr) {
+    get: function (attr) {
       // Return the document wrapped in jQuery if scope is not defined.
       if (attr === '$scope') {
         var scope = this.attributes['scope'];
@@ -6827,7 +6924,7 @@ quail.lib.SuccessCriteria = (function() {
       }
       return this.attributes[attr];
     },
-    set: function(attr, value) {
+    set: function (attr, value) {
       var isStatusChanged = false;
       // Allow an object of attributes to be passed in.
       if (typeof attr === 'object') {
@@ -6839,7 +6936,9 @@ quail.lib.SuccessCriteria = (function() {
             this.attributes[prop] = attr[prop];
           }
         }
-      } else {
+      }
+      // Assign a single attribute value.
+      else {
         this.attributes[attr] = value;
       }
       return this;
@@ -6847,7 +6946,7 @@ quail.lib.SuccessCriteria = (function() {
     /**
      * Execute a callback for every element in the matched set.
      */
-    each: function(iterator) {
+    each: function (iterator) {
       var args = [].slice.call(arguments, 1);
       for (var i = 0, len = this.length; i < len; ++i) {
         args.unshift(this[i]);
@@ -6863,7 +6962,7 @@ quail.lib.SuccessCriteria = (function() {
     /**
      * Add a Case to the Success Criteria instance, keyed by selector.
      */
-    add: function(_case) {
+    add: function (_case) {
       if (!this.find(_case.get('selector'))) {
         this.push(_case);
       }
@@ -6871,7 +6970,7 @@ quail.lib.SuccessCriteria = (function() {
     /**
      * Finds a case by its selector.
      */
-    find: function(selector) {
+    find: function (selector) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('selector') === selector) {
           return this[i];
@@ -6885,7 +6984,7 @@ quail.lib.SuccessCriteria = (function() {
      * There is a preEvaluator function run before tests are added to make sure
      * that the test is actually needed.
      */
-    registerTests: function(testCollection) {
+    registerTests: function (testCollection) {
       var preEvaluator = this.get('preEvaluator');
       var hasPreEvaluator = typeof preEvaluator !== 'undefined';
       // true means we'll run all the tests as usual, false, we skip the whole thing.
@@ -6902,14 +7001,14 @@ quail.lib.SuccessCriteria = (function() {
     /**
      * Returns a collection of tests for this success criteria.
      */
-    filterTests: function(tests) {
+    filterTests: function (tests) {
       var criteriaTests = new quail.lib.TestCollection();
       var name = this.get('name');
       if (!name) {
         throw new Error('Success Criteria instances require a name in order to have tests filtered.');
       }
       var identifier = name.split(':')[1];
-      tests.each(function(index, test) {
+      tests.each(function (index, test) {
         var guidelineCoverage = test.getGuidelineCoverage('wcag');
         // Get tests for this success criteria.
         for (var criteriaID in guidelineCoverage) {
@@ -6928,7 +7027,7 @@ quail.lib.SuccessCriteria = (function() {
      * @param string conclusion
      * @param quail.lib.Case _case
      */
-    addConclusion: function(conclusion, _case) {
+    addConclusion: function (conclusion, _case) {
       if (!this.get('results')[conclusion]) {
         this.get('results')[conclusion] = quail.lib.Test();
       }
@@ -6947,7 +7046,7 @@ quail.lib.SuccessCriteria = (function() {
     /**
      * Runs the evaluator callbacks against the completed TestCollection.
      */
-    evaluate: function(eventName, testCollection) {
+    evaluate: function (eventName, testCollection) {
       if (this.get('status') !== 'inapplicable') {
         var sc = this;
         var associatedTests = this.filterTests(testCollection);
@@ -6956,16 +7055,17 @@ quail.lib.SuccessCriteria = (function() {
         // Criteria has no coverage.
         if (associatedTests.length === 0) {
           this.set('status', 'noTestCoverage');
-        } else {
-          associatedTests.each(function(index, test) {
-            test.each(function(index, _case) {
+        }
+        else {
+          associatedTests.each(function (index, test) {
+            test.each(function (index, _case) {
               sc.addConclusion(_case.get('status'), _case);
             });
           });
-
           if (size(this.get('results')) === 0) {
             this.set('status', 'noResults');
-          } else {
+          }
+          else {
             this.set('status', 'tested');
           }
         }
@@ -6975,18 +7075,18 @@ quail.lib.SuccessCriteria = (function() {
     /**
      * Dispatches the complete event.
      */
-    report: function() {
+    report: function () {
       var args = Array.prototype.slice.call(arguments);
       args = [].concat(['successCriteriaEvaluated', this, this.get('tests')], args);
       this.dispatch.apply(this, args);
     },
     // @todo, make this a set of methods that all classes extend.
-    listenTo: function(dispatcher, eventName, handler) {
+    listenTo: function (dispatcher, eventName, handler) {
       // @todo polyfill Function.prototype.bind.
       handler = handler.bind(this);
       dispatcher.registerListener.call(dispatcher, eventName, handler);
     },
-    registerListener: function(eventName, handler) {
+    registerListener: function (eventName, handler) {
       // nb: 'this' is the dispatcher object, not the one that invoked listenTo.
       if (!this.listeners[eventName]) {
         this.listeners[eventName] = [];
@@ -6994,10 +7094,10 @@ quail.lib.SuccessCriteria = (function() {
 
       this.listeners[eventName].push(handler);
     },
-    dispatch: function(eventName) {
+    dispatch: function (eventName) {
       if (this.listeners[eventName] && this.listeners[eventName].length) {
         var eventArgs = [].slice.call(arguments);
-        this.listeners[eventName].forEach(function(handler) {
+        this.listeners[eventName].forEach(function (handler) {
           // Pass any additional arguments from the event dispatcher to the
           // handler function.
           handler.apply(null, eventArgs);
@@ -7018,7 +7118,7 @@ quail.lib.SuccessCriteria = (function() {
    * @return number
    *   The size of the object determined by the number of keys.
    */
-  function size(obj) {
+  function size (obj) {
     return Object.keys(obj).length;
   }
 
@@ -7028,12 +7128,12 @@ quail.lib.SuccessCriteria = (function() {
   return SuccessCriteria;
 }());
 
-quail.lib.Technique = (function() {
+quail.lib.Technique = (function () {
 
   /**
    * A collection of Cases.
    */
-  function Technique(name, attributes) {
+  function Technique (name, attributes) {
     return new Technique.fn.init(name, attributes);
   }
 
@@ -7055,7 +7155,7 @@ quail.lib.Technique = (function() {
     // Details of the test.
     attributes: {},
     // Execute a callback for every element in the matched set.
-    each: function(iterator) {
+    each: function (iterator) {
       var args = [].slice.call(arguments, 1);
       for (var i = 0, len = this.length; i < len; ++i) {
         args.unshift(this[i]);
@@ -7064,7 +7164,7 @@ quail.lib.Technique = (function() {
       }
       return this;
     },
-    get: function(attr) {
+    get: function (attr) {
       return this.attributes[attr];
     },
     set: function (attr, value) {
@@ -7075,33 +7175,35 @@ quail.lib.Technique = (function() {
             this.attributes[prop] = attr[prop];
           }
         }
-      } else {
+      }
+      // Assign a single attribute value.
+      else {
         this.attributes[attr] = value;
       }
       return this;
     },
-    addTest: function() {
+    addTest: function () {
 
     },
-    report: function(eventName, test) {
+    report: function (eventName, test) {
       window.console && window.console.log(this.get('name'), test.status, test, test[0] && test[0].status);
     },
     // @todo, make this a set of methods that all classes extend.
-    listenTo: function(dispatcher, eventName, handler) {
+    listenTo: function (dispatcher, eventName, handler) {
       // @todo polyfill Function.prototype.bind.
       handler = handler.bind(this);
       dispatcher.registerListener.call(dispatcher, eventName, handler);
     },
-    registerListener: function(eventName, handler) {
+    registerListener: function (eventName, handler) {
       if (!this.listeners[eventName]) {
         this.listeners[eventName] = [];
       }
       this.listeners[eventName].push(handler);
     },
-    dispatch: function(eventName) {
+    dispatch: function (eventName) {
       if (this.listeners[eventName] && this.listeners[eventName].length) {
         var eventArgs = [].slice.call(arguments);
-        this.listeners[eventName].forEach(function(handler) {
+        this.listeners[eventName].forEach(function (handler) {
           // Pass any additional arguments from the event dispatcher to the
           // handler function.
           handler.apply(null, eventArgs);
@@ -7119,18 +7221,19 @@ quail.lib.Technique = (function() {
   return Technique;
 }());
 
-quail.lib.Test = (function() {
+quail.lib.Test = (function () {
+
   /**
    * A collection of Cases.
    */
-  function Test(name, attributes) {
+  function Test (name, attributes) {
     return new Test.fn.init(name, attributes);
   }
 
   // Prototype object of the Test.
   Test.fn = Test.prototype = {
     constructor: Test,
-    init: function(name, attributes) {
+    init: function (name, attributes) {
       this.listeners = {};
       this.length = 0;
       if (!name) {
@@ -7148,7 +7251,7 @@ quail.lib.Test = (function() {
     // Details of the test.
     attributes: null,
     // Execute a callback for every element in the matched set.
-    each: function(iterator) {
+    each: function (iterator) {
       var args = [].slice.call(arguments, 1);
       for (var i = 0, len = this.length; i < len; ++i) {
         args.unshift(this[i]);
@@ -7157,7 +7260,7 @@ quail.lib.Test = (function() {
       }
       return this;
     },
-    get: function(attr) {
+    get: function (attr) {
       // Return the document wrapped in jQuery if scope is not defined.
       if (attr === '$scope') {
         var scope = this.attributes['scope'];
@@ -7167,7 +7270,7 @@ quail.lib.Test = (function() {
       }
       return this.attributes[attr];
     },
-    set: function(attr, value) {
+    set: function (attr, value) {
       var isStatusChanged = false;
       // Allow an object of attributes to be passed in.
       if (typeof attr === 'object') {
@@ -7179,7 +7282,9 @@ quail.lib.Test = (function() {
             this.attributes[prop] = attr[prop];
           }
         }
-      } else {
+      }
+      // Assign a single attribute value.
+      else {
         if (attr === 'status') {
           isStatusChanged = true;
         }
@@ -7191,7 +7296,7 @@ quail.lib.Test = (function() {
       }
       return this;
     },
-    add: function(_case) {
+    add: function (_case) {
       this.listenTo(_case, 'resolve', this.caseResponded);
       this.listenTo(_case, 'timeout', this.caseResponded);
       // If the case is already resolved because it has a status, then trigger
@@ -7202,7 +7307,7 @@ quail.lib.Test = (function() {
       this.push(_case);
       return _case;
     },
-    invoke: function() {
+    invoke: function () {
       // This test is already running.
       if (this.testComplete) {
         throw new Error('The test ' + this.get('name') + ' is already running.');
@@ -7236,7 +7341,8 @@ quail.lib.Test = (function() {
               window.console.error(e);
             }
           }
-        } else if (type === 'custom' && typeof quail[callback] === 'function') {
+        }
+        else if (type === 'custom' && typeof quail[callback] === 'function') {
           try {
             quail[callback].call(this, quail, test, quail.lib.Case, options);
           }
@@ -7245,10 +7351,12 @@ quail.lib.Test = (function() {
               window.console.error(e);
             }
           }
-        } else {
+        }
+        else {
           throw new Error('The callback ' + callback + ' cannot be invoked.');
         }
-      } else if (typeof quail.components[type] === 'function') {
+      }
+      else if (typeof quail.components[type] === 'function') {
         try {
           quail.components[type].call(this, quail, test, quail.lib.Case, options);
         }
@@ -7257,7 +7365,8 @@ quail.lib.Test = (function() {
             window.console.error(e);
           }
         }
-      } else {
+      }
+      else {
         throw new Error('The component type ' + type + ' is not defined.');
       }
 
@@ -7270,7 +7379,7 @@ quail.lib.Test = (function() {
     /**
      * Finds cases by their status.
      */
-    findByStatus: function(statuses) {
+    findByStatus: function (statuses) {
       if (!statuses) {
         return;
       }
@@ -7284,7 +7393,7 @@ quail.lib.Test = (function() {
       for (var i = 0, il = statuses.length; i < il; ++i) {
         var status = statuses[i];
         // Loop through the cases.
-        this.each(function(index, _case) {
+        this.each(function (index, _case) {
           var caseStatus = _case.get('status');
           if (caseStatus === status) {
             test.add(_case);
@@ -7296,7 +7405,7 @@ quail.lib.Test = (function() {
     /**
      * Returns a set of cases with corresponding to th supplied selector.
      */
-    findCasesBySelector: function(selector) {
+    findCasesBySelector: function (selector) {
       var cases = this.groupCasesBySelector();
       if (cases.hasOwnProperty(selector)) {
         return cases[selector];
@@ -7316,7 +7425,7 @@ quail.lib.Test = (function() {
      *
      * @needstests
      */
-    findCaseByHtml: function(html) {
+    findCaseByHtml: function (html) {
       var _case;
       for (var i = 0, il = this.length; i < il; ++i) {
         _case = this[i];
@@ -7333,10 +7442,10 @@ quail.lib.Test = (function() {
      * @return object
      *  A hash of cases, keyed by the element selector.
      */
-    groupCasesBySelector: function() {
+    groupCasesBySelector: function () {
       var casesBySelector = {};
       // Loop through the cases.
-      this.each(function(index, _case) {
+      this.each(function (index, _case) {
         var selector = _case.get('selector');
         if (!casesBySelector[selector]) {
           casesBySelector[selector] = new Test();
@@ -7353,10 +7462,10 @@ quail.lib.Test = (function() {
      * @return object
      *  A hash of cases, keyed by the element selector.
      */
-    groupCasesByHtml: function() {
+    groupCasesByHtml: function () {
       var casesByHtml = {};
       // Loop through the cases.
-      this.each(function(index, _case) {
+      this.each(function (index, _case) {
         var html = _case.get('html');
         if (!casesByHtml[html]) {
           casesByHtml[html] = new Test();
@@ -7368,7 +7477,7 @@ quail.lib.Test = (function() {
     /**
      * @needsdoc
      */
-    getGuidelineCoverage: function(name) {
+    getGuidelineCoverage: function (name) {
       var config = this.get('guidelines');
       return config && config[name] || {};
     },
@@ -7376,7 +7485,7 @@ quail.lib.Test = (function() {
      * Adds the test that owns the Case to the set of arguments passed up to
      * listeners of this test's cases.
      */
-    caseResponded: function(eventName, _case) {
+    caseResponded: function (eventName, _case) {
       this.dispatch(eventName, this, _case);
       // Attempt to declare the Test complete.
       if (typeof this.testComplete === 'function') {
@@ -7386,7 +7495,7 @@ quail.lib.Test = (function() {
     /**
      * Evaluates the test's cases and sets the test's status.
      */
-    determineStatus: function() {
+    determineStatus: function () {
       // Invoke post filtering. This is a very special case for color.js.
       var type = this.get('type');
       var passed;
@@ -7399,25 +7508,32 @@ quail.lib.Test = (function() {
         this.set({
           'status': 'passed'
         });
-      } else if (this.findByStatus(['cantTell']).length === this.length) {
+      }
+      // CantTell.
+      else if (this.findByStatus(['cantTell']).length === this.length) {
         this.set({
           'status': 'cantTell'
         });
-      } else if (this.findByStatus(['inapplicable']).length === this.length) {
+      }
+      // inapplicable.
+      else if (this.findByStatus(['inapplicable']).length === this.length) {
         this.set({
           'status': 'inapplicable'
         });
-      } else if (this.findByStatus(['failed', 'untested']).length) {
+      }
+      // Failed.
+      else if (this.findByStatus(['failed', 'untested']).length) {
         this.set({
           'status': 'failed'
         });
-      } else {
+      }
+      else {
         this.set({
           'status': 'passed'
         });
       }
     },
-    resolve: function() {
+    resolve: function () {
       this.dispatch('complete', this);
     },
     /**
@@ -7428,12 +7544,12 @@ quail.lib.Test = (function() {
      */
     testComplete: null,
     // @todo, make this a set of methods that all classes extend.
-    listenTo: function(dispatcher, eventName, handler) {
+    listenTo: function (dispatcher, eventName, handler) {
       // @todo polyfill Function.prototype.bind.
       handler = handler.bind(this);
       dispatcher.registerListener.call(dispatcher, eventName, handler);
     },
-    registerListener: function(eventName, handler) {
+    registerListener: function (eventName, handler) {
       // nb: 'this' is the dispatcher object, not the one that invoked listenTo.
       if (!this.listeners[eventName]) {
         this.listeners[eventName] = [];
@@ -7441,10 +7557,10 @@ quail.lib.Test = (function() {
 
       this.listeners[eventName].push(handler);
     },
-    dispatch: function(eventName) {
+    dispatch: function (eventName) {
       if (this.listeners[eventName] && this.listeners[eventName].length) {
         var eventArgs = [].slice.call(arguments);
-        this.listeners[eventName].forEach(function(handler) {
+        this.listeners[eventName].forEach(function (handler) {
           // Pass any additional arguments from the event dispatcher to the
           // handler function.
           handler.apply(null, eventArgs);
@@ -7463,11 +7579,11 @@ quail.lib.Test = (function() {
    * This function is meant to be bound to a Test as a method through
    * a debounced proxy function.
    */
-  function testComplete(complete) {
+  function testComplete (complete) {
     complete = (typeof complete === 'undefined') ? true : complete;
     // @todo, this iteration would be faster with _.findWhere, that breaks on
     // the first match.
-    this.each(function(index, _case) {
+    this.each(function (index, _case) {
       if (!_case.get('status')) {
         complete = false;
       }
@@ -7478,7 +7594,10 @@ quail.lib.Test = (function() {
       // @todo, this should be set with the set method and a silent flag.
       this.attributes.complete = true;
       this.determineStatus();
-    } else {
+    }
+    // Otherwise attempt to the complete the Test again after the debounce
+    // period has expired.
+    else {
       this.testComplete();
     }
   }
@@ -7497,15 +7616,15 @@ quail.lib.Test = (function() {
    *   invoked once. For example if the wait period is 250ms, then the callback
    *   will only be called at most 4 times per second.
    */
-  function debounce(func, wait, immediate) {
+  function debounce (func, wait, immediate) {
+
     "use strict";
 
     var timeout, result;
-
-    return function() {
+    return function () {
       var context = this;
       var args = arguments;
-      var later = function() {
+      var later = function () {
         timeout = null;
         if (!immediate) {
           result = func.apply(context, args);
@@ -7527,7 +7646,8 @@ quail.lib.Test = (function() {
   return Test;
 }());
 
-quail.lib.TestCollection = (function() {
+quail.lib.TestCollection = (function () {
+
   /**
    * A Collection of Tests.
    */
@@ -7538,7 +7658,7 @@ quail.lib.TestCollection = (function() {
   // Prototype object of the TestCollection.
   TestCollection.fn = TestCollection.prototype = {
     constructor: TestCollection,
-    init: function(tests, options) {
+    init: function (tests, options) {
       this.listeners = {};
       options = options || {};
       if (!tests) {
@@ -7561,13 +7681,13 @@ quail.lib.TestCollection = (function() {
     // Setting a length property makes it behave like an array.
     length: 0,
     // Invoke all the tests in a set.
-    run: function(callbacks) {
+    run: function (callbacks) {
       var tc = this;
       callbacks = callbacks || {};
-      this.each(function(index, test) {
+      this.each(function (index, test) {
         // Allow a prefilter to remove a case.
         if (callbacks.preFilter) {
-          tc.listenTo(test, 'resolve', function(eventName, test, _case) {
+          tc.listenTo(test, 'resolve', function (eventName, test, _case) {
             var result = callbacks.preFilter(eventName, test, _case);
             if (result === false) {
               // Manipulate the attributes directly so that change events
@@ -7587,7 +7707,8 @@ quail.lib.TestCollection = (function() {
         }
       });
 
-      // Allow the invoker to listen to complete events for the TestCollection.
+      // Allow the invoker to listen to complete events for the
+      // TestCollection.
       if (callbacks.testCollectionComplete) {
         tc.listenTo(tc, 'complete', callbacks.testCollectionComplete);
       }
@@ -7611,7 +7732,7 @@ quail.lib.TestCollection = (function() {
     /**
      * Execute a callback for every element in the matched set.
      */
-    each: function(iterator) {
+    each: function (iterator) {
       var args = [].slice.call(arguments, 1);
       for (var i = 0, len = this.length; i < len; ++i) {
         args.unshift(this[i]);
@@ -7627,7 +7748,7 @@ quail.lib.TestCollection = (function() {
     /**
      * Add a Test object to the set.
      */
-    add: function(test) {
+    add: function (test) {
       // Don't add a test that already exists in this set.
       if (!this.find(test.get('name'))) {
         this.push(test);
@@ -7636,7 +7757,7 @@ quail.lib.TestCollection = (function() {
     /**
      * Finds a test by its name.
      */
-    find: function(testname) {
+    find: function (testname) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('name') === testname) {
           return this[i];
@@ -7647,13 +7768,15 @@ quail.lib.TestCollection = (function() {
     /**
      * @info, this should be a static method.
      */
-    findByGuideline: function(guidelineName) {
+    findByGuideline: function (guidelineName) {
+
       var methods = {
         'wcag': function (section, technique) {
-          function findAllTestsForTechnique(guidelineName, sectionId, techniqueName) {
+
+          function findAllTestsForTechnique (guidelineName, sectionId, techniqueName) {
             // Return a TestCollection instance.
             var tests = new TestCollection();
-            this.each(function(index, test) {
+            this.each(function (index, test) {
               // Get the configured guidelines for the test.
               var guidelines = test.get('guidelines');
               // If this test is configured for this section and it has
@@ -7689,7 +7812,7 @@ quail.lib.TestCollection = (function() {
     /**
      * Finds tests by their status.
      */
-    findByStatus: function(statuses) {
+    findByStatus: function (statuses) {
       if (!statuses) {
         return;
       }
@@ -7703,7 +7826,7 @@ quail.lib.TestCollection = (function() {
       for (var i = 0, il = statuses.length; i < il; ++i) {
         var status = statuses[i];
         // Loop through the tests.
-        this.each(function(index, test) {
+        this.each(function (index, test) {
           var testStatus = test.get('status');
           if (testStatus === status) {
             tests.add(test);
@@ -7715,7 +7838,7 @@ quail.lib.TestCollection = (function() {
     /**
      * Create a new test from a name and details.
      */
-    set: function(testname, details) {
+    set: function (testname, details) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('name') === testname) {
           this[i].set(details);
@@ -7733,16 +7856,16 @@ quail.lib.TestCollection = (function() {
      * testsComplete function in outer scope.
      */
     testsComplete: null,
-    report: function() {
+    report: function () {
       this.dispatch.apply(this, arguments);
     },
     // @todo, make this a set of methods that all classes extend.
-    listenTo: function(dispatcher, eventName, handler) {
+    listenTo: function (dispatcher, eventName, handler) {
       // @todo polyfill Function.prototype.bind.
       handler = handler.bind(this);
       dispatcher.registerListener.call(dispatcher, eventName, handler);
     },
-    registerListener: function(eventName, handler) {
+    registerListener: function (eventName, handler) {
       // nb: 'this' is the dispatcher object, not the one that invoked listenTo.
       if (!this.listeners[eventName]) {
         this.listeners[eventName] = [];
@@ -7750,10 +7873,10 @@ quail.lib.TestCollection = (function() {
 
       this.listeners[eventName].push(handler);
     },
-    dispatch: function(eventName) {
+    dispatch: function (eventName) {
       if (this.listeners[eventName] && this.listeners[eventName].length) {
         var eventArgs = [].slice.call(arguments);
-        this.listeners[eventName].forEach(function(handler) {
+        this.listeners[eventName].forEach(function (handler) {
           // Pass any additional arguments from the event dispatcher to the
           // handler function.
           handler.apply(null, eventArgs);
@@ -7771,11 +7894,11 @@ quail.lib.TestCollection = (function() {
    * This function is meant to be bound to a Test as a method through
    * a debounced proxy function.
    */
-  function testsComplete() {
+  function testsComplete () {
     var complete = true;
     // @todo, this iteration would be faster with _.findWhere, that breaks on
     // the first match.
-    this.each(function(index, test) {
+    this.each(function (index, test) {
       if (!test.get('complete')) {
         complete = false;
       }
@@ -7784,7 +7907,10 @@ quail.lib.TestCollection = (function() {
     if (complete) {
       this.testsComplete = null;
       this.dispatch('complete', this);
-    } else {
+    }
+    // Otherwise attempt to the complete the Tests again after the debounce
+    // period has expired.
+    else {
       this.testsComplete();
     }
   }
@@ -7803,15 +7929,15 @@ quail.lib.TestCollection = (function() {
    *   invoked once. For example if the wait period is 250ms, then the callback
    *   will only be called at most 4 times per second.
    */
-  function debounce(func, wait, immediate) {
+  function debounce (func, wait, immediate) {
+
     "use strict";
 
     var timeout, result;
-
-    return function() {
+    return function () {
       var context = this;
       var args = arguments;
-      var later = function() {
+      var later = function () {
         timeout = null;
         if (!immediate) {
           result = func.apply(context, args);
@@ -7835,18 +7961,19 @@ quail.lib.TestCollection = (function() {
 
 // Iterates over Techniques.
 
-quail.lib.WCAGGuideline = (function() {
+quail.lib.WCAGGuideline = (function () {
+
   /**
    * A Collection of Tests.
    */
-  var WCAGGuideline = function(tests) {
+  var WCAGGuideline = function (tests) {
     return new WCAGGuideline.fn.init(tests);
   };
 
   // Prototype object of the WCAGGuideline.
   WCAGGuideline.fn = WCAGGuideline.prototype = {
     constructor: WCAGGuideline,
-    init: function(config) {
+    init: function (config) {
       if (!config) {
         return this;
       }
@@ -7898,7 +8025,7 @@ quail.lib.WCAGGuideline = (function() {
     // Setting a length property makes it behave like an array.
     length: 0,
     // Execute a callback for every element in the matched set.
-    each: function(iterator) {
+    each: function (iterator) {
       var args = [].slice.call(arguments, 1);
       for (var i = 0, len = this.length; i < len; ++i) {
         args.unshift(this[i]);
@@ -7907,7 +8034,7 @@ quail.lib.WCAGGuideline = (function() {
       }
       return this;
     },
-    find: function(testname) {
+    find: function (testname) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('name') === testname) {
           return this[i];
@@ -7915,7 +8042,7 @@ quail.lib.WCAGGuideline = (function() {
       }
       return null;
     },
-    findTechnique : function(techniqueName) {
+    findTechnique : function (techniqueName) {
       for (var i = 0, il = this.techniques.length; i < il; ++i) {
         if (this.techniques[i].get('name') === techniqueName) {
           return this.techniques[i];
@@ -7923,7 +8050,7 @@ quail.lib.WCAGGuideline = (function() {
       }
       return null;
     },
-    set: function(testname, details) {
+    set: function (testname, details) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('name') === testname) {
           this[i].set(details);
@@ -7934,10 +8061,10 @@ quail.lib.WCAGGuideline = (function() {
       this.push(test);
       return test;
     },
-    evaluate: function() {
+    evaluate: function () {
       /* loop through all the techniques and evaluate them against the page. */
     },
-    results: function() {
+    results: function () {
       /* return evaluation results */
       /* Filter by SC? */
     },
@@ -7952,17 +8079,17 @@ quail.lib.WCAGGuideline = (function() {
   return WCAGGuideline;
 }());
 
-(function($) {
+(function ($) {
   var scopeValues = ['row', 'col', 'rowgroup', 'colgroup'];
 
-  $.fn.getTableMap = function() {
+  $.fn.getTableMap = function () {
     var map = [];
-    this.find('tr').each(function(y) {
+    this.find('tr').each(function (y) {
       if (typeof map[y] === 'undefined') {
         map[y] = [];
       }
       var row = map[y];
-      $(this).children().each(function() {
+      $(this).children().each(function () {
         var x;
         var i, il;
         var cell = $(this);
@@ -8064,6 +8191,7 @@ quail.lib.WCAGGuideline = (function() {
         if (deltaY === -1 && isRowHeader(tableMap, currCell, x, y) ||
         deltaX === -1 && isColumnHeader(tableMap, currCell, x, y)) {
           blocked = true;
+
         } else {
           $.each(opaqueHeaders, function (i, opaqueHeader) {
             var currSize = +currCell.attr(dir + 'span') || 1;
@@ -8076,10 +8204,10 @@ quail.lib.WCAGGuideline = (function() {
             }
           });
         }
-
         if (blocked === false) {
           headerList = headerList.add(currCell);
         }
+
       } else if (currCell.is('td') && inHeaderBlock === true) {
         inHeaderBlock = false;
         opaqueHeaders.push(headersFromCurrBlock);
@@ -8114,6 +8242,7 @@ quail.lib.WCAGGuideline = (function() {
         return;
       } else if (tableMap[y][i] === cell[0]) {
         x = i;
+
       } else if (i + 1 === tableMap[y].length) {
         y += 1;
         i = 0;
@@ -8124,10 +8253,12 @@ quail.lib.WCAGGuideline = (function() {
     return {x: x, y: y};
   }
 
+
   function getHeadersFromScope(cell, tableMap) {
     var i;
     var headerCells = $();
     var coords = findCellInTableMap(tableMap, cell);
+
     // Grab the width and height, undefined, invalid or 0 become 1
     var height = +cell.attr('rowspan') || 1;
     var width = +cell.attr('colspan') || 1;
@@ -8146,6 +8277,7 @@ quail.lib.WCAGGuideline = (function() {
     return headerCells;
   }
 
+
   function getHeadersFromGroups(cell, tableMap) {
     var cellCoords = findCellInTableMap(tableMap, cell);
     var headers = $();
@@ -8157,11 +8289,14 @@ quail.lib.WCAGGuideline = (function() {
         headers = headers.add(this);
       }
     });
+
+    // TODO colgroups
+
   }
 
-  $.fn.tableHeaders = function() {
+  $.fn.tableHeaders = function () {
     var headers = $();
-    this.each(function() {
+    this.each(function () {
       var $this = $(this);
 
       if ($this.is(':not(td, th)')) {
@@ -8170,6 +8305,7 @@ quail.lib.WCAGGuideline = (function() {
 
       if ($this.is('[headers]')) {
         headers = headers.add(getHeadersFromAttr($this));
+
       } else {
         var map = $this.closest('table').getTableMap();
         headers = headers
@@ -8180,11 +8316,12 @@ quail.lib.WCAGGuideline = (function() {
     });
     return headers.not(':empty').not(this);
   };
+
+
 }(jQuery));
 
-quail.lib.wcag2 = (function() {
+quail.lib.wcag2 = (function () {
   'use strict';
-
   var ajaxOpt = {async: false, dataType: 'json'};
 
   /**
@@ -8204,14 +8341,16 @@ quail.lib.wcag2 = (function() {
           options.wcag2Structure,
           options.accessibilityTests,
           options.preconditionTests);
+
     } else {
       // Load the required json files
       $.when(
         $.ajax(options.jsonPath + '/wcag2.json', ajaxOpt),
         $.ajax(options.jsonPath + '/tests.json', ajaxOpt),
         $.ajax(options.jsonPath + '/preconditions.json', ajaxOpt))
+
       // Setup quail given the tests described in the json files
-      .done(function(wcag2Call, testsCall, preconditionCall) {
+      .done(function (wcag2Call, testsCall, preconditionCall) {
         startWCAG20Quail(options, wcag2Call[0], testsCall[0], preconditionCall[0]);
       });
 
@@ -8222,14 +8361,14 @@ quail.lib.wcag2 = (function() {
     var criteria, accessibilityTests, knownTests;
     var allTests = [];
 
-    criteria = $.map(wcag2Call, function(critData) {
+    criteria = $.map(wcag2Call, function (critData) {
       return new quail.lib.wcag2.Criterion(
         critData, tests, preconditionTests, options.subject);
     });
 
     // Create the accessibiliyTests object, based on the
     // tests in the criteria
-    $.each(criteria, function(i, criterion) {
+    $.each(criteria, function (i, criterion) {
       allTests.push.apply(allTests, criterion.getTests());
     });
 
@@ -8238,7 +8377,7 @@ quail.lib.wcag2 = (function() {
 
     // Remove duplicates
     // TODO: Figure out why some tests are created multiple times
-    $.each(allTests, function(i, test) {
+    $.each(allTests, function (i, test) {
       if (knownTests.indexOf(test.title.en) === -1) {
         knownTests.push(test.title.en);
         accessibilityTests.push(test);
@@ -8254,10 +8393,11 @@ quail.lib.wcag2 = (function() {
     });
   }
 
+
   function createCallback(criteria, callback) {
-    return function(status, data) {
+    return function (status, data) {
       if (status === 'complete') {
-        data = $.map(criteria, function(criterion) {
+        data = $.map(criteria, function (criterion) {
           return criterion.getResult(data);
         });
       }
@@ -8269,9 +8409,9 @@ quail.lib.wcag2 = (function() {
   return {
     run: runWCAG20Quail
   };
-}());
 
-quail.guidelines.wcag.successCriteria['1.1.1'] = (function(quail) {
+}());
+quail.guidelines.wcag.successCriteria['1.1.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8305,27 +8445,30 @@ quail.guidelines.wcag.successCriteria['1.1.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
   function preEvaluator() {
     return true;
   }
+
   // Create a new SuccessCriteria and pass it the evaluation callbacks.
   var sc = quail.lib.SuccessCriteria({
     'name': 'wcag:1.2.1',
     preEvaluator: preEvaluator
   });
+
   // Techniques
   sc.techniques = {};
+
   // Failures
   sc.failures = {};
 
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.2'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8358,7 +8501,7 @@ quail.guidelines.wcag.successCriteria['1.2.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.3'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8381,7 +8524,7 @@ quail.guidelines.wcag.successCriteria['1.2.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.4'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.4'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8409,7 +8552,7 @@ quail.guidelines.wcag.successCriteria['1.2.4'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.5'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.5'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -8442,7 +8585,7 @@ quail.guidelines.wcag.successCriteria['1.2.5'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.7'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.7'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8465,7 +8608,7 @@ quail.guidelines.wcag.successCriteria['1.2.7'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.8'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.8'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8488,7 +8631,7 @@ quail.guidelines.wcag.successCriteria['1.2.8'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.2.9'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.2.9'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8511,7 +8654,7 @@ quail.guidelines.wcag.successCriteria['1.2.9'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.3.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.3.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8582,7 +8725,7 @@ quail.guidelines.wcag.successCriteria['1.3.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.3.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.3.2'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -8623,7 +8766,7 @@ quail.guidelines.wcag.successCriteria['1.3.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.3.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.3.3'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -8652,7 +8795,7 @@ quail.guidelines.wcag.successCriteria['1.3.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8675,7 +8818,7 @@ quail.guidelines.wcag.successCriteria['1.4.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.2'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -8707,7 +8850,7 @@ quail.guidelines.wcag.successCriteria['1.4.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.3'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -8772,7 +8915,7 @@ quail.guidelines.wcag.successCriteria['1.4.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.4'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.4'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -8808,7 +8951,7 @@ quail.guidelines.wcag.successCriteria['1.4.4'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.5'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.5'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -8838,7 +8981,7 @@ quail.guidelines.wcag.successCriteria['1.4.5'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.6'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.6'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8861,7 +9004,7 @@ quail.guidelines.wcag.successCriteria['1.4.6'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.7'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.7'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8884,7 +9027,7 @@ quail.guidelines.wcag.successCriteria['1.4.7'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.8'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.8'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8907,7 +9050,7 @@ quail.guidelines.wcag.successCriteria['1.4.8'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['1.4.9'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['1.4.9'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8930,7 +9073,7 @@ quail.guidelines.wcag.successCriteria['1.4.9'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.1.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.1.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8953,7 +9096,7 @@ quail.guidelines.wcag.successCriteria['2.1.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.1.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.1.2'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8976,7 +9119,7 @@ quail.guidelines.wcag.successCriteria['2.1.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.1.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.1.3'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -8999,7 +9142,7 @@ quail.guidelines.wcag.successCriteria['2.1.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.2.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.2.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9022,7 +9165,7 @@ quail.guidelines.wcag.successCriteria['2.2.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.2.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.2.2'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9045,7 +9188,7 @@ quail.guidelines.wcag.successCriteria['2.2.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.2.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.2.3'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9068,7 +9211,7 @@ quail.guidelines.wcag.successCriteria['2.2.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.2.4'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.2.4'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9091,7 +9234,7 @@ quail.guidelines.wcag.successCriteria['2.2.4'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.2.5'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.2.5'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9114,7 +9257,7 @@ quail.guidelines.wcag.successCriteria['2.2.5'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.3.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.3.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9137,7 +9280,7 @@ quail.guidelines.wcag.successCriteria['2.3.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.3.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.3.2'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9160,7 +9303,7 @@ quail.guidelines.wcag.successCriteria['2.3.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.1'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -9191,7 +9334,7 @@ quail.guidelines.wcag.successCriteria['2.4.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.10'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.10'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9214,7 +9357,7 @@ quail.guidelines.wcag.successCriteria['2.4.10'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.2'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9237,7 +9380,7 @@ quail.guidelines.wcag.successCriteria['2.4.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.3'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9260,7 +9403,7 @@ quail.guidelines.wcag.successCriteria['2.4.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.4'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.4'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9283,7 +9426,7 @@ quail.guidelines.wcag.successCriteria['2.4.4'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.5'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.5'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9306,7 +9449,7 @@ quail.guidelines.wcag.successCriteria['2.4.5'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.6'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.6'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9329,7 +9472,7 @@ quail.guidelines.wcag.successCriteria['2.4.6'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.7'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.7'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9352,7 +9495,7 @@ quail.guidelines.wcag.successCriteria['2.4.7'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.8'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.8'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9375,7 +9518,7 @@ quail.guidelines.wcag.successCriteria['2.4.8'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['2.4.9'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['2.4.9'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9398,7 +9541,7 @@ quail.guidelines.wcag.successCriteria['2.4.9'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.1.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.1.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9421,7 +9564,7 @@ quail.guidelines.wcag.successCriteria['3.1.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.1.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.1.2'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9444,7 +9587,7 @@ quail.guidelines.wcag.successCriteria['3.1.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.1.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.1.3'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9467,7 +9610,7 @@ quail.guidelines.wcag.successCriteria['3.1.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.1.4'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.1.4'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9490,7 +9633,7 @@ quail.guidelines.wcag.successCriteria['3.1.4'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.1.5'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.1.5'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9513,7 +9656,7 @@ quail.guidelines.wcag.successCriteria['3.1.5'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.1.6'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.1.6'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9536,7 +9679,7 @@ quail.guidelines.wcag.successCriteria['3.1.6'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.2.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.2.1'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -9565,7 +9708,7 @@ quail.guidelines.wcag.successCriteria['3.2.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.2.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.2.2'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -9601,7 +9744,7 @@ quail.guidelines.wcag.successCriteria['3.2.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.2.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.2.3'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -9629,7 +9772,7 @@ quail.guidelines.wcag.successCriteria['3.2.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.2.4'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.2.4'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -9657,7 +9800,7 @@ quail.guidelines.wcag.successCriteria['3.2.4'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.2.5'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.2.5'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9680,7 +9823,7 @@ quail.guidelines.wcag.successCriteria['3.2.5'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.3.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.3.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9703,7 +9846,7 @@ quail.guidelines.wcag.successCriteria['3.3.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.3.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.3.2'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9726,7 +9869,7 @@ quail.guidelines.wcag.successCriteria['3.3.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.3.3'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.3.3'] = (function (quail) {
 
   /**
    * Determines if this Success Criteria applies to the document.
@@ -9789,7 +9932,8 @@ quail.guidelines.wcag.successCriteria['3.3.3'] = (function(quail) {
       ) {
         return true;
       }
-    } else {
+    }
+    else {
       return false;
     }
   }
@@ -9825,7 +9969,7 @@ quail.guidelines.wcag.successCriteria['3.3.3'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.3.4'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.3.4'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9848,7 +9992,7 @@ quail.guidelines.wcag.successCriteria['3.3.4'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.3.5'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.3.5'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9871,7 +10015,7 @@ quail.guidelines.wcag.successCriteria['3.3.5'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['3.3.6'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['3.3.6'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9894,7 +10038,7 @@ quail.guidelines.wcag.successCriteria['3.3.6'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['4.1.1'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['4.1.1'] = (function (quail) {
   /**
    * Determines if this Success Criteria applies to the document.
    */
@@ -9917,7 +10061,7 @@ quail.guidelines.wcag.successCriteria['4.1.1'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.guidelines.wcag.successCriteria['4.1.2'] = (function(quail) {
+quail.guidelines.wcag.successCriteria['4.1.2'] = (function (quail) {
 
   // The tests that must be run in order to evaluate this Success Criteria.
   // @todo, identify the complete set of required tests for this Success Criteria.
@@ -10047,14 +10191,14 @@ quail.guidelines.wcag.successCriteria['4.1.2'] = (function(quail) {
   return sc;
 }(quail));
 
-quail.lib.wcag2.Criterion = (function() {
+quail.lib.wcag2.Criterion = (function () {
 
   // Provide default values for the assert objects
   function aggregateParts(parts, defaultResult) {
     var getResultPriority = quail.lib.wcag2.EarlAssertion.getResultPriority;
     var outcome = {result: defaultResult};
 
-    $.each(parts, function(i, part) {
+    $.each(parts, function (i, part) {
       if (getResultPriority(outcome) < getResultPriority(part)) {
         outcome.result = part.outcome.result;
       }
@@ -10071,7 +10215,7 @@ quail.lib.wcag2.Criterion = (function() {
 
     // Create a TestAggregator object for each aggregator (if any)
     if ($.isArray(data.testAggregators)) {
-      testAggregators = $.map(data.testAggregators, function(aggregateConf) {
+      testAggregators = $.map(data.testAggregators, function (aggregateConf) {
         return new quail.lib.wcag2.TestAggregator(
           aggregateConf, testDefinitions, subject
         );
@@ -10091,11 +10235,11 @@ quail.lib.wcag2.Criterion = (function() {
     }
 
 
-    criterion.getResult = function(data) {
+    criterion.getResult = function (data) {
       var result;
       var parts = [];
 
-      $.each(testAggregators, function(i, aggregator) {
+      $.each(testAggregators, function (i, aggregator) {
         var part = aggregator.getResults(data);
         parts.push.apply(parts, part);
       });
@@ -10115,9 +10259,9 @@ quail.lib.wcag2.Criterion = (function() {
      * @param  {[json]} criteria
      * @return {[array]}
      */
-    criterion.getTests = function() {
+    criterion.getTests = function () {
       var tests = [];
-      $.each(testAggregators, function(i, aggregator) {
+      $.each(testAggregators, function (i, aggregator) {
         tests.push.apply(tests, aggregator.tests);
       });
       return tests;
@@ -10127,9 +10271,10 @@ quail.lib.wcag2.Criterion = (function() {
   }
 
   return constructor;
+
 }());
 
-quail.lib.wcag2.EarlAssertion = (function() {
+quail.lib.wcag2.EarlAssertion = (function () {
   var pageUrl;
   var resultPriorityMap = [
     'untested', 'inapplicable', 'passed',
@@ -10145,6 +10290,7 @@ quail.lib.wcag2.EarlAssertion = (function() {
     mode: 'automated'
   };
 
+
   if (window && window.location) {
     pageUrl = window.location.href;
   }
@@ -10158,6 +10304,7 @@ quail.lib.wcag2.EarlAssertion = (function() {
     $.extend(this, base, defaultAssertion);
     this.outcome = $.extend({}, this.outcome);
   }
+
 
   /**
    * Return the priorty index of the result
@@ -10176,13 +10323,14 @@ quail.lib.wcag2.EarlAssertion = (function() {
   };
 
   return Assertion;
-}());
 
-quail.lib.wcag2.TestAggregator = (function() {
+}());
+quail.lib.wcag2.TestAggregator = (function () {
+
   var pointerMap = {
     elms: [],
     pointers: [],
-    add: function(testCase) {
+    add: function (testCase) {
       var pointer;
       if (pointerMap.elms.indexOf(testCase.get('element')) === -1) {
         if (testCase.get('html')) {
@@ -10196,7 +10344,7 @@ quail.lib.wcag2.TestAggregator = (function() {
         pointerMap.pointers.push(pointer);
       }
     },
-    getPointer: function(elm) {
+    getPointer: function (elm) {
       var index = pointerMap.elms.indexOf(elm);
       return pointerMap.pointers[index];
     }
@@ -10208,8 +10356,8 @@ quail.lib.wcag2.TestAggregator = (function() {
    * @param  {Function} callback Given the parameters (test, testcase)
    */
   function eachTestCase(tests, callback) {
-    $.each(tests, function(i, test) {
-      test.each(function() {
+    $.each(tests, function (i, test) {
+      test.each(function () {
         callback.call(this, test, this);
       });
     });
@@ -10224,21 +10372,21 @@ quail.lib.wcag2.TestAggregator = (function() {
     var common = [];
     var map = [];
 
-    $.each(tests, function(i, test) {
+    $.each(tests, function (i, test) {
       var elms = [];
-      test.each(function() {
+      test.each(function () {
         elms.push(this.get('element'));
         pointerMap.add(this);
       });
       map.push(elms);
     });
-    $.each(map, function(i, arr) {
+    $.each(map, function (i, arr) {
       if (i === 0) {
         common = arr;
         return;
       }
       var newArr = [];
-      $.each(arr, function(i, val) {
+      $.each(arr, function (i, val) {
         if (common.indexOf(val) !== -1) {
           newArr.push(val);
         }
@@ -10256,7 +10404,7 @@ quail.lib.wcag2.TestAggregator = (function() {
    */
   function getAllElements(tests) {
     var elms = [];
-    eachTestCase(tests, function(test, testCase) {
+    eachTestCase(tests, function (test, testCase) {
       var elm = testCase.get('element');
       if (elms.indexOf(elm) === -1) {
         elms.push(elm);
@@ -10275,7 +10423,7 @@ quail.lib.wcag2.TestAggregator = (function() {
   function createAssertionsForEachElement(elms, base) {
     var assertions = [];
     // Create asserts for each element
-    $.each(elms, function(i, elm) {
+    $.each(elms, function (i, elm) {
       var assertion = new quail.lib.wcag2.EarlAssertion(base);
       if (elm) { // Don't do undefined pointers
         assertion.outcome.pointer = pointerMap.getPointer(elm);
@@ -10305,7 +10453,7 @@ quail.lib.wcag2.TestAggregator = (function() {
     });
 
     // Iterate over all results to build the assert
-    eachTestCase(tests, function(test, testCase) {
+    eachTestCase(tests, function (test, testCase) {
       // Look up the assert, if any
       var newResult = testCase.get('status');
       var getResultPriority = quail.lib.wcag2.EarlAssertion.getResultPriority;
@@ -10334,6 +10482,7 @@ quail.lib.wcag2.TestAggregator = (function() {
     return assertions;
   }
 
+
   /**
    * Stack the test results of a aggregator into asserts
    *
@@ -10351,7 +10500,7 @@ quail.lib.wcag2.TestAggregator = (function() {
     });
 
     // Iterate over all results to build the assert
-    eachTestCase(tests, function(test, testCase) {
+    eachTestCase(tests, function (test, testCase) {
       // Look up the assert, if any
       var newResult = testCase.get('status');
       var getResultPriority = quail.lib.wcag2.EarlAssertion.getResultPriority;
@@ -10375,16 +10524,18 @@ quail.lib.wcag2.TestAggregator = (function() {
     return asserts;
   }
 
+
   function TestAggregator(config, testDefinitions, subject) {
     $.extend(this, {
       id: config.tests.join('+'),
       subject: subject
     }, config);
 
-    this.tests = $.map(this.tests, function(test) {
+    this.tests = $.map(this.tests, function (test) {
       return testDefinitions[test];
     });
   }
+
 
   /**
    * Filter the data array so it only contains results
@@ -10392,13 +10543,13 @@ quail.lib.wcag2.TestAggregator = (function() {
    * @param  {Array} data
    * @return {Array}
    */
-  TestAggregator.prototype.filterDataToTests = function(data) {
+  TestAggregator.prototype.filterDataToTests = function (data) {
     var names = $.map(this.tests, function (test) {
       return test.name;
     });
     var testData = [];
 
-    $.each(data, function(i, result) {
+    $.each(data, function (i, result) {
       if (names.indexOf(result.get('name')) !== -1) {
         testData.push(result);
       }
@@ -10411,14 +10562,16 @@ quail.lib.wcag2.TestAggregator = (function() {
    * @param  {object} tests As provided by Quail
    * @return {object}       EARL assertions
    */
-  TestAggregator.prototype.getResults = function(tests) {
+  TestAggregator.prototype.getResults = function (tests) {
     var assertions, assertion;
     var filteredTests = this.filterDataToTests(tests);
 
     if (filteredTests.length === 1 || this.type === 'combined') {
       assertions = getCombinedAssertions(this, filteredTests);
+
     } else if (this.type === "stacking") {
       assertions = getStackedAssertions(this, filteredTests);
+
     } else if (window) {
       window.console.error(
         "Unknown type for aggregator " + this.id

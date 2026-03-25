@@ -32,7 +32,7 @@ $('input[name=\'product\']').autocomplete({
 	delay: 10,
 	source: function(request, response) {
 		$.ajax({
-			url: 'index.php?route=affiliate/tracking/autocomplete&filter_name=' + encodeURIComponent(request.term),
+			url: 'index.php?route=affiliate/tracking/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
 			dataType: 'json',
 			success: function(json) {
 				response($.map(json, function(item) {
@@ -45,8 +45,8 @@ $('input[name=\'product\']').autocomplete({
 		});
 	},
 	select: function(event, ui) {
-		$('input[name=\'product\']').attr('value', ui.item.label);
-		$('textarea[name=\'link\']').attr('value', ui.item.value);
+		$('input[name=\'product\']').val(ui.item.label);
+		$('textarea[name=\'link\']').val(ui.item.value);
 		return false;
 	},
 	focus: function(event, ui) {

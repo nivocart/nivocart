@@ -46,6 +46,8 @@ class ControllerAffiliateTracking extends Controller {
 
 		$this->data['continue'] = $this->url->link('affiliate/account', '', 'SSL');
 
+		$this->data['token'] = $this->session->data['token'];
+
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
@@ -78,7 +80,7 @@ class ControllerAffiliateTracking extends Controller {
 			$filter_data = array(
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
-				'limit'       => 20
+				'limit'       => 5
 			);
 
 			$results = $this->model_catalog_product->getProducts($filter_data);

@@ -330,7 +330,7 @@
           </tr>
           <tr>
             <td><?php echo $text_export_import_website; ?></td>
-            <td><a class="about" onclick="window.open('https://villagedefrance.net');" title="">https://villagedefrance.net</a></td>
+            <td><a class="about" onclick="window.open('https://nivocart.com');" title="">https://nivocart.com</a></td>
           </tr>
           <tr>
             <td><?php echo $text_export_import_support; ?></td>

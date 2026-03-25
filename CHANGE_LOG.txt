@@ -5,9 +5,33 @@
 
 NivoCart v2.0.0
 ---------------
-Released: 2026
+Released: summer 2026
 
 - All code updated to PHP 8.0+
+
+
+NivoCart v1.0.6
+---------------
+Released: N/A
+
+- FlexSlider updated to v2.7.2 (current latest)
+- User passwords can no longer be empty/null. Fix issue #21.
+- User Groups cannot be created if the Name already exists.
+
+
+NivoCart v1.0.5
+---------------
+Released: 16/09/2019
+
+- CKEditor v4.12.1, with Accessibility Checker.
+- Cookie Consent button text underline. Style. Fix issue #22
+- Improved Admin user accounts management. Fix issue #21
+- jQuery UI timepicker addon update to v1.6.3. Fix issue #20
+- Admin order history/order status update. Bug. Fix issue #19
+- DomPDF updates to fix broken downloaded files. Fix issue #18
+- Re-instated mCrypt function for Php 7.0.x support. Fix issue #16
+- Improved support for latest Php versions up to 7.3.8.
+- Minor language definitions changes.
 
 
 NivoCart v1.0.4

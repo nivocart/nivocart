@@ -40,11 +40,11 @@ final class Action {
 				continue;
 			}
 
-			$file = DIR_APPLICATION . 'controller/' . str_replace(array('../', '..\\', '..'), '', $path) . '.php';
+			$file = DIR_APPLICATION . 'controller/' . str_replace(array('../', '..\\', '..'), '', (string)$path) . '.php';
 
 			if (is_file($file)) {
 				$this->file = $file;
-				$this->class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $path);
+				$this->class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', (string)$path);
 				array_shift($parts);
 				break;
 			}

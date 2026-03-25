@@ -62,7 +62,7 @@ window.cookieconsent.initialise({
   "palette": {
     "popup": {
       "background": "<?php echo $cookie_popup; ?>",
-	  "text": "<?php echo $cookie_text; ?>"
+      "text": "<?php echo $cookie_text; ?>"
     },
     "button": {
       "background": "<?php echo $cookie_button; ?>"
@@ -74,7 +74,7 @@ window.cookieconsent.initialise({
 <?php } ?>
   "content": {
     "message": "<?php echo $text_message; ?>",
-	"dismiss": "<?php echo $text_accept; ?>",
+    "dismiss": "<?php echo $text_accept; ?>",
     "href": "<?php echo $cookie_privacy; ?>"
   }
 })});

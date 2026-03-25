@@ -19,6 +19,9 @@ class ModelUserUser extends Model {
 
 		if ($data['password']) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
+
+		if (isset($data['password'])) {
+			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 
 		if (isset($data['image'])) {
@@ -122,7 +125,7 @@ class ModelUserUser extends Model {
 	}
 
 	// Checks
-	public function checkUserPassword($password, int $user_id, $username) {
+	public function checkUserPassword(string $password, int $user_id, string $username) {
 		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "')))))) THEN 0 ELSE 1 END AS `result` FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "' AND username = '" . $this->db->escape((string)$username) . "' AND status = '1'");
 
 		if ($query->row['result']) {
@@ -130,6 +133,18 @@ class ModelUserUser extends Model {
 		} else {
 			return false;
 		}
+	}
+
+	public function checkTopAdministrator() {
+		$user_group_name = $this->getUserGroup($this->user->getId(), $this->user->getUserGroupId());
+
+		if ($user_group_name == 'Top Administrator') {
+			$top_administrator = true;
+		} else {
+			$top_administrator = false;
+		}
+
+		return $top_administrator;
 	}
 
 	// Totals

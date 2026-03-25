@@ -41,6 +41,7 @@ class ControllerStep2 extends Controller {
 		$this->data['text_curl'] = $this->language->get('text_curl');
 		$this->data['text_dom'] = $this->language->get('text_dom');
 		$this->data['text_xml'] = $this->language->get('text_xml');
+		$this->data['text_mcrypt'] = $this->language->get('text_mcrypt');
 		$this->data['text_openssl'] = $this->language->get('text_openssl');
 		$this->data['text_zlib'] = $this->language->get('text_zlib');
 		$this->data['text_zip'] = $this->language->get('text_zip');
@@ -73,6 +74,7 @@ class ControllerStep2 extends Controller {
 		$this->data['curl'] = extension_loaded('curl');
 		$this->data['dom'] = extension_loaded('dom');
 		$this->data['xml'] = extension_loaded('xml');
+		$this->data['mcrypt_encrypt'] = function_exists('mcrypt_encrypt');
 		$this->data['openssl_encrypt'] = function_exists('openssl_encrypt');
 		$this->data['zlib'] = extension_loaded('zlib');
 		$this->data['zip'] = extension_loaded('zip');
@@ -138,8 +140,14 @@ class ControllerStep2 extends Controller {
 			$this->error['warning'] = $this->language->get('error_php_xml');
 		}
 
-		if (!function_exists('openssl_encrypt')) {
-			$this->error['warning'] = $this->language->get('error_php_openssl');
+		if ($php_version >= '7.1') {
+			if (!function_exists('openssl_encrypt')) {
+				$this->error['warning'] = $this->language->get('error_php_openssl');
+			}
+		} else {
+			if (!function_exists('mcrypt_encrypt')) {
+				$this->error['warning'] = $this->language->get('error_php_mcrypt');
+			}
 		}
 
 		if (!extension_loaded('zlib')) {

@@ -78,7 +78,7 @@
           <?php } ?>
           </select></td>
         </tr>
-      <?php if ($user_exist) { ?>
+      <?php if ($user_exist && !$top_administrator) { ?>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_old_password; ?></td>
           <td><?php if ($error_old_password) { ?>

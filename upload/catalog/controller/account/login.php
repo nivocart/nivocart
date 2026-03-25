@@ -7,8 +7,6 @@ class ControllerAccountLogin extends Controller {
 			$this->redirect($this->url->link('account/login', '', 'SSL'), 301);
 		}
 
-		$this->load->model('account/customer');
-
 		// Login override for admin users
 		if (!empty($this->request->get['token'])) {
 			$this->customer->logout();
@@ -32,6 +30,8 @@ class ControllerAccountLogin extends Controller {
 			unset($this->session->data['reward']);
 			unset($this->session->data['voucher']);
 			unset($this->session->data['vouchers']);
+
+			$this->load->model('account/customer');
 
 			$customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
 
@@ -217,6 +217,8 @@ class ControllerAccountLogin extends Controller {
 		if (!$this->customer->login($this->request->post['email'], $this->request->post['password'])) {
 			$this->error['warning'] = $this->language->get('error_login');
 		}
+
+		$this->load->model('account/customer');
 
 		$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
 

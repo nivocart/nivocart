@@ -114,7 +114,7 @@ final class Loader {
 
 		$file = DIR_SYSTEM . 'database/' . $driver . '.php';
 
-		$class = 'Database' . preg_replace('/[^a-zA-Z0-9]/', '', $driver);
+		$class = 'Database' . $driver;
 
 		if (is_file($file)) {
 			include_once($file);

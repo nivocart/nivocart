@@ -706,7 +706,7 @@ class ControllerProductSearch extends Controller {
 							'name'  => html_entity_decode($values['name'] . ' ' . $product_price, ENT_QUOTES, 'UTF-8'),
 							'image' => $image,
 							'alt'   => $values['name'],
-							'href'  => $this->url->link('product/product&product_id=' . $product_id, '', 'SSL')
+							'href'  => $this->url->link('product/product&product_id=' . (int)$product_id, '', 'SSL')
 						);
 					}
 				}

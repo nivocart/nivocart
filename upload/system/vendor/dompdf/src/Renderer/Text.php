@@ -112,7 +112,7 @@ class Text extends AbstractRenderer {
         // Handle text decoration:
         // http://www.w3.org/TR/CSS21/text.html#propdef-text-decoration
 
-        // Draw all applicable text-decorations.  Start with the root and work our way down.
+        // Draw all applicable text-decorations. Start with the root and work our way down.
         $p = $frame;
 
         $stack = array();
@@ -133,7 +133,7 @@ class Text extends AbstractRenderer {
 
             switch ($text_deco) {
                 default:
-                    continue;
+                    continue 2;
 
                 case "underline":
                     $deco_y += $base - $descent + $underline_offset + $line_thickness / 2;
