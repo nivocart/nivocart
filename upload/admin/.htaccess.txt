@@ -5,4 +5,4 @@
 # AuthName "Restricted Area"
 # AuthUserFile path_to_file/admin/.htpasswd
 # Require valid-user
-# ErrorDocument 401 "<H1>Error 401</H1> Access to this page is restricted. Please enter valid credentials."
+# ErrorDocument 401 "<H1>Error 401</H1> Access to this page is restricted. Please use valid credentials."
