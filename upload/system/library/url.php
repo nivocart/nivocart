@@ -1,19 +1,56 @@
 <?php
 class Url {
-	private $url;
-	private $ssl;
-	private $rewrite = array();
+	/**
+	 * @var string
+	 */
+	private string $url;
 
-	public function __construct($url, $ssl = '') {
+	/**
+	 * @var string
+	 */
+	private string $ssl;
+
+	/**
+	 * @var array<int, object>
+	 */
+	private array $rewrite = [];
+
+	/**
+	 * Constructor
+	 *
+	 * @param string $url
+	 * @param string $ssl
+	 */
+	public function __construct(string $url, string $ssl = '') {
 		$this->url = $url;
 		$this->ssl = $ssl;
 	}
 
-	public function addRewrite($rewrite) {
-		$this->rewrite[] = $rewrite;
+	/**
+	 * Add Rewrite
+	 *
+	 * Add a rewrite method to the URL system
+	 *
+	 * @return void
+	 */
+	public function addRewrite(object $rewrite): void {
+		if (is_callable([$rewrite, 'rewrite'])) {
+			$this->rewrite[] = $rewrite;
+		}
 	}
 
-	public function link($route, $args = '', $connection = 'NONSSL') {
+	/**
+	 * Link
+	 *
+	 * Generates a URL
+	 *
+	 * @param string  $route
+	 * @param mixed   $args
+	 * @param string  $connection
+	 *
+	 * @return string
+	 */
+	public function link(string $route, $args = '', string $connection = 'NONSSL'): string {
 		if ($connection == 'NONSSL') {
 			$url = $this->url . 'index.php?route=' . $route;
 		} else {
@@ -32,10 +69,23 @@ class Url {
 			$url = $rewrite->rewrite($url);
 		}
 
+		// See https://stackoverflow.com/questions/78729429/403-forbidden-when-url-contains-get-with-encoded-question-mark-unsafeallow3f
+		// https://github.com/opencart/opencart/issues/14202
+		$url = str_replace('%3F', '?', $url);
+
 		return $url;
 	}
 
-	public function getHttpResponseCode($url) {
+	/**
+	 * getHttpResponseCode
+	 *
+	 * Test HTTP Response
+	 *
+	 * @param string  $url
+	 *
+	 * @return string
+	 */
+	public function getHttpResponseCode(string $url): string {
 		$headers = get_headers($url);
 
 		if ($headers) {
@@ -45,6 +95,11 @@ class Url {
 		}
 	}
 
+	/**
+	 * isLocal
+	 *
+	 * Test if server is local
+	 */
 	public function isLocal() {
 		$local_address = false;
 		$local_name = false;

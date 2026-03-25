@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogOffer extends Model {
 
-	public function getOfferProducts($product_id) {
+	public function getOfferProducts(int $product_id): array {
 		$this->language->load('total/offers');
 
 		$this->load->model('checkout/offers');
@@ -14,7 +14,7 @@ class ModelCatalogOffer extends Model {
 		if ($offer_product_products) {
 			foreach ($offer_product_products as $result) {
 				if ($result['type'] == 'F') {
-					$type = $this->currency->format($result['disc']) . ' ' . $this->language->get('text_off');
+					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
 					$type = $this->language->get('text_free');
 				} else {
@@ -57,7 +57,7 @@ class ModelCatalogOffer extends Model {
 		if ($offer_product_categories) {
 			foreach ($offer_product_categories as $result) {
 				if ($result['type'] == 'F') {
-					$type = $this->currency->format($result['disc']) . ' ' . $this->language->get('text_off');
+					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
 					$type = $this->language->get('text_free');
 				} else {
@@ -111,7 +111,7 @@ class ModelCatalogOffer extends Model {
 		if ($offer_category_products) {
 			foreach ($offer_category_products as $result) {
 				if ($result['type'] == 'F') {
-					$type = $this->currency->format($result['disc']) . ' ' . $this->language->get('text_off');
+					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
 					$type = $this->language->get('text_free');
 				} else {
@@ -165,7 +165,7 @@ class ModelCatalogOffer extends Model {
 		if ($offer_category_categories) {
 			foreach ($offer_category_categories as $result) {
 				if ($result['type'] == 'F') {
-					$type = $this->currency->format($result['disc']) . ' ' . $this->language->get('text_off');
+					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
 					$type = $this->language->get('text_free');
 				} else {
@@ -319,7 +319,7 @@ class ModelCatalogOffer extends Model {
 	}
 
 	// Product List from Category
-	protected function getCategoryProducts($category_id) {
+	protected function getCategoryProducts(int $category_id): array {
 		$product_list = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE category_id = '" . (int)$category_id . "'");
@@ -334,15 +334,15 @@ class ModelCatalogOffer extends Model {
 	}
 
 	// Product Image
-	public function getOfferProductImage($product_id) {
-		$query = $this->db->query("SELECT image FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "' AND status = '1'");
+	public function getOfferProductImage(int $product_id) {
+		$query = $this->db->query("SELECT `image` FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "' AND status = '1'");
 
 		return $query->row['image'];
 	}
 
 	// Product Name
-	public function getOfferProductName($product_id) {
-		$query = $this->db->query("SELECT pd.name AS name FROM `" . DB_PREFIX . "product` p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.product_id = '" . (int)$product_id . "' AND p.status = '1'");
+	public function getOfferProductName(int $product_id) {
+		$query = $this->db->query("SELECT pd.name AS `name` FROM `" . DB_PREFIX . "product` p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.product_id = '" . (int)$product_id . "' AND p.status = '1'");
 
 		return $query->row['name'];
 	}

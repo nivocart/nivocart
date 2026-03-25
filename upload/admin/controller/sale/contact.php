@@ -53,7 +53,9 @@ class ControllerSaleContact extends Controller {
 
 		$this->load->model('sale/customer_group');
 
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups(0);
+		$group_customers = array();
+
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($group_customers);
 
 		$this->template = 'sale/contact.tpl';
 		$this->children = array(
@@ -229,14 +231,6 @@ class ControllerSaleContact extends Controller {
 					foreach ($emails as $email) {
 						if (preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
 							$mail = new Mail();
-							$mail->protocol = $this->config->get('config_mail_protocol');
-							$mail->parameter = $this->config->get('config_mail_parameter');
-							$mail->hostname = $this->config->get('config_smtp_host');
-							$mail->username = $this->config->get('config_smtp_username');
-							$mail->password = $this->config->get('config_smtp_password');
-							$mail->port = $this->config->get('config_smtp_port');
-							$mail->timeout = $this->config->get('config_smtp_timeout');
-
 							$mail->setTo($email);
 							$mail->setFrom($this->config->get('config_email'));
 							$mail->setSender(html_entity_decode($store_name, ENT_QUOTES, 'UTF-8'));

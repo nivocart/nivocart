@@ -54,7 +54,7 @@ class ModelTotalReward extends Model {
 				$total_data[] = array(
 					'code'       => 'reward',
 					'title'      => sprintf($this->language->get('text_reward'), $reward_points * $points_rate),
-					'text'       => $this->currency->format(-$discount_total),
+					'text'       => $this->currency->format(-$discount_total, $this->config->get('config_currency')),
 					'value'      => -$discount_total,
 					'sort_order' => $this->config->get('reward_sort_order')
 				);

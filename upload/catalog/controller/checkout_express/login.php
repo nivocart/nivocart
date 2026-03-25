@@ -47,7 +47,7 @@ class ControllerCheckoutExpressLogin extends Controller {
 		}
 
 		if (!$json) {
-			if (!$this->request->post['email'] || (utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+			if (!$this->request->post['email'] || (mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				$json['error']['warning'] = $this->language->get('error_email');
 			}
 
@@ -83,7 +83,7 @@ class ControllerCheckoutExpressLogin extends Controller {
 		}
 
 		if (!$json) {
-			if (!$this->request->post['email'] || (utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+			if (!$this->request->post['email'] || (mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				$json['error']['warning'] = $this->language->get('error_email');
 			}
 

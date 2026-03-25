@@ -415,12 +415,12 @@ class ControllerCatalogNewsDownload extends Controller {
 		}
 
 		foreach ($this->request->post['news_download_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 64)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 3) || (mb_strlen($value['name'], 'UTF-8') > 64)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
 
-		if ((utf8_strlen($this->request->post['filename']) < 3) || (utf8_strlen($this->request->post['filename']) > 128)) {
+		if ((mb_strlen($this->request->post['filename'], 'UTF-8') < 3) || (mb_strlen($this->request->post['filename'], 'UTF-8') > 128)) {
 			$this->error['filename'] = $this->language->get('error_filename');
 		}
 
@@ -428,10 +428,10 @@ class ControllerCatalogNewsDownload extends Controller {
 			$this->error['filename'] = $this->language->get('error_exists');
 		}
 
-		if ((utf8_strlen($this->request->post['mask']) > 3) || (utf8_strlen($this->request->post['mask']) < 128)) {
-			$type = utf8_substr(strrchr($this->request->post['mask'], '.'), 1);
+		if ((mb_strlen($this->request->post['mask'], 'UTF-8') > 3) || (mb_strlen($this->request->post['mask'], 'UTF-8') < 128)) {
+			$type = substr(strrchr($this->request->post['mask'], '.'), 1);
 
-			if (!$type || utf8_strlen($type) < 3) {
+			if (!$type || mb_strlen($type, 'UTF-8') < 3) {
 				$this->error['mask'] = $this->language->get('error_mask_type');
 			}
 		} else {
@@ -472,7 +472,7 @@ class ControllerCatalogNewsDownload extends Controller {
 			if (!empty($this->request->files['file']['name'])) {
 				$filename = basename(html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8'));
 
-				if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 128)) {
+				if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 128)) {
 					$json['error'] = $this->language->get('error_filename');
 				}
 

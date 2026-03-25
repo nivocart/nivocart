@@ -103,9 +103,12 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->load->model('catalog/information');
 
+		// Set status to Enable true
+		$information_status = 1;
+
 		if (isset($this->request->post['selected'])) {
 			foreach ($this->request->post['selected'] as $information_id) {
-				$this->model_catalog_information->editInformationStatus($information_id, 1);
+				$this->model_catalog_information->editInformationStatus($information_id, $information_status);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -137,9 +140,12 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->load->model('catalog/information');
 
+		// Set status to Disable true
+		$information_status = 0;
+
 		if (isset($this->request->post['selected'])) {
 			foreach ($this->request->post['selected'] as $information_id) {
-				$this->model_catalog_information->editInformationStatus($information_id, 0);
+				$this->model_catalog_information->editInformationStatus($information_id, $information_status);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -565,11 +571,11 @@ class ControllerCatalogInformation extends Controller {
 		}
 
 		foreach ($this->request->post['information_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['title']) < 3) || (utf8_strlen($value['title']) > 64)) {
+			if ((mb_strlen($value['title'], 'UTF-8') < 3) || (mb_strlen($value['title'], 'UTF-8') > 64)) {
 				$this->error['title'][$language_id] = $this->language->get('error_title');
 			}
 
-			if (utf8_strlen($value['description']) < 3) {
+			if (mb_strlen($value['description'], 'UTF-8') < 3) {
 				$this->error['description'][$language_id] = $this->language->get('error_description');
 			}
 		}

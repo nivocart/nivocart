@@ -1,11 +1,13 @@
 <?php
 class ModelToolRoute extends Model {
 
-	public function getRoutes($data = array()) {
+	public function getRoutes(array $data = []): array {
 		$routes_data = array();
 
+		$parent_id = 0;
+
 		$links_data = $this->getLinks();
-		$categories_data = $this->getCategories(0);
+		$categories_data = $this->getCategories($parent_id);
 
 		$routes_data = array_merge($links_data, $categories_data);
 
@@ -13,7 +15,7 @@ class ModelToolRoute extends Model {
 	}
 
 	// Routes
-	public function getLinks() {
+	public function getLinks(): array {
 		$links_data = array();
 
 		$this->load->model('catalog/sitemap');
@@ -56,7 +58,9 @@ class ModelToolRoute extends Model {
 		$links_data[] = array('link'	=> 'information/news_list', 'name' => '');
 
 		// Information
-		$informations = $this->model_catalog_sitemap->getAllInformations();
+		$information_data = array();
+
+		$informations = $this->model_catalog_sitemap->getAllInformations($information_data);
 
 		foreach ($informations as $information) {
 			$links_data[] = array(
@@ -66,7 +70,9 @@ class ModelToolRoute extends Model {
 		}
 
 		// Manufacturers
-		$manufacturers = $this->model_catalog_sitemap->getAllManufacturers(0);
+		$store_id = 0;
+
+		$manufacturers = $this->model_catalog_sitemap->getAllManufacturers($store_id);
 
 		foreach ($manufacturers as $manufacturer) {
 			$links_data[] = array(
@@ -78,7 +84,7 @@ class ModelToolRoute extends Model {
 		return $links_data;
 	}
 
-	public function getCategories($parent_id, $current_path = '') {
+	public function getCategories(int $parent_id, $current_path = ''): array {
 		$categories_data = array();
 
 		$this->load->model('catalog/sitemap');

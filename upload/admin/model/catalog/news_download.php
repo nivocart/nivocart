@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogNewsDownload extends Model {
 
-	public function addDownload($data) {
+	public function addDownload(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "news_download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', date_added = NOW()");
 
 		$news_download_id = $this->db->getLastId();
@@ -14,7 +14,7 @@ class ModelCatalogNewsDownload extends Model {
 		}
 	}
 
-	public function editDownload($news_download_id, $data) {
+	public function editDownload(int $news_download_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "news_download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "' WHERE news_download_id = '" . (int)$news_download_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "news_download_description WHERE news_download_id = '" . (int)$news_download_id . "'");
@@ -24,18 +24,18 @@ class ModelCatalogNewsDownload extends Model {
 		}
 	}
 
-	public function deleteDownload($news_download_id) {
+	public function deleteDownload(int $news_download_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "news_download WHERE news_download_id = '" . (int)$news_download_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "news_download_description WHERE news_download_id = '" . (int)$news_download_id . "'");
 	}
 
-	public function getDownload($news_download_id) {
+	public function getDownload(int $news_download_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "news_download WHERE news_download_id = '" . (int)$news_download_id . "'");
 
 		return $query->row;
 	}
 
-	public function getDownloads($data = array()) {
+	public function getDownloads(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "news_download nd LEFT JOIN " . DB_PREFIX . "news_download_description ndd ON (nd.news_download_id = ndd.news_download_id) WHERE ndd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$sort_data = array(
@@ -71,7 +71,7 @@ class ModelCatalogNewsDownload extends Model {
 		return $query->rows;
 	}
 
-	public function getDownloadDescriptions($news_download_id) {
+	public function getDownloadDescriptions(int $news_download_id): array {
 		$news_download_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "news_download_description WHERE news_download_id = '" . (int)$news_download_id . "'");
@@ -83,13 +83,13 @@ class ModelCatalogNewsDownload extends Model {
 		return $news_download_description_data;
 	}
 
-	public function getTotalDownloads() {
+	public function getTotalDownloads(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "news_download");
 
 		return $query->row['total'];
 	}
 
-	public function getNewsDownloads($news_download_id) {
+	public function getNewsDownloads(int $news_download_id): array {
 		$news_download_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "news_to_download WHERE news_download_id = '" . (int)$news_download_id . "'");

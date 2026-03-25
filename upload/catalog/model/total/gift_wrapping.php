@@ -8,7 +8,7 @@ class ModelTotalGiftWrapping extends Model {
 			$total_data[] = array(
 				'code'       => 'gift_wrapping',
 				'title'      => $this->language->get('text_gift_wrapping'),
-				'text'       => $this->currency->format($this->config->get('gift_wrapping_price')),
+				'text'       => $this->currency->format($this->config->get('gift_wrapping_price'), $this->config->get('config_currency')),
 				'value'      => $this->config->get('gift_wrapping_price'),
 				'sort_order' => $this->config->get('gift_wrapping_sort_order')
 			);

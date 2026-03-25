@@ -16,7 +16,7 @@ class ControllerCommonFooter extends Controller {
 
 		$this->data['max_position'] = $this->model_design_footer->getFooterMaxPosition();
 
-		$routes = $this->model_design_footer->getFooterRoutes(0);
+		$routes = $this->model_design_footer->getFooterRoutes();
 
 		if ($routes) {
 			foreach ($routes as $route) {

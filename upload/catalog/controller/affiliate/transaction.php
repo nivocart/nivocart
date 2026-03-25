@@ -72,7 +72,7 @@ class ControllerAffiliateTransaction extends Controller {
 			);
 		}
 
-		$this->data['balance'] = $this->currency->format($this->model_affiliate_transaction->getBalance());
+		$this->data['balance'] = $this->currency->format($this->model_affiliate_transaction->getBalance(), $this->config->get('config_currency'));
 
 		$this->data['continue'] = $this->url->link('affiliate/account', '', 'SSL');
 

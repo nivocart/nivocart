@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogNews extends Model {
 
-	public function addNews($data) {
+	public function addNews(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "news` SET lightbox = '" . $this->db->escape($data['lightbox']) . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$news_id = $this->db->getLastId();
@@ -88,7 +88,7 @@ class ModelCatalogNews extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function editNews($news_id, $data) {
+	public function editNews(int $news_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "news` SET lightbox = '" . $this->db->escape($data['lightbox']) . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "' WHERE news_id = '" . (int)$news_id . "'");
 
 		if (isset($data['image'])) {
@@ -180,7 +180,7 @@ class ModelCatalogNews extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function deleteNews($news_id) {
+	public function deleteNews(int $news_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "news` WHERE news_id = '" . (int)$news_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "news_description` WHERE news_id = '" . (int)$news_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "news_to_download` WHERE news_id = '" . (int)$news_id . "'");
@@ -194,7 +194,7 @@ class ModelCatalogNews extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function resetViews($news_id) {
+	public function resetViews(int $news_id) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "news` SET viewed = '0' WHERE news_id = '" . (int)$news_id . "'");
 
 		$this->cache->delete('seo_url_map');
@@ -202,13 +202,13 @@ class ModelCatalogNews extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function getNewsStory($news_id) {
+	public function getNewsStory(int $news_id) {
 		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'news_id=" . (int)$news_id . "') AS keyword FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) WHERE n.news_id = '" . (int)$news_id . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
-	public function getNews($data = array()) {
+	public function getNews(array $data = []): array {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
@@ -263,7 +263,7 @@ class ModelCatalogNews extends Model {
 		}
 	}
 
-	public function getNewsDescriptions($news_id) {
+	public function getNewsDescriptions(int $news_id): array {
 		$news_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_description` WHERE news_id = '" . (int)$news_id . "'");
@@ -279,7 +279,7 @@ class ModelCatalogNews extends Model {
 		return $news_description_data;
 	}
 
-	public function getNewsDownloads($news_id) {
+	public function getNewsDownloads(int $news_id): array {
 		$news_download_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_to_download` WHERE news_id = '" . (int)$news_id . "'");
@@ -291,13 +291,13 @@ class ModelCatalogNews extends Model {
 		return $news_download_data;
 	}
 
-	public function getNewsProduct($news_id) {
+	public function getNewsProduct(int $news_id): array {
 		$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "news_product_related` WHERE news_id = '" . (int)$news_id . "'");
 
 		return $query->rows;
 	}
 
-	public function getNewsStores($news_id) {
+	public function getNewsStores(int $news_id): array {
 		$newspage_store_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_to_store` WHERE news_id = '" . (int)$news_id . "'");
@@ -309,25 +309,25 @@ class ModelCatalogNews extends Model {
 		return $newspage_store_data;
 	}
 
-	public function getTotalNews() {
+	public function getTotalNews(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news`");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalActiveNews() {
+	public function getTotalActiveNews(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news` WHERE status = '1'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalNewsDownloads() {
+	public function getTotalNewsDownloads(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news_to_download`");
 
 		return $query->row['total'];
 	}
 
-	public function getProductManufacturerWise($manufacturers) {
+	public function getProductManufacturerWise(array $manufacturers = []): array {
 		$product_list = array();
 
 		foreach ($manufacturers as $manufacturer) {
@@ -343,7 +343,7 @@ class ModelCatalogNews extends Model {
 		}
 	}
 
-	public function getProductCategoryWise($categories) {
+	public function getProductCategoryWise(array $categories = []): array {
 		$product_list = array();
 
 		foreach ($categories as $category_id) {

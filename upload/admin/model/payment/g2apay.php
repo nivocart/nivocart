@@ -34,7 +34,7 @@ class ModelPaymentG2aPay extends Model {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "g2apay_order_transaction`;");
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "g2apay_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
@@ -46,7 +46,7 @@ class ModelPaymentG2aPay extends Model {
 		}
 	}
 
-	public function getTotalReleased($g2apay_order_id) {
+	public function getTotalReleased(int $g2apay_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "g2apay_order_transaction WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "' AND (`type` = 'payment' OR `type` = 'refund')");
 
 		return (double)$query->row['total'];
@@ -78,18 +78,18 @@ class ModelPaymentG2aPay extends Model {
 		}
 	}
 
-	public function updateRefundStatus($g2apay_order_id, $status) {
+	public function updateRefundStatus(int $g2apay_order_id, int $status): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "g2apay_order SET refund_status = '" . (int)$status . "' WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "'");
 	}
 
-	private function getTransactions($g2apay_order_id, $currency_code) {
+	private function getTransactions(int $g2apay_order_id, $currency_code) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "g2apay_order_transaction WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "'");
 
 		$transactions = array();
 
 		if ($query->num_rows) {
 			foreach ($query->rows as $row) {
-				$row['amount'] = $this->currency->format($row['amount'], $currency_code, true, true);
+				$row['amount'] = $this->currency->format($row['amount'], $currency_code, true, true, $this->config->get('config_currency'));
 				$transactions[] = $row;
 			}
 			return $transactions;
@@ -98,11 +98,11 @@ class ModelPaymentG2aPay extends Model {
 		}
 	}
 
-	public function addTransaction($g2apay_order_id, $type, $total) {
+	public function addTransaction(int $g2apay_order_id, $type, $total): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "g2apay_order_transaction SET g2apay_order_id = '" . (int)$g2apay_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . (double)$total . "'");
 	}
 
-	public function getTotalRefunded($g2apay_order_id) {
+	public function getTotalRefunded(int $g2apay_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "g2apay_order_transaction WHERE g2apay_order_id = '" . (int)$g2apay_order_id . "' AND 'refund'");
 
 		return (double)$query->row['total'];

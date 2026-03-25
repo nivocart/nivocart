@@ -15,7 +15,9 @@ class ControllerProductCategoryList extends Controller {
 			'separator' => false
       	);
 
-		$categories_list = $this->model_catalog_category->getCategories(0);
+		$category_array = array();
+
+		$categories_list = $this->model_catalog_category->getCategories($category_array);
 
 		if ($categories_list) {
 			$this->document->setTitle($this->language->get('heading_title'));

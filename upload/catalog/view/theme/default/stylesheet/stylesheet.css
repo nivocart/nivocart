@@ -2471,9 +2471,8 @@ ul.box-filter > li ul {
 #captcha-wrap .captcha-box .captcha-view {
 	width: 262px;
 	height: 42px;
-}
-#captcha-wrap .captcha-box .captcha-view img {
-	display: none;
+	color: #111;
+	font-size: 28px;
 	margin-left: auto;
 	margin-right: auto;
 }

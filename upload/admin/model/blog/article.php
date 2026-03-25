@@ -1,7 +1,7 @@
 <?php
 class ModelBlogArticle extends Model {
 
-	public function addArticle($data) {
+	public function addArticle(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_article` SET blog_author_id = '" . (int)$data['blog_author_id'] . "', allow_comment = '" . (int)$data['allow_comment'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$blog_article_id = $this->db->getLastId();
@@ -106,7 +106,7 @@ class ModelBlogArticle extends Model {
 		}
 	}
 
-	public function editArticle($blog_article_id, $data) {
+	public function editArticle(int $blog_article_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET blog_author_id = '" . (int)$data['blog_author_id'] . "', allow_comment = '" . (int)$data['allow_comment'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_modified=NOW() WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
 		if (isset($data['image'])) {
@@ -220,10 +220,9 @@ class ModelBlogArticle extends Model {
 		if (isset($data['keyword'])) {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "url_alias` SET query = 'blog_article_id=" . (int)$blog_article_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 		}
-
 	}
 
-	public function deleteArticle($blog_article_id) {
+	public function deleteArticle(int $blog_article_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_article` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_article_description` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_article_description_additional` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
@@ -237,19 +236,19 @@ class ModelBlogArticle extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_article_id=" . (int)$blog_article_id. "'");
 	}
 
-	public function checkDeleteArticle($blog_article_id) {
+	public function checkDeleteArticle(int $blog_article_id): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_related_article` WHERE blog_article_related_id = '" . (int)$blog_article_id . "'");
 
 		return $query->num_rows;
 	}
 
-	public function getArticle($blog_article_id) {
+	public function getArticle(int $blog_article_id) {
 		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_article_id=" . (int)$blog_article_id . "') AS keyword FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) WHERE ba.blog_article_id = '" . (int)$blog_article_id . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
-	public function getTotalArticle($data = array()) {
+	public function getTotalArticle(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT(ba.blog_article_id)) AS `total` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id='" . (int)$this->config->get('config_language_id'). "'";
 
 		$query = $this->db->query($sql);
@@ -257,7 +256,7 @@ class ModelBlogArticle extends Model {
 		return $query->row['total'];
 	}
 
-	public function getArticles($data = array()) {
+	public function getArticles(array $data = []): array {
 		$sql = "SELECT ba.*, bau.name AS author_name, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id='" . (int)$this->config->get('config_language_id'). "'";
 
 		if (isset($data['filter_article']) && !empty($data['filter_article'])) {
@@ -301,7 +300,7 @@ class ModelBlogArticle extends Model {
 		return $query->rows;
 	}
 
-	public function getArticleDescriptions($blog_article_id) {
+	public function getArticleDescriptions(int $blog_article_id): array {
 		$blog_article_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
@@ -319,7 +318,7 @@ class ModelBlogArticle extends Model {
 		return $blog_article_description_data;
 	}
 
-	public function getArticleAdditionalDescriptions($blog_article_id) {
+	public function getArticleAdditionalDescriptions(int $blog_article_id): array {
 		$blog_article_additional_description = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description_additional` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
@@ -353,7 +352,7 @@ class ModelBlogArticle extends Model {
 		return $blog_article_additional_description;
 	}
 
-	public function getArticleCategories($blog_article_id) {
+	public function getArticleCategories(int $blog_article_id): array {
 		$article_category_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_category` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
@@ -365,7 +364,7 @@ class ModelBlogArticle extends Model {
 		return $article_category_data;
 	}
 
-	public function getArticleStore($blog_article_id) {
+	public function getArticleStore(int $blog_article_id): array {
 		$article_store_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_store` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
@@ -377,7 +376,7 @@ class ModelBlogArticle extends Model {
 		return $article_store_data;
 	}
 
-	public function getArticleLayouts($blog_article_id) {
+	public function getArticleLayouts(int $blog_article_id): array {
 		$article_layout_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_layout` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
@@ -389,7 +388,7 @@ class ModelBlogArticle extends Model {
 		return $article_layout_data;
 	}
 
-	public function getProductManufacturerWise($manufacturers) {
+	public function getProductManufacturerWise($manufacturers): array {
 		$product_list = array();
 
 		foreach ($manufacturers as $manufacturer) {
@@ -405,7 +404,7 @@ class ModelBlogArticle extends Model {
 		}
 	}
 
-	public function getProductCategoryWise($categories) {
+	public function getProductCategoryWise($categories): array {
 		$product_list = array();
 
 		foreach ($categories as $category_id) {
@@ -421,32 +420,32 @@ class ModelBlogArticle extends Model {
 		return $product_list;
 	}
 
-	public function getArticleProduct($blog_article_id) {
+	public function getArticleProduct(int $blog_article_id) {
 		$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "blog_article_product_related` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
 		return $query->rows;
 	}
 
 	public function checkAuthorName($author_name) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(utf8_strtolower($author_name)) . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(mb_strtolower($author_name), 'UTF-8') . "'");
 
 		return $query->num_rows;
 	}
 
-	public function checkArticleName($language_id, $article_name, $blog_article_id = 0) {
+	public function checkArticleName(int $language_id, $article_name, $blog_article_id = 0) {
 		if (!$blog_article_id) {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE LCASE(article_title) = '" . $this->db->escape(utf8_strtolower($article_name)) . "' AND language_id = '" . (int)$language_id . "'");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE LCASE(article_title) = '" . $this->db->escape(mb_strtolower($article_name), 'UTF-8') . "' AND language_id = '" . (int)$language_id . "'");
 
 			return $query->num_rows;
 
 		} else {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE LCASE(article_title) = '" . $this->db->escape(utf8_strtolower($article_name)) . "' AND language_id = '" . (int)$language_id . "' AND blog_article_id <> '" . (int)$blog_article_id . "'");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE LCASE(article_title) = '" . $this->db->escape(mb_strtolower($article_name), 'UTF-8') . "' AND language_id = '" . (int)$language_id . "' AND blog_article_id <> '" . (int)$blog_article_id . "'");
 
 			return $query->num_rows;
 		}
 	}
 
-	public function getRelatedArticles($blog_article_id) {
+	public function getRelatedArticles(int $blog_article_id): array {
 		$blog_related_article_data = array();
 
 		$query = $this->db->query("SELECT bra.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_related_article` bra LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bad.blog_article_id = bra.blog_article_related_id) WHERE bra.blog_article_id = '" . (int)$blog_article_id . "'");
@@ -463,8 +462,8 @@ class ModelBlogArticle extends Model {
 		return $blog_related_article_data;
 	}
 
-	public function getArticlesRelated($data, $blog_article_id) {
-		$query = "SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE LCASE(article_title) LIKE '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "%' AND blog_article_id <> '" . (int)$blog_article_id . "'";
+	public function getArticlesRelated(int $blog_article_id, array $data = []): array {
+		$query = "SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE LCASE(article_title) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name']), 'UTF-8') . "%' AND blog_article_id <> '" . (int)$blog_article_id . "'";
 
 		if (isset($data['start']) || isset($data['limit'])) {
 			if ($data['start'] < 0) {

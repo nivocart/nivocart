@@ -80,7 +80,7 @@ class ControllerAccountTransaction extends Controller {
 			);
 		}
 
-		$this->data['total'] = $this->currency->format($this->customer->getBalance());
+		$this->data['total'] = $this->currency->format($this->customer->getBalance(), $this->config->get('config_currency'));
 
 		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 

@@ -160,7 +160,7 @@ class ControllerAccountPassword extends Controller {
 			$this->error['password_required'] = $this->language->get('error_password_required');
 		}
 
-		if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+		if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 			$this->error['password'] = $this->language->get('error_password');
 		}
 

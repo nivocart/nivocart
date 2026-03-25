@@ -39,18 +39,18 @@ class ModelPaymentFirstdata extends Model {
 			$settle_status = 0;
 		}
 
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "firstdata_order` SET order_id = '" . (int)$order_info['order_id'] . "', order_ref = '" . $this->db->escape($order_ref) . "', tdate = '" . $this->db->escape($transaction_date) . "', date_added = NOW(), date_modified = NOW(), capture_status = '" . (int)$settle_status . "', currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "firstdata_order` SET order_id = '" . (int)$order_info['order_id'] . "', order_ref = '" . $this->db->escape($order_ref) . "', tdate = '" . $this->db->escape($transaction_date) . "', date_added = NOW(), date_modified = NOW(), capture_status = '" . (int)$settle_status . "', currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false, $this->config->get('config_currency')) . "'");
 
 		return $this->db->getLastId();
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$order = $this->db->query("SELECT * FROM " . DB_PREFIX . "firstdata_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		return $order->row;
 	}
 
-	public function addTransaction($fd_order_id, $type, $order_info = array()) {
+	public function addTransaction($fd_order_id, $type, $order_info = array()): void {
 		if (!empty($order_info)) {
 			$amount = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
 		} else {
@@ -60,7 +60,7 @@ class ModelPaymentFirstdata extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "firstdata_order_transaction SET firstdata_order_id = '" . (int)$fd_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . (float)$amount . "'");
 	}
 
-	public function addHistory($order_id, $order_status_id, $comment) {
+	public function addHistory(int $order_id, int $order_status_id, $comment) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$order_status_id . "', notify = '0', `comment` = '" . $this->db->escape($comment) . "', date_added = NOW()");
 	}
 
@@ -93,7 +93,7 @@ class ModelPaymentFirstdata extends Model {
 		return $query->rows;
 	}
 
-	public function storeCard($token, $customer_id, $month, $year, $digits) {
+	public function storeCard($token, int $customer_id, $month, $year, $digits) {
 		$existing_card = $this->db->query("SELECT * FROM " . DB_PREFIX . "firstdata_card WHERE token = '" . $this->db->escape($token) . "' AND customer_id = '" . (int)$customer_id . "' LIMIT 0,1");
 
 		if ($existing_card->num_rows > 0) {
@@ -111,11 +111,11 @@ class ModelPaymentFirstdata extends Model {
 		return sha1($ascii);
 	}
 
-	public function updateVoidStatus($order_id, $status) {
+	public function updateVoidStatus(int $order_id, $status): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "firstdata_order SET void_status = '" . (int)$status . "' WHERE order_id = '" . (int)$order_id . "'");
 	}
 
-	public function updateCaptureStatus($order_id, $status) {
+	public function updateCaptureStatus(int $order_id, $status): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "firstdata_order SET capture_status = '" . (int)$status . "' WHERE order_id = '" . (int)$order_id . "'");
 	}
 }

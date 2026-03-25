@@ -184,7 +184,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				$this->data['vouchers'][] = array(
 					'key'         => $key,
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount']),
+					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
 					'remove'      => $this->url->link('checkout/checkout_one_page', 'remove=' . $key, 'SSL')
 				);
 			}
@@ -306,7 +306,6 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				$customer_data['lastname'] = $customer_info['lastname'];
 				$customer_data['email'] = $customer_info['email'];
 				$customer_data['telephone'] = isset($customer_info['telephone']) ? $customer_info['telephone'] : '000';
-				$customer_data['fax'] = isset($customer_info['fax']) ? $customer_info['fax'] : '000';
 				$customer_data['gender'] = isset($customer_info['gender']) ? $customer_info['gender'] : 1;
 				$customer_data['date_of_birth'] = isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00';
 				$customer_data['password'] = $this->model_checkout_checkout_tools->generatePassword();
@@ -341,7 +340,6 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				$data['lastname'] = $this->customer->getLastName();
 				$data['email'] = $this->customer->getEmail();
 				$data['telephone'] = $this->customer->getTelephone();
-				$data['fax'] = $this->customer->getFax();
 				$data['gender'] = $this->customer->getGender();
 				$data['date_of_birth'] = $this->customer->getDateOfBirth();
 
@@ -673,7 +671,6 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_gender'] = $this->language->get('entry_gender');
 		$this->data['entry_date_of_birth'] = $this->language->get('entry_date_of_birth');
 		$this->data['entry_company'] = $this->language->get('entry_company');
@@ -887,16 +884,6 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->data['telephone'] = $this->customer->getTelephone();
 		} else {
 			$this->data['telephone'] = '';
-		}
-
-		$this->data['one_page_fax'] = $this->config->get('config_customer_fax');
-
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} elseif ($this->customer->isLogged()) {
-			$this->data['fax'] = $this->customer->getFax();
-		} else {
-			$this->data['fax'] = '';
 		}
 
 		$this->data['one_page_gender'] = $this->config->get('config_customer_gender');
@@ -1329,7 +1316,9 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		$this->data['payment_images'] = array();
 
-		$image_results = $this->model_design_payment->getPaymentImages(0);
+		$payment_images_array = array();
+
+		$image_results = $this->model_design_payment->getPaymentImages($payment_images_array);
 
 		if ($image_results) {
 			foreach ($image_results as $image_result) {
@@ -1370,7 +1359,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			}
 		}
 
-		$this->data['paypal_fee'] = ($paypal_fee > 0) ? $this->currency->format($paypal_fee) : false;
+		$this->data['paypal_fee'] = ($paypal_fee > 0) ? $this->currency->format($paypal_fee, $this->config->get('config_currency')) : false;
 
 		if (isset($this->session->data['payment_method'])) {
 			$this->data['payment_method_code'] = $this->session->data['payment_method']['code'];
@@ -1427,16 +1416,16 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		$this->language->load('checkout/checkout_one_page');
 
-		if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+		if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
 		if (isset($this->request->post['email'])) {
-			if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+			if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				$this->error['email'] = $this->language->get('error_email');
 			}
 
@@ -1460,13 +1449,13 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		if ($this->config->get('config_one_page_phone')) {
-			if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+			if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 				$this->error['telephone'] = $this->language->get('error_telephone');
 			}
 		}
 
 		if ($this->config->get('config_customer_dob')) {
-			if (isset($this->request->post['date_of_birth']) && (utf8_strlen($this->request->post['date_of_birth']) == 10)) {
+			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
 				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
@@ -1498,11 +1487,11 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			}
 		}
 
-		if ((utf8_strlen($this->request->post['address_1']) < 3) || (utf8_strlen($this->request->post['address_1']) > 128)) {
+		if ((mb_strlen($this->request->post['address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['address_1'], 'UTF-8') > 128)) {
 			$this->error['address_1'] = $this->language->get('error_address_1');
 		}
 
-		if ((utf8_strlen($this->request->post['city']) < 2) || (utf8_strlen($this->request->post['city']) > 128)) {
+		if ((mb_strlen($this->request->post['city'], 'UTF-8') < 2) || (mb_strlen($this->request->post['city'], 'UTF-8') > 128)) {
 			$this->error['city'] = $this->language->get('error_city');
 		}
 
@@ -1511,7 +1500,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
 
 		if ($country_info) {
-			if ($country_info['postcode_required'] && (utf8_strlen($this->request->post['postcode']) < 2) || (utf8_strlen($this->request->post['postcode']) > 10)) {
+			if ($country_info['postcode_required'] && (mb_strlen($this->request->post['postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['postcode'], 'UTF-8') > 10)) {
 				$this->error['postcode'] = $this->language->get('error_postcode');
 			}
 
@@ -1534,19 +1523,19 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		if (!isset($this->request->post['check_shipping_address'])) {
-			if ((utf8_strlen($this->request->post['shipping_firstname']) < 1) || (utf8_strlen($this->request->post['shipping_firstname']) > 32)) {
+			if ((mb_strlen($this->request->post['shipping_firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_firstname'], 'UTF-8') > 32)) {
 				$this->error['shipping_firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((utf8_strlen($this->request->post['shipping_lastname']) < 1) || (utf8_strlen($this->request->post['shipping_lastname']) > 32)) {
+			if ((mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') > 32)) {
 				$this->error['shipping_lastname'] = $this->language->get('error_lastname');
 			}
 
-			if ((utf8_strlen($this->request->post['shipping_address_1']) < 3) || (utf8_strlen($this->request->post['shipping_address_1']) > 128)) {
+			if ((mb_strlen($this->request->post['shipping_address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['shipping_address_1'], 'UTF-8') > 128)) {
 				$this->error['shipping_address_1'] = $this->language->get('error_address_1');
 			}
 
-			if ((utf8_strlen($this->request->post['shipping_city']) < 2) || (utf8_strlen($this->request->post['shipping_city']) > 128)) {
+			if ((mb_strlen($this->request->post['shipping_city'], 'UTF-8') < 2) || (mb_strlen($this->request->post['shipping_city'], 'UTF-8') > 128)) {
 				$this->error['shipping_city'] = $this->language->get('error_city');
 			}
 

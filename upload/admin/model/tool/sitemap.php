@@ -125,7 +125,7 @@ class ModelToolSitemap extends Model {
 		return $output;
 	}
 
-	protected function getCategories($parent_id, $current_path = '') {
+	protected function getCategories(int $parent_id, $current_path = '') {
 		$this->load->model('catalog/sitemap');
 
 		$base = $this->getBase();
@@ -368,19 +368,19 @@ class ModelToolSitemap extends Model {
 		$output = '';
 
 		// Common Pages
-		$output .= utf8_encode($base . 'index.php') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=common/home') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=information/contact') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=information/quote') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=information/sitemap') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=account/login') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=account/register') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=product/search') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=product/special') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=product/product_list') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=product/product_wall') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=product/review_list') . "\r";
-		$output .= utf8_encode($base . 'index.php?route=product/category_list') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=common/home', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=information/contact', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=information/quote', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=information/sitemap', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=account/login', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=account/register', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=product/search', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=product/special', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=product/product_list', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=product/product_wall', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=product/review_list', 'UTF-8') . "\r";
+		$output .= mb_convert_encoding($base . 'index.php?route=product/category_list', 'UTF-8') . "\r";
 
 		$stores_pag = $this->model_catalog_sitemap->getAllStores();
 
@@ -389,19 +389,19 @@ class ModelToolSitemap extends Model {
 				if ($store_pag['store_id'] != 0) {
 					$store_url = $store_pag['url'];
 
-					$output .= utf8_encode($store_url . 'index.php') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=common/home') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=information/contact') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=information/quote') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=information/sitemap') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=account/login') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=account/register') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=product/search') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=product/special') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=product/product_list') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=product/product_wall') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=product/review_list') . "\r";
-					$output .= utf8_encode($store_url . 'index.php?route=product/category_list') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=common/home', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=information/contact', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=information/quote', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=information/sitemap', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=account/login', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=account/register', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=product/search', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=product/special', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=product/product_list', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=product/product_wall', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=product/review_list', 'UTF-8') . "\r";
+					$output .= mb_convert_encoding($store_url . 'index.php?route=product/category_list', 'UTF-8') . "\r";
 				}
 			}
 		}
@@ -414,7 +414,7 @@ class ModelToolSitemap extends Model {
 		$products = $this->model_catalog_sitemap->getAllProducts($store_id);
 
 		foreach ($products as $product) {
-			$link_product = utf8_encode($base . 'index.php?route=product/product&product_id=' . $product['product_id']);
+			$link_product = mb_convert_encoding($base . 'index.php?route=product/product&product_id=' . $product['product_id'], 'UTF-8');
 
 			$link = $this->model_tool_seo_url->rewrite($link_product);
 
@@ -431,7 +431,7 @@ class ModelToolSitemap extends Model {
 					foreach ($products as $product) {
 						$store_url = $store_pro['url'];
 
-						$link_product = utf8_encode($store_url . 'index.php?route=product/product&product_id=' . $product['product_id']);
+						$link_product = mb_convert_encoding($store_url . 'index.php?route=product/product&product_id=' . $product['product_id'], 'UTF-8');
 
 						$link = $this->model_tool_seo_url->rewrite($link_product);
 
@@ -447,7 +447,7 @@ class ModelToolSitemap extends Model {
 		$manufacturers = $this->model_catalog_sitemap->getAllManufacturers($store_id);
 
 		foreach ($manufacturers as $manufacturer) {
-			$link_manufacturer = utf8_encode($base . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $manufacturer['manufacturer_id']);
+			$link_manufacturer = mb_convert_encoding($base . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $manufacturer['manufacturer_id'], 'UTF-8');
 
 			$link = $this->model_tool_seo_url->rewrite($link_manufacturer);
 
@@ -464,7 +464,7 @@ class ModelToolSitemap extends Model {
 					$manufacturers = $this->model_catalog_sitemap->getAllManufacturers($store_man['store_id']);
 
 					foreach ($manufacturers as $manufacturer) {
-						$link_manufacturer = utf8_encode($store_url . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $manufacturer['manufacturer_id']);
+						$link_manufacturer = mb_convert_encoding($store_url . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $manufacturer['manufacturer_id'], 'UTF-8');
 
 						$link = $this->model_tool_seo_url->rewrite($link_manufacturer);
 
@@ -480,7 +480,7 @@ class ModelToolSitemap extends Model {
 		$news = $this->model_catalog_sitemap->getAllNews($store_id);
 
 		foreach ($news as $new) {
-			$link_news = utf8_encode($base . 'index.php?route=information/news&news_id=' . $new['news_id']);
+			$link_news = mb_convert_encoding($base . 'index.php?route=information/news&news_id=' . $new['news_id'], 'UTF-8');
 
 			$link = $this->model_tool_seo_url->rewrite($link_news);
 
@@ -497,7 +497,7 @@ class ModelToolSitemap extends Model {
 					$news = $this->model_catalog_sitemap->getAllNews($store_new['store_id']);
 
 					foreach ($news as $new) {
-						$link_news = utf8_encode($store_url . 'index.php?route=information/news&news_id=' . $new['news_id']);
+						$link_news = mb_convert_encoding($store_url . 'index.php?route=information/news&news_id=' . $new['news_id'], 'UTF-8');
 
 						$link = $this->model_tool_seo_url->rewrite($link_news);
 
@@ -508,12 +508,10 @@ class ModelToolSitemap extends Model {
 		}
 
 		// Information
-		$store_id = 0;
-
 		$informations = $this->model_catalog_sitemap->getAllInformations();
 
 		foreach ($informations as $information) {
-			$link_information = utf8_encode($base . 'index.php?route=information/information&information_id=' . $information['information_id']);
+			$link_information = mb_convert_encoding($base . 'index.php?route=information/information&information_id=' . $information['information_id'], 'UTF-8');
 
 			$link = $this->model_tool_seo_url->rewrite($link_information);
 
@@ -536,7 +534,7 @@ class ModelToolSitemap extends Model {
 							if ($store_info_id != 0) {
 								$store_url = $this->model_catalog_sitemap->getStoreUrl($store_info_id);
 
-								$link_information = utf8_encode($store_url . 'index.php?route=information/information&information_id=' . $information['information_id']);
+								$link_information = mb_convert_encoding($store_url . 'index.php?route=information/information&information_id=' . $information['information_id'], 'UTF-8');
 
 								$link = $this->model_tool_seo_url->rewrite($link_information);
 
@@ -559,7 +557,7 @@ class ModelToolSitemap extends Model {
 			$blog_articles = $this->model_catalog_sitemap->getAllBlogArticles($store_id);
 
 			foreach ($blog_articles as $blog_article) {
-				$link_blogs = utf8_encode($base . 'index.php?route=blog/article_info&blog_article_id=' . $blog_article['blog_article_id']);
+				$link_blogs = mb_convert_encoding($base . 'index.php?route=blog/article_info&blog_article_id=' . $blog_article['blog_article_id'], 'UTF-8');
 
 				$link = $this->model_tool_seo_url->rewrite($link_blogs);
 
@@ -573,10 +571,10 @@ class ModelToolSitemap extends Model {
 					if ($store_blog_article['store_id'] != 0) {
 						$store_url = $store_blog_article['url'];
 
-						$blog_articles = $this->model_catalog_sitemap->getAllBlogArticles($store_article['store_id']);
+						$blog_articles = $this->model_catalog_sitemap->getAllBlogArticles($store_blog_article['store_id']);
 
 						foreach ($blog_articles as $blog_article) {
-							$link_blogs = utf8_encode($store_url . 'index.php?route=blog/article_info&blog_article_id=' . $blog_article['blog_article_id']);
+							$link_blogs = mb_convert_encoding($store_url . 'index.php?route=blog/article_info&blog_article_id=' . $blog_article['blog_article_id'], 'UTF-8');
 
 							$link = $this->model_tool_seo_url->rewrite($link_blogs);
 
@@ -591,7 +589,7 @@ class ModelToolSitemap extends Model {
 	}
 
 	// Text Sitemap - Categories
-	protected function getTextCategories($parent_id, $current_path = '') {
+	protected function getTextCategories(int $parent_id, $current_path = '') {
 		$this->load->model('catalog/sitemap');
 		$this->load->model('tool/seo_url');
 
@@ -610,7 +608,7 @@ class ModelToolSitemap extends Model {
 				$new_path = $current_path . '_' . $result['category_id'];
 			}
 
-			$link_category = utf8_encode($base . 'index.php?route=product/category&path=' . $new_path);
+			$link_category = mb_convert_encoding($base . 'index.php?route=product/category&path=' . $new_path, 'UTF-8');
 
 			$link = $this->model_tool_seo_url->rewrite($link_category);
 
@@ -635,7 +633,7 @@ class ModelToolSitemap extends Model {
 							$new_path = $current_path . '_' . $result['category_id'];
 						}
 
-						$link_category = utf8_encode($store_url . 'index.php?route=product/category&path=' . $new_path);
+						$link_category = mb_convert_encoding($store_url . 'index.php?route=product/category&path=' . $new_path, 'UTF-8');
 
 						$link = $this->model_tool_seo_url->rewrite($link_category);
 

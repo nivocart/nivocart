@@ -19,7 +19,7 @@ class ModelToolSeoUrl extends Controller {
 			$parts = explode('/', $this->request->get['_route_']);
 
 			// Remove any empty arrays from trailing
-			if (utf8_strlen(end($parts)) == 0) {
+			if (mb_strlen(end($parts), 'UTF-8') == 0) {
 				array_pop($parts);
 			}
 

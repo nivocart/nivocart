@@ -1,11 +1,11 @@
 <?php
 class ModelCatalogProduct extends Model {
 
-	public function updateViewed($product_id) {
+	public function updateViewed(int $product_id): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
 
-	public function getProduct($product_id) {
+	public function getProduct(int $product_id): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -69,7 +69,7 @@ class ModelCatalogProduct extends Model {
 				'special'          => $query->row['special'],
 				'reward'           => $query->row['reward'],
 				'points'           => $query->row['points'],
-				'rating'           => round($query->row['rating']),
+				'rating'           => $query->row['rating'] ? round($query->row['rating']) : 0,
 				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0,
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
@@ -81,7 +81,7 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-	public function getProducts($data = array()) {
+	public function getProducts(array $data = []): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -157,21 +157,21 @@ class ModelCatalogProduct extends Model {
 					$sql .= " " . implode(" OR ", $implode) . "";
 				}
 
-				$sql .= " OR LCASE(p.model) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.sku) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.upc) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.ean) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.jan) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.isbn) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.mpn) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+				$sql .= " OR LCASE(p.model) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.sku) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.upc) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.ean) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.jan) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.isbn) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.mpn) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
 			}
 
 			if (!empty($data['filter_tag'])) {
-				$sql .= " OR pd.tag LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_tag'])) . "%'";
+				$sql .= " OR pd.tag LIKE '%" . $this->db->escape(mb_strtolower($data['filter_tag'], 'UTF-8')) . "%'";
 			}
 
 			if (!empty($data['filter_color'])) {
-				$sql .= " OR pc.skin LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_color'])) . "%'";
+				$sql .= " OR pc.skin LIKE '%" . $this->db->escape(mb_strtolower($data['filter_color'], 'UTF-8')) . "%'";
 			}
 
 			$sql .= ")";
@@ -236,7 +236,7 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getProductSpecials($data = array()) {
+	public function getProductSpecials(array $data = []): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -297,7 +297,7 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getLatestProducts($limit) {
+	public function getLatestProducts(int $limit): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -321,7 +321,7 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getPopularProducts($limit) {
+	public function getPopularProducts(int $limit): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -345,7 +345,7 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getBestSellerProducts($limit) {
+	public function getBestSellerProducts(int $limit): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -369,7 +369,7 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getAlsoBoughtProducts($product_id, $limit) {
+	public function getAlsoBoughtProducts(int $product_id, int $limit): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -393,15 +393,15 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getProductVideos($product_id) {
-		$query = $this->db->query("SELECT DISTINCT py.video_code AS video_code FROM " . DB_PREFIX . "product_youtube py LEFT JOIN " . DB_PREFIX . "product p ON (py.product_id = p.product_id) WHERE py.product_id = '" . (int)$product_id . "'");
+	public function getProductVideos(int $product_id) {
+		$query = $this->db->query("SELECT DISTINCT py.video_code AS `video_code` FROM " . DB_PREFIX . "product_youtube py LEFT JOIN " . DB_PREFIX . "product p ON (py.product_id = p.product_id) WHERE py.product_id = '" . (int)$product_id . "'");
 
 		if ($query->num_rows) {
 			return $query->row['video_code'];
 		}
 	}
 
-	public function getProductFields($product_id) {
+	public function getProductFields(int $product_id): array {
 		$product_field_data = array();
 
 		$product_field_query = $this->db->query("SELECT f.field_id, fd.title, pf.text FROM " . DB_PREFIX . "field f LEFT JOIN " . DB_PREFIX . "field_description fd ON (fd.field_id = f.field_id) LEFT JOIN " . DB_PREFIX . "product_field pf ON (pf.field_id = f.field_id) WHERE pf.product_id = '" . (int)$product_id . "' AND pf.language_id = '" . (int)$this->config->get('config_language_id') . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND f.status = '1' ORDER BY f.sort_order ASC, fd.title ASC");
@@ -417,7 +417,7 @@ class ModelCatalogProduct extends Model {
 		return $product_field_data;
 	}
 
-	public function getProductAttributes($product_id) {
+	public function getProductAttributes(int $product_id): array {
 		$product_attribute_group_data = array();
 
 		$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN " . DB_PREFIX . "attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN " . DB_PREFIX . "attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
@@ -445,7 +445,7 @@ class ModelCatalogProduct extends Model {
 		return $product_attribute_group_data;
 	}
 
-	public function getProductOptions($product_id) {
+	public function getProductOptions(int $product_id): array {
 		$product_option_data = array();
 
 		$product_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_option po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.sort_order");
@@ -495,7 +495,7 @@ class ModelCatalogProduct extends Model {
 		return $product_option_data;
 	}
 
-	public function hasOptionPriceIncrease($product_id) {
+	public function hasOptionPriceIncrease(int $product_id) {
 		$option_data = $this->getProductOptions($product_id);
 
 		if (is_array($option_data)) {
@@ -514,7 +514,7 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-	public function getProductDiscounts($product_id) {
+	public function getProductDiscounts(int $product_id): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -526,13 +526,13 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getProductImages($product_id) {
+	public function getProductImages(int $product_id): array {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
 
 		return $query->rows;
 	}
 
-	public function getProductColorsByPaletteId($palette_id) {
+	public function getProductColorsByPaletteId(int $palette_id): array {
 		$colors_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette p LEFT JOIN " . DB_PREFIX . "palette_color pc ON (p.palette_id = pc.palette_id) LEFT JOIN " . DB_PREFIX . "palette_color_description pcd ON (p.palette_id = pcd.palette_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pcd.palette_id = '" . (int)$palette_id . "' GROUP BY pcd.palette_color_id ORDER BY p.palette_id, pcd.title ASC");
@@ -549,13 +549,13 @@ class ModelCatalogProduct extends Model {
 		return $colors_data;
 	}
 
-	public function getProductImagesByColor($product_id, $palette_color_id) {
+	public function getProductImagesByColor(int $product_id, int $palette_color_id): array {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' AND palette_color_id = '" . (int)$palette_color_id . "' ORDER BY sort_order ASC");
 
 		return $query->rows;
 	}
 
-	public function getProductRelated($product_id) {
+	public function getProductRelated(int $product_id): array {
 		$product_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_related pr LEFT JOIN " . DB_PREFIX . "product p ON (pr.related_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pr.product_id = '" . (int)$product_id . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
@@ -567,7 +567,7 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getProductLayoutId($product_id) {
+	public function getProductLayoutId(int $product_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
 
 		if ($query->num_rows) {
@@ -577,7 +577,7 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-	public function getProductLocationId($product_id) {
+	public function getProductLocationId(int $product_id): array {
 		$location_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_location WHERE product_id = '" . (int)$product_id . "'");
@@ -589,13 +589,13 @@ class ModelCatalogProduct extends Model {
 		return $location_data;
 	}
 
-	public function getCategories($product_id) {
+	public function getCategories(int $product_id): array {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
 
 		return $query->rows;
 	}
 
-	public function getRandomProducts($limit) {
+	public function getRandomProducts(int $limit): array {
 		$product_data = array();
 
 		$query = $this->db->query("SELECT p.product_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY RAND() LIMIT 0," . (int)$limit);
@@ -607,7 +607,7 @@ class ModelCatalogProduct extends Model {
 		return $product_data;
 	}
 
-	public function getAverageRating($product_id) {
+	public function getAverageRating(int $product_id) {
 		$query = $this->db->query("SELECT AVG(rating) AS `total` FROM " . DB_PREFIX . "review WHERE status = '1' AND product_id = '" . (int)$product_id . "' GROUP BY product_id");
 
 		if (isset($query->row['total'])) {
@@ -617,7 +617,7 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-	public function getProfiles($product_id) {
+	public function getProfiles(int $product_id): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -629,7 +629,7 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getProfile($product_id, $profile_id) {
+	public function getProfile(int $product_id, int $profile_id): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -641,14 +641,14 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getProductTags($product_id) {
+	public function getProductTags(int $product_id): array {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_tag WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->rows;
 	}
 
 	// Totals
-	public function getTotalProducts($data = array()) {
+	public function getTotalProducts(array $data = []) {
 		$sql = "SELECT COUNT(DISTINCT p.product_id) AS `total`";
 
 		if (!empty($data['filter_category_id'])) {
@@ -715,21 +715,21 @@ class ModelCatalogProduct extends Model {
 					$sql .= " " . implode(" OR ", $implode) . "";
 				}
 
-				$sql .= " OR LCASE(p.model) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.sku) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.upc) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.ean) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.jan) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.isbn) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
-				$sql .= " OR LCASE(p.mpn) = '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "'";
+				$sql .= " OR LCASE(p.model) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.sku) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.upc) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.ean) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.jan) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.isbn) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
+				$sql .= " OR LCASE(p.mpn) = '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "'";
 			}
 
 			if (!empty($data['filter_tag'])) {
-				$sql .= " OR pd.tag LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_tag'])) . "%'";
+				$sql .= " OR pd.tag LIKE '%" . $this->db->escape(mb_strtolower($data['filter_tag'], 'UTF-8')) . "%'";
 			}
 
 			if (!empty($data['filter_color'])) {
-				$sql .= " OR pc.skin LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_color'])) . "%'";
+				$sql .= " OR pc.skin LIKE '%" . $this->db->escape(mb_strtolower($data['filter_color'], 'UTF-8')) . "%'";
 			}
 
 			$sql .= ")";
@@ -744,7 +744,7 @@ class ModelCatalogProduct extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalProductSpecials() {
+	public function getTotalProductSpecials(): int {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
@@ -760,7 +760,7 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-	public function getTotalSpecials() {
+	public function getTotalSpecials(): int {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {

@@ -238,7 +238,9 @@ class ControllerBlogCategory extends Controller {
 
 		$category_total = $this->model_blog_category->getTotalCategories($data);
 
-		$results = $this->model_blog_category->getCategories(0);
+		$parent_id = 0;
+
+		$results = $this->model_blog_category->getCategories($parent_id);
 
 		foreach ($results as $result) {
 			$action = array();
@@ -446,7 +448,9 @@ class ControllerBlogCategory extends Controller {
 			$this->data['category_description'] = array();
 		}
 
-		$categories = $this->model_blog_category->getCategories(0);
+		$parent_id = 0;
+
+		$categories = $this->model_blog_category->getCategories($parent_id);
 
 		// Remove own id from list
 		if (!empty($category_info)) {
@@ -576,7 +580,7 @@ class ControllerBlogCategory extends Controller {
 		}
 
 		foreach ($this->request->post['category_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 2) || (mb_strlen($value['name'], 'UTF-8') > 255)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}

@@ -109,7 +109,9 @@ class ControllerReportCustomerCountry extends Controller {
 
 		$this->load->model('sale/customer');
 
-		$this->data['total_store_customers'] = $this->model_sale_customer->getTotalCustomers(0);
+		$customers_total_store = array();
+
+		$this->data['total_store_customers'] = $this->model_sale_customer->getTotalCustomers($customers_total_store);
 
 		$url = '';
 

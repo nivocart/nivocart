@@ -563,7 +563,6 @@ class ControllerSaleOrder extends Controller {
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
 		$this->data['entry_comment'] = $this->language->get('entry_comment');
 		$this->data['entry_affiliate'] = $this->language->get('entry_affiliate');
@@ -906,14 +905,6 @@ class ControllerSaleOrder extends Controller {
 			$this->data['telephone'] = $order_info['telephone'];
 		} else {
 			$this->data['telephone'] = '';
-		}
-
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} elseif (!empty($order_info)) {
-			$this->data['fax'] = $order_info['fax'];
-		} else {
-			$this->data['fax'] = '';
 		}
 
 		if (isset($this->request->post['affiliate_id'])) {
@@ -1317,7 +1308,6 @@ class ControllerSaleOrder extends Controller {
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_order_status'] = $this->language->get('entry_order_status');
 		$this->data['entry_comment'] = $this->language->get('entry_comment');
 		$this->data['entry_affiliate'] = $this->language->get('entry_affiliate');
@@ -1662,14 +1652,6 @@ class ControllerSaleOrder extends Controller {
 			$this->data['telephone'] = $order_info['telephone'];
 		} else {
 			$this->data['telephone'] = '';
-		}
-
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} elseif (!empty($order_info)) {
-			$this->data['fax'] = $order_info['fax'];
-		} else {
-			$this->data['fax'] = '';
 		}
 
 		if (isset($this->request->post['affiliate_id'])) {
@@ -2053,35 +2035,35 @@ class ControllerSaleOrder extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+		if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if ((utf8_strlen($this->request->post['email']) > 96) || (!preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email']))) {
+		if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || (!preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email']))) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
-		if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+		if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
-		if ((utf8_strlen($this->request->post['payment_firstname']) < 1) || (utf8_strlen($this->request->post['payment_firstname']) > 32)) {
+		if ((mb_strlen($this->request->post['payment_firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['payment_firstname'], 'UTF-8') > 32)) {
 			$this->error['payment_firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen($this->request->post['payment_lastname']) < 1) || (utf8_strlen($this->request->post['payment_lastname']) > 32)) {
+		if ((mb_strlen($this->request->post['payment_lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['payment_lastname'], 'UTF-8') > 32)) {
 			$this->error['payment_lastname'] = $this->language->get('error_lastname');
 		}
 
-		if ((utf8_strlen($this->request->post['payment_address_1']) < 3) || (utf8_strlen($this->request->post['payment_address_1']) > 128)) {
+		if ((mb_strlen($this->request->post['payment_address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['payment_address_1'], 'UTF-8') > 128)) {
 			$this->error['payment_address_1'] = $this->language->get('error_address_1');
 		}
 
-		if ((utf8_strlen($this->request->post['payment_city']) < 3) || (utf8_strlen($this->request->post['payment_city']) > 128)) {
+		if ((mb_strlen($this->request->post['payment_city'], 'UTF-8') < 3) || (mb_strlen($this->request->post['payment_city'], 'UTF-8') > 128)) {
 			$this->error['payment_city'] = $this->language->get('error_city');
 		}
 
@@ -2090,7 +2072,7 @@ class ControllerSaleOrder extends Controller {
 		$country_info = $this->model_localisation_country->getCountry($this->request->post['payment_country_id']);
 
 		if ($country_info) {
-			if ($country_info['postcode_required'] && (utf8_strlen($this->request->post['payment_postcode']) < 2) || (utf8_strlen($this->request->post['payment_postcode']) > 10)) {
+			if ($country_info['postcode_required'] && (mb_strlen($this->request->post['payment_postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['payment_postcode'], 'UTF-8') > 10)) {
 				$this->error['payment_postcode'] = $this->language->get('error_postcode');
 			}
 
@@ -2137,19 +2119,19 @@ class ControllerSaleOrder extends Controller {
 		}
 
 		if ($shipping) {
-			if ((utf8_strlen($this->request->post['shipping_firstname']) < 1) || (utf8_strlen($this->request->post['shipping_firstname']) > 32)) {
+			if ((mb_strlen($this->request->post['shipping_firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_firstname'], 'UTF-8') > 32)) {
 				$this->error['shipping_firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((utf8_strlen($this->request->post['shipping_lastname']) < 1) || (utf8_strlen($this->request->post['shipping_lastname']) > 32)) {
+			if ((mb_strlen($this->request->post['shipping_lastname']), 'UTF-8' < 1) || (mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') > 32)) {
 				$this->error['shipping_lastname'] = $this->language->get('error_lastname');
 			}
 
-			if ((utf8_strlen($this->request->post['shipping_address_1']) < 3) || (utf8_strlen($this->request->post['shipping_address_1']) > 128)) {
+			if ((mb_strlen($this->request->post['shipping_address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['shipping_address_1'], 'UTF-8') > 128)) {
 				$this->error['shipping_address_1'] = $this->language->get('error_address_1');
 			}
 
-			if ((utf8_strlen($this->request->post['shipping_city']) < 3) || (utf8_strlen($this->request->post['shipping_city']) > 128)) {
+			if ((mb_strlen($this->request->post['shipping_city'], 'UTF-8') < 3) || (mb_strlen($this->request->post['shipping_city'], 'UTF-8') > 128)) {
 				$this->error['shipping_city'] = $this->language->get('error_city');
 			}
 
@@ -2157,7 +2139,7 @@ class ControllerSaleOrder extends Controller {
 
 			$country_info = $this->model_localisation_country->getCountry($this->request->post['shipping_country_id']);
 
-			if ($country_info && $country_info['postcode_required'] && (utf8_strlen($this->request->post['shipping_postcode']) < 2) || (utf8_strlen($this->request->post['shipping_postcode']) > 10)) {
+			if ($country_info && $country_info['postcode_required'] && (mb_strlen($this->request->post['shipping_postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['shipping_postcode'], 'UTF-8') > 10)) {
 				$this->error['shipping_postcode'] = $this->language->get('error_postcode');
 			}
 
@@ -2217,7 +2199,6 @@ class ControllerSaleOrder extends Controller {
 			$this->data['text_customer_group'] = $this->language->get('text_customer_group');
 			$this->data['text_email'] = $this->language->get('text_email');
 			$this->data['text_telephone'] = $this->language->get('text_telephone');
-			$this->data['text_fax'] = $this->language->get('text_fax');
 			$this->data['text_total'] = $this->language->get('text_total');
 			$this->data['text_reward'] = $this->language->get('text_reward');
 			$this->data['text_order_status'] = $this->language->get('text_order_status');
@@ -2413,7 +2394,6 @@ class ControllerSaleOrder extends Controller {
 
 			$this->data['email'] = $order_info['email'];
 			$this->data['telephone'] = $order_info['telephone'];
-			$this->data['fax'] = $order_info['fax'];
 			$this->data['comment'] = nl2br($order_info['comment']);
 			$this->data['shipping_method'] = $order_info['shipping_method'];
 			$this->data['payment_method'] = $order_info['payment_method'];
@@ -2443,7 +2423,7 @@ class ControllerSaleOrder extends Controller {
 				$this->data['affiliate'] = '';
 			}
 
-			$this->data['commission'] = $this->currency->format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
+			$this->data['commission'] = $this->currency->format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency'));
 
 			$this->load->model('sale/affiliate');
 
@@ -2521,7 +2501,7 @@ class ControllerSaleOrder extends Controller {
 					} else {
 						$option_data[] = array(
 							'name'  => $option['name'],
-							'value' => utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.')),
+							'value' => substr($option['value'], 0, strrpos($option['value'], '.')),
 							'type'  => $option['type'],
 							'href'  => $this->url->link('sale/order/download', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
 						);
@@ -2536,10 +2516,10 @@ class ControllerSaleOrder extends Controller {
 					'model'            => $product['model'],
 					'option'           => $option_data,
 					'quantity'         => $product['quantity'],
-					'price'            => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-					'tax_value'        => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'price'            => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
+					'tax_value'        => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
 					'tax_percent'      => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-					'total'            => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'total'            => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
 					'picked'           => $product['picked'],
 					'backordered'      => $product['backordered'],
 					'href_picked'      => $this->url->link('sale/order/picked', 'token=' . $this->session->data['token'] . '&order_product_id=' . $product['order_product_id'], 'SSL'),
@@ -2555,7 +2535,7 @@ class ControllerSaleOrder extends Controller {
 			foreach ($vouchers as $voucher) {
 				$this->data['vouchers'][] = array(
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
+					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
 					'href'        => $this->url->link('sale/voucher/update', 'token=' . $this->session->data['token'] . '&voucher_id=' . $voucher['voucher_id'], 'SSL')
 				);
 			}
@@ -3019,7 +2999,7 @@ class ControllerSaleOrder extends Controller {
 			if (!empty($this->request->files['file']['name'])) {
 				$filename = html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8');
 
-				if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 128)) {
+				if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 128)) {
 					$json['error'] = $this->language->get('error_filename');
 				}
 
@@ -3325,12 +3305,10 @@ class ControllerSaleOrder extends Controller {
 					$store_address = $store_info['config_address'];
 					$store_email = $store_info['config_email'];
 					$store_telephone = $store_info['config_telephone'];
-					$store_fax = $store_info['config_fax'];
 				} else {
 					$store_address = $this->config->get('config_address');
 					$store_email = $this->config->get('config_email');
 					$store_telephone = $this->config->get('config_telephone');
-					$store_fax = $this->config->get('config_fax');
 				}
 
 				$store_company_id = $this->config->get('config_company_id') ? $this->config->get('config_company_id') : '';
@@ -3436,7 +3414,7 @@ class ControllerSaleOrder extends Controller {
 						if ($option['type'] != 'file') {
 							$value = $option['value'];
 						} else {
-							$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+							$value = substr($option['value'], 0, strrpos($option['value'], '.'));
 						}
 
 						$option_data[] = array(
@@ -3465,7 +3443,6 @@ class ControllerSaleOrder extends Controller {
 					'store_address'        => nl2br($store_address),
 					'store_email'          => $store_email,
 					'store_telephone'      => $store_telephone,
-					'store_fax'            => $store_fax,
 					'store_url'            => rtrim($order_info['store_url'], '/'),
 					'store_company_id'     => $store_company_id,
 					'store_company_tax_id' => $store_company_tax_id,
@@ -3582,12 +3559,10 @@ class ControllerSaleOrder extends Controller {
 					$store_address = $store_info['config_address'];
 					$store_email = $store_info['config_email'];
 					$store_telephone = $store_info['config_telephone'];
-					$store_fax = $store_info['config_fax'];
 				} else {
 					$store_address = $this->config->get('config_address');
 					$store_email = $this->config->get('config_email');
 					$store_telephone = $this->config->get('config_telephone');
-					$store_fax = $this->config->get('config_fax');
 				}
 
 				$store_company_id = $this->config->get('config_company_id') ? $this->config->get('config_company_id') : '';
@@ -3680,7 +3655,7 @@ class ControllerSaleOrder extends Controller {
 						if ($option['type'] != 'file') {
 							$value = $option['value'];
 						} else {
-							$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+							$value = substr($option['value'], 0, strrpos($option['value'], '.'));
 						}
 
 						$option_data[] = array(
@@ -3706,7 +3681,6 @@ class ControllerSaleOrder extends Controller {
 					'store_address'        => nl2br($store_address),
 					'store_email'          => $store_email,
 					'store_telephone'      => $store_telephone,
-					'store_fax'            => $store_fax,
 					'store_url'            => rtrim($order_info['store_url'], '/'),
 					'store_company_id'     => $store_company_id,
 					'store_company_tax_id' => $store_company_tax_id,
@@ -3820,12 +3794,10 @@ class ControllerSaleOrder extends Controller {
 					$store_address = $store_info['config_address'];
 					$store_email = $store_info['config_email'];
 					$store_telephone = $store_info['config_telephone'];
-					$store_fax = $store_info['config_fax'];
 				} else {
 					$store_address = $this->config->get('config_address');
 					$store_email = $this->config->get('config_email');
 					$store_telephone = $this->config->get('config_telephone');
-					$store_fax = $this->config->get('config_fax');
 				}
 
 				$store_company_id = $this->config->get('config_company_id') ? $this->config->get('config_company_id') : '';
@@ -3918,7 +3890,7 @@ class ControllerSaleOrder extends Controller {
 						if ($option['type'] != 'file') {
 							$value = $option['value'];
 						} else {
-							$value = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
+							$value = substr($option['value'], 0, strrpos($option['value'], '.'));
 						}
 
 						$option_data[] = array(
@@ -3932,10 +3904,10 @@ class ControllerSaleOrder extends Controller {
 						'model'       => $product['model'],
 						'option'      => $option_data,
 						'quantity'    => $product['quantity'],
-						'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-						'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+						'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
+						'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
 						'tax_percent' => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-						'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+						'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency'))
 					);
 				}
 
@@ -3960,7 +3932,6 @@ class ControllerSaleOrder extends Controller {
 					'store_address'        => nl2br($store_address),
 					'store_email'          => $store_email,
 					'store_telephone'      => $store_telephone,
-					'store_fax'            => $store_fax,
 					'store_url'            => rtrim($order_info['store_url'], '/'),
 					'store_company_id'     => $store_company_id,
 					'store_company_tax_id' => $store_company_tax_id,

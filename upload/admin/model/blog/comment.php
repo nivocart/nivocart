@@ -1,7 +1,7 @@
 <?php
 class ModelBlogComment extends Model {
 
-	public function addArticleComment($data) {
+	public function addArticleComment(array $data = []): void {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE article_title = '" . $this->db->escape($data['article_title']) . "'");
 
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_comment` SET blog_article_id = '" . (int)$query->row['blog_article_id'] . "', author='" . $this->db->escape($data['author_name']) . "', `comment` = '" . $this->db->escape($data['comment']) . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
@@ -18,7 +18,7 @@ class ModelBlogComment extends Model {
 		}
 	}
 
-	public function editArticleComment($blog_comment_id, $data) {
+	public function editArticleComment(int $blog_comment_id, array $data = []): void {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE article_title = '" . $this->db->escape($data['article_title']) . "'");
 
 		$this->db->query("UPDATE `" . DB_PREFIX . "blog_comment` SET blog_article_id = '" . (int)$query->row['blog_article_id'] . "', author = '" . $this->db->escape($data['author_name']) . "', `comment` = '" . $this->db->escape($data['comment']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE blog_comment_id = '" . (int)$blog_comment_id . "'");
@@ -32,18 +32,18 @@ class ModelBlogComment extends Model {
 		}
 	}
 
-	public function deleteArticleComment($blog_comment_id) {
+	public function deleteArticleComment(int $blog_comment_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_comment` WHERE blog_comment_id = '" . (int)$blog_comment_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_comment` WHERE blog_article_reply_id = '" . (int)$blog_comment_id . "'");
 	}
 
-	public function getArticleComment($blog_comment_id) {
+	public function getArticleComment(int $blog_comment_id) {
 		$query = $this->db->query("SELECT bc.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bc.blog_comment_id = '" . (int)$blog_comment_id . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
-	public function getArticleComments($data = array()) {
+	public function getArticleComments(array $data = []): array {
 		$sql = "SELECT bc.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$sort_data = array(
@@ -82,7 +82,7 @@ class ModelBlogComment extends Model {
 		return $query->rows;
 	}
 
-	public function getCommentReply($blog_comment_id) {
+	public function getCommentReply(int $blog_comment_id): array {
 		$comment_reply = array();
 
 		$query = $this->db->query("SELECT bc.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bc.blog_article_reply_id = '" . (int)$blog_comment_id . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
@@ -100,7 +100,7 @@ class ModelBlogComment extends Model {
 		return $comment_reply;
 	}
 
-	public function getTotalArticleComments($data = array()) {
+	public function getTotalArticleComments(array $data = []): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row['total'];
@@ -112,7 +112,7 @@ class ModelBlogComment extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalCommentReplies($blog_comment_id) {
+	public function getTotalCommentReplies(int $blog_comment_id): int {
 		$query = $this->db->query("SELECT COUNT(blog_article_reply_id) AS `total` FROM `" . DB_PREFIX . "blog_comment` WHERE blog_comment_id = '" . (int)$blog_comment_id . "' AND status = '1'");
 
 		return $query->row['total'];

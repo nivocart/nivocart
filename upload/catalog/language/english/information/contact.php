@@ -14,7 +14,7 @@ $_['text_longitude']   = 'Longitude:';
 $_['entry_name']       = 'Your Name:';
 $_['entry_email']      = 'Email Address:';
 $_['entry_enquiry']    = 'Enquiry:';
-$_['entry_captcha']    = 'Enter the two words';
+$_['entry_captcha']    = 'Enter the code below';
 
 // Email
 $_['email_subject']    = 'Enquiry %s';

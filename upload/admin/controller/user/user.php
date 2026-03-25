@@ -614,7 +614,7 @@ class ControllerUserUser extends Controller {
 			// Existing user
 			if ($this->request->post['username']) {
 				// Current Password Check
-				if ($this->request->post['old_password'] && (utf8_strlen($this->request->post['old_password']) > 3) && (utf8_strlen($this->request->post['old_password']) < 21)) {
+				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
 					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
 
 					if ($password_no_match) {
@@ -624,7 +624,7 @@ class ControllerUserUser extends Controller {
 					$this->error['old_password'] = $this->language->get('error_old_password');
 				}
 
-				if ((utf8_strlen($this->request->post['username']) < 3) || (utf8_strlen($this->request->post['username']) > 20)) {
+				if ((mb_strlen($this->request->post['username'], 'UTF-8') < 3) || (mb_strlen($this->request->post['username'], 'UTF-8') > 20)) {
 					$this->error['username'] = $this->language->get('error_username');
 				}
 
@@ -633,9 +633,9 @@ class ControllerUserUser extends Controller {
 				}
 			}
 
-			if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+			if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 				// Current Password Check
-				if ($this->request->post['old_password'] && (utf8_strlen($this->request->post['old_password']) > 3) && (utf8_strlen($this->request->post['old_password']) < 21)) {
+				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
 					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
 
 					if ($password_no_match) {
@@ -648,9 +648,9 @@ class ControllerUserUser extends Controller {
 				$this->error['firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+			if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 				// Current Password Check
-				if ($this->request->post['old_password'] && (utf8_strlen($this->request->post['old_password']) > 3) && (utf8_strlen($this->request->post['old_password']) < 21)) {
+				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
 					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
 
 					if ($password_no_match) {
@@ -663,9 +663,9 @@ class ControllerUserUser extends Controller {
 				$this->error['lastname'] = $this->language->get('error_lastname');
 			}
 
-			if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+			if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				// Current Password Check
-				if ($this->request->post['old_password'] && (utf8_strlen($this->request->post['old_password']) > 3) && (utf8_strlen($this->request->post['old_password']) < 21)) {
+				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
 					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
 
 					if ($password_no_match) {
@@ -692,7 +692,7 @@ class ControllerUserUser extends Controller {
 
 			if ($this->request->post['password'] != "") {
 				// Current Password Check
-				if ($this->request->post['old_password'] && (utf8_strlen($this->request->post['old_password']) > 3) && (utf8_strlen($this->request->post['old_password']) < 21)) {
+				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
 					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
 
 					if ($password_no_match) {
@@ -702,7 +702,7 @@ class ControllerUserUser extends Controller {
 					$this->error['old_password'] = $this->language->get('error_old_password');
 				}
 
-				if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+				if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 					$this->error['password'] = $this->language->get('error_password');
 				}
 
@@ -714,7 +714,7 @@ class ControllerUserUser extends Controller {
 		} else {
 			// New user
 			if ($this->request->post['username']) {
-				if ((utf8_strlen($this->request->post['username']) < 3) || (utf8_strlen($this->request->post['username']) > 20)) {
+				if ((mb_strlen($this->request->post['username'], 'UTF-8') < 3) || (mb_strlen($this->request->post['username'], 'UTF-8') > 20)) {
 					$this->error['username'] = $this->language->get('error_username');
 				}
 
@@ -723,15 +723,15 @@ class ControllerUserUser extends Controller {
 				}
 			}
 
-			if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+			if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 				$this->error['firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+			if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 				$this->error['lastname'] = $this->language->get('error_lastname');
 			}
 
-			if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+			if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				$this->error['email'] = $this->language->get('error_email');
 			}
 
@@ -748,7 +748,7 @@ class ControllerUserUser extends Controller {
 			}
 
 			if ($this->request->post['password'] != "") {
-				if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+				if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 					$this->error['password'] = $this->language->get('error_password');
 				}
 

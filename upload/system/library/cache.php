@@ -1,8 +1,16 @@
 <?php
 class Cache {
-	private $expire;
+	/**
+	 * @var int
+	 */
+	private int $expire;
 
-	public function __construct($expire = 3600) {
+	/**
+	 * Constructor
+	 *
+	 * @param int $expire
+	 */
+	public function __construct(int $expire = 3600) {
 		$this->expire = $expire;
 
 		$files = glob(DIR_CACHE . 'cache.*');
@@ -20,7 +28,14 @@ class Cache {
 		}
 	}
 
-	public function get($key) {
+	/**
+	 * Get
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public function get(string $key) {
 		$files = glob(DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
 
 		if ($files) {
@@ -40,7 +55,15 @@ class Cache {
 		return false;
 	}
 
-	public function set($key, $value) {
+	/**
+	 * Set
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return void
+	 */
+	public function set(string $key, $value): void {
 		$this->delete($key);
 
 		$file = DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $this->expire);
@@ -58,7 +81,14 @@ class Cache {
 		fclose($handle);
 	}
 
-	public function delete($key) {
+	/**
+	 * Delete
+	 *
+	 * @param string $key
+	 *
+	 * @return void
+	 */
+	public function delete(string $key): void {
 		$files = glob(DIR_CACHE . 'cache.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
 
 		if ($files) {

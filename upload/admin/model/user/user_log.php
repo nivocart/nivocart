@@ -1,7 +1,7 @@
 <?php
 class ModelUserUserLog extends Model {
 
-	public function getDataLog($data = array()) {
+	public function getDataLog(array $data = []): array {
 		if ($data) {
 			$sql = "SELECT * FROM " . DB_PREFIX . "user_log";
 
@@ -37,13 +37,13 @@ class ModelUserUserLog extends Model {
 		}
 	}
 
-	public function getTotalDataLog($data = array()) {
-		$query = $this->db->query("SELECT COUNT(log_id) AS total FROM " . DB_PREFIX . "user_log");
+	public function getTotalDataLog(): int {
+		$query = $this->db->query("SELECT COUNT(log_id) AS `total` FROM " . DB_PREFIX . "user_log");
 
 		return $query->row['total'];
 	}
 
-	public function clearDataLog($id, $username) {
+	public function clearDataLog(int $id, $username) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "user_log");
 
 		$url = $this->request->server['REQUEST_URI'];
@@ -52,11 +52,11 @@ class ModelUserUserLog extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "user_log SET user_id = '" . (int)$id . "', username = '" . $this->db->escape($username) . "', `action` = 'clear log', `allowed` = '1', `url` = '" . $this->db->escape($url) . "', ip = '" . $this->db->escape($ip) . "', `date` = NOW()");
 	}
 
-	public function deleteEntry($id) {
+	public function deleteEntry(int $id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "user_log WHERE log_id = " . (int)$id);
 	}
 
-	public function deleteEntryLog($id, $username, $amount) {
+	public function deleteEntryLog(int $id, $username, $amount) {
 		$url = $this->request->server['REQUEST_URI'];
 		$ip = $this->request->server['REMOTE_ADDR'];
 

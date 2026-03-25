@@ -1,18 +1,23 @@
-<?php
+<?php 
 class Pagination {
-	public $total = 0;
-	public $page = 1;
-	public $limit = 20;
-	public $num_links = 10;
-	public $url = '';
-	public $text = 'Showing {start}-{end} of {total} Results ({pages} Pages)';
-	public $text_first = '1';
-	public $text_last = '{page}';
-	public $text_next = '&#10095;';
-	public $text_prev = '&#10094;';
-	public $style_links = 'links';
-	public $style_results = 'results';
+	public int $total = 0;
+	public int $page = 1;
+	public int $limit = 20;
+	public int $num_links = 10;
+	public string $url = '';
+	public string $text = 'Showing {start} to {end} of {total} ({pages} Pages)';
+	public string $text_first = '&laquo;';
+	public string $text_last = '&raquo;';
+	public string $text_next = '&rsaquo;';
+	public string $text_prev = '&lsaquo;';
+	public string $style_links = 'links';
+	public string $style_results = 'results';
 
+	/**
+	 * render
+	 *
+	 * return css/html
+	 */
 	public function render() {
 		$total = $this->total;
 
@@ -29,24 +34,15 @@ class Pagination {
 		}
 
 		$num_links = $this->num_links;
-		$num_pages = ceil($total / $limit);
 
-		if ($num_links > $num_pages) {
-			$num_links = $num_pages;
-		}
+		$num_pages = ceil($total / $limit);
 
 		$this->url = str_replace('%7Bpage%7D', '{page}', $this->url);
 
 		$output = '';
 
 		if ($page > 1) {
-			$output .= ' <a href="' . str_replace('{page}', $page - 1, $this->url) . '" title="Previous Page">' . $this->text_prev . '</a> ';
-
-			$calc_first = floor(($this->num_links / 2) + 1);
-
-			if (($page > $calc_first) && !($num_pages <= ($num_links + 1))) {
-				$output .= '  <a href="' . str_replace('{page}', 1, $this->url) . '">' . $this->text_first . '</a> ';
-			}
+			$output .= ' <a href="' . str_replace('{page}', 1, $this->url) . '">' . $this->text_first . '</a> <a href="' . str_replace('{page}', $page - 1, $this->url) . '">' . $this->text_prev . '</a> ';
 		}
 
 		if ($num_pages > 1) {
@@ -68,8 +64,8 @@ class Pagination {
 				}
 			}
 
-			if ($start > 2) {
-				$output .= ' ... ';
+			if ($start > 1) {
+				$output .= ' .... ';
 			}
 
 			for ($i = $start; $i <= $end; $i++) {
@@ -80,23 +76,13 @@ class Pagination {
 				}
 			}
 
-			if ($end < ($num_pages - 1)) {
-				$output .= ' ... ';
+			if ($end < $num_pages) {
+				$output .= ' .... ';
 			}
 		}
 
-   		if ($page < $num_pages) {
-			$calc_last = $num_pages - floor($this->num_links / 2);
-
-			if (($end < $num_pages) && ($page < $calc_last)) {
-				$output .= ' <a href="' . str_replace('{page}', $num_pages, $this->url) . '">' . str_replace('{page}', $num_pages, $this->text_last) . '</a> ';
-			}
-
-			$output .= ' <a href="' . str_replace('{page}', $page + 1, $this->url) . '" title="Next Page">' . $this->text_next . '</a> ';
-		}
-
-		if ($total <= 1) {
-			$this->text = '';
+		if ($page < $num_pages) {
+			$output .= ' <a href="' . str_replace('{page}', $page + 1, $this->url) . '">' . $this->text_next . '</a> <a href="' . str_replace('{page}', $num_pages, $this->url) . '">' . $this->text_last . '</a> ';
 		}
 
 		$find = array(

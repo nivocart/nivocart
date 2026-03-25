@@ -1,13 +1,13 @@
 <?php
 class ModelDesignMedia extends Model {
 
-	public function getMedia($media_id) {
+	public function getMedia(int $media_id) {
 		$query = $this->db->query("SELECT DISTINCT media FROM " . DB_PREFIX . "media WHERE media_id = '" . (int)$media_id . "' AND status = '1'");
 
 		return $query->row['media'];
 	}
 
-	public function getCredit($media_id) {
+	public function getCredit(int $media_id) {
 		$query = $this->db->query("SELECT DISTINCT credit FROM " . DB_PREFIX . "media WHERE media_id = '" . (int)$media_id . "' AND status = '1'");
 
 		if ($query->row['credit']) {
@@ -17,12 +17,12 @@ class ModelDesignMedia extends Model {
 		}
 	}
 
-	public function getMediaType($media_id) {
+	public function getMediaType(int $media_id) {
 		$type = 'video';
 
 		$filename = $this->getFilename($media_id);
 
-		$ext = utf8_substr(strrchr($filename, '.'), 1);
+		$ext = substr(strrchr($filename, '.'), 1);
 
 		$video = array('mp4','ogv','ogg','webm','m4v','wmv','flv');
 
@@ -35,12 +35,12 @@ class ModelDesignMedia extends Model {
 		return $type;
 	}
 
-	public function getMediaMimeType($media_id) {
+	public function getMediaMimeType(int $media_id) {
 		$mime_type = '';
 
 		$filename = $this->getFilename($media_id);
 
-		$ext = utf8_substr(strrchr($filename, '.'), 1);
+		$ext = substr(strrchr($filename, '.'), 1);
 
 		if (strtolower($ext) == 'mp3') {
 			$mime_type = 'audio/mp3';
@@ -93,7 +93,7 @@ class ModelDesignMedia extends Model {
 		return $mime_type;
 	}
 
-	protected function getFilename($media_id) {
+	protected function getFilename(int $media_id) {
 		$query = $this->db->query("SELECT DISTINCT media AS filename FROM " . DB_PREFIX . "media WHERE media_id = '" . (int)$media_id . "'");
 
 		return $query->row['filename'];

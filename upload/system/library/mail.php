@@ -1,80 +1,144 @@
 <?php
 class Mail {
-	protected $to;
-	protected $from;
-	protected $sender;
-	protected $reply_to;
-	protected $subject;
-	protected $text;
-	protected $html;
-	protected $attachments = array();
+	protected string $to = '';
+	protected string $from = '';
+	protected string $sender = '';
+	protected string $reply_to = '';
+	protected string $subject = '';
+	protected string $text = '';
+	protected string $html = '';
+	protected array $attachments = [];
 
-	public $protocol = 'mail';
-	public $smtp_hostname;
-	public $smtp_username;
-	public $smtp_password;
-	public $smtp_port = 25;
-	public $smtp_timeout = 5;
+	public string $protocol = 'mail';
+	public string $smtp_hostname = '';
+	public string $smtp_username = '';
+	public string $smtp_password = '';
+	public int $smtp_port = 25;
+	public int $smtp_timeout = 5;
 	public $verp = false;
-	public $parameter;
+	public string $parameter = '';
 
-	public function __construct($config = array()) {
+	/**
+	 * Constructor
+	 *
+	 * @param array<string, mixed> $value
+	 */
+	public function __construct(array $config = []) {
 		foreach ($config as $key => $value) {
 			$this->$key = $value;
 		}
 	}
 
-	public function setTo($to) {
+	/**
+	 * Set To
+	 *
+	 * @param string $to
+	 *
+	 * @return void
+	 */
+	public function setTo($to): void {
 		$this->to = $to;
 	}
 
-	public function setFrom($from) {
+	/**
+	 * Set From
+	 *
+	 * @param string $from
+	 *
+	 * @return void
+	 */
+	public function setFrom(string $from): void {
 		$this->from = $from;
 	}
 
-	public function setSender($sender) {
+	/**
+	 * Set Sender
+	 *
+	 * @param string $sender
+	 *
+	 * @return void
+	 */
+	public function setSender(string $sender): void {
 		$this->sender = $sender;
 	}
 
-	public function setReplyTo($reply_to) {
+	/**
+	 * Set Reply To
+	 *
+	 * @param string $reply_to
+	 *
+	 * @return void
+	 */
+	public function setReplyTo(string $reply_to): void {
 		$this->reply_to = $reply_to;
 	}
 
-	public function setSubject($subject) {
+	/**
+	 * Set Subject
+	 *
+	 * @param string $subject
+	 *
+	 * @return void
+	 */
+	public function setSubject(string $subject): void {
 		$this->subject = $subject;
 	}
 
-	public function setText($text) {
+	/**
+	 * Set Text
+	 *
+	 * @param string $text
+	 *
+	 * @return void
+	 */
+	public function setText(string $text): void {
 		$this->text = $text;
 	}
 
-	public function setHtml($html) {
+	/**
+	 * Set Html
+	 *
+	 * @param string $html
+	 *
+	 * @return void
+	 */
+	public function setHtml(string $html): void {
 		$this->html = $html;
 	}
 
-	public function addAttachment($filename) {
+	/**
+	 * Add Attachment
+	 *
+	 * @param string $filename
+	 *
+	 * @return void
+	 */
+	public function addAttachment(string $filename): void {
 		$this->attachments[] = $filename;
 	}
 
+	/**
+	 * Send
+	 */
 	public function send() {
 		if (!$this->to) {
-			throw new \Exception('Error: Email to required!');
+			throw new \Exception('Error: E-Mail to required!');
 		}
 
 		if (!$this->from) {
-			throw new \Exception('Error: Email from required!');
+			throw new \Exception('Error: E-Mail from required!');
 		}
 
 		if (!$this->sender) {
-			throw new \Exception('Error: Email sender required!');
+			throw new \Exception('Error: E-Mail sender required!');
 		}
 
 		if (!$this->subject) {
-			throw new \Exception('Error: Email subject required!');
+			throw new \Exception('Error: E-Mail subject required!');
 		}
 
 		if ((!$this->text) && (!$this->html)) {
-			throw new \Exception('Error: Email message required!');
+			throw new \Exception('Error: E-Mail message required!');
 		}
 
 		if (is_array($this->to)) {
@@ -83,7 +147,7 @@ class Mail {
 			$to = $this->to;
 		}
 
-		$boundary = '----=_NextPart_' . md5(time());
+		$boundary = '----=_NextPart_' . md5((string)time());
 
 		$header = 'MIME-Version: 1.0' . PHP_EOL;
 
@@ -103,7 +167,7 @@ class Mail {
 
 		$header .= 'Return-Path: ' . $this->from . PHP_EOL;
 		$header .= 'X-Mailer: PHP/' . phpversion() . PHP_EOL;
-		$header .= 'Content-Type: multipart/mixed; boundary="' . $boundary . '"' . PHP_EOL . PHP_EOL;
+		$header .= 'Content-Type: multipart/related; boundary="' . $boundary . '"' . PHP_EOL . PHP_EOL;
 
 		if (!$this->html) {
 			$message = '--' . $boundary . PHP_EOL;
@@ -111,7 +175,7 @@ class Mail {
 			$message .= 'Content-Transfer-Encoding: 8bit' . PHP_EOL . PHP_EOL;
 			$message .= $this->text . PHP_EOL;
 		} else {
-			$message = '--' . $boundary . PHP_EOL;
+			$message  = '--' . $boundary . PHP_EOL;
 			$message .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '_alt"' . PHP_EOL . PHP_EOL;
 			$message .= '--' . $boundary . '_alt' . PHP_EOL;
 			$message .= 'Content-Type: text/plain; charset="utf-8"' . PHP_EOL;
@@ -142,8 +206,8 @@ class Mail {
 				$message .= 'Content-Type: application/octet-stream; name="' . basename($attachment) . '"' . PHP_EOL;
 				$message .= 'Content-Transfer-Encoding: base64' . PHP_EOL;
 				$message .= 'Content-Disposition: attachment; filename="' . basename($attachment) . '"' . PHP_EOL;
-				$message .= 'Content-ID: <' . urlencode(basename($attachment)) . '>' . PHP_EOL;
-				$message .= 'X-Attachment-Id: ' . urlencode(basename($attachment)) . PHP_EOL . PHP_EOL;
+				$message .= 'Content-ID: <' . basename(urlencode($attachment)) . '>' . PHP_EOL;
+				$message .= 'X-Attachment-Id: ' . basename(urlencode($attachment)) . PHP_EOL . PHP_EOL;
 				$message .= chunk_split(base64_encode($content));
 			}
 		}

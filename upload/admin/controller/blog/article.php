@@ -561,7 +561,9 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('blog/category');
 
-		$this->data['categories'] = $this->model_blog_category->getCategories(0);
+		$parent_id = 0;
+
+		$this->data['categories'] = $this->model_blog_category->getCategories($parent_id);
 
 		if (isset($this->request->post['article_category'])) {
 			$this->data['article_category'] = $this->request->post['article_category'];
@@ -573,11 +575,13 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('catalog/category');
 
-		$this->data['default_categories'] = $this->model_catalog_category->getCategories(0);
+		$this->data['default_categories'] = $this->model_catalog_category->getCategories($parent_id);
 
 		$this->load->model('catalog/manufacturer');
 
-		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers(0);
+		$manufacturer_array = array();
+
+		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_array);
 
 		$this->load->model('catalog/product');
 
@@ -681,7 +685,7 @@ class ControllerBlogArticle extends Controller {
 		}
 
 		foreach ($this->request->post['article_description'] as $language_id => $value) {
-			if ((strlen($value['article_title']) < 3) || (strlen($value['article_title']) > 100)) {
+			if ((mb_strlen($value['article_title'], 'UTF-8') < 3) || (mb_strlen($value['article_title'], 'UTF-8') > 100)) {
 				$this->error['article_title'][$language_id] = $this->language->get('error_title');
 			} else {
 				if (!isset($this->request->get['blog_article_id'])) {

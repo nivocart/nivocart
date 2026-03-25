@@ -25,14 +25,6 @@ class ControllerInformationContact extends Controller {
 
 			// Send mail
 			$mail = new Mail();
-			$mail->protocol = $this->config->get('config_mail_protocol');
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->hostname = $this->config->get('config_smtp_host');
-			$mail->username = $this->config->get('config_smtp_username');
-			$mail->password = $this->config->get('config_smtp_password');
-			$mail->port = $this->config->get('config_smtp_port');
-			$mail->timeout = $this->config->get('config_smtp_timeout');
-
 			$mail->setTo($this->config->get('config_email'));
 			$mail->setFrom($this->request->post['email']);
 			$mail->setSender($this->request->post['name']);
@@ -114,7 +106,6 @@ class ControllerInformationContact extends Controller {
 		$this->data['store'] = $this->config->get('config_name');
 		$this->data['address'] = nl2br($this->config->get('config_address'));
 		$this->data['telephone'] = $this->config->get('config_telephone');
-		$this->data['fax'] = $this->config->get('config_fax');
 
 		if (isset($this->request->post['name'])) {
 			$this->data['name'] = $this->request->post['name'];
@@ -144,7 +135,14 @@ class ControllerInformationContact extends Controller {
 			$this->data['captcha'] = '';
 		}
 
-		$this->data['captcha_image'] = $this->url->link('information/contact/captcha', '', 'SSL');
+		// Create session Captcha
+		$this->load->library('captcha');
+
+		$captcha = new Captcha();
+
+		$this->session->data['captcha'] = $captcha->getCode();
+
+		$this->data['captcha_image'] = $this->session->data['captcha'];
 
 		// Create directory if it does not exist
 		$directory = DIR_SYSTEM . 'logs/';
@@ -238,7 +236,7 @@ class ControllerInformationContact extends Controller {
 	}
 
 	protected function validate() {
-		if (!isset($this->request->post['name']) || (utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 32)) {
+		if (!isset($this->request->post['name']) || (mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 32)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
@@ -257,24 +255,14 @@ class ControllerInformationContact extends Controller {
 			}
 		}
 
-		if (!isset($this->request->post['enquiry']) || (utf8_strlen($this->request->post['enquiry']) < 10) || (utf8_strlen($this->request->post['enquiry']) > 3000)) {
+		if (!isset($this->request->post['enquiry']) || (mb_strlen($this->request->post['enquiry'], 'UTF-8') < 10) || (mb_strlen($this->request->post['enquiry'], 'UTF-8') > 3000)) {
 			$this->error['enquiry'] = $this->language->get('error_enquiry');
 		}
 
-		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != strtolower($this->request->post['captcha']))) {
+		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
 			$this->error['captcha'] = $this->language->get('error_captcha');
 		}
 
 		return empty($this->error);
-	}
-
-	public function captcha() {
-		$this->load->library('captcha');
-
-		$captcha = new Captcha();
-
-		$this->session->data['captcha'] = $captcha->getCode();
-
-		$captcha->showImage($this->config->get('config_captcha_font'));
 	}
 }

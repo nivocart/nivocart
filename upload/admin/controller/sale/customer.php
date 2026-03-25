@@ -1,6 +1,6 @@
 <?php
 class ControllerSaleCustomer extends Controller {
-	private $error = array();
+	private array $error = [];
 
 	public function index() {
 		$this->language->load('sale/customer');
@@ -676,7 +676,6 @@ class ControllerSaleCustomer extends Controller {
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_gender'] = $this->language->get('entry_gender');
 		$this->data['entry_date_of_birth'] = $this->language->get('entry_date_of_birth');
 		$this->data['entry_password'] = $this->language->get('entry_password');
@@ -955,16 +954,6 @@ class ControllerSaleCustomer extends Controller {
 			$this->data['telephone'] = '';
 		}
 
-		$this->data['show_fax'] = $this->config->get('config_customer_fax');
-
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} elseif (!empty($customer_info)) {
-			$this->data['fax'] = $customer_info['fax'];
-		} else {
-			$this->data['fax'] = '';
-		}
-
 		$this->data['show_gender'] = $this->config->get('config_customer_gender');
 
 		if (isset($this->request->post['gender'])) {
@@ -1088,15 +1077,15 @@ class ControllerSaleCustomer extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+		if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
@@ -1112,12 +1101,12 @@ class ControllerSaleCustomer extends Controller {
 			}
 		}
 
-		if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+		if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
 		if ($this->config->get('config_customer_dob')) {
-			if (isset($this->request->post['date_of_birth']) && (utf8_strlen($this->request->post['date_of_birth']) == 10)) {
+			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
 				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
@@ -1127,7 +1116,7 @@ class ControllerSaleCustomer extends Controller {
 		}
 
 		if (!empty($this->request->post['password']) || (!isset($this->request->get['customer_id']))) {
-			if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 				$this->error['password'] = $this->language->get('error_password');
 			}
 
@@ -1138,19 +1127,19 @@ class ControllerSaleCustomer extends Controller {
 
 		if (isset($this->request->post['address'])) {
 			foreach ($this->request->post['address'] as $key => $value) {
-				if ((utf8_strlen($value['firstname']) < 1) || (utf8_strlen($value['firstname']) > 32)) {
+				if ((mb_strlen($value['firstname'], 'UTF-8') < 1) || (mb_strlen($value['firstname'], 'UTF-8') > 32)) {
 					$this->error['address_firstname'][$key] = $this->language->get('error_firstname');
 				}
 
-				if ((utf8_strlen($value['lastname']) < 1) || (utf8_strlen($value['lastname']) > 32)) {
+				if ((mb_strlen($value['lastname'], 'UTF-8') < 1) || (mb_strlen($value['lastname'], 'UTF-8') > 32)) {
 					$this->error['address_lastname'][$key] = $this->language->get('error_lastname');
 				}
 
-				if ((utf8_strlen($value['address_1']) < 3) || (utf8_strlen($value['address_1']) > 128)) {
+				if ((mb_strlen($value['address_1'], 'UTF-8') < 3) || (mb_strlen($value['address_1'], 'UTF-8') > 128)) {
 					$this->error['address_address_1'][$key] = $this->language->get('error_address_1');
 				}
 
-				if ((utf8_strlen($value['city']) < 2) || (utf8_strlen($value['city']) > 128)) {
+				if ((mb_strlen($value['city'], 'UTF-8') < 2) || (mb_strlen($value['city'], 'UTF-8') > 128)) {
 					$this->error['address_city'][$key] = $this->language->get('error_city');
 				}
 
@@ -1159,7 +1148,7 @@ class ControllerSaleCustomer extends Controller {
 				$country_info = $this->model_localisation_country->getCountry($value['country_id']);
 
 				if ($country_info) {
-					if ($country_info['postcode_required'] && (utf8_strlen($value['postcode']) < 2) || (utf8_strlen($value['postcode']) > 10)) {
+					if ($country_info['postcode_required'] && (mb_strlen($value['postcode'], 'UTF-8') < 2) || (mb_strlen($value['postcode'], 'UTF-8') > 10)) {
 						$this->error['address_postcode'][$key] = $this->language->get('error_postcode');
 					}
 
@@ -1228,7 +1217,7 @@ class ControllerSaleCustomer extends Controller {
 		$customer_info = $this->model_sale_customer->getCustomer($customer_id);
 
 		if ($customer_info) {
-			$token = hash_rand('md5');
+			$token = hash('ripemd128', random_bytes(5), true);
 
 			$this->model_sale_customer->editToken($customer_id, $token);
 
@@ -1772,7 +1761,6 @@ class ControllerSaleCustomer extends Controller {
 					'lastname'          => $result['lastname'],
 					'email'             => $result['email'],
 					'telephone'         => $result['telephone'],
-					'fax'               => $result['fax'],
 					'address'           => $this->model_sale_customer->getAddresses($result['customer_id'])
 				);
 			}

@@ -264,7 +264,7 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; ++$i) {
-			$char = $code{$i};
+			$char = $code[$i];
 
 			if (!isset($chr[$char])) {
 				return false;
@@ -277,7 +277,7 @@ class ModelToolBarcode extends Model {
 					$t = false; // space
 				}
 
-				$w = $chr[$char]{$j};
+				$w = $chr[$char][$j];
 
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
@@ -436,11 +436,11 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; ++$i) {
-			if (ord($code{$i}) > 127) {
+			if (ord($code[$i]) > 127) {
 				return false;
 			}
 
-			$code_ext .= $encode[$code{$i}];
+			$code_ext .= $encode[$code[$i]];
 		}
 
 		return $code_ext;
@@ -464,7 +464,7 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; ++$i) {
-			$k = array_keys($chars, $code{$i});
+			$k = array_keys($chars, $code[$i]);
 			$sum += $k[0];
 		}
 
@@ -670,11 +670,11 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; ++$i) {
-			if (ord($code{$i}) > 127) {
+			if (ord($code[$i]) > 127) {
 				return false;
 			}
 
-			$code_ext .= $encode[$code{$i}];
+			$code_ext .= $encode[$code[$i]];
 		}
 
 		// Checksum
@@ -690,7 +690,7 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; ++$i) {
-			$char = ord($code{$i});
+			$char = ord($code[$i]);
 
 			if (!isset($chr[$char])) {
 				return false;
@@ -703,7 +703,7 @@ class ModelToolBarcode extends Model {
 					$t = false; // space
 				}
 
-				$w = $chr[$char]{$j};
+				$w = $chr[$char][$j];
 
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
@@ -740,7 +740,7 @@ class ModelToolBarcode extends Model {
 		$check = 0;
 
 		for ($i = ($len - 1); $i >= 0; --$i) {
-			$k = array_keys($chars, $code{$i});
+			$k = array_keys($chars, $code[$i]);
 			$check += ($k[0] * $p);
 			++$p;
 			if ($p > 20) {
@@ -757,7 +757,7 @@ class ModelToolBarcode extends Model {
 		$check = 0;
 
 		for ($i = $len; $i >= 0; --$i) {
-			$k = array_keys($chars, $code{$i});
+			$k = array_keys($chars, $code[$i]);
 			$check += ($k[0] * $p);
 			++$p;
 			if ($p > 15) {
@@ -787,13 +787,13 @@ class ModelToolBarcode extends Model {
 		$sum = 0;
 
 		for ($i = 0; $i < $len; $i += 2) {
-			$sum += $code{$i};
+			$sum += $code[$i];
 		}
 
 		$sum *= 3;
 
 		for ($i = 1; $i < $len; $i += 2) {
-			$sum += ($code{$i});
+			$sum += ($code[$i]);
 		}
 
 		$r = $sum % 10;
@@ -839,7 +839,7 @@ class ModelToolBarcode extends Model {
 			$check = 0;
 
 			for ($i = ($clen - 1); $i >= 0; --$i) {
-				$check += (hexdec($code{$i}) * $p);
+				$check += (hexdec($code[$i]) * $p);
 				++$p;
 				if ($p > 7) {
 					$p = 2;
@@ -859,7 +859,7 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; ++$i) {
-			$digit = $code{$i};
+			$digit = $code[$i];
 
 			if (!isset($chr[$digit])) {
 				return false;
@@ -911,7 +911,7 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; ++$i) {
-			$digit = $code{$i};
+			$digit = $code[$i];
 
 			if (!isset($chr[$digit])) {
 				return false;
@@ -943,8 +943,8 @@ class ModelToolBarcode extends Model {
 		for ($i = 0; $i < $len; ++$i) {
 			$w += 1;
 
-			if (($i == ($len - 1)) || (($i < ($len - 1)) && ($seq{$i} != $seq{($i + 1)}))) {
-				if ($seq{$i} == '1') {
+			if (($i == ($len - 1)) || (($i < ($len - 1)) && ($seq[$i] != $seq[($i + 1)]))) {
+				if ($seq[$i] == '1') {
 					$t = true; // bar
 				} else {
 					$t = false; // space
@@ -1003,8 +1003,8 @@ class ModelToolBarcode extends Model {
 		$clen = strlen($code);
 
 		for ($i = 0; $i < $clen; $i = ($i + 2)) {
-			$char_bar = $code{$i};
-			$char_space = $code{$i + 1};
+			$char_bar = $code[$i];
+			$char_space = $code[$i + 1];
 
 			if ((!isset($chr[$char_bar])) || (!isset($chr[$char_space]))) {
 				return false;
@@ -1016,7 +1016,7 @@ class ModelToolBarcode extends Model {
 			$chrlen = strlen($chr[$char_bar]);
 
 			for ($s = 0; $s < $chrlen; $s++) {
-				$seq .= $chr[$char_bar]{$s} . $chr[$char_space]{$s};
+				$seq .= $chr[$char_bar][$s] . $chr[$char_space][$s];
 			}
 
 			$seqlen = strlen($seq);
@@ -1028,7 +1028,7 @@ class ModelToolBarcode extends Model {
 					$t = false; // space
 				}
 
-				$w = $seq{$j};
+				$w = $seq[$j];
 
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
@@ -1184,7 +1184,7 @@ class ModelToolBarcode extends Model {
 				$startid = 103;
 
 				for ($i = 0; $i < $len; ++$i) {
-					$char = $code{$i};
+					$char = $code[$i];
 					$char_id = ord($char);
 
 					if (($char_id >= 241) && ($char_id <= 244)) {
@@ -1201,7 +1201,7 @@ class ModelToolBarcode extends Model {
 				$startid = 104;
 
 				for ($i = 0; $i < $len; ++$i) {
-					$char = $code{$i};
+					$char = $code[$i];
 					$char_id = ord($char);
 
 					if (($char_id >= 241) && ($char_id <= 244)) {
@@ -1229,7 +1229,7 @@ class ModelToolBarcode extends Model {
 				}
 
 				for ($i = 0; $i < $len; $i += 2) {
-					$chrnum = $code{$i} . $code{$i + 1};
+					$chrnum = $code[$i] . $code[$i + 1];
 
 					if (preg_match('/([0-9]{2})/', $chrnum) > 0) {
 						$code_data[] = intval($chrnum);
@@ -1299,7 +1299,7 @@ class ModelToolBarcode extends Model {
 							}
 
 							for ($i = 0; $i < $seq[2]; ++$i) {
-								$char = $seq[1]{$i};
+								$char = $seq[1][$i];
 								$char_id = ord($char);
 
 								if (($char_id >= 241) && ($char_id <= 244)) {
@@ -1346,7 +1346,7 @@ class ModelToolBarcode extends Model {
 							}
 
 							for ($i = 0; $i < $seq[2]; ++$i) {
-								$char = $seq[1]{$i};
+								$char = $seq[1][$i];
 								$char_id = ord($char);
 
 								if (($char_id >= 241) && ($char_id <= 244)) {
@@ -1365,7 +1365,7 @@ class ModelToolBarcode extends Model {
 							}
 
 							for ($i = 0; $i < $seq[2]; $i += 2) {
-								$chrnum = $seq[1]{$i} . $seq[1]{$i + 1};
+								$chrnum = $seq[1][$i] . $seq[1][$i + 1];
 								$code_data[] = intval($chrnum);
 							}
 							break;
@@ -1405,7 +1405,7 @@ class ModelToolBarcode extends Model {
 					$t = false; // space
 				}
 
-				$w = $seq{$j};
+				$w = $seq[$j];
 
 				$bararray['bcode'][] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
@@ -1490,7 +1490,7 @@ class ModelToolBarcode extends Model {
 		$sum_a = 0;
 
 		for ($i = 1; $i < $data_len; $i += 2) {
-			$sum_a += $code{$i};
+			$sum_a += $code[$i];
 		}
 
 		if ($len > 12) {
@@ -1500,7 +1500,7 @@ class ModelToolBarcode extends Model {
 		$sum_b = 0;
 
 		for ($i = 0; $i < $data_len; $i += 2) {
-			$sum_b += ($code{$i});
+			$sum_b += ($code[$i]);
 		}
 
 		if ($len < 13) {
@@ -1516,7 +1516,7 @@ class ModelToolBarcode extends Model {
 		if ($code_len == $data_len) {
 			// Add check digit
 			$code .= $r;
-		} elseif ($r !== intval($code{$data_len})) {
+		} elseif ($r !== intval($code[$data_len])) {
 			// Wrong check digit
 			return false;
 		}
@@ -1645,7 +1645,7 @@ class ModelToolBarcode extends Model {
 			$p = $upce_parities[$code[1]][$r];
 
 			for ($i = 0; $i < 6; ++$i) {
-				$seq .= $codes[$p[$i]][$upce_code{$i}];
+				$seq .= $codes[$p[$i]][$upce_code[$i]];
 			}
 
 			$seq .= '010101'; // right guard bar
@@ -1657,21 +1657,21 @@ class ModelToolBarcode extends Model {
 
 			if ($len == 8) {
 				for ($i = 0; $i < $half_len; ++$i) {
-					$seq .= $codes['A'][$code{$i}];
+					$seq .= $codes['A'][$code[$i]];
 				}
 
 			} else {
 				$p = $parities[$code[0]];
 
 				for ($i = 1; $i < $half_len; ++$i) {
-					$seq .= $codes[$p[$i - 1]][$code{$i}];
+					$seq .= $codes[$p[$i - 1]][$code[$i]];
 				}
 			}
 
 			$seq .= '01010'; // center guard bar
 
 			for ($i = $half_len; $i < $len; ++$i) {
-				$seq .= $codes['C'][$code{$i}];
+				$seq .= $codes['C'][$code[$i]];
 			}
 
 			$seq .= '101'; // right guard bar
@@ -1684,8 +1684,8 @@ class ModelToolBarcode extends Model {
 		for ($i = 0; $i < $clen; ++$i) {
 			$w += 1;
 
-			if (($i == ($clen - 1)) || (($i < ($clen - 1)) && ($seq{$i} != $seq{($i + 1)}))) {
-				if ($seq{$i} == '1') {
+			if (($i == ($clen - 1)) || (($i < ($clen - 1)) && ($seq[$i] != $seq[($i + 1)]))) {
+				if ($seq[$i] == '1') {
 					$t = true; // bar
 				} else {
 					$t = false; // space
@@ -1781,7 +1781,7 @@ class ModelToolBarcode extends Model {
 
 		for ($i = 1; $i < $len; ++$i) {
 			$seq .= '01'; // separator
-			$seq .= $codes[$p[$i]][$code{$i}];
+			$seq .= $codes[$p[$i]][$code[$i]];
 		}
 
 		$bararray = array('code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array());
@@ -1840,7 +1840,7 @@ class ModelToolBarcode extends Model {
 		$sum = 0;
 
 		for ($i = 0; $i < $len; ++$i) {
-			$sum += intval($code{$i});
+			$sum += intval($code[$i]);
 		}
 
 		$chkd = ($sum % 10);
@@ -1861,7 +1861,7 @@ class ModelToolBarcode extends Model {
 
 		for ($i = 0; $i < $len; ++$i) {
 			for ($j = 0; $j < 5; ++$j) {
-				$h = $barlen[$code{$i}][$j];
+				$h = $barlen[$code[$i]][$j];
 
 				if ($h > 0) {
 					$p = floor(1 / $h);
@@ -1990,8 +1990,8 @@ class ModelToolBarcode extends Model {
 			$col = 0;
 
 			for ($i = 0; $i < $len; ++$i) {
-				$row += $checktable[$code{$i}][0];
-				$col += $checktable[$code{$i}][1];
+				$row += $checktable[$code[$i]][0];
+				$col += $checktable[$code[$i]][1];
 			}
 
 			$row %= 6;
@@ -2015,7 +2015,7 @@ class ModelToolBarcode extends Model {
 
 		for ($i = 0; $i < $len; ++$i) {
 			for ($j = 0; $j < 4; ++$j) {
-				switch ($barmode[$code{$i}][$j]) {
+				switch ($barmode[$code[$i]][$j]) {
 					case 1: {
 						$p = 0;
 						$h = 2;
@@ -2095,11 +2095,11 @@ class ModelToolBarcode extends Model {
 		$len = strlen($code);
 
 		for ($i = 0; $i < $len; ++$i) {
-			if (!isset($chr[$code{$i}])) {
+			if (!isset($chr[$code[$i]])) {
 				return false;
 			}
 
-			$seq = $chr[$code{$i}];
+			$seq = $chr[$code[$i]];
 
 			for ($j = 0; $j < 8; ++$j) {
 				if (($j % 2) == 0) {
@@ -2108,7 +2108,7 @@ class ModelToolBarcode extends Model {
 					$t = false; // space
 				}
 
-				$w = $seq{$j};
+				$w = $seq[$j];
 
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
@@ -2154,7 +2154,7 @@ class ModelToolBarcode extends Model {
 		$check = 0;
 
 		for ($i = ($len - 1); $i >= 0; --$i) {
-			$digit = $code{$i};
+			$digit = $code[$i];
 
 			if ($digit == '-') {
 				$dval = 10;
@@ -2184,7 +2184,7 @@ class ModelToolBarcode extends Model {
 			$check = 0;
 
 			for ($i = $len; $i >= 0; --$i) {
-				$digit = $code{$i};
+				$digit = $code[$i];
 
 				if ($digit == '-') {
 					$dval = 10;
@@ -2210,11 +2210,11 @@ class ModelToolBarcode extends Model {
 		$len += 3;
 
 		for ($i = 0; $i < $len; ++$i) {
-			if (!isset($chr[$code{$i}])) {
+			if (!isset($chr[$code[$i]])) {
 				return false;
 			}
 
-			$seq = $chr[$code{$i}];
+			$seq = $chr[$code[$i]];
 
 			for ($j = 0; $j < 6; ++$j) {
 				if (($j % 2) == 0) {
@@ -2223,7 +2223,7 @@ class ModelToolBarcode extends Model {
 					$t = false; // space
 				}
 
-				$w = $seq{$j};
+				$w = $seq[$j];
 
 				$bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
 				$bararray['maxw'] += $w;
@@ -2304,7 +2304,7 @@ class ModelToolBarcode extends Model {
 		$len = strlen($seq);
 
 		for ($i = 0; $i < $len; ++$i) {
-			switch ($seq{$i}) {
+			switch ($seq[$i]) {
 				case '1': {
 					$p = 1;
 					$h = 1;
@@ -2875,7 +2875,7 @@ class ModelToolBarcode extends Model {
 		$len = strlen($hex);
 
 		for ($pos = ($len - 1); $pos >= 0; --$pos) {
-			$dec = bcadd($dec, bcmul(hexdec($hex{$pos}), $bitval));
+			$dec = bcadd($dec, bcmul(hexdec($hex[$pos]), $bitval));
 
 			$bitval = bcmul($bitval, 16);
 		}

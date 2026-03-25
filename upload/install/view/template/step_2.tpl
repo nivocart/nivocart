@@ -17,8 +17,8 @@
         <tr>
           <td><?php echo $text_version; ?></td>
           <td><?php echo $php_version; ?></td>
-          <td>7.0+</td>
-          <td style="text-align:center;"><?php if ($php_version >= '7.0') { ?>
+          <td>8.0+</td>
+          <td style="text-align:center;"><?php if ($php_version >= '8.0') { ?>
             <img src="view/image/good.png" alt="Good" />
           <?php } else { ?>
             <img src="view/image/bad.png" alt="Bad" />

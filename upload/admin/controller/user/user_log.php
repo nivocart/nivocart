@@ -194,6 +194,13 @@ class ControllerUserUserLog extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
+		// Limit failsafe
+		if ($this->config->get('user_log_display') > 0) {
+			$user_log_display = $this->config->get('user_log_display');
+		} else {
+			$user_log_display = 1;
+		}
+
 		$url = '';
 
 		if (isset($this->request->get['page'])) {
@@ -203,7 +210,7 @@ class ControllerUserUserLog extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $entries_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('user_log_display');
+		$pagination->limit = $user_log_display;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('user/user_log', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 

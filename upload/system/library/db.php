@@ -1,8 +1,21 @@
 <?php
 class DB {
-	private $driver;
+	/**
+	 * @var object
+	 */
+	private object $driver;
 
-	public function __construct($driver, $hostname, $username, $password, $database, $port = null) {
+	/**
+	 * Constructor
+	 *
+	 * @param string $driver
+	 * @param string $hostname
+	 * @param string $username
+	 * @param string $password
+	 * @param string $database
+	 * @param int $port
+	 */
+	public function __construct(string $driver, string $hostname, string $username, string $password, string $database, int $port) {
 		$file = DIR_DATABASE . $driver . '.php';
 
 		if (file_exists($file)) {
@@ -16,23 +29,58 @@ class DB {
 		}
 	}
 
-	public function query($sql, $params = array()) {
+	/**
+	 * Query
+	 *
+	 * @param string $sql SQL statement to be executed
+	 *
+	 * @return mixed
+	 */
+	public function query(string $sql, array $params = []) {
 		return $this->driver->query($sql, $params);
 	}
 
-	public function escape($value) {
+	/**
+	 * Escape
+	 *
+	 * @param string $value Value to be protected against SQL injections
+	 *
+	 * @return string Returns escaped value
+	 */
+	public function escape(string $value): string {
 		return $this->driver->escape($value);
 	}
 
-	public function countAffected() {
+	/**
+	 * Count Affected
+	 *
+	 * Gets the total number of affected rows from the last query
+	 *
+	 * @return int returns the total number of affected rows
+	 */
+	public function countAffected(): int {
 		return $this->driver->countAffected();
 	}
 
-	public function getLastId() {
+	/**
+	 * Get Last Id
+	 *
+	 * Get the last ID gets the primary key that was returned after creating a row in a table.
+	 *
+	 * @return int Returns last ID
+	 */
+	public function getLastId(): int {
 		return $this->driver->getLastId();
 	}
 
-	public function connected() {
+	/**
+	 * Is Connected
+	 *
+	 * Checks if a DB connection is active.
+	 *
+	 * @return bool
+	 */
+	public function isConnected(): bool {
 		return $this->driver->isConnected();
 	}
 }

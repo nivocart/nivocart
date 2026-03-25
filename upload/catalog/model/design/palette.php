@@ -1,13 +1,13 @@
 <?php
 class ModelDesignPalette extends Model {
 
-	public function getPalette($palette_id) {
+	public function getPalette(int $palette_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "palette WHERE palette_id = '" . (int)$palette_id . "'");
 
 		return $query->row;
 	}
 
-	public function getPalettes($data = array()) {
+	public function getPalettes(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "palette";
 
 		$sort_data = array('name');
@@ -41,7 +41,7 @@ class ModelDesignPalette extends Model {
 		return $query->rows;
 	}
 
-	public function getPaletteIds($data = array()) {
+	public function getPaletteIds(array $data = []): array {
 		$palette_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette");
@@ -59,7 +59,7 @@ class ModelDesignPalette extends Model {
 		return $query->rows;
 	}
 
-	public function getProductColors($product_id) {
+	public function getProductColors(int $product_id): array {
 		$product_color_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_color WHERE product_id = '" . (int)$product_id . "'");
@@ -120,7 +120,7 @@ class ModelDesignPalette extends Model {
 		return $colorcloud;
 	}
 
-	public function getPaletteColorsByPaletteId($palette_id) {
+	public function getPaletteColorsByPaletteId(int $palette_id): array {
 		$colors_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette p LEFT JOIN " . DB_PREFIX . "palette_color pc ON (p.palette_id = pc.palette_id) LEFT JOIN " . DB_PREFIX . "palette_color_description pcd ON (p.palette_id = pcd.palette_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pcd.palette_id = '" . (int)$palette_id . "' GROUP BY pcd.palette_color_id ORDER BY p.palette_id, pcd.title ASC");
@@ -137,7 +137,7 @@ class ModelDesignPalette extends Model {
 		return $colors_data;
 	}
 
-	public function getPaletteColorsByColorId($palette_color_id) {
+	public function getPaletteColorsByColorId(int $palette_color_id): array {
 		$palette_colors_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette_color pc LEFT JOIN " . DB_PREFIX . "palette_color_description pcd ON (pc.palette_color_id = pcd.palette_color_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pc.palette_color_id = '" . (int)$palette_color_id . "' GROUP BY pc.palette_color_id ORDER BY pcd.title ASC");
@@ -172,7 +172,7 @@ class ModelDesignPalette extends Model {
 		return $total;
 	}
 
-	public function getColors() {
+	public function getColors(): array {
 		$skins = array();
 
 		$skins[] = array('skin' => 'white','color' => '#FFFFFF','title' => 'White');

@@ -115,7 +115,9 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 
 		$this->data['payment_images'] = array();
 
-		$image_results = $this->model_design_payment->getPaymentImages(0);
+		$payment_images_array = array();
+
+		$image_results = $this->model_design_payment->getPaymentImages($payment_images_array);
 
 		if ($image_results) {
 			foreach ($image_results as $image_result) {
@@ -156,7 +158,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 			}
 		}
 
-		$this->data['paypal_fee_fee'] = $this->currency->format($paypal_fee);
+		$this->data['paypal_fee_fee'] = $this->currency->format($paypal_fee, $this->config->get('config_currency'));
 
 		// Language
 		$this->data['text_checkout_payment_method'] = $this->language->get('text_checkout_payment_method');

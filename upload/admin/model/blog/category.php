@@ -1,7 +1,7 @@
 <?php
 class ModelBlogCategory extends Model {
 
-	public function addCategory($data) {
+	public function addCategory(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category` SET parent_id = '" . (int)$data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', `column` = '" . (isset($data['column']) ? (int)$data['column'] : 0) . "', blog_category_column = '" . (int)$data['blog_category_column'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$blog_category_id = $this->db->getLastId();
@@ -38,7 +38,7 @@ class ModelBlogCategory extends Model {
 		$this->cache->delete('blog_category');
 	}
 
-	public function editCategory($blog_category_id, $data) {
+	public function editCategory(int $blog_category_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "blog_category` SET parent_id = '" . (int)$data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', `column` = '" . (isset($data['column']) ? (int)$data['column'] : 0) . "', blog_category_column = '" . (int)$data['blog_category_column'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 
 		if (isset($data['image'])) {
@@ -78,7 +78,7 @@ class ModelBlogCategory extends Model {
 		$this->cache->delete('blog_category');
 	}
 
-	public function deleteCategory($blog_category_id) {
+	public function deleteCategory(int $blog_category_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_category` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_category_description` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_category_to_store` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
@@ -95,19 +95,19 @@ class ModelBlogCategory extends Model {
 		$this->cache->delete('blog_category');
 	}
 
-	public function getCategory($blog_category_id) {
+	public function getCategory(int $blog_category_id) {
 		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_category_id=" . (int)$blog_category_id . "') AS keyword FROM `" . DB_PREFIX . "blog_category` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 
 		return $query->row;
 	}
 
-	public function getTotalCategories($data = array()) {
+	public function getTotalCategories(array $data = []): int {
 		$query = $this->db->query("SELECT COUNT(DISTINCT(bc.blog_category_id)) AS `total` FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bcd.language_id='" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getCategories($parent_id = 0) {
+	public function getCategories($parent_id = 0): array {
 		$category_data = array();
 
 		$sql = "SELECT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
@@ -158,7 +158,7 @@ class ModelBlogCategory extends Model {
 		return $category_data;
 	}
 
-	public function getPath($blog_category_id) {
+	public function getPath(int $blog_category_id) {
 		$query = $this->db->query("SELECT bcd.name AS name, bc.parent_id AS parent_id FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY bc.sort_order, bcd.name ASC");
 
 		if ($query->row['parent_id']) {
@@ -168,7 +168,7 @@ class ModelBlogCategory extends Model {
 		}
 	}
 
-	public function getCategoryDescriptions($blog_category_id) {
+	public function getCategoryDescriptions(int $blog_category_id): array {
 		$category_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category_description` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
@@ -185,7 +185,7 @@ class ModelBlogCategory extends Model {
 		return $category_description_data;
 	}
 
-	public function getCategoryStores($blog_category_id) {
+	public function getCategoryStores(int $blog_category_id): array {
 		$category_store_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category_to_store` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
@@ -197,7 +197,7 @@ class ModelBlogCategory extends Model {
 		return $category_store_data;
 	}
 
-	public function getCategoryLayouts($blog_category_id) {
+	public function getCategoryLayouts(int $blog_category_id): array {
 		$category_layout_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category_to_layout` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
@@ -215,7 +215,7 @@ class ModelBlogCategory extends Model {
 		return $query->row['layout_id'];
 	}
 
-	public function getTotalArticleCategoryWise($blog_category_id) {
+	public function getTotalArticleCategoryWise(int $blog_category_id): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_category` WHERE blog_category_id='" . (int)$blog_category_id . "'");
 
 		return $query->num_rows;

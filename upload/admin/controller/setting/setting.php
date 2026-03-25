@@ -109,7 +109,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_email_noreply'] = $this->language->get('entry_email_noreply');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_company_id'] = $this->language->get('entry_company_id');
 		$this->data['entry_company_tax_id'] = $this->language->get('entry_company_tax_id');
 		$this->data['entry_bank_name'] = $this->language->get('entry_bank_name');
@@ -183,7 +182,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_customer_group_display'] = $this->language->get('entry_customer_group_display');
 		$this->data['entry_customer_price'] = $this->language->get('entry_customer_price');
 		$this->data['entry_customer_redirect'] = $this->language->get('entry_customer_redirect');
-		$this->data['entry_customer_fax'] = $this->language->get('entry_customer_fax');
 		$this->data['entry_customer_gender'] = $this->language->get('entry_customer_gender');
 		$this->data['entry_customer_dob'] = $this->language->get('entry_customer_dob');
 		$this->data['entry_picklist_status'] = $this->language->get('entry_picklist_status');
@@ -196,7 +194,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_login_attempts'] = $this->language->get('entry_login_attempts');
 		$this->data['entry_affiliate'] = $this->language->get('entry_affiliate');
 		$this->data['entry_affiliate_mail'] = $this->language->get('entry_affiliate_mail');
-		$this->data['entry_affiliate_fax'] = $this->language->get('entry_affiliate_fax');
 		$this->data['entry_affiliate_activity'] = $this->language->get('entry_affiliate_activity');
 		$this->data['entry_affiliate_disable'] = $this->language->get('entry_affiliate_disable');
 		$this->data['entry_return'] = $this->language->get('entry_return');
@@ -762,12 +759,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_telephone'] = $this->config->get('config_telephone');
 		}
 
-		if (isset($this->request->post['config_fax'])) {
-			$this->data['config_fax'] = $this->request->post['config_fax'];
-		} else {
-			$this->data['config_fax'] = $this->config->get('config_fax');
-		}
-
 		if (isset($this->request->post['config_company_id'])) {
 			$this->data['config_company_id'] = $this->request->post['config_company_id'];
 		} else {
@@ -1301,12 +1292,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_customer_redirect'] = $this->config->get('config_customer_redirect');
 		}
 
-		if (isset($this->request->post['config_customer_fax'])) {
-			$this->data['config_customer_fax'] = $this->request->post['config_customer_fax'];
-		} else {
-			$this->data['config_customer_fax'] = $this->config->get('config_customer_fax');
-		}
-
 		if (isset($this->request->post['config_customer_gender'])) {
 			$this->data['config_customer_gender'] = $this->request->post['config_customer_gender'];
 		} else {
@@ -1389,14 +1374,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_affiliate_mail'] = '';
 		}
 
-		if (isset($this->request->post['config_affiliate_fax'])) {
-			$this->data['config_affiliate_fax'] = $this->request->post['config_affiliate_fax'];
-		} elseif ($this->config->get('config_affiliate_fax')) {
-			$this->data['config_affiliate_fax'] = $this->config->get('config_affiliate_fax');
-		} else {
-			$this->data['config_affiliate_fax'] = '';
-		}
-
 		if (isset($this->request->post['config_affiliate_activity'])) {
 			$this->data['config_affiliate_activity'] = $this->request->post['config_affiliate_activity'];
 		} else {
@@ -1466,7 +1443,9 @@ class ControllerSettingSetting extends Controller {
 		// Preference
 		$this->load->model('design/administration');
 
-		$this->data['admin_stylesheets'] = $this->model_design_administration->getAdministrations(0);
+		$admin_data = array();
+
+		$this->data['admin_stylesheets'] = $this->model_design_administration->getAdministrations($admin_data);
 
 		if (isset($this->request->post['config_admin_stylesheet'])) {
 			$this->data['config_admin_stylesheet'] = $this->request->post['config_admin_stylesheet'];
@@ -1542,7 +1521,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('user/user_group');
 
-		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups(0);
+		$user_groups = array();
+
+		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups($user_groups);
 
 		if (isset($this->request->post['config_user_group_display'])) {
 			$this->data['config_user_group_display'] = $this->request->post['config_user_group_display'];
@@ -2322,31 +2303,31 @@ class ControllerSettingSetting extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (!$this->request->post['config_name'] || (utf8_strlen($this->request->post['config_name']) < 3) || (utf8_strlen($this->request->post['config_name']) > 32)) {
+		if (!$this->request->post['config_name'] || (mb_strlen($this->request->post['config_name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_name'], 'UTF-8') > 32)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if ((utf8_strlen($this->request->post['config_owner']) < 3) || (utf8_strlen($this->request->post['config_owner']) > 64)) {
+		if ((mb_strlen($this->request->post['config_owner'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_owner'], 'UTF-8') > 64)) {
 			$this->error['owner'] = $this->language->get('error_owner');
 		}
 
-		if ((utf8_strlen($this->request->post['config_address']) < 3) || (utf8_strlen($this->request->post['config_address']) > 256)) {
+		if ((mb_strlen($this->request->post['config_address'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_address'], 'UTF-8') > 256)) {
 			$this->error['address'] = $this->language->get('error_address');
 		}
 
-		if ((utf8_strlen($this->request->post['config_email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email'])) {
+		if ((mb_strlen($this->request->post['config_email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
-		if ((utf8_strlen($this->request->post['config_email_noreply']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email_noreply'])) {
+		if ((mb_strlen($this->request->post['config_email_noreply'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email_noreply'])) {
 			$this->error['email_noreply'] = $this->language->get('error_email_noreply');
 		}
 
-		if ((utf8_strlen($this->request->post['config_telephone']) < 3) || (utf8_strlen($this->request->post['config_telephone']) > 32)) {
+		if ((mb_strlen($this->request->post['config_telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
-		if (!$this->request->post['config_title'] || (utf8_strlen($this->request->post['config_title']) < 3) || (utf8_strlen($this->request->post['config_title']) > 32)) {
+		if (!$this->request->post['config_title'] || (mb_strlen($this->request->post['config_title'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_title'], 'UTF-8') > 32)) {
 			$this->error['title'] = $this->language->get('error_title');
 		}
 
@@ -2474,7 +2455,7 @@ class ControllerSettingSetting extends Controller {
 			$this->model_tool_system->setupSeo();
 		}
 
-		if ((utf8_strlen($this->request->post['config_encryption']) < 3) || (utf8_strlen($this->request->post['config_encryption']) > 32)) {
+		if ((mb_strlen($this->request->post['config_encryption'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_encryption'], 'UTF-8') > 32)) {
 			$this->error['encryption'] = $this->language->get('error_encryption');
 		}
 

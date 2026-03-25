@@ -1,35 +1,90 @@
 <?php
 abstract class Controller {
+	/**
+	 * @var Registry
+	 */
 	protected $registry;
-	protected $id;
-	protected $layout;
-	protected $template;
-	protected $children = array();
-	protected $data = array();
-	protected $output;
 
+	/**
+	 * @var int
+	 */
+	protected int $id = 0;
+
+	/**
+	 * @var string
+	 */
+	protected string $layout = '';
+
+	/**
+	 * @var string
+	 */
+	protected string $template = '';
+
+	/**
+	 * @var array<string, string>
+	 */
+	protected array $children = [];
+
+	/**
+	 * @var array<string, string>
+	 */
+	protected array $data = [];
+
+	/**
+	 * @var string
+	 */
+	protected string $output = '';
+
+	/**
+	 * Constructor
+	 */
 	public function __construct($registry) {
 		$this->registry = $registry;
 	}
 
-	public function __get($key) {
-		return $this->registry->get($key);
+	/**
+	 * __get
+	 *
+	 * @param string $key
+	 *
+	 * @return object
+	 */
+	public function __get(string $key): object {
+		if ($this->registry->has($key)) {
+			return $this->registry->get($key);
+		} else {
+			throw new \Exception('Error: Could not call registry key ' . $key . '!');
+		}
 	}
 
-	public function __set($key, $value) {
+	/**
+	 * __set
+	 *
+	 * @param string $key
+	 * @param object $value
+	 *
+	 * @return void
+	 */
+	public function __set(string $key, object $value): void {
 		$this->registry->set($key, $value);
 	}
 
-	protected function forward($route, $args = array()) {
+	/**
+	 * Forward
+	 */
+	protected function forward(string $route, array $args = []) {
 		return new Action($route, $args);
 	}
 
-	protected function redirect($url, $status = 302) {
+	/**
+	 * Redirect
+	 */
+	protected function redirect(string $url, int $status = 302) {
 		header('Location: ' . str_replace(array('&amp;', "\n", "\r"), array('&', '', ''), $url), true, $status);
-		exit();
+		exit(); 
 	}
 
-	protected function getChild($child, $args = array()) {
+	protected function getChild($child, array $args = []) {
 		$action = new Action($child, $args);
 
 		if (file_exists($action->getFile())) {
@@ -43,11 +98,11 @@ abstract class Controller {
 
 		} else {
 			trigger_error('Error: Could not load controller ' . $child . '!');
-			exit();
+			exit(); 
 		}
 	}
 
-	protected function hasAction($child, $args = array()) {
+	protected function hasAction($child, array $args = []) {
 		$action = new Action($child, $args);
 
 		if (file_exists($action->getFile())) {
@@ -67,6 +122,9 @@ abstract class Controller {
 		}
 	}
 
+	/**
+	 * Render
+	 */
 	protected function render() {
 		foreach ($this->children as $child) {
 			$this->data[basename($child)] = $this->getChild($child);
@@ -87,7 +145,7 @@ abstract class Controller {
 
 		} else {
 			trigger_error('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
-			exit();
+			exit(); 
 		}
 	}
 }

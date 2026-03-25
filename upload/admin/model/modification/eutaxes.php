@@ -1,7 +1,7 @@
 <?php
 class ModelModificationEutaxes extends Model {
 
-	public function addEUCountries($data) {
+	public function addEUCountries(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "eucountry SET `code` = '" . $this->db->escape($data['code']) . "', `rate` = '" . $this->db->escape($data['rate']) . "', status = '" . (int)$data['status'] . "'");
 
 		$eucountry_id = $this->db->getLastId();
@@ -23,7 +23,7 @@ class ModelModificationEutaxes extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function editEUCountries($eucountry_id, $data) {
+	public function editEUCountries(int $eucountry_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "eucountry SET `code` = '" . $this->db->escape($data['code']) . "', `rate` = '" . $this->db->escape($data['rate']) . "', status = '" . (int)$data['status'] . "' WHERE eucountry_id = '" . (int)$eucountry_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "eucountry_description WHERE eucountry_id = '" . (int)$eucountry_id . "'");
@@ -44,7 +44,7 @@ class ModelModificationEutaxes extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function deleteEUCountries($eucountry_id) {
+	public function deleteEUCountries(int $eucountry_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "eucountry WHERE eucountry_id = '" . (int)$eucountry_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "eucountry_description WHERE eucountry_id = '" . (int)$eucountry_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "eucountry_to_store WHERE eucountry_id = '" . (int)$eucountry_id . "'");
@@ -53,13 +53,13 @@ class ModelModificationEutaxes extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function getEUCountryStory($eucountry_id) {
+	public function getEUCountryStory(int $eucountry_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "eucountry` ec LEFT JOIN " . DB_PREFIX . "eucountry_description ecd ON (ecd.eucountry_id = ec.eucountry_id) WHERE ec.eucountry_id = '" . (int)$eucountry_id . "' AND ecd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
-	public function getEUCountries($data = array()) {
+	public function getEUCountries(array $data = []) {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "eucountry` ec LEFT JOIN " . DB_PREFIX . "eucountry_description ecd ON (ecd.eucountry_id = ec.eucountry_id) WHERE ecd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
@@ -113,7 +113,7 @@ class ModelModificationEutaxes extends Model {
 		}
 	}
 
-	public function getEUCountryDescriptions($eucountry_id) {
+	public function getEUCountryDescriptions(int $eucountry_id): array {
 		$eucountry_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "eucountry_description` WHERE eucountry_id = '" . (int)$eucountry_id . "'");
@@ -128,7 +128,7 @@ class ModelModificationEutaxes extends Model {
 		return $eucountry_description_data;
 	}
 
-	public function getEUCountryStores($eucountry_id) {
+	public function getEUCountryStores(int $eucountry_id): array {
 		$eucountry_store_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "eucountry_to_store` WHERE eucountry_id = '" . (int)$eucountry_id . "'");
@@ -140,7 +140,7 @@ class ModelModificationEutaxes extends Model {
 		return $eucountry_store_data;
 	}
 
-	public function getTotalEUCountries() {
+	public function getTotalEUCountries(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "eucountry`");
 
 		return $query->row['total'];
@@ -163,7 +163,9 @@ class ModelModificationEutaxes extends Model {
 	public function getEUGeoZoneId() {
 		$this->load->model('localisation/geo_zone');
 
-		$geo_zones = $this->model_localisation_geo_zone->getGeoZones(0);
+		$zones = array();
+
+		$geo_zones = $this->model_localisation_geo_zone->getGeoZones($zones);
 
 		foreach ($geo_zones as $geo_zone) {
 			$geo_zone_name[] = $geo_zone['name'];
@@ -184,7 +186,9 @@ class ModelModificationEutaxes extends Model {
 	public function getEUTaxRateId() {
 		$this->load->model('localisation/tax_rate');
 
-		$tax_rates = $this->model_localisation_tax_rate->getTaxRates(0);
+		$rates = array();
+
+		$tax_rates = $this->model_localisation_tax_rate->getTaxRates($rates);
 
 		foreach ($tax_rates as $tax_rate) {
 			$tax_rate_name[] = $tax_rate['name'];
@@ -206,7 +210,9 @@ class ModelModificationEutaxes extends Model {
 	public function addEUGeoZone() {
 		$this->load->model('localisation/geo_zone');
 
-		$geo_zones = $this->model_localisation_geo_zone->getGeoZones(0);
+		$zones = array();
+
+		$geo_zones = $this->model_localisation_geo_zone->getGeoZones($zones);
 
 		foreach ($geo_zones as $geo_zone) {
 			$geo_zone_name[] = $geo_zone['name'];
@@ -234,7 +240,9 @@ class ModelModificationEutaxes extends Model {
 	public function addEUTaxClass() {
 		$this->load->model('localisation/tax_class');
 
-		$tax_classes = $this->model_localisation_tax_class->getTaxClasses(0);
+		$classes = array();
+
+		$tax_classes = $this->model_localisation_tax_class->getTaxClasses($classes);
 
 		foreach ($tax_classes as $tax_class) {
 			$tax_class_title[] = $tax_class['title'];
@@ -257,7 +265,9 @@ class ModelModificationEutaxes extends Model {
 	public function addEUTaxRate() {
 		$this->load->model('localisation/tax_rate');
 
-		$tax_rates = $this->model_localisation_tax_rate->getTaxRates(0);
+		$rates = array();
+
+		$tax_rates = $this->model_localisation_tax_rate->getTaxRates($rates);
 
 		foreach ($tax_rates as $tax_rate) {
 			$tax_rate_name[] = $tax_rate['name'];

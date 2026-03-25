@@ -1,19 +1,19 @@
 <?php
 class ModelCatalogNews extends Model {
 
-	public function updateViewed($news_id) {
+	public function updateViewed(int $news_id): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "news` SET viewed = (viewed + 1) WHERE news_id = '" . (int)$news_id . "'");
 
 		$this->cache->delete('news_all');
 	}
 
-	public function getNewsStory($news_id) {
+	public function getNewsStory(int $news_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n.news_id = n2s.news_id) WHERE n.news_id = '" . (int)$news_id . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'");
 
 		return $query->row;
 	}
 
-	public function getNews($data = array()) {
+	public function getNews(array $data = []): array {
 		$sql = "SELECT *, nd.title AS title FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (nd.news_id = n.news_id) LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n2s.news_id = n.news_id) WHERE n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.status = '1'";
 
 		$sort_data = array(
@@ -53,7 +53,7 @@ class ModelCatalogNews extends Model {
 		return $query->rows;
 	}
 
-	public function getNewsShort($limit) {
+	public function getNewsShort(int $limit) {
 		$news_data = $this->cache->get('news_short.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$limit);
 
 		if (!$news_data) {
@@ -89,21 +89,21 @@ class ModelCatalogNews extends Model {
 		return $news_data;
 	}
 
-	public function getTotalNews() {
+	public function getTotalNews(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n.news_id = n2s.news_id) WHERE n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'");
 
 		return $query->row['total'];
 	}
 
 	// Related
-	public function getNewsProductRelated($news_id) {
+	public function getNewsProductRelated(int $news_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_product_related` WHERE news_id = '" . (int)$news_id . "'");
 
 		return $query->rows;
 	}
 
 	// Download
-	public function getDownloads() {
+	public function getDownloads(): array {
 		$news_download_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_download`");
@@ -120,7 +120,7 @@ class ModelCatalogNews extends Model {
 		return $news_download_data;
 	}
 
-	public function getNewsDownloads($news_id) {
+	public function getNewsDownloads(int $news_id): array {
 		$news_downloads_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_to_download` WHERE news_id = '" . (int)$news_id . "'");
@@ -132,7 +132,7 @@ class ModelCatalogNews extends Model {
 		return $news_downloads_data;
 	}
 
-	public function getNewsDownloadDescription($news_download_id) {
+	public function getNewsDownloadDescription(int $news_download_id): array {
 		$news_download_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_download_description` WHERE news_download_id = '" . (int)$news_download_id . "'");
@@ -144,19 +144,19 @@ class ModelCatalogNews extends Model {
 		return $news_download_description_data;
 	}
 
-	public function getDownloadByDownloadId($news_download_id) {
+	public function getDownloadByDownloadId(int $news_download_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_download` WHERE news_download_id = '" . (int)$news_download_id . "'");
 
 		return $query->row;
 	}
 
-	public function getTotalDownloads() {
+	public function getTotalDownloads(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news_download`");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalNewsDownloads() {
+	public function getTotalNewsDownloads(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news_to_download`");
 
 		return $query->row['total'];

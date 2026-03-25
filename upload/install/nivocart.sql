@@ -29,7 +29,7 @@ CREATE TABLE `nc_address` (
   `zone_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`address_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -45,7 +45,7 @@ CREATE TABLE `nc_administration` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`administration_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_administration`
@@ -68,7 +68,6 @@ CREATE TABLE `nc_affiliate` (
   `lastname` varchar(32) NOT NULL,
   `email` varchar(96) NOT NULL,
   `telephone` varchar(32) NOT NULL,
-  `fax` varchar(32) NOT NULL,
   `password` varchar(40) NOT NULL,
   `salt` varchar(9) NOT NULL,
   `company` varchar(32) NOT NULL,
@@ -95,7 +94,7 @@ CREATE TABLE `nc_affiliate` (
   `approved` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`affiliate_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -112,7 +111,7 @@ CREATE TABLE `nc_affiliate_activity` (
   `ip` varchar(40) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`affiliate_activity_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -131,7 +130,7 @@ CREATE TABLE `nc_affiliate_login` (
   PRIMARY KEY (`affiliate_login_id`),
   KEY `email` (`email`),
   KEY `ip` (`ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -148,7 +147,7 @@ CREATE TABLE `nc_affiliate_product` (
   `code` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`affiliate_product_id`,`affiliate_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -165,7 +164,7 @@ CREATE TABLE `nc_affiliate_transaction` (
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`affiliate_transaction_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -180,7 +179,7 @@ CREATE TABLE `nc_api_key` (
   `code` varchar(128) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`api_key_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -194,7 +193,7 @@ CREATE TABLE `nc_attribute` (
   `attribute_group_id` int(11) NOT NULL,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`attribute_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_attribute`
@@ -219,7 +218,7 @@ CREATE TABLE `nc_attribute_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`attribute_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_attribute_description`
@@ -243,7 +242,7 @@ CREATE TABLE `nc_attribute_group` (
   `attribute_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`attribute_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_attribute_group`
@@ -266,7 +265,7 @@ CREATE TABLE `nc_attribute_group_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`attribute_group_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 --
@@ -290,7 +289,7 @@ CREATE TABLE `nc_banner` (
   `name` varchar(64) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`banner_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_banner`
@@ -316,7 +315,7 @@ CREATE TABLE `nc_banner_image` (
   `sort_order` int(3) NOT NULL,
   `clicked` int(11) NOT NULL,
   PRIMARY KEY (`banner_image_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_banner_image`
@@ -347,7 +346,7 @@ CREATE TABLE `nc_banner_image_description` (
   `banner_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL,
   PRIMARY KEY (`banner_image_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_banner_image_description`
@@ -377,7 +376,7 @@ CREATE TABLE `nc_block_ip` (
   `from_ip` varchar(32) NOT NULL,
   `to_ip` varchar(32) NOT NULL,
   PRIMARY KEY (`block_ip_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -398,7 +397,7 @@ CREATE TABLE `nc_category` (
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`category_id`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_category`
@@ -429,7 +428,7 @@ CREATE TABLE `nc_category_description` (
   `meta_keyword` varchar(255) NOT NULL,
   PRIMARY KEY (`category_id`,`language_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_category_description`
@@ -455,7 +454,7 @@ CREATE TABLE `nc_category_filter` (
   `category_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`filter_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -469,7 +468,7 @@ CREATE TABLE `nc_category_path` (
   `path_id` int(11) NOT NULL,
   `level` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`path_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_category_path`
@@ -499,7 +498,7 @@ CREATE TABLE `nc_category_to_layout` (
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -512,7 +511,7 @@ CREATE TABLE `nc_category_to_store` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`category_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_category_to_store`
@@ -540,7 +539,7 @@ CREATE TABLE `nc_connection` (
   `backend` tinyint(1) NOT NULL,
   `frontend` tinyint(1) NOT NULL,
   PRIMARY KEY (`connection_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -556,7 +555,7 @@ CREATE TABLE `nc_connection_route` (
   `title` varchar(64) NOT NULL,
   `route` varchar(255) NOT NULL,
   PRIMARY KEY (`connection_route_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -573,7 +572,7 @@ CREATE TABLE `nc_country` (
   `postcode_required` tinyint(1) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`country_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_country`
@@ -852,7 +851,7 @@ CREATE TABLE `nc_country_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`country_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_country_description`
@@ -1142,7 +1141,7 @@ CREATE TABLE `nc_coupon` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`coupon_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_coupon`
@@ -1164,7 +1163,7 @@ CREATE TABLE `nc_coupon_category` (
   `coupon_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`coupon_id`,`category_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1181,7 +1180,7 @@ CREATE TABLE `nc_coupon_history` (
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`coupon_history_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1195,7 +1194,7 @@ CREATE TABLE `nc_coupon_product` (
   `coupon_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   PRIMARY KEY (`coupon_product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1215,7 +1214,7 @@ CREATE TABLE `nc_currency` (
   `status` tinyint(1) NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`currency_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_currency`
@@ -1240,7 +1239,6 @@ CREATE TABLE `nc_customer` (
   `lastname` varchar(32) NOT NULL,
   `email` varchar(96) NOT NULL,
   `telephone` varchar(32) NOT NULL,
-  `fax` varchar(32) NOT NULL,
   `gender` varchar(32) NOT NULL,
   `date_of_birth` date NOT NULL,
   `password` varchar(40) NOT NULL,
@@ -1256,7 +1254,7 @@ CREATE TABLE `nc_customer` (
   `token` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1270,7 +1268,7 @@ CREATE TABLE `nc_customer_ban_ip` (
   `ip` varchar(32) NOT NULL,
   PRIMARY KEY (`customer_ban_ip_id`),
   KEY `ip` (`ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1290,7 +1288,7 @@ CREATE TABLE `nc_customer_deleted` (
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_deleted_id`),
   KEY `customer_id` (`customer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1308,7 +1306,7 @@ CREATE TABLE `nc_customer_group` (
   `tax_id_required` int(1) NOT NULL,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`customer_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_customer_group`
@@ -1330,7 +1328,7 @@ CREATE TABLE `nc_customer_group_description` (
   `name` varchar(32) NOT NULL,
   `description` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`customer_group_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_customer_group_description`
@@ -1351,7 +1349,7 @@ CREATE TABLE `nc_customer_group_image` (
   `customer_group_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL,
   PRIMARY KEY (`customer_group_image_id`,`customer_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1366,7 +1364,7 @@ CREATE TABLE `nc_customer_history` (
   `comment` text CHARACTER SET utf8 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_history_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1382,7 +1380,7 @@ CREATE TABLE `nc_customer_ip` (
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_ip_id`),
   KEY `ip` (`ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1399,7 +1397,7 @@ CREATE TABLE `nc_customer_online` (
   `user_agent` text NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1416,7 +1414,7 @@ CREATE TABLE `nc_customer_reward` (
   `points` int(8) NOT NULL DEFAULT '0',
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_reward_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1433,7 +1431,7 @@ CREATE TABLE `nc_customer_transaction` (
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_transaction_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1447,7 +1445,7 @@ CREATE TABLE `nc_customer_wishlist` (
   `product_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_id`,`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1463,7 +1461,7 @@ CREATE TABLE `nc_download` (
   `remaining` int(11) NOT NULL DEFAULT '0',
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`download_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1477,7 +1475,7 @@ CREATE TABLE `nc_download_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`download_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1492,7 +1490,7 @@ CREATE TABLE `nc_eucountry` (
   `rate` decimal(15,4) NOT NULL DEFAULT '0.0000',
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`eucountry_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_eucountry`
@@ -1541,7 +1539,7 @@ CREATE TABLE `nc_eucountry_description` (
   `eucountry` varchar(128) NOT NULL,
   `description` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`eucountry_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_eucountry_description`
@@ -1588,7 +1586,7 @@ CREATE TABLE `nc_eucountry_to_store` (
   `eucountry_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`eucountry_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_eucountry_to_store`
@@ -1636,7 +1634,7 @@ CREATE TABLE `nc_extension` (
   `type` varchar(32) NOT NULL,
   `code` varchar(32) NOT NULL,
   PRIMARY KEY (`extension_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_extension`
@@ -1679,7 +1677,7 @@ CREATE TABLE `nc_field` (
   `sort_order` int(3) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1694,7 +1692,7 @@ CREATE TABLE `nc_field_description` (
   `title` varchar(64) NOT NULL,
   `description` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`field_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1708,7 +1706,7 @@ CREATE TABLE `nc_filter` (
   `filter_group_id` int(11) NOT NULL,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`filter_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1723,7 +1721,7 @@ CREATE TABLE `nc_filter_description` (
   `filter_group_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`filter_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1736,7 +1734,7 @@ CREATE TABLE `nc_filter_group` (
   `filter_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`filter_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1750,7 +1748,7 @@ CREATE TABLE `nc_filter_group_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`filter_group_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1764,7 +1762,7 @@ CREATE TABLE `nc_footer` (
   `position` tinyint(1) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`footer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_footer`
@@ -1788,7 +1786,7 @@ CREATE TABLE `nc_footer_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`footer_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_footer_description`
@@ -1814,7 +1812,7 @@ CREATE TABLE `nc_footer_route` (
   `external_link` tinyint(1) NOT NULL,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`footer_route_id`,`footer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_footer_route`
@@ -1848,7 +1846,7 @@ CREATE TABLE `nc_footer_route_description` (
   `footer_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL,
   PRIMARY KEY (`footer_route_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_footer_route_description`
@@ -1880,7 +1878,7 @@ CREATE TABLE `nc_footer_to_store` (
   `footer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`footer_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_footer_to_store`
@@ -1906,7 +1904,7 @@ CREATE TABLE `nc_geo_zone` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`geo_zone_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_geo_zone`
@@ -1930,7 +1928,7 @@ CREATE TABLE `nc_information` (
   `sort_order` int(3) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`information_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_information`
@@ -1957,7 +1955,7 @@ CREATE TABLE `nc_information_description` (
   `meta_keyword` varchar(255) NOT NULL,
   `description` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`information_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_information_description`
@@ -1981,7 +1979,7 @@ CREATE TABLE `nc_information_to_layout` (
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
   PRIMARY KEY (`information_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1994,7 +1992,7 @@ CREATE TABLE `nc_information_to_store` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`information_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_information_to_store`
@@ -2025,7 +2023,7 @@ CREATE TABLE `nc_language` (
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`language_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_language`
@@ -2045,7 +2043,7 @@ CREATE TABLE `nc_layout` (
   `layout_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`layout_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_layout`
@@ -2079,7 +2077,7 @@ CREATE TABLE `nc_layout_route` (
   `store_id` int(11) NOT NULL,
   `route` varchar(255) NOT NULL,
   PRIMARY KEY (`layout_route_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_layout_route`
@@ -2111,7 +2109,7 @@ CREATE TABLE `nc_length_class` (
   `length_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `value` decimal(15,8) NOT NULL,
   PRIMARY KEY (`length_class_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_length_class`
@@ -2135,7 +2133,7 @@ CREATE TABLE `nc_length_class_description` (
   `title` varchar(32) NOT NULL,
   `unit` varchar(4) NOT NULL,
   PRIMARY KEY (`length_class_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_length_class_description`
@@ -2165,7 +2163,7 @@ CREATE TABLE `nc_location` (
   `comment` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`location_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2180,7 +2178,7 @@ CREATE TABLE `nc_manufacturer` (
   `sort_order` int(3) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`manufacturer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_manufacturer`
@@ -2209,7 +2207,7 @@ CREATE TABLE `nc_manufacturer_description` (
   `name` varchar(128) NOT NULL,
   `description` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`manufacturer_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_manufacturer_description`
@@ -2236,7 +2234,7 @@ CREATE TABLE `nc_manufacturer_to_store` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`manufacturer_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_manufacturer_to_store`
@@ -2266,7 +2264,7 @@ CREATE TABLE `nc_media` (
   `credit` varchar(128) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`media_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2280,7 +2278,7 @@ CREATE TABLE `nc_menu` (
   `title` varchar(64) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`menu_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_menu`
@@ -2305,7 +2303,7 @@ CREATE TABLE `nc_menu_item` (
   `sort_order` int(3) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`menu_item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_menu_item`
@@ -2349,7 +2347,7 @@ CREATE TABLE `nc_menu_item_description` (
   `meta_description` varchar(255) NOT NULL,
   `meta_keyword` varchar(255) NOT NULL,
   PRIMARY KEY (`menu_item_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_menu_item_description`
@@ -2390,7 +2388,7 @@ CREATE TABLE `nc_menu_item_path` (
   `path_id` int(11) NOT NULL,
   `level` int(11) NOT NULL,
   PRIMARY KEY (`menu_item_id`,`path_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_menu_item_path`
@@ -2447,7 +2445,7 @@ CREATE TABLE `nc_menu_to_store` (
   `menu_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`menu_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_menu_to_store`
@@ -2474,7 +2472,7 @@ CREATE TABLE `nc_news` (
   `date_added` datetime NOT NULL,
   `viewed` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`news_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2490,7 +2488,7 @@ CREATE TABLE `nc_news_description` (
   `meta_description` VARCHAR(255) NOT NULL,
   `description` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`news_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2505,7 +2503,7 @@ CREATE TABLE `nc_news_download` (
   `mask` varchar(128) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`news_download_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2519,7 +2517,7 @@ CREATE TABLE `nc_news_download_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`news_download_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2532,7 +2530,7 @@ CREATE TABLE `nc_news_product_related` (
   `news_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   PRIMARY KEY (`news_id`,`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2545,7 +2543,7 @@ CREATE TABLE `nc_news_to_download` (
   `news_id` int(11) NOT NULL,
   `news_download_id` int(11) NOT NULL,
   PRIMARY KEY (`news_id`,`news_download_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2558,7 +2556,7 @@ CREATE TABLE `nc_news_to_store` (
   `news_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`news_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2580,7 +2578,7 @@ CREATE TABLE `nc_offer_category_category` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`offer_category_category_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2602,7 +2600,7 @@ CREATE TABLE `nc_offer_category_product` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`offer_category_product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2624,7 +2622,7 @@ CREATE TABLE `nc_offer_product_category` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`offer_product_category_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2646,7 +2644,7 @@ CREATE TABLE `nc_offer_product_product` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`offer_product_product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2660,7 +2658,7 @@ CREATE TABLE `nc_option` (
   `type` varchar(32) NOT NULL,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_option`
@@ -2691,7 +2689,7 @@ CREATE TABLE `nc_option_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`option_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_option_description`
@@ -2723,7 +2721,7 @@ CREATE TABLE `nc_option_value` (
   `image` varchar(255) NOT NULL,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`option_value_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_option_value`
@@ -2758,7 +2756,7 @@ CREATE TABLE `nc_option_value_description` (
   `option_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`option_value_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_option_value_description`
@@ -2800,7 +2798,6 @@ CREATE TABLE `nc_order` (
   `lastname` varchar(32) NOT NULL,
   `email` varchar(96) NOT NULL,
   `telephone` varchar(32) NOT NULL,
-  `fax` varchar(32) NOT NULL,
   `payment_firstname` varchar(32) NOT NULL,
   `payment_lastname` varchar(32) NOT NULL,
   `payment_company` varchar(32) NOT NULL,
@@ -2848,7 +2845,7 @@ CREATE TABLE `nc_order` (
   `date_modified` datetime NOT NULL,
   `abandoned` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`order_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2866,7 +2863,7 @@ CREATE TABLE `nc_order_download` (
   `mask` varchar(128) NOT NULL,
   `remaining` int(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`order_download_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2883,7 +2880,7 @@ CREATE TABLE `nc_order_history` (
   `comment` text CHARACTER SET utf8 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`order_history_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2902,7 +2899,7 @@ CREATE TABLE `nc_order_option` (
   `value` text CHARACTER SET utf8 NOT NULL,
   `type` varchar(32) NOT NULL,
   PRIMARY KEY (`order_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2926,7 +2923,7 @@ CREATE TABLE `nc_order_product` (
   `picked` tinyint(1) NOT NULL,
   `backordered` varchar(255) NOT NULL,
   PRIMARY KEY (`order_product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2957,7 +2954,7 @@ CREATE TABLE `nc_order_recurring` (
   `trial_price` decimal(10,4) NOT NULL,
   `profile_reference` varchar(255) NOT NULL,
   PRIMARY KEY (`order_recurring_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2973,7 +2970,7 @@ CREATE TABLE `nc_order_recurring_transaction` (
   `amount` decimal(10,4) NOT NULL,
   `type` varchar(255) NOT NULL,
   PRIMARY KEY (`order_recurring_transaction_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2987,7 +2984,7 @@ CREATE TABLE `nc_order_status` (
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   PRIMARY KEY (`order_status_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_order_status`
@@ -3026,7 +3023,7 @@ CREATE TABLE `nc_order_total` (
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`order_total_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3049,7 +3046,7 @@ CREATE TABLE `nc_order_voucher` (
   `message` text CHARACTER SET utf8 NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   PRIMARY KEY (`order_voucher_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3062,7 +3059,7 @@ CREATE TABLE `nc_palette` (
   `palette_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`palette_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_palette`
@@ -3085,7 +3082,7 @@ CREATE TABLE `nc_palette_color` (
   `color` varchar(6) NOT NULL,
   `skin` varchar(64) NOT NULL,
   PRIMARY KEY (`palette_color_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_palette_color`
@@ -3118,7 +3115,7 @@ CREATE TABLE `nc_palette_color_description` (
   `palette_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL,
   PRIMARY KEY (`palette_color_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_palette_color_description`
@@ -3152,7 +3149,7 @@ CREATE TABLE `nc_payment_image` (
   `image` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`payment_image_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_payment_image`
@@ -3207,7 +3204,7 @@ CREATE TABLE `nc_product` (
   `date_modified` datetime NOT NULL,
   `viewed` int(8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product`
@@ -3243,7 +3240,7 @@ CREATE TABLE `nc_product_attribute` (
   `language_id` int(11) NOT NULL,
   `text` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`product_id`,`attribute_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_attribute`
@@ -3283,7 +3280,7 @@ CREATE TABLE `nc_product_color` (
   `palette_color_id` int(11) NOT NULL,
   PRIMARY KEY (`product_color_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_color`
@@ -3338,7 +3335,7 @@ CREATE TABLE `nc_product_description` (
   `tag` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`product_id`,`language_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_description`
@@ -3381,7 +3378,7 @@ CREATE TABLE `nc_product_discount` (
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`product_discount_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3396,7 +3393,7 @@ CREATE TABLE `nc_product_field` (
   `language_id` int(11) NOT NULL,
   `text` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`product_id`,`field_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3409,7 +3406,7 @@ CREATE TABLE `nc_product_filter` (
   `product_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`filter_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3426,7 +3423,7 @@ CREATE TABLE `nc_product_image` (
   `sort_order` int(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_image_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_image`
@@ -3490,7 +3487,7 @@ CREATE TABLE `nc_product_option` (
   `option_value` text CHARACTER SET utf8 NOT NULL,
   `required` tinyint(1) NOT NULL,
   PRIMARY KEY (`product_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_option`
@@ -3521,7 +3518,7 @@ CREATE TABLE `nc_product_option_value` (
   `weight` decimal(15,8) NOT NULL,
   `weight_prefix` varchar(1) NOT NULL,
   PRIMARY KEY (`product_option_value_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_option_value`
@@ -3543,7 +3540,7 @@ CREATE TABLE `nc_product_profile` (
   `profile_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`profile_id`,`customer_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3556,7 +3553,7 @@ CREATE TABLE `nc_product_recurring` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3569,7 +3566,7 @@ CREATE TABLE `nc_product_related` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`related_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_related`
@@ -3594,7 +3591,7 @@ CREATE TABLE `nc_product_reward` (
   `customer_group_id` int(11) NOT NULL DEFAULT '0',
   `points` int(8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_reward_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_reward`
@@ -3627,7 +3624,7 @@ CREATE TABLE `nc_product_special` (
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`product_special_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_special`
@@ -3652,7 +3649,7 @@ CREATE TABLE `nc_product_tag` (
   KEY `product_id` (`product_id`),
   KEY `language_id` (`language_id`),
   KEY `tag` (`tag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_tag`
@@ -3674,7 +3671,7 @@ CREATE TABLE `nc_product_tax_local_rate` (
   `tax_local_rate_id` int(11) NOT NULL,
   PRIMARY KEY (`product_tax_local_rate_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_tax_local_rate`
@@ -3709,7 +3706,7 @@ CREATE TABLE `nc_product_to_category` (
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`category_id`),
   KEY `category_id` (`category_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_to_category`
@@ -3743,7 +3740,7 @@ CREATE TABLE `nc_product_to_download` (
   `product_id` int(11) NOT NULL,
   `download_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`download_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3757,7 +3754,7 @@ CREATE TABLE `nc_product_to_layout` (
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3770,7 +3767,7 @@ CREATE TABLE `nc_product_to_location` (
   `product_id` int(11) NOT NULL,
   `location_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_id`,`location_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_to_location`
@@ -3804,7 +3801,7 @@ CREATE TABLE `nc_product_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_id`,`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_product_to_store`
@@ -3838,7 +3835,7 @@ CREATE TABLE `nc_product_youtube` (
   `product_id` int(11) NOT NULL,
   `video_code` varchar(255) NOT NULL,
   PRIMARY KEY (`product_id`,`video_code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3861,7 +3858,7 @@ CREATE TABLE `nc_profile` (
   `trial_duration` int(10) UNSIGNED NOT NULL,
   `trial_cycle` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`profile_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3875,7 +3872,7 @@ CREATE TABLE `nc_profile_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`profile_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3905,7 +3902,7 @@ CREATE TABLE `nc_return` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`return_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3919,7 +3916,7 @@ CREATE TABLE `nc_return_action` (
   `language_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`return_action_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_return_action`
@@ -3945,7 +3942,7 @@ CREATE TABLE `nc_return_history` (
   `comment` text CHARACTER SET utf8 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`return_history_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3959,7 +3956,7 @@ CREATE TABLE `nc_return_reason` (
   `language_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`return_reason_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_return_reason`
@@ -3984,7 +3981,7 @@ CREATE TABLE `nc_return_status` (
   `language_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(32) NOT NULL,
   PRIMARY KEY (`return_status_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_return_status`
@@ -4014,7 +4011,7 @@ CREATE TABLE `nc_review` (
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`review_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4029,7 +4026,7 @@ CREATE TABLE `nc_robot_online` (
   `user_agent` text NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4046,7 +4043,7 @@ CREATE TABLE `nc_setting` (
   `value` text CHARACTER SET utf8 NOT NULL,
   `serialized` tinyint(1) NOT NULL,
   PRIMARY KEY (`setting_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_setting`
@@ -4100,7 +4097,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (45, 0, 'config', 'config_error_log', '1', 0),
 (46, 0, 'config', 'config_compression', '6', 0),
 (47, 0, 'config', 'config_error_display', '1', 0),
-(48, 0, 'config', 'config_encryption', 'SUBSTRING(SHA1(RAND()) FROM 1 FOR 8)', 0),
+(48, 0, 'config', 'config_order_status_id', '1', 0),
 (49, 0, 'config', 'config_seo_url_cache', '0', 0),
 (50, 0, 'config', 'config_seo_url', '0', 0),
 (51, 0, 'config', 'config_matomo_analytics', '', 0),
@@ -4213,176 +4210,174 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (158, 0, 'config', 'config_return_id', '0', 0),
 (159, 0, 'config', 'config_affiliate_disable', '0', 0),
 (160, 0, 'config', 'config_affiliate_activity', '1', 0),
-(161, 0, 'config', 'config_affiliate_fax', '0', 0),
-(162, 0, 'config', 'config_affiliate_mail', '0', 0),
-(163, 0, 'config', 'config_affiliate_id', '5', 0),
-(164, 0, 'config', 'config_login_attempts', '5', 0),
-(165, 0, 'config', 'config_affiliate_commission', '5', 0),
-(166, 0, 'config', 'config_affiliate_auto', '1', 0),
-(167, 0, 'config', 'config_affiliate_approval', '0', 0),
-(168, 0, 'config', 'config_force_delete', '0', 0),
-(169, 0, 'config', 'config_account_id', '3', 0),
-(170, 0, 'config', 'config_account_captcha', '0', 0),
-(171, 0, 'config', 'config_picklist_status', '1', 0),
-(172, 0, 'config', 'config_customer_dob', '0', 0),
-(173, 0, 'config', 'config_customer_gender', '0', 0),
-(174, 0, 'config', 'config_customer_fax', '0', 0),
-(175, 0, 'config', 'config_customer_price', '0', 0),
-(176, 0, 'config', 'config_customer_redirect', '0', 0),
-(177, 0, 'config', 'config_customer_group_display', 'a:1:{i:0;s:1:\"1\";}', 1),
-(178, 0, 'config', 'config_customer_group_id', '1', 0),
-(179, 0, 'config', 'config_customer_online', '0', 0),
-(180, 0, 'config', 'config_supplier_group_id', '1', 0),
-(181, 0, 'config', 'config_stock_status_id', '5', 0),
-(182, 0, 'config', 'config_stock_checkout', '0', 0),
-(183, 0, 'config', 'config_stock_warning', '0', 0),
-(184, 0, 'config', 'config_stock_display', '0', 0),
-(185, 0, 'config', 'config_tax_customer', 'shipping', 0),
-(186, 0, 'config', 'config_tax_default', 'shipping', 0),
-(187, 0, 'config', 'config_tax', '1', 0),
-(188, 0, 'config', 'config_vat', '0', 0),
-(189, 0, 'config', 'config_review_login', '0', 0),
-(190, 0, 'config', 'config_review_status', '1', 0),
-(191, 0, 'config', 'config_download', '1', 0),
-(192, 0, 'config', 'config_one_page_point', '1', 0),
-(193, 0, 'config', 'config_empty_category', '0', 0),
-(194, 0, 'config', 'config_product_count', '1', 0),
-(195, 0, 'config', 'config_one_page_voucher', '1', 0),
-(196, 0, 'export_import', 'export_import_settings_use_export_tags', '1', 0),
-(197, 0, 'export_import', 'export_import_settings_use_export_cache', '0', 0),
-(198, 0, 'export_import', 'export_import_settings_use_import_cache', '0', 0),
-(199, 0, 'account', 'account_theme', '0', 0),
-(200, 0, 'account', 'account_title1', '', 0),
-(201, 0, 'account', 'account_mode', '0', 0),
-(202, 0, 'affiliate', 'affiliate_theme', '1', 0),
-(203, 0, 'affiliate', 'affiliate_title1', '', 0),
-(204, 0, 'affiliate', 'affiliate_mode', '0', 0),
-(205, 0, 'latest', 'latest_theme', '0', 0),
-(206, 0, 'latest', 'latest_title1', '', 0),
-(207, 0, 'latest', 'latest_viewproduct', '0', 0),
-(208, 0, 'latest', 'latest_addproduct', '0', 0),
-(209, 0, 'menu_horizontal', 'menu_horizontal_theme', 'dark', 0),
-(210, 0, 'menu_horizontal', 'menu_horizontal_header_color', 'white', 0),
-(211, 0, 'menu_horizontal', 'menu_horizontal_header_shape', 'rounded-0', 0),
-(212, 0, 'menu_horizontal', 'menu_horizontal_column_limit', '6', 0),
-(213, 0, 'menu_horizontal', 'menu_horizontal_column_number', '2', 0),
-(214, 0, 'menu_horizontal', 'menu_horizontal_module', 'a:13:{i:0;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"6\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:1;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"10\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:2;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"3\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:3;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"7\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:4;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"8\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:5;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"4\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:6;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:7;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:8;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"5\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:9;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"13\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:10;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"2\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:11;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"9\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:12;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}}', 1),
-(215, 0, 'menu_vertical', 'menu_vertical_theme', '1', 0),
-(216, 0, 'menu_vertical', 'menu_vertical_title1', '', 0),
-(217, 0, 'news', 'news_theme', '1', 0),
-(218, 0, 'news', 'news_title1', '', 0),
-(219, 0, 'news', 'news_headline', '0', 0),
-(220, 0, 'default', 'default_widescreen', 'normal', 0),
-(221, 0, 'default', 'default_breadcrumbs', '1', 0),
-(222, 0, 'default', 'default_back_to_top', '1', 0),
-(223, 0, 'default', 'default_right_click', '0', 0),
-(224, 0, 'default', 'default_web_design', '', 0),
-(225, 0, 'default', 'default_powered_by', '1', 0),
-(226, 0, 'default', 'default_footer_theme', 'dark', 0),
-(227, 0, 'default', 'default_footer_color', 'white', 0),
-(228, 0, 'default', 'default_footer_shape', 'rounded-0', 0),
-(229, 0, 'default', 'default_footer_big_column', '0', 0),
-(230, 0, 'default', 'default_footer_location', '1', 0),
-(231, 0, 'default', 'default_footer_phone', '1', 0),
-(232, 0, 'default', 'default_footer_email', '1', 0),
-(233, 0, 'default', 'default_footer_facebook', '0', 0),
-(234, 0, 'default', 'default_footer_twitter', '0', 0),
-(235, 0, 'default', 'default_footer_google', '0', 0),
-(236, 0, 'default', 'default_footer_pinterest', '0', 0),
-(237, 0, 'default', 'default_footer_instagram', '0', 0),
-(238, 0, 'default', 'default_footer_skype', '0', 0),
-(239, 0, 'default', 'default_livesearch', '1', 0),
-(240, 0, 'default', 'default_livesearch_limit', '10', 0),
-(241, 0, 'default', 'default_product_stock_low', '0', 0),
-(242, 0, 'default', 'default_product_stock_limit', '1', 0),
-(243, 0, 'default', 'default_manufacturer_name', '0', 0),
-(244, 0, 'default', 'default_manufacturer_image', '1', 0),
-(245, 0, 'default', 'default_stylesheet', '0', 0),
-(246, 0, 'slideshow', 'slideshow_theme', '0', 0),
-(247, 0, 'slideshow', 'slideshow_title1', '', 0),
-(248, 0, 'slideshow', 'slideshow_transition', 'horizontal', 0),
-(249, 0, 'slideshow', 'slideshow_duration', '6000', 0),
-(250, 0, 'slideshow', 'slideshow_speed', '600', 0),
-(251, 0, 'slideshow', 'slideshow_random', '0', 0),
-(252, 0, 'slideshow', 'slideshow_dots', '1', 0),
-(253, 0, 'slideshow', 'slideshow_arrows', '1', 0),
-(254, 0, 'slideshow', 'slideshow_module', 'a:1:{i:0;a:7:{s:9:\"banner_id\";s:1:\"1\";s:5:\"width\";s:4:\"1920\";s:6:\"height\";s:3:\"540\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:12:\"content_high\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}}', 1),
-(255, 0, 'carousel', 'carousel_module', 'a:1:{i:0;a:9:{s:9:\"banner_id\";s:1:\"2\";s:5:\"width\";s:3:\"100\";s:6:\"height\";s:3:\"100\";s:4:\"show\";s:1:\"7\";s:4:\"auto\";s:1:\"1\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:13:\"content_lower\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}}', 1),
-(256, 0, 'carousel', 'carousel_theme', '0', 0),
-(257, 0, 'carousel', 'carousel_title1', '', 0),
-(258, 0, 'carousel', 'carousel_duration', '5000', 0),
-(259, 0, 'carousel', 'carousel_speed', '500', 0),
-(260, 0, 'carousel', 'carousel_random', '1', 0),
-(261, 0, 'featured', 'featured_module', 'a:1:{i:0;a:7:{s:5:\"style\";s:3:\"box\";s:11:\"image_width\";s:3:\"200\";s:12:\"image_height\";s:3:\"200\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:12:\"content_high\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"2\";}}', 1),
-(262, 0, 'featured', 'featured_addproduct', '1', 0),
-(263, 0, 'featured', 'featured_viewproduct', '1', 0),
-(264, 0, 'featured', 'featured_review', '0', 0),
-(265, 0, 'featured', 'featured_point', '0', 0),
-(266, 0, 'featured', 'featured_reward', '0', 0),
-(267, 0, 'featured', 'featured_model', '0', 0),
-(268, 0, 'featured', 'featured_brand', '0', 0),
-(269, 0, 'featured', 'featured_theme', '1', 0),
-(270, 0, 'featured', 'featured_title1', '', 0),
-(271, 0, 'featured', 'product', 'i', 0),
-(272, 0, 'featured', 'featured_product', '5,13,9,1', 0),
-(273, 0, 'config', 'config_one_page_coupon', '1', 0),
-(274, 0, 'config', 'config_one_page_newsletter', '0', 0),
-(275, 0, 'config', 'config_one_page_phone', '0', 0),
-(276, 0, 'config', 'config_one_page_checkout', '0', 0),
-(277, 0, 'config', 'config_express_point', '2', 0),
-(278, 0, 'config', 'config_express_voucher', '1', 0),
-(279, 0, 'config', 'config_express_coupon', '1', 0),
-(280, 0, 'config', 'config_express_newsletter', '0', 0),
-(281, 0, 'config', 'config_express_comment', '1', 0),
-(282, 0, 'config', 'config_fax', '', 0),
-(283, 0, 'config', 'config_company_id', '', 0),
-(284, 0, 'config', 'config_company_tax_id', '', 0),
-(285, 0, 'config', 'config_bank_name', '', 0),
-(286, 0, 'config', 'config_bank_sort_code', '', 0),
-(287, 0, 'config', 'config_bank_account', '', 0),
-(288, 0, 'config', 'config_title', 'Your Store', 0),
-(289, 0, 'config', 'config_meta_description', 'My Store', 0),
-(290, 0, 'config', 'config_meta_keyword', '', 0),
-(291, 0, 'config', 'config_template', 'default', 0),
-(292, 0, 'config', 'config_layout_id', '4', 0),
-(293, 0, 'config', 'config_country_id', '222', 0),
-(294, 0, 'config', 'config_zone_id', '3553', 0),
-(295, 0, 'config', 'config_language', 'en', 0),
-(296, 0, 'config', 'config_admin_language', 'en', 0),
-(297, 0, 'config', 'config_length_class_id', '1', 0),
-(298, 0, 'config', 'config_weight_class_id', '1', 0),
-(299, 0, 'config', 'config_currency', 'GBP', 0),
-(300, 0, 'config', 'config_currency_auto', '1', 0),
-(301, 0, 'config', 'config_alpha_vantage', '', 0),
-(302, 0, 'config', 'config_date_format', 'short', 0),
-(303, 0, 'config', 'config_time_offset', '0', 0),
-(304, 0, 'config', 'config_store_address', '0', 0),
-(305, 0, 'config', 'config_store_latitude', '', 0),
-(306, 0, 'config', 'config_store_longitude', '', 0),
-(307, 0, 'config', 'config_store_location', '0', 0),
-(308, 0, 'config', 'config_map_code', '', 0),
-(309, 0, 'config', 'config_map_display', '0', 0),
-(310, 0, 'config', 'config_checkout_id', '5', 0),
-(311, 0, 'config', 'config_invoice_prefix', CONCAT('INV-',YEAR(NOW()),'-00'), 0),
-(312, 0, 'config', 'config_auto_invoice', '1', 0),
-(313, 0, 'config', 'config_cart_weight', '1', 0),
-(314, 0, 'config', 'config_tax_breakdown', '0', 0),
-(315, 0, 'config', 'config_order_edit', '30', 0),
-(316, 0, 'config', 'config_express_billing', '1', 0),
-(317, 0, 'config', 'config_express_phone', '0', 0),
-(318, 0, 'config', 'config_express_password', '1', 0),
-(319, 0, 'config', 'config_express_autofill', '1', 0),
-(320, 0, 'config', 'config_express_checkout', '1', 0),
-(321, 0, 'config', 'config_guest_checkout', '0', 0),
-(322, 0, 'config', 'config_abandoned_cart', '7', 0),
-(323, 0, 'config', 'config_complete_status_id', '5', 0),
-(324, 0, 'config', 'config_order_status_id', '1', 0),
-(325, 0, 'config', 'config_telephone', '0123456789', 0),
-(326, 0, 'config', 'config_email_noreply', 'noreply@store.com', 0),
-(327, 0, 'config', 'config_email', 'contact@store.com', 0),
-(328, 0, 'config', 'config_address', 'Store Address', 0),
-(329, 0, 'config', 'config_owner', 'Your Name', 0),
-(330, 0, 'config', 'config_name', 'Your Store', 0);
+(161, 0, 'config', 'config_affiliate_mail', '0', 0),
+(162, 0, 'config', 'config_affiliate_id', '5', 0),
+(163, 0, 'config', 'config_login_attempts', '5', 0),
+(164, 0, 'config', 'config_affiliate_commission', '5', 0),
+(165, 0, 'config', 'config_affiliate_auto', '1', 0),
+(166, 0, 'config', 'config_affiliate_approval', '0', 0),
+(167, 0, 'config', 'config_force_delete', '0', 0),
+(168, 0, 'config', 'config_account_id', '3', 0),
+(169, 0, 'config', 'config_account_captcha', '0', 0),
+(170, 0, 'config', 'config_picklist_status', '1', 0),
+(171, 0, 'config', 'config_customer_dob', '0', 0),
+(172, 0, 'config', 'config_customer_gender', '0', 0),
+(173, 0, 'config', 'config_customer_price', '0', 0),
+(174, 0, 'config', 'config_customer_redirect', '0', 0),
+(175, 0, 'config', 'config_customer_group_display', 'a:1:{i:0;s:1:\"1\";}', 1),
+(176, 0, 'config', 'config_customer_group_id', '1', 0),
+(177, 0, 'config', 'config_customer_online', '0', 0),
+(178, 0, 'config', 'config_supplier_group_id', '1', 0),
+(179, 0, 'config', 'config_stock_status_id', '5', 0),
+(180, 0, 'config', 'config_stock_checkout', '0', 0),
+(181, 0, 'config', 'config_stock_warning', '0', 0),
+(182, 0, 'config', 'config_stock_display', '0', 0),
+(183, 0, 'config', 'config_tax_customer', 'shipping', 0),
+(184, 0, 'config', 'config_tax_default', 'shipping', 0),
+(185, 0, 'config', 'config_tax', '1', 0),
+(186, 0, 'config', 'config_vat', '0', 0),
+(187, 0, 'config', 'config_review_login', '0', 0),
+(188, 0, 'config', 'config_review_status', '1', 0),
+(189, 0, 'config', 'config_download', '1', 0),
+(190, 0, 'config', 'config_one_page_point', '1', 0),
+(191, 0, 'config', 'config_empty_category', '0', 0),
+(192, 0, 'config', 'config_product_count', '1', 0),
+(193, 0, 'config', 'config_one_page_voucher', '1', 0),
+(194, 0, 'export_import', 'export_import_settings_use_export_tags', '1', 0),
+(195, 0, 'export_import', 'export_import_settings_use_export_cache', '0', 0),
+(196, 0, 'export_import', 'export_import_settings_use_import_cache', '0', 0),
+(197, 0, 'account', 'account_theme', '0', 0),
+(198, 0, 'account', 'account_title1', '', 0),
+(199, 0, 'account', 'account_mode', '0', 0),
+(200, 0, 'affiliate', 'affiliate_theme', '1', 0),
+(201, 0, 'affiliate', 'affiliate_title1', '', 0),
+(202, 0, 'affiliate', 'affiliate_mode', '0', 0),
+(203, 0, 'latest', 'latest_theme', '0', 0),
+(204, 0, 'latest', 'latest_title1', '', 0),
+(205, 0, 'latest', 'latest_viewproduct', '0', 0),
+(206, 0, 'latest', 'latest_addproduct', '0', 0),
+(207, 0, 'menu_horizontal', 'menu_horizontal_theme', 'dark', 0),
+(208, 0, 'menu_horizontal', 'menu_horizontal_header_color', 'white', 0),
+(209, 0, 'menu_horizontal', 'menu_horizontal_header_shape', 'rounded-0', 0),
+(210, 0, 'menu_horizontal', 'menu_horizontal_column_limit', '6', 0),
+(211, 0, 'menu_horizontal', 'menu_horizontal_column_number', '2', 0),
+(212, 0, 'menu_horizontal', 'menu_horizontal_module', 'a:13:{i:0;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"6\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:1;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"10\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:2;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"3\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:3;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"7\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:4;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"8\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:5;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"4\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:6;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:7;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"11\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:8;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"5\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:9;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"13\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:10;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"2\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:11;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:1:\"9\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}i:12;a:7:{s:7:\"menu_id\";s:1:\"1\";s:4:\"home\";s:1:\"1\";s:9:\"layout_id\";s:2:\"12\";s:8:\"position\";s:14:\"content_higher\";s:9:\"direction\";s:1:\"1\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}}', 1),
+(213, 0, 'menu_vertical', 'menu_vertical_theme', '1', 0),
+(214, 0, 'menu_vertical', 'menu_vertical_title1', '', 0),
+(215, 0, 'news', 'news_theme', '1', 0),
+(216, 0, 'news', 'news_title1', '', 0),
+(217, 0, 'news', 'news_headline', '0', 0),
+(218, 0, 'default', 'default_widescreen', 'normal', 0),
+(219, 0, 'default', 'default_breadcrumbs', '1', 0),
+(220, 0, 'default', 'default_back_to_top', '1', 0),
+(221, 0, 'default', 'default_right_click', '0', 0),
+(222, 0, 'default', 'default_web_design', '', 0),
+(223, 0, 'default', 'default_powered_by', '1', 0),
+(224, 0, 'default', 'default_footer_theme', 'dark', 0),
+(225, 0, 'default', 'default_footer_color', 'white', 0),
+(226, 0, 'default', 'default_footer_shape', 'rounded-0', 0),
+(227, 0, 'default', 'default_footer_big_column', '0', 0),
+(228, 0, 'default', 'default_footer_location', '1', 0),
+(229, 0, 'default', 'default_footer_phone', '1', 0),
+(230, 0, 'default', 'default_footer_email', '1', 0),
+(231, 0, 'default', 'default_footer_facebook', '0', 0),
+(232, 0, 'default', 'default_footer_twitter', '0', 0),
+(233, 0, 'default', 'default_footer_google', '0', 0),
+(234, 0, 'default', 'default_footer_pinterest', '0', 0),
+(235, 0, 'default', 'default_footer_instagram', '0', 0),
+(236, 0, 'default', 'default_footer_skype', '0', 0),
+(237, 0, 'default', 'default_livesearch', '1', 0),
+(238, 0, 'default', 'default_livesearch_limit', '10', 0),
+(239, 0, 'default', 'default_product_stock_low', '0', 0),
+(240, 0, 'default', 'default_product_stock_limit', '1', 0),
+(241, 0, 'default', 'default_manufacturer_name', '0', 0),
+(242, 0, 'default', 'default_manufacturer_image', '1', 0),
+(243, 0, 'default', 'default_stylesheet', '0', 0),
+(244, 0, 'slideshow', 'slideshow_theme', '0', 0),
+(245, 0, 'slideshow', 'slideshow_title1', '', 0),
+(246, 0, 'slideshow', 'slideshow_transition', 'horizontal', 0),
+(247, 0, 'slideshow', 'slideshow_duration', '6000', 0),
+(248, 0, 'slideshow', 'slideshow_speed', '600', 0),
+(249, 0, 'slideshow', 'slideshow_random', '0', 0),
+(250, 0, 'slideshow', 'slideshow_dots', '1', 0),
+(251, 0, 'slideshow', 'slideshow_arrows', '1', 0),
+(252, 0, 'slideshow', 'slideshow_module', 'a:1:{i:0;a:7:{s:9:\"banner_id\";s:1:\"1\";s:5:\"width\";s:4:\"1920\";s:6:\"height\";s:3:\"540\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:12:\"content_high\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}}', 1),
+(253, 0, 'carousel', 'carousel_module', 'a:1:{i:0;a:9:{s:9:\"banner_id\";s:1:\"2\";s:5:\"width\";s:3:\"100\";s:6:\"height\";s:3:\"100\";s:4:\"show\";s:1:\"7\";s:4:\"auto\";s:1:\"1\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:13:\"content_lower\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"1\";}}', 1),
+(254, 0, 'carousel', 'carousel_theme', '0', 0),
+(255, 0, 'carousel', 'carousel_title1', '', 0),
+(256, 0, 'carousel', 'carousel_duration', '5000', 0),
+(257, 0, 'carousel', 'carousel_speed', '500', 0),
+(258, 0, 'carousel', 'carousel_random', '1', 0),
+(259, 0, 'featured', 'featured_module', 'a:1:{i:0;a:7:{s:5:\"style\";s:3:\"box\";s:11:\"image_width\";s:3:\"200\";s:12:\"image_height\";s:3:\"200\";s:9:\"layout_id\";s:1:\"1\";s:8:\"position\";s:12:\"content_high\";s:6:\"status\";s:1:\"1\";s:10:\"sort_order\";s:1:\"2\";}}', 1),
+(260, 0, 'featured', 'featured_addproduct', '1', 0),
+(261, 0, 'featured', 'featured_viewproduct', '1', 0),
+(262, 0, 'featured', 'featured_review', '0', 0),
+(263, 0, 'featured', 'featured_point', '0', 0),
+(264, 0, 'featured', 'featured_reward', '0', 0),
+(265, 0, 'featured', 'featured_model', '0', 0),
+(266, 0, 'featured', 'featured_brand', '0', 0),
+(267, 0, 'featured', 'featured_theme', '1', 0),
+(268, 0, 'featured', 'featured_title1', '', 0),
+(269, 0, 'featured', 'product', 'i', 0),
+(270, 0, 'featured', 'featured_product', '5,13,9,1', 0),
+(271, 0, 'config', 'config_one_page_coupon', '1', 0),
+(272, 0, 'config', 'config_one_page_newsletter', '0', 0),
+(273, 0, 'config', 'config_one_page_phone', '0', 0),
+(274, 0, 'config', 'config_one_page_checkout', '0', 0),
+(275, 0, 'config', 'config_express_point', '2', 0),
+(276, 0, 'config', 'config_express_voucher', '1', 0),
+(277, 0, 'config', 'config_express_coupon', '1', 0),
+(278, 0, 'config', 'config_express_newsletter', '0', 0),
+(279, 0, 'config', 'config_express_comment', '1', 0),
+(280, 0, 'config', 'config_fax', '', 0),
+(281, 0, 'config', 'config_company_id', '', 0),
+(282, 0, 'config', 'config_company_tax_id', '', 0),
+(283, 0, 'config', 'config_bank_name', '', 0),
+(284, 0, 'config', 'config_bank_sort_code', '', 0),
+(285, 0, 'config', 'config_bank_account', '', 0),
+(286, 0, 'config', 'config_title', 'Your Store', 0),
+(287, 0, 'config', 'config_meta_description', 'My Store', 0),
+(288, 0, 'config', 'config_meta_keyword', '', 0),
+(289, 0, 'config', 'config_template', 'default', 0),
+(290, 0, 'config', 'config_layout_id', '4', 0),
+(291, 0, 'config', 'config_country_id', '222', 0),
+(292, 0, 'config', 'config_zone_id', '3553', 0),
+(293, 0, 'config', 'config_language', 'en', 0),
+(294, 0, 'config', 'config_admin_language', 'en', 0),
+(295, 0, 'config', 'config_length_class_id', '1', 0),
+(296, 0, 'config', 'config_weight_class_id', '1', 0),
+(297, 0, 'config', 'config_currency', 'GBP', 0),
+(298, 0, 'config', 'config_currency_auto', '1', 0),
+(299, 0, 'config', 'config_alpha_vantage', '', 0),
+(300, 0, 'config', 'config_date_format', 'short', 0),
+(301, 0, 'config', 'config_time_offset', '0', 0),
+(302, 0, 'config', 'config_store_address', '0', 0),
+(303, 0, 'config', 'config_store_latitude', '', 0),
+(304, 0, 'config', 'config_store_longitude', '', 0),
+(305, 0, 'config', 'config_store_location', '0', 0),
+(306, 0, 'config', 'config_map_code', '', 0),
+(307, 0, 'config', 'config_map_display', '0', 0),
+(308, 0, 'config', 'config_checkout_id', '5', 0),
+(309, 0, 'config', 'config_invoice_prefix', CONCAT('INV-',YEAR(NOW()),'-00'), 0),
+(310, 0, 'config', 'config_auto_invoice', '1', 0),
+(311, 0, 'config', 'config_cart_weight', '1', 0),
+(312, 0, 'config', 'config_tax_breakdown', '0', 0),
+(313, 0, 'config', 'config_order_edit', '30', 0),
+(314, 0, 'config', 'config_express_billing', '1', 0),
+(315, 0, 'config', 'config_express_phone', '0', 0),
+(316, 0, 'config', 'config_express_password', '1', 0),
+(317, 0, 'config', 'config_express_autofill', '1', 0),
+(318, 0, 'config', 'config_express_checkout', '1', 0),
+(319, 0, 'config', 'config_guest_checkout', '0', 0),
+(320, 0, 'config', 'config_abandoned_cart', '7', 0),
+(321, 0, 'config', 'config_complete_status_id', '5', 0),
+(322, 0, 'config', 'config_encryption', '', 0),
+(323, 0, 'config', 'config_telephone', '0123456789', 0),
+(324, 0, 'config', 'config_email_noreply', 'noreply@store.com', 0),
+(325, 0, 'config', 'config_email', 'contact@store.com', 0),
+(326, 0, 'config', 'config_address', 'Store Address', 0),
+(327, 0, 'config', 'config_owner', 'Your Name', 0),
+(328, 0, 'config', 'config_name', 'Your Store', 0);
 
 -- --------------------------------------------------------
 
@@ -4396,7 +4391,7 @@ CREATE TABLE `nc_stock_status` (
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   PRIMARY KEY (`stock_status_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_stock_status`
@@ -4421,7 +4416,7 @@ CREATE TABLE `nc_store` (
   `url` varchar(255) NOT NULL,
   `ssl` varchar(255) NOT NULL,
   PRIMARY KEY (`store_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4446,7 +4441,7 @@ CREATE TABLE `nc_supplier` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`supplier_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4467,7 +4462,7 @@ CREATE TABLE `nc_supplier_address` (
   `zone_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`address_id`),
   KEY `supplier_id` (`supplier_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4482,7 +4477,7 @@ CREATE TABLE `nc_supplier_group` (
   `payment_method` varchar(32) NOT NULL,
   `sort_order` int(3) NOT NULL,
   PRIMARY KEY (`supplier_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_supplier_group`
@@ -4504,7 +4499,7 @@ CREATE TABLE `nc_supplier_group_description` (
   `name` varchar(32) NOT NULL,
   `description` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`supplier_group_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_supplier_group_description`
@@ -4526,7 +4521,7 @@ CREATE TABLE `nc_supplier_history` (
   `comment` text CHARACTER SET utf8 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`supplier_history_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4558,7 +4553,7 @@ CREATE TABLE `nc_supplier_product` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`supplier_product_id`,`supplier_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4574,7 +4569,7 @@ CREATE TABLE `nc_tax_class` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`tax_class_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_tax_class`
@@ -4598,7 +4593,7 @@ CREATE TABLE `nc_tax_local_rate` (
   `rate` decimal(15,4) NOT NULL DEFAULT '0.0000',
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`tax_local_rate_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_tax_local_rate`
@@ -4623,7 +4618,7 @@ CREATE TABLE `nc_tax_rate` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`tax_rate_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_tax_rate`
@@ -4645,7 +4640,7 @@ CREATE TABLE `nc_tax_rate_to_customer_group` (
   `tax_rate_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
   PRIMARY KEY (`tax_rate_id`,`customer_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_tax_rate_to_customer_group`
@@ -4670,7 +4665,7 @@ CREATE TABLE `nc_tax_rule` (
   `based` varchar(32) NOT NULL,
   `priority` int(5) NOT NULL DEFAULT '1',
   PRIMARY KEY (`tax_rule_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_tax_rule`
@@ -4697,7 +4692,7 @@ CREATE TABLE `nc_upload` (
   `code` varchar(32) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`upload_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4713,7 +4708,7 @@ CREATE TABLE `nc_url_alias` (
   PRIMARY KEY (`url_alias_id`),
   KEY `query` (`query`),
   KEY `keyword` (`keyword`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_url_alias`
@@ -4773,7 +4768,7 @@ CREATE TABLE `nc_user` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4788,7 +4783,7 @@ CREATE TABLE `nc_user_group` (
   `permission` text CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`user_group_id`),
   KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_user_group`
@@ -4816,7 +4811,7 @@ CREATE TABLE `nc_user_log` (
   `date` datetime NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `username` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4830,7 +4825,7 @@ CREATE TABLE `nc_version` (
   `version` varchar(20) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`version_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4853,7 +4848,7 @@ CREATE TABLE `nc_voucher` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`voucher_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4869,7 +4864,7 @@ CREATE TABLE `nc_voucher_history` (
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`voucher_history_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4882,7 +4877,7 @@ CREATE TABLE `nc_voucher_theme` (
   `voucher_theme_id` int(11) NOT NULL AUTO_INCREMENT,
   `image` varchar(255) NOT NULL,
   PRIMARY KEY (`voucher_theme_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_voucher_theme`
@@ -4904,7 +4899,7 @@ CREATE TABLE `nc_voucher_theme_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   PRIMARY KEY (`voucher_theme_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_voucher_theme_description`
@@ -4925,7 +4920,7 @@ CREATE TABLE `nc_weight_class` (
   `weight_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `value` decimal(15,8) NOT NULL DEFAULT '0.00000000',
   PRIMARY KEY (`weight_class_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_weight_class`
@@ -4950,7 +4945,7 @@ CREATE TABLE `nc_weight_class_description` (
   `title` varchar(32) NOT NULL,
   `unit` varchar(4) NOT NULL,
   PRIMARY KEY (`weight_class_id`,`language_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_weight_class_description`
@@ -4976,7 +4971,7 @@ CREATE TABLE `nc_zone` (
   `name` varchar(128) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`zone_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_zone`
@@ -9565,7 +9560,7 @@ CREATE TABLE `nc_zone_to_geo_zone` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`zone_to_geo_zone_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nc_zone_to_geo_zone`

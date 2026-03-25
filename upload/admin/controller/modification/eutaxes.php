@@ -195,7 +195,9 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['geo_zones'] = array();
 
-		$geo_zone_results = $this->model_localisation_geo_zone->getGeoZones(0);
+		$geozones_array = array();
+
+		$geo_zone_results = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
 		foreach ($geo_zone_results as $geo_zone_result) {
 			$this->data['geo_zones'][] = array(
@@ -211,7 +213,9 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['tax_rates'] = array();
 
-		$tax_rates_results = $this->model_localisation_tax_rate->getTaxRates(0);
+		$taxrates_array = array();
+
+		$tax_rates_results = $this->model_localisation_tax_rate->getTaxRates($taxrates_array);
 
 		foreach ($tax_rates_results as $tax_rates_result) {
 			$this->data['tax_rates'][] = array(
@@ -228,7 +232,9 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['tax_classes'] = array();
 
-		$tax_classes_results = $this->model_localisation_tax_class->getTaxClasses(0);
+		$taxclasses_array = array();
+
+		$tax_classes_results = $this->model_localisation_tax_class->getTaxClasses($taxclasses_array);
 
 		foreach ($tax_classes_results as $tax_classes_result) {
 			if ($tax_classes_result['tax_class_id'] && $tax_classes_result['title'] == 'EU E-medias') {
@@ -606,7 +612,7 @@ class ControllerModificationEutaxes extends Controller {
 		}
 
 		foreach ($this->request->post['eucountry_description'] as $language_id => $value) {
-			if ((strlen($value['eucountry']) < 3) || (strlen($value['eucountry']) > 128)) {
+			if ((mb_strlen($value['eucountry'], 'UTF-8') < 3) || (mb_strlen($value['eucountry'], 'UTF-8') > 128)) {
 				$this->error['eucountry'][$language_id] = $this->language->get('error_eucountry');
 			}
 

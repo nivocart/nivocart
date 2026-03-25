@@ -1,16 +1,33 @@
 <?php
 class Log {
-	private $handle;
+	/**
+	 * @var string
+	 */
+	private string $filename;
 
-	public function __construct($filename) {
-		$this->handle = fopen(DIR_LOGS . $filename, 'a');
+	/**
+	 * Constructor
+	 *
+	 * @param string $filename
+	 */
+	public function __construct(string $filename) {
+		$this->filename = $filename;
 	}
 
-	public function write($message) {
-		fwrite($this->handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
-	}
+	/**
+	 * Write
+	 *
+	 * @param mixed $message
+	 *
+	 * @return void
+	 */
+	public function write($message): void {
+		$file = DIR_LOGS . $this->filename;
 
-	public function __destruct() {
-		fclose($this->handle);
+		$handle = fopen($file, 'a');
+
+		fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true) . "\n");
+
+		fclose($handle);
 	}
 }

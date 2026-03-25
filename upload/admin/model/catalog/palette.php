@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogPalette extends Model {
 
-	public function addPalette($data) {
+	public function addPalette(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "palette SET `name` = '" . $this->db->escape($data['name']) . "'");
 
 		$palette_id = $this->db->getLastId();
@@ -24,7 +24,7 @@ class ModelCatalogPalette extends Model {
 		$this->cache->delete('palette.total');
 	}
 
-	public function editPalette($palette_id, $data) {
+	public function editPalette(int $palette_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "palette SET `name` = '" . $this->db->escape($data['name']) . "' WHERE palette_id = '" . (int)$palette_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "palette_color WHERE palette_id = '" . (int)$palette_id . "'");
@@ -45,7 +45,7 @@ class ModelCatalogPalette extends Model {
 		$this->cache->delete('palette.total');
 	}
 
-	public function deletePalette($palette_id) {
+	public function deletePalette(int $palette_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "palette WHERE palette_id = '" . (int)$palette_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "palette_color WHERE palette_id = '" . (int)$palette_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "palette_color_description WHERE palette_id = '" . (int)$palette_id . "'");
@@ -53,13 +53,13 @@ class ModelCatalogPalette extends Model {
 		$this->cache->delete('palette.total');
 	}
 
-	public function getPalette($palette_id) {
+	public function getPalette(int $palette_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "palette p LEFT JOIN " . DB_PREFIX . "palette_color pc ON (pc.palette_id = p.palette_id) LEFT JOIN " . DB_PREFIX . "palette_color_description pcd ON (pcd.palette_id = p.palette_id) WHERE pcd.palette_id = '" . (int)$palette_id . "' AND pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY p.name");
 
 		return $query->row;
 	}
 
-	public function getPalettes($data = array()) {
+	public function getPalettes(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "palette p";
 
 		if (!empty($data['filter_name'])) {
@@ -99,7 +99,7 @@ class ModelCatalogPalette extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalPalettes($data = array()) {
+	public function getTotalPalettes(array $data = []): int {
 		$sql = "SELECT COUNT(p.palette_id) AS `total` FROM " . DB_PREFIX . "palette p";
 
 		if (!empty($data['filter_name'])) {
@@ -111,7 +111,7 @@ class ModelCatalogPalette extends Model {
 		return $query->row['total'];
 	}
 
-	public function getPaletteDescriptions($palette_id) {
+	public function getPaletteDescriptions(int $palette_id): array {
 		$color_data = array();
 
 		$color_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette_color WHERE palette_id = '" . (int)$palette_id . "'");
@@ -136,7 +136,7 @@ class ModelCatalogPalette extends Model {
 		return $color_data;
 	}
 
-	public function getPaletteColors($data = array()) {
+	public function getPaletteColors(array $data = []): array {
 		$colors_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette_color pc LEFT JOIN " . DB_PREFIX . "palette_color_description pcd ON (pcd.palette_id = pc.palette_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY pcd.palette_color_id ORDER BY pc.palette_id, pcd.title ASC");
@@ -153,7 +153,7 @@ class ModelCatalogPalette extends Model {
 		return $colors_data;
 	}
 
-	public function getPaletteColorsByPaletteId($palette_id) {
+	public function getPaletteColorsByPaletteId(int $palette_id): array {
 		$colors_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette p LEFT JOIN " . DB_PREFIX . "palette_color pc ON (pc.palette_id = p.palette_id) LEFT JOIN " . DB_PREFIX . "palette_color_description pcd ON (pcd.palette_id = p.palette_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pcd.palette_id = '" . (int)$palette_id . "' GROUP BY pcd.palette_color_id ORDER BY p.palette_id, pcd.title ASC");
@@ -170,7 +170,7 @@ class ModelCatalogPalette extends Model {
 		return $colors_data;
 	}
 
-	public function getPaletteColorsByColorId($palette_color_id) {
+	public function getPaletteColorsByColorId(int $palette_color_id): array {
 		$palette_colors_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "palette_color pc LEFT JOIN " . DB_PREFIX . "palette_color_description pcd ON (pcd.palette_color_id = pc.palette_color_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pc.palette_color_id = '" . (int)$palette_color_id . "' GROUP BY pc.palette_color_id ORDER BY pcd.title ASC");
@@ -187,7 +187,7 @@ class ModelCatalogPalette extends Model {
 		return $palette_colors_data;
 	}
 
-	public function getPaletteIds($data = array()) {
+	public function getPaletteIds(array $data = []): array {
 		$palette_data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette`;");
@@ -199,19 +199,19 @@ class ModelCatalogPalette extends Model {
 		return $palette_data;
 	}
 
-	public function getPaletteColor($palette_color_id) {
+	public function getPaletteColor(int $palette_color_id) {
 		$query = $this->db->query("SELECT DISTINCT color FROM " . DB_PREFIX . "palette_color WHERE palette_color_id = '" . (int)$palette_color_id . "'");
 
 		return $query->row['color'];
 	}
 
-	public function getPaletteName($palette_id) {
+	public function getPaletteName(int $palette_id) {
 		$query = $this->db->query("SELECT DISTINCT name FROM " . DB_PREFIX . "palette WHERE palette_id = '" . (int)$palette_id . "'");
 
 		return $query->row['name'];
 	}
 
-	public function getTotalColorsByPaletteId($palette_id) {
+	public function getTotalColorsByPaletteId(int $palette_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "palette_color WHERE palette_id = '" . (int)$palette_id . "'");
 
 		return $query->row['total'];

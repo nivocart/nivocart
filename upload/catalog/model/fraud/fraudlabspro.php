@@ -11,7 +11,7 @@ class ModelFraudFraudLabsPro extends Model {
 		return $hash;
 	}
 
-	public function check($data) {
+	public function check(array $data = []) {
 		$this->load->model('setting/extension');
 
 		// Do not perform a fraud check if FraudLabs Pro is disabled or API key is not provided.
@@ -38,7 +38,7 @@ class ModelFraudFraudLabsPro extends Model {
 			$request['bill_state'] = $data['payment_zone'];
 			$request['bill_country'] = $data['payment_iso_code_2'];
 			$request['bill_zip_code'] = $data['payment_postcode'];
-			$request['email_domain'] = utf8_substr(strrchr($data['email'], '@'), 1);
+			$request['email_domain'] = substr(strrchr($data['email'], '@'), 1);
 			$request['user_phone'] = $data['telephone'];
 
 			if ($data['shipping_method']) {
@@ -50,7 +50,7 @@ class ModelFraudFraudLabsPro extends Model {
 			}
 
 			$request['email_hash'] = $this->hashIt($data['email']);
-			$request['amount'] = $this->currency->format($data['total'], $data['currency_code'], $data['currency_value'], false);
+			$request['amount'] = $this->currency->format($data['total'], $data['currency_code'], $data['currency_value'], false, $this->config->get('config_currency'));
 			$request['quantity'] = 1;
 			$request['currency'] = $data['currency_code'];
 			$request['user_order_id'] = $data['order_id'];
@@ -152,7 +152,7 @@ class ModelFraudFraudLabsPro extends Model {
 		return $fraud_status_id;
 	}
 
-	public function getFraud($order_id) {
+	public function getFraud(int $order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "fraudlabspro WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row;

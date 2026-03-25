@@ -1,15 +1,56 @@
 <?php
 final class Tax {
-	private $shipping_address;
-	private $payment_address;
-	private $store_address;
+	/**
+	 * @var object
+	 */
+	private object $db;
+
+	/**
+	 * @var object
+	 */
+	private object $config;
+
+	/**
+	 * @var object
+	 */
+	private object $customer;
+
+	/**
+	 * @var object
+	 */
+	private object $session;
+
+	/**
+	 * @var array<int, array<int, array<string, mixed>>>
+	 */
+	private array $tax_rates = [];
+
+	/**
+	 * @var array<int, array<int, array<string, mixed>>>
+	 */
+	private array $shipping_address = [];
+
+	/**
+	 * @var array<int, array<int, array<string, mixed>>>
+	 */
+	private array $payment_address = [];
+
+	/**
+	 * @var array<int, array<int, array<string, mixed>>>
+	 */
+	private array $store_address = [];
 
 	protected $registry;
 
+	/**
+	 * Constructor
+	 *
+	 * @param 	$registry
+	 */
     public function __construct(Registry $registry) {
+		$this->db = $registry->get('db');
 		$this->config = $registry->get('config');
 		$this->customer = $registry->get('customer');
-		$this->db = $registry->get('db');
 		$this->session = $registry->get('session');
 
 		if (isset($this->session->data['shipping_country_id']) || isset($this->session->data['shipping_zone_id'])) {
@@ -27,28 +68,77 @@ final class Tax {
 		$this->setStoreAddress($this->config->get('config_country_id'), $this->config->get('config_zone_id'));
 	}
 
-	public function setShippingAddress($country_id, $zone_id) {
+	/**
+	 * Set Shipping Address
+	 *
+	 * @param int $country_id primary key of the country record
+	 * @param int $zone_id    primary key of the zone record
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->tax->setShippingAddress($country_id, $zone_id);
+	 */
+	public function setShippingAddress(int $country_id, int $zone_id): void {
 		$this->shipping_address = array(
 			'country_id' => $country_id,
 			'zone_id'    => $zone_id
 		);
 	}
 
-	public function setPaymentAddress($country_id, $zone_id) {
+	/**
+	 * Set Payment Address
+	 *
+	 * @param int $country_id primary key of the country record
+	 * @param int $zone_id    primary key of the zone record
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->tax->setPaymentAddress($country_id, $zone_id);
+	 */
+	public function setPaymentAddress(int $country_id, int $zone_id): void {
 		$this->payment_address = array(
 			'country_id' => $country_id,
 			'zone_id'    => $zone_id
 		);
 	}
 
-	public function setStoreAddress($country_id, $zone_id) {
+	/**
+	 * Set Store Address
+	 *
+	 * @param int $country_id primary key of the country record
+	 * @param int $zone_id    primary key of the zone record
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->tax->setStoreAddress($country_id, $zone_id);
+	 */
+	public function setStoreAddress(int $country_id, int $zone_id): void {
 		$this->store_address = array(
 			'country_id' => $country_id,
 			'zone_id'    => $zone_id
 		);
 	}
 
-	public function calculate($value, $tax_class_id, $calculate = true) {
+	/**
+	 * Calculate
+	 *
+	 * @param float $value
+	 * @param int   $tax_class_id primary key of the tax class record
+	 * @param bool  $calculate
+	 *
+	 * @return float
+	 *
+	 * @example
+	 *
+	 * $tax = $this->tax->calculate($value, $tax_class_id, $calculate);
+	 */
+	public function calculate(float $value, int $tax_class_id, bool $calculate = true): float {
 		if ($tax_class_id && $calculate) {
 			$amount = 0;
 
@@ -68,7 +158,19 @@ final class Tax {
 		}
 	}
 
-	public function getTax($value, $tax_class_id) {
+	/**
+	 * Get Tax
+	 *
+	 * @param float $value
+	 * @param int   $tax_class_id primary key of the tax class record
+	 *
+	 * @return float
+	 *
+	 * @example
+	 *
+	 * $tax = $this->tax->getTax($value, $tax_class_id);
+	 */
+	public function getTax(float $value, int $tax_class_id): float {
 		$amount = 0;
 
 		$tax_rates = $this->getRates($value, $tax_class_id);
@@ -80,7 +182,18 @@ final class Tax {
 		return $amount;
 	}
 
-	public function getRateName($tax_rate_id) {
+	/**
+	 * Get Rate Name
+	 *
+	 * @param int $tax_rate_id primary key of the tax rate record
+	 *
+	 * @return false|string
+	 *
+	 * @example
+	 *
+	 * $rate = $this->tax->getRateName($tax_rate_id);
+	 */
+	public function getRateName(int $tax_rate_id) {
 		$tax_query = $this->db->query("SELECT name FROM `" . DB_PREFIX . "tax_rate` WHERE tax_rate_id = '" . (int)$tax_rate_id . "'");
 
 		if ($tax_query->num_rows) {
@@ -90,7 +203,14 @@ final class Tax {
 		}
 	}
 
-	public function getEURate() {
+	/**
+	 * Get EU Rate
+	 *
+	 * @example
+	 *
+	 * $rates = $this->tax->getEURates();
+	 */
+	public function getEURates() {
 		$eu_table_exist = $this->db->query("SHOW TABLES LIKE 'eucountry'");
 
 		if ($eu_table_exist) {
@@ -109,8 +229,20 @@ final class Tax {
 		}
 	}
 
-	public function getRates($value, $tax_class_id) {
-		$tax_rates = array();
+	/**
+	 * Get Rates
+	 *
+	 * @param float $value
+	 * @param int   $tax_class_id primary key of the tax class record
+	 *
+	 * @return array<int, array<string, mixed>>
+	 *
+	 * @example
+	 *
+	 * $rates = $this->tax->getRates($value, $tax_class_id);
+	 */
+	public function getRates(float $value, int $tax_class_id): array {
+		$tax_rates = [];
 
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
@@ -162,7 +294,7 @@ final class Tax {
 			}
 		}
 
-		$tax_rate_data = array();
+		$tax_rate_data = [];
 
 		if (isset($tax_rates[$tax_class_id])) {
 			foreach ($tax_rates[$tax_class_id] as $tax_rate) {
@@ -191,7 +323,29 @@ final class Tax {
 		return $tax_rate_data;
 	}
 
-	public function has($tax_class_id) {
+	/**
+	 * has
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->tax->has($tax_class_id);
+	 */
+	public function has(int $tax_class_id): int {
 		return isset($this->taxes[$tax_class_id]);
+	}
+
+	/**
+	 * Clear
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->tax->clear();
+	 */
+	public function clear(): void {
+		$this->tax_rates = [];
 	}
 }

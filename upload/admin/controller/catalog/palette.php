@@ -450,19 +450,19 @@ class ControllerCatalogPalette extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 64)) {
+		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 64)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
 		if (isset($this->request->post['palette_color'])) {
 			foreach ($this->request->post['palette_color'] as $palette_color_id => $palette_color) {
 				foreach ($palette_color['color_description'] as $language_id => $color_description) {
-					if ((utf8_strlen($color_description['title']) < 3) || (utf8_strlen($color_description['title']) > 64)) {
+					if ((mb_strlen($color_description['title'], 'UTF-8') < 3) || (mb_strlen($color_description['title'], 'UTF-8') > 64)) {
 						$this->error['title'][$palette_color_id][$language_id] = $this->language->get('error_title');
 					}
 				}
 
-				if ((utf8_strlen($palette_color['color']) != 6) || (!preg_match('/^[a-f0-9]{6}$/i', $palette_color['color']))) {
+				if ((mb_strlen($palette_color['color'], 'UTF-8') != 6) || (!preg_match('/^[a-f0-9]{6}$/i', $palette_color['color']))) {
 					$this->error['color'][$palette_color_id] = $this->language->get('error_color');
 				}
 			}

@@ -3,13 +3,13 @@
   "type": "project",
   "description": "NivoCart. Opensource Shopping Cart software.",
   "keywords": ["ecommerce", "opensource"],
-  "homepage": "https://nivocart.com/",
+  "homepage": "https://nivocart.org/",
   "license": "OSL-3.0",
   "config": {
     "vendor-dir": "./upload/system/vendor/"
   },
   "require": {
-    "php": ">=7.0.0"
+    "php": ">=8.0.0"
   },
   "authors": [
     {

@@ -1,12 +1,25 @@
 <?php
 final class Encryption {
-	private $key;
+	/**
+	 * @var string
+	 */
+	private string $key = '';
 
-	public function __construct($key) {
+	/**
+	 * Constructor
+	 *
+	 * @param string $key
+	 */
+	public function __construct(string $key) {
 		$this->key = hash('sha256', $key, true);
 	}
 
-	public function encrypt($value) {
+	/**
+	 * encrypt
+	 *
+	 * @return string
+	 */
+	public function encrypt(string $value): string {
 		$method = 'AES-128-CBC';
 
 		$iv_length = openssl_cipher_iv_length($method); // 16
@@ -20,7 +33,12 @@ final class Encryption {
 		return strtr($encoded, '+/=', '-_,');
 	}
 
-	public function decrypt($value) {
+	/**
+	 * decrypt
+	 *
+	 * @return string
+	 */
+	public function decrypt(string $value): string {
 		$value = explode('|', strtr($value, '-_,', '+/=') . '|');
 
 		$decoded = base64_decode($value[0]);

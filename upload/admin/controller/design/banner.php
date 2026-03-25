@@ -436,7 +436,7 @@ class ControllerDesignBanner extends Controller {
 				'thumb'                    => $this->model_tool_image->resize($image, 120, 120),
 				'link'                     => $banner_image['link'],
 				'external_link'            => $banner_image['external_link'],
-				'sort_order'            => $banner_image['sort_order']
+				'sort_order'               => $banner_image['sort_order']
 			);
 		}
 
@@ -454,14 +454,14 @@ class ControllerDesignBanner extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 64)) {
+		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 64)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
 		if (isset($this->request->post['banner_image'])) {
 			foreach ($this->request->post['banner_image'] as $banner_image_id => $banner_image) {
 				foreach ($banner_image['banner_image_description'] as $language_id => $banner_image_description) {
-					if ((utf8_strlen($banner_image_description['title']) < 2) || (utf8_strlen($banner_image_description['title']) > 64)) {
+					if ((mb_strlen($banner_image_description['title'], 'UTF-8') < 2) || (mb_strlen($banner_image_description['title'], 'UTF-8') > 64)) {
 						$this->error['banner_image'][$banner_image_id][$language_id] = $this->language->get('error_title');
 					}
 				}
@@ -469,7 +469,7 @@ class ControllerDesignBanner extends Controller {
 				$allowed = array('jpg','jpeg','png','gif');
 
 				if ($banner_image['image']) {
-					$ext = utf8_substr(strrchr($banner_image['image'], '.'), 1);
+					$ext = substr(strrchr($banner_image['image'], '.'), 1);
 
 					if (!in_array(strtolower($ext), $allowed)) {
 						$this->error['image'][$banner_image_id] = $this->language->get('error_image_format');
@@ -505,7 +505,9 @@ class ControllerDesignBanner extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes = $this->model_tool_route->getRoutes(0);
+		$routes_banners = array();
+
+		$routes = $this->model_tool_route->getRoutes($routes_banners);
 
 		if ($routes) {
 			$output  = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";

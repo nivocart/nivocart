@@ -1,6 +1,6 @@
 <?php
 class ControllerAccountRegister extends Controller {
-	private $error = array();
+	private array $error = [];
 
 	public function index() {
 		if ($this->customer->isLogged()) {
@@ -82,7 +82,6 @@ class ControllerAccountRegister extends Controller {
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_gender'] = $this->language->get('entry_gender');
 		$this->data['entry_date_of_birth'] = $this->language->get('entry_date_of_birth');
 		$this->data['entry_company'] = $this->language->get('entry_company');
@@ -226,14 +225,6 @@ class ControllerAccountRegister extends Controller {
 			$this->data['telephone'] = '';
 		}
 
-		$this->data['show_fax'] = $this->config->get('config_customer_fax');
-
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} else {
-			$this->data['fax'] = '';
-		}
-
 		$this->data['show_gender'] = $this->config->get('config_customer_gender');
 
 		if (isset($this->request->post['gender'])) {
@@ -360,7 +351,14 @@ class ControllerAccountRegister extends Controller {
 			$this->data['captcha'] = '';
 		}
 
-		$this->data['captcha_image'] = $this->url->link('account/register/captcha', '', 'SSL');
+		// Create session Captcha
+		$this->load->library('captcha');
+
+		$captcha = new Captcha();
+
+		$this->session->data['captcha'] = $captcha->getCode();
+
+		$this->data['captcha_image'] = $this->session->data['captcha'];
 
 		if ($this->config->get('config_account_id')) {
 			$this->load->model('catalog/information');
@@ -407,15 +405,15 @@ class ControllerAccountRegister extends Controller {
 	}
 
 	protected function validate() {
-		if (!isset($this->request->post['firstname']) || (utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+		if (!isset($this->request->post['firstname']) || (mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
  			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if (!isset($this->request->post['lastname']) || (utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+		if (!isset($this->request->post['lastname']) || (mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if (!isset($this->request->post['email']) || (utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if (!isset($this->request->post['email']) || (mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
@@ -439,12 +437,12 @@ class ControllerAccountRegister extends Controller {
 			}
 		}
 
-		if (!isset($this->request->post['telephone']) || (utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+		if (!isset($this->request->post['telephone']) || (mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
 		if ($this->config->get('config_customer_dob')) {
-			if (isset($this->request->post['date_of_birth']) && (utf8_strlen($this->request->post['date_of_birth']) == 10)) {
+			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
 				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
@@ -476,11 +474,11 @@ class ControllerAccountRegister extends Controller {
 			}
 		}
 
-		if (!isset($this->request->post['address_1']) || (utf8_strlen($this->request->post['address_1']) < 3) || (utf8_strlen($this->request->post['address_1']) > 128)) {
+		if (!isset($this->request->post['address_1']) || (mb_strlen($this->request->post['address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['address_1'], 'UTF-8') > 128)) {
 			$this->error['address_1'] = $this->language->get('error_address_1');
 		}
 
-		if (!isset($this->request->post['city']) || (utf8_strlen($this->request->post['city']) < 2) || (utf8_strlen($this->request->post['city']) > 128)) {
+		if (!isset($this->request->post['city']) || (mb_strlen($this->request->post['city'], 'UTF-8') < 2) || (mb_strlen($this->request->post['city'], 'UTF-8') > 128)) {
 			$this->error['city'] = $this->language->get('error_city');
 		}
 
@@ -492,7 +490,7 @@ class ControllerAccountRegister extends Controller {
 			$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
 
 			if ($country_info) {
-				if ($country_info['postcode_required'] && !isset($this->request->post['postcode']) || (utf8_strlen($this->request->post['postcode']) < 2) || (utf8_strlen($this->request->post['postcode']) > 10)) {
+				if ($country_info['postcode_required'] && !isset($this->request->post['postcode']) || (mb_strlen($this->request->post['postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['postcode'], 'UTF-8') > 10)) {
 					$this->error['postcode'] = $this->language->get('error_postcode');
 				}
 
@@ -511,7 +509,7 @@ class ControllerAccountRegister extends Controller {
 			$this->error['zone'] = $this->language->get('error_zone');
 		}
 
-		if (!isset($this->request->post['password']) || (utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+		if (!isset($this->request->post['password']) || (mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 			$this->error['password'] = $this->language->get('error_password');
 		}
 
@@ -520,7 +518,7 @@ class ControllerAccountRegister extends Controller {
 		}
 
 		if ($this->config->get('config_account_captcha')) {
-			if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != strtolower($this->request->post['captcha']))) {
+			if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != ($this->request->post['captcha']))) {
 				$this->error['captcha'] = $this->language->get('error_captcha');
 			}
 		}
@@ -562,15 +560,5 @@ class ControllerAccountRegister extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
-	}
-
-	public function captcha() {
-		$this->load->library('captcha');
-
-		$captcha = new Captcha();
-
-		$this->session->data['captcha'] = $captcha->getCode();
-
-		$captcha->showImage($this->config->get('config_captcha_font'));
 	}
 }

@@ -32,14 +32,14 @@ class ModelPaymentFirstdataRemote extends Model {
 		return $method_data;
 	}
 
-	public function capturePayment($data, $order_id) {
+	public function capturePayment(int $order_id, $data) {
 		$this->load->model('checkout/order');
 
-		$order_info = $this->model_checkout_order->getOrder($order_id);
+		$order_info = $this->model_checkout_order->getOrder((int)$order_id);
 
 		$order_ref = 'API-' . $order_id . '-' . date("Y-m-d-H-i-s") . '-' . rand(10, 500);
 
-		$amount = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+		$amount = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false, $this->config->get('config_currency'));
 
 		if ($this->config->get('firstdata_remote_auto_settle') == 1) {
 			$type = 'sale';
@@ -236,12 +236,12 @@ class ModelPaymentFirstdataRemote extends Model {
 			$settle_status = 0;
 		}
 
-		$this->db->query("INSERT INTO " . DB_PREFIX . "firstdata_remote_order SET order_id = '" . (int)$order_info['order_id'] . "', order_ref = '" . $this->db->escape($capture_result['order_id']) . "', authcode = '" . $this->db->escape($capture_result['approval_code']) . "', tdate = '" . $this->db->escape($capture_result['t_date']) . "', date_added = NOW(), date_modified = NOW(), capture_status = '" . (int)$settle_status . "', currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "firstdata_remote_order SET order_id = '" . (int)$order_info['order_id'] . "', order_ref = '" . $this->db->escape($capture_result['order_id']) . "', authcode = '" . $this->db->escape($capture_result['approval_code']) . "', tdate = '" . $this->db->escape($capture_result['t_date']) . "', date_added = NOW(), date_modified = NOW(), capture_status = '" . (int)$settle_status . "', currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false, $this->config->get('config_currency')) . "'");
 
 		return $this->db->getLastId();
 	}
 
-	public function addTransaction($firstdata_remote_order_id, $type, $order_info = array()) {
+	public function addTransaction(int $firstdata_remote_order_id, $type, $order_info = array()): void {
 		if (!empty($order_info)) {
 			$amount = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
 		} else {
@@ -258,7 +258,7 @@ class ModelPaymentFirstdataRemote extends Model {
 		}
 	}
 
-	public function addHistory($order_id, $order_status_id, $comment) {
+	public function addHistory(int $order_id, int $order_status_id, $comment) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$order_status_id . "', notify = '0', `comment` = '" . $this->db->escape($comment) . "', date_added = NOW()");
 	}
 
@@ -284,7 +284,7 @@ class ModelPaymentFirstdataRemote extends Model {
 		return $query->rows;
 	}
 
-	public function storeCard($token, $customer_id, $type, $month, $year, $digits) {
+	public function storeCard($token, int $customer_id, $type, $month, $year, $digits) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "firstdata_remote_card SET customer_id = '" . (int)$customer_id . "', date_added = NOW(), token = '" . $this->db->escape($token) . "', card_type = '" . $this->db->escape($type) . "', expire_month = '" . $this->db->escape($month) . "', expire_year = '" . $this->db->escape($year) . "', digits = '" . $this->db->escape($digits) . "'");
 	}
 }

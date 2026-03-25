@@ -92,7 +92,9 @@ class ControllerAccountWishList extends Controller {
 
 		$this->load->model('catalog/offer');
 
-		$offers = $this->model_catalog_offer->getListProductOffers(0);
+		$offers_wishlist = array();
+
+		$offers = $this->model_catalog_offer->getListProductOffers($offers_wishlist);
 
 		$this->data['products'] = array();
 
@@ -118,14 +120,14 @@ class ControllerAccountWishList extends Controller {
 					if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
-						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 					}
 				} else {
 					$price = false;
 				}
 
 				if ((float)$product_info['special']) {
-					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
 					$special = false;
 				}

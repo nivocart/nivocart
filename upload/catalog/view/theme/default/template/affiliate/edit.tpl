@@ -45,12 +45,6 @@
           <span class="error"><?php echo $error_telephone; ?></span>
         <?php } ?></td>
       </tr>
-      <?php if ($show_fax) { ?>
-      <tr>
-        <td><?php echo $entry_fax; ?></td>
-        <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-      </tr>
-      <?php } ?>
     </table>
   </div>
   <h2><?php echo $text_your_address; ?></h2>

@@ -541,7 +541,7 @@ class ControllerCatalogManufacturer extends Controller {
 		}
 
 		foreach ($this->request->post['manufacturer_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 128)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 2) || (mb_strlen($value['name'], 'UTF-8') > 128)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
@@ -549,7 +549,7 @@ class ControllerCatalogManufacturer extends Controller {
 		$allowed = array('jpg','jpeg','png','gif');
 
 		if ($this->request->post['image']) {
-			$ext = utf8_substr(strrchr($this->request->post['image'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['image'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['image'] = $this->language->get('error_image');

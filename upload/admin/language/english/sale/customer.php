@@ -55,7 +55,6 @@ $_['entry_firstname']                 = 'First Name:';
 $_['entry_lastname']                  = 'Last Name:';
 $_['entry_email']                     = 'Email:';
 $_['entry_telephone']                 = 'Telephone:';
-$_['entry_fax']                       = 'Fax:';
 $_['entry_gender']                    = 'Gender:';
 $_['entry_date_of_birth']             = 'Date of Birth:';
 $_['entry_newsletter']                = 'Newsletter:';

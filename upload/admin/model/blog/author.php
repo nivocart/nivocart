@@ -1,7 +1,7 @@
 <?php
 class ModelBlogAuthor extends Model {
 
-	public function addAuthor($data) {
+	public function addAuthor(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_author` SET `name` = '" . $this->db->escape($data['name']) . "', status='" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$blog_author_id = $this->db->getLastId();
@@ -20,7 +20,7 @@ class ModelBlogAuthor extends Model {
 		$this->cache->delete('blog_author');
 	}
 
-	public function editAuthor($blog_author_id, $data) {
+	public function editAuthor(int $blog_author_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "blog_author` SET `name` = '" . $this->db->escape($data['name']) . "', status='" . (int)$data['status'] . "', date_modified = NOW() WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		if (isset($data['image'])) {
@@ -36,26 +36,26 @@ class ModelBlogAuthor extends Model {
 		$this->cache->delete('blog_author');
 	}
 
-	public function deleteAuthor($blog_author_id) {
+	public function deleteAuthor(int $blog_author_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_author` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_author_description` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		$this->cache->delete('blog_author');
 	}
 
-	public function getAuthor($blog_author_id) {
+	public function getAuthor(int $blog_author_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "blog_author` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		return $query->row;
 	}
 
-	public function getTotalAuthors($data = array()) {
+	public function getTotalAuthors(array $data = []) int {
 		$query = $this->db->query("SELECT COUNT(DISTINCT(ba.blog_author_id)) AS `total` FROM `" . DB_PREFIX . "blog_author` ba LEFT JOIN `" . DB_PREFIX . "blog_author_description` bad ON (ba.blog_author_id = bad.blog_author_id) WHERE bad.language_id='" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getAuthors($data = array()) {
+	public function getAuthors(array $data = []): array {
 		$sql = "SELECT ba.* FROM `" . DB_PREFIX . "blog_author` ba LEFT JOIN `" . DB_PREFIX . "blog_author_description` bad ON (ba.blog_author_id = bad.blog_author_id) WHERE bad.language_id='" . (int)$this->config->get('config_language_id') . "'";
 
 		if (isset($data['filter_author']) && $data['filter_author'] != '') {
@@ -97,7 +97,7 @@ class ModelBlogAuthor extends Model {
 		return $query->rows;
 	}
 
-	public function getAuthorDescriptions($blog_author_id) {
+	public function getAuthorDescriptions(int $blog_author_id): array {
 		$author_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_author_description WHERE blog_author_id = '" . (int)$blog_author_id . "'");
@@ -113,7 +113,7 @@ class ModelBlogAuthor extends Model {
 		return $author_description_data;
 	}
 
-	public function getAuthorName($blog_author_id) {
+	public function getAuthorName(int $blog_author_id) {
 		$query = $this->db->query("SELECT name FROM `" . DB_PREFIX . "blog_author` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		return $query->row['name'];
@@ -121,15 +121,15 @@ class ModelBlogAuthor extends Model {
 
 	public function checkAuthorName($name, $blog_author_id = 0) {
 		if (!$blog_author_id) {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(utf8_strtolower($name)) . "'");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(mb_strtolower($name), 'UTF-8') . "'");
 		} else {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(utf8_strtolower($name)) . "' AND blog_author_id <> '" . (int)$blog_author_id . "'");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(mb_strtolower($name), 'UTF-8') . "' AND blog_author_id <> '" . (int)$blog_author_id . "'");
 		}
 
 		return $query->num_rows;
 	}
 
-	public function getTotalArticleByAuthorId($blog_author_id) {
+	public function getTotalArticleByAuthorId(int $blog_author_id): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article` WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		return $query->num_rows;

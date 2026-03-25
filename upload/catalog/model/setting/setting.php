@@ -1,7 +1,7 @@
 <?php
 class ModelSettingSetting extends Model {
 
-	public function getSetting($group, $store_id = 0) {
+	public function getSetting($group, $store_id = 0): array {
 		$data = array();
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE store_id = '" . (int)$store_id . "' AND `group` = '" . $this->db->escape($group) . "'");

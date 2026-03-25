@@ -1,20 +1,48 @@
 <?php
 final class Loader {
+	/**
+	 * @var Registry
+	 */
 	protected $registry;
 
+	/**
+	 * Constructor
+	 */
 	public function __construct($registry) {
 		$this->registry = $registry;
 	}
 
-	public function __get($key) {
+	/**
+	 * __get
+	 *
+	 * @param string $key
+	 *
+	 * @return object
+	 */
+	public function __get(string $key): object {
 		return $this->registry->get($key);
 	}
 
-	public function __set($key, $value) {
+	/**
+	 * __set
+	 *
+	 * @param string $key
+	 * @param object $value
+	 *
+	 * @return void
+	 */
+	public function __set(string $key, object $value): void {
 		$this->registry->set($key, $value);
 	}
 
-	public function model($route) {
+	/**
+	 * Model
+	 *
+	 * @param string $route
+	 *
+	 * @return void
+	 */
+	public function model(string $route): void {
 		// Sanitize the call
 		$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
 
@@ -30,7 +58,14 @@ final class Loader {
 		}
 	}
 
-	public function library($route) {
+	/**
+	 * Library
+	 *
+	 * @param string $route
+	 *
+	 * @return void
+	 */
+	public function library(string $route): void {
 		// Sanitize the call
 		$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
 
@@ -43,7 +78,14 @@ final class Loader {
 		}
 	}
 
-	public function helper($route) {
+	/**
+	 * Helper
+	 *
+	 * @param string $route
+	 *
+	 * @return void
+	 */
+	public function helper(string $route): void {
 		// Sanitize the call
 		$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
 
@@ -56,7 +98,17 @@ final class Loader {
 		}
 	}
 
-	public function database($driver, $hostname, $username, $password, $database, $port = null) {
+	/**
+	 * Helper
+	 *
+	 * @param string $driver
+	 * @param string $hostname
+	 * @param string $username
+	 * @param string $password
+	 * @param string $database
+	 * @param int $port
+	 */
+	public function database(string $driver, string $hostname, string $username, string $password, string $database, int $port = 0) {
 		// Sanitize the call
 		$driver = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$driver);
 
@@ -72,11 +124,21 @@ final class Loader {
 		}
 	}
 
-	public function config($route) {
+	/**
+	 * Config
+	 *
+	 * @param string $route
+	 */
+	public function config(string $route) {
 		$this->config->load($route);
 	}
 
-	public function language($route) {
+	/**
+	 * Language
+	 *
+	 * @param string $route
+	 */
+	public function language(string $route) {
 		return $this->language->load($route);
 	}
 }

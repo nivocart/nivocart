@@ -1,7 +1,7 @@
 <?php
 class ModelSaleSupplier extends Model {
 
-	public function addSupplier($data) {
+	public function addSupplier(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "supplier SET reference = '" . $this->db->escape($data['reference']) . "', company = '" . $this->db->escape($data['company']) . "', account = '" . $this->db->escape($data['account']) . "', description = '" . $this->db->escape($data['description']) . "', contact = '" . $this->db->escape($data['contact']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . (isset($data['telephone']) ? $data['telephone'] : 0) . "', fax = '" . (isset($data['fax']) ? $data['fax'] : 0) . "', supplier_group_id = '" . (int)$data['supplier_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$supplier_id = $this->db->getLastId();
@@ -22,7 +22,7 @@ class ModelSaleSupplier extends Model {
 		}
 	}
 
-	public function editSupplier($supplier_id, $data) {
+	public function editSupplier(int $supplier_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "supplier SET reference = '" . $this->db->escape($data['reference']) . "', company = '" . $this->db->escape($data['company']) . "', account = '" . $this->db->escape($data['account']) . "', description = '" . $this->db->escape($data['description']) . "', contact = '" . $this->db->escape($data['contact']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . (isset($data['telephone']) ? $data['telephone'] : 0) . "', fax = '" . (isset($data['fax']) ? $data['fax'] : 0) . "', supplier_group_id = '" . (int)$data['supplier_group_id'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE supplier_id = '" . (int)$supplier_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_address WHERE supplier_id = '" . (int)$supplier_id . "'");
@@ -40,26 +40,26 @@ class ModelSaleSupplier extends Model {
 		}
 	}
 
-	public function deleteSupplier($supplier_id) {
+	public function deleteSupplier(int $supplier_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier WHERE supplier_id = '" . (int)$supplier_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_address WHERE supplier_id = '" . (int)$supplier_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_history WHERE supplier_id = '" . (int)$supplier_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_product WHERE supplier_id = '" . (int)$supplier_id . "'");
 	}
 
-	public function getSupplier($supplier_id) {
+	public function getSupplier(int $supplier_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "supplier WHERE supplier_id = '" . (int)$supplier_id . "'");
 
 		return $query->row;
 	}
 
 	public function getSupplierByEmail($email) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "supplier WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "supplier WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower($email), 'UTF-8') . "'");
 
 		return $query->row;
 	}
 
-	public function getSuppliers($data = array()) {
+	public function getSuppliers(array $data = []): array {
 		$sql = "SELECT *, sgd.name AS supplier_group FROM " . DB_PREFIX . "supplier s LEFT JOIN " . DB_PREFIX . "supplier_group_description sgd ON (s.supplier_group_id = sgd.supplier_group_id) WHERE sgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$implode = array();
@@ -130,11 +130,11 @@ class ModelSaleSupplier extends Model {
 		return $query->rows;
 	}
 
-	public function getAddress($address_id) {
+	public function getAddress(int $address_id) {
 		$address_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_address WHERE address_id = '" . (int)$address_id . "'");
 
 		if ($address_query->num_rows) {
-			$country_query = $this->db->query("SELECT DISTINCT *, cd.name AS name FROM " . DB_PREFIX . "country c LEFT JOIN " . DB_PREFIX . "country_description cd ON (c.country_id = cd.country_id) WHERE c.country_id = '" . (int)$address_query->row['country_id'] . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			$country_query = $this->db->query("SELECT DISTINCT *, cd.name AS `name` FROM " . DB_PREFIX . "country c LEFT JOIN " . DB_PREFIX . "country_description cd ON (c.country_id = cd.country_id) WHERE c.country_id = '" . (int)$address_query->row['country_id'] . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 			if ($country_query->num_rows) {
 				$country = $country_query->row['name'];
@@ -178,7 +178,7 @@ class ModelSaleSupplier extends Model {
 		}
 	}
 
-	public function getAddresses($supplier_id) {
+	public function getAddresses(int $supplier_id): array {
 		$address_data = array();
 
 		$query = $this->db->query("SELECT address_id FROM " . DB_PREFIX . "supplier_address WHERE supplier_id = '" . (int)$supplier_id . "'");
@@ -194,7 +194,7 @@ class ModelSaleSupplier extends Model {
 		return $address_data;
 	}
 
-	public function getTotalSuppliers($data = array()) {
+	public function getTotalSuppliers(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier";
 
 		$implode = array();
@@ -232,36 +232,36 @@ class ModelSaleSupplier extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalAddressesBySupplierId($supplier_id) {
+	public function getTotalAddressesBySupplierId(int $supplier_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_address WHERE supplier_id = '" . (int)$supplier_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalAddressesByCountryId($country_id) {
+	public function getTotalAddressesByCountryId(int $country_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_address WHERE country_id = '" . (int)$country_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalAddressesByZoneId($zone_id) {
+	public function getTotalAddressesByZoneId(int $zone_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_address WHERE zone_id = '" . (int)$zone_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalSuppliersBySupplierGroupId($supplier_group_id) {
+	public function getTotalSuppliersBySupplierGroupId(int $supplier_group_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier WHERE supplier_group_id = '" . (int)$supplier_group_id . "'");
 
 		return $query->row['total'];
 	}
 
 	// History
-	public function addHistory($supplier_id, $comment) {
+	public function addHistory(int $supplier_id, $comment): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_history SET supplier_id = '" . (int)$supplier_id . "', `comment` = '" . $this->db->escape(strip_tags($comment)) . "', date_added = NOW()");
 	}
 
-	public function getHistories($supplier_id, $start = 0, $limit = 10) {
+	public function getHistories(int $supplier_id, int $start = 0, int $limit = 10): array {
 		if ($start < 0) {
 			$start = 0;
 		}
@@ -275,14 +275,14 @@ class ModelSaleSupplier extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalHistories($supplier_id) {
+	public function getTotalHistories(int $supplier_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_history WHERE supplier_id = '" . (int)$supplier_id . "'");
 
 		return $query->row['total'];
 	}
 
 	// Products
-	public function getSupplierProductsBySupplierId($supplier_id, $data = array()) {
+	public function getSupplierProductsBySupplierId(int $supplier_id, array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "supplier_product sp LEFT JOIN " . DB_PREFIX . "supplier s ON (s.supplier_id = sp.supplier_id) WHERE sp.supplier_id = '" . (int)$supplier_id . "'";
 
 		$sort_data = array(
@@ -321,7 +321,7 @@ class ModelSaleSupplier extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalSupplierProductsBySupplierId($supplier_id, $data = array()) {
+	public function getTotalSupplierProductsBySupplierId(int $supplier_id, array $data = []): int {
 		$query = $this->db->query("SELECT COUNT(DISTINCT supplier_product_id) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE supplier_id = '" . (int)$supplier_id . "'");
 
 		return $query->row['total'];

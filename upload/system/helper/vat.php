@@ -1,4 +1,7 @@
 <?php
+/**
+ * Helper VAT
+ */
 function vat_validation($prefix, $number) {
 	$iso_code_2_data = array(
 		'AT' => 'AT', //Austria
@@ -30,8 +33,7 @@ function vat_validation($prefix, $number) {
 		'RO' => 'RO', //Romania
 		'SK' => 'SK', //Slovakia
 		'CZ' => 'CZ', //Czech Republic
-		'SI' => 'SI', //Slovenia
-		'HR' => 'HR' //Croatia
+		'SI' => 'SI'  //Slovenia
 	);
 
 	$number = str_replace(' ', '', $number);

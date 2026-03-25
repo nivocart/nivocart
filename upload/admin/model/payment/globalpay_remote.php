@@ -41,7 +41,7 @@ class ModelPaymentGlobalpayRemote extends Model {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "globalpay_remote_order_transaction`;");
 	}
 
-	public function void($order_id) {
+	public function void(int $order_id) {
 		$globalpay_order = $this->getOrder($order_id);
 
 		if (!empty($globalpay_order)) {
@@ -87,11 +87,11 @@ class ModelPaymentGlobalpayRemote extends Model {
 		}
 	}
 
-	public function updateVoidStatus($globalpay_remote_order_id, $status) {
+	public function updateVoidStatus(int $globalpay_remote_order_id, int $status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "globalpay_remote_order` SET `void_status` = '" . (int)$status . "' WHERE `globalpay_remote_order_id` = '" . (int)$globalpay_remote_order_id . "'");
 	}
 
-	public function capture($order_id, $amount) {
+	public function capture(int $order_id, $amount) {
 		$globalpay_order = $this->getOrder($order_id);
 
 		if (!empty($globalpay_order) && $globalpay_order['capture_status'] == 0) {
@@ -153,15 +153,15 @@ class ModelPaymentGlobalpayRemote extends Model {
 		}
 	}
 
-	public function updateCaptureStatus($globalpay_remote_order_id, $status) {
+	public function updateCaptureStatus(int $globalpay_remote_order_id, int $status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "globalpay_remote_order` SET `capture_status` = '" . (int)$status . "' WHERE `globalpay_remote_order_id` = '" . (int)$globalpay_remote_order_id . "'");
 	}
 
-	public function updateForRebate($globalpay_remote_order_id, $pas_ref, $order_ref) {
+	public function updateForRebate(int $globalpay_remote_order_id, $pas_ref, $order_ref): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "globalpay_remote_order` SET `order_ref_previous` = '_multisettle_" . $this->db->escape($order_ref) . "', `pasref_previous` = '" . $this->db->escape($pas_ref) . "' WHERE `globalpay_remote_order_id` = '" . (int)$globalpay_remote_order_id . "' LIMIT 1");
 	}
 
-	public function rebate($order_id, $amount) {
+	public function rebate(int $order_id, $amount) {
 		$globalpay_order = $this->getOrder($order_id);
 
 		if (!empty($globalpay_order) && $globalpay_order['rebate_status'] != 1) {
@@ -224,11 +224,11 @@ class ModelPaymentGlobalpayRemote extends Model {
 		}
 	}
 
-	public function updateRebateStatus($globalpay_remote_order_id, $status) {
+	public function updateRebateStatus(int $globalpay_remote_order_id, int $status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "globalpay_remote_order` SET `rebate_status` = '" . (int)$status . "' WHERE `globalpay_remote_order_id` = '" . (int)$globalpay_remote_order_id . "'");
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$this->logger('getOrder - ' . $order_id);
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "globalpay_remote_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
@@ -245,7 +245,7 @@ class ModelPaymentGlobalpayRemote extends Model {
 		}
 	}
 
-	private function getTransactions($globalpay_remote_order_id) {
+	private function getTransactions(int $globalpay_remote_order_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "globalpay_remote_order_transaction` WHERE `globalpay_remote_order_id` = '" . (int)$globalpay_remote_order_id . "'");
 
 		if ($query->num_rows) {
@@ -255,7 +255,7 @@ class ModelPaymentGlobalpayRemote extends Model {
 		}
 	}
 
-	public function addTransaction($globalpay_remote_order_id, $type, $total) {
+	public function addTransaction(int $globalpay_remote_order_id, $type, $total): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "globalpay_remote_order_transaction` SET `globalpay_remote_order_id` = '" . (int)$globalpay_remote_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', `amount` = '" . (double)$total . "'");
 	}
 
@@ -266,13 +266,13 @@ class ModelPaymentGlobalpayRemote extends Model {
 		}
 	}
 
-	public function getTotalCaptured($globalpay_remote_order_id) {
+	public function getTotalCaptured(int $globalpay_remote_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "globalpay_remote_order_transaction WHERE globalpay_remote_order_id = '" . (int)$globalpay_remote_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
 
 		return (double)$query->row['total'];
 	}
 
-	public function getTotalRebated($globalpay_remote_order_id) {
+	public function getTotalRebated(int $globalpay_remote_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "globalpay_remote_order_transaction WHERE globalpay_remote_order_id = '" . (int)$globalpay_remote_order_id . "' AND `type` = 'rebate'");
 
 		return (double)$query->row['total'];

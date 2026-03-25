@@ -8,7 +8,7 @@ class ModelTotalLowOrderFee extends Model {
 			$total_data[] = array(
 				'code'       => 'low_order_fee',
 				'title'      => $this->language->get('text_low_order_fee'),
-				'text'       => $this->currency->format($this->config->get('low_order_fee_fee')),
+				'text'       => $this->currency->format($this->config->get('low_order_fee_fee'), $this->config->get('config_currency')),
 				'value'      => $this->config->get('low_order_fee_fee'),
 				'sort_order' => $this->config->get('low_order_fee_sort_order')
 			);

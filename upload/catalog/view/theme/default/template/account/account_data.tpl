@@ -21,9 +21,6 @@
         <b><?php echo $customer['store_name']; ?></b><br />
         <?php echo $customer['store_address']; ?><br /><br />
         <img src="catalog/view/theme/<?php echo $template; ?>/image/location/phone.png" alt="" height="14" width="14" /> <?php echo $customer['store_telephone']; ?><br />
-        <?php if ($customer['store_fax']) { ?>
-          <img src="catalog/view/theme/<?php echo $template; ?>/image/location/fax.png" alt="" height="14" width="14" /> <?php echo $customer['store_fax']; ?><br />
-        <?php } ?>
         <img src="catalog/view/theme/<?php echo $template; ?>/image/location/mail.png" alt="" height="14" width="14" /> <?php echo $customer['store_email']; ?><br />
 		<img src="catalog/view/theme/<?php echo $template; ?>/image/location/global.png" alt="" height="14" width="14" /> <?php echo $customer['store_url']; ?><br />
         <?php if ($customer['store_company_id']) { ?>
@@ -65,12 +62,6 @@
         <td><?php echo $text_telephone; ?></td>
         <td><?php echo $customer['telephone']; ?></td>
       </tr>
-    <?php if ($customer['fax']) { ?>
-      <tr>
-        <td><?php echo $text_fax; ?></td>
-        <td><?php echo $customer['fax']; ?></td>
-      </tr>
-    <?php } ?>
     <?php if ($customer['gender']) { ?>
       <tr>
         <td><?php echo $text_gender; ?></td>

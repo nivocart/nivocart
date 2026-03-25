@@ -104,7 +104,7 @@ class ControllerBlogArticleInfo extends Controller {
 			$this->load->model('catalog/offer');
 			$this->load->model('account/customer');
 
-			$offers = $this->model_catalog_offer->getListProductOffers(0);
+			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			$related_product = $this->model_blog_article->getArticleProductRelated($blog_article_id);
 
@@ -129,7 +129,7 @@ class ControllerBlogArticleInfo extends Controller {
 					if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
-						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 					}
 				} else {
 					$price = false;
@@ -137,14 +137,14 @@ class ControllerBlogArticleInfo extends Controller {
 
 				if ((float)$product_info['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), 50, 50);
-					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
 					$special_label = false;
 					$special = false;
 				}
 
 				if ($this->config->get('config_tax')) {
-					$tax = $this->currency->format((float)$product_info['special'] ? $product_info['special'] : $product_info['price']);
+					$tax = $this->currency->format((float)$product_info['special'] ? $product_info['special'] : $product_info['price'], $this->config->get('config_currency'));
 				} else {
 					$tax = false;
 				}
@@ -276,7 +276,14 @@ class ControllerBlogArticleInfo extends Controller {
 				$this->data['captcha'] = '';
 			}
 
-			$this->data['captcha_image'] = $this->url->link('blog/article_info/captcha', '', 'SSL');
+			// Create session Captcha
+			$this->load->library('captcha');
+
+			$captcha = new Captcha();
+
+			$this->session->data['captcha'] = $captcha->getCode();
+
+			$this->data['captcha_image'] = $this->session->data['captcha'];
 
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
@@ -441,11 +448,11 @@ class ControllerBlogArticleInfo extends Controller {
 		$json = array();
 
 		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 25)) {
+			if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
 				$json['error'] = $this->language->get('error_name');
 			}
 
-			if ((utf8_strlen($this->request->post['text']) < 3) || (utf8_strlen($this->request->post['text']) > 1000)) {
+			if ((mb_strlen($this->request->post['text'], 'UTF-8') < 3) || (mb_strlen($this->request->post['text'], 'UTF-8') > 1000)) {
 				$json['error'] = $this->language->get('error_text');
 			}
 
@@ -466,15 +473,5 @@ class ControllerBlogArticleInfo extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
-	}
-
-	public function captcha() {
-		$this->load->library('captcha');
-
-		$captcha = new Captcha();
-
-		$this->session->data['captcha'] = $captcha->getCode();
-
-		$captcha->showImage($this->config->get('config_captcha_font'));
 	}
 }

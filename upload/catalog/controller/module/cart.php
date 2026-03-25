@@ -53,7 +53,7 @@ class ControllerModuleCart extends Controller {
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		if (!$price_hide) {
-			$this->data['text_items'] = sprintf($this->language->get('text_items_price'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
+			$this->data['text_items'] = sprintf($this->language->get('text_items_price'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->config->get('config_currency')));
 		} else {
 			$this->data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0));
 		}
@@ -113,26 +113,26 @@ class ControllerModuleCart extends Controller {
 				} else {
 					$filename = $this->encryption->decrypt($option['option_value']);
 
-					$value = utf8_substr($filename, 0, utf8_strrpos($filename, '.'));
+					$value = substr($filename, 0, strrpos($filename, '.'));
 				}
 
 				$option_data[] = array(
 					'name'  => $option['name'],
-					'value' => (utf8_strlen($value) > 20) ? utf8_substr($value, 0, 20) . '..' : $value,
+					'value' => (mb_strlen($value, 'UTF-8') > 20) ? substr($value, 0, 20) . '..' : $value,
 					'type'  => $option['type']
 				);
 			}
 
 			// Display price
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
+				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 			} else {
 				$price = false;
 			}
 
 			// Display total
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+				$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 			} else {
 				$total = false;
 			}
@@ -165,7 +165,7 @@ class ControllerModuleCart extends Controller {
 				$this->data['vouchers'][] = array(
 					'key'         => $key,
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'])
+					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency'))
 				);
 			}
 		}

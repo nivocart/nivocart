@@ -47,12 +47,6 @@
           <span class="error"><?php echo $error_telephone; ?></span>
         <?php } ?></td>
       </tr>
-      <?php if ($show_fax) { ?>
-      <tr>
-        <td><?php echo $entry_fax; ?></td>
-        <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-      </tr>
-      <?php } ?>
     </table>
   </div>
   <h2><?php echo $text_your_address; ?></h2>
@@ -208,7 +202,7 @@
   <div id="captcha-wrap">
     <div class="captcha-box">
       <div class="captcha-view">
-        <img src="<?php echo $captcha_image; ?>" alt="" id="captcha-image" />
+        <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
       </div>
     </div>
     <div class="captcha-text">
@@ -243,13 +237,6 @@
   <?php echo $content_low; ?>
 </div>
 <?php echo $content_lower; ?>
-
-<script type="text/javascript"><!--
-$('img#captcha-image').on('load', function(event) {
-	$(event.target).show();
-});
-$('img#captcha-image').trigger('load');
-//--></script>
 
 <script type="text/javascript"><!--
 $('select[name=\'country_id\']').on('change', function() {

@@ -1,75 +1,179 @@
 <?php
 class Document {
-	private $title;
-	private $description;
-	private $keywords;
-	private $links = array();
-	private $styles = array();
-	private $scripts = array();
+	/**
+	 * @var string
+	 */
+	private string $title = '';
+	/**
+	 * @var string
+	 */
+	private string $description = '';
+	/**
+	 * @var string
+	 */
+	private string $keywords = '';
+	/**
+	 * @var array<string, array<string, string>>
+	 */
+	private array $links = [];
+	/**
+	 * @var array<string, array<string, string>>
+	 */
+	private array $styles = [];
+	/**
+	 * @var array<string, array<string, array<string, string>>>
+	 */
+	private array $scripts = [];
+	/**
+	 * @var array<string, string>
+	 */
+	private array $meta = [];
 
-	public function setTitle($title) {
+	/**
+	 * Set Title
+	 *
+	 * @param string $title
+	 *
+	 * @return void
+	 */
+	public function setTitle(string $title): void {
 		$this->title = $title;
 	}
 
-	public function getTitle() {
+	/**
+	 * Get Title
+	 *
+	 * @return string
+	 */
+	public function getTitle(): string {
 		return $this->title;
 	}
 
-	public function setDescription($description) {
+	/**
+	 * Set Description
+	 *
+	 * @param string $description
+	 *
+	 * @return void
+	 */
+	public function setDescription(string $description): void {
 		$this->description = $description;
 	}
 
-	public function getDescription() {
+	/**
+	 * Get Description
+	 *
+	 * @return string
+	 */
+	public function getDescription(): string {
 		return $this->description;
 	}
 
-	public function setKeywords($keywords) {
+	/**
+	 * Set Keywords
+	 *
+	 * @param string $keywords
+	 */
+	public function setKeywords(string $keywords): void {
 		$this->keywords = $keywords;
 	}
 
-	public function getKeywords() {
+	/**
+	 * Get Keywords
+	 *
+	 * @return string
+	 */
+	public function getKeywords(): string {
 		return $this->keywords;
 	}
 
-	public function addMeta($name, $content) {
-		$this->metas[$name] = array(
-			'name'    => $name,
-			'content' => $content
-		);
-	}
-
-	public function getMetas() {
-		return $this->metas;
-	}
-
-	public function addLink($href, $rel) {
-		$this->links[md5($href)] = array(
+	/**
+	 * Add Link
+	 *
+	 * @param string $href
+	 * @param string $rel
+	 *
+	 * @return void
+	 */
+	public function addLink(string $href, string $rel): void {
+		$this->links[md5($href)] = [
 			'href' => $href,
 			'rel'  => $rel
-		);
+		];
 	}
 
-	public function getLinks() {
+	/**
+	 * Get Links
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	public function getLinks(): array {
 		return $this->links;
 	}
 
-	public function addStyle($href, $rel = 'stylesheet', $media = 'screen') {
-		$this->styles[md5($href)] = array(
+	/**
+	 * Add Style
+	 *
+	 * @param string $href
+	 * @param string $rel
+	 * @param string $media
+	 *
+	 * @return void
+	 */
+	public function addStyle(string $href, string $rel = 'stylesheet', string $media = 'screen'): void {
+		$this->styles[md5($href)] = [
 			'href'  => $href,
 			'rel'   => $rel,
 			'media' => $media
-		);
+		];
 	}
 
-	public function getStyles() {
+	/**
+	 * Get Styles
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	public function getStyles(): array {
 		return $this->styles;
 	}
 
-	public function addScript($script) {
+	/**
+	 * Add Script
+	 *
+	 * @param string script
+	 *
+	 * @return void
+	 */
+	public function addScript(string $script): void {
 		$this->scripts[md5($script)] = $script;
 	}
 
-	public function getScripts() {
+	/**
+	 * Get Scripts
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	public function getScripts(): array {
 		return $this->scripts;
+	}
+
+	/**
+	 * Add Meta
+	 *
+	 * @param string $meta
+	 *
+	 * @return void
+	 */
+	public function addMeta(string $meta): void {
+		$this->meta[$meta] = $meta;
+	}
+
+	/**
+	 * Get Meta
+	 *
+	 * @return array<string, string>
+	 */
+	public function getMeta(): array {
+		return $this->meta;
 	}
 }

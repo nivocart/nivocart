@@ -370,7 +370,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 		}
 
 		foreach ($this->request->post['return_status'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 32)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 3) || (mb_strlen($value['name'], 'UTF-8') > 32)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}

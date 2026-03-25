@@ -1,6 +1,6 @@
 <?php
 class ControllerStep1 extends Controller {
-	private $error = array();
+	private array $error = [];
 
 	public function index() {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {

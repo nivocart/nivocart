@@ -190,7 +190,7 @@ class ControllerCheckoutManual extends Controller {
 					$this->session->data['vouchers'][] = array(
 						'voucher_id'       => $voucher['voucher_id'],
 						'description'      => $voucher['description'],
-						'code'             => substr(hash_rand('md5'), 0, 10),
+						'code'             => substr(md5(mt_rand()), 0, 10),
 						'from_name'        => $voucher['from_name'],
 						'from_email'       => $voucher['from_email'],
 						'to_name'          => $voucher['to_name'],
@@ -204,19 +204,19 @@ class ControllerCheckoutManual extends Controller {
 
 			// Add a new voucher if set
 			if (isset($this->request->post['from_name']) && isset($this->request->post['from_email']) && isset($this->request->post['to_name']) && isset($this->request->post['to_email']) && isset($this->request->post['amount'])) {
-				if ((utf8_strlen($this->request->post['from_name']) < 1) || (utf8_strlen($this->request->post['from_name']) > 64)) {
+				if ((mb_strlen($this->request->post['from_name'], 'UTF-8') < 1) || (mb_strlen($this->request->post['from_name'], 'UTF-8') > 64)) {
 					$json['error']['vouchers']['from_name'] = $this->language->get('error_from_name');
 				}
 
-				if ((utf8_strlen($this->request->post['from_email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['from_email'])) {
+				if ((mb_strlen($this->request->post['from_email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['from_email'])) {
 					$json['error']['vouchers']['from_email'] = $this->language->get('error_email');
 				}
 
-				if ((utf8_strlen($this->request->post['to_name']) < 1) || (utf8_strlen($this->request->post['to_name']) > 64)) {
+				if ((mb_strlen($this->request->post['to_name'], 'UTF-8') < 1) || (mb_strlen($this->request->post['to_name'], 'UTF-8') > 64)) {
 					$json['error']['vouchers']['to_name'] = $this->language->get('error_to_name');
 				}
 
-				if ((utf8_strlen($this->request->post['to_email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['to_email'])) {
+				if ((mb_strlen($this->request->post['to_email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['to_email'])) {
 					$json['error']['vouchers']['to_email'] = $this->language->get('error_email');
 				}
 
@@ -227,7 +227,7 @@ class ControllerCheckoutManual extends Controller {
 				if (!isset($json['error']['vouchers'])) {
 					$voucher_data = array(
 						'order_id'         => 0,
-						'code'             => substr(hash_rand('md5'), 0, 10),
+						'code'             => substr(md5(mt_rand()), 0, 10),
 						'from_name'        => $this->request->post['from_name'],
 						'from_email'       => $this->request->post['from_email'],
 						'to_name'          => $this->request->post['to_name'],
@@ -245,7 +245,7 @@ class ControllerCheckoutManual extends Controller {
 					$this->session->data['vouchers'][] = array(
 						'voucher_id'       => $voucher_id,
 						'description'      => sprintf($this->language->get('text_for'), $this->currency->format($this->request->post['amount'], $this->config->get('config_currency')), $this->request->post['to_name']),
-						'code'             => substr(hash_rand('md5'), 0, 10),
+						'code'             => substr(md5(mt_rand()), 0, 10),
 						'from_name'        => $this->request->post['from_name'],
 						'from_email'       => $this->request->post['from_email'],
 						'to_name'          => $this->request->post['to_name'],
@@ -292,7 +292,7 @@ class ControllerCheckoutManual extends Controller {
 					$json['error']['shipping']['zone'] = $this->language->get('error_zone');
 				}
 
-				if ($country_info && $country_info['postcode_required'] && (utf8_strlen($this->request->post['shipping_postcode']) < 2) || (utf8_strlen($this->request->post['shipping_postcode']) > 10)) {
+				if ($country_info && $country_info['postcode_required'] && (mb_strlen($this->request->post['shipping_postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['shipping_postcode'], 'UTF-8') > 10)) {
 					$json['error']['shipping']['postcode'] = $this->language->get('error_postcode');
 				}
 
@@ -484,7 +484,7 @@ class ControllerCheckoutManual extends Controller {
 
 			$country_info = $this->model_localisation_country->getCountry($this->request->post['payment_country_id']);
 
-			if ($country_info && $country_info['postcode_required'] && (utf8_strlen($this->request->post['payment_postcode']) < 2) || (utf8_strlen($this->request->post['payment_postcode']) > 10)) {
+			if ($country_info && $country_info['postcode_required'] && (mb_strlen($this->request->post['payment_postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['payment_postcode'], 'UTF-8') > 10)) {
 				$json['error']['payment']['postcode'] = $this->language->get('error_postcode');
 			}
 

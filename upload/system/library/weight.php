@@ -1,8 +1,25 @@
 <?php
 class Weight {
-	private $weights = array();
+	/**
+	 * @var object
+	 */
+	private object $db;
+	/**
+	 * @var object
+	 */
+	private object $config;
+	/**
+	 * @var array<int, array<string, mixed>>
+	 */
+	private array $weights = [];
+
 	protected $registry;
 
+	/**
+	 * Constructor
+	 *
+	 * @param 	$registry
+	 */
     public function __construct(Registry $registry) {
 		$this->db = $registry->get('db');
 		$this->config = $registry->get('config');
@@ -19,7 +36,20 @@ class Weight {
 		}
 	}
 
-	public function convert($value, $from, $to) {
+	/**
+	 * Convert
+	 *
+	 * @param float $value
+	 * @param int   $from
+	 * @param int   $to
+	 *
+	 * @return float
+	 *
+	 * @example
+	 *
+	 * $weight = $this->weight->convert($value, $from, $to);
+	 */
+	public function convert(float $value, int $from, int $to): float {
 		if ($from == $to) {
 			return $value;
 		}
@@ -39,7 +69,21 @@ class Weight {
 		return $value * ($to / $from);
 	}
 
-	public function format($value, $weight_class_id, $decimal_point = '.', $thousand_point = ',') {
+	/**
+	 * Format
+	 *
+	 * @param float  $value
+	 * @param int    $weight_class_id primary key of the weight class record
+	 * @param string $decimal_point
+	 * @param string $thousand_point
+	 *
+	 * @return string
+	 *
+	 * @example
+	 *
+	 * $weight = $this->weight->format($value, $weight_class_id, $decimal_point, $thousand_point);
+	 */
+	public function format(float $value, int $weight_class_id, string $decimal_point = '.', string $thousand_point = ','): string {
 		if (isset($this->weights[$weight_class_id])) {
 			return number_format($value, 2, $decimal_point, $thousand_point) . $this->weights[$weight_class_id]['unit'];
 		} else {
@@ -47,7 +91,18 @@ class Weight {
 		}
 	}
 
-	public function getUnit($weight_class_id) {
+	/**
+	 * Get Unit
+	 *
+	 * @param int $weight_class_id primary key of the weight class record
+	 *
+	 * @return string
+	 *
+	 * @example
+	 *
+	 * $unit = $this->weight->getUnit($weight_class_id);
+	 */
+	public function getUnit(int $weight_class_id): string {
 		if (isset($this->weights[$weight_class_id])) {
 			return $this->weights[$weight_class_id]['unit'];
 		} else {

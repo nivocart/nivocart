@@ -72,8 +72,7 @@ $_['text_is_installing']     = 'Please wait while NivoCart is being installed ..
 $_['text_is_upgrading']      = 'Please wait while NivoCart is being upgraded ...';
 $_['text_login']             = 'Go to my Dashboard';
 $_['text_project_home']      = 'Project Homepage';
-$_['text_project_forum']     = 'Project Forum';
-$_['text_footer']            = 'Copyright © 2019 NivoCart - All rights reserved';
+$_['text_footer']            = 'Copyright © 2026 NivoCart - All rights reserved';
 
 // Entry
 $_['entry_agree']            = 'I agree to the license ';
@@ -92,7 +91,7 @@ $_['entry_maintenance']      = 'Activate Maintenance mode ?';
 $_['entry_demo_data']        = 'Remove Demo Data ?';
 
 // Error
-$_['error_php_version']      = 'Warning: You need to use PHP 7.0 or above for NivoCart to work!';
+$_['error_php_version']      = 'Warning: You need to use PHP 8.0 or above for NivoCart to work!';
 $_['error_php_uploads']      = 'Warning: PHP file_uploads needs to be enabled!';
 $_['error_php_session']      = 'Warning: NivoCart will not work with session.auto_start enabled!';
 $_['error_php_extension']    = 'Warning: A database extension needs to be loaded in the php.ini for NivoCart to work!';

@@ -1,7 +1,7 @@
 <?php
 class ModelReportCoupon extends Model {
 
-	public function getCoupons($data = array()) {
+	public function getCoupons(array $data = []): array {
 		$sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS orders, SUM(ch.amount) AS `total` FROM " . DB_PREFIX . "coupon_history ch LEFT JOIN " . DB_PREFIX . "coupon c ON (ch.coupon_id = c.coupon_id)";
 
 		$implode = array();
@@ -37,7 +37,7 @@ class ModelReportCoupon extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalCoupons($data = array()) {
+	public function getTotalCoupons(array $data = []) {
 		$sql = "SELECT COUNT(DISTINCT coupon_id) AS `total` FROM " . DB_PREFIX . "coupon_history";
 
 		$implode = array();

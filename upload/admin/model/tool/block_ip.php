@@ -1,7 +1,7 @@
 <?php
 class ModelToolBlockIp extends Model {
 
-	public function addBlockIp($data) {
+	public function addBlockIp(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "block_ip SET from_ip = '" . $this->db->escape($data['from_ip']) . "', to_ip = '" . $this->db->escape($data['to_ip']) . "'");
 
 		$block_ip_id = $this->db->getLastId();
@@ -12,25 +12,25 @@ class ModelToolBlockIp extends Model {
 		$this->cache->delete('block_ip');
 	}
 
-	public function editBlockIp($block_ip_id, $data) {
+	public function editBlockIp(int $block_ip_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "block_ip SET from_ip = '" . $this->db->escape($data['from_ip']) . "', to_ip = '" . $this->db->escape($data['to_ip']) . "' WHERE block_ip_id = '" . (int)$block_ip_id . "'");
 
 		$this->cache->delete('block_ip');
 	}
 
-	public function deleteBlockIp($block_ip_id) {
+	public function deleteBlockIp(int $block_ip_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "block_ip WHERE block_ip_id = '" . (int)$block_ip_id . "'");
 
 		$this->cache->delete('block_ip');
 	}
 
-	public function getBlockIp($block_ip_id) {
+	public function getBlockIp(int $block_ip_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "block_ip WHERE block_ip_id = '" . (int)$block_ip_id . "'");
 
 		return $query->row;
 	}
 
-	public function getBlockIps($data = array()) {
+	public function getBlockIps(array $data = []): array {
 		if ($data) {
 			$sql = "SELECT * FROM " . DB_PREFIX . "block_ip";
 
@@ -84,7 +84,7 @@ class ModelToolBlockIp extends Model {
 		}
 	}
 
-	public function getTotalBlockIps($data = array()) {
+	public function getTotalBlockIps(array $data = []): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "block_ip");
 
 		return $query->row['total'];

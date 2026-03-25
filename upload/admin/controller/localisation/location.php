@@ -490,22 +490,22 @@ class ControllerLocalisationLocation extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 64)) {
+		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 64)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if ((utf8_strlen($this->request->post['address']) < 3) || (utf8_strlen($this->request->post['address']) > 128)) {
+		if ((mb_strlen($this->request->post['address'], 'UTF-8') < 3) || (mb_strlen($this->request->post['address'], 'UTF-8') > 128)) {
 			$this->error['address'] = $this->language->get('error_address');
 		}
 
-		if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+		if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
 		$allowed = array('jpg','jpeg','png','gif');
 
 		if ($this->request->post['image']) {
-			$ext = utf8_substr(strrchr($this->request->post['image'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['image'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['image'] = $this->language->get('error_image');

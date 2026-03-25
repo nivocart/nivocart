@@ -1,7 +1,7 @@
 <?php
 class ModelSaleOfferCategoryCategory extends Model {
 
-	public function addOfferCategoryCategory($data) {
+	public function addOfferCategoryCategory(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "offer_category_category SET name = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', category_one = '" . $this->db->escape($data['category_one']) . "', category_two = '" . $this->db->escape($data['category_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$offer_category_category_id = $this->db->getLastId();
@@ -10,21 +10,21 @@ class ModelSaleOfferCategoryCategory extends Model {
 		$this->session->data['new_offer_category_category_id'] = $offer_category_category_id;
 	}
 
-	public function editOfferCategoryCategory($offer_category_category_id, $data) {
+	public function editOfferCategoryCategory(int $offer_category_category_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "offer_category_category SET name = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', category_one = '" . $this->db->escape($data['category_one']) . "', category_two = '" . $this->db->escape($data['category_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "' WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 	}
 
-	public function deleteOfferCategoryCategory($offer_category_category_id) {
+	public function deleteOfferCategoryCategory(int $offer_category_category_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 	}
 
-	public function getOfferCategoryCategory($offer_category_category_id) {
+	public function getOfferCategoryCategory(int $offer_category_category_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 
 		return $query->row;
 	}
 
-	public function getOfferCategoryCategories($data = array()) {
+	public function getOfferCategoryCategories(array $data = []): array {
 		$sql = "SELECT offer_category_category_id, name, discount, `type`, logged, date_start, date_end, status FROM " . DB_PREFIX . "offer_category_category";
 
 		$sort_data = array(
@@ -66,7 +66,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 		return $query->rows;
 	}
 
-	public function getOfferCategoryCategoryOnes($offer_category_category_id) {
+	public function getOfferCategoryCategoryOnes(int $offer_category_category_id): array {
 		$offer_category_one_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
@@ -78,7 +78,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 		return $offer_category_one_data;
 	}
 
-	public function getOfferCategoryCategoryTwos($offer_category_category_id) {
+	public function getOfferCategoryCategoryTwos(int $offer_category_category_id): array {
 		$offer_category_two_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
@@ -90,7 +90,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 		return $offer_category_two_data;
 	}
 
-	public function getTotalOfferCategoryCategory() {
+	public function getTotalOfferCategoryCategory(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_category_category");
 
 		return $query->row['total'];

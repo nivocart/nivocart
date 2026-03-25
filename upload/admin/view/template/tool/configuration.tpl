@@ -90,7 +90,7 @@
               <td><?php echo $text_phpversion; ?></td>
               <td>5.4+</td>
               <td><?php echo phpversion(); ?></td>
-              <td><?php echo (version_compare(phpversion(), '5.4.0', '>=')) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
+              <td><?php echo (version_compare(phpversion(), '8.0.0', '>=')) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
             </tr>
             <tr>
               <td><?php echo $text_registerglobals; ?></td>
@@ -128,8 +128,8 @@
             </tr>
             <tr>
               <td><?php echo $text_mysql; ?></td>
-              <td><?php echo (phpversion() < '7.0') ? $text_on : $text_off; ?></td>
-              <?php if (phpversion() < '7.0') { ?>
+              <td><?php echo (phpversion() < '8.0') ? $text_on : $text_off; ?></td>
+              <?php if (phpversion() < '8.0') { ?>
                 <td><?php echo extension_loaded('mysql') ? 'On' : 'Off'; ?></td>
                 <td><?php echo extension_loaded('mysql') ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
               <?php } else { ?>

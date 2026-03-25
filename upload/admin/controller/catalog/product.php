@@ -1,7 +1,10 @@
 <?php
 class ControllerCatalogProduct extends Controller {
-	private $error = array();
-
+	/**
+	 * @var array errors
+	 */
+	private array $error = [];
+	
 	public function index() {
 		$this->language->load('catalog/product');
 
@@ -355,7 +358,7 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->data['products'] = array();
 
-		$data = array(
+		$filter_data = [
 			'filter_name'     => $filter_name,
 			'filter_model'    => $filter_model,
 			'filter_price'    => $filter_price,
@@ -365,7 +368,7 @@ class ControllerCatalogProduct extends Controller {
 			'order'           => $order,
 			'start'           => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'           => $this->config->get('config_admin_limit')
-		);
+		];
 
 		// Admin user extra permissions
 		$this->data['user_allowed'] = false;
@@ -386,9 +389,9 @@ class ControllerCatalogProduct extends Controller {
 		$admin_barcode = $this->config->get('config_admin_barcode');
 		$barcode_type = $this->config->get('config_barcode_type');
 
-		$product_total = $this->model_catalog_product->getTotalProducts($data);
+		$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
 
-		$results = $this->model_catalog_product->getProducts($data);
+		$results = $this->model_catalog_product->getProducts($filter_data);
 
 		foreach ($results as $result) {
 			$action = array();
@@ -982,29 +985,39 @@ class ControllerCatalogProduct extends Controller {
 		// Price
 		$this->load->model('localisation/tax_local_rate');
 
-		$this->data['tax_local_rates'] = $this->model_localisation_tax_local_rate->getTaxLocalRates(0);
+		$tax_local_rates = [];
+
+		$tax_local_rates = $this->model_localisation_tax_local_rate->getTaxLocalRates();
+
+		if (!empty($tax_local_rates)) {
+			foreach ($tax_local_rates as $tax_local_rate) {
+				$tax_local_rate_id = (int)$tax_local_rate['tax_local_rate_id'];
+			}
+		}
+
+		$this->data['tax_local_rates'] = $tax_local_rates;
 
 		if (isset($this->request->post['tax_local_rate_id'])) {
 			$tax_local_rate_id = $this->request->post['tax_local_rate_id'];
-			$this->data['tax_local_rate_id'] = $tax_local_rate_id;
+			$this->data['tax_local_rate_id'] = (int)$tax_local_rate_id;
 		} elseif (isset($this->request->get['product_id'])) {
 			$tax_local_rate_id = $this->model_catalog_product->getProductTaxLocalRates($this->request->get['product_id']);
-			$this->data['tax_local_rate_id'] = $tax_local_rate_id;
+			$this->data['tax_local_rate_id'] = (int)$tax_local_rate_id;
 		} else {
 			$tax_local_rate_id = 0;
-			$this->data['tax_local_rate_id'] = $tax_local_rate_id;
+			$this->data['tax_local_rate_id'] = (int)$tax_local_rate_id;
 		}
 
 		$this->data['configure_tax_local_rate'] = $this->url->link('localisation/tax_local_rate', 'token=' . $this->session->data['token'], 'SSL');
 
-		$base_rate = $this->model_localisation_tax_local_rate->getTaxLocalRate($tax_local_rate_id);
+		$base_rate = $this->model_localisation_tax_local_rate->getTaxLocalRate((int)$tax_local_rate_id);
 
-		if (!empty($base_rate) && $base_rate['tax_local_rate_id'] > 0 && is_numeric($base_rate['rate'])) {
-			$this->data['vat_rate'] = 1 + ($base_rate['rate'] / 100);
-			$this->data['base_rate'] = $base_rate['rate'];
+		if (!empty($base_rate) && (int)$tax_local_rate_id > 0 && is_numeric((float)$base_rate)) {
+			$this->data['vat_rate'] = 1 + ((float)$base_rate / 100);
+			$this->data['base_rate'] = (float)$base_rate;
 		} else {
 			$this->data['vat_rate'] = 1;
-			$this->data['base_rate'] = '';
+			$this->data['base_rate'] = 0;
 		}
 
 		if (isset($this->request->post['price'])) {
@@ -1296,7 +1309,9 @@ class ControllerCatalogProduct extends Controller {
 		// Categories
 		$this->load->model('catalog/category');
 
-		$this->data['categories'] = $this->model_catalog_category->getCategories(0);
+		$categories_array = array();
+
+		$this->data['categories'] = $this->model_catalog_category->getCategories($categories_array);
 
 		if (isset($this->request->post['product_category'])) {
 			$categories = $this->request->post['product_category'];
@@ -1352,7 +1367,9 @@ class ControllerCatalogProduct extends Controller {
 		// Downloads
 		$this->load->model('catalog/download');
 
-		$this->data['downloads'] = $this->model_catalog_download->getDownloads(0);
+		$downloads_array = array();
+
+		$this->data['downloads'] = $this->model_catalog_download->getDownloads($downloads_array);
 
 		if (isset($this->request->post['product_download'])) {
 			$product_downloads = $this->request->post['product_download'];
@@ -1402,7 +1419,9 @@ class ControllerCatalogProduct extends Controller {
 		// Colors
 		$this->load->model('catalog/palette');
 
-		$this->data['palettes'] = $this->model_catalog_palette->getPalettes(0);
+		$palettes_array = array();
+
+		$this->data['palettes'] = $this->model_catalog_palette->getPalettes($palettes_array);
 
 		if (isset($this->request->post['palette_id'])) {
 			$this->data['palette_id'] = $this->request->post['palette_id'];
@@ -1447,7 +1466,9 @@ class ControllerCatalogProduct extends Controller {
 		// Fields
 		$this->load->model('catalog/field');
 
-		$this->data['fields'] = $this->model_catalog_field->getFields(0);
+		$fields_array = array();
+
+		$this->data['fields'] = $this->model_catalog_field->getFields($fields_array);
 
 		if (isset($this->request->post['product_field'])) {
 			$product_fields = $this->request->post['product_field'];
@@ -2051,19 +2072,19 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		foreach ($this->request->post['product_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 1) || (utf8_strlen($value['name']) > 255)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 1) || (mb_strlen($value['name'], 'UTF-8') > 255)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
 
-		if ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen($this->request->post['model']) > 64)) {
+		if ((mb_strlen($this->request->post['model'], 'UTF-8') < 1) || (mb_strlen($this->request->post['model'], 'UTF-8') > 64)) {
 			$this->error['model'] = $this->language->get('error_model');
 		}
 
 		$allowed = array('jpg','jpeg','png','gif');
 
 		if ($this->request->post['image']) {
-			$ext = utf8_substr(strrchr($this->request->post['image'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['image'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['image'] = $this->language->get('error_image_format');
@@ -2071,7 +2092,7 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		if ($this->request->post['label']) {
-			$ext = utf8_substr(strrchr($this->request->post['label'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['label'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['label'] = $this->language->get('error_image_format');
@@ -2081,7 +2102,7 @@ class ControllerCatalogProduct extends Controller {
 		if (isset($this->request->post['product_image'])) {
 			foreach ($this->request->post['product_image'] as $product_image_id => $product_image) {
 				if ($product_image['image']) {
-					$extension = utf8_substr(strrchr($product_image['image'], '.'), 1);
+					$extension = substr(strrchr($product_image['image'], '.'), 1);
 
 					if (!in_array(strtolower($extension), $allowed)) {
 						$this->error['product_image'][$product_image_id] = $this->language->get('error_image_format');

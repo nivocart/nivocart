@@ -93,10 +93,6 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_fax; ?></td>
-            <td><input type="text" name="config_fax" value="<?php echo $config_fax; ?>" /></td>
-          </tr>
-          <tr>
             <td><?php echo $entry_company_id; ?></td>
             <td><input type="text" name="config_company_id" value="<?php echo $config_company_id; ?>" size="40" /></td>
           </tr>
@@ -1008,20 +1004,6 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_customer_fax; ?></td>
-            <td><?php if ($config_customer_fax) { ?>
-              <input type="radio" name="config_customer_fax" value="1" id="customer-fax-on" class="radio" checked />
-              <label for="customer-fax-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_customer_fax" value="0" id="customer-fax-off" class="radio" />
-              <label for="customer-fax-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_customer_fax" value="1" id="customer-fax-on" class="radio" />
-              <label for="customer-fax-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_customer_fax" value="0" id="customer-fax-off" class="radio" checked />
-              <label for="customer-fax-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
             <td><?php echo $entry_customer_gender; ?></td>
             <td><?php if ($config_customer_gender) { ?>
               <input type="radio" name="config_customer_gender" value="1" id="customer-gender-on" class="radio" checked />
@@ -1168,20 +1150,6 @@
               <label for="affiliate-mail-on"><span><span></span></span><?php echo $text_yes; ?></label>
               <input type="radio" name="config_affiliate_mail" value="0" id="affiliate-mail-off" class="radio" checked />
               <label for="affiliate-mail-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_affiliate_fax; ?></td>
-            <td><?php if ($config_affiliate_fax) { ?>
-              <input type="radio" name="config_affiliate_fax" value="1" id="affiliate-fax-on" class="radio" checked />
-              <label for="affiliate-fax-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_affiliate_fax" value="0" id="affiliate-fax-off" class="radio" />
-              <label for="affiliate-fax-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_affiliate_fax" value="1" id="affiliate-fax-on" class="radio" />
-              <label for="affiliate-fax-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_affiliate_fax" value="0" id="affiliate-fax-off" class="radio" checked />
-              <label for="affiliate-fax-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>

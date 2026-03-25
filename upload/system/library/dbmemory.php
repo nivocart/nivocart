@@ -1,14 +1,27 @@
 <?php
 class Dbmemory {
-	private $db;
+	/**
+	 * @var object
+	 */
+	private object $db;
 
-	private static $results = array();
-	private static $escaped = array();
+	private static array $results = [];
+	private static array $escaped = [];
 
+	/**
+	 * Constructor
+	 *
+	 * @param 	$registry
+	 */
 	public function __construct($db) {
 		$this->db = $db;
 	}
 
+	/**
+	 * Query
+	 *
+	 * @param $sql
+	 */
 	public function query($sql) {
 		$h = md5($sql);
 
@@ -19,6 +32,11 @@ class Dbmemory {
 		return self::$results[$h];
 	}
 
+	/**
+	 * Escape
+	 *
+	 * @param string $string
+	 */
 	public function escape($string) {
 		if (!isset(self::$escaped[$string])) {
 			self::$escaped[$string] = $this->db->escape($string);
@@ -27,10 +45,16 @@ class Dbmemory {
 		return self::$escaped[$string];
 	}
 
+	/**
+	 * Count Affected
+	 */
 	public function countAffected() {
 		return $this->db->countAffected();
 	}
 
+	/**
+	 * get Last Id
+	 */
 	public function getLastId() {
 		return $this->db->getLastId();
 	}

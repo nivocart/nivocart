@@ -1,8 +1,8 @@
 <?php
 class ModelUserUser extends Model {
 
-	public function addUser($data) {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', salt = '" . $this->db->escape($salt = substr(hash_rand('md5'), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
+	public function addUser(array $data = []): void {
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$user_id = $this->db->getLastId();
 
@@ -14,11 +14,11 @@ class ModelUserUser extends Model {
 		}
 	}
 
-	public function editUser($user_id, $data) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
+	public function editUser(int $user_id, array $data = []): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
 
 		if ($data['password']) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = substr(hash_rand('md5'), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 
 		if (isset($data['image'])) {
@@ -26,31 +26,31 @@ class ModelUserUser extends Model {
 		}
 	}
 
-	public function editPassword($user_id, $password) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = substr(hash_rand('md5'), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', `code` = '' WHERE user_id = '" . (int)$user_id . "'");
+	public function editPassword(int $user_id, $password) {
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', `code` = '' WHERE user_id = '" . (int)$user_id . "'");
 	}
 
 	public function editCode($email, $code) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET `code` = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET `code` = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower($email), 'UTF-8') . "'");
 	}
 
-	public function deleteUser($user_id) {
+	public function deleteUser(int $user_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "'");
 	}
 
-	public function getUser($user_id) {
+	public function getUser(int $user_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "'");
 
 		return $query->row;
 	}
 
-	public function getUserName($user_id) {
+	public function getUserName(int $user_id) {
 		$query = $this->db->query("SELECT DISTINCT username FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "'");
 
 		return $query->row['username'];
 	}
 
-	public function getUsers($data = array()) {
+	public function getUsers(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "user`";
 
 		if (isset($data['filter_name'])) {
@@ -98,13 +98,13 @@ class ModelUserUser extends Model {
 	}
 
 	public function getUserByUsername($username) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE username = '" . $this->db->escape($username) . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE username = '" . $this->db->escape((string)$username) . "'");
 
 		return $query->row;
 	}
 
 	public function getUserByEmail($email) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower($email), 'UTF-8') . "'");
 
 		return $query->row;
 	}
@@ -115,15 +115,15 @@ class ModelUserUser extends Model {
 		return $query->row;
 	}
 
-	public function getUserGroup($user_id, $user_group_id) {
-		$query = $this->db->query("SELECT ug.name AS name FROM " . DB_PREFIX . "user_group ug LEFT JOIN `" . DB_PREFIX . "user` u ON (ug.user_group_id = u.user_group_id) WHERE ug.user_group_id = '" . (int)$user_group_id . "' AND u.user_id = '" . (int)$user_id . "'");
+	public function getUserGroup(int $user_id, int $user_group_id) {
+		$query = $this->db->query("SELECT ug.name AS `name` FROM " . DB_PREFIX . "user_group ug LEFT JOIN `" . DB_PREFIX . "user` u ON (ug.user_group_id = u.user_group_id) WHERE ug.user_group_id = '" . (int)$user_group_id . "' AND u.user_id = '" . (int)$user_id . "'");
 
 		return $query->row['name'];
 	}
 
 	// Checks
-	public function checkUserPassword($password, $user_id, $username) {
-		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "')))))) THEN 0 ELSE 1 END AS result FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "' AND username = '" . $this->db->escape($username) . "' AND status = '1'");
+	public function checkUserPassword($password, int $user_id, $username) {
+		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "')))))) THEN 0 ELSE 1 END AS `result` FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "' AND username = '" . $this->db->escape((string)$username) . "' AND status = '1'");
 
 		if ($query->row['result']) {
 			return $query->row['result'];
@@ -133,20 +133,20 @@ class ModelUserUser extends Model {
 	}
 
 	// Totals
-	public function getTotalUsers() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user`");
+	public function getTotalUsers(): int {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user`");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalUsersByGroupId($user_group_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user` WHERE user_group_id = '" . (int)$user_group_id . "'");
+	public function getTotalUsersByGroupId(int $user_group_id): int {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user` WHERE user_group_id = '" . (int)$user_group_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalUsersByEmail($email) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+	public function getTotalUsersByEmail($email): int {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower($email), 'UTF-8') . "'");
 
 		return $query->row['total'];
 	}

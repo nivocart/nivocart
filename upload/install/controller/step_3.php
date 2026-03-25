@@ -1,6 +1,6 @@
 <?php
 class ControllerStep3 extends Controller {
-	private $error = array();
+	private array $error = [];
 
 	public function index() {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -16,6 +16,7 @@ class ControllerStep3 extends Controller {
 		$this->data['heading_step_3'] = $this->language->get('heading_step_3');
 
 		$this->data['text_db_connection'] = $this->language->get('text_db_connection');
+		$this->data['text_db_advanced'] = $this->language->get('text_db_advanced');
 		$this->data['text_db_administration'] = $this->language->get('text_db_administration');
 		$this->data['text_db_option'] = $this->language->get('text_db_option');
 		$this->data['text_mysqli'] = $this->language->get('text_mysqli');
@@ -230,7 +231,7 @@ class ControllerStep3 extends Controller {
 
 		if ($this->request->post['db_driver'] == 'mysqli') {
 			if (function_exists('mysqli_connect')) {
-				$connection = new mysqli($this->request->post['db_hostname'], $this->request->post['db_username'], html_entity_decode($this->request->post['db_password'], ENT_QUOTES, 'UTF-8'), $this->request->post['db_database'], $this->request->post['db_port']);
+				$connection = new mysqli($this->request->post['db_hostname'], html_entity_decode($this->request->post['db_username'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->request->post['db_password'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->request->post['db_database'], ENT_QUOTES, 'UTF-8'), $this->request->post['db_port']);
 
 				if (mysqli_connect_error()) {
 					$this->error['warning'] = $this->language->get('error_db_connect');
@@ -245,7 +246,7 @@ class ControllerStep3 extends Controller {
 
 		if ($this->request->post['db_driver'] == 'mpdo') {
 			try {
-				new \PDO("mysql:host=" . $this->request->post['db_hostname'] . ";port=" . $this->request->post['db_port'] . ";dbname=" . $this->request->post['db_database'], $this->request->post['db_username'], $this->request->post['db_password'], array(\PDO::ATTR_PERSISTENT => true));
+				new \PDO("mysql:host=" . $this->request->post['db_hostname'] . ";port=" . $this->request->post['db_port'] . ";dbname=" . $this->request->post['db_database'], html_entity_decode($this->request->post['db_username'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->request->post['db_password'], ENT_QUOTES, 'UTF-8'), array(\PDO::ATTR_PERSISTENT => true));
 			} catch (Exception $e) {
 				$this->error['warning'] = $e->getMessage();
 			}
@@ -259,7 +260,7 @@ class ControllerStep3 extends Controller {
 			$this->error['password'] = $this->language->get('error_password');
 		}
 
-		if ((utf8_strlen($this->request->post['email']) < 6) || (utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if ((mb_strlen($this->request->post['email'], 'UTF-8') < 6) || (mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 

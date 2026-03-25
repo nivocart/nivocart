@@ -46,12 +46,6 @@
           <span class="error"><?php echo $error_telephone; ?></span>
         <?php } ?></td>
       </tr>
-      <?php if ($show_fax) { ?>
-      <tr>
-        <td><?php echo $entry_fax; ?></td>
-        <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-      </tr>
-      <?php } ?>
       <?php if ($show_gender) { ?>
       <tr>
         <td><?php echo $entry_gender; ?></td>
@@ -206,7 +200,7 @@
     <div id="captcha-wrap">
       <div class="captcha-box">
         <div class="captcha-view">
-          <img src="<?php echo $captcha_image; ?>" alt="" id="captcha-image" />
+          <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
         </div>
       </div>
       <div class="captcha-text">
@@ -242,15 +236,6 @@
   <?php echo $content_low; ?>
 </div>
 <?php echo $content_lower; ?>
-
-<?php if ($account_captcha) { ?>
-<script type="text/javascript"><!--
-$('img#captcha-image').on('load', function(event) {
-	$(event.target).show();
-});
-$('img#captcha-image').trigger('load');
-//--></script>
-<?php } ?>
 
 <script type="text/javascript"><!--
 $('input[name=\'customer_group_id\']:checked').on('change', function() {

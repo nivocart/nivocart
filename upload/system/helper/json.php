@@ -1,20 +1,24 @@
 <?php
+/**
+ * Helper json_encode
+ */
 if (!function_exists('json_encode')) {
 	function json_encode($data) {
 		switch (gettype($data)) {
 			case 'boolean':
-				return ($data) ? 'true' : 'false';
+				return $data ? 'true' : 'false';
 			case 'integer':
 			case 'double':
 				return $data;
 			case 'resource':
 			case 'string':
-				# Escape non-printable or Non-ASCII characters
+				# Escape non-printable or Non-ASCII characters.
+				# I also put the \\ character first, as suggested in comments on the 'addclashes' page.
 				$json = '';
 
 				$string = '"' . addcslashes($data, "\\\"\n\r\t/" . chr(8) . chr(12)) . '"';
 
-				# Convert UTF-8 to Hexadecimal Codepoints
+				# Convert UTF-8 to Hexadecimal Codepoints.
 				for ($i = 0; $i < strlen($string); $i++) {
 					$char = $string[$i];
 					$c1 = ord($char);
@@ -78,6 +82,9 @@ if (!function_exists('json_encode')) {
 	}
 }
 
+/**
+ * Helper json_decode
+ */
 if (!function_exists('json_decode')) {
 	function json_decode($json, $assoc = false) {
 		$match = '/".*?(?<!\\\\)"/';

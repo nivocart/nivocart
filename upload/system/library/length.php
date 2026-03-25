@@ -1,8 +1,25 @@
 <?php
 class Length {
-	private $lengths = array();
+	/**
+	 * @var object
+	 */
+	private object $db;
+	/**
+	 * @var object
+	 */
+	private object $config;
+	/**
+	 * @var array<int, array<string, mixed>>
+	 */
+	private array $lengths = [];
+
 	protected $registry;
 
+	/**
+	 * Constructor
+	 *
+	 * @param 	$registry
+	 */
     public function __construct(Registry $registry) {
 		$this->db = $registry->get('db');
 		$this->config = $registry->get('config');
@@ -19,7 +36,20 @@ class Length {
 		}
 	}
 
-	public function convert($value, $from, $to) {
+	/**
+	 * Convert
+	 *
+	 * @param float $value
+	 * @param int   $from
+	 * @param int   $to
+	 *
+	 * @return float
+	 *
+	 * @example
+	 *
+	 * $length = $this->length->convert($value, $from, $to);
+	 */
+	public function convert(float $value, int $from, int $to): float {
 		if ($from == $to) {
 			return $value;
 		}
@@ -39,7 +69,21 @@ class Length {
 		return $value * ($to / $from);
 	}
 
-	public function format($value, $length_class_id, $decimal_point = '.', $thousand_point = ',') {
+	/**
+	 * Format
+	 *
+	 * @param float  $value
+	 * @param int    $length_class_id primary key of the length class record
+	 * @param string $decimal_point
+	 * @param string $thousand_point
+	 *
+	 * @return string
+	 *
+	 * @example
+	 *
+	 * $length = $this->length->format($value, $length_class_id, $decimal_point, $thousand_point);
+	 */
+	public function format(float $value, int $length_class_id, string $decimal_point = '.', string $thousand_point = ','): string {
 		if (isset($this->lengths[$length_class_id])) {
 			return number_format($value, 2, $decimal_point, $thousand_point) . $this->lengths[$length_class_id]['unit'];
 		} else {
@@ -47,7 +91,18 @@ class Length {
 		}
 	}
 
-	public function getUnit($length_class_id) {
+	/**
+	 * Get Unit
+	 *
+	 * @param int $length_class_id primary key of the length class record
+	 *
+	 * @return string
+	 *
+	 * @example
+	 *
+	 * $unit = $this->length->getUnit($length_class_id);
+	 */
+	public function getUnit(int $length_class_id): string {
 		if (isset($this->lengths[$length_class_id])) {
 			return $this->lengths[$length_class_id]['unit'];
 		} else {

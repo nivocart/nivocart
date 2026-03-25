@@ -548,7 +548,10 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['path'] = '';
 		}
 
-		$categories = $this->model_catalog_category->getCategories(0);
+		// Empty array required here to get the Categories
+		$form_data = array();
+
+		$categories = $this->model_catalog_category->getCategories($form_data);
 
 		// Remove own id from list
 		if (!empty($category_info)) {
@@ -695,7 +698,7 @@ class ControllerCatalogCategory extends Controller {
 		}
 
 		foreach ($this->request->post['category_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 2) || (mb_strlen($value['name'], 'UTF-8') > 255)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
@@ -703,7 +706,7 @@ class ControllerCatalogCategory extends Controller {
 		$allowed = array('jpg','jpeg','png','gif');
 
 		if ($this->request->post['image']) {
-			$ext = utf8_substr(strrchr($this->request->post['image'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['image'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['image'] = $this->language->get('error_image');

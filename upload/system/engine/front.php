@@ -1,17 +1,47 @@
 <?php
 final class Front {
+	/**
+	 * @var Registry
+	 */
 	protected $registry;
-	protected $pre_action = array();
+
+	/**
+	 * @var array<string, string>
+	 */
+	protected array $pre_action = [];
+
+	/**
+	 * @var object
+	 */
+	protected object $action;
+
+	/**
+	 * @var Action $error
+	 */
 	protected $error;
 
+	/**
+	 * Constructor
+	 */
 	public function __construct($registry) {
 		$this->registry = $registry;
 	}
 
+	/**
+	 * Pre Action
+	 * 
+	 * @param $pre_action
+	 */
 	public function addPreAction($pre_action) {
 		$this->pre_action[] = $pre_action;
 	}
 
+	/**
+	 * Dispatch
+	 * 
+	 * @param $action
+	 * @param $error
+	 */
 	public function dispatch($action, $error) {
 		$this->error = $error;
 
@@ -29,7 +59,12 @@ final class Front {
 		}
 	}
 
-	protected function execute(Action $action) {
+	/**
+	 * Execute
+	 * 
+	 * @param $action
+	 */
+	private function execute($action) {
 		if (file_exists($action->getFile())) {
 			require_once($action->getFile());
 
@@ -37,7 +72,7 @@ final class Front {
 
 			$controller = new $class($this->registry);
 
-			if (is_callable(array($controller, $action->getMethod())) && substr($action->getMethod(), 0, 2) != '__') {
+			if (is_callable(array($controller, $action->getMethod())) && mb_substr($action->getMethod(), 0, 2, 'UTF-8') != '__') {
 				$action = call_user_func_array(array($controller, $action->getMethod()), $action->getArgs());
 			} else {
 				$action = $this->error;

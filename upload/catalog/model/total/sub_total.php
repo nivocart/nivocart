@@ -15,7 +15,7 @@ class ModelTotalSubTotal extends Model {
 		$total_data[] = array(
 			'code'       => 'sub_total',
 			'title'      => $this->language->get('text_sub_total'),
-			'text'       => $this->currency->format($sub_total),
+			'text'       => $this->currency->format($sub_total, $this->config->get('config_currency')),
 			'value'      => $sub_total,
 			'sort_order' => $this->config->get('sub_total_sort_order')
 		);

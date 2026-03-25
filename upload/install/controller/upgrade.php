@@ -1,6 +1,6 @@
 <?php
 class ControllerUpgrade extends Controller {
-	private $error = array();
+	private array $error = [];
 
 	public function index() {
 		$this->document->setTitle($this->language->get('heading_upgrade'));

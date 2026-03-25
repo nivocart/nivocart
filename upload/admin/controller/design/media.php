@@ -244,7 +244,7 @@ class ControllerDesignMedia extends Controller {
 			$this->data['medias'][] = array(
 				'media_id' => $result['media_id'],
 				'name'     => $result['name'],
-				'media'    => utf8_substr(strrchr($result['media'], '/'), 1),
+				'media'    => substr(strrchr($result['media'], '/'), 1),
 				'size'     => $size,
 				'type'     => $thumb,
 				'status'   => $result['status'],
@@ -493,14 +493,14 @@ class ControllerDesignMedia extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 128)) {
+		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 128)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
 		$allowed = array('mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','flv');
 
 		if ($this->request->post['media']) {
-			$ext = utf8_substr(strrchr($this->request->post['media'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['media'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['media'] = $this->language->get('error_media_file');

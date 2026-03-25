@@ -1,5 +1,10 @@
 <?php
 class Browser {
+	/**
+	 * @var array <array<string, mixed>>
+	 */
+	private $browserVersion = array();
+	
 	var $agent = null;
 
 	var $isRobot = false;

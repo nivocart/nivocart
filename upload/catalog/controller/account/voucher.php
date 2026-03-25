@@ -61,7 +61,7 @@ class ControllerAccountVoucher extends Controller {
 		$this->data['entry_from_email'] = $this->language->get('entry_from_email');
 		$this->data['entry_theme'] = $this->language->get('entry_theme');
 		$this->data['entry_message'] = $this->language->get('entry_message');
-		$this->data['entry_amount'] = sprintf($this->language->get('entry_amount'), $this->currency->format($this->config->get('config_voucher_min')), $this->currency->format($this->config->get('config_voucher_max')));
+		$this->data['entry_amount'] = sprintf($this->language->get('entry_amount'), $this->currency->format($this->config->get('config_voucher_min'), $this->config->get('config_currency')), $this->currency->format($this->config->get('config_voucher_max'), $this->config->get('config_currency')));
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
@@ -124,7 +124,7 @@ class ControllerAccountVoucher extends Controller {
 		if (isset($this->request->post['from_name'])) {
 			$this->data['from_name'] = $this->request->post['from_name'];
 		} elseif ($this->customer->isLogged()) {
-			$this->data['from_name'] = $this->customer->getFirstName() . ' '  . $this->customer->getLastName();
+			$this->data['from_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
 		} else {
 			$this->data['from_name'] = '';
 		}
@@ -156,7 +156,7 @@ class ControllerAccountVoucher extends Controller {
 		if (isset($this->request->post['amount'])) {
 			$this->data['amount'] = $this->request->post['amount'];
 		} else {
-			$this->data['amount'] = $this->currency->format($this->config->get('config_voucher_min'), '', '', false);
+			$this->data['amount'] = $this->currency->format($this->config->get('config_voucher_min'), '', '', false, $this->config->get('config_currency'));
 		}
 
 		if (isset($this->request->post['agree'])) {

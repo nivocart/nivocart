@@ -749,7 +749,7 @@ class ControllerModificationVQmods extends Controller {
 		}
 
 		// If NivoCart 1.0.0+ check that vqmod_nivocart.xml 2.1.7 or later is being used
-		if (version_compare(VERSION, '1.0.0', '>=')) {
+		if (version_compare(VERSION, '2.0.0', '>=')) {
 			libxml_use_internal_errors(true);
 
 			$xml = simplexml_load_file($this->vqmod_nivocart_script);

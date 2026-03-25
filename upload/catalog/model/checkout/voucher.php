@@ -1,7 +1,7 @@
 <?php
 class ModelCheckoutVoucher extends Model {
 
-	public function addVoucher($order_id, $data) {
+	public function addVoucher(int $order_id, array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "voucher SET order_id = '" . (int)$order_id . "', code = '" . $this->db->escape($data['code']) . "', from_name = '" . $this->db->escape($data['from_name']) . "', from_email = '" . $this->db->escape($data['from_email']) . "', to_name = '" . $this->db->escape($data['to_name']) . "', to_email = '" . $this->db->escape($data['to_email']) . "', voucher_theme_id = '" . (int)$data['voucher_theme_id'] . "', message = '" . $this->db->escape($data['message']) . "', amount = '" . (float)$data['amount'] . "', status = '1', date_added = NOW()");
 
 		return $this->db->getLastId();
@@ -62,7 +62,7 @@ class ModelCheckoutVoucher extends Model {
 		}
 	}
 
-	public function confirm($order_id) {
+	public function confirm(int $order_id): void {
 		$this->load->model('checkout/order');
 
 		$order_info = $this->model_checkout_order->getOrder($order_id);
@@ -75,7 +75,7 @@ class ModelCheckoutVoucher extends Model {
 			$language->load($order_info['language_filename']);
 			$language->load('mail/voucher');
 
-			$voucher_query = $this->db->query("SELECT *, vtd.name AS theme FROM " . DB_PREFIX . "voucher v LEFT JOIN " . DB_PREFIX . "voucher_theme vt ON (v.voucher_theme_id = vt.voucher_theme_id) LEFT JOIN " . DB_PREFIX . "voucher_theme_description vtd ON (vt.voucher_theme_id = vtd.voucher_theme_id) AND vtd.language_id = '" . (int)$order_info['language_id'] . "' WHERE v.order_id = '" . (int)$order_id . "'");
+			$voucher_query = $this->db->query("SELECT *, vtd.name AS `theme` FROM " . DB_PREFIX . "voucher v LEFT JOIN " . DB_PREFIX . "voucher_theme vt ON (v.voucher_theme_id = vt.voucher_theme_id) LEFT JOIN " . DB_PREFIX . "voucher_theme_description vtd ON (vt.voucher_theme_id = vtd.voucher_theme_id) AND vtd.language_id = '" . (int)$order_info['language_id'] . "' WHERE v.order_id = '" . (int)$order_id . "'");
 
 			foreach ($voucher_query->rows as $voucher) {
 				// HTML Mail
@@ -83,7 +83,7 @@ class ModelCheckoutVoucher extends Model {
 
 				$template->data['title'] = sprintf($language->get('text_subject'), $voucher['from_name']);
 
-				$template->data['text_greeting'] = sprintf($language->get('text_greeting'), $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']));
+				$template->data['text_greeting'] = sprintf($language->get('text_greeting'), $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')));
 				$template->data['text_from'] = sprintf($language->get('text_from'), $voucher['from_name']);
 				$template->data['text_message'] = $language->get('text_message');
 				$template->data['text_redeem'] = sprintf($language->get('text_redeem'), $voucher['code']);
@@ -106,14 +106,6 @@ class ModelCheckoutVoucher extends Model {
 				}
 
 				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
-
 				$mail->setTo($voucher['to_email']);
 				$mail->setFrom($this->config->get('config_email'));
 				$mail->setSender($order_info['store_name']);
@@ -124,7 +116,7 @@ class ModelCheckoutVoucher extends Model {
 		}
 	}
 
-	public function redeem($voucher_id, $order_id, $amount) {
+	public function redeem(int $voucher_id, int $order_id, float $amount): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "voucher_history SET voucher_id = '" . (int)$voucher_id . "', order_id = '" . (int)$order_id . "', amount = '" . (float)$amount . "', date_added = NOW()");
 	}
 }

@@ -627,7 +627,6 @@ class ControllerSaleAffiliate extends Controller {
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_company'] = $this->language->get('entry_company');
 		$this->data['entry_website'] = $this->language->get('entry_website');
 		$this->data['entry_address_1'] = $this->language->get('entry_address_1');
@@ -899,16 +898,6 @@ class ControllerSaleAffiliate extends Controller {
 			$this->data['telephone'] = '';
 		}
 
-		$this->data['show_fax'] = $this->config->get('config_affiliate_fax');
-
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} elseif (!empty($affiliate_info)) {
-			$this->data['fax'] = $affiliate_info['fax'];
-		} else {
-			$this->data['fax'] = '';
-		}
-
 		if (isset($this->request->post['company'])) {
 			$this->data['company'] = $this->request->post['company'];
 		} elseif (!empty($affiliate_info)) {
@@ -1123,15 +1112,15 @@ class ControllerSaleAffiliate extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+		if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
@@ -1140,7 +1129,7 @@ class ControllerSaleAffiliate extends Controller {
 				$this->error['cheque'] = $this->language->get('error_cheque');
 			}
 		} elseif ($this->request->post['payment'] == 'paypal') {
-			if ((utf8_strlen($this->request->post['paypal']) > 96) || !filter_var($this->request->post['paypal'], FILTER_VALIDATE_EMAIL)) {
+			if ((mb_strlen($this->request->post['paypal'], 'UTF-8') > 96) || !filter_var($this->request->post['paypal'], FILTER_VALIDATE_EMAIL)) {
 				$this->error['paypal'] = $this->language->get('error_paypal');
 			}
 		} elseif ($this->request->post['payment'] == 'bank') {
@@ -1165,12 +1154,12 @@ class ControllerSaleAffiliate extends Controller {
 			}
 		}
 
-		if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+		if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
 		if ($this->request->post['password'] || (!isset($this->request->get['affiliate_id']))) {
-			if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 				$this->error['password'] = $this->language->get('error_password');
 			}
 
@@ -1179,11 +1168,11 @@ class ControllerSaleAffiliate extends Controller {
 			}
 		}
 
-		if ((utf8_strlen($this->request->post['address_1']) < 3) || (utf8_strlen($this->request->post['address_1']) > 128)) {
+		if ((mb_strlen($this->request->post['address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['address_1'], 'UTF-8') > 128)) {
 			$this->error['address_1'] = $this->language->get('error_address_1');
 		}
 
-		if ((utf8_strlen($this->request->post['city']) < 2) || (utf8_strlen($this->request->post['city']) > 128)) {
+		if ((mb_strlen($this->request->post['city'], 'UTF-8') < 2) || (mb_strlen($this->request->post['city'], 'UTF-8') > 128)) {
 			$this->error['city'] = $this->language->get('error_city');
 		}
 
@@ -1191,7 +1180,7 @@ class ControllerSaleAffiliate extends Controller {
 
 		$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
 
-		if ($country_info && $country_info['postcode_required'] && (utf8_strlen($this->request->post['postcode']) < 2) || (utf8_strlen($this->request->post['postcode']) > 10)) {
+		if ($country_info && $country_info['postcode_required'] && (mb_strlen($this->request->post['postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['postcode'], 'UTF-8') > 10)) {
 			$this->error['postcode'] = $this->language->get('error_postcode');
 		}
 

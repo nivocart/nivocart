@@ -33,22 +33,22 @@ class ModelPaymentG2APay extends Model {
 	}
 
 	public function addG2aOrder($order_info) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "g2apay_order SET order_id = '" . (int)$order_info['order_id'] . "', date_added = NOW(), modified = NOW(), currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "g2apay_order SET order_id = '" . (int)$order_info['order_id'] . "', date_added = NOW(), modified = NOW(), currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false, $this->config->get('config_currency')) . "'");
 
 		return $this->db->getLastId();
 	}
 
-	public function updateOrder($g2apay_order_id, $g2apay_transaction_id, $type, $order_info) {
-		$this->db->query("UPDATE " . DB_PREFIX . "g2apay_order SET g2apay_transaction_id = '" . $this->db->escape($g2apay_transaction_id) . "', modified = NOW() WHERE order_id = '" . (int)$order_info['order_id'] . "'");
+	public function updateOrder(int $g2apay_order_id, int $g2apay_transaction_id, $type, $order_info): void {
+		$this->db->query("UPDATE " . DB_PREFIX . "g2apay_order SET g2apay_transaction_id = '" . $this->db->escape((int)$g2apay_transaction_id) . "', modified = NOW() WHERE order_id = '" . (int)$order_info['order_id'] . "'");
 
-		$this->addTransaction($g2apay_order_id, $type, $order_info);
+		$this->addTransaction((int)$g2apay_order_id, $type, $order_info);
 	}
 
-	public function addTransaction($g2apay_order_id, $type, $order_info) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "g2apay_order_transaction SET g2apay_order_id = '" . (int)$g2apay_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false) . "'");
+	public function addTransaction(int $g2apay_order_id, $type, $order_info): void {
+		$this->db->query("INSERT INTO " . DB_PREFIX . "g2apay_order_transaction SET g2apay_order_id = '" . (int)$g2apay_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false, $this->config->get('config_currency')) . "'");
 	}
 
-	public function getG2aOrder($order_id) {
+	public function getG2aOrder(int $order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "g2apay_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {

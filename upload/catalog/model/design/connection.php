@@ -1,13 +1,13 @@
 <?php
 class ModelDesignConnection extends Model {
 
-	public function getConnection($connection_id) {
+	public function getConnection(int $connection_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->row;
 	}
 
-	public function getConnections($data = array()) {
+	public function getConnections(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "connection`";
 
 		$sort_data = array(
@@ -45,7 +45,7 @@ class ModelDesignConnection extends Model {
 		return $query->rows;
 	}
 
-	public function getConnectionIds($data = array()) {
+	public function getConnectionIds(array $data = []) {
 		$connection_data = $this->cache->get('connection.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'));
 
 		if (!$connection_data) {
@@ -63,19 +63,19 @@ class ModelDesignConnection extends Model {
 		return $connection_data;
 	}
 
-	public function getConnectionRoutes($connection_id) {
+	public function getConnectionRoutes(int $connection_id): array {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "connection_route WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->rows;
 	}
 
-	public function getConnectionName($connection_id) {
+	public function getConnectionName(int $connection_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->row['name'];
 	}
 
-	public function getTotalConnections() {
+	public function getTotalConnections(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "connection`");
 
 		if (isset($query->row['total'])) {
@@ -85,8 +85,8 @@ class ModelDesignConnection extends Model {
 		}
 	}
 
-	public function getTotalCatalogConnections() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "connection WHERE frontend = '1'");
+	public function getTotalCatalogConnections(): int {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "connection WHERE frontend = '1'");
 
 		if (isset($query->row['total'])) {
 			return $query->row['total'];

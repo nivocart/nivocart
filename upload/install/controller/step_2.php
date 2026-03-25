@@ -1,6 +1,6 @@
 <?php
 class ControllerStep2 extends Controller {
-	private $error = array();
+	private array $error = [];
 
 	public function index() {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -106,7 +106,7 @@ class ControllerStep2 extends Controller {
 	private function validate() {
 		$php_version = phpversion();
 
-		if (version_compare($php_version, '7.0', '<')) {
+		if (version_compare($php_version, '8.0', '<')) {
 			$this->error['warning'] = $this->language->get('error_php_version');
 		}
 

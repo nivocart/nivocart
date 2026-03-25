@@ -146,7 +146,7 @@ class ModelUpgrade extends Model {
 		$table_query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
 
 		foreach ($table_query->rows as $table) {
-			if (utf8_substr($table['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
+			if (mb_substr($table['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX), 'UTF-8') == DB_PREFIX) {
 				$field_data = array();
 				$extended_field_data = array();
 
@@ -427,7 +427,7 @@ class ModelUpgrade extends Model {
 
 				if ($query->num_rows) {
 					foreach ($query->rows as $row) {
-						$this->db->query("UPDATE " . DB_PREFIX . "product_description SET tag = '" . $this->db->escape(strtolower($row['tags'])) . "' WHERE product_id = '" . (int)$row['product_id'] . "' AND language_id = '" . (int)$language['language_id'] . "'");
+						$this->db->query("UPDATE " . DB_PREFIX . "product_description SET tag = '" . $this->db->escape(mb_strtolower($row['tags'], 'UTF-8')) . "' WHERE product_id = '" . (int)$row['product_id'] . "' AND language_id = '" . (int)$language['language_id'] . "'");
 					}
 				}
 			}

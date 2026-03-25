@@ -22,8 +22,9 @@ class ControllerModuleMenuVertical extends Controller {
 		$this->data['menu_vertical'] = array();
 
 		$menu_id = $setting['menu_id'];
+		$parent_id = 0;
 
-		$menu_items = $this->model_design_menu->getMenuItems(0, $menu_id);
+		$menu_items = $this->model_design_menu->getMenuItems($menu_id, $parent_id);
 
 		foreach ($menu_items as $menu_item) {
 			if (!empty($menu_item['menu_item_link'])) {
@@ -38,7 +39,7 @@ class ControllerModuleMenuVertical extends Controller {
 
 			$children_data = array();
 
-			$children = $this->model_design_menu->getMenuItems($menu_item['menu_item_id'], $menu_id);
+			$children = $this->model_design_menu->getMenuItems($menu_id, $menu_item['menu_item_id']);
 
 			foreach ($children as $child) {
 				if (!empty($child['menu_item_link'])) {

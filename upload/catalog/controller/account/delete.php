@@ -140,7 +140,14 @@ class ControllerAccountDelete extends Controller {
 			$this->data['captcha'] = '';
 		}
 
-		$this->data['captcha_image'] = $this->url->link('account/delete/captcha', '', 'SSL');
+		// Create session Captcha
+		$this->load->library('captcha');
+
+		$captcha = new Captcha();
+
+		$this->session->data['captcha'] = $captcha->getCode();
+
+		$this->data['captcha_image'] = $this->session->data['captcha'];
 
 		$this->data['back'] = $this->url->link('account/edit', '', 'SSL');
 
@@ -231,7 +238,7 @@ class ControllerAccountDelete extends Controller {
 				$this->error['password'] = $this->language->get('error_password_match');
 			}
 
-			if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 				$this->error['password'] = $this->language->get('error_password');
 			}
 
@@ -239,20 +246,10 @@ class ControllerAccountDelete extends Controller {
 			$this->error['password'] = $this->language->get('error_password_required');
 		}
 
-		if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != strtolower($this->request->post['captcha']))) {
+		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != ($this->request->post['captcha']))) {
 			$this->error['captcha'] = $this->language->get('error_captcha');
 		}
 
 		return empty($this->error);
-	}
-
-	public function captcha() {
-		$this->load->library('captcha');
-
-		$captcha = new Captcha();
-
-		$this->session->data['captcha'] = $captcha->getCode();
-
-		$captcha->showImage($this->config->get('config_captcha_font'));
 	}
 }

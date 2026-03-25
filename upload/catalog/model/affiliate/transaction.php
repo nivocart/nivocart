@@ -1,7 +1,7 @@
 <?php
 class ModelAffiliateTransaction extends Model {
 
-	public function getTransactions($data = array()) {
+	public function getTransactions(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'";
 
 		$sort_data = array(
@@ -39,7 +39,7 @@ class ModelAffiliateTransaction extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalTransactions($data = array()) {
+	public function getTotalTransactions(array $data = []): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'");
 
 		if ($query->num_rows) {

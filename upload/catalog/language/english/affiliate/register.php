@@ -21,7 +21,6 @@ $_['entry_firstname']           = 'First Name:';
 $_['entry_lastname']            = 'Last Name:';
 $_['entry_email']               = 'Email:';
 $_['entry_telephone']           = 'Telephone:';
-$_['entry_fax']                 = 'Fax:';
 $_['entry_company']             = 'Company:';
 $_['entry_website']             = 'Web Site:';
 $_['entry_address_1']           = 'Address 1:';
@@ -41,7 +40,7 @@ $_['entry_bank_account_name']   = 'Account Name:';
 $_['entry_bank_account_number'] = 'Account Number:';
 $_['entry_password']            = 'Password:';
 $_['entry_confirm']             = 'Password Confirm:';
-$_['entry_captcha']             = 'Enter the two words';
+$_['entry_captcha']             = 'Enter the code below';
 
 // Error
 $_['error_exists']              = 'Warning: Email Address is already registered!';

@@ -347,12 +347,12 @@ class ControllerCheckoutCart extends Controller {
 					} else {
 						$filename = $this->encryption->decrypt($option['option_value']);
 
-						$value = utf8_substr($filename, 0, utf8_strrpos($filename, '.'));
+						$value = substr($filename, 0, strrpos($filename, '.'));
 					}
 
 					$option_data[] = array(
 						'name'  => $option['name'],
-						'value' => (utf8_strlen($value) > 20) ? utf8_substr($value, 0, 20) . '..' : $value
+						'value' => (mb_strlen($value, 'UTF-8') > 20) ? substr($value, 0, 20) . '..' : $value
 					);
 				}
 
@@ -361,7 +361,7 @@ class ControllerCheckoutCart extends Controller {
 					if (($product['price'] == '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
-						$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
+						$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 					}
 				} else {
 					$price = false;
@@ -369,7 +369,7 @@ class ControllerCheckoutCart extends Controller {
 
 				// Display totals
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					$total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+					$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
 					$total = false;
 				}
@@ -379,11 +379,11 @@ class ControllerCheckoutCart extends Controller {
 
 				if ($product['recurring']) {
 					if ($product['recurring_trial']) {
-						$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')));
+						$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 						$profile_description = sprintf($this->language->get('text_trial_description'), $recurring_price, $product['recurring_trial_cycle'], $frequencies[$product['recurring_trial_frequency']], $product['recurring_trial_duration']) . ' ';
 					}
 
-					$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')));
+					$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 					if ($product['recurring_duration']) {
 						$profile_description .= sprintf($this->language->get('text_payment_description'), $recurring_price, $product['recurring_cycle'], $frequencies[$product['recurring_frequency']], $product['recurring_duration']);
@@ -436,7 +436,7 @@ class ControllerCheckoutCart extends Controller {
 					'price'               => $price,
 					'special'             => $special,
 					'cost'                => $product['cost'],
-					'tax_value'           => $this->currency->format($product_tax_value),
+					'tax_value'           => $this->currency->format($product_tax_value, $this->config->get('config_currency')),
 					'tax_percent'         => number_format((($product_tax_value * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
 					'age_minimum'         => ($age_checked) ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
 					'recurring'           => $product['recurring'],
@@ -462,7 +462,7 @@ class ControllerCheckoutCart extends Controller {
 					$this->data['vouchers'][] = array(
 						'key'         => $key,
 						'description' => $voucher['description'],
-						'amount'      => $this->currency->format($voucher['amount']),
+						'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
 						'remove'      => $this->url->link('checkout/cart', 'remove=' . $key, 'SSL')
 					);
 				}
@@ -806,7 +806,7 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			if (!$json) {
-				$this->cart->add($this->request->post['product_id'], $quantity, $option, $profile_id);
+				$this->cart->add($this->request->post['product_id'], $profile_id, $quantity, $option);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id'], 'SSL'), $product_info['name'], $this->url->link('checkout/cart', '', 'SSL'));
 
@@ -851,7 +851,7 @@ class ControllerCheckoutCart extends Controller {
 					}
 				}
 
-				$json['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
+				$json['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->config->get('config_currency')));
 
 			} else {
 				$json['redirect'] = str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $this->request->post['product_id'], 'SSL'));
@@ -887,7 +887,7 @@ class ControllerCheckoutCart extends Controller {
 
 		$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
 
-		if ($country_info && $country_info['postcode_required'] && (utf8_strlen($this->request->post['postcode']) < 2) || (utf8_strlen($this->request->post['postcode']) > 10)) {
+		if ($country_info && $country_info['postcode_required'] && (mb_strlen($this->request->post['postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['postcode'], 'UTF-8') > 10)) {
 			$json['error']['postcode'] = $this->language->get('error_postcode');
 		}
 

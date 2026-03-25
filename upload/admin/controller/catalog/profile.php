@@ -488,7 +488,7 @@ class ControllerCatalogProfile extends Controller {
 		}
 
 		foreach ($this->request->post['profile_description'] as $language_id => $profile_description) {
-			if ((utf8_strlen($profile_description['name']) < 3) || (utf8_strlen($profile_description['name']) > 255)) {
+			if ((mb_strlen($profile_description['name'], 'UTF-8') < 3) || (mb_strlen($profile_description['name'], 'UTF-8') > 255)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}

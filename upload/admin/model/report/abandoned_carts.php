@@ -7,7 +7,7 @@ class ModelReportAbandonedCarts extends Model {
 		return $query->num_rows;
 	}
 
-	public function recoverEmail($order_id) {
+	public function recoverEmail(int $order_id) {
 		$order_info = $this->getOrder($order_id);
 
 		if ($order_info) {
@@ -67,7 +67,7 @@ class ModelReportAbandonedCarts extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET abandoned = '1' WHERE order_id = '" . (int)$order_id . "'");
 	}
 
-	public function getOrders($data = array()) {
+	public function getOrders(array $data = []): array {
 		$days = ($this->config->get('config_abandoned_cart')) ? $this->config->get('config_abandoned_cart') : 7;
 
 		$sql = "SELECT o.*, CONCAT(o.firstname, ' ', o.lastname) AS `name` FROM `" . DB_PREFIX . "order` o WHERE o.date_added >= DATE_SUB(NOW(), INTERVAL " . $days . " DAY) AND o.order_status_id = '0'";
@@ -116,7 +116,7 @@ class ModelReportAbandonedCarts extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalOrders($data = array()) {
+	public function getTotalOrders(array $data = []) {
 		$days = ($this->config->get('config_abandoned_cart')) ? $this->config->get('config_abandoned_cart') : 7;
 
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` o WHERE o.date_added >= DATE_SUB(NOW(), INTERVAL " . $days . " DAY) AND o.order_status_id = '0'";
@@ -130,7 +130,7 @@ class ModelReportAbandonedCarts extends Model {
 		return $query->row['total'];
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$order_query = $this->db->query("SELECT store_name, store_url, firstname, lastname, email FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "'");
 
 		return array(
@@ -142,7 +142,7 @@ class ModelReportAbandonedCarts extends Model {
 		);
 	}
 
-	public function deleteOrder($order_id) {
+	public function deleteOrder(int $order_id): void {
 		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_status_id = '0' AND order_id = '" . (int)$order_id . "'");
 
 		if ($order_query->num_rows) {

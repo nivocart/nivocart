@@ -1,7 +1,7 @@
 <?php
 class ModelToolApiKeyManager extends Model {
 
-	public function addApiKey($data) {
+	public function addApiKey(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "api_key SET `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . $this->db->escape($data['status']) . "'");
 
 		$api_key_id = $this->db->getLastId();
@@ -10,21 +10,21 @@ class ModelToolApiKeyManager extends Model {
 		$this->session->data['new_api_key_id'] = $api_key_id;
 	}
 
-	public function editApiKey($api_key_id, $data) {
+	public function editApiKey(int $api_key_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "api_key SET `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . $this->db->escape($data['status']) . "' WHERE api_key_id = '" . (int)$api_key_id . "'");
 	}
 
-	public function deleteApiKey($api_key_id) {
+	public function deleteApiKey(int $api_key_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "api_key WHERE api_key_id = " . (int)$api_key_id);
 	}
 
-	public function getApiKey($api_key_id) {
+	public function getApiKey(int $api_key_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "api_key WHERE api_key_id = '" . (int)$api_key_id . "'");
 
 		return $query->row;
 	}
 
-	public function getApiKeys($data = array()) {
+	public function getApiKeys(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "api_key";
 
 		$sort_data = array(
@@ -62,7 +62,7 @@ class ModelToolApiKeyManager extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalApiKeys() {
+	public function getTotalApiKeys(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "api_key");
 
 		return $query->row['total'];

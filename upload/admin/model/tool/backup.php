@@ -13,7 +13,7 @@ class ModelToolBackup extends Model {
 		$this->cache->delete('*');
 	}
 
-	public function getTables() {
+	public function getTables(): array {
 		$table_data = array();
 
 		$query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");

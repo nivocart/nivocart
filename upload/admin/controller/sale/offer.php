@@ -108,7 +108,9 @@ class ControllerSaleOffer extends Controller {
 		// P2P
 		$this->data['offer_product_products'] = array();
 
-		$product_product_infos = $this->model_sale_offer->getOfferProductProducts(0);
+		$product_product_array = array();
+
+		$product_product_infos = $this->model_sale_offer->getOfferProductProducts($product_product_array);
 
 		if ($product_product_infos) {
 			foreach ($product_product_infos as $result) {
@@ -142,7 +144,9 @@ class ControllerSaleOffer extends Controller {
 		// P2C
 		$this->data['offer_product_categories'] = array();
 
-		$product_category_infos = $this->model_sale_offer->getOfferProductCategories(0);
+		$product_category_array = array();
+
+		$product_category_infos = $this->model_sale_offer->getOfferProductCategories($product_category_array);
 
 		if ($product_category_infos) {
 			foreach ($product_category_infos as $result) {
@@ -176,7 +180,9 @@ class ControllerSaleOffer extends Controller {
 		// C2P
 		$this->data['offer_category_products'] = array();
 
-		$category_product_infos = $this->model_sale_offer->getOfferCategoryProducts(0);
+		$category_product_array = array();
+
+		$category_product_infos = $this->model_sale_offer->getOfferCategoryProducts($category_product_array);
 
 		if ($category_product_infos) {
 			foreach ($category_product_infos as $result) {
@@ -210,7 +216,9 @@ class ControllerSaleOffer extends Controller {
 		// C2C
 		$this->data['offer_category_categories'] = array();
 
-		$category_category_infos = $this->model_sale_offer->getOfferCategoryCategories(0);
+		$category_category_array = array();
+
+		$category_category_infos = $this->model_sale_offer->getOfferCategoryCategories($category_category_array);
 
 		if ($category_category_infos) {
 			foreach ($category_category_infos as $result) {

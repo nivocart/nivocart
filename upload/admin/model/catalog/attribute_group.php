@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogAttributeGroup extends Model {
 
-	public function addAttributeGroup($data) {
+	public function addAttributeGroup(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_group SET sort_order = '" . (int)$data['sort_order'] . "'");
 
 		$attribute_group_id = $this->db->getLastId();
@@ -16,7 +16,7 @@ class ModelCatalogAttributeGroup extends Model {
 		$this->cache->delete('attribute.group');
 	}
 
-	public function editAttributeGroup($attribute_group_id, $data) {
+	public function editAttributeGroup(int $attribute_group_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "attribute_group SET sort_order = '" . (int)$data['sort_order'] . "' WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_group_description WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
@@ -28,20 +28,20 @@ class ModelCatalogAttributeGroup extends Model {
 		$this->cache->delete('attribute.group');
 	}
 
-	public function deleteAttributeGroup($attribute_group_id) {
+	public function deleteAttributeGroup(int $attribute_group_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_group WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_group_description WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
 
 		$this->cache->delete('attribute.group');
 	}
 
-	public function getAttributeGroup($attribute_group_id) {
+	public function getAttributeGroup(int $attribute_group_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "attribute_group WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
 
 		return $query->row;
 	}
 
-	public function getAttributeGroups($data = array()) {
+	public function getAttributeGroups(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "attribute_group ag LEFT JOIN " . DB_PREFIX . "attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE agd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$sort_data = array(
@@ -78,7 +78,7 @@ class ModelCatalogAttributeGroup extends Model {
 		return $query->rows;
 	}
 
-	public function getAttributeGroupDescriptions($attribute_group_id) {
+	public function getAttributeGroupDescriptions(int $attribute_group_id) {
 		$attribute_group_data = $this->cache->get('attribute.group.' . (int)$this->config->get('config_language_id'));
 
 		if (!$attribute_group_data) {
@@ -96,7 +96,7 @@ class ModelCatalogAttributeGroup extends Model {
 		return $attribute_group_data;
 	}
 
-	public function getTotalAttributeGroups() {
+	public function getTotalAttributeGroups(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "attribute_group");
 
 		return $query->row['total'];

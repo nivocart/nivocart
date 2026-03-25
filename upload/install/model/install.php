@@ -28,7 +28,7 @@ class ModelInstall extends Model {
 			$sql = '';
 
 			foreach ($lines as $line) {
-				if ($line && (substr($line, 0, 2) != '--') && (substr($line, 0, 1) != '#')) {
+				if ($line && (mb_substr($line, 0, 2, 'UTF-8') != '--') && (mb_substr($line, 0, 1, 'UTF-8') != '#')) {
 					$sql .= $line;
 
 					if (preg_match('/;\s*$/', $line)) {
@@ -43,12 +43,12 @@ class ModelInstall extends Model {
 				}
 			}
 
-			$db->query("SET CHARACTER SET utf8");
+			$db->query("SET CHARACTER SET utf8mb4");
 
-			$db->query("SET @@session.sql_mode = 'MYSQL40'");
+			$db->query("SET @@session.sql_mode = ''");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "user` WHERE user_id = '1'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape($data['username']) . "', salt = '" . $db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '1', email = '" . $db->escape($data['email']) . "', date_added = NOW()");
+			$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape($data['username']) . "', salt = '" . $db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '1', email = '" . $db->escape($data['email']) . "', date_added = NOW()");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_email'");
 			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_email', `value` = '" . $db->escape($data['email']) . "'");
@@ -57,7 +57,7 @@ class ModelInstall extends Model {
 			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_url', `value` = '" . $db->escape(HTTP_NIVOCART) . "'");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_encryption'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(hash_rand('ripemd128')) . "'");
+			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(hash('ripemd128', $data['username'], true)) . "'");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_maintenance'");
 			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_maintenance', `value` = '" . (isset($data['maintenance']) ? 1 : 0) . "'");
@@ -92,11 +92,11 @@ class ModelInstall extends Model {
 		$output .= '// DB' . "\n";
 		$output .= 'define(\'DB_DRIVER\', \'' . addslashes($data['db_driver']) . '\');' . "\n";
 		$output .= 'define(\'DB_HOSTNAME\', \'' . addslashes($data['db_hostname']) . '\');' . "\n";
-		$output .= 'define(\'DB_USERNAME\', \'' . addslashes($data['db_username']) . '\');' . "\n";
+		$output .= 'define(\'DB_USERNAME\', \'' . addslashes(html_entity_decode($data['db_username'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
 		$output .= 'define(\'DB_PASSWORD\', \'' . addslashes(html_entity_decode($data['db_password'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
-		$output .= 'define(\'DB_DATABASE\', \'' . addslashes($data['db_database']) . '\');' . "\n";
+		$output .= 'define(\'DB_DATABASE\', \'' . addslashes(html_entity_decode($data['db_database'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
 		$output .= 'define(\'DB_PORT\', \'' . addslashes($data['db_port']) . '\');' . "\n";
-		$output .= 'define(\'DB_PREFIX\', \'' . addslashes($data['db_prefix']) . '\');' . "\n";
+		$output .= 'define(\'DB_PREFIX\', \'' . addslashes(html_entity_decode($data['db_prefix'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
 
 		$file_catalog = fopen(DIR_NIVOCART . 'config.php', 'w');
 
@@ -134,11 +134,11 @@ class ModelInstall extends Model {
 		$output .= '// DB' . "\n";
 		$output .= 'define(\'DB_DRIVER\', \'' . addslashes($data['db_driver']) . '\');' . "\n";
 		$output .= 'define(\'DB_HOSTNAME\', \'' . addslashes($data['db_hostname']) . '\');' . "\n";
-		$output .= 'define(\'DB_USERNAME\', \'' . addslashes($data['db_username']) . '\');' . "\n";
+		$output .= 'define(\'DB_USERNAME\', \'' . addslashes(html_entity_decode($data['db_username'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
 		$output .= 'define(\'DB_PASSWORD\', \'' . addslashes(html_entity_decode($data['db_password'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
-		$output .= 'define(\'DB_DATABASE\', \'' . addslashes($data['db_database']) . '\');' . "\n";
+		$output .= 'define(\'DB_DATABASE\', \'' . addslashes(html_entity_decode($data['db_database'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
 		$output .= 'define(\'DB_PORT\', \'' . addslashes($data['db_port']) . '\');' . "\n";
-		$output .= 'define(\'DB_PREFIX\', \'' . addslashes($data['db_prefix']) . '\');' . "\n";
+		$output .= 'define(\'DB_PREFIX\', \'' . addslashes(html_entity_decode($data['db_prefix'], ENT_QUOTES, 'UTF-8')) . '\');' . "\n";
 
 		$file_admin = fopen(DIR_NIVOCART . 'admin/config.php', 'w');
 

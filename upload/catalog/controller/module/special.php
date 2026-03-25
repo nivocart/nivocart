@@ -76,7 +76,7 @@ class ControllerModuleSpecial extends Controller {
 				if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
 					$price = $this->language->get('text_free');
 				} else {
-					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				}
 			} else {
 				$price = false;
@@ -84,7 +84,7 @@ class ControllerModuleSpecial extends Controller {
 
 			if ((float)$result['special']) {
 				$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
-				$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+				$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 			} else {
 				$special_label = false;
 				$special = false;

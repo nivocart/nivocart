@@ -7,7 +7,7 @@ class ModelTotalTax extends Model {
 				$total_data[] = array(
 					'code'       => 'tax',
 					'title'      => $this->tax->getRateName($key),
-					'text'       => $this->currency->format($value),
+					'text'       => $this->currency->format($value, $this->config->get('config_currency')),
 					'value'      => round($value, 2),
 					'sort_order' => $this->config->get('tax_sort_order')
 				);

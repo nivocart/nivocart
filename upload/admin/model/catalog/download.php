@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogDownload extends Model {
 
-	public function addDownload($data) {
+	public function addDownload(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "', date_added = NOW()");
 
 		$download_id = $this->db->getLastId();
@@ -16,7 +16,7 @@ class ModelCatalogDownload extends Model {
 		$this->cache->delete('download');
 	}
 
-	public function editDownload($download_id, $data) {
+	public function editDownload(int $download_id, array $data = []): void {
 		if (!empty($data['update'])) {
 			$download_info = $this->getDownload($download_id);
 
@@ -36,20 +36,20 @@ class ModelCatalogDownload extends Model {
 		$this->cache->delete('download');
 	}
 
-	public function deleteDownload($download_id) {
+	public function deleteDownload(int $download_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id = '" . (int)$download_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
 
 		$this->cache->delete('download');
 	}
 
-	public function getDownload($download_id) {
+	public function getDownload(int $download_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE d.download_id = '" . (int)$download_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
-	public function getDownloads($data = array()) {
+	public function getDownloads(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
@@ -90,7 +90,7 @@ class ModelCatalogDownload extends Model {
 		return $query->rows;
 	}
 
-	public function getDownloadDescriptions($download_id) {
+	public function getDownloadDescriptions(int $download_id) {
 		$download_description_data = $this->cache->get('download.' . (int)$this->config->get('config_language_id'));
 
 		if (!$download_description_data) {
@@ -108,13 +108,13 @@ class ModelCatalogDownload extends Model {
 		return $download_description_data;
 	}
 
-	public function getDownloadName($download_id) {
+	public function getDownloadName(int $download_id) {
 		$query = $this->db->query("SELECT DISTINCT dd.name AS `name` FROM " . DB_PREFIX . "download_description dd LEFT JOIN " . DB_PREFIX . "download d ON (d.download_id = dd.download_id) WHERE dd.download_id = '" . (int)$download_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row['name'];
 	}
 
-	public function getDownloadImage($download_id) {
+	public function getDownloadImage(int $download_id) {
 		$query = $this->db->query("SELECT filename FROM " . DB_PREFIX . "download WHERE download_id = '" . (int)$download_id . "'");
 
 		$filename = $query->row['filename'];
@@ -132,7 +132,7 @@ class ModelCatalogDownload extends Model {
 		return $image;
 	}
 
-	public function getTotalDownloads($data = array()) {
+	public function getTotalDownloads(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT d.download_id) AS `total` FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id)";
 
 		$sql .= " WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "'";

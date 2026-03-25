@@ -1,7 +1,7 @@
 <?php
 class ModelToolOnline extends Model {
 
-	public function whosOnline($ip, $customer_id, $url, $referer, $user_agent) {
+	public function whosOnline($ip, int $customer_id, $url, $referer, $user_agent): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_online WHERE date_added < '" . date('Y-m-d H:i:s', strtotime('-1 hour')) . "'");
 
 		$this->db->query("REPLACE INTO " . DB_PREFIX . "customer_online SET ip = '" . $ip . "', customer_id = '" . (int)$customer_id . "', url = '" . $this->db->escape($url) . "', referer = '" . $this->db->escape($referer) . "', user_agent = '" . $this->db->escape($user_agent) . "', date_added = NOW()");
@@ -21,7 +21,7 @@ class ModelToolOnline extends Model {
 	}
 
 	// Robots
-	public function robotsOnline($ip, $robot, $user_agent) {
+	public function robotsOnline($ip, $robot, $user_agent): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "robot_online WHERE date_added < '" . date('Y-m-d H:i:s', strtotime('-6 hour')) . "'");
 
 		$this->db->query("REPLACE INTO " . DB_PREFIX . "robot_online SET ip = '" . $ip . "', robot = '" . $this->db->escape($robot) . "', user_agent = '" . $this->db->escape($user_agent) . "', date_added = NOW()");

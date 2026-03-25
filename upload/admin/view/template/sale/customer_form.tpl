@@ -81,12 +81,6 @@
                 <input type="text" name="telephone" value="<?php echo $telephone; ?>" />
               <?php  } ?></td>
             </tr>
-            <?php if ($show_fax) { ?>
-            <tr>
-              <td><?php echo $entry_fax; ?></td>
-              <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-            </tr>
-            <?php } ?>
             <?php if ($show_gender) { ?>
             <tr>
               <td><?php echo $entry_gender; ?></td>

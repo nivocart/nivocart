@@ -1,8 +1,8 @@
 <?php
 class ModelDesignFooter extends Model {
 
-	public function getFooter($footer_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "footer f LEFT JOIN " . DB_PREFIX . "footer_description fd ON (f.footer_id = fd.footer_id) LEFT JOIN " . DB_PREFIX . "footer_to_store f2s ON (f.footer_id = f2s.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.footer_id = '" . (int)$this->config->get('config_language_id') . "' AND f2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND f.status = '1'");
+	public function getFooter(int $footer_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "footer` f LEFT JOIN " . DB_PREFIX . "footer_description fd ON (f.footer_id = fd.footer_id) LEFT JOIN " . DB_PREFIX . "footer_to_store f2s ON (f.footer_id = f2s.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.footer_id = '" . (int)$this->config->get('config_language_id') . "' AND f2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND f.status = '1'");
 
 		return $query->row;
 	}
@@ -11,7 +11,7 @@ class ModelDesignFooter extends Model {
 		$footer_data = $this->cache->get('footer.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'));
 
 		if (!$footer_data) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "footer f LEFT JOIN " . DB_PREFIX . "footer_description fd ON (f.footer_id = fd.footer_id) LEFT JOIN " . DB_PREFIX . "footer_to_store f2s ON (f.footer_id = f2s.footer_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND f2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND f.status = '1' ORDER BY f.position, LCASE(fd.name) ASC");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "footer` f LEFT JOIN " . DB_PREFIX . "footer_description fd ON (f.footer_id = fd.footer_id) LEFT JOIN " . DB_PREFIX . "footer_to_store f2s ON (f.footer_id = f2s.footer_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND f2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND f.status = '1' ORDER BY f.position, LCASE(fd.name) ASC");
 
 			$footer_data = $query->rows;
 
@@ -36,7 +36,7 @@ class ModelDesignFooter extends Model {
 	}
 
 	public function getTotalFooters() {
-		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "footer WHERE status = '1'";
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "footer` WHERE status = '1'";
 
 		$cache_id = 'footer.total';
 
@@ -54,7 +54,7 @@ class ModelDesignFooter extends Model {
 	}
 
 	public function getFooterMaxPosition() {
-		$query = $this->db->query("SELECT MAX(position) AS position FROM " . DB_PREFIX . "footer WHERE status = '1'");
+		$query = $this->db->query("SELECT MAX(position) AS `position` FROM `" . DB_PREFIX . "footer` WHERE status = '1'");
 
 		return $query->row['position'];
 	}

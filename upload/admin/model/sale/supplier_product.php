@@ -1,7 +1,7 @@
 <?php
 class ModelSaleSupplierProduct extends Model {
 
-	public function addSupplierProduct($data) {
+	public function addSupplierProduct(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "supplier_product SET supplier_id = '" . $this->db->escape($data['supplier_id']) . "', `name` = '" . $this->db->escape($data['name']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . (float)$data['price'] . "', tax_class_id = '" . $this->db->escape($data['tax_class_id']) . "', unit = '" . $this->db->escape($data['unit']) . "', color = '" . $this->db->escape($data['color']) . "', `size` = '" . $this->db->escape($data['size']) . "', quantity = '" . (int)$data['quantity'] . "', `length` = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
 		$supplier_product_id = $this->db->getLastId();
@@ -14,7 +14,7 @@ class ModelSaleSupplierProduct extends Model {
 		}
 	}
 
-	public function editSupplierProduct($supplier_product_id, $data) {
+	public function editSupplierProduct(int $supplier_product_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "supplier_product SET supplier_id = '" . $this->db->escape($data['supplier_id']) . "', `name` = '" . $this->db->escape($data['name']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . (float)$data['price'] . "', tax_class_id = '" . $this->db->escape($data['tax_class_id']) . "', unit = '" . $this->db->escape($data['unit']) . "', color = '" . $this->db->escape($data['color']) . "', `size` = '" . $this->db->escape($data['size']) . "', quantity = '" . (int)$data['quantity'] . "', `length` = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 
 		if (isset($data['image'])) {
@@ -22,11 +22,11 @@ class ModelSaleSupplierProduct extends Model {
 		}
 	}
 
-	public function editSupplierProductStatus($supplier_product_id, $status) {
+	public function editSupplierProductStatus(int $supplier_product_id, int $status): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '" . (int)$status . "', date_modified = NOW() WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 	}
 
-	public function copySupplierProduct($supplier_product_id) {
+	public function copySupplierProduct(int $supplier_product_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "supplier_product WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 
 		if ($query->num_rows) {
@@ -40,17 +40,17 @@ class ModelSaleSupplierProduct extends Model {
 		}
 	}
 
-	public function deleteSupplierProduct($supplier_product_id) {
+	public function deleteSupplierProduct(int $supplier_product_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "supplier_product WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 	}
 
-	public function getSupplierProduct($supplier_product_id) {
+	public function getSupplierProduct(int $supplier_product_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "supplier_product WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 
 		return $query->row;
 	}
 
-	public function getSupplierProducts($data = array()) {
+	public function getSupplierProducts(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "supplier_product sp LEFT JOIN " . DB_PREFIX . "supplier s ON (s.supplier_id = sp.supplier_id)";
 
 		$implode = array();
@@ -118,13 +118,13 @@ class ModelSaleSupplierProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getSupplierProductsBySupplierId($supplier_id) {
+	public function getSupplierProductsBySupplierId(int $supplier_id): array {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "supplier_product WHERE supplier_id = '" . (int)$supplier_id . "' ORDER BY `name` ASC");
 
 		return $query->rows;
 	}
 
-	public function getSupplierNameBySupplierId($supplier_id) {
+	public function getSupplierNameBySupplierId(int $supplier_id) {
 		$query = $this->db->query("SELECT DISTINCT company AS `name` FROM " . DB_PREFIX . "supplier WHERE supplier_id = '" . (int)$supplier_id . "'");
 
 		if (!empty($query->row['name'])) {
@@ -134,13 +134,13 @@ class ModelSaleSupplierProduct extends Model {
 		}
 	}
 
-	public function getTaxClassIdBySupplierProduct($supplier_product_id) {
+	public function getTaxClassIdBySupplierProduct(int $supplier_product_id) {
 		$query = $this->db->query("SELECT DISTINCT tax_class_id AS tax FROM " . DB_PREFIX . "supplier_product WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 
 		return $query->row['tax'];
 	}
 
-	public function updateSupplierProductPrice($selected, $supplier_products = array(), $price) {
+	public function updateSupplierProductPrice($selected, $price, array $supplier_products = []): void {
 		if ($selected) {
 			$query = $this->db->query("SELECT supplier_product_id, price FROM " . DB_PREFIX . "supplier_product WHERE supplier_product_id IN (" . implode(',', $supplier_products) . ") AND price >= '0'");
 		} else {
@@ -158,7 +158,7 @@ class ModelSaleSupplierProduct extends Model {
 		}
 	}
 
-	public function getTotalSupplierProducts($data = array()) {
+	public function getTotalSupplierProducts(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT sp.supplier_product_id) AS `total` FROM " . DB_PREFIX . "supplier_product sp LEFT JOIN " . DB_PREFIX . "supplier s ON (s.supplier_id = sp.supplier_id)";
 
 		$implode = array();
@@ -192,25 +192,25 @@ class ModelSaleSupplierProduct extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalSupplierProductsByManufacturerId($manufacturer_id) {
+	public function getTotalSupplierProductsByManufacturerId(int $manufacturer_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalSupplierProductsByTaxClassId($tax_class_id) {
+	public function getTotalSupplierProductsByTaxClassId(int $tax_class_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalSupplierProductsByWeightClassId($weight_class_id) {
+	public function getTotalSupplierProductsByWeightClassId(int $weight_class_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE weight_class_id = '" . (int)$weight_class_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalSupplierProductsByLengthClassId($length_class_id) {
+	public function getTotalSupplierProductsByLengthClassId(int $length_class_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "supplier_product WHERE length_class_id = '" . (int)$length_class_id . "'");
 
 		return $query->row['total'];

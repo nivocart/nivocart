@@ -1,7 +1,7 @@
 <?php
 class ModelReportOnline extends Model {
 
-	public function getCustomersOnline($data = array()) {
+	public function getCustomersOnline(array $data = []): array {
 		$sql = "SELECT co.ip, co.customer_id, co.url, co.referer, co.user_agent, co.date_added FROM " . DB_PREFIX . "customer_online co LEFT JOIN " . DB_PREFIX . "customer c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
 
 		$implode = array();
@@ -35,7 +35,7 @@ class ModelReportOnline extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalCustomersOnline($data = array()) {
+	public function getTotalCustomersOnline(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN " . DB_PREFIX . "customer c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
 
 		$implode = array();
@@ -58,7 +58,7 @@ class ModelReportOnline extends Model {
 	}
 
 	// Robots
-	public function getRobotsOnline($data = array()) {
+	public function getRobotsOnline(array $data = []): array {
 		$sql = "SELECT * FROM " . DB_PREFIX . "robot_online";
 
 		$implode = array();
@@ -94,7 +94,7 @@ class ModelReportOnline extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalRobotsOnline($data = array()) {
+	public function getTotalRobotsOnline($data = array()): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "robot_online";
 
 		$implode = array();

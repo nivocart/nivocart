@@ -1,6 +1,6 @@
 <?php
 class ControllerCommonLogin extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('common/login');
@@ -19,7 +19,7 @@ class ControllerCommonLogin extends Controller {
 		}
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['username']) && isset($this->request->post['password']) && $this->validate()) {
-			$this->session->data['token'] = hash_rand('ripemd128');
+			$this->session->data['token'] = substr(md5(mt_rand()), 0, 10);
 
 			if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) === 0 || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) === 0)) {
 				$this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));

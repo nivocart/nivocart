@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogProfile extends Model {
 
-	public function addProfile($data) {
+	public function addProfile(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "profile` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', price = '" . (double)$data['price'] . "', frequency = '" . $this->db->escape($data['frequency']) . "', duration = '" . (int)$data['duration'] . "', `cycle` = '" . (int)$data['cycle'] . "', trial_status = '" . (int)$data['trial_status'] . "', trial_price = '" . (double)$data['trial_price'] . "', trial_frequency = '" . $this->db->escape($data['trial_frequency']) . "', trial_duration = '" . (int)$data['trial_duration'] . "', trial_cycle = '" . (int)$data['trial_cycle'] . "'");
 
 		$profile_id = $this->db->getLastId();
@@ -14,11 +14,9 @@ class ModelCatalogProfile extends Model {
 		}
 
 		$this->cache->delete('profile');
-
-		return $profile_id;
 	}
 
-	public function updateProfile($profile_id, $data) {
+	public function updateProfile(int $profile_id, array $data = []): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "profile_description WHERE profile_id = '" . (int)$profile_id . "'");
 
 		$this->db->query("UPDATE `" . DB_PREFIX . "profile` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', price = '" . (double)$data['price'] . "', frequency = '" . $this->db->escape($data['frequency']) . "', duration = '" . (int)$data['duration'] . "', `cycle` = '" . (int)$data['cycle'] . "', trial_status = '" . (int)$data['trial_status'] . "', trial_price = '" . (double)$data['trial_price'] . "', trial_frequency = '" . $this->db->escape($data['trial_frequency']) . "', trial_duration = '" . (int)$data['trial_duration'] . "', trial_cycle = '" . (int)$data['trial_cycle'] . "' WHERE profile_id = '" . (int)$profile_id . "'");
@@ -30,7 +28,7 @@ class ModelCatalogProfile extends Model {
 		$this->cache->delete('profile');
 	}
 
-	public function deleteProfile($profile_id) {
+	public function deleteProfile(int $profile_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "profile` WHERE profile_id = '" . (int)$profile_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "profile_description` WHERE profile_id = '" . (int)$profile_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_profile` WHERE profile_id = '" . (int)$profile_id . "'");
@@ -40,7 +38,7 @@ class ModelCatalogProfile extends Model {
 		$this->cache->delete('profile');
 	}
 
-	public function getFrequencies() {
+	public function getFrequencies(): array {
 		return array(
 			'day'        => $this->language->get('text_day'),
 			'week'       => $this->language->get('text_week'),
@@ -50,7 +48,7 @@ class ModelCatalogProfile extends Model {
 		);
 	}
 
-	public function getProfiles($data = array()) {
+	public function getProfiles(array $data = []): array {
 		$sql = "SELECT pf.profile_id, pfd.name, pf.sort_order, pf.status FROM `" . DB_PREFIX . "profile` pf LEFT JOIN " . DB_PREFIX . "profile_description pfd ON (pf.profile_id = pfd.profile_id) WHERE pfd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$sort_data = array(
@@ -89,13 +87,13 @@ class ModelCatalogProfile extends Model {
 		return $query->rows;
 	}
 
-	public function getProfile($profile_id) {
+	public function getProfile(int $profile_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "profile` WHERE profile_id = '" . (int)$profile_id . "'");
 
 		return $query->row;
 	}
 
-	public function getProfileDescription($profile_id) {
+	public function getProfileDescription(int $profile_id) {
 		$profile_description_data = $this->cache->get('profile.' . (int)$this->config->get('config_language_id'));
 
 		if (!$profile_description_data) {
@@ -115,7 +113,7 @@ class ModelCatalogProfile extends Model {
 		return $profile_description_data;
 	}
 
-	public function getTotalProfiles() {
+	public function getTotalProfiles(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "profile`");
 
 		return $query->row['total'];

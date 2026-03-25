@@ -1,7 +1,7 @@
 <?php
 class ModelDesignAdministration extends Model {
 
-	public function addAdministration($data) {
+	public function addAdministration(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "administration` SET `name` = '" . $this->db->escape($data['name']) . "', contrast = '" . $this->db->escape($data['contrast']) . "', date_added = NOW(), date_modified = NOW()");
 
 		$administration_id = $this->db->getLastId();
@@ -12,25 +12,25 @@ class ModelDesignAdministration extends Model {
 		$this->cache->delete('administration');
 	}
 
-	public function editAdministration($administration_id, $data) {
+	public function editAdministration(int $administration_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "administration` SET `name` = '" . $this->db->escape($data['name']) . "', contrast = '" . $this->db->escape($data['contrast']) . "', date_modified = NOW() WHERE administration_id = '" . (int)$administration_id . "'");
 
 		$this->cache->delete('administration');
 	}
 
-	public function deleteAdministration($administration_id) {
+	public function deleteAdministration(int$administration_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "administration` WHERE administration_id = '" . (int)$administration_id . "'");
 
 		$this->cache->delete('administration');
 	}
 
-	public function getAdministration($administration_id) {
+	public function getAdministration(int $administration_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "administration` WHERE administration_id = '" . (int)$administration_id . "'");
 
 		return $query->row;
 	}
 
-	public function getAdministrations($data = array()) {
+	public function getAdministrations(array $data = []) {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "administration`";
 
@@ -79,7 +79,7 @@ class ModelDesignAdministration extends Model {
 		return $query->row['contrast'];
 	}
 
-	public function getTotalAdministrations() {
+	public function getTotalAdministrations(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "administration");
 
 		return $query->row['total'];

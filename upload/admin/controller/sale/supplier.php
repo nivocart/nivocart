@@ -795,7 +795,9 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$this->data['countries'] = $this->model_localisation_country->getCountries(0);
+		$countries_supplier = array();
+
+		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_supplier);
 
 		if (isset($this->request->post['address'])) {
 			$this->data['addresses'] = $this->request->post['address'];
@@ -827,15 +829,15 @@ class ControllerSaleSupplier extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['reference']) < 1) || (utf8_strlen($this->request->post['reference']) > 32)) {
+		if ((mb_strlen($this->request->post['reference'], 'UTF-8') < 1) || (mb_strlen($this->request->post['reference'], 'UTF-8') > 32)) {
 			$this->error['reference'] = $this->language->get('error_reference');
 		}
 
-		if ((utf8_strlen($this->request->post['company']) < 1) || (utf8_strlen($this->request->post['company']) > 32)) {
+		if ((mb_strlen($this->request->post['company'], 'UTF-8') < 1) || (mb_strlen($this->request->post['company'], 'UTF-8') > 32)) {
 			$this->error['company'] = $this->language->get('error_company');
 		}
 
-		if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
@@ -853,15 +855,15 @@ class ControllerSaleSupplier extends Controller {
 
 		if (isset($this->request->post['address'])) {
 			foreach ($this->request->post['address'] as $key => $value) {
-				if ((utf8_strlen($value['company']) < 1) || (utf8_strlen($value['company']) > 32)) {
+				if ((mb_strlen($value['company'], 'UTF-8') < 1) || (mb_strlen($value['company'], 'UTF-8') > 32)) {
 					$this->error['address_company'][$key] = $this->language->get('error_company');
 				}
 
-				if ((utf8_strlen($value['address_1']) < 3) || (utf8_strlen($value['address_1']) > 128)) {
+				if ((mb_strlen($value['address_1'], 'UTF-8') < 3) || (mb_strlen($value['address_1'], 'UTF-8') > 128)) {
 					$this->error['address_address_1'][$key] = $this->language->get('error_address_1');
 				}
 
-				if ((utf8_strlen($value['city']) < 2) || (utf8_strlen($value['city']) > 128)) {
+				if ((mb_strlen($value['city'], 'UTF-8') < 2) || (mb_strlen($value['city'], 'UTF-8') > 128)) {
 					$this->error['address_city'][$key] = $this->language->get('error_city');
 				}
 
@@ -870,7 +872,7 @@ class ControllerSaleSupplier extends Controller {
 				$country_info = $this->model_localisation_country->getCountry($value['country_id']);
 
 				if ($country_info) {
-					if ($country_info['postcode_required'] && (utf8_strlen($value['postcode']) < 2) || (utf8_strlen($value['postcode']) > 10)) {
+					if ($country_info['postcode_required'] && (mb_strlen($value['postcode'], 'UTF-8') < 2) || (mb_strlen($value['postcode'], 'UTF-8') > 10)) {
 						$this->error['address_postcode'][$key] = $this->language->get('error_postcode');
 					}
 				}

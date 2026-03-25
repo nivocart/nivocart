@@ -78,7 +78,6 @@ class ControllerAccountEdit extends Controller {
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_gender'] = $this->language->get('entry_gender');
 		$this->data['entry_date_of_birth'] = $this->language->get('entry_date_of_birth');
 
@@ -87,7 +86,6 @@ class ControllerAccountEdit extends Controller {
 		$this->data['gdpr_address'] = $this->language->get('gdpr_address');
 		$this->data['gdpr_email'] = $this->language->get('gdpr_email');
 		$this->data['gdpr_telephone'] = $this->language->get('gdpr_telephone');
-		$this->data['gdpr_fax'] = $this->language->get('gdpr_fax');
 		$this->data['gdpr_gender'] = $this->language->get('gdpr_gender');
 		$this->data['gdpr_date_of_birth'] = $this->language->get('gdpr_date_of_birth');
 		$this->data['gdpr_password'] = $this->language->get('gdpr_password');
@@ -185,16 +183,6 @@ class ControllerAccountEdit extends Controller {
 			$this->data['telephone'] = '';
 		}
 
-		$this->data['show_fax'] = $this->config->get('config_customer_fax');
-
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} elseif (isset($customer_info)) {
-			$this->data['fax'] = $customer_info['fax'];
-		} else {
-			$this->data['fax'] = '';
-		}
-
 		$this->data['show_gender'] = $this->config->get('config_customer_gender');
 
 		if (isset($this->request->post['gender'])) {
@@ -243,15 +231,15 @@ class ControllerAccountEdit extends Controller {
 	}
 
 	protected function validate() {
-		if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
+		if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
@@ -259,12 +247,12 @@ class ControllerAccountEdit extends Controller {
 			$this->error['warning'] = $this->language->get('error_exists');
 		}
 
-		if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+		if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
 		if ($this->config->get('config_customer_dob')) {
-			if (isset($this->request->post['date_of_birth']) && (utf8_strlen($this->request->post['date_of_birth']) == 10)) {
+			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
 				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
@@ -298,7 +286,6 @@ class ControllerAccountEdit extends Controller {
 		$this->data['text_date_added'] = $this->language->get('text_date_added');
 		$this->data['text_email'] = $this->language->get('text_email');
 		$this->data['text_telephone'] = $this->language->get('text_telephone');
-		$this->data['text_fax'] = $this->language->get('text_fax');
 		$this->data['text_gender'] = $this->language->get('text_gender');
 		$this->data['text_date_of_birth'] = $this->language->get('text_date_of_birth');
 		$this->data['text_ip'] = $this->language->get('text_ip');
@@ -347,26 +334,16 @@ class ControllerAccountEdit extends Controller {
 					$store_address = $store_info['config_address'];
 					$store_email = $store_info['config_email'];
 					$store_telephone = $store_info['config_telephone'];
-					$store_fax = $store_info['config_fax'];
 				} else {
 					$store_address = $this->config->get('config_address');
 					$store_email = $this->config->get('config_email');
 					$store_telephone = $this->config->get('config_telephone');
-					$store_fax = $this->config->get('config_fax');
 				}
 
 				$store_url = $this->request->server['HTTPS'] ? rtrim(HTTPS_SERVER, '/') : rtrim(HTTP_SERVER, '/');
 
 				$store_company_id = $this->config->get('config_company_id') ? $this->config->get('config_company_id') : '';
 				$store_company_tax_id = $this->config->get('config_company_tax_id') ? $this->config->get('config_company_tax_id') : '';
-
-				$show_fax = $this->config->get('config_customer_fax');
-
-				if ($show_fax && isset($customer_info['fax'])) {
-					$customer_fax = $customer_info['fax'];
-				} else {
-					$customer_fax = '';
-				}
 
 				$show_gender = $this->config->get('config_customer_gender');
 
@@ -399,7 +376,6 @@ class ControllerAccountEdit extends Controller {
 					'store_address'        => nl2br($store_address),
 					'store_email'          => $store_email,
 					'store_telephone'      => $store_telephone,
-					'store_fax'            => $store_fax,
 					'store_url'            => $store_url,
 					'store_company_id'     => $store_company_id,
 					'store_company_tax_id' => $store_company_tax_id,
@@ -407,7 +383,6 @@ class ControllerAccountEdit extends Controller {
 					'lastname'             => $customer_info['lastname'],
 					'email'                => $customer_info['email'],
 					'telephone'            => $customer_info['telephone'],
-					'fax'                  => $customer_fax,
 					'gender'               => $customer_gender,
 					'date_of_birth'        => $customer_date_of_birth,
 					'user_agent'           => $customer_user_agent,

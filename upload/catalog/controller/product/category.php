@@ -295,7 +295,7 @@ class ControllerProductCategory extends Controller {
 					if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
-						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 					}
 				} else {
 					$price = false;
@@ -303,14 +303,14 @@ class ControllerProductCategory extends Controller {
 
 				if ((float)$result['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
-					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
 					$special_label = false;
 					$special = false;
 				}
 
 				if ($this->config->get('config_tax')) {
-					$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
+					$tax = $this->currency->format(((float)$result['special'] ? $result['special'] : $result['price']), $this->config->get('config_currency'));
 				} else {
 					$tax = false;
 				}
@@ -371,7 +371,7 @@ class ControllerProductCategory extends Controller {
 					'offer'           => $offer,
 					'manufacturer'    => $manufacturer,
 					'name'            => $result['name'],
-					'description'     => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '..',
+					'description'     => substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '..',
 					'age_minimum'     => ($result['age_minimum'] > 0) ? (int)$result['age_minimum'] : '',
 					'age_logged'      => $age_logged,
 					'age_checked'     => $age_checked,

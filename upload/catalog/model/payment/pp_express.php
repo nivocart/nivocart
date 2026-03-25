@@ -81,17 +81,17 @@ class ModelPaymentPPExpress extends Model {
 					$value = $option['option_value'];
 				} else {
 					$filename = $this->encryption->decrypt($option['option_value']);
-					$value = utf8_substr($filename, 0, utf8_strrpos($filename, '.'));
+					$value = substr($filename, 0, strrpos($filename, '.'));
 				}
 
-				$data['L_PAYMENTREQUEST_0_DESC' . $i] .= ($option_count > 0 ? ', ' : '') . $option['name'] . ':' . (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value);
+				$data['L_PAYMENTREQUEST_0_DESC' . $i] .= ($option_count > 0 ? ', ' : '') . $option['name'] . ':' . (mb_strlen($value, 'UTF-8') > 20 ? substr($value, 0, 20) . '..' : $value);
 
 				$option_count++;
 			}
 
 			$data['L_PAYMENTREQUEST_0_DESC' . $i] = substr($data['L_PAYMENTREQUEST_0_DESC' . $i], 0, 126);
 
-			$item_price = $this->currency->format($item['price'], false, false, false);
+			$item_price = $this->currency->format($item['price'], false, false, false, $this->config->get('config_currency'));
 
 			$data['L_PAYMENTREQUEST_0_NAME' . $i] = $item['name'];
 			$data['L_PAYMENTREQUEST_0_NUMBER' . $i] = $item['model'];
@@ -131,7 +131,7 @@ class ModelPaymentPPExpress extends Model {
 				$data['L_PAYMENTREQUEST_0_NAME' . $i] = $voucher['description'];
 				$data['L_PAYMENTREQUEST_0_NUMBER' . $i] = 'VOUCHER';
 				$data['L_PAYMENTREQUEST_0_QTY' . $i] = 1;
-				$data['L_PAYMENTREQUEST_0_AMT' . $i] = $this->currency->format($voucher['amount'], false, false, false);
+				$data['L_PAYMENTREQUEST_0_AMT' . $i] = $this->currency->format($voucher['amount'], false, false, false, $this->config->get('config_currency'));
 
 				$i++;
 			}
@@ -176,11 +176,11 @@ class ModelPaymentPPExpress extends Model {
 		foreach ($total_data as $total_row) {
 			if (!in_array($total_row['code'], array('total', 'sub_total'))) {
 				if ($total_row['value'] != 0) {
-					$item_price = $this->currency->format($total_row['value'], false, false, false);
+					$item_price = $this->currency->format($total_row['value'], false, false, false, $this->config->get('config_currency'));
 
 					$data['L_PAYMENTREQUEST_0_NUMBER' . $i] = $total_row['code'];
 					$data['L_PAYMENTREQUEST_0_NAME' . $i] = $total_row['title'];
-					$data['L_PAYMENTREQUEST_0_AMT' . $i] = $this->currency->format($total_row['value'], false, false, false);
+					$data['L_PAYMENTREQUEST_0_AMT' . $i] = $this->currency->format($total_row['value'], false, false, false, $this->config->get('config_currency'));
 					$data['L_PAYMENTREQUEST_0_QTY' . $i] = 1;
 
 					$item_total = $item_total + $item_price;
@@ -203,14 +203,14 @@ class ModelPaymentPPExpress extends Model {
 				$data['L_BILLINGTYPE' . $z] = 'RecurringPayments';
 
 				if ($item['recurring_trial'] == 1) {
-					$trial_amt = $this->currency->format($this->tax->calculate($item['recurring_trial_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false) * $item['quantity'] . ' ' . $this->currency->getCode();
+					$trial_amt = $this->currency->format($this->tax->calculate($item['recurring_trial_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false, $this->config->get('config_currency')) * $item['quantity'] . ' ' . $this->currency->getCode();
 
 					$trial_text =  sprintf($this->language->get('text_trial'), $trial_amt, $item['recurring_trial_cycle'], $item['recurring_trial_frequency'], $item['recurring_trial_duration']);
 				} else {
 					$trial_text = '';
 				}
 
-				$recurring_amt = $this->currency->format($this->tax->calculate($item['recurring_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false)  * $item['quantity'] . ' ' . $this->currency->getCode();
+				$recurring_amt = $this->currency->format($this->tax->calculate($item['recurring_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false, $this->config->get('config_currency'))  * $item['quantity'] . ' ' . $this->currency->getCode();
 
 				$recurring_description = $trial_text . sprintf($this->language->get('text_recurring'), $recurring_amt, $item['recurring_cycle'], $item['recurring_frequency']);
 
@@ -227,20 +227,20 @@ class ModelPaymentPPExpress extends Model {
 		return $data;
 	}
 
-	public function getTotalCaptured($paypal_order_id) {
+	public function getTotalCaptured(int $paypal_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "paypal_order_transaction WHERE paypal_order_id = '" . (int)$paypal_order_id . "' AND pending_reason != 'authorization' AND pending_reason != 'paymentreview' AND (payment_status = 'Partially-Refunded' OR payment_status = 'Completed' OR payment_status = 'Pending') AND transaction_entity = 'payment'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalRefunded($paypal_order_id) {
+	public function getTotalRefunded(int $paypal_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "paypal_order_transaction WHERE paypal_order_id = '" . (int)$paypal_order_id . "' AND payment_status = 'Refunded'");
 
 		return $query->row['total'];
 	}
 
-	public function getTransactionRow($transaction_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order_transaction pt LEFT JOIN " . DB_PREFIX . "paypal_order po ON (pt.paypal_order_id = po.paypal_order_id) WHERE pt.transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
+	public function getTransactionRow(int $transaction_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order_transaction pt LEFT JOIN " . DB_PREFIX . "paypal_order po ON (pt.paypal_order_id = po.paypal_order_id) WHERE pt.transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
 
 		if ($query->num_rows > 0) {
 			return $query->row;
@@ -249,15 +249,15 @@ class ModelPaymentPPExpress extends Model {
 		}
 	}
 
-	public function updateTransactionStatus($transaction_id, $transaction_status) {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
+	public function updateTransactionStatus(int $transaction_id, $transaction_status): void {
+		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
 	}
 
-	public function updateTransactionPendingReason($transaction_id, $pending_reason) {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET pending_reason = '" . $this->db->escape($pending_reason) . "' WHERE transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
+	public function updateTransactionPendingReason(int $transaction_id, $pending_reason): void {
+		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET pending_reason = '" . $this->db->escape($pending_reason) . "' WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
 	}
 
-	public function updateOrder($capture_status, $order_id) {
+	public function updateOrder($capture_status, int $order_id): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order SET modified = NOW(), capture_status = '" . $this->db->escape($capture_status) . "' WHERE order_id = '" . (int)$order_id . "'");
 	}
 

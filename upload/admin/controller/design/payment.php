@@ -463,11 +463,13 @@ class ControllerDesignPayment extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 128)) {
+		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 128)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		$results = $this->model_design_payment->getPaymentImages(0);
+		$images_payments = array();
+
+		$results = $this->model_design_payment->getPaymentImages($images_payments);
 
 		foreach ($results as $result) {
 			if (isset($this->request->get['payment_image_id'])) {
@@ -488,7 +490,7 @@ class ControllerDesignPayment extends Controller {
 		$allowed = array('jpg','jpeg','png','gif');
 
 		if ($this->request->post['image']) {
-			$ext = utf8_substr(strrchr($this->request->post['image'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['image'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['image'] = $this->language->get('error_image_format');

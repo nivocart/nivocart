@@ -448,11 +448,11 @@ class ControllerLocalisationCurrency extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['title']) < 3) || (utf8_strlen($this->request->post['title']) > 32)) {
+		if ((mb_strlen($this->request->post['title'], 'UTF-8') < 3) || (mb_strlen($this->request->post['title'], 'UTF-8') > 32)) {
 			$this->error['title'] = $this->language->get('error_title');
 		}
 
-		if (utf8_strlen($this->request->post['code']) != 3) {
+		if (mb_strlen($this->request->post['code'], 'UTF-8') != 3) {
 			$this->error['code'] = $this->language->get('error_code');
 		}
 

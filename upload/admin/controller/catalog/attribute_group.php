@@ -384,7 +384,7 @@ class ControllerCatalogAttributeGroup extends Controller {
 		}
 
 		foreach ($this->request->post['attribute_group_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 64)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 3) || (mb_strlen($value['name'], 'UTF-8') > 64)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}

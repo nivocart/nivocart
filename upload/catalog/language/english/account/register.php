@@ -19,7 +19,6 @@ $_['entry_firstname']      = 'First Name:';
 $_['entry_lastname']       = 'Last Name:';
 $_['entry_email']          = 'Email:';
 $_['entry_telephone']      = 'Telephone:';
-$_['entry_fax']            = 'Fax:';
 $_['entry_gender']         = 'Gender:';
 $_['entry_date_of_birth']  = 'Date of Birth:';
 $_['entry_company']        = 'Company:';
@@ -35,7 +34,7 @@ $_['entry_zone']           = 'Region / State:';
 $_['entry_newsletter']     = 'Subscribe:';
 $_['entry_password']       = 'Password:';
 $_['entry_confirm']        = 'Password Confirm:';
-$_['entry_captcha']        = 'Enter the two words';
+$_['entry_captcha']        = 'Enter the code below';
 
 // Error
 $_['error_exists']         = 'Warning: Email Address is already registered!';

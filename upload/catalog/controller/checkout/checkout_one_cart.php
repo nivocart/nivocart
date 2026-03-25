@@ -254,19 +254,19 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 				} else {
 					$filename = $this->encryption->decrypt($option['option_value']);
 
-					$value = utf8_substr($filename, 0, utf8_strrpos($filename, '.'));
+					$value = substr($filename, 0, strrpos($filename, '.'));
 				}
 
 				$option_data[] = array(
 					'name'  => $option['name'],
-					'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
+					'value' => (mb_strlen($value, 'UTF-8') > 20 ? substr($value, 0, 20) . '..' : $value)
 				);
 			}
 
 			// Display prices & totals
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
-				$total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+				$total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'], $this->config->get('config_currency'));
 			} else {
 				$price = false;
 				$total = false;
@@ -284,12 +284,12 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 				);
 
 				if ($product['recurring_trial']) {
-					$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')));
+					$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 					$profile_description = sprintf($this->language->get('text_trial_description'), $recurring_price, $product['recurring_trial_cycle'], $frequencies[$product['recurring_trial_frequency']], $product['recurring_trial_duration']) . ' ';
 				}
 
-				$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')));
+				$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 				if ($product['recurring_duration']) {
 					$profile_description .= sprintf($this->language->get('text_payment_description'), $recurring_price, $product['recurring_cycle'], $frequencies[$product['recurring_frequency']], $product['recurring_duration']);
@@ -335,7 +335,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 				'subtract'            => $product['subtract'],
 				'price'               => $price,
 				'cost'                => $product['cost'],
-				'tax_value'           => $this->currency->format($product_tax_value),
+				'tax_value'           => $this->currency->format($product_tax_value, $this->config->get('config_currency')),
 				'tax_percent'         => number_format((($product_tax_value * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
 				'age_minimum'         => ($age_checked) ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
 				'recurring'           => $product['recurring'],
@@ -359,7 +359,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			foreach ($this->session->data['vouchers'] as $voucher) {
 				$this->data['vouchers'][] = array(
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'])
+					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency'))
 				);
 			}
 		}

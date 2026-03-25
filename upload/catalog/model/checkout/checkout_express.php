@@ -1,7 +1,7 @@
 <?php
 class ModelCheckoutCheckoutExpress extends Model {
 
-	public function addCustomer($data) {
+	public function addCustomer(array $data = []): void {
 		if (isset($data['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display'))) {
 			$customer_group_id = $data['customer_group_id'];
 		} else {
@@ -13,7 +13,7 @@ class ModelCheckoutCheckoutExpress extends Model {
 		$customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 
 		// Always approved
-		$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET store_id = '" . (int)$this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . (isset($data['telephone']) ? $this->db->escape($data['telephone']) : '000') . "', fax = '" . (isset($data['fax']) ? (int)$data['fax'] : 0) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $this->db->escape($data['date_of_birth']) : '1970-01-01') . "', salt = '" . $this->db->escape($salt = substr(hash_rand('ripemd128'), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 0) . "', customer_group_id = '" . (int)$customer_group_id . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '1', date_added = NOW()");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET store_id = '" . (int)$this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . (isset($data['telephone']) ? $this->db->escape($data['telephone']) : '000') . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $this->db->escape($data['date_of_birth']) : '1970-01-01') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 0) . "', customer_group_id = '" . (int)$customer_group_id . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '1', date_added = NOW()");
 
 		$customer_id = $this->db->getLastId();
 
@@ -65,14 +65,6 @@ class ModelCheckoutCheckoutExpress extends Model {
 			}
 
 			$mail = new Mail();
-			$mail->protocol = $this->config->get('config_mail_protocol');
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->hostname = $this->config->get('config_smtp_host');
-			$mail->username = $this->config->get('config_smtp_username');
-			$mail->password = $this->config->get('config_smtp_password');
-			$mail->port = $this->config->get('config_smtp_port');
-			$mail->timeout = $this->config->get('config_smtp_timeout');
-
 			$mail->setTo($data['email']);
 			$mail->setFrom($this->config->get('config_email'));
 			$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
@@ -94,14 +86,6 @@ class ModelCheckoutCheckoutExpress extends Model {
 				$message .= $this->language->get('text_email') . " " . $data['email'] . "\n\n";
 
 				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
-
 				$mail->setTo($this->config->get('config_email'));
 				$mail->setFrom($this->config->get('config_email_noreply'));
 				$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
@@ -113,7 +97,7 @@ class ModelCheckoutCheckoutExpress extends Model {
 				$emails = explode(',', $this->config->get('config_alert_emails'));
 
 				foreach ($emails as $email) {
-					if (utf8_strlen($email) > 0 && preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
+					if (mb_strlen($email, 'UTF-8') > 0 && preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
 						$mail->setTo($email);
 						$mail->send();
 					}
@@ -122,26 +106,26 @@ class ModelCheckoutCheckoutExpress extends Model {
 		}
 	}
 
-	public function editCustomer($data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . (isset($data['fax']) ? (int)$data['fax'] : 0) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . $this->db->escape($data['date_of_birth']) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+	public function editCustomer(array $data = []): void {
+		$this->db->query("UPDATE " . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . $this->db->escape($data['date_of_birth']) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 	}
 
-	public function editPassword($email, $password) {
-		$this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(hash_rand('ripemd128'), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+	public function editPassword(string $email, string $password): void {
+		$this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "'");
 	}
 
-	public function editNewsletter($newsletter) {
+	public function editNewsletter(int $newsletter): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer SET newsletter = '" . (int)$newsletter . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 	}
 
-	public function getCustomer($customer_id) {
+	public function getCustomer(int $customer_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$customer_id . "'");
 
 		return $query->row;
 	}
 
-	public function getCustomerByEmail($email) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+	public function getCustomerByEmail(string $email) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "'");
 
 		return $query->row;
 	}
@@ -152,17 +136,17 @@ class ModelCheckoutCheckoutExpress extends Model {
 		return $query->row;
 	}
 
-	public function getCustomers($data = array()) {
+	public function getCustomers(array $data = []): array {
 		$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cg.name AS customer_group FROM " . DB_PREFIX . "customer c LEFT JOIN " . DB_PREFIX . "customer_group cg ON (c.customer_group_id = cg.customer_group_id) ";
 
 		$implode = array();
 
 		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-			$implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape(utf8_strtolower($data['filter_name'])) . "%'";
+			$implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "%'";
 		}
 
 		if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
-			$implode[] = "LCASE(c.email) = '" . $this->db->escape(utf8_strtolower($data['filter_email'])) . "'";
+			$implode[] = "LCASE(c.email) = '" . $this->db->escape(mb_strtolower($data['filter_email'], 'UTF-8')) . "'";
 		}
 
 		if (isset($data['filter_customer_group_id']) && !is_null($data['filter_customer_group_id'])) {
@@ -227,13 +211,13 @@ class ModelCheckoutCheckoutExpress extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalCustomersByEmail($email) {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+	public function getTotalCustomersByEmail(string $email): int {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getIps($customer_id) {
+	public function getIps(int $customer_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int)$customer_id . "'");
 
 		return $query->rows;

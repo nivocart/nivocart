@@ -160,7 +160,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 				$this->data['vouchers'][] = array(
 					'key'         => $key,
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount']),
+					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
 					'remove'      => $this->url->link('checkout_express/checkout', 'remove=' . $key, 'SSL')
 				);
 			}

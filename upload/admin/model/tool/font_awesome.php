@@ -1,7 +1,7 @@
 <?php
 class ModelToolFontAwesome extends Model {
 
-	public function getFonts() {
+	public function getFonts(): array {
 		$fonts = $this->cache->get('fonts');
 
 		if (!$fonts) {

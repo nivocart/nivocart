@@ -1,9 +1,9 @@
 // ---------------------------------------
-//  NivoCart Shopping Cart v1.x.x
+//  NivoCart Shopping Cart v2.x.x
 //
 //  INSTALL INSTRUCTIONS
 //
-//  https://nivocart.com
+//  https://nivocart.org
 // ---------------------------------------
 
 
@@ -12,7 +12,7 @@ IF UPGRADING YOUR EXISTING CART, BE SURE TO READ THE UPGRADE.TXT FILE INSTEAD.
 
 REQUIREMENTS:
 ----------------
-- PHP 7.0 (minimum)
+- PHP 8.0 (minimum)
 - OpenSSL Encrypt extension
 - Curl extension
 

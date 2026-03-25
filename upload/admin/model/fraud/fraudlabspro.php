@@ -71,7 +71,7 @@ class ModelFraudFraudLabsPro extends Model {
 		$this->addSettings();
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "order_status WHERE `name` = 'Fraud'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "order_status WHERE `name` = 'Fraud Review'");
 
@@ -80,13 +80,13 @@ class ModelFraudFraudLabsPro extends Model {
 		$this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "fraudlabspro");
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "fraudlabspro WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row;
 	}
 
-	public function addOrderHistory($order_id, $data, $store_id = 0) {
+	public function addOrderHistory(int $order_id, $store_id = 0, array $data = []) {
 		$json = array();
 
 		$this->load->model('setting/store');

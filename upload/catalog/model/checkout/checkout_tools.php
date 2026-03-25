@@ -1,7 +1,7 @@
 <?php
 class ModelCheckoutCheckoutTools extends Model {
 
-	public function getJoinName($data) {
+	public function getJoinName(array $data = []) {
 		if ($data['firstname'] && $data['lastname']) {
 			return $data['firstname'] . ' ' . $data['lastname'];
 		} elseif ($data['firstname'] && !$data['lastname']) {

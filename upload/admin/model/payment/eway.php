@@ -51,7 +51,7 @@ class ModelPaymentEway extends Model {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "eway_card`;");
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "eway_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
@@ -77,11 +77,10 @@ class ModelPaymentEway extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "eway_order` SET `modified` = NOW(), refund_amount = '" . (double)$refund_amount . "', `refund_transaction_id` = '" . $this->db->escape($order['refund_transaction_id']) . "' WHERE eway_order_id = '" . $order['eway_order_id'] . "'");
 	}
 
-	public function capture($order_id, $capture_amount, $currency) {
+	public function capture(int $order_id, $capture_amount, $currency) {
 		$eway_order = $this->getOrder($order_id);
 
 		if ($eway_order && $capture_amount > 0 ) {
-
 			$capture_data = new stdClass();
 			$capture_data->Payment = new stdClass();
 			$capture_data->Payment->TotalAmount = (int)number_format($capture_amount, 2, '.', '') * 100;
@@ -103,15 +102,15 @@ class ModelPaymentEway extends Model {
 		}
 	}
 
-	public function updateCaptureStatus($eway_order_id, $status) {
+	public function updateCaptureStatus(int $eway_order_id, int $status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "eway_order` SET `capture_status` = '" . (int)$status . "' WHERE `eway_order_id` = '" . (int)$eway_order_id . "'");
 	}
 
-	public function updateTransactionId($eway_order_id, $transaction_id) {
+	public function updateTransactionId(int $eway_order_id, int $transaction_id): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "eway_order` SET `transaction_id` = '" . $transaction_id . "' WHERE `eway_order_id` = '" . (int)$eway_order_id . "'");
 	}
 
-	public function void($order_id) {
+	public function void(int $order_id) {
 		$eway_order = $this->getOrder($order_id);
 		if ($eway_order) {
 
@@ -133,11 +132,11 @@ class ModelPaymentEway extends Model {
 		}
 	}
 
-	public function updateVoidStatus($eway_order_id, $status) {
+	public function updateVoidStatus(int $eway_order_id, int $status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "eway_order` SET `void_status` = '" . (int)$status . "' WHERE `eway_order_id` = '" . (int)$eway_order_id . "'");
 	}
 
-	public function refund($order_id, $refund_amount) {
+	public function refund(int $order_id, $refund_amount) {
 		$eway_order = $this->getOrder($order_id);
 
 		if ($eway_order && $refund_amount > 0) {
@@ -161,7 +160,7 @@ class ModelPaymentEway extends Model {
 		}
 	}
 
-	public function updateRefundStatus($eway_order_id, $status) {
+	public function updateRefundStatus(int $eway_order_id, int $status) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "eway_order` SET `refund_status` = '" . (int)$status . "' WHERE `eway_order_id` = '" . (int)$eway_order_id . "'");
 	}
 
@@ -199,7 +198,7 @@ class ModelPaymentEway extends Model {
 		return $response;
 	}
 
-	private function getTransactions($eway_order_id) {
+	private function getTransactions(int $eway_order_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "eway_transactions` WHERE `eway_order_id` = '" . (int)$eway_order_id . "'");
 
 		if ($query->num_rows) {
@@ -209,17 +208,17 @@ class ModelPaymentEway extends Model {
 		}
 	}
 
-	public function addTransaction($eway_order_id, $transactionid, $type, $total, $currency) {
+	public function addTransaction(int $eway_order_id, $transactionid, $type, $total, $currency) {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "eway_transactions` SET `eway_order_id` = '" . (int)$eway_order_id . "', created = NOW(), transaction_id = '" . $this->db->escape($transactionid) . "', `type` = '" . $this->db->escape($type) . "', `amount` = '" . $this->currency->format($total, $currency, false, false) . "'");
 	}
 
-	public function getTotalCaptured($eway_order_id) {
+	public function getTotalCaptured(int $eway_order_id) {
 		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM `" . DB_PREFIX . "eway_transactions` WHERE `eway_order_id` = '" . (int)$eway_order_id . "' AND `type` = 'payment' ");
 
 		return (double)$query->row['total'];
 	}
 
-	public function getTotalRefunded($eway_order_id) {
+	public function getTotalRefunded(int $eway_order_id) {
 		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM `" . DB_PREFIX . "eway_transactions` WHERE `eway_order_id` = '" . (int)$eway_order_id . "' AND `type` = 'refund'");
 
 		return (double)$query->row['total'];

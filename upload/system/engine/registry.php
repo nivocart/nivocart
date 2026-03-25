@@ -1,16 +1,37 @@
 <?php
 final class Registry {
-	private $data = array();
+	/**
+	 * @var array<string, string>
+	 */
+	private array $data = [];
 
-	public function get($key) {
+	/**
+	 * get
+	 *
+	 * @param string $key
+	 */
+	public function get(string $key) {
 		return (isset($this->data[$key]) ? $this->data[$key] : null);
 	}
 
-	public function set($key, $value) {
+	/**
+	 * set
+	 *
+	 * @param string $key
+	 * @param $value
+	 *
+	 * @return void
+	 */
+	public function set(string $key, $value): void {
 		$this->data[$key] = $value;
 	}
 
-	public function has($key) {
+	/**
+	 * has
+	 *
+	 * @param string $key
+	 */
+	public function has(string $key) {
 		return isset($this->data[$key]);
 	}
 }

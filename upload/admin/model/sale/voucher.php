@@ -1,7 +1,7 @@
 <?php
 class ModelSaleVoucher extends Model {
 
-	public function addVoucher($data) {
+	public function addVoucher(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "voucher SET code = '" . $this->db->escape($data['code']) . "', from_name = '" . $this->db->escape($data['from_name']) . "', from_email = '" . $this->db->escape($data['from_email']) . "', to_name = '" . $this->db->escape($data['to_name']) . "', to_email = '" . $this->db->escape($data['to_email']) . "', voucher_theme_id = '" . (int)$data['voucher_theme_id'] . "', message = '" . $this->db->escape($data['message']) . "', amount = '" . (float)$data['amount'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$voucher_id = $this->db->getLastId();
@@ -10,16 +10,16 @@ class ModelSaleVoucher extends Model {
 		$this->session->data['new_voucher_id'] = $voucher_id;
 	}
 
-	public function editVoucher($voucher_id, $data) {
+	public function editVoucher(int $voucher_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "voucher SET code = '" . $this->db->escape($data['code']) . "', from_name = '" . $this->db->escape($data['from_name']) . "', from_email = '" . $this->db->escape($data['from_email']) . "', to_name = '" . $this->db->escape($data['to_name']) . "', to_email = '" . $this->db->escape($data['to_email']) . "', voucher_theme_id = '" . (int)$data['voucher_theme_id'] . "', message = '" . $this->db->escape($data['message']) . "', amount = '" . (float)$data['amount'] . "', status = '" . (int)$data['status'] . "' WHERE voucher_id = '" . (int)$voucher_id . "'");
 	}
 
-	public function deleteVoucher($voucher_id) {
+	public function deleteVoucher(int $voucher_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "voucher WHERE voucher_id = '" . (int)$voucher_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "voucher_history WHERE voucher_id = '" . (int)$voucher_id . "'");
 	}
 
-	public function getVoucher($voucher_id) {
+	public function getVoucher(int $voucher_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "voucher WHERE voucher_id = '" . (int)$voucher_id . "'");
 
 		return $query->row;
@@ -31,7 +31,7 @@ class ModelSaleVoucher extends Model {
 		return $query->row;
 	}
 
-	public function getVouchers($data = array()) {
+	public function getVouchers(array $data = []): array {
 		$sql = "SELECT v.voucher_id, v.code, v.from_name, v.from_email, v.to_name, v.to_email, (SELECT vtd.name FROM " . DB_PREFIX . "voucher_theme_description vtd WHERE vtd.voucher_theme_id = v.voucher_theme_id AND vtd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS theme, v.amount, v.status, v.date_added FROM " . DB_PREFIX . "voucher v";
 
 		$sort_data = array(
@@ -75,7 +75,7 @@ class ModelSaleVoucher extends Model {
 		return $query->rows;
 	}
 
-	public function sendVoucher($voucher_id) {
+	public function sendVoucher(int $voucher_id) {
 		$voucher_info = $this->getVoucher($voucher_id);
 
 		if ($voucher_info) {
@@ -102,7 +102,7 @@ class ModelSaleVoucher extends Model {
 
 				$template->data['title'] = sprintf($language->get('text_subject'), $voucher_info['from_name']);
 
-				$template->data['text_greeting'] = sprintf($language->get('text_greeting'), $this->currency->format($voucher_info['amount'], $order_info['currency_code'], $order_info['currency_value']));
+				$template->data['text_greeting'] = sprintf($language->get('text_greeting'), $this->currency->format($voucher_info['amount'], $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')));
 				$template->data['text_from'] = sprintf($language->get('text_from'), $voucher_info['from_name']);
 				$template->data['text_message'] = $language->get('text_message');
 				$template->data['text_redeem'] = sprintf($language->get('text_redeem'), $voucher_info['code']);
@@ -123,14 +123,6 @@ class ModelSaleVoucher extends Model {
 				$template->data['message'] = nl2br($voucher_info['message']);
 
 				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
-
 				$mail->setTo($voucher_info['to_email']);
 				$mail->setFrom($this->config->get('config_email'));
 				$mail->setSender($order_info['store_name']);
@@ -167,14 +159,6 @@ class ModelSaleVoucher extends Model {
 				$template->data['message'] = nl2br($voucher_info['message']);
 
 				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
-
 				$mail->setTo($voucher_info['to_email']);
 				$mail->setFrom($this->config->get('config_email'));
 				$mail->setSender($this->config->get('config_name'));
@@ -185,19 +169,19 @@ class ModelSaleVoucher extends Model {
 		}
 	}
 
-	public function getTotalVouchers() {
+	public function getTotalVouchers(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "voucher");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalVouchersByVoucherThemeId($voucher_theme_id) {
+	public function getTotalVouchersByVoucherThemeId(int $voucher_theme_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "voucher WHERE voucher_theme_id = '" . (int)$voucher_theme_id . "'");
 
 		return $query->row['total'];
 	}
 
-	public function getVoucherHistories($voucher_id, $start = 0, $limit = 10) {
+	public function getVoucherHistories(int $voucher_id, int $start = 0, int $limit = 10): array {
 		if ($start < 0) {
 			$start = 0;
 		}
@@ -211,7 +195,7 @@ class ModelSaleVoucher extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalVoucherHistories($voucher_id) {
+	public function getTotalVoucherHistories(int $voucher_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "voucher_history WHERE voucher_id = '" . (int)$voucher_id . "'");
 
 		return $query->row['total'];

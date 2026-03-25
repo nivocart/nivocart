@@ -1,7 +1,7 @@
 <?php
 class ModelFraudMaxMind extends Model {
 
-	public function check($data) {
+	public function check(array $data = []) {
 		$risk_score = 0;
 
 		$order_id = $data['order_id'];
@@ -21,7 +21,7 @@ class ModelFraudMaxMind extends Model {
 			$request .= '&region=' . urlencode($data['payment_zone']);
 			$request .= '&postal=' . urlencode($data['payment_postcode']);
 			$request .= '&country=' . urlencode($data['payment_country']);
-			$request .= '&domain=' . urlencode(utf8_substr(strrchr($data['email'], '@'), 1));
+			$request .= '&domain=' . urlencode(substr(strrchr($data['email'], '@'), 1));
 			$request .= '&custPhone=' . urlencode($data['telephone']);
 			$request .= '&license_key=' . urlencode($this->config->get('maxmind_key'));
 
@@ -35,9 +35,9 @@ class ModelFraudMaxMind extends Model {
 
 			$request .= '&user_agent=' . urlencode($data['user_agent']);
 			$request .= '&forwardedIP=' . urlencode($data['forwarded_ip']);
-			$request .= '&emailMD5=' . urlencode(md5(utf8_strtolower($data['email'])));
+			$request .= '&emailMD5=' . urlencode(md5(mb_strtolower($data['email'], 'UTF-8')));
 			$request .= '&accept_language=' . urlencode($data['accept_language']);
-			$request .= '&order_amount=' . urlencode($this->currency->format($data['total'], $data['currency_code'], $data['currency_value'], false));
+			$request .= '&order_amount=' . urlencode($this->currency->format($data['total'], $data['currency_code'], $data['currency_value'], false, $this->config->get('config_currency')));
 			$request .= '&order_currency=' . urlencode($data['currency_code']);
 
 			$curl = curl_init('https://minfraud1.maxmind.com/app/ccv2r');
@@ -388,7 +388,7 @@ class ModelFraudMaxMind extends Model {
 		return $fraud_status_id;
 	}
 
-	public function getFraud($order_id) {
+	public function getFraud(int $order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "maxmind WHERE order_id = '" . (int)$data['order_id'] . "'");
 
 		return $query->row;

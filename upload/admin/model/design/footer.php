@@ -1,7 +1,7 @@
 <?php
 class ModelDesignFooter extends Model {
 
-	public function addFooter($data) {
+	public function addFooter(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "footer SET position = '" . (int)$data['position'] . "', status = '1'");
 
 		$footer_id = $this->db->getLastId();
@@ -36,7 +36,7 @@ class ModelDesignFooter extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function editFooter($footer_id, $data) {
+	public function editFooter(int $footer_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "footer SET position = '" . (int)$data['position'] . "', status = '" . (int)$data['status'] . "' WHERE footer_id = '" . (int)$footer_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "footer_description WHERE footer_id = '" . (int)$footer_id . "'");
@@ -72,7 +72,7 @@ class ModelDesignFooter extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function deleteFooter($footer_id) {
+	public function deleteFooter(int $footer_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "footer WHERE footer_id = '" . (int)$footer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "footer_description WHERE footer_id = '" . (int)$footer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "footer_route WHERE footer_id = '" . (int)$footer_id . "'");
@@ -84,13 +84,13 @@ class ModelDesignFooter extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function getFooter($footer_id) {
+	public function getFooter(int $footer_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "footer WHERE footer_id = '" . (int)$footer_id . "'");
 
 		return $query->row;
 	}
 
-	public function getFooters($data = array()) {
+	public function getFooters(array $data = []) {
 		if ($data) {
 			$sql = "SELECT * FROM " . DB_PREFIX . "footer f LEFT JOIN " . DB_PREFIX . "footer_description fd ON (f.footer_id = fd.footer_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
@@ -143,7 +143,7 @@ class ModelDesignFooter extends Model {
 		}
 	}
 
-	public function getFooterDescriptions($footer_id) {
+	public function getFooterDescriptions(int $footer_id): array {
 		$footer_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "footer_description WHERE footer_id = '" . (int)$footer_id . "'");
@@ -155,13 +155,13 @@ class ModelDesignFooter extends Model {
 		return $footer_description_data;
 	}
 
-	public function getFooterName($footer_id) {
+	public function getFooterName(int $footer_id) {
 		$query = $this->db->query("SELECT DISTINCT fd.name AS `name` FROM " . DB_PREFIX . "footer_description fd LEFT JOIN " . DB_PREFIX . "footer f ON (fd.footer_id = f.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY f.footer_id");
 
 		return $query->row['name'];
 	}
 
-	public function getFooterRoutes($footer_id) {
+	public function getFooterRoutes(int $footer_id): array {
 		$footer_route_data = array();
 
 		$footer_route_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "footer_route WHERE footer_id = '" . (int)$footer_id . "' ORDER BY sort_order ASC");
@@ -186,7 +186,7 @@ class ModelDesignFooter extends Model {
 		return $footer_route_data;
 	}
 
-	public function getFooterStores($footer_id) {
+	public function getFooterStores(int $footer_id): array {
 		$footer_store_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "footer_to_store WHERE footer_id = '" . (int)$footer_id . "'");
@@ -198,7 +198,7 @@ class ModelDesignFooter extends Model {
 		return $footer_store_data;
 	}
 
-	public function getFooterIds($data = array()) {
+	public function getFooterIds(array $data = []): array {
 		$footer_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "footer");

@@ -1,7 +1,7 @@
 <?php
 class ModelSaleOfferProductProduct extends Model {
 
-	public function addOfferProductProduct($data) {
+	public function addOfferProductProduct(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "offer_product_product SET name = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', product_one = '" . $this->db->escape($data['product_one']) . "', product_two = '" . $this->db->escape($data['product_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$offer_product_product_id = $this->db->getLastId();
@@ -10,21 +10,21 @@ class ModelSaleOfferProductProduct extends Model {
 		$this->session->data['new_offer_product_product_id'] = $offer_product_product_id;
 	}
 
-	public function editOfferProductProduct($offer_product_product_id, $data) {
+	public function editOfferProductProduct(int $offer_product_product_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "offer_product_product SET name = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', product_one = '" . $this->db->escape($data['product_one']) . "', product_two = '" . $this->db->escape($data['product_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "' WHERE offer_product_product_id = '" . (int)$offer_product_product_id . "'");
 	}
 
-	public function deleteOfferProductProduct($offer_product_product_id) {
+	public function deleteOfferProductProduct(int $offer_product_product_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "offer_product_product WHERE offer_product_product_id = '" . (int)$offer_product_product_id . "'");
 	}
 
-	public function getOfferProductProduct($offer_product_product_id) {
+	public function getOfferProductProduct(int $offer_product_product_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "offer_product_product WHERE offer_product_product_id = '" . (int)$offer_product_product_id . "'");
 
 		return $query->row;
 	}
 
-	public function getOfferProductProducts($data = array()) {
+	public function getOfferProductProducts(array $data = []): array {
 		$sql = "SELECT offer_product_product_id, name, discount, `type`, logged, date_start, date_end, status FROM " . DB_PREFIX . "offer_product_product";
 
 		$sort_data = array(
@@ -66,7 +66,7 @@ class ModelSaleOfferProductProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getOfferProductProductOnes($offer_product_product_id) {
+	public function getOfferProductProductOnes(int $offer_product_product_id): array {
 		$offer_product_one_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "offer_product_product WHERE offer_product_product_id = '" . (int)$offer_product_product_id . "'");
@@ -78,7 +78,7 @@ class ModelSaleOfferProductProduct extends Model {
 		return $offer_product_one_data;
 	}
 
-	public function getOfferProductProductTwos($offer_product_product_id) {
+	public function getOfferProductProductTwos(int $offer_product_product_id): array {
 		$offer_product_two_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "offer_product_product WHERE offer_product_product_id = '" . (int)$offer_product_product_id . "'");
@@ -90,7 +90,7 @@ class ModelSaleOfferProductProduct extends Model {
 		return $offer_product_two_data;
 	}
 
-	public function getTotalOfferProductProduct() {
+	public function getTotalOfferProductProduct(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_product_product");
 
 		return $query->row['total'];

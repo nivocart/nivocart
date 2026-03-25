@@ -1,8 +1,16 @@
 <?php
 class Template {
-	public $data = array();
+	/**
+	 * @var array<mixed>
+	 */
+	public array $data = [];
 
-	public function fetch($filename) {
+	/**
+	 * Constructor
+	 *
+	 * @param string   $filename
+	 */
+	public function fetch(string $filename) {
 		$file = DIR_TEMPLATE . $filename;
 
 		if (file_exists($file)) {
@@ -13,6 +21,7 @@ class Template {
 			$content = ob_get_clean();
 
 			return $content;
+
 		} else {
 			trigger_error('Error: Could not load template ' . $file . '!');
 			exit();

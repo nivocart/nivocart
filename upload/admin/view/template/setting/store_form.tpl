@@ -101,10 +101,6 @@
               <input type="text" name="config_telephone" value="<?php echo $config_telephone; ?>" />
             <?php } ?></td>
           </tr>
-          <tr>
-            <td><?php echo $entry_fax; ?></td>
-            <td><input type="text" name="config_fax" value="<?php echo $config_fax; ?>" /></td>
-          </tr>
         </table>
       </div>
       <div id="tab-store">

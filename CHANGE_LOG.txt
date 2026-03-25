@@ -3,6 +3,13 @@
   CHANGE LOG
 ---------------
 
+NivoCart v2.0.0
+---------------
+Released: 2026
+
+- All code updated to PHP 8.0+
+
+
 NivoCart v1.0.4
 ---------------
 Released: 24/01/2019

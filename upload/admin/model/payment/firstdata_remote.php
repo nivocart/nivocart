@@ -124,7 +124,7 @@ class ModelPaymentFirstdataRemote extends Model {
 		return $response;
 	}
 
-	public function updateVoidStatus($firstdata_remote_order_id, $status) {
+	public function updateVoidStatus(int $firstdata_remote_order_id, int $status) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_remote_order` SET void_status = '" . (int)$status . "' WHERE firstdata_remote_order_id = '" . (int)$firstdata_remote_order_id . "'");
 	}
 
@@ -172,7 +172,7 @@ class ModelPaymentFirstdataRemote extends Model {
 		return $response;
 	}
 
-	public function updateCaptureStatus($firstdata_remote_order_id, $status) {
+	public function updateCaptureStatus(int $firstdata_remote_order_id, int $status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_remote_order` SET capture_status = '" . (int)$status . "' WHERE firstdata_remote_order_id = '" . (int)$firstdata_remote_order_id . "'");
 	}
 
@@ -219,11 +219,11 @@ class ModelPaymentFirstdataRemote extends Model {
 		return $response;
 	}
 
-	public function updateRefundStatus($firstdata_remote_order_id, $status) {
+	public function updateRefundStatus(int $firstdata_remote_order_id, int $status) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "firstdata_remote_order` SET refund_status = '" . (int)$status . "' WHERE firstdata_remote_order_id = '" . (int)$firstdata_remote_order_id . "'");
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "firstdata_remote_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
@@ -236,7 +236,7 @@ class ModelPaymentFirstdataRemote extends Model {
 		}
 	}
 
-	private function getTransactions($firstdata_remote_order_id) {
+	private function getTransactions(int $firstdata_remote_order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "firstdata_remote_order_transaction WHERE firstdata_remote_order_id = '" . (int)$firstdata_remote_order_id . "'");
 
 		if ($query->num_rows) {
@@ -246,7 +246,7 @@ class ModelPaymentFirstdataRemote extends Model {
 		}
 	}
 
-	public function addTransaction($firstdata_remote_order_id, $type, $total) {
+	public function addTransaction(int $firstdata_remote_order_id, $type, $total): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "firstdata_remote_order_transaction` SET firstdata_remote_order_id = '" . (int)$firstdata_remote_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . (float)$total . "'");
 	}
 
@@ -257,13 +257,13 @@ class ModelPaymentFirstdataRemote extends Model {
 		}
 	}
 
-	public function getTotalCaptured($firstdata_order_id) {
+	public function getTotalCaptured(int $firstdata_order_id) {
 		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM " . DB_PREFIX . "firstdata_remote_order_transaction WHERE firstdata_remote_order_id = '" . (int)$firstdata_order_id . "' AND (`type` = 'payment' OR `type` = 'refund')");
 
 		return (float)$query->row['total'];
 	}
 
-	public function getTotalRefunded($firstdata_order_id) {
+	public function getTotalRefunded(int $firstdata_order_id) {
 		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM " . DB_PREFIX . "firstdata_remote_order_transaction WHERE firstdata_remote_order_id = '" . (int)$firstdata_order_id . "' AND `type` = 'refund'");
 
 		return (float)$query->row['total'];

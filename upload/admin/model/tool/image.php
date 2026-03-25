@@ -1,15 +1,20 @@
 <?php
 class ModelToolImage extends Model {
+	private string $extension;
+	private string $old_image;
+	private string $new_image;
 
-	public function resize($filename, $width, $height) {
-		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, strlen(DIR_IMAGE)) != DIR_IMAGE) {
+	public function resize(string $filename, int $width, int $height) {
+		$filename = html_entity_decode($filename, ENT_QUOTES, 'UTF-8');
+
+		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, mb_strlen(DIR_IMAGE)) != DIR_IMAGE) {
 			return;
 		}
 
 		$extension = pathinfo($filename, PATHINFO_EXTENSION);
 
 		$old_image = $filename;
-		$new_image = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . (int)$width . 'x' . (int)$height . '.' . $extension;
+		$new_image = 'cache/' . mb_substr($filename, 0, mb_strrpos($filename, '.', 0 , 'UTF-8'), 'UTF-8') . '-' . (int)$width . 'x' . (int)$height . '.' . $extension;
 
 		if (!is_file(DIR_IMAGE . $new_image) || (filectime(DIR_IMAGE . $old_image) > filectime(DIR_IMAGE . $new_image))) {
 			$path = '';

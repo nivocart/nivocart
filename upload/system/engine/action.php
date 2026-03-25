@@ -1,17 +1,35 @@
 <?php
 final class Action {
-	protected $route;
-	protected $file;
-	protected $class;
-	protected $method;
-	protected $args = array();
+	/**
+	 * @var string
+	 */
+	protected string $file = '';
 
-	public function __construct($route, $args = array()) {
+	/**
+	 * @var string
+	 */
+	protected string $class = '';
+
+	/**
+	 * @var string
+	 */
+	protected string $method = '';
+
+	/**
+	 * @var array<string, string>
+	 */
+	protected array $args = [];
+
+	/**
+	 * Constructor
+	 *
+	 * @param string $route
+	 * @param array $args
+	 */
+	public function __construct(string $route, array $args = []) {
 		$path = '';
 
-		$this->route = str_replace('../', '', (string) $route);
-
-		$parts = explode('/', $this->route);
+		$parts = explode('/', str_replace('../', '', (string)$route));
 
 		foreach ($parts as $part) {
 			$path .= $part;
@@ -45,23 +63,39 @@ final class Action {
 		}
 	}
 
-	public function getRoute() {
-		return $this->route;
-	}
-
-	public function getFile() {
+	/**
+	 * Get File
+	 *
+	 * @return string
+	 */
+	public function getFile(): string {
 		return $this->file;
 	}
 
-	public function getClass() {
+	/**
+	 * Get Class
+	 *
+	 * @return string
+	 */
+	public function getClass(): string {
 		return $this->class;
 	}
 
-	public function getMethod() {
+	/**
+	 * Get Method
+	 *
+	 * @return string
+	 */
+	public function getMethod(): string {
 		return $this->method;
 	}
 
-	public function getArgs() {
+	/**
+	 * Get Args
+	 *
+	 * @return array<string, string>
+	 */
+	public function getArgs(): array {
 		return $this->args;
 	}
 }

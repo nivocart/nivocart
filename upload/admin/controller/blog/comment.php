@@ -495,7 +495,7 @@ class ControllerBlogComment extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (utf8_strlen($this->request->post['author_name']) < 3 || utf8_strlen($this->request->post['author_name']) > 64) {
+		if (mb_strlen($this->request->post['author_name'], 'UTF-8') < 3 || mb_strlen($this->request->post['author_name'], 'UTF-8') > 64) {
 			$this->error['author'] = $this->language->get('error_author');
 		}
 
@@ -509,17 +509,17 @@ class ControllerBlogComment extends Controller {
 			}
 		}
 
-		if (utf8_strlen($this->request->post['comment']) < 3 || utf8_strlen($this->request->post['comment']) > 1000) {
+		if (mb_strlen($this->request->post['comment'], 'UTF-8') < 3 || mb_strlen($this->request->post['comment'], 'UTF-8') > 1000) {
 			$this->error['comment'] = $this->language->get('error_comment');
 		}
 
 		if (isset($this->request->post['comment_reply'])) {
 			foreach ($this->request->post['comment_reply'] as $key => $value) {
-				if (utf8_strlen($value['author']) < 3 || utf8_strlen($value['author']) > 64) {
+				if (mb_strlen($value['author'], 'UTF-8') < 3 || mb_strlen($value['author'], 'UTF-8') > 64) {
 					$this->error['reply_author'][$key] = $this->language->get('error_author');
 				}
 
-				if (utf8_strlen($value['comment']) < 3 || utf8_strlen($value['comment']) > 1000) {
+				if (mb_strlen($value['comment'], 'UTF-8') < 3 || mb_strlen($value['comment'], 'UTF-8') > 1000) {
 					$this->error['reply_comment'][$key] = $this->language->get('error_comment');
 				}
 			}

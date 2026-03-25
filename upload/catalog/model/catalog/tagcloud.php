@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogTagCloud extends Model {
 
-	public function getRandomTags($limit, $min_font_size, $max_font_size, $font_weight, $random) {
+	public function getRandomTags(int $limit, $min_font_size, $max_font_size, $font_weight, $random) {
 		$names = array();
 		$totals = array();
 		$tags = array();

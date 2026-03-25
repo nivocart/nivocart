@@ -1,54 +1,66 @@
 <?php
 class Captcha {
-	private $code = null;
-	private $width = 186;
-	private $height = 42;
+	/**
+	 * @var string
+	 */
+	public string $code = '';
 
+	/**
+	 * @var string
+	 */
+	public string $font;
+
+	/**
+	 * @var string
+	 */
+	public string $file;
+
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
-		$word_1 = '';
-		$word_2 = '';
+		$captchaText = substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 4);
 
-		for ($i = 0; $i < 4; $i++) {
-			$word_1 .= chr(rand(97, 122));
-		}
+		$this->code = $captchaText;
+	}
 
-		for ($i = 0; $i < 4; $i++) {
-			$word_2 .= chr(rand(97, 122));
-		}
-
-		$this->code = $word_1 . ' ' . $word_2;
-
+	public function getCode(): string {
 		return $this->code;
 	}
 
-	public function getCode() {
-		return $this->code;
-	}
-
-	public function showImage($font) {
+	/**
+	 * Image Function
+	 *
+	 * Currently not displaying. Not being used.
+	 */
+	public function showImage(string $font) {
 		if ($font) {
-			$file = DIR_SYSTEM . 'fonts/' . $font . '.ttf';
+			$file = DIR_SYSTEM . 'fonts/' . (string)$font . '.ttf';
 		} else {
 			$file = DIR_SYSTEM . 'fonts/Recaptcha.ttf';
 		}
 
-		$image = imagecreatetruecolor($this->width, $this->height);
+		$this->image = imagecreatetruecolor(186, 42);
 
-		$background = imagecolorallocate($image, 250, 250, 250);
+		$background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
 
-		$text_color = imagecolorallocate($image, 10, 10, 10);
-		$text_shadow = imagecolorallocate($image, 128, 128, 128);
+		$text_color = imagecolorallocate($this->image, 10, 10, 10);
+		$text_shadow = imagecolorallocate($this->image, 128, 128, 128);
 
-		imagefilledrectangle($image, 0, 0, 292, 42, $background);
+		imagefilledrectangle($this->image, 0, 0, 292, 42, $background);
 
-		imagettftext($image, 22, 0, 7, 29, $text_shadow, $file, $this->code);
-		imagettftext($image, 22, 0, 6, 28, $text_color, $file, $this->code);
+		imagettftext($this->image, 22, 0, 6, 28, $text_color, $file, $this->code);
+		imagettftext($this->image, 22, 0, 7, 29, $text_shadow, $file, $this->code);
 
-		header('Content-Disposition: Attachment;filename=image.png');
+		// PNG image post-processing functions
+		imagealphablending($this->image, false);
+		imagesavealpha($this->image, true);
+		imagecolortransparent($this->image, $background);
+
 		header('Content-type: image/png');
 
-		imagepng($image, null, 9);
+		imagepng($this->image, null, 9);
 
-		imagedestroy($image);
+		imagedestroy($this->image);
 	}
 }

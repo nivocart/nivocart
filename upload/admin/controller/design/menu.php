@@ -343,7 +343,7 @@ class ControllerDesignMenu extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['title']) < 2) || (utf8_strlen($this->request->post['title']) > 32)) {
+		if ((mb_strlen($this->request->post['title'], 'UTF-8') < 2) || (mb_strlen($this->request->post['title'], 'UTF-8') > 32)) {
 			$this->error['title'] = $this->language->get('error_title');
 		}
 

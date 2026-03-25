@@ -477,7 +477,9 @@ class ControllerDesignMenuItems extends Controller {
 			$this->data['menu_item_description'] = array();
 		}
 
-		$menu_items = $this->model_design_menu_items->getMenuItems($menu_id, 0);
+		$menu_items_array = array();
+
+		$menu_items = $this->model_design_menu_items->getMenuItems($menu_id, $menu_items_array);
 
 		// Remove own Id from list
 		if (!empty($menu_item_info)) {
@@ -547,7 +549,7 @@ class ControllerDesignMenuItems extends Controller {
 		}
 
 		foreach ($this->request->post['menu_item_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 2) || (mb_strlen($value['name'], 'UTF-8') > 255)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
@@ -660,7 +662,9 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes = $this->model_tool_route->getRoutes(0);
+		$routes_menu = array();
+
+		$routes = $this->model_tool_route->getRoutes($routes_menu);
 
 		if ($routes) {
 			$output  = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";

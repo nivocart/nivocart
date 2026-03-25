@@ -83,7 +83,9 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
 		$this->data['payment_images'] = array();
 
-		$image_results = $this->model_design_payment->getPaymentImages(0);
+		$payment_images_array = array();
+
+		$image_results = $this->model_design_payment->getPaymentImages($payment_images_array);
 
 		if ($image_results) {
 			foreach ($image_results as $image_result) {
@@ -124,7 +126,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 			}
 		}
 
-		$this->data['paypal_fee'] = ($paypal_fee > 0) ? $this->currency->format($paypal_fee) : false;
+		$this->data['paypal_fee'] = ($paypal_fee > 0) ? $this->currency->format($paypal_fee, $this->config->get('config_currency')) : false;
 
 		// Language
 		$this->data['text_payment_method'] = $this->language->get('text_payment_method');

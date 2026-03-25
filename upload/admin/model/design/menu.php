@@ -1,7 +1,7 @@
 <?php
 class ModelDesignMenu extends Model {
 
-	public function addMenu($data) {
+	public function addMenu(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "menu SET title = '" . $this->db->escape($data['title']) . "', status = '1'");
 
 		$menu_id = $this->db->getLastId();
@@ -16,11 +16,9 @@ class ModelDesignMenu extends Model {
 		}
 
 		$this->cache->delete('store');
-
-		return $menu_id;
 	}
 
-	public function editMenu($menu_id, $data) {
+	public function editMenu(int $menu_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "menu SET title = '" . $this->db->escape($data['title']) . "', status = '" . (int)$data['status'] . "' WHERE menu_id = '" . (int)$menu_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_to_store WHERE menu_id = '" . (int)$menu_id . "'");
@@ -34,7 +32,7 @@ class ModelDesignMenu extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function deleteMenu($menu_id) {
+	public function deleteMenu(int $menu_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "menu WHERE menu_id = '" . (int)$menu_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_item WHERE menu_id = '" . (int)$menu_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_item_description WHERE menu_id = '" . (int)$menu_id . "'");
@@ -43,19 +41,19 @@ class ModelDesignMenu extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function getMenu($menu_id) {
+	public function getMenu(int $menu_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "menu WHERE menu_id = '" . (int)$menu_id . "'");
 
 		return $query->row;
 	}
 
-	public function getMenuTitle($menu_id) {
+	public function getMenuTitle(int $menu_id) {
 		$query = $this->db->query("SELECT title FROM " . DB_PREFIX . "menu WHERE menu_id = '" . (int)$menu_id . "'");
 
 		return $query->row['title'];
 	}
 
-	public function getMenus($data = array()) {
+	public function getMenus(array $data = []) {
 		$menu_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu ORDER BY menu_id ASC");
@@ -75,7 +73,7 @@ class ModelDesignMenu extends Model {
 		}
 	}
 
-	public function getMenuStores($menu_id) {
+	public function getMenuStores(int $menu_id): array {
 		$menu_store_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_to_store WHERE menu_id = '" . (int)$menu_id . "'");

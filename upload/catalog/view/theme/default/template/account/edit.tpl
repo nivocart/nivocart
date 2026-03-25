@@ -45,12 +45,6 @@
           <span class="error"><?php echo $error_telephone; ?></span>
         <?php } ?></td>
       </tr>
-      <?php if ($show_fax) { ?>
-      <tr>
-        <td><?php echo $entry_fax; ?></td>
-        <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-      </tr>
-      <?php } ?>
       <?php if ($show_gender) { ?>
       <tr>
         <td><?php echo $entry_gender; ?></td>
@@ -90,9 +84,6 @@
       <li><?php echo $gdpr_address; ?></li>
       <li><?php echo $gdpr_email; ?></li>
       <li><?php echo $gdpr_telephone; ?></li>
-    <?php if ($show_fax) { ?>
-      <li><?php echo $gdpr_fax; ?></li>
-    <?php } ?>
     <?php if ($show_gender) { ?>
       <li><?php echo $gdpr_gender; ?></li>
     <?php } ?>

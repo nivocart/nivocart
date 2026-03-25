@@ -47,7 +47,7 @@ $_['entry_quantity']     = 'Quantity:';
 $_['entry_reason']       = 'Reason for Return:';
 $_['entry_opened']       = 'Product is opened:';
 $_['entry_fault_detail'] = 'Faulty or other details:';
-$_['entry_captcha']      = 'Enter the two words';
+$_['entry_captcha']      = 'Enter the code below';
 
 // Error
 $_['error_order_id']     = 'Order ID required!';

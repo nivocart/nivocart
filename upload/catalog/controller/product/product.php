@@ -562,7 +562,7 @@ class ControllerProductProduct extends Controller {
 				if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
 					$this->data['price'] = $this->language->get('text_free');
 				} else {
-					$this->data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+					$this->data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				}
 			} else {
 				$this->data['price'] = false;
@@ -570,14 +570,14 @@ class ControllerProductProduct extends Controller {
 
 			if ((float)$product_info['special']) {
 				$this->data['special_label_large'] = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
-				$this->data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+				$this->data['special'] = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 			} else {
 				$this->data['special_label_large'] = false;
 				$this->data['special'] = false;
 			}
 
 			if ($this->config->get('config_tax')) {
-				$this->data['tax'] = $this->currency->format((float)$product_info['special'] ? $product_info['special'] : $product_info['price']);
+				$this->data['tax'] = $this->currency->format(((float)$product_info['special'] ? $product_info['special'] : $product_info['price']), $this->config->get('config_currency'));
 			} else {
 				$this->data['tax'] = false;
 			}
@@ -589,7 +589,7 @@ class ControllerProductProduct extends Controller {
 			foreach ($discounts as $discount) {
 				$this->data['discounts'][] = array(
 					'quantity' => $discount['quantity'],
-					'price'    => $this->currency->format($this->tax->calculate($discount['price'], $product_info['tax_class_id'], $this->config->get('config_tax')))
+					'price'    => $this->currency->format($this->tax->calculate($discount['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'))
 				);
 			}
 
@@ -640,7 +640,7 @@ class ControllerProductProduct extends Controller {
 					foreach ($option['option_value'] as $option_value) {
 						if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
 							if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
-								$price = $this->currency->format($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax') ? 'P' : false));
+								$price = $this->currency->format(($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax') ? 'P' : false)), $this->config->get('config_currency'));
 							} else {
 								$price = false;
 							}
@@ -821,7 +821,7 @@ class ControllerProductProduct extends Controller {
 					if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
-						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 					}
 				} else {
 					$price = false;
@@ -829,7 +829,7 @@ class ControllerProductProduct extends Controller {
 
 				if ((float)$result['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
-					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
 					$special_label = false;
 					$special = false;
@@ -1120,7 +1120,7 @@ class ControllerProductProduct extends Controller {
 
 			foreach ($profile_info as $result) {
 				if ($result['trial_status'] == 1) {
-					$price = $this->currency->format($this->tax->calculate($result['trial_price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')));
+					$price = $this->currency->format($this->tax->calculate($result['trial_price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 					$trial_text = sprintf($this->language->get('text_trial_description'), $price, $result['trial_cycle'], $frequencies[$result['trial_frequency']], $result['trial_duration']) . ' ';
 				} else {

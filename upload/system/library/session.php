@@ -1,8 +1,17 @@
 <?php
 class Session {
-	public $session_id = '';
-	public $data = array();
+	/**
+	 * @var string
+	 */
+	protected string $session_id = '';
+	/**
+	 * @var array<mixed>
+	 */
+	public array $data = [];
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		if (!session_id()) {
 			ini_set('session.use_only_cookies', 'Off');
@@ -21,7 +30,26 @@ class Session {
 		$this->data = &$_SESSION;
 	}
 
-	public function start($key = 'default', $value = '') {
+	/**
+	 * Get Session ID
+	 *
+	 * @return string
+	 */
+	public function getId(): string {
+		return $this->session_id;
+	}
+
+	/**
+	 * Start
+	 *
+	 * Starts a session
+	 *
+	 * @param string $key
+	 * @param string $value
+	 *
+	 * @return string returns the current session ID
+	 */	
+	public function start(string $key = 'default', string $value = ''): string {
 		if ($value) {
 			$this->session_id = $value;
 		} elseif (isset($_COOKIE[$key])) {
@@ -43,19 +71,29 @@ class Session {
 		return $this->session_id;
 	}
 
-	public function getId() {
-		return $this->session_id;
-	}
-
-	public function createId() {
-		if (function_exists('random_bytes')) {
-			return substr(bin2hex(random_bytes(26)), 0, 26);
-		} else {
+	/**
+	 * createId
+	 *
+	 * Creates a new session_id
+	 *
+	 * @return string
+	 */
+	public function createId(): string {
+		if (function_exists('openssl_random_pseudo_bytes')) {
 			return substr(bin2hex(openssl_random_pseudo_bytes(26)), 0, 26);
+		} else {
+			return substr(bin2hex(mcrypt_create_iv(26, MCRYPT_DEV_URANDOM)), 0, 26);
 		}
 	}
 
-	public function destroy($key = 'default') {
+	/**
+	 * Destroy
+	 *
+	 * Deletes the current session
+	 *
+	 * @return void
+	 */
+	public function destroy($key = 'default'): void {
 		if (isset($_SESSION[$key])) {
 			unset($_SESSION[$key]);
 		}

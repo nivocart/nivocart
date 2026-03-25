@@ -1,6 +1,9 @@
 <?php
 require_once(DIR_SYSTEM . 'vendor/dompdf/src/Dompdf.php');
 
+/**
+ * Helper PDF
+ */
 function pdf($data, $type, $number) {
 	$doc_type = str_replace(" ", "", $type);
 

@@ -468,7 +468,7 @@ class ControllerSaleRecurring extends Controller {
 				$this->data['transactions'][] = array(
 					'created' => $transaction['created'],
 					'type'    => $transaction['type'],
-					'amount'  => $this->currency->format($transaction['amount'], $order['currency_code'], $order['currency_value'])
+					'amount'  => $this->currency->format($transaction['amount'], $order['currency_code'], $order['currency_value'], $this->config->get('config_currency'))
 				);
 			}
 

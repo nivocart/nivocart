@@ -1,11 +1,33 @@
 <?php
 class Request {
-	public $get = array();
-	public $post = array();
-	public $cookie = array();
-	public $files = array();
-	public $server = array();
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $get = [];
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $post = [];
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $request = [];
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $cookie = [];
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $files = [];
+	/**
+	 * @var array<string, mixed>
+	 */
+	public array $server = [];
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		$this->get = $this->clean($_GET);
 		$this->post = $this->clean($_POST);
@@ -15,6 +37,13 @@ class Request {
 		$this->server = $this->clean($_SERVER);
 	}
 
+	/**
+	 * clean
+	 *
+	 * @param mixed $data
+	 *
+	 * @return mixed
+	 */
 	public function clean($data) {
 		if (is_array($data)) {
 			foreach ($data as $key => $value) {
@@ -29,6 +58,11 @@ class Request {
 		return $data;
 	}
 
+	/**
+	 * isSecure
+	 *
+	 * @return bool
+	 */
 	public function isSecure() {
 		if ((isset($this->server['HTTPS']) && (($this->server['HTTPS'] == 'on') || ($this->server['HTTPS'] == '1'))) || ($this->server['SERVER_PORT'] == '443')) {
 			return true;

@@ -666,11 +666,17 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('catalog/category');
 
-		$this->data['default_categories'] = $this->model_catalog_category->getCategories(0);
+		// Empty array required here to get the Categories
+		$category_data = array();
+
+		$this->data['default_categories'] = $this->model_catalog_category->getCategories($category_data);
 
 		$this->load->model('catalog/manufacturer');
 
-		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers(0);
+		// Empty array required here to get the Manufacturers
+		$manufacturer_data = array();
+
+		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_data);
 
 		$this->template = 'catalog/news_form.tpl';
 		$this->children = array(
@@ -699,7 +705,7 @@ class ControllerCatalogNews extends Controller {
 		$allowed = array('jpg','jpeg','png','gif');
 
 		if ($this->request->post['image']) {
-			$ext = utf8_substr(strrchr($this->request->post['image'], '.'), 1);
+			$ext = substr(strrchr($this->request->post['image'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['image'] = $this->language->get('error_image');

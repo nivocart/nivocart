@@ -1,7 +1,7 @@
 <?php
 class ModelBlogReport extends Model {
 
-	public function getTotalBlogViewed($data = array()) {
+	public function getTotalBlogViewed(array $data = []) {
 		$sql = "SELECT COUNT(DISTINCT(bv.blog_view_id)) AS `total` FROM `" . DB_PREFIX . "blog_view` bv LEFT JOIN `" . DB_PREFIX . "blog_article` ba ON (bv.blog_article_id = ba.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bv.view > 0";
 
 		if (!empty($data['filter_date_start'])) {
@@ -17,7 +17,7 @@ class ModelBlogReport extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalBlogViews($data = array()) {
+	public function getTotalBlogViews(array $data = []) {
 		$sql = "SELECT SUM(bv.view) AS `total` FROM `" . DB_PREFIX . "blog_view` bv LEFT JOIN `" . DB_PREFIX . "blog_article` ba ON (bv.blog_article_id = ba.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$query = $this->db->query($sql);
@@ -25,7 +25,7 @@ class ModelBlogReport extends Model {
 		return $query->row['total'];
 	}
 
-	public function getBlogViewed($data = array()) {
+	public function getBlogViewed(array $data = []): array {
 		$sql = "SELECT bv.*, bad.article_title AS article_title, bau.name AS author_name FROM `" . DB_PREFIX . "blog_view` bv LEFT JOIN `" . DB_PREFIX . "blog_article` ba ON (bv.blog_article_id = ba.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_date_start'])) {

@@ -70,12 +70,6 @@
               <input type="text" name="telephone" value="<?php echo $telephone; ?>" />
             <?php } ?></td>
           </tr>
-          <?php if ($show_fax) { ?>
-          <tr>
-            <td><?php echo $entry_fax; ?></td>
-            <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-          </tr>
-           <?php } ?>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_code; ?></td>
             <td><input type="code" name="code" value="<?php echo $code; ?>" />

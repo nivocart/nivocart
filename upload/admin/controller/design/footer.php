@@ -484,7 +484,7 @@ class ControllerDesignFooter extends Controller {
 		}
 
 		foreach ($this->request->post['footer_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 64)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 3) || (mb_strlen($value['name'], 'UTF-8') > 64)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
@@ -492,7 +492,7 @@ class ControllerDesignFooter extends Controller {
 		if (isset($this->request->post['footer_route'])) {
 			foreach ($this->request->post['footer_route'] as $footer_route_id => $footer_route) {
 				foreach ($footer_route['footer_route_description'] as $language_id => $footer_route_description) {
-					if ((utf8_strlen($footer_route_description['title']) < 2) || (utf8_strlen($footer_route_description['title']) > 64)) {
+					if ((mb_strlen($footer_route_description['title'], 'UTF-8') < 2) || (mb_strlen($footer_route_description['title'], 'UTF-8') > 64)) {
 						$this->error['footer_route'][$footer_route_id][$language_id] = $this->language->get('error_title');
 					}
 				}
@@ -519,7 +519,9 @@ class ControllerDesignFooter extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes = $this->model_tool_route->getRoutes(0);
+		$routes_footer = array();
+
+		$routes = $this->model_tool_route->getRoutes($routes_footer);
 
 		if ($routes) {
 			$output  = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";

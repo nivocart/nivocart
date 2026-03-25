@@ -1,7 +1,7 @@
 <?php
 class ModelDesignMenuItems extends Model {
 
-	public function addMenuItem($menu_id, $data) {
+	public function addMenuItem(int $menu_id, array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "menu_item SET menu_id = '" . (int)$menu_id . "', parent_id = '" . (int)$data['parent_id'] . "', menu_item_link = '" . $this->db->escape($data['link']) . "', external_link = '" . (int)$data['external_link'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '1'");
 
 		$menu_item_id = $this->db->getLastId();
@@ -31,7 +31,7 @@ class ModelDesignMenuItems extends Model {
 		$this->cache->delete('menu_items.parents.total');
 	}
 
-	public function editMenuItem($menu_item_id, $menu_id, $data) {
+	public function editMenuItem(int $menu_item_id, int $menu_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "menu_item SET menu_id = '" . (int)$menu_id . "', parent_id = '" . (int)$data['parent_id'] . "', menu_item_link = '" . $this->db->escape($data['link']) . "', external_link = '" . (int)$data['external_link'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "' WHERE menu_item_id = '" . (int)$menu_item_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_item_description WHERE menu_item_id = '" . (int)$menu_item_id . "'");
@@ -95,7 +95,7 @@ class ModelDesignMenuItems extends Model {
 		$this->cache->delete('menu_items');
 	}
 
-	public function editMenuItemStatus($menu_item_id, $status) {
+	public function editMenuItemStatus(int $menu_item_id, int $status): void {
         $this->db->query("UPDATE " . DB_PREFIX . "menu_item SET status = '" . (int)$status . "' WHERE menu_item_id = '" . (int)$menu_item_id . "'");
 
         $this->cache->delete('menu_items');
@@ -103,7 +103,7 @@ class ModelDesignMenuItems extends Model {
 		$this->cache->delete('menu_items.parents.total');
     }
 
-	public function deleteMenuItem($menu_item_id) {
+	public function deleteMenuItem(int $menu_item_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_item_path WHERE menu_item_id = '" . (int)$menu_item_id . "'");
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_item_path WHERE path_id = '" . (int)$menu_item_id . "'");
@@ -121,7 +121,7 @@ class ModelDesignMenuItems extends Model {
 	}
 
 	// Function to repair any erroneous menu items that are not in the menu item path table.
-	public function repairMenuItems($parent_id = 0) {
+	public function repairMenuItems($parent_id = 0): void {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_item WHERE parent_id = '" . (int)$parent_id . "'");
 
 		foreach ($query->rows as $menu_item) {
@@ -149,13 +149,13 @@ class ModelDesignMenuItems extends Model {
 		$this->cache->delete('menu_items.parents.total');
 	}
 
-	public function getMenuItem($menu_item_id) {
+	public function getMenuItem(int $menu_item_id) {
 		$query = $this->db->query("SELECT DISTINCT *, (SELECT GROUP_CONCAT(mid1.menu_item_name ORDER BY level SEPARATOR ' &gt; ') FROM " . DB_PREFIX . "menu_item_path mip LEFT JOIN " . DB_PREFIX . "menu_item_description mid1 ON (mip.path_id = mid1.menu_item_id AND mip.menu_item_id != mip.path_id) WHERE mip.menu_item_id = mi.menu_item_id AND mid1.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY mip.menu_item_id) AS `path`, mi.menu_item_link FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid2 ON (mi.menu_item_id = mid2.menu_item_id) WHERE mi.menu_item_id = '" . (int)$menu_item_id . "' AND mid2.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
-	public function getMenuItems($menu_id, $data) {
+	public function getMenuItems(int $menu_id, array $data = []): array {
 		$sql = "SELECT mip.menu_item_id AS menu_item_id, GROUP_CONCAT(mid1.menu_item_name ORDER BY mip.level SEPARATOR ' &gt; ') AS name, mi.parent_id, mi.external_link, mi.sort_order, mi.status FROM " . DB_PREFIX . "menu_item_path mip LEFT JOIN " . DB_PREFIX . "menu_item mi ON (mip.menu_item_id = mi.menu_item_id) LEFT JOIN " . DB_PREFIX . "menu_item_description mid1 ON (mip.path_id = mid1.menu_item_id) LEFT JOIN " . DB_PREFIX . "menu_item_description mid2 ON (mip.menu_item_id = mid2.menu_item_id) WHERE mid1.language_id = '" . (int)$this->config->get('config_language_id') . "' AND mid2.language_id = '" . (int)$this->config->get('config_language_id') . "' AND mi.menu_id='" . (int)$menu_id . "'";
 
 		if (!empty($data['filter_name'])) {
@@ -199,7 +199,7 @@ class ModelDesignMenuItems extends Model {
 		return $query->rows;
 	}
 
-	public function getMenuItemDescription($menu_item_id) {
+	public function getMenuItemDescription(int $menu_item_id): array {
 		$menu_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_item_description WHERE menu_item_id = '" . (int)$menu_item_id . "'");
@@ -215,7 +215,7 @@ class ModelDesignMenuItems extends Model {
 		return $menu_description_data;
 	}
 
-	public function getParents($menu_id) {
+	public function getParents(int $menu_id) {
 		$parents_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (mi.menu_item_id = mid.menu_item_id) WHERE mi.menu_id = '" . (int)$menu_id . "' AND mid.language_id = '" . $this->config->get('config_language_id') . "' AND mi.parent_id = '0' ORDER BY mi.sort_order, mid.menu_item_name ASC");
@@ -234,7 +234,7 @@ class ModelDesignMenuItems extends Model {
 		}
 	}
 
-	public function getTotalMenuItems($menu_id, $data) {
+	public function getTotalMenuItems(int $menu_id, array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT mi.menu_item_id) AS `total` FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (mi.menu_item_id = mid.menu_item_id) WHERE mi.menu_id = '" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {

@@ -1,7 +1,7 @@
 <?php
 class ModelSaleCustomerBanIp extends Model {
 
-	public function addCustomerBanIp($data) {
+	public function addCustomerBanIp(array $data = []): void {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "customer_ban_ip SET ip = '" . $this->db->escape($data['ip']) . "'");
 
 		$customer_ban_ip_id = $this->db->getLastId();
@@ -10,21 +10,21 @@ class ModelSaleCustomerBanIp extends Model {
 		$this->session->data['new_customer_ban_ip_id'] = $customer_ban_ip_id;
 	}
 
-	public function editCustomerBanIp($customer_ban_ip_id, $data) {
+	public function editCustomerBanIp(int $customer_ban_ip_id, array $data = []): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer_ban_ip SET ip = '" . $this->db->escape($data['ip']) . "' WHERE customer_ban_ip_id = '" . (int)$customer_ban_ip_id . "'");
 	}
 
-	public function deleteCustomerBanIp($customer_ban_ip_id) {
+	public function deleteCustomerBanIp(int $customer_ban_ip_id): void {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_ban_ip WHERE customer_ban_ip_id = '" . (int)$customer_ban_ip_id . "'");
 	}
 
-	public function getCustomerBanIp($customer_ban_ip_id) {
+	public function getCustomerBanIp(int $customer_ban_ip_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_ban_ip WHERE customer_ban_ip_id = '" . (int)$customer_ban_ip_id . "'");
 
 		return $query->row;
 	}
 
-	public function getCustomerBanIps($data = array()) {
+	public function getCustomerBanIps(array $data = []): array {
 		$sql = "SELECT *, (SELECT COUNT(DISTINCT customer_id) FROM " . DB_PREFIX . "customer_ip ci WHERE ci.ip = cbi.ip) AS `total` FROM " . DB_PREFIX . "customer_ban_ip cbi";
 
 		$sql .= " ORDER BY ip";
@@ -52,7 +52,7 @@ class ModelSaleCustomerBanIp extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalCustomerBanIps($data = array()) {
+	public function getTotalCustomerBanIps(array $data = []): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_ban_ip");
 
 		return $query->row['total'];

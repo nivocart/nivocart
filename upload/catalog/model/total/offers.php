@@ -198,7 +198,7 @@ class ModelTotalOffers {
 			$total_data[] = array(
 				'code'       => 'offers',
 				'title'      => $this->language->get('text_offers'),
-				'text'       => '-' . $this->currency->format($discount_total),
+				'text'       => '-' . $this->currency->format($discount_total, $this->config->get('config_currency')),
 				'value'      => '-' . number_format($discount_total, 2, '.', ''),
 				'sort_order' => $this->config->get('offers_sort_order')
 			);

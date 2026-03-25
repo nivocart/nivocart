@@ -1,7 +1,7 @@
 <?php
 class ModelSettingStore extends Model {
 
-	public function getStores($data = array()) {
+	public function getStores(array $data = []) {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "store`";
 

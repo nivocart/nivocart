@@ -32,7 +32,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		return $method_data;
 	}
 
-	public function getPaypalOrderByOrderId($order_id) {
+	public function getPaypalOrderByOrderId(int $order_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order` WHERE order_id = " . (int)$order_id);
 
 		return (($query instanceof stdClass) && isset($query->row) && is_array($query->row)) ? $query->row : false;

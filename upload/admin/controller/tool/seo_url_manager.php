@@ -444,15 +444,17 @@ class ControllerToolSeoUrlManager extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['query']) < 3) || (utf8_strlen($this->request->post['query']) > 255)) {
+		if ((mb_strlen($this->request->post['query'], 'UTF-8') < 3) || (mb_strlen($this->request->post['query'], 'UTF-8') > 255)) {
 			$this->error['query'] = $this->language->get('error_query');
 		}
 
-		if ((utf8_strlen($this->request->post['keyword']) < 3) || (utf8_strlen($this->request->post['keyword']) > 255)) {
+		if ((mb_strlen($this->request->post['keyword'], 'UTF-8') < 3) || (mb_strlen($this->request->post['keyword'], 'UTF-8') > 255)) {
 			$this->error['keyword'] = $this->language->get('error_keyword');
 		}
 
-		$results = $this->model_tool_seo_url_manager->getUrls(0);
+		$urls_array = array();
+
+		$results = $this->model_tool_seo_url_manager->getUrls($urls_array);
 
 		foreach ($results as $result) {
 			if (isset($this->request->get['url_alias_id'])) {
