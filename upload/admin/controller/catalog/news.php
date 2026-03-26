@@ -25,19 +25,13 @@ class ControllerCatalogNews extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$news_id = $this->session->data['new_news_id'];
@@ -68,19 +62,13 @@ class ControllerCatalogNews extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$news_id = $this->request->get['news_id'];
@@ -111,19 +99,13 @@ class ControllerCatalogNews extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -149,19 +131,13 @@ class ControllerCatalogNews extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -170,37 +146,13 @@ class ControllerCatalogNews extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'nd.title';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'nd.title',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->language->load('catalog/' . $this->_name);
 
@@ -244,6 +196,10 @@ class ControllerCatalogNews extends Controller {
 		$this->load->model('tool/image');
 
 		$this->data['news'] = array();
+
+		$sort = $this->request->get['sort'] ?? 'nd.title';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
 
 		$data = array(
 			'sort'  => $sort,
@@ -321,6 +277,7 @@ class ControllerCatalogNews extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if ($order == 'ASC') {
@@ -339,6 +296,7 @@ class ControllerCatalogNews extends Controller {
 		$this->data['sort_status'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=n.status' . $url, 'SSL');
 		$this->data['sort_viewed'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=n.viewed' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -449,19 +407,13 @@ class ControllerCatalogNews extends Controller {
 			$this->data['error_image'] = array();
 		}
 
-		$url = '';
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'nd.title',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->data['breadcrumbs'] = array();
 
@@ -666,14 +618,14 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('catalog/category');
 
-		// Empty array required here to get the Categories
+		// Empty array required to get the Categories
 		$category_data = array();
 
 		$this->data['default_categories'] = $this->model_catalog_category->getCategories($category_data);
 
 		$this->load->model('catalog/manufacturer');
 
-		// Empty array required here to get the Manufacturers
+		// Empty array required to get the Manufacturers
 		$manufacturer_data = array();
 
 		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_data);
@@ -693,11 +645,11 @@ class ControllerCatalogNews extends Controller {
 		}
 
 		foreach ($this->request->post['news_description'] as $language_id => $value) {
-			if ((strlen($value['title']) < 3) || (strlen($value['title']) > 250)) {
+			if ((mb_strlen($value['title'], 'UTF-8') < 3) || (mb_strlen($value['title'], 'UTF-8') > 250)) {
 				$this->error['title'][$language_id] = $this->language->get('error_title');
 			}
 
-			if (strlen($value['description']) < 3) {
+			if (mb_strlen($value['description'], 'UTF-8') < 3) {
 				$this->error['description'][$language_id] = $this->language->get('error_description');
 			}
 		}

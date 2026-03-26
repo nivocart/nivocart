@@ -24,19 +24,13 @@ class ControllerCatalogField extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$field_id = $this->session->data['new_field_id'];
@@ -67,19 +61,13 @@ class ControllerCatalogField extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$field_id = $this->request->get['field_id'];
@@ -110,19 +98,13 @@ class ControllerCatalogField extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? 'fd.title',
+				'order' => $this->request->get['order'] ?? 'ASC',
+				'page'  => $this->request->get['page'] ?? 1
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('catalog/field', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -144,19 +126,13 @@ class ControllerCatalogField extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? 'fd.title',
+				'order' => $this->request->get['order'] ?? 'ASC',
+				'page'  => $this->request->get['page'] ?? 1
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('catalog/field', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -178,19 +154,13 @@ class ControllerCatalogField extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('catalog/field', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -199,37 +169,13 @@ class ControllerCatalogField extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'fd.title';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'fd.title',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->data['breadcrumbs'] = array();
 
@@ -255,6 +201,10 @@ class ControllerCatalogField extends Controller {
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
 		$this->data['fields'] = array();
+
+		$sort = $this->request->get['sort'] ?? 'fd.title';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
 
 		$data = array(
 			'sort'  => $sort,
@@ -319,6 +269,7 @@ class ControllerCatalogField extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if ($order == 'ASC') {
@@ -335,6 +286,7 @@ class ControllerCatalogField extends Controller {
 		$this->data['sort_sort_order'] = $this->url->link('catalog/field', 'token=' . $this->session->data['token'] . '&sort=f.sort_order' . $url, 'SSL');
 		$this->data['sort_status'] = $this->url->link('catalog/field', 'token=' . $this->session->data['token'] . '&sort=f.status' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -407,19 +359,13 @@ class ControllerCatalogField extends Controller {
 			$this->data['error_description'] = array();
 		}
 
-		$url = '';
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'fd.title',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->data['breadcrumbs'] = array();
 

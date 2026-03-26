@@ -241,6 +241,7 @@ class ControllerCommonHome extends Controller {
 
 		clearstatcache();
 
+		// Breadcrumbs
 		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
@@ -249,6 +250,7 @@ class ControllerCommonHome extends Controller {
 			'separator' => false
 		);
 
+		// Session Token
 		$this->data['token'] = $this->session->data['token'];
 
 		// Seo urls
@@ -499,21 +501,21 @@ class ControllerCommonHome extends Controller {
 
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_result['customer_id'], 'SSL')
+				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . (int)$customer_result['customer_id'], 'SSL')
 			);
 
 			$action_passed = [];
 
 			$action_passed[] = array(
 				'text' => $this->language->get('text_view'),
-				'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . $customer_result['email'] . '&filter_customer=' . $customer_result['name'], 'SSL')
+				'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$customer_result['email'] . '&filter_customer=' . (string)$customer_result['name'], 'SSL')
 			);
 
 			$action_missed = [];
 
 			$action_missed[] = array(
 				'text' => $this->language->get('text_view'),
-                'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . $customer_result['email'] . '&filter_order_status_id=0', 'SSL')
+                'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$customer_result['email'] . '&filter_order_status_id=0', 'SSL')
 			);
 
 			if ($this->config->get('config_customer_dob')) {
@@ -558,14 +560,14 @@ class ControllerCommonHome extends Controller {
 
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link('catalog/review/update', 'token=' . $this->session->data['token'] . '&review_id=' . $review_result['review_id'], 'SSL')
+				'href' => $this->url->link('catalog/review/update', 'token=' . $this->session->data['token'] . '&review_id=' . (int)$review_result['review_id'], 'SSL')
 			);
 
 			$action_rated = [];
 
 			$action_rated[] = array(
 				'text' => $this->language->get('text_view'),
-                'href' => $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . '&filter_review=' . $review_result['review_id'] . '&filter_order_status_id=0', 'SSL')
+                'href' => $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . '&filter_review=' . (int)$review_result['review_id'] . '&filter_order_status_id=0', 'SSL')
 			);
 
 			$this->data['reviews'][] = array(
@@ -598,7 +600,7 @@ class ControllerCommonHome extends Controller {
 
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $affiliate_result['affiliate_id'], 'SSL')
+				'href' => $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . (int)$affiliate_result['affiliate_id'], 'SSL')
 			);
 
 			$this->data['affiliates'][] = array(
@@ -631,19 +633,19 @@ class ControllerCommonHome extends Controller {
 
 			$action[] = array(
 				'text' => $this->language->get('text_view'),
-				'href' => $this->url->link('sale/return/info', 'token=' . $this->session->data['token'] . '&return_id=' . $return_result['return_id'], 'SSL')
+				'href' => $this->url->link('sale/return/info', 'token=' . $this->session->data['token'] . '&return_id=' . (int)$return_result['return_id'], 'SSL')
 			);
 
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link('sale/return/update', 'token=' . $this->session->data['token'] . '&return_id=' . $return_result['return_id'], 'SSL')
+				'href' => $this->url->link('sale/return/update', 'token=' . $this->session->data['token'] . '&return_id=' . (int)$return_result['return_id'], 'SSL')
 			);
 
 			$action_return = [];
 
 			$action_return[] = array(
 				'text' => $this->language->get('text_view'),
-				'href' => $this->url->link('sale/return', 'token=' . $this->session->data['token'] . '&filter_email=' . $return_result['email'], 'SSL')
+				'href' => $this->url->link('sale/return', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$return_result['email'], 'SSL')
 			);
 
 			$this->data['returns'][] = array(
@@ -773,7 +775,7 @@ class ControllerCommonHome extends Controller {
 				'model'   => $model_viewed,
 				'viewed'  => $viewed_result['viewed'],
 				'percent' => $percent . '%',
-				'href'    => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $viewed_result['product_id'], 'SSL')
+				'href'    => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . (int)$viewed_result['product_id'], 'SSL')
 			);
 		}
 
@@ -800,7 +802,7 @@ class ControllerCommonHome extends Controller {
 				'orders'   => $client_result['orders'],
 				'products' => $client_result['products'],
 				'total'    => $this->currency->format($client_result['total'], $this->config->get('config_currency')),
-				'href'     => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $client_result['customer_id'], 'SSL')
+				'href'     => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . (int)$client_result['customer_id'], 'SSL')
 			);
 		}
 
@@ -1041,7 +1043,7 @@ class ControllerCommonHome extends Controller {
 	}
 
 	public function map() {
-		$json = [];
+		$json = array();
 
 		$this->language->load('common/home');
 

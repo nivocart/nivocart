@@ -64,12 +64,6 @@ class ControllerBlogReport extends Controller {
 			$filter_date_end = date('Y-m-d');
 		}
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
@@ -82,11 +76,13 @@ class ControllerBlogReport extends Controller {
 			$order = 'DESC';
 		}
 
-		$url = '';
-
 		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
+			$page = $this->request->get['page'];
+		} else {
+			$page = 1;
 		}
+
+		$url = '';
 
 		if (isset($this->request->get['sort'])) {
 			$url .= '&sort=' . $this->request->get['sort'];
@@ -94,6 +90,10 @@ class ControllerBlogReport extends Controller {
 
 		if (isset($this->request->get['order'])) {
 			$url .= '&order=' . $this->request->get['order'];
+		}
+
+		if (isset($this->request->get['page'])) {
+			$url .= '&page=' . $this->request->get['page'];
 		}
 
 		$this->data['breadcrumbs'] = array();
@@ -112,11 +112,11 @@ class ControllerBlogReport extends Controller {
 
 		$data = array(
 			'filter_date_start' => $filter_date_start,
-			'filter_date_end' => $filter_date_end,
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit' => $this->config->get('config_admin_limit')
+			'filter_date_end'   => $filter_date_end,
+			'sort'              => $sort,
+			'order'             => $order,
+			'start'             => ($page - 1) * $this->config->get('config_admin_limit'),
+			'limit'             => $this->config->get('config_admin_limit')
 		);
 
 		// Pagination
@@ -177,6 +177,7 @@ class ControllerBlogReport extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if ($order == 'ASC') {
@@ -193,6 +194,7 @@ class ControllerBlogReport extends Controller {
 		$this->data['sort_author_name'] = $this->url->link('blog/report', 'token=' . $this->session->data['token'] . '&sort=bau.name' . $url, 'SSL');
 		$this->data['sort_view'] = $this->url->link('blog/report', 'token=' . $this->session->data['token'] . '&sort=bv.view' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {

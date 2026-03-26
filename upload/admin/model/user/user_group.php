@@ -2,7 +2,7 @@
 class ModelUserUserGroup extends Model {
 
 	public function addUserGroup(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET name = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
 
 		$user_group_id = $this->db->getLastId();
 
