@@ -1,48 +1,170 @@
 <?php
 class ModelSettingSetting extends Model {
+	/**
+	 * Get Settings
+	 *
+	 * Get the record of the setting records in the database.
+	 *
+	 * @param int $store_id
+	 *
+	 * @return array<int, array<string, mixed>> setting records that have store ID
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $results = $this->model_setting_setting->getSettings($store_id);
+	 */
+	public function getSettings(int $store_id = 0): array {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '" . (int)$store_id . "' OR `store_id` = '0' ORDER BY `store_id` ASC");
 
-	public function getSetting($group, $store_id = 0): array {
-		$data = array();
+		return $query->rows;
+	}
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE store_id = '" . (int)$store_id . "' AND `group` = '" . $this->db->escape($group) . "'");
+	/**
+	 * Get Setting
+	 *
+	 * @param string $group
+	 * @param int    $store_id
+	 *
+	 * @return array<string, mixed>
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $setting_info = $this->model_setting_setting->getSetting($group, $store_id);
+	 */
+	public function getSetting(string $group, int $store_id = 0): array {
+		$setting_data = [];
+
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '" . (int)$store_id . "' AND `group` = '" . $this->db->escape($group) . "'");
 
 		foreach ($query->rows as $result) {
 			if (!$result['serialized']) {
-				$data[$result['key']] = $result['value'];
+				$setting_data[$result['key']] = $result['value'];
 			} else {
-				$data[$result['key']] = unserialize($result['value']);
+				$setting_data[$result['key']] = $result['value'] ? json_decode($result['value'], true) : [];
 			}
 		}
 
-		return $data;
+		return $setting_data;
 	}
 
-	public function editSetting($group, $data, $store_id = 0): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "setting WHERE store_id = '" . (int)$store_id . "' AND `group` = '" . $this->db->escape($group) . "'");
+	/**
+	 * Edit Setting
+	 *
+	 * @param string               $group
+	 * @param array<string, mixed> $data     array of data
+	 * @param int                  $store_id
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->editSetting($group, $data, $store_id);
+	 */
+	public function editSetting(string $group, array $data = [], int $store_id = 0): void {
+		$this->deleteSetting($group, $store_id);
 
 		foreach ($data as $key => $value) {
-			if (!is_array($value)) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "setting SET store_id = '" . (int)$store_id . "', `group` = '" . $this->db->escape($group) . "', `key` = '" . $this->db->escape($key) . "', `value` = '" . $this->db->escape($value) . "', serialized = '0'");
-			} else {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "setting SET store_id = '" . (int)$store_id . "', `group` = '" . $this->db->escape($group) . "', `key` = '" . $this->db->escape($key) . "', `value` = '" . $this->db->escape(serialize($value)) . "', serialized = '1'");
+			if (substr($key, 0, strlen($group)) == $group) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '" . (int)$store_id . "', `group` = '" . $this->db->escape($group) . "', `key` = '" . $this->db->escape($key) . "', `value` = '" . $this->db->escape(!is_array($value) ? $value : json_encode($value)) . "', `serialized` = '" . (bool)is_array($value) . "'");
 			}
 		}
 	}
 
-	public function deleteSetting($group, $store_id = 0): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "setting WHERE store_id = '" . (int)$store_id . "' AND `group` = '" . $this->db->escape($group) . "'");
+	/**
+	 * Edit Setting Value
+	 *
+	 * Edit setting value record in the database.
+	 *
+	 * @param string              $group
+	 * @param string              $key
+	 * @param array<mixed>|string $value
+	 * @param int                 $store_id
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->editValue($group, $key, $value, $store_id);
+	 */
+	public function editSettingValue(string $group = '', string $key = '', $value = '', int $store_id = 0): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "setting` SET `value` = '" . $this->db->escape(!is_array($value) ? $value : json_encode($value)) . "', `serialized` = '" . (bool)is_array($value) . "' WHERE `group` = '" . $this->db->escape($group) . "' AND `key` = '" . $this->db->escape($key) . "' AND `store_id` = '" . (int)$store_id . "'");
 	}
 
-	public function editSettingValue($group = '', $key = '', $value = '', $store_id = 0): void {
-		if (!is_array($value)) {
-			$this->db->query("UPDATE " . DB_PREFIX . "setting SET `value` = '" . $this->db->escape($value) . "', serialized = '0' WHERE `group` = '" . $this->db->escape($group) . "' AND `key` = '" . $this->db->escape($key) . "' AND store_id = '" . (int)$store_id . "'");
-		} else {
-			$this->db->query("UPDATE " . DB_PREFIX . "setting SET `value` = '" . $this->db->escape(serialize($value)) . "', serialized = '1' WHERE `group` = '" . $this->db->escape($group) . "' AND `key` = '" . $this->db->escape($key) . "' AND store_id = '" . (int)$store_id . "'");
-		}
+	/**
+	 * Delete Setting
+	 *
+	 * @param string $group
+	 * @param int    $store_id
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->deleteSetting($group, $store_id);
+	 */
+	public function deleteSetting(string $group, int $store_id = 0): void {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '" . (int)$store_id . "' AND `group` = '" . $this->db->escape($group) . "'");
 	}
 
+	/**
+	 * Delete Settings By Group
+	 *
+	 * @param string $group
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->deleteSettingsByGroup($group);
+	 */
+	public function deleteSettingsByGroup(string $group): void {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `group` = '" . $this->db->escape($code) . "'");
+	}
+
+	/**
+	 * Delete Settings By Store ID
+	 *
+	 * @param int $store_id
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->deleteSettingsByStoreId($store_id);
+	 */
+	public function deleteSettingsByStoreId(int $store_id): void {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '" . (int)$store_id . "'");
+	}
+
+	/**
+	 * Get Colors
+	 *
+	 * Set of Colours for themes, used by Modules.
+	 *
+	 * @return array
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->getColors();
+	 */
 	public function getColors(): array {
-		$skins = array();
+		$skins = [];
 
 		$skins[] = array('skin' => 'white','color' => '#FFFFFF','title' => 'White');
 		$skins[] = array('skin' => 'beige','color' => '#F5F5DC','title' => 'Beige');
@@ -80,8 +202,21 @@ class ModelSettingSetting extends Model {
 		return $skins;
 	}
 
+	/**
+	 * Get Shapes
+	 *
+	 * Set of Shapes for themes, used by Modules.
+	 *
+	 * @return array
+	 *
+	 * @example
+	 *
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->getShapes();
+	 */
 	public function getShapes(): array {
-		$shapes = array();
+		$shapes = [];
 
 		$shapes[] = array('shape' => 'rounded-0','title' => 'Square');
 		$shapes[] = array('shape' => 'rounded-3','title' => 'Round 3');

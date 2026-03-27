@@ -60,16 +60,14 @@ foreach ($query->rows as $setting) {
 	if (!$setting['serialized']) {
 		$config->set($setting['key'], $setting['value']);
 	} else {
-		$config->set($setting['key'], unserialize($setting['value']));
+		$config->set($setting['key'], json_decode($setting['value'], true));
 	}
 }
 
-if (!$store_query->num_rows) {
-	$config->set('config_url', HTTP_SERVER);
-	$config->set('config_ssl', HTTPS_SERVER);
-}
-
 // Url
+$config->set('config_url', HTTP_SERVER);
+$config->set('config_ssl', HTTPS_SERVER);
+
 $url = new Url($config->get('config_url'), $config->get('config_secure') ? $config->get('config_ssl') : $config->get('config_url'));
 $registry->set('url', $url);
 
