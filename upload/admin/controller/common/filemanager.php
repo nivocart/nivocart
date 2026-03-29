@@ -127,7 +127,7 @@ class ControllerCommonFileManager extends Controller {
 
 				foreach ($directories as $directory) {
 					$json[$i]['data'] = htmlspecialchars(basename($directory), ENT_QUOTES, 'UTF-8');
-					$json[$i]['attributes']['directory'] = htmlspecialchars(utf8_substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8');
+					$json[$i]['attributes']['directory'] = htmlspecialchars(substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8');
 
 					$children = glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR);
 
@@ -162,7 +162,7 @@ class ControllerCommonFileManager extends Controller {
 		if ($files) {
 			foreach ($files as $file) {
 				if (is_file($file)) {
-					$ext = utf8_substr(strrchr($file, '.'), 1);
+					$ext = substr(strrchr($file, '.'), 1);
 				} else {
 					$ext = '';
 				}
@@ -179,12 +179,12 @@ class ControllerCommonFileManager extends Controller {
 						$i++;
 					}
 
-					$filename_path_data = htmlspecialchars(utf8_substr($file, utf8_strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8');
+					$filename_path_data = htmlspecialchars(substr($file, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8');
 
 					$json[] = array(
 						'filename' => htmlspecialchars(basename($file), ENT_QUOTES, 'UTF-8'),
 						'file'     => $filename_path_data,
-						'size'     => round(utf8_substr($size, 0, utf8_strpos($size, '.') + 4), 2) . $suffix[$i],
+						'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i],
 						'image'    => $this->image($filename_path_data)
 					);
 				}
@@ -348,7 +348,7 @@ class ControllerCommonFileManager extends Controller {
 		$json = array();
 
 		if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
-			if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 255)) {
+			if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 255)) {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
@@ -417,7 +417,7 @@ class ControllerCommonFileManager extends Controller {
 	protected function recursiveFolders($directory) {
 		$output = '';
 
-		$output .= '<option value="' . htmlspecialchars(utf8_substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(utf8_substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8') . '</option>';
+		$output .= '<option value="' . htmlspecialchars(substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8') . '</option>';
 
 		$directories = glob(rtrim(str_replace(array('../', '..\\', '..'), '', $directory), '/') . '/*', GLOB_ONLYDIR);
 
@@ -434,7 +434,7 @@ class ControllerCommonFileManager extends Controller {
 		$json = array();
 
 		if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
-			if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 255)) {
+			if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 255)) {
 				$json['error'] = $this->language->get('error_filename');
 			}
 

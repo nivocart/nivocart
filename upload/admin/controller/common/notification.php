@@ -141,8 +141,10 @@ class ControllerCommonNotification extends Controller {
 
 		$this->load->model('report/customer');
 
+		$customers_online = array();
+
 		if ($notification_online) {
-			$online_total = $this->model_report_customer->getTotalCustomersOnline();
+			$online_total = $this->model_report_customer->getTotalCustomersOnline($customers_online);
 		} else {
 			$online_total = 0;
 		}
@@ -153,8 +155,10 @@ class ControllerCommonNotification extends Controller {
 
 		$this->load->model('sale/customer');
 
+		$customers_deleted = array();
+
 		if ($notification_deleted) {
-			$deleted_total = $this->model_sale_customer->getTotalCustomersDeleted(0);
+			$deleted_total = $this->model_sale_customer->getTotalCustomersDeleted($customers_deleted);
 		} else {
 			$deleted_total = 0;
 		}

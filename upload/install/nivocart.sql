@@ -423,7 +423,7 @@ CREATE TABLE `nc_category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   `meta_description` varchar(255) NOT NULL,
   `meta_keyword` varchar(255) NOT NULL,
   PRIMARY KEY (`category_id`,`language_id`),
@@ -568,7 +568,7 @@ CREATE TABLE `nc_country` (
   `country_id` int(11) NOT NULL AUTO_INCREMENT,
   `iso_code_2` varchar(2) NOT NULL,
   `iso_code_3` varchar(3) NOT NULL,
-  `address_format` text CHARACTER SET utf8 NOT NULL,
+  `address_format` text CHARACTER SET utf8mb4 NOT NULL,
   `postcode_required` tinyint(1) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`country_id`)
@@ -1326,7 +1326,7 @@ CREATE TABLE `nc_customer_group_description` (
   `customer_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`customer_group_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1361,7 +1361,7 @@ DROP TABLE IF EXISTS `nc_customer_history`;
 CREATE TABLE `nc_customer_history` (
   `customer_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
-  `comment` text CHARACTER SET utf8 NOT NULL,
+  `comment` text CHARACTER SET utf8mb4 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_history_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1410,7 +1410,7 @@ CREATE TABLE `nc_customer_reward` (
   `customer_reward_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL DEFAULT '0',
   `order_id` int(11) NOT NULL DEFAULT '0',
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   `points` int(8) NOT NULL DEFAULT '0',
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_reward_id`)
@@ -1427,7 +1427,7 @@ CREATE TABLE `nc_customer_transaction` (
   `customer_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_transaction_id`)
@@ -1537,7 +1537,7 @@ CREATE TABLE `nc_eucountry_description` (
   `eucountry_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `eucountry` varchar(128) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`eucountry_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1690,7 +1690,7 @@ CREATE TABLE `nc_field_description` (
   `field_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`field_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1953,7 +1953,7 @@ CREATE TABLE `nc_information_description` (
   `title` varchar(64) NOT NULL,
   `meta_description` varchar(255) NOT NULL,
   `meta_keyword` varchar(255) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`information_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2154,13 +2154,13 @@ DROP TABLE IF EXISTS `nc_location`;
 CREATE TABLE `nc_location` (
   `location_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
-  `address` text CHARACTER SET utf8 NOT NULL,
+  `address` text CHARACTER SET utf8mb4 NOT NULL,
   `telephone` varchar(32) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `latitude` varchar(32) NOT NULL,
   `longitude` varchar(32) NOT NULL,
-  `open` text CHARACTER SET utf8 NOT NULL,
-  `comment` text CHARACTER SET utf8 NOT NULL,
+  `open` text CHARACTER SET utf8mb4 NOT NULL,
+  `comment` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`location_id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -2205,7 +2205,7 @@ CREATE TABLE `nc_manufacturer_description` (
   `manufacturer_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`manufacturer_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2486,7 +2486,7 @@ CREATE TABLE `nc_news_description` (
   `language_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `meta_description` VARCHAR(255) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`news_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2811,7 +2811,7 @@ CREATE TABLE `nc_order` (
   `payment_country_id` int(11) NOT NULL,
   `payment_zone` varchar(128) NOT NULL,
   `payment_zone_id` int(11) NOT NULL,
-  `payment_address_format` text CHARACTER SET utf8 NOT NULL,
+  `payment_address_format` text CHARACTER SET utf8mb4 NOT NULL,
   `payment_method` varchar(128) NOT NULL,
   `payment_code` varchar(128) NOT NULL,
   `shipping_firstname` varchar(32) NOT NULL,
@@ -2825,10 +2825,10 @@ CREATE TABLE `nc_order` (
   `shipping_country_id` int(11) NOT NULL,
   `shipping_zone` varchar(128) NOT NULL,
   `shipping_zone_id` int(11) NOT NULL,
-  `shipping_address_format` text CHARACTER SET utf8 NOT NULL,
+  `shipping_address_format` text CHARACTER SET utf8mb4 NOT NULL,
   `shipping_method` varchar(128) NOT NULL,
   `shipping_code` varchar(128) NOT NULL,
-  `comment` text CHARACTER SET utf8 NOT NULL,
+  `comment` text CHARACTER SET utf8mb4 NOT NULL,
   `total` decimal(15,4) NOT NULL DEFAULT '0.0000',
   `order_status_id` int(11) NOT NULL DEFAULT '0',
   `affiliate_id` int(11) NOT NULL,
@@ -2877,7 +2877,7 @@ CREATE TABLE `nc_order_history` (
   `order_id` int(11) NOT NULL,
   `order_status_id` int(11) NOT NULL,
   `notify` tinyint(1) NOT NULL DEFAULT '0',
-  `comment` text CHARACTER SET utf8 NOT NULL,
+  `comment` text CHARACTER SET utf8mb4 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`order_history_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -2896,7 +2896,7 @@ CREATE TABLE `nc_order_option` (
   `product_option_id` int(11) NOT NULL,
   `product_option_value_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL,
-  `value` text CHARACTER SET utf8 NOT NULL,
+  `value` text CHARACTER SET utf8mb4 NOT NULL,
   `type` varchar(32) NOT NULL,
   PRIMARY KEY (`order_option_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -3036,14 +3036,14 @@ CREATE TABLE `nc_order_voucher` (
   `order_voucher_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `voucher_id` int(11) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   `code` varchar(10) NOT NULL,
   `from_name` varchar(64) NOT NULL,
   `from_email` varchar(96) NOT NULL,
   `to_name` varchar(64) NOT NULL,
   `to_email` varchar(96) NOT NULL,
   `voucher_theme_id` int(11) NOT NULL,
-  `message` text CHARACTER SET utf8 NOT NULL,
+  `message` text CHARACTER SET utf8mb4 NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   PRIMARY KEY (`order_voucher_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -3238,7 +3238,7 @@ CREATE TABLE `nc_product_attribute` (
   `product_id` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `text` text CHARACTER SET utf8 NOT NULL,
+  `text` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`product_id`,`attribute_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -3329,10 +3329,10 @@ CREATE TABLE `nc_product_description` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   `meta_description` varchar(255) NOT NULL,
   `meta_keyword` varchar(255) NOT NULL,
-  `tag` text CHARACTER SET utf8 NOT NULL,
+  `tag` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`product_id`,`language_id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -3391,7 +3391,7 @@ CREATE TABLE `nc_product_field` (
   `product_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `text` text CHARACTER SET utf8 NOT NULL,
+  `text` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`product_id`,`field_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -3484,7 +3484,7 @@ CREATE TABLE `nc_product_option` (
   `product_option_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
-  `option_value` text CHARACTER SET utf8 NOT NULL,
+  `option_value` text CHARACTER SET utf8mb4 NOT NULL,
   `required` tinyint(1) NOT NULL,
   PRIMARY KEY (`product_option_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -3939,7 +3939,7 @@ CREATE TABLE `nc_return_history` (
   `return_id` int(11) NOT NULL,
   `return_status_id` int(11) NOT NULL,
   `notify` tinyint(1) NOT NULL,
-  `comment` text CHARACTER SET utf8 NOT NULL,
+  `comment` text CHARACTER SET utf8mb4 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`return_history_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -4004,7 +4004,7 @@ CREATE TABLE `nc_review` (
   `product_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `author` varchar(64) NOT NULL,
-  `text` text CHARACTER SET utf8 NOT NULL,
+  `text` text CHARACTER SET utf8mb4 NOT NULL,
   `rating` int(1) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `date_added` datetime NOT NULL,
@@ -4040,7 +4040,7 @@ CREATE TABLE `nc_setting` (
   `store_id` int(11) NOT NULL DEFAULT '0',
   `group` varchar(32) NOT NULL,
   `key` varchar(64) NOT NULL,
-  `value` text CHARACTER SET utf8 NOT NULL,
+  `value` text CHARACTER SET utf8mb4 NOT NULL,
   `serialized` tinyint(1) NOT NULL,
   PRIMARY KEY (`setting_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -4430,7 +4430,7 @@ CREATE TABLE `nc_supplier` (
   `reference` varchar(32) NOT NULL,
   `company` varchar(32) NOT NULL,
   `account` varchar(32) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   `contact` varchar(64) NOT NULL,
   `email` varchar(96) NOT NULL,
   `telephone` varchar(32) NOT NULL,
@@ -4497,7 +4497,7 @@ CREATE TABLE `nc_supplier_group_description` (
   `supplier_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `description` text CHARACTER SET utf8 NOT NULL,
+  `description` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`supplier_group_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -4518,7 +4518,7 @@ DROP TABLE IF EXISTS `nc_supplier_history`;
 CREATE TABLE `nc_supplier_history` (
   `supplier_history_id` int(11) NOT NULL AUTO_INCREMENT,
   `supplier_id` int(11) NOT NULL,
-  `comment` text CHARACTER SET utf8 NOT NULL,
+  `comment` text CHARACTER SET utf8mb4 NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`supplier_history_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -4780,7 +4780,7 @@ DROP TABLE IF EXISTS `nc_user_group`;
 CREATE TABLE `nc_user_group` (
   `user_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
-  `permission` text CHARACTER SET utf8 NOT NULL,
+  `permission` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`user_group_id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -4843,7 +4843,7 @@ CREATE TABLE `nc_voucher` (
   `to_name` varchar(64) NOT NULL,
   `to_email` varchar(96) NOT NULL,
   `voucher_theme_id` int(11) NOT NULL,
-  `message` text CHARACTER SET utf8 NOT NULL,
+  `message` text CHARACTER SET utf8mb4 NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
