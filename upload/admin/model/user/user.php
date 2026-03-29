@@ -2,7 +2,7 @@
 class ModelUserUser extends Model {
 
 	public function addUser(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$data['password'])))) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$user_id = $this->db->getLastId();
 
@@ -18,7 +18,7 @@ class ModelUserUser extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
 
 		if (isset($data['password'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 
 		if (isset($data['image'])) {
@@ -26,12 +26,12 @@ class ModelUserUser extends Model {
 		}
 	}
 
-	public function editPassword(int $user_id, $password) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', `code` = '' WHERE user_id = '" . (int)$user_id . "'");
+	public function editPassword(int $user_id, string $password) {
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$password)))) . "', `code` = '' WHERE user_id = '" . (int)$user_id . "'");
 	}
 
-	public function editCode($email, $code) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET `code` = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower($email), 'UTF-8') . "'");
+	public function editCode(string $email, $code) {
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET `code` = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
 	}
 
 	public function deleteUser(int $user_id): void {
@@ -97,14 +97,14 @@ class ModelUserUser extends Model {
 		return $query->rows;
 	}
 
-	public function getUserByUsername($username) {
+	public function getUserByUsername(string $username) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE username = '" . $this->db->escape((string)$username) . "'");
 
 		return $query->row;
 	}
 
-	public function getUserByEmail($email) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower($email), 'UTF-8') . "'");
+	public function getUserByEmail(string $email) {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
 
 		return $query->row;
 	}
@@ -157,8 +157,8 @@ class ModelUserUser extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalUsersByEmail($email): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower($email), 'UTF-8') . "'");
+	public function getTotalUsersByEmail(string $email): int {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
 
 		return $query->row['total'];
 	}

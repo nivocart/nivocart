@@ -2,7 +2,7 @@
 class ModelUserUserGroup extends Model {
 
 	public function addUserGroup(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user_group` SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
 
 		$user_group_id = $this->db->getLastId();
 
@@ -11,11 +11,11 @@ class ModelUserUserGroup extends Model {
 	}
 
 	public function editUserGroup(int $user_group_id, array $data = []): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "user_group SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' WHERE user_group_id = '" . (int)$user_group_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' WHERE user_group_id = '" . (int)$user_group_id . "'");
 	}
 
 	public function deleteUserGroup(int $user_group_id): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_group_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "user_group` WHERE user_group_id = '" . (int)$user_group_id . "'");
 	}
 
 	public function addPermission(int $user_id, $type, $page) {
@@ -25,28 +25,44 @@ class ModelUserUserGroup extends Model {
 			$user_group_query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
 			if ($user_group_query->num_rows) {
-				$data = unserialize($user_group_query->row['permission']);
+				// check string before unserialize
+				$raw = $user_group_query->row['permission'] ?? null;
+
+				if (!is_string($raw)) {
+					throw new \InvalidArgumentException("Expected a serialized string.");
+				}
+
+				$data = unserialize($raw, ['allowed_classes' => false]);
 
 				$data[$type][] = $page;
 
-				$this->db->query("UPDATE " . DB_PREFIX . "user_group SET permission = '" . serialize($data) . "' WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET permission = '" . serialize($data) . "' WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 			}
 		}
 	}
 
 	public function getUserGroup(int $user_group_id): array {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_group_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "user_group` WHERE user_group_id = '" . (int)$user_group_id . "'");
+
+		// check string before unserialize
+		$raw = $query->row['permission'] ?? null;
+
+		if (!is_string($raw)) {
+			throw new \InvalidArgumentException("Expected a serialized string.");
+		}
+
+		$data = unserialize($raw, ['allowed_classes' => false]);
 
 		$user_group = array(
 			'name'       => $query->row['name'],
-			'permission' => unserialize($query->row['permission'])
+			'permission' => $data
 		);
 
 		return $user_group;
 	}
 
 	public function getUserGroups(array $data = []): array {
-		$sql = "SELECT * FROM " . DB_PREFIX . "user_group";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "user_group`";
 
 		$sql .= " ORDER BY `name`";
 
@@ -74,7 +90,7 @@ class ModelUserUserGroup extends Model {
 	}
 
 	public function getUserGroupNames() {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "user_group ORDER BY `name` ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user_group` ORDER BY `name` ASC");
 
 		$user_group_names = array_column($query->rows, 'name');
 
@@ -82,7 +98,7 @@ class ModelUserUserGroup extends Model {
 	}
 
 	public function getTotalUserGroups(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "user_group");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user_group`");
 
 		return $query->row['total'];
 	}

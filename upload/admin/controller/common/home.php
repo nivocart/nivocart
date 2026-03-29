@@ -982,6 +982,28 @@ class ControllerCommonHome extends Controller {
 		$this->response->setOutput(json_encode($data));
 	}
 
+	public function map() {
+		$json = array();
+
+		$this->language->load('common/home');
+
+		$this->load->model('report/sale');
+
+		$results = $this->model_report_sale->getTotalOrdersByCountry();
+
+		foreach ($results as $result) {
+			$json[strtolower($result['iso_code_2'])] = array(
+				'orders' => $this->language->get('text_total_order'),
+				'total'  => $result['total'],
+				'sales'  => $this->language->get('text_total_sale'),
+				'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency'))
+			);
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
 	public function login() {
 		if ($this->config->get('config_secure') && !$this->request->isSecure() && strpos(HTTPS_SERVER, 'https') === 0) {
 			$this->user->logout();
@@ -1003,13 +1025,13 @@ class ControllerCommonHome extends Controller {
 			}
 		}
 
-		$ignore = array(
+		$first_ignore = array(
 			'common/login',
 			'common/forgotten',
 			'common/reset'
 		);
 
-		if (!$this->user->isLogged() && !in_array($route, $ignore)) {
+		if (!$this->user->isLogged() && !in_array($route, $first_ignore)) {
 			return $this->forward('common/login');
 		}
 
@@ -1026,7 +1048,14 @@ class ControllerCommonHome extends Controller {
 			$config_ignore = [];
 
 			if ($this->config->get('config_token_ignore')) {
-				$config_ignore = unserialize($this->config->get('config_token_ignore'));
+				// check string before unserialize
+				$raw = $this->config->get('config_token_ignore') ?? null;
+
+				if (!is_string($raw)) {
+					throw new \InvalidArgumentException("Expected a serialized string.");
+				}
+
+				$config_ignore = unserialize($raw, ['allowed_classes' => false]);
 			}
 
 			$ignore = array_merge($ignore, $config_ignore);
@@ -1040,28 +1069,6 @@ class ControllerCommonHome extends Controller {
 				return $this->forward('common/login');
 			}
 		}
-	}
-
-	public function map() {
-		$json = array();
-
-		$this->language->load('common/home');
-
-		$this->load->model('report/sale');
-
-		$results = $this->model_report_sale->getTotalOrdersByCountry();
-
-		foreach ($results as $result) {
-			$json[strtolower($result['iso_code_2'])] = array(
-				'orders' => $this->language->get('text_total_order'),
-				'total'  => $result['total'],
-				'sales'  => $this->language->get('text_total_sale'),
-				'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency'))
-			);
-		}
-
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
 	}
 
 	public function permission() {
