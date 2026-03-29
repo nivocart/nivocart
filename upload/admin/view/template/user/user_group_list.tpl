@@ -48,9 +48,13 @@
             <?php } ?></td>
             <td class="left"><?php echo $user_group['name']; ?></td>
             <td class="center"><?php echo $user_group['users']; ?></td>
-            <td class="right"><?php foreach ($user_group['action'] as $action) { ?>
-              <a href="<?php echo $action['href']; ?>" class="button-form animated fadeIn ripple"><?php echo $action['text']; ?></a>
-            <?php } ?></td>
+            <td class="right">
+            <?php foreach ($user_group['action'] as $action) { ?>
+              <?php if ($user_group['user_group_id'] > 1) { ?>
+                <a href="<?php echo $action['href']; ?>" class="button-form animated fadeIn ripple"><?php echo $action['text']; ?></a>
+              <?php } ?>
+            <?php } ?>
+            </td>
           </tr>
           <?php } ?>
         <?php } else { ?>

@@ -17,9 +17,6 @@ class ModelUserUser extends Model {
 	public function editUser(int $user_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
 
-		if ($data['password']) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
-
 		if (isset($data['password'])) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
@@ -119,7 +116,7 @@ class ModelUserUser extends Model {
 	}
 
 	public function getUserGroup(int $user_id, int $user_group_id) {
-		$query = $this->db->query("SELECT ug.name AS `name` FROM " . DB_PREFIX . "user_group ug LEFT JOIN `" . DB_PREFIX . "user` u ON (ug.user_group_id = u.user_group_id) WHERE ug.user_group_id = '" . (int)$user_group_id . "' AND u.user_id = '" . (int)$user_id . "'");
+		$query = $this->db->query("SELECT ug.name AS `name` FROM `" . DB_PREFIX . "user_group` ug LEFT JOIN `" . DB_PREFIX . "user` u ON (ug.user_group_id = u.user_group_id) WHERE ug.user_group_id = '" . (int)$user_group_id . "' AND u.user_id = '" . (int)$user_id . "'");
 
 		return $query->row['name'];
 	}
@@ -135,16 +132,16 @@ class ModelUserUser extends Model {
 		}
 	}
 
-	public function checkTopAdministrator() {
+	public function checkTopAdministrator(): bool {
+		// Check using group id and group name
+		$user_group_id = $this->user->getUserGroupId();
 		$user_group_name = $this->getUserGroup($this->user->getId(), $this->user->getUserGroupId());
 
-		if ($user_group_name == 'Top Administrator') {
-			$top_administrator = true;
+		if (($user_group_id === 1) || ($user_group_name === 'Top Administrator')) {
+			return true;
 		} else {
-			$top_administrator = false;
+			return false;
 		}
-
-		return $top_administrator;
 	}
 
 	// Totals

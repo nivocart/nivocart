@@ -421,7 +421,6 @@ class ControllerUserUserPermission extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 64)) {
 		// Check if name already exists
 		if (!isset($this->request->get['user_group_id'])) {
 			$this->load->model('user/user_group');

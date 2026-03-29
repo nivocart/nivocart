@@ -553,7 +553,9 @@ class ControllerUserUser extends Controller {
 
 		$this->load->model('user/user_group');
 
-		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups();
+		$user_groups_data = array();
+
+		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups($user_groups_data);
 		$this->data['top_administrator'] = $this->model_user_user->checkTopAdministrator();
 
 		$this->data['user_exist'] = isset($this->request->get['user_id']) ? true : false;
@@ -616,11 +618,6 @@ class ControllerUserUser extends Controller {
 		if (isset($this->request->get['user_id']) && $user_info) {
 			// Existing user
 			if ($this->request->post['username']) {
-
-				// Current Password Check
-				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
-					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
-
 				if (!$top_administrator) {
 					// Current Password Check
 					if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
@@ -644,11 +641,6 @@ class ControllerUserUser extends Controller {
 			}
 
 			if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
-				// Current Password Check
-				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
-					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
-
-			if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 				if (!$top_administrator) {
 					// Current Password Check
 					if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
@@ -666,11 +658,6 @@ class ControllerUserUser extends Controller {
 			}
 
 			if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
-				// Current Password Check
-				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
-					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
-
-			if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 				if (!$top_administrator) {
 					// Current Password Check
 					if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
@@ -686,11 +673,6 @@ class ControllerUserUser extends Controller {
 
 				$this->error['lastname'] = $this->language->get('error_lastname');
 			}
-
-			if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
-				// Current Password Check
-				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
-					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
 
 			if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				if (!$top_administrator) {
@@ -721,11 +703,6 @@ class ControllerUserUser extends Controller {
 				}
 			}
 
-			if ($this->request->post['password'] != "") {
-				// Current Password Check
-				if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
-					$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
-
 			if (!$top_administrator) {
 				if ($this->request->post['password'] != "") {
 					// Current Password Check
@@ -738,8 +715,6 @@ class ControllerUserUser extends Controller {
 					} else {
 						$this->error['old_password'] = $this->language->get('error_old_password');
 					}
-
-				if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 
 					if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 						$this->error['password'] = $this->language->get('error_password');
