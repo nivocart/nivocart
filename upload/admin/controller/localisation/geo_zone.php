@@ -24,19 +24,13 @@ class ControllerLocalisationGeoZone extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$geo_zone_id = $this->session->data['new_geo_zone_id'];
@@ -67,19 +61,13 @@ class ControllerLocalisationGeoZone extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$geo_zone_id = $this->request->get['geo_zone_id'];
@@ -110,19 +98,13 @@ class ControllerLocalisationGeoZone extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -131,37 +113,13 @@ class ControllerLocalisationGeoZone extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'name';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->data['breadcrumbs'] = array();
 
@@ -185,6 +143,10 @@ class ControllerLocalisationGeoZone extends Controller {
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
 		$this->data['geo_zones'] = array();
+
+		$sort = $this->request->get['sort'] ?? 'name';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
 
 		$data = array(
 			'sort'  => $sort,
@@ -241,6 +203,7 @@ class ControllerLocalisationGeoZone extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if ($order == 'ASC') {
@@ -256,6 +219,7 @@ class ControllerLocalisationGeoZone extends Controller {
 		$this->data['sort_name'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
 		$this->data['sort_description'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'] . '&sort=description' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -319,19 +283,13 @@ class ControllerLocalisationGeoZone extends Controller {
 			$this->data['error_description'] = '';
 		}
 
-		$url = '';
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->data['breadcrumbs'] = array();
 
@@ -379,7 +337,9 @@ class ControllerLocalisationGeoZone extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$this->data['countries'] = $this->model_localisation_country->getCountries();
+		$countries_array = array();
+
+		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
 
 		if (isset($this->request->post['zone_to_geo_zone'])) {
 			$this->data['zone_to_geo_zones'] = $this->request->post['zone_to_geo_zone'];

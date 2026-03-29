@@ -25,23 +25,20 @@ class ControllerDesignMenuItems extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_insert_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$menu_item_id = $this->session->data['new_menu_item_id'];
@@ -72,23 +69,20 @@ class ControllerDesignMenuItems extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_update_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$menu_item_id = $this->request->get['menu_item_id'];
@@ -105,6 +99,76 @@ class ControllerDesignMenuItems extends Controller {
 		$this->getForm();
 	}
 
+	public function enable() {
+		$this->language->load('design/' . $this->_name);
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('design/menu_items');
+
+		if (isset($this->request->post['selected'])) {
+			foreach ($this->request->post['selected'] as $menu_item_id) {
+				$this->model_design_menu_items->editMenuItemStatus($menu_item_id, 1);
+			}
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			if (isset($this->request->get['filter_name'])) {
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
+			}
+
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
+
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
+
+			$this->redirect($this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL'));
+		}
+
+		$this->getList();
+	}
+
+	public function disable() {
+		$this->language->load('design/' . $this->_name);
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('design/menu_items');
+
+		if (isset($this->request->post['selected'])) {
+			foreach ($this->request->post['selected'] as $menu_item_id) {
+				$this->model_design_menu_items->editMenuItemStatus($menu_item_id, 0);
+			}
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			if (isset($this->request->get['filter_name'])) {
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
+			}
+
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
+
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
+
+			$this->redirect($this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL'));
+		}
+
+		$this->getList();
+	}
+
 	public function delete() {
 		$this->language->load('design/' . $this->_name);
 
@@ -119,23 +183,20 @@ class ControllerDesignMenuItems extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_delete_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL'));
 		}
@@ -155,23 +216,20 @@ class ControllerDesignMenuItems extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_repair_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = '';
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL'));
 		}
@@ -180,47 +238,21 @@ class ControllerDesignMenuItems extends Controller {
 	}
 
 	protected function getList() {
+		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
-			$filter_name = $this->request->get['filter_name'];
+			$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
 		} else {
-			$filter_name = null;
+			$filter_name = '';
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'name, mi.sort_order';
-		}
+		$page_url = array_filter([
+			'filter_name' => $filter_name,
+			'sort'        => $this->request->get['sort'] ?? 'name, mi.sort_order',
+			'order'       => $this->request->get['order'] ?? 'ASC',
+			'page'        => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$menu_id = $this->request->get['menu_id'];
 
@@ -250,6 +282,10 @@ class ControllerDesignMenuItems extends Controller {
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
 		$this->data['menu_items'] = array();
+
+		$sort = $this->request->get['sort'] ?? 'name, mi.sort_order';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
 
 		$data = array(
 			'filter_name' => $filter_name,
@@ -322,6 +358,7 @@ class ControllerDesignMenuItems extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
@@ -342,6 +379,7 @@ class ControllerDesignMenuItems extends Controller {
 		$this->data['sort_sort_order'] = $this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . '&sort=mi.sort_order' . $url, 'SSL');
 		$this->data['sort_status'] = $this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . '&sort=mi.status' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
@@ -575,82 +613,6 @@ class ControllerDesignMenuItems extends Controller {
 		}
 
 		return empty($this->error);
-	}
-
-	public function enable() {
-		$this->language->load('design/' . $this->_name);
-
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('design/menu_items');
-
-		if (isset($this->request->post['selected'])) {
-			foreach ($this->request->post['selected'] as $menu_item_id) {
-				$this->model_design_menu_items->editMenuItemStatus($menu_item_id, 1);
-			}
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->redirect($this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL'));
-		}
-
-		$this->getList();
-	}
-
-	public function disable() {
-		$this->language->load('design/' . $this->_name);
-
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('design/menu_items');
-
-		if (isset($this->request->post['selected'])) {
-			foreach ($this->request->post['selected'] as $menu_item_id) {
-				$this->model_design_menu_items->editMenuItemStatus($menu_item_id, 0);
-			}
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->redirect($this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL'));
-		}
-
-		$this->getList();
 	}
 
 	public function info() {
