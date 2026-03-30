@@ -88,4 +88,5 @@ $_['error_cache']                   = 'Warning: Cache directory %s not writeable
 $_['error_download']                = 'Warning: Download directory %s not writeable!';
 $_['error_upload']                  = 'Warning: Upload directory %s not writeable!';
 $_['error_logs']                    = 'Warning: Logs directory %s not writeable!';
+$_['error_unserialize']             = 'Warning: Expected a serialized string!';
 $_['error_user_log']                = 'Attention: Your <b>User Log</b> has %s records and is becoming very large!';

@@ -1,5 +1,6 @@
 <?php
 class ControllerCommonHome extends Controller {
+	private $error = array();
 
 	public function index() {
 		$this->language->load('common/home');
@@ -992,7 +993,7 @@ class ControllerCommonHome extends Controller {
 		$results = $this->model_report_sale->getTotalOrdersByCountry();
 
 		foreach ($results as $result) {
-			$json[strtolower($result['iso_code_2'])] = array(
+			$json[mb_strtolower($result['iso_code_2'], 'UTF-8')] = array(
 				'orders' => $this->language->get('text_total_order'),
 				'total'  => $result['total'],
 				'sales'  => $this->language->get('text_total_sale'),
@@ -1052,7 +1053,9 @@ class ControllerCommonHome extends Controller {
 				$raw = $this->config->get('config_token_ignore') ?? null;
 
 				if (!is_string($raw)) {
-					throw new \InvalidArgumentException("Expected a serialized string.");
+					$this->data['error_unserialize'] = $this->error['error_unserialize'];
+				} else {
+					$this->data['error_unserialize'] = '';
 				}
 
 				$config_ignore = unserialize($raw, ['allowed_classes' => false]);
