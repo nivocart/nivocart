@@ -1053,9 +1053,7 @@ class ControllerCommonHome extends Controller {
 				$raw = $this->config->get('config_token_ignore') ?? null;
 
 				if (!is_string($raw)) {
-					$this->data['error_unserialize'] = $this->error['error_unserialize'];
-				} else {
-					$this->data['error_unserialize'] = '';
+					$this->error['warning'] = $this->language->get('error_unserialize');
 				}
 
 				$config_ignore = unserialize($raw, ['allowed_classes' => false]);

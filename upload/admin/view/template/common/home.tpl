@@ -23,6 +23,9 @@
   <?php if ($error_logs) { ?>
     <div class="warning"><?php echo $error_logs; ?></div>
   <?php } ?>
+  <?php if ($error_warning) { ?>
+    <div class="warning"><?php echo $error_unserialize; ?></div>
+  <?php } ?>
   <?php if ($error_user_log) { ?>
     <div class="attention"><?php echo $error_user_log; ?> &nbsp; <a href="<?php echo $view_user_log; ?>" title="<?php echo $text_user_log; ?>"><b><?php echo $text_user_log; ?></b></a></div>
   <?php } ?>
