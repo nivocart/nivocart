@@ -121,12 +121,12 @@ class ControllerCommonFileManagerFull extends Controller {
 		$filename = str_replace('//', '/', $filename);
 		$filename = str_replace('data/data', 'data', $filename);
 
-		$ext = utf8_substr(strrchr($filename, '.'), 1);
+		$ext = substr(strrchr($filename, '.'), 1);
 
 		$file_images = array('mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv');
 
-		if (in_array(strtolower($ext), $file_images)) {
-			$filename = strtolower($ext) . '.png';
+		if (in_array(mb_strtolower($ext, 'UTF-8'), $file_images)) {
+			$filename = mb_strtolower($ext, 'UTF-8') . '.png';
 		}
 
 		if ($return) {
@@ -147,7 +147,7 @@ class ControllerCommonFileManagerFull extends Controller {
 
 				foreach ($directories as $directory) {
 					$json[$i]['data'] = htmlspecialchars(basename($directory), ENT_QUOTES, 'UTF-8');
-					$json[$i]['attributes']['directory'] = htmlspecialchars(substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8');
+					$json[$i]['attributes']['directory'] = htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
 					$children = glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR);
 
@@ -187,7 +187,7 @@ class ControllerCommonFileManagerFull extends Controller {
 					$ext = '';
 				}
 
-				if (in_array(strtolower($ext), $allowed)) {
+				if (in_array(mb_strtolower($ext, 'UTF-8'), $allowed)) {
 					$size = filesize($file);
 
 					$i = 0;
@@ -199,7 +199,7 @@ class ControllerCommonFileManagerFull extends Controller {
 						$i++;
 					}
 
-					$filename_path_data = htmlspecialchars(substr($file, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8');
+					$filename_path_data = htmlspecialchars(substr($file, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
 					$json[] = array(
 						'filename' => htmlspecialchars(basename($file), ENT_QUOTES, 'UTF-8'),
@@ -437,7 +437,7 @@ class ControllerCommonFileManagerFull extends Controller {
 	protected function recursiveFolders($directory) {
 		$output = '';
 
-		$output .= '<option value="' . htmlspecialchars(substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(substr($directory, strlen(DIR_IMAGE . 'data/')), ENT_QUOTES, 'UTF-8') . '</option>';
+		$output .= '<option value="' . htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8') . '</option>';
 
 		$directories = glob(rtrim(str_replace(array('../', '..\\', '..'), '', $directory), '/') . '/*', GLOB_ONLYDIR);
 
