@@ -93,6 +93,13 @@ class ControllerCommonHome extends Controller {
 
 		$this->data['entry_range'] = $this->language->get('entry_range');
 
+		// Login unserialize warning
+		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
 		// Delete install directory
 		if (is_dir(dirname(DIR_APPLICATION) . '/install')) {
 			$this->load->model('tool/system');
