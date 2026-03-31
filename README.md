@@ -1,6 +1,6 @@
 # NivoCart
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f03f3fae6e5e4788aadd87d48b443d99)](https://app.codacy.com/gh/nivocart/nivocart/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![License](https://poser.pugx.org/nivocart/nivocart/license)](https://github.com/nivocart/nivocart/blob/master/license.txt)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f03f3fae6e5e4788aadd87d48b443d99)](https://app.codacy.com/gh/nivocart/nivocart/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![License](https://poser.pugx.org/nivocart/nivocart/license)](https://github.com/nivocart/nivocart/blob/master/license.txt) [![Crowdin](https://badges.crowdin.net/nivocart/localized.svg)](https://crowdin.com/project/nivocart)
 
 ADVANCED SHOPPING CART SYSTEM
 
