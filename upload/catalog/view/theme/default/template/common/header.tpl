@@ -17,7 +17,7 @@
 <?php } ?>
 <?php if ($metas) { ?>
 <?php foreach ($metas as $meta) { ?>
-<meta name="<?php echo $meta['name']; ?>" content="<?php echo $meta['content']; ?>" />
+<?php echo $meta; ?>
 <?php } ?>
 <?php } ?>
 <?php if ($icon) { ?>

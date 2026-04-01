@@ -25,7 +25,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
 				$filter_name = '';
 			}
@@ -69,7 +69,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
 				$filter_name = '';
 			}
@@ -113,7 +113,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
 				$filter_name = '';
 			}
@@ -148,7 +148,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
 				$filter_name = '';
 			}
@@ -183,7 +183,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
 				$filter_name = '';
 			}
@@ -216,7 +216,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
 				$filter_name = '';
 			}
@@ -239,7 +239,7 @@ class ControllerCatalogCategory extends Controller {
 	protected function getList() {
 		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
-			$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$filter_name = '';
 		}
@@ -489,7 +489,7 @@ class ControllerCatalogCategory extends Controller {
 
 		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
-			$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$filter_name = '';
 		}
