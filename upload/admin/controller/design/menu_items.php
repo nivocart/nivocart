@@ -26,9 +26,9 @@ class ControllerDesignMenuItems extends Controller {
 			$this->session->data['success'] = $this->language->get('text_insert_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
-				$filter_name = '';
+				$filter_name = null;
 			}
 
 			$page_url = array_filter([
@@ -70,9 +70,9 @@ class ControllerDesignMenuItems extends Controller {
 			$this->session->data['success'] = $this->language->get('text_update_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
-				$filter_name = '';
+				$filter_name = null;
 			}
 
 			$page_url = array_filter([
@@ -114,9 +114,9 @@ class ControllerDesignMenuItems extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
-				$filter_name = '';
+				$filter_name = null;
 			}
 
 			$page_url = array_filter([
@@ -149,9 +149,9 @@ class ControllerDesignMenuItems extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
-				$filter_name = '';
+				$filter_name = null;
 			}
 
 			$page_url = array_filter([
@@ -184,9 +184,9 @@ class ControllerDesignMenuItems extends Controller {
 			$this->session->data['success'] = $this->language->get('text_delete_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
-				$filter_name = '';
+				$filter_name = null;
 			}
 
 			$page_url = array_filter([
@@ -217,9 +217,9 @@ class ControllerDesignMenuItems extends Controller {
 			$this->session->data['success'] = $this->language->get('text_repair_success');
 
 			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			} else {
-				$filter_name = '';
+				$filter_name = null;
 			}
 
 			$page_url = array_filter([
@@ -240,9 +240,9 @@ class ControllerDesignMenuItems extends Controller {
 	protected function getList() {
 		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
-			$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
-			$filter_name = '';
+			$filter_name = null;
 		}
 
 		$page_url = array_filter([
@@ -362,7 +362,7 @@ class ControllerDesignMenuItems extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if ($order == 'ASC') {
@@ -383,7 +383,7 @@ class ControllerDesignMenuItems extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['sort'])) {
