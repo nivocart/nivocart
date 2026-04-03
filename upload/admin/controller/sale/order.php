@@ -2123,7 +2123,7 @@ class ControllerSaleOrder extends Controller {
 				$this->error['shipping_firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((mb_strlen($this->request->post['shipping_lastname']), 'UTF-8' < 1) || (mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') > 32)) {
+			if ((mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') > 32)) {
 				$this->error['shipping_lastname'] = $this->language->get('error_lastname');
 			}
 
