@@ -1545,17 +1545,17 @@
             </select></td>
           </tr>
           <tr>
-            <td><?php echo $entry_share_addthis; ?><span class="help"><?php echo $help_share_addthis; ?></span></td>
-            <td><?php if ($config_share_addthis) { ?>
-              <input type="radio" name="config_share_addthis" value="1" id="share-addthis-on" class="radio" checked />
-              <label for="share-addthis-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_share_addthis" value="0" id="share-addthis-off" class="radio" />
-              <label for="share-addthis-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <td><?php echo $entry_share_sharethis; ?><span class="help"><?php echo $help_share_sharethis; ?></span></td>
+            <td><?php if ($config_share_sharethis) { ?>
+              <input type="radio" name="config_share_sharethis" value="1" id="share-sharethis-on" class="radio" checked />
+              <label for="share-sharethis-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_share_sharethis" value="0" id="share-sharethis-off" class="radio" />
+              <label for="share-sharethis-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } else { ?>
-              <input type="radio" name="config_share_addthis" value="1" id="share-addthis-on" class="radio" />
-              <label for="share-addthis-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_share_addthis" value="0" id="share-addthis-off" class="radio" checked />
-              <label for="share-addthis-off"><span><span></span></span><?php echo $text_no; ?></label>
+              <input type="radio" name="config_share_sharethis" value="1" id="share-sharethis-on" class="radio" />
+              <label for="share-sharethis-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_share_sharethis" value="0" id="share-sharethis-off" class="radio" checked />
+              <label for="share-sharethis-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>
@@ -1663,17 +1663,17 @@
         <h2><?php echo $text_news; ?></h2>
         <table class="form">
           <tr>
-            <td><?php echo $entry_news_addthis; ?><span class="help"><?php echo $help_news_addthis; ?></span></td>
-            <td><?php if ($config_news_addthis) { ?>
-              <input type="radio" name="config_news_addthis" value="1" id="news-addthis-on" class="radio" checked />
-              <label for="news-addthis-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_news_addthis" value="0" id="news-addthis-off" class="radio" />
-              <label for="news-addthis-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <td><?php echo $entry_news_sharethis; ?><span class="help"><?php echo $help_news_sharethis; ?></span></td>
+            <td><?php if ($config_news_sharethis) { ?>
+              <input type="radio" name="config_news_sharethis" value="1" id="news-sharethis-on" class="radio" checked />
+              <label for="news-sharethis-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_news_sharethis" value="0" id="news-sharethis-off" class="radio" />
+              <label for="news-sharethis-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } else { ?>
-              <input type="radio" name="config_news_addthis" value="1" id="news-addthis-on" class="radio" />
-              <label for="news-addthis-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_news_addthis" value="0" id="news-addthis-off" class="radio" checked />
-              <label for="news-addthis-off"><span><span></span></span><?php echo $text_no; ?></label>
+              <input type="radio" name="config_news_sharethis" value="1" id="news-sharethis-on" class="radio" />
+              <label for="news-sharethis-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_news_sharethis" value="0" id="news-sharethis-off" class="radio" checked />
+              <label for="news-sharethis-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>
@@ -2102,51 +2102,10 @@
       </div>
       <div id="tab-mail">
         <table class="form">
-          <tbody>
-          <tr>
-            <td><?php echo $entry_mail_protocol; ?><span class="help"><?php echo $help_mail_protocol; ?></span></td>
-            <td><select name="config_mail_protocol">
-              <?php if ($config_mail_protocol == 'mail') { ?>
-                <option value="mail" selected="selected"><?php echo $text_mail; ?></option>
-              <?php } else { ?>
-                <option value="mail"><?php echo $text_mail; ?></option>
-              <?php } ?>
-              <?php if ($config_mail_protocol == 'smtp') { ?>
-                <option value="smtp" selected="selected"><?php echo $text_smtp; ?></option>
-              <?php } else { ?>
-                <option value="smtp"><?php echo $text_smtp; ?></option>
-              <?php } ?>
-            </select></td>
-          </tr>
-          </tbody>
-          <tbody id="protocol-mail" class="protocol">
           <tr>
             <td><?php echo $entry_mail_parameter; ?><span class="help"><?php echo $help_mail_parameter; ?></span></td>
             <td><input type="text" name="config_mail_parameter" value="<?php echo $config_mail_parameter; ?>" size="30" /></td>
           </tr>
-          </tbody>
-          <tbody id="protocol-smtp" class="protocol">
-          <tr>
-            <td><?php echo $entry_smtp_host; ?></td>
-            <td><input type="text" name="config_smtp_host" value="<?php echo $config_smtp_host; ?>" size="30" /></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_smtp_username; ?></td>
-            <td><input type="text" name="config_smtp_username" value="<?php echo $config_smtp_username; ?>" size="30" /></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_smtp_password; ?></td>
-            <td><input type="text" name="config_smtp_password" value="<?php echo $config_smtp_password; ?>" size="30" /></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_smtp_port; ?></td>
-            <td><input type="text" name="config_smtp_port" value="<?php echo $config_smtp_port; ?>" /></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_smtp_timeout; ?></td>
-            <td><input type="text" name="config_smtp_timeout" value="<?php echo $config_smtp_timeout; ?>" /></td>
-          </tr>
-          </tbody>
           <tr>
             <td><?php echo $entry_alert_mail; ?><span class="help"><?php echo $help_alert_mail; ?></span></td>
             <td><?php if ($config_alert_mail) { ?>
@@ -2204,12 +2163,12 @@
             <td><input name="config_instagram" type="text" size="60" value="<?php echo $config_instagram; ?>" /></td>
           <tr>
           <tr>
-            <td><?php echo $entry_skype; ?></td>
-            <td><input name="config_skype" type="text" size="50" value="<?php echo $config_skype; ?>" /></td>
+            <td><?php echo $entry_teams; ?></td>
+            <td><input name="config_teams" type="text" size="50" value="<?php echo $config_teams; ?>" /></td>
           <tr>
           <tr>
-            <td><?php echo $entry_addthis; ?><span class="help"><?php echo $help_addthis; ?></span></td>
-            <td>#pubid=<input name="config_addthis" type="text" size="30" value="<?php echo $config_addthis; ?>" /></td>
+            <td><?php echo $entry_sharethis; ?><span class="help"><?php echo $help_sharethis; ?></span></td>
+            <td>#property=<input name="config_sharethis" type="text" size="30" value="<?php echo $config_sharethis; ?>" /></td>
           <tr>
         </table>
         <h2><?php echo $text_verification; ?></h2>
@@ -2230,20 +2189,12 @@
             <td><?php echo $entry_meta_baidu; ?><span class="help"><?php echo $help_meta_baidu; ?></span></td>
             <td><input type="text" name="config_meta_baidu" value="<?php echo $config_meta_baidu; ?>" size="50" /></td>
           </tr>
-          <tr>
-            <td><?php echo $entry_meta_alexa; ?><span class="help"><?php echo $help_meta_alexa; ?></span></td>
-            <td><input type="text" name="config_meta_alexa" value="<?php echo $config_meta_alexa; ?>" size="50" /></td>
-          </tr>
         </table>
         <h2><?php echo $text_analytic; ?></h2>
         <table class="form">
           <tr>
             <td><?php echo $entry_google_analytics; ?><span class="help"><?php echo $help_google_analytics; ?></span></td>
             <td><textarea name="config_google_analytics" cols="50" rows="10"><?php echo $config_google_analytics; ?></textarea></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_alexa_analytics; ?><span class="help"><?php echo $help_alexa_analytics; ?></span></td>
-            <td><textarea name="config_alexa_analytics" cols="50" rows="10"><?php echo $config_alexa_analytics; ?></textarea></td>
           </tr>
           <tr>
             <td><?php echo $entry_matomo_analytics; ?><span class="help"><?php echo $help_matomo_analytics; ?></span></td>
@@ -2258,7 +2209,6 @@
                 <a onclick="window.open('<?php echo $bing_web; ?>');" title="Bing Webmaster Tools"><img src="view/image/engines/bing-web.gif" alt="Bing" /></a> &nbsp;
                 <a onclick="window.open('<?php echo $yandex_web; ?>');" title="Yandex Webmaster Tools"><img src="view/image/engines/yandex-web.gif" alt="Yandex" /></a> &nbsp;
                 <a onclick="window.open('<?php echo $baidu_web; ?>');" title="Baidu Webmaster Tools"><img src="view/image/engines/baidu-web.gif" alt="Baidu" /></a> &nbsp;
-                <a onclick="window.open('<?php echo $alexa_web; ?>');" title="Alexa Analytics"><img src="view/image/engines/alexa-web.gif" alt="Alexa" /></a> &nbsp;
                 <a onclick="window.open('<?php echo $matomo_web; ?>');" title="Matomo Analytics"><img src="view/image/engines/matomo-web.gif" alt="Matomo" /></a> &nbsp;
               </td>
             </tr>
@@ -2581,15 +2531,6 @@ function image_upload(field, thumb) {
 		modal: false
 	});
 };
-//--></script>
-
-<script type="text/javascript"><!--
-$('select[name=\'config_mail_protocol\']').on('change', function() {
-	$('.protocol').hide();
-	$('#protocol-' + this.value).show();
-});
-
-$('select[name=\'config_mail_protocol\']').trigger('change');
 //--></script>
 
 <script type="text/javascript"><!--

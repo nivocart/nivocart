@@ -79,7 +79,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['text_shipping'] = $this->language->get('text_shipping');
 		$this->data['text_payment'] = $this->language->get('text_payment');
 		$this->data['text_mail'] = $this->language->get('text_mail');
-		$this->data['text_smtp'] = $this->language->get('text_smtp');
 		$this->data['text_verification'] = $this->language->get('text_verification');
 		$this->data['text_analytic'] = $this->language->get('text_analytic');
 		$this->data['text_security'] = $this->language->get('text_security');
@@ -221,7 +220,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_barcode_type'] = $this->language->get('entry_barcode_type');
 		$this->data['entry_buy_now'] = $this->language->get('entry_buy_now');
 		$this->data['entry_lightbox'] = $this->language->get('entry_lightbox');
-		$this->data['entry_share_addthis'] = $this->language->get('entry_share_addthis');
+		$this->data['entry_share_sharethis'] = $this->language->get('entry_share_sharethis');
 		$this->data['entry_price_free'] = $this->language->get('entry_price_free');
 		$this->data['entry_price_hide'] = $this->language->get('entry_price_hide');
 		$this->data['entry_captcha_font'] = $this->language->get('entry_captcha_font');
@@ -230,7 +229,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_cookie_position'] = $this->language->get('entry_cookie_position');
 		$this->data['entry_cookie_privacy'] = $this->language->get('entry_cookie_privacy');
 		$this->data['entry_cookie_age'] = $this->language->get('entry_cookie_age');
-		$this->data['entry_news_addthis'] = $this->language->get('entry_news_addthis');
+		$this->data['entry_news_sharethis'] = $this->language->get('entry_news_sharethis');
 		$this->data['entry_news_chars'] = $this->language->get('entry_news_chars');
 		$this->data['entry_notifications'] = $this->language->get('entry_notifications');
 		$this->data['entry_notification_pending'] = $this->language->get('entry_notification_pending');
@@ -268,13 +267,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_ftp_username'] = $this->language->get('entry_ftp_username');
 		$this->data['entry_ftp_password'] = $this->language->get('entry_ftp_password');
 		$this->data['entry_ftp_root'] = $this->language->get('entry_ftp_root');
-		$this->data['entry_mail_protocol'] = $this->language->get('entry_mail_protocol');
 		$this->data['entry_mail_parameter'] = $this->language->get('entry_mail_parameter');
-		$this->data['entry_smtp_host'] = $this->language->get('entry_smtp_host');
-		$this->data['entry_smtp_username'] = $this->language->get('entry_smtp_username');
-		$this->data['entry_smtp_password'] = $this->language->get('entry_smtp_password');
-		$this->data['entry_smtp_port'] = $this->language->get('entry_smtp_port');
-		$this->data['entry_smtp_timeout'] = $this->language->get('entry_smtp_timeout');
 		$this->data['entry_alert_mail'] = $this->language->get('entry_alert_mail');
 		$this->data['entry_account_mail'] = $this->language->get('entry_account_mail');
 		$this->data['entry_alert_emails'] = $this->language->get('entry_alert_emails');
@@ -283,15 +276,13 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_google'] = $this->language->get('entry_google');
 		$this->data['entry_pinterest'] = $this->language->get('entry_pinterest');
 		$this->data['entry_instagram'] = $this->language->get('entry_instagram');
-		$this->data['entry_skype'] = $this->language->get('entry_skype');
-		$this->data['entry_addthis'] = $this->language->get('entry_addthis');
+		$this->data['entry_teams'] = $this->language->get('entry_teams');
+		$this->data['entry_sharethis'] = $this->language->get('entry_sharethis');
 		$this->data['entry_meta_google'] = $this->language->get('entry_meta_google');
 		$this->data['entry_meta_bing'] = $this->language->get('entry_meta_bing');
 		$this->data['entry_meta_yandex'] = $this->language->get('entry_meta_yandex');
 		$this->data['entry_meta_baidu'] = $this->language->get('entry_meta_baidu');
-		$this->data['entry_meta_alexa'] = $this->language->get('entry_meta_alexa');
 		$this->data['entry_google_analytics'] = $this->language->get('entry_google_analytics');
-		$this->data['entry_alexa_analytics'] = $this->language->get('entry_alexa_analytics');
 		$this->data['entry_matomo_analytics'] = $this->language->get('entry_matomo_analytics');
 		$this->data['entry_maintenance'] = $this->language->get('entry_maintenance');
 		$this->data['entry_seo_url'] = $this->language->get('entry_seo_url');
@@ -400,13 +391,13 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_admin_barcode'] = $this->language->get('help_admin_barcode');
 		$this->data['help_buy_now'] = $this->language->get('help_buy_now');
 		$this->data['help_lightbox'] = $this->language->get('help_lightbox');
-		$this->data['help_share_addthis'] = $this->language->get('help_share_addthis');
+		$this->data['help_share_sharethis'] = $this->language->get('help_share_sharethis');
 		$this->data['help_price_free'] = $this->language->get('help_price_free');
 		$this->data['help_price_hide'] = $this->language->get('help_price_hide');
 		$this->data['help_captcha_font'] = $this->language->get('help_captcha_font');
 		$this->data['help_cookie_privacy'] = $this->language->get('help_cookie_privacy');
 		$this->data['help_cookie_age'] = $this->language->get('help_cookie_age');
-		$this->data['help_news_addthis'] = $this->language->get('help_news_addthis');
+		$this->data['help_news_sharethis'] = $this->language->get('help_news_sharethis');
 		$this->data['help_news_chars'] = $this->language->get('help_news_chars');
 		$this->data['help_notification_return'] = $this->language->get('help_notification_return');
 		$this->data['help_notification_online'] = $this->language->get('help_notification_online');
@@ -431,19 +422,16 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_label_offer'] = $this->language->get('help_label_offer');
 		$this->data['help_label_special'] = $this->language->get('help_label_special');
 		$this->data['help_ftp_root'] = $this->language->get('help_ftp_root');
-		$this->data['help_mail_protocol'] = $this->language->get('help_mail_protocol');
 		$this->data['help_mail_parameter'] = $this->language->get('help_mail_parameter');
 		$this->data['help_account_mail'] = $this->language->get('help_account_mail');
 		$this->data['help_alert_mail'] = $this->language->get('help_alert_mail');
 		$this->data['help_alert_emails'] = $this->language->get('help_alert_emails');
-		$this->data['help_addthis'] = $this->language->get('help_addthis');
+		$this->data['help_sharethis'] = $this->language->get('help_sharethis');
 		$this->data['help_meta_google'] = $this->language->get('help_meta_google');
 		$this->data['help_meta_bing'] = $this->language->get('help_meta_bing');
 		$this->data['help_meta_yandex'] = $this->language->get('help_meta_yandex');
 		$this->data['help_meta_baidu'] = $this->language->get('help_meta_baidu');
-		$this->data['help_meta_alexa'] = $this->language->get('help_meta_alexa');
 		$this->data['help_google_analytics'] = $this->language->get('help_google_analytics');
-		$this->data['help_alexa_analytics'] = $this->language->get('help_alexa_analytics');
 		$this->data['help_matomo_analytics'] = $this->language->get('help_matomo_analytics');
 		$this->data['help_maintenance'] = $this->language->get('help_maintenance');
 		$this->data['help_seo_url'] = $this->language->get('help_seo_url');
@@ -1571,10 +1559,10 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_lightbox'] = $this->config->get('config_lightbox');
 		}
 
-		if (isset($this->request->post['config_share_addthis'])) {
-			$this->data['config_share_addthis'] = $this->request->post['config_share_addthis'];
+		if (isset($this->request->post['config_share_sharethis'])) {
+			$this->data['config_share_sharethis'] = $this->request->post['config_share_sharethis'];
 		} else {
-			$this->data['config_share_addthis'] = $this->config->get('config_share_addthis');
+			$this->data['config_share_sharethis'] = $this->config->get('config_share_sharethis');
 		}
 
 		if (isset($this->request->post['config_price_free'])) {
@@ -1637,10 +1625,10 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_cookie_age'] = $this->config->get('config_cookie_age');
 		}
 
-		if (isset($this->request->post['config_news_addthis'])) {
-			$this->data['config_news_addthis'] = $this->request->post['config_news_addthis'];
+		if (isset($this->request->post['config_news_sharethis'])) {
+			$this->data['config_news_sharethis'] = $this->request->post['config_news_sharethis'];
 		} else {
-			$this->data['config_news_addthis'] = $this->config->get('config_news_addthis');
+			$this->data['config_news_sharethis'] = $this->config->get('config_news_sharethis');
 		}
 
 		if (isset($this->request->post['config_news_chars'])) {
@@ -1994,50 +1982,10 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		// Mail
-		if (isset($this->request->post['config_mail_protocol'])) {
-			$this->data['config_mail_protocol'] = $this->request->post['config_mail_protocol'];
-		} else {
-			$this->data['config_mail_protocol'] = $this->config->get('config_mail_protocol');
-		}
-
 		if (isset($this->request->post['config_mail_parameter'])) {
 			$this->data['config_mail_parameter'] = $this->request->post['config_mail_parameter'];
 		} else {
 			$this->data['config_mail_parameter'] = $this->config->get('config_mail_parameter');
-		}
-
-		if (isset($this->request->post['config_smtp_host'])) {
-			$this->data['config_smtp_host'] = $this->request->post['config_smtp_host'];
-		} else {
-			$this->data['config_smtp_host'] = $this->config->get('config_smtp_host');
-		}
-
-		if (isset($this->request->post['config_smtp_username'])) {
-			$this->data['config_smtp_username'] = $this->request->post['config_smtp_username'];
-		} else {
-			$this->data['config_smtp_username'] = $this->config->get('config_smtp_username');
-		}
-
-		if (isset($this->request->post['config_smtp_password'])) {
-			$this->data['config_smtp_password'] = $this->request->post['config_smtp_password'];
-		} else {
-			$this->data['config_smtp_password'] = $this->config->get('config_smtp_password');
-		}
-
-		if (isset($this->request->post['config_smtp_port'])) {
-			$this->data['config_smtp_port'] = $this->request->post['config_smtp_port'];
-		} elseif ($this->config->get('config_smtp_port')) {
-			$this->data['config_smtp_port'] = $this->config->get('config_smtp_port');
-		} else {
-			$this->data['config_smtp_port'] = 25;
-		}
-
-		if (isset($this->request->post['config_smtp_timeout'])) {
-			$this->data['config_smtp_timeout'] = $this->request->post['config_smtp_timeout'];
-		} elseif ($this->config->get('config_smtp_timeout')) {
-			$this->data['config_smtp_timeout'] = $this->config->get('config_smtp_timeout');
-		} else {
-			$this->data['config_smtp_timeout'] = 5;
 		}
 
 		if (isset($this->request->post['config_alert_mail'])) {
@@ -2089,16 +2037,16 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_instagram'] = $this->config->get('config_instagram');
 		}
 
-		if (isset($this->request->post['config_skype'])) {
-			$this->data['config_skype'] = $this->request->post['config_skype'];
+		if (isset($this->request->post['config_teams'])) {
+			$this->data['config_teams'] = $this->request->post['config_teams'];
 		} else {
-			$this->data['config_skype'] = $this->config->get('config_skype');
+			$this->data['config_teams'] = $this->config->get('config_teams');
 		}
 
-		if (isset($this->request->post['config_addthis'])) {
-			$this->data['config_addthis'] = $this->request->post['config_addthis'];
+		if (isset($this->request->post['config_sharethis'])) {
+			$this->data['config_sharethis'] = $this->request->post['config_sharethis'];
 		} else {
-			$this->data['config_addthis'] = $this->config->get('config_addthis');
+			$this->data['config_sharethis'] = $this->config->get('config_sharethis');
 		}
 
 		if (isset($this->request->post['config_meta_google'])) {
@@ -2125,22 +2073,10 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_meta_baidu'] = $this->config->get('config_meta_baidu');
 		}
 
-		if (isset($this->request->post['config_meta_alexa'])) {
-			$this->data['config_meta_alexa'] = $this->request->post['config_meta_alexa'];
-		} else {
-			$this->data['config_meta_alexa'] = $this->config->get('config_meta_alexa');
-		}
-
 		if (isset($this->request->post['config_google_analytics'])) {
 			$this->data['config_google_analytics'] = $this->request->post['config_google_analytics'];
 		} else {
 			$this->data['config_google_analytics'] = $this->config->get('config_google_analytics');
-		}
-
-		if (isset($this->request->post['config_alexa_analytics'])) {
-			$this->data['config_alexa_analytics'] = $this->request->post['config_alexa_analytics'];
-		} else {
-			$this->data['config_alexa_analytics'] = $this->config->get('config_alexa_analytics');
 		}
 
 		if (isset($this->request->post['config_matomo_analytics'])) {
@@ -2153,7 +2089,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['bing_web'] = 'https://ssl.bing.com/webmaster/home/mysites';
 		$this->data['yandex_web'] = 'http://webmaster.yandex.com/sites/';
 		$this->data['baidu_web'] = 'http://zhanzhang.baidu.com/sitemap/index';
-		$this->data['alexa_web'] = 'http://www.alexa.com/';
 		$this->data['matomo_web'] = 'https://matomo.org/';
 
 		// Server
