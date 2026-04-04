@@ -2,17 +2,14 @@
 class ModelCatalogManufacturer extends Model {
 
 	public function getManufacturer(int $manufacturer_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m.status = '1'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer` m LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN `" . DB_PREFIX . "manufacturer_to_store` m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m.status = '1'");
 
 		return $query->row;
 	}
 
-	/*
-	 * $data is mixed
-	*/
-	public function getManufacturers($data) {
+	public function getManufacturers(array $data = []): array {
 		if ($data) {
-			$sql = "SELECT *, md.name AS `name` FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m.status = '1'";
+			$sql = "SELECT *, md.name AS `name` FROM `" . DB_PREFIX . "manufacturer` m LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN `" . DB_PREFIX . "manufacturer_to_store` m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m.status = '1'";
 
 			$sort_data = array(
 				'md.name',
@@ -32,7 +29,7 @@ class ModelCatalogManufacturer extends Model {
 				$sql .= " ASC";
 			}
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
@@ -52,7 +49,7 @@ class ModelCatalogManufacturer extends Model {
 			$manufacturer_data = $this->cache->get('manufacturer.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'));
 
 			if (!$manufacturer_data) {
-				$query = $this->db->query("SELECT *, md.name AS name FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m.status = '1' ORDER BY md.name ASC");
+				$query = $this->db->query("SELECT *, md.name AS `name` FROM `" . DB_PREFIX . "manufacturer` m LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN `" . DB_PREFIX . "manufacturer_to_store` m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m.status = '1' ORDER BY md.name ASC");
 
 				$manufacturer_data = $query->rows;
 

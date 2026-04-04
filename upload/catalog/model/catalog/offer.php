@@ -322,7 +322,7 @@ class ModelCatalogOffer extends Model {
 	protected function getCategoryProducts(int $category_id): array {
 		$product_list = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE category_id = '" . (int)$category_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_to_category` WHERE category_id = '" . (int)$category_id . "'");
 
 		if ($query->num_rows) {
 			foreach ($query->rows as $result) {
@@ -342,7 +342,7 @@ class ModelCatalogOffer extends Model {
 
 	// Product Name
 	public function getOfferProductName(int $product_id) {
-		$query = $this->db->query("SELECT pd.name AS `name` FROM `" . DB_PREFIX . "product` p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.product_id = '" . (int)$product_id . "' AND p.status = '1'");
+		$query = $this->db->query("SELECT pd.name AS `name` FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.product_id = '" . (int)$product_id . "' AND p.status = '1'");
 
 		return $query->row['name'];
 	}

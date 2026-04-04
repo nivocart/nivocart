@@ -1,7 +1,7 @@
 <?php
 class ModelSettingStore extends Model {
 
-	public function getStores(array $data = []) {
+	public function getStores(array $data = []): array {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "store`";
 
@@ -22,7 +22,7 @@ class ModelSettingStore extends Model {
 				$sql .= " ASC";
 			}
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
@@ -53,7 +53,7 @@ class ModelSettingStore extends Model {
 		}
 	}
 
-	public function getTotalStores() {
+	public function getTotalStores(): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "store`";
 
 		$cache_id = 'stores.total';

@@ -8,13 +8,13 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getNewsStory(int $news_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n.news_id = n2s.news_id) WHERE n.news_id = '" . (int)$news_id . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n.news_id = n2s.news_id) WHERE n.news_id = '" . (int)$news_id . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'");
 
 		return $query->row;
 	}
 
 	public function getNews(array $data = []): array {
-		$sql = "SELECT *, nd.title AS title FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (nd.news_id = n.news_id) LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n2s.news_id = n.news_id) WHERE n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.status = '1'";
+		$sql = "SELECT *, nd.title AS title FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (nd.news_id = n.news_id) LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n2s.news_id = n.news_id) WHERE n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.status = '1'";
 
 		$sort_data = array(
 			'nd.title',
@@ -36,7 +36,7 @@ class ModelCatalogNews extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -59,7 +59,7 @@ class ModelCatalogNews extends Model {
 		if (!$news_data) {
 			$news_data = array();
 
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n.news_id = n2s.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'  GROUP BY n.date_added ORDER BY n.date_added DESC, n.sort_order ASC LIMIT 0," . (int)$limit);
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n.news_id = n2s.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'  GROUP BY n.date_added ORDER BY n.date_added DESC, n.sort_order ASC LIMIT 0," . (int)$limit);
 
 			foreach ($query->rows as $result) {
 				$news_data[$result['news_id']] = $this->getNewsStory($result['news_id']);
@@ -77,7 +77,7 @@ class ModelCatalogNews extends Model {
 		if (!$news_data) {
 			$news_data = array();
 
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n.news_id = n2s.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'  GROUP BY n.date_added ORDER BY n.date_added DESC, n.sort_order ASC");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n.news_id = n2s.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'  GROUP BY n.date_added ORDER BY n.date_added DESC, n.sort_order ASC");
 
 			foreach ($query->rows as $result) {
 				$news_data[$result['news_id']] = $this->getNewsStory($result['news_id']);
@@ -90,13 +90,13 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getTotalNews(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_to_store n2s ON (n.news_id = n2s.news_id) WHERE n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n.news_id = n2s.news_id) WHERE n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'");
 
 		return $query->row['total'];
 	}
 
 	// Related
-	public function getNewsProductRelated(int $news_id) {
+	public function getNewsProductRelated(int $news_id): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_product_related` WHERE news_id = '" . (int)$news_id . "'");
 
 		return $query->rows;
