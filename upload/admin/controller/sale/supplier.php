@@ -27,15 +27,15 @@ class ControllerSaleSupplier extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_reference'])) {
-				$url .= '&filter_reference=' . urlencode(html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_company'])) {
-				$url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_supplier_group_id'])) {
@@ -94,15 +94,15 @@ class ControllerSaleSupplier extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_reference'])) {
-				$url .= '&filter_reference=' . urlencode(html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_company'])) {
-				$url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_supplier_group_id'])) {
@@ -161,15 +161,15 @@ class ControllerSaleSupplier extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_reference'])) {
-				$url .= '&filter_reference=' . urlencode(html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_company'])) {
-				$url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_supplier_group_id'])) {
@@ -260,15 +260,15 @@ class ControllerSaleSupplier extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_reference'])) {
-			$url .= '&filter_reference=' . urlencode(html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_company'])) {
-			$url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_supplier_group_id'])) {
@@ -401,15 +401,15 @@ class ControllerSaleSupplier extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_reference'])) {
-			$url .= '&filter_reference=' . urlencode(html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_company'])) {
-			$url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_supplier_group_id'])) {
@@ -444,15 +444,15 @@ class ControllerSaleSupplier extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_reference'])) {
-			$url .= '&filter_reference=' . urlencode(html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_company'])) {
-			$url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_supplier_group_id'])) {
@@ -493,7 +493,9 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->load->model('sale/supplier_group');
 
-		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups();
+		$supplier_groups_array = array();
+
+		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups($supplier_groups_array);
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -530,7 +532,6 @@ class ControllerSaleSupplier extends Controller {
 		$this->data['entry_contact'] = $this->language->get('entry_contact');
 		$this->data['entry_email'] = $this->language->get('entry_email');
 		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-		$this->data['entry_fax'] = $this->language->get('entry_fax');
 		$this->data['entry_supplier_group'] = $this->language->get('entry_supplier_group');
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_address_1'] = $this->language->get('entry_address_1');
@@ -627,15 +628,15 @@ class ControllerSaleSupplier extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_reference'])) {
-			$url .= '&filter_reference=' . urlencode(html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_company'])) {
-			$url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_supplier_group_id'])) {
@@ -765,17 +766,11 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['telephone'] = '';
 		}
 
-		if (isset($this->request->post['fax'])) {
-			$this->data['fax'] = $this->request->post['fax'];
-		} elseif (!empty($supplier_info)) {
-			$this->data['fax'] = $supplier_info['fax'];
-		} else {
-			$this->data['fax'] = '';
-		}
-
 		$this->load->model('sale/supplier_group');
 
-		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups();
+		$supplier_groups_array = array();
+
+		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups($supplier_groups_array);
 
 		if (isset($this->request->post['supplier_group_id'])) {
 			$this->data['supplier_group_id'] = $this->request->post['supplier_group_id'];
@@ -1106,7 +1101,6 @@ class ControllerSaleSupplier extends Controller {
 					'contact'           => $result['contact'],
 					'email'             => $result['email'],
 					'telephone'         => $result['telephone'],
-					'fax'               => $result['fax'],
 					'address'           => $this->model_sale_supplier->getAddresses($result['supplier_id'])
 				);
 			}

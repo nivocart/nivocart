@@ -2,7 +2,7 @@
 class ModelLocalisationCurrency extends Model {
 
 	public function addCurrency(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "currency SET title = '" . $this->db->escape($data['title']) . "', code = '" . $this->db->escape($data['code']) . "', symbol_left = '" . $this->db->escape($data['symbol_left']) . "', symbol_right = '" . $this->db->escape($data['symbol_right']) . "', decimal_place = '" . $this->db->escape($data['decimal_place']) . "', `value` = '" . $this->db->escape($data['value']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "currency` SET title = '" . $this->db->escape($data['title']) . "', `code` = '" . $this->db->escape($data['code']) . "', symbol_left = '" . $this->db->escape($data['symbol_left']) . "', symbol_right = '" . $this->db->escape($data['symbol_right']) . "', decimal_place = '" . $this->db->escape($data['decimal_place']) . "', `value` = '" . $this->db->escape($data['value']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW()");
 
 		$currency_id = $this->db->getLastId();
 
@@ -17,38 +17,38 @@ class ModelLocalisationCurrency extends Model {
 	}
 
 	public function editCurrency(int $currency_id, array $data = []): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "currency SET title = '" . $this->db->escape($data['title']) . "', code = '" . $this->db->escape($data['code']) . "', symbol_left = '" . $this->db->escape($data['symbol_left']) . "', symbol_right = '" . $this->db->escape($data['symbol_right']) . "', decimal_place = '" . $this->db->escape($data['decimal_place']) . "', `value` = '" . $this->db->escape($data['value']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE currency_id = '" . (int)$currency_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET title = '" . $this->db->escape($data['title']) . "', `code` = '" . $this->db->escape($data['code']) . "', symbol_left = '" . $this->db->escape($data['symbol_left']) . "', symbol_right = '" . $this->db->escape($data['symbol_right']) . "', decimal_place = '" . $this->db->escape($data['decimal_place']) . "', `value` = '" . $this->db->escape($data['value']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE currency_id = '" . (int)$currency_id . "'");
 
 		$this->cache->delete('currency');
 	}
 
 	public function editValueByCode($code, $value): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "currency SET `value` = '" . (float)$value . "', date_modified = NOW() WHERE code = '" . $this->db->escape((string)$code) . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . (float)$value . "', date_modified = NOW() WHERE `code` = '" . $this->db->escape((string)$code) . "'");
 
 		$this->cache->delete('currency');
 	}
 
 	public function deleteCurrency(int $currency_id): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "currency` WHERE currency_id = '" . (int)$currency_id . "'");
 
 		$this->cache->delete('currency');
 	}
 
 	public function getCurrency(int $currency_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "currency` WHERE currency_id = '" . (int)$currency_id . "'");
 
 		return $query->row;
 	}
 
 	public function getCurrencyByCode($code) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape(trim($code)) . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "currency` WHERE `code` = '" . $this->db->escape(trim($code)) . "'");
 
 		return $query->row;
 	}
 
 	public function getCurrencies(array $data = []) {
 		if ($data) {
-			$sql = "SELECT * FROM " . DB_PREFIX . "currency";
+			$sql = "SELECT * FROM `" . DB_PREFIX . "currency`";
 
 			$sort_data = array(
 				'title',
@@ -70,7 +70,7 @@ class ModelLocalisationCurrency extends Model {
 				$sql .= " ASC";
 			}
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
@@ -92,7 +92,7 @@ class ModelLocalisationCurrency extends Model {
 			if (!$currency_data) {
 				$currency_data = array();
 
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency ORDER BY title ASC");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` ORDER BY title ASC");
 
 				foreach ($query->rows as $result) {
 					$currency_data[$result['code']] = array(
@@ -121,6 +121,7 @@ class ModelLocalisationCurrency extends Model {
 // Example USD: http://www.floatrates.com/daily/usd.xml
 //
 // Example XML Response:
+// ---------------------
 // <item>
 //	<title>1 USD = 0.81253219 EUR</title>
 //	<link>http://www.floatrates.com/usd/eur/</link>
@@ -137,12 +138,12 @@ class ModelLocalisationCurrency extends Model {
 	public function updateCurrencies($default = '') {
 		$default = $this->config->get('config_currency');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code != '" . trim($default) . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . trim($default) . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
 
 		if ($query->rows) {
 			$currencies = array();
 
-			$file_url = 'http://www.floatrates.com/daily/' . strtolower($default) . '.xml';
+			$file_url = 'http://www.floatrates.com/daily/' . mb_strtolower($default, 'UTF-8') . '.xml';
 
 			$file_exists = $this->checkFileExists($file_url);
 
@@ -155,7 +156,7 @@ class ModelLocalisationCurrency extends Model {
 
 			if ($results && $file_exists) {
 				foreach ($results as $result) {
-					if ($result['code'] != strtoupper($default)) {
+					if ($result['code'] != mb_strtoupper($default, 'UTF-8')) {
 						$currencies[] = $result['code'];
 					}
 				}
@@ -165,7 +166,7 @@ class ModelLocalisationCurrency extends Model {
 
 					foreach ($xml->children() as $response) {
 						if (in_array($response->targetCurrency, $currencies)) {
-							$this->db->query("UPDATE " . DB_PREFIX . "currency SET `value` = '" . $response->exchangeRate . "', date_modified = NOW() WHERE code = '" . strtoupper($response->targetCurrency) . "'");
+							$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . $response->exchangeRate . "', date_modified = NOW() WHERE `code` = '" . mb_strtoupper($response->targetCurrency, 'UTF-8') . "'");
 						}
 					}
 				}
@@ -179,18 +180,36 @@ class ModelLocalisationCurrency extends Model {
 		}
 	}
 
+//----------------------------------------------------------------------------------
+// Alpha Vantage : Currency_Exchange_Rate API
+//
+// replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+//
+// Example PHP/Json Response:
+// --------------------------
+// $json = file_get_contents('https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=JPY&apikey=demo');
+//
+// $data = json_decode($json,true);
+//
+// print_r($data);
+//
+// exit;
+//----------------------------------------------------------------------------------
+
 	public function updateAlphaVantageCurrencies() {
 		$default = $this->config->get('config_currency');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code != '" . $default . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $default . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
 
 		if ($query->rows) {
 			$api_key = $this->config->get('config_alpha_vantage');
 
-			$api_key = (isset($api_key) && $api_key) ? strtoupper($api_key) : 'P6WGY9G9LB22GMBJ';
+			$api_key = (isset($api_key) && $api_key) ? mb_strtoupper($api_key, 'UTF-8') : 'P6WGY9G9LB22GMBJ';
 
 			foreach ($query->rows as $result) {
-				$url = 'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=' . strtoupper($default) . '&to_currency=' . strtoupper($result['code']) . '&apikey=' . $api_key;
+				$code = mb_strtoupper($result['code'], 'UTF-8');
+
+				$url = 'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=' . strtoupper($default) . '&to_currency=' . $code . '&apikey=' . $api_key;
 
 				$curl = curl_init();
 
@@ -210,7 +229,7 @@ class ModelLocalisationCurrency extends Model {
 				if (isset($response_info)) {
 					$value = (float) $response_info["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
 
-					$this->db->query("UPDATE " . DB_PREFIX . "currency SET `value` = '" . $value . "', date_modified = NOW() WHERE code = '" . $this->db->escape($result['code']) . "'");
+					$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . $value . "', date_modified = NOW() WHERE `code` = '" . $this->db->escape($result['code']) . "'");
 				}
 			}
 
@@ -222,7 +241,7 @@ class ModelLocalisationCurrency extends Model {
 		}
 	}
 
-	protected function checkFileExists($url) {
+	protected function checkFileExists($url): bool {
 		$curl = curl_init();
 
 		curl_setopt($curl, CURLOPT_URL, $url);
@@ -244,7 +263,7 @@ class ModelLocalisationCurrency extends Model {
 	}
 
 	public function getTotalCurrencies() {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "currency");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "currency`");
 
 		return $query->row['total'];
 	}

@@ -63,7 +63,7 @@ class ModelToolSystem extends Model {
 
 				$path = rtrim(rtrim(dirname($_SERVER['SCRIPT_NAME']), ''), '/' . $folder . '.\\');
 
-				if (strlen($path) > 1) {
+				if (mb_strlen($path, 'UTF-8') > 1) {
 					$path .= '/';
 				}
 
@@ -87,7 +87,7 @@ class ModelToolSystem extends Model {
 	}
 
 	// Token generator
-	public function token($length = 32) {
+	public function token($length = 32): string {
 		$string = str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._=');
 
 		$token = '';

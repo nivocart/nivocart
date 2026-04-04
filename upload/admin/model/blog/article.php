@@ -283,7 +283,7 @@ class ModelBlogArticle extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -465,7 +465,7 @@ class ModelBlogArticle extends Model {
 	public function getArticlesRelated(int $blog_article_id, array $data = []): array {
 		$query = "SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE LCASE(article_title) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name']), 'UTF-8') . "%' AND blog_article_id <> '" . (int)$blog_article_id . "'";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}

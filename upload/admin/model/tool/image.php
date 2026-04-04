@@ -7,7 +7,7 @@ class ModelToolImage extends Model {
 	public function resize(string $filename, int $width, int $height) {
 		$filename = html_entity_decode($filename, ENT_QUOTES, 'UTF-8');
 
-		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, mb_strlen(DIR_IMAGE)) != DIR_IMAGE) {
+		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, mb_strlen(DIR_IMAGE, 'UTF-8')) != DIR_IMAGE) {
 			return;
 		}
 

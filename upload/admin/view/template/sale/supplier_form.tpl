@@ -83,10 +83,6 @@
               <td><input type="text" name="telephone" value="<?php echo $telephone; ?>" /></td>
             </tr>
             <tr>
-              <td><?php echo $entry_fax; ?></td>
-              <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-            </tr>
-            <tr>
               <td><?php echo $entry_supplier_group; ?></td>
               <td><select name="supplier_group_id">
                 <?php foreach ($supplier_groups as $supplier_group) { ?>

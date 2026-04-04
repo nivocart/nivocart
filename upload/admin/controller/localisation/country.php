@@ -279,7 +279,7 @@ class ControllerLocalisationCountry extends Controller {
 
 			$this->data['countries'][] = array(
 				'country_id' => $result['country_id'],
-				'name'       => $result['name'] . (($result['country_id'] == $this->config->get('config_country_id')) ? $this->language->get('text_default') : null),
+				'name'       => $result['name'] . ($result['country_id'] == $this->config->get('config_country_id') ? $this->language->get('text_default') : null),
 				'iso_code_2' => $result['iso_code_2'],
 				'iso_code_3' => $result['iso_code_3'],
 				'status'     => $result['status'],
@@ -459,7 +459,9 @@ class ControllerLocalisationCountry extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$languages_array = array();
+
+		$this->data['languages'] = $this->model_localisation_language->getLanguages($languages_array);
 
 		if (isset($this->request->post['country_description'])) {
 			$this->data['country_description'] = $this->request->post['country_description'];

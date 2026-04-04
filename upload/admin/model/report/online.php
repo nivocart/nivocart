@@ -2,7 +2,7 @@
 class ModelReportOnline extends Model {
 
 	public function getCustomersOnline(array $data = []): array {
-		$sql = "SELECT co.ip, co.customer_id, co.url, co.referer, co.user_agent, co.date_added FROM " . DB_PREFIX . "customer_online co LEFT JOIN " . DB_PREFIX . "customer c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
+		$sql = "SELECT co.ip, co.customer_id, co.url, co.referer, co.user_agent, co.date_added FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN `" . DB_PREFIX . "customer` c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
 
 		$implode = array();
 
@@ -18,7 +18,7 @@ class ModelReportOnline extends Model {
 			$sql .= implode(" AND ", $implode);
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -36,7 +36,7 @@ class ModelReportOnline extends Model {
 	}
 
 	public function getTotalCustomersOnline(array $data = []): int {
-		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN " . DB_PREFIX . "customer c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN `" . DB_PREFIX . "customer` c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
 
 		$implode = array();
 
@@ -59,7 +59,7 @@ class ModelReportOnline extends Model {
 
 	// Robots
 	public function getRobotsOnline(array $data = []): array {
-		$sql = "SELECT * FROM " . DB_PREFIX . "robot_online";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "robot_online`";
 
 		$implode = array();
 
@@ -77,7 +77,7 @@ class ModelReportOnline extends Model {
 
 		$sql .= " ORDER BY date_added DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -95,7 +95,7 @@ class ModelReportOnline extends Model {
 	}
 
 	public function getTotalRobotsOnline($data = array()): int {
-		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "robot_online";
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "robot_online`";
 
 		$implode = array();
 

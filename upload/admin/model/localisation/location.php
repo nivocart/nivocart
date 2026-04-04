@@ -2,7 +2,7 @@
 class ModelLocalisationLocation extends Model {
 
 	public function addLocation(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "location` SET `name` = '" . $this->db->escape($data['name']) . "', address = '" . $this->db->escape($data['address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', image = '" . $this->db->escape($data['image']) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "', `open` = '" . $this->db->escape($data['open']) . "', `comment` = '" . $this->db->escape($data['comment']) . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "location` SET `name` = '" . $this->db->escape($data['name']) . "', address = '" . $this->db->escape($data['address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', `image` = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "', `open` = '" . $this->db->escape($data['open']) . "', `comment` = '" . $this->db->escape($data['comment']) . "'");
 
 		$location_id = $this->db->getLastId();
 
@@ -11,7 +11,7 @@ class ModelLocalisationLocation extends Model {
 	}
 
 	public function editLocation(int $location_id, array $data = []): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "location` SET `name` = '" . $this->db->escape($data['name']) . "', address = '" . $this->db->escape($data['address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', image = '" . $this->db->escape($data['image']) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "', `open` = '" . $this->db->escape($data['open']) . "', `comment` = '" . $this->db->escape($data['comment']) . "' WHERE location_id = '" . (int)$location_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "location` SET `name` = '" . $this->db->escape($data['name']) . "', address = '" . $this->db->escape($data['address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', `image` = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "', `open` = '" . $this->db->escape($data['open']) . "', `comment` = '" . $this->db->escape($data['comment']) . "' WHERE location_id = '" . (int)$location_id . "'");
 	}
 
 	public function deleteLocation(int $location_id): void {
@@ -25,7 +25,7 @@ class ModelLocalisationLocation extends Model {
 	}
 
 	public function getLocations(array $data = []): array {
-		$sql = "SELECT location_id, image, `name`, address, telephone, latitude, longitude FROM `" . DB_PREFIX . "location`";
+		$sql = "SELECT location_id, `image`, `name`, address, telephone, latitude, longitude FROM `" . DB_PREFIX . "location`";
 
 		$sort_data = array(
 			'image',
@@ -48,7 +48,7 @@ class ModelLocalisationLocation extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}

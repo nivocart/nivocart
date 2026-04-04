@@ -42,7 +42,7 @@ class ModelDesignAdministration extends Model {
 				$sql .= " ASC";
 			}
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
@@ -74,7 +74,7 @@ class ModelDesignAdministration extends Model {
 	}
 
 	public function getAdministrationContrastByName($name) {
-		$query = $this->db->query("SELECT LCASE(contrast) AS contrast FROM `" . DB_PREFIX . "administration` WHERE `name` LIKE '%" . $this->db->escape($name) . "%'");
+		$query = $this->db->query("SELECT LCASE(contrast) AS `contrast` FROM `" . DB_PREFIX . "administration` WHERE `name` LIKE '%" . $this->db->escape($name) . "%'");
 
 		return $query->row['contrast'];
 	}

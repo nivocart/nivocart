@@ -50,7 +50,7 @@ class ModelDesignMedia extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -67,14 +67,14 @@ class ModelDesignMedia extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalMedias() {
+	public function getTotalMedias(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "media`");
 
 		return $query->row['total'];
 	}
 
 	public function getMediaImage(int $media_id) {
-		$query = $this->db->query("SELECT DISTINCT media AS filename FROM `" . DB_PREFIX . "media` WHERE media_id = '" . (int)$media_id . "'");
+		$query = $this->db->query("SELECT DISTINCT media AS `filename` FROM `" . DB_PREFIX . "media` WHERE media_id = '" . (int)$media_id . "'");
 
 		$filename = $query->row['filename'];
 
@@ -94,7 +94,7 @@ class ModelDesignMedia extends Model {
 	public function getMediaSize(int $media_id) {
 		$filesize = 0;
 
-		$query = $this->db->query("SELECT DISTINCT media AS filename FROM `" . DB_PREFIX . "media` WHERE media_id = '" . (int)$media_id . "'");
+		$query = $this->db->query("SELECT DISTINCT media AS `filename` FROM `" . DB_PREFIX . "media` WHERE media_id = '" . (int)$media_id . "'");
 
 		$filename = $query->row['filename'];
 

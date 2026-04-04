@@ -2,7 +2,7 @@
 class ModelToolBlockIp extends Model {
 
 	public function addBlockIp(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "block_ip SET from_ip = '" . $this->db->escape($data['from_ip']) . "', to_ip = '" . $this->db->escape($data['to_ip']) . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "block_ip` SET from_ip = '" . $this->db->escape($data['from_ip']) . "', to_ip = '" . $this->db->escape($data['to_ip']) . "'");
 
 		$block_ip_id = $this->db->getLastId();
 
@@ -13,26 +13,26 @@ class ModelToolBlockIp extends Model {
 	}
 
 	public function editBlockIp(int $block_ip_id, array $data = []): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "block_ip SET from_ip = '" . $this->db->escape($data['from_ip']) . "', to_ip = '" . $this->db->escape($data['to_ip']) . "' WHERE block_ip_id = '" . (int)$block_ip_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "block_ip` SET from_ip = '" . $this->db->escape($data['from_ip']) . "', to_ip = '" . $this->db->escape($data['to_ip']) . "' WHERE block_ip_id = '" . (int)$block_ip_id . "'");
 
 		$this->cache->delete('block_ip');
 	}
 
 	public function deleteBlockIp(int $block_ip_id): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "block_ip WHERE block_ip_id = '" . (int)$block_ip_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "block_ip` WHERE block_ip_id = '" . (int)$block_ip_id . "'");
 
 		$this->cache->delete('block_ip');
 	}
 
 	public function getBlockIp(int $block_ip_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "block_ip WHERE block_ip_id = '" . (int)$block_ip_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "block_ip` WHERE block_ip_id = '" . (int)$block_ip_id . "'");
 
 		return $query->row;
 	}
 
 	public function getBlockIps(array $data = []): array {
 		if ($data) {
-			$sql = "SELECT * FROM " . DB_PREFIX . "block_ip";
+			$sql = "SELECT * FROM `" . DB_PREFIX . "block_ip`";
 
 			$sort_data = array(
 				'from_ip',
@@ -51,7 +51,7 @@ class ModelToolBlockIp extends Model {
 				$sql .= " ASC";
 			}
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
@@ -73,7 +73,7 @@ class ModelToolBlockIp extends Model {
 			if (!$block_ip_data) {
 				$block_ip_data = array();
 
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "block_ip ORDER BY from_ip ASC");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "block_ip` ORDER BY from_ip ASC");
 
 				$block_ip_data = $query->rows;
 
@@ -85,7 +85,7 @@ class ModelToolBlockIp extends Model {
 	}
 
 	public function getTotalBlockIps(array $data = []): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "block_ip");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "block_ip`");
 
 		return $query->row['total'];
 	}
@@ -94,7 +94,7 @@ class ModelToolBlockIp extends Model {
 	public function isBlockedIp($ip) {
 		$status = false;
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "block_ip WHERE INET_ATON('" . $ip . "') BETWEEN INET_ATON(from_ip) AND INET_ATON(to_ip)");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "block_ip` WHERE INET_ATON('" . $ip . "') BETWEEN INET_ATON(from_ip) AND INET_ATON(to_ip)");
 
 		if ($query->num_rows) {
 			$status = true;

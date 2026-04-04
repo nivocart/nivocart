@@ -27,11 +27,11 @@ class ControllerSaleAffiliate extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_approved'])) {
@@ -90,11 +90,11 @@ class ControllerSaleAffiliate extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_approved'])) {
@@ -153,11 +153,11 @@ class ControllerSaleAffiliate extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_approved'])) {
@@ -215,11 +215,11 @@ class ControllerSaleAffiliate extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_approved'])) {
@@ -273,11 +273,11 @@ class ControllerSaleAffiliate extends Controller {
 			$url = '';
 
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 			}
 
 			if (isset($this->request->get['filter_approved'])) {
@@ -362,11 +362,11 @@ class ControllerSaleAffiliate extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_approved'])) {
@@ -514,11 +514,11 @@ class ControllerSaleAffiliate extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_approved'])) {
@@ -787,11 +787,11 @@ class ControllerSaleAffiliate extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_approved'])) {
@@ -956,7 +956,9 @@ class ControllerSaleAffiliate extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$this->data['countries'] = $this->model_localisation_country->getCountries();
+		$countries_array = array();
+
+		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
 
 		if (isset($this->request->post['zone_id'])) {
 			$this->data['zone_id'] = (int)$this->request->post['zone_id'];
@@ -1375,8 +1377,8 @@ class ControllerSaleAffiliate extends Controller {
 			$filter_data = array(
 				'filter_name'  => $filter_name,
 				'filter_email' => $filter_email,
-				'start'       => 0,
-				'limit'       => 20
+				'start'        => 0,
+				'limit'        => 20
 			);
 
 			$results = $this->model_sale_affiliate->getAffiliates($filter_data);

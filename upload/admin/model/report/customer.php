@@ -2,7 +2,7 @@
 class ModelReportCustomer extends Model {
 
 	public function getOrders(array $data = []): array {
-		$sql = "SELECT tmp.customer_id, tmp.customer, tmp.email, tmp.customer_group, tmp.status, COUNT(tmp.order_id) AS orders, SUM(tmp.products) AS products, SUM(tmp.total) AS `total` FROM (SELECT o.order_id, c.customer_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.email, cgd.name AS customer_group, c.status, (SELECT SUM(op.quantity) FROM " . DB_PREFIX . "order_product op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, o.total FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id) LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > '0' AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT tmp.customer_id, tmp.customer, tmp.email, tmp.customer_group, tmp.status, COUNT(tmp.order_id) AS orders, SUM(tmp.products) AS products, SUM(tmp.total) AS `total` FROM (SELECT o.order_id, c.customer_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.email, cgd.name AS customer_group, c.status, (SELECT SUM(op.quantity) FROM `" . DB_PREFIX . "order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, o.total FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > '0' AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -20,7 +20,7 @@ class ModelReportCustomer extends Model {
 
 		$sql .= ") tmp GROUP BY tmp.customer_id ORDER BY `total` DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -37,7 +37,7 @@ class ModelReportCustomer extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalOrders(array $data = []) {
+	public function getTotalOrders(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT o.customer_id) AS `total` FROM `" . DB_PREFIX . "order` o WHERE o.customer_id > '0'";
 
 		if (!empty($data['filter_order_status_id'])) {
@@ -59,7 +59,7 @@ class ModelReportCustomer extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalCustomersDeleted(array $data = []) {
+	public function getTotalCustomersDeleted(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_deleted";
 
 		$implode = array();
@@ -87,7 +87,7 @@ class ModelReportCustomer extends Model {
 
 	// Reward
 	public function getRewardPoints(array $data = []): array {
-		$sql = "SELECT cr.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, SUM(cr.points) AS points, COUNT(o.order_id) AS orders, SUM(o.total) AS `total` FROM " . DB_PREFIX . "customer_reward cr LEFT JOIN " . DB_PREFIX . "customer c ON (cr.customer_id = c.customer_id) LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (cr.order_id = o.order_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT cr.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, SUM(cr.points) AS points, COUNT(o.order_id) AS orders, SUM(o.total) AS `total` FROM `" . DB_PREFIX . "customer_reward` cr LEFT JOIN `" . DB_PREFIX . "customer` c ON (cr.customer_id = c.customer_id) LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (cr.order_id = o.order_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_date_start'])) {
 			$sql .= " AND DATE(cr.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -99,7 +99,7 @@ class ModelReportCustomer extends Model {
 
 		$sql .= " GROUP BY cr.customer_id ORDER BY points DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -116,8 +116,8 @@ class ModelReportCustomer extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalRewardPoints(array $data = []) {
-		$sql = "SELECT COUNT(DISTINCT customer_id) AS `total` FROM " . DB_PREFIX . "customer_reward";
+	public function getTotalRewardPoints(array $data = []): int {
+		$sql = "SELECT COUNT(DISTINCT customer_id) AS `total` FROM `" . DB_PREFIX . "customer_reward`";
 
 		$implode = array();
 
@@ -140,7 +140,7 @@ class ModelReportCustomer extends Model {
 
 	// Credit
 	public function getCredit(array $data = []): array {
-		$sql = "SELECT ct.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, SUM(ct.amount) AS `total` FROM " . DB_PREFIX . "customer_transaction ct LEFT JOIN " . DB_PREFIX . "customer c ON (ct.customer_id = c.customer_id) LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT ct.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, SUM(ct.amount) AS `total` FROM `" . DB_PREFIX . "customer_transaction` ct LEFT JOIN `" . DB_PREFIX . "customer` c ON (ct.customer_id = c.customer_id) LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_date_start'])) {
 			$sql .= "AND DATE(ct.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -152,7 +152,7 @@ class ModelReportCustomer extends Model {
 
 		$sql .= " GROUP BY ct.customer_id ORDER BY `total` DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -169,8 +169,8 @@ class ModelReportCustomer extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalCredit(array $data = []) {
-		$sql = "SELECT COUNT(DISTINCT customer_id) AS `total` FROM " . DB_PREFIX . "customer_transaction";
+	public function getTotalCredit(array $data = []): int {
+		$sql = "SELECT COUNT(DISTINCT customer_id) AS `total` FROM `" . DB_PREFIX . "customer_transaction`";
 
 		$implode = array();
 
@@ -201,7 +201,7 @@ class ModelReportCustomer extends Model {
 			$data['limit'] = 20;
 		}
 
-		$sql = "SELECT pd.name, p.model, COUNT(*) AS total_wishlisted FROM " . DB_PREFIX . "customer_wishlist cw LEFT JOIN " . DB_PREFIX . "product_description pd ON (cw.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product p ON (cw.product_id = p.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cw.product_id ORDER BY total_wishlisted DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		$sql = "SELECT pd.name, p.model, COUNT(*) AS total_wishlisted FROM `" . DB_PREFIX . "customer_wishlist` cw LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (cw.product_id = pd.product_id) LEFT JOIN `" . DB_PREFIX . "product` p ON (cw.product_id = p.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cw.product_id ORDER BY total_wishlisted DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 
 		$query = $this->db->query($sql);
 
@@ -209,14 +209,14 @@ class ModelReportCustomer extends Model {
 	}
 
 	public function getTotalWishlist(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_wishlist");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_wishlist`");
 
 		return $query->row['total'];
 	}
 
 	// Online
-	public function getTotalCustomersOnline(array $data = []) {
-		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN " . DB_PREFIX . "customer c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
+	public function getTotalCustomersOnline(array $data = []): int {
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN `" . DB_PREFIX . "customer` c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
 
 		$implode = array();
 

@@ -191,7 +191,7 @@ class ModelPaymentSagepayDirect extends Model {
 		}
 	}
 
-	public function updateRebateStatus($sagepay_direct_order_id, $status) {
+	public function updateRebateStatus($sagepay_direct_order_id, $status): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "sagepay_direct_order SET rebate_status = '" . (int)$status . "' WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
 	}
 

@@ -2,7 +2,7 @@
 class ModelDesignConnection extends Model {
 
 	public function addConnection(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "connection SET name = '" . $this->db->escape($data['name']) . "', backend = '" . (int)$data['backend'] . "', frontend = '" . (int)$data['frontend'] . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "connection` SET `name` = '" . $this->db->escape($data['name']) . "', backend = '" . (int)$data['backend'] . "', frontend = '" . (int)$data['frontend'] . "'");
 
 		$connection_id = $this->db->getLastId();
 
@@ -11,7 +11,7 @@ class ModelDesignConnection extends Model {
 
 		if (isset($data['connection_route'])) {
 			foreach ($data['connection_route'] as $connection_route) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "connection_route SET connection_id = '" . (int)$connection_id . "', icon = '" . $this->db->escape($connection_route['icon']) . "', title = '" . $this->db->escape($connection_route['title']) . "', route = '" . $this->db->escape($connection_route['route']) . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "connection_route` SET connection_id = '" . (int)$connection_id . "', icon = '" . $this->db->escape($connection_route['icon']) . "', title = '" . $this->db->escape($connection_route['title']) . "', route = '" . $this->db->escape($connection_route['route']) . "'");
 			}
 		}
 
@@ -19,13 +19,13 @@ class ModelDesignConnection extends Model {
 	}
 
 	public function editConnection(int $connection_id, array $data = []): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "connection SET name = '" . $this->db->escape($data['name']) . "', backend = '" . (int)$data['backend'] . "', frontend = '" . (int)$data['frontend'] . "' WHERE connection_id = '" . (int)$connection_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "connection` SET `name` = '" . $this->db->escape($data['name']) . "', backend = '" . (int)$data['backend'] . "', frontend = '" . (int)$data['frontend'] . "' WHERE connection_id = '" . (int)$connection_id . "'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "connection_route WHERE connection_id = '" . (int)$connection_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "connection_route` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		if (isset($data['connection_route'])) {
 			foreach ($data['connection_route'] as $connection_route) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "connection_route SET connection_id = '" . (int)$connection_id . "', icon = '" . $this->db->escape($connection_route['icon']) . "', title = '" . $this->db->escape($connection_route['title']) . "', route = '" . $this->db->escape($connection_route['route']) . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "connection_route` SET connection_id = '" . (int)$connection_id . "', icon = '" . $this->db->escape($connection_route['icon']) . "', title = '" . $this->db->escape($connection_route['title']) . "', route = '" . $this->db->escape($connection_route['route']) . "'");
 			}
 		}
 
@@ -33,20 +33,20 @@ class ModelDesignConnection extends Model {
 	}
 
 	public function deleteConnection(int $connection_id): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "connection WHERE connection_id = '" . (int)$connection_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "connection_route WHERE connection_id = '" . (int)$connection_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "connection_route` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		$this->cache->delete('connection');
 	}
 
 	public function getConnection(int $connection_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "connection WHERE connection_id = '" . (int)$connection_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->row;
 	}
 
 	public function getConnections(array $data = []): array {
-		$sql = "SELECT * FROM " . DB_PREFIX . "connection";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "connection`";
 
 		$sort_data = array(
 			'name',
@@ -57,7 +57,7 @@ class ModelDesignConnection extends Model {
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -66,7 +66,7 @@ class ModelDesignConnection extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -86,7 +86,7 @@ class ModelDesignConnection extends Model {
 	public function getConnectionIds(array $data = []): array {
 		$connection_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "connection");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "connection`");
 
 		foreach ($query->rows as $result) {
 			$connection_data[] = array('connection_id' => $result['connection_id']);
@@ -96,37 +96,37 @@ class ModelDesignConnection extends Model {
 	}
 
 	public function getConnectionName(int $connection_id) {
-		$query = $this->db->query("SELECT `name` FROM " . DB_PREFIX . "connection WHERE connection_id = '" . (int)$connection_id . "'");
+		$query = $this->db->query("SELECT `name` FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->row['name'];
 	}
 
 	public function getConnectionRoutes(int $connection_id): array {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "connection_route WHERE connection_id = '" . (int)$connection_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "connection_route` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->rows;
 	}
 
 	public function getConnectionIcon(int $connection_id) {
-		$query = $this->db->query("SELECT icon FROM " . DB_PREFIX . "connection_route WHERE connection_id = '" . (int)$connection_id . "'");
+		$query = $this->db->query("SELECT icon FROM `" . DB_PREFIX . "connection_route` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->row['icon'];
 	}
 
 	public function getTotalConnections(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "connection");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "connection`");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalAdminConnections(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "connection WHERE backend = '1'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "connection` WHERE backend = '1'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalCatalogConnections(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "connection WHERE frontend = '1'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "connection` WHERE frontend = '1'");
 
 		return $query->row['total'];
 	}

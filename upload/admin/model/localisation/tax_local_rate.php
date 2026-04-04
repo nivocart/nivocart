@@ -41,13 +41,13 @@ class ModelLocalisationTaxLocalRate extends Model {
 	}
 
 	public function getTotalTaxLocalRates(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "tax_local_rate");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "tax_local_rate`");
 
 		return (int)$query->row['total'];
 	}
 
 	public function getTotalProductsByTaxLocalRateId(int $tax_local_rate_id): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "product_tax_local_rate WHERE tax_local_rate_id = '" . (int)$tax_local_rate_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product_tax_local_rate` WHERE tax_local_rate_id = '" . (int)$tax_local_rate_id . "'");
 
 		return (int)$query->row['total'];
 	}

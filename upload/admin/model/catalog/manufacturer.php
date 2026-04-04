@@ -2,7 +2,7 @@
 class ModelCatalogManufacturer extends Model {
 
 	public function addManufacturer(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "manufacturer` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "'");
 
 		$manufacturer_id = $this->db->getLastId();
 
@@ -10,16 +10,16 @@ class ModelCatalogManufacturer extends Model {
 		$this->session->data['new_manufacturer_id'] = $manufacturer_id;
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "manufacturer` SET `image` = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}
 
 		foreach ($data['manufacturer_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "manufacturer_description` SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
 		if (isset($data['manufacturer_store'])) {
 			foreach ($data['manufacturer_store'] as $store_id) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "manufacturer_to_store` SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
 			}
 		}
 
@@ -33,23 +33,23 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function editManufacturer(int $manufacturer_id, array $data = []): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "manufacturer` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "manufacturer` SET `image` = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "manufacturer_description` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		foreach ($data['manufacturer_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "manufacturer_description` SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "manufacturer_to_store` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		if (isset($data['manufacturer_store'])) {
 			foreach ($data['manufacturer_store'] as $store_id) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "manufacturer_to_store` SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
 			}
 		}
 
@@ -65,9 +65,9 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function deleteManufacturer(int $manufacturer_id): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "manufacturer` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "manufacturer_description` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "manufacturer_to_store` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'manufacturer_id=" . (int)$manufacturer_id . "'");
 
@@ -77,13 +77,13 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function getManufacturer(int $manufacturer_id) {
-		$query = $this->db->query("SELECT DISTINCT *, md.name AS name, (SELECT keyword FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'manufacturer_id=" . (int)$manufacturer_id . "') AS keyword FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$query = $this->db->query("SELECT DISTINCT *, md.name AS `name`, (SELECT `keyword` FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'manufacturer_id=" . (int)$manufacturer_id . "') AS `keyword` FROM `" . DB_PREFIX . "manufacturer` m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
 	public function getManufacturers(array $data = []): array {
-		$sql = "SELECT *, md.manufacturer_id, md.name AS name FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) WHERE md.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT *, md.manufacturer_id, md.name AS `name` FROM `" . DB_PREFIX . "manufacturer` m LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id = md.manufacturer_id) WHERE md.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND md.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -109,7 +109,7 @@ class ModelCatalogManufacturer extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -127,7 +127,7 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function getManufacturerImage(int $manufacturer_id) {
-		$query = $this->db->query("SELECT image FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$query = $this->db->query("SELECT `image` FROM `" . DB_PREFIX . "manufacturer` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		return $query->row['image'];
 	}
@@ -135,7 +135,7 @@ class ModelCatalogManufacturer extends Model {
 	public function getManufacturerDescriptions(int $manufacturer_id): array {
 		$manufacturer_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer_description` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		foreach ($query->rows as $result) {
 			$manufacturer_data[$result['language_id']] = array(
@@ -150,7 +150,7 @@ class ModelCatalogManufacturer extends Model {
 	public function getManufacturerStores(int $manufacturer_id): array {
 		$manufacturer_store_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer_to_store` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		foreach ($query->rows as $result) {
 			$manufacturer_store_data[] = $result['store_id'];
@@ -160,19 +160,19 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function getManufacturerName(int $manufacturer_id) {
-		$query = $this->db->query("SELECT DISTINCT md.name AS name FROM " . DB_PREFIX . "manufacturer_description md LEFT JOIN " . DB_PREFIX . "manufacturer m ON (md.manufacturer_id = m.manufacturer_id) WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY m.manufacturer_id");
+		$query = $this->db->query("SELECT DISTINCT md.name AS `name` FROM `" . DB_PREFIX . "manufacturer_description` md LEFT JOIN `" . DB_PREFIX . "manufacturer` m ON (md.manufacturer_id = m.manufacturer_id) WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY m.manufacturer_id");
 
 		return $query->row['name'];
 	}
 
 	public function getTotalManufacturersByImageId(int $image_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "manufacturer WHERE image_id = '" . (int)$image_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "manufacturer` WHERE image_id = '" . (int)$image_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalManufacturers(array $data = []): int {
-		$sql = "SELECT COUNT(DISTINCT m.manufacturer_id) AS `total` FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id)";
+		$sql = "SELECT COUNT(DISTINCT m.manufacturer_id) AS `total` FROM `" . DB_PREFIX . "manufacturer` m LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id = md.manufacturer_id)";
 
 		$sql .= " WHERE md.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 

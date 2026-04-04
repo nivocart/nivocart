@@ -95,10 +95,6 @@
               <input type="text" name="telephone" value="<?php echo $telephone; ?>" />
             <?php } ?></td>
           </tr>
-          <tr>
-            <td><?php echo $entry_fax; ?></td>
-            <td><input type="text" name="fax" value="<?php echo $fax; ?>" /></td>
-          </tr>
         </table>
       </div>
       <div id="tab-payment" class="vtabs-content">
@@ -705,7 +701,6 @@ $('input[name=\'customer\']').catcomplete({
 						lastname: item['lastname'],
 						email: item['email'],
 						telephone: item['telephone'],
-						fax: item['fax'],
 						address: item['address']
 					}]
 				}));
@@ -719,7 +714,6 @@ $('input[name=\'customer\']').catcomplete({
 		$('input[name=\'lastname\']').attr('value', ui.item['lastname']);
 		$('input[name=\'email\']').attr('value', ui.item['email']);
 		$('input[name=\'telephone\']').attr('value', ui.item['telephone']);
-		$('input[name=\'fax\']').attr('value', ui.item['fax']);
 
 		html = '<option value="0"><?php echo $text_none; ?></option>';
 
@@ -811,6 +805,7 @@ $('input[name=\'affiliate\']').autocomplete({
 	}
 });
 
+// Payment country
 var payment_zone_id = '<?php echo $payment_zone_id; ?>';
 
 $('select[name=\'payment_country_id\']').on('change', function() {
@@ -882,6 +877,7 @@ $('body').on('change', 'select[name=\'payment_address\']', function() {
 	});
 });
 
+// Shipping country
 var shipping_zone_id = '<?php echo $shipping_zone_id; ?>';
 
 $('body').on('change', 'select[name=\'shipping_country_id\']', function() {
@@ -889,7 +885,7 @@ $('body').on('change', 'select[name=\'shipping_country_id\']', function() {
 		url: 'index.php?route=localisation/country/country&token=<?php echo $token; ?>&country_id=' + this.value,
 		dataType: 'json',
 		beforeSend: function() {
-			$('select[name=\'payment_country_id\']').after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
+			$('select[name=\'shipping_country_id\']').after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
 		},
 		complete: function() {
 			$('.wait').remove();

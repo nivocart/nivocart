@@ -22,7 +22,7 @@ class ModelUserUserGroup extends Model {
 		$user_query = $this->db->query("SELECT DISTINCT user_group_id FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "'");
 
 		if ($user_query->num_rows) {
-			$user_group_query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+			$user_group_query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "user_group` WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
 			if ($user_group_query->num_rows) {
 				// check string before unserialize

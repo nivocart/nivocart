@@ -2,7 +2,7 @@
 class ModelSaleRecurring extends Model {
 
 	public function getProfiles(array $data = []): array {
-		$sql = "SELECT order_recurring_id, order_id, status, created, profile_reference, CONCAT(firstname, ' ', lastname) AS customer FROM " . DB_PREFIX . "order_recurring LEFT JOIN `" . DB_PREFIX . "order` USING(`order_id`) WHERE order_recurring_id IS NOT NULL";
+		$sql = "SELECT order_recurring_id, order_id, status, created, profile_reference, CONCAT(firstname, ' ', lastname) AS `customer` FROM `" . DB_PREFIX . "order_recurring` LEFT JOIN `" . DB_PREFIX . "order` USING(`order_id`) WHERE order_recurring_id IS NOT NULL";
 
 		if (!empty($data['filter_order_recurring_id'])) {
 			$sql .= " AND order_recurring_id = " . (int)$data['filter_order_recurring_id'];
@@ -49,7 +49,7 @@ class ModelSaleRecurring extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -82,7 +82,7 @@ class ModelSaleRecurring extends Model {
 	public function getProfile(int $order_recurring_id): array {
 		$profile = array();
 
-		$result = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_recurring WHERE order_recurring_id = " . (int)$order_recurring_id)->row;
+		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_recurring` WHERE order_recurring_id = " . (int)$order_recurring_id)->row;
 
 		if ($result) {
 			$profile = array(
@@ -103,7 +103,7 @@ class ModelSaleRecurring extends Model {
 	}
 
 	public function getProfileTransactions(int $order_recurring_id): array {
-		$results = $this->db->query("SELECT amount, `type`, created FROM " . DB_PREFIX . "order_recurring_transaction WHERE order_recurring_id = " . (int)$order_recurring_id . " ORDER BY created DESC")->rows;
+		$results = $this->db->query("SELECT amount, `type`, created FROM `" . DB_PREFIX . "order_recurring_transaction` WHERE order_recurring_id = " . (int)$order_recurring_id . " ORDER BY created DESC")->rows;
 
 		$transactions = array();
 
@@ -183,7 +183,7 @@ class ModelSaleRecurring extends Model {
 	}
 
 	public function getTotalProfiles(array $data = []) {
-		$sql = "SELECT COUNT(*) AS profile_count FROM " . DB_PREFIX . "order_recurring LEFT JOIN `" . DB_PREFIX . "order` USING(`order_id`) WHERE order_recurring_id IS NOT NULL";
+		$sql = "SELECT COUNT(*) AS `profile_count` FROM `" . DB_PREFIX . "order_recurring` LEFT JOIN `" . DB_PREFIX . "order` USING(`order_id`) WHERE order_recurring_id IS NOT NULL";
 
 		if (!empty($data['filter_order_recurring_id'])) {
 			$sql .= " AND order_recurring_id = " . (int)$data['filter_order_recurring_id'];
@@ -218,7 +218,7 @@ class ModelSaleRecurring extends Model {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$order_recurring_id . "', `type` = '" . (int)$type . "', `amount` = " . (double)$amount) . ", `created` = NOW()";
 	}
 
-	public function updateOrderRecurringStatus(int $order_recurring_id, $status): void {
+	public function updateOrderRecurringStatus(int $order_recurring_id, int $status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "order_recurring` SET `status` = '" . (int)$status . "' WHERE `order_recurring_id` = '" . (int)$order_recurring_id . "' LIMIT 0,1");
 	}
 }

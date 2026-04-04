@@ -2,7 +2,7 @@
 class ModelReportCoupon extends Model {
 
 	public function getCoupons(array $data = []): array {
-		$sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS orders, SUM(ch.amount) AS `total` FROM " . DB_PREFIX . "coupon_history ch LEFT JOIN " . DB_PREFIX . "coupon c ON (ch.coupon_id = c.coupon_id)";
+		$sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS orders, SUM(ch.amount) AS `total` FROM `" . DB_PREFIX . "coupon_history` ch LEFT JOIN `" . DB_PREFIX . "coupon` c ON (ch.coupon_id = c.coupon_id)";
 
 		$implode = array();
 
@@ -20,7 +20,7 @@ class ModelReportCoupon extends Model {
 
 		$sql .= " GROUP BY ch.coupon_id ORDER BY `total` DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -37,8 +37,8 @@ class ModelReportCoupon extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalCoupons(array $data = []) {
-		$sql = "SELECT COUNT(DISTINCT coupon_id) AS `total` FROM " . DB_PREFIX . "coupon_history";
+	public function getTotalCoupons(array $data = []): int {
+		$sql = "SELECT COUNT(DISTINCT coupon_id) AS `total` FROM `" . DB_PREFIX . "coupon_history`";
 
 		$implode = array();
 

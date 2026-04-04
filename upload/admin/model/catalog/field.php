@@ -10,7 +10,7 @@ class ModelCatalogField extends Model {
 		$this->session->data['new_field_id'] = $field_id;
 
 		foreach ($data['field_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "field_description SET field_id = '" . (int)$field_id . "', language_id = '" . (int)$language_id . "', `title` = '" . $this->db->escape($value['title']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "field_description` SET field_id = '" . (int)$field_id . "', language_id = '" . (int)$language_id . "', `title` = '" . $this->db->escape($value['title']) . "', description = '" . $this->db->escape($value['description']) . "'");
 		}
 
 		$this->cache->delete('field');
@@ -19,7 +19,7 @@ class ModelCatalogField extends Model {
 	public function editField(int $field_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "field` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "' WHERE field_id = '" . (int)$field_id . "'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "field_description WHERE field_id = '" . (int)$field_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "field_description` WHERE field_id = '" . (int)$field_id . "'");
 
 		foreach ($data['field_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "field_description SET field_id = '" . (int)$field_id . "', language_id = '" . (int)$language_id . "', `title` = '" . $this->db->escape($value['title']) . "', description = '" . $this->db->escape($value['description']) . "'");
@@ -42,14 +42,14 @@ class ModelCatalogField extends Model {
 	}
 
 	public function getField(int $field_id): int {
-		$query = $this->db->query("SELECT DISTINCT *, fd.title AS title FROM `" . DB_PREFIX . "field` f LEFT JOIN " . DB_PREFIX . "field_description fd ON (f.field_id = fd.field_id) WHERE f.field_id = '" . (int)$field_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$query = $this->db->query("SELECT DISTINCT *, fd.title AS title FROM `" . DB_PREFIX . "field` f LEFT JOIN `" . DB_PREFIX . "field_description` fd ON (f.field_id = fd.field_id) WHERE f.field_id = '" . (int)$field_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
 	public function getFields(array $data = []): array {
 		if ($data) {
-			$sql = "SELECT * FROM `" . DB_PREFIX . "field` f LEFT JOIN " . DB_PREFIX . "field_description fd ON (f.field_id = fd.field_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			$sql = "SELECT * FROM `" . DB_PREFIX . "field` f LEFT JOIN `" . DB_PREFIX . "field_description` fd ON (f.field_id = fd.field_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 			if (!empty($data['filter_title'])) {
 				$sql .= " AND fd.title LIKE '" . $this->db->escape($data['filter_title']) . "%'";
@@ -73,7 +73,7 @@ class ModelCatalogField extends Model {
 				$sql .= " ASC";
 			}
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
@@ -93,7 +93,7 @@ class ModelCatalogField extends Model {
 			$field_data = $this->cache->get('field.' . (int)$this->config->get('config_language_id'));
 
 			if (!$field_data) {
-				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "field` f LEFT JOIN " . DB_PREFIX . "field_description fd ON (f.field_id = fd.field_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY fd.title");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "field` f LEFT JOIN `" . DB_PREFIX . "field_description` fd ON (f.field_id = fd.field_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY fd.title");
 
 				$field_data = $query->rows;
 
@@ -105,7 +105,7 @@ class ModelCatalogField extends Model {
 	}
 
 	public function getFieldPages(): array {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "field` f LEFT JOIN " . DB_PREFIX . "field_description fd ON (f.field_id = fd.field_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND f.status = '1' ORDER BY f.sort_order, LCASE(fd.title) ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "field` f LEFT JOIN `" . DB_PREFIX . "field_description` fd ON (f.field_id = fd.field_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND f.status = '1' ORDER BY f.sort_order, LCASE(fd.title) ASC");
 
 		return $query->rows;
 	}
@@ -113,7 +113,7 @@ class ModelCatalogField extends Model {
 	public function getFieldDescriptions(int $field_id): array {
 		$field_description_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "field_description WHERE field_id = '" . (int)$field_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "field_description` WHERE field_id = '" . (int)$field_id . "'");
 
 		foreach ($query->rows as $result) {
 			$field_description_data[$result['language_id']] = array(

@@ -31,7 +31,7 @@ class ModelToolSeoUrlManager extends Model {
 	}
 
 	public function getUrls(array $data = []): array {
-		$sql = "SELECT url_alias_id, query, keyword FROM `" . DB_PREFIX . "url_alias`";
+		$sql = "SELECT url_alias_id, `query`, keyword FROM `" . DB_PREFIX . "url_alias`";
 
 		$sort_data = array(
 			'url_alias_id',
@@ -51,7 +51,7 @@ class ModelToolSeoUrlManager extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -74,8 +74,8 @@ class ModelToolSeoUrlManager extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalUniqueKeywords() {
-		$query = $this->db->query("SELECT COUNT(DISTINCT keyword) AS keyword_total FROM `" . DB_PREFIX . "url_alias`");
+	public function getTotalUniqueKeywords(): int {
+		$query = $this->db->query("SELECT COUNT(DISTINCT keyword) AS `keyword_total` FROM `" . DB_PREFIX . "url_alias`");
 
 		return $query->row['keyword_total'];
 	}

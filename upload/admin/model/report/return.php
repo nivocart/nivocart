@@ -2,7 +2,7 @@
 class ModelReportReturn extends Model {
 
 	public function getReturns(array $data = []): array {
-		$sql = "SELECT MIN(r.date_added) AS date_start, MAX(r.date_added) AS date_end, COUNT(r.return_id) AS returns FROM `" . DB_PREFIX . "return` r";
+		$sql = "SELECT MIN(r.date_added) AS date_start, MAX(r.date_added) AS date_end, COUNT(r.return_id) AS `returns` FROM `" . DB_PREFIX . "return` r";
 
 		if (!empty($data['filter_return_status_id'])) {
 			$sql .= " WHERE r.return_status_id = '" . (int)$data['filter_return_status_id'] . "'";
@@ -40,7 +40,7 @@ class ModelReportReturn extends Model {
 				break;
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -57,7 +57,7 @@ class ModelReportReturn extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalReturns(array $data = []) {
+	public function getTotalReturns(array $data = []): int {
 		if (!empty($data['filter_group'])) {
 			$group = $data['filter_group'];
 		} else {
@@ -96,6 +96,6 @@ class ModelReportReturn extends Model {
 
 		$query = $this->db->query($sql);
 
-		return $query->row['total'];
+		return (int)$query->row['total'];
 	}
 }

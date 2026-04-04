@@ -109,7 +109,7 @@ class ModelPaymentSagepayServer extends Model {
 		}
 	}
 
-	public function updateVoidStatus($sagepay_server_order_id, $status) {
+	public function updateVoidStatus($sagepay_server_order_id, $status): void {
 		$this->db->query("UPDATE " . DB_PREFIX . "sagepay_server_order SET void_status = '" . (int)$status . "' WHERE sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "'");
 	}
 

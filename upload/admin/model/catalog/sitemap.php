@@ -56,7 +56,7 @@ class ModelCatalogSitemap extends Model {
 	}
 
 	public function getStoreUrl(int $store_id) {
-		$query = $this->db->query("SELECT DISTINCT url FROM `" . DB_PREFIX . "store` WHERE store_id = '" . (int)$store_id . "'");
+		$query = $this->db->query("SELECT DISTINCT `url` FROM `" . DB_PREFIX . "store` WHERE store_id = '" . (int)$store_id . "'");
 
 		return $query->row;
 	}

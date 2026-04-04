@@ -4,12 +4,15 @@ class ModelToolSitemap extends Model {
 	public function generateText() {
 		$this->language->load('tool/sitemap');
 
+		$parent_id = 0; 
+		$current_path = '';
+
 		$output = '';
 
 		// Generating TEXT sitemap
 		$fp = fopen('../sitemap.txt', 'w+');
 		fwrite($fp, $this->getTextLinks());
-		fwrite($fp, $this->getTextCategories(0));
+		fwrite($fp, $this->getTextCategories($parent_id, $current_path));
 		fclose($fp);
 
 		$output .= "<img src=\"view/image/success.png\" alt=\"\" /> &nbsp; <b>" . HTTP_CATALOG . "sitemap.txt</b><br /><br />";
@@ -20,6 +23,9 @@ class ModelToolSitemap extends Model {
 	public function generateXml() {
 		$this->language->load('tool/sitemap');
 
+		$parent_id = 0; 
+		$current_path = '';
+
 		$output = '';
 
 		// Generating XML sitemap
@@ -27,7 +33,7 @@ class ModelToolSitemap extends Model {
 		fwrite($fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r");
 		fwrite($fp, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r");
 		fwrite($fp, $this->getCommonPages());
-		fwrite($fp, $this->getCategories(0));
+		fwrite($fp, $this->getCategories($parent_id, $current_path));
 		fwrite($fp, $this->getProducts());
 		fwrite($fp, $this->getManufacturers());
 		fwrite($fp, $this->getNews());

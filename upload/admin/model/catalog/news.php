@@ -10,7 +10,7 @@ class ModelCatalogNews extends Model {
 		$this->session->data['new_news_id'] = $news_id;
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "news` SET image = '" . $this->db->escape($data['image']) . "' WHERE news_id = '" . (int)$news_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "news` SET `image` = '" . $this->db->escape($data['image']) . "' WHERE news_id = '" . (int)$news_id . "'");
 		}
 
 		foreach ($data['news_description'] as $language_id => $value) {
@@ -92,7 +92,7 @@ class ModelCatalogNews extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "news` SET lightbox = '" . $this->db->escape($data['lightbox']) . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "' WHERE news_id = '" . (int)$news_id . "'");
 
 		if (isset($data['image'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "news` SET image = '" . $this->db->escape($data['image']) . "' WHERE news_id = '" . (int)$news_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "news` SET `image` = '" . $this->db->escape($data['image']) . "' WHERE news_id = '" . (int)$news_id . "'");
 		}
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "news_description` WHERE news_id = '" . (int)$news_id . "'");
@@ -203,14 +203,14 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getNewsStory(int $news_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'news_id=" . (int)$news_id . "') AS keyword FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) WHERE n.news_id = '" . (int)$news_id . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$query = $this->db->query("SELECT DISTINCT *, (SELECT `keyword` FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'news_id=" . (int)$news_id . "') AS `keyword` FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) WHERE n.news_id = '" . (int)$news_id . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
 
 	public function getNews(array $data = []): array {
 		if ($data) {
-			$sql = "SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			$sql = "SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 			$sort_data = array(
 				'nd.title',
@@ -232,7 +232,7 @@ class ModelCatalogNews extends Model {
 				$sql .= " ASC";
 			}
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
@@ -252,7 +252,7 @@ class ModelCatalogNews extends Model {
 			$news_data = $this->cache->get('news.' . (int)$this->config->get('config_language_id'));
 
 			if (!$news_data) {
-				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN " . DB_PREFIX . "news_description nd ON (n.news_id = nd.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY n.date_added ASC");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY n.date_added ASC");
 
 				$news_data = $query->rows;
 

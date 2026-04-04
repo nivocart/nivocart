@@ -2,7 +2,7 @@
 class ModelSaleOfferCategoryCategory extends Model {
 
 	public function addOfferCategoryCategory(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "offer_category_category SET name = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', category_one = '" . $this->db->escape($data['category_one']) . "', category_two = '" . $this->db->escape($data['category_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "offer_category_category` SET `name` = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', category_one = '" . $this->db->escape($data['category_one']) . "', category_two = '" . $this->db->escape($data['category_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$offer_category_category_id = $this->db->getLastId();
 
@@ -11,21 +11,21 @@ class ModelSaleOfferCategoryCategory extends Model {
 	}
 
 	public function editOfferCategoryCategory(int $offer_category_category_id, array $data = []): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "offer_category_category SET name = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', category_one = '" . $this->db->escape($data['category_one']) . "', category_two = '" . $this->db->escape($data['category_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "' WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "offer_category_category` SET `name` = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', category_one = '" . $this->db->escape($data['category_one']) . "', category_two = '" . $this->db->escape($data['category_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "' WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 	}
 
 	public function deleteOfferCategoryCategory(int $offer_category_category_id): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "offer_category_category` WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 	}
 
 	public function getOfferCategoryCategory(int $offer_category_category_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "offer_category_category` WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 
 		return $query->row;
 	}
 
 	public function getOfferCategoryCategories(array $data = []): array {
-		$sql = "SELECT offer_category_category_id, name, discount, `type`, logged, date_start, date_end, status FROM " . DB_PREFIX . "offer_category_category";
+		$sql = "SELECT offer_category_category_id, `name`, discount, `type`, logged, date_start, date_end, status FROM `" . DB_PREFIX . "offer_category_category`";
 
 		$sort_data = array(
 			'name',
@@ -40,7 +40,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -49,7 +49,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -69,7 +69,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 	public function getOfferCategoryCategoryOnes(int $offer_category_category_id): array {
 		$offer_category_one_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_category` WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 
 		foreach ($query->rows as $result) {
 			$offer_category_one_data[] = $result['category_one'];
@@ -81,7 +81,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 	public function getOfferCategoryCategoryTwos(int $offer_category_category_id): array {
 		$offer_category_two_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "offer_category_category WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_category` WHERE offer_category_category_id = '" . (int)$offer_category_category_id . "'");
 
 		foreach ($query->rows as $result) {
 			$offer_category_two_data[] = $result['category_two'];
@@ -91,7 +91,7 @@ class ModelSaleOfferCategoryCategory extends Model {
 	}
 
 	public function getTotalOfferCategoryCategory(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "offer_category_category");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "offer_category_category`");
 
 		return $query->row['total'];
 	}

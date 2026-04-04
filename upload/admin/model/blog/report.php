@@ -56,7 +56,7 @@ class ModelBlogReport extends Model {
 			$sql .= " DESC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}

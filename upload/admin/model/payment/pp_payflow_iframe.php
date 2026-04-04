@@ -116,10 +116,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function getPaypalCapturesByParentReference($ref) {
+	public function getPaypalCapturesByParentReference($ref): array {
 		$captures = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' AND transaction_type = 'D' ORDER BY `date_added` ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' AND transaction_type = 'D' ORDER BY `date_added` ASC");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			foreach ($query->rows as $row) {
@@ -130,10 +130,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		return $captures;
 	}
 
-	public function getPaypalRefundsByParentReference($ref) {
+	public function getPaypalRefundsByParentReference($ref): array {
 		$refunds = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' AND transaction_type = 'C' ORDER BY `date_added` ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' AND transaction_type = 'C' ORDER BY `date_added` ASC");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			foreach ($query->rows as $row) {
@@ -144,10 +144,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		return $refunds;
 	}
 
-	public function getPaypalTransactionsByParentReference($ref) {
+	public function getPaypalTransactionsByParentReference($ref): array {
 		$transactions = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' ORDER BY `date_added` ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' ORDER BY `date_added` ASC");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			foreach ($query->rows as $row) {
@@ -158,10 +158,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		return $transactions;
 	}
 
-	public function getPaypalTransactionsByOrderId($order_id) {
+	public function getPaypalTransactionsByOrderId(int $order_id): array {
 		$transactions = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE order_id = " . (int)$order_id . " ORDER BY `date_added` ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE order_id = " . (int)$order_id . " ORDER BY `date_added` ASC");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			foreach ($query->rows as $row) {
@@ -173,7 +173,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 	}
 
 	public function getPaypalTransactionByReference($ref) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE transaction_reference = '" . $this->db->escape($ref) . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE transaction_reference = '" . $this->db->escape($ref) . "'");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			return $query->row;
@@ -182,8 +182,8 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function getPaypalRootTransactionByOrderId($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE order_id = " . (int)$order_id . " AND (parent_transaction_reference = '' OR parent_transaction_reference IS NULL) ORDER BY `date_added` ASC");
+	public function getPaypalRootTransactionByOrderId(int $order_id) {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE order_id = " . (int)$order_id . " AND (parent_transaction_reference = '' OR parent_transaction_reference IS NULL) ORDER BY `date_added` ASC");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			return $query->row;
@@ -192,8 +192,8 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function getPaypalLastAuthorizationByOrderId($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE order_id = " . (int)$order_id . " AND (transaction_type = 'A' OR transaction_type = 'F') AND (void_transaction_reference = '' OR void_transaction_reference IS NULL) ORDER BY `date_added` ASC");
+	public function getPaypalLastAuthorizationByOrderId(int $order_id) {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE order_id = " . (int)$order_id . " AND (transaction_type = 'A' OR transaction_type = 'F') AND (void_transaction_reference = '' OR void_transaction_reference IS NULL) ORDER BY `date_added` ASC");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			return $query->rows[$query->num_rows - 1];
@@ -202,10 +202,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function getTotalCaptured($order_id) {
+	public function getTotalCaptured(int $order_id) {
 		$total = 0;
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE order_id = " . (int)$order_id . " AND transaction_type = 'D'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE order_id = " . (int)$order_id . " AND transaction_type = 'D'");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			foreach ($query->rows as $row) {
@@ -218,10 +218,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		return $total;
 	}
 
-	public function getTotalRefunded($order_id) {
+	public function getTotalRefunded(int $order_id) {
 		$total = 0;
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_payflow_iframe_order_transaction WHERE order_id = " . (int)$order_id . " AND transaction_type = 'C'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE order_id = " . (int)$order_id . " AND transaction_type = 'C'");
 
 		if (($query instanceof stdClass) && $query->num_rows) {
 			foreach ($query->rows as $row) {
@@ -264,7 +264,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		$call_parameters_with_length = array();
 
 		foreach ($call_parameters as $key => $value) {
-			$call_parameters_with_length[] = $key . '[' . strlen($value) . ']=' . $value;
+			$call_parameters_with_length[] = $key . '[' . mb_strlen($value, 'UTF-8') . ']=' . $value;
 		}
 
 		$post_fields = implode('&', $call_parameters_with_length);
@@ -274,7 +274,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		// Standard HTTP Headers
 		$headers = array();
 		$headers[] = 'Content-Type: text/name value';
-		$headers[] = 'Content-Length: ' . strlen($post_fields);
+		$headers[] = 'Content-Length: ' . mb_strlen($post_fields, 'UTF-8');
 		$headers[] = 'Host: ' . $host;
 		// Payflow Message Protocol Headers
 		$headers[] = 'X-VPS-REQUEST-ID: ' . md5($post_fields . time());  // Unique ID to prevent duplicate requests. Append time to separate between multiple errors/requests on same shopping cart checkout attempt

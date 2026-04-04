@@ -1,7 +1,7 @@
 <?php
 class ModelFraudMaxMind extends Model {
 
-	public function install() {
+	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "maxmind` (
 			  `order_id` int(11) NOT NULL,
@@ -62,7 +62,7 @@ class ModelFraudMaxMind extends Model {
 		");
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "maxmind`");
 	}
 

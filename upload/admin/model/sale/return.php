@@ -20,17 +20,17 @@ class ModelSaleReturn extends Model {
 
 	public function deleteReturn(int $return_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "return` WHERE return_id = '" . (int)$return_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "return_history WHERE return_id = '" . (int)$return_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "return_history` WHERE return_id = '" . (int)$return_id . "'");
 	}
 
 	public function getReturn(int $return_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT CONCAT(c.firstname, ' ', c.lastname) FROM " . DB_PREFIX . "customer c WHERE c.customer_id = r.customer_id) AS customer FROM `" . DB_PREFIX . "return` r WHERE r.return_id = '" . (int)$return_id . "'");
+		$query = $this->db->query("SELECT DISTINCT *, (SELECT CONCAT(c.firstname, ' ', c.lastname) FROM `" . DB_PREFIX . "customer` c WHERE c.customer_id = r.customer_id) AS `customer` FROM `" . DB_PREFIX . "return` r WHERE r.return_id = '" . (int)$return_id . "'");
 
 		return $query->row;
 	}
 
 	public function getReturns(array $data = []): array {
-		$sql = "SELECT *, CONCAT(r.firstname, ' ', r.lastname) AS customer, (SELECT rs.name FROM " . DB_PREFIX . "return_status rs WHERE rs.return_status_id = r.return_status_id AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "return` r";
+		$sql = "SELECT *, CONCAT(r.firstname, ' ', r.lastname) AS `customer`, (SELECT rs.name FROM `" . DB_PREFIX . "return_status` rs WHERE rs.return_status_id = r.return_status_id AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "return` r";
 
 		$implode = array();
 
@@ -93,7 +93,7 @@ class ModelSaleReturn extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -177,10 +177,10 @@ class ModelSaleReturn extends Model {
 	public function addReturnHistory(int $return_id, array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "return` SET return_status_id = '" . (int)$data['return_status_id'] . "', date_modified = NOW() WHERE return_id = '" . (int)$return_id . "'");
 
-		$this->db->query("INSERT INTO " . DB_PREFIX . "return_history SET return_id = '" . (int)$return_id . "', return_status_id = '" . (int)$data['return_status_id'] . "', notify = '" . (isset($data['notify']) ? (int)$data['notify'] : 0) . "', `comment` = '" . $this->db->escape(strip_tags($data['comment'])) . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "return_history` SET return_id = '" . (int)$return_id . "', return_status_id = '" . (int)$data['return_status_id'] . "', notify = '" . (isset($data['notify']) ? (int)$data['notify'] : 0) . "', `comment` = '" . $this->db->escape(strip_tags($data['comment'])) . "', date_added = NOW()");
 
 		if ($data['notify']) {
-			$return_query = $this->db->query("SELECT *, rs.name AS status FROM `" . DB_PREFIX . "return` r LEFT JOIN " . DB_PREFIX . "return_status rs ON (r.return_status_id = rs.return_status_id) WHERE r.return_id = '" . (int)$return_id . "' AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			$return_query = $this->db->query("SELECT *, rs.name AS status FROM `" . DB_PREFIX . "return` r LEFT JOIN `" . DB_PREFIX . "return_status` rs ON (r.return_status_id = rs.return_status_id) WHERE r.return_id = '" . (int)$return_id . "' AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 			if ($return_query->num_rows) {
 				$this->language->load('mail/return');
@@ -230,19 +230,19 @@ class ModelSaleReturn extends Model {
 			$limit = 10;
 		}
 
-		$query = $this->db->query("SELECT rh.date_added, rs.name AS status, rh.comment, rh.notify FROM " . DB_PREFIX . "return_history rh LEFT JOIN " . DB_PREFIX . "return_status rs ON rh.return_status_id = rs.return_status_id WHERE rh.return_id = '" . (int)$return_id . "' AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY rh.date_added ASC LIMIT " . (int)$start . "," . (int)$limit);
+		$query = $this->db->query("SELECT rh.date_added, rs.name AS status, rh.comment, rh.notify FROM `" . DB_PREFIX . "return_history` rh LEFT JOIN `" . DB_PREFIX . "return_status` rs ON rh.return_status_id = rs.return_status_id WHERE rh.return_id = '" . (int)$return_id . "' AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY rh.date_added ASC LIMIT " . (int)$start . "," . (int)$limit);
 
 		return $query->rows;
 	}
 
 	public function getTotalReturnHistories(int $return_id): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "return_history WHERE return_id = '" . (int)$return_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "return_history` WHERE return_id = '" . (int)$return_id . "'");
 
 		return $query->row['total'];
 	}
 
 	public function getTotalReturnHistoriesByReturnStatusId(int $return_status_id): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "return_history WHERE return_status_id = '" . (int)$return_status_id . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "return_history` WHERE return_status_id = '" . (int)$return_status_id . "'");
 
 		return $query->row['total'];
 	}
