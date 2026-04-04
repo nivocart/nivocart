@@ -414,7 +414,7 @@ class Customer {
 	 * Set Token
 	 */
 	public function setToken() {
-		$this->session->data['customer_token'] = hash_rand('ripemd128');
+		$this->session->data['customer_token'] = bin2hex(random_bytes(32));
 	}
 
 	/**
