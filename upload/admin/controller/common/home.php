@@ -879,7 +879,7 @@ class ControllerCommonHome extends Controller {
 						$data['order']['data'][] = array($i, 0);
 					}
 
-					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer WHERE DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "' GROUP BY HOUR(date_added) ORDER BY date_added ASC");
+					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "' GROUP BY HOUR(date_added) ORDER BY date_added ASC");
 
 					if ($query->num_rows) {
 						$data['customer']['data'][] = array($i, (int)$query->row['total']);
@@ -913,7 +913,7 @@ class ControllerCommonHome extends Controller {
 						$data['order']['data'][] = array($i, 0);
 					}
 
-					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer WHERE DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DATE(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DATE(date_added)");
 
 					if ($query->num_rows) {
 						$data['customer']['data'][] = array($i, (int)$query->row['total']);
@@ -944,7 +944,7 @@ class ControllerCommonHome extends Controller {
 						$data['order']['data'][] = array($i, 0);
 					}
 
-					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer WHERE DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DAY(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DAY(date_added)");
 
 					if ($query->num_rows) {
 						$data['customer']['data'][] = array($i, (int)$query->row['total']);
@@ -973,7 +973,7 @@ class ControllerCommonHome extends Controller {
 						$data['order']['data'][] = array($i, 0);
 					}
 
-					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer WHERE YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
+					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
 
 					if ($query->num_rows) {
 						$data['customer']['data'][] = array($i, (int)$query->row['total']);
