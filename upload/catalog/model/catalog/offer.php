@@ -218,7 +218,7 @@ class ModelCatalogOffer extends Model {
 	}
 
 	// Called in Shopping Cart
-	public function getListProductOffers() {
+	public function getListProductOffers(): array {
 		$this->load->model('checkout/offers');
 
 		$offer_products = array();

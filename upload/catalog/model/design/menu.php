@@ -2,13 +2,13 @@
 class ModelDesignMenu extends Model {
 
 	public function getMenu(int $menu_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "menu` m LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (m.menu_id = mid.menu_id) LEFT JOIN " . DB_PREFIX . "menu_to_store m2s ON (m.menu_id = m2s.menu_id) WHERE m.menu_id = '" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND m.status = '1'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "menu` m LEFT JOIN `" . DB_PREFIX . "menu_item_description` mid ON (m.menu_id = mid.menu_id) LEFT JOIN `" . DB_PREFIX . "menu_to_store` m2s ON (m.menu_id = m2s.menu_id) WHERE m.menu_id = '" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND m.status = '1'");
 
 		return $query->row;
 	}
 
 	public function getMenuTitle(int $menu_id) {
-		$query = $this->db->query("SELECT title FROM `" . DB_PREFIX . "menu` WHERE menu_id='" . (int)$menu_id . "' AND status = '1'");
+		$query = $this->db->query("SELECT `title` FROM `" . DB_PREFIX . "menu` WHERE menu_id='" . (int)$menu_id . "' AND status = '1'");
 
 		if ($query->num_rows) {
 			return $query->row['title'];
@@ -18,19 +18,19 @@ class ModelDesignMenu extends Model {
 	}
 
 	public function getMenuItem(int $menu_item_id, int $menu_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (mi.menu_item_id = mid.menu_item_id) WHERE mid.menu_item_id = '" . (int)$menu_item_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND mi.menu_id='" . (int)$menu_id . "' AND mi.status = '1'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "menu_item` mi LEFT JOIN `" . DB_PREFIX . "menu_item_description` mid ON (mi.menu_item_id = mid.menu_item_id) WHERE mid.menu_item_id = '" . (int)$menu_item_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND mi.menu_id='" . (int)$menu_id . "' AND mi.status = '1'");
 
 		return $query->row;
 	}
 
-	public function getMenuItems(int $menu_id, int $parent_id = 0) {
+	public function getMenuItems(int $menu_id, int $parent_id = 0): array {
 		if ($parent_id == 0) {
 			$menu_item_data = $this->cache->get('menu_items.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$parent_id);
 
 			if (!$menu_item_data) {
 				$menu_item_data = array();
 
-				$query = $this->db->query("SELECT *, mid.menu_item_name AS name FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (mi.menu_item_id = mid.menu_item_id) LEFT JOIN " . DB_PREFIX . "menu_to_store m2s ON (mi.menu_id = m2s.menu_id) WHERE mi.parent_id = '" . (int)$parent_id . "' AND mi.menu_id='" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND mi.status = '1' ORDER BY mi.sort_order, mid.menu_item_name ASC");
+				$query = $this->db->query("SELECT *, mid.menu_item_name AS `name` FROM `" . DB_PREFIX . "menu_item` mi LEFT JOIN `" . DB_PREFIX . "menu_item_description` mid ON (mi.menu_item_id = mid.menu_item_id) LEFT JOIN `" . DB_PREFIX . "menu_to_store` m2s ON (mi.menu_id = m2s.menu_id) WHERE mi.parent_id = '" . (int)$parent_id . "' AND mi.menu_id='" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND mi.status = '1' ORDER BY mi.sort_order, mid.menu_item_name ASC");
 
 				foreach ($query->rows as $result) {
 					$menu_item_data[$result['menu_item_id']] = $this->getMenuItem($result['menu_item_id'], (int)$menu_id);
@@ -42,14 +42,14 @@ class ModelDesignMenu extends Model {
 			return $menu_item_data;
 
 		} else {
-			$query = $this->db->query("SELECT *, mid.menu_item_name AS name FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid ON (mi.menu_item_id = mid.menu_item_id) LEFT JOIN " . DB_PREFIX . "menu_to_store m2s ON (mi.menu_id = m2s.menu_id) WHERE mi.parent_id = '" . (int)$parent_id . "' AND mi.menu_id='" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND mi.status = '1' ORDER BY mi.sort_order, mid.menu_item_name ASC");
+			$query = $this->db->query("SELECT *, mid.menu_item_name AS `name` FROM `" . DB_PREFIX . "menu_item` mi LEFT JOIN `" . DB_PREFIX . "menu_item_description` mid ON (mi.menu_item_id = mid.menu_item_id) LEFT JOIN `" . DB_PREFIX . "menu_to_store` m2s ON (mi.menu_id = m2s.menu_id) WHERE mi.parent_id = '" . (int)$parent_id . "' AND mi.menu_id='" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND mi.status = '1' ORDER BY mi.sort_order, mid.menu_item_name ASC");
 
 			return $query->rows;
 		}
 	}
 
-	public function getTotalMenuItems(int $menu_id) {
-		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "menu_item WHERE menu_id = '" . (int)$menu_id . "' AND status = '1'";
+	public function getTotalMenuItems(int $menu_id): int {
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "menu_item` WHERE menu_id = '" . (int)$menu_id . "' AND status = '1'";
 
 		$cache_id = 'menu_items.total';
 
@@ -66,8 +66,8 @@ class ModelDesignMenu extends Model {
 		return $total;
 	}
 
-	public function getTotalMenuItemsByParentId(int $menu_id, int $parent_id) {
-		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "menu_item WHERE menu_id = '" . (int)$menu_id . "' AND parent_id = '" . (int)$parent_id . "' AND status = '1'";
+	public function getTotalMenuItemsByParentId(int $menu_id, int $parent_id): int {
+		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "menu_item` WHERE menu_id = '" . (int)$menu_id . "' AND parent_id = '" . (int)$parent_id . "' AND status = '1'";
 
 		$cache_id = 'menu_items.parents.total';
 

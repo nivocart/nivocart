@@ -19,7 +19,7 @@ class ModelDesignConnection extends Model {
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -28,7 +28,7 @@ class ModelDesignConnection extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -45,7 +45,7 @@ class ModelDesignConnection extends Model {
 		return $query->rows;
 	}
 
-	public function getConnectionIds(array $data = []) {
+	public function getConnectionIds(array $data = []): array {
 		$connection_data = $this->cache->get('connection.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'));
 
 		if (!$connection_data) {
@@ -64,7 +64,7 @@ class ModelDesignConnection extends Model {
 	}
 
 	public function getConnectionRoutes(int $connection_id): array {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "connection_route WHERE connection_id = '" . (int)$connection_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "connection_route` WHERE connection_id = '" . (int)$connection_id . "'");
 
 		return $query->rows;
 	}
@@ -86,7 +86,7 @@ class ModelDesignConnection extends Model {
 	}
 
 	public function getTotalCatalogConnections(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "connection WHERE frontend = '1'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "connection` WHERE frontend = '1'");
 
 		if (isset($query->row['total'])) {
 			return $query->row['total'];

@@ -35,7 +35,9 @@ class ControllerProductManufacturer extends Controller {
 
 		$this->data['categories'] = array();
 
-		$results = $this->model_catalog_manufacturer->getManufacturers(0);
+		$manufacturers_array = array();
+
+		$results = $this->model_catalog_manufacturer->getManufacturers($manufacturers_array);
 
 		foreach ($results as $result) {
 			if ($result['image']) {
@@ -44,10 +46,10 @@ class ControllerProductManufacturer extends Controller {
 				$image = false;
 			}
 
-			if (is_numeric(utf8_substr($result['name'], 0, 1))) {
+			if (is_numeric(substr($result['name'], 0, 1))) {
 				$key = '0 - 9';
 			} else {
-				$key = utf8_substr(utf8_strtoupper($result['name']), 0, 1);
+				$key = substr(mb_strtoupper($result['name'], 'UTF-8'), 0, 1);
 			}
 
 			if (!isset($this->data['manufacturers'][$key])) {
@@ -225,7 +227,7 @@ class ControllerProductManufacturer extends Controller {
 			$this->load->model('catalog/offer');
 			$this->load->model('account/customer');
 
-			$offers = $this->model_catalog_offer->getListProductOffers(0);
+			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			$this->data['products'] = array();
 
@@ -337,7 +339,7 @@ class ControllerProductManufacturer extends Controller {
 					'special_label'   => $special_label,
 					'offer'           => $offer,
 					'name'            => $result['name'],
-					'description'     => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '..',
+					'description'     => substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '..',
 					'age_minimum'     => ($result['age_minimum'] > 0) ? (int)$result['age_minimum'] : '',
 					'age_logged'      => $age_logged,
 					'age_checked'     => $age_checked,
