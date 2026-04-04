@@ -65,9 +65,26 @@ class Cart {
 				$product_id = $product[0];
 				$stock = true;
 
-				// Options
+				// Options: check string before unserialize
 				if (!empty($product[1])) {
-					$options = unserialize(base64_decode($product[1]));
+					$decoded = base64_decode($product[1], true); // strict mode
+
+					if ($decoded === false) {
+						throw new \Exception('Error: Invalid base64 encoding in product options.');
+					}
+
+					// Basic sanity check: unserialize expects a specific format
+					if (!is_string($decoded) || strlen($decoded) === 0) {
+						throw new \Exception('Error: Decoded product option is not a valid string.');
+					}
+
+					$options = unserialize($decoded, ['allowed_classes' => false]);
+
+					// Enforce expected type
+					if (!is_array($options)) {
+						throw new \Exception('Error: Product options must be an array.');
+					}
+
 				} else {
 					$options = array();
 				}

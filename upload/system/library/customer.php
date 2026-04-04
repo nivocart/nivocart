@@ -137,7 +137,7 @@ class Customer {
 			if ($this->config->get('config_secure')) {
 				// Create a cookie and restrict it to HTTPS pages
 				if ($this->request->isSecure()) {
-					$this->session->data['customer_cookie'] = hash_rand('ripemd128');
+					$this->session->data['customer_cookie'] = bin2hex(random_bytes(32));
 
 					setcookie('customer', $this->session->data['customer_cookie'], 0, '/', '', true, true);
 				} else {
@@ -151,8 +151,14 @@ class Customer {
 			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
 			$this->session->data['customer_login_time'] = time();
 
+			// check string before unserialize
 			if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
-				$cart = unserialize($customer_query->row['cart']);
+				$cart = unserialize($customer_query->row['cart'], ['allowed_classes' => false]);
+
+				// Enforce expected type
+				if (!is_array($cart)) {
+					throw new \Exception('Error: Cart must be an array.');
+				}
 
 				foreach ($cart as $key => $value) {
 					if (!array_key_exists($key, $this->session->data['cart'])) {
@@ -163,12 +169,18 @@ class Customer {
 				}
 			}
 
+			// check string before unserialize
 			if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])) {
 				if (!isset($this->session->data['wishlist'])) {
 					$this->session->data['wishlist'] = array();
 				}
 
-				$wishlist = unserialize($customer_query->row['wishlist']);
+				$wishlist = unserialize($customer_query->row['wishlist'], ['allowed_classes' => false]);
+
+				// Enforce expected type
+				if (!is_array($wishlist)) {
+					throw new \Exception('Error: Wishlist must be an array.');
+				}
 
 				foreach ($wishlist as $product_id) {
 					if (!in_array($product_id, $this->session->data['wishlist'])) {
@@ -336,6 +348,10 @@ class Customer {
 	 * Get DOB
 	 *
 	 * @return date
+	 *
+	 * @example
+	 *
+	 * $dob = $this->customer->getDateOfBirth();
 	 */
 	public function getDateOfBirth() {
 		return $this->date_of_birth;
