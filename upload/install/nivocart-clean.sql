@@ -3792,7 +3792,6 @@ CREATE TABLE `nc_supplier` (
   `contact` varchar(64) NOT NULL,
   `email` varchar(96) NOT NULL,
   `telephone` varchar(32) NOT NULL,
-  `fax` varchar(32) NOT NULL,
   `address_id` int(11) NOT NULL DEFAULT '0',
   `supplier_group_id` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL,
