@@ -11,6 +11,7 @@ class ControllerModuleHtml extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			// POST uses json_encode
 			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -27,7 +28,7 @@ class ControllerModuleHtml extends Controller {
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_yes'] = $this->language->get('text_yes');
-		$this->data['text_no']	= $this->language->get('text_no');
+		$this->data['text_no'] = $this->language->get('text_no');
 
 		$this->data['text_content_higher'] = $this->language->get('text_content_higher');
 		$this->data['text_content_high'] = $this->language->get('text_content_high');
@@ -89,7 +90,9 @@ class ControllerModuleHtml extends Controller {
 		// Module
 		$this->load->model('localisation/language');
 
-		$languages = $this->model_localisation_language->getLanguages();
+		$languages_array = array();
+
+		$languages = $this->model_localisation_language->getLanguages($languages_array);
 
 		$this->data['languages'] = $languages;
 
@@ -117,7 +120,9 @@ class ControllerModuleHtml extends Controller {
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$layouts_array = array();
+
+		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		$this->data['modules'] = array();
 

@@ -11,6 +11,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			// POST uses json_encode
 			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -148,11 +149,15 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->load->model('design/menu');
 
-		$this->data['menus'] = $this->model_design_menu->getMenus();
+		$menus_array = array();
+
+		$this->data['menus'] = $this->model_design_menu->getMenus($menus_array);
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$layouts_array = array();
+
+		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		$this->template = 'module/' . $this->_name . '.tpl';
 		$this->children = array(

@@ -11,6 +11,7 @@ class ControllerModuleTagCloud extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+			// POST uses json_encode
 			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
 
 			$this->cache->delete('product');
@@ -115,7 +116,9 @@ class ControllerModuleTagCloud extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$languages = $this->model_localisation_language->getLanguages();
+		$languages_array = array();
+
+		$languages = $this->model_localisation_language->getLanguages($languages_array);
 
 		foreach ($languages as $language) {
 			if (isset($this->request->post[$this->_name . '_title' . $language['language_id']])) {
@@ -155,7 +158,9 @@ class ControllerModuleTagCloud extends Controller {
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$layouts_array = array();
+
+		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		$this->template = 'module/' . $this->_name . '.tpl';
 		$this->children = array(
