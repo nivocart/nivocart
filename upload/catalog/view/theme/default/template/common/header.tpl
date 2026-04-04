@@ -81,7 +81,6 @@ window.cookieconsent.initialise({
 //--></script>
 <?php } ?>
 <?php echo ($google_analytics) ? $google_analytics : ''; ?>
-<?php echo ($alexa_analytics) ? $alexa_analytics : ''; ?>
 <?php if ($rss) { ?>
 <link rel="alternate" type="application/rss+xml" href="<?php echo $rss_href; ?>" />
 <?php } ?>

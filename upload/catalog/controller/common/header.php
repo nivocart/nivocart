@@ -28,10 +28,6 @@ class ControllerCommonHeader extends Controller {
 			$this->document->addMeta(html_entity_decode($this->config->get('config_meta_baidu'), ENT_QUOTES, 'UTF-8'));
 		}
 
-		if ($this->config->get('config_meta_alexa')) {
-			$this->document->addMeta(html_entity_decode($this->config->get('config_meta_alexa'), ENT_QUOTES, 'UTF-8'));
-		}
-
 		$page_keywords = $this->document->getKeywords();
 
 		$default_keywords = $this->config->get('config_meta_keyword');
@@ -79,7 +75,6 @@ class ControllerCommonHeader extends Controller {
 		$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
 		$this->data['google_analytics'] = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
-		$this->data['alexa_analytics'] = html_entity_decode($this->config->get('config_alexa_analytics'), ENT_QUOTES, 'UTF-8');
 
 		// Robot detector
 		$status = true;
@@ -114,7 +109,9 @@ class ControllerCommonHeader extends Controller {
 		if ($this->config->get('config_shared') && $status) {
 			$this->data['stores'][] = $server . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();
 
-			$stores = $this->model_setting_store->getStores();
+			$stores_array = array();
+			
+			$stores = $this->model_setting_store->getStores($stores_array);
 
 			foreach ($stores as $store) {
 				$this->data['stores'][] = $store['url'] . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();
