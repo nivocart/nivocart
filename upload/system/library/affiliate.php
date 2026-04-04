@@ -108,7 +108,7 @@ class Affiliate {
 			if ($this->config->get('config_secure')) {
 				if ($this->request->isSecure()) {
 					// Create a cookie and restrict it to HTTPS pages
-					$this->session->data['affiliate_cookie'] = hash_rand('ripemd128');
+					$this->session->data['affiliate_cookie'] = bin2hex(random_bytes(32));
 
 					setcookie('affiliate', $this->session->data['affiliate_cookie'], 0, '/', '', true, true);
 				} else {
@@ -281,7 +281,7 @@ class Affiliate {
 	 * Set Token
 	 */
 	public function setToken() {
-		$this->session->data['affiliate_token'] = hash_rand('ripemd128');
+		$this->session->data['affiliate_token'] = bin2hex(random_bytes(32));
 	}
 
 	/**
