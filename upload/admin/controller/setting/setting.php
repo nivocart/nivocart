@@ -63,7 +63,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['text_coupon'] = $this->language->get('text_coupon');
 		$this->data['text_voucher'] = $this->language->get('text_voucher');
 		$this->data['text_forms'] = $this->language->get('text_forms');
-		$this->data['text_captcha'] = $this->language->get('text_captcha');
 		$this->data['text_cookies'] = $this->language->get('text_cookies');
 		$this->data['text_black'] = $this->language->get('text_black');
 		$this->data['text_white'] = $this->language->get('text_white');
@@ -223,7 +222,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_share_sharethis'] = $this->language->get('entry_share_sharethis');
 		$this->data['entry_price_free'] = $this->language->get('entry_price_free');
 		$this->data['entry_price_hide'] = $this->language->get('entry_price_hide');
-		$this->data['entry_captcha_font'] = $this->language->get('entry_captcha_font');
 		$this->data['entry_cookie_consent'] = $this->language->get('entry_cookie_consent');
 		$this->data['entry_cookie_theme'] = $this->language->get('entry_cookie_theme');
 		$this->data['entry_cookie_position'] = $this->language->get('entry_cookie_position');
@@ -394,7 +392,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_share_sharethis'] = $this->language->get('help_share_sharethis');
 		$this->data['help_price_free'] = $this->language->get('help_price_free');
 		$this->data['help_price_hide'] = $this->language->get('help_price_hide');
-		$this->data['help_captcha_font'] = $this->language->get('help_captcha_font');
 		$this->data['help_cookie_privacy'] = $this->language->get('help_cookie_privacy');
 		$this->data['help_cookie_age'] = $this->language->get('help_cookie_age');
 		$this->data['help_news_sharethis'] = $this->language->get('help_news_sharethis');
@@ -1575,22 +1572,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_price_hide'] = $this->request->post['config_price_hide'];
 		} else {
 			$this->data['config_price_hide'] = $this->config->get('config_price_hide');
-		}
-
-		$this->data['fontnames'] = array();
-
-		$fonts = glob(DIR_SYSTEM . 'fonts/*.ttf');
-
-		if ($fonts) {
-			foreach ($fonts as $font) {
-				$this->data['fontnames'][] = basename($font, '.ttf');
-			}
-		}
-
-		if (isset($this->request->post['config_captcha_font'])) {
-			$this->data['config_captcha_font'] = $this->request->post['config_captcha_font'];
-		} else {
-			$this->data['config_captcha_font'] = $this->config->get('config_captcha_font');
 		}
 
 		if (isset($this->request->post['config_cookie_consent'])) {

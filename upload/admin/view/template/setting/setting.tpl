@@ -1587,21 +1587,6 @@
             <?php } ?></td>
           </tr>
         </table>
-        <h2><?php echo $text_captcha; ?></h2>
-        <table class="form">
-          <tr>
-            <td><?php echo $entry_captcha_font; ?><span class="help"><?php echo $help_captcha_font; ?></span></td>
-            <td><select name="config_captcha_font">
-            <?php foreach ($fontnames as $fontname) { ?>
-              <?php if ($fontname == $config_captcha_font) { ?>
-                <option value="<?php echo $fontname; ?>" selected="selected"><?php echo $fontname; ?></option>
-              <?php } else { ?>
-                <option value="<?php echo $fontname; ?>"><?php echo $fontname; ?></option>
-              <?php } ?>
-            <?php } ?>
-            </select></td>
-          </tr>
-        </table>
         <h2><?php echo $text_cookies; ?></h2>
         <table class="form">
           <tr>
