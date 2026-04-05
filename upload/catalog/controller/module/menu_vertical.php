@@ -16,7 +16,16 @@ class ControllerModuleMenuVertical extends Controller {
 			$this->data['title'] = $this->data['heading_title'];
 		}
 
-		// Module
+		// Check connection type
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+			$connection = 'SSL';
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+			$connection = 'SSL';
+		} else {
+			$connection = 'NONSSL';
+		}
+
+		// Module - Menu Vertical
 		$this->load->model('design/menu');
 
 		$this->data['menu_vertical'] = array();
@@ -31,7 +40,7 @@ class ControllerModuleMenuVertical extends Controller {
 				if ($menu_item['external_link']) {
 					$href = html_entity_decode($menu_item['menu_item_link'], ENT_QUOTES, 'UTF-8');
 				} else {
-					$href = $this->url->link($menu_item['menu_item_link'], '', 'SSL');
+					$href = $this->url->link($menu_item['menu_item_link'], '', $connection);
 				}
 			} else {
 				$href = '';
@@ -46,7 +55,7 @@ class ControllerModuleMenuVertical extends Controller {
 					if ($child['external_link']) {
 						$child_href = html_entity_decode($child['menu_item_link'], ENT_QUOTES, 'UTF-8');
 					} else {
-						$child_href = $this->url->link($child['menu_item_link'], '', 'SSL');
+						$child_href = $this->url->link($child['menu_item_link'], '', $connection);
 					}
 				} else {
 					$child_href = '';

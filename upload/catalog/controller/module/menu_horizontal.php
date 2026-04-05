@@ -11,7 +11,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$template = $this->config->get('config_template');
 
-		// Options
+		// Style Options
 		$menu_theme = $this->config->get($this->_name . '_theme');
 
 		$header_color = $this->config->get($this->_name . '_header_color');
@@ -51,11 +51,20 @@ class ControllerModuleMenuHorizontal extends Controller {
 		$this->data['column_limit'] = $this->config->get($this->_name . '_column_limit') ? $this->config->get($this->_name . '_column_limit') : 10;
 		$this->data['column_number'] = $this->config->get($this->_name . '_column_number') ? $this->config->get($this->_name . '_column_number') : 4;
 
+		// Check connection type
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+			$connection = 'SSL';
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+			$connection = 'SSL';
+		} else {
+			$connection = 'NONSSL';
+		}
+
+		// Module - Menu Horizontal
 		$this->data['menu_home'] = isset($setting['home']) ? true : false;
 
-		$this->data['home'] = $this->url->link('common/home', '', 'SSL');
+		$this->data['home'] = $this->url->link('common/home', '', $connection);
 
-		// Menu Horizontal
 		$this->load->model('design/menu');
 
 		$this->data['menu_horizontal'] = array();
@@ -70,7 +79,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 				if ($menu_item['external_link']) {
 					$href = html_entity_decode($menu_item['menu_item_link'], ENT_QUOTES, 'UTF-8');
 				} else {
-					$href = $this->url->link($menu_item['menu_item_link'], '', 'SSL');
+					$href = $this->url->link($menu_item['menu_item_link'], '', $connection);
 				}
 			} else {
 				$href = '';
@@ -85,7 +94,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 					if ($child['external_link']) {
 						$child_href = html_entity_decode($child['menu_item_link'], ENT_QUOTES, 'UTF-8');
 					} else {
-						$child_href = $this->url->link($child['menu_item_link'], '', 'SSL');
+						$child_href = $this->url->link($child['menu_item_link'], '', $connection);
 					}
 				} else {
 					$child_href = '';
