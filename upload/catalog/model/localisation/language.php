@@ -7,13 +7,13 @@ class ModelLocalisationLanguage extends Model {
 		return $query->row;
 	}
 
-	public function getLanguages() {
+	public function getLanguages(): array {
 		$language_data = $this->cache->get('language');
 
 		if (!$language_data) {
 			$language_data = array();
 
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` ORDER BY sort_order, name");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` ORDER BY sort_order, `name`");
 
 			foreach ($query->rows as $result) {
 				$language_data[$result['code']] = array(
