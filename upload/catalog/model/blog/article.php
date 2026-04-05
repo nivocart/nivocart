@@ -2,11 +2,11 @@
 class ModelBlogArticle extends Model {
 
 	public function getArticles(array $data = []): array {
-		$sql = "SELECT ba.*, bad.*, bau.name AS author_name FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id)";
+		$sql = "SELECT ba.*, bad.*, bau.name AS `author_name` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id)";
 		$sql .= " WHERE ba.status = '1' AND bau.status = '1' AND ba2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		$sql .= " ORDER BY ba.date_modified DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -126,7 +126,7 @@ class ModelBlogArticle extends Model {
 		return $query->row['total'];
 	}
 
-	public function getCommentsByArticle(int $blog_article_id, int $blog_comment_id = 0, $start = 0, $limit = 20) {
+	public function getCommentsByArticle(int $blog_article_id, int $blog_comment_id = 0, $start = 0, $limit = 20): array {
 		if (!$blog_comment_id) {
 			if ($start < 0) {
 				$start = 0;
@@ -178,7 +178,7 @@ class ModelBlogArticle extends Model {
 	public function getArticleCategoryWise(array $data = []): array {
 		$sql = "SELECT ba.*, bad.*, bau.name AS `author_name` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_category` bac ON (ba.blog_article_id = bac.blog_article_id) WHERE bac.blog_category_id = '" . (int)$data['blog_category_id'] . "' AND ba.status = '1' AND bau.status = '1' AND ba2s.store_id='" . (int)$this->config->get('config_store_id') . "' ORDER BY ba.date_modified DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -204,7 +204,7 @@ class ModelBlogArticle extends Model {
 	public function getArticleAuthorWise(array $data = []): array {
 		$sql = "SELECT ba.*, bad.*, bau.name AS `author_name` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON(ba.blog_author_id=bau.blog_author_id) WHERE ba.blog_author_id = '" . (int)$data['blog_author_id'] . "' AND ba.status = '1' AND bau.status = '1' AND ba2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY ba.date_modified DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -236,7 +236,7 @@ class ModelBlogArticle extends Model {
 
 		$sql .= " GROUP BY ba.blog_article_id ORDER BY ba.date_modified DESC";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -256,7 +256,7 @@ class ModelBlogArticle extends Model {
 	public function getPopularArticlesModuleWise(array $data = []) {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "blog_view`";
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -275,7 +275,7 @@ class ModelBlogArticle extends Model {
 
 			$sql .= " GROUP BY ba.blog_article_id ORDER BY bv.view DESC";
 
-			if (isset($data['start']) || isset($data['limit'])) {
+			if (isset($data['start']) && isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}
