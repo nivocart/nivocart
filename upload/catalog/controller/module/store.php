@@ -30,15 +30,11 @@ class ControllerModuleStore extends Controller {
 			$this->data['text_default'] = $this->language->get('text_default');
 
 			if ($this->user) {
+				$this->data['userid'] = $this->user->getId();
 				$this->data['username'] = $this->user->getUserName();
 			} else {
-				$this->data['username'] = '';
-			}
-
-			if ($this->user) {
-				$this->data['userid'] = $this->user->getId();
-			} else {
 				$this->data['userid'] = '';
+				$this->data['username'] = '';
 			}
 
 			$this->data['store_id'] = $this->config->get('config_store_id');
@@ -63,11 +59,7 @@ class ControllerModuleStore extends Controller {
 				);
 			}
 
-			if (isset($setting['access'])) {
-				$this->data['access'] = 1;
-			} else {
-				$this->data['access'] = 0;
-			}
+			$this->data['access'] = isset($setting['access']) ? 1 : 0;
 
 			$this->data['button_adminlogin'] = $this->language->get('button_adminlogin');
 

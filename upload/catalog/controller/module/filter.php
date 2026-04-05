@@ -31,19 +31,13 @@ class ControllerModuleFilter extends Controller {
 			$this->data['button_filter'] = $this->language->get('button_filter');
 
 			// Filters
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->data['action'] = str_replace('&amp;', '&', $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url, 'SSL'));
 

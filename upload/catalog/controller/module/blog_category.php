@@ -23,7 +23,9 @@ class ControllerModuleBlogCategory extends Controller {
 		if ($blog_tables) {
 			$this->data['blog_categories'] = array();
 
-			$blog_categories_1 = $this->model_blog_article->getCategories(0);
+			$parent_id = 0;
+
+			$blog_categories_1 = $this->model_blog_article->getCategories($parent_id);
 
 			foreach ($blog_categories_1 as $blog_category_1) {
 				$level_2_data = array();

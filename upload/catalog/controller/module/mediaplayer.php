@@ -41,17 +41,8 @@ class ControllerModuleMediaPlayer extends Controller {
 			$this->data['media_id'] = false;
 		}
 
-		if ($setting['image_width']) {
-			$this->data['width'] = $setting['image_width'];
-		} else {
-			$this->data['width'] = 480;
-		}
-
-		if ($setting['image_height']) {
-			$this->data['height'] = $setting['image_height'];
-		} else {
-			$this->data['height'] = 320;
-		}
+		$this->data['width'] = ($setting['image_width']) ? $setting['image_width'] : 480;
+		$this->data['height'] = ($setting['image_height']) ? $setting['image_height'] : 320;
 
 		$this->data['icons'] = HTTPS_SERVER . 'catalog/view/javascript/jquery/plyr/dist/plyr.svg';
 

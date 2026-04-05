@@ -83,17 +83,9 @@ class ControllerModuleLatest extends Controller {
 				$special = false;
 			}
 
-			if ($this->config->get('config_review_status')) {
-				$rating = $result['rating'];
-			} else {
-				$rating = false;
-			}
+			$rating = $this->config->get('config_review_status') ? $result['rating'] : false;
 
-			if ($result['quantity'] <= 0) {
-				$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
-			} else {
-				$stock_label = false;
-			}
+			$stock_label = ($result['quantity'] <= 0) ? $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio) : false;
 
 			if (in_array($result['product_id'], $offers, true)) {
 				$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
@@ -103,11 +95,8 @@ class ControllerModuleLatest extends Controller {
 				$offer = false;
 			}
 
-			if ($result['quote']) {
-				$quote = $this->url->link('information/quote', '', 'SSL');
-			} else {
-				$quote = false;
-			}
+			// Quote redirect
+			$quote = ($result['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
 
 			$this->data['products'][] = array(
 				'product_id'      => $result['product_id'],

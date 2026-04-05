@@ -33,7 +33,7 @@ class ControllerModuleBlog extends Controller {
 		$results = $this->model_blog_article->getArticleModuleWise($data);
 
 		foreach ($results as $result) {
-			$description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '...';
+			$description = substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '...';
 
 			if ($result['image']) {
 				$image = $this->model_tool_image->resize($result['image'], 120, 120);

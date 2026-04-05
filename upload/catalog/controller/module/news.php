@@ -31,11 +31,7 @@ class ControllerModuleNews extends Controller {
 
 		$numchars = $setting['numchars'];
 
-		if (isset($numchars)) {
-			$chars = $numchars;
-		} else {
-			$chars = 100;
-		}
+		$chars = (isset($numchars)) ? $numchars : 100;
 
 		$this->data['news'] = array();
 
@@ -48,7 +44,7 @@ class ControllerModuleNews extends Controller {
 				$image = false;
 			}
 
-			$news_length = strlen(utf8_decode($result['description']));
+			$news_length = mb_strlen($result['description'], 'UTF-8');
 
 			if ($news_length > $chars) {
 				$description = '<p>' . substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $chars) . ' ...</p>';

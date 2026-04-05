@@ -70,7 +70,7 @@ class ControllerModuleCart extends Controller {
 		$this->load->model('catalog/offer');
 		$this->load->model('tool/image');
 
-		$offers = $this->model_catalog_offer->getListProductOffers(0);
+		$offers = $this->model_catalog_offer->getListProductOffers();
 
 		$this->data['products'] = array();
 

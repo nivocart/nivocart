@@ -22,17 +22,9 @@ class ControllerModuleBanner extends Controller {
 
 		$animation = $this->config->get($this->_name . '_transition');
 
-		if ($animation == 'fade') {
-			$this->data['animation'] = 'fade';
-		} else {
-			$this->data['animation'] = 'slide';
-		}
 
-		if ($animation == 'horizontal') {
-			$this->data['direction'] = 'horizontal';
-		} else {
-			$this->data['direction'] = 'vertical';
-		}
+		$this->data['animation'] = ($animation == 'fade') ? 'fade' : 'slide';
+		$this->data['direction'] = ($animation == 'horizontal') ? 'horizontal' : 'vertical';
 
 		$this->data['duration'] = ($this->config->get($this->_name . '_duration')) ? $this->config->get($this->_name . '_duration') : 5000;
 		$this->data['speed'] = ($this->config->get($this->_name . '_speed')) ? $this->config->get($this->_name . '_speed') : 500;

@@ -42,7 +42,7 @@ class ControllerModuleViewed extends Controller {
 		$this->load->model('catalog/offer');
 		$this->load->model('tool/image');
 
-		$offers = $this->model_catalog_offer->getListProductOffers(0);
+		$offers = $this->model_catalog_offer->getListProductOffers();
 
 		$products = array();
 
@@ -108,17 +108,9 @@ class ControllerModuleViewed extends Controller {
 					$special = false;
 				}
 
-				if ($this->config->get('config_review_status')) {
-					$rating = $product_info['rating'];
-				} else {
-					$rating = false;
-				}
+				$rating = $this->config->get('config_review_status') ? $product_info['rating'] : false;
 
-				if ($product_info['quantity'] <= 0) {
-					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
-				} else {
-					$stock_label = false;
-				}
+				$stock_label = ($product_info['quantity'] <= 0) ? $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio) : false;
 
 				if (in_array($product_info['product_id'], $offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
@@ -128,12 +120,9 @@ class ControllerModuleViewed extends Controller {
 					$offer = false;
 				}
 
-				if ($product_info['quote']) {
-					$quote = $this->url->link('information/quote', '', 'SSL');
-				} else {
-					$quote = false;
-				}
-
+				// Quote redirect
+				$quote = ($product_info['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
+	
 				$this->data['products'][] = array(
 					'product_id'      => $product_info['product_id'],
 					'thumb'           => $image,

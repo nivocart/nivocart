@@ -25,24 +25,17 @@ class ControllerModuleCategory extends Controller {
 			$parts = array();
 		}
 
-		if (isset($parts[0])) {
-			$this->data['category_id'] = $parts[0];
-		} else {
-			$this->data['category_id'] = 0;
-		}
-
-		if (isset($parts[1])) {
-			$this->data['child_id'] = $parts[1];
-		} else {
-			$this->data['child_id'] = 0;
-		}
+		$this->data['category_id'] = (isset($parts[0])) ? $parts[0] : 0;
+		$this->data['child_id'] = (isset($parts[1])) ? $parts[1] : 0;
 
 		$empty_category = $this->config->get('config_empty_category');
 		$product_count = $this->config->get('config_product_count');
 
 		$this->data['categories'] = array();
 
-		$categories = $this->model_catalog_category->getCategories(0);
+		$parent_id = 0;
+
+		$categories = $this->model_catalog_category->getCategories($parent_id);
 
 		foreach ($categories as $category) {
 			$data = array(

@@ -27,7 +27,9 @@ class ControllerModuleLinks extends Controller {
 		if ($connection_total > 0) {
 			$this->data['connections_li'] = array();
 
-			$connections = $this->model_design_connection->getConnections(0);
+			$connections_array = array();
+
+			$connections = $this->model_design_connection->getConnections($connections_array);
 
 			foreach ($connections as $connection) {
 				if ($connection['frontend']) {
