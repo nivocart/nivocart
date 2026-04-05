@@ -71,6 +71,9 @@ abstract class Controller {
 
 	/**
 	 * Forward
+	 *
+	 * @param string $route
+	 * @param array $args
 	 */
 	protected function forward(string $route, array $args = []) {
 		return new Action($route, $args);
@@ -78,13 +81,22 @@ abstract class Controller {
 
 	/**
 	 * Redirect
+	 *
+	 * @param string $url
+	 * @param int $status
 	 */
 	protected function redirect(string $url, int $status = 302) {
 		header('Location: ' . str_replace(array('&amp;', "\n", "\r"), array('&', '', ''), $url), true, $status);
 		exit(); 
 	}
 
-	protected function getChild($child, array $args = []) {
+	/**
+	 * getChild
+	 *
+	 * @param string $child
+	 * @param array $args
+	 */
+	protected function getChild(string $child, array $args = []) {
 		$action = new Action($child, $args);
 
 		if (file_exists($action->getFile())) {
@@ -102,7 +114,15 @@ abstract class Controller {
 		}
 	}
 
-	protected function hasAction($child, array $args = []) {
+	/**
+	 * hasAction
+	 *
+	 * @param string $child
+	 * @param array $args
+	 *
+	 * @return bool
+	 */
+	protected function hasAction(string $child, array $args = []): bool {
 		$action = new Action($child, $args);
 
 		if (file_exists($action->getFile())) {
@@ -124,8 +144,10 @@ abstract class Controller {
 
 	/**
 	 * Render
+	 *
+	 * @return string
 	 */
-	protected function render() {
+	protected function render(): string {
 		foreach ($this->children as $child) {
 			$this->data[basename($child)] = $this->getChild($child);
 		}
