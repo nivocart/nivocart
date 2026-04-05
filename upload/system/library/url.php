@@ -69,8 +69,7 @@ class Url {
 			$url = $rewrite->rewrite($url);
 		}
 
-		// See https://stackoverflow.com/questions/78729429/403-forbidden-when-url-contains-get-with-encoded-question-mark-unsafeallow3f
-		// https://github.com/opencart/opencart/issues/14202
+		// Sanitize url
 		$url = str_replace('%3F', '?', $url);
 
 		return $url;
