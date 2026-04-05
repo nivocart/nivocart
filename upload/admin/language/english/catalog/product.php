@@ -58,7 +58,7 @@ $_['entry_name']              = 'Product Name:';
 $_['entry_meta_description']  = 'Meta Tag Description:<span class="help">The optimal number of characters is around 155, including spaces.<br />SEO importance: High.</span>';
 $_['entry_meta_keyword']      = 'Meta Tag Keywords:<span class="help">Usually ignored by search engines.<br />SEO importance: Low.</span>';
 $_['entry_description']       = 'Product Description:';
-$_['entry_tag']               = 'Product Tags:<span class="help">Comma separated.</span>';
+$_['entry_tag']               = 'Product Tags:<span class="help">Helps greatly in product searches.<br /><b>Enter a comma separated list.</b></span>';
 
 $_['entry_model']             = 'Model:';
 $_['entry_image']             = 'Main Image:<span class="help">The main image will represent this product in both Administration and Catalog.</span>';
