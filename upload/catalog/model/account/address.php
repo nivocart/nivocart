@@ -2,32 +2,32 @@
 class ModelAccountAddress extends Model {
 
 	public function addAddress(array $data = []): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int)$this->customer->getId() . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company = '" . $this->db->escape($data['company']) . "', company_id = '" . $this->db->escape(isset($data['company_id']) ? $data['company_id'] : '') . "', tax_id = '" . $this->db->escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', city = '" . $this->db->escape($data['city']) . "', zone_id = '" . (int)$data['zone_id'] . "', country_id = '" . (int)$data['country_id'] . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "address` SET customer_id = '" . (int)$this->customer->getId() . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', company = '" . $this->db->escape((string)$data['company']) . "', company_id = '" . $this->db->escape(isset($data['company_id']) ? $data['company_id'] : '') . "', tax_id = '" . $this->db->escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', city = '" . $this->db->escape($data['city']) . "', zone_id = '" . (int)$data['zone_id'] . "', country_id = '" . (int)$data['country_id'] . "'");
 
 		$address_id = $this->db->getLastId();
 
 		if (!empty($data['default'])) {
-			$this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 		}
 	}
 
 	public function editAddress(int $address_id, array $data = []): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "address SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company = '" . $this->db->escape($data['company']) . "', company_id = '" . $this->db->escape(isset($data['company_id']) ? $data['company_id'] : '') . "', tax_id = '" . $this->db->escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', city = '" . $this->db->escape($data['city']) . "', zone_id = '" . (int)$data['zone_id'] . "', country_id = '" . (int)$data['country_id'] . "' WHERE address_id  = '" . (int)$address_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "address` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', company = '" . $this->db->escape((string)$data['company']) . "', company_id = '" . $this->db->escape(isset($data['company_id']) ? $data['company_id'] : '') . "', tax_id = '" . $this->db->escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', city = '" . $this->db->escape($data['city']) . "', zone_id = '" . (int)$data['zone_id'] . "', country_id = '" . (int)$data['country_id'] . "' WHERE address_id  = '" . (int)$address_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if (!empty($data['default'])) {
-			$this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 		}
 	}
 
 	public function deleteAddress(int $address_id): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "address WHERE address_id = '" . (int)$address_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "address` WHERE address_id = '" . (int)$address_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
 	}
 
 	public function getAddress(int $address_id) {
-		$address_query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "address WHERE address_id = '" . (int)$address_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
+		$address_query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "address` WHERE address_id = '" . (int)$address_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if ($address_query->num_rows) {
-			$country_query = $this->db->query("SELECT DISTINCT *, cd.name AS `name` FROM " . DB_PREFIX . "country c LEFT JOIN " . DB_PREFIX . "country_description cd ON (c.country_id = cd.country_id) WHERE c.country_id = '" . (int)$address_query->row['country_id'] . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			$country_query = $this->db->query("SELECT DISTINCT *, cd.name AS `name` FROM `" . DB_PREFIX . "country` c LEFT JOIN `" . DB_PREFIX . "country_description` cd ON (c.country_id = cd.country_id) WHERE c.country_id = '" . (int)$address_query->row['country_id'] . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 			if ($country_query->num_rows) {
 				$country = $country_query->row['name'];
@@ -80,10 +80,10 @@ class ModelAccountAddress extends Model {
 	public function getAddresses(): array {
 		$address_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "address` WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 
 		foreach ($query->rows as $result) {
-			$country_query = $this->db->query("SELECT *, cd.name AS name FROM " . DB_PREFIX . "country c LEFT JOIN " . DB_PREFIX . "country_description cd ON (c.country_id = cd.country_id) WHERE c.country_id = '" . (int)$result['country_id'] . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			$country_query = $this->db->query("SELECT *, cd.name AS `name` FROM `" . DB_PREFIX . "country` c LEFT JOIN `" . DB_PREFIX . "country_description` cd ON (c.country_id = cd.country_id) WHERE c.country_id = '" . (int)$result['country_id'] . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 			if ($country_query->num_rows) {
 				$country = $country_query->row['name'];
@@ -133,7 +133,7 @@ class ModelAccountAddress extends Model {
 	}
 
 	public function getTotalAddresses(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "address` WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if ($query->num_rows) {
 			return $query->row['total'];
@@ -143,7 +143,7 @@ class ModelAccountAddress extends Model {
 	}
 
 	public function getDefaultAddressId(int $customer_id) {
-		$query = $this->db->query("SELECT DISTINCT address_id AS `address` FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$customer_id . "'");
+		$query = $this->db->query("SELECT DISTINCT address_id AS `address` FROM `" . DB_PREFIX . "customer` WHERE customer_id = '" . (int)$customer_id . "'");
 
 		if ($query->row['address']) {
 			return $query->row['address'];

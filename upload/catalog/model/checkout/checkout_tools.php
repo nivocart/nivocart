@@ -11,7 +11,7 @@ class ModelCheckoutCheckoutTools extends Model {
 		}
 	}
 
-	public function generatePassword() {
+	public function generatePassword(): array {
 		$passwords = array(
 			"qwerty", "azerty", "test", "love", "hello", "monkey", "dragon", "express", "shadow",
 			"sunshine", "master", "computer", "princess", "tiger", "football", "angel", "whatever",

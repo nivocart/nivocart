@@ -2,7 +2,7 @@
 class ModelAffiliateTransaction extends Model {
 
 	public function getTransactions(array $data = []): array {
-		$sql = "SELECT * FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "affiliate_transaction` WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'";
 
 		$sort_data = array(
 			'amount',
@@ -22,7 +22,7 @@ class ModelAffiliateTransaction extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -40,7 +40,7 @@ class ModelAffiliateTransaction extends Model {
 	}
 
 	public function getTotalTransactions(array $data = []): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "affiliate_transaction` WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'");
 
 		if ($query->num_rows) {
 			return $query->row['total'];
@@ -50,7 +50,7 @@ class ModelAffiliateTransaction extends Model {
 	}
 
 	public function getBalance() {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "affiliate_transaction WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "' GROUP BY affiliate_id");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "affiliate_transaction` WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "' GROUP BY affiliate_id");
 
 		if ($query->num_rows) {
 			return $query->row['total'];

@@ -2,7 +2,7 @@
 class ModelAccountTransaction extends Model {
 
 	public function getTransactions(array $data = []): array {
-		$sql = "SELECT * FROM " . DB_PREFIX . "customer_transaction WHERE customer_id = '" . (int)$this->customer->getId() . "'";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "customer_transaction` WHERE customer_id = '" . (int)$this->customer->getId() . "'";
 
 		$sort_data = array(
 			'amount',
@@ -22,7 +22,7 @@ class ModelAccountTransaction extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -40,7 +40,7 @@ class ModelAccountTransaction extends Model {
 	}
 
 	public function getTotalTransactions(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_transaction WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_transaction` WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if ($query->num_rows) {
 			return $query->row['total'];
@@ -50,7 +50,7 @@ class ModelAccountTransaction extends Model {
 	}
 
 	public function getTotalAmount() {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "customer_transaction WHERE customer_id = '" . (int)$this->customer->getId() . "' GROUP BY customer_id");
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "customer_transaction` WHERE customer_id = '" . (int)$this->customer->getId() . "' GROUP BY customer_id");
 
 		if ($query->num_rows) {
 			return $query->row['total'];

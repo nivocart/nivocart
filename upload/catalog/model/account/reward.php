@@ -2,7 +2,7 @@
 class ModelAccountReward extends Model {
 
 	public function getRewards(array $data = []): array {
-		$sql = "SELECT * FROM " . DB_PREFIX . "customer_reward WHERE customer_id = '" . (int)$this->customer->getId() . "'";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "customer_reward` WHERE customer_id = '" . (int)$this->customer->getId() . "'";
 
 		$sort_data = array(
 			'points',
@@ -22,7 +22,7 @@ class ModelAccountReward extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -40,7 +40,7 @@ class ModelAccountReward extends Model {
 	}
 
 	public function getTotalRewards(): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_reward WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_reward` WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if ($query->num_rows) {
 			return $query->row['total'];
@@ -50,7 +50,7 @@ class ModelAccountReward extends Model {
 	}
 
 	public function getTotalPoints() {
-		$query = $this->db->query("SELECT SUM(points) AS `total` FROM " . DB_PREFIX . "customer_reward WHERE customer_id = '" . (int)$this->customer->getId() . "' GROUP BY customer_id");
+		$query = $this->db->query("SELECT SUM(points) AS `total` FROM `" . DB_PREFIX . "customer_reward` WHERE customer_id = '" . (int)$this->customer->getId() . "' GROUP BY customer_id");
 
 		if ($query->num_rows) {
 			return $query->row['total'];

@@ -78,13 +78,13 @@ class ModelAffiliateAffiliate extends Model {
 	}
 
 	public function addActivity(int $affiliate_id, $key, $affiliate_name): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "affiliate_activity SET affiliate_id = '" . (int)$affiliate_id . "', `key` = '" . $this->db->escape($key) . "', name = '" . $this->db->escape($affiliate_name) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_activity` SET affiliate_id = '" . (int)$affiliate_id . "', `key` = '" . $this->db->escape($key) . "', `name` = '" . $this->db->escape($affiliate_name) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
 	}
 
 	public function editAffiliate(array $data = []): void {
 		$affiliate_id = $this->affiliate->getId();
 
-		$this->db->query("UPDATE " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', company = '" . $this->db->escape((string)$data['company']) . "', website = '" . $this->db->escape((string)$data['website']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape((string)$data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int)$data['country_id'] . "', zone_id = '" . (int)$data['zone_id'] . "' WHERE affiliate_id = '" . (int)$affiliate_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "affiliate` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', company = '" . $this->db->escape((string)$data['company']) . "', website = '" . $this->db->escape((string)$data['website']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape((string)$data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int)$data['country_id'] . "', zone_id = '" . (int)$data['zone_id'] . "' WHERE affiliate_id = '" . (int)$affiliate_id . "'");
 	}
 
 	public function editPayment(array $data = []): void {
@@ -94,11 +94,11 @@ class ModelAffiliateAffiliate extends Model {
 	}
 
 	public function editPassword(string $email, string $password): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "affiliate SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "affiliate` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
 	}
 
 	public function checkAffiliatePassword(int $affiliate_id, string $email, string$password) {
-		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') THEN 0 ELSE 1 END AS result FROM " . DB_PREFIX . "affiliate WHERE affiliate_id = '" . (int)$affiliate_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "' AND status = '1' AND approved = '1'");
+		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') THEN 0 ELSE 1 END AS result FROM " . DB_PREFIX . "affiliate WHERE affiliate_id = '" . (int)$affiliate_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
 
 		if ($query->row['result']) {
 			return $query->row['result'];
@@ -114,7 +114,7 @@ class ModelAffiliateAffiliate extends Model {
 	}
 
 	public function getAffiliateByEmail(string $email) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
 
 		return $query->row;
 	}
@@ -126,7 +126,7 @@ class ModelAffiliateAffiliate extends Model {
 	}
 
 	public function getTotalAffiliatesByEmail(string $email): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "affiliate WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "affiliate` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
 
 		return $query->row['total'];
 	}
@@ -222,22 +222,22 @@ class ModelAffiliateAffiliate extends Model {
 
 	// Login
 	public function getLoginAttempts(string $email) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
 
 		return $query->row;
 	}
 
 	public function addLoginAttempt(string $email) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
 
 		if (!$query->num_rows) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_login` SET email = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `total` = '1', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_login` SET email = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `total` = '1', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
 		} else {
 			$this->db->query("UPDATE `" . DB_PREFIX . "affiliate_login` SET `total` = (`total` + 1), date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE affiliate_login_id = '" . (int)$query->row['affiliate_login_id'] . "'");
 		}
 	}
 
 	public function deleteLoginAttempts(string $email) {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
 	}
 }
