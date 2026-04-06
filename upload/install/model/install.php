@@ -169,7 +169,7 @@ class ModelInstall extends Model {
 
 				$path = rtrim(rtrim(dirname($_SERVER['SCRIPT_NAME']), ''), '/' . $folder . '.\\');
 
-				if (strlen($path) > 1) {
+				if (mb_strlen($path, 'UTF-8') > 1) {
 					$path .= '/';
 				}
 
