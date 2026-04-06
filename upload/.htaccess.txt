@@ -59,6 +59,11 @@ AddType video/webm .webm
   Header set X-XSS-Protection "1; mode=block" 
 </IfModule>
 
+## X-Frame-Options
+<IfModule mod_headers.c>
+	Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
 ## Set Cache Control header
 <IfModule mod_headers.c> 
  <filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
@@ -91,7 +96,6 @@ RewriteEngine On
 RewriteBase /
 
 RewriteRule ^sitemap.xml$ index.php?route=feed/google_sitemap [L]
-RewriteRule ^googlebase.xml$ index.php?route=feed/google_base [L]
 RewriteRule ^download/(.*) index.php?route=error/not_found [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
