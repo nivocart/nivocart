@@ -68,18 +68,23 @@ class ControllerCommonSeoUrl extends Controller {
 							$this->request->get['blog_category_id'] .= '_' . $url[1];
 						}
 					}
-
-					if ($this->config->get('config_seo_url')) {
-						if ($query->row['query'] && $url[0] != 'blog_category_id' && $url[0] != 'blog_author_id' && $url[0] != 'blog_article_id' && $url[0] != 'news_id' && $url[0] != 'information_id' && $url[0] != 'manufacturer_id' && $url[0] != 'category_id' && $url[0] != 'product_id') {
-							$this->request->get['route'] = $query->row['query'];
-						} else {
-							$this->request->get['route'] = 'error/not_found';
-						}
-					}
 				}
 			}
 
+			// Assign route based on what GET params were populated
 			if (isset($this->request->get['product_id'])) {
+				// 301 redirect to canonical product URL, stripping manufacturer/category prefix
+				$canonical = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'product_id=" . (int)$this->request->get['product_id'] . "'");
+
+				if ($canonical->num_rows && $canonical->row['keyword']) {
+					$requested = trim($this->request->get['_route_'], '/');
+
+					if ($requested !== $canonical->row['keyword']) {
+						header('Location: /nivocart/' . $canonical->row['keyword'], true, 301);
+						exit;
+					}
+				}
+
 				$this->request->get['route'] = 'product/product';
 			} elseif (isset($this->request->get['path'])) {
 				$this->request->get['route'] = 'product/category';
@@ -103,12 +108,7 @@ class ControllerCommonSeoUrl extends Controller {
 		}
 
 		if ((isset($this->request->get['route'])) && ($this->config->get('config_seo_url'))) {
-			$route = (string)$this->request->get['route'];
-
-			// Sanitize the call
-			$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);
-
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $route . "'");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->request->get['route'] . "'");
 
 			if ($query->num_rows) {
 				header('Location:/' . $query->row['keyword'], true, 301);
@@ -127,36 +127,32 @@ class ControllerCommonSeoUrl extends Controller {
 
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {
-				if (($data['route'] == 'product/product' && $key == 'product_id') || (($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || ($data['route'] == 'information/information' && $key == 'information_id') || ($data['route'] == 'information/news' && $key == 'news_id')) {
+				if (($data['route'] == 'product/product' && $key == 'product_id') || 
+				(($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || 
+				($data['route'] == 'information/information' && $key == 'information_id') || ($data['route'] == 'information/news' && $key == 'news_id') ||
+				($data['route'] == 'blog/article_info' && $key == 'blog_article_id') || ($data['route'] == 'blog/article_author' && $key == 'blog_author_id')) {
 					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
 
 					if ($query->num_rows && $query->row['keyword']) {
 						$url .= '/' . $query->row['keyword'];
+
 						unset($data[$key]);
 					}
 
-				} elseif (($data['route'] == 'blog/article_info' && $key == 'blog_article_id') || ($data['route'] == 'blog/article_author' && $key == 'blog_author_id')) {
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
-
-					if ($query->num_rows) {
-						$url .= '/' . $query->row['keyword'];
-						unset($data[$key]);
-					}
-
-				} elseif ($data['route'] == 'blog/category' && $key == 'blog_category_id') {
+				} elseif ($data['route'] == 'blog/category' && $key == 'blog_category_id' && !is_array($value)) {
 					$blog_categories = explode("_", $value);
 
 					foreach ($blog_categories as $blog_category) {
 						$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'blog_category_id=" . (int)$blog_category . "'");
 
-						if ($query->num_rows) {
+						if ($query->num_rows && $query->row['keyword']) {
 							$url .= '/' . $query->row['keyword'];
 						}
 					}
 
 					unset($data[$key]);
 
-				} elseif ($key == 'path') {
+				} elseif ($key == 'path' && !is_array($value)) {
 					$categories = explode('_', $value);
 
 					foreach ($categories as $category) {
@@ -164,9 +160,6 @@ class ControllerCommonSeoUrl extends Controller {
 
 						if ($query->num_rows && $query->row['keyword']) {
 							$url .= '/' . $query->row['keyword'];
-						} else {
-							$url = '';
-							break;
 						}
 					}
 
@@ -181,6 +174,7 @@ class ControllerCommonSeoUrl extends Controller {
 
 						if ($query->num_rows && $query->row['keyword']) {
 							$url .= '/' . $query->row['keyword'];
+
 							unset($data[$key]);
 						}
 					}
@@ -195,7 +189,7 @@ class ControllerCommonSeoUrl extends Controller {
 
 			if ($data) {
 				foreach ($data as $key => $value) {
-					$query .= '&' . rawurlencode((string)$key) . '=' . rawurlencode((string)$value);
+					$query .= '&' . rawurlencode((string)$key) . '=' . rawurlencode((is_array($value) ? http_build_query($value) : (string)$value));
 				}
 
 				if ($query) {
@@ -203,9 +197,7 @@ class ControllerCommonSeoUrl extends Controller {
 				}
 			}
 
-			$new_link = $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
-
-			return $new_link;
+			return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
 		} else {
 			return $link;
 		}
