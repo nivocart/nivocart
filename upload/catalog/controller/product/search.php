@@ -353,7 +353,7 @@ class ControllerProductSearch extends Controller {
         $age_checked = false;
 
         if ($this->config->get('config_customer_dob') && $result['age_minimum'] > 0 && $this->customer->isLogged() && $this->customer->isSecure()) {
-            $age_logged    = true;
+            $age_logged = true;
             $date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
             if ($date_of_birth && $date_of_birth !== '0000-00-00') {
@@ -387,7 +387,7 @@ class ControllerProductSearch extends Controller {
             'tax'             => $tax,
             'rating'          => $rating,
             'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
-            'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url, 'SSL'),
+			'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
         ];
     }
 
@@ -436,19 +436,19 @@ class ControllerProductSearch extends Controller {
 							$special = false;
 						}
 
-						$product_id = (int)$values['product_id'];
-
 						if ($this->config->get('config_price_hide')) {
 							$product_price = '';
 						} else {
 							$product_price = ($special) ? $special : $price;
 						}
 
+						$product_id = (int)$values['product_id'];
+
 						$data[$key] = array(
 							'name'  => html_entity_decode($values['name'] . ' ' . $product_price, ENT_QUOTES, 'UTF-8'),
 							'image' => $image,
 							'alt'   => $values['name'],
-							'href'  => $this->url->link('product/product&product_id=' . (int)$product_id, '', 'SSL')
+							'href'  => $this->url->link('product/product', 'product_id=' . (int)$product_id, 'SSL')
 						);
 					}
 				}
