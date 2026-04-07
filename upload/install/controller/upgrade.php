@@ -89,7 +89,9 @@ class ControllerUpgrade extends Controller {
 			}
 
 			if (isset($step2) && $step2 = true) {
-				$this->model_upgrade->repairCategories(0, false);
+				$parent_id = 0;
+
+				$this->model_upgrade->repairCategories($parent_id, false);
 			}
 
 			if (isset($step3) && $step3 = true) {

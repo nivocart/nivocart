@@ -1,10 +1,9 @@
 <?php
-// ---------------------------------
+// ----------------------------------
 // NivoCart Upgrade Script
-// ---------------------------------
-// Upgrading directly from OpenCart
-// Min. version supported: v1.5.5.1
-// ---------------------------------
+// ----------------------------------
+// Minimum version supported: v2.0.0
+// ----------------------------------
 
 class ModelUpgrade extends Model {
 
@@ -146,7 +145,7 @@ class ModelUpgrade extends Model {
 		$table_query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
 
 		foreach ($table_query->rows as $table) {
-			if (mb_substr($table['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX), 'UTF-8') == DB_PREFIX) {
+			if (mb_substr($table['Tables_in_' . DB_DATABASE], 0, mb_strlen(DB_PREFIX, 'UTF-8'), 'UTF-8') == DB_PREFIX) {
 				$field_data = array();
 				$extended_field_data = array();
 
@@ -189,7 +188,7 @@ class ModelUpgrade extends Model {
 
 						foreach ($table_old_data[$table['name']]['extended_field_data'] as $oldfield) {
 							if ($oldfield['Extra'] == 'auto_increment' && $field['autoincrement']) {
-								$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $oldfield['Field'] . "` `" . $field['name'] . "` " . strtoupper($field['type']);
+								$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $oldfield['Field'] . "` `" . $field['name'] . "` " . mb_strtoupper($field['type'], 'UTF-8');
 								$status = false;
 								break;
 							}
@@ -229,7 +228,7 @@ class ModelUpgrade extends Model {
 
 					} else {
 						// Remove auto-increment from all fields
-						$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $field['name'] . "` `" . $field['name'] . "` " . strtoupper($field['type']);
+						$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $field['name'] . "` `" . $field['name'] . "` " . mb_strtoupper($field['type'], 'UTF-8');
 
 						if ($field['size']) {
 							$sql .= "(" . $field['size'] . ")";
@@ -313,7 +312,7 @@ class ModelUpgrade extends Model {
 				// Add auto-increment to primary keys again
 				foreach ($table['field'] as $field) {
 					if ($field['autoincrement']) {
-						$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $field['name'] . "` `" . $field['name'] . "` " . strtoupper($field['type']);
+						$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $field['name'] . "` `" . $field['name'] . "` " . mb_strtoupper($field['type'], 'UTF-8');
 
 						if ($field['size']) {
 							$sql .= "(" . $field['size'] . ")";
@@ -359,82 +358,20 @@ class ModelUpgrade extends Model {
 	public function additionalTables($step2) {
 		set_time_limit(60);
 
-		// Add serialized to Setting
+		// Add json_decode to Setting
 		$setting_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE store_id = '0' ORDER BY store_id ASC");
 
 		foreach ($setting_query->rows as $setting) {
 			if (!$setting['serialized']) {
 				$settings[$setting['key']] = $setting['value'];
 			} else {
-				$settings[$setting['key']] = unserialize($setting['value']);
+				$settings[$setting['key']] = $setting['value'] ? json_decode($setting['value'], true) : [];
 			}
 		}
 
-		// Update the country table (OCE)
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "country' AND COLUMN_NAME = 'name'");
-
-		if ($query->num_rows) {
-			// Country 'name' field moved to new country_description table. Need to loop through and move over
-			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country`");
-
-			foreach ($country_query->rows as $country) {
-				$language_query = $this->db->query("SELECT language_id FROM `" . DB_PREFIX . "language`");
-
-				foreach ($language_query->rows as $language) {
-					$this->db->query("REPLACE INTO `" . DB_PREFIX . "country_description` SET country_id = '" . (int)$country['country_id'] . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($country['name']) . "'");
-				}
-			}
-		}
-
-		// Update the manufacturer table (OCE)
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "manufacturer' AND COLUMN_NAME = 'name'");
-
-		if ($query->num_rows) {
-			// Manufacturer 'name' field moved to new manufacturer_description table. Need to loop through and move over
-			$manufacturer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer`");
-
-			foreach ($manufacturer_query->rows as $manufacturer) {
-				$language_query = $this->db->query("SELECT language_id FROM `" . DB_PREFIX . "language`");
-
-				foreach ($language_query->rows as $language) {
-					$this->db->query("REPLACE INTO `" . DB_PREFIX . "manufacturer_description` SET manufacturer_id = '" . (int)$manufacturer['manufacturer_id'] . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($manufacturer['name']) . "'");
-				}
-			}
-		}
-
-		// Move customer IP blacklist to customer ban IP table (OC)
-		$ip_query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "customer_ip_blacklist'");
-
-		if ($ip_query->num_rows) {
-			$blacklist_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_ip_blacklist`");
-
-			foreach ($blacklist_query->rows as $result) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_ban_ip` SET ip = '" . $this->db->escape($result['ip']) . "'");
-			}
-
-			// Drop unused table
-			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "customer_ip_blacklist`");
-		}
-
-		// Product tag table to product description tag (OCE)
-		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_tag'");
-
-		if ($query->num_rows) {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language`");
-
-			foreach ($query->rows as $language) {
-				$query = $this->db->query("SELECT p.product_id, GROUP_CONCAT(DISTINCT pt.tag order by pt.tag ASC SEPARATOR ',') AS tags FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_tag pt ON (p.product_id = pt.product_id) WHERE pt.language_id = '" . (int)$language['language_id'] . "' GROUP BY p.product_id");
-
-				if ($query->num_rows) {
-					foreach ($query->rows as $row) {
-						$this->db->query("UPDATE " . DB_PREFIX . "product_description SET tag = '" . $this->db->escape(mb_strtolower($row['tags'], 'UTF-8')) . "' WHERE product_id = '" . (int)$row['product_id'] . "' AND language_id = '" . (int)$language['language_id'] . "'");
-					}
-				}
-			}
-		}
-
-		// Drop unused order_fraud table (OCE)
-		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "order_fraud`");
+		// ----------------------------------
+		// No additional tables at this time
+		// ----------------------------------
 
 		flush();
 
@@ -443,9 +380,9 @@ class ModelUpgrade extends Model {
 		return $step2;
 	}
 
-	// --------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------
 	// Function to repair any erroneous categories that are not in the category path table
-	// --------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------
 	public function repairCategories($parent_id = 0, $step3) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category` WHERE parent_id = '" . (int)$parent_id . "'");
 
@@ -469,7 +406,9 @@ class ModelUpgrade extends Model {
 			$this->repairCategories($category['category_id'], false);
 		}
 
-		// Create system/upload directory
+		// --------------------------------------------------
+		// Check system/upload directory. Create if missing
+		// --------------------------------------------------
 		$upload_directory = DIR_SYSTEM . 'upload/';
 
 		if (!is_dir($upload_directory)) {
@@ -481,20 +420,17 @@ class ModelUpgrade extends Model {
 		return $step3;
 	}
 
-	// -----------------------------------------------
+	// ---------------------------------------------------
 	// Function to update the existing "config.php" files
 	//
 	// If missing, deprecated or redundant:
-	// -----------------------------------
+	// ------------------------------------
 	// Add constant: 'HTTP_IMAGE'
 	// Add constant: 'HTTPS_IMAGE'
 	// Add constant: 'DIR_UPLOAD'
 	// Add constant: 'DIR_VQMOD'
-	// Add constant: 'DB_PORT'
-	// Replace DB_DRIVER: 'mysql' with 'mysqli'
-	// Replace backslashes with slashes
 	// Remove PHP closing tag
-	// -----------------------------------------------
+	// ---------------------------------------------------
 	public function updateConfig($step4) {
 		set_time_limit(60);
 
@@ -504,11 +440,13 @@ class ModelUpgrade extends Model {
 			// Check if config files are writeable
 			foreach ($files as $file) {
 				if (!is_writable($file)) {
-					exit('ATTENTION: ' . $file . ' file is read only. Please adjust and try again.');
+					exit('ATTENTION: ' . $file . ' file is read only. Please adjust CHMOD and try again.');
 				}
 			}
 
+			// --------------------------
 			// Add HTTP_IMAGE if missing
+			// --------------------------
 			foreach ($files as $file) {
 				$upgrade_http = true;
 
@@ -539,7 +477,9 @@ class ModelUpgrade extends Model {
 				}
 			}
 
+			// ---------------------------
 			// Add HTTPS_IMAGE if missing
+			// ---------------------------
 			foreach ($files as $file) {
 				$upgrade_https = true;
 
@@ -570,7 +510,9 @@ class ModelUpgrade extends Model {
 				}
 			}
 
+			// ---------------------------
 			// Add DIR_UPLOAD if missing
+			// ---------------------------
 			foreach ($files as $file) {
 				$upgrade_upload = true;
 
@@ -600,7 +542,9 @@ class ModelUpgrade extends Model {
 				}
 			}
 
+			// ---------------------------
 			// Add DIR_VQMOD if missing
+			// ---------------------------
 			foreach ($files as $file) {
 				$upgrade_vqmod = true;
 
@@ -630,90 +574,9 @@ class ModelUpgrade extends Model {
 				}
 			}
 
-			// Add DB_PORT if missing
-			foreach ($files as $file) {
-				$upgrade_port = true;
-
-				$lines = file($file);
-
-				foreach ($lines as $line) {
-					if (strpos(strtoupper($line), 'DB_PORT') !== false) {
-						$upgrade_port = false;
-						break;
-					}
-				}
-
-				if ($upgrade_port) {
-					$output = '';
-
-					foreach ($lines as $line_id => $line) {
-						if (strpos($line, 'DB_PREFIX') !== false) {
-							$new_line = "define('DB_PORT', '" . ini_get('mysqli.default_port') . "');";
-							$output .= $new_line . "\n";
-							$output .= $line;
-						} else {
-							$output .= $line;
-						}
-					}
-
-					file_put_contents($file, $output);
-				}
-			}
-
-			// Replace deprecated mysql with mysqli
-			foreach ($files as $file) {
-				$upgrade_mysql = false;
-
-				$lines = file($file);
-
-				foreach ($lines as $line) {
-					if (strpos($line, "'mysql'") !== false) {
-						$upgrade_mysql = true;
-						break;
-					}
-				}
-
-				if ($upgrade_mysql) {
-					$output = '';
-
-					foreach ($lines as $line_id => $line) {
-						if (strpos($line, "'mysql'") !== false) {
-							$new_line = "define('DB_DRIVER', 'mysqli');";
-							$output .= $new_line . "\n";
-						} else {
-							$output .= $line;
-						}
-					}
-
-					file_put_contents($file, $output);
-				}
-			}
-
-			// Replace all "\" in URLs with "/"
-			foreach ($files as $file) {
-				$upgrade_slashes = false;
-
-				$lines = file($file);
-
-				foreach ($lines as $line) {
-					if (strpos($line, "\\") !== false) {
-						$upgrade_slashes = true;
-						break;
-					}
-				}
-
-				if ($upgrade_slashes) {
-					$output = '';
-
-					foreach ($lines as $line_id => $line) {
-						$output .= str_replace("\\", "/", $line);
-					}
-
-					file_put_contents($file, $output);
-				}
-			}
-
-			// Remove redundant PHP closing tag
+			// ---------------------------
+			// Remove PHP closing tag
+			// ---------------------------
 			foreach ($files as $file) {
 				$upgrade_tag = false;
 
@@ -751,14 +614,16 @@ class ModelUpgrade extends Model {
 		return $step4;
 	}
 
-	// ------------------------------------
+	// -------------------------------------
 	// Function to update the layout routes
-	// ------------------------------------
+	// -------------------------------------
 	public function updateLayouts($step5) {
+		// -----------
 		// Get stores
-		$stores = array(0);
+		// -----------
+		$stores = array();
 
-		$sql = "SELECT store_id FROM " . DB_PREFIX . "store";
+		$sql = "SELECT store_id FROM `" . DB_PREFIX . "store`";
 
 		$query_store = $this->db->query($sql);
 
@@ -766,16 +631,20 @@ class ModelUpgrade extends Model {
 			$stores[] = $store['store_id'];
 		}
 
-		// Create News layout
-		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'News' LIMIT 0,1";
+		// -------------------------------------------------
+		// Check News entry in layout table. Add if missing
+		// -------------------------------------------------
+		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'News' LIMIT 0,1";
 
 		$query_name = $this->db->query($sql);
 
 		if ($query_name->num_rows == 0) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET name = 'News'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = 'News'");
 		}
 
-		// Add News routes
+		// --------------------------------------------------------------------
+		// Check News routes in layout_route table. Add News routes if missing
+		// --------------------------------------------------------------------
 		$news_routes = array('information/news', 'information/news_list');
 
 		foreach ($stores as $store_id) {
@@ -785,21 +654,25 @@ class ModelUpgrade extends Model {
 				$query = $this->db->query($sql);
 
 				if ($query->num_rows == 0) {
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE name = 'News'), store_id = '" . (int)$store_id . "', `route` = '" . $news_route . "'");
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = 'News'), store_id = '" . (int)$store_id . "', `route` = '" . $news_route . "'");
 				}
 			}
 		}
 
-		// Create Special layout
-		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Special' LIMIT 0,1";
+		// -------------------------------------------------
+		// Check Special entry in layout table. Add if missing
+		// -------------------------------------------------
+		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'Special' LIMIT 0,1";
 
 		$query_name = $this->db->query($sql);
 
 		if ($query_name->num_rows == 0) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET name = 'Special'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = 'Special'");
 		}
 
-		// Add Special routes
+		// --------------------------------------------------------------------------
+		// Check Special routes in layout_route table. Add Special routes if missing
+		// --------------------------------------------------------------------------
 		$special_routes = array('product/special');
 
 		foreach ($stores as $store_id) {
@@ -809,7 +682,7 @@ class ModelUpgrade extends Model {
 				$query = $this->db->query($sql);
 
 				if ($query->num_rows == 0) {
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE name = 'Special'), store_id = '" . (int)$store_id . "', `route` = '" . $special_route . "'");
+					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = 'Special'), store_id = '" . (int)$store_id . "', `route` = '" . $special_route . "'");
 				}
 			}
 		}
@@ -819,20 +692,20 @@ class ModelUpgrade extends Model {
 		return $step5;
 	}
 
-	// ------------------------------------
+	// ---------------------------------------
 	// Function to update fields and finalize
-	// ------------------------------------
+	// ---------------------------------------
 	public function updateFields() {
 		$country_query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "country' AND COLUMN_NAME = 'name'");
 
 		if ($country_query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "country` DROP name");
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "country` DROP name`");
 		}
 
 		$manufacturer_query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "manufacturer' AND COLUMN_NAME = 'name'");
 
 		if ($manufacturer_query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP name");
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP `name`");
 		}
 
 		return;
