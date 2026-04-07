@@ -69,6 +69,7 @@ class ControllerAccountLogin extends Controller {
 			$this->redirect($this->url->link('account/account', '', 'SSL'));
 		}
 
+		// Customer login starts
 		$this->language->load('account/login');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -163,7 +164,7 @@ class ControllerAccountLogin extends Controller {
 			$this->data['success'] = '';
 		}
 
-		// Added strpos check to pass McAfee PCI compliance test (http://forum.opencart.com/viewtopic.php?f=10&t=12043&p=151494#p151295)
+		// Added strpos check to pass McAfee PCI compliance test
 		if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) === 0 || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) === 0)) {
 			$this->data['redirect'] = $this->request->post['redirect'];
 		} elseif (isset($this->session->data['redirect'])) {

@@ -38,7 +38,7 @@
       <div id="captcha-wrap">
         <div class="captcha-box">
           <div class="captcha-view">
-            <img src="<?php echo $captcha_image; ?>" alt="" id="captcha-image" />
+            <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
           </div>
         </div>
         <div class="captcha-text">
@@ -62,12 +62,4 @@
   <?php echo $content_low; ?>
 </div>
 <?php echo $content_lower; ?>
-
-<script type="text/javascript"><!--
-$('img#captcha-image').on('load', function(event) {
-	$(event.target).show();
-});
-$('img#captcha-image').trigger('load');
-//--></script>
-
 <?php echo $footer; ?>

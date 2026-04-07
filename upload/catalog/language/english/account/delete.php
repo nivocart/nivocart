@@ -12,7 +12,7 @@ $_['text_message']            = '<p>Your account cancellation request has been p
 
 // Entry
 $_['entry_password']          = 'Current Password:';
-$_['entry_captcha']           = 'Enter the two words';
+$_['entry_captcha']           = 'Enter the code below';
 
 // Error
 $_['error_password_match']    = 'Password does not match our records!';

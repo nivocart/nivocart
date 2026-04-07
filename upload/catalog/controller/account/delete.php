@@ -149,6 +149,7 @@ class ControllerAccountDelete extends Controller {
 
 		$this->data['captcha_image'] = $this->session->data['captcha'];
 
+		// Navigation
 		$this->data['back'] = $this->url->link('account/edit', '', 'SSL');
 
 		// Theme

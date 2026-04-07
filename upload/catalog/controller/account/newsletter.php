@@ -74,6 +74,7 @@ class ControllerAccountNewsletter extends Controller {
 
 		$this->data['newsletter'] = $this->customer->getNewsletter();
 
+		// Navigation
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 
 		// Theme

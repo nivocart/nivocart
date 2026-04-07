@@ -56,6 +56,7 @@ class ControllerAccountLogout extends Controller {
 
 		$this->data['text_message'] = $this->language->get('text_message');
 
+		// Navigation
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
 		$this->data['continue'] = $this->url->link('common/home', '', 'SSL');

@@ -125,6 +125,7 @@ class ControllerAccountForgotten extends Controller {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
+		// Check email is valid
 		if (isset($this->request->post['email'])) {
 			// Email exists check
 			$this->load->model('account/customer');

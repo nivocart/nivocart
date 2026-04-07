@@ -81,11 +81,7 @@ class ControllerAccountAccount extends Controller {
 		$this->data['logout'] = $this->url->link('account/logout', '', 'SSL');
 
 		// Check Cart
-		if ($this->cart->hasProducts()) {
-			$this->data['cart_exist'] = true;
-		} else {
-			$this->data['cart_exist'] = false;
-		}
+		$this->data['cart_exist'] = $this->cart->hasProducts() ? true : false;
 
 		// Check Addresses
 		$this->load->model('account/address');
@@ -93,29 +89,17 @@ class ControllerAccountAccount extends Controller {
 		$this->data['addresses'] = $this->model_account_address->getTotalAddresses();
 
 		// Rewards
-		if ($this->config->get('reward_status')) {
-			$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
-		} else {
-			$this->data['reward'] = '';
-		}
+		$this->data['reward'] = $this->config->get('reward_status') ? $this->url->link('account/reward', '', 'SSL') : '';
 
 		// Returns
-		if ($this->config->get('config_return_disable')) {
-			$this->data['allow_return'] = false;
-		} else {
-			$this->data['allow_return'] = true;
-		}
+		$this->data['allow_return'] = $this->config->get('config_return_disable') ? false : true;
 
 		// Profiles
 		$this->load->model('account/recurring');
 
 		$recurring_total = $this->model_account_recurring->getTotalRecurring();
 
-		if ($recurring_total > 0) {
-			$this->data['profile_exist'] = true;
-		} else {
-			$this->data['profile_exist'] = false;
-		}
+		$this->data['profile_exist'] = ($recurring_total > 0) ? true : false;
 
 		// Account Header
 		if ($this->customer->isLogged()) {

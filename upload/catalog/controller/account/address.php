@@ -602,7 +602,7 @@ class ControllerAccountAddress extends Controller {
 				$this->error['postcode'] = $this->language->get('error_postcode');
 			}
 
-			// VAT Validation
+			// VAT Validation (system/helper/vat)
 			$this->load->helper('vat');
 
 			if ($this->config->get('config_vat') && isset($this->request->post['tax_id']) && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {

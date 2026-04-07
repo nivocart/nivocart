@@ -231,7 +231,7 @@ class ModelAffiliateAffiliate extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
 
 		if (!$query->num_rows) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_login` SET email = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `total` = '1', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_login` SET email = '" . $this->db->escape((string)$email) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `total` = '1', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
 		} else {
 			$this->db->query("UPDATE `" . DB_PREFIX . "affiliate_login` SET `total` = (`total` + 1), date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE affiliate_login_id = '" . (int)$query->row['affiliate_login_id'] . "'");
 		}

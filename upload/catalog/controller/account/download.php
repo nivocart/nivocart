@@ -162,12 +162,14 @@ class ControllerAccountDownload extends Controller {
 	}
 
 	public function download() {
+		// Customer logged check
 		if (!$this->customer->isLogged()) {
 			$this->session->data['redirect'] = $this->url->link('account/download', '', 'SSL');
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
+		// Customer secure check
 		if (!$this->customer->isSecure() || $this->customer->loginExpired()) {
 			$this->customer->logout();
 

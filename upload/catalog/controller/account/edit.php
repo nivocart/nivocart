@@ -442,6 +442,7 @@ class ControllerAccountEdit extends Controller {
 			$this->template = 'default/template/account/account_data.tpl';
 		}
 
+		// Dompdf 
 		if ($pdf) {
 			$document_type = $this->language->get('text_customer_data');
 
