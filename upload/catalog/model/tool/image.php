@@ -7,14 +7,14 @@ class ModelToolImage extends Model {
 	public function resize(string $filename, int $width, int $height) {
 		$filename = html_entity_decode($filename, ENT_QUOTES, 'UTF-8');
 
-		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, mb_strlen(DIR_IMAGE)) != DIR_IMAGE) {
+		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, strlen(DIR_IMAGE)) != DIR_IMAGE) {
 			return;
 		}
 
 		$extension = pathinfo($filename, PATHINFO_EXTENSION);
 
 		$old_image = $filename;
-		$new_image = 'cache/' . mb_substr($filename, 0, mb_strrpos($filename, '.')) . '-' . (int)$width . 'x' . (int)$height . '.' . $extension;
+		$new_image = 'cache/' . substr($filename, 0, strrpos($filename, '.')) . '-' . (int)$width . 'x' . (int)$height . '.' . $extension;
 
 		if (!is_file(DIR_IMAGE . $new_image) || (filectime(DIR_IMAGE . $old_image) > filectime(DIR_IMAGE . $new_image))) {
 			$path = '';
@@ -62,9 +62,9 @@ class ModelToolImage extends Model {
 			$color = substr($color, 1);
 		}
 
-		if (strlen($color) == 6) {
+		if (mb_strlen($color, 'UTF_8') == 6) {
 			$hex = array($color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5]);
-		} elseif (strlen($color) == 3) {
+		} elseif (mb_strlen($color, 'UTF_8') == 3) {
 			$hex = array($color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2]);
 		} else {
 			return $default;

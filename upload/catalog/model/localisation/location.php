@@ -2,13 +2,13 @@
 class ModelLocalisationLocation extends Model {
 
 	public function getLocation(int $location_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "location WHERE location_id = '" . (int)$location_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "location` WHERE location_id = '" . (int)$location_id . "'");
 
 		return $query->row;
 	}
 
 	public function getLocations(int $limit): array {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "location ORDER BY `name` DESC LIMIT 0," . (int)$limit);
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "location` ORDER BY `name` DESC LIMIT 0," . (int)$limit);
 
 		return $query->rows;
 	}
@@ -16,10 +16,6 @@ class ModelLocalisationLocation extends Model {
 	public function getTotalLocations(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "location`");
 
-		if (isset($query->row['total'])) {
-			return $query->row['total'];
-		} else {
-			return 0;
-		}
+		return $query->row['total'];
 	}
 }

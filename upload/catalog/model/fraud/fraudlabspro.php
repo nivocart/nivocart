@@ -72,7 +72,7 @@ class ModelFraudFraudLabsPro extends Model {
 			$risk_score = 0;
 
 			if (is_null($json = json_decode($response)) === false) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "fraudlabspro SET order_id = '" . (int)$data['order_id'] . "',
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "fraudlabspro` SET order_id = '" . (int)$data['order_id'] . "',
 					is_country_match = '" . $this->db->escape($json->is_country_match) . "',
 					is_high_risk_country = '" . $this->db->escape($json->is_high_risk_country) . "',
 					distance_in_km = '" . $this->db->escape($json->distance_in_km) . "',
@@ -153,7 +153,7 @@ class ModelFraudFraudLabsPro extends Model {
 	}
 
 	public function getFraud(int $order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "fraudlabspro WHERE order_id = '" . (int)$order_id . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "fraudlabspro` WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row;
 	}

@@ -2,29 +2,25 @@
 class ModelToolOnline extends Model {
 
 	public function whosOnline($ip, int $customer_id, $url, $referer, $user_agent): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_online WHERE date_added < '" . date('Y-m-d H:i:s', strtotime('-1 hour')) . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_online` WHERE date_added < '" . date('Y-m-d H:i:s', strtotime('-1 hour')) . "'");
 
-		$this->db->query("REPLACE INTO " . DB_PREFIX . "customer_online SET ip = '" . $ip . "', customer_id = '" . (int)$customer_id . "', url = '" . $this->db->escape($url) . "', referer = '" . $this->db->escape($referer) . "', user_agent = '" . $this->db->escape($user_agent) . "', date_added = NOW()");
+		$this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_online` SET `ip` = '" . $ip . "', customer_id = '" . (int)$customer_id . "', `url` = '" . $this->db->escape($url) . "', referer = '" . $this->db->escape($referer) . "', user_agent = '" . $this->db->escape($user_agent) . "', date_added = NOW()");
 	}
 
 	// Ban
-	public function isBlockedIp($ip) {
-		$status = false;
+	public function isBlockedIp($ip): bool {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "block_ip` WHERE INET_ATON('" . $ip . "') BETWEEN INET_ATON(from_ip) AND INET_ATON(to_ip)");
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "block_ip WHERE INET_ATON('" . $ip . "') BETWEEN INET_ATON(from_ip) AND INET_ATON(to_ip)");
-
-		if ($query->num_rows) {
-			$status = true;
-		}
+		$status = $query->num_rows ? true : false;
 
 		return $status;
 	}
 
 	// Robots
 	public function robotsOnline($ip, $robot, $user_agent): void {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "robot_online WHERE date_added < '" . date('Y-m-d H:i:s', strtotime('-6 hour')) . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "robot_online` WHERE date_added < '" . date('Y-m-d H:i:s', strtotime('-6 hour')) . "'");
 
-		$this->db->query("REPLACE INTO " . DB_PREFIX . "robot_online SET ip = '" . $ip . "', robot = '" . $this->db->escape($robot) . "', user_agent = '" . $this->db->escape($user_agent) . "', date_added = NOW()");
+		$this->db->query("REPLACE INTO `" . DB_PREFIX . "robot_online` SET `ip` = '" . $ip . "', robot = '" . $this->db->escape($robot) . "', user_agent = '" . $this->db->escape($user_agent) . "', date_added = NOW()");
 	}
 
 	public function getRobotSignatures() {
