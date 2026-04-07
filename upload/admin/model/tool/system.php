@@ -1,6 +1,12 @@
 <?php
 class ModelToolSystem extends Model {
-
+	/**
+	 * deleteDirectory
+	 *
+	 * $var		$dir	directory name
+	 *
+	 * Required by Image Manager
+	 */
 	public function deleteDirectory($dir) {
 		if (!file_exists($dir)) {
 			return true;
@@ -29,64 +35,54 @@ class ModelToolSystem extends Model {
 		return rmdir($dir);
 	}
 
+	/**
+	 * setupSeo
+	 *
+	 * Required by Settings
+	 */
 	public function setupSeo() {
 		if (file_exists('../.htaccess')) {
 			return;
+		}
+
+		if (function_exists('apache_get_modules')) {
+			$mod_rewrite = in_array('mod_rewrite', apache_get_modules(), true);
 		} else {
-			if (function_exists('apache_get_modules')) {
-				$apache_modules = apache_get_modules();
+			$mod_rewrite = ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) == 'on');
+		}
 
-				if (in_array('mod_rewrite', $apache_modules, true)) {
-					$mod_rewrite = true;
-				} else {
-					$mod_rewrite = false;
-				}
+		if ($mod_rewrite && file_exists('../.htaccess.txt')) {
+			$document = file_get_contents('../.htaccess.txt');
 
-			} else {
-				if ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) == 'on') {
-					$mod_rewrite = true;
-				} else {
-					$mod_rewrite = false;
-				}
+			// Correctly extract the RewriteBase path
+			$root       = rtrim(HTTP_SERVER, '/');
+			$folder     = substr(strrchr($root, '/'), 1);
+			$script_dir = dirname($_SERVER['SCRIPT_NAME']);
+			$path       = str_replace('/' . $folder, '', $script_dir);
+			$path       = rtrim($path, '/') . '/';
+
+			if (!$path) {
+				$path = '/';
 			}
 
-			if ($mod_rewrite && file_exists('../.htaccess.txt')) {
-				chmod('../.htaccess.txt', 0777);
+			$document = str_replace('RewriteBase /', 'RewriteBase ' . $path, $document);
 
-				$file = fopen('../.htaccess.txt', 'a');
+			// Write to file first, then rename
+			file_put_contents('../.htaccess.txt', $document);
 
-				$document = file_get_contents('../.htaccess.txt');
+			rename('../.htaccess.txt', '../.htaccess');
 
-				$root = rtrim(HTTP_SERVER, '/');
-
-				$folder = substr(strrchr($root, '/'), 1);
-
-				$path = rtrim(rtrim(dirname($_SERVER['SCRIPT_NAME']), ''), '/' . $folder . '.\\');
-
-				if (mb_strlen($path, 'UTF-8') > 1) {
-					$path .= '/';
-				}
-
-				if (!$path) {
-					$path = '/';
-				}
-
-				$document = str_replace('RewriteBase /', 'RewriteBase ' . $path, $document);
-
-				file_put_contents('../.htaccess.txt', $document);
-
-				fflush($file);
-
-				fclose($file);
-
-				rename('../.htaccess.txt', '../.htaccess');
-			}
+			chmod('../.htaccess', 0644);
 		}
 
 		clearstatcache();
 	}
 
-	// Token generator
+	/**
+	 * token Generator
+	 *
+	 * Return string
+	 */
 	public function token($length = 32): string {
 		$string = str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._=');
 

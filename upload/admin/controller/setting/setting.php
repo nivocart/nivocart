@@ -18,6 +18,7 @@ class ControllerSettingSetting extends Controller {
 				$this->model_localisation_currency->updateCurrencies();
 			}
 
+			// Load model only if .htaccess.txt file still exists
 			if ($this->config->get('config_seo_url') && !file_exists('../.htaccess')) {
 				$this->load->model('tool/system');
 

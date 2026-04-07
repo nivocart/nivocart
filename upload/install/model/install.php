@@ -146,49 +146,39 @@ class ModelInstall extends Model {
 
 		fclose($file_admin);
 
-		// Convert .htaccess
+		// Setup Seo_url Rewrite
 		if (isset($data['rewrite'])) {
 			$mod_rewrite = false;
 
 			if (function_exists('apache_get_modules')) {
-				$apache_modules = apache_get_modules();
-
-				$mod_rewrite = (in_array('mod_rewrite', $apache_modules, true)) ? true : false;
+				$mod_rewrite = in_array('mod_rewrite', apache_get_modules(), true);
 			} else {
-				$mod_rewrite = ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) == 'on') ? true : false;
+				$mod_rewrite = ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) == 'on');
 			}
 
 			if ($mod_rewrite && file_exists('../.htaccess.txt') && is_writable('../.htaccess.txt')) {
-				$file = fopen('../.htaccess.txt', 'a');
-
 				$document = file_get_contents('../.htaccess.txt');
 
-				$root = rtrim(HTTP_SERVER, '/');
+				// RewriteBase path
+				$base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 
-				$folder = substr(strrchr($root, '/'), 1);
+				$path = $base . '/';
 
-				$path = rtrim(rtrim(dirname($_SERVER['SCRIPT_NAME']), ''), '/' . $folder . '.\\');
-
-				if (mb_strlen($path, 'UTF-8') > 1) {
-					$path .= '/';
-				}
-
-				if (!$path) {
+				if (!$base) {
 					$path = '/';
 				}
 
 				$document = str_replace('RewriteBase /', 'RewriteBase ' . $path, $document);
 
+				// Write to file first, then rename
 				file_put_contents('../.htaccess.txt', $document);
-
-				fflush($file);
-
-				fclose($file);
 
 				rename('../.htaccess.txt', '../.htaccess');
 
+				chmod('../.htaccess', 0644);
+
 				$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_seo_url'");
-				$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_seo_url', `value` = '" . (isset($data['rewrite']) ? 1 : 0) . "'");
+				$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_seo_url', `value` = '1'");
 
 				clearstatcache();
 			}
