@@ -18,7 +18,7 @@ class ModelDesignPayment extends Model {
 	}
 
 	public function getMethodImage(string $code) {
-		$image_query = $this->db->query("SELECT DISTINCT `image` FROM `" . DB_PREFIX . "payment_image` WHERE payment = '" . mb_strtolower($code, 'UTF-8') . "' AND status = '1'");
+		$image_query = $this->db->query("SELECT DISTINCT `image` FROM `" . DB_PREFIX . "payment_image` WHERE payment = '" . (string)$code . "' AND status = '1'");
 
 		return $image_query->row;
 	}
