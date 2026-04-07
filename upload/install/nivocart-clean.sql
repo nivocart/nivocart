@@ -3523,7 +3523,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (93, 0, 'config', 'config_maintenance', '0', 0),
 (94, 0, 'config', 'config_seo_url', '0', 0),
 (95, 0, 'config', 'config_seo_url_cache', '0', 0),
-(96, 0, 'config', 'config_encryption', MD5(UUID()), 0),
+(96, 0, 'config', 'config_encryption', '', 0),
 (97, 0, 'config', 'config_compression', '6', 0),
 (98, 0, 'config', 'config_error_display', '1', 0),
 (99, 0, 'config', 'config_error_log', '1', 0),

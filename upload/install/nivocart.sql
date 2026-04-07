@@ -4362,7 +4362,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (319, 0, 'config', 'config_guest_checkout', '0', 0),
 (320, 0, 'config', 'config_abandoned_cart', '7', 0),
 (321, 0, 'config', 'config_complete_status_id', '5', 0),
-(322, 0, 'config', 'config_encryption', MD5(UUID()), 0),
+(322, 0, 'config', 'config_encryption', '', 0),
 (323, 0, 'config', 'config_telephone', '0123456789', 0),
 (324, 0, 'config', 'config_email_noreply', 'noreply@store.com', 0),
 (325, 0, 'config', 'config_email', 'contact@store.com', 0),
