@@ -15,6 +15,7 @@ $_['text_phptime']          = 'Server Time:<span class="help">Current time for t
 $_['text_dbtime']           = 'Database Time:<span class="help">Current system date and time.</span>';
 $_['text_dbname']           = 'Database Driver:<span class="help">Current system database driver.</span>';
 $_['text_dbengine']         = 'Database Table Engine:<span class="help">Current system database table engine.</span>';
+$_['text_rewrite_base']     = 'Htaccess RewriteBase:<span class="help">Canonical base for Seo_urls routing.</span>';
 $_['text_no_timezone']      = 'Time Zone data not available.';
 $_['text_present']          = '<span style="color:#5DC15E;">File is present</span>';
 $_['text_missing']          = '<span style="color:#F2B155;">File is missing</span>';
@@ -62,7 +63,6 @@ $_['text_openssl']          = 'OpenSSL Encrypt:';
 $_['text_zlib']             = 'ZLIB:';
 $_['text_zip']              = 'ZIP:';
 $_['text_mbstring']         = 'mbstring:';
-$_['text_mbstring_note']    = '<span class="help">mbstring is required only when iconv is not available.</span>';
 
 // Error
 $_['error_permission']      = 'Warning: You do not have permission to modify <b>Configuration</b>!';

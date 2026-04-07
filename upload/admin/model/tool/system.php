@@ -79,6 +79,29 @@ class ModelToolSystem extends Model {
 	}
 
 	/**
+	 * getRewriteBase (Admin)
+	 *
+	 * Returns .htaccess RewriteBase string
+	 *
+	 * Required by ModelToolSeoUrl controller
+	 */
+	public function getRewriteBase(): string {
+		// get path
+		$path_info = pathinfo($_SERVER['PHP_SELF']);
+
+		// trim url to the root folders
+		$path = $path_info['dirname'];
+
+		// trim folder on the right of first /
+		$removed = strrchr($path, '/');
+
+		// trim string with empty (result: /nivocart)
+		$base_path = str_replace($removed, '', $path);
+
+		return $base_path;
+	}
+
+	/**
 	 * token Generator
 	 *
 	 * Return string

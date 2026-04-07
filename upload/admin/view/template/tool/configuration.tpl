@@ -71,6 +71,10 @@
               <td><?php echo $text_innodb; ?></td>
             <?php } ?>
           </tr>
+		  <tr>
+            <td><?php echo $text_rewrite_base; ?></td>
+            <td><?php echo $base_path; ?>/</td>
+		  </tr>
         </table>
         <?php if ($error_install) { ?>
           <div class="warning"><?php echo $error_install; ?></div>
@@ -193,10 +197,6 @@
               <td><?php echo $text_on; ?></td>
               <td><?php echo extension_loaded('mbstring') ? 'On' : 'Off'; ?></td>
               <td><?php echo extension_loaded('mbstring') ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
-            </tr>
-            <tr>
-              <td colspan="2"><?php echo $text_mbstring_note; ?></td>
-              <td colspan="2"></td>
             </tr>
           </table>
         </div>

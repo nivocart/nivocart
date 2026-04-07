@@ -14,6 +14,11 @@ class ModelToolSeoUrl extends Controller {
 			$this->url->addRewrite($this);
 		}
 
+		// Get the RewriteBase for the canonical urls
+		$this->load->model('tool/system');
+
+		$RewriteBase = $this->model_tool_system->getRewriteBase();
+
 		// Decode URL
 		if (isset($this->request->get['_route_'])) {
 			$parts = explode('/', $this->request->get['_route_']);
@@ -80,7 +85,7 @@ class ModelToolSeoUrl extends Controller {
 					$requested = trim($this->request->get['_route_'], '/');
 
 					if ($requested !== $canonical->row['keyword']) {
-						header('Location: /nivocart/' . $canonical->row['keyword'], true, 301);
+						header('Location:' . $RewriteBase . '/' . $canonical->row['keyword'], true, 301);
 						exit;
 					}
 				}

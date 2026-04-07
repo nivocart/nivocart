@@ -44,6 +44,7 @@ class ControllerToolConfiguration extends Controller {
 		$this->data['text_dbtime'] = $this->language->get('text_dbtime');
 		$this->data['text_dbname'] = $this->language->get('text_dbname');
 		$this->data['text_dbengine'] = $this->language->get('text_dbengine');
+		$this->data['text_rewrite_base'] = $this->language->get('text_rewrite_base');
 		$this->data['text_present'] = $this->language->get('text_present');
 		$this->data['text_missing'] = $this->language->get('text_missing');
 		$this->data['text_unknown'] = $this->language->get('text_unknown');
@@ -88,7 +89,6 @@ class ControllerToolConfiguration extends Controller {
 		$this->data['text_zlib'] = $this->language->get('text_zlib');
 		$this->data['text_zip'] = $this->language->get('text_zip');
 		$this->data['text_mbstring'] = $this->language->get('text_mbstring');
-		$this->data['text_mbstring_note'] = $this->language->get('text_mbstring_note');
 
 		$this->data['button_close'] = $this->language->get('button_close');
 
@@ -125,6 +125,9 @@ class ControllerToolConfiguration extends Controller {
 			$this->data['config_template'] = $this->config->get('config_template');
 		}
 
+		// -----------------------
+		// Store Information
+		// -----------------------
 		// Time
 		$date_timezone = ini_get('date.timezone');
 		$default_timezone = date_default_timezone_get();
@@ -169,6 +172,13 @@ class ControllerToolConfiguration extends Controller {
 		$this->data['text_innodb'] = 'InnoDB';
 		$this->data['text_myisam'] = 'MyISAM';
 
+		$this->load->model('tool/system');
+
+		$this->data['base_path'] = $this->model_tool_system->getRewriteBase();
+
+		// -----------------------
+		// Settings Information
+		// -----------------------
 		// Check install directory exists
 		if (is_dir(dirname(DIR_APPLICATION) . '/install')) {
 			$this->data['error_install'] = $this->language->get('error_install');
@@ -191,6 +201,9 @@ class ControllerToolConfiguration extends Controller {
 		$this->data['vqcache'] = DIR_VQMOD . 'vqcache';
 		$this->data['vqmod_xml'] = DIR_VQMOD . 'xml';
 
+		// -----------------------
+		// Images Information
+		// -----------------------
 		// Images
 		if (extension_loaded('gd')) {
 			$gd_infos = gd_info();
@@ -241,6 +254,9 @@ class ControllerToolConfiguration extends Controller {
 
 		$this->data['gd_loaded'] = $gd_loaded;
 
+		// -----------------------
+		// System Files Integrity
+		// -----------------------
 		// Database Files
 		$this->data['databases'] = array();
 
@@ -330,7 +346,9 @@ class ControllerToolConfiguration extends Controller {
 			'weight'     => DIR_SYSTEM . 'library/weight.php'
 		);
 
-		// Server
+		// -----------------------
+		// Server Information
+		// -----------------------
 		$server_requests = array(
 			'PHP_SELF',
 			'GATEWAY_INTERFACE',
@@ -364,6 +382,7 @@ class ControllerToolConfiguration extends Controller {
 			);
 		}
 
+		// Render
 		$this->template = 'tool/' . $this->_name . '.tpl';
 		$this->children = array(
 			'common/header',
