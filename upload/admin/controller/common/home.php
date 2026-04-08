@@ -432,8 +432,9 @@ class ControllerCommonHome extends Controller {
 
 		foreach ($top_countries as $top_country) {
 			if ($total_sales > 0) {
-				$sale_amount = round((float)$top_country['amount'], 2);
-				$sale_total = round((float)$total_sales, 2);
+				// Note: rounding mode PHP_ROUND_HALF_UP required for PHP 8.4+
+				$sale_amount = round((float)$top_country['amount'], 2, PHP_ROUND_HALF_UP);
+				$sale_total = round((float)$total_sales, 2, PHP_ROUND_HALF_UP);
 
 				$flag = ($top_country['iso_code_2']) ? 'view/image/flags/' . strtolower($top_country['iso_code_2']) . '.png' : '';
 				$circle_percent = $sale_amount / $sale_total;
@@ -484,7 +485,7 @@ class ControllerCommonHome extends Controller {
 				'customer_group' => $result['customer_id'] ? $customer_group : $this->language->get('text_guest'),
 				'passed'         => ((int)$orders_passed > 0) ? '<span class="passed">' . (int)$orders_passed . '</span>' : '<span class="disabled">' . (int)$orders_passed . '</span>',
 				'missed'         => ((int)$orders_missed > 0) ? '<span class="missed">' . (int)$orders_missed . '</span>' : '<span class="disabled">' . (int)$orders_missed . '</span>',
-				'conversion'     => round($orders_conversion, 2) . '%',
+				'conversion'     => round($orders_conversion, 2, PHP_ROUND_HALF_UP) . '%',
 				'date_added'     => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
 				'status'         => $result['status'],
 				'total'          => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value'], true),
@@ -773,7 +774,8 @@ class ControllerCommonHome extends Controller {
 			}
 
 			if ($viewed_result['viewed']) {
-				$percent = round($viewed_result['viewed'] / (int)$product_views_total * 10, 2);
+				// Note: rounding mode PHP_ROUND_HALF_UP required for PHP 8.4+
+				$percent = round((($viewed_result['viewed'] * 100) / $product_views_total), 1, PHP_ROUND_HALF_UP);
 			} else {
 				$percent = 0;
 			}

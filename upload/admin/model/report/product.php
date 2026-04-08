@@ -36,10 +36,8 @@ class ModelReportProduct extends Model {
 	public function getTotalProductViews() {
 		$query = $this->db->query("SELECT SUM(viewed) AS `total` FROM `" . DB_PREFIX . "product` WHERE viewed > '0'");
 
-		if (!empty($query->num_rows) && $query->num_rows > 0) {
-			$views_data = $query->num_rows;
-
-			return $views_data;
+		if ($query->row['total']) {
+			return $query->row['total'];
 		} else {
 			return 0;
 		}
@@ -82,11 +80,7 @@ class ModelReportProduct extends Model {
 
 		$query = $this->db->query($sql);
 
-		if (!empty($query)) {
-			return $query->rows;
-		} else {
-			return [];
-		}
+		return $query->rows;
 	}
 
 	public function getTotalPurchased($data): int {
@@ -144,11 +138,7 @@ class ModelReportProduct extends Model {
 
 		$query = $this->db->query($sql);
 
-		if (!empty($query)) {
-			return $query->rows;
-		} else {
-			return [];
-		}
+		return $query->rows;
 	}
 
 	public function getTotalProfit(array $data = []) {
@@ -207,7 +197,7 @@ class ModelReportProduct extends Model {
 			$sql .= " ASC";
 		}
 
-		if (isset($data['start']) || isset($data['limit'])) {
+		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -221,11 +211,7 @@ class ModelReportProduct extends Model {
 
 		$query = $this->db->query($sql);
 
-		if (!empty($query)) {
-			return $query->rows;
-		} else {
-			return [];
-		}
+		return $query->rows;
 	}
 
 	public function getTotalProducts(array $data = []): int {
