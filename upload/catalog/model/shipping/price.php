@@ -6,11 +6,11 @@ class ModelShippingPrice extends Model {
 
 		$quote_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "geo_zone ORDER BY name");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "geo_zone` ORDER BY `name`");
 
 		foreach ($query->rows as $result) {
 			if ($this->config->get('price_' . $result['geo_zone_id'] . '_status')) {
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$result['geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE geo_zone_id = '" . (int)$result['geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
 				if ($query->num_rows) {
 					$status = true;
@@ -42,10 +42,10 @@ class ModelShippingPrice extends Model {
 				if ((string)$cost != '') {
 					$quote_data['price_' . $result['geo_zone_id']] = array(
 						'code'         => 'price.price_' . $result['geo_zone_id'],
-						'title'        => $result['name'] . ' (' . $this->language->get('text_price') . ' ' . $this->currency->format($this->tax->calculate($cost, $this->config->get('price_tax_class_id'), $this->config->get('config_tax'))) . ')',
+						'title'        => $result['name'] . ' (' . $this->language->get('text_price') . ' ' . $this->currency->format($this->tax->calculate($cost, $this->config->get('price_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency')) . ')',
 						'cost'         => $cost,
 						'tax_class_id' => $this->config->get('price_tax_class_id'),
-						'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('price_tax_class_id'), $this->config->get('config_tax')))
+						'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('price_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
 					);
 				}
 			}

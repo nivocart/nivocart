@@ -6,7 +6,7 @@ class ModelShippingGeoZone extends Model {
 
 		$quote_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "geo_zone ORDER BY name");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "geo_zone` ORDER BY `name`");
 
 		if ($this->config->get('geozone_method') == 'item') {
 			$method = $this->cart->hasProducts();
@@ -28,7 +28,7 @@ class ModelShippingGeoZone extends Model {
 		if ($query->num_rows) {
 			foreach ($query->rows as $result) {
 				if ($this->config->get('geozone_' . $result['geo_zone_id'] . '_status')) {
-					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int) $result['geo_zone_id'] . "' AND country_id = '" . (int) $address['country_id'] . "' AND (zone_id = '" . (int) $address['zone_id'] . "' OR zone_id = '0')");
+					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE geo_zone_id = '" . (int) $result['geo_zone_id'] . "' AND country_id = '" . (int) $address['country_id'] . "' AND (zone_id = '" . (int) $address['zone_id'] . "' OR zone_id = '0')");
 
 					foreach ($query->rows as $zoneresult) {
 						$zone_id = $zoneresult['zone_id'];
@@ -66,7 +66,7 @@ class ModelShippingGeoZone extends Model {
 							'title'        => $result['name'] . ' (' . $this->language->get('text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')',
 							'cost'         => $cost,
 							'tax_class_id' => $this->config->get('geozone_tax_class_id'),
-							'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')))
+							'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
 						);
 					}
 				}
@@ -82,7 +82,7 @@ class ModelShippingGeoZone extends Model {
 					'title'        => $result['name'] . ' (' . $this->language->get('text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')',
 					'cost'         => $cost,
 					'tax_class_id' => $this->config->get('geozone_tax_class_id'),
-					'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')))
+					'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
 				);
 			}
 		}
@@ -107,7 +107,7 @@ class ModelShippingGeoZone extends Model {
 					'title'        => $address['country'] . '  (' . $this->language->get('text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')',
 					'cost'         => $cost,
 					'tax_class_id' => $this->config->get('geozone_tax_class_id'),
-					'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')))
+					'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
 				);
 			}
 		}
