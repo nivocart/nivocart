@@ -140,7 +140,6 @@ class ControllerCheckoutExpressConfirm extends Controller {
 				$data['lastname'] = $this->customer->getLastName();
 				$data['email'] = $this->customer->getEmail();
 				$data['telephone'] = $this->customer->getTelephone();
-				$data['fax'] = $this->customer->getFax();
 
 				if ($this->config->get('config_express_billing')) {
 					$this->load->model('account/address');
@@ -286,7 +285,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 				foreach ($this->session->data['vouchers'] as $voucher) {
 					$voucher_data[] = array(
 						'description'      => $voucher['description'],
-						'code'             => substr(hash_rand('md5'), 0, 10),
+						'code'             => substr(md5(mt_rand()), 0, 10),
 						'to_name'          => $voucher['to_name'],
 						'to_email'         => $voucher['to_email'],
 						'from_name'        => $voucher['from_name'],
@@ -325,7 +324,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 			}
 
 			$data['language_id'] = $this->config->get('config_language_id');
-			$data['currency_id'] = $this->currency->getId();
+			$data['currency_id'] = $this->currency->getId($this->currency->getCode());
 			$data['currency_code'] = $this->currency->getCode();
 			$data['currency_value'] = $this->currency->getValue($this->currency->getCode());
 

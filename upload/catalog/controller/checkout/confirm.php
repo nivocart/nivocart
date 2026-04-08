@@ -314,7 +314,7 @@ class ControllerCheckoutConfirm extends Controller {
 
 			$data['language_id'] = $this->config->get('config_language_id');
 
-			$data['currency_id'] = $this->currency->getId();
+			$data['currency_id'] = $this->currency->getId($this->currency->getCode());
 			$data['currency_code'] = $this->currency->getCode();
 			$data['currency_value'] = $this->currency->getValue($this->currency->getCode());
 
