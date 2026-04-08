@@ -445,7 +445,7 @@
           <a onclick="goToReviews('<?php echo $product_id; ?>');" style="margin:0 15px;"><?php echo $reviews; ?></a>
           <a onclick="goToReviews('<?php echo $product_id; ?>');" title="<?php echo $text_write; ?>" class="button-add"><i class="fa fa-comments"></i></a>
         </div>
-        <?php if (!$share_addthis) { ?>
+        <?php if (!$share_sharethis) { ?>
         <div class="share">
           <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
             <a class="addthis_button_print"></a>
@@ -456,8 +456,8 @@
             <a class="addthis_button_compact"></a>
             <a class="addthis_counter addthis_bubble_style"></a>
           </div>
-          <?php if ($addthis) { ?>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $addthis; ?>"></script>
+          <?php if ($sharethis) { ?>
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $sharethis; ?>"></script>
           <?php } else { ?>
             <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script> 
           <?php } ?>
@@ -604,7 +604,7 @@
           <div id="captcha-wrap">
             <div class="captcha-box">
               <div class="captcha-view">
-                <img src="index.php?route=product/product/captcha" alt="" id="captcha-image" />
+                <div id="captcha-image" style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
               </div>
             </div>
             <div class="captcha-text">
@@ -639,6 +639,7 @@
 </div>
 <?php echo $content_lower; ?>
 
+<!-- Lightbox Jquery Scripts //-->
 <?php if ($lightbox == 'colorbox') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
@@ -711,6 +712,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
+<!-- Shopping Cart Scripts //-->
 <script type="text/javascript"><!--
 $('select[name="profile_id"], input[name="quantity"]').change(function() {
 	$.ajax({
@@ -825,6 +827,7 @@ $('.datetime').datetimepicker({
 });
 //--></script>
 
+<!-- Product Option Scripts //-->
 <?php if ($options) { ?>
 <script type="text/javascript" src="catalog/view/javascript/jquery/ajaxupload.min.js"></script>
 
@@ -863,23 +866,13 @@ new AjaxUpload('#button-option-<?php echo $option['product_option_id']; ?>', {
 <?php } ?>
 <?php } ?>
 
+<!-- Reviews Scripts //-->
 <script type="text/javascript"><!--
-$('img#captcha-image').on('load', function(event) {
-	$(event.target).show();
+$('#reviews .pagination').on('click', 'a', function() {
+	$('#reviews').fadeOut('slow');
+	$('#review').load('index.php?route=product/product/reviews&product_id=<?php echo $product_id; ?>');
+	$('#reviews').fadeIn('slow');
 });
-$('img#captcha-image').trigger('load');
-//--></script>
-
-<script type="text/javascript"><!--
-$('#review .pagination').on('click', 'a', function() {
-	$('#review').fadeOut('slow');
-	$('#review').load(this.href);
-	$('#review').fadeIn('slow');
-
-	return false;
-});
-
-$('#review').load('index.php?route=product/product/review&product_id=<?php echo $product_id; ?>');
 
 $('#button-review').on('click', function() {
 	$.ajax({
@@ -895,7 +888,6 @@ $('#button-review').on('click', function() {
 		complete: function() {
 			$('#button-review').attr('disabled', false);
 			$('.attention').remove();
-			$('#captcha').attr('src', 'index.php?route=product/product/captcha');
 			$('input[name=\'captcha\']').val('');
 		},
 		success: function(data) {

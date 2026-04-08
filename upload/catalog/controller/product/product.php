@@ -336,6 +336,7 @@ class ControllerProductProduct extends Controller {
 			$this->load->model('catalog/review');
 			$this->load->model('tool/image');
 
+			// Image viewers
 			if ($this->config->get('config_lightbox') == 'zoomlens') {
 				$this->document->addStyle('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.css');
 				$this->document->addScript('catalog/view/javascript/jquery/simple-lens/jquery.simpleGallery.min.js');
@@ -365,9 +366,9 @@ class ControllerProductProduct extends Controller {
 
 				if ($product_info['image']) {
 					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -383,9 +384,9 @@ class ControllerProductProduct extends Controller {
 
 				if ($product_info['image']) {
 					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -401,9 +402,9 @@ class ControllerProductProduct extends Controller {
 
 				if ($product_info['image']) {
 					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -419,9 +420,9 @@ class ControllerProductProduct extends Controller {
 
 				if ($product_info['image']) {
 					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0), round(($this->image_thumb_height / 4), 0));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0);
+					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
+					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
+					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$this->data['thumb'] = '';
 					$this->data['label'] = '';
@@ -433,7 +434,7 @@ class ControllerProductProduct extends Controller {
 			}
 
 			if ($product_info['image']) {
-				$label_ratio = round((($this->image_thumb_width * $this->config->get('config_label_size_ratio')) / 100), 0);
+				$label_ratio = round((($this->image_thumb_width * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 				$this->data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width, $this->image_popup_height);
 			} else {
 				$label_ratio = 90;
@@ -677,19 +678,12 @@ class ControllerProductProduct extends Controller {
 				}
 			}
 
-			if ($product_info['minimum'] > 1) {
-				$this->data['minimum'] = $product_info['minimum'];
-			} else {
-				$this->data['minimum'] = 1;
-			}
+			$this->data['minimum'] = ($product_info['minimum'] > 1) ? $product_info['minimum'] : 1;
 
-			if ($this->config->get('config_addthis')) {
-				$this->data['addthis'] = $this->config->get('config_addthis');
-			} else {
-				$this->data['addthis'] = false;
-			}
-
-			$this->data['share_addthis'] = $this->config->get('config_share_addthis');
+			// ShareThis
+			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
+	
+			$this->data['share_sharethis'] = $this->config->get('config_share_sharethis');
 
 			// Offers
 			$this->load->model('catalog/offer');
@@ -701,7 +695,7 @@ class ControllerProductProduct extends Controller {
 			if ($product_offers) {
 				$this->data['offer_label_large'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
 
-				$label_ratio_medium = round((($this->image_related_width * $this->config->get('config_label_size_ratio')) / 100), 0);
+				$label_ratio_medium = round((($this->image_related_width * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 
 				$this->data['offer_label_medium'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio_medium, $label_ratio_medium);
 
@@ -785,8 +779,17 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']);
 			$this->data['rating'] = (int)$product_info['rating'];
-			$this->data['captcha'] = ''; // Captcha required
 			$this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+			// Captcha required
+			$this->data['captcha'] = '';
+			// Generate session captcha
+			$this->load->library('captcha');
+
+			$captcha = new Captcha();
+
+			$this->session->data['captcha'] = $captcha->getCode();
+
+			$this->data['captcha_image'] = $this->session->data['captcha'];
 
 			// Attributes
 			$attribute_groups = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
@@ -794,7 +797,7 @@ class ControllerProductProduct extends Controller {
 			$this->data['attribute_groups'] = array_reverse($attribute_groups, true);
 
 			// Related
-			$related_offers = $this->model_catalog_offer->getListProductOffers(0);
+			$related_offers = $this->model_catalog_offer->getListProductOffers();
 
 			$this->data['products'] = array();
 
@@ -803,15 +806,15 @@ class ControllerProductProduct extends Controller {
 			foreach ($results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->image_related_width, $this->image_related_height);
-					$label_ratio = round((($this->image_related_width * $this->config->get('config_label_size_ratio')) / 100), 0);
+					$label_ratio = round((($this->image_related_width * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$image = false;
 					$label_ratio = 50;
 				}
 
 				if ($result['label']) {
-					$label = $this->model_tool_image->resize($result['label'], round(($this->image_related_width / 3), 0), round(($this->image_related_height / 3), 0));
-					$label_style = round(($this->image_related_width / 3), 0);
+					$label = $this->model_tool_image->resize($result['label'], round(($this->image_related_width / 3), 0, PHP_ROUND_HALF_UP), round(($this->image_related_height / 3), 0, PHP_ROUND_HALF_UP));
+					$label_style = round(($this->image_related_width / 3), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$label = '';
 					$label_style = '';
@@ -835,17 +838,8 @@ class ControllerProductProduct extends Controller {
 					$special = false;
 				}
 
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$result['rating'];
-				} else {
-					$rating = false;
-				}
-
-				if ($result['quantity'] <= 0) {
-					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
-				} else {
-					$stock_label = false;
-				}
+				$rating = $this->config->get('config_review_status') ? (int)$result['rating'] : false;
+				$stock_label = ($result['quantity'] <= 0) ? $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio) : false;
 
 				if (in_array($result['product_id'], $related_offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
@@ -855,11 +849,7 @@ class ControllerProductProduct extends Controller {
 					$offer = false;
 				}
 
-				if ($result['quote']) {
-					$quote = $this->url->link('information/quote', '', 'SSL');
-				} else {
-					$quote = false;
-				}
+				$quote = $result['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
 				$this->data['products'][] = array(
 					'product_id'      => $result['product_id'],
@@ -884,6 +874,7 @@ class ControllerProductProduct extends Controller {
 				);
 			}
 
+			// Tags
 			$this->data['tags'] = array();
 
 			if ($product_info['tag']) {
@@ -907,6 +898,7 @@ class ControllerProductProduct extends Controller {
 				$this->data['profiles'] = false;
 			}
 
+			// Update viewed
 			$this->model_catalog_product->updateViewed($this->request->get['product_id']);
 
 			// Theme
@@ -1025,7 +1017,7 @@ class ControllerProductProduct extends Controller {
 		}
 	}
 
-	public function review() {
+	public function reviews() {
 		$this->language->load('product/product');
 
 		$this->load->model('catalog/review');
@@ -1127,7 +1119,7 @@ class ControllerProductProduct extends Controller {
 					$trial_text = '';
 				}
 
-				$price = $this->currency->format($this->tax->calculate($result['price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')));
+				$price = $this->currency->format($this->tax->calculate($result['price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 				if ($result['duration']) {
 					$text = $trial_text . sprintf($this->language->get('text_payment_description'), $price, $result['cycle'], $frequencies[$result['frequency']], $result['duration']);
@@ -1151,11 +1143,11 @@ class ControllerProductProduct extends Controller {
 		$json = array();
 
 		if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->config->get('config_review_status')) {
-			if (empty($this->request->post['name']) || (utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 25)) {
+			if (empty($this->request->post['name']) || (mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
 				$json['error'] = $this->language->get('error_name');
 			}
 
-			if (empty($this->request->post['text']) || (utf8_strlen($this->request->post['text']) < 25) || (utf8_strlen($this->request->post['text']) > 1000)) {
+			if (empty($this->request->post['text']) || (mb_strlen($this->request->post['text'], 'UTF-8') < 25) || (mb_strlen($this->request->post['text'], 'UTF-8') > 1000)) {
 				$json['error'] = $this->language->get('error_text');
 			}
 
@@ -1163,7 +1155,7 @@ class ControllerProductProduct extends Controller {
 				$json['error'] = $this->language->get('error_rating');
 			}
 
-			if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != strtolower($this->request->post['captcha']))) {
+			if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
 				$json['error'] = $this->language->get('error_captcha');
 			}
 
@@ -1180,16 +1172,6 @@ class ControllerProductProduct extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function captcha() {
-		$this->load->library('captcha');
-
-		$captcha = new Captcha();
-
-		$this->session->data['captcha'] = $captcha->getCode();
-
-		$captcha->showImage($this->config->get('config_captcha_font'));
-	}
-
 	public function upload() {
 		$this->language->load('product/product');
 
@@ -1198,7 +1180,7 @@ class ControllerProductProduct extends Controller {
 		if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
 			$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8')));
 
-			if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 64)) {
+			if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 64)) {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
@@ -1244,7 +1226,7 @@ class ControllerProductProduct extends Controller {
 		}
 
 		if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-			$file = basename($filename) . '.' . hash_rand('md5');
+			$file = basename($filename) . '.' . mb_substr(md5(uniqid(rand(), true)), 0, 10, 'UTF-8');
 
 			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_UPLOAD . $file);
 
