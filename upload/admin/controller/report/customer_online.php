@@ -31,7 +31,7 @@ class ControllerReportCustomerOnline extends Controller {
 		}
 
 		if (isset($this->request->get['filter_customer'])) {
-			$url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_customer=' . html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -131,7 +131,7 @@ class ControllerReportCustomerOnline extends Controller {
 		}
 
 		if (isset($this->request->get['filter_customer'])) {
-			$url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_customer=' . html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['page'])) {

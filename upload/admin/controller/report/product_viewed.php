@@ -43,8 +43,10 @@ class ControllerReportProductViewed extends Controller {
 			'limit' => $this->config->get('config_admin_limit')
 		);
 
-		$product_viewed_total = $this->model_report_product->getTotalProductsViewed($data);
+		// Total for pagination
+		$product_viewed_total = $this->model_report_product->getTotalProductsViewed();
 
+		// Total for report results
 		$product_views_total = $this->model_report_product->getTotalProductViews();
 
 		$this->data['products'] = array();
@@ -53,7 +55,7 @@ class ControllerReportProductViewed extends Controller {
 
 		foreach ($results as $result) {
 			if ($result['viewed']) {
-				$percent = round($result['viewed'] / $product_views_total * 100, 2);
+				$percent = round((($result['viewed'] * 100) / $product_views_total), 2, PHP_ROUND_HALF_UP);
 			} else {
 				$percent = 0;
 			}

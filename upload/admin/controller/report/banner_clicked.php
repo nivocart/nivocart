@@ -60,7 +60,7 @@ class ControllerReportBannerClicked extends Controller {
 			}
 
 			if ($result['clicked']) {
-				$percent = round($result['clicked'] / $image_clicks_total * 100, 2);
+				$percent = round((($result['clicked'] * 100) / $image_clicks_total), 2, PHP_ROUND_HALF_UP);
 			} else {
 				$percent = 0;
 			}

@@ -57,11 +57,11 @@ class ControllerReportProductQuantity extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_model'])) {
-			$url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_model=' . html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_price'])) {
@@ -171,11 +171,11 @@ class ControllerReportProductQuantity extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_model'])) {
-			$url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_model=' . html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_price'])) {
@@ -210,11 +210,11 @@ class ControllerReportProductQuantity extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_model'])) {
-			$url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_model=' . html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_price'])) {

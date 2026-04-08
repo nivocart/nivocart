@@ -31,7 +31,7 @@ class ControllerReportRobotOnline extends Controller {
 		}
 
 		if (isset($this->request->get['filter_robot'])) {
-			$url .= '&filter_robot=' . urlencode(html_entity_decode($this->request->get['filter_robot'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_robot=' . html_entity_decode($this->request->get['filter_robot'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -107,7 +107,7 @@ class ControllerReportRobotOnline extends Controller {
 		}
 
 		if (isset($this->request->get['filter_robot'])) {
-			$url .= '&filter_robot=' . urlencode(html_entity_decode($this->request->get['filter_robot'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_robot=' . html_entity_decode($this->request->get['filter_robot'], ENT_QUOTES, 'UTF-8');
 		}
 
 		$pagination = new Pagination();

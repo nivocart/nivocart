@@ -33,11 +33,11 @@ class ControllerReportCustomerDeleted extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_orders'])) {
@@ -113,11 +113,11 @@ class ControllerReportCustomerDeleted extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_orders'])) {
