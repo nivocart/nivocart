@@ -39,7 +39,7 @@ class Currency {
 		$this->db = $registry->get('db');
 		$this->language = $registry->get('language');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency`");
 
 		foreach ($query->rows as $result) {
 			$this->currencies[$result['code']] = array(
@@ -73,12 +73,7 @@ class Currency {
 
 		$currency = $this->currencies[$currency];
 
-		// check if currency data is malformed
-		if (isset($currency) && is_string($currency)) {
-			$this->code = $currency;
-		} else {
-			return;
-		}
+		$this->code = $currency;
 
 		if (!isset($this->session->data['currency']) || ($this->session->data['currency'] !== $currency)) {
 			$this->session->data['currency'] = $currency;
