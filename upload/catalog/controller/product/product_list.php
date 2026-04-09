@@ -108,7 +108,7 @@ class ControllerProductProductList extends Controller {
 				}
 			}
 
-			$this->data['tritotal1'] = round(($this->data['ptotal'] / 3) + 1);
+			$this->data['tritotal1'] = round((($this->data['ptotal'] / 3) + 1), PHP_ROUND_HALF_UP);
 			$this->data['tritotal2'] = $this->data['tritotal1'] * 2;
 
 			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');

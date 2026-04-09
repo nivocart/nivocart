@@ -77,7 +77,7 @@ class ControllerProductCompare extends Controller {
 
 		$this->load->model('catalog/offer');
 
-		$offers = $this->model_catalog_offer->getListProductOffers(0);
+		$offers = $this->model_catalog_offer->getListProductOffers();
 
 		$this->data['products'] = array();
 
@@ -89,15 +89,15 @@ class ControllerProductCompare extends Controller {
 			if ($product_info) {
 				if ($product_info['image']) {
 					$image = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_compare_width'), $this->config->get('config_image_compare_height'));
-					$label_ratio = round((($this->config->get('config_image_compare_width') * $this->config->get('config_label_size_ratio')) / 100), 0);
+					$label_ratio = round((($this->config->get('config_image_compare_width') * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$image = false;
 					$label_ratio = 50;
 				}
 
 				if ($product_info['label']) {
-					$label = $this->model_tool_image->resize($product_info['label'], round(($this->config->get('config_image_compare_width') / 3), 0), round(($this->config->get('config_image_compare_height') / 3), 0));
-					$label_style = round(($this->config->get('config_image_compare_width') / 3), 0);
+					$label = $this->model_tool_image->resize($product_info['label'], round(($this->config->get('config_image_compare_width') / 3), 0, PHP_ROUND_HALF_UP), round(($this->config->get('config_image_compare_height') / 3), 0, PHP_ROUND_HALF_UP));
+					$label_style = round(($this->config->get('config_image_compare_width') / 3), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$label = '';
 					$label_style = '';
@@ -206,7 +206,7 @@ class ControllerProductCompare extends Controller {
 					'quote'             => $quote,
 					'price'             => $price,
 					'special'           => $special,
-					'description'       => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '..',
+					'description'       => substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '..',
 					'model'             => $product_info['model'],
 					'manufacturer'      => $product_info['manufacturer'],
 					'availability'      => $availability,

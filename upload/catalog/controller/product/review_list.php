@@ -163,15 +163,15 @@ class ControllerProductReviewList extends Controller {
 			foreach ($review_results as $result) {
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->image_product_width, $this->image_product_height);
-					$label_ratio = round((($this->image_product_width * $this->label_size_ratio) / 100), 0);
+					$label_ratio = round((($this->image_product_width * $this->label_size_ratio) / 100), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$image = $this->model_tool_image->resize('no_image.jpg', $this->image_product_width, $this->image_product_height);
 					$label_ratio = 50;
 				}
 
 				if ($result['label']) {
-					$label = $this->model_tool_image->resize($result['label'], round(($this->image_product_width / 3), 0), round(($this->image_product_height / 3), 0));
-					$label_style = round(($this->image_product_width / 3), 0);
+					$label = $this->model_tool_image->resize($result['label'], round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP), round(($this->image_product_height / 3), 0, PHP_ROUND_HALF_UP));
+					$label_style = round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$label = '';
 					$label_style = '';

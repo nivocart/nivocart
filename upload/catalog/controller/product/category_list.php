@@ -91,7 +91,7 @@ class ControllerProductCategoryList extends Controller {
 
 			$this->data['cattotal'] = $this->data['ccount'];
 
-			$this->data['cattotal1'] = round($this->data['cattotal'] / 3);
+			$this->data['cattotal1'] = round(($this->data['cattotal'] / 3), 0, PHP_ROUND_HALF_UP);
 			$this->data['cattotal2'] = $this->data['cattotal1'] * 2;
 
 			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');

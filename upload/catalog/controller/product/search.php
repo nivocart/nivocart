@@ -310,15 +310,15 @@ class ControllerProductSearch extends Controller {
 
         if ($result['image']) {
             $image = $this->model_tool_image->resize($result['image'], $width, $height);
-            $label_ratio = round(($width * $this->label_size_ratio) / 100, 0);
+            $label_ratio = round(($width * $this->label_size_ratio) / 100, 0, PHP_ROUND_HALF_UP);
         } else {
             $image = false;
             $label_ratio = 50;
         }
 
         if ($result['label']) {
-            $label = $this->model_tool_image->resize($result['label'], round($width / 3, 0), round($height / 3, 0));
-            $label_style = round($width / 3, 0);
+            $label = $this->model_tool_image->resize($result['label'], round($width / 3, 0, PHP_ROUND_HALF_UP), round($height / 3, 0, PHP_ROUND_HALF_UP));
+            $label_style = round($width / 3, 0, PHP_ROUND_HALF_UP);
         } else {
             $label = '';
             $label_style = '';
