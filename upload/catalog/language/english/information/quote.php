@@ -15,7 +15,7 @@ $_['entry_name']       = 'Your Name:';
 $_['entry_email']      = 'Email Address:';
 $_['entry_product']    = 'Reference Product:';
 $_['entry_enquiry']    = 'Requirements:';
-$_['entry_captcha']    = 'Enter the two words';
+$_['entry_captcha']    = 'Enter the code below';
 
 // Email
 $_['email_subject']    = 'Quote %s';

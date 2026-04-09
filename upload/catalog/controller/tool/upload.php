@@ -11,7 +11,7 @@ class ControllerToolUpload extends Controller {
 			$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8')));
 
 			// Validate the filename length
-			if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 64)) {
+			if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 64)) {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
@@ -64,7 +64,7 @@ class ControllerToolUpload extends Controller {
 		clearstatcache();
 
 		if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-			$file = basename($filename) . '.' . hash_rand('md5');
+			$file = basename($filename) . '.' . substr(md5(mt_rand()), 0, 10);
 
 			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_UPLOAD . $file);
 

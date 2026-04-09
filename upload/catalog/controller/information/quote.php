@@ -29,14 +29,6 @@ class ControllerInformationQuote extends Controller {
 			$message .= strip_tags(html_entity_decode($this->request->post['enquiry'], ENT_QUOTES, 'UTF-8')) . "\n";
 
 			$mail = new Mail();
-			$mail->protocol = $this->config->get('config_mail_protocol');
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->hostname = $this->config->get('config_smtp_host');
-			$mail->username = $this->config->get('config_smtp_username');
-			$mail->password = $this->config->get('config_smtp_password');
-			$mail->port = $this->config->get('config_smtp_port');
-			$mail->timeout = $this->config->get('config_smtp_timeout');
-
 			$mail->setTo($this->config->get('config_email'));
 			$mail->setFrom($this->request->post['email']);
 			$mail->setSender($this->request->post['name']);
@@ -132,7 +124,9 @@ class ControllerInformationQuote extends Controller {
 
 		$this->data['products'] = array();
 
-		$results = $this->model_catalog_product->getProducts(0);
+		$products_array = array();
+
+		$results = $this->model_catalog_product->getProducts($products_array);
 
 		foreach ($results as $result) {
 			if ($result['model']) {
@@ -169,7 +163,14 @@ class ControllerInformationQuote extends Controller {
 			$this->data['captcha'] = '';
 		}
 
-		$this->data['captcha_image'] = $this->url->link('information/quote/captcha', '', 'SSL');
+		// Create session Captcha
+		$this->load->library('captcha');
+
+		$captcha = new Captcha();
+
+		$this->session->data['captcha'] = $captcha->getCode();
+
+		$this->data['captcha_image'] = $this->session->data['captcha'];
 
 		// Create directory if it does not exist
 		$directory = DIR_SYSTEM . 'logs/';
@@ -263,7 +264,7 @@ class ControllerInformationQuote extends Controller {
 	}
 
 	protected function validate() {
-		if (!isset($this->request->post['name']) || (utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 32)) {
+		if (!isset($this->request->post['name']) || (mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 32)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
@@ -282,11 +283,11 @@ class ControllerInformationQuote extends Controller {
 			}
 		}
 
-		if (!isset($this->request->post['enquiry']) || (utf8_strlen($this->request->post['enquiry']) < 10) || (utf8_strlen($this->request->post['enquiry']) > 3000)) {
+		if (!isset($this->request->post['enquiry']) || (mb_strlen($this->request->post['enquiry'], 'UTF-8') < 10) || (mb_strlen($this->request->post['enquiry'], 'UTF-8') > 3000)) {
 			$this->error['enquiry'] = $this->language->get('error_enquiry');
 		}
 
-		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != strtolower($this->request->post['captcha']))) {
+		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
 			$this->error['captcha'] = $this->language->get('error_captcha');
 		}
 
@@ -301,7 +302,7 @@ class ControllerInformationQuote extends Controller {
 		if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
 			$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8')));
 
-			if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 64)) {
+			if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 64)) {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
@@ -347,7 +348,7 @@ class ControllerInformationQuote extends Controller {
 		}
 
 		if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-			$file = basename($filename) . '.' . hash_rand('md5');
+			$file = basename($filename) . '.' . substr(md5(mt_rand()), 0, 10);
 
 			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_UPLOAD . $file);
 
@@ -361,15 +362,5 @@ class ControllerInformationQuote extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
-	}
-
-	public function captcha() {
-		$this->load->library('captcha');
-
-		$captcha = new Captcha();
-
-		$this->session->data['captcha'] = $captcha->getCode();
-
-		$captcha->showImage($this->config->get('config_captcha_font'));
 	}
 }
