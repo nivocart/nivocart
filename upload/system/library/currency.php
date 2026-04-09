@@ -45,6 +45,7 @@ class Currency {
 			$this->currencies[$result['code']] = array(
 				'currency_id'   => $result['currency_id'],
 				'title'         => $result['title'],
+				'code'          => $result['code'],
 				'symbol_left'   => $result['symbol_left'],
 				'symbol_right'  => $result['symbol_right'],
 				'decimal_place' => $result['decimal_place'],
@@ -65,20 +66,25 @@ class Currency {
 	 *
 	 * $currency = $this->currency->set($currency);
 	 */
-	public function set(string $currency) {
-		if (!isset($this->currencies[$currency]) || ($this->currencies[$currency]['status'] != 1)) {
-			return '';
+	public function set(string $currency): void {
+		if (!isset($this->currencies[$currency]) || ($this->currencies[$currency]['status'] !== 1)) {
+			return;
 		}
 
-		$currency = $this->currencies[$currency];
+		$currency = $this->currencies[$currency]['code'];
 
-		$this->code = $currency;
+		// check if currency data is malformed
+		if (isset($currency) && is_string($currency)) {
+			$this->code = $currency;
+		} else {
+			return;
+		}
 
-		if (!isset($this->session->data['currency']) || ($this->session->data['currency'] != $currency)) {
+		if (!isset($this->session->data['currency']) || ($this->session->data['currency'] !== $currency)) {
 			$this->session->data['currency'] = $currency;
 		}
 
-		if (!isset($this->request->cookie['currency']) || ($this->request->cookie['currency'] != $currency)) {
+		if (!isset($this->request->cookie['currency']) || ($this->request->cookie['currency'] !== $currency)) {
 			setcookie('currency', $currency, time() + 60 * 60 * 24 * 30, '/', $this->request->server['HTTP_HOST']);
 		}
 	}
