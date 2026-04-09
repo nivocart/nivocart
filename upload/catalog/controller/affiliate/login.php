@@ -26,7 +26,7 @@ class ControllerAffiliateLogin extends Controller {
 				$this->model_affiliate_affiliate->addActivity($affiliate_id, 'login', $affiliate_name);
 			}
 
-			// Added strpos check to pass McAfee PCI compliance test (http://forum.opencart.com/viewtopic.php?f=10&t=12043&p=151494#p151295)
+			// Added strpos check to pass McAfee PCI compliance test
 			if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) === 0 || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) === 0)) {
 				$this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
 			} else {
@@ -133,7 +133,7 @@ class ControllerAffiliateLogin extends Controller {
 	}
 
 	protected function validate() {
-		// Check how many login attempts have been made.
+		// Check how many login attempts have been made
 		$this->load->model('affiliate/affiliate');
 
 		$login_info = $this->model_affiliate_affiliate->getLoginAttempts($this->request->post['email']);
@@ -142,7 +142,7 @@ class ControllerAffiliateLogin extends Controller {
 			$this->error['warning'] = $this->language->get('error_attempts');
 		}
 
-		// Check if affiliate has been approved.
+		// Check if affiliate has been approved
 		$affiliate_info = $this->model_affiliate_affiliate->getAffiliateByEmail($this->request->post['email']);
 
 		if ($affiliate_info && !$affiliate_info['approved']) {

@@ -25,8 +25,6 @@ class ControllerAccountRegister extends Controller {
 
 			$this->customer->login($this->request->post['email'], $this->request->post['password']);
 
-			unset($this->session->data['guest']);
-
 			// Default Shipping Address
 			if ($this->config->get('config_tax_customer') == 'shipping') {
 				$this->session->data['shipping_country_id'] = $this->request->post['country_id'];
@@ -39,6 +37,9 @@ class ControllerAccountRegister extends Controller {
 				$this->session->data['payment_country_id'] = $this->request->post['country_id'];
 				$this->session->data['payment_zone_id'] = $this->request->post['zone_id'];
 			}
+
+			unset($this->session->data['captcha']);
+			unset($this->session->data['guest']);
 
 			$this->redirect($this->url->link('account/success', '', 'SSL'));
 		}

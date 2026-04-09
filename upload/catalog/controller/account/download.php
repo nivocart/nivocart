@@ -84,7 +84,7 @@ class ControllerAccountDownload extends Controller {
 						'date_added' => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
 						'name'       => $result['name'],
 						'remaining'  => $result['remaining'],
-						'size'       => round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i],
+						'size'       => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
 						'href'       => $this->url->link('account/download/download', 'order_download_id=' . $result['order_download_id'], 'SSL')
 					);
 				}

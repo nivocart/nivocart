@@ -28,11 +28,11 @@ class ControllerAccountDelete extends Controller {
 		$this->load->model('account/customer');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			unset($this->session->data['captcha']);
-
 			$customer_id = $this->customer->getId();
 
 			$this->model_account_customer->addDeletedCustomer($customer_id);
+
+			unset($this->session->data['captcha']);
 
 			$this->customer->logout();
 			$this->cart->clear();
@@ -247,7 +247,7 @@ class ControllerAccountDelete extends Controller {
 			$this->error['password'] = $this->language->get('error_password_required');
 		}
 
-		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != ($this->request->post['captcha']))) {
+		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
 			$this->error['captcha'] = $this->language->get('error_captcha');
 		}
 

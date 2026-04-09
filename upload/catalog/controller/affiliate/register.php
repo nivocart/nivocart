@@ -19,10 +19,12 @@ class ControllerAffiliateRegister extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$this->model_affiliate_affiliate->addAffiliate($this->request->post);
 
-			// Clear any previous login attempts in not registered.
+			// Clear any previous login attempts if not registered
 			$this->model_affiliate_affiliate->deleteLoginAttempts($this->request->post['email']);
 
 			$this->affiliate->login($this->request->post['email'], $this->request->post['password']);
+
+			unset($this->session->data['captcha']);
 
 			$this->redirect($this->url->link('affiliate/success', '', 'SSL'));
 		}
