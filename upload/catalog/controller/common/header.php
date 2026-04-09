@@ -4,9 +4,9 @@ class ControllerCommonHeader extends Controller {
 	protected function index() {
 		$this->data['title'] = $this->document->getTitle();
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$server = $this->config->get('config_ssl');
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$server = $this->config->get('config_ssl');
 		} else {
 			$server = $this->config->get('config_url');
@@ -141,7 +141,7 @@ class ControllerCommonHeader extends Controller {
 
 		$cookie_theme = $this->config->get('config_cookie_theme');
 
-		if ($cookie_theme == "dark") {
+		if ($cookie_theme === "dark") {
 			$this->data['cookie_popup'] = "#323435";
 			$this->data['cookie_text'] = "#FCFCFC";
 			$this->data['cookie_button'] = "#14A7D0";
@@ -166,11 +166,11 @@ class ControllerCommonHeader extends Controller {
 
 		$display_size = $this->config->get($template . '_widescreen');
 
-		if ($display_size == 'full') {
+		if ($display_size === 'full') {
 			$this->data['display_size'] = 'full';
-		} elseif ($display_size == 'wide') {
+		} elseif ($display_size === 'wide') {
 			$this->data['display_size'] = 'wide';
-		} elseif ($display_size == 'normal') {
+		} elseif ($display_size === 'normal') {
 			$this->data['display_size'] = 'normal';
 		} else {
 			$this->data['display_size'] = 'normal';

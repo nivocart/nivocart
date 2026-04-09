@@ -24,7 +24,7 @@ class ControllerCommonSeoUrl extends Controller {
 			$parts = explode('/', $this->request->get['_route_']);
 
 			// Remove any empty arrays from trailing
-			if (mb_strlen(end($parts), 'UTF-8') == 0) {
+			if (mb_strlen(end($parts), 'UTF-8') === 0) {
 				array_pop($parts);
 			}
 
@@ -34,11 +34,11 @@ class ControllerCommonSeoUrl extends Controller {
 				if ($query->num_rows) {
 					$url = explode('=', $query->row['query']);
 
-					if ($url[0] == 'product_id') {
+					if ($url[0] === 'product_id') {
 						$this->request->get['product_id'] = $url[1];
 					}
 
-					if ($url[0] == 'category_id') {
+					if ($url[0] === 'category_id') {
 						if (!isset($this->request->get['path'])) {
 							$this->request->get['path'] = $url[1];
 						} else {
@@ -46,27 +46,27 @@ class ControllerCommonSeoUrl extends Controller {
 						}
 					}
 
-					if ($url[0] == 'manufacturer_id') {
+					if ($url[0] === 'manufacturer_id') {
 						$this->request->get['manufacturer_id'] = $url[1];
 					}
 
-					if ($url[0] == 'information_id') {
+					if ($url[0] === 'information_id') {
 						$this->request->get['information_id'] = $url[1];
 					}
 
-					if ($url[0] == 'news_id') {
+					if ($url[0] === 'news_id') {
 						$this->request->get['news_id'] = $url[1];
 					}
 
-					if ($url[0] == 'blog_article_id') {
+					if ($url[0] === 'blog_article_id') {
 						$this->request->get['blog_article_id'] = $url[1];
 					}
 
-					if ($url[0] == 'blog_author_id') {
+					if ($url[0] === 'blog_author_id') {
 						$this->request->get['blog_author_id'] = $url[1];
 					}
 
-					if ($url[0] == 'blog_category_id') {
+					if ($url[0] === 'blog_category_id') {
 						if (!isset($this->request->get['blog_category_id'])) {
 							$this->request->get['blog_category_id'] = $url[1];
 						} else {
@@ -132,10 +132,10 @@ class ControllerCommonSeoUrl extends Controller {
 
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {
-				if (($data['route'] == 'product/product' && $key == 'product_id') || 
-				(($data['route'] == 'product/manufacturer/info' || $data['route'] == 'product/product') && $key == 'manufacturer_id') || 
-				($data['route'] == 'information/information' && $key == 'information_id') || ($data['route'] == 'information/news' && $key == 'news_id') ||
-				($data['route'] == 'blog/article_info' && $key == 'blog_article_id') || ($data['route'] == 'blog/article_author' && $key == 'blog_author_id')) {
+				if (($data['route'] === 'product/product' && $key === 'product_id') || 
+				(($data['route'] === 'product/manufacturer/info' || $data['route'] === 'product/product') && $key === 'manufacturer_id') || 
+				($data['route'] === 'information/information' && $key === 'information_id') || ($data['route'] === 'information/news' && $key === 'news_id') ||
+				($data['route'] === 'blog/article_info' && $key === 'blog_article_id') || ($data['route'] === 'blog/article_author' && $key === 'blog_author_id')) {
 					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
 
 					if ($query->num_rows && $query->row['keyword']) {
@@ -144,7 +144,7 @@ class ControllerCommonSeoUrl extends Controller {
 						unset($data[$key]);
 					}
 
-				} elseif ($data['route'] == 'blog/category' && $key == 'blog_category_id' && !is_array($value)) {
+				} elseif ($data['route'] === 'blog/category' && $key === 'blog_category_id' && !is_array($value)) {
 					$blog_categories = explode("_", $value);
 
 					foreach ($blog_categories as $blog_category) {
@@ -157,7 +157,7 @@ class ControllerCommonSeoUrl extends Controller {
 
 					unset($data[$key]);
 
-				} elseif ($key == 'path' && !is_array($value)) {
+				} elseif ($key === 'path' && !is_array($value)) {
 					$categories = explode('_', $value);
 
 					foreach ($categories as $category) {

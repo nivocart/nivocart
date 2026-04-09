@@ -16,6 +16,7 @@ class ControllerCommonContentRight extends Controller {
 
 		$layout_id = 0;
 
+		// Strict validation '===' should not be used on this page, at this time
 		if ($route == 'product/category' && isset($this->request->get['path']) && !is_array($this->request->get['path'])) {
 			$path = explode('_', (string)$this->request->get['path']);
 
