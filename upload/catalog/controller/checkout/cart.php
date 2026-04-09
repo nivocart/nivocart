@@ -292,7 +292,7 @@ class ControllerCheckoutCart extends Controller {
 				$product_total = 0;
 
 				foreach ($products as $product_2) {
-					if ($product_2['product_id'] == $product['product_id']) {
+					if ($product_2['product_id'] === $product['product_id']) {
 						$product_total += $product_2['quantity'];
 					}
 				}
@@ -303,15 +303,15 @@ class ControllerCheckoutCart extends Controller {
 
 				if ($product['image']) {
 					$image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
-					$label_ratio = round((($this->config->get('config_image_cart_width') * $this->config->get('config_label_size_ratio')) / 100), 0);
+					$label_ratio = round((($this->config->get('config_image_cart_width') * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$image = '';
 					$label_ratio = 30;
 				}
 
 				if ($product['label']) {
-					$label = $this->model_tool_image->resize($product['label'], round(($this->config->get('config_image_cart_width') / 3), 0), round(($this->config->get('config_image_cart_height') / 3), 0));
-					$label_style = round(($this->config->get('config_image_cart_width') / 3), 0);
+					$label = $this->model_tool_image->resize($product['label'], round(($this->config->get('config_image_cart_width') / 3), 0, PHP_ROUND_HALF_UP), round(($this->config->get('config_image_cart_height') / 3), 0, PHP_ROUND_HALF_UP));
+					$label_style = round(($this->config->get('config_image_cart_width') / 3), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$label = '';
 					$label_style = '';
@@ -358,7 +358,7 @@ class ControllerCheckoutCart extends Controller {
 
 				// Display prices
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($product['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($product['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -405,7 +405,7 @@ class ControllerCheckoutCart extends Controller {
 
 						$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-						if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+						if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 							$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 							if ($customer_age >= $product['age_minimum']) {
@@ -875,11 +875,11 @@ class ControllerCheckoutCart extends Controller {
 			$json['error']['warning'] = sprintf($this->language->get('error_no_shipping'), $this->url->link('information/contact', '', 'SSL'));
 		}
 
-		if ($this->request->post['country_id'] == '') {
+		if ($this->request->post['country_id'] === '') {
 			$json['error']['country'] = $this->language->get('error_country');
 		}
 
-		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {
+		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '' || !is_numeric($this->request->post['zone_id'])) {
 			$json['error']['zone'] = $this->language->get('error_zone');
 		}
 

@@ -141,7 +141,7 @@ class ControllerCheckoutExpressPaymentAddress extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -159,7 +159,7 @@ class ControllerCheckoutExpressPaymentAddress extends Controller {
 				$this->request->post['payment_address'] = 'new';
 			}
 
-			if ($this->request->post['payment_address'] == 'existing') {
+			if ($this->request->post['payment_address'] === 'existing') {
 				$this->load->model('account/address');
 
 				if (empty($this->request->post['address_id'])) {
@@ -239,7 +239,7 @@ class ControllerCheckoutExpressPaymentAddress extends Controller {
 				$this->request->post['tax_id'] = '';
 			}
 
-			if ($this->request->post['payment_address'] == 'new') {
+			if ($this->request->post['payment_address'] === 'new') {
 				if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 					$json['error']['firstname'] = $this->language->get('error_firstname');
 				}
@@ -285,16 +285,16 @@ class ControllerCheckoutExpressPaymentAddress extends Controller {
 					// VAT Validation
 					$this->load->helper('vat');
 
-					if ($this->config->get('config_vat') && isset($this->request->post['tax_id']) && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+					if ($this->config->get('config_vat') && isset($this->request->post['tax_id']) && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
 						$json['error']['tax_id'] = $this->language->get('error_vat');
 					}
 				}
 
-				if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '') {
+				if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '') {
 					$json['error']['country'] = $this->language->get('error_country');
 				}
 
-				if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
+				if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '') {
 					$json['error']['zone'] = $this->language->get('error_zone');
 				}
 

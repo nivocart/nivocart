@@ -182,17 +182,17 @@ class ControllerCheckoutGuest extends Controller {
 
 		$json = array();
 
-		// Validate if customer is logged in.
+		// Validate if customer is logged in
 		if ($this->customer->isLogged()) {
 			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
 		}
 
-		// Validate cart has products and has stock.
+		// Validate cart has products and has stock
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 			$json['redirect'] = $this->url->link('checkout/cart', '', 'SSL');
 		}
 
-		// Check if guest checkout is available.
+		// Check if guest checkout is available
 		if (!$this->config->get('config_guest_checkout') || $this->config->get('config_customer_price') || $this->cart->hasDownload()) {
 			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
 		}
@@ -215,8 +215,8 @@ class ControllerCheckoutGuest extends Controller {
 			}
 
 			if ($this->config->get('config_customer_dob')) {
-				if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
-					if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
+				if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') === 10)) {
+					if ($this->request->post['date_of_birth'] !== date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 						$json['error']['date_of_birth'] = $this->language->get('error_date_of_birth');
 					}
 				} else {
@@ -268,17 +268,17 @@ class ControllerCheckoutGuest extends Controller {
 				if ($customer_group && $customer_group['tax_id_display']) {
 					$this->load->helper('vat');
 
-					if ($this->config->get('config_vat') && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+					if ($this->config->get('config_vat') && $this->request->post['tax_id'] !== '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
 						$json['error']['tax_id'] = $this->language->get('error_vat');
 					}
 				}
 			}
 
-			if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '') {
+			if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '') {
 				$json['error']['country'] = $this->language->get('error_country');
 			}
 
-			if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
+			if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '') {
 				$json['error']['zone'] = $this->language->get('error_zone');
 			}
 		}
@@ -411,7 +411,7 @@ class ControllerCheckoutGuest extends Controller {
 		foreach ($results as $result) {
 			$output .= '<option value="' . $result['zone_id'] . '"';
 
-			if (isset($this->request->get['zone_id']) && ($this->request->get['zone_id'] == $result['zone_id'])) {
+			if (isset($this->request->get['zone_id']) && ($this->request->get['zone_id'] === $result['zone_id'])) {
 				$output .= ' selected="selected"';
 			}
 

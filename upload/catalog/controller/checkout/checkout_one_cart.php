@@ -4,7 +4,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 	public function index() {
 		$this->language->load('checkout/checkout_one_page');
 
-		// Validate minimum quantity requirements.
+		// Validate minimum quantity requirements
 		$products = $this->cart->getProducts();
 
 		foreach ($products as $product) {
@@ -66,6 +66,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			$data['store_url'] = HTTP_SERVER;
 		}
 
+		// Session data
 		if (isset($this->session->data['payment_method']['title'])) {
 			$data['payment_method'] = $this->session->data['payment_method']['title'];
 		} else {
@@ -90,6 +91,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			$data['shipping_code'] = '';
 		}
 
+		// Get cart products
 		$product_data = array();
 
 		foreach ($this->cart->getProducts() as $product) {
@@ -160,6 +162,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 
 		$data['total'] = $total;
 
+		// Affiliate
 		if (isset($this->request->cookie['tracking'])) {
 			$this->load->model('affiliate/affiliate');
 
@@ -182,7 +185,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 
 		$data['language_id'] = $this->config->get('config_language_id');
 
-		$data['currency_id'] = $this->currency->getId();
+		$data['currency_id'] = $this->currency->getId($this->currency->getCode());
 		$data['currency_code'] = $this->currency->getCode();
 		$data['currency_value'] = $this->currency->getValue($this->currency->getCode());
 

@@ -100,17 +100,17 @@ class ControllerCheckoutGuestShipping extends Controller {
 
 		$json = array();
 
-		// Validate if customer is logged in.
+		// Validate if customer is logged in
 		if ($this->customer->isLogged()) {
 			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
 		}
 
-		// Validate cart has products and has stock.
+		// Validate cart has products and has stock
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 			$json['redirect'] = $this->url->link('checkout/cart', '', 'SSL');
 		}
 
-		// Check if guest checkout is available.
+		// Check if guest checkout is available
 		if (!$this->config->get('config_guest_checkout') || $this->config->get('config_customer_price') || $this->cart->hasDownload()) {
 			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
 		}

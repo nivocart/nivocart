@@ -494,7 +494,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				$data['shipping_code'] = '';
 			}
 
-			// Validate minimum quantity requirements.
+			// Validate minimum quantity requirements
 			$total_data = array();
 			$total = 0;
 			$taxes = $this->cart->getTaxes();
@@ -529,6 +529,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 			$product_data = array();
 
+			// Get cart products
 			foreach ($this->cart->getProducts() as $product) {
 				$option_data = array();
 
@@ -591,6 +592,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$data['comment'] = $customer_info['comment'];
 			$data['total'] = $total;
 
+			// Affiliate
 			if (isset($this->request->cookie['tracking'])) {
 				$this->load->model('affiliate/affiliate');
 
@@ -623,7 +625,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 			$data['language_id'] = $this->config->get('config_language_id');
 
-			$data['currency_id'] = $this->currency->getId();
+			$data['currency_id'] = $this->currency->getId($this->currency->getCode());
 			$data['currency_code'] = $this->currency->getCode();
 			$data['currency_value'] = $this->currency->getValue($this->currency->getCode());
 
@@ -1275,6 +1277,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 			$results = $this->model_setting_extension->getExtensions('payment');
 
+			// Recurring
 			$cart_has_recurring = $this->cart->hasRecurringProducts();
 
 			foreach ($results as $result) {

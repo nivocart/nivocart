@@ -67,11 +67,11 @@ class ControllerCheckoutManual extends Controller {
 
 					if (isset($order_product['order_option'])) {
 						foreach ($order_product['order_option'] as $option) {
-							if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'image') {
+							if ($option['type'] === 'select' || $option['type'] === 'radio' || $option['type'] === 'image') {
 								$option_data[$option['product_option_id']] = $option['product_option_value_id'];
-							} elseif ($option['type'] == 'checkbox') {
+							} elseif ($option['type'] === 'checkbox') {
 								$option_data[$option['product_option_id']][] = $option['product_option_value_id'];
-							} elseif ($option['type'] == 'text' || $option['type'] == 'textarea' || $option['type'] == 'file' || $option['type'] == 'date' || $option['type'] == 'datetime' || $option['type'] == 'time') {
+							} elseif ($option['type'] === 'text' || $option['type'] === 'textarea' || $option['type'] === 'file' || $option['type'] === 'date' || $option['type'] === 'datetime' || $option['type'] === 'time') {
 								$option_data[$option['product_option_id']] = $option['value'];
 							}
 						}
@@ -135,7 +135,7 @@ class ControllerCheckoutManual extends Controller {
 				$product_total = 0;
 
 				foreach ($products as $product_2) {
-					if ($product_2['product_id'] == $product['product_id']) {
+					if ($product_2['product_id'] === $product['product_id']) {
 						$product_total += $product_2['quantity'];
 					}
 				}
@@ -240,7 +240,9 @@ class ControllerCheckoutManual extends Controller {
 
 					$this->load->model('checkout/voucher');
 
-					$voucher_id = $this->model_checkout_voucher->addVoucher(0, $voucher_data);
+					$order_id = 0;
+
+					$voucher_id = $this->model_checkout_voucher->addVoucher($order_id, $voucher_data);
 
 					$this->session->data['vouchers'][] = array(
 						'voucher_id'       => $voucher_id,
@@ -284,11 +286,11 @@ class ControllerCheckoutManual extends Controller {
 			if ($this->cart->hasShipping()) {
 				$country_info = $this->model_localisation_country->getCountry($this->request->post['shipping_country_id']);
 
-				if (!isset($this->request->post['shipping_country_id']) || $this->request->post['shipping_country_id'] == '') {
+				if (!isset($this->request->post['shipping_country_id']) || $this->request->post['shipping_country_id'] === '') {
 					$json['error']['shipping']['country'] = $this->language->get('error_country');
 				}
 
-				if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] == '') {
+				if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] === '') {
 					$json['error']['shipping']['zone'] = $this->language->get('error_zone');
 				}
 
@@ -399,7 +401,7 @@ class ControllerCheckoutManual extends Controller {
 
 				$voucher_info = $this->model_checkout_voucher->getVoucher($this->request->post['voucher']);
 
-				if ($this->request->post['voucher'] == $this->request->post['current_voucher']) {
+				if ($this->request->post['voucher'] === $this->request->post['current_voucher']) {
 					$this->session->data['current_voucher_value'] = $this->request->post['current_voucher_value'];
 					$this->session->data['voucher'] = $this->request->post['voucher'];
 				} elseif ($voucher_info) {
@@ -445,7 +447,7 @@ class ControllerCheckoutManual extends Controller {
 				$this->session->data['current_credit'] = $this->request->post['current_credit'];
 			}
 
-			// Save payment code to session. Klarna fee total needs this.
+			// Save payment code to session. Klarna fee total needs this
 			$this->session->data['payment_method']['code'] = isset($this->request->post['payment_code']) ? $this->request->post['payment_code'] : '';
 
 			// Totals
@@ -488,11 +490,11 @@ class ControllerCheckoutManual extends Controller {
 				$json['error']['payment']['postcode'] = $this->language->get('error_postcode');
 			}
 
-			if (!isset($this->request->post['payment_country_id']) || $this->request->post['payment_country_id'] == '') {
+			if (!isset($this->request->post['payment_country_id']) || $this->request->post['payment_country_id'] === '') {
 				$json['error']['payment']['country'] = $this->language->get('error_country');
 			}
 
-			if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] == '') {
+			if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] === '') {
 				$json['error']['payment']['zone'] = $this->language->get('error_zone');
 			}
 

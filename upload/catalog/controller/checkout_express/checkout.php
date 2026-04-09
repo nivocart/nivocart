@@ -11,19 +11,19 @@ class ControllerCheckoutExpressCheckout extends Controller {
 			$this->redirect($this->url->link('checkout/checkout_express', '', 'SSL'));
 		}
 
-		// Validate cart has products and has stock.
+		// Validate cart has products and has stock
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 			$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
 		}
 
-		// Validate minimum quantity requirements.
+		// Validate minimum quantity requirements
 		$products = $this->cart->getProducts();
 
 		foreach ($products as $product) {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -205,13 +205,13 @@ class ControllerCheckoutExpressCheckout extends Controller {
 			$this->data['reward_point'] = false;
 		}
 
-		if ($this->config->get('config_express_point') == 2) {
+		if ($this->config->get('config_express_point') === 2) {
 			$this->data['show_point'] = false;
 
 			if ($points && $this->config->get('reward_status')) {
 				$this->session->data['reward'] = $reward_points * $points_rate;
 			}
-		} elseif ($this->config->get('config_express_point') == 1) {
+		} elseif ($this->config->get('config_express_point') === 1) {
 			$this->data['show_point'] = true;
 		} else {
 			$this->data['show_point'] = false;

@@ -112,7 +112,7 @@ class ControllerCheckoutExpressShippingAddress extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -128,7 +128,7 @@ class ControllerCheckoutExpressShippingAddress extends Controller {
 				$this->request->post['shipping_address'] = 'new';
 			}
 
-			if ($this->request->post['shipping_address'] == 'existing') {
+			if ($this->request->post['shipping_address'] === 'existing') {
 				$this->load->model('account/address');
 
 				// Get address
@@ -195,7 +195,7 @@ class ControllerCheckoutExpressShippingAddress extends Controller {
 				$this->request->post['tax_id'] = '';
 			}
 
-			if ($this->request->post['shipping_address'] == 'new') {
+			if ($this->request->post['shipping_address'] === 'new') {
 				if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 					$json['error']['firstname'] = $this->language->get('error_firstname');
 				}
@@ -220,11 +220,11 @@ class ControllerCheckoutExpressShippingAddress extends Controller {
 					$json['error']['postcode'] = $this->language->get('error_postcode');
 				}
 
-				if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '') {
+				if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '') {
 					$json['error']['country'] = $this->language->get('error_country');
 				}
 
-				if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
+				if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '') {
 					$json['error']['zone'] = $this->language->get('error_zone');
 				}
 

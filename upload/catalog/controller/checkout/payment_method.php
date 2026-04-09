@@ -54,7 +54,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 					if ($method) {
 						if ($cart_has_recurring > 0) {
 							if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments')) {
-								if ($this->{'model_payment_' . $result['code']}->recurringPayments() == true) {
+								if ($this->{'model_payment_' . $result['code']}->recurringPayments() === true) {
 									$method_data[$result['code']] = $method;
 								}
 							}
@@ -108,7 +108,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 		$paypal_fee_total = $this->config->get('paypal_fee_total');
 
 		if (empty($paypal_fee_total) || ($this->cart->getTotal() < $paypal_fee_total)) {
-			if ($this->config->get('paypal_fee_fee_type') == 'F') {
+			if ($this->config->get('paypal_fee_fee_type') === 'F') {
 				$paypal_fee = $this->config->get('paypal_fee_fee');
 			} else {
 				$paypal_fee = ($this->cart->getTotal() * $this->config->get('paypal_fee_fee')) / 100;
@@ -221,7 +221,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
