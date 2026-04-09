@@ -49,7 +49,7 @@ $_['entry_review']                            = 'Your Review';
 $_['entry_rating']                            = 'Rating:';
 $_['entry_good']                              = 'Good';
 $_['entry_bad']                               = 'Bad';
-$_['entry_captcha']                           = 'Enter the two words';
+$_['entry_captcha']                           = 'Enter the code below';
 
 // Tabs
 $_['tab_description']                         = 'Description';
