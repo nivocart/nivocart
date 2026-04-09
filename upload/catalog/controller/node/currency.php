@@ -1,5 +1,5 @@
 <?php
-class ControllerModuleCurrency extends Controller {
+class ControllerNodeCurrency extends Controller {
 
 	protected function index() {
 		if (isset($this->request->post['currency_code'])) {
@@ -16,13 +16,13 @@ class ControllerModuleCurrency extends Controller {
 			}
 		}
 
-		$this->language->load('module/currency');
+		$this->language->load('node/currency');
 
 		$this->data['text_currency'] = $this->language->get('text_currency');
 
 		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$connection = 'SSL';
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$connection = 'SSL';
 		} else {
 			$connection = 'NONSSL';
@@ -69,10 +69,10 @@ class ControllerModuleCurrency extends Controller {
 			$this->data['redirect'] = $this->url->link($route, $url, $connection);
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/currency.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/currency.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/node/currency.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/node/currency.tpl';
 		} else {
-			$this->template = 'default/template/module/currency.tpl';
+			$this->template = 'default/template/node/currency.tpl';
 		}
 
 		$this->render();

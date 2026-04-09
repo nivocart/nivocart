@@ -1,5 +1,5 @@
 <?php
-class ControllerModuleLanguage extends Controller {
+class ControllerNodeLanguage extends Controller {
 
 	protected function index() {
 		if (isset($this->request->post['language_code'])) {
@@ -13,13 +13,13 @@ class ControllerModuleLanguage extends Controller {
 			}
 		}
 
-		$this->language->load('module/language');
+		$this->language->load('node/language');
 
 		$this->data['text_language'] = $this->language->get('text_language');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$connection = 'SSL';
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$connection = 'SSL';
 		} else {
 			$connection = 'NONSSL';
@@ -65,10 +65,10 @@ class ControllerModuleLanguage extends Controller {
 			$this->data['redirect'] = $this->url->link($route, $url, $connection);
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/language.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/language.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/node/language.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/node/language.tpl';
 		} else {
-			$this->template = 'default/template/module/language.tpl';
+			$this->template = 'default/template/node/language.tpl';
 		}
 
 		$this->render();

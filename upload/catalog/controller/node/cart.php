@@ -1,8 +1,8 @@
 <?php
-class ControllerModuleCart extends Controller {
+class ControllerNodeCart extends Controller {
 
 	public function index() {
-		$this->language->load('module/cart');
+		$this->language->load('node/cart');
 
 		if (isset($this->request->get['remove'])) {
 			$this->cart->remove($this->request->get['remove']);
@@ -176,10 +176,10 @@ class ControllerModuleCart extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/cart.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/cart.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/node/cart.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/node/cart.tpl';
 		} else {
-			$this->template = 'default/template/module/cart.tpl';
+			$this->template = 'default/template/node/cart.tpl';
 		}
 
 		$this->response->setOutput($this->render());

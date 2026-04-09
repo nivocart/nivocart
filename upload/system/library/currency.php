@@ -71,7 +71,7 @@ class Currency {
 			return;
 		}
 
-		$currency = $this->currencies[$currency]['code'];
+		$currency = $this->currencies[$currency];
 
 		// check if currency data is malformed
 		if (isset($currency) && is_string($currency)) {
