@@ -33,7 +33,7 @@
           <?php echo $description; ?>
         </div>
       </div>
-      <?php if ($news_addthis) { ?>
+      <?php if ($news_sharethis) { ?>
         <div style="margin:25px 0;">
           <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
             <a class="addthis_button_email"></a>
@@ -45,8 +45,8 @@
             <a class="addthis_button_compact"></a>
             <a class="addthis_counter addthis_bubble_style"></a>
           </div>
-          <?php if ($addthis) { ?>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $addthis; ?>"></script>
+          <?php if ($sharethis) { ?>
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $sharethis; ?>"></script>
           <?php } else { ?>
             <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
           <?php } ?>
