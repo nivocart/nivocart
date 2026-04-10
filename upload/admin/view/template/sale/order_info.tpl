@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="content">
-  <?php if (!$abandoned && $order_status_id == 0) { ?>
+  <?php if (!$abandoned && $order_status_id === 0) { ?>
     <div class="warning"><?php echo $text_missed; ?></div>
   <?php } ?>
   <?php if ($abandoned) { ?>
@@ -103,12 +103,6 @@
           <td><?php echo $text_telephone; ?></td>
           <td><?php echo $telephone; ?></td>
         </tr>
-        <?php if ($fax) { ?>
-        <tr>
-          <td><?php echo $text_fax; ?></td>
-          <td><?php echo $fax; ?></td>
-        </tr>
-        <?php } ?>
         <tr>
           <td><?php echo $text_total; ?></td>
           <td><?php echo $total; ?>
@@ -429,7 +423,7 @@
               <td class="left"><?php echo $product['barcode']; ?><?php echo $product['model']; ?></td>
               <td class="center"><?php echo $product['quantity']; ?></td>
               <td class="center">
-                <?php if ($product['picked'] == '1') { ?>
+                <?php if ($product['picked'] === '1') { ?>
                   <input type="checkbox" class="status-picked" name="pick-<?php echo $product['product_id']; ?>" checked />
                 <?php } else { ?>
                   <input type="checkbox" class="status-picked" name="pick-<?php echo $product['product_id']; ?>" />
@@ -456,7 +450,7 @@
             <input type="hidden" name="old_order_status_id" value="<?php echo $order_status_id; ?>" id="old_order_status_id" />
             <select name="order_status_id">
             <?php foreach ($order_statuses as $order_statuses) { ?>
-              <?php if ($order_statuses['order_status_id'] == $order_status_id) { ?>
+              <?php if ($order_statuses['order_status_id'] === $order_status_id) { ?>
                 <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $order_statuses['order_status_id']; ?>"><?php echo $order_statuses['name']; ?></option>
@@ -731,7 +725,7 @@ function setNotComplete(obj, init) {
 		$(element).removeClass('staged');
 		$(element).removeClass('picked');
 		$(element).addClass('delayed');
-	} else if ($(obj).val().length == 0) {
+	} else if ($(obj).val().length === 0) {
 		$.get(href, {backorder: ''}).done(function(data) { });
 		$(element).removeClass('delayed');
 		$(element).addClass('staged');
@@ -777,6 +771,9 @@ $('body').on('click', '#button-history', function() {
 			$('#history').html(html);
 			$('textarea[name=\'comment\']').val('');
 			$('#order-status').html($('select[name=\'order_status_id\'] option:selected').text());
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		}
 	});
 });

@@ -19,7 +19,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/order');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_order->addOrder($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -75,7 +75,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/order');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_order->addOrder($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -131,7 +131,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/order');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_order->editOrder($this->request->get['order_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -459,7 +459,7 @@ class ControllerSaleOrder extends Controller {
 			$url .= '&filter_total=' . $this->request->get['filter_total'];
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -617,6 +617,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['help_autocomplete'] = $this->language->get('help_autocomplete');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -749,6 +750,7 @@ class ControllerSaleOrder extends Controller {
 			$this->data['error_shipping_method'] = '';
 		}
 
+		// Breadcrumbs
 		$url = '';
 
 		if (isset($this->request->get['filter_order_id'])) {
@@ -809,7 +811,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
 		}
 
@@ -841,9 +843,9 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['stores'] = $this->model_setting_store->getStores($stores_array);
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['store_url'] = HTTPS_CATALOG;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['store_url'] = HTTPS_CATALOG;
 		} else {
 			$this->data['store_url'] = HTTP_CATALOG;
@@ -1235,7 +1237,7 @@ class ControllerSaleOrder extends Controller {
 		$current_credit = '';
 
 		foreach ($this->data['order_totals'] as $key => $value) {
-			if ($value['code'] == 'coupon') {
+			if ($value['code'] === 'coupon') {
 				$start = strpos($value['title'], '(') + 1;
 				$end = strrpos($value['title'], ')');
 
@@ -1243,7 +1245,7 @@ class ControllerSaleOrder extends Controller {
 					$current_coupon = substr($value['title'], $start, $end - $start);
 				}
 
-			} elseif ($value['code'] == 'voucher') {
+			} elseif ($value['code'] === 'voucher') {
 				$start = strpos($value['title'], '(') + 1;
 				$end = strrpos($value['title'], ')');
 
@@ -1252,7 +1254,7 @@ class ControllerSaleOrder extends Controller {
 					$current_voucher_value = abs($value['value']);
 				}
 
-			} elseif ($value['code'] == 'reward') {
+			} elseif ($value['code'] === 'reward') {
 				$start = strpos($value['title'], '(') + 1;
 				$end = strrpos($value['title'], ')');
 
@@ -1260,7 +1262,7 @@ class ControllerSaleOrder extends Controller {
 					$current_reward = substr($value['title'], $start, $end - $start);
 				}
 
-			} elseif ($value['code'] == 'credit') {
+			} elseif ($value['code'] === 'credit') {
 				$current_credit = abs($value['value']);
 			}
 		}
@@ -1374,6 +1376,7 @@ class ControllerSaleOrder extends Controller {
 		$this->data['help_confirm_select'] = $this->language->get('help_confirm_select');
 		$this->data['help_do_not_edit'] = $this->language->get('help_do_not_edit');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -1506,6 +1509,7 @@ class ControllerSaleOrder extends Controller {
 			$this->data['error_shipping_method'] = '';
 		}
 
+		// Breadcrumbs
 		$url = '';
 
 		if (isset($this->request->get['filter_order_id'])) {
@@ -1566,7 +1570,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
 		}
 
@@ -1598,9 +1602,9 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['stores'] = $this->model_setting_store->getStores($stores_array);
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['store_url'] = HTTPS_CATALOG;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['store_url'] = HTTPS_CATALOG;
 		} else {
 			$this->data['store_url'] = HTTP_CATALOG;
@@ -1986,7 +1990,7 @@ class ControllerSaleOrder extends Controller {
 		$current_credit = '';
 
 		foreach ($this->data['order_totals'] as $key => $value) {
-			if ($value['code'] == 'coupon') {
+			if ($value['code'] === 'coupon') {
 				$start = strpos($value['title'], '(') + 1;
 				$end = strrpos($value['title'], ')');
 
@@ -1994,7 +1998,7 @@ class ControllerSaleOrder extends Controller {
 					$current_coupon = substr($value['title'], $start, $end - $start);
 				}
 
-			} elseif ($value['code'] == 'voucher') {
+			} elseif ($value['code'] === 'voucher') {
 				$start = strpos($value['title'], '(') + 1;
 				$end = strrpos($value['title'], ')');
 
@@ -2003,7 +2007,7 @@ class ControllerSaleOrder extends Controller {
 					$current_voucher_value = abs($value['value']);
 				}
 
-			} elseif ($value['code'] == 'reward') {
+			} elseif ($value['code'] === 'reward') {
 				$start = strpos($value['title'], '(') + 1;
 				$end = strrpos($value['title'], ')');
 
@@ -2011,7 +2015,7 @@ class ControllerSaleOrder extends Controller {
 					$current_reward = substr($value['title'], $start, $end - $start);
 				}
 
-			} elseif ($value['code'] == 'credit') {
+			} elseif ($value['code'] === 'credit') {
 				$current_credit = abs($value['value']);
 			}
 		}
@@ -2102,21 +2106,21 @@ class ControllerSaleOrder extends Controller {
 			if ($customer_group && $customer_group['tax_id_display']) {
 				$this->load->helper('vat');
 
-				if ($this->config->get('config_vat') && $this->request->post['payment_tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['payment_tax_id']) == 'invalid')) {
+				if ($this->config->get('config_vat') && $this->request->post['payment_tax_id'] !== '' && (vat_validation($country_info['iso_code_2'], $this->request->post['payment_tax_id']) === 'invalid')) {
 					$this->error['payment_tax_id'] = $this->language->get('error_vat');
 				}
 			}
 		}
 
-		if (!isset($this->request->post['payment_country_id']) || $this->request->post['payment_country_id'] == '') {
+		if (!isset($this->request->post['payment_country_id']) || $this->request->post['payment_country_id'] === '') {
 			$this->error['payment_country'] = $this->language->get('error_country');
 		}
 
-		if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] == '') {
+		if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] === '') {
 			$this->error['payment_zone'] = $this->language->get('error_zone');
 		}
 
-		if (!isset($this->request->post['payment_method']) || $this->request->post['payment_method'] == '') {
+		if (!isset($this->request->post['payment_method']) || $this->request->post['payment_method'] === '') {
 			$this->error['payment_method'] = $this->language->get('error_payment');
 		}
 
@@ -2161,15 +2165,15 @@ class ControllerSaleOrder extends Controller {
 				$this->error['shipping_postcode'] = $this->language->get('error_postcode');
 			}
 
-			if (!isset($this->request->post['shipping_country_id']) || $this->request->post['shipping_country_id'] == '') {
+			if (!isset($this->request->post['shipping_country_id']) || $this->request->post['shipping_country_id'] === '') {
 				$this->error['shipping_country'] = $this->language->get('error_country');
 			}
 
-			if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] == '') {
+			if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] === '') {
 				$this->error['shipping_zone'] = $this->language->get('error_zone');
 			}
 
-			if (!isset($this->request->post['shipping_method']) || $this->request->post['shipping_method'] == '') {
+			if (!isset($this->request->post['shipping_method']) || $this->request->post['shipping_method'] === '') {
 				$this->error['shipping_method'] = $this->language->get('error_shipping');
 			}
 		}
@@ -2300,6 +2304,7 @@ class ControllerSaleOrder extends Controller {
 
 			$this->data['picklist_status'] = $this->config->get('config_picklist_status');
 
+			// Breadcrumbs
 			$url = '';
 
 			if (isset($this->request->get['filter_order_id'])) {
@@ -2385,7 +2390,7 @@ class ControllerSaleOrder extends Controller {
 			$this->data['store_id'] = $order_info['store_id'];
 			$this->data['store_name'] = $order_info['store_name'];
 
-			if ($order_info['store_id'] == 0) {
+			if ($order_info['store_id'] === 0) {
 				$this->data['store_url'] = $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG;
 			} else {
 				$this->data['store_url'] = $order_info['store_url'];
@@ -2416,7 +2421,7 @@ class ControllerSaleOrder extends Controller {
 			$this->data['shipping_method'] = $order_info['shipping_method'];
 			$this->data['payment_method'] = $order_info['payment_method'];
 
-			$this->data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
+			$this->data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency'));
 
 			if ($order_info['total'] > 0) {
 				$this->data['credit'] = $order_info['total'];
@@ -2441,7 +2446,7 @@ class ControllerSaleOrder extends Controller {
 				$this->data['affiliate'] = '';
 			}
 
-			$this->data['commission'] = $this->currency->format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
+			$this->data['commission'] = $this->currency->format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency'));
 
 			$this->load->model('sale/affiliate');
 
@@ -2534,10 +2539,10 @@ class ControllerSaleOrder extends Controller {
 					'model'            => $product['model'],
 					'option'           => $option_data,
 					'quantity'         => $product['quantity'],
-					'price'            => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-					'tax_value'        => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'price'            => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
+					'tax_value'        => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
 					'tax_percent'      => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-					'total'            => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'total'            => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
 					'picked'           => $product['picked'],
 					'backordered'      => $product['backordered'],
 					'href_picked'      => $this->url->link('sale/order/picked', 'token=' . $this->session->data['token'] . '&order_product_id=' . $product['order_product_id'], 'SSL'),
@@ -2605,7 +2610,7 @@ class ControllerSaleOrder extends Controller {
 				}
 			}
 
-			if ($this->hasAction('payment/' . $order_info['payment_code'] . '/orderAction') == true) {
+			if ($this->hasAction('payment/' . $order_info['payment_code'] . '/orderAction') === true) {
 				$this->data['payment_action'] = $this->getChild('payment/' . $order_info['payment_code'] . '/orderAction');
 			} else {
 				$this->data['payment_action'] = '';
@@ -2880,13 +2885,16 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/order');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$this->data['error'] = $this->language->get('error_permission');
 			}
 
+			// Needs more work to retrieve Ajax Data properly
+			$new_history = array();
+			
 			if (!$this->data['error']) {
-				$this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
+				$this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post[$new_history]);
 
 				$this->data['success'] = $this->language->get('text_success');
 
@@ -2949,7 +2957,7 @@ class ControllerSaleOrder extends Controller {
 
 		$option_info = $this->model_sale_order->getOrderOption($this->request->get['order_id'], $order_option_id);
 
-		if ($option_info && $option_info['type'] == 'file') {
+		if ($option_info && $option_info['type'] === 'file') {
 			$file = DIR_DOWNLOAD . $option_info['value'];
 
 			$mask = basename(substr($option_info['value'], 0, strrpos($option_info['value'], '.')));
@@ -3017,7 +3025,7 @@ class ControllerSaleOrder extends Controller {
 
 		$json = array();
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			if (!empty($this->request->files['file']['name'])) {
 				$filename = html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8');
 
@@ -3140,9 +3148,9 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['title'] = $this->language->get('heading_title');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['base'] = HTTPS_SERVER;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['base'] = HTTPS_SERVER;
 		} else {
 			$this->data['base'] = HTTP_SERVER;
@@ -3247,9 +3255,9 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['title'] = $this->language->get('heading_title');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['base'] = HTTPS_SERVER;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['base'] = HTTPS_SERVER;
 		} else {
 			$this->data['base'] = HTTP_SERVER;
@@ -3497,9 +3505,9 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['title'] = $this->language->get('heading_title');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['base'] = HTTPS_SERVER;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['base'] = HTTPS_SERVER;
 		} else {
 			$this->data['base'] = HTTP_SERVER;
@@ -3735,9 +3743,9 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['title'] = $this->language->get('heading_title');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['base'] = HTTPS_SERVER;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['base'] = HTTPS_SERVER;
 		} else {
 			$this->data['base'] = HTTP_SERVER;
@@ -3926,10 +3934,10 @@ class ControllerSaleOrder extends Controller {
 						'model'       => $product['model'],
 						'option'      => $option_data,
 						'quantity'    => $product['quantity'],
-						'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-						'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+						'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
+						'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency')),
 						'tax_percent' => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-						'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+						'total'       => $this->currency->format(($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], $this->config->get('config_currency'))
 					);
 				}
 

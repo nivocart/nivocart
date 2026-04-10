@@ -33,7 +33,7 @@
             <td class="left"><select name="store_id">
               <option value="0"><?php echo $text_default; ?></option>
               <?php foreach ($stores as $store) { ?>
-                <?php if ($store['store_id'] == $store_id) { ?>
+                <?php if ($store['store_id'] === $store_id) { ?>
                   <option value="<?php echo $store['store_id']; ?>" selected="selected"><?php echo $store['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></option>
@@ -51,7 +51,7 @@
             <td class="left"><?php echo $entry_customer_group; ?></td>
             <td class="left"><select id="customer_group_id" <?php echo ($customer_id ? 'disabled="disabled"' : ''); ?>>
               <?php foreach ($customer_groups as $customer_group) { ?>
-                <?php if ($customer_group['customer_group_id'] == $customer_group_id) { ?>
+                <?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
                   <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>
@@ -180,7 +180,7 @@
               <select name="payment_country_id" class="input-error">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <?php if ($country['country_id'] == $payment_country_id) { ?>
+                  <?php if ($country['country_id'] === $payment_country_id) { ?>
                     <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -192,7 +192,7 @@
               <select name="payment_country_id">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <?php if ($country['country_id'] == $payment_country_id) { ?>
+                  <?php if ($country['country_id'] === $payment_country_id) { ?>
                     <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -279,7 +279,7 @@
               <select name="shipping_country_id" class="input-error">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <?php if ($country['country_id'] == $shipping_country_id) { ?>
+                  <?php if ($country['country_id'] === $shipping_country_id) { ?>
                     <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -291,7 +291,7 @@
               <select name="shipping_country_id">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <?php if ($country['country_id'] == $shipping_country_id) { ?>
+                  <?php if ($country['country_id'] === $shipping_country_id) { ?>
                     <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -634,7 +634,7 @@
             <td class="left"><?php echo $entry_order_status; ?></td>
             <td class="left"><select name="order_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $order_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $order_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -750,25 +750,25 @@ $('select[id=\'customer_group_id\']').on('change', function() {
 <?php } ?>
 
 	if (customer_group[this.value]) {
-		if (customer_group[this.value]['company_id_display'] == '1') {
+		if (customer_group[this.value]['company_id_display'] === '1') {
 			$('#company-id-display').show();
 		} else {
 			$('#company-id-display').hide();
 		}
 
-		if (customer_group[this.value]['company_id_required'] == '1') {
+		if (customer_group[this.value]['company_id_required'] === '1') {
 			$('#company-id-required').show();
 		} else {
 			$('#company-id-required').hide();
 		}
 
-		if (customer_group[this.value]['tax_id_display'] == '1') {
+		if (customer_group[this.value]['tax_id_display'] === '1') {
 			$('#tax-id-display').show();
 		} else {
 			$('#tax-id-display').hide();
 		}
 
-		if (customer_group[this.value]['tax_id_required'] == '1') {
+		if (customer_group[this.value]['tax_id_required'] === '1') {
 			$('#tax-id-required').show();
 		} else {
 			$('#tax-id-required').hide();
@@ -819,7 +819,7 @@ $('select[name=\'payment_country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#payment-postcode-required').show();
 			} else {
 				$('#payment-postcode-required').hide();
@@ -831,7 +831,7 @@ $('select[name=\'payment_country_id\']').on('change', function() {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == payment_zone_id) {
+					if (json['zone'][i]['zone_id'] === payment_zone_id) {
 						html += ' selected="selected"';
 					}
 
@@ -867,7 +867,7 @@ $('body').on('change', 'select[name=\'payment_address\']', function() {
 				$('input[name=\'payment_address_2\']').attr('value', json['address_2']);
 				$('input[name=\'payment_city\']').attr('value', json['city']);
 				$('input[name=\'payment_postcode\']').attr('value', json['postcode']);
-				$('select[name=\'payment_country_id\']').attr('value', json['country_id']);
+				$('select[name=\'payment_country_id\']').val(json['country_id']);
 
 				payment_zone_id = json['zone_id'];
 
@@ -880,7 +880,7 @@ $('body').on('change', 'select[name=\'payment_address\']', function() {
 // Shipping country
 var shipping_zone_id = '<?php echo $shipping_zone_id; ?>';
 
-$('body').on('change', 'select[name=\'shipping_country_id\']', function() {
+$('select[name=\'shipping_country_id\']').on('change', function() {
 	$.ajax({
 		url: 'index.php?route=localisation/country/country&token=<?php echo $token; ?>&country_id=' + this.value,
 		dataType: 'json',
@@ -891,7 +891,7 @@ $('body').on('change', 'select[name=\'shipping_country_id\']', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#shipping-postcode-required').show();
 			} else {
 				$('#shipping-postcode-required').hide();
@@ -903,7 +903,7 @@ $('body').on('change', 'select[name=\'shipping_country_id\']', function() {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == shipping_zone_id) {
+					if (json['zone'][i]['zone_id'] === shipping_zone_id) {
 						html += ' selected="selected"';
 					}
 
@@ -936,7 +936,7 @@ $('body').on('change', 'select[name=\'shipping_address\']', function() {
 				$('input[name=\'shipping_address_2\']').attr('value', json['address_2']);
 				$('input[name=\'shipping_city\']').attr('value', json['city']);
 				$('input[name=\'shipping_postcode\']').attr('value', json['postcode']);
-				$('select[name=\'shipping_country_id\']').attr('value', json['country_id']);
+				$('select[name=\'shipping_country_id\']').val(json['country_id']);
 
 				shipping_zone_id = json['zone_id'];
 
@@ -995,7 +995,7 @@ $('input[name=\'product\']').autocomplete({
 			for (i = 0; i < ui.item['option'].length; i++) {
 				option = ui.item['option'][i];
 
-				if (option['type'] == 'select') {
+				if (option['type'] === 'select') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1023,7 +1023,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'radio') {
+				if (option['type'] === 'radio') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1051,7 +1051,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'checkbox') {
+				if (option['type'] === 'checkbox') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1078,7 +1078,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'image') {
+				if (option['type'] === 'image') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1106,7 +1106,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'text') {
+				if (option['type'] === 'text') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1119,7 +1119,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'textarea') {
+				if (option['type'] === 'textarea') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1132,7 +1132,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'file') {
+				if (option['type'] === 'file') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1146,7 +1146,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'date') {
+				if (option['type'] === 'date') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1159,7 +1159,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'datetime') {
+				if (option['type'] === 'datetime') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1172,7 +1172,7 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] == 'time') {
+				if (option['type'] === 'time') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
 					if (option['required']) {
@@ -1191,7 +1191,7 @@ $('input[name=\'product\']').autocomplete({
 			for (i = 0; i < ui.item.option.length; i++) {
 				option = ui.item.option[i];
 
-				if (option['type'] == 'file') {
+				if (option['type'] === 'file') {
 					new AjaxUpload('#button-option-' + option['product_option_id'], {
 						action: 'index.php?route=sale/order/upload&token=<?php echo $token; ?>',
 						name: 'file',
@@ -1273,13 +1273,13 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 	data += '#tab-payment input[type=\'text\'], #tab-payment input[type=\'hidden\'], #tab-payment input[type=\'radio\']:checked, #tab-payment input[type=\'checkbox\']:checked, #tab-payment select, #tab-payment textarea, ';
 	data += '#tab-shipping input[type=\'text\'], #tab-shipping input[type=\'hidden\'], #tab-shipping input[type=\'radio\']:checked, #tab-shipping input[type=\'checkbox\']:checked, #tab-shipping select, #tab-shipping textarea, ';
 
-	if ($(this).attr('id') == 'button-product') {
+	if ($(this).attr('id') === 'button-product') {
 		data += '#tab-product input[type=\'text\'], #tab-product input[type=\'hidden\'], #tab-product input[type=\'radio\']:checked, #tab-product input[type=\'checkbox\']:checked, #tab-product select, #tab-product textarea, ';
 	} else {
 		data += '#product input[type=\'text\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea, ';
 	}
 
-	if ($(this).attr('id') == 'button-voucher') {
+	if ($(this).attr('id') === 'button-voucher') {
 		data += '#tab-voucher input[type=\'text\'], #tab-voucher input[type=\'hidden\'], #tab-voucher input[type=\'radio\']:checked, #tab-voucher input[type=\'checkbox\']:checked, #tab-voucher select, #tab-voucher textarea, ';
 	} else {
 		data += '#voucher input[type=\'text\'], #voucher input[type=\'hidden\'], #voucher input[type=\'radio\']:checked, #voucher input[type=\'checkbox\']:checked, #voucher select, #voucher textarea, ';
@@ -1678,7 +1678,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 
 					if (!json['shipping_method'][i]['error']) {
 						for (j in json['shipping_method'][i]['quote']) {
-							if (json['shipping_method'][i]['quote'][j]['code'] == $('input[name=\'shipping_code\']').attr('value')) {
+							if (json['shipping_method'][i]['quote'][j]['code'] === $('input[name=\'shipping_code\']').attr('value')) {
 								html += '<option value="' + json['shipping_method'][i]['quote'][j]['code'] + '" selected="selected">' + json['shipping_method'][i]['quote'][j]['title'] + '</option>';
 							} else {
 								html += '<option value="' + json['shipping_method'][i]['quote'][j]['code'] + '">' + json['shipping_method'][i]['quote'][j]['title'] + '</option>';
@@ -1708,7 +1708,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 				html = '<option value=""><?php echo $text_select; ?></option>';
 
 				for (i in json['payment_method']) {
-					if (json['payment_method'][i]['code'] == $('input[name=\'payment_code\']').attr('value')) {
+					if (json['payment_method'][i]['code'] === $('input[name=\'payment_code\']').attr('value')) {
 						html += '<option value="' + json['payment_method'][i]['code'] + '" selected="selected">' + json['payment_method'][i]['title'] + '</option>';
 					} else {
 						html += '<option value="' + json['payment_method'][i]['code'] + '">' + json['payment_method'][i]['title'] + '</option>';

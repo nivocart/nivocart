@@ -44,7 +44,7 @@ class ControllerCheckoutManual extends Controller {
 			if ($this->request->post['customer_id']) {
 				$this->load->model('account/customer');
 
-				$customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+				$customer_info = $this->model_account_customer->getCustomer((int)$this->request->post['customer_id']);
 
 				if ($customer_info) {
 					$this->customer->login($customer_info['email'], '', true);
@@ -62,6 +62,13 @@ class ControllerCheckoutManual extends Controller {
 			$this->load->model('catalog/product');
 
 			if (isset($this->request->post['order_product'])) {
+				// Recurring Profile needs implementing properly
+				if (isset($this->request->post['profile_id'])) {
+					$profile_id = $this->request->post['profile_id'];
+				} else {
+					$profile_id = 0;
+				}
+
 				foreach ($this->request->post['order_product'] as $order_product) {
 					$option_data = array();
 
@@ -77,14 +84,21 @@ class ControllerCheckoutManual extends Controller {
 						}
 					}
 
-					$this->cart->add($order_product['product_id'], $order_product['quantity'], $option_data);
+					$this->cart->add($order_product['product_id'], $profile_id, $order_product['quantity'], $option_data);
 				}
 			}
 
 			if (isset($this->request->post['product_id'])) {
-				$product_info = $this->model_catalog_product->getProduct($this->request->post['product_id']);
+				$product_info = $this->model_catalog_product->getProduct((int)$this->request->post['product_id']);
 
 				if ($product_info) {
+					// Recurring Profile needs implementing properly
+					if (isset($this->request->post['profile_id'])) {
+						$profile_id = $this->request->post['profile_id'];
+					} else {
+						$profile_id = 0;
+					}
+
 					if (isset($this->request->post['quantity'])) {
 						$quantity = $this->request->post['quantity'];
 					} else {
@@ -97,7 +111,7 @@ class ControllerCheckoutManual extends Controller {
 						$option = array();
 					}
 
-					$product_options = $this->model_catalog_product->getProductOptions($this->request->post['product_id']);
+					$product_options = $this->model_catalog_product->getProductOptions((int)$this->request->post['product_id']);
 
 					foreach ($product_options as $product_option) {
 						if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
@@ -106,7 +120,7 @@ class ControllerCheckoutManual extends Controller {
 					}
 
 					if (!isset($json['error']['product']['option'])) {
-						$this->cart->add($this->request->post['product_id'], $quantity, $option);
+						$this->cart->add($this->request->post['product_id'], $profile_id, $quantity, $option);
 					}
 				}
 			}
