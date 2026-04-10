@@ -19,7 +19,7 @@ class ControllerUserUserLog extends Controller {
 
 		$this->load->model('user/user_log');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateSettings()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateSettings()) {
 			$this->load->model('setting/setting');
 
 			$this->model_setting_setting->editSetting('user_log', $this->request->post);
@@ -73,7 +73,7 @@ class ControllerUserUserLog extends Controller {
 
 		$this->load->model('user/user_log');
 
-		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token']) && $this->validateClear()) {
+		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] === $this->session->data['token']) && $this->validateClear()) {
 			$this->model_user_user_log->clearDataLog($this->user->getId(), $this->user->getUserName());
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -180,6 +180,8 @@ class ControllerUserUserLog extends Controller {
 		$this->data['clear'] = $this->url->link('user/user_log/clear', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['action'] = $this->url->link('user/user_log', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
+		$this->data['token'] = $this->session->data['token'];
+
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
 
@@ -194,7 +196,7 @@ class ControllerUserUserLog extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		// Limit failsafe
+		// Log limit failsafe
 		if ($this->config->get('user_log_display') > 0) {
 			$user_log_display = $this->config->get('user_log_display');
 		} else {

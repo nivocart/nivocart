@@ -19,7 +19,7 @@ class ControllerUserUserPermission extends Controller {
 
 		$this->load->model('user/user_group');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_user_user_group->addUserGroup($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerUserUserPermission extends Controller {
 
 		$this->load->model('user/user_group');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_user_user_group->editUserGroup($this->request->get['user_group_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -202,7 +202,7 @@ class ControllerUserUserPermission extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -260,6 +260,9 @@ class ControllerUserUserPermission extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -278,6 +281,7 @@ class ControllerUserUserPermission extends Controller {
 			$this->data['error_exists'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'        => $this->request->get['sort'] ?? 'name',
 			'order'       => $this->request->get['order'] ?? 'ASC',
@@ -308,7 +312,7 @@ class ControllerUserUserPermission extends Controller {
 
 		$this->data['cancel'] = $this->url->link('user/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['user_group_id']) && $this->request->server['REQUEST_METHOD'] != 'POST') {
+		if (isset($this->request->get['user_group_id']) && $this->request->server['REQUEST_METHOD'] !== 'POST') {
 			$user_group_info = $this->model_user_user_group->getUserGroup($this->request->get['user_group_id']);
 		}
 

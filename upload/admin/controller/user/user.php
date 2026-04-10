@@ -19,7 +19,7 @@ class ControllerUserUser extends Controller {
 
 		$this->load->model('user/user');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_user_user->addUser($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -63,7 +63,7 @@ class ControllerUserUser extends Controller {
 
 		$this->load->model('user/user');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -134,7 +134,6 @@ class ControllerUserUser extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -264,7 +263,7 @@ class ControllerUserUser extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -347,6 +346,7 @@ class ControllerUserUser extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -403,7 +403,7 @@ class ControllerUserUser extends Controller {
 			$this->data['success'] = '';
 		}
 
-		// Jquery filter name
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -456,7 +456,7 @@ class ControllerUserUser extends Controller {
 
 		$this->data['cancel'] = $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['user_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['user_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$user_info = $this->model_user_user->getUser($this->request->get['user_id']);
 		}
 
@@ -609,6 +609,7 @@ class ControllerUserUser extends Controller {
 				}
 			}
 
+			// Firstname check
 			if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 				if (!$top_administrator) {
 					// Current Password Check
@@ -626,6 +627,7 @@ class ControllerUserUser extends Controller {
 				$this->error['firstname'] = $this->language->get('error_firstname');
 			}
 
+			// Lastname check
 			if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
 				if (!$top_administrator) {
 					// Current Password Check
@@ -643,6 +645,7 @@ class ControllerUserUser extends Controller {
 				$this->error['lastname'] = $this->language->get('error_lastname');
 			}
 
+			// Email Check
 			if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
 				if (!$top_administrator) {
 					// Current Password Check
@@ -667,11 +670,12 @@ class ControllerUserUser extends Controller {
 					$this->error['email'] = $this->language->get('error_email_exists');
 				}
 			} else {
-				if ($user_email && ($this->request->get['user_id'] != $user_email['user_id'])) {
+				if ($user_email && ($this->request->get['user_id'] !== $user_email['user_id'])) {
 					$this->error['email'] = $this->language->get('error_email_exists');
 				}
 			}
 
+			// Top Administrator check
 			if (!$top_administrator) {
 				if ($this->request->post['password'] != "") {
 					// Current Password Check
@@ -766,7 +770,7 @@ class ControllerUserUser extends Controller {
 		}
 
 		foreach ($this->request->post['selected'] as $user_id) {
-			if ($this->user->getId() == $user_id) {
+			if ($this->user->getId() === $user_id) {
 				$this->error['warning'] = $this->language->get('error_account');
 			}
 		}
@@ -774,6 +778,7 @@ class ControllerUserUser extends Controller {
 		return empty($this->error);
 	}
 
+	// Autocomplete
 	public function autocomplete() {
 		$json = array();
 
