@@ -56,7 +56,7 @@ class Currency {
 	}
 
 	/**
-	 * Set
+	 * Set Currency Session
 	 *
 	 * @param string $currency
 	 *
@@ -73,8 +73,13 @@ class Currency {
 
 		$currency = $this->currencies[$currency];
 
-		$this->code = $currency;
+		if (isset($currency) && is_string($currency)) {
+			$this->code = $currency;
+		} else {
+			return;
+		}
 
+		// Update currency session
 		if (!isset($this->session->data['currency']) || ($this->session->data['currency'] !== $currency)) {
 			$this->session->data['currency'] = $currency;
 		}
