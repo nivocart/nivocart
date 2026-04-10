@@ -19,7 +19,7 @@ class ControllerCatalogOption extends Controller {
 
 		$this->load->model('catalog/option');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_option->addOption($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerCatalogOption extends Controller {
 
 		$this->load->model('catalog/option');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_option->editOption($this->request->get['option_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -206,7 +206,7 @@ class ControllerCatalogOption extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -282,6 +282,9 @@ class ControllerCatalogOption extends Controller {
 		$this->data['button_add_option_value'] = $this->language->get('button_add_option_value');
 		$this->data['button_remove'] = $this->language->get('button_remove');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -300,6 +303,7 @@ class ControllerCatalogOption extends Controller {
 			$this->data['error_option_value'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'od.name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -330,11 +334,9 @@ class ControllerCatalogOption extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['option_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['option_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$option_info = $this->model_catalog_option->getOption($this->request->get['option_id']);
 		}
-
-		$this->data['token'] = $this->session->data['token'];
 
 		$this->load->model('localisation/language');
 
@@ -414,7 +416,7 @@ class ControllerCatalogOption extends Controller {
 			}
 		}
 
-		if (($this->request->post['type'] == 'select' || $this->request->post['type'] == 'radio' || $this->request->post['type'] == 'checkbox') && !isset($this->request->post['option_value'])) {
+		if (($this->request->post['type'] === 'select' || $this->request->post['type'] === 'radio' || $this->request->post['type'] === 'checkbox') && !isset($this->request->post['option_value'])) {
 			$this->error['warning'] = $this->language->get('error_type');
 		}
 
@@ -469,7 +471,7 @@ class ControllerCatalogOption extends Controller {
 			foreach ($options as $option) {
 				$option_value_data = array();
 
-				if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
+				if ($option['type'] === 'select' || $option['type'] === 'radio' || $option['type'] === 'checkbox' || $option['type'] === 'image') {
 					$option_values = $this->model_catalog_option->getOptionValues($option['option_id']);
 
 					foreach ($option_values as $option_value) {
@@ -497,19 +499,19 @@ class ControllerCatalogOption extends Controller {
 
 				$type = '';
 
-				if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
+				if ($option['type'] === 'select' || $option['type'] === 'radio' || $option['type'] === 'checkbox' || $option['type'] === 'image') {
 					$type = $this->language->get('text_choose');
 				}
 
-				if ($option['type'] == 'text' || $option['type'] == 'textarea') {
+				if ($option['type'] === 'text' || $option['type'] === 'textarea') {
 					$type = $this->language->get('text_input');
 				}
 
-				if ($option['type'] == 'file') {
+				if ($option['type'] === 'file') {
 					$type = $this->language->get('text_file');
 				}
 
-				if ($option['type'] == 'date' || $option['type'] == 'datetime' || $option['type'] == 'time') {
+				if ($option['type'] === 'date' || $option['type'] === 'datetime' || $option['type'] === 'time') {
 					$type = $this->language->get('text_date');
 				}
 

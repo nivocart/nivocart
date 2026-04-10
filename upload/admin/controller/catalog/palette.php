@@ -19,7 +19,7 @@ class ControllerCatalogPalette extends Controller {
 
 		$this->load->model('catalog/palette');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_palette->addPalette($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -63,7 +63,7 @@ class ControllerCatalogPalette extends Controller {
 
 		$this->load->model('catalog/palette');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_palette->editPalette($this->request->get['palette_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -134,7 +134,6 @@ class ControllerCatalogPalette extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -247,7 +246,7 @@ class ControllerCatalogPalette extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'DESC') {
+		if ($order === 'DESC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -315,6 +314,7 @@ class ControllerCatalogPalette extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -339,7 +339,7 @@ class ControllerCatalogPalette extends Controller {
 			$this->data['error_color'] = array();
 		}
 
-		// Jquery filter name
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -377,7 +377,7 @@ class ControllerCatalogPalette extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/palette', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['palette_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['palette_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$palette_name = $this->model_catalog_palette->getPaletteName($this->request->get['palette_id']);
 		}
 

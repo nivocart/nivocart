@@ -19,7 +19,7 @@ class ControllerCatalogNewsDownload extends Controller {
 
 		$this->load->model('catalog/news_download');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_news_download->addDownload($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerCatalogNewsDownload extends Controller {
 
 		$this->load->model('catalog/news_download');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_news_download->editDownload($this->request->get['news_download_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -206,7 +206,7 @@ class ControllerCatalogNewsDownload extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -324,7 +324,7 @@ class ControllerCatalogNewsDownload extends Controller {
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		if (isset($this->request->get['news_download_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['news_download_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$download_info = $this->model_catalog_news_download->getDownload($this->request->get['news_download_id']);
 		}
 

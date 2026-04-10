@@ -19,7 +19,7 @@ class ControllerCatalogField extends Controller {
 
 		$this->load->model('catalog/field');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_field->addField($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerCatalogField extends Controller {
 
 		$this->load->model('catalog/field');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_field->editField($this->request->get['field_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -272,7 +272,7 @@ class ControllerCatalogField extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -341,6 +341,7 @@ class ControllerCatalogField extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -359,6 +360,7 @@ class ControllerCatalogField extends Controller {
 			$this->data['error_description'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'fd.title',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -404,7 +406,7 @@ class ControllerCatalogField extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/field', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['field_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['field_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$field_info = $this->model_catalog_field->getField($this->request->get['field_id']);
 		}
 

@@ -19,7 +19,7 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->load->model('catalog/category');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_category->addCategory($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -63,7 +63,7 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->load->model('catalog/category');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_category->editCategory($this->request->get['category_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -237,7 +237,6 @@ class ControllerCatalogCategory extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -369,7 +368,7 @@ class ControllerCatalogCategory extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -469,6 +468,9 @@ class ControllerCatalogCategory extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -487,7 +489,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['error_image'] = array();
 		}
 
-		// Jquery filter name
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -558,11 +560,9 @@ class ControllerCatalogCategory extends Controller {
 			}
 		}
 
-		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$category_info = $this->model_catalog_category->getCategory($this->request->get['category_id']);
 		}
-
-		$this->data['token'] = $this->session->data['token'];
 
 		$this->load->model('localisation/language');
 
@@ -584,15 +584,14 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['path'] = '';
 		}
 
-		// Empty array required here to get the Categories
-		$form_data = array();
+		$categories_array = array();
 
-		$categories = $this->model_catalog_category->getCategories($form_data);
+		$categories = $this->model_catalog_category->getCategories($categories_array);
 
 		// Remove own id from list
 		if (!empty($category_info)) {
 			foreach ($categories as $key => $category) {
-				if ($category['category_id'] == $category_info['category_id']) {
+				if ($category['category_id'] === $category_info['category_id']) {
 					unset($categories[$key]);
 				}
 			}

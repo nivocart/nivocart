@@ -19,7 +19,7 @@ class ControllerCatalogProfile extends Controller {
 
 		$this->load->model('catalog/profile');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_profile->addProfile($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerCatalogProfile extends Controller {
 
 		$this->load->model('catalog/profile');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_profile->updateProfile($this->request->get['profile_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -210,7 +210,7 @@ class ControllerCatalogProfile extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -281,6 +281,9 @@ class ControllerCatalogProfile extends Controller {
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_info'] = $this->language->get('button_info');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -293,6 +296,7 @@ class ControllerCatalogProfile extends Controller {
 			$this->data['error_name'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'pfd.name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -319,8 +323,6 @@ class ControllerCatalogProfile extends Controller {
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		$this->data['token'] = $this->session->data['token'];
-
 		if (!isset($this->request->get['profile_id'])) {
 			$this->data['action'] = $this->url->link('catalog/profile/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		} else {
@@ -329,7 +331,7 @@ class ControllerCatalogProfile extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/profile', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['profile_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['profile_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$profile_info = $this->model_catalog_profile->getProfile($this->request->get['profile_id']);
 		}
 

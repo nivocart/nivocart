@@ -19,7 +19,7 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->load->model('catalog/information');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_information->addInformation($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->load->model('catalog/information');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_information->editInformation($this->request->get['information_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -278,7 +278,7 @@ class ControllerCatalogInformation extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -360,6 +360,7 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -378,6 +379,7 @@ class ControllerCatalogInformation extends Controller {
 			$this->data['error_description'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'id.title',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -432,7 +434,7 @@ class ControllerCatalogInformation extends Controller {
 			}
 		}
 
-		if (isset($this->request->get['information_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['information_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$information_info = $this->model_catalog_information->getInformation($this->request->get['information_id']);
 		}
 
@@ -543,15 +545,15 @@ class ControllerCatalogInformation extends Controller {
 		$this->load->model('setting/store');
 
 		foreach ($this->request->post['selected'] as $information_id) {
-			if ($this->config->get('config_account_id') == $information_id) {
+			if ($this->config->get('config_account_id') === $information_id) {
 				$this->error['warning'] = $this->language->get('error_account');
 			}
 
-			if ($this->config->get('config_checkout_id') == $information_id) {
+			if ($this->config->get('config_checkout_id') === $information_id) {
 				$this->error['warning'] = $this->language->get('error_checkout');
 			}
 
-			if ($this->config->get('config_affiliate_id') == $information_id) {
+			if ($this->config->get('config_affiliate_id') === $information_id) {
 				$this->error['warning'] = $this->language->get('error_affiliate');
 			}
 

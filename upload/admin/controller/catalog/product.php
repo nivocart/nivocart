@@ -19,7 +19,7 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('catalog/product');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_product->addProduct($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -91,7 +91,7 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('catalog/product');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_product->editProduct($this->request->get['product_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -407,7 +407,6 @@ class ControllerCatalogProduct extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filters
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -537,7 +536,7 @@ class ControllerCatalogProduct extends Controller {
 			$product_specials = $this->model_catalog_product->getProductSpecials($result['product_id']);
 
 			foreach ($product_specials as $product_special) {
-				if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] <= date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
+				if (($product_special['date_start'] === '0000-00-00' || $product_special['date_start'] <= date('Y-m-d')) && ($product_special['date_end'] === '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
 					$special = (float)$product_special['price'];
 					break;
 				}
@@ -546,7 +545,6 @@ class ControllerCatalogProduct extends Controller {
 			$discounts = array();
 
 			$total_discounts = $this->model_catalog_product->getTotalDiscountsByProductId($result['product_id']);
-
 			$product_discounts = $this->model_catalog_product->getProductValidDiscounts($result['product_id']);
 
 			foreach ($product_discounts as $product_discount) {
@@ -650,7 +648,7 @@ class ControllerCatalogProduct extends Controller {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -936,7 +934,7 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['error_product_image'] = '';
 		}
 
-		// Jquery filters
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -1029,7 +1027,7 @@ class ControllerCatalogProduct extends Controller {
 			}
 		}
 
-		if (isset($this->request->get['product_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['product_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$product_info = $this->model_catalog_product->getProduct($this->request->get['product_id']);
 		}
 
@@ -1668,7 +1666,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['product_options'] = array();
 
 		foreach ($product_options as $product_option) {
-			if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
+			if ($product_option['type'] === 'select' || $product_option['type'] === 'radio' || $product_option['type'] === 'checkbox' || $product_option['type'] === 'image') {
 				$product_option_value_data = array();
 
 				foreach ($product_option['product_option_value'] as $product_option_value) {
@@ -1710,7 +1708,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['option_values'] = array();
 
 		foreach ($this->data['product_options'] as $product_option) {
-			if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
+			if ($product_option['type'] === 'select' || $product_option['type'] === 'radio' || $product_option['type'] === 'checkbox' || $product_option['type'] === 'image') {
 				if (!isset($this->data['option_values'][$product_option['option_id']])) {
 					$this->data['option_values'][$product_option['option_id']] = $this->model_catalog_option->getOptionValues($product_option['option_id']);
 				}
@@ -1839,7 +1837,7 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->language->load('catalog/product');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$selected = false;
 			$products = array();
 
@@ -1908,7 +1906,7 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->language->load('catalog/product');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$selected = false;
 			$products = array();
 
@@ -1985,7 +1983,7 @@ class ControllerCatalogProduct extends Controller {
 			'undefined' => $this->language->get('text_end_undefined')
 		);
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$selected = false;
 			$append = false;
 			$date_start = date('Y-m-d');
@@ -2019,15 +2017,15 @@ class ControllerCatalogProduct extends Controller {
 			if (isset($this->request->post['sp_period']) && array_key_exists($this->request->post['sp_period'], $periods)) {
 				$period = $this->request->post['sp_period'];
 
-				if ($period == 'today') {
+				if ($period === 'today') {
 					$date_end = date('Y-m-d');
-				} elseif ($period == 'day') {
+				} elseif ($period === 'day') {
 					$date_end = date('Y-m-d', strtotime('+1 day'));
-				} elseif ($period == 'week') {
+				} elseif ($period === 'week') {
 					$date_end = date('Y-m-d', strtotime('+1 week'));
-				} elseif ($period == 'month') {
+				} elseif ($period === 'month') {
 					$date_end = date('Y-m-d', strtotime('+1 month'));
-				} elseif ($period == 'undefined') {
+				} elseif ($period === 'undefined') {
 					$date_end = '0000-00-00';
 				} else {
 					$date_end = '0000-00-00';
@@ -2097,7 +2095,7 @@ class ControllerCatalogProduct extends Controller {
 			'undefined' => $this->language->get('text_end_undefined')
 		);
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$selected = false;
 			$append = false;
 			$date_start = date('Y-m-d');
@@ -2131,15 +2129,15 @@ class ControllerCatalogProduct extends Controller {
 			if (isset($this->request->post['di_period']) && array_key_exists($this->request->post['di_period'], $periods)) {
 				$period = $this->request->post['di_period'];
 
-				if ($period == 'today') {
+				if ($period === 'today') {
 					$date_end = date('Y-m-d');
-				} elseif ($period == 'day') {
+				} elseif ($period === 'day') {
 					$date_end = date('Y-m-d', strtotime('+1 day'));
-				} elseif ($period == 'week') {
+				} elseif ($period === 'week') {
 					$date_end = date('Y-m-d', strtotime('+1 week'));
-				} elseif ($period == 'month') {
+				} elseif ($period === 'month') {
 					$date_end = date('Y-m-d', strtotime('+1 month'));
-				} elseif ($period == 'undefined') {
+				} elseif ($period === 'undefined') {
 					$date_end = '0000-00-00';
 				} else {
 					$date_end = '0000-00-00';
@@ -2440,6 +2438,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+	// Autocomplete - Options
 	public function autocomplete() {
 		$json = array();
 
@@ -2483,7 +2482,7 @@ class ControllerCatalogProduct extends Controller {
 					$option_info = $this->model_catalog_option->getOption($product_option['option_id']);
 
 					if ($option_info) {
-						if ($option_info['type'] == 'select' || $option_info['type'] == 'radio' || $option_info['type'] == 'checkbox' || $option_info['type'] == 'image') {
+						if ($option_info['type'] === 'select' || $option_info['type'] === 'radio' || $option_info['type'] === 'checkbox' || $option_info['type'] === 'image') {
 							$option_value_data = array();
 
 							foreach ($product_option['product_option_value'] as $product_option_value) {

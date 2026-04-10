@@ -19,7 +19,7 @@ class ControllerCatalogDownload extends Controller {
 
 		$this->load->model('catalog/download');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_download->addDownload($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -63,7 +63,7 @@ class ControllerCatalogDownload extends Controller {
 
 		$this->load->model('catalog/download');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_download->editDownload($this->request->get['download_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -134,7 +134,6 @@ class ControllerCatalogDownload extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -218,7 +217,7 @@ class ControllerCatalogDownload extends Controller {
 				'download_id' => $result['download_id'],
 				'name'        => $result['name'],
 				'filetype'    => $type,
-				'filesize'    => round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i],
+				'filesize'    => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
 				'remaining'   => $result['remaining'],
 				'selected'    => isset($this->request->post['selected']) && in_array($result['download_id'], $this->request->post['selected']),
 				'action'      => $action
@@ -264,7 +263,7 @@ class ControllerCatalogDownload extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -337,6 +336,7 @@ class ControllerCatalogDownload extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -361,7 +361,7 @@ class ControllerCatalogDownload extends Controller {
 			$this->data['error_mask'] = '';
 		}
 
-		// Jquery filter name
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -418,7 +418,7 @@ class ControllerCatalogDownload extends Controller {
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		if (isset($this->request->get['download_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['download_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$download_info = $this->model_catalog_download->getDownload($this->request->get['download_id']);
 		}
 

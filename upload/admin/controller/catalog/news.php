@@ -20,7 +20,7 @@ class ControllerCatalogNews extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_news->addNews($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -57,7 +57,7 @@ class ControllerCatalogNews extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_catalog_news->editNews($this->request->get['news_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -280,7 +280,7 @@ class ControllerCatalogNews extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -383,6 +383,7 @@ class ControllerCatalogNews extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -407,6 +408,7 @@ class ControllerCatalogNews extends Controller {
 			$this->data['error_image'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'nd.title',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -465,7 +467,7 @@ class ControllerCatalogNews extends Controller {
 
 		$this->data['new_download'] = $this->url->link('catalog/news_download/insert', 'token=' . $this->session->data['token'], 'SSL');
 
-		if ((isset($this->request->get['news_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if ((isset($this->request->get['news_id'])) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$news_info = $this->model_catalog_news->getNewsStory($this->request->get['news_id']);
 		}
 
@@ -585,13 +587,20 @@ class ControllerCatalogNews extends Controller {
 			if ($news_info['related_method']) {
 				$this->data['related'] = $news_info['related_method'];
 
-				$options = unserialize($news_info['related_option']);
+				// check string before unserialize
+				$raw = $news_info['related_option'] ?? null;
 
-				if ($this->data['related'] == 'category_wise' && $options) {
+				if (!is_string($raw)) {
+					$this->error['warning'] = $this->language->get('error_unserialize');
+				}
+
+				$options = unserialize($raw, ['allowed_classes' => false]);
+
+				if ($this->data['related'] === 'category_wise' && $options) {
 					foreach ($options['category_wise'] as $option) {
 						$this->data['category_ids'][] = $option;
 					}
-				} elseif ($this->data['related'] == 'manufacturer_wise' && $options) {
+				} elseif ($this->data['related'] === 'manufacturer_wise' && $options) {
 					foreach ($options['manufacturer_wise'] as $option) {
 						$this->data['manufacturer_ids'][] = $option;
 					}
@@ -618,14 +627,12 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('catalog/category');
 
-		// Empty array required to get the Categories
 		$category_data = array();
 
 		$this->data['default_categories'] = $this->model_catalog_category->getCategories($category_data);
 
 		$this->load->model('catalog/manufacturer');
 
-		// Empty array required to get the Manufacturers
 		$manufacturer_data = array();
 
 		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_data);
