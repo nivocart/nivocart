@@ -53,11 +53,7 @@ class ControllerBlogArticleList extends Controller {
 		$results = $this->model_blog_article->getArticles($data);
 
 		foreach ($results as $result) {
-			if ($result['image']) {
-				$image = $this->model_tool_image->resize($result['image'], 100, 100);
-			} else {
-				$image = '';
-			}
+			$image = $result['image'] ? $this->model_tool_image->resize($result['image'], 100, 100) : '';
 
 			if ($result['description']) {
 				$description = substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '...';

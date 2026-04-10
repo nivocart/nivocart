@@ -34,8 +34,8 @@
             <a class="addthis_button_compact"></a>
             <a class="addthis_counter addthis_bubble_style"></a>
           </div>
-          <?php if ($addthis) { ?>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $addthis; ?>"></script>
+          <?php if ($sharethis) { ?>
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $sharethis; ?>"></script>
           <?php } else { ?>
             <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
           <?php } ?>
@@ -144,9 +144,9 @@
                       <div class="left"><img src="<?php echo $related_article['image']; ?>" alt="" /></div>
                       <div class="right">
                       <?php if ($content_left || $content_right) { ?>
-                        <?php echo utf8_substr(strip_tags(html_entity_decode($related_article['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '...'; ?>
+                        <?php echo substr(strip_tags(html_entity_decode($related_article['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '...'; ?>
                       <?php } else { ?>
-                        <?php echo utf8_substr(strip_tags(html_entity_decode($related_article['description'], ENT_QUOTES, 'UTF-8')), 0, 350) . '...'; ?>
+                        <?php echo substr(strip_tags(html_entity_decode($related_article['description'], ENT_QUOTES, 'UTF-8')), 0, 350) . '...'; ?>
                       <?php } ?>
                       </div>
                     </div>

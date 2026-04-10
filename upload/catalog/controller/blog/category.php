@@ -122,11 +122,7 @@ class ControllerBlogCategory extends Controller {
 			// Blog Category articles
 			$this->data['articles'] = array();
 
-			if ($category_info['blog_category_column']) {
-				$limit = $category_info['blog_category_column'];
-			} else {
-				$limit = 5;
-			}
+			$limit = $category_info['blog_category_column'] ? $category_info['blog_category_column'] : 5;
 
 			$data = array(
 				'blog_category_id' => $blog_category_id,

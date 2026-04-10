@@ -79,11 +79,7 @@ class ControllerBlogArticleInfo extends Controller {
 			$this->data['article_info'] = $article_info;
 			$this->data['article_info_found'] = $article_info;
 
-			if ($article_info['image']) {
-				$this->data['image'] = $this->model_tool_image->resize($article_info['image'], 180, 180);
-			} else {
-				$this->data['image'] = '';
-			}
+			$this->data['image'] = $article_info['image'] ? $this->model_tool_image->resize($article_info['image'], 180, 180) : '';
 
 			$this->data['minimum_height'] = 200;
 
@@ -149,17 +145,9 @@ class ControllerBlogArticleInfo extends Controller {
 					$tax = false;
 				}
 
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$product_info['rating'];
-				} else {
-					$rating = false;
-				}
+				$rating = $this->config->get('config_review_status') ? (int)$product_info['rating'] : false;
 
-				if ($product_info['quantity'] <= 0) {
-					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), 50, 50);
-				} else {
-					$stock_label = false;
-				}
+				$stock_label = ($product_info['quantity'] <= 0) ? $this->model_tool_image->resize($this->config->get('config_label_stock'), 50, 50) : false;
 
 				if (in_array($product_info['product_id'], $offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), 50, 50);
@@ -188,11 +176,7 @@ class ControllerBlogArticleInfo extends Controller {
 					}
 				}
 
-				if ($product_info['quote']) {
-					$quote = $this->url->link('information/quote', '', 'SSL');
-				} else {
-					$quote = false;
-				}
+				$quote = $product_info['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
 				$this->data['products'][] = array(
 					'product_id'      => $product_info['product_id'],
@@ -262,11 +246,11 @@ class ControllerBlogArticleInfo extends Controller {
 			// Add view
 			$this->model_blog_article->addBlogView($article_info['blog_article_id']);
 
-			// AddThis
-			if ($this->config->get('config_addthis')) {
-				$this->data['addthis'] = $this->config->get('config_addthis');
+			// ShareThis
+			if ($this->config->get('config_sharethis')) {
+				$this->data['sharethis'] = $this->config->get('config_sharethis');
 			} else {
-				$this->data['addthis'] = false;
+				$this->data['sharethis'] = false;
 			}
 
 			// Captcha
