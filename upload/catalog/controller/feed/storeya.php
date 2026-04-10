@@ -33,7 +33,7 @@ class ControllerFeedStoreya extends Controller {
 			$currency= $this->config->get('currency');
 		}
 
-		if (isset($this->request->get['language']) && ($this->request->get['language'] != $this->session->data['language'])) {
+		if (isset($this->request->get['language']) && ($this->request->get['language'] !== $this->session->data['language'])) {
 			$this->session->data['language'] = $this->request->get['language'];
 			$this->redirect($_SERVER['REQUEST_URI']);
 		} elseif (($this->config->get('language') != $this->session->data['language']) && !isset($this->request->get['language'])) {
@@ -48,7 +48,7 @@ class ControllerFeedStoreya extends Controller {
 				$output .= '<item>'. "\n";
 				$output .= '<title>' . $this->stripHtmlTags($this->replaceProblemCharacters($this->encodeIfNeeded($product['name']))) . '</title>' . "\n";
 				$output .= '<link>' . $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL') . '</link>' . "\n";
-				$output .= '<description>' . $this->stripHtmlTags($this->replaceProblemCharacters($this->encodeIfNeeded(html_entity_decode($product['description'])))) . '</description>' . "\n";
+				$output .= '<description>' . $this->stripHtmlTags($this->replaceProblemCharacters($this->encodeIfNeeded(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')))) . '</description>' . "\n";
 				$output .= '<g:brand>' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . '</g:brand>' . "\n";
 				$output .= '<g:condition>new</g:condition>' . "\n";
 				$output .= '<g:id>' . $product['product_id'] . '</g:id>'. "\n";
@@ -118,7 +118,7 @@ class ControllerFeedStoreya extends Controller {
 		$this->response->setOutput($output);
 	}
 
-	protected function getPath($parent_id, $current_path = '') {
+	protected function getPath(int $parent_id, $current_path = '') {
 		$category_info = $this->model_catalog_category->getCategory($parent_id);
 
 		if ($category_info) {

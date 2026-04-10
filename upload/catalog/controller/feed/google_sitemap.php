@@ -33,7 +33,9 @@ class ControllerFeedGoogleSitemap extends Controller {
 
 			$this->load->model('catalog/category');
 
-			$output .= $this->getCategories(0);
+			$parent_id = 0;
+
+			$output .= $this->getCategories($parent_id);
 
 			$this->load->model('catalog/manufacturer');
 

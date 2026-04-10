@@ -14,6 +14,7 @@ class ControllerFeedRSSFeed extends Controller {
 			$show_price = $this->config->get('rss_feed_show_price');
 			$include_tax = $this->config->get('rss_feed_include_tax');
 
+			// Feed limit
 			$limit = ($this->config->get('rss_feed_limit')) ? $this->config->get('rss_feed_limit') : 100;
 
 			if ($this->config->get('rss_feed_show_image')) {
