@@ -20,7 +20,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->load->model('design/footer');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_footer->addFooter($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -57,7 +57,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->load->model('design/footer');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_footer->editFooter($this->request->get['footer_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -216,7 +216,7 @@ class ControllerDesignFooter extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -296,6 +296,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -314,9 +315,11 @@ class ControllerDesignFooter extends Controller {
 			$this->data['error_footer_route'] = array();
 		}
 
+		// Colorbox
 		$this->document->addScript('view/javascript/jquery/colorbox/jquery.colorbox-min.js');
 		$this->document->addStyle('view/javascript/jquery/colorbox/colorbox.css');
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'fd.name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -364,7 +367,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->data['text_info'] = sprintf($this->language->get('text_info'), $this->url->link('design/footer/info', 'token=' . $this->session->data['token'], 'SSL'));
 
-		if (isset($this->request->get['footer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['footer_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$footer_info = $this->model_design_footer->getFooter($this->request->get['footer_id']);
 		}
 
@@ -468,6 +471,7 @@ class ControllerDesignFooter extends Controller {
 		return empty($this->error);
 	}
 
+	// Colorbox
 	public function info() {
 		$this->language->load('design/' . $this->_name);
 

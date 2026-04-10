@@ -19,7 +19,7 @@ class ControllerDesignLayout extends Controller {
 
 		$this->load->model('design/layout');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_layout->addLayout($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerDesignLayout extends Controller {
 
 		$this->load->model('design/layout');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_layout->editLayout($this->request->get['layout_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -206,7 +206,7 @@ class ControllerDesignLayout extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -265,6 +265,9 @@ class ControllerDesignLayout extends Controller {
 		$this->data['button_add_route'] = $this->language->get('button_add_route');
 		$this->data['button_remove'] = $this->language->get('button_remove');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -277,6 +280,7 @@ class ControllerDesignLayout extends Controller {
 			$this->data['error_name'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -363,7 +367,7 @@ class ControllerDesignLayout extends Controller {
 		$this->load->model('catalog/information');
 
 		foreach ($this->request->post['selected'] as $layout_id) {
-			if ($this->config->get('config_layout_id') == $layout_id) {
+			if ($this->config->get('config_layout_id') === $layout_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

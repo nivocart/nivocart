@@ -20,7 +20,7 @@ class ControllerDesignMenu extends Controller {
 
 		$this->load->model('design/menu');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$menu_id = $this->model_design_menu->addMenu($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_insert_success');
@@ -55,7 +55,7 @@ class ControllerDesignMenu extends Controller {
 
 		$this->load->model('design/menu');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_menu->editMenu($this->request->get['menu_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_update_success');
@@ -154,7 +154,6 @@ class ControllerDesignMenu extends Controller {
 		$this->load->model('design/menu_items');
 
 		$menu_total = $this->model_design_menu->getTotalMenus();
-
 		$menu_data = $this->model_design_menu->getMenus($data);
 
 		if ($menu_data) {
@@ -263,6 +262,7 @@ class ControllerDesignMenu extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -275,6 +275,7 @@ class ControllerDesignMenu extends Controller {
 			$this->data['error_title'] = '';
 		}
 
+		// Breadcrumbs
 		$this->data['breadcrumbs'] = array();
 
 		$this->data['breadcrumbs'][] = array(
@@ -297,7 +298,7 @@ class ControllerDesignMenu extends Controller {
 
 		$this->data['cancel'] = $this->url->link('design/menu', 'token=' . $this->session->data['token'], 'SSL');
 
-		if (isset($this->request->get['menu_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['menu_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$menu_info = $this->model_design_menu->getMenu($this->request->get['menu_id']);
 		}
 

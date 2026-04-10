@@ -19,7 +19,7 @@ class ControllerDesignBanner extends Controller {
 
 		$this->load->model('design/banner');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_banner->addBanner($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerDesignBanner extends Controller {
 
 		$this->load->model('design/banner');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_banner->editBanner($this->request->get['banner_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -210,7 +210,7 @@ class ControllerDesignBanner extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -284,6 +284,7 @@ class ControllerDesignBanner extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -308,9 +309,11 @@ class ControllerDesignBanner extends Controller {
 			$this->data['error_image'] = array();
 		}
 
+		// Colorbox
 		$this->document->addScript('view/javascript/jquery/colorbox/jquery.colorbox-min.js');
 		$this->document->addStyle('view/javascript/jquery/colorbox/colorbox.css');
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -343,7 +346,7 @@ class ControllerDesignBanner extends Controller {
 
 		$this->data['text_info'] = sprintf($this->language->get('text_info'), $this->url->link('design/banner/info', 'token=' . $this->session->data['token'], 'SSL'));
 
-		if (isset($this->request->get['banner_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['banner_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$banner_info = $this->model_design_banner->getBanner($this->request->get['banner_id']);
 		}
 
@@ -454,6 +457,7 @@ class ControllerDesignBanner extends Controller {
 		return empty($this->error);
 	}
 
+	// Colorbox
 	public function info() {
 		$this->language->load('design/banner');
 

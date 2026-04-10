@@ -19,7 +19,7 @@ class ControllerDesignMedia extends Controller {
 
 		$this->load->model('design/media');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_media->addMedia($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -63,7 +63,7 @@ class ControllerDesignMedia extends Controller {
 
 		$this->load->model('design/media');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_media->editMedia($this->request->get['media_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -134,7 +134,6 @@ class ControllerDesignMedia extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -265,7 +264,7 @@ class ControllerDesignMedia extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -340,6 +339,7 @@ class ControllerDesignMedia extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -358,7 +358,7 @@ class ControllerDesignMedia extends Controller {
 			$this->data['error_media'] = array();
 		}
 
-		// Jquery filter name
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -398,7 +398,7 @@ class ControllerDesignMedia extends Controller {
 
 		$this->data['text_info'] = sprintf($this->language->get('text_info'), $this->url->link('design/media/info', 'token=' . $this->session->data['token'], 'SSL'));
 
-		if (isset($this->request->get['media_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['media_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$media_info = $this->model_design_media->getMedia($this->request->get['media_id']);
 		}
 

@@ -19,7 +19,7 @@ class ControllerDesignConnection extends Controller {
 
 		$this->load->model('design/connection');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_connection->addConnection($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerDesignConnection extends Controller {
 
 		$this->load->model('design/connection');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_connection->editConnection($this->request->get['connection_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -214,7 +214,7 @@ class ControllerDesignConnection extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -280,6 +280,9 @@ class ControllerDesignConnection extends Controller {
 		$this->data['button_add_route'] = $this->language->get('button_add_route');
 		$this->data['button_remove'] = $this->language->get('button_remove');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -292,6 +295,7 @@ class ControllerDesignConnection extends Controller {
 			$this->data['error_name'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -322,7 +326,7 @@ class ControllerDesignConnection extends Controller {
 
 		$this->data['cancel'] = $this->url->link('design/connection', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['connection_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['connection_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$connection_info = $this->model_design_connection->getConnection($this->request->get['connection_id']);
 		}
 

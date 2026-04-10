@@ -21,7 +21,7 @@ class ControllerDesignAdministration extends Controller {
 
 		$this->load->model('design/administration');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_administration->addAdministration($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -58,7 +58,7 @@ class ControllerDesignAdministration extends Controller {
 
 		$this->load->model('design/administration');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_administration->editAdministration($this->request->get['administration_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -217,7 +217,7 @@ class ControllerDesignAdministration extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -278,6 +278,9 @@ class ControllerDesignAdministration extends Controller {
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 		$this->data['button_info'] = $this->language->get('button_info');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -290,6 +293,7 @@ class ControllerDesignAdministration extends Controller {
 			$this->data['error_name'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -320,7 +324,7 @@ class ControllerDesignAdministration extends Controller {
 
 		$this->data['cancel'] = $this->url->link('design/administration', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['administration_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['administration_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$administration_info = $this->model_design_administration->getAdministration($this->request->get['administration_id']);
 		}
 
@@ -372,7 +376,7 @@ class ControllerDesignAdministration extends Controller {
 			$administration_info = $this->model_design_administration->getAdministration($administration_id);
 
 			if ($administration_info) {
-				if ($this->config->get('config_admin_stylesheet') == $administration_info['name']) {
+				if ($this->config->get('config_admin_stylesheet') === $administration_info['name']) {
 					$this->error['warning'] = $this->language->get('error_default');
 				}
 

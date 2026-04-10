@@ -20,7 +20,7 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->load->model('design/menu_items');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$menu_item_id = $this->model_design_menu_items->addMenuItem($this->request->get['menu_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_insert_success');
@@ -64,7 +64,7 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->load->model('design/menu_items');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_design_menu_items->editMenuItem($this->request->get['menu_item_id'], $this->request->get['menu_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_update_success');
@@ -238,7 +238,6 @@ class ControllerDesignMenuItems extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -365,7 +364,7 @@ class ControllerDesignMenuItems extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -446,6 +445,7 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -458,9 +458,11 @@ class ControllerDesignMenuItems extends Controller {
 			$this->data['error_name'] = array();
 		}
 
+		// Colorbox
 		$this->document->addScript('view/javascript/jquery/colorbox/jquery.colorbox-min.js');
 		$this->document->addStyle('view/javascript/jquery/colorbox/colorbox.css');
 
+		// Breadcrumbs
 		$url = '';
 
 		if (isset($this->request->get['page'])) {
@@ -499,7 +501,7 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->data['text_info'] = sprintf($this->language->get('text_info'), $this->url->link('design/menu_items/info', 'token=' . $this->session->data['token'], 'SSL'));
 
-		if (isset($this->request->get['menu_item_id']) && isset($menu_id) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['menu_item_id']) && isset($menu_id) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$menu_item_info = $this->model_design_menu_items->getMenuItem($this->request->get['menu_item_id'], $menu_id);
 		}
 
@@ -522,7 +524,7 @@ class ControllerDesignMenuItems extends Controller {
 		// Remove own Id from list
 		if (!empty($menu_item_info)) {
 			foreach ($menu_items as $key => $menu_item) {
-				if ($menu_item['menu_item_id'] == $menu_item_info['menu_item_id']) {
+				if ($menu_item['menu_item_id'] === $menu_item_info['menu_item_id']) {
 					unset($menu_items[$key]);
 				}
 			}
@@ -615,6 +617,7 @@ class ControllerDesignMenuItems extends Controller {
 		return empty($this->error);
 	}
 
+	// Colorbox
 	public function info() {
 		$this->language->load('design/' . $this->_name);
 
