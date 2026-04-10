@@ -11,7 +11,7 @@ class ControllerCommonFooter extends Controller {
 		// Display Limit
 		$display_limit = $this->config->get('config_admin_width_limit');
 
-		$this->data['resolution'] = ($display_limit) ? 'limited' : 'normal';
+		$this->data['resolution'] = $display_limit ? 'limited' : 'normal';
 
 		$this->template = 'common/footer.tpl';
 

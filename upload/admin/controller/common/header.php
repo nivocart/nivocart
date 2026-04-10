@@ -4,9 +4,9 @@ class ControllerCommonHeader extends Controller {
 	protected function index() {
 		$this->data['title'] = $this->document->getTitle();
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['base'] = HTTPS_SERVER;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['base'] = HTTPS_SERVER;
 		} else {
 			$this->data['base'] = HTTP_SERVER;
@@ -59,9 +59,9 @@ class ControllerCommonHeader extends Controller {
 
 		$medium = $this->browser->getMedium();
 
-		if (!$agent_platform || (!$agent_platform && $medium == 'mobile')) {
+		if (!$agent_platform || (!$agent_platform && $medium === 'mobile')) {
 			$this->data['device'] = 'fa fa-tablet';
-		} elseif ($medium == 'pad') {
+		} elseif ($medium === 'pad') {
 			$this->data['device'] = 'fa fa-tablet';
 		} else {
 			$this->data['device'] = 'fa fa-tv';
@@ -70,9 +70,9 @@ class ControllerCommonHeader extends Controller {
 		// Date & Time
 		$date = $this->config->get('config_date_format');
 
-		if ($date && $date == "long") {
+		if ($date && $date === "long") {
 			$this->data['date_format'] = date($this->language->get('date_format_long')) . "\n";
-		} elseif ($date && $date == "short") {
+		} elseif ($date && $date === "short") {
 			$this->data['date_format'] = date($this->language->get('date_format_short')) . "\n";
 		} else {
 			$this->data['date_format'] = date('d-m-Y') . "\n";
@@ -240,7 +240,7 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_paypal_express_search'] = $this->language->get('text_paypal_search');
 
 		// Header
-		if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
+		if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] !== $this->session->data['token'])) {
 			$this->data['logged'] = false;
 
 			$this->data['home'] = $this->url->link('common/login', '', 'SSL');
@@ -448,19 +448,9 @@ class ControllerCommonHeader extends Controller {
 				$this->data['connection_exist'] = false;
 			}
 
-			// Reviews
-			if ($this->config->get('config_review_status')) {
-				$this->data['allow_review'] = true;
-			} else {
-				$this->data['allow_review'] = false;
-			}
-
-			// Affiliates
-			if ($this->config->get('config_affiliate_disable')) {
-				$this->data['allow_affiliate'] = false;
-			} else {
-				$this->data['allow_affiliate'] = true;
-			}
+			// Check Reviews/ Affiliate Allowed
+			$this->data['allow_review'] = $this->config->get('config_review_status') ? true : false;
+			$this->data['allow_affiliate'] = $this->config->get('config_affiliate_disable') ? false : true;
 
 			// Store
 			$this->data['stores'] = array();

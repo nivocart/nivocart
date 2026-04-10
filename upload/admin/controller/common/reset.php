@@ -20,7 +20,7 @@ class ControllerCommonReset extends Controller {
 		if ($user_info) {
 			$this->language->load('common/reset');
 
-			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+			if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 				$this->model_user_user->editPassword($user_info['user_id'], $this->request->post['password']);
 
 				$this->session->data['success'] = $this->language->get('text_success');
@@ -52,6 +52,7 @@ class ControllerCommonReset extends Controller {
 			$this->data['button_save'] = $this->language->get('button_save');
 			$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+			// Errors
 			if (isset($this->error['password'])) {
 				$this->data['error_password'] = $this->error['password'];
 			} else {

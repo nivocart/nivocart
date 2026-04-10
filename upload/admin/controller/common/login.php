@@ -14,11 +14,11 @@ class ControllerCommonLogin extends Controller {
 			$this->model_tool_system->deleteDirectory('../install');
 		}
 
-		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
+		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] === $this->session->data['token'])) {
 			$this->redirect($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['username']) && isset($this->request->post['password']) && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && isset($this->request->post['username']) && isset($this->request->post['password']) && $this->validate()) {
 			$this->session->data['token'] = substr(md5(mt_rand()), 0, 10);
 
 			if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) === 0 || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) === 0)) {
@@ -50,7 +50,7 @@ class ControllerCommonLogin extends Controller {
 			$this->data['admin_css'] = 'light';
 		}
 
-		if ((isset($this->session->data['token']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['token']) && ($this->request->get['token'] != $this->session->data['token']))))) {
+		if ((isset($this->session->data['token']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['token']) && ($this->request->get['token'] !== $this->session->data['token']))))) {
 			$this->error['warning'] = $this->language->get('error_token');
 		}
 

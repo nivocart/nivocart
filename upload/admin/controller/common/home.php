@@ -273,7 +273,7 @@ class ControllerCommonHome extends Controller {
 
 			$seo_url_variance = $seo_url_total - $keyword_total;
 
-			if ($seo_url_total == $keyword_total) {
+			if ($seo_url_total === $keyword_total) {
 				$seo_url_ratio = 1;
 			} elseif ($seo_url_variance <= 5) {
 				$seo_url_ratio = 2;
@@ -294,11 +294,11 @@ class ControllerCommonHome extends Controller {
 
 		$contrast = $this->model_design_administration->getAdministrationContrastByName($admin_css);
 
-		if ($contrast == 'dark') {
+		if ($contrast === 'dark') {
 			$this->data['chart_background'] = '#6D7582';
 			$this->data['chart_border'] = '#999999';
 			$this->data['chart_colour'] = '#E5E5E5';
-		} elseif ($contrast == 'light') {
+		} elseif ($contrast === 'light') {
 			$this->data['chart_background'] = '#FFFFFF';
 			$this->data['chart_border'] = '#AAAAAA';
 			$this->data['chart_colour'] = '#333333';
@@ -1070,12 +1070,12 @@ class ControllerCommonHome extends Controller {
 
 			$ignore = array_merge($ignore, $config_ignore);
 
-			if (!in_array($route, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
+			if (!in_array($route, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] !== $this->session->data['token']))) {
 				return $this->forward('common/login');
 			}
 
 		} else {
-			if (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
+			if (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] !== $this->session->data['token'])) {
 				return $this->forward('common/login');
 			}
 		}

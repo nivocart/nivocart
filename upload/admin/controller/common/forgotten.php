@@ -13,7 +13,7 @@ class ControllerCommonForgotten extends Controller {
 
 		$this->load->model('user/user');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->language->load('mail/forgotten');
 
 			$code = sha1(uniqid(mt_rand(), true));
@@ -40,7 +40,7 @@ class ControllerCommonForgotten extends Controller {
 			$this->redirect($this->url->link('common/login', '', 'SSL'));
 		}
 
-		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
+		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] === $this->session->data['token'])) {
 			$this->data['logged'] = true;
 		} else {
 			$this->data['logged'] = false;

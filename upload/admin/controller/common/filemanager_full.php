@@ -7,9 +7,9 @@ class ControllerCommonFileManagerFull extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$this->data['directory'] = HTTPS_IMAGE . 'data/';
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['directory'] = HTTPS_IMAGE . 'data/';
 		} else {
 			$this->data['directory'] = HTTP_IMAGE . 'data/';
@@ -114,7 +114,7 @@ class ControllerCommonFileManagerFull extends Controller {
 			$return = false;
 		}
 
-		if (strpos($filename, 'data/') == false) {
+		if (strpos($filename, 'data/') === false) {
 			$filename = 'data/' . $filename;
 		}
 
@@ -204,7 +204,7 @@ class ControllerCommonFileManagerFull extends Controller {
 					$json[] = array(
 						'filename' => htmlspecialchars(basename($file), ENT_QUOTES, 'UTF-8'),
 						'file'     => $filename_path_data,
-						'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i],
+						'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
 						'image'    => $this->image($filename_path_data)
 					);
 				}
@@ -266,7 +266,7 @@ class ControllerCommonFileManagerFull extends Controller {
 				$json['error'] = $this->language->get('error_select');
 			}
 
-			if ($path == rtrim(DIR_IMAGE . 'data/', '/')) {
+			if ($path === rtrim(DIR_IMAGE . 'data/', '/')) {
 				$json['error'] = $this->language->get('error_delete');
 			}
 
@@ -330,7 +330,7 @@ class ControllerCommonFileManagerFull extends Controller {
 				$json['error'] = $this->language->get('error_missing');
 			}
 
-			if ($from == DIR_IMAGE . 'data') {
+			if ($from === DIR_IMAGE . 'data') {
 				$json['error'] = $this->language->get('error_default');
 			}
 
@@ -374,7 +374,7 @@ class ControllerCommonFileManagerFull extends Controller {
 
 			$old_name = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
 
-			if (!file_exists($old_name) || $old_name == DIR_IMAGE . 'data') {
+			if (!file_exists($old_name) || $old_name === DIR_IMAGE . 'data') {
 				$json['error'] = $this->language->get('error_copy');
 			}
 
@@ -460,7 +460,7 @@ class ControllerCommonFileManagerFull extends Controller {
 
 			$old_name = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
 
-			if (!file_exists($old_name) || $old_name == DIR_IMAGE . 'data') {
+			if (!file_exists($old_name) || $old_name === DIR_IMAGE . 'data') {
 				$json['error'] = $this->language->get('error_rename');
 			}
 
@@ -536,7 +536,7 @@ class ControllerCommonFileManagerFull extends Controller {
 
 		if (strpos($contentType, "multipart") !== false) {
 			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
-				$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+				$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk === 0 ? "wb" : "ab");
 
 				if ($out) {
 					$in = fopen($_FILES['file']['tmp_name'], "rb");
@@ -563,7 +563,7 @@ class ControllerCommonFileManagerFull extends Controller {
 			}
 
 		} else {
-			$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk == 0 ? "wb" : "ab");
+			$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk === 0 ? "wb" : "ab");
 
 			if ($out) {
 				$in = fopen("php://input", "rb");
