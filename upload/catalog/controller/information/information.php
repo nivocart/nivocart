@@ -108,11 +108,8 @@ class ControllerInformationInformation extends Controller {
 	public function info() {
 		$this->load->model('catalog/information');
 
-		if (isset($this->request->get['information_id'])) {
-			$information_id = (int)$this->request->get['information_id'];
-		} else {
-			$information_id = 0;
-		}
+		// Get information_id
+		$information_id = isset($this->request->get['information_id']) ? (int)$this->request->get['information_id'] : 0;
 
 		$information_info = $this->model_catalog_information->getInformation($information_id);
 

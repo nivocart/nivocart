@@ -72,7 +72,9 @@ class ControllerInformationSitemap extends Controller {
 
 		$this->data['categories'] = array();
 
-		$categories_1 = $this->model_catalog_category->getCategories(0);
+		$parent_id = 0;
+
+		$categories_1 = $this->model_catalog_category->getCategories($parent_id);
 
 		foreach ($categories_1 as $category_1) {
 			$level_2_data = array();
@@ -127,7 +129,9 @@ class ControllerInformationSitemap extends Controller {
 		$blog_tables = $this->model_blog_status->checkBlog();
 
 		if ($blog_tables) {
-			$blog_categories_1 = $this->model_blog_article->getCategories(0);
+			$parent_id = 0;
+
+			$blog_categories_1 = $this->model_blog_article->getCategories($parent_id);
 
 			foreach ($blog_categories_1 as $blog_category_1) {
 				$level_2_data = array();
@@ -193,26 +197,18 @@ class ControllerInformationSitemap extends Controller {
 
 		$this->data['informations'] = array();
 
-		foreach ($this->model_catalog_information->getInformations() as $result) {
+		$informations = $this->model_catalog_information->getInformations();
+
+		foreach ($informations as $result) {
 			$this->data['informations'][] = array(
 				'title' => $result['title'],
 				'href'  => $this->url->link('information/information', 'information_id=' . $result['information_id'], 'SSL')
 			);
 		}
 
-		// Returns
-		if ($this->config->get('config_return_disable')) {
-			$this->data['allow_return'] = false;
-		} else {
-			$this->data['allow_return'] = true;
-		}
-
-		// Affiliates
-		if ($this->config->get('config_affiliate_disable')) {
-			$this->data['allow_affiliate'] = false;
-		} else {
-			$this->data['allow_affiliate'] = true;
-		}
+		// Allow Returns/Affiliates
+		$this->data['allow_return'] = $this->config->get('config_return_disable') ? false : true;
+		$this->data['allow_affiliate'] = $this->config->get('config_affiliate_disable') ? false : true;
 
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');

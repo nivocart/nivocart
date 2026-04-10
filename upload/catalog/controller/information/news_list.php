@@ -49,7 +49,7 @@ class ControllerInformationNewsList extends Controller {
 			$news_chars = $this->config->get('config_news_chars');
 
 			foreach ($news_data as $result) {
-				$news_length = strlen(utf8_decode($result['description']));
+				$news_length = mb_strlen($result['description'], 'UTF-8');
 
 				if ($news_length > (int)$news_chars) {
 					$description = '<p>' . substr(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'), 0, (int)$news_chars) . ' ...</p>';

@@ -66,6 +66,9 @@ class ControllerInformationNews extends Controller {
 			$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 
 			// Image
+			$config_image_newsthumb_width = $this->config->get('config_image_newsthumb_width');
+			$config_image_newsthumb_height = $this->config->get('config_image_newsthumb_height');
+
 			$this->load->model('tool/image');
 
 			if ($news_info['lightbox'] == 'viewbox') {
@@ -73,7 +76,7 @@ class ControllerInformationNews extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/viewbox/jquery.viewbox.min.js');
 
 				if ($news_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $this->config->get('config_image_newsthumb_width'), $this->config->get('config_image_newsthumb_height'));
+					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $config_image_newsthumb_width, $config_image_newsthumb_height);
 				} else {
 					$this->data['thumb'] = '';
 				}
@@ -85,7 +88,7 @@ class ControllerInformationNews extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/magnific/magnific.min.js');
 
 				if ($news_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $this->config->get('config_image_newsthumb_width'), $this->config->get('config_image_newsthumb_height'));
+					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $config_image_newsthumb_width, $config_image_newsthumb_height);
 				} else {
 					$this->data['thumb'] = '';
 				}
@@ -97,7 +100,7 @@ class ControllerInformationNews extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/fancybox-plus/js/jquery.fancybox-plus.min.js');
 
 				if ($news_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $this->config->get('config_image_newsthumb_width'), $this->config->get('config_image_newsthumb_height'));
+					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $config_image_newsthumb_width, $config_image_newsthumb_height);
 				} else {
 					$this->data['thumb'] = '';
 				}
@@ -109,7 +112,7 @@ class ControllerInformationNews extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
 
 				if ($news_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $this->config->get('config_image_newsthumb_width'), $this->config->get('config_image_newsthumb_height'));
+					$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], $config_image_newsthumb_width, $config_image_newsthumb_height);
 				} else {
 					$this->data['thumb'] = '';
 				}
@@ -118,22 +121,22 @@ class ControllerInformationNews extends Controller {
 			}
 
 			if ($news_info['image']) {
-				$this->data['popup'] = $this->model_tool_image->resize($news_info['image'], $this->config->get('config_image_newspopup_width'), $this->config->get('config_image_newspopup_height'));
+				$this->data['popup'] = $this->model_tool_image->resize($news_info['image'], $config_image_newsthumb_width, $config_image_newsthumb_height);
 			} else {
 				$this->data['popup'] = '';
 			}
 
-			// AddThis
-			if ($this->config->get('config_addthis')) {
-				$this->data['addthis'] = $this->config->get('config_addthis');
+			// ShareThis
+			if ($this->config->get('config_sharethis')) {
+				$this->data['sharethis'] = $this->config->get('config_sharethis');
 			} else {
-				$this->data['addthis'] = false;
+				$this->data['sharethis'] = false;
 			}
 
-			if ($this->config->get('config_news_addthis')) {
-				$this->data['news_addthis'] = $this->config->get('config_news_addthis');
+			if ($this->config->get('config_news_sharethis')) {
+				$this->data['news_sharethis'] = $this->config->get('config_news_sharethis');
 			} else {
-				$this->data['news_addthis'] = false;
+				$this->data['news_sharethis'] = false;
 			}
 
 			// Downloads
@@ -155,7 +158,7 @@ class ControllerInformationNews extends Controller {
 					);
 
 					foreach ($download_results as $result) {
-						if ($file['news_download_id'] == $result['news_download_id']) {
+						if ($file['news_download_id'] === $result['news_download_id']) {
 							if (file_exists(DIR_DOWNLOAD . $file['filename']) && is_file(DIR_DOWNLOAD . $file['filename'])) {
 								$size = filesize(DIR_DOWNLOAD . $file['filename']);
 
@@ -172,7 +175,7 @@ class ControllerInformationNews extends Controller {
 							$this->data['downloads'][] = array(
 								'news_download_id' => $file['news_download_id'],
 								'name'             => $file['mask'],
-								'size'             => round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i],
+								'size'             => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
 								'date_added'       => date($this->language->get('date_format_short'), strtotime($file['date_added'])),
 								'href'             => $this->url->link('information/news/download', 'news_download_id=' . (int)$file['news_download_id'], 'SSL')
 							);
@@ -189,7 +192,7 @@ class ControllerInformationNews extends Controller {
 			$this->load->model('catalog/offer');
 			$this->load->model('account/customer');
 
-			$offers = $this->model_catalog_offer->getListProductOffers(0);
+			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			$related_product = $this->model_catalog_news->getNewsProductRelated($news_id);
 
@@ -198,23 +201,14 @@ class ControllerInformationNews extends Controller {
 			foreach ($related_product as $product) {
 				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
-				if ($product_info['image']) {
-					$image = $this->model_tool_image->resize($product_info['image'], 100, 100);
-				} else {
-					$image = false;
-				}
-
-				if ($product_info['manufacturer']) {
-					$manufacturer = $product_info['manufacturer'];
-				} else {
-					$manufacturer = false;
-				}
+				$image = $product_info['image'] ? $this->model_tool_image->resize($product_info['image'], 100, 100) : false;
+				$manufacturer = $product_info['manufacturer'] ? $product_info['manufacturer'] : false;
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 					if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
-						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 					}
 				} else {
 					$price = false;
@@ -222,29 +216,20 @@ class ControllerInformationNews extends Controller {
 
 				if ((float)$product_info['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), 50, 50);
-					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
 					$special_label = false;
 					$special = false;
 				}
 
 				if ($this->config->get('config_tax')) {
-					$tax = $this->currency->format((float)$product_info['special'] ? $product_info['special'] : $product_info['price']);
+					$tax = $this->currency->format(((float)$product_info['special'] ? $product_info['special'] : $product_info['price']), $this->config->get('config_currency'));
 				} else {
 					$tax = false;
 				}
 
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$product_info['rating'];
-				} else {
-					$rating = false;
-				}
-
-				if ($product_info['quantity'] <= 0) {
-					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), 50, 50);
-				} else {
-					$stock_label = false;
-				}
+				$rating = $this->config->get('config_review_status') ? (int)$product_info['rating'] : false;
+				$stock_label = ($product_info['quantity'] <= 0) ? $this->model_tool_image->resize($this->config->get('config_label_stock'), 50, 50) : false;
 
 				if (in_array($product_info['product_id'], $offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), 50, 50);
@@ -273,11 +258,7 @@ class ControllerInformationNews extends Controller {
 					}
 				}
 
-				if ($product_info['quote']) {
-					$quote = $this->url->link('information/quote', '', 'SSL');
-				} else {
-					$quote = false;
-				}
+				$quote = $product_info['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
 				$this->data['products'][] = array(
 					'product_id'      => $product_info['product_id'],
