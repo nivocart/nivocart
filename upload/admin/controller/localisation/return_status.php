@@ -19,7 +19,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 
 		$this->load->model('localisation/return_status');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_return_status->addReturnStatus($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 
 		$this->load->model('localisation/return_status');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_return_status->editReturnStatus($this->request->get['return_status_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -169,7 +169,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 
 			$this->data['return_statuses'][] = array(
 				'return_status_id' => $result['return_status_id'],
-				'name'             => $result['name'] . (($result['return_status_id'] == $this->config->get('config_return_status_id')) ? $this->language->get('text_default') : null),
+				'name'             => $result['name'] . (($result['return_status_id'] === $this->config->get('config_return_status_id')) ? $this->language->get('text_default') : null),
 				'selected'         => isset($this->request->post['selected']) && in_array($result['return_status_id'], $this->request->post['selected']),
 				'action'           => $action
 			);
@@ -205,7 +205,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -259,6 +259,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -271,6 +272,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 			$this->data['error_name'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -344,7 +346,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 		$this->load->model('sale/return');
 
 		foreach ($this->request->post['selected'] as $return_status_id) {
-			if ($this->config->get('config_return_status_id') == $return_status_id) {
+			if ($this->config->get('config_return_status_id') === $return_status_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

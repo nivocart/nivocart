@@ -19,7 +19,7 @@ class ControllerLocalisationLengthClass extends Controller {
 
 		$this->load->model('localisation/length_class');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_length_class->addLengthClass($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationLengthClass extends Controller {
 
 		$this->load->model('localisation/length_class');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_length_class->editLengthClass($this->request->get['length_class_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -169,7 +169,7 @@ class ControllerLocalisationLengthClass extends Controller {
 
 			$this->data['length_classes'][] = array(
 				'length_class_id' => $result['length_class_id'],
-				'title'           => $result['title'] . (($result['length_class_id'] == $this->config->get('config_length_class')) ? $this->language->get('text_default') : null),
+				'title'           => $result['title'] . (($result['length_class_id'] === $this->config->get('config_length_class')) ? $this->language->get('text_default') : null),
 				'unit'            => $result['unit'],
 				'value'           => $result['value'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['length_class_id'], $this->request->post['selected']),
@@ -208,7 +208,7 @@ class ControllerLocalisationLengthClass extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -265,6 +265,9 @@ class ControllerLocalisationLengthClass extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -283,6 +286,7 @@ class ControllerLocalisationLengthClass extends Controller {
 			$this->data['error_unit'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'title',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -313,7 +317,7 @@ class ControllerLocalisationLengthClass extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/length_class', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['length_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['length_class_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$length_class_info = $this->model_localisation_length_class->getLengthClass($this->request->get['length_class_id']);
 		}
 
@@ -372,7 +376,7 @@ class ControllerLocalisationLengthClass extends Controller {
 		$this->load->model('catalog/product');
 
 		foreach ($this->request->post['selected'] as $length_class_id) {
-			if ($this->config->get('config_length_class_id') == $length_class_id) {
+			if ($this->config->get('config_length_class_id') === $length_class_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

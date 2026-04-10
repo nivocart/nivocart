@@ -19,7 +19,7 @@ class ControllerLocalisationReturnReason extends Controller {
 
 		$this->load->model('localisation/return_reason');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_return_reason->addReturnReason($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationReturnReason extends Controller {
 
 		$this->load->model('localisation/return_reason');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_return_reason->editReturnReason($this->request->get['return_reason_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -204,7 +204,7 @@ class ControllerLocalisationReturnReason extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -257,6 +257,7 @@ class ControllerLocalisationReturnReason extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -269,6 +270,7 @@ class ControllerLocalisationReturnReason extends Controller {
 			$this->data['error_name'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',

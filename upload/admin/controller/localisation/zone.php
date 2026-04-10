@@ -19,7 +19,7 @@ class ControllerLocalisationZone extends Controller {
 
 		$this->load->model('localisation/zone');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_zone->addZone($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -63,7 +63,7 @@ class ControllerLocalisationZone extends Controller {
 
 		$this->load->model('localisation/zone');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_zone->editZone($this->request->get['zone_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -134,7 +134,6 @@ class ControllerLocalisationZone extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -204,7 +203,7 @@ class ControllerLocalisationZone extends Controller {
 			$this->data['zones'][] = array(
 				'zone_id'  => $result['zone_id'],
 				'country'  => $result['country'],
-				'name'     => $result['name'] . (($result['zone_id'] == $this->config->get('config_zone_id')) ? $this->language->get('text_default') : null),
+				'name'     => $result['name'] . (($result['zone_id'] === $this->config->get('config_zone_id')) ? $this->language->get('text_default') : null),
 				'code'     => $result['code'],
 				'status'   => $result['status'],
 				'selected' => isset($this->request->post['selected']) && in_array($result['zone_id'], $this->request->post['selected']),
@@ -253,7 +252,7 @@ class ControllerLocalisationZone extends Controller {
 			$url .= '&filter_name=' . $this->request->get['filter_name'];
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -321,6 +320,7 @@ class ControllerLocalisationZone extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -333,7 +333,7 @@ class ControllerLocalisationZone extends Controller {
 			$this->data['error_name'] = '';
 		}
 
-		// Jquery filter name
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -371,7 +371,7 @@ class ControllerLocalisationZone extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/zone', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['zone_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['zone_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$zone_info = $this->model_localisation_zone->getZone($this->request->get['zone_id']);
 		}
 
@@ -443,7 +443,7 @@ class ControllerLocalisationZone extends Controller {
 		$this->load->model('localisation/geo_zone');
 
 		foreach ($this->request->post['selected'] as $zone_id) {
-			if ($this->config->get('config_zone_id') == $zone_id) {
+			if ($this->config->get('config_zone_id') === $zone_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 
@@ -483,6 +483,7 @@ class ControllerLocalisationZone extends Controller {
 		return empty($this->error);
 	}
 
+	// Autocomplete
 	public function autocomplete() {
 		$json = array();
 

@@ -19,7 +19,7 @@ class ControllerLocalisationWeightClass extends Controller {
 
 		$this->load->model('localisation/weight_class');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_weight_class->addWeightClass($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationWeightClass extends Controller {
 
 		$this->load->model('localisation/weight_class');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_weight_class->editWeightClass($this->request->get['weight_class_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -169,7 +169,7 @@ class ControllerLocalisationWeightClass extends Controller {
 
 			$this->data['weight_classes'][] = array(
 				'weight_class_id' => $result['weight_class_id'],
-				'title'           => $result['title'] . (($result['weight_class_id'] == $this->config->get('config_weight_class')) ? $this->language->get('text_default') : null),
+				'title'           => $result['title'] . (($result['weight_class_id'] === $this->config->get('config_weight_class')) ? $this->language->get('text_default') : null),
 				'unit'            => $result['unit'],
 				'value'           => $result['value'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['weight_class_id'], $this->request->post['selected']),
@@ -208,7 +208,7 @@ class ControllerLocalisationWeightClass extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -265,6 +265,7 @@ class ControllerLocalisationWeightClass extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -283,6 +284,7 @@ class ControllerLocalisationWeightClass extends Controller {
 			$this->data['error_unit'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'title',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -372,7 +374,7 @@ class ControllerLocalisationWeightClass extends Controller {
 		$this->load->model('catalog/product');
 
 		foreach ($this->request->post['selected'] as $weight_class_id) {
-			if ($this->config->get('config_weight_class_id') == $weight_class_id) {
+			if ($this->config->get('config_weight_class_id') === $weight_class_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

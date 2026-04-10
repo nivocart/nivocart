@@ -19,7 +19,7 @@ class ControllerLocalisationCountry extends Controller {
 
 		$this->load->model('localisation/country');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_country->addCountry($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -63,7 +63,7 @@ class ControllerLocalisationCountry extends Controller {
 
 		$this->load->model('localisation/country');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_country->editCountry($this->request->get['country_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -212,7 +212,6 @@ class ControllerLocalisationCountry extends Controller {
 	}
 
 	protected function getList() {
-		// Jquery filter name
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -279,7 +278,7 @@ class ControllerLocalisationCountry extends Controller {
 
 			$this->data['countries'][] = array(
 				'country_id' => $result['country_id'],
-				'name'       => $result['name'] . ($result['country_id'] == $this->config->get('config_country_id') ? $this->language->get('text_default') : null),
+				'name'       => $result['name'] . ($result['country_id'] === $this->config->get('config_country_id') ? $this->language->get('text_default') : null),
 				'iso_code_2' => $result['iso_code_2'],
 				'iso_code_3' => $result['iso_code_3'],
 				'status'     => $result['status'],
@@ -331,7 +330,7 @@ class ControllerLocalisationCountry extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -403,6 +402,9 @@ class ControllerLocalisationCountry extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -415,7 +417,7 @@ class ControllerLocalisationCountry extends Controller {
 			$this->data['error_name'] = array();
 		}
 
-		// Jquery filter name
+		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
@@ -453,7 +455,7 @@ class ControllerLocalisationCountry extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/country', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['country_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['country_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$country_info = $this->model_localisation_country->getCountry($this->request->get['country_id']);
 		}
 
@@ -546,7 +548,7 @@ class ControllerLocalisationCountry extends Controller {
 		$this->load->model('localisation/geo_zone');
 
 		foreach ($this->request->post['selected'] as $country_id) {
-			if ($this->config->get('config_country_id') == $country_id) {
+			if ($this->config->get('config_country_id') === $country_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

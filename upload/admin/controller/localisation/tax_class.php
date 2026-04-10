@@ -19,7 +19,7 @@ class ControllerLocalisationTaxClass extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_tax_class->addTaxClass($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationTaxClass extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_tax_class->editTaxClass($this->request->get['tax_class_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -207,7 +207,7 @@ class ControllerLocalisationTaxClass extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -270,6 +270,7 @@ class ControllerLocalisationTaxClass extends Controller {
 		$this->data['button_add_rule'] = $this->language->get('button_add_rule');
 		$this->data['button_remove'] = $this->language->get('button_remove');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -288,6 +289,7 @@ class ControllerLocalisationTaxClass extends Controller {
 			$this->data['error_description'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'title',
 			'order' => $this->request->get['order'] ?? 'ASC',

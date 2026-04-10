@@ -19,7 +19,7 @@ class ControllerLocalisationLocation extends Controller {
 
 		$this->load->model('localisation/location');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_location->addLocation($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationLocation extends Controller {
 
 		$this->load->model('localisation/location');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_location->editLocation($this->request->get['location_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -121,7 +121,7 @@ class ControllerLocalisationLocation extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] =   array();
+		$this->data['breadcrumbs'] = array();
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -222,7 +222,7 @@ class ControllerLocalisationLocation extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -290,6 +290,9 @@ class ControllerLocalisationLocation extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -320,6 +323,7 @@ class ControllerLocalisationLocation extends Controller {
 			$this->data['error_image'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -350,11 +354,9 @@ class ControllerLocalisationLocation extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/location', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['location_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['location_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$location_info = $this->model_localisation_location->getLocation($this->request->get['location_id']);
 		}
-
-		$this->data['token'] = $this->session->data['token'];
 
 		$this->load->model('setting/store');
 

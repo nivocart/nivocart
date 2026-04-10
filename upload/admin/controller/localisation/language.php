@@ -19,7 +19,7 @@ class ControllerLocalisationLanguage extends Controller {
 
 		$this->load->model('localisation/language');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_language->addLanguage($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationLanguage extends Controller {
 
 		$this->load->model('localisation/language');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_language->editLanguage($this->request->get['language_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -169,7 +169,7 @@ class ControllerLocalisationLanguage extends Controller {
 
 			$this->data['languages'][] = array(
 				'language_id' => $result['language_id'],
-				'name'        => $result['name'] . (($result['code'] == $this->config->get('config_language')) ? $this->language->get('text_default') : null),
+				'name'        => $result['name'] . (($result['code'] === $this->config->get('config_language')) ? $this->language->get('text_default') : null),
 				'code'        => $result['code'],
 				'image'       => $result['image'],
 				'sort_order'  => $result['sort_order'],
@@ -214,7 +214,7 @@ class ControllerLocalisationLanguage extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -281,6 +281,9 @@ class ControllerLocalisationLanguage extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -323,6 +326,7 @@ class ControllerLocalisationLanguage extends Controller {
 			$this->data['error_filename'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -353,7 +357,7 @@ class ControllerLocalisationLanguage extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/language', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['language_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['language_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$language_info = $this->model_localisation_language->getLanguage($this->request->get['language_id']);
 		}
 
@@ -474,11 +478,11 @@ class ControllerLocalisationLanguage extends Controller {
 			$language_info = $this->model_localisation_language->getLanguage($language_id);
 
 			if ($language_info) {
-				if ($this->config->get('config_language') == $language_info['code']) {
+				if ($this->config->get('config_language') === $language_info['code']) {
 					$this->error['warning'] = $this->language->get('error_default');
 				}
 
-				if ($this->config->get('config_admin_language') == $language_info['code']) {
+				if ($this->config->get('config_admin_language') === $language_info['code']) {
 					$this->error['warning'] = $this->language->get('error_admin');
 				}
 

@@ -19,7 +19,7 @@ class ControllerLocalisationOrderStatus extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_order_status->addOrderStatus($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationOrderStatus extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_order_status->editOrderStatus($this->request->get['order_status_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -169,7 +169,7 @@ class ControllerLocalisationOrderStatus extends Controller {
 
 			$this->data['order_statuses'][] = array(
 				'order_status_id' => $result['order_status_id'],
-				'name'            => $result['name'] . (($result['order_status_id'] == $this->config->get('config_order_status_id')) ? $this->language->get('text_default') : null),
+				'name'            => $result['name'] . (($result['order_status_id'] === $this->config->get('config_order_status_id')) ? $this->language->get('text_default') : null),
 				'selected'        => isset($this->request->post['selected']) && in_array($result['order_status_id'], $this->request->post['selected']),
 				'action'          => $action
 			);
@@ -205,7 +205,7 @@ class ControllerLocalisationOrderStatus extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -259,6 +259,7 @@ class ControllerLocalisationOrderStatus extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -271,6 +272,7 @@ class ControllerLocalisationOrderStatus extends Controller {
 			$this->data['error_name'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -345,11 +347,11 @@ class ControllerLocalisationOrderStatus extends Controller {
 		$this->load->model('sale/order');
 
 		foreach ($this->request->post['selected'] as $order_status_id) {
-			if ($this->config->get('config_order_status_id') == $order_status_id) {
+			if ($this->config->get('config_order_status_id') === $order_status_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 
-			if ($this->config->get('config_download_status_id') == $order_status_id) {
+			if ($this->config->get('config_download_status_id') === $order_status_id) {
 				$this->error['warning'] = $this->language->get('error_download');
 			}
 

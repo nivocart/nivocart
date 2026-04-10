@@ -19,7 +19,7 @@ class ControllerLocalisationCurrency extends Controller {
 
 		$this->load->model('localisation/currency');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_currency->addCurrency($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationCurrency extends Controller {
 
 		$this->load->model('localisation/currency');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_currency->editCurrency($this->request->get['currency_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -169,7 +169,7 @@ class ControllerLocalisationCurrency extends Controller {
 
 			$this->data['currencies'][] = array(
 				'currency_id'   => $result['currency_id'],
-				'title'         => $result['title'] . (($result['code'] == $this->config->get('config_currency')) ? $this->language->get('text_default') : null),
+				'title'         => $result['title'] . (($result['code'] === $this->config->get('config_currency')) ? $this->language->get('text_default') : null),
 				'code'          => $result['code'],
 				'status'        => $result['status'],
 				'value'         => $result['value'],
@@ -216,7 +216,7 @@ class ControllerLocalisationCurrency extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -284,6 +284,9 @@ class ControllerLocalisationCurrency extends Controller {
 
 		$this->data['tab_general'] = $this->language->get('tab_general');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -302,6 +305,7 @@ class ControllerLocalisationCurrency extends Controller {
 			$this->data['error_code'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'title',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -332,7 +336,7 @@ class ControllerLocalisationCurrency extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['currency_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['currency_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$currency_info = $this->model_localisation_currency->getCurrency($this->request->get['currency_id']);
 		}
 
@@ -410,7 +414,7 @@ class ControllerLocalisationCurrency extends Controller {
 			$this->error['title'] = $this->language->get('error_title');
 		}
 
-		if (mb_strlen($this->request->post['code'], 'UTF-8') != 3) {
+		if (mb_strlen($this->request->post['code'], 'UTF-8') !== 3) {
 			$this->error['code'] = $this->language->get('error_code');
 		}
 
@@ -429,7 +433,7 @@ class ControllerLocalisationCurrency extends Controller {
 			$currency_info = $this->model_localisation_currency->getCurrency($currency_id);
 
 			if ($currency_info) {
-				if ($this->config->get('config_currency') == $currency_info['code']) {
+				if ($this->config->get('config_currency') === $currency_info['code']) {
 					$this->error['warning'] = $this->language->get('error_default');
 				}
 

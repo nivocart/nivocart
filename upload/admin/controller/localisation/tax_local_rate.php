@@ -19,7 +19,7 @@ class ControllerLocalisationTaxLocalRate extends Controller {
 
 		$this->load->model('localisation/tax_local_rate');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_tax_local_rate->addTaxLocalRate($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -56,7 +56,7 @@ class ControllerLocalisationTaxLocalRate extends Controller {
 
 		$this->load->model('localisation/tax_local_rate');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_localisation_tax_local_rate->editTaxLocalRate($this->request->get['tax_local_rate_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -212,7 +212,7 @@ class ControllerLocalisationTaxLocalRate extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -272,6 +272,7 @@ class ControllerLocalisationTaxLocalRate extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -290,6 +291,7 @@ class ControllerLocalisationTaxLocalRate extends Controller {
 			$this->data['error_rate'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'name',
 			'order' => $this->request->get['order'] ?? 'ASC',
@@ -320,7 +322,7 @@ class ControllerLocalisationTaxLocalRate extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/tax_local_rate', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['tax_local_rate_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['tax_local_rate_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$tax_local_rate_info = $this->model_localisation_tax_local_rate->getTaxLocalRate($this->request->get['tax_local_rate_id']);
 		}
 
