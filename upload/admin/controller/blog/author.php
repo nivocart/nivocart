@@ -62,7 +62,7 @@ class ControllerBlogAuthor extends Controller {
 
 		$this->load->model('blog/author');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_author->addAuthor($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -99,7 +99,7 @@ class ControllerBlogAuthor extends Controller {
 
 		$this->load->model('blog/author');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_author->editAuthor($this->request->get['blog_author_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -330,6 +330,7 @@ class ControllerBlogAuthor extends Controller {
 			$this->data['blog_author_id'] = 0;
 		}
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -342,6 +343,7 @@ class ControllerBlogAuthor extends Controller {
 			$this->data['error_name'] = '';
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'ba.name',
 			'order' => $this->request->get['order'] ?? 'ASC',

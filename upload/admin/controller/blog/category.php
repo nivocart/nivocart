@@ -62,7 +62,7 @@ class ControllerBlogCategory extends Controller {
 
 		$this->load->model('blog/category');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_category->addCategory($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -99,7 +99,7 @@ class ControllerBlogCategory extends Controller {
 
 		$this->load->model('blog/category');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_category->editCategory($this->request->get['blog_category_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -348,6 +348,7 @@ class ControllerBlogCategory extends Controller {
 			$this->data['blog_category_id'] = 0;
 		}
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -360,6 +361,7 @@ class ControllerBlogCategory extends Controller {
 			$this->data['error_name'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'bcd.name',
 			'order' => $this->request->get['order'] ?? 'ASC',

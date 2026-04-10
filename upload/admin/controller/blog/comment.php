@@ -62,7 +62,7 @@ class ControllerBlogComment extends Controller {
 
 		$this->load->model('blog/comment');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_comment->addArticleComment($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -99,7 +99,7 @@ class ControllerBlogComment extends Controller {
 
 		$this->load->model('blog/comment');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_comment->editArticleComment($this->request->get['blog_comment_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -329,6 +329,7 @@ class ControllerBlogComment extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -365,6 +366,7 @@ class ControllerBlogComment extends Controller {
 			$this->data['error_reply_comment'] = array();
 		}
 
+		// Breadcrumbs
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'bc.date_added',
 			'order' => $this->request->get['order'] ?? 'DESC',

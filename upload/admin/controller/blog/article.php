@@ -62,7 +62,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('blog/article');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_article->addArticle($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -99,7 +99,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('blog/article');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_blog_article->editArticle($this->request->get['blog_article_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -366,6 +366,7 @@ class ControllerBlogArticle extends Controller {
 			$this->data['blog_article_id'] = 0;
 		}
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -420,7 +421,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->data['cancel'] = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if ((isset($this->request->get['blog_article_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if ((isset($this->request->get['blog_article_id'])) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$article_info = $this->model_blog_article->getArticle($this->request->get['blog_article_id']);
 		}
 

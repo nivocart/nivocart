@@ -1,5 +1,6 @@
 <?php
 class ControllerBlogInstall extends Controller {
+	private $error = array();
 
 	public function index() {
 		$this->language->load('blog/install');

@@ -124,7 +124,6 @@ class ControllerBlogReport extends Controller {
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
 		$blog_viewed_total = $this->model_blog_report->getTotalBlogViewed($data);
-
 		$blog_views_total = $this->model_blog_report->getTotalBlogViews($data);
 
 		$this->data['blog_views'] = array();
