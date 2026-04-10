@@ -34,22 +34,22 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getCategory(int $blog_category_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN " . DB_PREFIX . "blog_category_to_store bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'");
 
 		return $query->row;
 	}
 
 	public function getCategoryByName(int $blog_category_id) {
-		$query = $this->db->query("SELECT DISTINCT bcd.name AS `name` FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc.status = '1'");
+		$query = $this->db->query("SELECT DISTINCT bcd.name AS `name` FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc.status = '1'");
 
 		return $query->row['name'];
 	}
 
-	public function getCategories($parent_id = 0) {
-		if ($parent_id == 0) {
+	public function getCategories($parent_id = 0): array {
+		if ($parent_id === 0) {
 			$blog_category_data = array();
 
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN " . DB_PREFIX . "blog_category_to_store bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1' ORDER BY bc.sort_order, LCASE(bcd.name)");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1' ORDER BY bc.sort_order, LCASE(bcd.name)");
 
 			foreach ($query->rows as $result) {
 				$blog_category_data[$result['blog_category_id']] = $this->getCategory($result['blog_category_id']);
@@ -58,14 +58,14 @@ class ModelBlogArticle extends Model {
 			return $blog_category_data;
 
 		} else {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN " . DB_PREFIX . "blog_category_to_store bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1' ORDER BY bc.sort_order, LCASE(bcd.name)");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN `" . DB_PREFIX . "blog_category_to_store` bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1' ORDER BY bc.sort_order, LCASE(bcd.name)");
 
 			return $query->rows;
 		}
 	}
 
-	public function getTotalCategories($parent_id = 0) {
-		$query = $this->db->query("SELECT COUNT(DISTINCT(bc.blog_category_id)) AS `total` FROM " . DB_PREFIX . "blog_category bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN " . DB_PREFIX . "blog_category_to_store bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'");
+	public function getTotalCategories($parent_id = 0): int {
+		$query = $this->db->query("SELECT COUNT(DISTINCT(bc.blog_category_id)) AS `total` FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) LEFT JOIN " . DB_PREFIX . "blog_category_to_store bc2s ON (bc.blog_category_id = bc2s.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bc2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bc.status = '1'");
 
 		return $query->row['total'];
 	}
@@ -287,11 +287,9 @@ class ModelBlogArticle extends Model {
 				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 			}
 
-			$my_query = $this->db->query($sql);
+			$wise_query = $this->db->query($sql);
 
-			return $my_query->rows;
-		} else {
-			return '';
+			return $wise_query->rows;
 		}
 	}
 
@@ -300,9 +298,9 @@ class ModelBlogArticle extends Model {
 
 		$blog_related_article_data = array();
 
-		$sql = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_related_article` WHERE blog_article_id = '" . (int)$blog_article_id . "' AND status = '1' ORDER BY sort_order");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_related_article` WHERE blog_article_id = '" . (int)$blog_article_id . "' AND status = '1' ORDER BY sort_order");
 
-		foreach ($sql->rows as $row) {
+		foreach ($query->rows as $row) {
 			$article_info = $this->db->query("SELECT ba.*, bad.article_title AS article_title, bad.description AS description, bau.blog_author_id AS blog_author_id, bau.name AS author_name FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE ba.blog_article_id='" . (int)$row['blog_article_related_id'] . "' AND ba.status = '1' AND bau.status = '1'");
 
 			if ($article_info->row) {
@@ -328,13 +326,13 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getAuthors(): array {
-		$sql = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE status = '1'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE status = '1'");
 
-		return $sql->rows;
+		return $query->rows;
 	}
 
 	public function getBlogArticleLayoutId(int $blog_article_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_article_to_layout WHERE blog_article_id = '" . (int)$blog_article_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_layout` WHERE blog_article_id = '" . (int)$blog_article_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
 
 		if ($query->num_rows) {
 			return (int)$query->row['layout_id'];
@@ -344,7 +342,7 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getBlogCategoryLayoutId(int $blog_category_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_category_to_layout WHERE blog_category_id = '" . (int)$blog_category_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category_to_layout` WHERE blog_category_id = '" . (int)$blog_category_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
 
 		if ($query->num_rows) {
 			return (int)$query->row['layout_id'];
