@@ -88,7 +88,6 @@ window.cookieconsent.initialise({
 <body>
 <div id="container-top">
   <div class="container-top-inner-<?php echo $display_size; ?>">
-    <?php echo $currency; ?>
     <?php echo $language; ?>
     <?php if ($logged) { ?>
       <a class="top-link" onclick="location='<?php echo $account; ?>';" title=""><i class="fa fa-user"></i><span class="hide-phone"> &nbsp;<?php echo $text_account; ?></span></a>
