@@ -1,6 +1,6 @@
 /* -------------------------
 * NivoCart - Default Styles
-* Copyright © 2018
+* Copyright © 2026
 * --------------------------
 */
 
@@ -184,29 +184,6 @@ span.from {
 #container-top .container-top-inner-full form {
 	float: left;
 	display: inline;
-}
-/* Currency */
-#currency {
-	line-height: 40px;
-	margin-right: 20px;
-}
-#currency a {
-	color: #FCFCFC;
-	font-size: 16px;
-	font-weight: bold;
-	text-decoration: none;
-	background-color: #555;
-	border: 1px solid transparent;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
-	border-radius: 2px;
-	padding: 2px 8px;
-	outline: none;
-	cursor: pointer;
-}
-#currency a:hover {
-	background-color: #36AAD8;
 }
 /* Language */
 #language {
