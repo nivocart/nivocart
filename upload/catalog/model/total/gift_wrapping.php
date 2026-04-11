@@ -1,19 +1,25 @@
 <?php
 class ModelTotalGiftWrapping extends Model {
 
-	public function getTotal(&$total_data, &$total, &$taxes) {
-		if (isset($this->session->data['wrapping']) && $this->config->get('gift_wrapping_status') && $this->cart->getSubTotal() > 0) {
-			$this->language->load('total/gift_wrapping');
+    public function getTotal(array $taxes, float $total): array {
+        if (!isset($this->session->data['wrapping']) || !$this->config->get('gift_wrapping_status') || $this->cart->getSubTotal() <= 0) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-			$total_data[] = array(
-				'code'       => 'gift_wrapping',
-				'title'      => $this->language->get('text_gift_wrapping'),
-				'text'       => $this->currency->format($this->config->get('gift_wrapping_price'), $this->config->get('config_currency')),
-				'value'      => $this->config->get('gift_wrapping_price'),
-				'sort_order' => $this->config->get('gift_wrapping_sort_order')
-			);
+        $this->language->load('total/gift_wrapping');
 
-			$total += $this->config->get('gift_wrapping_price');
-		}
-	}
+        $price = (float)$this->config->get('gift_wrapping_price');
+
+        return [
+            'total_data' => [[
+                'code'       => 'gift_wrapping',
+                'title'      => $this->language->get('text_gift_wrapping'),
+                'text'       => $this->currency->format($price, $this->config->get('config_currency')),
+                'value'      => $price,
+                'sort_order' => $this->config->get('gift_wrapping_sort_order')
+            ]],
+            'total' => $price,
+            'taxes' => [],
+        ];
+    }
 }

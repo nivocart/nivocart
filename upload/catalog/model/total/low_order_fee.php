@@ -1,31 +1,34 @@
 <?php
 class ModelTotalLowOrderFee extends Model {
 
-	public function getTotal(&$total_data, &$total, &$taxes) {
-		if ($this->cart->getSubTotal() && ($this->cart->getSubTotal() < $this->config->get('low_order_fee_total'))) {
-			$this->language->load('total/low_order_fee');
+    public function getTotal(array $taxes, float $total): array {
+        $sub_total = (float)$this->cart->getSubTotal();
 
-			$total_data[] = array(
-				'code'       => 'low_order_fee',
-				'title'      => $this->language->get('text_low_order_fee'),
-				'text'       => $this->currency->format($this->config->get('low_order_fee_fee'), $this->config->get('config_currency')),
-				'value'      => $this->config->get('low_order_fee_fee'),
-				'sort_order' => $this->config->get('low_order_fee_sort_order')
-			);
+        if ($sub_total <= 0 || $sub_total >= (float)$this->config->get('low_order_fee_total')) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-			if ($this->config->get('low_order_fee_tax_class_id')) {
-				$tax_rates = $this->tax->getRates($this->config->get('low_order_fee_fee'), $this->config->get('low_order_fee_tax_class_id'));
+        $this->language->load('total/low_order_fee');
 
-				foreach ($tax_rates as $tax_rate) {
-					if (!isset($taxes[$tax_rate['tax_rate_id']])) {
-						$taxes[$tax_rate['tax_rate_id']] = $tax_rate['amount'];
-					} else {
-						$taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
-					}
-				}
-			}
+        $fee = (float)$this->config->get('low_order_fee_fee');
+        $new_taxes = [];
 
-			$total += $this->config->get('low_order_fee_fee');
-		}
-	}
+        if ($this->config->get('low_order_fee_tax_class_id')) {
+            foreach ($this->tax->getRates($fee, $this->config->get('low_order_fee_tax_class_id')) as $tax_rate) {
+                $new_taxes[$tax_rate['tax_rate_id']] = ($new_taxes[$tax_rate['tax_rate_id']] ?? 0) + $tax_rate['amount'];
+            }
+        }
+
+        return [
+            'total_data' => [[
+                'code'       => 'low_order_fee',
+                'title'      => $this->language->get('text_low_order_fee'),
+                'text'       => $this->currency->format($fee, $this->config->get('config_currency')),
+                'value'      => $fee,
+                'sort_order' => $this->config->get('low_order_fee_sort_order')
+            ]],
+            'total' => $fee,
+            'taxes' => $new_taxes,
+        ];
+    }
 }

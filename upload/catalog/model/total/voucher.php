@@ -1,58 +1,71 @@
 <?php
 class ModelTotalVoucher extends Model {
 
-	public function getTotal(&$total_data, &$total, &$taxes) {
-		if (isset($this->session->data['voucher'])) {
-			$this->language->load('total/voucher');
+    public function getTotal(array $taxes, float $total): array {
+        if (!isset($this->session->data['voucher'])) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-			$this->load->model('checkout/voucher');
+        $this->language->load('total/voucher');
 
-			$voucher_info = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
+        $this->load->model('checkout/voucher');
 
-			$amount = 0;
+        $voucher_info = $this->model_checkout_voucher->getVoucher($this->session->data['voucher']);
 
-			if ($voucher_info && !empty($voucher_info['amount'])) {
-				$amount += $voucher_info['amount'];
-			}
+        $amount = 0.0;
 
-			if (!empty($this->session->data['current_voucher_value'])) {
-				$amount += $this->session->data['current_voucher_value'];
-			}
+        if (!empty($voucher_info['amount'])) {
+            $amount += (float)$voucher_info['amount'];
+        }
 
-			if ($amount) {
-				if ($amount > $total) {
-					$amount = $total;
-				}
+        if (!empty($this->session->data['current_voucher_value'])) {
+            $amount += (float)$this->session->data['current_voucher_value'];
+        }
 
-				$total_data[] = array(
-					'code'       => 'voucher',
-					'title'      => sprintf($this->language->get('text_voucher'), $this->session->data['voucher']),
-					'text'       => $this->currency->format(-$amount, $this->config->get('config_currency')),
-					'value'      => -$amount,
-					'sort_order' => $this->config->get('voucher_sort_order')
-				);
+        if (!$amount) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-				$total -= $amount;
-			}
-		}
-	}
+        // Voucher can never exceed the running total
+        $amount = min($amount, $total);
 
-	public function confirm($order_info, $order_total) {
-		$code = '';
+        return [
+            'total_data' => [[
+                'code'       => 'voucher',
+                'title'      => sprintf($this->language->get('text_voucher'), $this->session->data['voucher']),
+                'text'       => $this->currency->format(-$amount, $this->config->get('config_currency')),
+                'value'      => -$amount,
+                'sort_order' => $this->config->get('voucher_sort_order')
+            ]],
+            'total' => -$amount,
+            'taxes' => [],
+        ];
+    }
 
-		$start = strpos($order_total['title'], '(') + 1;
-		$end = strrpos($order_total['title'], ')');
+    public function confirm(array $order_info, array $order_total): void {
+        $code = $this->extractCodeFromTitle($order_total['title']);
 
-		if ($start && $end) {
-			$code = substr($order_total['title'], $start, $end - $start);
-		}
+        $this->load->model('checkout/voucher');
 
-		$this->load->model('checkout/voucher');
+        $voucher_info = $this->model_checkout_voucher->getVoucher($code);
 
-		$voucher_info = $this->model_checkout_voucher->getVoucher($code);
+        if ($voucher_info) {
+            $this->model_checkout_voucher->redeem(
+                $voucher_info['voucher_id'],
+                $order_info['order_id'],
+                $order_total['value']
+            );
+        }
+    }
 
-		if ($voucher_info) {
-			$this->model_checkout_voucher->redeem($voucher_info['voucher_id'], $order_info['order_id'], $order_total['value']);
-		}
-	}
+    private function extractCodeFromTitle(string $title): string {
+        $start = strpos($title, '(');
+        $end = strrpos($title, ')');
+
+        if ($start !== false && $end !== false && $end > $start) {
+            return substr($title, $start + 1, $end - $start - 1);
+        }
+
+        return '';
+    }
 }

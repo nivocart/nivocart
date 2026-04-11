@@ -1,52 +1,71 @@
 <?php
 class ModelTotalPayPalFee extends Model {
 
-	public function getTotal(&$total_data, &$total, &$taxes) {
-		$paypal_fee_total = $this->config->get('paypal_fee_total');
+    public function getTotal(array $taxes, float $total): array {
+        $cart_total = (float)$this->cart->getTotal();
 
-		if ($this->cart->getTotal() && (empty($paypal_fee_total) || ($this->cart->getTotal() < $paypal_fee_total))) {
-			$this->language->load('total/paypal_fee');
+        $paypal_fee_max = $this->config->get('paypal_fee_total');
 
-			if ((isset($this->session->data['payment_method']) && ((substr($this->session->data['payment_method']['code'], 0, 3) == 'pp_') || ($this->session->data['payment_method']['code'] == "paypal_email"))) || (isset($this->request->post['payment']) && ((substr($this->request->post['payment'], 0, 3) == 'pp_') || ($this->request->post['payment'] == "paypal_email")))) {
-				if ($this->config->get('paypal_fee_fee_type') == 'F') {
-					$paypal_fee = $this->config->get('paypal_fee_fee');
-				} else {
-					$paypal_fee = ($this->cart->getTotal() * $this->config->get('paypal_fee_fee')) / 100;
+        if (!$cart_total || (!empty($paypal_fee_max) && $cart_total >= (float)$paypal_fee_max)) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-					$min = $this->config->get('paypal_fee_fee_min');
-					$max = $this->config->get('paypal_fee_fee_max');
+        if (!$this->isPayPalPaymentMethod()) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-					if (!empty($min) && ($paypal_fee < $min)) {
-						$paypal_fee = $min;
-					}
+        $this->language->load('total/paypal_fee');
 
-					if (!empty($max) && ($paypal_fee > $max)) {
-						$paypal_fee = $max;
-					}
-				}
+        $fee = $this->calculateFee($cart_total);
 
-				$total_data[] = array(
-					'code'       => 'paypal_fee',
-					'title'      => $this->language->get('text_paypal_fee'),
-					'text'       => $this->currency->format($paypal_fee, $this->config->get('config_currency')),
-					'value'      => $paypal_fee,
-					'sort_order' => $this->config->get('paypal_fee_sort_order')
-				);
+        $new_taxes = [];
 
-				if ($this->config->get('paypal_fee_tax_class_id')) {
-					$tax_rates = $this->tax->getRates($paypal_fee, $this->config->get('paypal_fee_tax_class_id'));
+        if ($this->config->get('paypal_fee_tax_class_id')) {
+            foreach ($this->tax->getRates($fee, $this->config->get('paypal_fee_tax_class_id')) as $tax_rate) {
+                $new_taxes[$tax_rate['tax_rate_id']] = ($new_taxes[$tax_rate['tax_rate_id']] ?? 0) + $tax_rate['amount'];
+            }
+        }
 
-					foreach ($tax_rates as $tax_rate) {
-						if (!isset($taxes[$tax_rate['tax_rate_id']])) {
-							$taxes[$tax_rate['tax_rate_id']] = $tax_rate['amount'];
-						} else {
-							$taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
-						}
-					}
-				}
+        return [
+            'total_data' => [[
+                'code'       => 'paypal_fee',
+                'title'      => $this->language->get('text_paypal_fee'),
+                'text'       => $this->currency->format($fee, $this->config->get('config_currency')),
+                'value'      => $fee,
+                'sort_order' => $this->config->get('paypal_fee_sort_order')
+            ]],
+            'total' => $fee,
+            'taxes' => $new_taxes,
+        ];
+    }
 
-				$total += $paypal_fee;
-			}
-		}
-	}
+    private function isPayPalPaymentMethod(): bool {
+        $session_code = $this->session->data['payment_method']['code'] ?? '';
+
+        $post_code = $this->request->post['payment'] ?? '';
+
+        foreach ([$session_code, $post_code] as $code) {
+            if (str_starts_with($code, 'pp_') || $code === 'paypal_email') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function calculateFee(float $cart_total): float {
+        if ($this->config->get('paypal_fee_fee_type') === 'F') {
+            return (float)$this->config->get('paypal_fee_fee');
+        }
+
+        $fee = $cart_total * (float)$this->config->get('paypal_fee_fee') / 100;
+
+        $min = (float)$this->config->get('paypal_fee_fee_min');
+        $max = (float)$this->config->get('paypal_fee_fee_max');
+
+        if ($min > 0 && $fee < $min) $fee = $min;
+        if ($max > 0 && $fee > $max) $fee = $max;
+
+        return $fee;
+    }
 }

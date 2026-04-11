@@ -818,37 +818,36 @@ class ControllerCheckoutCart extends Controller {
 				// Totals
 				$this->load->model('setting/extension');
 
-				$total_data = array();
-				$total = 0;
+				$total_data = [];
+				$total = 0.0;
 				$taxes = $this->cart->getTaxes();
 
-				// Display prices
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					$sort_order = array();
 
 					$results = $this->model_setting_extension->getExtensions('total');
 
-					foreach ($results as $key => $value) {
-						$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-					}
-
-					array_multisort($sort_order, SORT_ASC, $results);
+					// Sort extensions by their configured sort_order
+					usort($results, fn($a, $b) =>
+						$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+					);
 
 					foreach ($results as $result) {
 						if ($this->config->get($result['code'] . '_status')) {
 							$this->load->model('total/' . $result['code']);
 
-							$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+							$model = $this->{'model_total_' . $result['code']};
+
+							// each model returns its contribution, caller merges it
+							$contribution = $model->getTotal($taxes, $total);
+
+							$total_data  = array_merge($total_data, $contribution['total_data']);
+							$total      += $contribution['total'];
+							$taxes       = array_merge($taxes, $contribution['taxes']);
 						}
-
-						$sort_order = array();
-
-						foreach ($total_data as $key => $value) {
-							$sort_order[$key] = $value['sort_order'];
-						}
-
-						array_multisort($sort_order, SORT_ASC, $total_data);
 					}
+
+					// Sort the final total_data rows by sort_order
+					usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 				}
 
 				$json['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->config->get('config_currency')));

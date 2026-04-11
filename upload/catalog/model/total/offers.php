@@ -100,15 +100,11 @@ class ModelTotalOffers {
                 $tax_class_id = $product['tax_class_id'];
 
                 if ($line->type === '$') {
-                    $discount_total = ($offer_taxes && $line->amount > 0)
-                        ? (float)$this->tax->calculate($line->amount, $tax_class_id, $this->config->get('config_tax'))
-                        : $line->amount;
+                    $discount_total = ($offer_taxes && $line->amount > 0) ? (float)$this->tax->calculate($line->amount, $tax_class_id, $this->config->get('config_tax')) : $line->amount;
                 } else {
                     $base = $product['price'] * $line->amount;
 
-                    $discount_total = ($offer_taxes && $base > 0)
-                        ? (float)$this->tax->calculate($base, $tax_class_id, $this->config->get('config_tax')) / 100
-                        : $base;
+                    $discount_total = ($offer_taxes && $base > 0) ? (float)$this->tax->calculate($base, $tax_class_id, $this->config->get('config_tax')) / 100 : $base;
                 }
             }
         }
