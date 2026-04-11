@@ -49,7 +49,6 @@ $_['text_file_manager']                = 'File Manager';
 $_['text_filter']                      = 'Filters';
 $_['text_fraud']                       = 'Fraud';
 $_['text_footer']                      = 'Footers';
-$_['text_forum']                       = 'NivoCart Forum';
 $_['text_front']                       = 'Store Front';
 $_['text_geo_zone']                    = 'Geo Zones';
 $_['text_help']                        = 'Support';

@@ -287,12 +287,12 @@
                 <ul>
                   <li><a href="<?php echo $tax_class; ?>"><?php echo ($icons) ? '<i class="fa fa-briefcase"></i>' : ''; ?><?php echo $text_tax_class; ?></a></li>
                   <li><a href="<?php echo $tax_rate; ?>"><?php echo ($icons) ? '<i class="fa fa-percent"></i>' : ''; ?><?php echo $text_tax_rate; ?></a></li>
+                  <li><a href="<?php echo $geo_zone; ?>"><?php echo ($icons) ? '<i class="fa fa-map-signs"></i>' : ''; ?><?php echo $text_geo_zone; ?></a></li>
                   <li><a href="<?php echo $tax_local_rate; ?>"><?php echo ($icons) ? '<i class="fa fa-home"></i>' : ''; ?><?php echo $text_tax_local_rate; ?></a></li>
                 </ul>
               </li>
               <li><a href="<?php echo $country; ?>"><?php echo ($icons) ? '<i class="fa fa-globe"></i>' : ''; ?><?php echo $text_country; ?></a></li>
               <li><a href="<?php echo $zone; ?>"><?php echo ($icons) ? '<i class="fa fa-map-pin"></i>' : ''; ?><?php echo $text_zone; ?></a></li>
-              <li><a href="<?php echo $geo_zone; ?>"><?php echo ($icons) ? '<i class="fa fa-map-signs"></i>' : ''; ?><?php echo $text_geo_zone; ?></a></li>
               <li><a href="<?php echo $length_class; ?>"><?php echo ($icons) ? '<i class="fa fa-road"></i>' : ''; ?><?php echo $text_length_class; ?></a></li>
               <li><a href="<?php echo $weight_class; ?>"><?php echo ($icons) ? '<i class="fa fa-balance-scale"></i>' : ''; ?><?php echo $text_weight_class; ?></a></li>
             </ul>
@@ -316,8 +316,7 @@
           </li>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-support"></i>' : ''; ?><?php echo $text_help; ?></a>
             <ul>
-              <li><a onclick="window.open('https://nivocart.com');" title=""><?php echo ($icons) ? '<i class="fa fa-home"></i>' : ''; ?><?php echo $text_nivocart; ?></a></li>
-              <li><a onclick="window.open('http://forum.nivocart.com');" title=""><?php echo ($icons) ? '<i class="fa fa-heart"></i>' : ''; ?><?php echo $text_forum; ?></a></li>
+              <li><a onclick="window.open('https://nivocart.org');" title=""><?php echo ($icons) ? '<i class="fa fa-home"></i>' : ''; ?><?php echo $text_nivocart; ?></a></li>
             </ul>
           </li>
         </ul>

@@ -140,7 +140,6 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_file_manager'] = $this->language->get('text_file_manager');
 		$this->data['text_filter'] = $this->language->get('text_filter');
 		$this->data['text_footer'] = $this->language->get('text_footer');
-		$this->data['text_forum'] = $this->language->get('text_forum');
 		$this->data['text_fraud'] = $this->language->get('text_fraud');
 		$this->data['text_front'] = $this->language->get('text_front');
 		$this->data['text_geo_zone'] = $this->language->get('text_geo_zone');
