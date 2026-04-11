@@ -1,313 +1,230 @@
 <?php
-define('PRO_TO_PRO', '1');
-define('PRO_TO_CAT', '2');
-define('CAT_TO_CAT', '3');
-define('CAT_TO_PRO', '4');
+
+enum OfferVariation: string {
+    case ProToPro = '1';
+    case ProToCat = '2';
+    case CatToCat = '3';
+    case CatToPro = '4';
+}
 
 class Offer {
-	var $item1;
-	var $item2;
-	var $type;
-	var $amount;
-	var $variation;
-	var $isvalid;
+    public string $item1;
+    public string $item2;
+    public string $type;
+    public float  $amount;
+    public OfferVariation $variation;
+    public bool $isvalid = false;
 
-	public function init($item1, $item2, $type, $amount, $variation) {
-		$this->isvalid = 0;
+    public function init(string $item1, string $item2, string $type, float $amount, OfferVariation $variation): void {
+        if ($type !== '$' && $type !== '%') {
+            throw new \InvalidArgumentException("Unknown offer type: $type");
+        }
 
-		if ($type != "$" && $type != "%") {
-			die("Unknown type " . $type);
-		}
+        $this->item1 = $item1;
+        $this->item2 = $item2;
+        $this->type = $type;
+        $this->amount = $amount;
+        $this->variation = $variation;
+        $this->isvalid = true;
+    }
 
-		if ($variation != PRO_TO_PRO && $variation != PRO_TO_CAT && $variation != CAT_TO_PRO && $variation != CAT_TO_CAT) {
-			die("Unknown variation " . $variation);
-		}
-
-		$this->item1 = $item1;
-		$this->item2 = $item2;
-		$this->type = $type;
-		$this->amount = $amount;
-		$this->variation = $variation;
-		$this->isvalid = 1;
-	}
-
-	public function getId() {
-		return $this->item1;
-	}
+    public function getId(): string {
+        return $this->item1;
+    }
 }
 
 class ModelTotalOffers {
-	protected $registry;
+    protected $registry;
+    protected array $discount_list = [];
 
-	public function __construct(Registry $registry) {
-		$this->registry = $registry;
-		$this->discount_list = array();
-		$this->offers();
-	}
+    public function __construct(Registry $registry) {
+        $this->registry = $registry;
+        $this->offers();
+    }
 
-	public function __get($name) {
-		return $this->registry->get($name);
-	}
+    public function __get(string $name): mixed {
+        return $this->registry->get($name);
+    }
 
-	protected function getDiscount($discount_item, &$discountable_products, &$already_discounted_items = array(), $one_to_many = 0) {
-		$discount_total = 0;
+    protected function getDiscount(array $discount_item, array &$discountable_products, array &$already_discounted_items = [], int $one_to_many = 0): float {
+        $offer_taxes = (bool)$this->config->get('offers_taxes');
+        $discount_total = 0.0;
 
-		$offer_taxes = $this->config->get('offers_taxes');
+        foreach ($this->discount_list as $line) {
+            // Check item1 matches the trigger product or category
+            $item1_matches = match(true) {
+                $line->variation === OfferVariation::ProToPro,
+                $line->variation === OfferVariation::ProToCat
+                    => $line->item1 === $discount_item['product_id'],
+                default
+                    => in_array($line->item1, $discount_item['category_id'], strict: true),
+            };
 
-		for ($disc = 0, $n = count($this->discount_list); $disc < $n; $disc++) {
-			$line = $this->discount_list[$disc];
+            if (!$item1_matches) {
+                continue;
+            }
 
-			if (($line->variation == PRO_TO_PRO) || ($line->variation == PRO_TO_CAT)) {
-				if ($line->item1 != $discount_item['product_id']) {
-					continue;
-				}
-			} else {
-				if (!in_array($line->item1, $discount_item['category_id'])) {
-					continue;
-				}
-			}
+            for ($i = count($discountable_products) - 1; $i >= 0; $i--) {
+                if ($discountable_products[$i]['quantity'] === 0) {
+                    continue;
+                }
 
-			for ($i = sizeof($discountable_products) - 1; $i >= 0; $i--) {
-				if ($discountable_products[$i]['quantity'] == 0) {
-					continue;
-				}
+                // Check item2 matches the discountable product or category
+                $item2_matches = match(true) {
+                    $line->variation === OfferVariation::ProToPro,
+                    $line->variation === OfferVariation::CatToPro
+                        => $discountable_products[$i]['product_id'] === $line->item2,
+                    default
+                        => in_array($line->item2, $discountable_products[$i]['category_id'], strict: true),
+                };
 
-				$match = 0;
+                if (!$item2_matches) {
+                    continue;
+                }
 
-				if (($line->variation == PRO_TO_PRO) || ($line->variation == CAT_TO_PRO)) {
-					if ($discountable_products[$i]['product_id'] == $line->item2) {
-						$match = 1;
-					}
-				} else {
-					if (in_array($line->item2, $discountable_products[$i]['category_id'])) {
-						$match = 1;
-					}
-				}
+                if ($one_to_many !== 0) {
+                    $pro_id = $discountable_products[$i]['product_id'];
 
-				if ($match == 1 && $one_to_many != 0) {
-					$pro_id = $discountable_products[$i]['product_id'];
+                    if ($one_to_many === 1) {
+                        if (in_array($pro_id, $already_discounted_items, strict: true)) {
+                            continue;
+                        }
 
-					if ($one_to_many == 1) {
-						if (in_array($pro_id, $already_discounted_items)) {
-							continue;
-						}
+                        $already_discounted_items[] = $pro_id;
+                    }
+                }
 
-						$already_discounted_items[] = $pro_id;
-					}
-				}
+                $discountable_products[$i]['quantity']--;
 
-				if ($match == 1) {
-					$discountable_products[$i]['quantity'] -= 1;
+                $product = $discountable_products[$i];
+                $tax_class_id = $product['tax_class_id'];
 
-					$discount_total = 0;
+                if ($line->type === '$') {
+                    $discount_total = ($offer_taxes && $line->amount > 0)
+                        ? (float)$this->tax->calculate($line->amount, $tax_class_id, $this->config->get('config_tax'))
+                        : $line->amount;
+                } else {
+                    $base = $product['price'] * $line->amount;
 
-					if ($line->type == "$") {
-						$product_amount = $line->amount;
+                    $discount_total = ($offer_taxes && $base > 0)
+                        ? (float)$this->tax->calculate($base, $tax_class_id, $this->config->get('config_tax')) / 100
+                        : $base;
+                }
+            }
+        }
 
-						if ($offer_taxes && $product_amount > 0) {
-							$discount_total = $this->tax->calculate($line->amount, $discountable_products[$i]['tax_class_id'], $this->config->get('config_tax'));
-						} else {
-							$discount_total = $line->amount;
-						}
+        return $discount_total;
+    }
 
-					} else {
-						$product_amount = $discountable_products[$i]['price'] * $line->amount;
+    public function getTotal(&$total_data, &$total, &$taxes): void {
+        $products = $this->cart->getProducts();
 
-						if ($offer_taxes && $product_amount > 0) {
-							$discount_total = $this->tax->calculate(($discountable_products[$i]['price'] * $line->amount), $discountable_products[$i]['tax_class_id'], $this->config->get('config_tax')) / 100;
-						} else {
-							$discount_total = $discountable_products[$i]['price'] * $line->amount;
-						}
-					}
-				}
-			}
-		}
+        $offer_taxes = (bool)$this->config->get('offers_taxes');
 
-		return $discount_total;
-	}
+        usort($products, fn($a, $b) => $a['product_id'] <=> $b['product_id']);
 
-	public function getTotal(&$total_data, &$total, &$taxes) {
-		$products = $this->cart->getProducts();
+        $this->load->model('checkout/offers');
 
-		reset($products);
-		sort($products);
+        // Enrich each product with its category list
+        $discountable_products = array_map(function (array $product): array {
+            $product['category_id'] = $this->model_checkout_offers->getCategoryList($product['product_id']);
+            return $product;
+        }, $products);
 
-		$offer_taxes = $this->config->get('offers_taxes');
+        $discount_total = 0.0;
 
-		$discountable_products = array();
+        foreach ($discountable_products as $i => $trigger_product) {
+            $already_discounted_items = [];
 
-		$this->load->model('checkout/offers');
+            while ($discountable_products[$i]['quantity'] > 0) {
+                if ($one_to_many === 0) {
+                    $discountable_products[$i]['quantity']--;
+                }
 
-		for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-			$products[$i]['category_id'] = $this->model_checkout_offers->getCategoryList($products[$i]['product_id']);
+                $item_discountable = $this->getDiscount(
+                    $discountable_products[$i],
+                    $discountable_products,
+                    $already_discounted_items,
+                    $one_to_many ?? 0
+                );
 
-			$discountable_products[$i] = $products[$i];
-		}
+                if ($item_discountable === 0.0) {
+                    if ($one_to_many === 0) {
+                        $discountable_products[$i]['quantity']++;
+                        break;
+                    }
 
-		$discount_total = 0;
-		$one_to_many = 0;
+                    if (!empty($already_discounted_items)) {
+                        $discountable_products[$i]['quantity']--;
+                        $already_discounted_items = [];
+                        continue;
+                    }
 
-		for ($i = 0, $n = sizeof($discountable_products); $i < $n; $i++) {
-			$already_discounted_items = array();
+                    break;
+                }
 
-			while ($discountable_products[$i]['quantity'] > 0) {
-				if ($one_to_many == 0) {
-					$discountable_products[$i]['quantity'] -= 1;
-				}
+                $discount_total += $item_discountable;
 
-				$item_discountable = $this->getDiscount($discountable_products[$i], $discountable_products, $already_discounted_items, $one_to_many);
+                if ($offer_taxes) {
+                    foreach ($discountable_products as $product) {
+                        if (!empty($product['tax_class_id']) && $product['total'] > 0) {
+                            $tax_rates = $this->tax->getRates($product['total'], $product['tax_class_id']);
 
-				if ($item_discountable == 0) {
-					if ($one_to_many == 0) {
-						$discountable_products[$i]['quantity'] += 1;
-						break;
-					} else {
-						if (sizeof($already_discounted_items) > 0) {
-							$discountable_products[$i]['quantity'] -= 1;
+                            foreach ($tax_rates as $tax_rate) {
+                                $taxes[$tax_rate['tax_rate_id']] = ($taxes[$tax_rate['tax_rate_id']] ?? 0) - $tax_rate['amount'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-							$already_discounted_items = array();
-							continue;
-						} else {
-							break;
-						}
-					}
+        if ($discount_total > 0.0) {
+            $this->language->load('total/offers');
 
-				} else {
-					$discount_total += $item_discountable;
+            $total_data[] = [
+                'code'       => 'offers',
+                'title'      => $this->language->get('text_offers'),
+                'text'       => '-' . $this->currency->format($discount_total, $this->config->get('config_currency')),
+                'value'      => -round($discount_total, 2, PHP_ROUND_HALF_UP),
+                'sort_order' => $this->config->get('offers_sort_order')
+            ];
 
-					if ($offer_taxes) {
-						foreach ($products as $product) {
-							if ($product['tax_class_id'] && $product['total'] > 0) {
-								$tax_rates = $this->tax->getRates($product['total'], $product['tax_class_id']);
+            $total -= $discount_total;
+        }
+    }
 
-								foreach ($tax_rates as $tax_rate) {
-									if (in_array($item_discountable, $products)) {
-										$taxes[$tax_rate['tax_rate_id']] -= $tax_rate['amount'];
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+    protected function addOffer(string $item1, string $item2, string $type, float $amount, OfferVariation $variation): void {
+        $offer = new Offer();
+        $offer->init($item1, $item2, $type, $amount, $variation);
 
-		if ($discount_total > 0) {
-			$this->language->load('total/offers');
+        if ($offer->isvalid) {
+            $this->discount_list[] = $offer;
+        }
+    }
 
-			$total_data[] = array(
-				'code'       => 'offers',
-				'title'      => $this->language->get('text_offers'),
-				'text'       => '-' . $this->currency->format($discount_total, $this->config->get('config_currency')),
-				'value'      => '-' . number_format($discount_total, 2, '.', ''),
-				'sort_order' => $this->config->get('offers_sort_order')
-			);
+    protected function offers(): void {
+        $this->load->model('checkout/offers');
 
-			$total -= number_format($discount_total, 2, '.', '');
-		}
-	}
+        $m = $this->model_checkout_offers;
 
-	protected function addProToPro($item1, $item2, $type, $amount) {
-		$add_to_list = new Offer;
+        $groups = [
+            OfferVariation::ProToPro => $m->getOfferProductProducts(),
+            OfferVariation::ProToCat => $m->getOfferProductCategories(),
+            OfferVariation::CatToPro => $m->getOfferCategoryProducts(),
+            OfferVariation::CatToCat => $m->getOfferCategoryCategories()
+        ];
 
-		$add_to_list->init($item1, $item2, $type, $amount, PRO_TO_PRO);
-
-		if ($add_to_list->isvalid == 1) {
-			$this->discount_list[] =& $add_to_list;
-		}
-	}
-
-	protected function addProToCat($item1, $item2, $type, $amount) {
-		$add_to_list = new Offer;
-
-		$add_to_list->init($item1, $item2, $type, $amount, PRO_TO_CAT);
-
-		if ($add_to_list->isvalid == 1) {
-			$this->discount_list[] =& $add_to_list;
-		}
-	}
-
-	protected function addCatToCat($item1, $item2, $type, $amount) {
-		$add_to_list = new Offer;
-
-		$add_to_list->init($item1, $item2, $type, $amount, CAT_TO_CAT);
-
-		if ($add_to_list->isvalid == 1) {
-			$this->discount_list[] =& $add_to_list;
-		}
-	}
-
-	protected function addCatToPro($item1, $item2, $type, $amount) {
-		$add_to_list = new Offer;
-
-		$add_to_list->init($item1, $item2, $type, $amount, CAT_TO_PRO);
-
-		if ($add_to_list->isvalid == 1) {
-			$this->discount_list[] =& $add_to_list;
-		}
-	}
-
-	protected function offers() {
-		$this->load->model('checkout/offers');
-
-		// Product Product
-		$offer_product_products = $this->model_checkout_offers->getOfferProductProducts();
-
-		if ($offer_product_products) {
-			foreach ($offer_product_products as $result) {
-				if ($result['type'] == 'F') {
-					$type = "$";
-				} else {
-					$type = "%";
-				}
-
-				$this->addProToPro($result['one'], $result['two'], $type, $result['disc']);
-			}
-		}
-
-		// Product Category
-		$offer_product_categories = $this->model_checkout_offers->getOfferProductCategories();
-
-		if ($offer_product_categories) {
-			foreach ($offer_product_categories as $result) {
-				if ($result['type'] == 'F') {
-					$type = "$";
-				} else {
-					$type = "%";
-				}
-
-				$this->addProToCat($result['one'], $result['two'], $type, $result['disc']);
-			}
-		}
-
-		// Category Product
-		$offer_category_products = $this->model_checkout_offers->getOfferCategoryProducts();
-
-		if ($offer_category_products) {
-			foreach ($offer_category_products as $result) {
-				if ($result['type'] == 'F') {
-					$type = "$";
-				} else {
-					$type = "%";
-				}
-
-				$this->addCatToPro($result['one'], $result['two'], $type, $result['disc']);
-			}
-		}
-
-		// Category Category
-		$offer_category_categories = $this->model_checkout_offers->getOfferCategoryCategories();
-
-		if ($offer_category_categories) {
-			foreach ($offer_category_categories as $result) {
-				if ($result['type'] == 'F') {
-					$type = "$";
-				} else {
-					$type = "%";
-				}
-
-				$this->addCatToCat($result['one'], $result['two'], $type, $result['disc']);
-			}
-		}
-	}
+        foreach ($groups as $variation => $results) {
+            foreach ($results ?: [] as $result) {
+                $this->addOffer(
+                    item1: $result['one'],
+                    item2: $result['two'],
+                    type: $result['type'] === 'F' ? '$' : '%',
+                    amount: (float)$result['disc'],
+                    variation: $variation
+                );
+            }
+        }
+    }
 }
