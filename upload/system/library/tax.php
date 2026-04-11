@@ -194,7 +194,7 @@ final class Tax {
 	 * $rate = $this->tax->getRateName($tax_rate_id);
 	 */
 	public function getRateName(int $tax_rate_id) {
-		$tax_query = $this->db->query("SELECT name FROM `" . DB_PREFIX . "tax_rate` WHERE tax_rate_id = '" . (int)$tax_rate_id . "'");
+		$tax_query = $this->db->query("SELECT DISTINCT `name` FROM `" . DB_PREFIX . "tax_rate` WHERE tax_rate_id = '" . (int)$tax_rate_id . "'");
 
 		if ($tax_query->num_rows) {
 			return $tax_query->row['name'];

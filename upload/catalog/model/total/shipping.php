@@ -7,7 +7,10 @@ class ModelTotalShipping extends Model {
         }
 
         $method = $this->session->data['shipping_method'];
+
+		$title = (string)$method['title'];
         $cost = (float)$method['cost'];
+
         $new_taxes = [];
 
         if (!empty($method['tax_class_id'])) {
@@ -19,7 +22,7 @@ class ModelTotalShipping extends Model {
         return [
             'total_data' => [[
                 'code'       => 'shipping',
-                'title'      => $method['title'],
+                'title'      => $title,
                 'text'       => $this->currency->format($cost, $this->config->get('config_currency')),
                 'value'      => $cost,
                 'sort_order' => $this->config->get('shipping_sort_order')
