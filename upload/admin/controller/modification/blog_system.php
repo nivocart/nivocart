@@ -36,14 +36,10 @@ class ControllerModificationBlogSystem extends Controller {
 		}
 	}
 
-	public function validateDatabase() {
+	public function validateDatabase(): bool {
 		$database_not_found = $this->getChild('blog/install');
 
-		if ($database_not_found) {
-			return true;
-		}
-
-		return false;
+		return $database_not_found ? true : false;
 	}
 
 	public function setting() {
@@ -53,7 +49,7 @@ class ControllerModificationBlogSystem extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('blog_system', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -224,7 +220,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`blog_article_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog article description table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_description`");
@@ -237,7 +233,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_descr
   `meta_description` varchar(255) NOT NULL,
   `meta_keyword` varchar(255) NOT NULL,
   PRIMARY KEY (`blog_article_description_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog article table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_description_additional`");
@@ -245,21 +241,21 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_descr
   `blog_article_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `additional_description` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog article product related table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_product_related`");
 $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_product_related (
   `blog_article_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog article to category table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_category`");
 $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_category (
   `blog_article_id` int(11) NOT NULL,
   `blog_category_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog article to layout table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_layout`");
@@ -267,14 +263,14 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_la
   `blog_article_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog article to store table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_store`");
 $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_store (
   `blog_article_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog author table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_author`");
@@ -286,7 +282,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`blog_author_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog author description table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_author_description`");
@@ -299,7 +295,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author_descri
   `meta_keyword` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`blog_author_description_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog category table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category`");
@@ -315,7 +311,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`blog_category_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog category description table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_category`");
@@ -328,7 +324,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_desc
   `meta_description` varchar(255) NOT NULL,
   `meta_keyword` varchar(255) NOT NULL,
   PRIMARY KEY (`blog_category_description_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog category to layout table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_to_layout`");
@@ -336,14 +332,14 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_to_l
   `blog_category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog category to store table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_to_store`");
 $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_to_store (
   `blog_category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog comment table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_comment`");
@@ -357,7 +353,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_comment (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`blog_comment_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 		// Create blog related article table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_related_article`");
@@ -369,7 +365,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_related_artic
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`blog_related_article_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	// Create blog view table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_view`");
@@ -380,12 +376,12 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`blog_view_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 		// Set layouts
-		$layout_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "layout` WHERE name LIKE 'Blog'");
+		$layout_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'Blog'");
 
-		if ($layout_query->num_rows == 0) {
+		if ($layout_query->num_rows === 0) {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET name = 'Blog'");
 
 			$layout_id = $this->db->getLastId();
@@ -393,7 +389,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 			$routes = array('blog/article_info', 'blog/article_list', 'blog/article_author', 'blog/category');
 
 			foreach ($routes as $route) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', route = '" . $route . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', `route` = '" . $route . "'");
 			}
 		}
 	}

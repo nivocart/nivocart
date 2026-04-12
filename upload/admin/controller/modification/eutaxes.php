@@ -22,7 +22,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->load->model('modification/' . $this->_name);
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validateForm())) {
 			$this->model_modification_eutaxes->addEUCountries($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -65,7 +65,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->load->model('modification/' . $this->_name);
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validateForm())) {
 			$this->model_modification_eutaxes->editEUCountries($this->request->get['eucountry_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -237,7 +237,7 @@ class ControllerModificationEutaxes extends Controller {
 		$tax_classes_results = $this->model_localisation_tax_class->getTaxClasses($taxclasses_array);
 
 		foreach ($tax_classes_results as $tax_classes_result) {
-			if ($tax_classes_result['tax_class_id'] && $tax_classes_result['title'] == 'EU E-medias') {
+			if ($tax_classes_result['tax_class_id'] && $tax_classes_result['title'] === 'EU E-medias') {
 				$tax_rule = $this->model_localisation_tax_class->getTaxRules($tax_classes_result['tax_class_id']);
 			} else {
 				$tax_rule = false;
@@ -361,9 +361,9 @@ class ControllerModificationEutaxes extends Controller {
 
 			if ($result['code'] && file_exists(DIR_APPLICATION . 'view/image/flags/' . strtolower($result['code']) . '.png')) {
 				$flagcode = strtolower($result['code']);
-			} elseif (($result['code'] == 'EL') && file_exists(DIR_APPLICATION . 'view/image/flags/gr.png')) {
+			} elseif (($result['code'] === 'EL') && file_exists(DIR_APPLICATION . 'view/image/flags/gr.png')) {
 				$flagcode = 'gr';
-			} elseif (($result['code'] == 'UK') && file_exists(DIR_APPLICATION . 'view/image/flags/gb.png')) {
+			} elseif (($result['code'] === 'UK') && file_exists(DIR_APPLICATION . 'view/image/flags/gb.png')) {
 				$flagcode = 'gb';
 			} else {
 				$flagcode = '';
@@ -414,7 +414,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -543,7 +543,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->load->model('modification/' . $this->_name);
 
-		if ((isset($this->request->get['eucountry_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if ((isset($this->request->get['eucountry_id'])) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$eucountry_info = $this->model_modification_eutaxes->getEUCountryStory($this->request->get['eucountry_id']);
 		}
 
