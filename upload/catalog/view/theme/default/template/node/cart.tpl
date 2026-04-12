@@ -35,7 +35,7 @@
         <td class="quantity">x&nbsp;<?php echo $product['quantity']; ?></td>
         <td class="total"><?php echo $product['total']; ?></td>
         <td class="remove">
-          <img src="catalog/view/theme/<?php echo $template; ?>/image/remove-small.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" onclick="(getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') ? location = 'index.php?route=checkout/cart&remove=<?php echo $product['key']; ?>' : $('#cart').load('index.php?route=module/cart&remove=<?php echo $product['key']; ?>' + ' #cart > *');" />
+          <img src="catalog/view/theme/<?php echo $template; ?>/image/remove-small.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" onclick="(getURLVar('route') === 'checkout/cart' || getURLVar('route') === 'checkout/checkout') ? location = 'index.php?route=checkout/cart&remove=<?php echo $product['key']; ?>' : $('#cart').load('index.php?route=node/cart&remove=<?php echo $product['key']; ?>' + ' #cart > *');" />
         </td>
       </tr>
     <?php } ?>
@@ -46,7 +46,7 @@
         <td class="quantity">x&nbsp;1</td>
         <td class="total"><?php echo $voucher['amount']; ?></td>
         <td class="remove">
-          <img src="catalog/view/theme/<?php echo $template; ?>/image/remove-small.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" onclick="(getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') ? location = 'index.php?route=checkout/cart&remove=<?php echo $voucher['key']; ?>' : $('#cart').load('index.php?route=module/cart&remove=<?php echo $voucher['key']; ?>' + ' #cart > *');" />
+          <img src="catalog/view/theme/<?php echo $template; ?>/image/remove-small.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" onclick="(getURLVar('route') === 'checkout/cart' || getURLVar('route') === 'checkout/checkout') ? location = 'index.php?route=checkout/cart&remove=<?php echo $voucher['key']; ?>' : $('#cart').load('index.php?route=node/cart&remove=<?php echo $voucher['key']; ?>' + ' #cart > *');" />
         </td>
       </tr>
     <?php } ?>

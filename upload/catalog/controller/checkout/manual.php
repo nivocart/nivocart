@@ -482,12 +482,11 @@ class ControllerCheckoutManual extends Controller {
 
 					$model = $this->{'model_total_' . $result['code']};
 
-					// each model returns its contribution, caller merges it
 					$contribution = $model->getTotal($taxes, $total);
 
-					$total_data  = array_merge($total_data, $contribution['total_data']);
-					$total      += $contribution['total'];
-					$taxes       = array_merge($taxes, $contribution['taxes']);
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total     += $contribution['total'];
+					$taxes     += $contribution['taxes'];
 				}
 			}
 

@@ -18,7 +18,6 @@ class ControllerNodeCart extends Controller {
 		$taxes = $this->cart->getTaxes();
 
 		if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-
 			$results = $this->model_setting_extension->getExtensions('total');
 
 			// Sort extensions by their configured sort_order
@@ -32,12 +31,11 @@ class ControllerNodeCart extends Controller {
 
 					$model = $this->{'model_total_' . $result['code']};
 
-					// each model returns its contribution, caller merges it
 					$contribution = $model->getTotal($taxes, $total);
 
-					$total_data  = array_merge($total_data, $contribution['total_data']);
-					$total      += $contribution['total'];
-					$taxes       = array_merge($taxes, $contribution['taxes']);
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total     += $contribution['total'];
+					$taxes     += $contribution['taxes'];
 				}
 			}
 
