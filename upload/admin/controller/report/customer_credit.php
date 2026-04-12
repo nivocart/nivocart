@@ -110,6 +110,7 @@ class ControllerReportCustomerCredit extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_date_start'])) {

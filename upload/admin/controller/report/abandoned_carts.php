@@ -26,23 +26,20 @@ class ControllerReportAbandonedCarts extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_name = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('report/abandoned_carts', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -64,23 +61,20 @@ class ControllerReportAbandonedCarts extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_deleted');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_name = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('report/abandoned_carts', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -90,46 +84,19 @@ class ControllerReportAbandonedCarts extends Controller {
 
 	protected function getList() {
 		if (isset($this->request->get['filter_name'])) {
-			$filter_name = $this->request->get['filter_name'];
+			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$filter_name = null;
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'o.order_id';
-		}
+		$page_url = array_filter([
+			'filter_name' => $filter_name,
+			'sort'        => $this->request->get['sort'] ?? 'o.order_id',
+			'order'       => $this->request->get['order'] ?? 'DESC',
+			'page'        => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'DESC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->data['breadcrumbs'] = array();
 
@@ -153,6 +120,10 @@ class ControllerReportAbandonedCarts extends Controller {
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
 		$this->data['orders'] = array();
+
+		$sort = $this->request->get['sort'] ?? 'o.order_id';
+		$order = $this->request->get['order'] ?? 'DESC';
+		$page = $this->request->get['page'] ?? 1;
 
 		$data = array(
 			'days'        => ($this->config->get('config_abandoned_cart')) ? $this->config->get('config_abandoned_cart') : 7,
@@ -185,7 +156,7 @@ class ControllerReportAbandonedCarts extends Controller {
 				'ip'              => $result['ip'],
 				'abandoned'       => $result['abandoned'],
 				'duplicate_count' => $existing_carts,
-				'duplicate'       => ($result['abandoned'] == '0' && $existing_carts > 0) ? sprintf($this->language->get('warning_duplicate'), $existing_carts, '<a href="' . $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL') . '">' . $result['name'] . '</a>') : '',
+				'duplicate'       => ($result['abandoned'] === '0' && $existing_carts > 0) ? sprintf($this->language->get('warning_duplicate'), $existing_carts, '<a href="' . $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL') . '">' . $result['name'] . '</a>') : '',
 				'selected'        => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']),
 				'action'          => $action
 			);
@@ -231,13 +202,14 @@ class ControllerReportAbandonedCarts extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -254,6 +226,7 @@ class ControllerReportAbandonedCarts extends Controller {
 		$this->data['sort_ip'] = $this->url->link('report/abandoned_carts', 'token=' . $this->session->data['token'] . '&sort=o.ip' . $url, 'SSL');
 		$this->data['sort_abandoned'] = $this->url->link('report/abandoned_carts', 'token=' . $this->session->data['token'] . '&sort=o.abandoned' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {

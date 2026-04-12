@@ -110,6 +110,7 @@ class ControllerReportCustomerDeleted extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
@@ -150,6 +151,7 @@ class ControllerReportCustomerDeleted extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	// Autocomplete Sale Customer
 	public function autocomplete() {
 		$json = array();
 

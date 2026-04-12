@@ -91,14 +91,17 @@ class ControllerReportBannerClicked extends Controller {
 
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['page'])) {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
+		// Reset button
 		$this->data['reset'] = $this->url->link('report/banner_clicked/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
+		// Success
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
 

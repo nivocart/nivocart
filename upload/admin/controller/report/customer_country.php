@@ -119,7 +119,7 @@ class ControllerReportCustomerCountry extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -168,6 +168,7 @@ class ControllerReportCustomerCountry extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	// Autocomplete Country
 	public function autocomplete() {
 		$json = array();
 

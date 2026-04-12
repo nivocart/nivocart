@@ -175,6 +175,7 @@ class ControllerReportAffiliateActivity extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_date_start'])) {
