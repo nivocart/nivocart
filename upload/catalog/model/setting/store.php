@@ -13,10 +13,10 @@ class ModelSettingStore extends Model {
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
 			} else {
-				$sql .= " ORDER BY url";
+				$sql .= " ORDER BY `url`";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -42,7 +42,7 @@ class ModelSettingStore extends Model {
 			$store_data = $this->cache->get('store');
 
 			if (!$store_data) {
-				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` ORDER BY url");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` ORDER BY `url`");
 
 				$store_data = $query->rows;
 
