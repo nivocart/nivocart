@@ -66,9 +66,9 @@ class ModelSaleOrder extends Model {
 			$payment_zone = '';
 		}
 
+		// Currency info
 		$this->load->model('localisation/currency');
 
-		// Currency info
 		$currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
 
 		if ($currency_info) {
@@ -78,10 +78,8 @@ class ModelSaleOrder extends Model {
 		} else {
 			$currency_id = 0;
 			$currency_code = $this->config->get('config_currency');
-			$currency_value = 1.00000;
+			$currency_value = 1.00000000;
 		}
-
-		$this->load->model('sale/affiliate');
 
 		// Ip
 		$ip = isset($data['ip']) ? $data['ip'] : '127.0.0.1';
@@ -963,7 +961,7 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getEmailsByProductsOrdered(int $start, int $end, array $products = []): array {
-		$implode = array();
+		$implode = [];
 
 		foreach ($products as $product_id) {
 			$implode[] = "op.product_id = '" . (int)$product_id . "'";
@@ -975,7 +973,7 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getTotalEmailsByProductsOrdered(array $products = []): int {
-		$implode = array();
+		$implode = [];
 
 		foreach ($products as $product_id) {
 			$implode[] = "op.product_id = '" . (int)$product_id . "'";

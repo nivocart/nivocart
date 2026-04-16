@@ -51,7 +51,7 @@
 
 <script type="text/javascript"><!--
 $('#checkout .checkout-content input[name=\'account\']').on('change', function() {
-	if ($(this).attr('value') == 'register') {
+	if ($(this).attr('value') === 'register') {
 		$('#payment-address .checkout-heading span').html('<?php echo $text_checkout_account; ?>');
 	} else {
 		$('#payment-address .checkout-heading span').html('<?php echo $text_checkout_payment_address; ?>');

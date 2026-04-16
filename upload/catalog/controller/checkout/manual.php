@@ -4,7 +4,7 @@ class ControllerCheckoutManual extends Controller {
 	public function index() {
 		$this->language->load('checkout/manual');
 
-		$json = array();
+		$json = [];
 
 		$this->load->library('user');
 
@@ -70,7 +70,7 @@ class ControllerCheckoutManual extends Controller {
 				}
 
 				foreach ($this->request->post['order_product'] as $order_product) {
-					$option_data = array();
+					$option_data = [];
 
 					if (isset($order_product['order_option'])) {
 						foreach ($order_product['order_option'] as $option) {
@@ -108,7 +108,7 @@ class ControllerCheckoutManual extends Controller {
 					if (isset($this->request->post['option'])) {
 						$option = array_filter($this->request->post['option']);
 					} else {
-						$option = array();
+						$option = [];
 					}
 
 					$product_options = $this->model_catalog_product->getProductOptions((int)$this->request->post['product_id']);
@@ -141,7 +141,7 @@ class ControllerCheckoutManual extends Controller {
 			$this->tax->setStoreAddress($this->config->get('config_country_id'), $this->config->get('config_zone_id'));
 
 			// Products
-			$json['order_product'] = array();
+			$json['order_product'] = [];
 
 			$products = $this->cart->getProducts();
 
@@ -158,7 +158,7 @@ class ControllerCheckoutManual extends Controller {
 					$json['error']['product']['minimum'][] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
 				}
 
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
 					$option_data[] = array(
@@ -170,7 +170,7 @@ class ControllerCheckoutManual extends Controller {
 					);
 				}
 
-				$download_data = array();
+				$download_data = [];
 
 				foreach ($product['download'] as $download) {
 					$download_data[] = array(
@@ -197,7 +197,7 @@ class ControllerCheckoutManual extends Controller {
 			}
 
 			// Voucher
-			$this->session->data['vouchers'] = array();
+			$this->session->data['vouchers'] = [];
 
 			if (isset($this->request->post['order_voucher'])) {
 				foreach ($this->request->post['order_voucher'] as $voucher) {
@@ -273,7 +273,7 @@ class ControllerCheckoutManual extends Controller {
 				}
 			}
 
-			$json['order_voucher'] = array();
+			$json['order_voucher'] = [];
 
 			foreach ($this->session->data['vouchers'] as $voucher) {
 				$json['order_voucher'][] = array(
@@ -295,7 +295,7 @@ class ControllerCheckoutManual extends Controller {
 			$this->load->model('localisation/zone');
 
 			// Shipping
-			$json['shipping_method'] = array();
+			$json['shipping_method'] = [];
 
 			if ($this->cart->hasShipping()) {
 				$country_info = $this->model_localisation_country->getCountry($this->request->post['shipping_country_id']);
@@ -373,7 +373,7 @@ class ControllerCheckoutManual extends Controller {
 						}
 					}
 
-					$sort_order = array();
+					$sort_order = [];
 
 					foreach ($json['shipping_method'] as $key => $value) {
 						$sort_order[$key] = $value['sort_order'];
@@ -557,7 +557,7 @@ class ControllerCheckoutManual extends Controller {
 					'address_format' => $address_format
 				);
 
-				$json['payment_method'] = array();
+				$json['payment_method'] = [];
 
 				$results = $this->model_setting_extension->getExtensions('payment');
 
@@ -573,7 +573,7 @@ class ControllerCheckoutManual extends Controller {
 					}
 				}
 
-				$sort_order = array();
+				$sort_order = [];
 
 				foreach ($json['payment_method'] as $key => $value) {
 					$sort_order[$key] = $value['sort_order'];

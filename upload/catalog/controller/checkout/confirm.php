@@ -58,7 +58,7 @@ class ControllerCheckoutConfirm extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -79,41 +79,40 @@ class ControllerCheckoutConfirm extends Controller {
 
 		if (!$redirect) {
 			// Totals
-			$total_data = array();
-			$total = 0;
+			$total_data = [];
+			$total = 0.0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = array();
-
 			$results = $this->model_setting_extension->getExtensions('total');
 
-			foreach ($results as $key => $value) {
-				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-			}
-
-			array_multisort($sort_order, SORT_ASC, $results);
+			// Sort extensions by their configured sort_order
+			usort($results, fn($a, $b) =>
+				$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+			);
 
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('total/' . $result['code']);
 
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+					$model = $this->{'model_total_' . $result['code']};
+
+					$contribution = $model->getTotal($taxes, $total);
+
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total     += $contribution['total'];
+					$taxes     += $contribution['taxes'];
 				}
 			}
 
-			$sort_order = array();
+			// Sort the final total_data rows by sort_order
+			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
-			foreach ($total_data as $key => $value) {
-				$sort_order[$key] = $value['sort_order'];
-			}
-
-			array_multisort($sort_order, SORT_ASC, $total_data);
-
+			// Confirm Data
 			$this->language->load('checkout/checkout');
 
-			$data = array();
+			$data = [];
 
 			$data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
 			$data['store_id'] = $this->config->get('config_store_id');
@@ -227,13 +226,13 @@ class ControllerCheckoutConfirm extends Controller {
 				$data['shipping_code'] = '';
 			}
 
-			$product_data = array();
+			$product_data = [];
 
 			foreach ($this->cart->getProducts() as $product) {
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
-					if ($option['type'] != 'file') {
+					if ($option['type'] !== 'file') {
 						$value = $option['option_value'];
 					} else {
 						$value = $this->encryption->decrypt($option['option_value']);
@@ -267,7 +266,7 @@ class ControllerCheckoutConfirm extends Controller {
 			}
 
 			// Gift Voucher
-			$voucher_data = array();
+			$voucher_data = [];
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {
@@ -291,8 +290,8 @@ class ControllerCheckoutConfirm extends Controller {
 			$data['comment'] = $this->session->data['comment'];
 			$data['total'] = $total;
 
+			// Affiliate
 			if (isset($this->request->cookie['tracking'])) {
-				// Affiliate
 				$this->load->model('affiliate/affiliate');
 
 				$affiliate_info = $this->model_affiliate_affiliate->getAffiliateByCode($this->request->cookie['tracking']);
@@ -314,10 +313,22 @@ class ControllerCheckoutConfirm extends Controller {
 
 			$data['language_id'] = $this->config->get('config_language_id');
 
-			$data['currency_id'] = $this->currency->getId($this->currency->getCode());
-			$data['currency_code'] = $this->currency->getCode();
-			$data['currency_value'] = $this->currency->getValue($this->currency->getCode());
+			// Currency info
+			$this->load->model('localisation/currency');
 
+			$currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
+
+			if ($currency_info) {
+				$data['currency_id'] = $currency_info['currency_id'];
+				$data['currency_code'] = $currency_info['code'];
+				$data['currency_value'] = $currency_info['value'];
+			} else {
+				$data['currency_id'] = 0;
+				$data['currency_code'] = $this->config->get('config_currency');
+				$data['currency_value'] = 1.00000000;
+			}
+
+			// Ip
 			$data['ip'] = $this->request->server['REMOTE_ADDR'];
 
 			if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
@@ -340,19 +351,12 @@ class ControllerCheckoutConfirm extends Controller {
 				$data['accept_language'] = '';
 			}
 
-			// Get tax breakdown
-			if ($this->config->get('config_tax_breakdown')) {
-				$this->data['tax_breakdown'] = true;
-				$this->data['tax_colspan'] = 6;
-			} else {
-				$this->data['tax_breakdown'] = false;
-				$this->data['tax_colspan'] = 4;
-			}
-
+			// Add order
 			$this->load->model('checkout/order');
 
 			$this->session->data['order_id'] = $this->model_checkout_order->addOrder($data);
 
+			// Form data
 			$this->data['column_name'] = $this->language->get('column_name');
 			$this->data['column_model'] = $this->language->get('column_model');
 			$this->data['column_quantity'] = $this->language->get('column_quantity');
@@ -372,10 +376,19 @@ class ControllerCheckoutConfirm extends Controller {
 				'year'       => $this->language->get('text_year')
 			);
 
-			$this->data['products'] = array();
+			// Get tax breakdown
+			if ($this->config->get('config_tax_breakdown')) {
+				$this->data['tax_breakdown'] = true;
+				$this->data['tax_colspan'] = 6;
+			} else {
+				$this->data['tax_breakdown'] = false;
+				$this->data['tax_colspan'] = 4;
+			}
+
+			$this->data['products'] = [];
 
 			foreach ($this->cart->getProducts() as $product) {
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
 					if ($option['type'] != 'file') {
@@ -434,7 +447,7 @@ class ControllerCheckoutConfirm extends Controller {
 			}
 
 			// Gift Voucher
-			$this->data['vouchers'] = array();
+			$this->data['vouchers'] = [];
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {

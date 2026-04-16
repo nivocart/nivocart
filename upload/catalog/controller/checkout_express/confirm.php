@@ -89,39 +89,40 @@ class ControllerCheckoutExpressConfirm extends Controller {
 
 		if (!$redirect) {
 			// Totals
-			$total_data = array();
-			$total = 0;
+			$total_data = [];
+			$total = 0.0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = array();
-
 			$results = $this->model_setting_extension->getExtensions('total');
 
-			foreach ($results as $key => $value) {
-				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-			}
-
-			array_multisort($sort_order, SORT_ASC, $results);
+			// Sort extensions by their configured sort_order
+			usort($results, fn($a, $b) =>
+				$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+			);
 
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('total/' . $result['code']);
 
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+					$model = $this->{'model_total_' . $result['code']};
+
+					$contribution = $model->getTotal($taxes, $total);
+
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total     += $contribution['total'];
+					$taxes     += $contribution['taxes'];
 				}
 			}
 
-			$sort_order = array();
+			// Sort the final total_data rows by sort_order
+			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
-			foreach ($total_data as $key => $value) {
-				$sort_order[$key] = $value['sort_order'];
-			}
+			// Confirm Data
+			$this->language->load('checkout/checkout');
 
-			array_multisort($sort_order, SORT_ASC, $total_data);
-
-			$data = array();
+			$data = [];
 
 			$data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
 			$data['store_id'] = $this->config->get('config_store_id');
@@ -239,10 +240,10 @@ class ControllerCheckoutExpressConfirm extends Controller {
 				$data['shipping_code'] = '';
 			}
 
-			$product_data = array();
+			$product_data = [];
 
 			foreach ($this->cart->getProducts() as $product) {
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
 					if ($option['type'] != 'file') {
@@ -279,7 +280,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 			}
 
 			// Gift Voucher
-			$voucher_data = array();
+			$voucher_data = [];
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {
@@ -303,6 +304,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 			$data['comment'] = $this->session->data['comment'];
 			$data['total'] = $total;
 
+			// Affiliate
 			if (isset($this->request->cookie['tracking'])) {
 				$this->load->model('affiliate/affiliate');
 
@@ -324,10 +326,23 @@ class ControllerCheckoutExpressConfirm extends Controller {
 			}
 
 			$data['language_id'] = $this->config->get('config_language_id');
-			$data['currency_id'] = $this->currency->getId($this->currency->getCode());
-			$data['currency_code'] = $this->currency->getCode();
-			$data['currency_value'] = $this->currency->getValue($this->currency->getCode());
 
+			// Currency info
+			$this->load->model('localisation/currency');
+
+			$currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
+
+			if ($currency_info) {
+				$data['currency_id'] = $currency_info['currency_id'];
+				$data['currency_code'] = $currency_info['code'];
+				$data['currency_value'] = $currency_info['value'];
+			} else {
+				$data['currency_id'] = 0;
+				$data['currency_code'] = $this->config->get('config_currency');
+				$data['currency_value'] = 1.00000000;
+			}
+
+			// Ip
 			$data['ip'] = $this->request->server['REMOTE_ADDR'];
 
 			if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
@@ -352,13 +367,15 @@ class ControllerCheckoutExpressConfirm extends Controller {
 
 			$this->language->load('checkout/checkout_express');
 
+			// Add order
 			$this->load->model('checkout/order');
 
 			$this->session->data['order_id'] = $this->model_checkout_order->addOrder($data);
 
-			// Language
+			// Form data
 			$this->data['text_checkout_confirm'] = $this->language->get('text_checkout_confirm');
 
+			// Address Express
 			if ($this->customer->isLogged()) {
 				$this->load->model('account/address');
 
@@ -434,7 +451,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 			$this->data['text_recurring_item'] = $this->language->get('text_recurring_item');
 			$this->data['text_payment_profile'] = $this->language->get('text_payment_profile');
 
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 
 			foreach ($this->cart->getProducts() as $product) {
 				$option_data = array();
@@ -503,7 +520,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 			}
 
 			// Gift Voucher
-			$this->data['vouchers'] = array();
+			$this->data['vouchers'] = [];
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {
