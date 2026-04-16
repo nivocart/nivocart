@@ -465,7 +465,7 @@ class ControllerCheckoutManual extends Controller {
 			$this->session->data['payment_method']['code'] = isset($this->request->post['payment_code']) ? $this->request->post['payment_code'] : '';
 
 			// Totals
-			$json['order_total'] = [];
+			$total_data = [];
 			$total = 0.0;
 			$taxes = $this->cart->getTaxes();
 
@@ -492,6 +492,8 @@ class ControllerCheckoutManual extends Controller {
 
 			// Sort the final total_data rows by sort_order
 			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
+
+			$json['order_total'] = $total_data;
 
 			// Payment
 			$this->load->model('localisation/country');
