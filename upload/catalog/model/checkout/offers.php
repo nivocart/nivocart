@@ -2,12 +2,12 @@
 class ModelCheckoutOffers extends Model {
 
 	// Product Product
-	public function getOfferProductProducts() {
+	public function getOfferProductProducts(): array {
 		$status = true;
 
 		$product_product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_product_product` WHERE ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND status = '1'");
 
-		$product_product_data = array();
+		$product_product_data = [];
 
 		foreach ($product_product_query->rows as $result) {
 			if ($result['logged'] && !$this->customer->getId()) {
@@ -32,17 +32,17 @@ class ModelCheckoutOffers extends Model {
 		if ($status) {
 			return $product_product_data;
 		} else {
-			return 0;
+			return [];
 		}
 	}
 
 	// Product Category
-	public function getOfferProductCategories() {
+	public function getOfferProductCategories(): array {
 		$status = true;
 
 		$product_category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_product_category` WHERE ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND status = '1'");
 
-		$product_category_data = array();
+		$product_category_data = [];
 
 		foreach ($product_category_query->rows as $result) {
 			if ($result['logged'] && !$this->customer->getId()) {
@@ -67,17 +67,17 @@ class ModelCheckoutOffers extends Model {
 		if ($status) {
 			return $product_category_data;
 		} else {
-			return 0;
+			return [];
 		}
 	}
 
 	// Category Product
-	public function getOfferCategoryProducts() {
+	public function getOfferCategoryProducts(): array {
 		$status = true;
 
 		$category_product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_product` WHERE ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND status = '1'");
 
-		$category_product_data = array();
+		$category_product_data = [];
 
 		foreach ($category_product_query->rows as $result) {
 			if ($result['logged'] && !$this->customer->getId()) {
@@ -102,17 +102,17 @@ class ModelCheckoutOffers extends Model {
 		if ($status) {
 			return $category_product_data;
 		} else {
-			return 0;
+			return [];
 		}
 	}
 
 	// Category Category
-	public function getOfferCategoryCategories() {
+	public function getOfferCategoryCategories(): array {
 		$status = true;
 
 		$category_category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_category` WHERE ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND status = '1'");
 
-		$category_category_data = array();
+		$category_category_data = [];
 
 		foreach ($category_category_query->rows as $result) {
 			if ($result['logged'] && !$this->customer->getId()) {
@@ -137,7 +137,7 @@ class ModelCheckoutOffers extends Model {
 		if ($status) {
 			return $category_category_data;
 		} else {
-			return 0;
+			return [];
 		}
 	}
 

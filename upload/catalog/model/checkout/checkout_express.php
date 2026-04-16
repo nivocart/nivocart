@@ -142,11 +142,11 @@ class ModelCheckoutCheckoutExpress extends Model {
 		$implode = array();
 
 		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-			$implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "%'";
+			$implode[] = "LOWER(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "%'";
 		}
 
 		if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
-			$implode[] = "LCASE(c.email) = '" . $this->db->escape(mb_strtolower($data['filter_email'], 'UTF-8')) . "'";
+			$implode[] = "LOWER(c.email) = '" . $this->db->escape(mb_strtolower($data['filter_email'], 'UTF-8')) . "'";
 		}
 
 		if (isset($data['filter_customer_group_id']) && !is_null($data['filter_customer_group_id'])) {
@@ -188,7 +188,7 @@ class ModelCheckoutCheckoutExpress extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
