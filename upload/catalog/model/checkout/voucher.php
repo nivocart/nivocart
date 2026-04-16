@@ -2,9 +2,7 @@
 class ModelCheckoutVoucher extends Model {
 
 	public function addVoucher(int $order_id, array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "voucher` SET order_id = '" . (int)$order_id . "', code = '" . $this->db->escape($data['code']) . "', from_name = '" . $this->db->escape($data['from_name']) . "', from_email = '" . $this->db->escape($data['from_email']) . "', to_name = '" . $this->db->escape($data['to_name']) . "', to_email = '" . $this->db->escape($data['to_email']) . "', voucher_theme_id = '" . (int)$data['voucher_theme_id'] . "', message = '" . $this->db->escape($data['message']) . "', amount = '" . (float)$data['amount'] . "', status = '1', date_added = NOW()");
-
-		return $this->db->getLastId();
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "voucher` SET order_id = '" . (int)$order_id . "', `code` = '" . $this->db->escape($data['code']) . "', from_name = '" . $this->db->escape($data['from_name']) . "', from_email = '" . $this->db->escape($data['from_email']) . "', to_name = '" . $this->db->escape($data['to_name']) . "', to_email = '" . $this->db->escape($data['to_email']) . "', voucher_theme_id = '" . (int)$data['voucher_theme_id'] . "', message = '" . $this->db->escape($data['message']) . "', amount = '" . (float)$data['amount'] . "', status = '1', date_added = NOW()");
 	}
 
 	public function getVoucher($code) {
@@ -20,7 +18,7 @@ class ModelCheckoutVoucher extends Model {
 					$status = false;
 				}
 
-				$order_voucher_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_voucher WHERE order_id = '" . (int)$voucher_query->row['order_id'] . "' AND voucher_id = '" . (int)$voucher_query->row['voucher_id'] . "'");
+				$order_voucher_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_voucher` WHERE order_id = '" . (int)$voucher_query->row['order_id'] . "' AND voucher_id = '" . (int)$voucher_query->row['voucher_id'] . "'");
 
 				if (!$order_voucher_query->num_rows) {
 					$status = false;
@@ -55,7 +53,7 @@ class ModelCheckoutVoucher extends Model {
 				'theme'            => $voucher_query->row['theme'],
 				'message'          => $voucher_query->row['message'],
 				'image'            => $voucher_query->row['image'],
-				'amount'           => $amount,
+				'amount'           => round($amount, 2, PHP_ROUND_HALF_UP),
 				'status'           => $voucher_query->row['status'],
 				'date_added'       => $voucher_query->row['date_added']
 			);

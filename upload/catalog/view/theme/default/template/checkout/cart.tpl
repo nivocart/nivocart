@@ -140,7 +140,7 @@
       <table class="radio">
       <?php if ($coupon_status) { ?>
         <tr class="highlight">
-          <td><?php if ($next == 'coupon') { ?>
+          <td><?php if ($next === 'coupon') { ?>
             <input type="radio" name="next" value="coupon" id="use_coupon" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="next" value="coupon" id="use_coupon" />
@@ -150,7 +150,7 @@
       <?php } ?>
       <?php if ($voucher_status) { ?>
         <tr class="highlight">
-          <td><?php if ($next == 'voucher') { ?>
+          <td><?php if ($next === 'voucher') { ?>
             <input type="radio" name="next" value="voucher" id="use_voucher" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="next" value="voucher" id="use_voucher" />
@@ -160,7 +160,7 @@
       <?php } ?>
       <?php if ($reward_status) { ?>
         <tr class="highlight">
-          <td><?php if ($next == 'reward') { ?>
+          <td><?php if ($next === 'reward') { ?>
             <input type="radio" name="next" value="reward" id="use_reward" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="next" value="reward" id="use_reward" />
@@ -170,7 +170,7 @@
       <?php } ?>
       <?php if ($shipping_status) { ?>
         <tr class="highlight">
-          <td><?php if ($next == 'shipping') { ?>
+          <td><?php if ($next === 'shipping') { ?>
             <input type="radio" name="next" value="shipping" id="shipping_estimate" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="next" value="shipping" id="shipping_estimate" />
@@ -180,7 +180,7 @@
       <?php } ?>
       <?php if ($wrapping_status) { ?>
         <tr class="highlight">
-          <td><?php if ($next == 'wrapping') { ?>
+          <td><?php if ($next === 'wrapping') { ?>
             <input type="radio" name="next" value="wrapping" id="gift_wrapping" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="next" value="wrapping" id="gift_wrapping" />
@@ -191,7 +191,7 @@
     </table>
   </div>
   <div class="cart-module">
-    <div id="coupon" class="content" style="display:<?php echo ($next == 'coupon') ? 'block' : 'none'; ?>;">
+    <div id="coupon" class="content" style="display:<?php echo ($next === 'coupon') ? 'block' : 'none'; ?>;">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
         <?php echo $entry_coupon; ?>&nbsp;
         <input type="text" name="coupon" value="<?php echo $coupon; ?>" />
@@ -200,7 +200,7 @@
         <input type="submit" value="<?php echo $button_coupon; ?>" class="button" />
       </form>
     </div>
-    <div id="voucher" class="content" style="display:<?php echo ($next == 'voucher') ? 'block' : 'none'; ?>;">
+    <div id="voucher" class="content" style="display:<?php echo ($next === 'voucher') ? 'block' : 'none'; ?>;">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
         <?php echo $entry_voucher; ?>&nbsp;
         <input type="text" name="voucher" value="<?php echo $voucher; ?>" />
@@ -209,7 +209,7 @@
         <input type="submit" value="<?php echo $button_voucher; ?>" class="button" />
       </form>
     </div>
-    <div id="reward" class="content" style="display:<?php echo ($next == 'reward') ? 'block' : 'none'; ?>;">
+    <div id="reward" class="content" style="display:<?php echo ($next === 'reward') ? 'block' : 'none'; ?>;">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
         <?php echo $entry_reward; ?>&nbsp;
         <input type="text" name="reward" value="<?php echo $reward; ?>" />
@@ -218,7 +218,7 @@
         <input type="submit" value="<?php echo $button_reward; ?>" class="button" />
       </form>
     </div>
-    <div id="shipping" class="content" style="display:<?php echo ($next == 'shipping') ? 'block' : 'none'; ?>;">
+    <div id="shipping" class="content" style="display:<?php echo ($next === 'shipping') ? 'block' : 'none'; ?>;">
       <p><?php echo $text_shipping_detail; ?></p>
       <table>
         <tr>
@@ -226,7 +226,7 @@
           <td><select name="country_id">
             <option value=""><?php echo $text_select; ?></option>
             <?php foreach ($countries as $country) { ?>
-              <?php if ($country['country_id'] == $country_id) { ?>
+              <?php if ($country['country_id'] === $country_id) { ?>
                 <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -247,7 +247,7 @@
       <br />
       <input type="button" value="<?php echo $button_quotes; ?>" id="button-quote" class="button" />
     </div>
-    <div id="wrapping" class="content" style="display: <?php echo ($next == 'wrapping' ? 'block' : 'none'); ?>;">
+    <div id="wrapping" class="content" style="display: <?php echo ($next === 'wrapping' ? 'block' : 'none'); ?>;">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
         <input type="submit" value="<?php echo $button_add_wrapping; ?>" name="add_wrapping" class="button" />
         &nbsp;&nbsp;
@@ -267,7 +267,7 @@
     </table>
   </div>
   <div class="buttons">
-    <?php if ($age_minimum == 0) { ?>
+    <?php if ($age_minimum === 0) { ?>
       <div class="right"><a href="<?php echo $checkout; ?>" class="button"><?php echo $button_checkout; ?></a></div>
     <?php } elseif ($dob && $age_minimum > 0 && $age_checked) { ?>
       <div class="right"><a href="<?php echo $checkout; ?>" class="button"><?php echo $button_checkout; ?></a></div>
@@ -342,7 +342,7 @@ $('#button-quote').on('click', function() {
 						for (j in json['shipping_method'][i]['quote']) {
 							html += '<tr class="highlight">';
 
-							if (json['shipping_method'][i]['quote'][j]['code'] == '<?php echo $shipping_method; ?>') {
+							if (json['shipping_method'][i]['quote'][j]['code'] === '<?php echo $shipping_method; ?>') {
 								html += '  <td><input type="radio" name="shipping_method" value="' + json['shipping_method'][i]['quote'][j]['code'] + '" id="' + json['shipping_method'][i]['quote'][j]['code'] + '" checked="checked" /></td>';
 							} else {
 								html += '  <td><input type="radio" name="shipping_method" value="' + json['shipping_method'][i]['quote'][j]['code'] + '" id="' + json['shipping_method'][i]['quote'][j]['code'] + '" /></td>';
@@ -400,7 +400,7 @@ $('select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#postcode-required').show();
 			} else {
 				$('#postcode-required').hide();
@@ -412,7 +412,7 @@ $('select[name=\'country_id\']').on('change', function() {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 						html += ' selected="selected"';
 					}
 

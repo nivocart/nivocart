@@ -1,13 +1,13 @@
 <?php
 class ControllerCheckoutCart extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('checkout/cart');
 		$this->language->load('total/gift_wrapping');
 
 		if (!isset($this->session->data['vouchers'])) {
-			$this->session->data['vouchers'] = array();
+			$this->session->data['vouchers'] = [];
 		}
 
 		// Update
@@ -565,40 +565,35 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			// Totals
-			$this->load->model('setting/extension');
-
-			$total_data = array();
-			$total = 0;
+			$total_data = [];
+			$total = 0.0;
 			$taxes = $this->cart->getTaxes();
 
-			// Display prices
-			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$sort_order = array();
+			$this->load->model('setting/extension');
 
-				$results = $this->model_setting_extension->getExtensions('total');
+			$results = $this->model_setting_extension->getExtensions('total');
 
-				foreach ($results as $key => $value) {
-					$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-				}
+			// Sort extensions by their configured sort_order
+			usort($results, fn($a, $b) =>
+				$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+			);
 
-				array_multisort($sort_order, SORT_ASC, $results);
+			foreach ($results as $result) {
+				if ($this->config->get($result['code'] . '_status')) {
+					$this->load->model('total/' . $result['code']);
 
-				foreach ($results as $result) {
-					if ($this->config->get($result['code'] . '_status')) {
-						$this->load->model('total/' . $result['code']);
+					$model = $this->{'model_total_' . $result['code']};
 
-						$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-					}
+					$contribution = $model->getTotal($taxes, $total);
 
-					$sort_order = array();
-
-					foreach ($total_data as $key => $value) {
-						$sort_order[$key] = $value['sort_order'];
-					}
-
-					array_multisort($sort_order, SORT_ASC, $total_data);
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total     += $contribution['total'];
+					$taxes     += $contribution['taxes'];
 				}
 			}
+
+			// Sort the final total_data rows by sort_order
+			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
 			$this->data['totals'] = $total_data;
 
@@ -746,7 +741,7 @@ class ControllerCheckoutCart extends Controller {
 	public function add() {
 		$this->language->load('checkout/cart');
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['product_id'])) {
 			$product_id = $this->request->post['product_id'];
@@ -774,7 +769,7 @@ class ControllerCheckoutCart extends Controller {
 			if (isset($this->request->post['option'])) {
 				$option = array_filter($this->request->post['option']);
 			} else {
-				$option = array();
+				$option = [];
 			}
 
 			if (isset($this->request->post['profile_id'])) {
@@ -794,7 +789,7 @@ class ControllerCheckoutCart extends Controller {
 			$profiles = $this->model_catalog_product->getProfiles($product_info['product_id']);
 
 			if ($profiles) {
-				$profile_ids = array();
+				$profile_ids = [];
 
 				foreach ($profiles as $profile) {
 					$profile_ids[] = $profile['profile_id'];
@@ -862,7 +857,7 @@ class ControllerCheckoutCart extends Controller {
 	public function quote() {
 		$this->language->load('checkout/cart');
 
-		$json = array();
+		$json = [];
 
 		if (!$this->cart->hasProducts()) {
 			$json['error']['warning'] = $this->language->get('error_product');
@@ -983,7 +978,7 @@ class ControllerCheckoutCart extends Controller {
 	}
 
 	public function country() {
-		$json = array();
+		$json = [];
 
 		$this->load->model('localisation/country');
 
