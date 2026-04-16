@@ -10,6 +10,9 @@ class ModelTotalSubTotal extends Model {
             $sub_total += (float)$voucher['amount'];
         }
 
+		// Round to two decimals
+		$sub_total = round($sub_total, 2, PHP_ROUND_HALF_UP);
+
         return [
             'total_data' => [[
                 'code'       => 'sub_total',
