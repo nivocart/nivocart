@@ -270,7 +270,7 @@ class Affiliate {
 	 * @return bool
 	 */
 	public function isSecure(): bool {
-		if (!$this->config->get('config_secure') || ($this->request->isSecure() && isset($this->request->cookie['affiliate']) && isset($this->session->data['affiliate_cookie']) && $this->request->cookie['affiliate'] == $this->session->data['affiliate_cookie'])) {
+		if (!$this->config->get('config_secure') || ($this->request->isSecure() && isset($this->request->cookie['affiliate']) && isset($this->session->data['affiliate_cookie']) && $this->request->cookie['affiliate'] === $this->session->data['affiliate_cookie'])) {
 			return true;
 		} else {
 			return false;
