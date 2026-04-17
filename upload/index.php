@@ -125,7 +125,7 @@ $session->start();
 $registry->set('session', $session);
 
 // Language Detection
-$languages = array();
+$languages = [];
 
 $query = $db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE status = '1'");
 
@@ -162,11 +162,11 @@ if (isset($session->data['language']) && array_key_exists($session->data['langua
 	$code = $detect ? $detect : $config->get('config_language');
 }
 
-if (!isset($session->data['language']) || $session->data['language'] != $code) {
+if (!isset($session->data['language']) || $session->data['language'] !== $code) {
 	$session->data['language'] = $code;
 }
 
-if (!isset($request->cookie['language']) || $request->cookie['language'] != $code) {
+if (!isset($request->cookie['language']) || $request->cookie['language'] !== $code) {
 	setcookie('language', $code, time() + 60 * 60 * 24 * 30, '/', $request->server['HTTP_HOST']);
 }
 
