@@ -11,8 +11,7 @@ class ControllerCommonFooter extends Controller {
 
 		$this->data['total_footers'] = $this->model_design_footer->getTotalFooters();
 
-		$this->data['footer_routes'] = array();
-		$this->data['footer_blocks'] = array();
+		$this->data['footer_routes'] = [];
 
 		$this->data['max_position'] = $this->model_design_footer->getFooterMaxPosition();
 
@@ -26,24 +25,24 @@ class ControllerCommonFooter extends Controller {
 					$href = $this->url->link($route['route']);
 				}
 
-				$this->data['footer_routes'][] = array(
+				$this->data['footer_routes'][] = [
 					'footer_id' => $route['footer_id'],
 					'title'     => $route['title'],
 					'route'     => $href
-				);
+				];
 
-				$this->data['footer_blocks'] = array();
+				$this->data['footer_blocks'] = [];
 
 				$blocks = $this->model_design_footer->getFooters();
 
 				if ($blocks) {
 					foreach ($blocks as $block) {
-						$this->data['footer_blocks'][] = array(
+						$this->data['footer_blocks'][] = [
 							'footer_id' => $block['footer_id'],
 							'name'      => $block['name'],
 							'position'  => $block['position'],
 							'status'    => $block['status']
-						);
+						];
 					}
 				}
 			}
@@ -62,7 +61,6 @@ class ControllerCommonFooter extends Controller {
 		$this->data['google'] = html_entity_decode($this->config->get('config_google'), ENT_QUOTES, 'UTF-8');
 		$this->data['pinterest'] = html_entity_decode($this->config->get('config_pinterest'), ENT_QUOTES, 'UTF-8');
 		$this->data['instagram'] = html_entity_decode($this->config->get('config_instagram'), ENT_QUOTES, 'UTF-8');
-		$this->data['skype'] = $this->config->get('config_skype');
 
 		$template = $this->config->get('config_template');
 
@@ -112,11 +110,7 @@ class ControllerCommonFooter extends Controller {
 
 			$this->load->model('tool/online');
 
-			if (isset($this->request->server['REMOTE_ADDR'])) {
-				$ip = $this->request->server['REMOTE_ADDR'];
-			} else {
-				$ip = '';
-			}
+			$ip = isset($this->request->server['REMOTE_ADDR']) ? $this->request->server['REMOTE_ADDR'] : '';
 
 			if ($this->config->get('config_customer_online')) {
 				if (isset($this->request->server['HTTP_HOST']) && isset($this->request->server['REQUEST_URI'])) {
@@ -125,11 +119,7 @@ class ControllerCommonFooter extends Controller {
 					$url = '';
 				}
 
-				if (isset($this->request->server['HTTP_REFERER'])) {
-					$referer = $this->request->server['HTTP_REFERER'];
-				} else {
-					$referer = '';
-				}
+				$referer = isset($this->request->server['HTTP_REFERER']) ? $this->request->server['HTTP_REFERER'] : '';
 
 				$this->model_tool_online->whosOnline($ip, $this->customer->getId(), $url, $referer, $user_agent);
 			}
@@ -173,11 +163,7 @@ class ControllerCommonFooter extends Controller {
 
 		$json = array();
 
-		if (isset($this->request->post['banner_image_id'])) {
-			$banner_image_id = $this->request->post['banner_image_id'];
-		} else {
-			$banner_image_id = 0;
-		}
+		$banner_image_id = isset($this->request->post['banner_image_id']) ? $this->request->post['banner_image_id'] : 0;
 
 		$this->model_design_banner->updateClicked($banner_image_id);
 

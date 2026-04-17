@@ -38,7 +38,7 @@
             <td><?php echo $entry_widescreen; ?></td>
             <td><select name="default_widescreen">
               <?php foreach ($display_sizes as $display_size) { ?>
-                <?php if ($default_widescreen == $display_size['format']) { ?>
+                <?php if ($default_widescreen === $display_size['format']) { ?>
                   <option value="<?php echo $display_size['format']; ?>" selected="selected"><?php echo $display_size['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $display_size['format']; ?>"><?php echo $display_size['title']; ?></option>
@@ -113,19 +113,19 @@
         <tbody>
           <tr>
             <td><?php echo $entry_footer_theme; ?></td>
-            <td><?php if ($default_footer_theme == 'light') { ?>
+            <td><?php if ($default_footer_theme === 'light') { ?>
               <input type="radio" name="default_footer_theme" value="light" id="light" class="checkbox" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="default_footer_theme" value="light" id="light" class="checkbox" />
             <?php } ?>
             <label for="light"><?php echo $text_light; ?>&nbsp;&nbsp;<span></span></label>
-            <?php if ($default_footer_theme == 'dark') { ?>
+            <?php if ($default_footer_theme === 'dark') { ?>
               <input type="radio" name="default_footer_theme" value="dark" id="dark" class="checkbox" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="default_footer_theme" value="dark" id="dark" class="checkbox" />
             <?php } ?>
             <label for="dark"><?php echo $text_dark; ?>&nbsp;&nbsp;<span></span></label>
-            <?php if ($default_footer_theme == 'custom') { ?>
+            <?php if ($default_footer_theme === 'custom') { ?>
               <input type="radio" name="default_footer_theme" value="custom" id="custom" class="checkbox" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="default_footer_theme" value="custom" id="custom" class="checkbox" />
@@ -139,7 +139,7 @@
             <td><?php echo $entry_footer_color; ?></td>
             <td><select name="default_footer_color">
               <?php foreach ($skins as $skin) { ?>
-                <?php if ($skin['skin'] == $default_footer_color) { ?>
+                <?php if ($skin['skin'] === $default_footer_color) { ?>
                   <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;" selected="selected"><?php echo $skin['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;"><?php echo $skin['title']; ?></option>
@@ -151,7 +151,7 @@
             <td><?php echo $entry_footer_shape; ?></td>
             <td><select name="default_footer_shape">
               <?php foreach ($shapes as $shape) { ?>
-                <?php if ($shape['shape'] == $default_footer_shape) { ?>
+                <?php if ($shape['shape'] === $default_footer_shape) { ?>
                   <option value="<?php echo $shape['shape']; ?>" selected="selected"><?php echo $shape['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $shape['shape']; ?>"><?php echo $shape['title']; ?></option>
@@ -287,20 +287,6 @@
               <label for="footer-instagram-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
-          <tr>
-            <td><?php echo $entry_footer_skype; ?></td>
-            <td><?php if ($default_footer_skype) { ?>
-              <input type="radio" name="default_footer_skype" value="1" id="footer-skype-on" class="radio" checked />
-              <label for="footer-skype-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="default_footer_skype" value="0" id="footer-skype-off" class="radio" />
-              <label for="footer-skype-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="default_footer_skype" value="1" id="footer-skype-on" class="radio" />
-              <label for="footer-skype-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="default_footer_skype" value="0" id="footer-skype-off" class="radio" checked />
-              <label for="footer-skype-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
         </tbody>
         </table>
       </div>
@@ -342,7 +328,7 @@
             <td><?php echo $entry_product_stock_limit; ?></td>
             <td><select name="default_product_stock_limit">
             <?php foreach ($stock_limits as $stock_limit) { ?>
-              <?php if ($stock_limit == $default_product_stock_limit) { ?>
+              <?php if ($stock_limit === $default_product_stock_limit) { ?>
                 <option value="<?php echo $stock_limit; ?>" selected="selected"><?php echo $stock_limit; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $stock_limit; ?>"><?php echo $stock_limit; ?></option>

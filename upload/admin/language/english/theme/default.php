@@ -36,7 +36,6 @@ $_['entry_footer_twitter']      = 'Display Twitter:<span class="help">Link must 
 $_['entry_footer_google']       = 'Display Google+:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_pinterest']    = 'Display Pinterest:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_instagram']    = 'Display Instagram:<span class="help">Link must be defined in store Settings.</span>';
-$_['entry_footer_skype']        = 'Display Skype:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_livesearch']          = 'Use Live Search:<span class="help">Display product results based on 3 or more search keywords. Header Search only.</span>';
 $_['entry_livesearch_limit']    = 'Live Search results:<span class="help">Maximum number of results to be returned by the search.</span>';
 $_['entry_product_stock_low']   = 'Low Stock Message:<span class="help">Show "Only x left in stock!" message for products.</span>';
@@ -63,7 +62,7 @@ $_['button_settings']           = 'Settings';
 $_['text_info_theme']           = 'Default - NivoCart';
 $_['text_info_author']          = 'Nivocart';
 $_['text_info_license']         = '<a onclick="window.open(\'http://www.gnu.org/licenses/gpl-3.0.en.html\');">GPLv3 (GNU General Public License)</a>';
-$_['text_info_support']         = '<a onclick="window.open(\'https://nivocart.com/index.php\');">www.nivocart.com</a>';
+$_['text_info_support']         = '<a onclick="window.open(\'https://nivocart.org/index.php\');">www.nivocart.org</a>';
 
 // Error
 $_['error_permission']          = 'Warning: You do not have permission to modify Theme <b>Default</b> !';

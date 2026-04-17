@@ -10,7 +10,7 @@ class ControllerThemeDefault extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -61,7 +61,6 @@ class ControllerThemeDefault extends Controller {
 		$this->data['entry_footer_google'] = $this->language->get('entry_footer_google');
 		$this->data['entry_footer_pinterest'] = $this->language->get('entry_footer_pinterest');
 		$this->data['entry_footer_instagram'] = $this->language->get('entry_footer_instagram');
-		$this->data['entry_footer_skype'] = $this->language->get('entry_footer_skype');
 		$this->data['entry_livesearch'] = $this->language->get('entry_livesearch');
 		$this->data['entry_livesearch_limit'] = $this->language->get('entry_livesearch_limit');
 		$this->data['entry_product_stock_low'] = $this->language->get('entry_product_stock_low');
@@ -91,12 +90,14 @@ class ControllerThemeDefault extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Error
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';
 		}
 
+		// Breadcrumbs
 		$this->data['breadcrumbs'] = array();
 
 		$this->data['breadcrumbs'][] = array(
@@ -128,16 +129,12 @@ class ControllerThemeDefault extends Controller {
 		// Check active template
 		$template = $this->config->get('config_template');
 
-		if ($template == $this->_name) {
-			$this->data['active'] = true;
-		} else {
-			$this->data['active'] = false;
-		}
+		$this->data['active'] = ($template === $this->_name) ? true : false;
 
 		// Get template preview
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 			$server = HTTPS_CATALOG;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$server = HTTPS_CATALOG;
 		} else {
 			$server = HTTP_CATALOG;
@@ -152,11 +149,11 @@ class ControllerThemeDefault extends Controller {
 		$this->data['image_preview'] = '<img src="' . $image . '" alt="" style="border:1px solid #EEE;" />';
 
 		// General
-		$this->data['display_sizes'] = array();
+		$this->data['display_sizes'] = [];
 
-		$this->data['display_sizes'][] = array('format' => 'normal', 'title' => 'Normal (HD)');
-		$this->data['display_sizes'][] = array('format' => 'wide', 'title' => 'Wide (Full HD)');
-		$this->data['display_sizes'][] = array('format' => 'full', 'title' => 'Unlimited');
+		$this->data['display_sizes'][] = ['format' => 'normal', 'title' => 'Normal (HD)'];
+		$this->data['display_sizes'][] = ['format' => 'wide', 'title' => 'Wide (Full HD)'];
+		$this->data['display_sizes'][] = ['format' => 'full', 'title' => 'Unlimited'];
 
 		if (isset($this->request->post[$this->_name . '_widescreen'])) {
 			$this->data[$this->_name . '_widescreen'] = $this->request->post[$this->_name . '_widescreen'];
@@ -273,12 +270,6 @@ class ControllerThemeDefault extends Controller {
 			$this->data[$this->_name . '_footer_instagram'] = $this->config->get($this->_name . '_footer_instagram');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_skype'])) {
-			$this->data[$this->_name . '_footer_skype'] = $this->request->post[$this->_name . '_footer_skype'];
-		} else {
-			$this->data[$this->_name . '_footer_skype'] = $this->config->get($this->_name . '_footer_skype');
-		}
-
 		// Options
 		if (isset($this->request->post[$this->_name . '_livesearch'])) {
 			$this->data[$this->_name . '_livesearch'] = $this->request->post[$this->_name . '_livesearch'];
@@ -298,7 +289,7 @@ class ControllerThemeDefault extends Controller {
 			$this->data[$this->_name . '_product_stock_low'] = $this->config->get($this->_name . '_product_stock_low');
 		}
 
-		$this->data['stock_limits'] = array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12', '15', '20', '50', '100');
+		$this->data['stock_limits'] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12', '15', '20', '50', '100'];
 
 		if (isset($this->request->post[$this->_name . '_product_stock_limit'])) {
 			$this->data[$this->_name . '_product_stock_limit'] = $this->request->post[$this->_name . '_product_stock_limit'];

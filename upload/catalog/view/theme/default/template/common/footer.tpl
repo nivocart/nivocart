@@ -74,11 +74,6 @@
   <p class="icon-mail-<?php echo $footer_class; ?>"><?php echo $email; ?></p>
   <?php } ?>
   <span>
-  <?php if ($this->config->get($template . '_footer_skype') && $skype) { ?>
-  <script type="text/javascript" src="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"></script>
-  <a onclick="window.open('skype:<?php echo $skype; ?>?chat');" class="icon-skype" title="Skype"></a>
-  <style>#skypedetectionswf{ display: none; }</style>
-  <?php } ?>
   <?php if ($this->config->get($template . '_footer_instagram') && $instagram) { ?>
   <a onclick="window.open('<?php echo $instagram; ?>');" class="icon-instagram" title="Instagram"></a>
   <?php } ?>
