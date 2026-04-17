@@ -107,9 +107,7 @@ class Response {
      */
     public function setCompression(int $level): void {
         if ($level < -1 || $level > 9) {
-            throw new \InvalidArgumentException(
-                'Invalid compression level: must be between -1 and 9.'
-            );
+            throw new \InvalidArgumentException('Invalid compression level: must be between -1 and 9.');
         }
 
         $this->level = $level;
