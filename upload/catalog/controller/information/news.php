@@ -6,7 +6,7 @@ class ControllerInformationNews extends Controller {
 
 		$this->load->model('catalog/news');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -14,11 +14,8 @@ class ControllerInformationNews extends Controller {
 			'separator' => false
 		);
 
-		if (isset($this->request->get['news_id'])) {
-			$news_id = $this->request->get['news_id'];
-		} else {
-			$news_id = 0;
-		}
+		// Get current news id
+		$news_id = isset($this->request->get['news_id']) ? $this->request->get['news_id'] : 0;
 
 		$news_info = $this->model_catalog_news->getNewsStory($news_id);
 
@@ -65,13 +62,13 @@ class ControllerInformationNews extends Controller {
 
 			$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 
-			// Image
+			// Image viewers
 			$config_image_newsthumb_width = $this->config->get('config_image_newsthumb_width');
 			$config_image_newsthumb_height = $this->config->get('config_image_newsthumb_height');
 
 			$this->load->model('tool/image');
 
-			if ($news_info['lightbox'] == 'viewbox') {
+			if ($news_info['lightbox'] === 'viewbox') {
 				$this->document->addStyle('catalog/view/javascript/jquery/viewbox/viewbox.min.css');
 				$this->document->addScript('catalog/view/javascript/jquery/viewbox/jquery.viewbox.min.js');
 
@@ -83,7 +80,7 @@ class ControllerInformationNews extends Controller {
 
 				$this->data['lightbox'] = 'viewbox';
 
-			} elseif ($news_info['lightbox'] == 'magnific') {
+			} elseif ($news_info['lightbox'] === 'magnific') {
 				$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific.css');
 				$this->document->addScript('catalog/view/javascript/jquery/magnific/magnific.min.js');
 
@@ -95,7 +92,7 @@ class ControllerInformationNews extends Controller {
 
 				$this->data['lightbox'] = 'magnific';
 
-			} elseif ($news_info['lightbox'] == 'fancybox') {
+			} elseif ($news_info['lightbox'] === 'fancybox') {
 				$this->document->addStyle('catalog/view/javascript/jquery/fancybox-plus/css/jquery.fancybox-plus.css');
 				$this->document->addScript('catalog/view/javascript/jquery/fancybox-plus/js/jquery.fancybox-plus.min.js');
 
@@ -127,25 +124,17 @@ class ControllerInformationNews extends Controller {
 			}
 
 			// ShareThis
-			if ($this->config->get('config_sharethis')) {
-				$this->data['sharethis'] = $this->config->get('config_sharethis');
-			} else {
-				$this->data['sharethis'] = false;
-			}
-
-			if ($this->config->get('config_news_sharethis')) {
-				$this->data['news_sharethis'] = $this->config->get('config_news_sharethis');
-			} else {
-				$this->data['news_sharethis'] = false;
-			}
+			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
+	
+			$this->data['news_sharethis'] = $this->config->get('config_news_sharethis') ? true : false;
 
 			// Downloads
-			$this->data['downloads'] = array();
+			$this->data['downloads'] = [];
 
 			$download_results = $this->model_catalog_news->getNewsDownloads($news_id);
 
 			if ($download_results) {
-				$this->data['download_files'] = array();
+				$this->data['download_files'] = [];
 
 				$files = $this->model_catalog_news->getDownloads();
 
@@ -164,7 +153,7 @@ class ControllerInformationNews extends Controller {
 
 								$i = 0;
 
-								$suffix = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
+								$suffix = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
 
 								while (($size / 1024) > 1) {
 									$size = $size / 1024;
@@ -196,7 +185,7 @@ class ControllerInformationNews extends Controller {
 
 			$related_product = $this->model_catalog_news->getNewsProductRelated($news_id);
 
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 
 			foreach ($related_product as $product) {
 				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
@@ -205,7 +194,7 @@ class ControllerInformationNews extends Controller {
 				$manufacturer = $product_info['manufacturer'] ? $product_info['manufacturer'] : false;
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($product_info['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -353,11 +342,8 @@ class ControllerInformationNews extends Controller {
 	public function download() {
 		$this->load->model('catalog/news');
 
-		if (isset($this->request->get['news_download_id'])) {
-			$news_download_id = $this->request->get['news_download_id'];
-		} else {
-			$news_download_id = 0;
-		}
+		// Get news download id
+		$news_download_id = isset($this->request->get['news_download_id']) ? $this->request->get['news_download_id'] : 0;
 
 		$download_info = $this->model_catalog_news->getDownloadByDownloadId($news_download_id);
 
