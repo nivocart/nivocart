@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
 <head>
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php if ($description) { ?>
-<meta name="description" content="<?php echo $description; ?>" />
+<meta name="description" content="<?php echo $description; ?>">
 <?php } ?>
 <?php if ($keywords) { ?>
-<meta name="keywords" content="<?php echo $keywords; ?>" />
+<meta name="keywords" content="<?php echo $keywords; ?>">
 <?php } ?>
 <title><?php echo $title; ?></title>
 <base href="<?php echo $base; ?>" />
@@ -31,10 +30,6 @@
 <script type="text/javascript" src="view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js"></script>
 <script type="text/javascript" src="view/javascript/jquery/tabs.min.js"></script>
 <script type="text/javascript" src="view/javascript/common.min.js"></script>
-<!--[if lt IE 9]>
-<script type="text/javascript" src="view/javascript/html5shiv.min.js"></script>
-<script type="text/javascript" src="view/javascript/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
 <div id="container-<?php echo $resolution; ?>">

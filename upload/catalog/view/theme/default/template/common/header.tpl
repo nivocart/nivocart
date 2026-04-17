@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
 <head>
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="robots" content="index, follow" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php echo $title; ?></title>
 <base href="<?php echo $base; ?>" />
 <?php if ($description) { ?>
-<meta name="description" content="<?php echo $description; ?>" />
+<meta name="description" content="<?php echo $description; ?>">
 <?php } ?>
 <?php if ($keywords) { ?>
-<meta name="keywords" content="<?php echo $keywords; ?>" />
+<meta name="keywords" content="<?php echo $keywords; ?>">
 <?php } else { ?>
-<meta name="keywords" content="<?php echo $text_home; ?>" />
+<meta name="keywords" content="<?php echo $text_home; ?>">
 <?php } ?>
 <?php if ($metas) { ?>
 <?php foreach ($metas as $meta) { ?>
@@ -39,10 +37,6 @@
 <script type="text/javascript" src="catalog/view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js" async></script>
 <script type="text/javascript" src="catalog/view/javascript/livesearch.min.js" async></script>
 <script type="text/javascript" src="catalog/view/javascript/common.min.js" async></script>
-<!--[if lt IE 9]>
-<script type="text/javascript" src="catalog/view/javascript/html5shiv.min.js"></script>
-<script type="text/javascript" src="catalog/view/javascript/respond.min.js"></script>
-<![endif]-->
 <?php if ($stores) { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {

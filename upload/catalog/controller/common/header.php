@@ -104,12 +104,12 @@ class ControllerCommonHeader extends Controller {
 		// Multi-store cookie
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = array();
+		$this->data['stores'] = [];
 
 		if ($this->config->get('config_shared') && $status) {
 			$this->data['stores'][] = $server . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();
 
-			$stores_array = array();
+			$stores_array = [];
 			
 			$stores = $this->model_setting_store->getStores($stores_array);
 
@@ -179,10 +179,10 @@ class ControllerCommonHeader extends Controller {
 		// Template
 		$this->data['template'] = $template;
 
-		$this->children = array(
+		$this->children = [
 			'node/language',
 			'node/cart'
-		);
+		];
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/common/header.tpl';
