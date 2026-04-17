@@ -65,23 +65,14 @@ class ControllerProductProduct extends Controller {
 			$category_info = $this->model_catalog_category->getCategory($category_id);
 
 			if ($category_info) {
-				$url = '';
+				$page_url = array_filter([
+					'sort'  => $this->request->get['sort'] ?? null,
+					'order' => $this->request->get['order'] ?? null,
+					'limit' => $this->request->get['limit'] ?? null,
+					'page'  => $this->request->get['page'] ?? null
+				]);
 
-				if (isset($this->request->get['sort'])) {
-					$url .= '&sort=' . $this->request->get['sort'];
-				}
-
-				if (isset($this->request->get['order'])) {
-					$url .= '&order=' . $this->request->get['order'];
-				}
-
-				if (isset($this->request->get['limit'])) {
-					$url .= '&limit=' . $this->request->get['limit'];
-				}
-
-				if (isset($this->request->get['page'])) {
-					$url .= '&page=' . $this->request->get['page'];
-				}
+				$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 				$this->data['breadcrumbs'][] = array(
 					'text'      => $category_info['name'],
@@ -100,23 +91,14 @@ class ControllerProductProduct extends Controller {
 				'separator' => $this->language->get('text_separator')
 			);
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'limit' => $this->request->get['limit'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
 
