@@ -1,6 +1,6 @@
 <?php
 class ControllerModificationEutaxes extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'eutaxes';
 
 	public function index() {
@@ -27,19 +27,13 @@ class ControllerModificationEutaxes extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$eucountry_id = $this->session->data['new_eucountry_id'];
@@ -70,19 +64,13 @@ class ControllerModificationEutaxes extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$eucountry_id = $this->request->get['eucountry_id'];
@@ -113,19 +101,13 @@ class ControllerModificationEutaxes extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('modification/eutaxes/listing', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -170,7 +152,7 @@ class ControllerModificationEutaxes extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -193,9 +175,9 @@ class ControllerModificationEutaxes extends Controller {
 		// Geo_zone Status
 		$this->load->model('localisation/geo_zone');
 
-		$this->data['geo_zones'] = array();
+		$this->data['geo_zones'] = [];
 
-		$geozones_array = array();
+		$geozones_array = [];
 
 		$geo_zone_results = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
@@ -211,9 +193,9 @@ class ControllerModificationEutaxes extends Controller {
 		// Tax_rate Status
 		$this->load->model('localisation/tax_rate');
 
-		$this->data['tax_rates'] = array();
+		$this->data['tax_rates'] = [];
 
-		$taxrates_array = array();
+		$taxrates_array = [];
 
 		$tax_rates_results = $this->model_localisation_tax_rate->getTaxRates($taxrates_array);
 
@@ -230,9 +212,9 @@ class ControllerModificationEutaxes extends Controller {
 		// Tax_class & Tax_rule Status
 		$this->load->model('localisation/tax_class');
 
-		$this->data['tax_classes'] = array();
+		$this->data['tax_classes'] = [];
 
-		$taxclasses_array = array();
+		$taxclasses_array = [];
 
 		$tax_classes_results = $this->model_localisation_tax_class->getTaxClasses($taxclasses_array);
 
@@ -273,39 +255,15 @@ class ControllerModificationEutaxes extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'ecd.eucountry';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'ecd.eucountry',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -336,7 +294,11 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->load->model('modification/eutaxes');
 
-		$this->data['eucountries'] = array();
+		$this->data['eucountries'] = [];
+
+		$sort = $this->request->get['sort'] ?? 'ecd.eucountry';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
 
 		$data = array(
 			'sort'  => $sort,
@@ -352,7 +314,7 @@ class ControllerModificationEutaxes extends Controller {
 		$results = $this->model_modification_eutaxes->getEUCountries($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
@@ -412,6 +374,7 @@ class ControllerModificationEutaxes extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if ($order === 'ASC') {
@@ -429,6 +392,7 @@ class ControllerModificationEutaxes extends Controller {
 		$this->data['sort_rate'] = $this->url->link('modification/eutaxes/listing', 'token=' . $this->session->data['token'] . '&sort=ec.rate' . $url, 'SSL');
 		$this->data['sort_status'] = $this->url->link('modification/eutaxes/listing', 'token=' . $this->session->data['token'] . '&sort=ec.status' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -481,6 +445,9 @@ class ControllerModificationEutaxes extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -499,21 +466,16 @@ class ControllerModificationEutaxes extends Controller {
 			$this->data['error_description'] = '';
 		}
 
-		$url = '';
+		// Breadcrumbs
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'ecd.eucountry',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -547,8 +509,6 @@ class ControllerModificationEutaxes extends Controller {
 			$eucountry_info = $this->model_modification_eutaxes->getEUCountryStory($this->request->get['eucountry_id']);
 		}
 
-		$this->data['token'] = $this->session->data['token'];
-
 		$this->load->model('localisation/language');
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
@@ -558,7 +518,7 @@ class ControllerModificationEutaxes extends Controller {
 		} elseif (isset($this->request->get['eucountry_id'])) {
 			$this->data['eucountry_description'] = $this->model_modification_eutaxes->getEUCountryDescriptions($this->request->get['eucountry_id']);
 		} else {
-			$this->data['eucountry_description'] = array();
+			$this->data['eucountry_description'] = [];
 		}
 
 		$this->load->model('setting/store');
@@ -616,7 +576,7 @@ class ControllerModificationEutaxes extends Controller {
 				$this->error['eucountry'][$language_id] = $this->language->get('error_eucountry');
 			}
 
-			if (strlen($value['description']) < 3) {
+			if (mb_strlen($value['description'], 'UTF-8') < 3) {
 				$this->error['description'][$language_id] = $this->language->get('error_description');
 			}
 		}

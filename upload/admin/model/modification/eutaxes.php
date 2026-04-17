@@ -76,7 +76,7 @@ class ModelModificationEutaxes extends Model {
 				$sql .= " ORDER BY ecd.eucountry";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -114,7 +114,7 @@ class ModelModificationEutaxes extends Model {
 	}
 
 	public function getEUCountryDescriptions(int $eucountry_id): array {
-		$eucountry_description_data = array();
+		$eucountry_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "eucountry_description` WHERE eucountry_id = '" . (int)$eucountry_id . "'");
 
@@ -129,7 +129,7 @@ class ModelModificationEutaxes extends Model {
 	}
 
 	public function getEUCountryStores(int $eucountry_id): array {
-		$eucountry_store_data = array();
+		$eucountry_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "eucountry_to_store` WHERE eucountry_id = '" . (int)$eucountry_id . "'");
 
@@ -148,11 +148,11 @@ class ModelModificationEutaxes extends Model {
 
 	public function checkEUCountries() {
 		// check eucountry table
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry` (`eucountry_id` int(11) NOT NULL AUTO_INCREMENT, `code` varchar(3) DEFAULT NULL, `rate` decimal(15,4) NOT NULL DEFAULT '0.0000', `status` tinyint(1) NOT NULL, PRIMARY KEY (`eucountry_id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry` (`eucountry_id` int(11) NOT NULL AUTO_INCREMENT, `code` varchar(3) DEFAULT NULL, `rate` decimal(15,4) NOT NULL DEFAULT '0.0000', `status` tinyint(1) NOT NULL, PRIMARY KEY (`eucountry_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 		// check eucountry description table
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_description` (`eucountry_id` int(11) NOT NULL, `language_id` int(11) NOT NULL, `eucountry` varchar(128) NOT NULL, `description` text CHARACTER SET utf8 NOT NULL, PRIMARY KEY (`eucountry_id`,`language_id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_description` (`eucountry_id` int(11) NOT NULL, `language_id` int(11) NOT NULL, `eucountry` varchar(128) NOT NULL, `description` text CHARACTER SET utf8mb4 NOT NULL, PRIMARY KEY (`eucountry_id`,`language_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 		// check eucountry store table
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_to_store` (`eucountry_id` int(11) NOT NULL, `store_id` int(11) NOT NULL, PRIMARY KEY (`eucountry_id`,`store_id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_to_store` (`eucountry_id` int(11) NOT NULL, `store_id` int(11) NOT NULL, PRIMARY KEY (`eucountry_id`,`store_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 		$this->addEUGeoZone();
 		$this->addEUTaxRate();
@@ -163,7 +163,7 @@ class ModelModificationEutaxes extends Model {
 	public function getEUGeoZoneId() {
 		$this->load->model('localisation/geo_zone');
 
-		$zones = array();
+		$zones = [];
 
 		$geo_zones = $this->model_localisation_geo_zone->getGeoZones($zones);
 
@@ -186,7 +186,7 @@ class ModelModificationEutaxes extends Model {
 	public function getEUTaxRateId() {
 		$this->load->model('localisation/tax_rate');
 
-		$rates = array();
+		$rates = [];
 
 		$tax_rates = $this->model_localisation_tax_rate->getTaxRates($rates);
 
@@ -210,7 +210,7 @@ class ModelModificationEutaxes extends Model {
 	public function addEUGeoZone() {
 		$this->load->model('localisation/geo_zone');
 
-		$zones = array();
+		$zones = [];
 
 		$geo_zones = $this->model_localisation_geo_zone->getGeoZones($zones);
 
@@ -240,7 +240,7 @@ class ModelModificationEutaxes extends Model {
 	public function addEUTaxClass() {
 		$this->load->model('localisation/tax_class');
 
-		$classes = array();
+		$classes = [];
 
 		$tax_classes = $this->model_localisation_tax_class->getTaxClasses($classes);
 
@@ -251,7 +251,7 @@ class ModelModificationEutaxes extends Model {
 		if (in_array('EU E-medias', $tax_class_title)) {
 			return;
 		} else {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "tax_class` SET title = 'EU E-medias', description = 'EU E-medias', date_added = NOW(), date_modified = NOW()");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "tax_class` SET `title` = 'EU E-medias', description = 'EU E-medias', date_added = NOW(), date_modified = NOW()");
 
 			$tax_class_id = $this->db->getLastId();
 			$tax_rate_id = $this->getEUTaxRateId();
@@ -265,7 +265,7 @@ class ModelModificationEutaxes extends Model {
 	public function addEUTaxRate() {
 		$this->load->model('localisation/tax_rate');
 
-		$rates = array();
+		$rates = [];
 
 		$tax_rates = $this->model_localisation_tax_rate->getTaxRates($rates);
 
@@ -284,7 +284,7 @@ class ModelModificationEutaxes extends Model {
 
 			$this->load->model('sale/customer_group');
 
-			$customer_groups_array = array();
+			$customer_groups_array = [];
 
 			$tax_rate_customer_group = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
 
