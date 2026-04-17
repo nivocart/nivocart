@@ -48,7 +48,7 @@ class ControllerReportSaleProfit extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -68,7 +68,7 @@ class ControllerReportSaleProfit extends Controller {
 
 		$this->load->model('report/product');
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$data = array(
 			'filter_date_start'      => $filter_date_start,
