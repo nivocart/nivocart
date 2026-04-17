@@ -21,7 +21,7 @@
     <?php } ?>
     <?php if ($thumb || $images) { ?>
       <div class="left">
-      <?php if ($lightbox == 'colorbox') { ?>
+      <?php if ($lightbox === 'colorbox') { ?>
         <?php if ($thumb) { ?>
           <?php if ($stock_label_large) { ?>
             <div class="stock-large"><img src="<?php echo $stock_label_large; ?>" alt="" /></div>
@@ -48,7 +48,7 @@
           </div>
         <?php } ?>
       <?php } ?>
-      <?php if ($lightbox == 'fancybox') { ?>
+      <?php if ($lightbox === 'fancybox') { ?>
         <?php if ($thumb) { ?>
           <?php if ($stock_label_large) { ?>
             <div class="stock-large"><img src="<?php echo $stock_label_large; ?>" alt="" /></div>
@@ -75,7 +75,7 @@
           </div>
         <?php } ?>
       <?php } ?>
-      <?php if ($lightbox == 'magnific') { ?>
+      <?php if ($lightbox === 'magnific') { ?>
         <?php if ($thumb) { ?>
           <?php if ($stock_label_large) { ?>
             <div class="stock-large"><img src="<?php echo $stock_label_large; ?>" alt="" /></div>
@@ -102,7 +102,7 @@
           </div>
         <?php } ?>
       <?php } ?>
-      <?php if ($lightbox == 'viewbox') { ?>
+      <?php if ($lightbox === 'viewbox') { ?>
         <?php if ($thumb) { ?>
           <?php if ($stock_label_large) { ?>
             <div class="stock-large"><img src="<?php echo $stock_label_large; ?>" alt="" /></div>
@@ -129,7 +129,7 @@
           </div>
         <?php } ?>
       <?php } ?>
-      <?php if ($lightbox == 'zoomlens') { ?>
+      <?php if ($lightbox === 'zoomlens') { ?>
         <?php if ($thumb) { ?>
           <?php if ($stock_label_large) { ?>
             <div class="stock-large"><img src="<?php echo $stock_label_large; ?>" alt="" /></div>
@@ -257,7 +257,7 @@
           <h2><?php echo $text_option; ?></h2>
           <br />
           <?php foreach ($options as $option) { ?>
-            <?php if ($option['type'] == 'select') { ?>
+            <?php if ($option['type'] === 'select') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -276,7 +276,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'radio') { ?>
+            <?php if ($option['type'] === 'radio') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -294,7 +294,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'checkbox') { ?>
+            <?php if ($option['type'] === 'checkbox') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -312,7 +312,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'image') { ?>
+            <?php if ($option['type'] === 'image') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -334,7 +334,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'text') { ?>
+            <?php if ($option['type'] === 'text') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -344,7 +344,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'textarea') { ?>
+            <?php if ($option['type'] === 'textarea') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -354,7 +354,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'file') { ?>
+            <?php if ($option['type'] === 'file') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -365,7 +365,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'date') { ?>
+            <?php if ($option['type'] === 'date') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -375,7 +375,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'time') { ?>
+            <?php if ($option['type'] === 'time') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -385,7 +385,7 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] == 'datetime') { ?>
+            <?php if ($option['type'] === 'datetime') { ?>
               <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
               <?php if ($option['required']) { ?>
                 <span class="required">* </span>
@@ -445,21 +445,20 @@
           <a onclick="goToReviews('<?php echo $product_id; ?>');" style="margin:0 15px;"><?php echo $reviews; ?></a>
           <a onclick="goToReviews('<?php echo $product_id; ?>');" title="<?php echo $text_write; ?>" class="button-add"><i class="fa fa-comments"></i></a>
         </div>
-        <?php if (!$share_sharethis) { ?>
+        <?php if ($share_sharethis) { ?>
         <div class="share">
-          <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-            <a class="addthis_button_print"></a>
-            <a class="addthis_button_email"></a>
-            <a class="addthis_button_preferred_1"></a>
-            <a class="addthis_button_preferred_2"></a>
-            <a class="addthis_button_preferred_3"></a>
-            <a class="addthis_button_compact"></a>
-            <a class="addthis_counter addthis_bubble_style"></a>
+          <!-- ShareThis BEGINS -->
+          <div class="sharethis-share-buttons" data-type="inline-share-buttons" data-labels="cta" data-show_total="false" data-size="small">
+            <span data-network="facebook"></span>
+            <span data-network="twitter"></span>
+            <span data-network="email"></span>
+            <span data-network="sharethis"></span>
           </div>
+          <!-- ShareThis ENDS -->
           <?php if ($sharethis) { ?>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $sharethis; ?>"></script>
+            <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop' async='async'></script>
           <?php } else { ?>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script> 
+            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script> 
           <?php } ?>
         </div>
         <?php } ?>
@@ -640,7 +639,7 @@
 <?php echo $content_lower; ?>
 
 <!-- Lightbox Jquery Scripts //-->
-<?php if ($lightbox == 'colorbox') { ?>
+<?php if ($lightbox === 'colorbox') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.colorbox').colorbox({
@@ -652,7 +651,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
-<?php if ($lightbox == 'fancybox') { ?>
+<?php if ($lightbox === 'fancybox') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('a.fancybox').attr('rel', 'gallery').fancyboxPlus({
@@ -670,7 +669,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
-<?php if ($lightbox == 'magnific') { ?>
+<?php if ($lightbox === 'magnific') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.magnific').magnificPopup({
@@ -681,7 +680,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
-<?php if ($lightbox == 'viewbox') { ?>
+<?php if ($lightbox === 'viewbox') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.viewbox').viewbox({
@@ -699,7 +698,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
-<?php if ($lightbox == 'zoomlens') { ?>
+<?php if ($lightbox === 'zoomlens') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('#zoom .simpleLens-thumbnails-container img').click(function(event) {
@@ -832,7 +831,7 @@ $('.datetime').datetimepicker({
 <script type="text/javascript" src="catalog/view/javascript/jquery/ajaxupload.min.js"></script>
 
 <?php foreach ($options as $option) { ?>
-<?php if ($option['type'] == 'file') { ?>
+<?php if ($option['type'] === 'file') { ?>
 <script type="text/javascript"><!--
 new AjaxUpload('#button-option-<?php echo $option['product_option_id']; ?>', {
 	action: 'index.php?route=product/product/upload',

@@ -337,7 +337,7 @@ class ControllerProductProduct extends Controller {
 			$this->load->model('tool/image');
 
 			// Image viewers
-			if ($this->config->get('config_lightbox') == 'zoomlens') {
+			if ($this->config->get('config_lightbox') === 'zoomlens') {
 				$this->document->addStyle('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.css');
 				$this->document->addScript('catalog/view/javascript/jquery/simple-lens/jquery.simpleGallery.min.js');
 				$this->document->addScript('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.js');
@@ -360,7 +360,7 @@ class ControllerProductProduct extends Controller {
 
 				$this->data['lightbox'] = 'zoomlens';
 
-			} elseif ($this->config->get('config_lightbox') == 'viewbox') {
+			} elseif ($this->config->get('config_lightbox') === 'viewbox') {
 				$this->document->addStyle('catalog/view/javascript/jquery/viewbox/viewbox.min.css');
 				$this->document->addScript('catalog/view/javascript/jquery/viewbox/jquery.viewbox.min.js');
 
@@ -378,7 +378,7 @@ class ControllerProductProduct extends Controller {
 
 				$this->data['lightbox'] = 'viewbox';
 
-			} elseif ($this->config->get('config_lightbox') == 'magnific') {
+			} elseif ($this->config->get('config_lightbox') === 'magnific') {
 				$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific.min.css');
 				$this->document->addScript('catalog/view/javascript/jquery/magnific/magnific.min.js');
 
@@ -396,7 +396,7 @@ class ControllerProductProduct extends Controller {
 
 				$this->data['lightbox'] = 'magnific';
 
-			} elseif ($this->config->get('config_lightbox') == 'fancybox') {
+			} elseif ($this->config->get('config_lightbox') === 'fancybox') {
 				$this->document->addStyle('catalog/view/javascript/jquery/fancybox-plus/css/jquery.fancybox-plus.min.css');
 				$this->document->addScript('catalog/view/javascript/jquery/fancybox-plus/js/jquery.fancybox-plus.min.js');
 
@@ -560,7 +560,7 @@ class ControllerProductProduct extends Controller {
 			$this->data['price_option'] = $this->model_catalog_product->hasOptionPriceIncrease($this->request->get['product_id']);
 
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
+				if (($product_info['price'] === '0.0000') && $this->config->get('config_price_free')) {
 					$this->data['price'] = $this->language->get('text_free');
 				} else {
 					$this->data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -635,7 +635,7 @@ class ControllerProductProduct extends Controller {
 			$this->data['options'] = array();
 
 			foreach ($this->model_catalog_product->getProductOptions($this->request->get['product_id']) as $option) {
-				if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
+				if ($option['type'] === 'select' || $option['type'] === 'radio' || $option['type'] === 'checkbox' || $option['type'] === 'image') {
 					$option_value_data = array();
 
 					foreach ($option['option_value'] as $option_value) {
@@ -666,7 +666,7 @@ class ControllerProductProduct extends Controller {
 						'required'          => $option['required']
 					);
 
-				} elseif ($option['type'] == 'text' || $option['type'] == 'textarea' || $option['type'] == 'file' || $option['type'] == 'date' || $option['type'] == 'time' || $option['type'] == 'datetime') {
+				} elseif ($option['type'] === 'text' || $option['type'] === 'textarea' || $option['type'] === 'file' || $option['type'] === 'date' || $option['type'] === 'time' || $option['type'] === 'datetime') {
 					$this->data['options'][] = array(
 						'product_option_id' => $option['product_option_id'],
 						'option_id'         => $option['option_id'],
@@ -683,7 +683,7 @@ class ControllerProductProduct extends Controller {
 			// ShareThis
 			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
 	
-			$this->data['share_sharethis'] = $this->config->get('config_share_sharethis');
+			$this->data['share_sharethis'] = $this->config->get('config_share_sharethis') ? true : false;
 
 			// Offers
 			$this->load->model('catalog/offer');
@@ -700,7 +700,7 @@ class ControllerProductProduct extends Controller {
 				$this->data['offer_label_medium'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio_medium, $label_ratio_medium);
 
 				foreach ($product_offers as $product_offer) {
-					if ($product_offer['one'] == $this->request->get['product_id']) {
+					if ($product_offer['one'] === $this->request->get['product_id']) {
 						$product_offer_image = $this->model_catalog_offer->getOfferProductImage($product_offer['two']);
 
 						if ($product_offer_image) {
@@ -714,7 +714,7 @@ class ControllerProductProduct extends Controller {
 
 						$offer_product = $product_offer['two'];
 
-					} elseif ($product_offer['two'] == $this->request->get['product_id']) {
+					} elseif ($product_offer['two'] === $this->request->get['product_id']) {
 						$product_offer_image = $this->model_catalog_offer->getOfferProductImage($product_offer['one']);
 
 						if ($product_offer_image) {
@@ -735,13 +735,13 @@ class ControllerProductProduct extends Controller {
 						$offer_product = '';
 					}
 
-					if ($product_offer['group'] == 'G241') {
+					if ($product_offer['group'] === 'G241') {
 						$offer_label = sprintf($this->language->get('text_G241'), $product_offer['type']);
-					} elseif ($product_offer['group'] == 'G241D') {
+					} elseif ($product_offer['group'] === 'G241D') {
 						$offer_label = sprintf($this->language->get('text_G241D'), $offer_mirror_name, $offer_name, $product_offer['type']);
-					} elseif ($product_offer['group'] == 'G242D') {
+					} elseif ($product_offer['group'] === 'G242D') {
 						$offer_label = sprintf($this->language->get('text_G242D'), $offer_mirror_name, $offer_name, $product_offer['type']);
-					} elseif ($product_offer['group'] == 'G142D') {
+					} elseif ($product_offer['group'] === 'G142D') {
 						$offer_label = sprintf($this->language->get('text_G142D'), $product_offer['type'], $offer_mirror_name, $offer_name);
 					} else {
 						$offer_label = '';
@@ -821,7 +821,7 @@ class ControllerProductProduct extends Controller {
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -1111,7 +1111,7 @@ class ControllerProductProduct extends Controller {
 			);
 
 			foreach ($profile_info as $result) {
-				if ($result['trial_status'] == 1) {
+				if ($result['trial_status'] === 1) {
 					$price = $this->currency->format($this->tax->calculate($result['trial_price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 					$trial_text = sprintf($this->language->get('text_trial_description'), $price, $result['trial_cycle'], $frequencies[$result['trial_frequency']], $result['trial_duration']) . ' ';
@@ -1142,7 +1142,7 @@ class ControllerProductProduct extends Controller {
 
 		$json = array();
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->config->get('config_review_status')) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->config->get('config_review_status')) {
 			if (empty($this->request->post['name']) || (mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
 				$json['error'] = $this->language->get('error_name');
 			}
