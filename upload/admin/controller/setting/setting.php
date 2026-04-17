@@ -9,7 +9,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('config', $this->request->post);
 
 			if ($this->config->get('config_currency_auto')) {
@@ -447,9 +447,11 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_file_extension_allowed'] = $this->language->get('help_file_extension_allowed');
 		$this->data['help_file_mime_allowed'] = $this->language->get('help_file_mime_allowed');
 
+		// Internal Links
 		$this->data['customer_approval'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['themes'] = $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -678,7 +680,8 @@ class ControllerSettingSetting extends Controller {
 			$this->data['error_encryption'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		// Breadcrumbs
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -794,14 +797,14 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_meta_keyword'] = $this->config->get('config_meta_keyword');
 		}
 
-		$this->data['templates'] = array();
+		$this->data['templates'] = [];
 
 		$directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
 
 		foreach ($directories as $directory) {
-			if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
+			if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
 				$server = HTTPS_CATALOG;
-			} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+			} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 				$server = HTTPS_CATALOG;
 			} else {
 				$server = HTTP_CATALOG;
@@ -922,7 +925,7 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_alpha_vantage'] = $this->config->get('config_alpha_vantage');
 		}
 
-		$this->data['date_formats'] = array();
+		$this->data['date_formats'] = [];
 
 		$this->data['date_formats'][] = array('format' => 'short', 'title' => $this->language->get('date_format_short'));
 		$this->data['date_formats'][] = array('format' => 'long', 'title' => $this->language->get('date_format_long'));
@@ -933,7 +936,7 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_date_format'] = $this->config->get('config_date_format');
 		}
 
-		$this->data['time_offsets'] = array('+11', '+10', '+9', '+8', '+7', '+6', '+5', '+4', '+3', '+2', '+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9', '-10', '-11');
+		$this->data['time_offsets'] = ['+11', '+10', '+9', '+8', '+7', '+6', '+5', '+4', '+3', '+2', '+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9', '-10', '-11'];
 
 		if (isset($this->request->post['config_time_offset'])) {
 			$this->data['config_time_offset'] = $this->request->post['config_time_offset'];
@@ -1263,7 +1266,7 @@ class ControllerSettingSetting extends Controller {
 		} elseif ($this->config->get('config_customer_group_display')) {
 			$this->data['config_customer_group_display'] = $this->config->get('config_customer_group_display');
 		} else {
-			$this->data['config_customer_group_display'] = array();
+			$this->data['config_customer_group_display'] = [];
 		}
 
 		if (isset($this->request->post['config_customer_price'])) {
@@ -1429,7 +1432,7 @@ class ControllerSettingSetting extends Controller {
 		// Preference
 		$this->load->model('design/administration');
 
-		$admin_data = array();
+		$admin_data = [];
 
 		$this->data['admin_stylesheets'] = $this->model_design_administration->getAdministrations($admin_data);
 
@@ -1495,19 +1498,19 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_autocomplete_offer'] = $this->config->get('config_autocomplete_offer');
 		}
 
-		$this->data['seo_url_pages'] = array('Category', 'Product', 'Manufacturer', 'Information', 'News');
+		$this->data['seo_url_pages'] = ['Category', 'Product', 'Manufacturer', 'Information', 'News'];
 
 		if (isset($this->request->post['config_auto_seo_url'])) {
 			$this->data['config_auto_seo_url'] = $this->request->post['config_auto_seo_url'];
 		} elseif ($this->config->get('config_auto_seo_url')) {
 			$this->data['config_auto_seo_url'] = $this->config->get('config_auto_seo_url');
 		} else {
-			$this->data['config_auto_seo_url'] = array();
+			$this->data['config_auto_seo_url'] = [];
 		}
 
 		$this->load->model('user/user_group');
 
-		$user_groups = array();
+		$user_groups = [];
 
 		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups($user_groups);
 
@@ -1516,7 +1519,7 @@ class ControllerSettingSetting extends Controller {
 		} elseif ($this->config->get('config_user_group_display')) {
 			$this->data['config_user_group_display'] = $this->config->get('config_user_group_display');
 		} else {
-			$this->data['config_user_group_display'] = array();
+			$this->data['config_user_group_display'] = [];
 		}
 
 		if (isset($this->request->post['config_catalog_barcode'])) {
@@ -1531,11 +1534,11 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_admin_barcode'] = $this->config->get('config_admin_barcode');
 		}
 
-		$this->data['barcode_types'] = array();
+		$this->data['barcode_types'] = [];
 
-		$this->data['barcode_types'][] = array('format' => 'TYPE_CODE_39', 'title' => 'Barcode Code 39');
-		$this->data['barcode_types'][] = array('format' => 'TYPE_CODE_93', 'title' => 'Barcode Code 93');
-		$this->data['barcode_types'][] = array('format' => 'TYPE_CODE_128', 'title' => 'Barcode Code 128');
+		$this->data['barcode_types'][] = ['format' => 'TYPE_CODE_39', 'title' => 'Barcode Code 39'];
+		$this->data['barcode_types'][] = ['format' => 'TYPE_CODE_93', 'title' => 'Barcode Code 93'];
+		$this->data['barcode_types'][] = ['format' => 'TYPE_CODE_128', 'title' => 'Barcode Code 128'];
 
 		if (isset($this->request->post['config_barcode_type'])) {
 			$this->data['config_barcode_type'] = $this->request->post['config_barcode_type'];
@@ -1865,7 +1868,7 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		// Image > Labels
-		$this->data['label_ratios'] = array();
+		$this->data['label_ratios'] = [];
 
 		$this->data['label_ratios'][] = array('ratio' => '20', 'title' => '20%');
 		$this->data['label_ratios'][] = array('ratio' => '25', 'title' => '25%');
@@ -2087,13 +2090,13 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if (isset($this->request->post['config_seo_url_cache'])) {
-			if (isset($this->request->post['config_seo_url']) && ($this->request->post['config_seo_url'] == 1)) {
+			if (isset($this->request->post['config_seo_url']) && ($this->request->post['config_seo_url'] === 1)) {
 				$this->data['config_seo_url_cache'] = $this->request->post['config_seo_url_cache'];
 			} else {
 				$this->data['config_seo_url_cache'] = 0;
 			}
 		} else {
-			if ($this->config->get('config_seo_url') == 1) {
+			if ($this->config->get('config_seo_url') === 1) {
 				$this->data['config_seo_url_cache'] = $this->config->get('config_seo_url_cache');
 			} else {
 				$this->data['config_seo_url_cache'] = 0;
@@ -2207,10 +2210,10 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		$this->template = 'setting/setting.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -2248,7 +2251,7 @@ class ControllerSettingSetting extends Controller {
 			$this->error['title'] = $this->language->get('error_title');
 		}
 
-		if (($this->request->post['config_one_page_checkout'] == 1) && ($this->request->post['config_express_checkout'] == 1)) {
+		if (($this->request->post['config_one_page_checkout'] === 1) && ($this->request->post['config_express_checkout'] === 1)) {
 			$this->error['multiple_checkout'] = $this->language->get('error_multiple_checkout');
 		}
 

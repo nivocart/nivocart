@@ -138,7 +138,7 @@
             <td><?php echo $entry_template; ?></td>
             <td><select name="config_template">
             <?php foreach ($templates as $template) { ?>
-              <?php if ($template['name'] == $config_template) { ?>
+              <?php if ($template['name'] === $config_template) { ?>
                 <option value="<?php echo $template['name']; ?>" selected="selected"><?php echo $template['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $template['name']; ?>"><?php echo $template['name']; ?></option>
@@ -149,14 +149,14 @@
           <tr>
             <td></td>
             <td><?php foreach ($templates as $template) { ?>
-              <?php echo ($template['name'] == $config_template) ? '<img src="' . $template['image'] . '" alt="" style="border:1px solid #EEE;" />' : ''; ?>
+              <?php echo ($template['name'] === $config_template) ? '<img src="' . $template['image'] . '" alt="" style="border:1px solid #EEE;" />' : ''; ?>
             <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_layout; ?></td>
             <td><select name="config_layout_id">
             <?php foreach ($layouts as $layout) { ?>
-              <?php if ($layout['layout_id'] == $config_layout_id) { ?>
+              <?php if ($layout['layout_id'] === $config_layout_id) { ?>
                 <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -172,7 +172,7 @@
             <td><?php echo $entry_country; ?></td>
             <td><select name="config_country_id">
             <?php foreach ($countries as $country) { ?>
-              <?php if ($country['country_id'] == $config_country_id) { ?>
+              <?php if ($country['country_id'] === $config_country_id) { ?>
                 <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -189,7 +189,7 @@
             <td><?php echo $entry_language; ?></td>
             <td><select name="config_language">
             <?php foreach ($languages as $language) { ?>
-              <?php if ($language['code'] == $config_language) { ?>
+              <?php if ($language['code'] === $config_language) { ?>
                 <option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
@@ -201,7 +201,7 @@
             <td><?php echo $entry_admin_language; ?></td>
             <td><select name="config_admin_language">
             <?php foreach ($languages as $language) { ?>
-              <?php if ($language['code'] == $config_admin_language) { ?>
+              <?php if ($language['code'] === $config_admin_language) { ?>
                 <option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
@@ -213,7 +213,7 @@
             <td><?php echo $entry_length_class; ?></td>
             <td><select name="config_length_class_id">
             <?php foreach ($length_classes as $length_class) { ?>
-              <?php if ($length_class['length_class_id'] == $config_length_class_id) { ?>
+              <?php if ($length_class['length_class_id'] === $config_length_class_id) { ?>
                 <option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
@@ -225,7 +225,7 @@
             <td><?php echo $entry_weight_class; ?></td>
             <td><select name="config_weight_class_id">
             <?php foreach ($weight_classes as $weight_class) { ?>
-              <?php if ($weight_class['weight_class_id'] == $config_weight_class_id) { ?>
+              <?php if ($weight_class['weight_class_id'] === $config_weight_class_id) { ?>
                 <option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
@@ -240,7 +240,7 @@
             <td><?php echo $entry_currency; ?><span class="help"><?php echo $help_currency; ?></span></td>
             <td><select name="config_currency">
             <?php foreach ($currencies as $currency) { ?>
-              <?php if ($currency['code'] == $config_currency) { ?>
+              <?php if ($currency['code'] === $config_currency) { ?>
                 <option value="<?php echo $currency['code']; ?>" selected="selected"><?php echo $currency['title']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $currency['code']; ?>"><?php echo $currency['title']; ?></option>
@@ -275,7 +275,7 @@
             <td><?php echo $entry_date_format; ?><span class="help"><?php echo $help_date_format; ?></span></td>
             <td><select name="config_date_format">
               <?php foreach ($date_formats as $date_format) { ?>
-                <?php if ($config_date_format == $date_format['format']) { ?>
+                <?php if ($config_date_format === $date_format['format']) { ?>
                   <option value="<?php echo $date_format['format']; ?>" selected="selected"><?php echo $date_format['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $date_format['format']; ?>"><?php echo $date_format['title']; ?></option>
@@ -287,7 +287,7 @@
             <td><?php echo $entry_time_offset; ?><span class="help"><?php echo $help_time_offset; ?></span></td>
             <td><select name="config_time_offset">
               <?php foreach ($time_offsets as $time_offset) { ?>
-                <?php if ($config_time_offset == $time_offset) { ?>
+                <?php if ($config_time_offset === $time_offset) { ?>
                   <option value="<?php echo $time_offset; ?>" selected="selected"><?php echo $time_offset; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $time_offset; ?>"><?php echo $time_offset; ?></option>
@@ -370,7 +370,7 @@
             <td><select name="config_checkout_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($informations as $information) { ?>
-                <?php if ($information['information_id'] == $config_checkout_id) { ?>
+                <?php if ($information['information_id'] === $config_checkout_id) { ?>
                   <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -432,7 +432,7 @@
             <td><?php echo $entry_order_status; ?><span class="help"><?php echo $help_order_status; ?></span></td>
             <td><select name="config_order_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $config_order_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $config_order_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -444,7 +444,7 @@
             <td><?php echo $entry_complete_status; ?><span class="help"><?php echo $help_complete_status; ?></span></td>
             <td><select name="config_complete_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $config_complete_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $config_complete_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -514,9 +514,9 @@
             <td><?php echo $entry_express_password; ?><span class="help"><?php echo $help_express_password; ?></span></td>
             <td><select name="config_express_password">
               <?php if (isset($config_express_password)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_password == '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_password == '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_password == '2') { echo $selected; } ?>><?php echo $text_hide; ?></option>
+                <option value="0" <?php if ($config_express_password === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_express_password === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="2" <?php if ($config_express_password === '2') { echo $selected; } ?>><?php echo $text_hide; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -528,9 +528,9 @@
             <td><?php echo $entry_express_phone; ?></td>
             <td><select name="config_express_phone">
               <?php if (isset($config_express_phone)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_phone == '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_phone == '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_phone == '2') { echo $selected; } ?>><?php echo $text_required; ?></option>
+                <option value="0" <?php if ($config_express_phone === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_express_phone === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="2" <?php if ($config_express_phone === '2') { echo $selected; } ?>><?php echo $text_required; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -570,9 +570,9 @@
             <td><?php echo $entry_express_newsletter; ?></td>
             <td><select name="config_express_newsletter">
               <?php if (isset($config_express_newsletter)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_newsletter == '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_newsletter == '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_newsletter == '2') { echo $selected; } ?>><?php echo $text_choice; ?></option>
+                <option value="0" <?php if ($config_express_newsletter === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_express_newsletter === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="2" <?php if ($config_express_newsletter === '2') { echo $selected; } ?>><?php echo $text_choice; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -612,9 +612,9 @@
             <td><?php echo $entry_express_point; ?></td>
             <td><select name="config_express_point">
               <?php if (isset($config_express_point)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_point == '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_point == '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_point == '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
+                <option value="0" <?php if ($config_express_point === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_express_point === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="2" <?php if ($config_express_point === '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -649,8 +649,8 @@
             <td><?php echo $entry_one_page_phone; ?></td>
             <td><select name="config_one_page_phone">
               <?php if (isset($config_one_page_phone)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_one_page_phone == '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_one_page_phone == '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="0" <?php if ($config_one_page_phone === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_one_page_phone === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -661,8 +661,8 @@
             <td><?php echo $entry_one_page_newsletter; ?></td>
             <td><select name="config_one_page_newsletter">
               <?php if (isset($config_one_page_newsletter)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_one_page_newsletter == '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_one_page_newsletter == '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="0" <?php if ($config_one_page_newsletter === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_one_page_newsletter === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -701,9 +701,9 @@
             <td><?php echo $entry_one_page_point; ?></td>
             <td><select name="config_one_page_point">
               <?php if (isset($config_one_page_point)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_one_page_point == '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_one_page_point == '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_one_page_point == '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
+                <option value="0" <?php if ($config_one_page_point === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_one_page_point === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="2" <?php if ($config_one_page_point === '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -820,12 +820,12 @@
             <td><?php echo $entry_tax_default; ?><span class="help"><?php echo $help_tax_default; ?></span></td>
             <td><select name="config_tax_default">
               <option value=""><?php echo $text_none; ?></option>
-              <?php if ($config_tax_default == 'shipping') { ?>
+              <?php if ($config_tax_default === 'shipping') { ?>
                 <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
               <?php } else { ?>
                 <option value="shipping"><?php echo $text_shipping; ?></option>
               <?php } ?>
-              <?php if ($config_tax_default == 'payment') { ?>
+              <?php if ($config_tax_default === 'payment') { ?>
                 <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
               <?php } else { ?>
                 <option value="payment"><?php echo $text_payment; ?></option>
@@ -836,12 +836,12 @@
             <td><?php echo $entry_tax_customer; ?><span class="help"><?php echo $help_tax_customer; ?></span></td>
             <td><select name="config_tax_customer">
               <option value=""><?php echo $text_none; ?></option>
-              <?php if ($config_tax_customer == 'shipping') { ?>
+              <?php if ($config_tax_customer === 'shipping') { ?>
                 <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
               <?php } else { ?>
                 <option value="shipping"><?php echo $text_shipping; ?></option>
               <?php } ?>
-              <?php if ($config_tax_customer == 'payment') { ?>
+              <?php if ($config_tax_customer === 'payment') { ?>
                 <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
               <?php } else { ?>
                 <option value="payment"><?php echo $text_payment; ?></option>
@@ -897,7 +897,7 @@
             <td><?php echo $entry_stock_status; ?><span class="help"><?php echo $help_stock_status; ?></span></td>
             <td><select name="config_stock_status_id">
               <?php foreach ($stock_statuses as $stock_status) { ?>
-                <?php if ($stock_status['stock_status_id'] == $config_stock_status_id) { ?>
+                <?php if ($stock_status['stock_status_id'] === $config_stock_status_id) { ?>
                   <option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
@@ -913,7 +913,7 @@
             <td><select name="config_supplier_group_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($supplier_groups as $supplier_group) { ?>
-                <?php if ($supplier_group['supplier_group_id'] == $config_supplier_group_id) { ?>
+                <?php if ($supplier_group['supplier_group_id'] === $config_supplier_group_id) { ?>
                   <option value="<?php echo $supplier_group['supplier_group_id']; ?>" selected="selected"><?php echo $supplier_group['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $supplier_group['supplier_group_id']; ?>"><?php echo $supplier_group['name']; ?></option>
@@ -946,7 +946,7 @@
             <td><?php echo $entry_customer_group; ?><span class="help"><?php echo $help_customer_group; ?></span></td>
             <td><select name="config_customer_group_id">
             <?php foreach ($customer_groups as $customer_group) { ?>
-              <?php if ($customer_group['customer_group_id'] == $config_customer_group_id) { ?>
+              <?php if ($customer_group['customer_group_id'] === $config_customer_group_id) { ?>
                 <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>
@@ -959,7 +959,7 @@
             <td><div class="scrollbox-store">
               <?php $class = 'odd'; ?>
               <?php foreach ($customer_groups as $customer_group) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                   <?php if (in_array($customer_group['customer_group_id'], $config_customer_group_display)) { ?>
                     <input type="checkbox" name="config_customer_group_display[]" value="<?php echo $customer_group['customer_group_id']; ?>" checked="checked" />
@@ -1064,7 +1064,7 @@
             <td><select name="config_account_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($informations as $information) { ?>
-                <?php if ($information['information_id'] == $config_account_id) { ?>
+                <?php if ($information['information_id'] === $config_account_id) { ?>
                   <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -1130,7 +1130,7 @@
             <td><select name="config_affiliate_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($informations as $information) { ?>
-                <?php if ($information['information_id'] == $config_affiliate_id) { ?>
+                <?php if ($information['information_id'] === $config_affiliate_id) { ?>
                   <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -1188,7 +1188,7 @@
             <td><select name="config_return_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($informations as $information) { ?>
-                <?php if ($information['information_id'] == $config_return_id) { ?>
+                <?php if ($information['information_id'] === $config_return_id) { ?>
                   <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -1200,7 +1200,7 @@
             <td><?php echo $entry_return_status; ?><span class="help"><?php echo $help_return_status; ?></span></td>
             <td><select name="config_return_status_id">
               <?php foreach ($return_statuses as $return_status) { ?>
-                <?php if ($return_status['return_status_id'] == $config_return_status_id) { ?>
+                <?php if ($return_status['return_status_id'] === $config_return_status_id) { ?>
                   <option value="<?php echo $return_status['return_status_id']; ?>" selected="selected"><?php echo $return_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $return_status['return_status_id']; ?>"><?php echo $return_status['name']; ?></option>
@@ -1296,7 +1296,7 @@
             <td><?php echo $entry_admin_stylesheet; ?></td>
             <td><select name="config_admin_stylesheet">
               <?php foreach ($admin_stylesheets as $admin_stylesheet) { ?>
-                <?php if ($config_admin_stylesheet == $admin_stylesheet['name']) { ?>
+                <?php if ($config_admin_stylesheet === $admin_stylesheet['name']) { ?>
                   <option value="<?php echo $admin_stylesheet['name']; ?>" selected="selected"><?php echo ucfirst($admin_stylesheet['name']); ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $admin_stylesheet['name']; ?>"><?php echo ucfirst($admin_stylesheet['name']); ?></option>
@@ -1436,7 +1436,7 @@
             <td><div class="scrollbox-store">
               <?php $class = 'odd'; ?>
               <?php foreach ($seo_url_pages as $seo_url_page) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                   <?php if (in_array($seo_url_page, $config_auto_seo_url)) { ?>
                     <input type="checkbox" name="config_auto_seo_url[]" value="<?php echo $seo_url_page; ?>" checked="checked" />
@@ -1454,7 +1454,7 @@
             <td><div class="scrollbox-store">
               <?php $class = 'odd'; ?>
               <?php foreach ($user_groups as $user_group) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                   <?php if (in_array($user_group['user_group_id'], $config_user_group_display)) { ?>
                     <input type="checkbox" name="config_user_group_display[]" value="<?php echo $user_group['user_group_id']; ?>" checked="checked" />
@@ -1504,7 +1504,7 @@
             <td><?php echo $entry_barcode_type; ?></td>
             <td><select name="config_barcode_type">
               <?php foreach ($barcode_types as $barcode_type) { ?>
-                <?php if ($config_barcode_type == $barcode_type['format']) { ?>
+                <?php if ($config_barcode_type === $barcode_type['format']) { ?>
                   <option value="<?php echo $barcode_type['format']; ?>" selected="selected"><?php echo $barcode_type['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $barcode_type['format']; ?>"><?php echo $barcode_type['title']; ?></option>
@@ -1530,11 +1530,11 @@
             <td><?php echo $entry_lightbox; ?><span class="help"><?php echo $help_lightbox; ?></span></td>
             <td><select name="config_lightbox">
               <?php if (isset($config_lightbox)) { $selected = "selected"; ?>
-                <option value="magnific" <?php if ($config_lightbox == 'magnific') { echo $selected; } ?>>Magnific <?php echo $text_default; ?></option>
-                <option value="fancybox" <?php if ($config_lightbox == 'fancybox') { echo $selected; } ?>>Fancybox</option>
-                <option value="colorbox" <?php if ($config_lightbox == 'colorbox') { echo $selected; } ?>>Colorbox</option>
-                <option value="viewbox" <?php if ($config_lightbox == 'viewbox') { echo $selected; } ?>>Viewbox</option>
-                <option value="zoomlens" <?php if ($config_lightbox == 'zoomlens') { echo $selected; } ?>>ZoomLens</option>
+                <option value="magnific" <?php if ($config_lightbox === 'magnific') { echo $selected; } ?>>Magnific <?php echo $text_default; ?></option>
+                <option value="fancybox" <?php if ($config_lightbox === 'fancybox') { echo $selected; } ?>>Fancybox</option>
+                <option value="colorbox" <?php if ($config_lightbox === 'colorbox') { echo $selected; } ?>>Colorbox</option>
+                <option value="viewbox" <?php if ($config_lightbox === 'viewbox') { echo $selected; } ?>>Viewbox</option>
+                <option value="zoomlens" <?php if ($config_lightbox === 'zoomlens') { echo $selected; } ?>>ZoomLens</option>
               <?php } else { ?>
                 <option value="magnific">Magnific <?php echo $text_default; ?></option>
                 <option value="fancybox">Fancybox</option>
@@ -1607,8 +1607,8 @@
             <td><?php echo $entry_cookie_theme; ?></td>
             <td><select name="config_cookie_theme">
               <?php if (isset($config_cookie_theme)) { $selected = "selected"; ?>
-                <option value="dark" <?php if ($config_cookie_theme == 'dark') { echo $selected; } ?>><?php echo $text_black; ?> <?php echo $text_default; ?></option>
-                <option value="light" <?php if ($config_cookie_theme == 'light') { echo $selected; } ?>><?php echo $text_white; ?></option>
+                <option value="dark" <?php if ($config_cookie_theme === 'dark') { echo $selected; } ?>><?php echo $text_black; ?> <?php echo $text_default; ?></option>
+                <option value="light" <?php if ($config_cookie_theme === 'light') { echo $selected; } ?>><?php echo $text_white; ?></option>
               <?php } else { ?>
                 <option value="dark"><?php echo $text_black; ?> <?php echo $text_default; ?></option>
                 <option value="light"><?php echo $text_white; ?></option>
@@ -1619,8 +1619,8 @@
             <td><?php echo $entry_cookie_position; ?></td>
             <td><select name="config_cookie_position">
               <?php if (isset($config_cookie_position)) { $selected = "selected"; ?>
-                <option value="top" <?php if ($config_cookie_position == 'top') { echo $selected; } ?>><?php echo $text_top; ?> <?php echo $text_default; ?></option>
-                <option value="bottom" <?php if ($config_cookie_position == 'bottom') { echo $selected; } ?>><?php echo $text_bottom; ?></option>
+                <option value="top" <?php if ($config_cookie_position === 'top') { echo $selected; } ?>><?php echo $text_top; ?> <?php echo $text_default; ?></option>
+                <option value="bottom" <?php if ($config_cookie_position === 'bottom') { echo $selected; } ?>><?php echo $text_bottom; ?></option>
               <?php } else { ?>
                 <option value="top"><?php echo $text_top; ?> <?php echo $text_default; ?></option>
                 <option value="bottom"><?php echo $text_bottom; ?></option>
@@ -1632,7 +1632,7 @@
             <td><select name="config_cookie_privacy">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($information_pages as $information) { ?>
-                <?php if ($information['information_id'] == $config_cookie_privacy) { ?>
+                <?php if ($information['information_id'] === $config_cookie_privacy) { ?>
                   <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -1996,7 +1996,7 @@
             <td><?php echo $entry_label_size_ratio; ?><span class="help"><?php echo $help_label_size_ratio; ?></span></td>
             <td><select name="config_label_size_ratio">
               <?php foreach ($label_ratios as $label_ratio) { ?>
-                <?php if ($config_label_size_ratio == $label_ratio['ratio']) { ?>
+                <?php if ($config_label_size_ratio === $label_ratio['ratio']) { ?>
                   <option value="<?php echo $label_ratio['ratio']; ?>" selected="selected"><?php echo $label_ratio['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $label_ratio['ratio']; ?>"><?php echo $label_ratio['title']; ?></option>
@@ -2380,8 +2380,8 @@
             <td><?php echo $entry_ban_page; ?><span class="help"><?php echo $help_ban_page; ?></span></td>
             <td><select name="config_ban_page">
               <?php if (isset($config_ban_page)) { $selected = "selected"; ?>
-                <option value="search" <?php if ($config_ban_page == 'search') { echo $selected; } ?>><?php echo $text_search_page; ?></option>
-                <option value="block" <?php if ($config_ban_page == 'block') { echo $selected; } ?>><?php echo $text_block_page; ?></option>
+                <option value="search" <?php if ($config_ban_page === 'search') { echo $selected; } ?>><?php echo $text_search_page; ?></option>
+                <option value="block" <?php if ($config_ban_page === 'block') { echo $selected; } ?>><?php echo $text_block_page; ?></option>
               <?php } else { ?>
                 <option value="search"><?php echo $text_search_page; ?></option>
                 <option value="block"><?php echo $text_block_page; ?></option>
@@ -2456,7 +2456,7 @@ $('select[name=\'config_country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#postcode-required').show();
 			} else {
 				$('#postcode-required').hide();
@@ -2468,7 +2468,7 @@ $('select[name=\'config_country_id\']').on('change', function() {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $config_zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $config_zone_id; ?>') {
 						html += ' selected="selected"';
 					}
 
