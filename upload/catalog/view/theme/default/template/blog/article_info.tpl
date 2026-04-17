@@ -25,19 +25,18 @@
       <?php if ($this->config->get('blog_share_social_site')) { ?>
         <span class="article-share" style="float:right; margin-top:10px;">
         <div style="margin:25px 0 10px 0;">
-          <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-            <a class="addthis_button_email"></a>
-            <a class="addthis_button_print"></a>
-            <a class="addthis_button_preferred_1"></a>
-            <a class="addthis_button_preferred_2"></a>
-            <a class="addthis_button_preferred_3"></a>
-            <a class="addthis_button_compact"></a>
-            <a class="addthis_counter addthis_bubble_style"></a>
+          <!-- ShareThis BEGINS -->
+          <div class="sharethis-share-buttons" data-type="inline-share-buttons" data-labels="cta" data-show_total="false" data-size="small">
+            <span data-network="facebook"></span>
+            <span data-network="twitter"></span>
+            <span data-network="email"></span>
+            <span data-network="sharethis"></span>
           </div>
+          <!-- ShareThis ENDS -->
           <?php if ($sharethis) { ?>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<?php echo $sharethis; ?>"></script>
+            <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop' async='async'></script>
           <?php } else { ?>
-            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script> 
           <?php } ?>
         </div>
         </span>
@@ -129,7 +128,7 @@
               <div class="related-article">
                 <?php $i = 0; ?>
                 <?php foreach ($related_articles as $related_article) { ?>
-                  <?php if (($i%2) == 0) { ?>
+                  <?php if (($i%2) === 0) { ?>
                     <div class="<?php if ($content_left || $content_right) { ?> related-article-blok-11 <?php } else { ?> related-article-blok-1 <?php } ?>">
                   <?php } else { ?>
                     <div class="<?php if ($content_left || $content_right) { ?> related-article-blok-22 <?php } else { ?> related-article-blok-2 <?php } ?>">

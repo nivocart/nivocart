@@ -8,7 +8,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -25,11 +25,8 @@ class ControllerBlogArticleInfo extends Controller {
 		$this->load->model('blog/article');
 		$this->load->model('tool/image');
 
-		if (isset($this->request->get['blog_article_id'])) {
-			$blog_article_id = $this->request->get['blog_article_id'];
-		} else {
-			$blog_article_id = 0;
-		}
+		// Get article id
+		$blog_article_id = isset($this->request->get['blog_article_id']) ? $this->request->get['blog_article_id'] : 0;
 
 		$this->data['blog_article_id'] = $blog_article_id;
 
@@ -122,7 +119,7 @@ class ControllerBlogArticleInfo extends Controller {
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($product_info['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -247,11 +244,7 @@ class ControllerBlogArticleInfo extends Controller {
 			$this->model_blog_article->addBlogView($article_info['blog_article_id']);
 
 			// ShareThis
-			if ($this->config->get('config_sharethis')) {
-				$this->data['sharethis'] = $this->config->get('config_sharethis');
-			} else {
-				$this->data['sharethis'] = false;
-			}
+			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
 
 			// Captcha
 			if (isset($this->request->post['captcha'])) {
@@ -358,17 +351,9 @@ class ControllerBlogArticleInfo extends Controller {
 		$this->data['text_said'] = $this->language->get('text_said');
 		$this->data['text_no_comment'] = $this->language->get('text_no_comment');
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		if (isset($this->request->get['limit'])) {
-			$limit = $this->request->get['limit'];
-		} else {
-			$limit = 5;
-		}
+		// Pagination
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+		$limit = isset($this->request->get['limit']) ? $this->request->get['limit'] : 5;
 
 		$this->data['text_reply_comment'] = $this->language->get('text_reply_comment');
 
@@ -431,7 +416,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 		$json = array();
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
 				$json['error'] = $this->language->get('error_name');
 			}
