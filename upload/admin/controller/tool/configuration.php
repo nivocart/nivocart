@@ -146,11 +146,11 @@ class ControllerToolConfiguration extends Controller {
 		// Database
 		$database_name = DB_DRIVER;
 
-		if ($database_name == 'mysqli') {
+		if ($database_name === 'mysqli') {
 			$this->data['database_name'] = 'MySQLi';
-		} elseif ($database_name == 'mpdo') {
+		} elseif ($database_name === 'mpdo') {
 			$this->data['database_name'] = 'PDO (MySQL)';
-		} elseif ($database_name == 'pgsql') {
+		} elseif ($database_name === 'pgsql') {
 			$this->data['database_name'] = 'PgSQL';
 		} else {
 			$this->data['database_name'] = 'SQL';
@@ -162,7 +162,7 @@ class ControllerToolConfiguration extends Controller {
 		$engines = $this->model_tool_database->getEngines();
 
 		foreach ($engines as $engine) {
-			if ($engine == 'InnoDB') {
+			if ($engine === 'InnoDB') {
 				$this->data['engine'] = true;
 			} else {
 				$this->data['engine'] = false;
@@ -194,12 +194,6 @@ class ControllerToolConfiguration extends Controller {
 		$this->data['image'] = DIR_IMAGE;
 		$this->data['image_cache'] = DIR_IMAGE . 'cache';
 		$this->data['image_data'] = DIR_IMAGE . 'data';
-
-		// VQMod folders
-		$this->data['vqmod'] = DIR_VQMOD;
-		$this->data['vqlogs'] = DIR_VQMOD . 'logs';
-		$this->data['vqcache'] = DIR_VQMOD . 'vqcache';
-		$this->data['vqmod_xml'] = DIR_VQMOD . 'xml';
 
 		// -----------------------
 		// Images Information
