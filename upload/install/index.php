@@ -3,9 +3,9 @@
 error_reporting(E_ALL);
 
 // Check if SSL
-if ((isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) || $_SERVER['SERVER_PORT'] == 443) {
+if ((isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] === 'on') || ($_SERVER['HTTPS'] === '1'))) || $_SERVER['SERVER_PORT'] === 443) {
 	$protocol = 'https://';
-} elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+} elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') {
 	$protocol = 'https://';
 } else {
 	$protocol = 'http://';
@@ -24,7 +24,7 @@ define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 
 // Version
-define('NC_VERSION', '2.0.0');
+define('NC_VERSION', '2.0.0 Beta');
 
 // Startup
 require_once(DIR_SYSTEM . 'startup.php');
