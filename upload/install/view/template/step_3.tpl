@@ -12,14 +12,14 @@
         <td><?php echo $entry_db_driver; ?></td>
         <td><select name="db_driver">
         <?php if ($mysqli) { ?>
-          <?php if ($db_driver == 'mysqli') { ?>
+          <?php if ($db_driver === 'mysqli') { ?>
             <option value="mysqli" selected="selected"><?php echo $text_mysqli; ?></option>
           <?php } else { ?>
             <option value="mysqli"><?php echo $text_mysqli; ?></option>
           <?php } ?>
         <?php } ?>
         <?php if ($pdo) { ?>
-          <?php if ($db_driver == 'mpdo') { ?>
+          <?php if ($db_driver === 'mpdo') { ?>
             <option value="mpdo" selected="selected"><?php echo $text_mpdo; ?></option>
           <?php } else { ?>
             <option value="mpdo"><?php echo $text_mpdo; ?></option>
