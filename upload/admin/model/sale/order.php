@@ -149,11 +149,11 @@ class ModelSaleOrder extends Model {
 			foreach ($data['order_total'] as $order_total) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_total` SET order_id = '" . (int)$order_id . "', `code` = '" . $this->db->escape($order_total['code']) . "', title = '" . $this->db->escape($order_total['title']) . "', `text` = '" . $this->db->escape($order_total['text']) . "', `value` = '" . (double)$order_total['value'] . "', sort_order = '" . (int)$order_total['sort_order'] . "'");
 
-				if ($order_total['code'] == 'coupon') {
+				if ($order_total['code'] === 'coupon') {
 					$coupon_value = $order_total['value'];
-				} elseif ($order_total['code'] == 'voucher') {
+				} elseif ($order_total['code'] === 'voucher') {
 					$voucher_value = $order_total['value'];
-				} elseif ($order_total['code'] == 'credit') {
+				} elseif ($order_total['code'] === 'credit') {
 					$credit = $order_total['value'];
 				}
 			}
@@ -333,11 +333,11 @@ class ModelSaleOrder extends Model {
 			foreach ($data['order_total'] as $order_total) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_total` SET order_total_id = '" . (int)$order_total['order_total_id'] . "', order_id = '" . (int)$order_id . "', `code` = '" . $this->db->escape($order_total['code']) . "', title = '" . $this->db->escape($order_total['title']) . "', `text` = '" . $this->db->escape($order_total['text']) . "', `value` = '" . (double)$order_total['value'] . "', sort_order = '" . (int)$order_total['sort_order'] . "'");
 
-				if ($order_total['code'] == 'coupon') {
+				if ($order_total['code'] === 'coupon') {
 					$coupon_value = $order_total['value'];
-				} elseif ($order_total['code'] == 'voucher') {
+				} elseif ($order_total['code'] === 'voucher') {
 					$voucher_value = $order_total['value'];
-				} elseif ($order_total['code'] == 'credit') {
+				} elseif ($order_total['code'] === 'credit') {
 					$credit = $order_total['value'];
 				}
 			}
@@ -631,7 +631,7 @@ class ModelSaleOrder extends Model {
 			$sql .= " AND o.`total` = '" . (float)$data['filter_total'] . "'";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'o.order_id',
 			'o.customer_id',
 			'o.email',
@@ -640,7 +640,7 @@ class ModelSaleOrder extends Model {
 			'o.date_added',
 			'o.date_modified',
 			'o.`total`'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -648,7 +648,7 @@ class ModelSaleOrder extends Model {
 			$sql .= " ORDER BY o.order_id";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -824,11 +824,7 @@ class ModelSaleOrder extends Model {
 	public function getOrderProductLocation(int $product_id) {
 		$query = $this->db->query("SELECT location FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "' LIMIT 0,1");
 
-		if ($query->row) {
-			return $query->row;
-		} else {
-			return false;
-		}
+		return ($query->row) ? $query->row : false;
 	}
 
 	// Order processing statuses
@@ -873,7 +869,7 @@ class ModelSaleOrder extends Model {
 		$order_info = $this->getOrder($order_id);
 
 		// Send out any gift voucher mails
-		if ($this->config->get('config_complete_status_id') == $data['order_status_id']) {
+		if ($this->config->get('config_complete_status_id') === $data['order_status_id']) {
 			$this->load->model('sale/voucher');
 
 			$results = $this->getOrderVouchers($order_id);
@@ -935,13 +931,8 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getOrderHistories(int $order_id, int $start = 0, int $limit = 10): array {
-		if ($start < 0) {
-			$start = 0;
-		}
-
-		if ($limit < 1) {
-			$limit = 10;
-		}
+		$start = ($start < 0) ? 0 : $start;
+		$limit = ($limit < 1) ? 10 : $limit;
 
 		$query = $this->db->query("SELECT oh.date_added, os.name AS `status`, oh.comment, oh.notify FROM `" . DB_PREFIX . "order_history` oh LEFT JOIN `" . DB_PREFIX . "order_status` os ON (oh.order_status_id = os.order_status_id) WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added ASC LIMIT " . (int)$start . "," . (int)$limit);
 
