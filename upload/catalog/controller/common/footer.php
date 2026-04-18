@@ -10,10 +10,9 @@ class ControllerCommonFooter extends Controller {
 		$this->load->model('design/footer');
 
 		$this->data['total_footers'] = $this->model_design_footer->getTotalFooters();
+		$this->data['max_position'] = $this->model_design_footer->getFooterMaxPosition();
 
 		$this->data['footer_routes'] = [];
-
-		$this->data['max_position'] = $this->model_design_footer->getFooterMaxPosition();
 
 		$routes = $this->model_design_footer->getFooterRoutes();
 

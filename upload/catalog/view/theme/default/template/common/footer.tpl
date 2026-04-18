@@ -12,7 +12,7 @@
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
-  <?php if ($footer_route['footer_id'] == $footer_block['footer_id']) { ?>
+  <?php if ($footer_route['footer_id'] === $footer_block['footer_id']) { ?>
   <li><a href="<?php echo $footer_route['route']; ?>"><?php echo $footer_route['title']; ?></a></li>
   <?php } ?>
   <?php } ?>
@@ -26,7 +26,7 @@
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
-  <?php if ($footer_route['footer_id'] == $footer_block['footer_id']) { ?>
+  <?php if ($footer_route['footer_id'] === $footer_block['footer_id']) { ?>
   <li><a href="<?php echo $footer_route['route']; ?>"><?php echo $footer_route['title']; ?></a></li>
   <?php } ?>
   <?php } ?>
@@ -40,7 +40,7 @@
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
-  <?php if ($footer_route['footer_id'] == $footer_block['footer_id']) { ?>
+  <?php if ($footer_route['footer_id'] === $footer_block['footer_id']) { ?>
   <li><a href="<?php echo $footer_route['route']; ?>"><?php echo $footer_route['title']; ?></a></li>
   <?php } ?>
   <?php } ?>
@@ -54,7 +54,7 @@
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
-  <?php if ($footer_route['footer_id'] == $footer_block['footer_id']) { ?>
+  <?php if ($footer_route['footer_id'] === $footer_block['footer_id']) { ?>
   <li><a href="<?php echo $footer_route['route']; ?>"><?php echo $footer_route['title']; ?></a></li>
   <?php } ?>
   <?php } ?>
