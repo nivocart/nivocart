@@ -5,7 +5,7 @@ class ControllerUpgrade extends Controller {
 	public function index() {
 		$this->document->setTitle($this->language->get('heading_upgrade'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->initialize($this->request->post);
 
 			$this->data['heading_success'] = $this->language->get('heading_success');
@@ -20,10 +20,10 @@ class ControllerUpgrade extends Controller {
 			$this->data['help_installer'] = $this->language->get('help_installer');
 
 			$this->template = 'success.tpl';
-			$this->children = array(
+			$this->children = [
 				'header',
 				'footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
@@ -50,10 +50,10 @@ class ControllerUpgrade extends Controller {
 			}
 
 			$this->template = 'upgrade.tpl';
-			$this->children = array(
+			$this->children = [
 				'header',
 				'footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 		}
@@ -112,7 +112,7 @@ class ControllerUpgrade extends Controller {
 	}
 
 	protected function validate() {
-		if (DB_DRIVER == 'mysqli') {
+		if (DB_DRIVER === 'mysqli') {
 			$connection = mysqli_connect(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
 			if (mysqli_connect_errno()) {
@@ -127,7 +127,7 @@ class ControllerUpgrade extends Controller {
 			mysqli_close($connection);
 		}
 
-		if (DB_DRIVER == 'mpdo') {
+		if (DB_DRIVER === 'mpdo') {
 			try {
 				new \PDO("mysql:host=" . DB_HOSTNAME . ";port=" . DB_PORT . ";dbname=" . DB_DATABASE, DB_USERNAME, DB_PASSWORD, array(\PDO::ATTR_PERSISTENT => true));
 			} catch (Exception $e) {

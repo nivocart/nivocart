@@ -26,10 +26,10 @@ class ControllerStep1 extends Controller {
 		$this->data['action'] = $this->url->link('step_1', '', 'SSL');
 
 		$this->template = 'step_1.tpl';
-		$this->children = array(
+		$this->children = [
 			'header',
 			'footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

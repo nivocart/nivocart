@@ -20,10 +20,10 @@ class ControllerStep4 extends Controller {
 		$this->data['text_login'] = $this->language->get('text_login');
 
 		$this->template = 'step_4.tpl';
-		$this->children = array(
+		$this->children = [
 			'header',
 			'footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

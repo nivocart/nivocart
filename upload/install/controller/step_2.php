@@ -3,7 +3,7 @@ class ControllerStep2 extends Controller {
 	private array $error = [];
 
 	public function index() {
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->response->redirect($this->url->link('step_3', '', 'SSL'));
 		}
 
@@ -64,7 +64,7 @@ class ControllerStep2 extends Controller {
 		$this->data['file_uploads'] = ini_get('file_uploads');
 		$this->data['session_auto_start'] = ini_get('session_auto_start');
 
-		if (!array_filter(array('mysqli', 'pdo', 'pgsql'), 'extension_loaded')) {
+		if (!array_filter(['mysqli', 'pdo', 'pgsql'], 'extension_loaded')) {
 			$this->data['db'] = false;
 		} else {
 			$this->data['db'] = true;
@@ -91,16 +91,14 @@ class ControllerStep2 extends Controller {
 		$this->data['image'] = DIR_NIVOCART . 'image';
 		$this->data['image_cache'] = DIR_NIVOCART . 'image/cache';
 		$this->data['image_data'] = DIR_NIVOCART . 'image/data';
-		$this->data['vqmod'] = DIR_NIVOCART . 'vqmod';
-		$this->data['vqmod_xml'] = DIR_NIVOCART . 'vqmod/xml';
 
 		$this->data['back'] = $this->url->link('step_1', '', 'SSL');
 
 		$this->template = 'step_2.tpl';
-		$this->children = array(
+		$this->children = [
 			'header',
 			'footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -120,7 +118,7 @@ class ControllerStep2 extends Controller {
 			$this->error['warning'] = $this->language->get('error_php_session');
 		}
 
-		if (!array_filter(array('mysqli', 'pdo', 'pgsql'), 'extension_loaded')) {
+		if (!array_filter(['mysqli', 'pdo', 'pgsql'], 'extension_loaded')) {
 			$this->error['warning'] = $this->language->get('error_php_extension');
 		}
 

@@ -3,7 +3,7 @@ class ControllerStep3 extends Controller {
 	private array $error = [];
 
 	public function index() {
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->load->model('install');
 
 			$this->model_install->database($this->request->post);
@@ -43,6 +43,7 @@ class ControllerStep3 extends Controller {
 		$this->data['button_install'] = $this->language->get('button_install');
 		$this->data['button_back'] = $this->language->get('button_back');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -149,19 +150,19 @@ class ControllerStep3 extends Controller {
 		}
 
 		// Credentials
-		if (isset($this->request->post['username'])) {
+		if (isset($this->request->post['username']) && is_string($this->request->post['username'])) {
 			$this->data['username'] = $this->request->post['username'];
 		} else {
 			$this->data['username'] = 'admin';
 		}
 
-		if (isset($this->request->post['password'])) {
+		if (isset($this->request->post['password']) && is_string($this->request->post['password'])) {
 			$this->data['password'] = $this->request->post['password'];
 		} else {
 			$this->data['password'] = '';
 		}
 
-		if (isset($this->request->post['email'])) {
+		if (isset($this->request->post['email']) && is_string($this->request->post['email'])) {
 			$this->data['email'] = $this->request->post['email'];
 		} else {
 			$this->data['email'] = '';
@@ -200,10 +201,10 @@ class ControllerStep3 extends Controller {
 		$this->data['back'] = $this->url->link('step_2', '', 'SSL');
 
 		$this->template = 'step_3.tpl';
-		$this->children = array(
+		$this->children = [
 			'header',
 			'footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -229,7 +230,7 @@ class ControllerStep3 extends Controller {
 			$this->error['db_prefix'] = $this->language->get('error_db_prefix');
 		}
 
-		if ($this->request->post['db_driver'] == 'mysqli') {
+		if ($this->request->post['db_driver'] === 'mysqli') {
 			if (function_exists('mysqli_connect')) {
 				$connection = new mysqli($this->request->post['db_hostname'], html_entity_decode($this->request->post['db_username'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->request->post['db_password'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->request->post['db_database'], ENT_QUOTES, 'UTF-8'), $this->request->post['db_port']);
 
@@ -244,7 +245,7 @@ class ControllerStep3 extends Controller {
 			}
 		}
 
-		if ($this->request->post['db_driver'] == 'mpdo') {
+		if ($this->request->post['db_driver'] === 'mpdo') {
 			try {
 				new \PDO("mysql:host=" . $this->request->post['db_hostname'] . ";port=" . $this->request->post['db_port'] . ";dbname=" . $this->request->post['db_database'], html_entity_decode($this->request->post['db_username'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->request->post['db_password'], ENT_QUOTES, 'UTF-8'), array(\PDO::ATTR_PERSISTENT => true));
 			} catch (Exception $e) {
