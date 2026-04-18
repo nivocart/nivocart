@@ -96,7 +96,7 @@ RewriteEngine On
 RewriteBase /
 
 ## Protect admin and system directories from SEO rewrite
-RewriteRule ^(admin|system|catalog|image|download|security|vqmod)(/.*)?$ - [L]
+RewriteRule ^(admin|install|system|catalog|image|download|security)(/.*)?$ - [L]
 
 RewriteRule ^sitemap.xml$ index.php?route=feed/google_sitemap [L]
 RewriteCond %{REQUEST_FILENAME} !-f

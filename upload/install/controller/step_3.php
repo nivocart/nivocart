@@ -8,7 +8,7 @@ class ControllerStep3 extends Controller {
 
 			$this->model_install->database($this->request->post);
 
-			$this->redirect($this->url->link('step_4', '', 'SSL'));
+			$this->response->redirect($this->url->link('step_4', '', 'SSL'));
 		}
 
 		$this->document->setTitle($this->language->get('heading_step_3'));

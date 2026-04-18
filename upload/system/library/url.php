@@ -51,7 +51,7 @@ class Url {
 	 * @return string
 	 */
 	public function link(string $route, $args = '', string $connection = 'NONSSL'): string {
-		if ($connection == 'NONSSL') {
+		if ($connection === 'NONSSL') {
 			$url = $this->url . 'index.php?route=' . $route;
 		} else {
 			$url = $this->ssl . 'index.php?route=' . $route;
@@ -105,15 +105,15 @@ class Url {
 		$local_host = false;
 
 		if (isset($_SERVER['SERVER_ADDR'])) {
-			$local_address = ($_SERVER['SERVER_ADDR'] == '::1' || $_SERVER['SERVER_ADDR'] == '127.0.0.1') ? true : false;
+			$local_address = ($_SERVER['SERVER_ADDR'] === '::1' || $_SERVER['SERVER_ADDR'] === '127.0.0.1') ? true : false;
 		}
 
 		if (isset($_SERVER['SERVER_NAME'])) {
-			$local_name = ($_SERVER['SERVER_NAME'] == 'localhost') ? true : false;
+			$local_name = ($_SERVER['SERVER_NAME'] === 'localhost') ? true : false;
 		}
 
 		if (isset($_SERVER['HTTP_HOST'])) {
-			$local_host = ($_SERVER['HTTP_HOST'] == 'localhost') ? true : false;
+			$local_host = ($_SERVER['HTTP_HOST'] === 'localhost') ? true : false;
 		}
 
 		if ($local_address || $local_name || $local_host) {
