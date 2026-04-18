@@ -1,7 +1,7 @@
 <?php
 class ModelInstall extends Model {
 
-	public function database($data) {
+	public function database(array $data = []) {
 		$db = new DB($data['db_driver'], htmlspecialchars_decode($data['db_hostname']), htmlspecialchars_decode($data['db_username']), htmlspecialchars_decode($data['db_password']), htmlspecialchars_decode($data['db_database']), $data['db_port']);
 
 		if (isset($data['demo_data'])) {
@@ -28,7 +28,7 @@ class ModelInstall extends Model {
 			$sql = '';
 
 			foreach ($lines as $line) {
-				if ($line && (mb_substr($line, 0, 2, 'UTF-8') != '--') && (mb_substr($line, 0, 1, 'UTF-8') != '#')) {
+				if ($line && (mb_substr($line, 0, 2, 'UTF-8') !== '--') && (mb_substr($line, 0, 1, 'UTF-8') !== '#')) {
 					$sql .= $line;
 
 					if (preg_match('/;\s*$/', $line)) {
@@ -48,7 +48,7 @@ class ModelInstall extends Model {
 			$db->query("SET @@session.sql_mode = ''");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "user` WHERE user_id = '1'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape($data['username']) . "', salt = '" . $db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '1', email = '" . $db->escape($data['email']) . "', date_added = NOW()");
+			$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape((string)$data['username']) . "', salt = '" . $db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '1', email = '" . $db->escape((string)$data['email']) . "', date_added = NOW()");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_email'");
 			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_email', `value` = '" . $db->escape($data['email']) . "'");
@@ -86,7 +86,6 @@ class ModelInstall extends Model {
 		$output .= 'define(\'DIR_CACHE\', \'' . DIR_NIVOCART . 'system/cache/\');' . "\n";
 		$output .= 'define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');' . "\n";
 		$output .= 'define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');' . "\n";
-		$output .= 'define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');' . "\n";
 		$output .= 'define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');' . "\n\n";
 
 		$output .= '// DB' . "\n";
@@ -127,7 +126,6 @@ class ModelInstall extends Model {
 		$output .= 'define(\'DIR_CACHE\', \'' . DIR_NIVOCART . 'system/cache/\');' . "\n";
 		$output .= 'define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');' . "\n";
 		$output .= 'define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');' . "\n";
-		$output .= 'define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');' . "\n";
 		$output .= 'define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');' . "\n";
 		$output .= 'define(\'DIR_CATALOG\', \'' . DIR_NIVOCART . 'catalog/\');' . "\n\n";
 
@@ -153,7 +151,7 @@ class ModelInstall extends Model {
 			if (function_exists('apache_get_modules')) {
 				$mod_rewrite = in_array('mod_rewrite', apache_get_modules(), true);
 			} else {
-				$mod_rewrite = ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) == 'on');
+				$mod_rewrite = ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) === 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) === 'on');
 			}
 
 			if ($mod_rewrite && file_exists('../.htaccess.txt') && is_writable('../.htaccess.txt')) {

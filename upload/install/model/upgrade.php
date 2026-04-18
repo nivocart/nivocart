@@ -29,7 +29,7 @@ class ModelUpgrade extends Model {
 			$line = str_replace("CREATE TABLE `nc_", "CREATE TABLE `" . DB_PREFIX, $line);
 
 			// If line begins with Create Table, start recording
-			if (substr($line, 0, 12) == 'CREATE TABLE') {
+			if (substr($line, 0, 12) === 'CREATE TABLE') {
 				$status = true;
 			}
 
@@ -43,7 +43,7 @@ class ModelUpgrade extends Model {
 			}
 		}
 
-		$table_new_data = array();
+		$table_new_data = [];
 
 		// Trim any spaces, and ';'
 		$string = trim($string);
@@ -53,13 +53,13 @@ class ModelUpgrade extends Model {
 		$statements = explode(';', $string);
 
 		foreach ($statements as $sql) {
-			$field_data = array();
+			$field_data = [];
 
 			// Get all fields
 			preg_match_all('#`(\w[\w\d]*)`\s+((tinyint|smallint|mediumint|bigint|int|tinytext|text|mediumtext|longtext|tinyblob|blob|mediumblob|longblob|varchar|char|datetime|date|float|double|decimal|timestamp|time|year|enum|set|binary|varbinary)(\((.*)\))?){1}\s*(collate (\w+)\s*)?(unsigned\s*)?((NOT\s*NULL\s*)|(NULL\s*))?(auto_increment\s*)?(default \'([^\']*)\'\s*)?#i', $sql, $match);
 
 			foreach (array_keys($match[0]) as $key) {
-				$field_data[] = array(
+				$field_data[] = [
 					'name'          => trim($match[1][$key]),
 					'type'          => strtoupper(trim($match[3][$key])),
 					'size'          => str_replace(array('(', ')'), '', trim($match[4][$key])),
@@ -69,18 +69,18 @@ class ModelUpgrade extends Model {
 					'notnull'       => trim($match[9][$key]),
 					'autoincrement' => trim($match[12][$key]),
 					'default'       => trim($match[14][$key])
-				);
+				];
 			}
 
 			// Get primary keys
-			$primary_data = array();
+			$primary_data = [];
 
 			preg_match('#primary\s*key\s*\([^)]+\)#i', $sql, $match);
 
 			if (isset($match[0])) {
 				preg_match_all('#`(\w[\w\d]*)`#', $match[0], $match);
 			} else {
-				$match = array();
+				$match = [];
 			}
 
 			if ($match) {
@@ -90,8 +90,8 @@ class ModelUpgrade extends Model {
 			}
 
 			// Get indexes
-			$index_data = array();
-			$indexes = array();
+			$index_data = [];
+			$indexes = [];
 
 			preg_match_all('#key\s*`\w[\w\d]*`\s*\(.*\)#i', $sql, $match);
 
@@ -105,7 +105,7 @@ class ModelUpgrade extends Model {
 				$key = '';
 
 				foreach ($index[1] as $field) {
-					if ($key == '') {
+					if ($key === '') {
 						$key = $field;
 					} else {
 						$index_data[$key][] = $field;
@@ -114,7 +114,7 @@ class ModelUpgrade extends Model {
 			}
 
 			// Table options
-			$option_data = array();
+			$option_data = [];
 
 			preg_match_all('#(\w+)=(\w+)#', $sql, $option);
 
@@ -126,14 +126,14 @@ class ModelUpgrade extends Model {
 			preg_match_all('#create\s*table\s*`(\w[\w\d]*)`#i', $sql, $table);
 
 			if (isset($table[1][0])) {
-				$table_new_data[] = array(
+				$table_new_data[] = [
 					'sql'     => $sql,
 					'name'    => $table[1][0],
 					'field'   => $field_data,
 					'primary' => $primary_data,
 					'index'   => $index_data,
 					'option'  => $option_data
-				);
+				];
 			}
 		}
 
@@ -145,9 +145,9 @@ class ModelUpgrade extends Model {
 		$table_query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
 
 		foreach ($table_query->rows as $table) {
-			if (mb_substr($table['Tables_in_' . DB_DATABASE], 0, mb_strlen(DB_PREFIX, 'UTF-8'), 'UTF-8') == DB_PREFIX) {
-				$field_data = array();
-				$extended_field_data = array();
+			if (mb_substr($table['Tables_in_' . DB_DATABASE], 0, mb_strlen(DB_PREFIX, 'UTF-8'), 'UTF-8') === DB_PREFIX) {
+				$field_data = [];
+				$extended_field_data = [];
 
 				$field_query = $this->db->query("SHOW COLUMNS FROM `" . $table['Tables_in_' . DB_DATABASE] . "`");
 
@@ -187,7 +187,7 @@ class ModelUpgrade extends Model {
 						$status = true;
 
 						foreach ($table_old_data[$table['name']]['extended_field_data'] as $oldfield) {
-							if ($oldfield['Extra'] == 'auto_increment' && $field['autoincrement']) {
+							if ($oldfield['Extra'] === 'auto_increment' && $field['autoincrement']) {
 								$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $oldfield['Field'] . "` `" . $field['name'] . "` " . mb_strtoupper($field['type'], 'UTF-8');
 								$status = false;
 								break;
@@ -271,7 +271,7 @@ class ModelUpgrade extends Model {
 
 				if ($query->num_rows) {
 					foreach ($query->rows as $result) {
-						if ($result['Key_name'] != 'PRIMARY' && $result['Key_name'] != $last_key_name) {
+						if ($result['Key_name'] !== 'PRIMARY' && $result['Key_name'] !== $last_key_name) {
 							$last_key_name = $result['Key_name'];
 
 							$this->db->query("ALTER TABLE `" . $table['name'] . "` DROP INDEX `" . $result['Key_name'] . "`");
@@ -286,7 +286,7 @@ class ModelUpgrade extends Model {
 				}
 
 				// Add a new primary key
-				$primary_data = array();
+				$primary_data = [];
 
 				foreach ($table['primary'] as $primary) {
 					$primary_data[] = "`" . $primary . "`";
@@ -298,7 +298,7 @@ class ModelUpgrade extends Model {
 
 				// Add the new indexes
 				foreach ($table['index'] as $name => $index) {
-					$index_data = array();
+					$index_data = [];
 
 					foreach ($index as $key) {
 						$index_data[] = '`' . $key . '`';
@@ -352,9 +352,9 @@ class ModelUpgrade extends Model {
 		return $step1;
 	}
 
-	// -----------------------------------
+	// -------------------------------------
 	// Function to update additional tables
-	// -----------------------------------
+	// -------------------------------------
 	public function additionalTables($step2) {
 		set_time_limit(60);
 
@@ -428,14 +428,18 @@ class ModelUpgrade extends Model {
 	// Add constant: 'HTTP_IMAGE'
 	// Add constant: 'HTTPS_IMAGE'
 	// Add constant: 'DIR_UPLOAD'
-	// Add constant: 'DIR_VQMOD'
 	// Remove PHP closing tag
 	// ---------------------------------------------------
 	public function updateConfig($step4) {
 		set_time_limit(60);
 
 		if (is_file(DIR_NIVOCART . 'config.php')) {
-			$files = glob(DIR_NIVOCART . '{config.php,admin/config.php}', GLOB_BRACE);
+			$candidates = [
+				DIR_NIVOCART . 'config.php',
+				DIR_NIVOCART . 'admin/config.php',
+			];
+
+			$files = array_filter($candidates, 'is_file');
 
 			// Check if config files are writeable
 			foreach ($files as $file) {
@@ -462,7 +466,7 @@ class ModelUpgrade extends Model {
 				if ($upgrade_http) {
 					$output = '';
 
-					foreach ($lines as $line_id => $line) {
+					foreach ($lines as $line) {
 						if (strpos($line, 'HTTP_SERVER') !== false) {
 							$new_line = "define('HTTP_IMAGE', '" . str_replace("\\", "/", HTTP_SERVER) . 'image/' . "');";
 							$strip_line = str_replace("/install", "", $new_line);
@@ -495,7 +499,7 @@ class ModelUpgrade extends Model {
 				if ($upgrade_https) {
 					$output = '';
 
-					foreach ($lines as $line_id => $line) {
+					foreach ($lines as $line) {
 						if (strpos($line, 'HTTPS_SERVER') !== false) {
 							$new_line = "define('HTTPS_IMAGE', '" . str_replace("\\", "/", HTTP_SERVER) . 'image/' . "');";
 							$strip_line = str_replace("/install", "", $new_line);
@@ -528,41 +532,9 @@ class ModelUpgrade extends Model {
 				if ($upgrade_upload) {
 					$output = '';
 
-					foreach ($lines as $line_id => $line) {
+					foreach ($lines as $line) {
 						if (strpos($line, 'DIR_DOWNLOAD') !== false) {
 							$new_line = "define('DIR_UPLOAD', '" . str_replace("\\", "/", DIR_SYSTEM) . 'upload/' . "');";
-							$output .= $new_line . "\n";
-							$output .= $line;
-						} else {
-							$output .= $line;
-						}
-					}
-
-					file_put_contents($file, $output);
-				}
-			}
-
-			// ---------------------------
-			// Add DIR_VQMOD if missing
-			// ---------------------------
-			foreach ($files as $file) {
-				$upgrade_vqmod = true;
-
-				$lines = file($file);
-
-				foreach ($lines as $line) {
-					if (strpos($line, 'DIR_VQMOD') !== false) {
-						$upgrade_vqmod = false;
-						break;
-					}
-				}
-
-				if ($upgrade_vqmod) {
-					$output = '';
-
-					foreach ($lines as $line_id => $line) {
-						if (strpos($line, 'DIR_LOGS') !== false) {
-							$new_line = "define('DIR_VQMOD', '" . str_replace("\\", "/", DIR_NIVOCART) . 'vqmod/' . "');";
 							$output .= $new_line . "\n";
 							$output .= $line;
 						} else {
@@ -592,7 +564,7 @@ class ModelUpgrade extends Model {
 				if ($upgrade_tag) {
 					$output = '';
 
-					foreach ($lines as $line_id => $line) {
+					foreach ($lines as $line) {
 						if (strpos($line, "?>") !== false) {
 							$output .= str_replace("?>", "", $line);
 						} else {
@@ -638,7 +610,7 @@ class ModelUpgrade extends Model {
 
 		$query_name = $this->db->query($sql);
 
-		if ($query_name->num_rows == 0) {
+		if ($query_name->num_rows === 0) {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = 'News'");
 		}
 
@@ -653,7 +625,7 @@ class ModelUpgrade extends Model {
 
 				$query = $this->db->query($sql);
 
-				if ($query->num_rows == 0) {
+				if ($query->num_rows === 0) {
 					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = 'News'), store_id = '" . (int)$store_id . "', `route` = '" . $news_route . "'");
 				}
 			}
@@ -666,7 +638,7 @@ class ModelUpgrade extends Model {
 
 		$query_name = $this->db->query($sql);
 
-		if ($query_name->num_rows == 0) {
+		if ($query_name->num_rows === 0) {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = 'Special'");
 		}
 
@@ -681,7 +653,7 @@ class ModelUpgrade extends Model {
 
 				$query = $this->db->query($sql);
 
-				if ($query->num_rows == 0) {
+				if ($query->num_rows === 0) {
 					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = 'Special'), store_id = '" . (int)$store_id . "', `route` = '" . $special_route . "'");
 				}
 			}
