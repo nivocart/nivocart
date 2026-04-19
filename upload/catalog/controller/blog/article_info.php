@@ -10,17 +10,17 @@ class ControllerBlogArticleInfo extends Controller {
 
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/article_list', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->load->model('blog/article');
 		$this->load->model('tool/image');
@@ -67,11 +67,11 @@ class ControllerBlogArticleInfo extends Controller {
 			$this->document->setDescription($article_info['meta_description']);
 			$this->document->setKeywords($article_info['meta_keyword']);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $article_info['article_title'],
 				'href'      => $this->url->link('blog/article_info', 'blog_article_id=' . $article_info['blog_article_id'], 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['article_info'] = $article_info;
 			$this->data['article_info_found'] = $article_info;
@@ -84,7 +84,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 			$total_comments = $this->model_blog_article->getTotalComments($blog_article_id);
 
-			if ($total_comments != 1) {
+			if ($total_comments !== 1) {
 				$this->data['total_comment'] = $total_comments . " " . $this->language->get('text_comments');
 			} else {
 				$this->data['total_comment'] = $total_comments . " " . $this->language->get('text_comment');
@@ -101,7 +101,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 			$related_product = $this->model_blog_article->getArticleProductRelated($blog_article_id);
 
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 
 			foreach ($related_product as $product) {
 				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
@@ -175,7 +175,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 				$quote = $product_info['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'product_id'      => $product_info['product_id'],
 					'thumb'           => $image,
 					'stock_label'     => $stock_label,
@@ -198,7 +198,7 @@ class ControllerBlogArticleInfo extends Controller {
 					'rating'          => $rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 					'href'            => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL')
-				);
+				];
 			}
 
 			$this->data['author_details'] = $this->config->get('blog_author_details');
@@ -271,7 +271,7 @@ class ControllerBlogArticleInfo extends Controller {
 				$this->template = 'default/template/blog/article_info.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -280,7 +280,7 @@ class ControllerBlogArticleInfo extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
@@ -295,17 +295,17 @@ class ControllerBlogArticleInfo extends Controller {
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', '', 'SSL'),
 				'separator' => false
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('blog/article_list', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->document->setTitle($this->language->get('text_article_error'));
 
@@ -326,7 +326,7 @@ class ControllerBlogArticleInfo extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -335,7 +335,7 @@ class ControllerBlogArticleInfo extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());
@@ -357,7 +357,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 		$this->data['text_reply_comment'] = $this->language->get('text_reply_comment');
 
-		$this->data['comments'] = array();
+		$this->data['comments'] = [];
 
 		$comment_total = $this->model_blog_article->getTotalCommentsByArticleId($this->request->get['blog_article_id']);
 
@@ -368,14 +368,14 @@ class ControllerBlogArticleInfo extends Controller {
 
 			$comment_reply = $this->model_blog_article->getCommentsByArticle($this->request->get['blog_article_id'], 0, 1000, $result['blog_comment_id']);
 
-			$this->data['comments'][] = array(
+			$this->data['comments'][] = [
 				'blog_article_id' => $result['blog_article_id'],
 				'blog_comment_id' => $result['blog_comment_id'],
 				'comment_reply'   => $comment_reply,
 				'author'          => ucwords($result['author']),
 				'comment'         => $result['comment'],
 				'date_added'      => date($this->language->get('text_date_format_long'), strtotime($result['date_added']))
-			);
+			];
 		}
 
 		$url = '';
@@ -425,7 +425,7 @@ class ControllerBlogArticleInfo extends Controller {
 				$json['error'] = $this->language->get('error_text');
 			}
 
-			if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
+			if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
 				$json['error'] = $this->language->get('error_captcha');
 			}
 

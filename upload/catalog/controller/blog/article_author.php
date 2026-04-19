@@ -8,19 +8,19 @@ class ControllerBlogArticleAuthor extends Controller {
 
 		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/article_list', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->load->model('blog/article');
 		$this->load->model('tool/image');
@@ -36,13 +36,13 @@ class ControllerBlogArticleAuthor extends Controller {
 
 			$this->data['heading_title'] = $author_info['name'];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $author_info['name'],
 				'href'      => $this->url->link('blog/article_author', 'blog_author_id=' . $blog_author_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
-			$this->data['articles'] = array();
+			$this->data['articles'] = [];
 
 			if (isset($this->request->get['page'])) {
 				$page = $this->request->get['page'];
@@ -56,11 +56,11 @@ class ControllerBlogArticleAuthor extends Controller {
 				$limit = $this->config->get('config_catalog_limit');
 			}
 
-			$data = array(
+			$data = [
 				'blog_author_id' => $blog_author_id,
 				'start'          => ($page - 1) * $limit,
 				'limit'          => $limit
-			);
+			];
 
 			$author_total = $this->model_blog_article->getTotalArticleAuthorWise($blog_author_id);
 
@@ -77,7 +77,7 @@ class ControllerBlogArticleAuthor extends Controller {
 
 				$total_comments = $this->model_blog_article->getTotalComments($result['blog_article_id']);
 
-				if ($total_comments != 1) {
+				if ($total_comments !== 1) {
 					$total_comments .= $this->language->get('text_comments');
 				} else {
 					$total_comments .= $this->language->get('text_comment');
@@ -154,7 +154,7 @@ class ControllerBlogArticleAuthor extends Controller {
 				$this->template = 'default/template/blog/article_author.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -163,7 +163,7 @@ class ControllerBlogArticleAuthor extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
@@ -182,25 +182,25 @@ class ControllerBlogArticleAuthor extends Controller {
 				$url .= '&limit=' . $this->request->get['limit'];
 			}
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', '', 'SSL'),
 				'separator' => false
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('blog/article_list', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_author_error'),
 				'href'      => $this->url->link('blog/article_author', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->document->setTitle($this->language->get('text_author_error'));
 
@@ -221,7 +221,7 @@ class ControllerBlogArticleAuthor extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -230,7 +230,7 @@ class ControllerBlogArticleAuthor extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());

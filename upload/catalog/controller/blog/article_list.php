@@ -8,19 +8,19 @@ class ControllerBlogArticleList extends Controller {
 
 		$this->document->addStyle('catalog/view/theme/default/stylesheet/blog-system.css');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/article_list', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->load->model('blog/article');
 		$this->load->model('tool/image');
@@ -29,7 +29,7 @@ class ControllerBlogArticleList extends Controller {
 
 		$this->data['author_details'] = $this->config->get('blog_author_details');
 
-		$this->data['articles'] = array();
+		$this->data['articles'] = [];
 
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -43,10 +43,10 @@ class ControllerBlogArticleList extends Controller {
 			$limit = $this->config->get('config_catalog_limit');
 		}
 
-		$data = array(
+		$data = [
 			'start' => ($page - 1) * $limit,
 			'limit' => $limit
-		);
+		];
 
 		$blog_total = $this->model_blog_article->getTotalArticle($data);
 
@@ -63,13 +63,13 @@ class ControllerBlogArticleList extends Controller {
 
 			$total_comments = $this->model_blog_article->getTotalComments($result['blog_article_id']);
 
-			if ($total_comments != 1) {
+			if ($total_comments !== 1) {
 				$total_comments .= $this->language->get('text_comments');
 			} else {
 				$total_comments .= $this->language->get('text_comment');
 			}
 
-			$this->data['articles'][] = array(
+			$this->data['articles'][] = [
 				'blog_article_id' => $result['blog_article_id'],
 				'article_title'   => $result['article_title'],
 				'author_name'     => $result['author_name'],
@@ -81,7 +81,7 @@ class ControllerBlogArticleList extends Controller {
 				'comment_href'    => $this->url->link('blog/article_info', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
 				'allow_comment'   => $result['allow_comment'],
 				'total_comment'   => $total_comments
-			);
+			];
 		}
 
 		$this->data['button_continue_reading'] = $this->language->get('button_continue_reading');
@@ -116,7 +116,7 @@ class ControllerBlogArticleList extends Controller {
 			$this->template = 'default/template/blog/article_list.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -125,7 +125,7 @@ class ControllerBlogArticleList extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
