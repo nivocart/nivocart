@@ -3,7 +3,7 @@ class Browser {
 	/**
 	 * @var array <array<string, mixed>>
 	 */
-	private $browserVersion = array();
+	private $browserVersion = [];
 	
 	var $agent = null;
 
@@ -12,14 +12,14 @@ class Browser {
 	var $isPad = false;
 	var $isMobile = false;
 
-	var $languages = array();
-	var $charsets = array();
+	var $languages = [];
+	var $charsets = [];
 
-	var $platforms = array();
-	var $robots = array();
-	var $browsers = array();
-	var $pads = array();
-	var $mobiles = array();
+	var $platforms = [];
+	var $robots = [];
+	var $browsers = [];
+	var $pads = [];
+	var $mobiles = [];
 
 	var $platform = '';
 	var $robot = '';
@@ -139,7 +139,7 @@ class Browser {
 
 					$this->browser = $val;
 
-					if ($this->setPad() == false) {
+					if ($this->setPad() === false) {
 					    $this->setMobile();
 					}
 
@@ -187,26 +187,26 @@ class Browser {
 
 	// Set the accepted languages
 	protected function setLanguages() {
-		if ((count($this->acceptLanguages) == 0) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && $_SERVER['HTTP_ACCEPT_LANGUAGE'] != '') {
+		if ((count($this->acceptLanguages) === 0) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && $_SERVER['HTTP_ACCEPT_LANGUAGE'] != '') {
 			$languages = preg_replace('/(;q=[0-9\.]+)/i', '', strtolower(trim($_SERVER['HTTP_ACCEPT_LANGUAGE'])));
 
 			$this->acceptLanguages = explode(',', $languages);
 		}
 
-		if (count($this->acceptLanguages) == 0) {
+		if (count($this->acceptLanguages) === 0) {
 			$this->acceptLanguages = array('Undefined');
 		}
 	}
 
 	// Set the accepted character sets
 	protected function setCharsets() {
-		if ((count($this->acceptCharsets) == 0) && isset($_SERVER['HTTP_ACCEPT_CHARSET']) && $_SERVER['HTTP_ACCEPT_CHARSET'] != '') {
+		if ((count($this->acceptCharsets) === 0) && isset($_SERVER['HTTP_ACCEPT_CHARSET']) && $_SERVER['HTTP_ACCEPT_CHARSET'] != '') {
 			$charsets = preg_replace('/(;q=.+)/i', '', strtolower(trim($_SERVER['HTTP_ACCEPT_CHARSET'])));
 
 			$this->acceptCharsets = explode(',', $charsets);
 		}
 
-		if (count($this->acceptCharsets) == 0) {
+		if (count($this->acceptCharsets) === 0) {
 			$this->acceptCharsets = array('Undefined');
 		}
 	}
@@ -291,7 +291,7 @@ class Browser {
 
 	// Is this a referral from another site?
 	public function isReferral() {
-		if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == '') {
+		if (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] === '') {
 			return false;
 		}
 
@@ -335,12 +335,12 @@ class Browser {
 
 	// Get the referrer
 	public function referrer() {
-		return (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] == '') ? '' : trim($_SERVER['HTTP_REFERER']);
+		return (!isset($_SERVER['HTTP_REFERER']) || $_SERVER['HTTP_REFERER'] === '') ? '' : trim($_SERVER['HTTP_REFERER']);
 	}
 
 	// Get the accepted languages
 	public function getAcceptLanguages() {
-		if (count($this->languages) == 0) {
+		if (count($this->languages) === 0) {
 			$this->setLanguages();
 		}
 
@@ -349,7 +349,7 @@ class Browser {
 
 	// Get the accepted Character Sets
 	public function getAcceptCharsets() {
-		if (count($this->charsets) == 0) {
+		if (count($this->charsets) === 0) {
 			$this->setCharsets();
 		}
 
