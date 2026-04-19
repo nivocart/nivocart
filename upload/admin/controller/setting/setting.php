@@ -2104,13 +2104,13 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if (isset($this->request->post['config_seo_url_cache'])) {
-			if (isset($this->request->post['config_seo_url']) && ($this->request->post['config_seo_url'] === 1)) {
+			if (isset($this->request->post['config_seo_url']) || $this->config->get('config_seo_url')) {
 				$this->data['config_seo_url_cache'] = $this->request->post['config_seo_url_cache'];
 			} else {
 				$this->data['config_seo_url_cache'] = 0;
 			}
 		} else {
-			if ($this->config->get('config_seo_url') === 1) {
+			if ($this->config->get('config_seo_url')) {
 				$this->data['config_seo_url_cache'] = $this->config->get('config_seo_url_cache');
 			} else {
 				$this->data['config_seo_url_cache'] = 0;

@@ -33,11 +33,11 @@ class ModelToolSeoUrlManager extends Model {
 	public function getUrls(array $data = []): array {
 		$sql = "SELECT url_alias_id, `query`, keyword FROM `" . DB_PREFIX . "url_alias`";
 
-		$sort_data = array(
+		$sort_data = [
 			'url_alias_id',
 			'query',
 			'keyword'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
