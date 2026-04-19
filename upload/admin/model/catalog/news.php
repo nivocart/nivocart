@@ -23,13 +23,13 @@ class ModelCatalogNews extends Model {
 			}
 		}
 
-		if ($data['related'] == 'category_wise') {
+		if ($data['related'] === 'category_wise') {
 			if (isset($data['category_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['category_wise'] = $data['category_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductCategoryWise($data['category_wise']);
 
@@ -42,13 +42,13 @@ class ModelCatalogNews extends Model {
 				$this->db->query("UPDATE `" . DB_PREFIX . "news` SET related_method = '" . $this->db->escape($data['related']) . "', related_option = '' WHERE news_id = '" . (int)$news_id . "'");
 			}
 
-		} elseif ($data['related'] == 'manufacturer_wise') {
+		} elseif ($data['related'] === 'manufacturer_wise') {
 			if (isset($data['manufacturer_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['manufacturer_wise'] = $data['manufacturer_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductManufacturerWise($data['manufacturer_wise']);
 
@@ -111,13 +111,13 @@ class ModelCatalogNews extends Model {
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "news_product_related` WHERE news_id = '" . (int)$news_id . "'");
 
-		if ($data['related'] == 'category_wise') {
+		if ($data['related'] === 'category_wise') {
 			if (isset($data['category_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['category_wise'] = $data['category_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductCategoryWise($data['category_wise']);
 
@@ -130,13 +130,13 @@ class ModelCatalogNews extends Model {
 				$this->db->query("UPDATE `" . DB_PREFIX . "news` SET related_method = '" . $this->db->escape($data['related']) . "', related_option = '' WHERE news_id = '" . (int)$news_id . "'");
 			}
 
-		} elseif ($data['related'] == 'manufacturer_wise') {
+		} elseif ($data['related'] === 'manufacturer_wise') {
 			if (isset($data['manufacturer_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['manufacturer_wise'] = $data['manufacturer_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductManufacturerWise($data['manufacturer_wise']);
 
@@ -194,7 +194,7 @@ class ModelCatalogNews extends Model {
 		$this->cache->delete('store');
 	}
 
-	public function resetViews(int $news_id) {
+	public function resetViews(int $news_id): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "news` SET viewed = '0' WHERE news_id = '" . (int)$news_id . "'");
 
 		$this->cache->delete('seo_url_map');
@@ -212,13 +212,13 @@ class ModelCatalogNews extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'nd.title',
 				'n.date_added',
 				'n.sort_order',
 				'n.status',
 				'n.viewed'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -226,7 +226,7 @@ class ModelCatalogNews extends Model {
 				$sql .= " ORDER BY n.date_added";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -264,23 +264,23 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getNewsDescriptions(int $news_id): array {
-		$news_description_data = array();
+		$news_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_description` WHERE news_id = '" . (int)$news_id . "'");
 
 		foreach ($query->rows as $result) {
-			$news_description_data[$result['language_id']] = array(
+			$news_description_data[$result['language_id']] = [
 				'title'            => $result['title'],
 				'meta_description' => $result['meta_description'],
 				'description'      => $result['description']
-			);
+			];
 		}
 
 		return $news_description_data;
 	}
 
 	public function getNewsDownloads(int $news_id): array {
-		$news_download_data = array();
+		$news_download_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_to_download` WHERE news_id = '" . (int)$news_id . "'");
 
@@ -298,7 +298,7 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getNewsStores(int $news_id): array {
-		$newspage_store_data = array();
+		$newspage_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_to_store` WHERE news_id = '" . (int)$news_id . "'");
 
@@ -328,7 +328,7 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getProductManufacturerWise(array $manufacturers = []): array {
-		$product_list = array();
+		$product_list = [];
 
 		foreach ($manufacturers as $manufacturer) {
 			$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product` WHERE manufacturer_id = '" . (int)$manufacturer . "'");
@@ -344,7 +344,7 @@ class ModelCatalogNews extends Model {
 	}
 
 	public function getProductCategoryWise(array $categories = []): array {
-		$product_list = array();
+		$product_list = [];
 
 		foreach ($categories as $category_id) {
 			$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product_to_category` WHERE category_id = '" . (int)$category_id . "'");

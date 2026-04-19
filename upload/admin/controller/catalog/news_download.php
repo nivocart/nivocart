@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogNewsDownload extends Controller {
-	private $error = array();
+	private $error = [];
 
   	public function index() {
 		$this->language->load('catalog/news_download');
@@ -121,19 +121,19 @@ class ControllerCatalogNewsDownload extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/news_download', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['news_list'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['insert'] = $this->url->link('catalog/news_download/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -143,18 +143,18 @@ class ControllerCatalogNewsDownload extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['downloads'] = array();
+		$this->data['downloads'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'ndd.name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$download_total = $this->model_catalog_news_download->getTotalDownloads();
 
@@ -168,12 +168,12 @@ class ControllerCatalogNewsDownload extends Controller {
 				'href' => $this->url->link('catalog/news_download/update', 'token=' . $this->session->data['token'] . '&news_download_id=' . $result['news_download_id'] . $url, 'SSL')
 			);
 
-			$this->data['downloads'][] = array(
+			$this->data['downloads'][] = [
 				'news_download_id' => $result['news_download_id'],
 				'name'             => $result['name'],
 				'selected'         => isset($this->request->post['selected']) && in_array($result['news_download_id'], $this->request->post['selected']),
 				'action'           => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -242,10 +242,10 @@ class ControllerCatalogNewsDownload extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/news_download_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -275,7 +275,7 @@ class ControllerCatalogNewsDownload extends Controller {
  		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
-			$this->data['error_name'] = array();
+			$this->data['error_name'] = [];
 		}
 
   		if (isset($this->error['filename'])) {
@@ -298,19 +298,19 @@ class ControllerCatalogNewsDownload extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/news_download', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['news_download_id'])) {
 			$this->data['action'] = $this->url->link('catalog/news_download/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -339,7 +339,7 @@ class ControllerCatalogNewsDownload extends Controller {
 		} elseif (isset($this->request->get['news_download_id'])) {
 			$this->data['news_download_description'] = $this->model_catalog_news_download->getDownloadDescriptions($this->request->get['news_download_id']);
 		} else {
-			$this->data['news_download_description'] = array();
+			$this->data['news_download_description'] = [];
 		}
 
 		if (isset($this->request->post['filename'])) {
@@ -359,10 +359,10 @@ class ControllerCatalogNewsDownload extends Controller {
 		}
 
 		$this->template = 'catalog/news_download_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -435,7 +435,7 @@ class ControllerCatalogNewsDownload extends Controller {
 				}
 
 				// Allowed file extension types
-				$allowed = array();
+				$allowed = [];
 
 				$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_extension_allowed')));
 
@@ -448,7 +448,7 @@ class ControllerCatalogNewsDownload extends Controller {
 				}
 
 				// Allowed file mime types
-				$allowed = array();
+				$allowed = [];
 
 				$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_mime_allowed')));
 
@@ -467,7 +467,7 @@ class ControllerCatalogNewsDownload extends Controller {
 					$json['error'] = $this->language->get('error_filetype');
 				}
 
-				if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
+				if ($this->request->files['file']['error'] !== UPLOAD_ERR_OK) {
 					$json['error'] = $this->language->get('error_upload_' . $this->request->files['file']['error']);
 				}
 

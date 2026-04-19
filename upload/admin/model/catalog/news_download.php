@@ -38,9 +38,7 @@ class ModelCatalogNewsDownload extends Model {
 	public function getDownloads(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "news_download` nd LEFT JOIN `" . DB_PREFIX . "news_download_description` ndd ON (nd.news_download_id = ndd.news_download_id) WHERE ndd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$sort_data = array(
-			'ndd.name'
-		);
+		$sort_data = ['ndd.name'];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -48,7 +46,7 @@ class ModelCatalogNewsDownload extends Model {
 			$sql .= " ORDER BY ndd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -72,7 +70,7 @@ class ModelCatalogNewsDownload extends Model {
 	}
 
 	public function getDownloadDescriptions(int $news_download_id): array {
-		$news_download_description_data = array();
+		$news_download_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_download_description` WHERE news_download_id = '" . (int)$news_download_id . "'");
 
@@ -90,7 +88,7 @@ class ModelCatalogNewsDownload extends Model {
 	}
 
 	public function getNewsDownloads(int $news_download_id): array {
-		$news_download_data = array();
+		$news_download_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_to_download` WHERE news_download_id = '" . (int)$news_download_id . "'");
 

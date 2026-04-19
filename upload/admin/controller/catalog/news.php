@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogNews extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'news';
 
 	public function index() {
@@ -156,19 +156,19 @@ class ControllerCatalogNews extends Controller {
 
 		$this->language->load('catalog/' . $this->_name);
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'text'      => $this->language->get('text_home'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'href'      => $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'text'      => $this->language->get('heading_title'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->load->model('setting/extension');
 
@@ -195,18 +195,18 @@ class ControllerCatalogNews extends Controller {
 		$this->load->model('catalog/news');
 		$this->load->model('tool/image');
 
-		$this->data['news'] = array();
+		$this->data['news'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'nd.title';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$news_total = $this->model_catalog_news->getTotalNews();
 
@@ -215,12 +215,12 @@ class ControllerCatalogNews extends Controller {
 		$results = $this->model_catalog_news->getNews($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/news/update', 'token=' . $this->session->data['token'] . '&news_id=' . $result['news_id'] . $url, 'SSL')
-			);
+			];
 
 			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
 				$image = $this->model_tool_image->resize($result['image'], 40, 40);
@@ -228,7 +228,7 @@ class ControllerCatalogNews extends Controller {
 				$image = $this->model_tool_image->resize('no_image.jpg', 40, 40);
 			}
 
-			$this->data['news'][] = array(
+			$this->data['news'][] = [
 				'news_id'    => $result['news_id'],
 				'title'      => $result['title'],
 				'image'      => $image,
@@ -238,7 +238,7 @@ class ControllerCatalogNews extends Controller {
 				'viewed'     => $result['viewed'],
 				'selected'   => isset($this->request->post['selected']) && in_array($result['news_id'], $this->request->post['selected']),
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -320,10 +320,10 @@ class ControllerCatalogNews extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/news_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -405,7 +405,7 @@ class ControllerCatalogNews extends Controller {
 		if (isset($this->error['image'])) {
 			$this->data['error_image'] = $this->error['image'];
 		} else {
-			$this->data['error_image'] = array();
+			$this->data['error_image'] = [];
 		}
 
 		// Breadcrumbs
@@ -417,32 +417,32 @@ class ControllerCatalogNews extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'text'      => $this->language->get('text_home'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['news_id'])) {
 			$news_name = $this->model_catalog_news->getNewsStory($this->request->get['news_id']);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $news_name['title'],
 				'href'      => $this->url->link('catalog/news/update', 'token=' . $this->session->data['token'] . '&news_id=' . $this->request->get['news_id'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['news_title'] = $news_name['title'];
 			$this->data['new_entry'] = false;
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['news_title'] = $this->language->get('heading_title');
 			$this->data['new_entry'] = true;
@@ -480,7 +480,7 @@ class ControllerCatalogNews extends Controller {
 		} elseif (isset($this->request->get['news_id'])) {
 			$this->data['news_description'] = $this->model_catalog_news->getNewsDescriptions($this->request->get['news_id']);
 		} else {
-			$this->data['news_description'] = array();
+			$this->data['news_description'] = [];
 		}
 
 		if (isset($this->request->post['image'])) {
@@ -520,7 +520,7 @@ class ControllerCatalogNews extends Controller {
 		} elseif (isset($this->request->get['news_id'])) {
 			$this->data['news_download'] = $this->model_catalog_news->getNewsDownloads($this->request->get['news_id']);
 		} else {
-			$this->data['news_download'] = array();
+			$this->data['news_download'] = [];
 		}
 
 		$this->load->model('setting/store');
@@ -532,7 +532,7 @@ class ControllerCatalogNews extends Controller {
 		} elseif (isset($this->request->get['news_id'])) {
 			$this->data['news_store'] = $this->model_catalog_news->getNewsStores($this->request->get['news_id']);
 		} else {
-			$this->data['news_store'] = array(0);
+			$this->data['news_store'] = [0];
 		}
 
 		if (isset($this->request->post['lightbox'])) {
@@ -570,15 +570,15 @@ class ControllerCatalogNews extends Controller {
 				$this->data['manufacturer_ids'] = $this->request->post['manufacturer_wise'];
 			} else {
 				if (isset($this->request->post['product_wise'])) {
-					$this->data['products'] = array();
+					$this->data['products'] = [];
 
 					foreach ($this->request->post['product_wise'] as $product_id) {
 						$product_info = $this->model_catalog_product->getProduct($product_id);
 
-						$this->data['products'][] = array(
+						$this->data['products'][] = [
 							'product_id' => $product_info['product_id'],
 							'name'       => $product_info['name']
-						);
+						];
 					}
 				}
 			}
@@ -587,14 +587,7 @@ class ControllerCatalogNews extends Controller {
 			if ($news_info['related_method']) {
 				$this->data['related'] = $news_info['related_method'];
 
-				// check string before unserialize
-				$raw = $news_info['related_option'] ?? null;
-
-				if (!is_string($raw)) {
-					$this->error['warning'] = $this->language->get('error_unserialize');
-				}
-
-				$options = unserialize($raw, ['allowed_classes' => false]);
+				$options = json_decode($news_info['related_option'], true);
 
 				if ($this->data['related'] === 'category_wise' && $options) {
 					foreach ($options['category_wise'] as $option) {
@@ -610,10 +603,10 @@ class ControllerCatalogNews extends Controller {
 					foreach ($products as $product) {
 						$product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
-						$this->data['products'][] = array(
+						$this->data['products'][] = [
 							'product_id' => $product_info['product_id'],
 							'name'       => $product_info['name']
-						);
+						];
 					}
 				}
 
@@ -627,21 +620,21 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('catalog/category');
 
-		$category_data = array();
+		$category_data = [];
 
 		$this->data['default_categories'] = $this->model_catalog_category->getCategories($category_data);
 
 		$this->load->model('catalog/manufacturer');
 
-		$manufacturer_data = array();
+		$manufacturer_data = [];
 
 		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_data);
 
 		$this->template = 'catalog/news_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
