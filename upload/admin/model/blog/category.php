@@ -108,15 +108,15 @@ class ModelBlogCategory extends Model {
 	}
 
 	public function getCategories($parent_id = 0): array {
-		$category_data = array();
+		$category_data = [];
 
 		$sql = "SELECT * FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.parent_id = '" . (int)$parent_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'bcd.name',
 			'bc.sort_order',
 			'bc.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -124,7 +124,7 @@ class ModelBlogCategory extends Model {
 			$sql .= " ORDER BY bcd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -145,12 +145,12 @@ class ModelBlogCategory extends Model {
 		$query = $this->db->query($sql);
 
 		foreach ($query->rows as $result) {
-			$category_data[] = array(
+			$category_data[] = [
 				'blog_category_id' => $result['blog_category_id'],
 				'name'             => $this->getPath($result['blog_category_id'], $this->config->get('config_language_id')),
 				'status'           => $result['status'],
 				'sort_order'       => $result['sort_order']
-			);
+			];
 
 			$category_data = array_merge($category_data, $this->getCategories($result['blog_category_id']));
 		}
@@ -159,7 +159,7 @@ class ModelBlogCategory extends Model {
 	}
 
 	public function getPath(int $blog_category_id) {
-		$query = $this->db->query("SELECT bcd.name AS name, bc.parent_id AS parent_id FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN " . DB_PREFIX . "blog_category_description bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY bc.sort_order, bcd.name ASC");
+		$query = $this->db->query("SELECT bcd.name AS name, bc.parent_id AS parent_id FROM `" . DB_PREFIX . "blog_category` bc LEFT JOIN `" . DB_PREFIX . "blog_category_description` bcd ON (bc.blog_category_id = bcd.blog_category_id) WHERE bc.blog_category_id = '" . (int)$blog_category_id . "' AND bcd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY bc.sort_order, bcd.name ASC");
 
 		if ($query->row['parent_id']) {
 			return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('text_separator') . $query->row['name'];
@@ -169,24 +169,24 @@ class ModelBlogCategory extends Model {
 	}
 
 	public function getCategoryDescriptions(int $blog_category_id): array {
-		$category_description_data = array();
+		$category_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category_description` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 
 		foreach ($query->rows as $result) {
-			$category_description_data[$result['language_id']] = array(
+			$category_description_data[$result['language_id']] = [
 				'name'             => $result['name'],
 				'meta_keyword'     => $result['meta_keyword'],
 				'meta_description' => $result['meta_description'],
 				'description'      => $result['description']
-			);
+			];
 		}
 
 		return $category_description_data;
 	}
 
 	public function getCategoryStores(int $blog_category_id): array {
-		$category_store_data = array();
+		$category_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category_to_store` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 
@@ -198,7 +198,7 @@ class ModelBlogCategory extends Model {
 	}
 
 	public function getCategoryLayouts(int $blog_category_id): array {
-		$category_layout_data = array();
+		$category_layout_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_category_to_layout` WHERE blog_category_id = '" . (int)$blog_category_id . "'");
 

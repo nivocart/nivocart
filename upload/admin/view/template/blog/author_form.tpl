@@ -39,8 +39,8 @@
         <tr class="highlighted">
           <td><?php echo $entry_status; ?></td>
           <td><select name="status">
-            <option value="1" <?php if ($status == 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
-            <option value="0" <?php if ($status == 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
+            <option value="1" <?php if ($status === 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
+            <option value="0" <?php if ($status === 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
           </select></td>
         </tr>
       </table>

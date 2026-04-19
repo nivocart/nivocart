@@ -1,6 +1,6 @@
 <?php
 class ControllerBlogComment extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$url = $this->request->get['route'];
@@ -15,19 +15,19 @@ class ControllerBlogComment extends Controller {
 			$this->data['text_install_message'] = $this->language->get('text_install_message');
 			$this->data['text_upgrade'] = $this->language->get('text_upgrade');
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 				'separator' => false
-			);
+			];
 
 			$this->template = 'blog/notification.tpl';
-			$this->children = array(
+			$this->children = [
 				'common/header',
 				'common/footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 		} else {
@@ -35,14 +35,10 @@ class ControllerBlogComment extends Controller {
 		}
 	}
 
-	public function validateDatabase() {
+	public function validateDatabase(): bool {
 		$database_not_found = $this->getChild('blog/install');
 
-		if ($database_not_found) {
-			return true;
-		}
-
-		return false;
+		return ($database_not_found) ? true : false;
 	}
 
 	public function getData() {
@@ -164,19 +160,19 @@ class ControllerBlogComment extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('blog/comment/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('blog/comment/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -185,32 +181,32 @@ class ControllerBlogComment extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['comments'] = array();
+		$this->data['comments'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'bc.date_added';
 		$order = $this->request->get['order'] ?? 'DESC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort' => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$comment_total = $this->model_blog_comment->getTotalArticleComments($data);
 
 		$results = $this->model_blog_comment->getArticleComments($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('blog/comment/update', 'token=' . $this->session->data['token'] . '&blog_comment_id=' . $result['blog_comment_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['comments'][] = array(
+			$this->data['comments'][] = [
 				'blog_comment_id' => $result['blog_comment_id'],
 				'blog_article_id' => $result['blog_article_id'],
 				'article_title'   => $result['article_title'],
@@ -219,7 +215,7 @@ class ControllerBlogComment extends Controller {
 				'date_added'      => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'selected'        => isset($this->request->post['selected']) && in_array($result['blog_comment_id'], $this->request->post['selected']),
 				'action'          => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -258,7 +254,7 @@ class ControllerBlogComment extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -298,10 +294,10 @@ class ControllerBlogComment extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'blog/comment_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -357,13 +353,13 @@ class ControllerBlogComment extends Controller {
 		if (isset($this->error['reply_author'])) {
 			$this->data['error_reply_author'] = $this->error['reply_author'];
 		} else {
-			$this->data['error_reply_author'] = array();
+			$this->data['error_reply_author'] = [];
 		}
 
 		if (isset($this->error['reply_comment'])) {
 			$this->data['error_reply_comment'] = $this->error['reply_comment'];
 		} else {
-			$this->data['error_reply_comment'] = array();
+			$this->data['error_reply_comment'] = [];
 		}
 
 		// Breadcrumbs
@@ -375,19 +371,19 @@ class ControllerBlogComment extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (isset($this->request->get['blog_comment_id'])) {
 			$this->data['action'] = $this->url->link('blog/comment/update', 'token=' . $this->session->data['token'] . '&blog_comment_id=' . $this->request->get['blog_comment_id'] . $url, 'SSL');
@@ -397,7 +393,7 @@ class ControllerBlogComment extends Controller {
 
 		$this->data['cancel'] = $this->url->link('blog/comment', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if ((isset($this->request->get['blog_comment_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if ((isset($this->request->get['blog_comment_id'])) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$comment_info = $this->model_blog_comment->getArticleComment($this->request->get['blog_comment_id']);
 		}
 
@@ -438,14 +434,14 @@ class ControllerBlogComment extends Controller {
 		} elseif (isset($this->request->get['blog_comment_id'])) {
 			$this->data['comment_reply'] = $this->model_blog_comment->getCommentReply($this->request->get['blog_comment_id']);
 		} else {
-			$this->data['comment_reply'] = array();
+			$this->data['comment_reply'] = [];
 		}
 
 		$this->template = 'blog/comment_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -459,7 +455,7 @@ class ControllerBlogComment extends Controller {
 			$this->error['author'] = $this->language->get('error_author');
 		}
 
-		if ($this->request->post['article_title'] == '') {
+		if ($this->request->post['article_title'] === '') {
 			$this->error['article_title'] = $this->language->get('error_article_title');
 		} else {
 			$found = $this->model_blog_comment->checkArticleTitle($this->request->post['article_title']);

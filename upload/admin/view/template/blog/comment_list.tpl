@@ -29,22 +29,22 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'bad.article_title') { ?>
+            <td class="left"><?php if ($sort === 'bad.article_title') { ?>
               <a href="<?php echo $sort_article_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_article_title; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_article_title; ?>"><?php echo $column_article_title; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'bc.author_name') { ?>
+            <td class="left"><?php if ($sort === 'bc.author_name') { ?>
               <a href="<?php echo $sort_author_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_author_name; ?>"><?php echo $column_author_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'bc.status') { ?>
+            <td class="left"><?php if ($sort === 'bc.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'bc.date_added') { ?>
+            <td class="left"><?php if ($sort === 'bc.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -65,7 +65,7 @@
             <?php } ?></td>
             <td class="left"><?php echo $comment['article_title']; ?></td>
             <td class="left"><?php echo $comment['author_name']; ?></td>
-            <?php if ($comment['status'] == 1) { ?>
+            <?php if ($comment['status'] === 1) { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>

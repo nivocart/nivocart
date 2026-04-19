@@ -45,13 +45,13 @@ class ModelBlogArticle extends Model {
 			}
 		}
 
-		if ($data['related_article'] == 'category_wise') {
+		if ($data['related_article'] === 'category_wise') {
 			if (isset($data['category_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['category_wise'] = $data['category_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductCategoryWise($data['category_wise']);
 
@@ -64,13 +64,13 @@ class ModelBlogArticle extends Model {
 				$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET article_related_method = '" . $this->db->escape($data['related_article']) . "', article_related_option = '' WHERE blog_article_id='" . (int)$blog_article_id . "'");
 			}
 
-		} elseif ($data['related_article'] == 'manufacturer_wise') {
+		} elseif ($data['related_article'] === 'manufacturer_wise') {
 			if (isset($data['manufacturer_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['manufacturer_wise'] = $data['manufacturer_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductManufacturerWise($data['manufacturer_wise']);
 
@@ -157,13 +157,13 @@ class ModelBlogArticle extends Model {
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "blog_article_product_related` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
-		if ($data['related_article'] == 'category_wise') {
+		if ($data['related_article'] === 'category_wise') {
 			if (isset($data['category_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['category_wise'] = $data['category_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductCategoryWise($data['category_wise']);
 
@@ -176,13 +176,13 @@ class ModelBlogArticle extends Model {
 				$this->db->query("UPDATE `" . DB_PREFIX . "blog_article` SET article_related_method = '" . $this->db->escape($data['related_article']) . "', article_related_option = '' WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 			}
 
-		} elseif ($data['related_article'] == 'manufacturer_wise') {
+		} elseif ($data['related_article'] === 'manufacturer_wise') {
 			if (isset($data['manufacturer_wise'])) {
-				$option = array();
+				$option = [];
 
 				$option['manufacturer_wise'] = $data['manufacturer_wise'];
 
-				$options = serialize($option);
+				$options = json_encode($option);
 
 				$product_list = $this->getProductManufacturerWise($data['manufacturer_wise']);
 
@@ -263,13 +263,13 @@ class ModelBlogArticle extends Model {
 			$sql .= " AND bad.article_title LIKE '" . $this->db->escape($data['filter_article']) . "%'";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'bad.article_title',
 			'bau.name',
 			'ba.sort_order',
 			'ba.status',
 			'ba.date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -277,7 +277,7 @@ class ModelBlogArticle extends Model {
 			$sql .= " ORDER BY ba.date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -301,25 +301,25 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getArticleDescriptions(int $blog_article_id): array {
-		$blog_article_description_data = array();
+		$blog_article_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
 		foreach ($query->rows as $result) {
-			$blog_article_description_data[$result['language_id']] = array(
+			$blog_article_description_data[$result['language_id']] = [
 				'blog_article_description_id' => $result['blog_article_description_id'],
 				'article_title'               => $result['article_title'],
 				'description'                 => $result['description'],
 				'meta_description'            => $result['meta_description'],
 				'meta_keyword'                => $result['meta_keyword']
-			);
+			];
 		}
 
 		return $blog_article_description_data;
 	}
 
 	public function getArticleAdditionalDescriptions(int $blog_article_id): array {
-		$blog_article_additional_description = array();
+		$blog_article_additional_description = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description_additional` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
@@ -328,24 +328,24 @@ class ModelBlogArticle extends Model {
 
 			$language_total = $this->model_localisation_language->getTotalLanguages();
 
-			$addition_blog_array = array();
+			$addition_blog_array = [];
 			$counter = 0;
 
 			foreach ($query->rows as $key => $result) {
 				$counter++;
 
-				$addition_blog_array[$result['language_id']] = array('additional' => $result['additional_description']);
+				$addition_blog_array[$result['language_id']] = ['additional' => $result['additional_description']];
 
-				if ($counter == $language_total) {
+				if ($counter === $language_total) {
 					$blog_article_additional_description[] = $addition_blog_array;
-					$addition_blog_array = array();
+					$addition_blog_array = [];
 					$counter = 0;
 				}
 			}
 
 		} else {
 			foreach ($query->rows as $result) {
-				$blog_article_additional_description[][$result['language_id']] = array('additional' => $result['additional_description']);
+				$blog_article_additional_description[][$result['language_id']] = ['additional' => $result['additional_description']];
 			}
 		}
 
@@ -353,7 +353,7 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getArticleCategories(int $blog_article_id): array {
-		$article_category_data = array();
+		$article_category_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_category` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
@@ -365,7 +365,7 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getArticleStore(int $blog_article_id): array {
-		$article_store_data = array();
+		$article_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_store` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
@@ -377,7 +377,7 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getArticleLayouts(int $blog_article_id): array {
-		$article_layout_data = array();
+		$article_layout_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_to_layout` WHERE blog_article_id = '" . (int)$blog_article_id . "'");
 
@@ -389,7 +389,7 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getProductManufacturerWise($manufacturers): array {
-		$product_list = array();
+		$product_list = [];
 
 		foreach ($manufacturers as $manufacturer) {
 			$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product` WHERE manufacturer_id = '" . (int)$manufacturer . "'");
@@ -405,7 +405,7 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getProductCategoryWise($categories): array {
-		$product_list = array();
+		$product_list = [];
 
 		foreach ($categories as $category_id) {
 			$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product_to_category` WHERE category_id = '" . (int)$category_id . "'");
@@ -446,17 +446,17 @@ class ModelBlogArticle extends Model {
 	}
 
 	public function getRelatedArticles(int $blog_article_id): array {
-		$blog_related_article_data = array();
+		$blog_related_article_data = [];
 
 		$query = $this->db->query("SELECT bra.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_related_article` bra LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bad.blog_article_id = bra.blog_article_related_id) WHERE bra.blog_article_id = '" . (int)$blog_article_id . "'");
 
 		foreach ($query->rows as $row) {
-			$blog_related_article_data[] = array(
+			$blog_related_article_data[] = [
 				'blog_article_related_id' => $row['blog_article_related_id'],
 				'article_title'           => $row['article_title'],
 				'sort_order'              => $row['sort_order'],
 				'status'                  => $row['status']
-			);
+			];
 		}
 
 		return $blog_related_article_data;

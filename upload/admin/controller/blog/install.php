@@ -1,6 +1,6 @@
 <?php
 class ControllerBlogInstall extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('blog/install');
@@ -32,17 +32,13 @@ class ControllerBlogInstall extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	public function validateTable() {
+	public function validateTable(): bool {
 		$table_name = $this->db->escape('blog_article');
 
 		$table = DB_PREFIX . $table_name;
 
 		$query = $this->db->query("SHOW TABLES LIKE '{$table}'");
 
-		if ($query->num_rows) {
-			return true;
-		}
-
-		return false;
+		return ($query->num_rows) ? true : false;
 	}
 }

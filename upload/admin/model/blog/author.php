@@ -58,15 +58,15 @@ class ModelBlogAuthor extends Model {
 	public function getAuthors(array $data = []): array {
 		$sql = "SELECT ba.* FROM `" . DB_PREFIX . "blog_author` ba LEFT JOIN `" . DB_PREFIX . "blog_author_description` bad ON (ba.blog_author_id = bad.blog_author_id) WHERE bad.language_id='" . (int)$this->config->get('config_language_id') . "'";
 
-		if (isset($data['filter_author']) && $data['filter_author'] != '') {
+		if (isset($data['filter_author']) && $data['filter_author'] !== '') {
 			$sql .= " AND ba.name LIKE '" . $this->db->escape($data['filter_author']) . "%'";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'ba.name',
 			'ba.status',
 			'ba.date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -98,16 +98,16 @@ class ModelBlogAuthor extends Model {
 	}
 
 	public function getAuthorDescriptions(int $blog_author_id): array {
-		$author_description_data = array();
+		$author_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_author_description WHERE blog_author_id = '" . (int)$blog_author_id . "'");
 
 		foreach ($query->rows as $result) {
-			$author_description_data[$result['language_id']] = array(
+			$author_description_data[$result['language_id']] = [
 				'meta_keyword'     => $result['meta_keyword'],
 				'meta_description' => $result['meta_description'],
 				'description'      => $result['description']
-			);
+			];
 		}
 
 		return $author_description_data;
@@ -119,11 +119,11 @@ class ModelBlogAuthor extends Model {
 		return $query->row['name'];
 	}
 
-	public function checkAuthorName($name, $blog_author_id = 0) {
+	public function checkAuthorName($name, $blog_author_id = 0): array {
 		if (!$blog_author_id) {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(mb_strtolower($name), 'UTF-8') . "'");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LOWER(name) = '" . $this->db->escape(mb_strtolower($name), 'UTF-8') . "'");
 		} else {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LCASE(name) = '" . $this->db->escape(mb_strtolower($name), 'UTF-8') . "' AND blog_author_id <> '" . (int)$blog_author_id . "'");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_author` WHERE LOWER(name) = '" . $this->db->escape(mb_strtolower($name), 'UTF-8') . "' AND blog_author_id <> '" . (int)$blog_author_id . "'");
 		}
 
 		return $query->num_rows;

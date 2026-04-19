@@ -1,6 +1,6 @@
 <?php
 class ControllerBlogReport extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$url = $this->request->get['route'];
@@ -15,19 +15,19 @@ class ControllerBlogReport extends Controller {
 			$this->data['text_install_message'] = $this->language->get('text_install_message');
 			$this->data['text_upgrade'] = $this->language->get('text_upgrade');
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 				'separator' => false
-			);
+			];
 
 			$this->template = 'blog/notification.tpl';
-			$this->children = array(
+			$this->children = [
 				'common/header',
 				'common/footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 		} else {
@@ -35,14 +35,10 @@ class ControllerBlogReport extends Controller {
 		}
 	}
 
-	public function validateDatabase() {
+	public function validateDatabase(): bool {
 		$database_not_found = $this->getChild('blog/install');
 
-		if ($database_not_found) {
-			return true;
-		}
-
-		return false;
+		return ($database_not_found) ? true : false;
 	}
 
 	public function getData() {
@@ -96,28 +92,28 @@ class ControllerBlogReport extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/report', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$data = array(
+		$data = [
 			'filter_date_start' => $filter_date_start,
 			'filter_date_end'   => $filter_date_end,
 			'sort'              => $sort,
 			'order'             => $order,
 			'start'             => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'             => $this->config->get('config_admin_limit')
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -126,23 +122,23 @@ class ControllerBlogReport extends Controller {
 		$blog_viewed_total = $this->model_blog_report->getTotalBlogViewed($data);
 		$blog_views_total = $this->model_blog_report->getTotalBlogViews($data);
 
-		$this->data['blog_views'] = array();
+		$this->data['blog_views'] = [];
 
 		$results = $this->model_blog_report->getBlogViewed($data);
 
 		foreach ($results as $result) {
 			if ($result['view'] && ($blog_views_total > 0)) {
-				$percent = round($result['view'] / $blog_views_total * 100, 2);
+				$percent = round(($result['view'] * 100) / $blog_views_total, 2, PHP_ROUND_HALF_UP);
 			} else {
 				$percent = 0;
 			}
 
-			$this->data['blog_views'][] = array(
+			$this->data['blog_views'][] = [
 				'article_title' => $result['article_title'],
 				'author_name'   => $result['author_name'],
 				'viewed'        => $result['view'],
 				'percent'       => $percent . '%'
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -220,10 +216,10 @@ class ControllerBlogReport extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'blog/report.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

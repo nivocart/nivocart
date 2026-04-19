@@ -28,17 +28,17 @@
       <table class="list">
       <thead>
         <tr>
-          <td class="left"><?php if ($sort == 'bad.article_title') { ?>
+          <td class="left"><?php if ($sort === 'bad.article_title') { ?>
             <a href="<?php echo $sort_article_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_article_name; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_article_title; ?>"><?php echo $column_article_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'bau.author_name') { ?>
+          <td class="left"><?php if ($sort === 'bau.author_name') { ?>
             <a href="<?php echo $sort_author_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author_name; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_author_name; ?>"><?php echo $column_author_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'bv.view') { ?>
+          <td class="left"><?php if ($sort === 'bv.view') { ?>
             <a href="<?php echo $sort_view; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_viewed; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_view; ?>"><?php echo $column_viewed; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>

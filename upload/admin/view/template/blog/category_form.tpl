@@ -65,7 +65,7 @@
               <td><select name="parent_id">
                 <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($categories as $category) { ?>
-                <?php if ($category['blog_category_id'] == $parent_id) { ?>
+                <?php if ($category['blog_category_id'] === $parent_id) { ?>
                   <option value="<?php echo $category['blog_category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $category['blog_category_id']; ?>"><?php echo $category['name']; ?></option>
@@ -85,7 +85,7 @@
                 <?php } ?>
                 </div>
               <?php foreach ($stores as $store) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                   <?php if (in_array($store['store_id'], $category_store)) { ?>
                     <input type="checkbox" name="category_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" /><?php echo $store['name']; ?>
@@ -145,7 +145,7 @@
               <td class="left"><select name="category_layout[0][layout_id]">
                 <option value=""><?php echo $text_none; ?></option>
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if (isset($category_layout[0]) && $category_layout[0] == $layout['layout_id']) { ?>
+                  <?php if (isset($category_layout[0]) && $category_layout[0] === $layout['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -161,7 +161,7 @@
               <td class="left"><select name="category_layout[<?php echo $store['store_id']; ?>][layout_id]">
                 <option value=""><?php echo $text_none; ?></option>
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if (isset($category_layout[$store['store_id']]) && $category_layout[$store['store_id']] == $layout['layout_id']) { ?>
+                  <?php if (isset($category_layout[$store['store_id']]) && $category_layout[$store['store_id']] === $layout['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>

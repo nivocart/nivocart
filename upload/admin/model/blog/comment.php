@@ -46,12 +46,12 @@ class ModelBlogComment extends Model {
 	public function getArticleComments(array $data = []): array {
 		$sql = "SELECT bc.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'bad.article_title',
 			'bc.author',
 			'bc.status',
 			'bc.date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -59,7 +59,7 @@ class ModelBlogComment extends Model {
 			$sql .= " ORDER BY bc.date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'ASC')) {
+		if (isset($data['order']) && ($data['order'] === 'ASC')) {
 			$sql .= " ASC";
 		} else {
 			$sql .= " DESC";
@@ -83,18 +83,18 @@ class ModelBlogComment extends Model {
 	}
 
 	public function getCommentReply(int $blog_comment_id): array {
-		$comment_reply = array();
+		$comment_reply = [];
 
 		$query = $this->db->query("SELECT bc.*, bad.article_title AS article_title FROM `" . DB_PREFIX . "blog_comment` bc LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (bc.blog_article_id = bad.blog_article_id) WHERE bc.blog_article_reply_id = '" . (int)$blog_comment_id . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($query->rows as $result) {
-			$comment_reply[] = array(
+			$comment_reply[] = [
 				'blog_comment_id' => $result['blog_comment_id'],
 				'artile_title'    => $result['article_title'],
 				'author'          => $result['author'],
 				'comment'         => $result['comment'],
 				'status'          => $result['status']
-			);
+			];
 		}
 
 		return $comment_reply;
@@ -106,7 +106,7 @@ class ModelBlogComment extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTotalCommentsAwaitingApproval() {
+	public function getTotalCommentsAwaitingApproval(): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "blog_comment` WHERE status = '0'");
 
 		return $query->row['total'];

@@ -1,6 +1,6 @@
 <?php
 class ControllerBlogArticle extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$url = $this->request->get['route'];
@@ -15,19 +15,19 @@ class ControllerBlogArticle extends Controller {
 			$this->data['text_install_message'] = $this->language->get('text_install_message');
 			$this->data['text_upgrade'] = $this->language->get('text_upgrade');
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 				'separator' => false
-			);
+			];
 
 			$this->template = 'blog/notification.tpl';
-			$this->children = array(
+			$this->children = [
 				'common/header',
 				'common/footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 		} else {
@@ -35,14 +35,10 @@ class ControllerBlogArticle extends Controller {
 		}
 	}
 
-	public function validateDatabase() {
+	public function validateDatabase(): bool {
 		$database_not_found = $this->getChild('blog/install');
 
-		if ($database_not_found) {
-			return true;
-		}
-
-		return false;
+		return ($database_not_found) ? true : false;
 	}
 
 	public function getData() {
@@ -164,19 +160,19 @@ class ControllerBlogArticle extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('blog/article/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('blog/article/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -185,32 +181,32 @@ class ControllerBlogArticle extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['articles'] = array();
+		$this->data['articles'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'ba.date_added';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$article_limit = $this->model_blog_article->getTotalArticle($data);
 
 		$results = $this->model_blog_article->getArticles($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('blog/article/update', 'token=' . $this->session->data['token'] . '&blog_article_id=' . $result['blog_article_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['articles'][] = array(
+			$this->data['articles'][] = [
 				'blog_article_id' => $result['blog_article_id'],
 				'article_title'   => $result['article_title'],
 				'author_name'     => $result['author_name'],
@@ -219,7 +215,7 @@ class ControllerBlogArticle extends Controller {
 				'date_added'      => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'selected'        => isset($this->request->post['selected']) && in_array($result['blog_article_id'], $this->request->post['selected']),
 				'action'          => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -259,7 +255,7 @@ class ControllerBlogArticle extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -300,10 +296,10 @@ class ControllerBlogArticle extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'blog/article_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -376,13 +372,13 @@ class ControllerBlogArticle extends Controller {
 	 	if (isset($this->error['article_title'])) {
 			$this->data['error_article_title'] = $this->error['article_title'];
 		} else {
-			$this->data['error_article_title'] = array();
+			$this->data['error_article_title'] = [];
 		}
 
 	 	if (isset($this->error['description'])) {
 			$this->data['error_description'] = $this->error['description'];
 		} else {
-			$this->data['error_description'] = array();
+			$this->data['error_description'] = [];
 		}
 
 		if (isset($this->error['author_name'])) {
@@ -399,19 +395,19 @@ class ControllerBlogArticle extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (isset($this->request->get['blog_article_id'])) {
 			$this->data['action'] = $this->url->link('blog/article/update', 'token=' . $this->session->data['token'] . '&blog_article_id=' . $this->request->get['blog_article_id'] . $url, 'SSL');
@@ -427,7 +423,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('blog/author');
 
-		$this->data['authors'] = array();
+		$this->data['authors'] = [];
 
 		$this->data['authors'] = $this->model_blog_author->getAuthors();
 
@@ -440,7 +436,7 @@ class ControllerBlogArticle extends Controller {
 		} elseif (isset($this->request->get['blog_article_id'])) {
 			$this->data['article_description'] = $this->model_blog_article->getArticleDescriptions($this->request->get['blog_article_id']);
 		} else {
-			$this->data['article_description'] = array();
+			$this->data['article_description'] = [];
 		}
 
 		if (isset($this->request->post['article_additional_description'])) {
@@ -448,7 +444,7 @@ class ControllerBlogArticle extends Controller {
 		} elseif (isset($this->request->get['blog_article_id'])) {
 			$this->data['article_additional_description'] = $this->model_blog_article->getArticleAdditionalDescriptions($this->request->get['blog_article_id']);
 		} else {
-			$this->data['article_additional_description'] = array();
+			$this->data['article_additional_description'] = [];
 		}
 
 		if (isset($this->request->post['keyword'])) {
@@ -513,10 +509,10 @@ class ControllerBlogArticle extends Controller {
 		} elseif (isset($this->request->get['blog_article_id'])) {
 			$this->data['article_store'] = $this->model_blog_article->getArticleStore($this->request->get['blog_article_id']);
 		} else {
-			$this->data['article_store'] = array(0);
+			$this->data['article_store'] = [0];
 		}
 
-		$this->data['categories'] = array();
+		$this->data['categories'] = [];
 
 		$this->load->model('blog/category');
 
@@ -529,7 +525,7 @@ class ControllerBlogArticle extends Controller {
 		} elseif (isset($this->request->get['blog_article_id'])) {
 			$this->data['article_category'] = $this->model_blog_article->getArticleCategories($this->request->get['blog_article_id']);
 		} else {
-			$this->data['article_category'] = array();
+			$this->data['article_category'] = [];
 		}
 
 		$this->load->model('catalog/category');
@@ -538,7 +534,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('catalog/manufacturer');
 
-		$manufacturer_array = array();
+		$manufacturer_array = [];
 
 		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_array);
 
@@ -552,15 +548,15 @@ class ControllerBlogArticle extends Controller {
 			} elseif (isset($this->request->post['manufacturer_wise'])) {
 				$this->data['manufacturer_ids'] = $this->request->post['manufacturer_wise'];
 			} elseif (isset($this->request->post['product_wise'])) {
-				$this->data['products'] = array();
+				$this->data['products'] = [];
 
 				foreach ($this->request->post['product_wise'] as $product_id) {
 					$product_info = $this->model_catalog_product->getProduct($product_id);
 
-					$this->data['products'][] = array(
+					$this->data['products'][] = [
 						'product_id' => $product_info['product_id'],
 						'name'       => $product_info['name']
-					);
+					];
 				}
 			}
 
@@ -568,14 +564,14 @@ class ControllerBlogArticle extends Controller {
 			if ($article_info['article_related_method']) {
 				$this->data['related_article'] = $article_info['article_related_method'];
 
-				$options = unserialize($article_info['article_related_option']);
+				$options = json_decode($article_info['article_related_option'], true);
 
-				if ($this->data['related_article'] == 'category_wise' && $options) {
+				if ($this->data['related_article'] === 'category_wise' && $options) {
 					foreach ($options['category_wise'] as $option) {
 						$this->data['category_ids'][] = $option;
 					}
 
-				} elseif ($this->data['related_article'] == 'manufacturer_wise' && $options) {
+				} elseif ($this->data['related_article'] === 'manufacturer_wise' && $options) {
 					foreach ($options['manufacturer_wise'] as $option) {
 						$this->data['manufacturer_ids'][] = $option;
 					}
@@ -586,10 +582,10 @@ class ControllerBlogArticle extends Controller {
 					foreach ($products as $product) {
 						$product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
-						$this->data['products'][] = array(
+						$this->data['products'][] = [
 							'product_id' => $product_info['product_id'],
 							'name'       => $product_info['name']
-						);
+						];
 					}
 				}
 
@@ -606,7 +602,7 @@ class ControllerBlogArticle extends Controller {
 		} elseif (isset($this->request->get['blog_article_id'])) {
 			$this->data['blog_related_articles'] = $this->model_blog_article->getRelatedArticles($this->request->get['blog_article_id']);
 		} else {
-			$this->data['blog_related_articles'] = array();
+			$this->data['blog_related_articles'] = [];
 		}
 
 		if (isset($this->request->post['status'])) {
@@ -622,7 +618,7 @@ class ControllerBlogArticle extends Controller {
 		} elseif (isset($this->request->get['blog_article_id'])) {
 			$this->data['article_layout'] = $this->model_blog_article->getArticleLayouts($this->request->get['blog_article_id']);
 		} else {
-			$this->data['article_layout'] = array();
+			$this->data['article_layout'] = [];
 		}
 
 		$this->load->model('design/layout');
@@ -630,10 +626,10 @@ class ControllerBlogArticle extends Controller {
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 
 		$this->template = 'blog/article_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -720,15 +716,15 @@ class ControllerBlogArticle extends Controller {
 
 			$this->load->model('blog/article');
 
-			$data = array('filter_article' => $article_name);
+			$data = ['filter_article' => $article_name];
 
 			$results = $this->model_blog_article->getArticles($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'blog_article_id' => $result['blog_article_id'],
 					'name'            => strip_tags(html_entity_decode($result['article_title'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
@@ -737,7 +733,7 @@ class ControllerBlogArticle extends Controller {
 	}
 
 	public function autocomplete_article() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['blog_article_id'])) {
 			$this->load->model('blog/article');
@@ -748,15 +744,15 @@ class ControllerBlogArticle extends Controller {
 				$filter_name = '';
 			}
 
-			$data = array('filter_name' => $filter_name);
+			$data = ['filter_name' => $filter_name];
 
 			$results = $this->model_blog_article->getArticlesRelated($data, $this->request->get['blog_article_id']);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'blog_article_id' => $result['blog_article_id'],
 					'article_title'   => strip_tags(html_entity_decode($result['article_title'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 

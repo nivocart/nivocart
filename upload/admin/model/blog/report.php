@@ -1,7 +1,7 @@
 <?php
 class ModelBlogReport extends Model {
 
-	public function getTotalBlogViewed(array $data = []) {
+	public function getTotalBlogViewed(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT(bv.blog_view_id)) AS `total` FROM `" . DB_PREFIX . "blog_view` bv LEFT JOIN `" . DB_PREFIX . "blog_article` ba ON (bv.blog_article_id = ba.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bv.view > 0";
 
 		if (!empty($data['filter_date_start'])) {
@@ -26,7 +26,7 @@ class ModelBlogReport extends Model {
 	}
 
 	public function getBlogViewed(array $data = []): array {
-		$sql = "SELECT bv.*, bad.article_title AS article_title, bau.name AS author_name FROM `" . DB_PREFIX . "blog_view` bv LEFT JOIN `" . DB_PREFIX . "blog_article` ba ON (bv.blog_article_id = ba.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT bv.*, bad.article_title AS `article_title`, bau.name AS `author_name` FROM `" . DB_PREFIX . "blog_view` bv LEFT JOIN `" . DB_PREFIX . "blog_article` ba ON (bv.blog_article_id = ba.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_date_start'])) {
 			$sql .= " AND DATE(bv.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -38,11 +38,11 @@ class ModelBlogReport extends Model {
 
 		$sql .= " GROUP BY bv.blog_article_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'bv.view',
 			'ba.article_title',
 			'bau.name'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -50,7 +50,7 @@ class ModelBlogReport extends Model {
 			$sql .= " ORDER BY bv.view";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'ASC')) {
+		if (isset($data['order']) && ($data['order'] === 'ASC')) {
 			$sql .= " ASC";
 		} else {
 			$sql .= " DESC";

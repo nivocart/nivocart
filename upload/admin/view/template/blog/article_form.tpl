@@ -84,7 +84,7 @@
             <td><div class="scrollbox" style="width:500px;">
               <?php $class = 'odd'; ?>
               <?php foreach ($categories as $category) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                 <?php if (in_array($category['blog_category_id'], $article_category)) { ?>
                   <input type="checkbox" name="article_category[]" value="<?php echo $category['blog_category_id']; ?>" checked="checked" /><?php echo $category['name']; ?>
@@ -110,7 +110,7 @@
                 <?php } ?>
                 </div>
               <?php foreach ($stores as $store) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                 <?php if (in_array($store['store_id'], $article_store)) { ?>
                   <input type="checkbox" name="article_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" /><?php echo $store['name']; ?>
@@ -126,8 +126,8 @@
           <tr>
             <td><?php echo $entry_allow_comment; ?></td>
             <td><select name="allow_comment">
-              <option value="1" <?php if ($allow_comment == 1) { echo "selected='selected'"; } ?>><?php echo $text_yes; ?></option>
-              <option value="0" <?php if ($allow_comment == 0) { echo "selected='selected'"; } ?>><?php echo $text_no; ?></option>
+              <option value="1" <?php if ($allow_comment === 1) { echo "selected='selected'"; } ?>><?php echo $text_yes; ?></option>
+              <option value="0" <?php if ($allow_comment === 0) { echo "selected='selected'"; } ?>><?php echo $text_no; ?></option>
             </select></td>
           </tr>
           <tr>
@@ -137,8 +137,8 @@
           <tr class="highlighted">
             <td><?php echo $entry_status; ?></td>
             <td><select name="status">
-              <option value="1" <?php if ($status == 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
-              <option value="0" <?php if ($status == 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
+              <option value="1" <?php if ($status === 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
+              <option value="0" <?php if ($status === 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
             </select></td>
           </tr>
         </table>
@@ -192,9 +192,9 @@
             <td><?php echo $entry_article_related_method; ?></td>
             <td>
               <select name="related_article" onchange="getRelatedMethod(this.value);">
-                <option value="category_wise" <?php if ($related_article == 'category_wise') { echo "selected='selected'"; } ?>><?php echo $entry_category_wise; ?></option>
-                <option value="manufacturer_wise" <?php if ($related_article == 'manufacturer_wise') { echo "selected='selected'"; } ?>><?php echo $entry_manufacturer_wise; ?></option>
-                <option value="product_wise" <?php if ($related_article == 'product_wise') { echo "selected='selected'"; } ?>><?php echo $entry_product_wise; ?></option>
+                <option value="category_wise" <?php if ($related_article === 'category_wise') { echo "selected='selected'"; } ?>><?php echo $entry_category_wise; ?></option>
+                <option value="manufacturer_wise" <?php if ($related_article === 'manufacturer_wise') { echo "selected='selected'"; } ?>><?php echo $entry_manufacturer_wise; ?></option>
+                <option value="product_wise" <?php if ($related_article === 'product_wise') { echo "selected='selected'"; } ?>><?php echo $entry_product_wise; ?></option>
               </select>
             </td>
           </tr>
@@ -204,9 +204,9 @@
               <div class="scrollbox" style="width:350px;">
               <?php $class = 'odd'; ?>
               <?php foreach ($default_categories as $category) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
-                  <input type="checkbox" name="category_wise[]" value="<?php echo $category['category_id']; ?>" <?php if (isset($category_ids)) { for ($i = 0; $i < count($category_ids); $i++) { if ($category_ids[$i] == $category['category_id']) { echo "checked='checked'"; } } } ?> />
+                  <input type="checkbox" name="category_wise[]" value="<?php echo $category['category_id']; ?>" <?php if (isset($category_ids)) { for ($i = 0; $i < count($category_ids); $i++) { if ($category_ids[$i] === $category['category_id']) { echo "checked='checked'"; } } } ?> />
                   <?php echo $category['name']; ?>
                 </div>
               <?php } ?>
@@ -220,9 +220,9 @@
               <div class="scrollbox" style="width:350px;">
               <?php $class = 'odd'; ?>
               <?php foreach ($default_manufacturers as $manufacturer) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
-                  <input type="checkbox" name="manufacturer_wise[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" <?php if (isset($manufacturer_ids)) { for ($i = 0; $i < count($manufacturer_ids); $i++) { if ($manufacturer_ids[$i] == $manufacturer['manufacturer_id']) { echo "checked='checked'"; } } } ?> />
+                  <input type="checkbox" name="manufacturer_wise[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" <?php if (isset($manufacturer_ids)) { for ($i = 0; $i < count($manufacturer_ids); $i++) { if ($manufacturer_ids[$i] === $manufacturer['manufacturer_id']) { echo "checked='checked'"; } } } ?> />
                   <?php echo $manufacturer['name']; ?>
                 </div>
               <?php } ?>
@@ -244,7 +244,7 @@
                     <?php $class = 'odd'; ?>
                     <?php if (isset($products)) { ?>
                       <?php foreach ($products as $product) { ?>
-                        <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                        <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                         <div id="product-wise-list<?php echo $product['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product['name']; ?><img src="view/image/delete.png" alt="" />
                           <input type="hidden" name="product_wise[]" value="<?php echo $product['product_id']; ?>" />
                         </div>
@@ -316,7 +316,7 @@
             <td class="left"><select name="article_layout[0][layout_id]">
               <option value=""><?php echo $text_none; ?></option>
               <?php foreach ($layouts as $layout) { ?>
-                <?php if (isset($article_layout[0]) && $article_layout[0] == $layout['layout_id']) { ?>
+                <?php if (isset($article_layout[0]) && $article_layout[0] === $layout['layout_id']) { ?>
                   <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -332,7 +332,7 @@
             <td class="left"><select name="article_layout[<?php echo $store['store_id']; ?>][layout_id]">
               <option value=""><?php echo $text_none; ?></option>
               <?php foreach ($layouts as $layout) { ?>
-                <?php if (isset($article_layout[$store['store_id']]) && $article_layout[$store['store_id']] == $layout['layout_id']) { ?>
+                <?php if (isset($article_layout[$store['store_id']]) && $article_layout[$store['store_id']] === $layout['layout_id']) { ?>
                   <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -513,15 +513,15 @@ $('#product-wise-list div img').live('click', function() {
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-<?php if ($related_article == 'product_wise') { ?>
+<?php if ($related_article === 'product_wise') { ?>
 	$("#category-wise").css({display: "none"});
 	$("#manufacturer-wise").css({display: "none"});
 	$("#product-wise").css({display: "table-row"});
-<?php } else if ($related_article == 'category_wise') { ?>
+<?php } else if ($related_article === 'category_wise') { ?>
 	$("#category-wise").css({display: "table-row"});
 	$("#manufacturer-wise").css({display: "none"});
 	$("#product-wise").css({display: "none"});
-<?php } else if ($related_article == 'manufacturer_wise') { ?>
+<?php } else if ($related_article === 'manufacturer_wise') { ?>
 	$("#category-wise").css({display: "none"});
 	$("#manufacturer-wise").css({display: "table-row"});
 	$("#product-wise").css({display: "none"});
@@ -531,15 +531,15 @@ $(document).ready(function() {
 
 <script type="text/javascript"><!--
 function getRelatedMethod(value) {
-	if (value == 'product_wise') {
+	if (value === 'product_wise') {
 		$("#category-wise").css({display: "none"});
 		$("#manufacturer-wise").css({display: "none"});
 		$("#product-wise").css({display: "table-row"});
-	} else if (value == 'category_wise') {
+	} else if (value === 'category_wise') {
 		$("#category-wise").css({display: "table-row"});
 		$("#manufacturer-wise").css({display: "none"});
 		$("#product-wise").css({display: "none"});
-	} else if (value == 'manufacturer_wise') {
+	} else if (value === 'manufacturer_wise') {
 		$("#category-wise").css({display: "none"});
 		$("#manufacturer-wise").css({display: "table-row"});
 		$("#product-wise").css({display: "none"});

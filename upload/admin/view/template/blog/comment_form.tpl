@@ -44,8 +44,8 @@
           <tr class="highlighted">
             <td><?php echo $entry_status; ?></td>
             <td><select name="status">
-              <option value="1" <?php if ($status == 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
-              <option value="0" <?php if ($status == 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
+              <option value="1" <?php if ($status === 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
+              <option value="0" <?php if ($status === 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
             </select></td>
           </tr>
         </table>
@@ -87,8 +87,8 @@
               <?php } ?>
             </td>
             <td class="left"><select name="comment_reply[<?php echo $module_row; ?>][status]">
-              <option value="1" <?php if ($reply['status'] == 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
-              <option value="0" <?php if ($reply['status'] == 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
+              <option value="1" <?php if ($reply['status'] === 1) { echo "selected='selected'"; } ?>><?php echo $text_enabled; ?></option>
+              <option value="0" <?php if ($reply['status'] === 0) { echo "selected='selected'"; } ?>><?php echo $text_disabled; ?></option>
             </select></td>
             <td class="center"><a onclick="$('#reply-<?php echo $module_row; ?>').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>
           </tr>

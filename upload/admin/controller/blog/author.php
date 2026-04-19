@@ -1,6 +1,6 @@
 <?php
 class ControllerBlogAuthor extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$url = $this->request->get['route'];
@@ -15,19 +15,19 @@ class ControllerBlogAuthor extends Controller {
 			$this->data['text_install_message'] = $this->language->get('text_install_message');
 			$this->data['text_upgrade'] = $this->language->get('text_upgrade');
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 				'separator' => false
-			);
+			];
 
 			$this->template = 'blog/notification.tpl';
-			$this->children = array(
+			$this->children = [
 				'common/header',
 				'common/footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 		} else {
@@ -35,14 +35,10 @@ class ControllerBlogAuthor extends Controller {
 		}
 	}
 
-	public function validateDatabase() {
+	public function validateDatabase(): bool {
 		$database_not_found = $this->getChild('blog/install');
 
-		if ($database_not_found) {
-			return true;
-		}
-
-		return false;
+		return ($database_not_found) ? true : false;
 	}
 
 	public function getData() {
@@ -164,19 +160,19 @@ class ControllerBlogAuthor extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/author', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('blog/author/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('blog/author/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -185,39 +181,39 @@ class ControllerBlogAuthor extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['authors'] = array();
+		$this->data['authors'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'ba.name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$author_total = $this->model_blog_author->getTotalAuthors($data);
 
 		$results = $this->model_blog_author->getAuthors($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('blog/author/update', 'token=' . $this->session->data['token'] . '&blog_author_id=' . $result['blog_author_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['authors'][] = array(
+			$this->data['authors'][] = [
 				'blog_author_id' => $result['blog_author_id'],
 				'name'           => $result['name'],
 				'status'         => $result['status'],
 				'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'selected'       => isset($this->request->post['selected']) && in_array($result['blog_author_id'], $this->request->post['selected']),
 				'action'         => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -255,7 +251,7 @@ class ControllerBlogAuthor extends Controller {
 		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -294,10 +290,10 @@ class ControllerBlogAuthor extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'blog/author_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -352,19 +348,19 @@ class ControllerBlogAuthor extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('blog/author', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (isset($this->request->get['blog_author_id'])) {
 			$this->data['action'] = $this->url->link('blog/author/update', 'token=' . $this->session->data['token'] . '&blog_author_id=' . $this->request->get['blog_author_id'] . $url, 'SSL');
@@ -374,7 +370,7 @@ class ControllerBlogAuthor extends Controller {
 
 		$this->data['cancel'] = $this->url->link('blog/author', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['blog_author_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['blog_author_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$author_info = $this->model_blog_author->getAuthor($this->request->get['blog_author_id']);
 		}
 
@@ -387,7 +383,7 @@ class ControllerBlogAuthor extends Controller {
 		} elseif (isset($this->request->get['blog_author_id'])) {
 			$this->data['author_description'] = $this->model_blog_author->getAuthorDescriptions($this->request->get['blog_author_id']);
 		} else {
-			$this->data['author_description'] = array();
+			$this->data['author_description'] = [];
 		}
 
 		if (isset($this->request->post['name'])) {
@@ -427,10 +423,10 @@ class ControllerBlogAuthor extends Controller {
 		}
 
 		$this->template = 'blog/author_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -486,7 +482,7 @@ class ControllerBlogAuthor extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['author_name'])) {
 			if (isset($this->request->get['author_name'])) {
@@ -497,15 +493,15 @@ class ControllerBlogAuthor extends Controller {
 
 			$this->load->model('blog/author');
 
-			$data = array('filter_author' => $author_name);
+			$data = ['filter_author' => $author_name];
 
 			$results = $this->model_blog_author->getAuthors($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'blog_author_id' => $result['blog_author_id'],
 					'name'           => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
