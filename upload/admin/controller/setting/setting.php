@@ -12,13 +12,14 @@ class ControllerSettingSetting extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('config', $this->request->post);
 
+			// Auto update currency values
 			if ($this->config->get('config_currency_auto')) {
 				$this->load->model('localisation/currency');
 
 				$this->model_localisation_currency->updateCurrencies();
 			}
 
-			// Load model only if .htaccess.txt file still exists
+			// Load setupSeo model only if .htaccess.txt file still exists
 			if ($this->config->get('config_seo_url') && !file_exists('../.htaccess')) {
 				$this->load->model('tool/system');
 
@@ -683,17 +684,17 @@ class ControllerSettingSetting extends Controller {
 		// Breadcrumbs
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
@@ -797,29 +798,42 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_meta_keyword'] = $this->config->get('config_meta_keyword');
 		}
 
+		// Get available templates
 		$this->data['templates'] = [];
 
-		$directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			$server = HTTPS_CATALOG;
+		} else {
+			$server = HTTP_CATALOG;
+		}
 
-		foreach ($directories as $directory) {
-			if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
-				$server = HTTPS_CATALOG;
-			} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
-				$server = HTTPS_CATALOG;
-			} else {
-				$server = HTTP_CATALOG;
+		// Scan theme directory for subdirectories
+		$themePath = DIR_CATALOG . 'view/theme/';
+
+		if (is_dir($themePath)) {
+			$iterator = new FilesystemIterator($themePath, FilesystemIterator::SKIP_DOTS);
+
+			foreach ($iterator as $entry) {
+				if (!$entry->isDir()) {
+					continue;
+				}
+
+				$name = $entry->getFilename();
+
+				if (file_exists(DIR_IMAGE . 'templates/' . $name . '.png')) {
+					$image = $server . 'image/templates/' . $name . '.png';
+				} else {
+					$image = $server . 'image/templates/default.png';
+				}
+
+				$this->data['templates'][] = [
+					'name'  => $name,
+					'image' => $image,
+				];
 			}
-
-			if (file_exists(DIR_IMAGE . 'templates/' . basename($directory) . '.png')) {
-				$image = $server . 'image/templates/' . basename($directory) . '.png';
-			} else {
-				$image = $server . 'image/templates/default.png';
-			}
-
-			$this->data['templates'][] = array(
-				'name'  => basename($directory),
-				'image' => $image
-			);
 		}
 
 		if (isset($this->request->post['config_template'])) {
@@ -927,8 +941,8 @@ class ControllerSettingSetting extends Controller {
 
 		$this->data['date_formats'] = [];
 
-		$this->data['date_formats'][] = array('format' => 'short', 'title' => $this->language->get('date_format_short'));
-		$this->data['date_formats'][] = array('format' => 'long', 'title' => $this->language->get('date_format_long'));
+		$this->data['date_formats'][] = ['format' => 'short', 'title' => $this->language->get('date_format_short')];
+		$this->data['date_formats'][] = ['format' => 'long', 'title' => $this->language->get('date_format_long')];
 
 		if (isset($this->request->post['config_date_format'])) {
 			$this->data['config_date_format'] = $this->request->post['config_date_format'];
@@ -1870,16 +1884,16 @@ class ControllerSettingSetting extends Controller {
 		// Image > Labels
 		$this->data['label_ratios'] = [];
 
-		$this->data['label_ratios'][] = array('ratio' => '20', 'title' => '20%');
-		$this->data['label_ratios'][] = array('ratio' => '25', 'title' => '25%');
-		$this->data['label_ratios'][] = array('ratio' => '30', 'title' => '30%');
-		$this->data['label_ratios'][] = array('ratio' => '35', 'title' => '35%');
-		$this->data['label_ratios'][] = array('ratio' => '40', 'title' => '40%');
-		$this->data['label_ratios'][] = array('ratio' => '45', 'title' => '45%');
-		$this->data['label_ratios'][] = array('ratio' => '50', 'title' => '50%');
-		$this->data['label_ratios'][] = array('ratio' => '55', 'title' => '55%');
-		$this->data['label_ratios'][] = array('ratio' => '60', 'title' => '60%');
-		$this->data['label_ratios'][] = array('ratio' => '65', 'title' => '65%');
+		$this->data['label_ratios'][] = ['ratio' => '20', 'title' => '20%'];
+		$this->data['label_ratios'][] = ['ratio' => '25', 'title' => '25%'];
+		$this->data['label_ratios'][] = ['ratio' => '30', 'title' => '30%'];
+		$this->data['label_ratios'][] = ['ratio' => '35', 'title' => '35%'];
+		$this->data['label_ratios'][] = ['ratio' => '40', 'title' => '40%'];
+		$this->data['label_ratios'][] = ['ratio' => '45', 'title' => '45%'];
+		$this->data['label_ratios'][] = ['ratio' => '50', 'title' => '50%'];
+		$this->data['label_ratios'][] = ['ratio' => '55', 'title' => '55%'];
+		$this->data['label_ratios'][] = ['ratio' => '60', 'title' => '60%'];
+		$this->data['label_ratios'][] = ['ratio' => '65', 'title' => '65%'];
 
 		if (isset($this->request->post['config_label_size_ratio'])) {
 			$this->data['config_label_size_ratio'] = $this->request->post['config_label_size_ratio'];
