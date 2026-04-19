@@ -27,12 +27,12 @@ class Weight {
 		$weight_class_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "weight_class` wc LEFT JOIN `" . DB_PREFIX . "weight_class_description` wcd ON (wc.weight_class_id = wcd.weight_class_id) WHERE wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($weight_class_query->rows as $result) {
-			$this->weights[$result['weight_class_id']] = array(
+			$this->weights[$result['weight_class_id']] = [
 				'weight_class_id' => $result['weight_class_id'],
 				'title'           => $result['title'],
 				'unit'            => $result['unit'],
 				'value'           => $result['value']
-			);
+			];
 		}
 	}
 
@@ -50,21 +50,12 @@ class Weight {
 	 * $weight = $this->weight->convert($value, $from, $to);
 	 */
 	public function convert(float $value, int $from, int $to): float {
-		if ($from == $to) {
+		if ($from === $to) {
 			return $value;
 		}
 
-		if (isset($this->weights[$from])) {
-			$from = $this->weights[$from]['value'];
-		} else {
-			$from = 1;
-		}
-
-		if (isset($this->weights[$to])) {
-			$to = $this->weights[$to]['value'];
-		} else {
-			$to = 1;
-		}
+		$from = (isset($this->weights[$from])) ? $this->weights[$from]['value'] : 1;
+		$to = (isset($this->weights[$to])) ? $this->weights[$to]['value'] : 1;
 
 		return $value * ($to / $from);
 	}

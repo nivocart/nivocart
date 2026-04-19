@@ -69,7 +69,7 @@ class User {
 				if ($user_group_query->row['permission'] && is_string($user_group_query->row['permission'])) {
 					$permissions = unserialize($user_group_query->row['permission'], ['allowed_classes' => false]);
 				} else {
-					$permissions = array();
+					$permissions = [];
 				}
 
 				// Enforce expected type
@@ -122,7 +122,7 @@ class User {
 			if ($user_group_query->row['permission'] && is_string($user_group_query->row['permission'])) {
 				$permissions = unserialize($user_group_query->row['permission'], ['allowed_classes' => false]);
 			} else {
-				$permissions = array();
+				$permissions = [];
 			}
 
 			if (is_array($permissions)) {
@@ -194,8 +194,8 @@ class User {
 		if (isset($this->permission[$key])) {
 			// User Log
 			if ($this->config->get('user_log_enable')) {
-				if ((($this->config->get('user_log_allowed') == 1 || $this->config->get('user_log_allowed') == 2) && (in_array($value, $this->permission[$key]))) || (($this->config->get('user_log_allowed') == 0 || $this->config->get('user_log_allowed') == 2) && !(in_array($value, $this->permission[$key])))) {
-					if (($this->config->get('user_log_access') && $key == "access") || ($this->config->get('user_log_modify') && $key == "modify")) {
+				if ((($this->config->get('user_log_allowed') === 1 || $this->config->get('user_log_allowed') === 2) && (in_array($value, $this->permission[$key]))) || (($this->config->get('user_log_allowed') === 0 || $this->config->get('user_log_allowed') === 2) && !(in_array($value, $this->permission[$key])))) {
+					if (($this->config->get('user_log_access') && $key === "access") || ($this->config->get('user_log_modify') && $key === "modify")) {
 						$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . (string)$this->username . "', `action` = '" . $key . "', `allowed` = '" . in_array($value, $this->permission[$key]) . "', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
 					}
 				}
@@ -205,7 +205,7 @@ class User {
 
 		} else {
 			// User Log
-			if ($this->config->get('user_log_enable') && ($this->config->get('user_log_allowed') == 0 || $this->config->get('user_log_allowed') == 2)) {
+			if ($this->config->get('user_log_enable') && ($this->config->get('user_log_allowed') === 0 || $this->config->get('user_log_allowed') === 2)) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . (string)$this->username . "', `action` = '" . $key . "', `allowed` = '0', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
 			}
 
@@ -291,7 +291,7 @@ class User {
 	 * $username = $this->user->checkUsername();
 	 */
 	public function checkUsername(string $username): bool {
-		$username = mb_strtolower($username);
+		$username = mb_strtolower($username, 'UTF-8');
 
 		$check_name = $this->sanitize($username);
 

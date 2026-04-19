@@ -135,7 +135,7 @@ class Cart {
 										$stock = false;
 									}
 
-									$option_data[] = array(
+									$option_data[] = [
 										'product_option_id'       => $product_option_id,
 										'product_option_value_id' => $option_value,
 										'option_id'               => $option_query->row['option_id'],
@@ -151,7 +151,7 @@ class Cart {
 										'points_prefix'           => $option_value_query->row['points_prefix'],
 										'weight'                  => $option_value_query->row['weight'],
 										'weight_prefix'           => $option_value_query->row['weight_prefix']
-									);
+									];
 
 								} else {
 									$this->remove($key);
@@ -185,7 +185,7 @@ class Cart {
 											$stock = false;
 										}
 
-										$option_data[] = array(
+										$option_data[] = [
 											'product_option_id'       => $product_option_id,
 											'product_option_value_id' => $product_option_value_id,
 											'option_id'               => $option_query->row['option_id'],
@@ -201,7 +201,7 @@ class Cart {
 											'points_prefix'           => $option_value_query->row['points_prefix'],
 											'weight'                  => $option_value_query->row['weight'],
 											'weight_prefix'           => $option_value_query->row['weight_prefix']
-										);
+										];
 
 									} else {
 										$this->remove($key);
@@ -210,7 +210,7 @@ class Cart {
 								}
 
 							} elseif ($option_query->row['type'] === 'text' || $option_query->row['type'] === 'textarea' || $option_query->row['type'] === 'file' || $option_query->row['type'] === 'date' || $option_query->row['type'] === 'datetime' || $option_query->row['type'] === 'time') {
-								$option_data[] = array(
+								$option_data[] = [
 									'product_option_id'       => $product_option_id,
 									'product_option_value_id' => '',
 									'option_id'               => $option_query->row['option_id'],
@@ -226,7 +226,7 @@ class Cart {
 									'points_prefix'           => '',
 									'weight'                  => '',
 									'weight_prefix'           => ''
-								);
+								];
 							}
 
 						} else {
@@ -280,18 +280,18 @@ class Cart {
 					}
 
 					// Downloads
-					$download_data = array();
+					$download_data = [];
 
 					$download_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_to_download` p2d LEFT JOIN `" . DB_PREFIX . "download` d ON (p2d.download_id = d.download_id) LEFT JOIN `" . DB_PREFIX . "download_description` dd ON (d.download_id = dd.download_id) WHERE p2d.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 					foreach ($download_query->rows as $download) {
-						$download_data[] = array(
+						$download_data[] = [
 							'download_id' => $download['download_id'],
 							'name'        => $download['name'],
 							'filename'    => $download['filename'],
 							'mask'        => $download['mask'],
 							'remaining'   => $download['remaining']
-						);
+						];
 					}
 
 					// Stock
@@ -331,7 +331,7 @@ class Cart {
 						}
 					}
 
-					$this->data[$key] = array(
+					$this->data[$key] = [
 						'key'                       => $key,
 						'product_id'                => $product_query->row['product_id'],
 						'name'                      => $product_query->row['name'],
@@ -372,7 +372,7 @@ class Cart {
 						'recurring_trial_price'     => $recurring_trial_price,
 						'recurring_trial_cycle'     => $recurring_trial_cycle,
 						'recurring_trial_duration'  => $recurring_trial_duration
-					);
+					];
 
 				} else {
 					$this->remove($key);

@@ -214,7 +214,7 @@ class Mail {
 
 		$message .= '--' . $boundary . '--' . PHP_EOL;
 
-		if ($this->protocol == 'mail') {
+		if ($this->protocol === 'mail') {
 			ini_set('sendmail_from', $this->from);
 
 			if ($this->parameter) {
@@ -223,8 +223,8 @@ class Mail {
 				mail($to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $message, $header);
 			}
 
-		} elseif ($this->protocol == 'smtp') {
-			if (substr($this->smtp_hostname, 0, 3) == 'tls') {
+		} elseif ($this->protocol === 'smtp') {
+			if (substr($this->smtp_hostname, 0, 3) === 'tls') {
 				$hostname = substr($this->smtp_hostname, 6);
 			} else {
 				$hostname = $this->smtp_hostname;
@@ -235,12 +235,12 @@ class Mail {
 			if (!$handle) {
 				throw new \Exception('Error: ' . $errstr . ' (' . $errno . ')');
 			} else {
-				if (substr(PHP_OS, 0, 3) != 'WIN') {
+				if (substr(PHP_OS, 0, 3) !== 'WIN') {
 					socket_set_timeout($handle, $this->smtp_timeout, 0);
 				}
 
 				while ($line = fgets($handle, 515)) {
-					if (substr($line, 3, 1) == ' ') {
+					if (substr($line, 3, 1) === ' ') {
 						break;
 					}
 				}
@@ -253,20 +253,20 @@ class Mail {
 					$reply .= $line;
 
 					//some SMTP servers respond with 220 code before responding with 250. hence, we need to ignore 220 response string
-					if (substr($reply, 0, 3) == 220 && substr($line, 3, 1) == ' ') {
+					if (substr($reply, 0, 3) === 220 && substr($line, 3, 1) === ' ') {
 						$reply = '';
 						continue;
 
-					} else if (substr($line, 3, 1) == ' ') {
+					} else if (substr($line, 3, 1) === ' ') {
 						break;
 					}
 				}
 
-				if (substr($reply, 0, 3) != 250) {
+				if (substr($reply, 0, 3) !== 250) {
 					throw new \Exception('Error: EHLO not accepted from server!');
 				}
 
-				if (substr($this->smtp_hostname, 0, 3) == 'tls') {
+				if (substr($this->smtp_hostname, 0, 3) === 'tls') {
 					fputs($handle, 'STARTTLS' . "\r\n");
 
 					$reply = '';
@@ -274,19 +274,19 @@ class Mail {
 					while ($line = fgets($handle, 515)) {
 						$reply .= $line;
 
-						if (substr($line, 3, 1) == ' ') {
+						if (substr($line, 3, 1) === ' ') {
 							break;
 						}
 					}
 
-					if (substr($reply, 0, 3) != 220) {
+					if (substr($reply, 0, 3) !== 220) {
 						throw new \Exception('Error: STARTTLS not accepted from server!');
 					}
 
 					stream_socket_enable_crypto($handle, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
 				}
 
-				if (!empty($this->smtp_username)  && !empty($this->smtp_password)) {
+				if (!empty($this->smtp_username) && !empty($this->smtp_password)) {
 					fputs($handle, 'EHLO ' . getenv('SERVER_NAME') . "\r\n");
 
 					$reply = '';
@@ -294,12 +294,12 @@ class Mail {
 					while ($line = fgets($handle, 515)) {
 						$reply .= $line;
 
-						if (substr($line, 3, 1) == ' ') {
+						if (substr($line, 3, 1) === ' ') {
 							break;
 						}
 					}
 
-					if (substr($reply, 0, 3) != 250) {
+					if (substr($reply, 0, 3) !== 250) {
 						throw new \Exception('Error: EHLO not accepted from server!');
 					}
 
@@ -310,12 +310,12 @@ class Mail {
 					while ($line = fgets($handle, 515)) {
 						$reply .= $line;
 
-						if (substr($line, 3, 1) == ' ') {
+						if (substr($line, 3, 1) === ' ') {
 							break;
 						}
 					}
 
-					if (substr($reply, 0, 3) != 334) {
+					if (substr($reply, 0, 3) !== 334) {
 						throw new \Exception('Error: AUTH LOGIN not accepted from server!');
 					}
 
@@ -326,12 +326,12 @@ class Mail {
 					while ($line = fgets($handle, 515)) {
 						$reply .= $line;
 
-						if (substr($line, 3, 1) == ' ') {
+						if (substr($line, 3, 1) === ' ') {
 							break;
 						}
 					}
 
-					if (substr($reply, 0, 3) != 334) {
+					if (substr($reply, 0, 3) !== 334) {
 						throw new \Exception('Error: Username not accepted from server!');
 					}
 
@@ -342,12 +342,12 @@ class Mail {
 					while ($line = fgets($handle, 515)) {
 						$reply .= $line;
 
-						if (substr($line, 3, 1) == ' ') {
+						if (substr($line, 3, 1) === ' ') {
 							break;
 						}
 					}
 
-					if (substr($reply, 0, 3) != 235) {
+					if (substr($reply, 0, 3) !== 235) {
 						throw new \Exception('Error: Password not accepted from server!');
 					}
 
@@ -359,12 +359,12 @@ class Mail {
 					while ($line = fgets($handle, 515)) {
 						$reply .= $line;
 
-						if (substr($line, 3, 1) == ' ') {
+						if (substr($line, 3, 1) === ' ') {
 							break;
 						}
 					}
 
-					if (substr($reply, 0, 3) != 250) {
+					if (substr($reply, 0, 3) !== 250) {
 						throw new \Exception('Error: HELO not accepted from server!');
 					}
 				}
@@ -380,12 +380,12 @@ class Mail {
 				while ($line = fgets($handle, 515)) {
 					$reply .= $line;
 
-					if (substr($line, 3, 1) == ' ') {
+					if (substr($line, 3, 1) === ' ') {
 						break;
 					}
 				}
 
-				if (substr($reply, 0, 3) != 250) {
+				if (substr($reply, 0, 3) !== 250) {
 					throw new \Exception('Error: MAIL FROM not accepted from server!');
 				}
 
@@ -397,12 +397,12 @@ class Mail {
 					while ($line = fgets($handle, 515)) {
 						$reply .= $line;
 
-						if (substr($line, 3, 1) == ' ') {
+						if (substr($line, 3, 1) === ' ') {
 							break;
 						}
 					}
 
-					if ((substr($reply, 0, 3) != 250) && (substr($reply, 0, 3) != 251)) {
+					if ((substr($reply, 0, 3) !== 250) && (substr($reply, 0, 3) !== 251)) {
 						throw new \Exception('Error: RCPT TO not accepted from server!');
 					}
 
@@ -415,12 +415,12 @@ class Mail {
 						while ($line = fgets($handle, 515)) {
 							$reply .= $line;
 
-							if (substr($line, 3, 1) == ' ') {
+							if (substr($line, 3, 1) === ' ') {
 								break;
 							}
 						}
 
-						if ((substr($reply, 0, 3) != 250) && (substr($reply, 0, 3) != 251)) {
+						if ((substr($reply, 0, 3) !== 250) && (substr($reply, 0, 3) !== 251)) {
 							throw new \Exception('Error: RCPT TO not accepted from server!');
 						}
 					}
@@ -433,12 +433,12 @@ class Mail {
 				while ($line = fgets($handle, 515)) {
 					$reply .= $line;
 
-					if (substr($line, 3, 1) == ' ') {
+					if (substr($line, 3, 1) === ' ') {
 						break;
 					}
 				}
 
-				if (substr($reply, 0, 3) != 354) {
+				if (substr($reply, 0, 3) !== 354) {
 					throw new \Exception('Error: DATA not accepted from server!');
 				}
 
@@ -452,7 +452,7 @@ class Mail {
 					$results = str_split($line, 998);
 
 					foreach ($results as $result) {
-						if (substr(PHP_OS, 0, 3) != 'WIN') {
+						if (substr(PHP_OS, 0, 3) !== 'WIN') {
 							fputs($handle, $result . "\r\n");
 						} else {
 							fputs($handle, str_replace("\n", "\r\n", $result) . "\r\n");
@@ -467,12 +467,12 @@ class Mail {
 				while ($line = fgets($handle, 515)) {
 					$reply .= $line;
 
-					if (substr($line, 3, 1) == ' ') {
+					if (substr($line, 3, 1) === ' ') {
 						break;
 					}
 				}
 
-				if (substr($reply, 0, 3) != 250) {
+				if (substr($reply, 0, 3) !== 250) {
 					throw new \Exception('Error: DATA not accepted from server!');
 				}
 
@@ -483,12 +483,12 @@ class Mail {
 				while ($line = fgets($handle, 515)) {
 					$reply .= $line;
 
-					if (substr($line, 3, 1) == ' ') {
+					if (substr($line, 3, 1) === ' ') {
 						break;
 					}
 				}
 
-				if (substr($reply, 0, 3) != 221) {
+				if (substr($reply, 0, 3) !== 221) {
 					throw new \Exception('Error: QUIT not accepted from server!');
 				}
 

@@ -27,12 +27,12 @@ class Length {
 		$length_class_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "length_class` mc LEFT JOIN `" . DB_PREFIX . "length_class_description` mcd ON (mc.length_class_id = mcd.length_class_id) WHERE mcd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($length_class_query->rows as $result) {
-			$this->lengths[$result['length_class_id']] = array(
+			$this->lengths[$result['length_class_id']] = [
 				'length_class_id' => $result['length_class_id'],
 				'title'           => $result['title'],
 				'unit'            => $result['unit'],
 				'value'           => $result['value']
-			);
+			];
 		}
 	}
 
@@ -50,7 +50,7 @@ class Length {
 	 * $length = $this->length->convert($value, $from, $to);
 	 */
 	public function convert(float $value, int $from, int $to): float {
-		if ($from == $to) {
+		if ($from === $to) {
 			return $value;
 		}
 

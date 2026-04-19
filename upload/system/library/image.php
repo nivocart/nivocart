@@ -53,26 +53,18 @@ class Image {
 			$this->bits = isset($info['bits']) ? $info['bits'] : '';
 			$this->mime = isset($info['mime']) ? $info['mime'] : '';
 
-			switch($this->mime) {
-				case 'image/jpeg':
-				case 'image/pjpeg':
-					$this->image = imagecreatefromjpeg($imagefile);
-					break;
-				case 'image/png':
-					$this->image = imagecreatefrompng($imagefile);
-					break;
-				case 'image/gif':
-					$this->image = imagecreatefromgif($imagefile);
-					break;
-				case 'image/webp':
-					$this->image = imagecreatefromwebp($imagefile);
-					break;
-			}
+			$this->image = match($this->mime) {
+				'image/jpeg', 'image/pjpeg' => imagecreatefromjpeg($imagefile),
+				'image/png'                 => imagecreatefrompng($imagefile),
+				'image/gif'                 => imagecreatefromgif($imagefile),
+				'image/webp'                => imagecreatefromwebp($imagefile),
+				default                     => null
+			};
 
 			clearstatcache();
 
 		} else {
-			exit('Error: Could not load image ' . $file . '!');
+			exit('Error: Could not load image ' . $imagefile . '!');
 		}
 	}
 
@@ -144,24 +136,16 @@ class Image {
 		$extension = strtolower($info['extension']);
 
 		if (is_object($this->image) || is_resource($this->image)) {
-			$result = '';
-
-			switch($extension) {
-				case 'jpg':
-				case 'jpeg':
+			$result = match($extension) {
+				'jpg', 'jpeg' => (function() use ($imagefile, $quality) {
 					imageinterlace($this->image, true);
-					$result = imagejpeg($this->image, $imagefile, $quality);
-					break;
-				case 'png':
-					$result = imagepng($this->image, $imagefile);
-					break;
-				case 'gif':
-					$result = imagegif($this->image, $imagefile);
-					break;
-				case 'webp':
-					$result = imagewebp($this->image, $imagefile);
-					break;
-			}
+					return imagejpeg($this->image, $imagefile, $quality);
+				})(),
+				'png'  => imagepng($this->image, $imagefile),
+				'gif'  => imagegif($this->image, $imagefile),
+				'webp' => imagewebp($this->image, $imagefile),
+				default => ''
+			};
 
 			imagedestroy($this->image);
 
@@ -198,15 +182,13 @@ class Image {
 		$scale_w = $width / $this->width;
 		$scale_h = $height / $this->height;
 
-		if ($default == 'w') {
-			$scale = $scale_w;
-		} elseif ($default == 'h') {
-			$scale = $scale_h;
-		} else {
-			$scale = min($scale_w, $scale_h);
-		}
+		$scale = match($default) {
+			'w'     => $scale_w,
+			'h'     => $scale_h,
+			default => min($scale_w, $scale_h)
+		};
 
-		if ($scale == 1 && $scale_h == $scale_w && $this->mime != 'image/png') {
+		if ($scale === 1 && $scale_h === $scale_w && $this->mime !== 'image/png') {
 			return;
 		}
 
@@ -220,7 +202,7 @@ class Image {
 
 		$this->image = imagecreatetruecolor($width, $height);
 
-		if ($this->mime == 'image/png') {
+		if ($this->mime === 'image/png') {
 			imagealphablending($this->image, false);
 			imagesavealpha($this->image, true);
 			$background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
@@ -248,44 +230,17 @@ class Image {
 	 * @return void
 	 */
 	public function watermark(self $watermark, string $position = 'bottomright'): void {
-		switch($position) {
-			case 'topleft':
-				$watermark_pos_x = 0;
-				$watermark_pos_y = 0;
-				break;
-			case 'topcenter':
-				$watermark_pos_x = intval(($this->width - $watermark->getWidth()) / 2);
-				$watermark_pos_y = 0;
-				break;
-			case 'topright':
-				$watermark_pos_x = $this->width - $watermark->getWidth();
-				$watermark_pos_y = 0;
-				break;
-			case 'middleleft':
-				$watermark_pos_x = 0;
-				$watermark_pos_y = intval(($this->height - $watermark->getHeight()) / 2);
-				break;
-			case 'middlecenter':
-				$watermark_pos_x = intval(($this->width - $watermark->getWidth()) / 2);
-				$watermark_pos_y = intval(($this->height - $watermark->getHeight()) / 2);
-				break;
-			case 'middleright':
-				$watermark_pos_x = $this->width - $watermark->getWidth();
-				$watermark_pos_y = intval(($this->height - $watermark->getHeight()) / 2);
-				break;
-			case 'bottomleft':
-				$watermark_pos_x = 0;
-				$watermark_pos_y = $this->height - $watermark->getHeight();
-				break;
-			case 'bottomcenter':
-				$watermark_pos_x = intval(($this->width - $watermark->getWidth()) / 2);
-				$watermark_pos_y = $this->height - $watermark->getHeight();
-				break;
-			case 'bottomright':
-				$watermark_pos_x = $this->width - $watermark->getWidth();
-				$watermark_pos_y = $this->height - $watermark->getHeight();
-				break;
-		}
+		[$watermark_pos_x, $watermark_pos_y] = match($position) {
+			'topleft'      => [0, 0],
+			'topcenter'    => [intval(($this->width - $watermark->getWidth()) / 2), 0],
+			'topright'     => [$this->width - $watermark->getWidth(), 0],
+			'middleleft'   => [0, intval(($this->height - $watermark->getHeight()) / 2)],
+			'middlecenter' => [intval(($this->width - $watermark->getWidth()) / 2), intval(($this->height - $watermark->getHeight()) / 2)],
+			'middleright'  => [$this->width - $watermark->getWidth(), intval(($this->height - $watermark->getHeight()) / 2)],
+			'bottomleft'   => [0, $this->height - $watermark->getHeight()],
+			'bottomcenter' => [intval(($this->width - $watermark->getWidth()) / 2), $this->height - $watermark->getHeight()],
+			'bottomright'  => [$this->width - $watermark->getWidth(), $this->height - $watermark->getHeight()],
+		};
 
 		imagealphablending($this->image, true);
 		imagesavealpha($this->image, true);
@@ -382,11 +337,11 @@ class Image {
 	 * @return array<int, int>
 	 */
 	private function html2rgb(string $color): array {
-		if ($color[0] == '#') {
+		if ($color[0] === '#') {
 			$color = substr($color, 1);
 		}
 
-		if (strlen($color) == 6) {
+		if (strlen($color) === 6) {
 			[
 				$r,
 				$g,
@@ -396,7 +351,7 @@ class Image {
 				$color[2] . $color[3],
 				$color[4] . $color[5]
 			];
-		} elseif (strlen($color) == 3) {
+		} elseif (strlen($color) === 3) {
 			[
 				$r,
 				$g,

@@ -21,17 +21,9 @@ class Pagination {
 	public function render() {
 		$total = $this->total;
 
-		if ($this->page < 1) {
-			$page = 1;
-		} else {
-			$page = $this->page;
-		}
+		$page = ((int)$this->page < 1) ? 1 : $this->page;
 
-		if (!(int)$this->limit) {
-			$limit = 10;
-		} else {
-			$limit = $this->limit;
-		}
+		$limit = (!(int)$this->limit) ? 10 : $this->limit;
 
 		$num_links = $this->num_links;
 
@@ -69,7 +61,7 @@ class Pagination {
 			}
 
 			for ($i = $start; $i <= $end; $i++) {
-				if ($page == $i) {
+				if ($page === $i) {
 					$output .= ' <b>' . $i . '</b> ';
 				} else {
 					$output .= ' <a href="' . str_replace('{page}', $i, $this->url) . '">' . $i . '</a> ';
@@ -85,19 +77,19 @@ class Pagination {
 			$output .= ' <a href="' . str_replace('{page}', $page + 1, $this->url) . '">' . $this->text_next . '</a> <a href="' . str_replace('{page}', $num_pages, $this->url) . '">' . $this->text_last . '</a> ';
 		}
 
-		$find = array(
+		$find = [
 			'{start}',
 			'{end}',
 			'{total}',
 			'{pages}'
-		);
+		];
 
-		$replace = array(
+		$replace = [
 			($total) ? (($page - 1) * $limit) + 1 : 0,
 			((($page - 1) * $limit) > ($total - $limit)) ? $total : ((($page - 1) * $limit) + $limit),
 			$total,
 			$num_pages
-		);
+		];
 
 		return ($output ? '<div class="' . $this->style_links . '">' . $output . '</div>' : '') . '<div class="' . $this->style_results . '">' . str_replace($find, $replace, $this->text) . '</div>';
 	}

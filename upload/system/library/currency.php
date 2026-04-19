@@ -42,7 +42,7 @@ class Currency {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency`");
 
 		foreach ($query->rows as $result) {
-			$this->currencies[$result['code']] = array(
+			$this->currencies[$result['code']] = [
 				'currency_id'   => $result['currency_id'],
 				'title'         => $result['title'],
 				'code'          => $result['code'],
@@ -51,7 +51,7 @@ class Currency {
 				'decimal_place' => $result['decimal_place'],
 				'value'         => $result['value'],
 				'status'        => $result['status']
-			);
+			];
 		}
 	}
 
@@ -116,9 +116,9 @@ class Currency {
 			$value = $this->currencies[$currency]['value'];
 		}
 
-		$amount = $value ? (float)$number * $value : (float)$number;
+		$amount = $value ? ((float)$number * $value) : (float)$number;
 
-		$amount = round($amount, $decimal_place);
+		$amount = round($amount, $decimal_place, PHP_ROUND_HALF_UP);
 
 		if (!$format) {
 			return $amount;
