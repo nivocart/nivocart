@@ -7,7 +7,7 @@ class ControllerCommonFileManagerFull extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
+		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || (isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443')) {
 			$this->data['directory'] = HTTPS_IMAGE . 'data/';
 		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
 			$this->data['directory'] = HTTPS_IMAGE . 'data/';
@@ -15,19 +15,19 @@ class ControllerCommonFileManagerFull extends Controller {
 			$this->data['directory'] = HTTP_IMAGE . 'data/';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('common/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 		$this->data['heading_info'] = $this->language->get('heading_info');
@@ -94,10 +94,10 @@ class ControllerCommonFileManagerFull extends Controller {
 		}
 
 		$this->template = 'common/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -123,7 +123,7 @@ class ControllerCommonFileManagerFull extends Controller {
 
 		$ext = substr(strrchr($filename, '.'), 1);
 
-		$file_images = array('mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv');
+		$file_images = ['mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
 
 		if (in_array(mb_strtolower($ext, 'UTF-8'), $file_images)) {
 			$filename = mb_strtolower($ext, 'UTF-8') . '.png';
@@ -137,26 +137,44 @@ class ControllerCommonFileManagerFull extends Controller {
 	}
 
 	public function directory() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['directory'])) {
-			$directories = glob(rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['directory'], ENT_QUOTES, 'UTF-8')), '/') . '/*', GLOB_ONLYDIR);
+			$scanPath = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['directory'], ENT_QUOTES, 'UTF-8')), '/');
 
-			if ($directories) {
-				$i = 0;
+			if (!is_dir($scanPath)) {
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+				return;
+			}
 
-				foreach ($directories as $directory) {
-					$json[$i]['data'] = htmlspecialchars(basename($directory), ENT_QUOTES, 'UTF-8');
-					$json[$i]['attributes']['directory'] = htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
+			$i = 0;
 
-					$children = glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR);
+			$iterator = new FilesystemIterator($scanPath, FilesystemIterator::SKIP_DOTS);
 
-					if ($children) {
-						$json[$i]['children'] = ' ';
-					}
-
-					$i++;
+			foreach ($iterator as $entry) {
+				if (!$entry->isDir()) {
+					continue;
 				}
+
+				$json[$i]['data'] = htmlspecialchars($entry->getFilename(), ENT_QUOTES, 'UTF-8');
+
+				$json[$i]['attributes']['directory'] = htmlspecialchars(
+					substr($entry->getPathname(), mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')),
+					ENT_QUOTES, 'UTF-8'
+				);
+
+				// Check if this subdirectory itself has any child directories
+				$childIterator = new FilesystemIterator($entry->getPathname(), FilesystemIterator::SKIP_DOTS);
+
+				foreach ($childIterator as $child) {
+					if ($child->isDir()) {
+						$json[$i]['children'] = ' ';
+						break;
+					}
+				}
+
+				$i++;
 			}
 		}
 
@@ -167,48 +185,53 @@ class ControllerCommonFileManagerFull extends Controller {
 	public function files() {
 		$this->data['token'] = $this->session->data['token'];
 
-		$json = array();
+		$json = [];
 
 		if (!empty($this->request->post['directory'])) {
-			$directory = DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['directory'], ENT_QUOTES, 'UTF-8'));
+			$directory = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['directory'], ENT_QUOTES, 'UTF-8')), '/');
 		} else {
-			$directory = DIR_IMAGE . 'data/';
+			$directory = rtrim(DIR_IMAGE . 'data/', '/');
 		}
 
-		$allowed = array('jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv');
+		$allowed = ['jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
 
-		$files = glob(rtrim($directory, '/') . '/*');
+		$suffix = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
 
-		if ($files) {
-			foreach ($files as $file) {
-				if (is_file($file)) {
-					$ext = substr(strrchr($file, '.'), 1);
-				} else {
-					$ext = '';
-				}
+		if (!is_dir($directory)) {
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+			return;
+		}
 
-				if (in_array(mb_strtolower($ext, 'UTF-8'), $allowed)) {
-					$size = filesize($file);
+		$iterator = new FilesystemIterator($directory, FilesystemIterator::SKIP_DOTS);
 
-					$i = 0;
-
-					$suffix = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
-
-					while (($size / 1024) > 1) {
-						$size = $size / 1024;
-						$i++;
-					}
-
-					$filename_path_data = htmlspecialchars(substr($file, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
-
-					$json[] = array(
-						'filename' => htmlspecialchars(basename($file), ENT_QUOTES, 'UTF-8'),
-						'file'     => $filename_path_data,
-						'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
-						'image'    => $this->image($filename_path_data)
-					);
-				}
+		foreach ($iterator as $entry) {
+			if (!$entry->isFile()) {
+				continue;
 			}
+
+			$ext = mb_strtolower(substr(strrchr($entry->getFilename(), '.'), 1), 'UTF-8');
+
+			if (!in_array($ext, $allowed, true)) {
+				continue;
+			}
+
+			$size = $entry->getSize();
+			$i = 0;
+
+			while (($size / 1024) > 1) {
+				$size = $size / 1024;
+				$i++;
+			}
+
+			$filename_path_data = htmlspecialchars(substr($entry->getPathname(), mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
+
+			$json[] = [
+				'filename' => htmlspecialchars($entry->getFilename(), ENT_QUOTES, 'UTF-8'),
+				'file'     => $filename_path_data,
+				'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
+				'image'    => $this->image($filename_path_data)
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
@@ -218,17 +241,17 @@ class ControllerCommonFileManagerFull extends Controller {
 	public function create() {
 		$this->language->load('common/' . $this->_name);
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['directory'])) {
 			if (isset($this->request->post['name']) || $this->request->post['name']) {
-				$directory = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['directory'], ENT_QUOTES, 'UTF-8')), '/');
+				$directory = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['directory'], ENT_QUOTES, 'UTF-8')), '/');
 
 				if (!is_dir($directory)) {
 					$json['error'] = $this->language->get('error_directory');
 				}
 
-				if (file_exists($directory . '/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8')))) {
+				if (file_exists($directory . '/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8')))) {
 					$json['error'] = $this->language->get('error_exists');
 				}
 
@@ -245,7 +268,7 @@ class ControllerCommonFileManagerFull extends Controller {
 		}
 
 		if (!isset($json['error'])) {
-			mkdir($directory . '/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8')), 0777);
+			mkdir($directory . '/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8')), 0777);
 
 			$json['success'] = $this->language->get('text_create');
 		}
@@ -257,10 +280,10 @@ class ControllerCommonFileManagerFull extends Controller {
 	public function delete() {
 		$this->language->load('common/' . $this->_name);
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['path'])) {
-			$path = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+			$path = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
 
 			if (!file_exists($path)) {
 				$json['error'] = $this->language->get('error_select');
@@ -302,7 +325,7 @@ class ControllerCommonFileManagerFull extends Controller {
 		}
 
 		while (false !== ($file = readdir($handle))) {
-			if ($file != '.' && $file != '..') {
+			if ($file !== '.' && $file !== '..') {
 				if (!is_dir($directory . '/' . $file)) {
 					unlink($directory . '/' . $file);
 				} else {
@@ -321,10 +344,10 @@ class ControllerCommonFileManagerFull extends Controller {
 	public function move() {
 		$this->language->load('common/' . $this->_name);
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['from']) && isset($this->request->post['to'])) {
-			$from = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['from'], ENT_QUOTES, 'UTF-8')), '/');
+			$from = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['from'], ENT_QUOTES, 'UTF-8')), '/');
 
 			if (!file_exists($from)) {
 				$json['error'] = $this->language->get('error_missing');
@@ -334,7 +357,7 @@ class ControllerCommonFileManagerFull extends Controller {
 				$json['error'] = $this->language->get('error_default');
 			}
 
-			$to = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['to'], ENT_QUOTES, 'UTF-8')), '/');
+			$to = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['to'], ENT_QUOTES, 'UTF-8')), '/');
 
 			if (!file_exists($to)) {
 				$json['error'] = $this->language->get('error_move');
@@ -365,14 +388,14 @@ class ControllerCommonFileManagerFull extends Controller {
 	public function copy() {
 		$this->language->load('common/' . $this->_name);
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
 			if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 255)) {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
-			$old_name = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+			$old_name = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
 
 			if (!file_exists($old_name) || $old_name === DIR_IMAGE . 'data') {
 				$json['error'] = $this->language->get('error_copy');
@@ -384,7 +407,7 @@ class ControllerCommonFileManagerFull extends Controller {
 				$ext = '';
 			}
 
-			$new_name = dirname($old_name) . '/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
+			$new_name = dirname($old_name) . '/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
 
 			if (file_exists($new_name)) {
 				$json['error'] = $this->language->get('error_exists');
@@ -418,7 +441,7 @@ class ControllerCommonFileManagerFull extends Controller {
 		@mkdir($destination);
 
 		while (false !== ($file = readdir($directory))) {
-			if (($file != '.') && ($file != '..')) {
+			if (($file !== '.') && ($file !== '..')) {
 				if (is_dir($source . '/' . $file)) {
 					$this->recursiveCopy($source . '/' . $file, $destination . '/' . $file);
 				} else {
@@ -437,12 +460,20 @@ class ControllerCommonFileManagerFull extends Controller {
 	protected function recursiveFolders($directory) {
 		$output = '';
 
-		$output .= '<option value="' . htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8') . '</option>';
+		$output .= '<option value="' . htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8') . '">'
+				 . htmlspecialchars(substr($directory, mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8')
+				 . '</option>';
 
-		$directories = glob(rtrim(str_replace(array('../', '..\\', '..'), '', $directory), '/') . '/*', GLOB_ONLYDIR);
+		if (!is_dir($directory)) {
+			return $output;
+		}
 
-		foreach ($directories as $directory) {
-			$output .= $this->recursiveFolders($directory);
+		$iterator = new FilesystemIterator(rtrim(str_replace(['../', '..\\', '..'], '', $directory), '/'), FilesystemIterator::SKIP_DOTS);
+
+		foreach ($iterator as $entry) {
+			if ($entry->isDir()) {
+				$output .= $this->recursiveFolders($entry->getPathname());
+			}
 		}
 
 		return $output;
@@ -451,14 +482,14 @@ class ControllerCommonFileManagerFull extends Controller {
 	public function rename() {
 		$this->language->load('common/' . $this->_name);
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
 			if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 255)) {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
-			$old_name = rtrim(DIR_IMAGE . 'data/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+			$old_name = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
 
 			if (!file_exists($old_name) || $old_name === DIR_IMAGE . 'data') {
 				$json['error'] = $this->language->get('error_rename');
@@ -470,7 +501,7 @@ class ControllerCommonFileManagerFull extends Controller {
 				$ext = '';
 			}
 
-			$new_name = dirname($old_name) . '/' . str_replace(array('../', '..\\', '..'), '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
+			$new_name = dirname($old_name) . '/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
 
 			if (file_exists($new_name)) {
 				$json['error'] = $this->language->get('error_exists');
@@ -588,7 +619,7 @@ class ControllerCommonFileManagerFull extends Controller {
 	}
 
 	public function information() {
-		$json = array();
+		$json = [];
 
 		$this->language->load('common/filemanager_full');
 
