@@ -6,19 +6,19 @@ class ControllerExtensionModification extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -62,13 +62,19 @@ class ControllerExtensionModification extends Controller {
 			}
 		}
 
-		$this->data['extensions'] = array();
+		$this->data['extensions'] = [];
 
-		$files = glob(DIR_APPLICATION . 'controller/modification/*.php');
+		$modulePath = DIR_APPLICATION . 'controller/modification/';
 
-		if ($files) {
-			foreach ($files as $file) {
-				$extension = basename($file, '.php');
+		if (is_dir($modulePath)) {
+			$iterator = new FilesystemIterator($modulePath, FilesystemIterator::SKIP_DOTS);
+
+			foreach ($iterator as $entry) {
+				if (!$entry->isFile() || $entry->getExtension() !== 'php') {
+					continue;
+				}
+
+				$extension = $entry->getBasename('.php');
 
 				if (!$this->user->hasPermission('access', 'modification/' . $extension)) {
 					continue;
@@ -76,41 +82,46 @@ class ControllerExtensionModification extends Controller {
 
 				$this->language->load('modification/' . $extension);
 
-				$action = array();
+				$action = [];
 
 				if (!in_array($extension, $extensions)) {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_install'),
 						'type' => 'install',
 						'href' => $this->url->link('extension/modification/install', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
+
+					$installed = false;
 
 				} else {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_edit'),
 						'type' => 'edit',
 						'href' => $this->url->link('modification/' . $extension, 'token=' . $this->session->data['token'], 'SSL')
-					);
+					];
 
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_uninstall'),
 						'type' => 'uninstall',
 						'href' => $this->url->link('extension/modification/uninstall', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
+
+					$installed = true;
 				}
 
-				$this->data['extensions'][] = array(
+				$this->data['extensions'][] = [
 					'name'   => $this->language->get('heading_title'),
+					'set'    => $installed,
 					'action' => $action
-				);
+				];
 			}
 		}
 
 		$this->template = 'extension/modification.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -122,6 +133,7 @@ class ControllerExtensionModification extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 
@@ -153,6 +165,7 @@ class ControllerExtensionModification extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 			$this->load->model('setting/setting');

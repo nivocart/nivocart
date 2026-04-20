@@ -6,19 +6,19 @@ class ControllerExtensionTheme extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -63,15 +63,22 @@ class ControllerExtensionTheme extends Controller {
 			}
 		}
 
-		$this->data['extensions'] = array();
+		$this->data['extensions'] = [];
 
-		$files = glob(DIR_APPLICATION . 'controller/theme/*.php');
+		$modulePath = DIR_APPLICATION . 'controller/theme/';
 
-		if ($files) {
+		if (is_dir($modulePath)) {
+			// Load active template
 			$template = strtolower($this->config->get('config_template'));
 
-			foreach ($files as $file) {
-				$extension = basename($file, '.php');
+			$iterator = new FilesystemIterator($modulePath, FilesystemIterator::SKIP_DOTS);
+
+			foreach ($iterator as $entry) {
+				if (!$entry->isFile() || $entry->getExtension() !== 'php') {
+					continue;
+				}
+
+				$extension = $entry->getBasename('.php');
 
 				if (!$this->user->hasPermission('access', 'theme/' . $extension)) {
 					continue;
@@ -79,49 +86,45 @@ class ControllerExtensionTheme extends Controller {
 
 				$this->language->load('theme/' . $extension);
 
-				// Check active template
-				if ($template == $extension) {
-					$active = true;
-				} else {
-					$active = false;
-				}
-
-				$action = array();
+				// Check if template is Active
+				$active = ($template === $extension) ? true : false;
+	
+				$action = [];
 
 				if (!in_array($extension, $extensions)) {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_install'),
 						'type' => 'install',
 						'href' => $this->url->link('extension/theme/install', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
 
 				} else {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_edit'),
 						'type' => 'edit',
 						'href' => $this->url->link('theme/' . $extension, 'token=' . $this->session->data['token'], 'SSL')
-					);
+					];
 
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_uninstall'),
 						'type' => 'uninstall',
 						'href' => $this->url->link('extension/theme/uninstall', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
 				}
 
-				$this->data['extensions'][] = array(
+				$this->data['extensions'][] = [
 					'name'   => $this->language->get('heading_title'),
-					'active' => ($active) ? $this->language->get('text_is_active') : '',
+					'active' => $active ? $this->language->get('text_is_active') : '',
 					'action' => $action
-				);
+				];
 			}
 		}
 
 		$this->template = 'extension/theme.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -133,6 +136,7 @@ class ControllerExtensionTheme extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 
@@ -164,6 +168,7 @@ class ControllerExtensionTheme extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 			$this->load->model('setting/setting');

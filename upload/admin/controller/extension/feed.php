@@ -6,19 +6,19 @@ class ControllerExtensionFeed extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -64,13 +64,19 @@ class ControllerExtensionFeed extends Controller {
 			}
 		}
 
-		$this->data['extensions'] = array();
+		$this->data['extensions'] = [];
 
-		$files = glob(DIR_APPLICATION . 'controller/feed/*.php');
+		$modulePath = DIR_APPLICATION . 'controller/feed/';
 
-		if ($files) {
-			foreach ($files as $file) {
-				$extension = basename($file, '.php');
+		if (is_dir($modulePath)) {
+			$iterator = new FilesystemIterator($modulePath, FilesystemIterator::SKIP_DOTS);
+
+			foreach ($iterator as $entry) {
+				if (!$entry->isFile() || $entry->getExtension() !== 'php') {
+					continue;
+				}
+
+				$extension = $entry->getBasename('.php');
 
 				if (!$this->user->hasPermission('access', 'feed/' . $extension)) {
 					continue;
@@ -78,42 +84,42 @@ class ControllerExtensionFeed extends Controller {
 
 				$this->language->load('feed/' . $extension);
 
-				$action = array();
+				$action = [];
 
 				if (!in_array($extension, $extensions)) {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_install'),
 						'type' => 'install',
 						'href' => $this->url->link('extension/feed/install', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
 
 				} else {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_edit'),
 						'type' => 'edit',
 						'href' => $this->url->link('feed/' . $extension, 'token=' . $this->session->data['token'], 'SSL')
-					);
+					];
 
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_uninstall'),
 						'type' => 'uninstall',
 						'href' => $this->url->link('extension/feed/uninstall', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
 				}
 
-				$this->data['extensions'][] = array(
+				$this->data['extensions'][] = [
 					'name'   => $this->language->get('heading_title'),
 					'status' => $this->config->get($extension . '_status'),
 					'action' => $action
-				);
+				];
 			}
 		}
 
 		$this->template = 'extension/feed.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -125,6 +131,7 @@ class ControllerExtensionFeed extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 
@@ -156,6 +163,7 @@ class ControllerExtensionFeed extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 			$this->load->model('setting/setting');

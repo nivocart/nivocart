@@ -6,19 +6,19 @@ class ControllerExtensionPayment extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -83,15 +83,21 @@ class ControllerExtensionPayment extends Controller {
 		}
 
 		// Payments accepting recurring transactions
-		$is_recurring = array('pp_express', 'sagepay_direct', 'sagepay_server', 'worldpay_online');
+		$is_recurring = ['pp_express', 'sagepay_direct', 'sagepay_server'];
 
-		$this->data['extensions'] = array();
+		$this->data['extensions'] = [];
 
-		$files = glob(DIR_APPLICATION . 'controller/payment/*.php');
+		$modulePath = DIR_APPLICATION . 'controller/payment/';
 
-		if ($files) {
-			foreach ($files as $file) {
-				$extension = basename($file, '.php');
+		if (is_dir($modulePath)) {
+			$iterator = new FilesystemIterator($modulePath, FilesystemIterator::SKIP_DOTS);
+
+			foreach ($iterator as $entry) {
+				if (!$entry->isFile() || $entry->getExtension() !== 'php') {
+					continue;
+				}
+
+				$extension = $entry->getBasename('.php');
 
 				if (!$this->user->hasPermission('access', 'payment/' . $extension)) {
 					continue;
@@ -99,36 +105,36 @@ class ControllerExtensionPayment extends Controller {
 
 				$this->language->load('payment/' . $extension);
 
-				$action = array();
+				$action = [];
 
 				if (!in_array($extension, $extensions)) {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_install'),
 						'type' => 'install',
 						'href' => $this->url->link('extension/payment/install', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
 
 					$installed = false;
 
 				} else {
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_edit'),
 						'type' => 'edit',
 						'href' => $this->url->link('payment/' . $extension, 'token=' . $this->session->data['token'], 'SSL')
-					);
+					];
 
-					$action[] = array(
+					$action[] = [
 						'text' => $this->language->get('text_uninstall'),
 						'type' => 'uninstall',
 						'href' => $this->url->link('extension/payment/uninstall', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					);
+					];
 
 					$installed = true;
 				}
 
 				$text_link = $this->language->get('text_' . $extension);
 
-				if ($text_link != 'text_' . $extension) {
+				if ($text_link !== 'text_' . $extension) {
 					$link = $this->language->get('text_' . $extension);
 				} else {
 					$link = '';
@@ -140,24 +146,24 @@ class ControllerExtensionPayment extends Controller {
 					$name = $this->language->get('heading_title');
 				}
 
-				$this->data['extensions'][] = array(
-					'name'       => $name,
+				$this->data['extensions'][] = [
+					'name'       => $this->language->get('heading_title'),
 					'link'       => $link,
 					'sort_order' => $this->config->get($extension . '_sort_order'),
 					'status'     => $this->config->get($extension . '_status'),
 					'set'        => $installed,
 					'action'     => $action
-				);
+				];
 			}
 		}
 
 		$this->data['total_extensions'] = $total_extensions;
 
 		$this->template = 'extension/payment.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -169,6 +175,7 @@ class ControllerExtensionPayment extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 
@@ -200,6 +207,7 @@ class ControllerExtensionPayment extends Controller {
 			$this->session->data['error'] = $this->language->get('error_permission');
 
 			$this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+
 		} else {
 			$this->load->model('setting/extension');
 			$this->load->model('setting/setting');
