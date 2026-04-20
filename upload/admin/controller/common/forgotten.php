@@ -46,19 +46,20 @@ class ControllerCommonForgotten extends Controller {
 			$this->data['logged'] = false;
 		}
 
-		$this->data['breadcrumbs'] = array();
+		// Breadcrumbs
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_forgotten'),
 			'href'      => $this->url->link('common/forgotten', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -87,10 +88,10 @@ class ControllerCommonForgotten extends Controller {
 		}
 
 		$this->template = 'common/forgotten.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header_login',
 			'common/footer_login'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

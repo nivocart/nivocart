@@ -1,6 +1,6 @@
 <?php
 class ControllerCommonHome extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('common/home');
@@ -252,11 +252,11 @@ class ControllerCommonHome extends Controller {
 		// Breadcrumbs
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
 		// Session Token
 		$this->data['token'] = $this->session->data['token'];
@@ -310,55 +310,50 @@ class ControllerCommonHome extends Controller {
 
 		$this->data['admin_css'] = $admin_css;
 
-		// Overview
+		// Overview Sales
 		$this->load->model('sale/order');
 
-		$sales_total = array();
+		$sales_total = [];
 
 		$this->data['total_sale'] = $this->currency->format($this->model_sale_order->getTotalSales($sales_total), $this->config->get('config_currency'));
 		$this->data['total_sale_year'] = $this->currency->format($this->model_sale_order->getTotalSalesByYear(date('Y')), $this->config->get('config_currency'));
 		$this->data['total_sale_month'] = $this->currency->format($this->model_sale_order->getTotalSalesByMonth(date('m')), $this->config->get('config_currency'));
 
+		// Overview Customers
 		$this->load->model('sale/customer');
 
-		$customers_total = array();
+		$customers_total = [];
 
 		$this->data['total_customer'] = $this->model_sale_customer->getTotalCustomers($customers_total);
 		$this->data['total_customer_approval'] = $this->model_sale_customer->getTotalCustomersAwaitingApproval();
 
+		// Overview Reviews
 		$this->load->model('catalog/review');
 
 		$this->data['total_review'] = $this->model_catalog_review->getTotalReviews();
 		$this->data['total_review_approval'] = $this->model_catalog_review->getTotalReviewsAwaitingApproval();
 
+		// Overview Affiliates
 		$this->load->model('sale/affiliate');
 
-		$affiliates_total = array();
+		$affiliates_total = [];
 
 		$this->data['total_affiliate'] = $this->model_sale_affiliate->getTotalAffiliates($affiliates_total);
 		$this->data['total_affiliate_approval'] = $this->model_sale_affiliate->getTotalAffiliatesAwaitingApproval();
+		$this->data['allow_affiliate'] = $this->config->get('config_affiliate_disable') ? false : true;
 
-		if ($this->config->get('config_affiliate_disable')) {
-			$this->data['allow_affiliate'] = false;
-		} else {
-			$this->data['allow_affiliate'] = true;
-		}
-
+		// Overview Returns
 		$this->load->model('sale/return');
 
-		$returns_total = array();
+		$returns_total = [];
 
 		$this->data['total_return'] = $this->model_sale_return->getTotalReturns($returns_total);
+		$this->data['allow_return'] = $this->config->get('config_return_disable') ? false : true;
 
-		if ($this->config->get('config_return_disable')) {
-			$this->data['allow_return'] = false;
-		} else {
-			$this->data['allow_return'] = true;
-		}
-
+		// Overview Uploads
 		$this->load->model('tool/upload');
 
-		$uploads_total = array();
+		$uploads_total = [];
 
 		$this->data['total_upload'] = $this->model_tool_upload->getTotalUploads($uploads_total);
 
@@ -375,31 +370,25 @@ class ControllerCommonHome extends Controller {
 		$this->data['view_reviews'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['view_affiliates'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
 
-		// Today
-		$orders_total = array();
+		// Today - New Orders
+		$orders_total = [];
 
 		$this->data['total_order'] = $this->model_sale_order->getTotalOrders($orders_total);
 
-		$order_today = $this->model_sale_order->getTotalOrders(array('filter_date_added' => date('Y-m-d')));
+		$order_today = $this->model_sale_order->getTotalOrders(['filter_date_added' => date('Y-m-d')]);
 
-		if ($order_today > 0) {
-			$this->data['total_order_today'] = $order_today;
-		} else {
-			$this->data['total_order_today'] = 0;
-		}
+		$this->data['total_order_today'] = ((int)$order_today > 0) ? (int)$order_today : 0;
 
 		$this->data['view_orders'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
-		$customer_today = $this->model_sale_customer->getTotalCustomers(array('filter_date_added' => date('Y-m-d')));
+		// Today - New Customers
+		$customer_today = $this->model_sale_customer->getTotalCustomers(['filter_date_added' => date('Y-m-d')]);
 
-		if ($customer_today > 0) {
-			$this->data['total_customer_today'] = $customer_today;
-		} else {
-			$this->data['total_customer_today'] = 0;
-		}
+		$this->data['total_customer_today'] = ($customer_today > 0) ? $customer_today : 0;
 
 		$this->data['view_customers'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
+		// Today - New Sales
 		$this->load->model('report/sale');
 
 		$total_sales_today = $this->model_report_sale->getTotalSales(array('filter_date_added' => date('Y-m-d')));
@@ -408,9 +397,10 @@ class ControllerCommonHome extends Controller {
 
 		$this->data['view_sales'] = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . '&filter_date_start=' . date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01')) . '&filter_date_end=' . date('Y-m-d') . '&filter_group=day', 'SSL');
 
+		// Today - Visitors Online
 		$this->load->model('report/online');
 
-		$customers_online_total = array();
+		$customers_online_total = [];
 
 		$this->data['total_online'] = $this->model_report_online->getTotalCustomersOnline($customers_online_total);
 
@@ -443,10 +433,10 @@ class ControllerCommonHome extends Controller {
 				$circle_percent = 1;
 			}
 
-			$this->data['top_countries'][] = array(
+			$this->data['top_countries'][] = [
 				'amount' => $circle_percent,
 				'country' => ($top_country['iso_code_2']) ? $top_country['iso_code_2'] : '00'
-			);
+			];
 		}
 
 		$this->data['top_flag'] = $flag;
@@ -454,22 +444,22 @@ class ControllerCommonHome extends Controller {
 		// Tab Orders
 		$this->data['orders'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'o.date_added',
 			'order' => 'DESC',
 			'start' => 0,
 			'limit' => 10
-		);
+		];
 
 		$results = $this->model_sale_order->getOrders($data);
 
 		foreach ($results as $result) {
 			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL')
-			);
+			];
 
 			$customer_group = $this->model_sale_customer->getOrdersCustomersGroup($result['customer_id']);
 
@@ -479,7 +469,7 @@ class ControllerCommonHome extends Controller {
 			$orders_passed = $orders_total - $orders_missed;
 			$orders_conversion = ($orders_passed * 100) / $orders_total;
 
-			$this->data['orders'][] = array(
+			$this->data['orders'][] = [
 				'order_id'       => $result['order_id'],
 				'customer'       => $result['customer'],
 				'customer_group' => $result['customer_id'] ? $customer_group : $this->language->get('text_guest'),
@@ -490,42 +480,42 @@ class ControllerCommonHome extends Controller {
 				'status'         => $result['status'],
 				'total'          => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value'], true),
 				'action'         => $action
-			);
+			];
 		}
 
 		// Tab Customers
 		$this->data['customers'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'c.date_added',
 			'order' => 'DESC',
 			'start' => 0,
 			'limit' => 10
-		);
+		];
 
 		$customer_results = $this->model_sale_customer->getCustomers($data);
 
 		foreach ($customer_results as $customer_result) {
 			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . (int)$customer_result['customer_id'], 'SSL')
-			);
+			];
 
 			$action_passed = [];
 
-			$action_passed[] = array(
+			$action_passed[] = [
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$customer_result['email'] . '&filter_customer=' . (string)$customer_result['name'], 'SSL')
-			);
+			];
 
 			$action_missed = [];
 
-			$action_missed[] = array(
+			$action_missed[] = [
 				'text' => $this->language->get('text_view'),
                 'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$customer_result['email'] . '&filter_order_status_id=0', 'SSL')
-			);
+			];
 
 			if ($this->config->get('config_customer_dob')) {
 				$customer_age = date_diff(date_create($customer_result['date_of_birth']), date_create('today'))->y;
@@ -535,51 +525,51 @@ class ControllerCommonHome extends Controller {
 
 			$customer_deleted = $this->model_sale_customer->checkCustomersDeletedId($customer_result['customer_id']);
 
-			$this->data['customers'][] = array(
+			$this->data['customers'][] = [
 				'customer_id'    => $customer_result['customer_id'],
 				'name'           => $customer_result['name'],
 				'age'            => $customer_age,
 				'email'          => $customer_result['email'],
 				'customer_group' => $customer_result['customer_group'] ? $customer_result['customer_group'] : $this->language->get('text_guest'),
 				'approved'       => $customer_result['approved'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
-				'status'         => (!$customer_deleted) ? $customer_result['status'] : 2,
+				'status'         => ($customer_deleted) ? 2 : $customer_result['status'],
 				'date_added'     => date($this->language->get('date_format_short'), strtotime($customer_result['date_added'])),
 				'orders_passed'  => $this->model_sale_customer->getTotalCustomersOrders($customer_result['customer_id']),
 				'orders_missed'  => $this->model_sale_customer->getTotalCustomersOrdersMissed($customer_result['customer_id']),
 				'action_passed'  => $action_passed,
 				'action_missed'  => $action_missed,
 				'action'         => $action
-			);
+			];
 		}
 
 		// Tab Reviews
-		$this->data['reviews'] = array();
+		$this->data['reviews'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'r.date_added',
 			'order' => 'DESC',
 			'start' => 0,
 			'limit' => 10
-		);
+		];
 
 		$review_results = $this->model_catalog_review->getReviews($data);
 
 		foreach ($review_results as $review_result) {
 			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/review/update', 'token=' . $this->session->data['token'] . '&review_id=' . (int)$review_result['review_id'], 'SSL')
-			);
+			];
 
 			$action_rated = [];
 
-			$action_rated[] = array(
+			$action_rated[] = [
 				'text' => $this->language->get('text_view'),
                 'href' => $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . '&filter_review=' . (int)$review_result['review_id'] . '&filter_order_status_id=0', 'SSL')
-			);
+			];
 
-			$this->data['reviews'][] = array(
+			$this->data['reviews'][] = [
 				'review_id'    => $review_result['review_id'],
 				'name'         => $review_result['name'],
 				'author'       => $review_result['author'],
@@ -589,11 +579,11 @@ class ControllerCommonHome extends Controller {
 				'rating_total' => $this->model_catalog_review->getTotalProductReviews($review_result['product_id']),
 				'action_rated' => $action_rated,
 				'action'       => $action
-			);
+			];
 		}
 
 		// Tab Affiliates
-		$this->data['affiliates'] = array();
+		$this->data['affiliates'] = [];
 
 		$data = array(
 			'sort'  => 'a.date_added',
@@ -607,12 +597,12 @@ class ControllerCommonHome extends Controller {
 		foreach ($affiliate_results as $affiliate_result) {
 			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . (int)$affiliate_result['affiliate_id'], 'SSL')
-			);
+			];
 
-			$this->data['affiliates'][] = array(
+			$this->data['affiliates'][] = [
 				'affiliate_id' => $affiliate_result['affiliate_id'],
 				'name'         => $affiliate_result['name'],
 				'email'        => $affiliate_result['email'],
@@ -622,42 +612,42 @@ class ControllerCommonHome extends Controller {
 				'approved'     => $affiliate_result['approved'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
 				'date_added'   => date($this->language->get('date_format_short'), strtotime($affiliate_result['date_added'])),
 				'action'       => $action
-			);
+			];
 		}
 
 		// Tab Returns
 		$this->data['returns'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'r.date_added',
 			'order' => 'DESC',
 			'start' => 0,
 			'limit' => 10
-		);
+		];
 
 		$return_results = $this->model_sale_return->getReturns($data);
 
     	foreach ($return_results as $return_result) {
 			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('sale/return/info', 'token=' . $this->session->data['token'] . '&return_id=' . (int)$return_result['return_id'], 'SSL')
-			);
+			];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/return/update', 'token=' . $this->session->data['token'] . '&return_id=' . (int)$return_result['return_id'], 'SSL')
-			);
+			];
 
 			$action_return = [];
 
-			$action_return[] = array(
+			$action_return[] = [
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('sale/return', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$return_result['email'], 'SSL')
-			);
+			];
 
-			$this->data['returns'][] = array(
+			$this->data['returns'][] = [
 				'return_id'      => $return_result['return_id'],
 				'order_id'       => $return_result['order_id'],
 				'customer'       => $return_result['customer'],
@@ -667,44 +657,44 @@ class ControllerCommonHome extends Controller {
                 'return_history' => $this->model_sale_customer->getTotalCustomersReturns($return_result['customer_id']),
 				'action_return'  => $action_return,
 				'action'         => $action
-			);
+			];
 		}
 
 		// Tab Uploads
 		$this->data['uploads'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'date_added',
 			'order' => 'DESC',
 			'start' => 0,
 			'limit' => 10
-		);
+		];
 
 		$upload_results = $this->model_tool_upload->getUploads($data);
 
 		foreach ($upload_results as $upload_result) {
 			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_download'),
 				'href' => $this->url->link('tool/upload/download', 'token=' . $this->session->data['token'] . '&code=' . $upload_result['code'], 'SSL')
-			);
+			];
 
-			$this->data['uploads'][] = array(
+			$this->data['uploads'][] = [
 				'upload_id'  => $upload_result['upload_id'],
 				'name'       => $upload_result['name'],
 				'filename'   => $upload_result['filename'],
 				'date_added' => date($this->language->get('date_format_time'), strtotime($upload_result['date_added'])),
 				'action'     => $action
-			);
+			];
 		}
 
-		// Top 5 Data report
-		$data_reports = array(
+		// Data for Top 5 Reports
+		$data_reports = [
 			'order' => 'DESC',
 			'start' => 0,
 			'limit' => 5
-		);
+		];
 
 		// Best Seller report
 		$this->language->load('report/product_purchased');
@@ -734,13 +724,13 @@ class ControllerCommonHome extends Controller {
 				$model_purchased = $purchased_result['model'];
 			}
 
-			$this->data['sellers'][] = array(
+			$this->data['sellers'][] = [
 				'name'     => $product_purchased,
 				'model'    => $model_purchased,
 				'quantity' => $purchased_result['quantity'],
 				'total'    => $this->currency->format($purchased_result['total'], $this->config->get('config_currency')),
 				'href'     => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $purchased_result['product_id'], 'SSL')
-			);
+			];
 		}
 
 		// Most Viewed report
@@ -780,13 +770,13 @@ class ControllerCommonHome extends Controller {
 				$percent = 0;
 			}
 
-			$this->data['views'][] = array(
+			$this->data['views'][] = [
 				'name'    => $product_viewed,
 				'model'   => $model_viewed,
 				'viewed'  => $viewed_result['viewed'],
 				'percent' => $percent . '%',
 				'href'    => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . (int)$viewed_result['product_id'], 'SSL')
-			);
+			];
 		}
 
 		// Best Customer report
@@ -807,13 +797,13 @@ class ControllerCommonHome extends Controller {
 				$client = $client_result['customer'];
 			}
 
-			$this->data['clients'][] = array(
+			$this->data['clients'][] = [
 				'customer' => $client,
 				'orders'   => $client_result['orders'],
 				'products' => $client_result['products'],
 				'total'    => $this->currency->format($client_result['total'], $this->config->get('config_currency')),
 				'href'     => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . (int)$client_result['customer_id'], 'SSL')
-			);
+			];
 		}
 
 		// Currency auto-update
@@ -828,10 +818,10 @@ class ControllerCommonHome extends Controller {
 		}
 
 		$this->template = 'common/home.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -868,28 +858,28 @@ class ControllerCommonHome extends Controller {
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id <> '" . (int)$complete_status_id . "' AND (DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "') GROUP BY HOUR(date_added) ORDER BY date_added ASC");
 
 					if ($query->num_rows) {
-						$data['cart']['data'][] = array($i, (int)$query->row['total']);
+						$data['cart']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['cart']['data'][] = array($i, 0);
+						$data['cart']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id = '" . (int)$complete_status_id . "' AND (DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "') GROUP BY HOUR(date_added) ORDER BY date_added ASC");
 
 					if ($query->num_rows) {
-						$data['order']['data'][] = array($i, (int)$query->row['total']);
+						$data['order']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['order']['data'][] = array($i, 0);
+						$data['order']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE DATE(date_added) = DATE(NOW()) AND HOUR(date_added) = '" . (int)$i . "' GROUP BY HOUR(date_added) ORDER BY date_added ASC");
 
 					if ($query->num_rows) {
-						$data['customer']['data'][] = array($i, (int)$query->row['total']);
+						$data['customer']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['customer']['data'][] = array($i, 0);
+						$data['customer']['data'][] = [$i, 0];
 					}
 
-					$data['xaxis'][] = array($i, date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y'))));
+					$data['xaxis'][] = [$i, date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y')))];
 				}
 				break;
 				default:
@@ -902,28 +892,28 @@ class ControllerCommonHome extends Controller {
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id <> '" . (int)$complete_status_id . "' AND DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DATE(date_added)");
 
 					if ($query->num_rows) {
-						$data['cart']['data'][] = array($i, (int)$query->row['total']);
+						$data['cart']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['cart']['data'][] = array($i, 0);
+						$data['cart']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id = '" . (int)$complete_status_id . "' AND DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DATE(date_added)");
 
 					if ($query->num_rows) {
-						$data['order']['data'][] = array($i, (int)$query->row['total']);
+						$data['order']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['order']['data'][] = array($i, 0);
+						$data['order']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DATE(date_added)");
 
 					if ($query->num_rows) {
-						$data['customer']['data'][] = array($i, (int)$query->row['total']);
+						$data['customer']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['customer']['data'][] = array($i, 0);
+						$data['customer']['data'][] = [$i, 0];
 					}
 
-					$data['xaxis'][] = array($i, date('D', strtotime($date)));
+					$data['xaxis'][] = [$i, date('D', strtotime($date))];
 				}
 				break;
 			case 'month':
@@ -933,28 +923,28 @@ class ControllerCommonHome extends Controller {
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id <> '" . (int)$complete_status_id . "' AND (DATE(date_added) = '" . $this->db->escape($date) . "') GROUP BY DAY(date_added)");
 
 					if ($query->num_rows) {
-						$data['cart']['data'][] = array($i, (int)$query->row['total']);
+						$data['cart']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['cart']['data'][] = array($i, 0);
+						$data['cart']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id = '" . (int)$complete_status_id . "' AND (DATE(date_added) = '" . $this->db->escape($date) . "') GROUP BY DAY(date_added)");
 
 					if ($query->num_rows) {
-						$data['order']['data'][] = array($i, (int)$query->row['total']);
+						$data['order']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['order']['data'][] = array($i, 0);
+						$data['order']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE DATE(date_added) = '" . $this->db->escape($date) . "' GROUP BY DAY(date_added)");
 
 					if ($query->num_rows) {
-						$data['customer']['data'][] = array($i, (int)$query->row['total']);
+						$data['customer']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['customer']['data'][] = array($i, 0);
+						$data['customer']['data'][] = [$i, 0];
 					}
 
-					$data['xaxis'][] = array($i, date('j', strtotime($date)));
+					$data['xaxis'][] = [$i, date('j', strtotime($date))];
 				}
 				break;
 			case 'year':
@@ -962,28 +952,28 @@ class ControllerCommonHome extends Controller {
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id <> '" . (int)$complete_status_id . "' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
 
 					if ($query->num_rows) {
-						$data['cart']['data'][] = array($i, (int)$query->row['total']);
+						$data['cart']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['cart']['data'][] = array($i, 0);
+						$data['cart']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id = '" . (int)$complete_status_id . "' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
 
 					if ($query->num_rows) {
-						$data['order']['data'][] = array($i, (int)$query->row['total']);
+						$data['order']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['order']['data'][] = array($i, 0);
+						$data['order']['data'][] = [$i, 0];
 					}
 
 					$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer` WHERE YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
 
 					if ($query->num_rows) {
-						$data['customer']['data'][] = array($i, (int)$query->row['total']);
+						$data['customer']['data'][] = [$i, (int)$query->row['total']];
 					} else {
-						$data['customer']['data'][] = array($i, 0);
+						$data['customer']['data'][] = [$i, 0];
 					}
 
-					$data['xaxis'][] = array($i, date('M', mktime(0, 0, 0, $i, 1, date('Y'))));
+					$data['xaxis'][] = [$i, date('M', mktime(0, 0, 0, $i, 1, date('Y')))];
 				}
 				break;
 		}
@@ -993,7 +983,7 @@ class ControllerCommonHome extends Controller {
 	}
 
 	public function map() {
-		$json = array();
+		$json = [];
 
 		$this->language->load('common/home');
 
@@ -1002,12 +992,12 @@ class ControllerCommonHome extends Controller {
 		$results = $this->model_report_sale->getTotalOrdersByCountry();
 
 		foreach ($results as $result) {
-			$json[mb_strtolower($result['iso_code_2'], 'UTF-8')] = array(
+			$json[mb_strtolower($result['iso_code_2'], 'UTF-8')] = [
 				'orders' => $this->language->get('text_total_order'),
 				'total'  => $result['total'],
 				'sales'  => $this->language->get('text_total_sale'),
 				'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency'))
-			);
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
@@ -1035,25 +1025,25 @@ class ControllerCommonHome extends Controller {
 			}
 		}
 
-		$first_ignore = array(
+		$first_ignore = [
 			'common/login',
 			'common/forgotten',
 			'common/reset'
-		);
+		];
 
 		if (!$this->user->isLogged() && !in_array($route, $first_ignore)) {
 			return $this->forward('common/login');
 		}
 
 		if (isset($this->request->get['route'])) {
-			$ignore = array(
+			$ignore = [
 				'common/login',
 				'common/logout',
 				'common/forgotten',
 				'common/reset',
 				'error/not_found',
 				'error/permission'
-			);
+			];
 
 			$config_ignore = [];
 
@@ -1095,7 +1085,7 @@ class ControllerCommonHome extends Controller {
 				$route .= '/' . $part[1];
 			}
 
-			$ignore = array(
+			$ignore = [
 				'common/login',
 				'common/logout',
 				'common/forgotten',
@@ -1103,7 +1093,7 @@ class ControllerCommonHome extends Controller {
 				'common/reset',
 				'error/not_found',
 				'error/permission'
-			);
+			];
 
 			if (!in_array($route, $ignore) && !$this->user->hasPermission('access', $route)) {
 				return $this->forward('error/permission');

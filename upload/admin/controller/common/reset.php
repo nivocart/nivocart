@@ -1,17 +1,13 @@
 <?php
 class ControllerCommonReset extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if (!$this->config->get('config_password')) {
 			$this->redirect($this->url->link('common/login', '', 'SSL'));
 		}
 
-		if (isset($this->request->get['code'])) {
-			$code = $this->request->get['code'];
-		} else {
-			$code = '';
-		}
+		$code = isset($this->request->get['code']) ? $this->request->get['code'] : '';
 
 		$this->load->model('user/user');
 
@@ -28,19 +24,20 @@ class ControllerCommonReset extends Controller {
 				$this->redirect($this->url->link('common/login', '', 'SSL'));
 			}
 
-			$this->data['breadcrumbs'] = array();
+			// Breadcrumbs
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', '', 'SSL'),
 				'separator' => false
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_reset'),
 				'href'      => $this->url->link('common/reset', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -82,10 +79,10 @@ class ControllerCommonReset extends Controller {
 			}
 
 			$this->template = 'common/reset.tpl';
-			$this->children = array(
+			$this->children = [
 				'common/header_login',
 				'common/footer_login'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 

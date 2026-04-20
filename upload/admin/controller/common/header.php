@@ -93,7 +93,7 @@ class ControllerCommonHeader extends Controller {
 			$this->data['blog_ready'] = false;
 		}
 
-		// Text
+		// Menu text definitions
 		$this->data['text_administration'] = $this->language->get('text_administration');
 		$this->data['text_affiliate'] = $this->language->get('text_affiliate');
 		$this->data['text_api_key_manager'] = $this->language->get('text_api_key_manager');
@@ -270,6 +270,7 @@ class ControllerCommonHeader extends Controller {
 				$this->data['user_profile'] = '';
 			}
 
+			// Menu links definitions
 			$this->data['administration'] = $this->url->link('design/administration', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['affiliate'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['api_key_manager'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL');
@@ -400,11 +401,7 @@ class ControllerCommonHeader extends Controller {
 
 			$profile_total = $this->model_catalog_profile->getTotalProfiles();
 
-			if ($profile_total > 0) {
-				$this->data['profile_exist'] = true;
-			} else {
-				$this->data['profile_exist'] = false;
-			}
+			$this->data['profile_exist'] = ($profile_total > 0) ? true : false;
 
 			// Menu Icons
 			$this->data['icons'] = $this->config->get('config_admin_menu_icons');
@@ -415,29 +412,29 @@ class ControllerCommonHeader extends Controller {
 			$connection_total = $this->model_design_connection->getTotalAdminConnections();
 
 			if ($connection_total > 0) {
-				$this->data['connections_ul'] = array();
-				$this->data['connections_li'] = array();
+				$this->data['connections_ul'] = [];
+				$this->data['connections_li'] = [];
 
-				$connections_array = array();
+				$connections_array = [];
 
 				$connections = $this->model_design_connection->getConnections($connections_array);
 
 				foreach ($connections as $connection) {
 					if ($connection['backend']) {
-						$this->data['connections_ul'][] = array(
+						$this->data['connections_ul'][] = [
 							'connection_id' => $connection['connection_id'],
 							'name'          => $connection['name']
-						);
+						];
 
 						$connection_routes = $this->model_design_connection->getConnectionRoutes($connection['connection_id']);
 
 						foreach ($connection_routes as $connection_route) {
-							$this->data['connections_li'][] = array(
+							$this->data['connections_li'][] = [
 								'parent_id' => $connection_route['connection_id'],
 								'icon'      => $connection_route['icon'],
 								'title'     => $connection_route['title'],
 								'route'     => html_entity_decode($connection_route['route'], ENT_QUOTES, 'UTF-8')
-							);
+							];
 						}
 					}
 				}
@@ -452,17 +449,17 @@ class ControllerCommonHeader extends Controller {
 			$this->data['allow_affiliate'] = $this->config->get('config_affiliate_disable') ? false : true;
 
 			// Store
-			$this->data['stores'] = array();
+			$this->data['stores'] = [];
 
 			$this->load->model('setting/store');
 
 			$results = $this->model_setting_store->getAllStores();
 
 			foreach ($results as $result) {
-				$this->data['stores'][] = array(
+				$this->data['stores'][] = [
 					'name' => $result['name'],
 					'href' => $result['url']
-				);
+				];
 			}
 
 			// Robots
@@ -475,9 +472,9 @@ class ControllerCommonHeader extends Controller {
 		$this->template = 'common/header.tpl';
 
 		if ($this->user->isLogged() && $this->config->get('config_notifications')) {
-			$this->children = array(
+			$this->children = [
 				'common/notification'
-			);
+			];
 		}
 
 		$this->render();

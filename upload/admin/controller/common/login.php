@@ -99,10 +99,10 @@ class ControllerCommonLogin extends Controller {
 		}
 
 		$this->template = 'common/login.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header_login',
 			'common/footer_login'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
