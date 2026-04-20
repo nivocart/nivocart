@@ -1,6 +1,6 @@
 <?php
 class ControllerModificationBlogSystem extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'blog_system';
 
 	public function index() {
@@ -16,21 +16,22 @@ class ControllerModificationBlogSystem extends Controller {
 			$this->data['text_install_message'] = $this->language->get('text_install_message');
 			$this->data['text_upgrade'] = $this->language->get('text_upgrade');
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 				'separator' => false
-			);
+			];
 
 			$this->template = 'blog/notification.tpl';
-			$this->children = array(
+			$this->children = [
 				'common/header',
 				'common/footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
+
 		} else {
 			$this->setting();
 		}
@@ -113,25 +114,25 @@ class ControllerModificationBlogSystem extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_modification'),
 			'href'      => $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('modification/blog_system', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('modification/blog_system', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -188,10 +189,10 @@ class ControllerModificationBlogSystem extends Controller {
 		}
 
 		$this->template = 'modification/blog_system.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -204,7 +205,7 @@ class ControllerModificationBlogSystem extends Controller {
 		return empty($this->error);
 	}
 
-	public function install() {
+	public function install(): void {
 	// Create blog article table
 $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article`");
 $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article (
@@ -394,7 +395,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 		}
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->cache->delete('blog_author');
 		$this->cache->delete('blog_category');
 

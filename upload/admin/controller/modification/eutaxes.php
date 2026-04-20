@@ -154,23 +154,23 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_modification'),
 			'href'      => $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('modification/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Geo_zone Status
 		$this->load->model('localisation/geo_zone');
@@ -182,10 +182,10 @@ class ControllerModificationEutaxes extends Controller {
 		$geo_zone_results = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
 		foreach ($geo_zone_results as $geo_zone_result) {
-			$this->data['geo_zones'][] = array(
+			$this->data['geo_zones'][] = [
 				'geo_zone_id' => $geo_zone_result['geo_zone_id'],
 				'name'        => $geo_zone_result['name']
-			);
+			];
 		}
 
 		$this->data['text_status_geo_zone'] = $this->language->get('text_status_geo_zone');
@@ -200,11 +200,11 @@ class ControllerModificationEutaxes extends Controller {
 		$tax_rates_results = $this->model_localisation_tax_rate->getTaxRates($taxrates_array);
 
 		foreach ($tax_rates_results as $tax_rates_result) {
-			$this->data['tax_rates'][] = array(
+			$this->data['tax_rates'][] = [
 				'tax_rate_id' => $tax_rates_result['tax_rate_id'],
 				'name'        => $tax_rates_result['name'],
 				'geo_zone'    => $tax_rates_result['geo_zone']
-			);
+			];
 		}
 
 		$this->data['text_status_tax_rate'] = $this->language->get('text_status_tax_rate');
@@ -225,11 +225,11 @@ class ControllerModificationEutaxes extends Controller {
 				$tax_rule = false;
 			}
 
-			$this->data['tax_classes'][] = array(
+			$this->data['tax_classes'][] = [
 				'tax_class_id' => $tax_classes_result['tax_class_id'],
 				'title'        => $tax_classes_result['title'],
 				'tax_rules'    => $tax_rule
-			);
+			];
 		}
 
 		$this->data['text_status_tax_class'] = $this->language->get('text_status_tax_class');
@@ -246,10 +246,10 @@ class ControllerModificationEutaxes extends Controller {
 		$this->data['action_tax_rule'] = $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->template = 'modification/eutaxes.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -265,23 +265,23 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_modification'),
 			'href'      => $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('modification/eutaxes/listing', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('modification/eutaxes/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('modification/eutaxes/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -300,12 +300,12 @@ class ControllerModificationEutaxes extends Controller {
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$eucountries_total = $this->model_modification_eutaxes->getTotalEUCountries();
 
@@ -316,10 +316,10 @@ class ControllerModificationEutaxes extends Controller {
 		foreach ($results as $result) {
 			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('modification/eutaxes/update', 'token=' . $this->session->data['token'] . '&eucountry_id=' . $result['eucountry_id'], 'SSL')
-			);
+			];
 
 			if ($result['code'] && file_exists(DIR_APPLICATION . 'view/image/flags/' . strtolower($result['code']) . '.png')) {
 				$flagcode = strtolower($result['code']);
@@ -331,7 +331,7 @@ class ControllerModificationEutaxes extends Controller {
 				$flagcode = '';
 			}
 
-			$this->data['eucountries'][] = array(
+			$this->data['eucountries'][] = [
 				'eucountry_id' => $result['eucountry_id'],
 				'flag'         => $flagcode,
 				'eucountry'    => $result['eucountry'],
@@ -340,7 +340,7 @@ class ControllerModificationEutaxes extends Controller {
 				'status'       => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
 				'selected'     => isset($this->request->post['selected']) && in_array($result['eucountry_id'], $this->request->post['selected']),
 				'action'       => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -416,10 +416,10 @@ class ControllerModificationEutaxes extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'modification/eutaxes_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -477,23 +477,23 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_modification'),
 			'href'      => $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('modification/eutaxes/listing', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['eucountry_id'])) {
 			$this->data['action'] = $this->url->link('modification/eutaxes/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -530,7 +530,7 @@ class ControllerModificationEutaxes extends Controller {
 		} elseif (isset($eucountry_info)) {
 			$this->data['eucountry_store'] = $this->model_modification_eutaxes->getEUCountryStores($this->request->get['eucountry_id']);
 		} else {
-			$this->data['eucountry_store'] = array(0);
+			$this->data['eucountry_store'] = [0];
 		}
 
 		if (isset($this->request->post['code'])) {
@@ -558,10 +558,10 @@ class ControllerModificationEutaxes extends Controller {
 		}
 
 		$this->template = 'modification/eutaxes_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -600,7 +600,7 @@ class ControllerModificationEutaxes extends Controller {
 		return empty($this->error);
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->cache->delete('eucountry');
 	}
 }
