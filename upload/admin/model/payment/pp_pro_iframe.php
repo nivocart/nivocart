@@ -1,7 +1,7 @@
 <?php
 class ModelPaymentPPProIframe extends Model {
 
-	public function install() {
+	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_iframe_order` (
 			`paypal_iframe_order_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -13,7 +13,7 @@ class ModelPaymentPPProIframe extends Model {
 			`authorization_id` VARCHAR(30) NOT NULL,
 			`total` DECIMAL(10, 2) NOT NULL,
 			PRIMARY KEY (`paypal_iframe_order_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
 		$this->db->query("
@@ -34,36 +34,36 @@ class ModelPaymentPPProIframe extends Model {
 			`debug_data` TEXT NOT NULL,
 			`call_data` TEXT NOT NULL,
 			PRIMARY KEY (`paypal_iframe_order_transaction_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "paypal_iframe_order_transaction`;");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "paypal_iframe_order`;");
 	}
 
-	public function getPaypalOrder($paypal_iframe_order_id) {
+	public function getPaypalOrder(int $paypal_iframe_order_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_iframe_order` WHERE `paypal_iframe_order_id` = " . (int)$paypal_iframe_order_id);
 
 		return (($query instanceof stdClass) && isset($query->row) && is_array($query->row)) ? $query->row : false;
 	}
 
-	public function getPaypalOrderByOrderId($order_id) {
+	public function getPaypalOrderByOrderId(int $order_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_iframe_order` WHERE `order_id` = " . (int)$order_id);
 
 		return (($query instanceof stdClass) && isset($query->row) && is_array($query->row)) ? $query->row : false;
 	}
 
-	public function updatePaypalOrderStatus($order_id, $capture_status) {
+	public function updatePaypalOrderStatus(int $order_id, $capture_status): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_iframe_order` SET `capture_status` = '" . $this->db->escape($capture_status) . "', `modified` = NOW() WHERE `order_id` = " . (int)$order_id);
 	}
 
-	public function updateAuthorizationId($paypal_iframe_order_id, $authorization_id) {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_iframe_order SET authorization_id = '" . $this->db->escape($authorization_id) . "' WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id);
+	public function updateAuthorizationId(int $paypal_iframe_order_id, $authorization_id): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_iframe_order` SET authorization_id = '" . $this->db->escape($authorization_id) . "' WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id);
 	}
 
-	public function addTransaction($transaction_data, $request_data = array()) {
+	public function addTransaction($transaction_data, array $request_data = []) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "paypal_iframe_order_transaction SET "
 		. "paypal_iframe_order_id = " . (isset($transaction_data['paypal_iframe_order_id']) ? (int)$transaction_data['paypal_iframe_order_id'] : 0) . ", "
 		. "transaction_id = '" . (isset($transaction_data['transaction_id']) ? $this->db->escape($transaction_data['transaction_id']) : null) . "', "
@@ -78,7 +78,7 @@ class ModelPaymentPPProIframe extends Model {
 		. "transaction_entity = '" . (isset($transaction_data['transaction_entity']) ? $this->db->escape($transaction_data['transaction_entity']) : null) . "', "
 		. "amount = " . (isset($transaction_data['amount']) ? (double)$transaction_data['amount'] : 0.0) . ", "
 		. "debug_data = '" . (isset($transaction_data['debug_data']) ? $this->db->escape($transaction_data['debug_data']) : null) . "'"
-		. (!empty($request_data) ? ", call_data = '" . $this->db->escape(serialize($request_data)) . "'" : null));
+		. (!empty($request_data) ? ", call_data = '" . $this->db->escape(json_encode($request_data)) . "'" : null));
 
 		$paypal_iframe_order_transaction_id = $this->db->getLastId();
 
@@ -110,7 +110,7 @@ class ModelPaymentPPProIframe extends Model {
 		return $query->rows;
 	}
 
-	public function getFailedTransaction($paypal_iframe_order_transaction_id) {
+	public function getFailedTransaction(int $paypal_iframe_order_transaction_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_iframe_order_transaction` WHERE paypal_iframe_order_transaction_id = " . (int)$paypal_iframe_order_transaction_id . " AND payment_status = 'Failed'");
 
 		if ($query->num_rows) {
@@ -131,10 +131,10 @@ class ModelPaymentPPProIframe extends Model {
 	}
 
 	public function requestTransactionDetails($transaction_id) {
-		$call_data = array(
+		$call_data = [
 			'METHOD'        => 'GetTransactionDetails',
 			'TRANSACTIONID' => $transaction_id
-		);
+		];
 
 		return $this->call($call_data);
 	}
@@ -143,13 +143,13 @@ class ModelPaymentPPProIframe extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_iframe_order_transaction` SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape($transaction_id) . "' LIMIT 0,1");
 	}
 
-	public function getTotalCaptured($paypal_iframe_order_id) {
+	public function getTotalCaptured(int $paypal_iframe_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "paypal_iframe_order_transaction` WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " AND pending_reason != 'authorization' AND (payment_status = 'Partially-Refunded' OR payment_status = 'Completed' OR payment_status = 'Pending') AND transaction_entity = 'payment'");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalRefunded($paypal_iframe_order_id) {
+	public function getTotalRefunded(int $paypal_iframe_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "paypal_iframe_order_transaction` WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " AND payment_status = 'Refunded'");
 
 		return $query->row['total'];
@@ -161,10 +161,10 @@ class ModelPaymentPPProIframe extends Model {
 		return $query->row['total'];
 	}
 
-	protected function cleanReturn($data) {
+	protected function cleanReturn(array $data = []) {
 		$data = explode('&', $data);
 
-		$arr = array();
+		$arr = [];
 
 		foreach ($data as $k => $v) {
 			$tmp = explode('=', $v);
@@ -181,7 +181,7 @@ class ModelPaymentPPProIframe extends Model {
 		}
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_iframe_order WHERE order_id = " . (int)$order_id . " LIMIT 0,1");
 
 		if ($query->row) {
@@ -206,8 +206,9 @@ class ModelPaymentPPProIframe extends Model {
 		}
 	}
 
-	public function getTransactions($paypal_iframe_order_id) {
-		$transactions = array();
+	public function getTransactions(int $paypal_iframe_order_id) {
+		$transactions = [];
+
 		// children unused
 		$query = $this->db->query("SELECT ot.*, (SELECT COUNT(ot2.paypal_iframe_order_id) FROM " . DB_PREFIX . "paypal_iframe_order_transaction ot2 WHERE ot2.parent_transaction_id = ot.transaction_id) AS children FROM " . DB_PREFIX . "paypal_iframe_order_transaction ot WHERE paypal_iframe_order_id = " . (int)$paypal_iframe_order_id . " ORDER BY paypal_iframe_order_transaction_id ASC");
 
@@ -220,8 +221,8 @@ class ModelPaymentPPProIframe extends Model {
 		return $transactions;
 	}
 
-	public function call($data) {
-		if ($this->config->get('pp_pro_iframe_test') == 1) {
+	public function call(array $data = []) {
+		if ($this->config->get('pp_pro_iframe_test') === 1) {
 			$api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
 			$user = $this->config->get('pp_pro_iframe_sandbox_username');
 			$password = $this->config->get('pp_pro_iframe_sandbox_password');
@@ -233,13 +234,13 @@ class ModelPaymentPPProIframe extends Model {
 			$signature = $this->config->get('pp_pro_iframe_signature');
 		}
 
-		$default_parameters = array(
+		$default_parameters = [
 			'USER'         => $user,
 			'PWD'          => $password,
 			'SIGNATURE'    => $signature,
 			'VERSION'      => '84',
 			'BUTTONSOURCE' => 'WM_PRO_OPENCART_UK_' . VERSION
-		);
+		];
 
 		$call_parameters = array_merge($data, $default_parameters);
 
@@ -266,10 +267,10 @@ class ModelPaymentPPProIframe extends Model {
 		$response = curl_exec($ch);
 
 		if (curl_errno($ch) != CURLE_OK) {
-			$log_data = array(
+			$log_data = [
 				'curl_error' => curl_error($ch),
 				'curl_errno' => curl_errno($ch)
-			);
+			];
 
 			$this->log($log_data, 'cURL failed');
 			return false;

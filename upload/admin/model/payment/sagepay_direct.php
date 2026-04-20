@@ -1,7 +1,7 @@
 <?php
 class ModelPaymentSagepayDirect extends Model {
 
-	public function install() {
+	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "sagepay_direct_order` (
 				`sagepay_direct_order_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -20,7 +20,7 @@ class ModelPaymentSagepayDirect extends Model {
 				`total` decimal(10, 2) NOT NULL,
 				`card_id` int(11),
 				PRIMARY KEY (`sagepay_direct_order_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
 		$this->db->query("
@@ -31,7 +31,7 @@ class ModelPaymentSagepayDirect extends Model {
 				`type` enum('auth', 'payment', 'rebate', 'void') DEFAULT NULL,
 				`amount` decimal(10, 2) NOT NULL,
 				PRIMARY KEY (`sagepay_direct_order_transaction_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
 		$this->db->query("
@@ -51,7 +51,7 @@ class ModelPaymentSagepayDirect extends Model {
 				`currency_code` varchar(3) NOT NULL,
 				`total` decimal(10, 2) NOT NULL,
 				PRIMARY KEY (`sagepay_direct_order_recurring_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
 		$this->db->query("
@@ -63,30 +63,30 @@ class ModelPaymentSagepayDirect extends Model {
 				`expiry` varchar(5) NOT NULL,
 				`type` varchar(50) NOT NULL,
 				PRIMARY KEY (`card_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sagepay_direct_order`;");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sagepay_direct_order_transaction`;");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sagepay_direct_order_recurring`;");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sagepay_direct_card`;");
 	}
 
-	public function void($order_id) {
-		$sagepay_direct_order = $this->getOrder($order_id);
+	public function void(int $order_id) {
+		$sagepay_direct_order = $this->getOrder((int)$order_id);
 
-		if (!empty($sagepay_direct_order) && $sagepay_direct_order['release_status'] == 0) {
-			$void_data = array();
+		if (!empty($sagepay_direct_order) && $sagepay_direct_order['release_status'] === 0) {
+			$void_data = [];
 
-			if ($this->config->get('sagepay_direct_test') == 'live') {
+			if ($this->config->get('sagepay_direct_test') === 'live') {
 				$url = 'https://live.sagepay.com/gateway/service/void.vsp';
 				$void_data['VPSProtocol'] = '3.00';
-			} elseif ($this->config->get('sagepay_direct_test') == 'test') {
+			} elseif ($this->config->get('sagepay_direct_test') === 'test') {
 				$url = 'https://test.sagepay.com/gateway/service/void.vsp';
 				$void_data['VPSProtocol'] = '3.00';
-			} elseif ($this->config->get('sagepay_direct_test') == 'sim') {
+			} elseif ($this->config->get('sagepay_direct_test') === 'sim') {
 				$url = 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorVoidTx';
 				$void_data['VPSProtocol'] = '2.23';
 			}
@@ -108,25 +108,25 @@ class ModelPaymentSagepayDirect extends Model {
 		}
 	}
 
-	public function updateVoidStatus($sagepay_direct_order_id, $status) {
-		$this->db->query("UPDATE " . DB_PREFIX . "sagepay_direct_order SET void_status = '" . (int)$status . "' WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
+	public function updateVoidStatus(int $sagepay_direct_order_id, int $status): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "sagepay_direct_order` SET void_status = '" . (int)$status . "' WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
 	}
 
-	public function release($order_id, $amount) {
-		$sagepay_direct_order = $this->getOrder($order_id);
+	public function release(int $order_id, $amount) {
+		$sagepay_direct_order = $this->getOrder((int)$order_id);
 
 		$total_released = $this->getTotalReleased($sagepay_direct_order['sagepay_direct_order_id']);
 
-		if (!empty($sagepay_direct_order) && $sagepay_direct_order['release_status'] == 0 && ($total_released + $amount <= $sagepay_direct_order['total'])) {
-			$release_data = array();
+		if (!empty($sagepay_direct_order) && $sagepay_direct_order['release_status'] === 0 && ($total_released + $amount <= $sagepay_direct_order['total'])) {
+			$release_data = [];
 
-			if ($this->config->get('sagepay_direct_test') == 'live') {
+			if ($this->config->get('sagepay_direct_test') === 'live') {
 				$url = 'https://live.sagepay.com/gateway/service/release.vsp';
 				$release_data['VPSProtocol'] = '3.00';
-			} elseif ($this->config->get('sagepay_direct_test') == 'test') {
+			} elseif ($this->config->get('sagepay_direct_test') === 'test') {
 				$url = 'https://test.sagepay.com/gateway/service/release.vsp';
 				$release_data['VPSProtocol'] = '3.00';
-			} elseif ($this->config->get('sagepay_direct_test') == 'sim') {
+			} elseif ($this->config->get('sagepay_direct_test') === 'sim') {
 				$url = 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorReleaseTx';
 				$release_data['VPSProtocol'] = '2.23';
 			}
@@ -149,23 +149,23 @@ class ModelPaymentSagepayDirect extends Model {
 		}
 	}
 
-	public function updateReleaseStatus($sagepay_direct_order_id, $status) {
-		$this->db->query("UPDATE " . DB_PREFIX . "sagepay_direct_order SET release_status = '" . (int)$status . "' WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
+	public function updateReleaseStatus(int $sagepay_direct_order_id, int $status): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "sagepay_direct_order` SET release_status = '" . (int)$status . "' WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
 	}
 
-	public function rebate($order_id, $amount) {
-		$sagepay_direct_order = $this->getOrder($order_id);
+	public function rebate(int $order_id, $amount) {
+		$sagepay_direct_order = $this->getOrder((int)$order_id);
 
 		if (!empty($sagepay_direct_order) && $sagepay_direct_order['rebate_status'] != 1) {
-			$refund_data = array();
+			$refund_data = [];
 
-			if ($this->config->get('sagepay_direct_test') == 'live') {
+			if ($this->config->get('sagepay_direct_test') === 'live') {
 				$url = 'https://live.sagepay.com/gateway/service/refund.vsp';
 				$refund_data['VPSProtocol'] = '3.00';
-			} elseif ($this->config->get('sagepay_direct_test') == 'test') {
+			} elseif ($this->config->get('sagepay_direct_test') === 'test') {
 				$url = 'https://test.sagepay.com/gateway/service/refund.vsp';
 				$refund_data['VPSProtocol'] = '3.00';
-			} elseif ($this->config->get('sagepay_direct_test') == 'sim') {
+			} elseif ($this->config->get('sagepay_direct_test') === 'sim') {
 				$url = 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorRefundTx';
 				$refund_data['VPSProtocol'] = '2.23';
 			}
@@ -191,14 +191,14 @@ class ModelPaymentSagepayDirect extends Model {
 		}
 	}
 
-	public function updateRebateStatus($sagepay_direct_order_id, $status): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "sagepay_direct_order SET rebate_status = '" . (int)$status . "' WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
+	public function updateRebateStatus(int $sagepay_direct_order_id, int $status): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "sagepay_direct_order` SET rebate_status = '" . (int)$status . "' WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
 	}
 
-	public function getOrder($order_id) {
+	public function getOrder(int $order_id) {
 		$this->logger('getOrder - ' . $order_id);
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sagepay_direct_order WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "sagepay_direct_order` WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
 
 		if ($query->num_rows) {
 			$order = $query->row;
@@ -213,8 +213,8 @@ class ModelPaymentSagepayDirect extends Model {
 		}
 	}
 
-	protected function getTransactions($sagepay_direct_order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sagepay_direct_order_transaction WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
+	protected function getTransactions(int $sagepay_direct_order_id): array {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "sagepay_direct_order_transaction` WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "'");
 
 		if ($query->num_rows) {
 			return $query->rows;
@@ -223,18 +223,18 @@ class ModelPaymentSagepayDirect extends Model {
 		}
 	}
 
-	public function addTransaction($sagepay_direct_order_id, $type, $total) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "sagepay_direct_order_transaction SET sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . (float)$total . "'");
+	public function addTransaction(int $sagepay_direct_order_id, $type, $total) {
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "sagepay_direct_order_transaction` SET sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . (float)$total . "'");
 	}
 
-	public function getTotalReleased($sagepay_direct_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "sagepay_direct_order_transaction WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
+	public function getTotalReleased(int $sagepay_direct_order_id) {
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "sagepay_direct_order_transaction` WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
 
 		return (double)$query->row['total'];
 	}
 
-	public function getTotalRebated($sagepay_direct_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "sagepay_direct_order_transaction WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "' AND 'rebate'");
+	public function getTotalRebated(int $sagepay_direct_order_id) {
+		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "sagepay_direct_order_transaction` WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "' AND 'rebate'");
 
 		return (double)$query->row['total'];
 	}
@@ -272,7 +272,7 @@ class ModelPaymentSagepayDirect extends Model {
 	}
 
 	public function logger($message) {
-		if ($this->config->get('sagepay_direct_debug') == 1) {
+		if ($this->config->get('sagepay_direct_debug') === 1) {
 			$log = new Log('sagepay_direct.log');
 			$log->write($message);
 		}

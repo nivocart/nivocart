@@ -1,7 +1,7 @@
 <?php
 class ModelPaymentPPPayflowIframe extends Model {
 
-	public function install() {
+	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_payflow_iframe_order` (
 			`order_id` int(11) NOT NULL DEFAULT 0,
@@ -12,7 +12,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			`date_modified` datetime NOT NULL,
 			PRIMARY KEY(`order_id`),
 			KEY `secure_token_id` (`secure_token_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
 		$this->db->query("
@@ -28,16 +28,16 @@ class ModelPaymentPPPayflowIframe extends Model {
 			PRIMARY KEY (`transaction_reference`),
 			KEY `order_id` (`order_id`),
 			KEY `parent_transaction_reference` (`parent_transaction_reference`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "paypal_payflow_iframe_order`;");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction`;");
 	}
 
-	public function getPaypalOrderByOrderId($order_id) {
+	public function getPaypalOrderByOrderId(int $order_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order` WHERE order_id = " . (int)$order_id);
 
 		return (($query instanceof stdClass) && isset($query->row) && is_array($query->row)) ? $query->row : false;
@@ -49,7 +49,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		return (($query instanceof stdClass) && isset($query->row) && is_array($query->row)) ? $query->row : false;
 	}
 
-	public function addPaypalOrder($data) {
+	public function addPaypalOrder(array $data = []) {
 		if (is_array($data) && !empty($data)) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "paypal_payflow_iframe_order SET "
 			. "order_id = " . (isset($data['order_id']) ? (int)$data['order_id'] : 0) . ", "
@@ -64,7 +64,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function editPaypalOrderByOrderId($order_id, $data) {
+	public function editPaypalOrderByOrderId(int $order_id, array $data = []) {
 		if (is_array($data) && !empty($data)) {
 			$result = $this->db->query("UPDATE " . DB_PREFIX . "paypal_payflow_iframe_order SET "
 			. (isset($data['secure_token_id']) ? "secure_token_id = '" . $this->db->escape($data['secure_token_id']) . "', " : null)
@@ -79,11 +79,11 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function setPaypalOrderComplete($order_id, $complete) {
-		return (self::editPaypalOrderByOrderId($order_id, array('complete' => $complete)));
+	public function setPaypalOrderComplete(int $order_id, $complete) {
+		return (self::editPaypalOrderByOrderId($order_id, ['complete' => $complete]));
 	}
 
-	public function addPaypalTransaction($data) {
+	public function addPaypalTransaction(array $data = []) {
 		if (is_array($data) && !empty($data)) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "paypal_payflow_iframe_order_transaction SET "
 			. "order_id = " . (isset($data['order_id']) ? (int)$data['order_id'] : 0) . ", "
@@ -100,7 +100,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function editPaypalTransactionByReference($transaction_reference, $data) {
+	public function editPaypalTransactionByReference($transaction_reference, array $data = []) {
 		if (is_array($data) && !empty($data)) {
 			$result = $this->db->query("UPDATE " . DB_PREFIX . "paypal_payflow_iframe_order_transaction SET "
 			. (isset($data['order_id']) ? "order_id = " . (int)$data['order_id'] . ", " : null)
@@ -117,7 +117,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 	}
 
 	public function getPaypalCapturesByParentReference($ref): array {
-		$captures = array();
+		$captures = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' AND transaction_type = 'D' ORDER BY `date_added` ASC");
 
@@ -131,7 +131,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 	}
 
 	public function getPaypalRefundsByParentReference($ref): array {
-		$refunds = array();
+		$refunds = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' AND transaction_type = 'C' ORDER BY `date_added` ASC");
 
@@ -145,7 +145,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 	}
 
 	public function getPaypalTransactionsByParentReference($ref): array {
-		$transactions = array();
+		$transactions = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE parent_transaction_reference = '" . $this->db->escape($ref) . "' ORDER BY `date_added` ASC");
 
@@ -159,7 +159,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 	}
 
 	public function getPaypalTransactionsByOrderId(int $order_id): array {
-		$transactions = array();
+		$transactions = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` WHERE order_id = " . (int)$order_id . " ORDER BY `date_added` ASC");
 
@@ -241,27 +241,27 @@ class ModelPaymentPPPayflowIframe extends Model {
 		}
 	}
 
-	public function call($data) {
+	public function call(array $data = []) {
 		if ($this->config->get('pp_payflow_iframe_test')) {
 			$host = 'pilot-payflowpro.paypal.com';
 		} else {
 			$host = 'payflowpro.paypal.com';
 		}
 
-		$user_parameters = array(
+		$user_parameters = [
 			'USER'         => html_entity_decode($this->config->get('pp_payflow_iframe_username'), ENT_QUOTES, 'UTF-8'),
 			'VENDOR'       => html_entity_decode($this->config->get('pp_payflow_iframe_vendor'), ENT_QUOTES, 'UTF-8'),
 			'PWD'          => html_entity_decode($this->config->get('pp_payflow_iframe_password'), ENT_QUOTES, 'UTF-8'),
 			'PARTNER'      => html_entity_decode($this->config->get('pp_payflow_iframe_partner'), ENT_QUOTES, 'UTF-8'),
 			'BUTTONSOURCE' => 'NivoCart_Cart_PFP' // (Optional) Identification code for use by third-party applications to identify transactions.
-		);
+		];
 
 		$call_parameters = array_merge($data, $user_parameters);
 
 		$this->log($call_parameters, 'Call data');
 
 		// NVP format with length
-		$call_parameters_with_length = array();
+		$call_parameters_with_length = [];
 
 		foreach ($call_parameters as $key => $value) {
 			$call_parameters_with_length[] = $key . '[' . mb_strlen($value, 'UTF-8') . ']=' . $value;
@@ -272,7 +272,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		$timeout = $this->config->has('pp_payflow_iframe_timeout') ? $this->config->get('pp_payflow_iframe_timeout') : 30;
 
 		// Standard HTTP Headers
-		$headers = array();
+		$headers = [];
 		$headers[] = 'Content-Type: text/name value';
 		$headers[] = 'Content-Length: ' . mb_strlen($post_fields, 'UTF-8');
 		$headers[] = 'Host: ' . $host;
@@ -282,7 +282,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		// Optional Headers
 		$headers[] = 'X-VPS-VIT-INTEGRATION-PRODUCT: N with PPPayflowIframe Extension';
 
-		$options = array(
+		$options = [
 			CURLOPT_URL            => 'https://' . $host,
 			CURLOPT_PORT           => 443,
 			CURLOPT_HTTPHEADER     => $headers,
@@ -293,7 +293,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			CURLOPT_TIMEOUT        => $timeout + 1,
 			CURLOPT_SSL_VERIFYPEER => false, // This line makes it work under https
 			CURLOPT_POSTFIELDS     =>  $post_fields
-		);
+		];
 
 		$ch = curl_init();
 
@@ -302,10 +302,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		$response = curl_exec($ch);
 
 		if (curl_errno($ch) != CURLE_OK) {
-			$log_data = array(
+			$log_data = [
 				'curl_errno' => curl_errno($ch),
 				'curl_error' => curl_error($ch)
-			);
+			];
 
 			$this->log($log_data, 'cURL failed');
 			return false;
@@ -323,7 +323,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 	// Parses a response string from Payflow and returns an associative array of response parameters.
 	private function parse_payflow_string($str) {
 		$workstr = $str;
-		$out = array();
+		$out = [];
 
 		while (strlen($workstr) > 0) {
 			$loc = strpos($workstr, '=');

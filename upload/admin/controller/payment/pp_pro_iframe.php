@@ -1052,7 +1052,7 @@ class ControllerPaymentPPProIframe extends Controller {
 			$transaction = $this->model_payment_pp_pro_iframe->getFailedTransaction($this->request->get['paypal_iframe_order_transaction_id']);
 
 			if ($transaction) {
-				$call_data = unserialize($transaction['call_data'], ['allowed_classes' => false]);
+				$call_data = json_decode($transaction['call_data'], true);
 
 				$response = $this->model_payment_pp_pro_iframe->call($call_data);
 

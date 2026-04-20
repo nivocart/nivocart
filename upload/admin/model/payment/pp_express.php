@@ -74,7 +74,7 @@ class ModelPaymentPPExpress extends Model {
 		. "transaction_entity = '" . (isset($transaction_data['transaction_entity']) ? $this->db->escape($transaction_data['transaction_entity']) : null) . "', "
 		. "amount = " . (isset($transaction_data['amount']) ? (double)$transaction_data['amount'] : 0.0) . ", "
 		. "debug_data = '" . (isset($transaction_data['debug_data']) ? $this->db->escape($transaction_data['debug_data']) : null) . "'"
-		. (!empty($request_data) ? ", call_data = '" . $this->db->escape(serialize($request_data)) . "'" : null));
+		. (!empty($request_data) ? ", call_data = '" . $this->db->escape(json_encode($request_data)) . "'" : null));
 
 		$paypal_order_transaction_id = $this->db->getLastId();
 
@@ -246,7 +246,7 @@ class ModelPaymentPPExpress extends Model {
 		return $transactions;
 	}
 
-	public function call($data) {
+	public function call(array $data = []) {
 		if ($this->config->get('pp_express_test') === 1) {
 			$api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
 			$user = $this->config->get('pp_express_sandbox_username');
@@ -292,10 +292,10 @@ class ModelPaymentPPExpress extends Model {
 		$response = curl_exec($ch);
 
 		if (curl_errno($ch) !== CURLE_OK) {
-			$log_data = array(
+			$log_data = [
 				'curl_error' => curl_error($ch),
 				'curl_errno' => curl_errno($ch)
-			);
+			];
 
 			$this->log($log_data, 'cURL failed');
 
@@ -312,7 +312,7 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	private function curl($endpoint, array $additional_opts = []) {
-		$default_opts = array(
+		$default_opts = [
 			CURLOPT_PORT           => 443,
 			CURLOPT_HEADER         => false,
 			CURLOPT_SSL_VERIFYPEER => false,
@@ -320,7 +320,7 @@ class ModelPaymentPPExpress extends Model {
 			CURLOPT_FORBID_REUSE   => true,
 			CURLOPT_FRESH_CONNECT  => true,
 			CURLOPT_URL            => $endpoint
-		);
+		];
 
 		$ch = curl_init($endpoint);
 
