@@ -1,6 +1,6 @@
 <?php
 class ControllerFeedStoreya extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'storeya';
 
 	public function index() {
@@ -10,7 +10,7 @@ class ControllerFeedStoreya extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('storeya', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -38,33 +38,35 @@ class ControllerFeedStoreya extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
-		$this->data['storeya_link'] = html_entity_decode('http://www.storeya.com/partners/opencart', ENT_QUOTES, 'UTF-8');
+		$this->data['storeya_link'] = html_entity_decode('https://www.storeya.com/marketing', ENT_QUOTES, 'UTF-8');
 
+		// Error
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		// Breadcrumbs
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_feed'),
 			'href'      => $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('feed/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('feed/storeya', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -86,17 +88,17 @@ class ControllerFeedStoreya extends Controller {
 
 		$this->load->model('localisation/currency');
 
-		$data = array();
+		$data = [];
 
 		$currencies = $this->model_localisation_currency->getCurrencies($data);
 
 		foreach ($currencies as $result) {
-			$this->data['currencies'][] = array(
+			$this->data['currencies'][] = [
 				'currency_id' => $result['currency_id'],
 				'title'       => $result['title'],
 				'code'        => $result['code'],
 				'value'       => $result['value']
-			);
+			];
 		}
 
 		$this->load->model('localisation/language');
@@ -104,20 +106,20 @@ class ControllerFeedStoreya extends Controller {
 		$languages = $this->model_localisation_language->getLanguages($data);
 
 		foreach ($languages as $result) {
-			$this->data['languages'][] = array(
+			$this->data['languages'][] = [
 				'language_id' => $result['language_id'],
 				'name'        => $result['name'],
 				'code'        => $result['code']
-			);
+			];
 		}
 
 		$this->data['data_feed'] = HTTP_CATALOG . 'index.php?route=feed/storeya';
 
 		$this->template = 'feed/storeya.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
