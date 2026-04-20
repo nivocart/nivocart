@@ -1,6 +1,6 @@
 <?php
 class ControllerFraudMaxMind extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'maxmind';
 
 	public function index() {
@@ -10,7 +10,7 @@ class ControllerFraudMaxMind extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('maxmind', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -40,6 +40,7 @@ class ControllerFraudMaxMind extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -52,25 +53,26 @@ class ControllerFraudMaxMind extends Controller {
 			$this->data['error_key'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		// Breadcrumbs
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_fraud'),
 			'href'      => $this->url->link('extension/fraud', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('fraud/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('fraud/maxmind', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -107,21 +109,21 @@ class ControllerFraudMaxMind extends Controller {
 		}
 
 		$this->template = 'fraud/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
-	public function install() {
+	public function install(): void {
 		$this->load->model('fraud/maxmind');
 
 		$this->model_fraud_maxmind->install();
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->load->model('fraud/maxmind');
 
 		$this->model_fraud_maxmind->uninstall();
@@ -144,11 +146,8 @@ class ControllerFraudMaxMind extends Controller {
 
 		$this->load->model('fraud/maxmind');
 
-		if (isset($this->request->get['order_id'])) {
-			$order_id = $this->request->get['order_id'];
-		} else {
-			$order_id = 0;
-		}
+		// Get current Order Id
+		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
 
 		$fraud_info = $this->model_fraud_maxmind->getOrder($order_id);
 

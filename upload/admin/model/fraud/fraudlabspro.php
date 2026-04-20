@@ -52,7 +52,7 @@ class ModelFraudFraudLabsPro extends Model {
 			  `fraudlabspro_credits` VARCHAR(10) NOT NULL,
 			  `api_key` CHAR(32) NOT NULL,
 			  PRIMARY KEY (`order_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
 		// Change IP Address character length if table already exists
@@ -87,7 +87,7 @@ class ModelFraudFraudLabsPro extends Model {
 	}
 
 	public function addOrderHistory(int $order_id, $store_id = 0, array $data = []) {
-		$json = array();
+		$json = [];
 
 		$this->load->model('setting/store');
 
@@ -103,7 +103,7 @@ class ModelFraudFraudLabsPro extends Model {
 			$curl = curl_init();
 
 			// Set SSL if required
-			if (substr($url, 0, 5) == 'https') {
+			if (substr($url, 0, 5) === 'https') {
 				curl_setopt($curl, CURLOPT_PORT, 443);
 			}
 
@@ -133,11 +133,11 @@ class ModelFraudFraudLabsPro extends Model {
 		$order_statuses = $this->model_localisation_order_status->getOrderStatuses();
 
 		foreach ($order_statuses as $order_status) {
-			if ($order_status['name'] == 'Fraud') {
+			if ($order_status['name'] === 'Fraud') {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `group` = 'fraudlabspro', `key` = 'fraudlabspro_order_status_id', `value` = '" . (int)$order_status['order_status_id'] . "'");
 			}
 
-			if ($order_status['name'] == 'Fraud Review') {
+			if ($order_status['name'] === 'Fraud Review') {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `group` = 'fraudlabspro', `key` = 'fraudlabspro_review_status_id', `value` = '" . (int)$order_status['order_status_id'] . "'");
 			}
 		}
