@@ -1,6 +1,6 @@
 <?php
 class ControllerSettingStore extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('setting/store');
@@ -19,7 +19,7 @@ class ControllerSettingStore extends Controller {
 
 		$this->load->model('setting/store');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$store_id = $this->model_setting_store->addStore($this->request->post);
 
 			$this->load->model('setting/setting');
@@ -52,7 +52,7 @@ class ControllerSettingStore extends Controller {
 
 		$this->load->model('setting/store');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_setting_store->editStore($this->request->get['store_id'], $this->request->post);
 
 			$this->load->model('setting/setting');
@@ -100,59 +100,59 @@ class ControllerSettingStore extends Controller {
 	}
 
 	protected function getList() {
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('setting/store/insert', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['delete'] = $this->url->link('setting/store/delete', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['stores'] = array();
+		$this->data['stores'] = [];
 
-		$action = array();
+		$action = [];
 
-		$action[] = array(
+		$action[] = [
 			'text' => $this->language->get('text_edit'),
 			'href' => $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL')
-		);
+		];
 
-		$this->data['stores'][] = array(
+		$this->data['stores'][] = [
 			'store_id' => 0,
 			'name'     => $this->config->get('config_name') . $this->language->get('text_default'),
 			'template' => $this->model_setting_store->getTemplate(0),
 			'url'      => HTTP_CATALOG,
 			'selected' => isset($this->request->post['selected']) && in_array(0, $this->request->post['selected']),
 			'action'   => $action
-		);
+		];
 
 		$results = $this->model_setting_store->getStores();
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('setting/store/update', 'token=' . $this->session->data['token'] . '&store_id=' . $result['store_id'], 'SSL')
-			);
+			];
 
-			$this->data['stores'][] = array(
+			$this->data['stores'][] = [
 				'store_id' => $result['store_id'],
 				'name'     => $result['name'],
 				'template' => $this->model_setting_store->getTemplate($result['store_id']),
 				'url'      => $result['url'],
 				'selected' => isset($this->request->post['selected']) && in_array($result['store_id'], $this->request->post['selected']),
 				'action'   => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -187,10 +187,10 @@ class ControllerSettingStore extends Controller {
 		}
 
 		$this->template = 'setting/store_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -466,19 +466,19 @@ class ControllerSettingStore extends Controller {
 			$this->data['error_image_cart'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
@@ -586,29 +586,42 @@ class ControllerSettingStore extends Controller {
 			$this->data['config_meta_description'] = '';
 		}
 
-		$this->data['templates'] = array();
+		// Get available templates
+		$this->data['templates'] = [];
 
-		$directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			$server = HTTPS_CATALOG;
+		} else {
+			$server = HTTP_CATALOG;
+		}
 
-		foreach ($directories as $directory) {
-			if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
-				$server = HTTPS_CATALOG;
-			} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
-				$server = HTTPS_CATALOG;
-			} else {
-				$server = HTTP_CATALOG;
+		// Scan theme directory for subdirectories
+		$themePath = DIR_CATALOG . 'view/theme/';
+
+		if (is_dir($themePath)) {
+			$iterator = new FilesystemIterator($themePath, FilesystemIterator::SKIP_DOTS);
+
+			foreach ($iterator as $entry) {
+				if (!$entry->isDir()) {
+					continue;
+				}
+
+				$name = $entry->getFilename();
+
+				if (file_exists(DIR_IMAGE . 'templates/' . $name . '.png')) {
+					$image = $server . 'image/templates/' . $name . '.png';
+				} else {
+					$image = $server . 'image/templates/default.png';
+				}
+
+				$this->data['templates'][] = [
+					'name'  => $name,
+					'image' => $image,
+				];
 			}
-
-			if (file_exists(DIR_IMAGE . 'templates/' . basename($directory) . '.png')) {
-				$image = $server . 'image/templates/' . basename($directory) . '.png';
-			} else {
-				$image = $server . 'image/templates/default.png';
-			}
-
-			$this->data['templates'][] = array(
-				'name'  => basename($directory),
-				'image' => $image
-			);
 		}
 
 		if (isset($this->request->post['config_template'])) {
@@ -771,7 +784,7 @@ class ControllerSettingStore extends Controller {
 		} elseif (isset($store_info['config_customer_group_display'])) {
 			$this->data['config_customer_group_display'] = $store_info['config_customer_group_display'];
 		} else {
-			$this->data['config_customer_group_display'] = array();
+			$this->data['config_customer_group_display'] = [];
 		}
 
 		if (isset($this->request->post['config_customer_price'])) {
@@ -1070,10 +1083,10 @@ class ControllerSettingStore extends Controller {
 		}
 
 		$this->template = 'setting/store_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -1115,7 +1128,7 @@ class ControllerSettingStore extends Controller {
 			$this->error['title'] = $this->language->get('error_title');
 		}
 
-		if (($this->request->post['config_one_page_checkout'] == 1) && ($this->request->post['config_express_checkout'] == 1)) {
+		if (($this->request->post['config_one_page_checkout'] === 1) && ($this->request->post['config_express_checkout'] === 1)) {
 			$this->error['multiple_checkout'] = $this->language->get('error_multiple_checkout');
 		}
 
