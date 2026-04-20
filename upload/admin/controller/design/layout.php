@@ -1,6 +1,6 @@
 <?php
 class ControllerDesignLayout extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('design/layout');
@@ -121,19 +121,19 @@ class ControllerDesignLayout extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('design/layout/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('design/layout/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -142,7 +142,7 @@ class ControllerDesignLayout extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['layouts'] = array();
+		$this->data['layouts'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name';
 		$order = $this->request->get['order'] ?? 'ASC';
@@ -160,20 +160,20 @@ class ControllerDesignLayout extends Controller {
 		$results = $this->model_design_layout->getLayouts($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('design/layout/update', 'token=' . $this->session->data['token'] . '&layout_id=' . $result['layout_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['layouts'][] = array(
+			$this->data['layouts'][] = [
 				'layout_id' => $result['layout_id'],
 				'name'      => $result['name'],
 				'routes'    => $this->model_design_layout->getTotalRoutesByLayoutId($result['layout_id']),
 				'selected'  => isset($this->request->post['selected']) && in_array($result['layout_id'], $this->request->post['selected']),
 				'action'    => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -242,10 +242,10 @@ class ControllerDesignLayout extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'design/layout_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -289,19 +289,19 @@ class ControllerDesignLayout extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['layout_id'])) {
 			$this->data['action'] = $this->url->link('design/layout/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -311,7 +311,7 @@ class ControllerDesignLayout extends Controller {
 
 		$this->data['cancel'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['layout_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['layout_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$layout_info = $this->model_design_layout->getLayout($this->request->get['layout_id']);
 		}
 
@@ -332,14 +332,14 @@ class ControllerDesignLayout extends Controller {
 		} elseif (isset($this->request->get['layout_id'])) {
 			$this->data['layout_routes'] = $this->model_design_layout->getLayoutRoutes($this->request->get['layout_id']);
 		} else {
-			$this->data['layout_routes'] = array();
+			$this->data['layout_routes'] = [];
 		}
 
 		$this->template = 'design/layout_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

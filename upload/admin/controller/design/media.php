@@ -1,6 +1,6 @@
 <?php
 class ControllerDesignMedia extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('design/media');
@@ -149,19 +149,19 @@ class ControllerDesignMedia extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/media', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['module_mediaplayer'] = $this->url->link('module/mediaplayer', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -174,31 +174,31 @@ class ControllerDesignMedia extends Controller {
 
 		$this->load->model('tool/image');
 
-		$this->data['medias'] = array();
+		$this->data['medias'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'filter_name' => $filter_name,
 			'sort'        => $sort,
 			'order'       => $order,
 			'start'       => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'       => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$media_total = $this->model_design_media->getTotalMedias();
 
 		$results = $this->model_design_media->getMedias($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('design/media/update', 'token=' . $this->session->data['token'] . '&media_id=' . $result['media_id'] . $url, 'SSL')
-			);
+			];
 
 			if ($result['media'] && file_exists(DIR_IMAGE . $result['media'])) {
 				$size = $this->model_design_media->getMediaSize($result['media_id']);
@@ -209,7 +209,7 @@ class ControllerDesignMedia extends Controller {
 				$thumb = $this->model_tool_image->resize('no_file.jpg', 40, 40);
 			}
 
-			$this->data['medias'][] = array(
+			$this->data['medias'][] = [
 				'media_id' => $result['media_id'],
 				'name'     => $result['name'],
 				'media'    => substr(strrchr($result['media'], '/'), 1),
@@ -218,7 +218,7 @@ class ControllerDesignMedia extends Controller {
 				'status'   => $result['status'],
 				'selected' => isset($this->request->post['selected']) && in_array($result['media_id'], $this->request->post['selected']),
 				'action'   => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -307,10 +307,10 @@ class ControllerDesignMedia extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'design/media_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -355,7 +355,7 @@ class ControllerDesignMedia extends Controller {
 		if (isset($this->error['media'])) {
 			$this->data['error_media'] = $this->error['media'];
 		} else {
-			$this->data['error_media'] = array();
+			$this->data['error_media'] = [];
 		}
 
 		// Breadcrumbs
@@ -374,19 +374,19 @@ class ControllerDesignMedia extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/media', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['media_id'])) {
 			$this->data['action'] = $this->url->link('design/media/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -449,10 +449,10 @@ class ControllerDesignMedia extends Controller {
 		}
 
 		$this->template = 'design/media_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -466,7 +466,7 @@ class ControllerDesignMedia extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		$allowed = array('mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','flv');
+		$allowed = ['mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','flv'];
 
 		if ($this->request->post['media']) {
 			$ext = substr(strrchr($this->request->post['media'], '.'), 1);
@@ -491,28 +491,28 @@ class ControllerDesignMedia extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('design/media');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$results = $this->model_design_media->getMedias($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'media_id' => $result['media_id'],
 					'name'     => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];

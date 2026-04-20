@@ -1,6 +1,6 @@
 <?php
 class ControllerDesignMenuItems extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'menu_items';
 
 	public function index() {
@@ -255,19 +255,19 @@ class ControllerDesignMenuItems extends Controller {
 
 		$menu_id = $this->request->get['menu_id'];
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['back'] = $this->url->link('design/menu', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['enabled'] = $this->url->link('design/menu_items/enable', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL');
@@ -280,33 +280,33 @@ class ControllerDesignMenuItems extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['menu_items'] = array();
+		$this->data['menu_items'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name, mi.sort_order';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'filter_name' => $filter_name,
 			'sort'        => $sort,
 			'order'       => $order,
 			'start'       => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'       => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$menu_item_total = $this->model_design_menu_items->getTotalMenuItems($menu_id, $data);
 
 		$results = $this->model_design_menu_items->getMenuItems($menu_id, $data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('design/menu_items/update', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . '&menu_item_id=' . $result['menu_item_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['menu_items'][] = array(
+			$this->data['menu_items'][] = [
 				'menu_item_id' => $result['menu_item_id'],
 				'name'         => $result['name'],
 				'external'     => $result['external_link'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
@@ -314,7 +314,7 @@ class ControllerDesignMenuItems extends Controller {
 				'status'       => $result['status'],
 				'selected'     => isset($this->request->post['selected']) && in_array($result['menu_item_id'], $this->request->post['selected']),
 				'action'       => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -408,10 +408,10 @@ class ControllerDesignMenuItems extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'design/menu_items_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -455,7 +455,7 @@ class ControllerDesignMenuItems extends Controller {
  		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
-			$this->data['error_name'] = array();
+			$this->data['error_name'] = [];
 		}
 
 		// Colorbox
@@ -471,25 +471,25 @@ class ControllerDesignMenuItems extends Controller {
 
 		$menu_id = $this->request->get['menu_id'];
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_menu'),
 			'href'      => $this->url->link('design/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['menu_item_id'])) {
 			$this->data['action'] = $this->url->link('design/menu_items/insert', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL');
@@ -514,10 +514,10 @@ class ControllerDesignMenuItems extends Controller {
 		} elseif (isset($this->request->get['menu_item_id'])) {
 			$this->data['menu_item_description'] = $this->model_design_menu_items->getMenuItemDescription($this->request->get['menu_item_id']);
 		} else {
-			$this->data['menu_item_description'] = array();
+			$this->data['menu_item_description'] = [];
 		}
 
-		$menu_items_array = array();
+		$menu_items_array = [];
 
 		$menu_items = $this->model_design_menu_items->getMenuItems($menu_id, $menu_items_array);
 
@@ -575,10 +575,10 @@ class ControllerDesignMenuItems extends Controller {
 		}
 
 		$this->template = 'design/menu_items_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -627,7 +627,7 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes_menu = array();
+		$routes_menu = [];
 
 		$routes = $this->model_tool_route->getRoutes($routes_menu);
 

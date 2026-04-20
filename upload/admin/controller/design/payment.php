@@ -1,6 +1,6 @@
 <?php
 class ControllerDesignPayment extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('design/payment');
@@ -121,19 +121,19 @@ class ControllerDesignPayment extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/payment', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['extension'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['insert'] = $this->url->link('design/payment/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -146,30 +146,30 @@ class ControllerDesignPayment extends Controller {
 		$this->load->model('setting/extension');
 		$this->load->model('tool/image');
 
-		$this->data['payment_images'] = array();
+		$this->data['payment_images'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$payment_image_total = $this->model_design_payment->getTotalPaymentImages();
 
 		$results = $this->model_design_payment->getPaymentImages($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('design/payment/update', 'token=' . $this->session->data['token'] . '&payment_image_id=' . $result['payment_image_id'] . $url, 'SSL')
-			);
+			];
 
 			$image = $this->model_design_payment->getPaymentImageImage($result['payment_image_id']);
 
@@ -179,7 +179,7 @@ class ControllerDesignPayment extends Controller {
 				$thumb = $this->model_tool_image->resize('no_image.jpg', 80, 20);
 			}
 
-			$this->data['payment_images'][] = array(
+			$this->data['payment_images'][] = [
 				'payment_image_id' => $result['payment_image_id'],
 				'image'            => $thumb,
 				'name'             => $result['name'],
@@ -187,7 +187,7 @@ class ControllerDesignPayment extends Controller {
 				'status'           => $result['status'],
 				'selected'         => isset($this->request->post['selected']) && in_array($result['payment_image_id'], $this->request->post['selected']),
 				'action'           => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -261,10 +261,10 @@ class ControllerDesignPayment extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'design/payment_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -300,13 +300,13 @@ class ControllerDesignPayment extends Controller {
 		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
-			$this->data['error_name'] = array();
+			$this->data['error_name'] = [];
 		}
 
 		if (isset($this->error['payment'])) {
 			$this->data['error_payment'] = $this->error['payment'];
 		} else {
-			$this->data['error_payment'] = array();
+			$this->data['error_payment'] = [];
 		}
 
 		if (isset($this->error['image'])) {
@@ -324,19 +324,19 @@ class ControllerDesignPayment extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/payment', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['payment_image_id'])) {
 			$this->data['action'] = $this->url->link('design/payment/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -358,7 +358,7 @@ class ControllerDesignPayment extends Controller {
 			$this->data['name'] = '';
 		}
 
-		$this->data['payment_methods'] = array();
+		$this->data['payment_methods'] = [];
 
 		$files = $this->model_design_payment->getExtensions('payment');
 
@@ -368,10 +368,10 @@ class ControllerDesignPayment extends Controller {
 
 				$this->language->load('payment/' . $filename);
 
-				$this->data['payment_methods'][] = array(
+				$this->data['payment_methods'][] = [
 					'filename' => $filename,
 					'name'     => $this->language->get('heading_title')
-				);
+				];
 			}
 		}
 
@@ -410,10 +410,10 @@ class ControllerDesignPayment extends Controller {
 		}
 
 		$this->template = 'design/payment_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -427,13 +427,13 @@ class ControllerDesignPayment extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		$images_payments = array();
+		$images_payments = [];
 
 		$results = $this->model_design_payment->getPaymentImages($images_payments);
 
 		foreach ($results as $result) {
 			if (isset($this->request->get['payment_image_id'])) {
-				if (($this->request->post['payment'] === $result['payment']) && ($this->request->get['payment_image_id'] != $result['payment_image_id'])) {
+				if (($this->request->post['payment'] === $result['payment']) && ($this->request->get['payment_image_id'] !== $result['payment_image_id'])) {
 					$this->error['payment'] = $this->language->get('error_payment_exist');
 				}
 			} else {
@@ -447,7 +447,7 @@ class ControllerDesignPayment extends Controller {
 			$this->error['payment'] = $this->language->get('error_payment');
 		}
 
-		$allowed = array('jpg','jpeg','png','gif');
+		$allowed = ['jpg','jpeg','png','gif'];
 
 		if ($this->request->post['image']) {
 			$ext = substr(strrchr($this->request->post['image'], '.'), 1);

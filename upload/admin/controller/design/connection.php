@@ -1,6 +1,6 @@
 <?php
 class ControllerDesignConnection extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('design/connection');
@@ -121,19 +121,19 @@ class ControllerDesignConnection extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/connection', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['module_links'] = $this->url->link('module/links', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -144,32 +144,32 @@ class ControllerDesignConnection extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['connections'] = array();
+		$this->data['connections'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$connection_total = $this->model_design_connection->getTotalConnections();
 
 		$results = $this->model_design_connection->getConnections($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('design/connection/update', 'token=' . $this->session->data['token'] . '&connection_id=' . $result['connection_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['connections'][] = array(
+			$this->data['connections'][] = [
 				'connection_id' => $result['connection_id'],
 				'icon'          => $this->model_design_connection->getConnectionIcon($result['connection_id']),
 				'name'          => $result['name'],
@@ -177,7 +177,7 @@ class ControllerDesignConnection extends Controller {
 				'frontend'      => $result['frontend'],
 				'selected'      => isset($this->request->post['selected']) && in_array($result['connection_id'], $this->request->post['selected']),
 				'action'        => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -252,10 +252,10 @@ class ControllerDesignConnection extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'design/connection_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -304,19 +304,19 @@ class ControllerDesignConnection extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/connection', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['connection_id'])) {
 			$this->data['action'] = $this->url->link('design/connection/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -363,25 +363,25 @@ class ControllerDesignConnection extends Controller {
 		} elseif (isset($this->request->get['connection_id'])) {
 			$connection_routes = $this->model_design_connection->getConnectionRoutes($this->request->get['connection_id']);
 		} else {
-			$connection_routes = array();
+			$connection_routes = [];
 		}
 
-		$this->data['connection_routes'] = array();
+		$this->data['connection_routes'] = [];
 
 		foreach ($connection_routes as $connection_route) {
-			$this->data['connection_routes'][] = array(
+			$this->data['connection_routes'][] = [
 				'route_id' => $connection_route['connection_route_id'],
 				'icon'     => $connection_route['icon'],
 				'title'    => $connection_route['title'],
 				'route'    => $connection_route['route']
-			);
+			];
 		}
 
 		$this->template = 'design/connection_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

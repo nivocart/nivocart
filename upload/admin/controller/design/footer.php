@@ -1,6 +1,6 @@
 <?php
 class ControllerDesignFooter extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'footer';
 
 	public function index() {
@@ -122,19 +122,19 @@ class ControllerDesignFooter extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/footer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['theme'] = $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -145,39 +145,39 @@ class ControllerDesignFooter extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['footer_blocks'] = array();
+		$this->data['footer_blocks'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'fd.name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$footer_total = $this->model_design_footer->getTotalFooters();
 
 		$results = $this->model_design_footer->getFooters($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('design/footer/update', 'token=' . $this->session->data['token'] . '&footer_id=' . $result['footer_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['footer_blocks'][] = array(
+			$this->data['footer_blocks'][] = [
 				'footer_id' => $result['footer_id'],
 				'name'      => $result['name'],
 				'position'  => $result['position'],
 				'status'    => $result['status'],
 				'selected'  => isset($this->request->post['selected']) && in_array($result['footer_id'], $this->request->post['selected']),
 				'action'    => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -254,10 +254,10 @@ class ControllerDesignFooter extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'design/footer_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -312,7 +312,7 @@ class ControllerDesignFooter extends Controller {
 		if (isset($this->error['footer_route'])) {
 			$this->data['error_footer_route'] = $this->error['footer_route'];
 		} else {
-			$this->data['error_footer_route'] = array();
+			$this->data['error_footer_route'] = [];
 		}
 
 		// Colorbox
@@ -328,31 +328,31 @@ class ControllerDesignFooter extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['footer_id'])) {
 			$footer_name = $this->model_design_footer->getFooterName($this->request->get['footer_id']);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $footer_name,
 				'href'      => $this->url->link('design/footer/update', 'token=' . $this->session->data['token'] . '&footer_id=' . $this->request->get['footer_id'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['footer_title'] = $this->language->get('text_block') . ': ' . $footer_name;
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('design/footer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['footer_title'] = $this->language->get('heading_title');
 		}
@@ -380,7 +380,7 @@ class ControllerDesignFooter extends Controller {
 		} elseif (isset($this->request->get['footer_id'])) {
 			$this->data['footer_description'] = $this->model_design_footer->getFooterDescriptions($this->request->get['footer_id']);
 		} else {
-			$this->data['footer_description'] = array();
+			$this->data['footer_description'] = [];
 		}
 
 		if (isset($this->request->post['position'])) {
@@ -400,7 +400,7 @@ class ControllerDesignFooter extends Controller {
 		} elseif (isset($this->request->get['footer_id'])) {
 			$this->data['footer_store'] = $this->model_design_footer->getFooterStores($this->request->get['footer_id']);
 		} else {
-			$this->data['footer_store'] = array(0);
+			$this->data['footer_store'] = [0];
 		}
 
 		if (isset($this->request->post['status'])) {
@@ -416,25 +416,25 @@ class ControllerDesignFooter extends Controller {
 		} elseif (isset($this->request->get['footer_id'])) {
 			$footer_routes = $this->model_design_footer->getFooterRoutes($this->request->get['footer_id']);
 		} else {
-			$footer_routes = array();
+			$footer_routes = [];
 		}
 
-		$this->data['footer_routes'] = array();
+		$this->data['footer_routes'] = [];
 
 		foreach ($footer_routes as $footer_route) {
-			$this->data['footer_routes'][] = array(
+			$this->data['footer_routes'][] = [
 				'footer_route_description' => $footer_route['footer_route_description'],
 				'route'                    => $footer_route['route'],
 				'external_link'            => $footer_route['external_link'],
 				'sort_order'               => $footer_route['sort_order']
-			);
+			];
 		}
 
 		$this->template = 'design/footer_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -481,7 +481,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes_footer = array();
+		$routes_footer = [];
 
 		$routes = $this->model_tool_route->getRoutes($routes_footer);
 

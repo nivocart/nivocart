@@ -1,6 +1,6 @@
 <?php
 class ControllerDesignAdministration extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('design/administration');
@@ -123,19 +123,19 @@ class ControllerDesignAdministration extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/administration', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['settings'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -146,32 +146,32 @@ class ControllerDesignAdministration extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['administrations'] = array();
+		$this->data['administrations'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$administration_total = $this->model_design_administration->getTotalAdministrations();
 
 		$results = $this->model_design_administration->getAdministrations($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('design/administration/update', 'token=' . $this->session->data['token'] . '&administration_id=' . $result['administration_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['administrations'][] = array(
+			$this->data['administrations'][] = [
 				'administration_id' => $result['administration_id'],
 				'name'              => $result['name'],
 				'status'            => $this->checkStylesheet($result['name']),
@@ -179,7 +179,7 @@ class ControllerDesignAdministration extends Controller {
 				'date_modified'     => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
 				'selected'          => isset($this->request->post['selected']) && in_array($result['administration_id'], $this->request->post['selected']),
 				'action'            => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -253,10 +253,10 @@ class ControllerDesignAdministration extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'design/administration_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -302,19 +302,19 @@ class ControllerDesignAdministration extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('design/administration', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['administration_id'])) {
 			$this->data['action'] = $this->url->link('design/administration/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -345,10 +345,10 @@ class ControllerDesignAdministration extends Controller {
 		}
 
 		$this->template = 'design/administration_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -391,7 +391,7 @@ class ControllerDesignAdministration extends Controller {
 		return empty($this->error);
 	}
 
-	protected function checkStylesheet($name) {
+	protected function checkStylesheet($name): bool {
 		$check = false;
 
 		if (file_exists('view/stylesheet/stylesheet_' . trim($name) . '.css')) {
