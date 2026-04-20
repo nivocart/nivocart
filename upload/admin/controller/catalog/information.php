@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogInformation extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('catalog/information');
@@ -160,8 +160,6 @@ class ControllerCatalogInformation extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
-
 			$page_url = array_filter([
 				'sort'  => $this->request->get['sort'] ?? null,
 				'order' => $this->request->get['order'] ?? null,
@@ -208,39 +206,39 @@ class ControllerCatalogInformation extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['informations'] = array();
+		$this->data['informations'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'id.title';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$information_total = $this->model_catalog_information->getTotalInformations();
 
 		$results = $this->model_catalog_information->getInformations($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/information/update', 'token=' . $this->session->data['token'] . '&information_id=' . $result['information_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['informations'][] = array(
+			$this->data['informations'][] = [
 				'information_id' => $result['information_id'],
 				'title'          => $result['title'],
 				'sort_order'     => $result['sort_order'],
 				'status'         => $result['status'],
 				'selected'       => isset($this->request->post['selected']) && in_array($result['information_id'], $this->request->post['selected']),
 				'action'         => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -316,10 +314,10 @@ class ControllerCatalogInformation extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/information_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -370,13 +368,13 @@ class ControllerCatalogInformation extends Controller {
 		if (isset($this->error['title'])) {
 			$this->data['error_title'] = $this->error['title'];
 		} else {
-			$this->data['error_title'] = array();
+			$this->data['error_title'] = [];
 		}
 
 		if (isset($this->error['description'])) {
 			$this->data['error_description'] = $this->error['description'];
 		} else {
-			$this->data['error_description'] = array();
+			$this->data['error_description'] = [];
 		}
 
 		// Breadcrumbs
@@ -388,31 +386,31 @@ class ControllerCatalogInformation extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['information_id'])) {
 			$information_name = $this->model_catalog_information->getInformation($this->request->get['information_id']);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $information_name['title'],
 				'href'      => $this->url->link('catalog/information/update', 'token=' . $this->session->data['token'] . '&information_id=' . $this->request->get['information_id'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['information_title'] = $information_name['title'];
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('catalog/information', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['information_title'] = $this->language->get('heading_title');
 		}
@@ -447,7 +445,7 @@ class ControllerCatalogInformation extends Controller {
 		} elseif (isset($this->request->get['information_id'])) {
 			$this->data['information_description'] = $this->model_catalog_information->getInformationDescriptions($this->request->get['information_id']);
 		} else {
-			$this->data['information_description'] = array();
+			$this->data['information_description'] = [];
 		}
 
 		$this->load->model('setting/store');
@@ -459,7 +457,7 @@ class ControllerCatalogInformation extends Controller {
 		} elseif (isset($this->request->get['information_id'])) {
 			$this->data['information_store'] = $this->model_catalog_information->getInformationStores($this->request->get['information_id']);
 		} else {
-			$this->data['information_store'] = array(0);
+			$this->data['information_store'] = [0];
 		}
 
 		if (isset($this->request->post['keyword'])) {
@@ -499,7 +497,7 @@ class ControllerCatalogInformation extends Controller {
 		} elseif (isset($this->request->get['information_id'])) {
 			$this->data['information_layout'] = $this->model_catalog_information->getInformationLayouts($this->request->get['information_id']);
 		} else {
-			$this->data['information_layout'] = array();
+			$this->data['information_layout'] = [];
 		}
 
 		$this->load->model('design/layout');
@@ -507,10 +505,10 @@ class ControllerCatalogInformation extends Controller {
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 
 		$this->template = 'catalog/information_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

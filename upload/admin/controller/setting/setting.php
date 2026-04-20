@@ -2104,7 +2104,7 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if (isset($this->request->post['config_seo_url_cache'])) {
-			if (isset($this->request->post['config_seo_url']) && $this->config->get('config_seo_url')) {
+			if (isset($this->request->post['config_seo_url']) || $this->config->get('config_seo_url')) {
 				$this->data['config_seo_url_cache'] = $this->request->post['config_seo_url_cache'];
 			} else {
 				$this->data['config_seo_url_cache'] = 0;

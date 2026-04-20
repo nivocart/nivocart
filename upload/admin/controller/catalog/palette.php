@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogPalette extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('catalog/palette');
@@ -170,41 +170,41 @@ class ControllerCatalogPalette extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['palettes'] = array();
+		$this->data['palettes'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'p.name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'filter_name' => $filter_name,
 			'sort'        => $sort,
 			'order'       => $order,
 			'start'       => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'       => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$palette_total = $this->model_catalog_palette->getTotalPalettes($data);
 
 		$results = $this->model_catalog_palette->getPalettes($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/palette/update', 'token=' . $this->session->data['token'] . '&palette_id=' . $result['palette_id'] . $url, 'SSL')
-			);
+			];
 
 			$colors_total = $this->model_catalog_palette->getTotalColorsByPaletteId($result['palette_id']);
 
-			$this->data['palettes'][] = array(
+			$this->data['palettes'][] = [
 				'palette_id' => $result['palette_id'],
 				'name'       => $result['name'],
 				'colors'     => $colors_total,
 				'selected'   => isset($this->request->post['selected']) && in_array($result['palette_id'], $this->request->post['selected']),
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -288,10 +288,10 @@ class ControllerCatalogPalette extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/palette_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -336,7 +336,7 @@ class ControllerCatalogPalette extends Controller {
 		if (isset($this->error['color'])) {
 			$this->data['error_color'] = $this->error['color'];
 		} else {
-			$this->data['error_color'] = array();
+			$this->data['error_color'] = [];
 		}
 
 		// Breadcrumbs
@@ -355,19 +355,19 @@ class ControllerCatalogPalette extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/palette', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['palette_id'])) {
 			$this->data['action'] = $this->url->link('catalog/palette/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -402,14 +402,14 @@ class ControllerCatalogPalette extends Controller {
 		} elseif (isset($this->request->get['palette_id'])) {
 			$this->data['palette_colors'] = $this->model_catalog_palette->getPaletteDescriptions($this->request->get['palette_id']);
 		} else {
-			$this->data['palette_colors'] = array();
+			$this->data['palette_colors'] = [];
 		}
 
 		$this->template = 'catalog/palette_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -449,28 +449,28 @@ class ControllerCatalogPalette extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/palette');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$results = $this->model_catalog_palette->getPalettes($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'palette_id' => $result['palette_id'],
 					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];

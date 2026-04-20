@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogField extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('catalog/field');
@@ -177,19 +177,19 @@ class ControllerCatalogField extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/field', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['enabled'] = $this->url->link('catalog/field/enable', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['disabled'] = $this->url->link('catalog/field/disable', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -200,39 +200,39 @@ class ControllerCatalogField extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['fields'] = array();
+		$this->data['fields'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'fd.title';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$field_total = $this->model_catalog_field->getTotalFields();
 
 		$results = $this->model_catalog_field->getFields($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/field/update', 'token=' . $this->session->data['token'] . '&field_id=' . $result['field_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['fields'][] = array(
+			$this->data['fields'][] = [
 				'field_id'       => $result['field_id'],
 				'title'          => $result['title'],
 				'sort_order'     => $result['sort_order'],
 				'status'         => $result['status'],
 				'selected'       => isset($this->request->post['selected']) && in_array($result['field_id'], $this->request->post['selected']),
 				'action'         => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -310,10 +310,10 @@ class ControllerCatalogField extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/field_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -351,13 +351,13 @@ class ControllerCatalogField extends Controller {
 		if (isset($this->error['title'])) {
 			$this->data['error_title'] = $this->error['title'];
 		} else {
-			$this->data['error_title'] = array();
+			$this->data['error_title'] = [];
 		}
 
 		if (isset($this->error['description'])) {
 			$this->data['error_description'] = $this->error['description'];
 		} else {
-			$this->data['error_description'] = array();
+			$this->data['error_description'] = [];
 		}
 
 		// Breadcrumbs
@@ -369,31 +369,31 @@ class ControllerCatalogField extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['field_id'])) {
 			$field_name = $this->model_catalog_field->getField($this->request->get['field_id']);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $field_name['title'],
 				'href'      => $this->url->link('catalog/field/update', 'token=' . $this->session->data['token'] . '&field_id=' . $this->request->get['field_id'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['field_title'] = $field_name['title'];
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('catalog/field', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['field_title'] = $this->language->get('heading_title');
 		}
@@ -419,7 +419,7 @@ class ControllerCatalogField extends Controller {
 		} elseif (isset($this->request->get['field_id'])) {
 			$this->data['field_description'] = $this->model_catalog_field->getFieldDescriptions($this->request->get['field_id']);
 		} else {
-			$this->data['field_description'] = array();
+			$this->data['field_description'] = [];
 		}
 
 		if (isset($this->request->post['status'])) {
@@ -439,10 +439,10 @@ class ControllerCatalogField extends Controller {
 		}
 
 		$this->template = 'catalog/field_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -478,29 +478,29 @@ class ControllerCatalogField extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_title'])) {
 			$this->load->model('catalog/field');
 
-			$data = array(
+			$data = [
 				'filter_title' => $this->request->get['filter_title'],
 				'start'        => 0,
 				'limit'        => 20
-			);
+			];
 
 			$results = $this->model_catalog_field->getFields($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'field_id' => $result['field_id'],
 					'title'    => strip_tags(html_entity_decode($result['title'], ENT_QUOTES, 'UTF-8')),
 					'category' => ''
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['title'];

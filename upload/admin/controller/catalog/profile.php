@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogProfile extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('catalog/profile');
@@ -121,19 +121,19 @@ class ControllerCatalogProfile extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/profile', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('catalog/profile/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('catalog/profile/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -142,39 +142,39 @@ class ControllerCatalogProfile extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['profiles'] = array();
+		$this->data['profiles'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'pfd.name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$profile_total = $this->model_catalog_profile->getTotalProfiles();
 
 		$results = $this->model_catalog_profile->getProfiles($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'name' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/profile/update', 'token=' . $this->session->data['token'] . '&profile_id=' . $result['profile_id'], 'SSL')
-			);
+			];
 
-			$this->data['profiles'][] = array(
+			$this->data['profiles'][] = [
 				'profile_id' => $result['profile_id'],
 				'name'       => $result['name'],
 				'sort_order' => $result['sort_order'],
 				'status'     => $result['status'],
 				'selected'   => isset($this->request->post['selected']) && in_array($result['profile_id'], $this->request->post['selected']),
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -248,10 +248,10 @@ class ControllerCatalogProfile extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/profile_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -293,7 +293,7 @@ class ControllerCatalogProfile extends Controller {
 		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
-			$this->data['error_name'] = array();
+			$this->data['error_name'] = [];
 		}
 
 		// Breadcrumbs
@@ -305,19 +305,19 @@ class ControllerCatalogProfile extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/profile', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->load->model('localisation/language');
 
@@ -342,7 +342,7 @@ class ControllerCatalogProfile extends Controller {
 		} elseif (isset($this->request->get['profile_id'])) {
 			$this->data['profile_description'] = $this->model_catalog_profile->getProfileDescription($this->request->get['profile_id']);
 		} else {
-			$this->data['profile_description'] = array();
+			$this->data['profile_description'] = [];
 		}
 
 		if (isset($this->request->post['sort_order'])) {
@@ -434,10 +434,10 @@ class ControllerCatalogProfile extends Controller {
 		}
 
 		$this->template = 'catalog/profile_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

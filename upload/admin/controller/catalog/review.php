@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogReview extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('catalog/review');
@@ -107,7 +107,7 @@ class ControllerCatalogReview extends Controller {
 
 		if (isset($this->request->post['selected'])) {
 			foreach ($this->request->post['selected'] as $review_id) {
-				$data = array();
+				$data = [];
 
 				$result = $this->model_catalog_review->getReview($review_id);
 
@@ -152,7 +152,7 @@ class ControllerCatalogReview extends Controller {
 
 		if (isset($this->request->post['selected'])) {
 			foreach ($this->request->post['selected'] as $review_id) {
-				$data = array();
+				$data = [];
 
 				$result = $this->model_catalog_review->getReview($review_id);
 
@@ -239,19 +239,19 @@ class ControllerCatalogReview extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['enabled'] = $this->url->link('catalog/review/enable', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $this->data['disabled'] = $this->url->link('catalog/review/disable', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -262,33 +262,33 @@ class ControllerCatalogReview extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['reviews'] = array();
+		$this->data['reviews'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'r.date_added';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'filter_name' => $filter_name,
 			'sort'        => $sort,
 			'order'       => $order,
 			'start'       => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'       => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$review_total = $this->model_catalog_review->getTotalReviews($data);
 
 		$results = $this->model_catalog_review->getReviews($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/review/update', 'token=' . $this->session->data['token'] . '&review_id=' . $result['review_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['reviews'][] = array(
+			$this->data['reviews'][] = [
 				'review_id'  => $result['review_id'],
 				'name'       => $result['name'],
 				'author'     => $result['author'],
@@ -297,7 +297,7 @@ class ControllerCatalogReview extends Controller {
 				'date_added' => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
 				'selected'   => isset($this->request->post['selected']) && in_array($result['review_id'], $this->request->post['selected']),
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -390,10 +390,10 @@ class ControllerCatalogReview extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/review_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -469,19 +469,19 @@ class ControllerCatalogReview extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['review_id'])) {
 			$this->data['action'] = $this->url->link('catalog/review/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -560,10 +560,10 @@ class ControllerCatalogReview extends Controller {
 		}
 
 		$this->template = 'catalog/review_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -601,28 +601,28 @@ class ControllerCatalogReview extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/product');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$results = $this->model_catalog_product->getProducts($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'product_id' => $result['product_id'],
 					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];

@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogFilter extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('catalog/filter');
@@ -121,19 +121,19 @@ class ControllerCatalogFilter extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('catalog/filter/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('catalog/filter/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -142,38 +142,38 @@ class ControllerCatalogFilter extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['filters'] = array();
+		$this->data['filters'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'fgd.name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$filter_total = $this->model_catalog_filter->getTotalFilterGroups();
 
 		$results = $this->model_catalog_filter->getFilterGroups($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/filter/update', 'token=' . $this->session->data['token'] . '&filter_group_id=' . $result['filter_group_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['filters'][] = array(
+			$this->data['filters'][] = [
 				'filter_group_id' => $result['filter_group_id'],
 				'name'            => $result['name'],
 				'sort_order'      => $result['sort_order'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['filter_group_id'], $this->request->post['selected']),
 				'action'          => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -243,10 +243,10 @@ class ControllerCatalogFilter extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'catalog/filter_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -276,13 +276,13 @@ class ControllerCatalogFilter extends Controller {
 		if (isset($this->error['group'])) {
 			$this->data['error_group'] = $this->error['group'];
 		} else {
-			$this->data['error_group'] = array();
+			$this->data['error_group'] = [];
 		}
 
 		if (isset($this->error['filter'])) {
 			$this->data['error_filter'] = $this->error['filter'];
 		} else {
-			$this->data['error_filter'] = array();
+			$this->data['error_filter'] = [];
 		}
 
 		// Breadcrumbs
@@ -294,19 +294,19 @@ class ControllerCatalogFilter extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['filter_group_id'])) {
 			$this->data['action'] = $this->url->link('catalog/filter/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -329,7 +329,7 @@ class ControllerCatalogFilter extends Controller {
 		} elseif (isset($this->request->get['filter_group_id'])) {
 			$this->data['filter_group_description'] = $this->model_catalog_filter->getFilterGroupDescriptions($this->request->get['filter_group_id']);
 		} else {
-			$this->data['filter_group_description'] = array();
+			$this->data['filter_group_description'] = [];
 		}
 
 		if (isset($this->request->post['sort_order'])) {
@@ -345,14 +345,14 @@ class ControllerCatalogFilter extends Controller {
 		} elseif (isset($this->request->get['filter_group_id'])) {
 			$this->data['filters'] = $this->model_catalog_filter->getFilterDescriptions($this->request->get['filter_group_id']);
 		} else {
-			$this->data['filters'] = array();
+			$this->data['filters'] = [];
 		}
 
 		$this->template = 'catalog/filter_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -390,28 +390,28 @@ class ControllerCatalogFilter extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/filter');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$filters = $this->model_catalog_filter->getFilters($data);
 
 			foreach ($filters as $filter) {
-				$json[] = array(
+				$json[] = [
 					'filter_id' => $filter['filter_id'],
 					'name'      => strip_tags(html_entity_decode($filter['group'] . ' &gt; ' . $filter['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];
