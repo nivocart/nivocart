@@ -619,7 +619,7 @@ class ControllerSettingStore extends Controller {
 
 				$this->data['templates'][] = [
 					'name'  => $name,
-					'image' => $image,
+					'image' => $image
 				];
 			}
 		}
