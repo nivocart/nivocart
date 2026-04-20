@@ -1,6 +1,6 @@
 <?php
 class ControllerPaymentPPProPF extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('payment/pp_pro_pf');
@@ -9,7 +9,7 @@ class ControllerPaymentPPProPF extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('pp_pro_pf', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -89,28 +89,27 @@ class ControllerPaymentPPProPF extends Controller {
 			$this->data['error_partner'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_payment'),
 			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/pp_pro_pf', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('payment/pp_pro_pf', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['pp_pro_pf_vendor'])) {
@@ -181,7 +180,9 @@ class ControllerPaymentPPProPF extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+		$geozones_array = [];
+
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
 		if (isset($this->request->post['pp_pro_pf_status'])) {
 			$this->data['pp_pro_pf_status'] = $this->request->post['pp_pro_pf_status'];
@@ -196,10 +197,10 @@ class ControllerPaymentPPProPF extends Controller {
 		}
 
 		$this->template = 'payment/pp_pro_pf.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

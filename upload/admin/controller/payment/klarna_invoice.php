@@ -1,6 +1,6 @@
 <?php
 class ControllerPaymentKlarnaInvoice extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('payment/klarna_invoice');
@@ -9,7 +9,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$status = false;
 
 			foreach ($this->request->post['klarna_invoice'] as $klarna_invoice) {
@@ -19,10 +19,10 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				}
 			}
 
-			$klarna_data = array(
+			$klarna_data = [
 				'klarna_invoice_pclasses' => $this->pclasses,
 				'klarna_invoice_status'   => $status
-			);
+			];
 
 			$this->model_setting_setting->editSetting('klarna_invoice', array_merge($this->request->post, $klarna_data));
 
@@ -87,58 +87,57 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_payment'),
 			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/klarna_invoice', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('payment/klarna_invoice', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['countries'] = array();
+		$this->data['countries'] = [];
 
-		$this->data['countries'][] = array(
+		$this->data['countries'][] = [
 			'name'  => $this->language->get('text_germany'),
 			'code'  => 'DEU'
-		);
+		];
 
-		$this->data['countries'][] = array(
+		$this->data['countries'][] = [
 			'name'  => $this->language->get('text_netherlands'),
 			'code'  => 'NLD'
-		);
+		];
 
-		$this->data['countries'][] = array(
+		$this->data['countries'][] = [
 			'name'  => $this->language->get('text_denmark'),
 			'code'  => 'DNK'
-		);
+		];
 
-		$this->data['countries'][] = array(
+		$this->data['countries'][] = [
 			'name'  => $this->language->get('text_sweden'),
 			'code'  => 'SWE'
-		);
+		];
 
-		$this->data['countries'][] = array(
+		$this->data['countries'][] = [
 			'name'  => $this->language->get('text_norway'),
 			'code'  => 'NOR'
-		);
+		];
 
-		$this->data['countries'][] = array(
+		$this->data['countries'][] = [
 			'name'  => $this->language->get('text_finland'),
 			'code'  => 'FIN'
 		);
@@ -151,7 +150,9 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+		$geozones_array = [];
+
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
 		$this->load->model('localisation/order_status');
 
@@ -168,10 +169,10 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 		$this->data['clear'] = $this->url->link('payment/klarna_invoice/clear', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->template = 'payment/klarna_invoice.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -193,9 +194,9 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				break;
 			case 'boolean':
 				$value = (string)$child->nodeValue;
-				if ($value == '0') {
+				if ($value === '0') {
 					$value = false;
-				} elseif ($value == '1') {
+				} elseif ($value === '1') {
 					$value = true;
 				} else {
 					$value = null;
@@ -208,7 +209,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				$value = (int)$child->nodeValue;
 				break;
 			case 'array':
-				$value = array();
+				$value = [];
 				$xpath = new DOMXPath($document);
 				$entries = $xpath->query('.//array/data/value', $child);
 				for ($i = 0; $i < $entries->length; $i++) {

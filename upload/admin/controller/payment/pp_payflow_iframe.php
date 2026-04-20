@@ -4,7 +4,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 	private $errors;
 
 	public function index() {
-		$this->errors = array();
+		$this->errors = [];
 
 		$this->language->load('payment/pp_payflow_iframe');
 
@@ -12,7 +12,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('pp_payflow_iframe', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -91,28 +91,27 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_payment'),
 			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/pp_payflow_iframe', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('payment/pp_payflow_iframe', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['pp_payflow_iframe_vendor'])) {
@@ -197,7 +196,9 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+		$geozones_array = [];
+
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
 		if (isset($this->request->post['pp_payflow_iframe_geo_zone_id'])) {
 			$this->data['pp_payflow_iframe_geo_zone_id'] = $this->request->post['pp_payflow_iframe_geo_zone_id'];
@@ -248,10 +249,10 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 		}
 
 		$this->template = 'payment/pp_payflow_iframe.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -280,13 +281,13 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 		return empty($this->errors);
 	}
 
-	public function install() {
+	public function install(): void {
 		$this->load->model('payment/pp_payflow_iframe');
 
 		$this->model_payment_pp_payflow_iframe->install();
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->load->model('payment/pp_payflow_iframe');
 
 		$this->model_payment_pp_payflow_iframe->uninstall();
@@ -296,11 +297,8 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 		if ($this->config->get('pp_payflow_iframe_status')) {
 			$this->language->load('payment/pp_payflow_iframe_order');
 
-			if (isset($this->request->get['order_id'])) {
-				$order_id = $this->request->get['order_id'];
-			} else {
-				$order_id = 0;
-			}
+			// Get current Order Id
+			$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
 
 			$this->load->model('payment/pp_payflow_iframe');
 
@@ -384,13 +382,10 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 		$this->data['button_void'] = $this->language->get('button_void');
 		$this->data['button_refund'] = $this->language->get('button_refund');
 
-		$this->data['transactions'] = array();
+		$this->data['transactions'] = [];
 
-		if (isset($this->request->get['order_id'])) {
-			$order_id = $this->request->get['order_id'];
-		} else {
-			$order_id = 0;
-		}
+		// Get current Order Id
+		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
 
 		$this->load->model('payment/pp_payflow_iframe');
 
@@ -403,7 +398,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 			$transactions = $this->model_payment_pp_payflow_iframe->getPaypalTransactionsByOrderId($paypal_order['order_id']);
 
 			foreach ($transactions as $transaction) {
-				$actions = array();
+				$actions = [];
 
 				$void_enabled = (empty($paypal_order['complete']) && empty($transaction['void_transaction_reference']) && (strtotime($transaction['date_added']) >= $void_expiration)) ? true : false;
 				$refund_enabled = (empty($transaction['void_transaction_reference']) && (strtotime($transaction['date_added']) >= $refund_expiration)) ? true : false;
@@ -415,77 +410,77 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 					case 'S': // Sale
 						$text_transaction_type = $this->language->get('text_sale');
 						if ($void_enabled) {
-							$actions[] = array(
+							$actions[] = [
 								'title' => $this->language->get('button_void'),
 								'id'    => 'button-void-'.$transaction['transaction_reference'],
 								'name'  => 'button-void[]',
 								'class' => 'button-repair',
 								'href'  => 'javascript:doVoid(\'' . $transaction['transaction_reference'] . '\'); void 0;'
-							);
+							];
 						};
 						if ($refund_enabled) {
-							$actions[] = array(
+							$actions[] = [
 								'title' => $this->language->get('button_refund'),
 								'id'    => 'button-refund-'.$transaction['transaction_reference'],
 								'name'  => 'button-refund[]',
 								'class' => 'button-delete',
 								'href'  => $this->url->link('payment/pp_payflow_iframe/refund', 'transaction_reference=' . $transaction['transaction_reference'] . '&order_id=' . $order_id . '&token=' . $this->session->data['token'], 'SSL')
-							);
+							];
 						};
 						break;
 					case 'D': // Delayed Capture
 						$text_transaction_type = $this->language->get('text_capture');
 						if ($void_enabled) {
-							$actions[] = array(
+							$actions[] = [
 								'title' => $this->language->get('button_void'),
 								'id'    => 'button-void-'.$transaction['transaction_reference'],
 								'name'  => 'button-void[]',
 								'class' => 'button-repair',
 								'href'  => 'javascript:doVoid(\'' . $transaction['transaction_reference'] . '\'); void 0;'
-							);
+							];
 						};
 						if ($refund_enabled) {
-							$actions[] = array(
+							$actions[] = [
 								'title' => $this->language->get('button_refund'),
 								'id'    => 'button-refund-'.$transaction['transaction_reference'],
 								'name'  => 'button-refund[]',
 								'class' => 'button-delete',
 								'href'  => $this->url->link('payment/pp_payflow_iframe/refund', 'transaction_reference=' . $transaction['transaction_reference'] . '&order_id=' . $order_id . '&token=' . $this->session->data['token'], 'SSL')
-							);
+							];
 						};
 						break;
 					case 'A': // Authorization
 					case 'F': // Voice authorization
 						$text_transaction_type = (empty($transaction['parent_transaction_reference']) ? $this->language->get('text_authorization') : $this->language->get('text_reauthorization'));
 						if ($void_enabled) {
-							$actions[] = array(
+							$actions[] = [
 								'title' => $this->language->get('button_void'),
 								'id'    => 'button-void-'.$transaction['transaction_reference'],
 								'name'  => 'button-void[]',
 								'class' => 'button-repair',
 								'href'  => 'javascript:doVoid(\'' . $transaction['transaction_reference'] . '\'); void 0;'
-							);
+							];
 						};
-						if ($refund_enabled && $transaction['transaction_type'] == 'F') {
-							$actions[] = array(
+						if ($refund_enabled && $transaction['transaction_type'] === 'F') {
+							$actions[] = [
 								'title' => $this->language->get('button_refund'),
 								'id'    => 'button-refund-'.$transaction['transaction_reference'],
 								'name'  => 'button-refund[]',
 								'class' => 'button-delete',
 								'href'  => $this->url->link('payment/pp_payflow_iframe/refund', 'transaction_reference=' . $transaction['transaction_reference'] . '&order_id=' . $order_id . '&token=' . $this->session->data['token'], 'SSL')
-							);
+							];
 						};
 						break;
 					case 'C': // Credit (Refund)
 						$text_transaction_type = $this->language->get('text_refund');
 						if ($void_enabled) {
-							$actions[] = array(
+							$actions[] = [
 								'title' => $this->language->get('button_void'),
 								'id'    => 'button-void-'.$transaction['transaction_reference'],
 								'name'  => 'button-void[]',
 								'class' => 'button-repair',
 								'href'  => 'javascript:doVoid(\'' . $transaction['transaction_reference'] . '\'); void 0;'
-							);
+							];
 						};
 						break;
 					default:
@@ -493,7 +488,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 						break;
 				}
 
-				$this->data['transactions'][] = array(
+				$this->data['transactions'][] = [
 					'transaction_reference'        => $transaction['transaction_reference'],
 					'parent_transaction_reference' => $transaction['parent_transaction_reference'],
 					'transaction_type'             => $text_transaction_type,
@@ -502,7 +497,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 					'date_added'                   => date($this->language->get('date_format_time'), strtotime($transaction['date_added'])),
 					'date_modified'                => date($this->language->get('date_format_time'), strtotime($transaction['date_modified'])),
 					'actions'                      => $actions
-				);
+				];
 			}
 		}
 
@@ -522,7 +517,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 	public function do_capture() {
 		// Used to capture a previously authorized (A or F) transaction. Capture can be full or partial amounts.
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_payflow_iframe_order');
 
@@ -559,6 +554,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 											$already_refunded += $refund['amount'];
 										}
 									}
+
 									$already_captured += $capture['amount'] - $already_refunded;
 								}
 							}
@@ -566,13 +562,13 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 							// Limitation to 115%
 							if ($amount <= ($authorization['amount'] * 1.15) - $already_captured) {
 
-								$request = array(
+								$request = [
 									'TENDER'          => 'C',  // Credit Card
 									'TRXTYPE'         => 'D',  // Delayed Capture
 									'ORIGID'          => $authorization['transaction_reference'],
 									'AMT'             => number_format($amount, 2, '.', ''),
 									'CAPTURECOMPLETE'	=> ($complete ? 'Y' : 'N')
-								);
+								];
 
 								$response = $this->model_payment_pp_payflow_iframe->call($request);
 
@@ -580,14 +576,14 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 									$json['error'] = $this->language->get('error_connection');
 
 								} elseif (is_array($response) && isset($response['RESULT'])) {
-									if (intval($response['RESULT']) == 0) {
-										$data = array(
+									if (intval($response['RESULT']) === 0) {
+										$data = [
 											'order_id'                     => $order_id,
 											'transaction_type'             => $request['TRXTYPE'],
 											'transaction_reference'        => $response['PNREF'],
 											'parent_transaction_reference' => $request['ORIGID'],
 											'amount'                       => $amount,
-										);
+										];
 
 										$this->model_payment_pp_payflow_iframe->addPaypalTransaction($data);
 
@@ -611,12 +607,12 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 											$remaining = $root_transaction['amount'] - $captured + $refunded;
 										}
 
-										$json['to_display'] = array(
-											'captured'   => $this->currency->format($captured, strtoupper($paypal_order['currency_code']), 1, true),
-											'refunded'   => $this->currency->format($refunded, strtoupper($paypal_order['currency_code']), 1, true),
-											'remaining'   => $this->currency->format($remaining, strtoupper($paypal_order['currency_code']), 1, true),
-											'remaining_raw'  => number_format($remaining, 2, '.', ''),
-										);
+										$json['to_display'] = [
+											'captured'      => $this->currency->format($captured, strtoupper($paypal_order['currency_code']), 1, true),
+											'refunded'      => $this->currency->format($refunded, strtoupper($paypal_order['currency_code']), 1, true),
+											'remaining'     => $this->currency->format($remaining, strtoupper($paypal_order['currency_code']), 1, true),
+											'remaining_raw' => number_format($remaining, 2, '.', ''),
+										];
 
 										if ($complete || ($remaining <= 0)) {
 											$this->model_payment_pp_payflow_iframe->setPaypalOrderComplete($order_id, 1);
@@ -671,7 +667,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		$this->language->load('payment/pp_payflow_iframe_order');
 
-		if (isset($this->request->post['order_id']) && ($this->request->post['order_id'] != '') && isset($this->request->post['pnref']) && $this->request->post['pnref'] != '') {
+		if (isset($this->request->post['order_id']) && ($this->request->post['order_id'] !== '') && isset($this->request->post['pnref']) && $this->request->post['pnref'] !== '') {
 			$order_id = $this->request->post['order_id'];
 			$pnref = $this->request->post['pnref'];
 
@@ -684,8 +680,8 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 					$transaction = $this->model_payment_pp_payflow_iframe->getPaypalTransactionByReference($pnref);
 
 					if ($transaction) {
-						if (in_array($transaction['transaction_type'], array('S', 'A', 'F', 'D', 'C'))) {
-							$is_authorization = ($transaction['transaction_type'] == 'A' || $transaction['transaction_type'] == 'F') ? true : false;
+						if (in_array($transaction['transaction_type'], ['S', 'A', 'F', 'D', 'C'])) {
+							$is_authorization = ($transaction['transaction_type'] === 'A' || $transaction['transaction_type'] === 'F') ? true : false;
 
 							// You cannot void an already voided transaction, an authorization having capture(s), a capture having refund(s).
 							if (empty($transaction['void_transaction_reference'])) {
@@ -714,11 +710,11 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 								}
 
 								if ($void_possible) {
-									$request = array(
+									$request = [
 										'TENDER'  => 'C',
 										'TRXTYPE' => 'V',
 										'ORIGID'  => $pnref
-									);
+									];
 
 									$response = $this->model_payment_pp_payflow_iframe->call($request);
 
@@ -726,30 +722,32 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 										$json['error'] = $this->language->get('error_connection');
 
 									} elseif (is_array($response) && isset($response['RESULT'])) {
-										if (intval($response['RESULT']) == 0) {
+										if (intval($response['RESULT']) === 0) {
 											// Records the void
-											$void_data = array(
+											$void_data = [
 												'order_id'                     => $order_id,
 												'transaction_reference'        => $response['PNREF'],
 												'parent_transaction_reference' => $request['ORIGID'],
 												'transaction_type'             => $request['TRXTYPE'],
-											);
+											];
+
 											$this->model_payment_pp_payflow_iframe->addPaypalTransaction($void_data);
 
 											// Voids the transaction
-											$update_data = array(
-												'void_transaction_reference' => $response['PNREF'],
-											);
+											$update_data = ['void_transaction_reference' => $response['PNREF']];
+
 											$this->model_payment_pp_payflow_iframe->editPaypalTransactionByReference($transaction['transaction_reference'], $update_data);
 
 											// If original authorization, set status to complete
 											if ($is_authorization && empty($transaction['parent_transaction_reference'])) {
 												$this->model_payment_pp_payflow_iframe->setPaypalOrderComplete($order_id, 1);
+
 												$json['complete'] = $this->language->get('text_complete');
 											}
 
 											// Updating display
 											$captured = $refunded = $remaining = 0;
+
 											$root_transaction = $this->model_payment_pp_payflow_iframe->getPaypalRootTransactionByOrderId($order_id);
 
 											if ($root_transaction) {
@@ -768,12 +766,12 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 												$remaining = $root_transaction['amount'] - $captured + $refunded;
 											}
 
-											$json['to_display'] = array(
-												'captured'  => $this->currency->format($captured, strtoupper($paypal_order['currency_code']), 1, true),
-												'refunded'  => $this->currency->format($refunded, strtoupper($paypal_order['currency_code']), 1, true),
-												'remaining'  => $this->currency->format($remaining, strtoupper($paypal_order['currency_code']), 1, true),
+											$json['to_display'] = [
+												'captured'      => $this->currency->format($captured, strtoupper($paypal_order['currency_code']), 1, true),
+												'refunded'      => $this->currency->format($refunded, strtoupper($paypal_order['currency_code']), 1, true),
+												'remaining'     => $this->currency->format($remaining, strtoupper($paypal_order['currency_code']), 1, true),
 												'remaining_raw' => number_format($remaining, 2, '.', ''),
-											);
+											];
 
 											$json['success'] = sprintf($this->language->get('msg_void_success'), $transaction['transaction_reference']);
 
@@ -817,7 +815,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 	}
 
 	public function refund() {
-		$this->errors = array();
+		$this->errors = [];
 
 		$this->language->load('payment/pp_payflow_iframe_refund');
 
@@ -851,25 +849,25 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 			$transaction_reference = 0;
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_order') . ' N&deg;' . (int)$order_id,
 			'href'      => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$order_id, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/pp_payflow_iframe/refund', 'token=' . $this->session->data['token'] . '&transaction_reference=' . $this->request->get['transaction_reference'] . '&order_id=' . (int)$order_id, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$order_id, 'SSL');
 
@@ -884,6 +882,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 			if ($transaction) {
 				$already_refunded = 0;
+
 				$refunds = $this->model_payment_pp_payflow_iframe->getPaypalRefundsByParentReference($transaction['transaction_reference']);
 
 				foreach ($refunds as $refund) {
@@ -897,10 +896,10 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 				$this->data['transaction_already_refunded'] = $this->currency->format($already_refunded, strtoupper($paypal_order['currency_code']), 1, true);
 
 				$this->template = 'payment/pp_payflow_iframe_refund.tpl';
-				$this->children = array(
+				$this->children = [
 					'common/header',
 					'common/footer'
-				);
+				];
 
 				$this->response->setOutput($this->render());
 
@@ -915,11 +914,11 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 	public function do_refund() {
 		// Used to issue a refund for a captured payment. Refund can be full or partial.
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_payflow_iframe_refund');
 
-		if (isset($this->request->post['order_id']) && ($this->request->post['order_id'] != '') && isset($this->request->post['transaction_reference']) && isset($this->request->post['amount'])) {
+		if (isset($this->request->post['order_id']) && ($this->request->post['order_id'] !== '') && isset($this->request->post['transaction_reference']) && isset($this->request->post['amount'])) {
 			$order_id = $this->request->post['order_id'];
 			$reference = $this->request->post['transaction_reference'];
 			$amount = (double)$this->request->post['amount'];
@@ -933,8 +932,9 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 				if ($transaction) {
 					// To issue a referenced credit, the original transaction can only be one of the following: a Sale (TRXTYPE=S), Delayed Capture (TRXTYPE=D) or Voice Authorization (TRXTYPE=F).
-					if (in_array($transaction['transaction_type'], array('S', 'D', 'F'))) {
+					if (in_array($transaction['transaction_type'], ['S', 'D', 'F'])) {
 						$already_refunded = 0;
+
 						$refunds = $this->model_payment_pp_payflow_iframe->getPaypalRefundsByParentReference($transaction['transaction_reference']);
 
 						foreach ($refunds as $refund) {
@@ -945,12 +945,12 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 						// Limitation to 115%
 						if ($amount <= ($transaction['amount'] * 1.15) - $already_refunded) {
-							$request = array(
+							$request = [
 								'TRXTYPE' => 'C',
 								'TENDER'  => 'C',
 								'ORIGID'  => $transaction['transaction_reference'],
 								'AMT'     => number_format($amount, 2, '.', '')
-							);
+							];
 
 							$response = $this->model_payment_pp_payflow_iframe->call($request);
 
@@ -958,14 +958,14 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 								$json['error'] = $this->language->get('error_connection');
 
 							} elseif (is_array($response) && isset($response['RESULT'])) {
-								if (intval($response['RESULT']) == 0) {
-									$refund_data = array(
+								if (intval($response['RESULT']) === 0) {
+									$refund_data = [
 										'order_id'                     => $transaction['order_id'],
 										'transaction_type'             => $request['TRXTYPE'],
 										'transaction_reference'        => $response['PNREF'],
 										'parent_transaction_reference' => $request['ORIGID'],
 										'amount'                       => $amount
-									);
+									];
 
 									$this->model_payment_pp_payflow_iframe->addPaypalTransaction($refund_data);
 
@@ -1015,7 +1015,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 			But if multiple captures were possible, a reauthorization call on an authorization should exist too.
 			For future use, I program here the function but let it unused the time Payflow online documentation becomes more clear on that point.
 		*/
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_payflow_iframe_order');
 
@@ -1032,7 +1032,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 					$root_transaction = $this->model_payment_pp_payflow_iframe->getPaypalRootTransactionByOrderId($paypal_order['order_id']);
 
 					if ($root_transaction) {
-						if (in_array($root_transaction['transaction_type'], array('A', 'F'))) {
+						if (in_array($root_transaction['transaction_type'], ['A', 'F'])) {
 							if (empty($root_transaction['void_transaction_reference'])) {
 								$captured = $this->model_payment_pp_payflow_iframe->getTotalCaptured($paypal_order['order_id']);
 								$refunded = $this->model_payment_pp_payflow_iframe->getTotalRefunded($paypal_order['order_id']);
@@ -1054,14 +1054,14 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 										$json['error'] = $this->language->get('error_connection');
 
 									} elseif (is_array($response) && isset($response['RESULT'])) {
-										if (intval($response['RESULT']) == 0) {
-											$data = array(
+										if (intval($response['RESULT']) === 0) {
+											$data = [
 												'order_id'                     => $order_id,
 												'transaction_reference'        => $response['PNREF'],
 												'parent_transaction_reference' => $request['ORIGID'],
 												'transaction_type'             => $request['TRXTYPE'],
 												'amount'                       => $amount,
-											);
+											];
 
 											$this->model_payment_pp_payflow_iframe->addPaypalTransaction($data);
 

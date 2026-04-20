@@ -4,7 +4,7 @@ class ControllerPaymentPPProIframe extends Controller {
 	private $errors;
 
 	public function index() {
-		$this->errors = array();
+		$this->errors = [];
 
 		$this->language->load('payment/pp_pro_iframe');
 
@@ -12,7 +12,7 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('pp_pro_iframe', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -98,28 +98,27 @@ class ControllerPaymentPPProIframe extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_payment'),
 			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['pp_pro_iframe_username'])) {
@@ -202,7 +201,9 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+		$geozones_array = [];
+
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
 		if (isset($this->request->post['pp_pro_iframe_status'])) {
 			$this->data['pp_pro_iframe_status'] = $this->request->post['pp_pro_iframe_status'];
@@ -308,10 +309,10 @@ class ControllerPaymentPPProIframe extends Controller {
 		}
 
 		$this->template = 'payment/pp_pro_iframe.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -333,6 +334,7 @@ class ControllerPaymentPPProIframe extends Controller {
 			if (empty($this->request->post['pp_pro_iframe_sandbox_signature'])) {
 				$this->errors['sandbox_signature'] = $this->language->get('error_sandbox_signature');
 			}
+
 		} else {
 			if (empty($this->request->post['pp_pro_iframe_username'])) {
 				$this->errors['username'] = $this->language->get('error_username');
@@ -350,13 +352,13 @@ class ControllerPaymentPPProIframe extends Controller {
 		return empty($this->errors);
 	}
 
-	public function install() {
+	public function install(): void {
 		$this->load->model('payment/pp_pro_iframe');
 
 		$this->model_payment_pp_pro_iframe->install();
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->load->model('payment/pp_pro_iframe');
 
 		$this->model_payment_pp_pro_iframe->uninstall();
@@ -366,11 +368,8 @@ class ControllerPaymentPPProIframe extends Controller {
 		if ($this->config->get('pp_pro_iframe_status')) {
 			$this->language->load('payment/pp_pro_iframe_order');
 
-			if (isset($this->request->get['order_id'])) {
-				$order_id = $this->request->get['order_id'];
-			} else {
-				$order_id = 0;
-			}
+			// Get current Order Id
+			$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
 
 			$this->load->model('payment/pp_pro_iframe');
 
@@ -439,13 +438,10 @@ class ControllerPaymentPPProIframe extends Controller {
 		$this->data['button_refund'] = $this->language->get('button_refund');
 		$this->data['button_resend'] = $this->language->get('button_resend');
 
-		$this->data['transactions'] = array();
+		$this->data['transactions'] = [];
 
-		if (isset($this->request->get['order_id'])) {
-			$order_id = $this->request->get['order_id'];
-		} else {
-			$order_id = 0;
-		}
+		// Get current Order Id
+		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
 
 		$this->load->model('payment/pp_pro_iframe');
 
@@ -455,7 +451,7 @@ class ControllerPaymentPPProIframe extends Controller {
 			$results = $this->model_payment_pp_pro_iframe->getTransactions($paypal_order['paypal_iframe_order_id']);
 
 			foreach ($results as $result) {
-				$this->data['transactions'][] = array(
+				$this->data['transactions'][] = [
 					'paypal_iframe_order_transaction_id' => $result['paypal_iframe_order_transaction_id'],
 					'transaction_id' => $result['transaction_id'],
 					'amount'         => $result['amount'],
@@ -466,7 +462,7 @@ class ControllerPaymentPPProIframe extends Controller {
 					'view'           => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id . '&referrer=detail', 'SSL'),
 					'refund'         => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id, 'SSL'),
 					'resend'         => $this->url->link('payment/pp_pro_iframe/do_resend', 'token=' . $this->session->data['token'] . '&paypal_iframe_order_transaction_id=' . $result['paypal_iframe_order_transaction_id'], 'SSL')
-				);
+				];
 			}
 		}
 
@@ -477,7 +473,7 @@ class ControllerPaymentPPProIframe extends Controller {
 
 	public function do_capture() {
 		// Used to capture authorised payments. Capture can be full or partial amounts
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_pro_iframe');
 
@@ -490,24 +486,24 @@ class ControllerPaymentPPProIframe extends Controller {
 				// If this is the final amount to capture or not.
 				// NOTE: If 'Complete', any remaining amount of the original authorized transaction is automatically voided
 				// and all remaining open authorizations are voided by Paypal.
-				if ($this->request->post['complete'] == 1) {
+				if ($this->request->post['complete'] === 1) {
 					$complete = 'Complete';
 				} else {
 					$complete = 'NotComplete';
 				}
 
-				$request = array(
+				$request = [
 					'METHOD'          => 'DoCapture',
 					'AUTHORIZATIONID' => $paypal_order['authorization_id'],
 					'AMT'             => number_format($this->request->post['amount'], 2),
 					'CURRENCYCODE'    => $paypal_order['currency_code'],
 					'COMPLETETYPE'    => $complete,
 					'MSGSUBID'        => uniqid(mt_rand(), true)
-				);
+				];
 
 				$response = $this->model_payment_pp_pro_iframe->call($request);
 
-				$transaction = array(
+				$transaction = [
 					'paypal_iframe_order_id' => $paypal_order['paypal_iframe_order_id'],
 					'transaction_id'         => '',
 					'parent_transaction_id'  => $paypal_order['authorization_id'],
@@ -520,7 +516,7 @@ class ControllerPaymentPPProIframe extends Controller {
 					'transaction_entity'     => 'payment',
 					'amount'                 => '',
 					'debug_data'             => json_encode($response)
-				);
+				];
 
 				if ($response === false) {
 					// Save for resend
@@ -531,7 +527,7 @@ class ControllerPaymentPPProIframe extends Controller {
 
 					$json['error'] = $this->language->get('error_connection');
 
-				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] != 'Failure') && ($response['ACK'] != 'FailureWithWarning')) {
+				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] !== 'Failure') && ($response['ACK'] !== 'FailureWithWarning')) {
 					$transaction['transaction_id'] = $response['TRANSACTIONID'];
 					$transaction['payment_type'] = $response['PAYMENTTYPE'];
 					$transaction['payment_status'] = $response['PAYMENTSTATUS'];
@@ -556,7 +552,7 @@ class ControllerPaymentPPProIframe extends Controller {
 					// Not used.
 					$transaction['complete_status'] = 0;
 
-					if ($this->request->post['complete'] == 1 || $transaction['remaining'] == '0.00') {
+					if ($this->request->post['complete'] === 1 || $transaction['remaining'] === '0.00') {
 						$transaction['complete_status'] = 1;
 
 						$json['capture_status'] = $this->language->get('text_complete');
@@ -566,9 +562,9 @@ class ControllerPaymentPPProIframe extends Controller {
 
 					$transaction['void'] = '';
 
-					if ($this->request->post['complete'] == 1 && $remaining > 0) {
+					if ($this->request->post['complete'] === 1 && $remaining > 0) {
 						// Records the void (done automatically by Paypal) on the funds remaining on the authorization.
-						$transaction['void'] = array(
+						$transaction['void'] = [
 							'paypal_iframe_order_id' => $paypal_order['paypal_iframe_order_id'],
 							'transaction_id'         => '',
 							'parent_transaction_id'  => $paypal_order['authorization_id'],
@@ -581,7 +577,7 @@ class ControllerPaymentPPProIframe extends Controller {
 							'amount'                 => '',
 							'debug_data'             => 'Voided after capture',
 							'transaction_entity'     => 'auth'
-						);
+						];
 
 						$this->model_payment_pp_pro_iframe->addTransaction($transaction['void']);
 
@@ -615,7 +611,7 @@ class ControllerPaymentPPProIframe extends Controller {
 	}
 
 	public function refund() {
-		$this->errors = array();
+		$this->errors = [];
 
 		$this->language->load('payment/pp_pro_iframe_refund');
 
@@ -657,25 +653,25 @@ class ControllerPaymentPPProIframe extends Controller {
 			$this->data['error'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_order') . ' N&deg;' . (int)$order_id,
 			'href'      => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$order_id, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . (int)$transaction_id . '&order_id=' . (int)$order_id, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('payment/pp_pro_iframe/do_refund', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id , 'SSL');
@@ -686,9 +682,10 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		$response = $this->model_payment_pp_pro_iframe->requestTransactionDetails($transaction_id);
 
-		if (is_array($response) && isset($response['ACK']) && ($response['ACK'] == 'Success')) {
+		if (is_array($response) && isset($response['ACK']) && ($response['ACK'] === 'Success')) {
 			$this->data['amount_original'] = $response['AMT'];
 			$this->data['currency_code'] = $response['CURRENCYCODE'];
+
 		} else {
 			// Call failed, try local infos
 			$local_transaction = $this->model_payment_pp_pro_iframe->getLocalTransaction($transaction_id);
@@ -697,6 +694,7 @@ class ControllerPaymentPPProIframe extends Controller {
 				$this->data['amount_original'] = 0;
 				$this->data['currency_code'] = 'Error';
 				$this->data['error'] = $this->language->get('error_transaction_amount');
+
 			} else {
 				$this->data['amount_original'] = $local_transaction['amount'];
 				$paypal_order = $this->model_payment_pp_pro_iframe->getPaypalOrder($local_transaction['paypal_iframe_order_id']);
@@ -710,16 +708,17 @@ class ControllerPaymentPPProIframe extends Controller {
 			$refund_available = $this->data['amount_original'] + $refunded;
 			$this->data['refund_available'] = number_format($refund_available, 2);
 			$this->data['attention'] = $this->language->get('text_current_refunds') . ': ' . $this->data['refund_available'];
+
 		} else {
 			$this->data['refund_available'] = '';
 			$this->data['attention'] = '';
 		}
 
 		$this->template = 'payment/pp_pro_iframe_refund.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -727,14 +726,14 @@ class ControllerPaymentPPProIframe extends Controller {
 	// Changed to json for calling from everywhere and return complete error messages.
 	public function do_refund() {
 		// Used to issue a refund for a captured payment. Refund can be full or partial
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_pro_iframe_refund');
 
 		if (isset($this->request->post['transaction_id']) && isset($this->request->post['refund_full'])) {
 			$this->load->model('payment/pp_pro_iframe');
 
-			if ($this->request->post['refund_full'] == 0 && $this->request->post['amount'] == 0) {
+			if ($this->request->post['refund_full'] === 0 && $this->request->post['amount'] === 0) {
 				$json['error'] = $this->language->get('error_partial_amt');
 			} else if ($this->request->post['amount'] <= 0) {
 				$json['error'] = $this->language->get('error_positive_amt');
@@ -745,16 +744,16 @@ class ControllerPaymentPPProIframe extends Controller {
 					$paypal_order = $this->model_payment_pp_pro_iframe->getPaypalOrderByOrderId($order_id);
 
 					if ($paypal_order) {
-						$request = array(
+						$request = [
 							'METHOD'        => 'RefundTransaction',
 							'TRANSACTIONID' => $this->request->post['transaction_id'],
 							'NOTE'          => urlencode($this->request->post['refund_message']),
 							'MSGSUBID'      => uniqid(mt_rand(), true)
-						);
+						];
 
 						$current_transaction = $this->model_payment_pp_pro_iframe->getLocalTransaction($this->request->post['transaction_id']);
 
-						if ($this->request->post['refund_full'] == 1) {
+						if ($this->request->post['refund_full'] === 1) {
 							$request['REFUNDTYPE'] = 'Full';
 						} else {
 							$request['REFUNDTYPE'] = 'Partial';
@@ -764,7 +763,7 @@ class ControllerPaymentPPProIframe extends Controller {
 
 						$response = $this->model_payment_pp_pro_iframe->call($request);
 
-						$transaction = array(
+						$transaction = [
 							'paypal_iframe_order_id' => $paypal_order['paypal_iframe_order_id'],
 							'transaction_id'         => '',
 							'parent_transaction_id'  => $this->request->post['transaction_id'],
@@ -777,7 +776,7 @@ class ControllerPaymentPPProIframe extends Controller {
 							'pending_reason'         => '',
 							'amount'                 => '-' . (isset($request['AMT']) ? $request['AMT'] : $current_transaction['amount']),
 							'debug_data'             => json_encode($response)
-						);
+						];
 
 						if ($response === false) {
 							// Save for resend
@@ -796,7 +795,7 @@ class ControllerPaymentPPProIframe extends Controller {
 							$this->model_payment_pp_pro_iframe->addTransaction($transaction);
 
 							// Update transaction to refunded status
-							if ($response['TOTALREFUNDEDAMOUNT'] == $this->request->post['amount_original']) {
+							if ($response['TOTALREFUNDEDAMOUNT'] === $this->request->post['amount_original']) {
 								$this->model_payment_pp_pro_iframe->updateTransactionStatus($this->request->post['transaction_id'], 'Refunded');
 							} else {
 								$this->model_payment_pp_pro_iframe->updateTransactionStatus($this->request->post['transaction_id'], 'Partially-Refunded');
@@ -827,7 +826,7 @@ class ControllerPaymentPPProIframe extends Controller {
 
 	public function do_void() {
 		// Used to void an authorised payment
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_pro_iframe');
 
@@ -837,11 +836,11 @@ class ControllerPaymentPPProIframe extends Controller {
 			$paypal_order = $this->model_payment_pp_pro_iframe->getPaypalOrderByOrderId($this->request->post['order_id']);
 
 			if ($paypal_order) {
-				$request = array(
+				$request = [
 					'METHOD'          => 'DoVoid',
 					'AUTHORIZATIONID' => $paypal_order['authorization_id'],
 					'MSGSUBID'        => uniqid(mt_rand(), true)
-				);
+				];
 
 				$response = $this->model_payment_pp_pro_iframe->call($request);
 
@@ -849,7 +848,7 @@ class ControllerPaymentPPProIframe extends Controller {
 					$json['error'] = $this->language->get('error_connection');
 
 				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] != 'Failure') && ($response['ACK'] != 'FailureWithWarning')) {
-					$transaction = array(
+					$transaction = [
 						'paypal_iframe_order_id' => $paypal_order['paypal_iframe_order_id'],
 						'transaction_id'         => '',
 						'parent_transaction_id'  => $paypal_order['authorization_id'],
@@ -862,7 +861,7 @@ class ControllerPaymentPPProIframe extends Controller {
 						'transaction_entity'     => 'auth',
 						'amount'                 => '',
 						'debug_data'             => json_encode($response)
-					);
+					];
 
 					$this->model_payment_pp_pro_iframe->addTransaction($transaction);
 
@@ -889,7 +888,7 @@ class ControllerPaymentPPProIframe extends Controller {
 	}
 
 	public function viewTransaction() {
-		$this->errors = array();
+		$this->errors = [];
 
 		$this->language->load('payment/pp_pro_iframe_view');
 
@@ -996,32 +995,32 @@ class ControllerPaymentPPProIframe extends Controller {
 			$transaction_id = 0;
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_pp_pro_iframe'),
 			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $transaction_id, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$response = $this->model_payment_pp_pro_iframe->requestTransactionDetails($transaction_id);
 
 		if ($response === false) {
 			$this->errors['warning'] = $this->language->get('error_connection');
 
-		} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] == 'Success')) {
+		} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] === 'Success')) {
 			$this->data['lines'] = $this->formatRows($this->data['transaction']);
 			$this->data['view_link'] = $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -1034,16 +1033,16 @@ class ControllerPaymentPPProIframe extends Controller {
 		$this->data['errors'] = $this->errors;
 
 		$this->template = 'payment/pp_pro_iframe_view.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	public function do_resend() {
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_pro_iframe');
 
@@ -1053,7 +1052,7 @@ class ControllerPaymentPPProIframe extends Controller {
 			$transaction = $this->model_payment_pp_pro_iframe->getFailedTransaction($this->request->get['paypal_iframe_order_transaction_id']);
 
 			if ($transaction) {
-				$call_data = unserialize($transaction['call_data']);
+				$call_data = unserialize($transaction['call_data'], ['allowed_classes' => false]);
 
 				$response = $this->model_payment_pp_pro_iframe->call($call_data);
 
@@ -1067,7 +1066,7 @@ class ControllerPaymentPPProIframe extends Controller {
 						$json['error'] = $this->language->get('error_missing_parent_transaction');
 
 					} else {
-						if ($parent_transaction['amount'] == abs($transaction['amount'])) {
+						if ($parent_transaction['amount'] === abs($transaction['amount'])) {
 							$this->model_payment_pp_pro_iframe->updateTransactionStatus($transaction['parent_transaction_id'], 'Refunded');
 						} else {
 							$this->model_payment_pp_pro_iframe->updateTransactionStatus($transaction['parent_transaction_id'], 'Partially-Refunded');
@@ -1125,28 +1124,28 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		$this->load->model('payment/pp_pro_iframe');
 
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['order_id'])) {
 			$paypal_order = $this->model_payment_pp_pro_iframe->getPaypalOrderByOrderId($this->request->post['order_id']);
 
 			if ($paypal_order) {
-				$request = array(
+				$request = [
 					'METHOD'          => 'DoReauthorization',
 					'AUTHORIZATIONID' => $paypal_order['authorization_id'],
 					'AMT'             => number_format($paypal_order['total'], 2),
 					'CURRENCYCODE'    => $paypal_order['currency_code']
-				);
+				];
 
 				$response = $this->model_payment_pp_pro_iframe->call($request);
 
 				if ($response === false) {
 					$json['error'] = $this->language->get('error_connection');
 
-				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] != 'Failure') && ($response['ACK'] != 'FailureWithWarning')) {
+				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] !== 'Failure') && ($response['ACK'] !== 'FailureWithWarning')) {
 					$this->model_payment_pp_pro_iframe->updateAuthorizationId($paypal_order['paypal_iframe_order_id'], $response['AUTHORIZATIONID']);
 
-					$transaction = array(
+					$transaction = [
 						'paypal_iframe_order_id' => $paypal_order['paypal_iframe_order_id'],
 						'transaction_id'         => '',
 						'parent_transaction_id'  => $paypal_order['authorization_id'],
@@ -1159,7 +1158,7 @@ class ControllerPaymentPPProIframe extends Controller {
 						'pending_reason'         => $response['PENDINGREASON'],
 						'amount'                 => '-' . '',
 						'debug_data'             => json_encode($response)
-					);
+					];
 
 					$this->model_payment_pp_pro_iframe->addTransaction($transaction);
 
@@ -1186,13 +1185,13 @@ class ControllerPaymentPPProIframe extends Controller {
 	}
 
 	private function formatRows($data) {
-		$return = array();
+		$return = [];
 
 		foreach ($data as $k => $v) {
 			$elements = preg_split("/(\d+)/", $k, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
 			if (isset($elements[1]) && isset($elements[0])) {
-				if ($elements[0] == 'L_TIMESTAMP') {
+				if ($elements[0] === 'L_TIMESTAMP') {
 					$v = str_replace('T', ' ', $v);
 					$v = str_replace('Z', '', $v);
 				}

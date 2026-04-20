@@ -1,7 +1,7 @@
 <?php
 class ModelPaymentPPExpress extends Model {
 
-	public function install() {
+	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_order` (
 			`paypal_order_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -13,7 +13,7 @@ class ModelPaymentPPExpress extends Model {
 			`authorization_id` VARCHAR(30) NOT NULL,
 			`total` DECIMAL(10, 2) NOT NULL,
 			PRIMARY KEY (`paypal_order_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
 		$this->db->query("
@@ -34,11 +34,11 @@ class ModelPaymentPPExpress extends Model {
 			`debug_data` TEXT NOT NULL,
 			`call_data` TEXT NOT NULL,
 			PRIMARY KEY (`paypal_order_transaction_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 	}
 
-	public function uninstall() {
+	public function uninstall(): void {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "paypal_order_transaction`;");
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "paypal_order`;");
 	}
@@ -127,20 +127,20 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function requestTransactionDetails(int $transaction_id) {
-		$call_data = array(
+		$call_data = [
 			'METHOD'        => 'GetTransactionDetails',
 			'TRANSACTIONID' => $transaction_id
-		);
+		];
 
 		return $this->call($call_data);
 	}
 
 	public function updateTransactionStatus(int $transaction_id, $transaction_status) {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
+		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
 	}
 
 	public function getCurrencies() {
-		return array(
+		return [
 			'AUD',
 			'BRL',
 			'CAD',
@@ -166,7 +166,7 @@ class ModelPaymentPPExpress extends Model {
 			'TRY',
 			'USD',
 			'INR'
-		);
+		];
 	}
 
 	public function getTotalCaptured(int $paypal_order_id) {
@@ -190,7 +190,7 @@ class ModelPaymentPPExpress extends Model {
 	protected function cleanReturn(array $data = []) {
 		$data = explode('&', $data);
 
-		$arr = array();
+		$arr = [];
 
 		foreach ($data as $k => $v) {
 			$tmp = explode('=', $v);
@@ -233,8 +233,8 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function getTransactions(int $paypal_order_id) {
-		$transactions = array();
-// children unused
+		$transactions = [];
+		// children unused
 		$query = $this->db->query("SELECT ot.*, (SELECT COUNT(ot2.paypal_order_id) FROM `" . DB_PREFIX . "paypal_order_transaction` ot2 WHERE ot2.parent_transaction_id = ot.transaction_id) AS children FROM `" . DB_PREFIX . "paypal_order_transaction` ot WHERE paypal_order_id = '" . (int)$paypal_order_id . "' ORDER BY paypal_order_transaction_id ASC");
 
 		if ($query->num_rows) {
@@ -247,7 +247,7 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function call($data) {
-		if ($this->config->get('pp_express_test') == 1) {
+		if ($this->config->get('pp_express_test') === 1) {
 			$api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
 			$user = $this->config->get('pp_express_sandbox_username');
 			$password = $this->config->get('pp_express_sandbox_password');
@@ -259,19 +259,19 @@ class ModelPaymentPPExpress extends Model {
 			$signature = $this->config->get('pp_express_signature');
 		}
 
-		$default_parameters = array(
+		$default_parameters = [
 			'USER'         => $user,
 			'PWD'          => $password,
 			'SIGNATURE'    => $signature,
 			'VERSION'      => '109.0',
-			'BUTTONSOURCE' => 'OpenCart_Cart_EC'
-		);
+			'BUTTONSOURCE' => 'NivoCart_Cart_EC'
+		];
 
 		$call_parameters = array_merge($data, $default_parameters);
 
 		$this->log($call_parameters, 'Call data');
 
-		$options = array(
+		$options = [
 			CURLOPT_POST           => true,
 			CURLOPT_HEADER         => false,
 			CURLOPT_URL            => $api_endpoint,
@@ -283,7 +283,7 @@ class ModelPaymentPPExpress extends Model {
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_POSTFIELDS     => http_build_query($call_parameters, '', '&')
-		);
+		];
 
 		$ch = curl_init();
 
@@ -291,13 +291,14 @@ class ModelPaymentPPExpress extends Model {
 
 		$response = curl_exec($ch);
 
-		if (curl_errno($ch) != CURLE_OK) {
+		if (curl_errno($ch) !== CURLE_OK) {
 			$log_data = array(
 				'curl_error' => curl_error($ch),
 				'curl_errno' => curl_errno($ch)
 			);
 
 			$this->log($log_data, 'cURL failed');
+
 			return false;
 		}
 
@@ -310,7 +311,7 @@ class ModelPaymentPPExpress extends Model {
 		return $response;
 	}
 
-	private function curl($endpoint, $additional_opts = array()) {
+	private function curl($endpoint, array $additional_opts = []) {
 		$default_opts = array(
 			CURLOPT_PORT           => 443,
 			CURLOPT_HEADER         => false,
@@ -336,7 +337,7 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function getTokens($test) {
-		if ($test == 'sandbox') {
+		if ($test === 'sandbox') {
 			$endpoint = 'https://api.sandbox.paypal.com/v1/oauth2/token';
 			$client_id = 'Ad3QTBAHwhuNI_blejO4_RqvES74yWRUC61c5QVNDbxkq9csbLpDZogWp_0n';
 			$client_secret = 'EGqgGxCqjs1GIa5l1Ex_Flq0Mb2oMT3rJu2kwz6FuF9QKyxCg6qNqyddxCCW';
@@ -346,17 +347,17 @@ class ModelPaymentPPExpress extends Model {
 			$client_secret = 'EEkc6xB30fDkgUO_YldWWHxKDquY7LBRId6FJ-parAR1CsVpK35zB6U0SIh4';
 		}
 
-		$call_parameters = array(
+		$call_parameters = [
 			'client_id'     => $client_id,
 			'client_secret' => $client_secret,
 			'grant_type'    => 'client_credentials',
-		);
+		];
 
-		$additional_opts = array(
+		$additional_opts = [
 			CURLOPT_USERPWD    => $client_id . ':' . $client_secret,
 			CURLOPT_POST       => true,
 			CURLOPT_POSTFIELDS => http_build_query($call_parameters, '', '&')
-		);
+		];
 
 		$curl = $this->curl($endpoint, $additional_opts);
 
@@ -366,7 +367,7 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function getUserInfo($merchant_id, $test, $access_token) {
-		if ($test == 'sandbox') {
+		if ($test === 'sandbox') {
 			$endpoint = 'https://api.sandbox.paypal.com/v1/customer/partners/T4E8WSXT43QPJ/merchant-integrations';
 		} else {
 			$endpoint = 'https://api.paypal.com/v1/customer/partners/9PDNYE4RZBVFJ/merchant-integrations';
@@ -374,14 +375,14 @@ class ModelPaymentPPExpress extends Model {
 
 		$endpoint1 = $endpoint . '?tracking_id=' . $merchant_id;
 
-		$header = array();
+		$header = [];
 		$header[] = 'Content-Type: application/json';
 		$header[] = 'Authorization: Bearer ' . $access_token;
 		$header[] = 'PAYPAL_SERVICE_VERSION:1.2.0';
 
-		$additional_opts = array(
+		$additional_opts = [
 			CURLOPT_HTTPHEADER => $header,
-		);
+		];
 
 		$curl = $this->curl($endpoint1, $additional_opts);
 
@@ -404,11 +405,11 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function recurringCancel($reference) {
-		$data = array(
+		$data = [
 			'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
 			'PROFILEID' => $reference,
 			'ACTION'    => 'Cancel'
-		);
+		];
 
 		return $this->call($data);
 	}

@@ -1,6 +1,6 @@
 <?php
 class ControllerPaymentPPProUK extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('payment/pp_pro_uk');
@@ -9,7 +9,7 @@ class ControllerPaymentPPProUK extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('pp_pro_uk', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -72,25 +72,25 @@ class ControllerPaymentPPProUK extends Controller {
 			$this->data['error_signature'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_payment'),
 			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('payment/pp_pro_uk', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('payment/pp_pro_uk', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -150,7 +150,9 @@ class ControllerPaymentPPProUK extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+		$geozones_array = [];
+
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
 
 		if (isset($this->request->post['pp_pro_uk_status'])) {
 			$this->data['pp_pro_uk_status'] = $this->request->post['pp_pro_uk_status'];
@@ -165,10 +167,10 @@ class ControllerPaymentPPProUK extends Controller {
 		}
 
 		$this->template = 'payment/pp_pro_uk.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
