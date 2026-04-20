@@ -6,10 +6,10 @@ class ControllerCommonFileManager extends Controller {
 
 		$this->data['title'] = $this->language->get('heading_title');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || (isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443')) {
-			$this->data['base'] = HTTPS_SERVER;
-			$this->data['directory'] = HTTPS_IMAGE . 'data/';
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			$this->data['base'] = HTTPS_SERVER;
 			$this->data['directory'] = HTTPS_IMAGE . 'data/';
 		} else {
