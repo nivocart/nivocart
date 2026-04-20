@@ -1,6 +1,6 @@
 <?php
 class ControllerLocalisationLocation extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('localisation/location');
@@ -121,19 +121,19 @@ class ControllerLocalisationLocation extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('localisation/location', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('localisation/location/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('localisation/location/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -144,30 +144,30 @@ class ControllerLocalisationLocation extends Controller {
 
 		$this->load->model('tool/image');
 
-		$this->data['locations'] = array();
+		$this->data['locations'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$location_total = $this->model_localisation_location->getTotalLocations();
 
 		$results = $this->model_localisation_location->getLocations($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('localisation/location/update', 'token=' . $this->session->data['token'] . '&location_id=' . $result['location_id'] . $url, 'SSL')
-			);
+			];
 
 			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
 				$thumb = $this->model_tool_image->resize($result['image'], 50, 50);
@@ -175,7 +175,7 @@ class ControllerLocalisationLocation extends Controller {
 				$thumb = $this->model_tool_image->resize('no_image.jpg', 50, 50);
 			}
 
-			$this->data['locations'][] = array(
+			$this->data['locations'][] = [
 				'location_id' => $result['location_id'],
 				'image'       => $thumb,
 				'name'        => $result['name'],
@@ -185,7 +185,7 @@ class ControllerLocalisationLocation extends Controller {
 				'longitude'   => $result['longitude'] ? $result['longitude'] . '&deg; E' : '',
 				'selected'    => isset($this->request->post['selected']) && in_array($result['location_id'], $this->request->post['selected']),
 				'action'      => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -259,10 +259,10 @@ class ControllerLocalisationLocation extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'localisation/location_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -320,7 +320,7 @@ class ControllerLocalisationLocation extends Controller {
 		if (isset($this->error['image'])) {
 			$this->data['error_image'] = $this->error['image'];
 		} else {
-			$this->data['error_image'] = array();
+			$this->data['error_image'] = [];
 		}
 
 		// Breadcrumbs
@@ -332,19 +332,19 @@ class ControllerLocalisationLocation extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('localisation/location', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['location_id'])) {
 			$this->data['action'] = $this->url->link('localisation/location/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -437,10 +437,10 @@ class ControllerLocalisationLocation extends Controller {
 		}
 
 		$this->template = 'localisation/location_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -462,7 +462,7 @@ class ControllerLocalisationLocation extends Controller {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
-		$allowed = array('jpg','jpeg','png','gif');
+		$allowed = ['jpg','jpeg','png','gif'];
 
 		if ($this->request->post['image']) {
 			$ext = substr(strrchr($this->request->post['image'], '.'), 1);

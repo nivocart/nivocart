@@ -1,6 +1,6 @@
 <?php
 class ControllerLocalisationWeightClass extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('localisation/weight_class');
@@ -121,19 +121,19 @@ class ControllerLocalisationWeightClass extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('localisation/weight_class', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('localisation/weight_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('localisation/weight_class/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -142,39 +142,39 @@ class ControllerLocalisationWeightClass extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['weight_classes'] = array();
+		$this->data['weight_classes'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'title';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$weight_class_total = $this->model_localisation_weight_class->getTotalWeightClasses();
 
 		$results = $this->model_localisation_weight_class->getWeightClasses($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('localisation/weight_class/update', 'token=' . $this->session->data['token'] . '&weight_class_id=' . $result['weight_class_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['weight_classes'][] = array(
+			$this->data['weight_classes'][] = [
 				'weight_class_id' => $result['weight_class_id'],
 				'title'           => $result['title'] . (($result['weight_class_id'] === $this->config->get('config_weight_class')) ? $this->language->get('text_default') : null),
 				'unit'            => $result['unit'],
 				'value'           => $result['value'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['weight_class_id'], $this->request->post['selected']),
 				'action'          => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -246,10 +246,10 @@ class ControllerLocalisationWeightClass extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'localisation/weight_class_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -275,13 +275,13 @@ class ControllerLocalisationWeightClass extends Controller {
 		if (isset($this->error['title'])) {
 			$this->data['error_title'] = $this->error['title'];
 		} else {
-			$this->data['error_title'] = array();
+			$this->data['error_title'] = [];
 		}
 
 		if (isset($this->error['unit'])) {
 			$this->data['error_unit'] = $this->error['unit'];
 		} else {
-			$this->data['error_unit'] = array();
+			$this->data['error_unit'] = [];
 		}
 
 		// Breadcrumbs
@@ -293,19 +293,19 @@ class ControllerLocalisationWeightClass extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('localisation/weight_class', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['weight_class_id'])) {
 			$this->data['action'] = $this->url->link('localisation/weight_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -315,7 +315,7 @@ class ControllerLocalisationWeightClass extends Controller {
 
 		$this->data['cancel'] = $this->url->link('localisation/weight_class', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['weight_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['weight_class_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$weight_class_info = $this->model_localisation_weight_class->getWeightClass($this->request->get['weight_class_id']);
 		}
 
@@ -328,7 +328,7 @@ class ControllerLocalisationWeightClass extends Controller {
 		} elseif (isset($this->request->get['weight_class_id'])) {
 			$this->data['weight_class_description'] = $this->model_localisation_weight_class->getWeightClassDescriptions($this->request->get['weight_class_id']);
 		} else {
-			$this->data['weight_class_description'] = array();
+			$this->data['weight_class_description'] = [];
 		}
 
 		if (isset($this->request->post['value'])) {
@@ -340,10 +340,10 @@ class ControllerLocalisationWeightClass extends Controller {
 		}
 
 		$this->template = 'localisation/weight_class_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
