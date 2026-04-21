@@ -1,6 +1,6 @@
 <?php
 class ControllerToolSitemap extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'sitemap';
 
 	public function index() {
@@ -70,19 +70,19 @@ class ControllerToolSitemap extends Controller {
 			$this->data['output'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['refresh'] = $this->url->link('tool/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
@@ -92,7 +92,7 @@ class ControllerToolSitemap extends Controller {
 
 		$this->data['sitemap'] = '';
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate()) {
 			$button = $this->request->post['buttonForm'];
 
 			switch ($button) {
@@ -119,13 +119,10 @@ class ControllerToolSitemap extends Controller {
 		$this->data['text_create'] = $this->language->get('text_create');
 		$this->data['text_publish'] = $this->language->get('text_publish');
 
+		// Check if localhost
 		$hostcheck = $this->request->server['HTTP_HOST'];
 
-		if ($hostcheck == 'localhost') {
-			$this->data['localhost'] = true;
-		} else {
-			$this->data['localhost'] = false;
-		}
+		$this->data['localhost'] = ($hostcheck === 'localhost') ? true : false;
 
 		// Master Text Sitemap
 		if (file_exists("../sitemap.txt") && is_file("../sitemap.txt")) {
@@ -139,7 +136,7 @@ class ControllerToolSitemap extends Controller {
 
 			$i = 0;
 
-			$suffix = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
+			$suffix = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
 
 			while (($size / 1024) > 1) {
 				$size = $size / 1024;
@@ -148,7 +145,7 @@ class ControllerToolSitemap extends Controller {
 
 			$this->data['text_text'] = $this->language->get('text_text');
 			$this->data['text_nametext'] = $this->language->get('text_nametext');
-			$this->data['text_sizetext'] = round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i];
+			$this->data['text_sizetext'] = round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i];
 			$this->data['text_datetext'] = sprintf($this->language->get('text_datetext'), date("d-m-Y H:i:s", filemtime($filetext)));
 			$this->data['checktext'] = HTTP_CATALOG . "sitemap.txt";
 		} else {
@@ -169,7 +166,7 @@ class ControllerToolSitemap extends Controller {
 
 			$i = 0;
 
-			$suffix = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+			$suffix = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 			while (($size / 1024) > 1) {
 				$size = $size / 1024;
@@ -178,7 +175,7 @@ class ControllerToolSitemap extends Controller {
 
 			$this->data['text_xml'] = $this->language->get('text_xml');
 			$this->data['text_namexml'] = $this->language->get('text_namexml');
-			$this->data['text_sizexml'] = round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i];
+			$this->data['text_sizexml'] = round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i];
 			$this->data['text_datexml'] = sprintf($this->language->get('text_datexml'), date("d-m-Y H:i:s", filemtime($filexml)));
 		} else {
 			$this->data['sitemapxml'] = '';
@@ -200,7 +197,7 @@ class ControllerToolSitemap extends Controller {
 
 			$i = 0;
 
-			$suffix = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+			$suffix = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 			while (($size / 1024) > 1) {
 				$size = $size / 1024;
@@ -209,7 +206,7 @@ class ControllerToolSitemap extends Controller {
 
 			$this->data['text_gzip'] = $this->language->get('text_gzip');
 			$this->data['text_namegzip'] = $this->language->get('text_namegzip');
-			$this->data['text_sizegzip'] = round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i];
+			$this->data['text_sizegzip'] = round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i];
 			$this->data['text_dategzip'] = sprintf($this->language->get('text_dategzip'), date("d-m-Y H:i:s", filemtime($FileRead)));
 		} else {
 			$this->data['sitemapgzip'] = '';
@@ -220,10 +217,10 @@ class ControllerToolSitemap extends Controller {
 		clearstatcache();
 
 		$this->template = 'tool/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

@@ -1,6 +1,6 @@
 <?php
 class ControllerToolApiKeyManager extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/api_key_manager');
@@ -19,24 +19,18 @@ class ControllerToolApiKeyManager extends Controller {
 
 		$this->load->model('tool/api_key_manager');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_tool_api_key_manager->addApiKey($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$api_key_id = $this->session->data['new_api_key_id'];
@@ -62,24 +56,18 @@ class ControllerToolApiKeyManager extends Controller {
 
 		$this->load->model('tool/api_key_manager');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_tool_api_key_manager->editApiKey($this->request->get['api_key_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$api_key_id = $this->request->get['api_key_id'];
@@ -110,19 +98,13 @@ class ControllerToolApiKeyManager extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -131,51 +113,27 @@ class ControllerToolApiKeyManager extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'name';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$this->data['breadcrumbs'] = [];
 
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] =   array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('tool/api_key_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
@@ -185,14 +143,18 @@ class ControllerToolApiKeyManager extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['api_keys'] = array();
+		$this->data['api_keys'] = [];
 
-		$data = array(
+		$sort = $this->request->get['sort'] ?? 'name';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
+
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$api_key_total = $this->model_tool_api_key_manager->getTotalApiKeys();
 
@@ -201,21 +163,21 @@ class ControllerToolApiKeyManager extends Controller {
 		$results = $this->model_tool_api_key_manager->getApiKeys($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $result['api_key_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['api_keys'][] = array(
+			$this->data['api_keys'][] = [
 				'api_key_id' => $result['api_key_id'],
 				'name'       => $result['name'],
 				'code'       => $result['code'],
 				'status'     => $result['status'],
 				'selected'   => isset($this->request->post['selected']) && in_array($result['api_key_id'], $this->request->post['selected']),
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -250,9 +212,10 @@ class ControllerToolApiKeyManager extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -265,6 +228,7 @@ class ControllerToolApiKeyManager extends Controller {
 		$this->data['sort_name'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
 		$this->data['sort_code'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -288,10 +252,10 @@ class ControllerToolApiKeyManager extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'tool/api_key_manager_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -336,33 +300,27 @@ class ControllerToolApiKeyManager extends Controller {
 			$this->data['error_code'] = '';
 		}
 
-		$url = '';
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		$this->data['breadcrumbs'] = [];
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['api_key_id'])) {
 			$this->data['action'] = $this->url->link('tool/api_key_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -372,7 +330,7 @@ class ControllerToolApiKeyManager extends Controller {
 
 		$this->data['cancel'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['api_key_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['api_key_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$api_key_info = $this->model_tool_api_key_manager->getApiKey($this->request->get['api_key_id']);
 		}
 
@@ -414,11 +372,11 @@ class ControllerToolApiKeyManager extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 64)) {
+		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 64)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if ((utf8_strlen($this->request->post['code']) < 3) || (utf8_strlen($this->request->post['code']) > 255)) {
+		if ((mb_strlen($this->request->post['code'], 'UTF-8') < 3) || (mb_strlen($this->request->post['code'], 'UTF-8') > 255)) {
 			$this->error['code'] = $this->language->get('error_code');
 		}
 

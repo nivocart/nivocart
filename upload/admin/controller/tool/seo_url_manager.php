@@ -1,6 +1,6 @@
 <?php
 class ControllerToolSeoUrlManager extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/seo_url_manager');
@@ -19,24 +19,18 @@ class ControllerToolSeoUrlManager extends Controller {
 
 		$this->load->model('tool/seo_url_manager');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_tool_seo_url_manager->addUrl($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$url_alias_id = $this->session->data['new_url_alias_id'];
@@ -62,24 +56,18 @@ class ControllerToolSeoUrlManager extends Controller {
 
 		$this->load->model('tool/seo_url_manager');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_tool_seo_url_manager->editUrl($this->request->get['url_alias_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$url_alias_id = $this->request->get['url_alias_id'];
@@ -110,19 +98,13 @@ class ControllerToolSeoUrlManager extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -131,51 +113,27 @@ class ControllerToolSeoUrlManager extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'keyword';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'keyword',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$this->data['breadcrumbs'] = [];
 
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] =   array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('tool/seo_url_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('tool/seo_url_manager/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -186,14 +144,18 @@ class ControllerToolSeoUrlManager extends Controller {
 
 		$this->load->model('tool/image');
 
-		$this->data['seo_urls'] = array();
+		$this->data['seo_urls'] = [];
 
-		$data = array(
+		$sort = $this->request->get['sort'] ?? 'keyword';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
+
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$keyword_total = $this->model_tool_seo_url_manager->getTotalUniqueKeywords();
 		$url_total = $this->model_tool_seo_url_manager->getTotalUrls();
@@ -204,41 +166,41 @@ class ControllerToolSeoUrlManager extends Controller {
 		$results = $this->model_tool_seo_url_manager->getUrls($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('tool/seo_url_manager/update', 'token=' . $this->session->data['token'] . '&url_alias_id=' . $result['url_alias_id'] . $url, 'SSL')
-			);
+			];
 
 			$query_link = false;
 
 			if ($result['query']) {
 				$check_query = strstr($result['query'], '_', true);
 
-				if ($check_query == 'category') {
+				if ($check_query === 'category') {
 					$query_link = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&' . $result['query'], 'SSL');
-				} elseif ($check_query == 'product') {
+				} elseif ($check_query === 'product') {
 					$query_link = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&' . $result['query'], 'SSL');
-				} elseif ($check_query == 'manufacturer') {
+				} elseif ($check_query === 'manufacturer') {
 					$query_link = $this->url->link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&' . $result['query'], 'SSL');
-				} elseif ($check_query == 'information') {
+				} elseif ($check_query === 'information') {
 					$query_link = $this->url->link('catalog/information/update', 'token=' . $this->session->data['token'] . '&' . $result['query'], 'SSL');
-				} elseif ($check_query == 'news') {
+				} elseif ($check_query === 'news') {
 					$query_link = $this->url->link('catalog/news/update', 'token=' . $this->session->data['token'] . '&' . $result['query'], 'SSL');
 				} else {
 					$query_link = false;
 				}
 			}
 
-			$this->data['seo_urls'][] = array(
+			$this->data['seo_urls'][] = [
 				'url_alias_id' => $result['url_alias_id'],
 				'query'        => $result['query'],
 				'query_link'   => $query_link,
 				'keyword'      => $result['keyword'],
 				'selected'     => isset($this->request->post['selected']) && in_array($result['url_alias_id'], $this->request->post['selected']),
 				'action'       => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -295,9 +257,10 @@ class ControllerToolSeoUrlManager extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -310,6 +273,7 @@ class ControllerToolSeoUrlManager extends Controller {
 		$this->data['sort_url_alias_id'] = $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'] . '&sort=url_alias_id' . $url, 'SSL');
 		$this->data['sort_keyword'] = $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'] . '&sort=keyword' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -333,10 +297,10 @@ class ControllerToolSeoUrlManager extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'tool/seo_url_manager_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -374,33 +338,27 @@ class ControllerToolSeoUrlManager extends Controller {
 			$this->data['error_keyword'] = '';
 		}
 
-		$url = '';
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'keyword',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		$this->data['breadcrumbs'] = [];
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['url_alias_id'])) {
 			$this->data['action'] = $this->url->link('tool/seo_url_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -410,7 +368,7 @@ class ControllerToolSeoUrlManager extends Controller {
 
 		$this->data['cancel'] = $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['url_alias_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['url_alias_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$url_info = $this->model_tool_seo_url_manager->getUrl($this->request->get['url_alias_id']);
 		}
 
@@ -431,10 +389,10 @@ class ControllerToolSeoUrlManager extends Controller {
 		}
 
 		$this->template = 'tool/seo_url_manager_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -452,17 +410,17 @@ class ControllerToolSeoUrlManager extends Controller {
 			$this->error['keyword'] = $this->language->get('error_keyword');
 		}
 
-		$urls_array = array();
+		$urls_array = [];
 
 		$results = $this->model_tool_seo_url_manager->getUrls($urls_array);
 
 		foreach ($results as $result) {
 			if (isset($this->request->get['url_alias_id'])) {
-				if (($this->request->post['keyword'] == $result['keyword']) && ($this->request->get['url_alias_id'] != $result['url_alias_id'])) {
+				if (($this->request->post['keyword'] === $result['keyword']) && ($this->request->get['url_alias_id'] !== $result['url_alias_id'])) {
 					$this->error['keyword'] = $this->language->get('error_keyword_exist');
 				}
 			} else {
-				if ($this->request->post['keyword'] == $result['keyword']) {
+				if ($this->request->post['keyword'] === $result['keyword']) {
 					$this->error['keyword'] = $this->language->get('error_keyword_exist');
 				}
 			}

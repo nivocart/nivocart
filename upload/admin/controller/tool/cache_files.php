@@ -1,25 +1,25 @@
 <?php
 class ControllerToolCacheFiles extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/cache_files');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/cache_files', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -35,37 +35,50 @@ class ControllerToolCacheFiles extends Controller {
 		$this->data['delete'] = $this->url->link('tool/cache_files/delete', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['cache_files'] = array();
+		// Get Cache files
+		$this->data['cache_files'] = [];
 
-		$files = glob(DIR_CACHE . 'cache.*');
+		$suffix = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
-		foreach ($files as $file) {
-			if (file_exists($file)) {
-				$size = filesize($file);
+		if (is_dir(DIR_CACHE)) {
+			$iterator = new FilesystemIterator(DIR_CACHE, FilesystemIterator::SKIP_DOTS);
 
+			foreach ($iterator as $entry) {
+				if (!$entry->isFile()) {
+					continue;
+				}
+
+				$filename = $entry->getFilename();
+
+				if (!str_starts_with($filename, 'cache.')) {
+					continue;
+				}
+
+				if ($filename === 'index.html') {
+					continue;
+				}
+
+				// Expiry timestamp is the last segment after the final dot
+				$time = substr(strrchr($filename, '.'), 1);
+
+				if (!is_numeric($time)) {
+					continue;
+				}
+
+				$size = $entry->getSize();
 				$i = 0;
-
-				$suffix = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 
 				while (($size / 1024) > 1) {
 					$size = $size / 1024;
 					$i++;
 				}
-			}
 
-			$data = explode('/', $file);
-
-			if (strpos(end($data), '.') > 0) {
-				if (end($data) != 'index.html') {
-					$time = substr(strrchr(end($data), '.'), 1);
-
-					$this->data['cache_files'][] = array(
-						'name'     => end($data),
-						'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i],
-						'time'     => round(($time - time()) / 60),
-						'selected' => isset($this->request->post['selected']) && in_array(end($data), $this->request->post['selected'])
-					);
-				}
+				$this->data['cache_files'][] = [
+					'name'     => $filename,
+					'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
+					'time'     => round((((int)$time - time()) / 60), 0, PHP_ROUND_HALF_UP),
+					'selected' => isset($this->request->post['selected']) && in_array($filename, $this->request->post['selected'])
+				];
 			}
 		}
 
@@ -92,10 +105,10 @@ class ControllerToolCacheFiles extends Controller {
 		}
 
 		$this->template = 'tool/cache_files.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -107,14 +120,18 @@ class ControllerToolCacheFiles extends Controller {
 
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $name) {
-				$files = glob(DIR_CACHE . $name);
+				// Sanitise: strip any path traversal and accept only the bare filename
+				$name = basename($name);
 
-				if ($files) {
-					foreach ($files as $file) {
-						if (file_exists($file)) {
-							unlink($file);
-						}
-					}
+				// Ensure it matches the cache file naming convention before touching it
+				if (!str_starts_with($name, 'cache.') || $name === 'index.html') {
+					continue;
+				}
+
+				$file = DIR_CACHE . $name;
+
+				if (is_file($file)) {
+					unlink($file);
 				}
 			}
 

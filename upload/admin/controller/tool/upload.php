@@ -1,6 +1,6 @@
 <?php
 class ControllerToolUpload extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/upload');
@@ -128,19 +128,19 @@ class ControllerToolUpload extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/upload', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['delete'] = $this->url->link('tool/upload/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
@@ -149,9 +149,9 @@ class ControllerToolUpload extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['uploads'] = array();
+		$this->data['uploads'] = [];
 
-		$data = array(
+		$data = [
 			'filter_name'       => $filter_name,
 			'filter_filename'   => $filter_filename,
 			'filter_date_added' => $filter_date_added,
@@ -159,20 +159,20 @@ class ControllerToolUpload extends Controller {
 			'order'             => $order,
 			'start'             => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'             => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$upload_total = $this->model_tool_upload->getTotalUploads($data);
 
 		$results = $this->model_tool_upload->getUploads($data);
 
 		foreach ($results as $result) {
-			$this->data['uploads'][] = array(
+			$this->data['uploads'][] = [
 				'upload_id'  => $result['upload_id'],
 				'name'       => $result['name'],
 				'filename'   => $result['filename'],
 				'date_added' => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
 				'download'   => $this->url->link('tool/upload/download', 'token=' . $this->session->data['token'] . '&code=' . $result['code'] . $url, 'SSL')
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -209,12 +209,13 @@ class ControllerToolUpload extends Controller {
 		if (isset($this->request->post['selected'])) {
 			$this->data['selected'] = (array)$this->request->post['selected'];
 		} else {
-			$this->data['selected'] = array();
+			$this->data['selected'] = [];
 		}
 
+		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -228,6 +229,7 @@ class ControllerToolUpload extends Controller {
 		$this->data['sort_filename'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'] . '&sort=filename' . $url, 'SSL');
 		$this->data['sort_date_added'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
 
+		// Pagination dat
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
@@ -267,10 +269,10 @@ class ControllerToolUpload extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'tool/upload.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -331,25 +333,25 @@ class ControllerToolUpload extends Controller {
 
 			$this->data['text_not_found'] = $this->language->get('text_not_found');
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 				'separator' => false
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->template = 'error/not_found.tpl';
-			$this->children = array(
+			$this->children = [
 				'common/header',
 				'common/footer'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 		}
@@ -358,7 +360,7 @@ class ControllerToolUpload extends Controller {
 	public function upload() {
 		$this->language->load('sale/order');
 
-		$json = array();
+		$json = [];
 
 		// Check user has permission
 		if (!$this->user->hasPermission('modify', 'tool/upload')) {
@@ -370,12 +372,12 @@ class ControllerToolUpload extends Controller {
 				// Sanitize the filename
 				$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8')));
 
-				if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 128)) {
+				if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 128)) {
 					$json['error'] = $this->language->get('error_filename');
 				}
 
 				// Allowed file extension types
-				$allowed = array();
+				$allowed = [];
 
 				$extension_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_ext_allowed'));
 
@@ -390,7 +392,7 @@ class ControllerToolUpload extends Controller {
 				}
 
 				// Allowed file mime types
-				$allowed = array();
+				$allowed = [];
 
 				$mime_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_mime_allowed'));
 
@@ -412,7 +414,7 @@ class ControllerToolUpload extends Controller {
 				}
 
 				// Return any upload error
-				if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
+				if ($this->request->files['file']['error'] !== UPLOAD_ERR_OK) {
 					$json['error'] = $this->language->get('error_upload_' . $this->request->files['file']['error']);
 				}
 			} else {
@@ -421,7 +423,12 @@ class ControllerToolUpload extends Controller {
 		}
 
 		if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-			$file = basename($filename) . '.' . hash_rand('md5');
+			// Sanitize the temp filename
+			$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['tmp_name'], ENT_QUOTES, 'UTF-8')));
+
+			$ms = substr(time().str_shuffle(md5(time())), 0, 8);
+
+			$file = $filename . '.' . $ms;
 
 			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_UPLOAD . $file);
 

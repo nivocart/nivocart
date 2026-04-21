@@ -1,6 +1,6 @@
 <?php
 class ControllerToolBackup extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/backup');
@@ -11,7 +11,7 @@ class ControllerToolBackup extends Controller {
 
 		$this->load->model('tool/backup');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->user->hasPermission('modify', 'tool/backup')) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->user->hasPermission('modify', 'tool/backup')) {
 			if (is_uploaded_file($this->request->files['import']['tmp_name'])) {
 				$content = file_get_contents($this->request->files['import']['tmp_name']);
 			} else {
@@ -48,7 +48,6 @@ class ControllerToolBackup extends Controller {
 
 		if (isset($this->session->data['error'])) {
 			$this->data['error_warning'] = $this->session->data['error'];
-
 			unset($this->session->data['error']);
 		} elseif (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -58,25 +57,24 @@ class ControllerToolBackup extends Controller {
 
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
-
 			unset($this->session->data['success']);
 		} else {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['restore'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['backup'] = $this->url->link('tool/backup/backup', 'token=' . $this->session->data['token'], 'SSL');
@@ -85,10 +83,10 @@ class ControllerToolBackup extends Controller {
 		$this->data['tables'] = $this->model_tool_backup->getTables();
 
 		$this->template = 'tool/backup.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

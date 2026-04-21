@@ -1,6 +1,6 @@
 <?php
 class ControllerToolConfiguration extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'configuration';
 
 	public function index() {
@@ -16,19 +16,19 @@ class ControllerToolConfiguration extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -111,12 +111,18 @@ class ControllerToolConfiguration extends Controller {
 		}
 
 		// Template
-		$this->data['templates'] = array();
+		$this->data['templates'] = [];
 
-		$directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
+		$themePath = DIR_CATALOG . 'view/theme/';
 
-		foreach ($directories as $directory) {
-			$this->data['templates'][] = basename($directory);
+		if (is_dir($themePath)) {
+			$iterator = new FilesystemIterator($themePath, FilesystemIterator::SKIP_DOTS);
+
+			foreach ($iterator as $entry) {
+				if ($entry->isDir()) {
+					$this->data['templates'][] = $entry->getFilename();
+				}
+			}
 		}
 
 		if (isset($this->request->post['config_template'])) {
@@ -251,99 +257,81 @@ class ControllerToolConfiguration extends Controller {
 		// -----------------------
 		// System Files Integrity
 		// -----------------------
-		// Database Files
-		$this->data['databases'] = array();
+		// Ensure correct slashes are used
+		$ds = function(string $path): string {
+			return str_replace('\\', '/', $path);
+		};
 
-		$databases = glob(DIR_SYSTEM . 'database/*.php');
+		// Scan existing PHP files
+		$integrityPaths = [
+			'databases' => DIR_SYSTEM . 'database/',
+			'engines'   => DIR_SYSTEM . 'engine/',
+			'helpers'   => DIR_SYSTEM . 'helper/',
+			'libraries' => DIR_SYSTEM . 'library/',
+		];
 
-		foreach ($databases as $database) {
-			$this->data['databases'][] = $database;
+		foreach ($integrityPaths as $key => $path) {
+			$this->data[$key] = $this->scanPhpFiles($path);
 		}
 
-		$this->data['database_files'] = array(
-			'mpdo'   => DIR_SYSTEM . 'database/mpdo.php',
-			'mysqli' => DIR_SYSTEM . 'database/mysqli.php',
-			'pgsql'  => DIR_SYSTEM . 'database/pgsql.php'
-		);
+		// Set comparison arrays
+		$this->data['database_files'] = [
+			'mpdo'   => $ds(DIR_SYSTEM . 'database/mpdo.php'),
+			'mysqli' => $ds(DIR_SYSTEM . 'database/mysqli.php'),
+			'pgsql'  => $ds(DIR_SYSTEM . 'database/pgsql.php')
+		];
 
-		// Engine Files
-		$this->data['engines'] = array();
+		$this->data['engine_files'] = [
+			'action'     => $ds(DIR_SYSTEM . 'engine/action.php'),
+			'controller' => $ds(DIR_SYSTEM . 'engine/controller.php'),
+			'front'      => $ds(DIR_SYSTEM . 'engine/front.php'),
+			'loader'     => $ds(DIR_SYSTEM . 'engine/loader.php'),
+			'model'      => $ds(DIR_SYSTEM . 'engine/model.php'),
+			'registry'   => $ds(DIR_SYSTEM . 'engine/registry.php')
+		];
 
-		$engines = glob(DIR_SYSTEM . 'engine/*.php');
+		$this->data['helper_files'] = [
+			'agent'  => $ds(DIR_SYSTEM . 'helper/agent.php'),
+			'crypto' => $ds(DIR_SYSTEM . 'helper/crypto.php'),
+			'json'   => $ds(DIR_SYSTEM . 'helper/json.php'),
+			'pdf'    => $ds(DIR_SYSTEM . 'helper/pdf.php'),
+			'utf8'   => $ds(DIR_SYSTEM . 'helper/utf8.php'),
+			'vat'    => $ds(DIR_SYSTEM . 'helper/vat.php')
+		];
 
-		foreach ($engines as $engine) {
-			$this->data['engines'][] = $engine;
-		}
-
-		$this->data['engine_files'] = array(
-			'action'     => DIR_SYSTEM . 'engine/action.php',
-			'controller' => DIR_SYSTEM . 'engine/controller.php',
-			'front'      => DIR_SYSTEM . 'engine/front.php',
-			'loader'     => DIR_SYSTEM . 'engine/loader.php',
-			'model'      => DIR_SYSTEM . 'engine/model.php',
-			'registry'   => DIR_SYSTEM . 'engine/registry.php'
-		);
-
-		// Helper Files
-		$this->data['helpers'] = array();
-
-		$helpers = glob(DIR_SYSTEM . 'helper/*.php');
-
-		foreach ($helpers as $helper) {
-			$this->data['helpers'][] = $helper;
-		}
-
-		$this->data['helper_files'] = array(
-			'agent'  => DIR_SYSTEM . 'helper/agent.php',
-			'crypto' => DIR_SYSTEM . 'helper/crypto.php',
-			'json'   => DIR_SYSTEM . 'helper/json.php',
-			'pdf'    => DIR_SYSTEM . 'helper/pdf.php',
-			'utf8'   => DIR_SYSTEM . 'helper/utf8.php',
-			'vat'    => DIR_SYSTEM . 'helper/vat.php'
-		);
-
-		// Library Files
-		$this->data['libraries'] = array();
-
-		$libraries = glob(DIR_SYSTEM . 'library/*.php');
-
-		foreach ($libraries as $library) {
-			$this->data['libraries'][] = $library;
-		}
-
-		$this->data['library_files'] = array(
-			'affiliate'  => DIR_SYSTEM . 'library/affiliate.php',
-			'browser'    => DIR_SYSTEM . 'library/browser.php',
-			'cache'      => DIR_SYSTEM . 'library/cache.php',
-			'captcha'    => DIR_SYSTEM . 'library/captcha.php',
-			'cart'       => DIR_SYSTEM . 'library/cart.php',
-			'config'     => DIR_SYSTEM . 'library/config.php',
-			'currency'   => DIR_SYSTEM . 'library/currency.php',
-			'customer'   => DIR_SYSTEM . 'library/customer.php',
-			'db'         => DIR_SYSTEM . 'library/db.php',
-			'dbmemory'   => DIR_SYSTEM . 'library/dbmemory.php',
-			'document'   => DIR_SYSTEM . 'library/document.php',
-			'encryption' => DIR_SYSTEM . 'library/encryption.php',
-			'image'      => DIR_SYSTEM . 'library/image.php',
-			'language'   => DIR_SYSTEM . 'library/language.php',
-			'length'     => DIR_SYSTEM . 'library/length.php',
-			'log'        => DIR_SYSTEM . 'library/log.php',
-			'mail'       => DIR_SYSTEM . 'library/mail.php',
-			'pagination' => DIR_SYSTEM . 'library/pagination.php',
-			'request'    => DIR_SYSTEM . 'library/request.php',
-			'response'   => DIR_SYSTEM . 'library/response.php',
-			'session'    => DIR_SYSTEM . 'library/session.php',
-			'tax'        => DIR_SYSTEM . 'library/tax.php',
-			'template'   => DIR_SYSTEM . 'library/template.php',
-			'url'        => DIR_SYSTEM . 'library/url.php',
-			'user'       => DIR_SYSTEM . 'library/user.php',
-			'weight'     => DIR_SYSTEM . 'library/weight.php'
-		);
+		$this->data['library_files'] = [
+			'affiliate'  => $ds(DIR_SYSTEM . 'library/affiliate.php'),
+			'browser'    => $ds(DIR_SYSTEM . 'library/browser.php'),
+			'cache'      => $ds(DIR_SYSTEM . 'library/cache.php'),
+			'captcha'    => $ds(DIR_SYSTEM . 'library/captcha.php'),
+			'cart'       => $ds(DIR_SYSTEM . 'library/cart.php'),
+			'config'     => $ds(DIR_SYSTEM . 'library/config.php'),
+			'currency'   => $ds(DIR_SYSTEM . 'library/currency.php'),
+			'customer'   => $ds(DIR_SYSTEM . 'library/customer.php'),
+			'db'         => $ds(DIR_SYSTEM . 'library/db.php'),
+			'dbmemory'   => $ds(DIR_SYSTEM . 'library/dbmemory.php'),
+			'document'   => $ds(DIR_SYSTEM . 'library/document.php'),
+			'encryption' => $ds(DIR_SYSTEM . 'library/encryption.php'),
+			'image'      => $ds(DIR_SYSTEM . 'library/image.php'),
+			'language'   => $ds(DIR_SYSTEM . 'library/language.php'),
+			'length'     => $ds(DIR_SYSTEM . 'library/length.php'),
+			'log'        => $ds(DIR_SYSTEM . 'library/log.php'),
+			'mail'       => $ds(DIR_SYSTEM . 'library/mail.php'),
+			'pagination' => $ds(DIR_SYSTEM . 'library/pagination.php'),
+			'request'    => $ds(DIR_SYSTEM . 'library/request.php'),
+			'response'   => $ds(DIR_SYSTEM . 'library/response.php'),
+			'session'    => $ds(DIR_SYSTEM . 'library/session.php'),
+			'tax'        => $ds(DIR_SYSTEM . 'library/tax.php'),
+			'template'   => $ds(DIR_SYSTEM . 'library/template.php'),
+			'url'        => $ds(DIR_SYSTEM . 'library/url.php'),
+			'user'       => $ds(DIR_SYSTEM . 'library/user.php'),
+			'weight'     => $ds(DIR_SYSTEM . 'library/weight.php')
+		];
 
 		// -----------------------
 		// Server Information
 		// -----------------------
-		$server_requests = array(
+		$server_requests = [
 			'PHP_SELF',
 			'GATEWAY_INTERFACE',
 			'SERVER_ADDR',
@@ -361,7 +349,7 @@ class ControllerToolConfiguration extends Controller {
 			'SCRIPT_FILENAME',
 			'SERVER_ADMIN',
 			'SERVER_PORT'
-		);
+		];
 
 		foreach ($server_requests as $argument) {
 			if (isset($_SERVER[$argument])) {
@@ -370,20 +358,45 @@ class ControllerToolConfiguration extends Controller {
 				$response = '';
 			}
 
-			$this->data['server_responses'][] = array(
+			$this->data['server_responses'][] = [
 				'request'  => $argument,
 				'response' => $response
-			);
+			];
 		}
 
 		// Render
 		$this->template = 'tool/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
+	}
+
+	/**
+	 * Scan a directory and return full paths of all .php files found
+	 *
+	 * @param string $path
+	 *
+	 * @return array
+	 */
+	private function scanPhpFiles(string $path): array {
+		$results = [];
+
+		if (!is_dir($path)) {
+			return $results;
+		}
+
+		$iterator = new FilesystemIterator($path, FilesystemIterator::SKIP_DOTS);
+
+		foreach ($iterator as $entry) {
+			if ($entry->isFile() && $entry->getExtension() === 'php') {
+				$results[] = str_replace('\\', '/', $entry->getPathname());
+			}
+		}
+
+		return $results;
 	}
 
 	protected function validate() {

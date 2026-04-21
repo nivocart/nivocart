@@ -69,11 +69,11 @@ class ModelToolSitemap extends Model {
 		return $output;
 	}
 
-	// Base
+	// Server base URL
 	protected function getBase() {
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
-			$base = HTTPS_CATALOG;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			$base = HTTPS_CATALOG;
 		} else {
 			$base = HTTP_CATALOG;
@@ -108,7 +108,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_pag) {
 			foreach ($stores_pag as $store_pag) {
-				if ($store_pag['store_id'] != 0) {
+				if ($store_pag['store_id'] !== 0) {
 					$store_url = $store_pag['url'];
 
 					$output .= $this->standardLinkNode($store_url . 'index.php');
@@ -157,7 +157,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_cat) {
 			foreach ($stores_cat as $store_cat) {
-				if ($store_cat['store_id'] != 0) {
+				if ($store_cat['store_id'] !== 0) {
 					$results = $this->model_catalog_sitemap->getAllCategories($parent_id, $store_cat['store_id']);
 
 					foreach ($results as $result) {
@@ -198,7 +198,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_pro) {
 			foreach ($stores_pro as $store_pro) {
-				if ($store_pro['store_id'] != 0) {
+				if ($store_pro['store_id'] !== 0) {
 					$results = $this->model_catalog_sitemap->getAllProducts($store_pro['store_id']);
 
 					foreach ($results as $result) {
@@ -232,7 +232,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_man) {
 			foreach ($stores_man as $store_man) {
-				if ($store_man['store_id'] != 0) {
+				if ($store_man['store_id'] !== 0) {
 					$store_url = $store_man['url'];
 
 					$results = $this->model_catalog_sitemap->getAllManufacturers($store_man['store_id']);
@@ -266,7 +266,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_new) {
 			foreach ($stores_new as $store_new) {
-				if ($store_new['store_id'] != 0) {
+				if ($store_new['store_id'] !== 0) {
 					$store_url = $store_new['url'];
 
 					$results = $this->model_catalog_sitemap->getAllNews($store_new['store_id']);
@@ -300,7 +300,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_inf) {
 			foreach ($stores_inf as $store_inf) {
-				if ($store_inf['store_id'] != 0) {
+				if ($store_inf['store_id'] !== 0) {
 					$store_info_ids = array();
 
 					$results = $this->model_catalog_sitemap->getAllInformations();
@@ -347,7 +347,7 @@ class ModelToolSitemap extends Model {
 
 			if ($stores_blog) {
 				foreach ($stores_blog as $store_blog) {
-					if ($store_blog['store_id'] != 0) {
+					if ($store_blog['store_id'] !== 0) {
 						$results = $this->model_catalog_sitemap->getAllBlogArticles($store_blog['store_id']);
 
 						foreach ($results as $result) {
@@ -392,7 +392,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_pag) {
 			foreach ($stores_pag as $store_pag) {
-				if ($store_pag['store_id'] != 0) {
+				if ($store_pag['store_id'] !== 0) {
 					$store_url = $store_pag['url'];
 
 					$output .= mb_convert_encoding($store_url . 'index.php', 'UTF-8') . "\r";
@@ -431,7 +431,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_pro) {
 			foreach ($stores_pro as $store_pro) {
-				if ($store_pro['store_id'] != 0) {
+				if ($store_pro['store_id'] !== 0) {
 					$products = $this->model_catalog_sitemap->getAllProducts($store_pro['store_id']);
 
 					foreach ($products as $product) {
@@ -464,7 +464,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_man) {
 			foreach ($stores_man as $store_man) {
-				if ($store_man['store_id'] != 0) {
+				if ($store_man['store_id'] !== 0) {
 					$store_url = $store_man['url'];
 
 					$manufacturers = $this->model_catalog_sitemap->getAllManufacturers($store_man['store_id']);
@@ -497,7 +497,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_new) {
 			foreach ($stores_new as $store_new) {
-				if ($store_new['store_id'] != 0) {
+				if ($store_new['store_id'] !== 0) {
 					$store_url = $store_new['url'];
 
 					$news = $this->model_catalog_sitemap->getAllNews($store_new['store_id']);
@@ -528,7 +528,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_inf) {
 			foreach ($stores_inf as $store_inf) {
-				if ($store_inf['store_id'] != 0) {
+				if ($store_inf['store_id'] !== 0) {
 					$store_info_ids = array();
 
 					$informations = $this->model_catalog_sitemap->getAllInformations();
@@ -574,7 +574,7 @@ class ModelToolSitemap extends Model {
 
 			if ($stores_blog_article) {
 				foreach ($stores_blog_article as $store_blog_article) {
-					if ($store_blog_article['store_id'] != 0) {
+					if ($store_blog_article['store_id'] !== 0) {
 						$store_url = $store_blog_article['url'];
 
 						$blog_articles = $this->model_catalog_sitemap->getAllBlogArticles($store_blog_article['store_id']);
@@ -627,7 +627,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_cat) {
 			foreach ($stores_cat as $store_cat) {
-				if ($store_cat['store_id'] != 0) {
+				if ($store_cat['store_id'] !== 0) {
 					$results = $this->model_catalog_sitemap->getAllCategories($parent_id, $store_cat['store_id']);
 
 					foreach ($results as $result) {

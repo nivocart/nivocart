@@ -1,6 +1,6 @@
 <?php
 class ControllerToolBlockIp extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/block_ip');
@@ -19,24 +19,18 @@ class ControllerToolBlockIp extends Controller {
 
 		$this->load->model('tool/block_ip');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_tool_block_ip->addBlockIp($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$block_ip_id = $this->session->data['new_block_ip_id'];
@@ -62,24 +56,18 @@ class ControllerToolBlockIp extends Controller {
 
 		$this->load->model('tool/block_ip');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_tool_block_ip->editBlockIp($this->request->get['block_ip_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$block_ip_id = $this->request->get['block_ip_id'];
@@ -110,19 +98,13 @@ class ControllerToolBlockIp extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('tool/block_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -131,51 +113,27 @@ class ControllerToolBlockIp extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'from_ip';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'from_ip',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$this->data['breadcrumbs'] = [];
 
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/block_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('tool/block_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('tool/block_ip/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -184,34 +142,38 @@ class ControllerToolBlockIp extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['block_ips'] = array();
+		$this->data['block_ips'] = [];
 
-		$data = array(
+		$sort = $this->request->get['sort'] ?? 'from_ip';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
+
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$block_ip_total = $this->model_tool_block_ip->getTotalBlockIps($data);
 
 		$results = $this->model_tool_block_ip->getBlockIps($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('tool/block_ip/update', 'token=' . $this->session->data['token'] . '&block_ip_id=' . $result['block_ip_id'] . $url, 'SSL')
-			);
+			];
 
-      		$this->data['block_ips'][] = array(
+      		$this->data['block_ips'][] = [
 				'block_ip_id' => $result['block_ip_id'],
 				'from_ip'     => $result['from_ip'],
 				'to_ip'       => $result['to_ip'],
 				'selected'    => isset($this->request->post['selected']) && in_array($result['block_ip_id'], $this->request->post['selected']),
 				'action'      => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -247,9 +209,10 @@ class ControllerToolBlockIp extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -262,6 +225,7 @@ class ControllerToolBlockIp extends Controller {
 		$this->data['sort_from_ip'] = $this->url->link('tool/block_ip', 'token=' . $this->session->data['token'] . '&sort=from_ip' . $url, 'SSL');
 		$this->data['sort_to_ip'] = $this->url->link('tool/block_ip', 'token=' . $this->session->data['token'] . '&sort=to_ip' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -285,10 +249,10 @@ class ControllerToolBlockIp extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'tool/block_ip_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -332,33 +296,27 @@ class ControllerToolBlockIp extends Controller {
 			$this->data['error_range'] = '';
 		}
 
-		$url = '';
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'from_ip',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		$this->data['breadcrumbs'] = [];
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/block_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['block_ip_id'])) {
 			$this->data['action'] = $this->url->link('tool/block_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -368,7 +326,7 @@ class ControllerToolBlockIp extends Controller {
 
 		$this->data['cancel'] = $this->url->link('tool/block_ip', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['block_ip_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['block_ip_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$block_ip_info = $this->model_tool_block_ip->getBlockIp($this->request->get['block_ip_id']);
 		}
 
@@ -389,10 +347,10 @@ class ControllerToolBlockIp extends Controller {
 		}
 
 		$this->template = 'tool/block_ip_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

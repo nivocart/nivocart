@@ -1,6 +1,6 @@
 <?php
 class ControllerToolDatabase extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'database';
 
 	public function index() {
@@ -10,7 +10,7 @@ class ControllerToolDatabase extends Controller {
 
 		$this->data['database'] = '';
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate()) {
 			$button = $this->request->post['buttonForm'];
 
 			switch ($button) {
@@ -43,19 +43,19 @@ class ControllerToolDatabase extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -74,7 +74,7 @@ class ControllerToolDatabase extends Controller {
 		$engines = $this->model_tool_database->getEngines();
 
 		foreach ($engines as $engine) {
-			if ($engine == 'InnoDB') {
+			if ($engine === 'InnoDB') {
 				$this->data['engine'] = true;
 			} else {
 				$this->data['engine'] = false;
@@ -139,10 +139,10 @@ class ControllerToolDatabase extends Controller {
 		}
 
 		$this->template = 'tool/database.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

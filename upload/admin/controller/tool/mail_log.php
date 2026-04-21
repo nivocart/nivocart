@@ -20,19 +20,19 @@ class ControllerToolMailLog extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/mail_log', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['clear'] = $this->url->link('tool/mail_log/clear', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['download'] = $this->url->link('tool/mail_log/download', 'token=' . $this->session->data['token'], 'SSL');
@@ -63,10 +63,10 @@ class ControllerToolMailLog extends Controller {
 		clearstatcache();
 
 		$this->template = 'tool/mail_log.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
