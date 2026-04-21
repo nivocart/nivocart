@@ -1,6 +1,6 @@
 <?php
 class ControllerUserUserPermission extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('user/user_group');
@@ -25,9 +25,9 @@ class ControllerUserUserPermission extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$page_url = array_filter([
-				'sort'        => $this->request->get['sort'] ?? null,
-				'order'       => $this->request->get['order'] ?? null,
-				'page'        => $this->request->get['page'] ?? null
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -62,9 +62,9 @@ class ControllerUserUserPermission extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$page_url = array_filter([
-				'sort'        => $this->request->get['sort'] ?? null,
-				'order'       => $this->request->get['order'] ?? null,
-				'page'        => $this->request->get['page'] ?? null
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -99,9 +99,9 @@ class ControllerUserUserPermission extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$page_url = array_filter([
-				'sort'        => $this->request->get['sort'] ?? null,
-				'order'       => $this->request->get['order'] ?? null,
-				'page'        => $this->request->get['page'] ?? null
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -114,62 +114,62 @@ class ControllerUserUserPermission extends Controller {
 
 	protected function getList() {
 		$page_url = array_filter([
-			'sort'        => $this->request->get['sort'] ?? 'name',
-			'order'       => $this->request->get['order'] ?? 'ASC',
-			'page'        => $this->request->get['page'] ?? 1
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
 		]);
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('user/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('user/user_permission/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('user/user_permission/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		$this->data['user_groups'] = array();
+		$this->data['user_groups'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'name';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$user_group_total = $this->model_user_user_group->getTotalUserGroups();
 
 		$results = $this->model_user_user_group->getUserGroups($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('user/user_permission/update', 'token=' . $this->session->data['token'] . '&user_group_id=' . $result['user_group_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['user_groups'][] = array(
+			$this->data['user_groups'][] = [
 				'user_group_id' => $result['user_group_id'],
 				'name'          => $result['name'],
 				'users'         => $this->model_user_user_group->getTotalUsersByUserGroups($result['user_group_id']),
 				'selected'      => isset($this->request->post['selected']) && in_array($result['user_group_id'], $this->request->post['selected']),
 				'action'        => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -238,10 +238,10 @@ class ControllerUserUserPermission extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'user/user_group_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -283,26 +283,26 @@ class ControllerUserUserPermission extends Controller {
 
 		// Breadcrumbs
 		$page_url = array_filter([
-			'sort'        => $this->request->get['sort'] ?? 'name',
-			'order'       => $this->request->get['order'] ?? 'ASC',
-			'page'        => $this->request->get['page'] ?? 1
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
 		]);
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('user/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['user_group_id'])) {
 			$this->data['action'] = $this->url->link('user/user_permission/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -324,7 +324,7 @@ class ControllerUserUserPermission extends Controller {
 			$this->data['name'] = '';
 		}
 
-		$ignore = array(
+		$ignore = [
 			'common/startup',
 			'common/login',
 			'common/logout',
@@ -336,19 +336,37 @@ class ControllerUserUserPermission extends Controller {
 			'common/footer',
 			'common/header',
 			'common/footer_login',
-			'common/header_login'
+			'common/header_login',
+		];
+
+		$ignoreSet = array_fill_keys($ignore, true);
+
+		$this->data['permissions'] = [];
+
+		$controllerDir = rtrim(DIR_APPLICATION, "/\\") . DIRECTORY_SEPARATOR . 'controller';
+
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($controllerDir, FilesystemIterator::SKIP_DOTS)
 		);
 
-		$this->data['permissions'] = array();
+		foreach ($iterator as $fileInfo) {
+			if (!$fileInfo->isFile() || $fileInfo->getExtension() !== 'php') {
+				continue;
+			}
 
-		$files = glob(DIR_APPLICATION . 'controller/*/*.php');
+			// Only keep "group/action" (two segments)
+			$relative = str_replace($controllerDir . DIRECTORY_SEPARATOR, '', $fileInfo->getPathname());
+			$relative = str_replace(['\\', '/'], '/', $relative);
 
-		foreach ($files as $file) {
-			$data = explode('/', dirname($file));
+			$parts = explode('/', $relative);
 
-			$permission = end($data) . '/' . basename($file, '.php');
+			if (count($parts) !== 2 || pathinfo($parts[1], PATHINFO_EXTENSION) !== 'php') {
+				continue;
+			}
 
-			if (!in_array($permission, $ignore)) {
+			$permission = $parts[0] . '/' . pathinfo($parts[1], PATHINFO_FILENAME);
+
+			if (!isset($ignoreSet[$permission])) {
 				$this->data['permissions'][] = $permission;
 			}
 		}
@@ -358,7 +376,7 @@ class ControllerUserUserPermission extends Controller {
 		} elseif (isset($user_group_info['permission']['access'])) {
 			$this->data['access'] = $user_group_info['permission']['access'];
 		} else {
-			$this->data['access'] = array();
+			$this->data['access'] = [];
 		}
 
 		if (isset($this->request->post['permission']['modify'])) {
@@ -366,14 +384,14 @@ class ControllerUserUserPermission extends Controller {
 		} elseif (isset($user_group_info['permission']['modify'])) {
 			$this->data['modify'] = $user_group_info['permission']['modify'];
 		} else {
-			$this->data['modify'] = array();
+			$this->data['modify'] = [];
 		}
 
 		$this->template = 'user/user_group_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

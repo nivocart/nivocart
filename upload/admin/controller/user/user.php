@@ -1,6 +1,6 @@
 <?php
 class ControllerUserUser extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('user/user');
@@ -149,50 +149,50 @@ class ControllerUserUser extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('user/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('user/user/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		$this->load->model('tool/image');
 
-		$this->data['users'] = array();
+		$this->data['users'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'username';
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'filter_name' => $filter_name,
 			'sort'        => $sort,
 			'order'       => $order,
 			'start'       => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'       => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$user_total = $this->model_user_user->getTotalUsers();
 
 		$results = $this->model_user_user->getUsers($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL')
-			);
+			];
 
 			if ($result['user_id'] && $result['user_group_id']) {
 				$group_name = $this->model_user_user->getUserGroup($result['user_id'], $result['user_group_id']);
@@ -206,7 +206,7 @@ class ControllerUserUser extends Controller {
 				$image = $this->model_tool_image->resize('no_avatar.jpg', 40, 40);
 			}
 
-			$this->data['users'][] = array(
+			$this->data['users'][] = [
 				'user_id'    => $result['user_id'],
 				'image'      => $image,
 				'username'   => $result['username'],
@@ -216,7 +216,7 @@ class ControllerUserUser extends Controller {
 				'status'     => $result['status'],
 				'selected'   => isset($this->request->post['selected']) && in_array($result['user_id'], $this->request->post['selected']),
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -310,10 +310,10 @@ class ControllerUserUser extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'user/user_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -419,31 +419,31 @@ class ControllerUserUser extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['user_id'])) {
 			$user_name = $this->model_user_user->getUserName($this->request->get['user_id']);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $user_name,
 				'href'      => $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['user_title'] = $user_name;
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['user_title'] = $this->language->get('heading_title');
 		}
@@ -522,7 +522,7 @@ class ControllerUserUser extends Controller {
 
 		$this->load->model('user/user_group');
 
-		$user_groups_data = array();
+		$user_groups_data = [];
 
 		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups($user_groups_data);
 		$this->data['top_administrator'] = $this->model_user_user->checkTopAdministrator();
@@ -557,10 +557,10 @@ class ControllerUserUser extends Controller {
 		}
 
 		$this->template = 'user/user_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -577,7 +577,7 @@ class ControllerUserUser extends Controller {
 				$this->error['warning'] = $this->language->get('error_exists');
 			}
 		} else {
-			if ($user_info && ($this->request->get['user_id'] != $user_info['user_id'])) {
+			if ($user_info && ($this->request->get['user_id'] !== $user_info['user_id'])) {
 				$this->error['warning'] = $this->language->get('error_exists');
 			}
 		}
@@ -677,7 +677,7 @@ class ControllerUserUser extends Controller {
 
 			// Top Administrator check
 			if (!$top_administrator) {
-				if ($this->request->post['password'] != "") {
+				if ($this->request->post['password'] !== "") {
 					// Current Password Check
 					if ($this->request->post['old_password'] && (mb_strlen($this->request->post['old_password'], 'UTF-8') > 3) && (mb_strlen($this->request->post['old_password'], 'UTF-8') < 21)) {
 						$password_no_match = $this->model_user_user->checkUserPassword($this->request->post['old_password'], $user_info['user_id'], $this->request->post['username']);
@@ -693,7 +693,7 @@ class ControllerUserUser extends Controller {
 						$this->error['password'] = $this->language->get('error_password');
 					}
 
-					if ($this->request->post['confirm'] != $this->request->post['password']) {
+					if ($this->request->post['confirm'] !== $this->request->post['password']) {
 						$this->error['confirm'] = $this->language->get('error_confirm');
 					}
 				} else {
@@ -701,12 +701,12 @@ class ControllerUserUser extends Controller {
 				}
 
 			} else {
-				if ($this->request->post['password'] != "") {
+				if ($this->request->post['password'] !== "") {
 					if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 						$this->error['password'] = $this->language->get('error_password');
 					}
 
-					if ($this->request->post['confirm'] != $this->request->post['password']) {
+					if ($this->request->post['confirm'] !== $this->request->post['password']) {
 						$this->error['confirm'] = $this->language->get('error_confirm');
 					}
 				}
@@ -743,17 +743,17 @@ class ControllerUserUser extends Controller {
 					$this->error['email'] = $this->language->get('error_email_exists');
 				}
 			} else {
-				if ($user_email && ($this->request->get['user_id'] != $user_email['user_id'])) {
+				if ($user_email && ($this->request->get['user_id'] !== $user_email['user_id'])) {
 					$this->error['email'] = $this->language->get('error_email_exists');
 				}
 			}
 
-			if ($this->request->post['password'] != "") {
+			if ($this->request->post['password'] !== "") {
 				if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 					$this->error['password'] = $this->language->get('error_password');
 				}
 
-				if ($this->request->post['confirm'] != $this->request->post['password']) {
+				if ($this->request->post['confirm'] !== $this->request->post['password']) {
 					$this->error['confirm'] = $this->language->get('error_confirm');
 				}
 			} else {
@@ -780,28 +780,28 @@ class ControllerUserUser extends Controller {
 
 	// Autocomplete
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('user/user');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$results = $this->model_user_user->getUsers($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'user_id'  => $result['user_id'],
 					'username' => strip_tags(html_entity_decode($result['username'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['username'];

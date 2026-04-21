@@ -1,6 +1,6 @@
 <?php
 class ControllerUserUserLog extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('user/user_log');
@@ -103,30 +103,30 @@ class ControllerUserUserLog extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('user/user_log', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['entries'] = array();
+		$this->data['entries'] = [];
 
-		$data = array(
+		$data = [
 			'start' => ($page - 1) * $this->config->get('user_log_display'),
 			'limit' => $this->config->get('user_log_display')
-		);
+		];
 
 		$entries_total = $this->model_user_user_log->getTotalDataLog($data);
 
@@ -135,7 +135,7 @@ class ControllerUserUserLog extends Controller {
 		foreach ($entries as $entry) {
 			$entry_url = preg_replace("/&token=[a-z0-9]+/", "", htmlspecialchars_decode($entry['url']));
 
-			$this->data['entries'][] = array(
+			$this->data['entries'][] = [
 				'log_id'       => $entry['log_id'],
 				'user'         => $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $entry['user_id'], 'SSL'),
 				'username'     => $entry['username'],
@@ -146,7 +146,7 @@ class ControllerUserUserLog extends Controller {
 				'ip'           => $entry['ip'],
 				'date'         => date('d.m.Y H:i:s', strtotime($entry['date'])),
 				'selected'     => isset($this->request->post['selected']) && in_array($entry['log_id'], $this->request->post['selected'])
-			);
+			];
 		}
 
 		$this->data['heading_total'] = ' (' . $entries_total . ')';
@@ -304,10 +304,10 @@ class ControllerUserUserLog extends Controller {
 		}
 
 		$this->template = 'user/user_log.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
