@@ -38,19 +38,19 @@ class ControllerReportAffiliateCommission extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/affiliate_commission', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -58,28 +58,28 @@ class ControllerReportAffiliateCommission extends Controller {
 
 		$this->load->model('report/affiliate');
 
-		$this->data['affiliates'] = array();
+		$this->data['affiliates'] = [];
 
-		$filter_data = array(
+		$filter_data = [
 			'filter_date_start' => $filter_date_start,
 			'filter_date_end'   => $filter_date_end,
 			'start'             => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'             => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$affiliate_total = $this->model_report_affiliate->getTotalCommission($filter_data);
 
 		$results = $this->model_report_affiliate->getCommission($filter_data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $result['affiliate_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['affiliates'][] = array(
+			$this->data['affiliates'][] = [
 				'affiliate'  => $result['affiliate'],
 				'email'      => $result['email'],
 				'status'     => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
@@ -87,7 +87,7 @@ class ControllerReportAffiliateCommission extends Controller {
 				'orders'     => $result['orders'],
 				'total'      => $this->currency->format($result['total'], $this->config->get('config_currency')),
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -136,10 +136,10 @@ class ControllerReportAffiliateCommission extends Controller {
 		$this->data['filter_date_end'] = $filter_date_end;
 
 		$this->template = 'report/affiliate_commission.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

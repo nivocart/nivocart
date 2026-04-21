@@ -48,19 +48,19 @@ class ControllerReportCustomerDeleted extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/customer_deleted', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -69,28 +69,28 @@ class ControllerReportCustomerDeleted extends Controller {
 		$this->load->model('report/customer');
 		$this->load->model('sale/customer');
 
-		$this->data['customers'] = array();
+		$this->data['customers'] = [];
 
-		$data = array(
+		$data = [
 			'filter_name'   => $filter_name,
 			'filter_email'  => $filter_email,
 			'filter_orders' => $filter_orders,
 			'start'         => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'         => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$customer_total = $this->model_report_customer->getTotalCustomersDeleted($data);
 
 		$results = $this->model_sale_customer->getCustomersDeleted($data);
 
 		foreach ($results as $result) {
-			$this->data['customers'][] = array(
+			$this->data['customers'][] = [
 				'customer_id' => $result['customer_id'],
 				'name'        => $result['name'],
 				'email'       => $result['email'],
 				'orders'      => $result['orders'],
 				'date_added'  => date($this->language->get('date_format_time'), strtotime($result['date_added']))
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -143,38 +143,38 @@ class ControllerReportCustomerDeleted extends Controller {
 		$this->data['filter_orders'] = $filter_orders;
 
 		$this->template = 'report/customer_deleted.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	// Autocomplete Sale Customer
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('sale/customer');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$results = $this->model_sale_customer->getCustomersDeleted($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'customer_id' => $result['customer_id'],
 					'name'        => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];

@@ -48,19 +48,19 @@ class ControllerReportProductPurchased extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/product_purchased', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -69,15 +69,15 @@ class ControllerReportProductPurchased extends Controller {
 		$this->load->model('report/product');
 		$this->load->model('catalog/product');
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
-		$data = array(
+		$data = [
 			'filter_date_start'      => $filter_date_start,
 			'filter_date_end'        => $filter_date_end,
 			'filter_order_status_id' => $filter_order_status_id,
 			'start'                  => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'                  => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$product_total = $this->model_report_product->getTotalPurchased($data);
 
@@ -89,7 +89,7 @@ class ControllerReportProductPurchased extends Controller {
 			$product_specials = $this->model_catalog_product->getProductSpecials($result['product_id']);
 
 			foreach ($product_specials as $product_special) {
-				if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] <= date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
+				if (($product_special['date_start'] === '0000-00-00' || $product_special['date_start'] <= date('Y-m-d')) && ($product_special['date_end'] === '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
 					$special = $product_special['price'];
 					break;
 				}
@@ -97,7 +97,7 @@ class ControllerReportProductPurchased extends Controller {
 
 			$subtotal = $result['price'] * $result['quantity'];
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'name'     => $result['name'],
 				'model'    => $result['model'],
 				'price'    => $this->currency->format($result['price'], $this->config->get('config_currency')),
@@ -106,7 +106,7 @@ class ControllerReportProductPurchased extends Controller {
 				'quantity' => $result['quantity'],
 				'subtotal' => $this->currency->format($subtotal, $this->config->get('config_currency')),
 				'total'    => $this->currency->format($result['total'], $this->config->get('config_currency'))
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -165,10 +165,10 @@ class ControllerReportProductPurchased extends Controller {
 		$this->data['filter_order_status_id'] = $filter_order_status_id;
 
 		$this->template = 'report/product_purchased.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

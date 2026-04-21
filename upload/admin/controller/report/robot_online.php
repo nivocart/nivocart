@@ -38,19 +38,19 @@ class ControllerReportRobotOnline extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/robot_online', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -58,26 +58,26 @@ class ControllerReportRobotOnline extends Controller {
 
 		$this->load->model('report/online');
 
-		$this->data['robots'] = array();
+		$this->data['robots'] = [];
 
-		$data = array(
+		$data = [
 			'filter_ip'    => $filter_ip,
 			'filter_robot' => $filter_robot,
 			'start'        => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'        => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$robot_total = $this->model_report_online->getTotalRobotsOnline($data);
 
 		$results = $this->model_report_online->getRobotsOnline($data);
 
 		foreach ($results as $result) {
-			$this->data['robots'][] = array(
+			$this->data['robots'][] = [
 				'ip'         => $result['ip'],
 				'robot'      => $result['robot'],
 				'user_agent' => $result['user_agent'],
 				'date_added' => date($this->language->get('date_format_time'), strtotime($result['date_added']))
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -100,6 +100,7 @@ class ControllerReportRobotOnline extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_ip'])) {
@@ -123,10 +124,10 @@ class ControllerReportRobotOnline extends Controller {
 		$this->data['filter_robot'] = $filter_robot;
 
 		$this->template = 'report/robot_online.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

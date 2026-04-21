@@ -1,7 +1,48 @@
 <?php
 class ControllerReportBannerClicked extends Controller {
+	private $error = [];
 
 	public function index() {
+		$this->language->load('report/banner_clicked');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('design/banner');
+
+		$this->getList();
+	}
+
+	public function reset() {
+		$this->language->load('report/banner_clicked');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		if ($this->validate()) {
+			$this->load->model('design/banner');
+
+			$this->model_design_banner->resetClicks();
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			if (isset($this->request->get['page'])) {
+				$page = $this->request->get['page'];
+			} else {
+				$page = 1;
+			}
+
+			$url = '';
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+
+			$this->redirect($this->url->link('report/banner_clicked', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		}
+
+		$this->getList();
+	}
+
+	public function getList() {
 		$this->language->load('report/banner_clicked');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -18,19 +59,19 @@ class ControllerReportBannerClicked extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/banner_clicked', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -39,16 +80,16 @@ class ControllerReportBannerClicked extends Controller {
 		$this->load->model('design/banner');
 		$this->load->model('tool/image');
 
-		$data = array(
+		$data = [
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$image_clicked_total = $this->model_design_banner->getTotalImagesClicked($data);
 
 		$image_clicks_total = $this->model_design_banner->getTotalImagesClicks();
 
-		$this->data['banners'] = array();
+		$this->data['banners'] = [];
 
 		$results = $this->model_design_banner->getImagesClicked($data);
 
@@ -65,14 +106,14 @@ class ControllerReportBannerClicked extends Controller {
 				$percent = 0;
 			}
 
-			$this->data['banners'][] = array(
+			$this->data['banners'][] = [
 				'banner_image_id' => $result['banner_image_id'],
 				'image'           => $image,
 				'title'           => $result['title'],
 				'link'            => $result['link'],
 				'clicked'         => $result['clicked'],
 				'percent'         => $percent . '%'
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -91,6 +132,20 @@ class ControllerReportBannerClicked extends Controller {
 
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 
+		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
+		if (isset($this->session->data['success'])) {
+			$this->data['success'] = $this->session->data['success'];
+
+			unset($this->session->data['success']);
+		} else {
+			$this->data['success'] = '';
+		}
+
 		// Pagination data
 		$url = '';
 
@@ -101,42 +156,29 @@ class ControllerReportBannerClicked extends Controller {
 		// Reset button
 		$this->data['reset'] = $this->url->link('report/banner_clicked/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		// Success
-		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
-
-			unset($this->session->data['success']);
-		} else {
-			$this->data['success'] = '';
-		}
-
 		$pagination = new Pagination();
 		$pagination->total = $image_clicked_total;
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('report/banner_clicked', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('report/banner_clicked', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
 
 		$this->template = 'report/banner_clicked.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
-	public function reset() {
-		$this->language->load('report/banner_clicked');
+	protected function validate() {
+		if (!$this->user->hasPermission('modify', 'report/banner_clicked')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
 
-		$this->load->model('design/banner');
-
-		$this->model_design_banner->resetClicks();
-
-		$this->session->data['success'] = $this->language->get('text_success');
-
-		$this->redirect($this->url->link('report/banner_clicked', 'token=' . $this->session->data['token'], 'SSL'));
+		return empty($this->error);
 	}
 }

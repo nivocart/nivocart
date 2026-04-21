@@ -48,19 +48,19 @@ class ControllerReportProductLabel extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/product_label', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -70,18 +70,18 @@ class ControllerReportProductLabel extends Controller {
 		$this->load->model('report/product');
 		$this->load->model('catalog/product');
 
-		$data = array(
+		$data = [
 			'filter_name' => $filter_name,
 			'sort'        => $sort,
 			'order'       => $order,
 			'start'       => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'       => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$products_total = $this->model_report_product->getTotalProducts($data);
 
 		// Products
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$products = $this->model_report_product->getProducts($data);
 
@@ -103,13 +103,13 @@ class ControllerReportProductLabel extends Controller {
 			$product_specials = $this->model_catalog_product->getProductSpecials($product['product_id']);
 
 			foreach ($product_specials as $product_special) {
-				if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] <= date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
+				if (($product_special['date_start'] === '0000-00-00' || $product_special['date_start'] <= date('Y-m-d')) && ($product_special['date_end'] === '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
 					$special = $product_special['price'];
 					break;
 				}
 			}
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'product_id'   => $product['product_id'],
 				'image'        => $image,
 				'label'        => $label,
@@ -118,7 +118,7 @@ class ControllerReportProductLabel extends Controller {
 				'cost'         => $this->currency->format($product['cost'], $this->config->get('config_currency')),
 				'special'      => $special,
 				'product_href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -145,7 +145,7 @@ class ControllerReportProductLabel extends Controller {
 			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -188,47 +188,38 @@ class ControllerReportProductLabel extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'report/product_label.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/product');
 
-			if (isset($this->request->get['filter_name'])) {
-				$filter_name = $this->request->get['filter_name'];
-			} else {
-				$filter_name = '';
-			}
+			$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : '';
+			$limit = isset($this->request->get['limit']) ? $this->request->get['limit'] : 20;
 
-			if (isset($this->request->get['limit'])) {
-				$limit = $this->request->get['limit'];
-			} else {
-				$limit = 20;
-			}
-
-			$data = array(
+			$data = [
 				'filter_name' => $filter_name,
 				'start'       => 0,
 				'limit'       => $limit
-			);
+			];
 
 			$results = $this->model_catalog_product->getProducts($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'product_id' => $result['product_id'],
 					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
 					'price'      => $result['price'],
 					'cost'       => $result['cost']
-				);
+				];
 			}
 		}
 

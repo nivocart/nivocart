@@ -1,6 +1,6 @@
 <?php
 class ControllerReportAffiliateActivity extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('report/affiliate_activity');
@@ -83,19 +83,19 @@ class ControllerReportAffiliateActivity extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/affiliate_activity', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['delete'] = $this->url->link('report/affiliate_activity/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
@@ -105,37 +105,37 @@ class ControllerReportAffiliateActivity extends Controller {
 
 		$this->load->model('report/affiliate');
 
-		$this->data['activities'] = array();
+		$this->data['activities'] = [];
 
-		$filter_data = array(
+		$filter_data = [
 			'filter_date_start' => $filter_date_start,
 			'filter_date_end'   => $filter_date_end,
 			'start'             => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'             => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$activity_total = $this->model_report_affiliate->getTotalAffiliateActivities($filter_data);
 
 		$results = $this->model_report_affiliate->getAffiliateActivities($filter_data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit_link'),
 				'href' => $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $result['affiliate_id'] . $url, 'SSL')
-			);
+			];
 
 			$comment = sprintf($this->language->get('text_' . $result['key']), $result['affiliate_id'], $result['name']);
 
-			$this->data['activities'][] = array(
+			$this->data['activities'][] = [
 				'activity_id' => $result['affiliate_activity_id'],
 				'activity'    => str_replace('affiliate_id=', $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=', 'SSL'), $comment),
 				'ip'          => $result['ip'],
 				'date_added'  => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
 				'selected'    => isset($this->request->post['selected']) && in_array($result['affiliate_activity_id'], $this->request->post['selected']),
 				'action'      => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -199,10 +199,10 @@ class ControllerReportAffiliateActivity extends Controller {
 		$this->data['filter_date_end'] = $filter_date_end;
 
 		$this->template = 'report/affiliate_activity.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

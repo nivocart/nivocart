@@ -88,19 +88,19 @@ class ControllerReportProductQuantity extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/product_quantity', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -108,9 +108,9 @@ class ControllerReportProductQuantity extends Controller {
 
 		$this->load->model('catalog/product');
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
-		$data = array(
+		$data = [
 			'filter_name'     => $filter_name,
 			'filter_model'    => $filter_model,
 			'filter_price'    => $filter_price,
@@ -120,21 +120,21 @@ class ControllerReportProductQuantity extends Controller {
 			'order'           => $order,
 			'start'           => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'           => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$product_total = $this->model_catalog_product->getTotalProducts($data);
 
 		$results = $this->model_catalog_product->getProductQuantities($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_view'),
 				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL')
-			);
+			];
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'product_id' => $result['product_id'],
 				'name'       => $result['name'],
 				'model'      => $result['model'],
@@ -143,7 +143,7 @@ class ControllerReportProductQuantity extends Controller {
 				'status'     => $result['status'],
 				'quantity'   => $result['quantity'],
 				'action'     => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -190,7 +190,7 @@ class ControllerReportProductQuantity extends Controller {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -256,50 +256,36 @@ class ControllerReportProductQuantity extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'report/product_quantity.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_model'])) {
 			$this->load->model('catalog/product');
 			$this->load->model('catalog/option');
 
-			if (isset($this->request->get['filter_name'])) {
-				$filter_name = $this->request->get['filter_name'];
-			} else {
-				$filter_name = '';
-			}
+			$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : '';
+			$filter_model = isset($this->request->get['filter_model']) ? $this->request->get['filter_model'] : '';
+			$limit = isset($this->request->get['limit']) ? $this->request->get['limit'] : 20;
 
-			if (isset($this->request->get['filter_model'])) {
-				$filter_model = $this->request->get['filter_model'];
-			} else {
-				$filter_model = '';
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$limit = $this->request->get['limit'];
-			} else {
-				$limit = 20;
-			}
-
-			$data = array(
+			$data = [
 				'filter_name'  => $filter_name,
 				'filter_model' => $filter_model,
 				'start'        => 0,
 				'limit'        => $limit
-			);
+			];
 
 			$results = $this->model_catalog_product->getProducts($data);
 
 			foreach ($results as $result) {
-				$option_data = array();
+				$option_data = [];
 
 				$product_options = $this->model_catalog_product->getProductOptions($result['product_id']);
 
@@ -307,52 +293,52 @@ class ControllerReportProductQuantity extends Controller {
 					$option_info = $this->model_catalog_option->getOption($product_option['option_id']);
 
 					if ($option_info) {
-						if ($option_info['type'] == 'select' || $option_info['type'] == 'radio' || $option_info['type'] == 'checkbox' || $option_info['type'] == 'image') {
-							$option_value_data = array();
+						if ($option_info['type'] === 'select' || $option_info['type'] === 'radio' || $option_info['type'] === 'checkbox' || $option_info['type'] === 'image') {
+							$option_value_data = [];
 
 							foreach ($product_option['product_option_value'] as $product_option_value) {
 								$option_value_info = $this->model_catalog_option->getOptionValue($product_option_value['option_value_id']);
 
 								if ($option_value_info) {
-									$option_value_data[] = array(
+									$option_value_data[] = [
 										'product_option_value_id' => $product_option_value['product_option_value_id'],
 										'option_value_id'         => $product_option_value['option_value_id'],
 										'name'                    => $option_value_info['name'],
 										'price'                   => (float)$product_option_value['price'] ? $this->currency->format($product_option_value['price'], $this->config->get('config_currency')) : false,
 										'price_prefix'            => $product_option_value['price_prefix']
-									);
+									];
 								}
 							}
 
-							$option_data[] = array(
+							$option_data[] = [
 								'product_option_id' => $product_option['product_option_id'],
 								'option_id'         => $product_option['option_id'],
 								'name'              => $option_info['name'],
 								'type'              => $option_info['type'],
 								'option_value'      => $option_value_data,
 								'required'          => $product_option['required']
-							);
+							];
 
 						} else {
-							$option_data[] = array(
+							$option_data[] = [
 								'product_option_id' => $product_option['product_option_id'],
 								'option_id'         => $product_option['option_id'],
 								'name'              => $option_info['name'],
 								'type'              => $option_info['type'],
 								'option_value'      => $product_option['option_value'],
 								'required'          => $product_option['required']
-							);
+							];
 						}
 					}
 				}
 
-				$json[] = array(
+				$json[] = [
 					'product_id' => $result['product_id'],
 					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
 					'model'      => $result['model'],
 					'option'     => $option_data,
 					'price'      => $result['price']
-				);
+				];
 			}
 		}
 

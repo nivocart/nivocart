@@ -1,7 +1,48 @@
 <?php
 class ControllerReportProductViewed extends Controller {
+	private $error = [];
 
 	public function index() {
+		$this->language->load('report/product_viewed');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('report/product');
+
+		$this->getList();
+	}
+
+	public function reset() {
+		$this->language->load('report/product_viewed');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		if ($this->validate()) {
+			$this->load->model('report/product');
+
+			$this->model_report_product->resetViews();
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			if (isset($this->request->get['page'])) {
+				$page = $this->request->get['page'];
+			} else {
+				$page = 1;
+			}
+
+			$url = '';
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+
+			$this->redirect($this->url->link('report/product_viewed', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		}
+
+		$this->getList();
+	}
+
+	public function getList() {
 		$this->language->load('report/product_viewed');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -18,19 +59,19 @@ class ControllerReportProductViewed extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/product_viewed', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -38,10 +79,10 @@ class ControllerReportProductViewed extends Controller {
 
 		$this->load->model('report/product');
 
-		$data = array(
+		$data = [
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		// Total for pagination
 		$product_viewed_total = $this->model_report_product->getTotalProductsViewed();
@@ -49,7 +90,7 @@ class ControllerReportProductViewed extends Controller {
 		// Total for report results
 		$product_views_total = $this->model_report_product->getTotalProductViews();
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$results = $this->model_report_product->getProductsViewed($data);
 
@@ -60,12 +101,12 @@ class ControllerReportProductViewed extends Controller {
 				$percent = 0;
 			}
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'name'    => $result['name'],
 				'model'   => $result['model'],
 				'viewed'  => $result['viewed'],
 				'percent' => $percent . '%'
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -82,13 +123,11 @@ class ControllerReportProductViewed extends Controller {
 
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 
-		$url = '';
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
+		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
 		}
-
-		$this->data['reset'] = $this->url->link('report/product_viewed/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
@@ -97,6 +136,16 @@ class ControllerReportProductViewed extends Controller {
 		} else {
 			$this->data['success'] = '';
 		}
+
+		// Pagination data
+		$url = '';
+
+		if (isset($this->request->get['page'])) {
+			$url .= '&page=' . $this->request->get['page'];
+		}
+
+		// Reset button
+		$this->data['reset'] = $this->url->link('report/product_viewed/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		$pagination = new Pagination();
 		$pagination->total = $product_viewed_total;
@@ -108,23 +157,19 @@ class ControllerReportProductViewed extends Controller {
 		$this->data['pagination'] = $pagination->render();
 
 		$this->template = 'report/product_viewed.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
-	public function reset() {
-		$this->language->load('report/product_viewed');
+	protected function validate() {
+		if (!$this->user->hasPermission('modify', 'report/product_viewed')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
 
-		$this->load->model('report/product');
-
-		$this->model_report_product->resetViews();
-
-		$this->session->data['success'] = $this->language->get('text_success');
-
-		$this->redirect($this->url->link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL'));
+		return empty($this->error);
 	}
 }

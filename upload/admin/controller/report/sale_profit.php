@@ -50,17 +50,17 @@ class ControllerReportSaleProfit extends Controller {
 
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/sale_profit', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -70,13 +70,13 @@ class ControllerReportSaleProfit extends Controller {
 
 		$this->data['products'] = [];
 
-		$data = array(
+		$data = [
 			'filter_date_start'      => $filter_date_start,
 			'filter_date_end'        => $filter_date_end,
 			'filter_order_status_id' => $filter_order_status_id,
 			'start'                  => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'                  => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$price = 0;
 		$cost = 0;
@@ -87,14 +87,14 @@ class ControllerReportSaleProfit extends Controller {
 		$results = $this->model_report_product->getProfit($data);
 
 		foreach ($results as $result) {
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'year'           => $result['year'],
 				'month'          => $result['month'],
 				'price'          => $this->currency->format($result['price'], $this->config->get('config_currency')),
 				'cost'           => $this->currency->format($result['cost'], $this->config->get('config_currency')),
 				'percent_profit' => ($result['cost'] > 0) ? number_format(($result['profit'] * 100) / $result['cost'], 2) . '%' : '100%',
 				'profit'         => $this->currency->format($result['profit'], $this->config->get('config_currency'))
-			);
+			];
 
 			$price += $result['price'];
 			$cost += $result['cost'];
@@ -133,6 +133,7 @@ class ControllerReportSaleProfit extends Controller {
 
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_date_start'])) {
@@ -145,6 +146,10 @@ class ControllerReportSaleProfit extends Controller {
 
 		if (isset($this->request->get['filter_order_status_id'])) {
 			$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+		}
+
+		if (isset($this->request->get['page'])) {
+			$url .= '&page=' . $this->request->get['page'];
 		}
 
 		$pagination = new Pagination();
@@ -161,10 +166,10 @@ class ControllerReportSaleProfit extends Controller {
 		$this->data['filter_order_status_id'] = $filter_order_status_id;
 
 		$this->template = 'report/sale_profit.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

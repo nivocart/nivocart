@@ -18,19 +18,19 @@ class ControllerReportCustomerWishlist extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/customer_wishlist', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -38,12 +38,12 @@ class ControllerReportCustomerWishlist extends Controller {
 
 		$this->load->model('report/customer');
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
-		$data = array(
+		$data = [
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$wishlist_total = $this->model_report_customer->getTotalWishlist($data);
 
@@ -51,17 +51,17 @@ class ControllerReportCustomerWishlist extends Controller {
 
 		foreach ($results as $result) {
 			if ($result['total_wishlisted']) {
-				$percent = round($result['total_wishlisted'] / $wishlist_total * 100, 2);
+				$percent = round(($result['total_wishlisted'] * 100) / $wishlist_total, 2, PHP_ROUND_HALF_UP);
 			} else {
 				$percent = 0;
 			}
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'name'        => $result['name'],
 				'model'       => $result['model'],
 				'wishlisted'  => $result['total_wishlisted'],
 				'percent'     => $percent . '%'
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -91,10 +91,10 @@ class ControllerReportCustomerWishlist extends Controller {
 		$this->data['pagination'] = $pagination->render();
 
 		$this->template = 'report/customer_wishlist.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

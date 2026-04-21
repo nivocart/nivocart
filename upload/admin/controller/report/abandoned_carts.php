@@ -1,6 +1,6 @@
 <?php
 class ControllerReportAbandonedCarts extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('report/abandoned_carts');
@@ -98,19 +98,19 @@ class ControllerReportAbandonedCarts extends Controller {
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/abandoned_carts', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['recover'] = $this->url->link('report/abandoned_carts/recover', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('report/abandoned_carts/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -119,36 +119,36 @@ class ControllerReportAbandonedCarts extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['orders'] = array();
+		$this->data['orders'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'o.order_id';
 		$order = $this->request->get['order'] ?? 'DESC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$data = array(
+		$data = [
 			'days'        => ($this->config->get('config_abandoned_cart')) ? $this->config->get('config_abandoned_cart') : 7,
 			'filter_name' => $filter_name,
 			'sort'        => $sort,
 			'order'       => $order,
 			'start'       => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'       => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$order_total = $this->model_report_abandoned_carts->getTotalOrders($data);
 
 		$results = $this->model_report_abandoned_carts->getOrders($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('button_view'),
 				'href' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
-			);
+			];
 
 			$existing_carts = $this->model_report_abandoned_carts->checkDuplicates($result['ip']);
 
-			$this->data['orders'][] = array(
+			$this->data['orders'][] = [
 				'order_id'        => $result['order_id'],
 				'name'            => $result['name'],
 				'total'           => $this->currency->format($result['total'], $this->config->get('config_currency')),
@@ -159,7 +159,7 @@ class ControllerReportAbandonedCarts extends Controller {
 				'duplicate'       => ($result['abandoned'] === '0' && $existing_carts > 0) ? sprintf($this->language->get('warning_duplicate'), $existing_carts, '<a href="' . $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL') . '">' . $result['name'] . '</a>') : '',
 				'selected'        => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']),
 				'action'          => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -256,10 +256,10 @@ class ControllerReportAbandonedCarts extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'report/abandoned_carts.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

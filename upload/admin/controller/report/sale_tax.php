@@ -58,19 +58,19 @@ class ControllerReportSaleTax extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -78,31 +78,31 @@ class ControllerReportSaleTax extends Controller {
 
 		$this->load->model('report/sale');
 
-		$this->data['orders'] = array();
+		$this->data['orders'] = [];
 
-		$data = array(
+		$data = [
 			'filter_date_start'      => $filter_date_start,
 			'filter_date_end'        => $filter_date_end,
 			'filter_group'           => $filter_group,
 			'filter_order_status_id' => $filter_order_status_id,
 			'start'                  => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'                  => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$order_total = $this->model_report_sale->getTotalTaxes($data);
 
-		$this->data['orders'] = array();
+		$this->data['orders'] = [];
 
 		$results = $this->model_report_sale->getTaxes($data);
 
 		foreach ($results as $result) {
-			$this->data['orders'][] = array(
+			$this->data['orders'][] = [
 				'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
 				'date_end'   => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
 				'title'      => $result['title'],
 				'orders'     => $result['orders'],
 				'total'      => $this->currency->format($result['total'], $this->config->get('config_currency'))
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -132,28 +132,29 @@ class ControllerReportSaleTax extends Controller {
 
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-		$this->data['groups'] = array();
+		$this->data['groups'] = [];
 
-		$this->data['groups'][] = array(
+		$this->data['groups'][] = [
 			'text'  => $this->language->get('text_year'),
 			'value' => 'year'
-		);
+		];
 
-		$this->data['groups'][] = array(
+		$this->data['groups'][] = [
 			'text'  => $this->language->get('text_month'),
 			'value' => 'month'
-		);
+		];
 
-		$this->data['groups'][] = array(
+		$this->data['groups'][] = [
 			'text'  => $this->language->get('text_week'),
 			'value' => 'week'
-		);
+		];
 
-		$this->data['groups'][] = array(
+		$this->data['groups'][] = [
 			'text'  => $this->language->get('text_day'),
 			'value' => 'day'
-		);
+		];
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_date_start'])) {
@@ -172,6 +173,10 @@ class ControllerReportSaleTax extends Controller {
 			$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
 		}
 
+		if (isset($this->request->get['page'])) {
+			$url .= '&page=' . $this->request->get['page'];
+		}
+
 		$pagination = new Pagination();
 		$pagination->total = $order_total;
 		$pagination->page = $page;
@@ -187,10 +192,10 @@ class ControllerReportSaleTax extends Controller {
 		$this->data['filter_order_status_id'] = $filter_order_status_id;
 
 		$this->template = 'report/sale_tax.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
