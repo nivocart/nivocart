@@ -160,10 +160,7 @@ class ControllerCommonFileManagerFull extends Controller {
 
 				$json[$i]['data'] = htmlspecialchars($entry->getFilename(), ENT_QUOTES, 'UTF-8');
 
-				$json[$i]['attributes']['directory'] = htmlspecialchars(
-					substr($entry->getPathname(), mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')),
-					ENT_QUOTES, 'UTF-8'
-				);
+				$json[$i]['attributes']['directory'] = htmlspecialchars(substr($entry->getPathname(), mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
 				// Check if this subdirectory itself has any child directories
 				$childIterator = new FilesystemIterator($entry->getPathname(), FilesystemIterator::SKIP_DOTS);
