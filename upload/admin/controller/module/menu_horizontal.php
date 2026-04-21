@@ -1,6 +1,6 @@
 <?php
 class ControllerModuleMenuHorizontal extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'menu_horizontal';
 
 	public function index() {
@@ -10,7 +10,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validate())) {
 			// POST uses json_encode
 			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
 
@@ -74,28 +74,28 @@ class ControllerModuleMenuHorizontal extends Controller {
 		if (isset($this->error['menu'])) {
 			$this->data['error_menu'] = $this->error['menu'];
 		} else {
-			$this->data['error_menu'] = array();
+			$this->data['error_menu'] = [];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_module'),
 			'href'      => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
 
@@ -139,7 +139,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 			$this->data[$this->_name . '_column_number'] = $this->config->get($this->_name . '_column_number');
 		}
 
-		$this->data['modules'] = array();
+		$this->data['modules'] = [];
 
 		if (isset($this->request->post[$this->_name . '_module'])) {
 			$this->data['modules'] = $this->request->post[$this->_name . '_module'];
@@ -149,21 +149,21 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->load->model('design/menu');
 
-		$menus_array = array();
+		$menus_array = [];
 
 		$this->data['menus'] = $this->model_design_menu->getMenus($menus_array);
 
 		$this->load->model('design/layout');
 
-		$layouts_array = array();
+		$layouts_array = [];
 
 		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		$this->template = 'module/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

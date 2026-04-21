@@ -1,6 +1,6 @@
 <?php
 class ControllerModuleTagCloud extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'tagcloud';
 
 	public function index() {
@@ -10,7 +10,7 @@ class ControllerModuleTagCloud extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			// POST uses json_encode
 			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
 
@@ -68,40 +68,40 @@ class ControllerModuleTagCloud extends Controller {
 		if (isset($this->error['limit'])) {
 			$this->data['error_limit'] = $this->error['limit'];
 		} else {
-			$this->data['error_limit'] = array();
+			$this->data['error_limit'] = [];
 		}
 
 		if (isset($this->error['min_font_size'])) {
 			$this->data['error_min_font_size'] = $this->error['min_font_size'];
 		} else {
-			$this->data['error_min_font_size'] = array();
+			$this->data['error_min_font_size'] = [];
 		}
 
 		if (isset($this->error['max_font_size'])) {
 			$this->data['error_max_font_size'] = $this->error['max_font_size'];
 		} else {
-			$this->data['error_max_font_size'] = array();
+			$this->data['error_max_font_size'] = [];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_module'),
 			'href'      => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
 
@@ -116,7 +116,7 @@ class ControllerModuleTagCloud extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$languages_array = array();
+		$languages_array = [];
 
 		$languages = $this->model_localisation_language->getLanguages($languages_array);
 
@@ -136,19 +136,19 @@ class ControllerModuleTagCloud extends Controller {
 			$this->data[$this->_name . '_title'] = $this->config->get($this->_name . '_title');
 		}
 
-		$this->data['font_weights'] = array();
+		$this->data['font_weights'] = [];
 
-		$this->data['font_weights'][] = array(
+		$this->data['font_weights'][] = [
 			'font_weight' => 'normal',
 			'title'       => $this->language->get('text_normal')
-		);
+		];
 
-		$this->data['font_weights'][] = array(
+		$this->data['font_weights'][] = [
 			'font_weight' => 'bold',
 			'title'       => $this->language->get('text_bold')
-		);
+		];
 
-		$this->data['modules'] = array();
+		$this->data['modules'] = [];
 
 		if (isset($this->request->post[$this->_name . '_module'])) {
 			$this->data['modules'] = $this->request->post[$this->_name . '_module'];
@@ -158,15 +158,15 @@ class ControllerModuleTagCloud extends Controller {
 
 		$this->load->model('design/layout');
 
-		$layouts_array = array();
+		$layouts_array = [];
 
 		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		$this->template = 'module/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

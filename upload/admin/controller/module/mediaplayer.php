@@ -1,6 +1,6 @@
 <?php
 class ControllerModuleMediaPlayer extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'mediaplayer';
 	private $_plugin = 'Plyr';
 	private $_version = 'v3.4.7';
@@ -12,7 +12,7 @@ class ControllerModuleMediaPlayer extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			// POST uses json_encode
 			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
 
@@ -74,28 +74,28 @@ class ControllerModuleMediaPlayer extends Controller {
 		if (isset($this->error['image'])) {
 			$this->data['error_image'] = $this->error['image'];
 		} else {
-			$this->data['error_image'] = array();
+			$this->data['error_image'] = [];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_module'),
 			'href'      => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
 
@@ -117,7 +117,7 @@ class ControllerModuleMediaPlayer extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$languages_array = array();
+		$languages_array = [];
 
 		$languages = $this->model_localisation_language->getLanguages($languages_array);
 
@@ -155,7 +155,7 @@ class ControllerModuleMediaPlayer extends Controller {
 
 		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 
-		$this->data['modules'] = array();
+		$this->data['modules'] = [];
 
 		if (isset($this->request->post[$this->_name . '_module'])) {
 			$this->data['modules'] = $this->request->post[$this->_name . '_module'];
@@ -165,21 +165,21 @@ class ControllerModuleMediaPlayer extends Controller {
 
 		$this->load->model('design/media');
 
-		$medias_array = array();
+		$medias_array = [];
 
 		$this->data['medias'] = $this->model_design_media->getMedias($medias_array);
 
 		$this->load->model('design/layout');
 
-		$layouts_array = array();
+		$layouts_array = [];
 
 		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		$this->template = 'module/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -189,10 +189,10 @@ class ControllerModuleMediaPlayer extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		$allowed = array('jpg','jpeg','png','gif');
+		$allowed = ['jpg','jpeg','png','gif'];
 
 		if ($this->request->post[$this->_name . '_image']) {
-			$ext = utf8_substr(strrchr($this->request->post[$this->_name . '_image'], '.'), 1);
+			$ext = substr(strrchr($this->request->post[$this->_name . '_image'], '.'), 1);
 
 			if (!in_array(strtolower($ext), $allowed)) {
 				$this->error['image'] = $this->language->get('error_image');
