@@ -9,7 +9,6 @@ $_['text_success']              = 'Success: You have modified <b>Supplier Groups
 $_['text_order_website']        = 'Website';
 $_['text_order_email']          = 'Email';
 $_['text_order_phone']          = 'Telephone';
-$_['text_order_fax']            = 'Fax';
 $_['text_order_post']           = 'Post';
 $_['text_order_instore']        = 'In Store';
 $_['text_order_other']          = 'Other';

@@ -30,19 +30,19 @@ class ControllerSaleOffer extends Controller {
 		$this->data['cancel'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Breadcrumbs
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('sale/offer', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['token'] = $this->session->data['token'];
 
@@ -51,17 +51,11 @@ class ControllerSaleOffer extends Controller {
 
 		$offers_status = $this->config->get('offers_status');
 
-		if (!$offers_status) {
-			$this->data['error_offers'] = $this->language->get('error_offers');
-		} else {
-			$this->data['error_offers'] = '';
-		}
+		// Error Offers
+		$this->data['error_offers'] = (!$offers_status) ? $this->language->get('error_offers') : '';
 
-		if ($offers_status) {
-			$this->data['success_offers'] = sprintf($this->language->get('success_offers'), $this->config->get('offers_sort_order'));
-		} else {
-			$this->data['success_offers'] = '';
-		}
+		// Success Offers
+		$this->data['success_offers'] = ($offers_status) ? sprintf($this->language->get('success_offers'), $this->config->get('offers_sort_order')) : '';
 
 		// Overview
 		$this->load->model('sale/offer');
@@ -106,9 +100,9 @@ class ControllerSaleOffer extends Controller {
 		$this->data['button_edit'] = $this->language->get('button_edit');
 
 		// P2P
-		$this->data['offer_product_products'] = array();
+		$this->data['offer_product_products'] = [];
 
-		$product_product_array = array();
+		$product_product_array = [];
 
 		$product_product_infos = $this->model_sale_offer->getOfferProductProducts($product_product_array);
 
@@ -124,7 +118,7 @@ class ControllerSaleOffer extends Controller {
 					$validity = $this->language->get('text_offer_valid');
 				}
 
-				$this->data['offer_product_products'][] = array(
+				$this->data['offer_product_products'][] = [
 					'group'    => 'P2P',
 					'name'     => $result['name'],
 					'type'     => $result['type'],
@@ -134,7 +128,7 @@ class ControllerSaleOffer extends Controller {
 					'validity' => $validity,
 					'status'   => $result['status'],
 					'href'     => $this->url->link('sale/offer_product_product/update', 'token=' . $this->session->data['token'] . '&offer_product_product_id=' . $result['offer_product_product_id'], 'SSL')
-				);
+				];
 			}
 
 		} else {
@@ -142,9 +136,9 @@ class ControllerSaleOffer extends Controller {
 		}
 
 		// P2C
-		$this->data['offer_product_categories'] = array();
+		$this->data['offer_product_categories'] = [];
 
-		$product_category_array = array();
+		$product_category_array = [];
 
 		$product_category_infos = $this->model_sale_offer->getOfferProductCategories($product_category_array);
 
@@ -160,7 +154,7 @@ class ControllerSaleOffer extends Controller {
 					$validity = $this->language->get('text_offer_valid');
 				}
 
-				$this->data['offer_product_categories'][] = array(
+				$this->data['offer_product_categories'][] = [
 					'group'    => 'P2C',
 					'name'     => $result['name'],
 					'type'     => $result['type'],
@@ -170,7 +164,7 @@ class ControllerSaleOffer extends Controller {
 					'validity' => $validity,
 					'status'   => $result['status'],
 					'href'     => $this->url->link('sale/offer_product_category/update', 'token=' . $this->session->data['token'] . '&offer_product_category_id=' . $result['offer_product_category_id'], 'SSL')
-				);
+				];
 			}
 
 		} else {
@@ -178,9 +172,9 @@ class ControllerSaleOffer extends Controller {
 		}
 
 		// C2P
-		$this->data['offer_category_products'] = array();
+		$this->data['offer_category_products'] = [];
 
-		$category_product_array = array();
+		$category_product_array = [];
 
 		$category_product_infos = $this->model_sale_offer->getOfferCategoryProducts($category_product_array);
 
@@ -196,7 +190,7 @@ class ControllerSaleOffer extends Controller {
 					$validity = $this->language->get('text_offer_valid');
 				}
 
-				$this->data['offer_category_products'][] = array(
+				$this->data['offer_category_products'][] = [
 					'group'    => 'C2P',
 					'name'     => $result['name'],
 					'type'     => $result['type'],
@@ -206,7 +200,7 @@ class ControllerSaleOffer extends Controller {
 					'validity' => $validity,
 					'status'   => $result['status'],
 					'href'     => $this->url->link('sale/offer_category_product/update', 'token=' . $this->session->data['token'] . '&offer_category_product_id=' . $result['offer_category_product_id'], 'SSL')
-				);
+				];
 			}
 
 		} else {
@@ -214,9 +208,9 @@ class ControllerSaleOffer extends Controller {
 		}
 
 		// C2C
-		$this->data['offer_category_categories'] = array();
+		$this->data['offer_category_categories'] = [];
 
-		$category_category_array = array();
+		$category_category_array = [];
 
 		$category_category_infos = $this->model_sale_offer->getOfferCategoryCategories($category_category_array);
 
@@ -232,7 +226,7 @@ class ControllerSaleOffer extends Controller {
 					$validity = $this->language->get('text_offer_valid');
 				}
 
-				$this->data['offer_category_categories'][] = array(
+				$this->data['offer_category_categories'][] = [
 					'group'    => 'C2C',
 					'name'     => $result['name'],
 					'type'     => $result['type'],
@@ -242,7 +236,7 @@ class ControllerSaleOffer extends Controller {
 					'validity' => $validity,
 					'status'   => $result['status'],
 					'href'     => $this->url->link('sale/offer_category_category/update', 'token=' . $this->session->data['token'] . '&offer_category_category_id=' . $result['offer_category_category_id'], 'SSL')
-				);
+				];
 			}
 
 		} else {
@@ -250,10 +244,10 @@ class ControllerSaleOffer extends Controller {
 		}
 
 		$this->template = 'sale/offer.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

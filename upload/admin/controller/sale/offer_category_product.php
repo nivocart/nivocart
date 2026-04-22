@@ -1,6 +1,6 @@
 <?php
 class ControllerSaleOfferCategoryProduct extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('sale/offer_category_product');
@@ -19,24 +19,18 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 
 		$this->load->model('sale/offer_category_product');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_offer_category_product->addOfferCategoryProduct($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$offer_category_product_id = $this->session->data['new_offer_category_product_id'];
@@ -62,24 +56,18 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 
 		$this->load->model('sale/offer_category_product');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_offer_category_product->editOfferCategoryProduct($this->request->get['offer_category_product_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$offer_category_product_id = $this->request->get['offer_category_product_id'];
@@ -110,19 +98,13 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('sale/offer_category_product', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -131,51 +113,27 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'name';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$this->data['breadcrumbs'] = [];
 
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('sale/offer_category_product', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('sale/offer_category_product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('sale/offer_category_product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -184,28 +142,32 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['offer_category_products'] = array();
+		$this->data['offer_category_products'] = [];
 
-		$data = array(
+		$sort = $this->request->get['sort'] ?? 'name';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
+
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$offer_category_product_total = $this->model_sale_offer_category_product->getTotalOfferCategoryProduct();
 
 		$results = $this->model_sale_offer_category_product->getOfferCategoryProducts($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/offer_category_product/update', 'token=' . $this->session->data['token'] . '&offer_category_product_id=' . $result['offer_category_product_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['offer_category_products'][] = array(
+			$this->data['offer_category_products'][] = [
 				'offer_category_product_id' => $result['offer_category_product_id'],
 				'name'                      => $result['name'],
 				'discount'                  => $result['discount'],
@@ -216,7 +178,7 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 				'status'                    => $result['status'],
 				'selected'                  => isset($this->request->post['selected']) && in_array($result['offer_category_product_id'], $this->request->post['selected']),
 				'action'                    => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -256,9 +218,10 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -276,6 +239,7 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 		$this->data['sort_date_end'] = $this->url->link('sale/offer_category_product', 'token=' . $this->session->data['token'] . '&sort=date_end' . $url, 'SSL');
 		$this->data['sort_status'] = $this->url->link('sale/offer_category_product', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -299,10 +263,10 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'sale/offer_category_product_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -342,6 +306,7 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 			$this->data['offer_category_product_id'] = 0;
 		}
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -390,33 +355,28 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 			$this->data['error_date_end'] = '';
 		}
 
-		$url = '';
+		// Breadcrumbs
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+		$this->data['breadcrumbs'] = [];
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('sale/offer_category_product', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['offer_category_product_id'])) {
 			$this->data['action'] = $this->url->link('sale/offer_category_product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -429,7 +389,7 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 		// Auto-complete
 		$this->data['autocomplete_off'] = $this->config->get('config_autocomplete_offer');
 
-		if (isset($this->request->get['offer_category_product_id']) && (!$this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['offer_category_product_id']) && (!$this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$offer_category_product_info = $this->model_sale_offer_category_product->getOfferCategoryProduct($this->request->get['offer_category_product_id']);
 		}
 
@@ -467,7 +427,9 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 
 		$this->load->model('catalog/category');
 
-		$this->data['categories'] = $this->model_catalog_category->getCategories(0);
+		$categories_array = [];
+
+		$this->data['categories'] = $this->model_catalog_category->getCategories($categories_array);
 
 		// Category One
 		if (isset($this->request->post['category_one'])) {
@@ -483,7 +445,9 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 
 		$this->load->model('catalog/product');
 
-		$this->data['products'] = $this->model_catalog_product->getProducts(0);
+		$products_array = [];
+
+		$this->data['products'] = $this->model_catalog_product->getProducts($products_array);
 
 		// Product Two
 		if (isset($this->request->post['product_two'])) {
@@ -522,10 +486,10 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 		}
 
 		$this->template = 'sale/offer_category_product_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -535,11 +499,11 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 128)) {
+		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 128)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if (($this->request->post['type'] == 'P') && ($this->request->post['discount'] > '100')) {
+		if (($this->request->post['type'] === 'P') && ($this->request->post['discount'] > '100')) {
 			$this->error['percent'] = $this->language->get('error_percent');
 		}
 
@@ -547,7 +511,7 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 
 		$product_price = $this->model_sale_offer->getProductPrice($this->request->post['product_two']);
 
-		if (($this->request->post['type'] == 'F') && ($this->request->post['discount'] > $product_price)) {
+		if (($this->request->post['type'] === 'F') && ($this->request->post['discount'] > $product_price)) {
 			$this->error['price'] = $this->language->get('error_price');
 
 			$this->data['gross_price'] = $product_price;
@@ -572,29 +536,30 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 		return empty($this->error);
 	}
 
+	// Autocomplete Categories
 	public function autocompleteCat() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/category');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$results = $this->model_catalog_category->getListCategories($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'category_id' => $result['category_id'],
 					'name'        => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];
@@ -606,29 +571,30 @@ class ControllerSaleOfferCategoryProduct extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+	// Autocomplete Products
 	public function autocompletePro() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/product');
 
-			$data = array(
+			$data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 20
-			);
+			];
 
 			$results = $this->model_catalog_product->getProducts($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'product_id' => $result['product_id'],
 					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];

@@ -1,6 +1,6 @@
 <?php
 class ControllerSaleSupplierGroup extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('sale/supplier_group');
@@ -19,24 +19,18 @@ class ControllerSaleSupplierGroup extends Controller {
 
 		$this->load->model('sale/supplier_group');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_supplier_group->addSupplierGroup($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$supplier_group_id = $this->session->data['new_supplier_group_id'];
@@ -62,24 +56,18 @@ class ControllerSaleSupplierGroup extends Controller {
 
 		$this->load->model('sale/supplier_group');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_supplier_group->editSupplierGroup($this->request->get['supplier_group_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$supplier_group_id = $this->request->get['supplier_group_id'];
@@ -110,19 +98,13 @@ class ControllerSaleSupplierGroup extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('sale/supplier_group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -131,51 +113,27 @@ class ControllerSaleSupplierGroup extends Controller {
 	}
 
 	protected function getList() {
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'sgd.name';
-		}
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'sgd.name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$this->data['breadcrumbs'] = [];
 
-		$url = '';
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('sale/supplier_group', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('sale/supplier_group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('sale/supplier_group/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -184,36 +142,40 @@ class ControllerSaleSupplierGroup extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['supplier_groups'] = array();
+		$this->data['supplier_groups'] = [];
 
-		$data = array(
+		$sort = $this->request->get['sort'] ?? 'sgd.name';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
+
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$supplier_group_total = $this->model_sale_supplier_group->getTotalSupplierGroups();
 
 		$results = $this->model_sale_supplier_group->getSupplierGroups($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/supplier_group/update', 'token=' . $this->session->data['token'] . '&supplier_group_id=' . $result['supplier_group_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['supplier_groups'][] = array(
+			$this->data['supplier_groups'][] = [
 				'supplier_group_id' => $result['supplier_group_id'],
-				'name'              => $result['name'] . (($result['supplier_group_id'] == $this->config->get('config_supplier_group_id')) ? $this->language->get('text_default') : null),
+				'name'              => $result['name'] . (($result['supplier_group_id'] === $this->config->get('config_supplier_group_id')) ? $this->language->get('text_default') : null),
 				'order_method'      => $this->language->get('text_order_' . $result['order_method']),
 				'payment_method'    => $this->language->get('text_payment_' . $result['payment_method']),
 				'sort_order'        => $result['sort_order'],
 				'selected'          => isset($this->request->post['selected']) && in_array($result['supplier_group_id'], $this->request->post['selected']),
 				'action'            => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -245,9 +207,10 @@ class ControllerSaleSupplierGroup extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -262,6 +225,7 @@ class ControllerSaleSupplierGroup extends Controller {
 		$this->data['sort_payment_method'] = $this->url->link('sale/supplier_group', 'token=' . $this->session->data['token'] . '&sort=sg.payment_method' . $url, 'SSL');
 		$this->data['sort_sort_order'] = $this->url->link('sale/supplier_group', 'token=' . $this->session->data['token'] . '&sort=sg.sort_order' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -285,10 +249,10 @@ class ControllerSaleSupplierGroup extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'sale/supplier_group_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -317,36 +281,30 @@ class ControllerSaleSupplierGroup extends Controller {
 		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
-			$this->data['error_name'] = array();
+			$this->data['error_name'] = [];
 		}
 
-		$url = '';
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? 'sgd.name',
+			'order' => $this->request->get['order'] ?? 'ASC',
+			'page'  => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		$this->data['breadcrumbs'] = [];
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('sale/supplier_group', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		if (!isset($this->request->get['supplier_group_id'])) {
 			$this->data['action'] = $this->url->link('sale/supplier_group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -356,7 +314,7 @@ class ControllerSaleSupplierGroup extends Controller {
 
 		$this->data['cancel'] = $this->url->link('sale/supplier_group', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['supplier_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['supplier_group_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$supplier_group_info = $this->model_sale_supplier_group->getSupplierGroup($this->request->get['supplier_group_id']);
 		}
 
@@ -369,18 +327,17 @@ class ControllerSaleSupplierGroup extends Controller {
 		} elseif (isset($this->request->get['supplier_group_id'])) {
 			$this->data['supplier_group_description'] = $this->model_sale_supplier_group->getSupplierGroupDescriptions($this->request->get['supplier_group_id']);
 		} else {
-			$this->data['supplier_group_description'] = array();
+			$this->data['supplier_group_description'] = [];
 		}
 
-		$this->data['order_options'] = array();
+		$this->data['order_options'] = [];
 
-		$this->data['order_options'][] = array('method' => 'website', 'title' => $this->language->get('text_order_website'));
-		$this->data['order_options'][] = array('method' => 'email', 'title' => $this->language->get('text_order_email'));
-		$this->data['order_options'][] = array('method' => 'phone', 'title' => $this->language->get('text_order_phone'));
-		$this->data['order_options'][] = array('method' => 'fax', 'title' => $this->language->get('text_order_fax'));
-		$this->data['order_options'][] = array('method' => 'post', 'title' => $this->language->get('text_order_post'));
-		$this->data['order_options'][] = array('method' => 'instore', 'title' => $this->language->get('text_order_instore'));
-		$this->data['order_options'][] = array('method' => 'other', 'title' => $this->language->get('text_order_other'));
+		$this->data['order_options'][] = ['method' => 'website', 'title' => $this->language->get('text_order_website')];
+		$this->data['order_options'][] = ['method' => 'email', 'title' => $this->language->get('text_order_email')];
+		$this->data['order_options'][] = ['method' => 'phone', 'title' => $this->language->get('text_order_phone')];
+		$this->data['order_options'][] = ['method' => 'post', 'title' => $this->language->get('text_order_post')];
+		$this->data['order_options'][] = ['method' => 'instore', 'title' => $this->language->get('text_order_instore')];
+		$this->data['order_options'][] = ['method' => 'other', 'title' => $this->language->get('text_order_other')];
 
 		if (isset($this->request->post['order_method'])) {
 			$this->data['order_method'] = $this->request->post['order_method'];
@@ -390,15 +347,15 @@ class ControllerSaleSupplierGroup extends Controller {
 			$this->data['order_method'] = 0;
 		}
 
-		$this->data['payment_options'] = array();
+		$this->data['payment_options'] = [];
 
-		$this->data['payment_options'][] = array('method' => 'account', 'title' => $this->language->get('text_payment_account'));
-		$this->data['payment_options'][] = array('method' => 'cash', 'title' => $this->language->get('text_payment_cash'));
-		$this->data['payment_options'][] = array('method' => 'cheque', 'title' => $this->language->get('text_payment_cheque'));
-		$this->data['payment_options'][] = array('method' => 'creditcard', 'title' => $this->language->get('text_payment_creditcard'));
-		$this->data['payment_options'][] = array('method' => 'banktransfer', 'title' => $this->language->get('text_payment_banktransfer'));
-		$this->data['payment_options'][] = array('method' => 'paypal', 'title' => $this->language->get('text_payment_paypal'));
-		$this->data['payment_options'][] = array('method' => 'other', 'title' => $this->language->get('text_payment_other'));
+		$this->data['payment_options'][] = ['method' => 'account', 'title' => $this->language->get('text_payment_account')];
+		$this->data['payment_options'][] = ['method' => 'cash', 'title' => $this->language->get('text_payment_cash')];
+		$this->data['payment_options'][] = ['method' => 'cheque', 'title' => $this->language->get('text_payment_cheque')];
+		$this->data['payment_options'][] = ['method' => 'creditcard', 'title' => $this->language->get('text_payment_creditcard')];
+		$this->data['payment_options'][] = ['method' => 'banktransfer', 'title' => $this->language->get('text_payment_banktransfer')];
+		$this->data['payment_options'][] = ['method' => 'paypal', 'title' => $this->language->get('text_payment_paypal')];
+		$this->data['payment_options'][] = ['method' => 'other', 'title' => $this->language->get('text_payment_other')];
 
 		if (isset($this->request->post['payment_method'])) {
 			$this->data['payment_method'] = $this->request->post['payment_method'];
@@ -417,10 +374,10 @@ class ControllerSaleSupplierGroup extends Controller {
 		}
 
 		$this->template = 'sale/supplier_group_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -431,7 +388,7 @@ class ControllerSaleSupplierGroup extends Controller {
 		}
 
 		foreach ($this->request->post['supplier_group_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 32)) {
+			if ((mb_strlen($value['name'], 'UTF-8') < 3) || (mb_strlen($value['name'], 'UTF-8') > 32)) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
@@ -447,7 +404,7 @@ class ControllerSaleSupplierGroup extends Controller {
 		$this->load->model('sale/supplier');
 
 		foreach ($this->request->post['selected'] as $supplier_group_id) {
-			if ($this->config->get('config_supplier_group_id') == $supplier_group_id) {
+			if ($this->config->get('config_supplier_group_id') === $supplier_group_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

@@ -1,6 +1,6 @@
 <?php
 class ControllerSaleSupplier extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('sale/supplier');
@@ -19,48 +19,60 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->load->model('sale/supplier');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_supplier->addSupplier($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_reference'])) {
-				$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+				$filter_reference = html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_reference = null;
 			}
 
 			if (isset($this->request->get['filter_company'])) {
-				$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+				$filter_company = html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_company = null;
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+				$filter_email = html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_email = null;
 			}
 
 			if (isset($this->request->get['filter_supplier_group_id'])) {
-				$url .= '&filter_supplier_group_id=' . $this->request->get['filter_supplier_group_id'];
+				$filter_supplier_group_id = $this->request->get['filter_supplier_group_id'];
+			} else {
+				$filter_supplier_group_id = null;
 			}
 
 			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
+				$filter_status = $this->request->get['filter_status'];
+			} else {
+				$filter_status = null;
 			}
 
 			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+				$filter_date_added = $this->request->get['filter_date_added'];
+			} else {
+				$filter_date_added = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_reference'         => $filter_reference,
+				'filter_company'           => $filter_company,
+				'filter_email'             => $filter_email,
+				'filter_supplier_group_id' => $filter_supplier_group_id,
+				'filter_status'            => $filter_status,
+				'filter_date_added'        => $filter_date_added,
+				'sort'                     => $this->request->get['sort'] ?? null,
+				'order'                    => $this->request->get['order'] ?? null,
+				'page'                     => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$supplier_id = $this->session->data['new_supplier_id'];
@@ -86,48 +98,60 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->load->model('sale/supplier');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
 			$this->model_sale_supplier->editSupplier($this->request->get['supplier_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_reference'])) {
-				$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+				$filter_reference = html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_reference = null;
 			}
 
 			if (isset($this->request->get['filter_company'])) {
-				$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+				$filter_company = html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_company = null;
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+				$filter_email = html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_email = null;
 			}
 
 			if (isset($this->request->get['filter_supplier_group_id'])) {
-				$url .= '&filter_supplier_group_id=' . $this->request->get['filter_supplier_group_id'];
+				$filter_supplier_group_id = $this->request->get['filter_supplier_group_id'];
+			} else {
+				$filter_supplier_group_id = null;
 			}
 
 			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
+				$filter_status = $this->request->get['filter_status'];
+			} else {
+				$filter_status = null;
 			}
 
 			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+				$filter_date_added = $this->request->get['filter_date_added'];
+			} else {
+				$filter_date_added = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_reference'         => $filter_reference,
+				'filter_company'           => $filter_company,
+				'filter_email'             => $filter_email,
+				'filter_supplier_group_id' => $filter_supplier_group_id,
+				'filter_status'            => $filter_status,
+				'filter_date_added'        => $filter_date_added,
+				'sort'                     => $this->request->get['sort'] ?? null,
+				'order'                    => $this->request->get['order'] ?? null,
+				'page'                     => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			if (isset($this->request->post['apply'])) {
 				$supplier_id = $this->request->get['supplier_id'];
@@ -158,43 +182,55 @@ class ControllerSaleSupplier extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_reference'])) {
-				$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+				$filter_reference = html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_reference = null;
 			}
 
 			if (isset($this->request->get['filter_company'])) {
-				$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+				$filter_company = html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_company = null;
 			}
 
 			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+				$filter_email = html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_email = null;
 			}
 
 			if (isset($this->request->get['filter_supplier_group_id'])) {
-				$url .= '&filter_supplier_group_id=' . $this->request->get['filter_supplier_group_id'];
+				$filter_supplier_group_id = $this->request->get['filter_supplier_group_id'];
+			} else {
+				$filter_supplier_group_id = null;
 			}
 
 			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
+				$filter_status = $this->request->get['filter_status'];
+			} else {
+				$filter_status = null;
 			}
 
 			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+				$filter_date_added = $this->request->get['filter_date_added'];
+			} else {
+				$filter_date_added = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_reference'         => $filter_reference,
+				'filter_company'           => $filter_company,
+				'filter_email'             => $filter_email,
+				'filter_supplier_group_id' => $filter_supplier_group_id,
+				'filter_status'            => $filter_status,
+				'filter_date_added'        => $filter_date_added,
+				'sort'                     => $this->request->get['sort'] ?? null,
+				'order'                    => $this->request->get['order'] ?? null,
+				'page'                     => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -204,19 +240,19 @@ class ControllerSaleSupplier extends Controller {
 
 	protected function getList() {
 		if (isset($this->request->get['filter_reference'])) {
-			$filter_reference = $this->request->get['filter_reference'];
+			$filter_reference = html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$filter_reference = null;
 		}
 
 		if (isset($this->request->get['filter_company'])) {
-			$filter_company = $this->request->get['filter_company'];
+			$filter_company = html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$filter_company = null;
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$filter_email = $this->request->get['filter_email'];
+			$filter_email = html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$filter_email = null;
 		}
@@ -239,75 +275,33 @@ class ControllerSaleSupplier extends Controller {
 			$filter_date_added = null;
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'company';
-		}
+		$page_url = array_filter([
+			'filter_reference'         => $filter_reference,
+			'filter_company'           => $filter_company,
+			'filter_email'             => $filter_email,
+			'filter_supplier_group_id' => $filter_supplier_group_id,
+			'filter_status'            => $filter_status,
+			'filter_date_added'        => $filter_date_added,
+			'sort'                     => $this->request->get['sort'] ?? 'company',
+			'order'                    => $this->request->get['order'] ?? 'ASC',
+			'page'                     => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$this->data['breadcrumbs'] = [];
 
-		$url = '';
-
-		if (isset($this->request->get['filter_reference'])) {
-			$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
-		}
-
-		if (isset($this->request->get['filter_company'])) {
-			$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
-		}
-
-		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
-		}
-
-		if (isset($this->request->get['filter_supplier_group_id'])) {
-			$url .= '&filter_supplier_group_id=' . $this->request->get['filter_supplier_group_id'];
-		}
-
-		if (isset($this->request->get['filter_status'])) {
-			$url .= '&filter_status=' . $this->request->get['filter_status'];
-		}
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['insert'] = $this->url->link('sale/supplier/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('sale/supplier/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -316,9 +310,13 @@ class ControllerSaleSupplier extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['suppliers'] = array();
+		$this->data['suppliers'] = [];
 
-		$filter_data = array(
+		$sort = $this->request->get['sort'] ?? 'company';
+		$order = $this->request->get['order'] ?? 'ASC';
+		$page = $this->request->get['page'] ?? 1;
+
+		$filter_data = [
 			'filter_reference'         => $filter_reference,
 			'filter_company'           => $filter_company,
 			'filter_email'             => $filter_email,
@@ -329,21 +327,21 @@ class ControllerSaleSupplier extends Controller {
 			'order'                    => $order,
 			'start'                    => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'                    => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$supplier_total = $this->model_sale_supplier->getTotalSuppliers($filter_data);
 
 		$results = $this->model_sale_supplier->getSuppliers($filter_data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $result['supplier_id'] . $url, 'SSL')
-			);
+			];
 
-			$this->data['suppliers'][] = array(
+			$this->data['suppliers'][] = [
 				'supplier_id'    => $result['supplier_id'],
 				'reference'      => $result['reference'],
 				'company'        => $result['company'],
@@ -354,7 +352,7 @@ class ControllerSaleSupplier extends Controller {
 				'date_modified'  => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
 				'selected'       => isset($this->request->post['selected']) && in_array($result['supplier_id'], $this->request->post['selected']),
 				'action'         => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -398,6 +396,7 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Html table sorting data
 		$url = '';
 
 		if (isset($this->request->get['filter_reference'])) {
@@ -424,7 +423,7 @@ class ControllerSaleSupplier extends Controller {
 			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
 		}
 
-		if ($order == 'ASC') {
+		if ($order === 'ASC') {
 			$url .= '&order=DESC';
 		} else {
 			$url .= '&order=ASC';
@@ -441,6 +440,7 @@ class ControllerSaleSupplier extends Controller {
 		$this->data['sort_status'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=s.status' . $url, 'SSL');
 		$this->data['sort_date_added'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=s.date_added' . $url, 'SSL');
 
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_reference'])) {
@@ -493,7 +493,7 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->load->model('sale/supplier_group');
 
-		$supplier_groups_array = array();
+		$supplier_groups_array = [];
 
 		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups($supplier_groups_array);
 
@@ -501,10 +501,10 @@ class ControllerSaleSupplier extends Controller {
 		$this->data['order'] = $order;
 
 		$this->template = 'sale/supplier_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -557,6 +557,7 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -625,69 +626,82 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['error_address_zone'] = '';
 		}
 
-		$url = '';
-
+		// Breadcrumbs
 		if (isset($this->request->get['filter_reference'])) {
-			$url .= '&filter_reference=' . html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+			$filter_reference = html_entity_decode($this->request->get['filter_reference'], ENT_QUOTES, 'UTF-8');
+		} else {
+			$filter_reference = null;
 		}
 
 		if (isset($this->request->get['filter_company'])) {
-			$url .= '&filter_company=' . html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+			$filter_company = html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8');
+		} else {
+			$filter_company = null;
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+			$filter_email = html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
+		} else {
+			$filter_email = null;
 		}
 
 		if (isset($this->request->get['filter_supplier_group_id'])) {
-			$url .= '&filter_supplier_group_id=' . $this->request->get['filter_supplier_group_id'];
+			$filter_supplier_group_id = $this->request->get['filter_supplier_group_id'];
+		} else {
+			$filter_supplier_group_id = null;
 		}
 
 		if (isset($this->request->get['filter_status'])) {
-			$url .= '&filter_status=' . $this->request->get['filter_status'];
+			$filter_status = $this->request->get['filter_status'];
+		} else {
+			$filter_status = null;
 		}
 
 		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+			$filter_date_added = $this->request->get['filter_date_added'];
+		} else {
+			$filter_date_added = null;
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
+		$page_url = array_filter([
+			'filter_reference'         => $filter_reference,
+			'filter_company'           => $filter_company,
+			'filter_email'             => $filter_email,
+			'filter_supplier_group_id' => $filter_supplier_group_id,
+			'filter_status'            => $filter_status,
+			'filter_date_added'        => $filter_date_added,
+			'sort'                     => $this->request->get['sort'] ?? 'company',
+			'order'                    => $this->request->get['order'] ?? 'ASC',
+			'page'                     => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'] = array();
-
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['supplier_id'])) {
 			$supplier_reference = $this->model_sale_supplier->getSupplier($this->request->get['supplier_id']);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $supplier_reference['reference'],
 				'href'      => $this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $this->request->get['supplier_id'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['supplier_title'] = $supplier_reference['reference'];
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'),
 				'separator' => ' :: '
-			);
+			];
 
 			$this->data['supplier_title'] = $this->language->get('heading_title');
 		}
@@ -700,7 +714,7 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->data['cancel'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['supplier_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['supplier_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$supplier_info = $this->model_sale_supplier->getSupplier($this->request->get['supplier_id']);
 		}
 
@@ -768,7 +782,7 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->load->model('sale/supplier_group');
 
-		$supplier_groups_array = array();
+		$supplier_groups_array = [];
 
 		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups($supplier_groups_array);
 
@@ -790,7 +804,7 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$countries_supplier = array();
+		$countries_supplier = [];
 
 		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_supplier);
 
@@ -799,7 +813,7 @@ class ControllerSaleSupplier extends Controller {
 		} elseif (isset($this->request->get['supplier_id'])) {
 			$this->data['addresses'] = $this->model_sale_supplier->getAddresses($this->request->get['supplier_id']);
 		} else {
-			$this->data['addresses'] = array();
+			$this->data['addresses'] = [];
 		}
 
 		if (isset($this->request->post['address_id'])) {
@@ -811,10 +825,10 @@ class ControllerSaleSupplier extends Controller {
 		}
 
 		$this->template = 'sale/supplier_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -843,7 +857,7 @@ class ControllerSaleSupplier extends Controller {
 				$this->error['warning'] = $this->language->get('error_exists');
 			}
 		} else {
-			if ($supplier_info && ($this->request->get['supplier_id'] != $supplier_info['supplier_id'])) {
+			if ($supplier_info && ($this->request->get['supplier_id'] !== $supplier_info['supplier_id'])) {
 				$this->error['warning'] = $this->language->get('error_exists');
 			}
 		}
@@ -872,11 +886,11 @@ class ControllerSaleSupplier extends Controller {
 					}
 				}
 
-				if (!isset($value['country_id']) || $value['country_id'] == '' || !is_numeric($value['country_id'])) {
+				if (!isset($value['country_id']) || $value['country_id'] === '' || !is_numeric($value['country_id'])) {
 					$this->error['address_country'][$key] = $this->language->get('error_country');
 				}
 
-				if (!isset($value['zone_id']) || $value['zone_id'] == '' || !is_numeric($value['zone_id'])) {
+				if (!isset($value['zone_id']) || $value['zone_id'] === '' || !is_numeric($value['zone_id'])) {
 					$this->error['address_zone'][$key] = $this->language->get('error_zone');
 				}
 			}
@@ -897,12 +911,13 @@ class ControllerSaleSupplier extends Controller {
 		return empty($this->error);
 	}
 
+	// History
 	public function history() {
 		$this->language->load('sale/supplier');
 
 		$this->load->model('sale/supplier');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'sale/supplier')) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->user->hasPermission('modify', 'sale/supplier')) {
 			$this->model_sale_supplier->addHistory($this->request->get['supplier_id'], $this->request->post['comment']);
 
 			$this->data['success'] = $this->language->get('text_success');
@@ -910,7 +925,7 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['success'] = '';
 		}
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->user->hasPermission('modify', 'sale/supplier')) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && !$this->user->hasPermission('modify', 'sale/supplier')) {
 			$this->data['error_warning'] = $this->language->get('error_permission');
 		} else {
 			$this->data['error_warning'] = '';
@@ -921,25 +936,21 @@ class ControllerSaleSupplier extends Controller {
 		$this->data['column_date_added'] = $this->language->get('column_date_added');
 		$this->data['column_comment'] = $this->language->get('column_comment');
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['histories'] = array();
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+
+		$this->data['histories'] = [];
 
 		$results = $this->model_sale_supplier->getHistories($this->request->get['supplier_id'], ($page - 1) * 10, 10);
 
 		foreach ($results as $result) {
-			$this->data['histories'][] = array(
+			$this->data['histories'][] = [
 				'comment'    => $result['comment'],
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
-			);
+			];
 		}
 
 		$transaction_total = $this->model_sale_supplier->getTotalHistories($this->request->get['supplier_id']);
@@ -958,12 +969,13 @@ class ControllerSaleSupplier extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	// Supplier Products
 	public function product() {
 		$this->language->load('sale/supplier');
 
 		$this->load->model('sale/supplier');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->user->hasPermission('modify', 'sale/supplier')) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && !$this->user->hasPermission('modify', 'sale/supplier')) {
 			$this->data['error_warning'] = $this->language->get('error_permission');
 		} else {
 			$this->data['error_warning'] = '';
@@ -975,6 +987,11 @@ class ControllerSaleSupplier extends Controller {
 			$supplier_id = 0;
 		}
 
+		// Pagination
+		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
+		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
+
+		// Data
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
@@ -993,21 +1010,17 @@ class ControllerSaleSupplier extends Controller {
 			$page = 1;
 		}
 
-		// Pagination
-		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
-		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
-
-		$this->data['catalog_products'] = array();
-
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$this->load->model('tool/image');
 		$this->load->model('tool/barcode');
+
+		$this->data['catalog_products'] = [];
 
 		$admin_barcode = $this->config->get('config_admin_barcode');
 
@@ -1016,12 +1029,12 @@ class ControllerSaleSupplier extends Controller {
 		$results = $this->model_sale_supplier->getSupplierProductsBySupplierId($supplier_id, $data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('sale/supplier_product/update', 'token=' . $this->session->data['token'] . '&supplier_product_id=' . $result['supplier_product_id'], 'SSL')
-			);
+			];
 
 			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
 				$image = $this->model_tool_image->resize($result['image'], 40, 40);
@@ -1029,7 +1042,7 @@ class ControllerSaleSupplier extends Controller {
 				$image = $this->model_tool_image->resize('no_image.jpg', 40, 40);
 			}
 
-			$this->data['catalog_products'][] = array(
+			$this->data['catalog_products'][] = [
 				'supplier_product_id' => $result['supplier_product_id'],
 				'image'               => $image,
 				'name'                => $result['name'],
@@ -1039,7 +1052,7 @@ class ControllerSaleSupplier extends Controller {
 				'status'              => $result['status'],
 				'selected'            => isset($this->request->post['selected']) && in_array($result['supplier_product_id'], $this->request->post['selected']),
 				'action'              => $action
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -1077,22 +1090,23 @@ class ControllerSaleSupplier extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	// Autocomplete Supplier Products
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_reference'])) {
 			$this->load->model('sale/supplier');
 
-			$data = array(
+			$data = [
 				'filter_reference' => $this->request->get['filter_reference'],
 				'start'            => 0,
 				'limit'            => 20
-			);
+			];
 
 			$results = $this->model_sale_supplier->getSuppliers($data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'supplier_id'       => $result['supplier_id'],
 					'supplier_group_id' => $result['supplier_group_id'],
 					'reference'         => strip_tags(html_entity_decode($result['reference'], ENT_QUOTES, 'UTF-8')),
@@ -1102,11 +1116,11 @@ class ControllerSaleSupplier extends Controller {
 					'email'             => $result['email'],
 					'telephone'         => $result['telephone'],
 					'address'           => $this->model_sale_supplier->getAddresses($result['supplier_id'])
-				);
+				];
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['reference'];
@@ -1118,8 +1132,9 @@ class ControllerSaleSupplier extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+	// Address
 	public function address() {
-		$json = array();
+		$json = [];
 
 		if (!empty($this->request->get['address_id'])) {
 			$this->load->model('sale/supplier');
