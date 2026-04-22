@@ -92,7 +92,7 @@
             </tr>
             <tr>
               <td><?php echo $text_phpversion; ?></td>
-              <td>7.0+</td>
+              <td>8.0+</td>
               <td><?php echo phpversion(); ?></td>
               <td><?php echo (version_compare(phpversion(), '8.0.0', '>=')) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
             </tr>
