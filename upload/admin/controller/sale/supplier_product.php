@@ -1183,7 +1183,6 @@ class ControllerSaleSupplierProduct extends Controller {
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-
 			$this->redirect($this->url->link('sale/supplier_product', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
 
