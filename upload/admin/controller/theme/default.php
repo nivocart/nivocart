@@ -1,6 +1,6 @@
 <?php
 class ControllerThemeDefault extends Controller {
-	private $error = array();
+	private $error = [];
 	private $_name = 'default';
 
 	public function index() {
@@ -98,30 +98,28 @@ class ControllerThemeDefault extends Controller {
 		}
 
 		// Breadcrumbs
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_theme'),
 			'href'      => $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('theme/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['settings'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['action'] = $this->url->link('theme/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['stylesheet_mode'] = $this->config->get('config_stylesheet');
@@ -131,10 +129,10 @@ class ControllerThemeDefault extends Controller {
 
 		$this->data['active'] = ($template === $this->_name) ? true : false;
 
-		// Get template preview
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
-			$server = HTTPS_CATALOG;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			$server = HTTPS_CATALOG;
 		} else {
 			$server = HTTP_CATALOG;
@@ -317,10 +315,10 @@ class ControllerThemeDefault extends Controller {
 		}
 
 		$this->template = 'theme/' . $this->_name . '.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
