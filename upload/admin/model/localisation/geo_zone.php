@@ -45,7 +45,7 @@ class ModelLocalisationGeoZone extends Model {
 		return $query->row;
 	}
 
-	public function getGeoZones(array $data = []) {
+	public function getGeoZones(array $data = []): array {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "geo_zone`";
 
@@ -60,7 +60,7 @@ class ModelLocalisationGeoZone extends Model {
 				$sql .= " ORDER BY name";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
