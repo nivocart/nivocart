@@ -1,6 +1,6 @@
 <?php
 class ControllerTotalCoupon extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('total/coupon');
@@ -9,7 +9,7 @@ class ControllerTotalCoupon extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('coupon', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -39,28 +39,27 @@ class ControllerTotalCoupon extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_total'),
 			'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('total/coupon', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('total/coupon', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['coupon_status'])) {
@@ -76,10 +75,10 @@ class ControllerTotalCoupon extends Controller {
 		}
 
 		$this->template = 'total/coupon.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

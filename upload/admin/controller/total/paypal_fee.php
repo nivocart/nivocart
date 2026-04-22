@@ -1,6 +1,6 @@
 <?php
 class ControllerTotalPayPalFee extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->load->language('total/paypal_fee');
@@ -9,7 +9,7 @@ class ControllerTotalPayPalFee extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validate())) {
 			$this->model_setting_setting->editSetting('paypal_fee', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -54,28 +54,27 @@ class ControllerTotalPayPalFee extends Controller {
 			$this->data['error_fee'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_total'),
 			'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('total/paypal_fee', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('total/paypal_fee', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['paypal_fee_fee'])) {
@@ -110,7 +109,9 @@ class ControllerTotalPayPalFee extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+		$tax_classes_array = [];
+
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
 
 		if (isset($this->request->post['paypal_fee_tax_class_id'])) {
 			$this->data['paypal_fee_tax_class_id'] = $this->request->post['paypal_fee_tax_class_id'];
@@ -131,10 +132,10 @@ class ControllerTotalPayPalFee extends Controller {
 		}
 
 		$this->template = 'total/paypal_fee.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

@@ -1,6 +1,6 @@
 <?php
 class ControllerTotalLowOrderFee extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('total/low_order_fee');
@@ -9,7 +9,7 @@ class ControllerTotalLowOrderFee extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('low_order_fee', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -43,28 +43,27 @@ class ControllerTotalLowOrderFee extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_total'),
 			'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('total/low_order_fee', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('total/low_order_fee', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['low_order_fee_total'])) {
@@ -87,7 +86,9 @@ class ControllerTotalLowOrderFee extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+		$tax_classes_array = [];
+
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
 
 		if (isset($this->request->post['low_order_fee_status'])) {
 			$this->data['low_order_fee_status'] = $this->request->post['low_order_fee_status'];
@@ -102,10 +103,10 @@ class ControllerTotalLowOrderFee extends Controller {
 		}
 
 		$this->template = 'total/low_order_fee.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

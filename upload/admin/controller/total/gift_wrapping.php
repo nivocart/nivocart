@@ -1,6 +1,6 @@
 <?php
 class ControllerTotalGiftWrapping extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('total/gift_wrapping');
@@ -9,7 +9,7 @@ class ControllerTotalGiftWrapping extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('gift_wrapping', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -47,28 +47,27 @@ class ControllerTotalGiftWrapping extends Controller {
 			$this->data['error_price'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_total'),
 			'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('total/gift_wrapping', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('total/gift_wrapping', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['gift_wrapping_price'])) {
@@ -90,10 +89,10 @@ class ControllerTotalGiftWrapping extends Controller {
 		}
 
 		$this->template = 'total/gift_wrapping.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
