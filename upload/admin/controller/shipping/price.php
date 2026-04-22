@@ -1,6 +1,6 @@
 <?php
 class ControllerShippingPrice extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('shipping/price');
@@ -9,7 +9,7 @@ class ControllerShippingPrice extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('price', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -44,33 +44,34 @@ class ControllerShippingPrice extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_shipping'),
 			'href'      => $this->url->link('extension/shipping', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('shipping/price', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['action'] = $this->url->link('shipping/price', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/shipping', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->load->model('localisation/geo_zone');
 
-		$geo_zones = $this->model_localisation_geo_zone->getGeoZones();
+		$geo_zones_array = [];
+
+		$geo_zones = $this->model_localisation_geo_zone->getGeoZones($geo_zones_array);
 
 		foreach ($geo_zones as $geo_zone) {
 			if (isset($this->request->post['price_' . $geo_zone['geo_zone_id'] . '_rate'])) {
@@ -96,7 +97,9 @@ class ControllerShippingPrice extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+		$tax_classes_array = [];
+
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
 
 		if (isset($this->request->post['price_status'])) {
 			$this->data['price_status'] = $this->request->post['price_status'];
@@ -111,10 +114,10 @@ class ControllerShippingPrice extends Controller {
 		}
 
 		$this->template = 'shipping/price.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
