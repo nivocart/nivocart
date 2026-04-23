@@ -434,8 +434,8 @@ class ControllerCommonHome extends Controller {
 			}
 
 			$this->data['top_countries'][] = [
-				'amount'	=> $circle_percent,
-				'country'	=> ($top_country['iso_code_2']) ? $top_country['iso_code_2'] : '00'
+				'amount'  => $circle_percent,
+				'country' => ($top_country['iso_code_2']) ? $top_country['iso_code_2'] : '00'
 			];
 		}
 
@@ -445,10 +445,10 @@ class ControllerCommonHome extends Controller {
 		$this->data['orders'] = [];
 
 		$data = [
-			'sort'	=> 'o.date_added',
-			'order'	=> 'DESC',
-			'start'	=> 0,
-			'limit'	=> 10
+			'sort'  => 'o.date_added',
+			'order' => 'DESC',
+			'start' => 0,
+			'limit' => 10
 		];
 
 		$results = $this->model_sale_order->getOrders($data);
@@ -457,8 +457,8 @@ class ControllerCommonHome extends Controller {
 			$action = [];
 
 			$action[] = [
-				'text'	=> $this->language->get('text_view'),
-				'href'	=> $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL')
+				'text' => $this->language->get('text_view'),
+				'href' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL')
 			];
 
 			$customer_group = $this->model_sale_customer->getOrdersCustomersGroup($result['customer_id']);
@@ -470,16 +470,16 @@ class ControllerCommonHome extends Controller {
 			$orders_conversion = ($orders_passed * 100) / $orders_total;
 
 			$this->data['orders'][] = [
-				'order_id'			=> $result['order_id'],
-				'customer'			=> $result['customer'],
-				'customer_group'	=> $result['customer_id'] ? $customer_group : $this->language->get('text_guest'),
-				'passed'			=> ((int)$orders_passed > 0) ? '<span class="passed">' . (int)$orders_passed . '</span>' : '<span class="disabled">' . (int)$orders_passed . '</span>',
-				'missed'			=> ((int)$orders_missed > 0) ? '<span class="missed">' . (int)$orders_missed . '</span>' : '<span class="disabled">' . (int)$orders_missed . '</span>',
-				'conversion'		=> round($orders_conversion, 2, PHP_ROUND_HALF_UP) . '%',
-				'date_added'		=> date($this->language->get('date_format_time'), strtotime($result['date_added'])),
-				'status'			=> $result['status'],
-				'total'				=> $this->currency->format($result['total'], $result['currency_code'], $result['currency_value'], true),
-				'action'			=> $action
+				'order_id'       => $result['order_id'],
+				'customer'       => $result['customer'],
+				'customer_group' => $result['customer_id'] ? $customer_group : $this->language->get('text_guest'),
+				'passed'         => ((int)$orders_passed > 0) ? '<span class="passed">' . (int)$orders_passed . '</span>' : '<span class="disabled">' . (int)$orders_passed . '</span>',
+				'missed'         => ((int)$orders_missed > 0) ? '<span class="missed">' . (int)$orders_missed . '</span>' : '<span class="disabled">' . (int)$orders_missed . '</span>',
+				'conversion'     => round($orders_conversion, 2, PHP_ROUND_HALF_UP) . '%',
+				'date_added'     => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
+				'status'         => $result['status'],
+				'total'          => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value'], true),
+				'action'         => $action
 			];
 		}
 
