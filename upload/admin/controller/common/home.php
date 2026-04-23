@@ -585,12 +585,12 @@ class ControllerCommonHome extends Controller {
 		// Tab Affiliates
 		$this->data['affiliates'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'a.date_added',
 			'order' => 'DESC',
 			'start' => 0,
 			'limit' => 10
-		);
+		];
 
 		$affiliate_results = $this->model_sale_affiliate->getAffiliates($data);
 

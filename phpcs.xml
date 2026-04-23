@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ruleset name="NivoCart">
+
+    <description>
+        NivoCart PHPCS ruleset — PSR-12 base with pragmatic exclusions
+        for OpenCart-derived legacy framework compatibility.
+        Docs: https://www.php.net/manual/en/migration74.incompatible.php
+    </description>
+
+    <!-- Scan these paths -->
+    <file>admin</file>
+    <file>catalog</file>
+    <file>system</file>
+
+    <!-- Exclude third-party and generated paths -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/storage/*</exclude-pattern>
+
+    <!-- PHP version target -->
+    <config name="php_version" value="80100"/>
+
+    <!-- =========================================================
+         Base ruleset: PSR-12
+    ========================================================= -->
+    <rule ref="PSR12">
+
+        <!-- EXCLUSION 1: strict_types declaration
+             NivoCart's front controller loads files dynamically;
+             adding strict_types globally risks type-juggling
+             regressions across the framework. Tackle file-by-file,
+			 by manually adding "declare(strict_types=1);" -->
+        <exclude name="PSR12.Files.DeclareStatement"/>
+
+        <!-- EXCLUSION 2: File-level blank line after opening tag
+             Follows from the strict_types exclusion above —
+             no declare() means the blank-line rule is irrelevant. -->
+        <exclude name="PSR12.Files.FileHeader"/>
+
+    </rule>
+
+    <!-- =========================================================
+         Additional targeted rules beyond PSR-12 base
+    ========================================================= -->
+
+    <!-- Enforce short array syntax [] over array() -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <!-- No whitespace before semicolons -->
+    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+
+    <!-- No trailing whitespace on any line -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+
+    <!-- Consistent spacing inside array brackets -->
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+
+    <!-- Single space after cast operators e.g. (int) $x -->
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+
+    <!-- Disallow multiple statements on a single line -->
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+
+    <!-- No space before colon in switch/match cases -->
+    <rule ref="PSR2.ControlStructures.SwitchDeclaration"/>
+
+    <!-- Unused function parameters — warn, don't error -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+        <type>warning</type>
+    </rule>
+
+    <!-- Flag TODO / FIXME comments so they don't get lost -->
+    <rule ref="Generic.Commenting.Todo">
+        <type>warning</type>
+    </rule>
+    <rule ref="Generic.Commenting.Fixme">
+        <type>warning</type>
+    </rule>
+
+</ruleset>

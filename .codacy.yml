@@ -6,6 +6,8 @@ engines:
   # --- PHP ---
   phpcs:
     enabled: true
+    config:
+      standard: phpcs.xml
   phpmd:
     enabled: true
 
