@@ -37,6 +37,10 @@
              no declare() means the blank-line rule is irrelevant. -->
         <exclude name="PSR12.Files.FileHeader"/>
 
+		<!-- EXCLUSION 3: Tab indentation
+			 NivoCart PHP files use tabs throughout by convention.
+			 Spaces are used only in TPL template files. -->
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
     </rule>
 
     <!-- =========================================================
@@ -45,6 +49,9 @@
 
     <!-- Enforce short array syntax [] over array() -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+	<!-- Enforce tab indentation in PHP files -->
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
 
     <!-- No whitespace before semicolons -->
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
