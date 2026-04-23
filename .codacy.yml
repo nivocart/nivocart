@@ -1,0 +1,139 @@
+---
+# .codacy.yml — Codacy project configuration for NivoCart
+# Docs: https://docs.codacy.com/repositories-configure/codacy-configuration-file/
+
+engines:
+  # --- PHP ---
+  phpcs:
+    enabled: true
+  phpmd:
+    enabled: true
+
+  # --- JavaScript / TypeScript ---
+  eslint-9:
+    enabled: true
+  biome:
+    enabled: true
+
+  # --- CSS / SCSS ---
+  stylelint:
+    enabled: true
+
+  # --- Security ---
+  opengrep:
+    enabled: true
+  trivy:
+    enabled: true
+
+  # --- Complexity / general quality (language-agnostic) ---
+  lizard:
+    enabled: true
+  pmd-7:
+    enabled: true
+
+  # --- Disabled: not relevant to PHP/JS/TS/CSS project ---
+  ameba:
+    enabled: false
+  bandit:
+    enabled: false
+  brakeman:
+    enabled: false
+  checkov:
+    enabled: false
+  checkstyle:
+    enabled: false
+  codacy-scalameta-pro:
+    enabled: false
+  codenarc:
+    enabled: false
+  coffeelint:
+    enabled: false
+  cppcheck:
+    enabled: false
+  credo:
+    enabled: false
+  dartanalyzer:
+    enabled: false
+  detekt:
+    enabled: false
+  eslint-8:
+    enabled: false
+  flawfinder:
+    enabled: false
+  hadolint:
+    enabled: false
+  jacksonlinter:
+    enabled: false
+  markdownlint:
+    enabled: false
+  phpcs:
+    enabled: true   # already listed above, kept for clarity
+  pmd:
+    enabled: false
+  prospector:
+    enabled: false
+  psscriptanalyzer:
+    enabled: false
+  pylintpython3:
+    enabled: false
+  remark-lint:
+    enabled: false
+  revive:
+    enabled: false
+  roslyn:
+    enabled: false
+  rubocop:
+    enabled: false
+  ruff:
+    enabled: false
+  scalastyle:
+    enabled: false
+  shellcheck:
+    enabled: false
+  sonarcsharp:
+    enabled: false
+  sonarvb:
+    enabled: false
+  spectral:
+    enabled: false
+  SQLint:
+    enabled: false
+  swiftlint:
+    enabled: false
+  tsqllint:
+    enabled: false
+
+exclude_paths:
+  # Git & GitHub metadata
+  - ".github/**"
+  - ".git/**"
+
+  # Project documentation
+  - "README.md"
+  - "CHANGELOG.md"
+  - "CONTRIBUTING.md"
+  - "LICENSE"
+  - "*.md"
+
+  # Dependency directories (never lint third-party code)
+  - "vendor/**"
+  - "node_modules/**"
+
+  # Build / compiled output
+  - "dist/**"
+  - "build/**"
+  - "public/assets/**"
+
+  # Cache & temp files
+  - "*.cache"
+  - "tmp/**"
+  - "storage/**"
+
+  # Test fixtures & snapshots (optional — remove if you want tests scanned)
+  - "tests/fixtures/**"
+  - "**/__snapshots__/**"
+
+  # Config lock files
+  - "composer.lock"
+  - "package-lock.json"
+  - "yarn.lock"
