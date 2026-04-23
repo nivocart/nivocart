@@ -134,8 +134,8 @@
               <td><?php echo $text_mysql; ?></td>
               <td><?php echo (phpversion() < '8.0') ? $text_on : $text_off; ?></td>
               <?php if (phpversion() < '8.0') { ?>
-                <td><?php echo extension_loaded('mysql') ? 'On' : 'Off'; ?></td>
-                <td><?php echo extension_loaded('mysql') ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
+                <td><?php echo extension_loaded('mysqli') ? 'On' : 'Off'; ?></td>
+                <td><?php echo extension_loaded('mysqli') ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
               <?php } else { ?>
                 <td><?php echo 'Off'; ?></td>
                 <td><?php echo '<img src="view/image/success.png" alt="" />'; ?></td>

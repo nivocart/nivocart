@@ -90,7 +90,7 @@ if (isset($request->get['route'])) {
 } elseif ($upgrade) {
 	$action = new Action('upgrade');
 } else {
-	$action = new Action('step_1');
+	$action = new Action('prepare');
 }
 
 // Dispatch

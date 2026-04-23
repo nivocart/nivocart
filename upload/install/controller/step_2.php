@@ -35,8 +35,6 @@ class ControllerStep2 extends Controller {
 		$this->data['text_global'] = $this->language->get('text_global');
 		$this->data['text_db'] = $this->language->get('text_db');
 		$this->data['text_mysqli'] = $this->language->get('text_mysqli');
-		$this->data['text_mpdo'] = $this->language->get('text_mpdo');
-		$this->data['text_pgsql'] = $this->language->get('text_pgsql');
 		$this->data['text_gd'] = $this->language->get('text_gd');
 		$this->data['text_curl'] = $this->language->get('text_curl');
 		$this->data['text_dom'] = $this->language->get('text_dom');
@@ -64,7 +62,7 @@ class ControllerStep2 extends Controller {
 		$this->data['file_uploads'] = ini_get('file_uploads');
 		$this->data['session_auto_start'] = ini_get('session_auto_start');
 
-		if (!array_filter(['mysqli', 'pdo', 'pgsql'], 'extension_loaded')) {
+		if (!array_filter(['mysqli'], 'extension_loaded')) {
 			$this->data['db'] = false;
 		} else {
 			$this->data['db'] = true;
@@ -118,7 +116,7 @@ class ControllerStep2 extends Controller {
 			$this->error['warning'] = $this->language->get('error_php_session');
 		}
 
-		if (!array_filter(['mysqli', 'pdo', 'pgsql'], 'extension_loaded')) {
+		if (!array_filter(['mysqli'], 'extension_loaded')) {
 			$this->error['warning'] = $this->language->get('error_php_extension');
 		}
 

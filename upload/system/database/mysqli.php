@@ -15,9 +15,7 @@ final class DBMySQLi {
 	 * @param int    $port
 	 */
 	public function __construct(string $hostname, string $username, string $password, string $database, int $port = 0) {
-		if (!$port) {
-			$port = 3306;
-		}
+		$port = ($port) ? $port : 3306;
 
 		try {
 			mysqli_report(MYSQLI_REPORT_STRICT);

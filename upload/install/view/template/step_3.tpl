@@ -18,13 +18,6 @@
             <option value="mysqli"><?php echo $text_mysqli; ?></option>
           <?php } ?>
         <?php } ?>
-        <?php if ($pdo) { ?>
-          <?php if ($db_driver === 'mpdo') { ?>
-            <option value="mpdo" selected="selected"><?php echo $text_mpdo; ?></option>
-          <?php } else { ?>
-            <option value="mpdo"><?php echo $text_mpdo; ?></option>
-          <?php } ?>
-        <?php } ?>
         </select>
         <br />
         <?php if ($error_db_driver) { ?>

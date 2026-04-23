@@ -1,5 +1,6 @@
 <?php
 // Heading
+$_['heading_prepare']        = 'Preparation';
 $_['heading_step_1']         = 'License agreement';
 $_['heading_step_2']         = 'Pre-Installation';
 $_['heading_step_3']         = 'Configuration';
@@ -51,8 +52,7 @@ $_['text_magic']             = 'Magic Quotes GPC';
 $_['text_file_upload']       = 'File Uploads';
 $_['text_session']           = 'Session Auto Start';
 $_['text_db']                = 'Database';
-$_['text_mysqli']            = 'MySQLi';
-$_['text_mpdo']              = 'PDO';
+$_['text_mysqli']            = 'MySQL/MariaDB';
 $_['text_gd']                = 'GD';
 $_['text_curl']              = 'cURL';
 $_['text_dom']               = 'DOM';
@@ -123,7 +123,7 @@ $_['error_db_port']          = 'Database Port is required and must be numeric!';
 $_['error_db_prefix']        = 'DB Prefix can only contain lowercase characters in the a-z range, 0-9 and underscores.';
 $_['error_db_connect']       = 'Error: Could not connect to the database please make sure the database server, username and password is correct!';
 $_['error_db_not_exist']     = 'Error: Database does not exist!';
-$_['error_db_mysqli']        = 'MySQLi is not supported on your server! Try using PDO.';
+$_['error_db_mysqli']        = 'MySQL/MariaDB is not supported on your server!';
 $_['error_username']         = 'Username is required!';
 $_['error_password']         = 'Password is required!';
 $_['error_email']            = 'Invalid Email address!';
@@ -134,6 +134,40 @@ $_['button_install']         = '&#9654; &nbsp; Install NivoCart';
 $_['button_upgrade']         = '&#9654; &nbsp; Upgrade NivoCart';
 $_['button_continue']        = 'Continue &nbsp; &#10095;';
 $_['button_back']            = '&#10094; &nbsp; Back';
+
+// Prepare
+$_['text_prepare'] = '<h3>Welcome to NivoCart!</h3>
+    <h3>Preparing for Installation</h3>
+    <p>This quick guide is designed to help you through the installation process. The installation process
+	 contains 4 steps: 1-Agree to the License, 2-Validate server settings, 3-Install the database,
+	 4-Confirm successful install. In order to perform a smooth installation it is recommended to prepare
+	 a few things before clicking the &ldquo;Continue&rdquo; button below.</p>
+	<h3>Creating a new empty database</h3>
+	<p>To create a new database, open PhpMyAdmin from your Hosting Provider\'s dashboard. In PhpMyAdmin,
+	 the first page should be the one with the option to create a new MySQL database. However, it is advised
+	 before creating your new database, to create a new database user with all the privileges,
+	 then create the database. NivoCart uses &ldquo;utf8mb4_general_ci&rdquo; collation by default,
+	 so it is recommended to select this collation when creating the database. Make sure to write down
+	 your user and MySQL database details before leaving PhpMyAdmin, as they will be required during
+	 the installation process.</p>
+	<h3>Re-naming the config-dist files</h3>
+	<p>Re-name both &ldquo;config-dist.php&rdquo; to &ldquo;config.php&rdquo; using your Hosting Provider\'s
+	 File manager. The first one is at the root of the NivoCart\'s package, while the second one
+	 is up one level inside the &ldquo;admin&rdquo; folder. Both files are empty at this time but
+	 the installation routine will write essential information into them, such as your website root
+	 and your database credentials, therefore they should be writable (CHMOD 644 minimum).</p>
+	<h3>Enabling Seo_urls during Installation</h3>
+	<p>You will be able to select the activation of Seo_urls Rewriting during the installation process.
+	 This operation is automated for you. However, if you choose to not activate Seo_urls Rewriting
+	 at this time, it is fine too, as you can activate them at any time in your Admin Settings.</p>
+	<h3>Enabling Maintenance during Installation</h3>
+	<p>You will be able to place your new NivoCart website in Maintenance Mode during the installation
+	 process. This could be useful if you are not quite ready to go live just yet. Again, this option
+	 will also be available from your Admin Settings at any time. It is important to know that, as
+	 the &ldquo;Top Administrator&rdquo; you will still have full access to all pages on your site,
+	 only visitors will be presented with the Maintenance Page.</p>
+	<h3>Ready to Continue with the Installation?</h3>
+	<p>To start the Installation, click the <b>continue</b> button below. Enjoy NivoCart!</p>';
 
 // Terms
 $_['text_terms'] = '<h3>Open Software License v. 3.0 (OSL-3.0)</h3>

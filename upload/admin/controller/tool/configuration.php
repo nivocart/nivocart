@@ -154,10 +154,6 @@ class ControllerToolConfiguration extends Controller {
 
 		if ($database_name === 'mysqli') {
 			$this->data['database_name'] = 'MySQLi';
-		} elseif ($database_name === 'mpdo') {
-			$this->data['database_name'] = 'PDO (MySQL)';
-		} elseif ($database_name === 'pgsql') {
-			$this->data['database_name'] = 'PgSQL';
 		} else {
 			$this->data['database_name'] = 'SQL';
 		}
@@ -276,9 +272,7 @@ class ControllerToolConfiguration extends Controller {
 
 		// Set comparison arrays
 		$this->data['database_files'] = [
-			'mpdo'   => $ds(DIR_SYSTEM . 'database/mpdo.php'),
-			'mysqli' => $ds(DIR_SYSTEM . 'database/mysqli.php'),
-			'pgsql'  => $ds(DIR_SYSTEM . 'database/pgsql.php')
+			'mysqli' => $ds(DIR_SYSTEM . 'database/mysqli.php')
 		];
 
 		$this->data['engine_files'] = [
