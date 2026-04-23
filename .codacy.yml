@@ -127,7 +127,6 @@ exclude_paths:
   # Cache & temp files
   - "*.cache"
   - "tmp/**"
-  - "storage/**"
 
   # Test fixtures & snapshots (optional — remove if you want tests scanned)
   - "tests/fixtures/**"
