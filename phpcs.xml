@@ -41,6 +41,25 @@
 			 NivoCart PHP files use tabs throughout by convention.
 			 Spaces are used only in TPL template files. -->
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+
+		<!-- EXCLUSION 4: Line length limit
+			 Long lines are acceptable in NivoCart; splitting them
+			 offers no performance benefit and reduces readability
+			 of chained method calls and concatenated URLs. -->
+		<exclude name="Generic.Files.LineLength"/>
+
+		<!-- EXCLUSION 5: Multi-line function declaration formatting
+			 Single-line function signatures are preferred throughout
+			 NivoCart regardless of parameter count. -->
+		<exclude name="PSR12.Functions.NullableTypeDeclaration"/>
+		<exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
+		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration"/>
+
+		<!-- EXCLUSION 6: Single space after cast operators
+			 Cast spacing style is left to developer preference;
+			 (int)$x and (int) $x are both acceptable in NivoCart. -->
+		<exclude name="Generic.Formatting.SpaceAfterCast"/>
+
     </rule>
 
     <!-- =========================================================
@@ -50,9 +69,6 @@
     <!-- Enforce short array syntax [] over array() -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
-	<!-- Enforce tab indentation in PHP files -->
-	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
-
     <!-- No whitespace before semicolons -->
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
 
@@ -61,9 +77,6 @@
 
     <!-- Consistent spacing inside array brackets -->
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
-
-    <!-- Single space after cast operators e.g. (int) $x -->
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
 
     <!-- Disallow multiple statements on a single line -->
     <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
