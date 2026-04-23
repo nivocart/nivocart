@@ -31,7 +31,7 @@ define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 
 // Version
-define('NC_VERSION', '1.0.6');
+define('NC_VERSION', '2.0.0');
 
 // Startup
 require_once(DIR_SYSTEM . 'startup.php');
@@ -58,7 +58,7 @@ function usage() {
 	echo "Usage:\n";
 	echo "======\n";
 	echo "\n";
-	$options = implode(" ", array(
+	$options = implode(" ", [
 		'--db_hostname', 'localhost',
 		'--db_username', 'root',
 		'--db_password', 'pass',
@@ -70,12 +70,12 @@ function usage() {
 		'--email', 'email@example.com',
 		'--agree_tnc', 'yes',
 		'--http_server', 'http://localhost/nivocart')
-	);
+	];
 	echo 'php cli_install.php install ' . $options . "\n\n";
 }
 
-function getOptions($argv) {
-	$defaults = array(
+function getOptions($argv): array {
+	$defaults = [
 		'db_hostname' => 'localhost',
 		'db_database' => 'nivocart',
 		'db_prefix'   => 'nc_',
@@ -83,9 +83,9 @@ function getOptions($argv) {
 		'db_port'     => '3306',
 		'username'    => 'admin',
 		'agree_tnc'   => 'no'
-	);
+	];
 
-	$options = array();
+	$options = [];
 
 	$total = count($argv);
 
@@ -102,8 +102,8 @@ function getOptions($argv) {
 	return array_merge($defaults, $options);
 }
 
-function valid($options) {
-	$required = array(
+function valid(array $options = []): array {
+	$required = [
 		'db_hostname',
 		'db_username',
 		'db_password',
@@ -115,9 +115,9 @@ function valid($options) {
 		'email',
 		'agree_tnc',
 		'http_server'
-	);
+	];
 
-	$missing = array();
+	$missing = [];
 
 	foreach ($required as $r) {
 		if (!array_key_exists($r, $options)) {
@@ -134,7 +134,7 @@ function valid($options) {
 	return array($valid, $missing);
 }
 
-function install($options) {
+function install(array $options = []): void {
 	$check = checkRequirements();
 
 	if ($check[0]) {
@@ -147,11 +147,11 @@ function install($options) {
 	}
 }
 
-function checkRequirements() {
+function checkRequirements(): array {
 	$error = null;
 
-	if (phpversion() < '7.0') {
-		$error = 'Warning: You need to use PHP 7.0 or above for NivoCart to work!';
+	if (phpversion() < '8.0') {
+		$error = 'Warning: You need to use PHP 8.0 or above for NivoCart to work!';
 	}
 
 	if (!ini_get('file_uploads')) {
@@ -239,7 +239,7 @@ function checkRequirements() {
 	return array($error === null, $error);
 }
 
-function setupDb($data) {
+function setupDb($data): void {
 	$db = new DB($data['db_driver'], htmlspecialchars_decode($data['db_hostname']), htmlspecialchars_decode($data['db_username']), htmlspecialchars_decode($data['db_password']), htmlspecialchars_decode($data['db_database']), $data['db_port']);
 
 	$file = DIR_APPLICATION . 'nivocart.sql';
@@ -254,7 +254,7 @@ function setupDb($data) {
 		$sql = '';
 
 		foreach ($lines as $line) {
-			if ($line && (substr($line, 0, 2) != '--') && (substr($line, 0, 1) != '#')) {
+			if ($line && (substr($line, 0, 2) !== '--') && (substr($line, 0, 1) !== '#')) {
 				$sql .= $line;
 
 				if (preg_match('/;\s*$/', $line)) {
@@ -283,13 +283,13 @@ function setupDb($data) {
 		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_url', `value` = '" . $db->escape(HTTP_NIVOCART) . "'");
 
 		$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_encryption'");
-		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(hash_rand('ripemd128')) . "'");
+		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(mb_substr(md5(uniqid(rand(), true)), 0, 16, 'UTF-8')) . "'");
 
 		$db->query("INSERT INTO `" . $data['db_prefix'] . "version` SET `version` = '" . $db->escape(NC_VERSION) . "', date_added = NOW()");
 	}
 }
 
-function writeConfigFiles($options) {
+function writeConfigFiles($options): void {
 	// Write Catalog config.php
 	$output = '<?php' . "\n";
 	$output .= '// HTTP' . "\n";
@@ -311,7 +311,6 @@ function writeConfigFiles($options) {
 	$output .= 'define(\'DIR_CACHE\', \'' . DIR_NIVOCART . 'system/cache/\');' . "\n";
 	$output .= 'define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');' . "\n";
 	$output .= 'define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');' . "\n";
-	$output .= 'define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');' . "\n";
 	$output .= 'define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');' . "\n";
 
 	$output .= '// DB' . "\n";
@@ -352,7 +351,6 @@ function writeConfigFiles($options) {
 	$output .= 'define(\'DIR_CACHE\', \'' . DIR_NIVOCART . 'system/cache/\');' . "\n";
 	$output .= 'define(\'DIR_UPLOAD\', \'' . DIR_NIVOCART . 'system/upload/\');' . "\n";
 	$output .= 'define(\'DIR_DOWNLOAD\', \'' . DIR_NIVOCART . 'download/\');' . "\n";
-	$output .= 'define(\'DIR_VQMOD\', \'' . DIR_NIVOCART . 'vqmod/\');' . "\n";
 	$output .= 'define(\'DIR_LOGS\', \'' . DIR_NIVOCART . 'system/logs/\');' . "\n";
 	$output .= 'define(\'DIR_CATALOG\', \'' . DIR_NIVOCART . 'catalog/\');' . "\n\n";
 
@@ -372,14 +370,14 @@ function writeConfigFiles($options) {
 	fclose($file);
 }
 
-function dirPermissions() {
-	$dirs = array(
+function dirPermissions(): void {
+	$dirs = [
 		DIR_NIVOCART . 'image/',
 		DIR_NIVOCART . 'download/',
 		DIR_SYSTEM . 'upload/',
 		DIR_SYSTEM . 'cache/',
 		DIR_SYSTEM . 'logs/'
-	);
+	];
 
 	exec('chmod o+w -R ' . implode(' ', $dirs));
 }
@@ -387,36 +385,34 @@ function dirPermissions() {
 $argv = $_SERVER['argv'];
 
 $script = array_shift($argv);
-
 $subcommand = array_shift($argv);
 
-switch ($subcommand) {
-	case "install":
-		try {
-			$options = getOptions($argv);
+match($subcommand) {
+    'install' => (function() use ($argv) {
+        try {
+            $options = getOptions($argv);
 
-			define('HTTP_NIVOCART', $options['http_server']);
+            define('HTTP_NIVOCART', $options['http_server']);
 
-			$valid = valid($options);
+            $valid = valid($options);
 
-			if (!$valid[0]) {
-				echo "FAILED! The following inputs were missing or invalid: ";
-				echo implode(', ',  $valid[1]) . "\n\n";
-				exit(1);
-			}
+            if (!$valid[0]) {
+                echo "FAILED! The following inputs were missing or invalid: ";
+                echo implode(', ', $valid[1]) . "\n\n";
+                exit(1);
+            }
 
-			install($options);
+            install($options);
 
-			echo "SUCCESS: NivoCart was successfully installed on your server!\n";
-
-			echo "Store link: " . $options['http_server'] . "\n";
-			echo "Admin link: " . $options['http_server'] . "admin/\n\n";
-		} catch (ErrorException $e) {
-			echo 'FAILED!: ' . $e->getMessage() . "\n";
-			exit(1);
-		}
-		break;
-	case "usage":
-	default:
-	echo usage();
-}
+            echo "SUCCESS: NivoCart was successfully installed on your server!\n";
+            echo "Store link: " . $options['http_server'] . "\n";
+            echo "Admin link: " . $options['http_server'] . "admin/\n\n";
+        } catch (ErrorException $e) {
+            echo 'FAILED!: ' . $e->getMessage() . "\n";
+            exit(1);
+        }
+    })(),
+    default => (function() {
+        echo usage();
+    })()
+};

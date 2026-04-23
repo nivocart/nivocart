@@ -1,7 +1,7 @@
 <?php
 class ModelInstall extends Model {
 
-	public function database(array $data = []) {
+	public function database(array $data = []): void {
 		$db = new DB($data['db_driver'], htmlspecialchars_decode($data['db_hostname']), htmlspecialchars_decode($data['db_username']), htmlspecialchars_decode($data['db_password']), htmlspecialchars_decode($data['db_database']), $data['db_port']);
 
 		if (isset($data['demo_data'])) {
@@ -10,6 +10,7 @@ class ModelInstall extends Model {
 			if (!file_exists($file)) {
 				exit('Could not load SQL file: ' . $file);
 			}
+
 		} else {
 			$file = DIR_APPLICATION . 'nivocart.sql';
 
@@ -57,7 +58,7 @@ class ModelInstall extends Model {
 			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_url', `value` = '" . $db->escape(HTTP_NIVOCART) . "'");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_encryption'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . mb_substr(md5(uniqid(rand(), true)), 0, 16, 'UTF-8') . "'");
+			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(mb_substr(md5(uniqid(rand(), true)), 0, 16, 'UTF-8')) . "'");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_maintenance'");
 			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_maintenance', `value` = '" . (isset($data['maintenance']) ? 1 : 0) . "'");

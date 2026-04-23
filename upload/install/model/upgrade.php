@@ -8,7 +8,7 @@
 class ModelUpgrade extends Model {
 
 	public function dataTables($step1) {
-		// Load the sql file
+		// Load the MySql file
 		$file = DIR_APPLICATION . 'nivocart-upgrade.sql';
 
 		if (!file_exists($file)) {
@@ -140,7 +140,7 @@ class ModelUpgrade extends Model {
 		$this->db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
 		// Get all current tables, fields, type, size, etc..
-		$table_old_data = array();
+		$table_old_data = [];
 
 		$table_query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
 
@@ -470,6 +470,7 @@ class ModelUpgrade extends Model {
 						if (strpos($line, 'HTTP_SERVER') !== false) {
 							$new_line = "define('HTTP_IMAGE', '" . str_replace("\\", "/", HTTP_SERVER) . 'image/' . "');";
 							$strip_line = str_replace("/install", "", $new_line);
+
 							$output .= $strip_line . "\n";
 							$output .= $line;
 						} else {
@@ -593,7 +594,7 @@ class ModelUpgrade extends Model {
 		// -----------
 		// Get stores
 		// -----------
-		$stores = array();
+		$stores = [];
 
 		$sql = "SELECT store_id FROM `" . DB_PREFIX . "store`";
 
@@ -617,7 +618,7 @@ class ModelUpgrade extends Model {
 		// --------------------------------------------------------------------
 		// Check News routes in layout_route table. Add News routes if missing
 		// --------------------------------------------------------------------
-		$news_routes = array('information/news', 'information/news_list');
+		$news_routes = ['information/news', 'information/news_list'];
 
 		foreach ($stores as $store_id) {
 			foreach ($news_routes as $news_route) {
@@ -645,7 +646,7 @@ class ModelUpgrade extends Model {
 		// --------------------------------------------------------------------------
 		// Check Special routes in layout_route table. Add Special routes if missing
 		// --------------------------------------------------------------------------
-		$special_routes = array('product/special');
+		$special_routes = ['product/special'];
 
 		foreach ($stores as $store_id) {
 			foreach ($special_routes as $special_route) {
