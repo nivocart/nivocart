@@ -1,7 +1,16 @@
 <?php
+/**
+ * Class Header
+ *
+ * @package NivoCart
+ */
 class ControllerHeader extends Controller {
-
-	public function index() {
+	/**
+	 * Index
+	 *
+	 * @return void
+	 */
+	public function index(): void {
 		$this->data['title'] = $this->document->getTitle();
 		$this->data['description'] = $this->document->getDescription();
 		$this->data['links'] = $this->document->getLinks();

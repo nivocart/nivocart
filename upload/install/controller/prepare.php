@@ -1,7 +1,16 @@
 <?php
+/**
+ * Class Prepare
+ *
+ * @package NivoCart
+ */
 class ControllerPrepare extends Controller {
-
-	public function index() {
+	/**
+	 * Index
+	 *
+	 * @return void
+	 */
+	public function index(): void {
 		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$this->response->redirect($this->url->link('step_1', '', 'SSL'));
 		}

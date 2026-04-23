@@ -1,7 +1,16 @@
 <?php
+/**
+ * Class Step4
+ *
+ * @package NivoCart
+ */
 class ControllerStep4 extends Controller {
-
-	public function index() {
+	/**
+	 * Index
+	 *
+	 * @return void
+	 */
+	public function index(): void {
 		$this->document->setTitle($this->language->get('heading_step_4'));
 
 		$this->data['heading_step_4'] = $this->language->get('heading_step_4');

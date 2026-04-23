@@ -1,8 +1,18 @@
 <?php
+/**
+ * Class Step2
+ *
+ * @package NivoCart
+ */
 class ControllerStep2 extends Controller {
 	private array $error = [];
 
-	public function index() {
+	/**
+	 * Index
+	 *
+	 * @return void
+	 */
+	public function index(): void {
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->response->redirect($this->url->link('step_3', '', 'SSL'));
 		}

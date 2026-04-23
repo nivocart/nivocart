@@ -1,8 +1,18 @@
 <?php
+/**
+ * Class Step3
+ *
+ * @package NivoCart
+ */
 class ControllerStep3 extends Controller {
 	private array $error = [];
 
-	public function index() {
+	/**
+	 * Index
+	 *
+	 * @return void
+	 */
+	public function index(): void {
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->load->model('install');
 

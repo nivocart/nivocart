@@ -1,14 +1,25 @@
 <?php
-// ----------------------------------
-// NivoCart Upgrade Script
-// ----------------------------------
-// Minimum version supported: v2.0.0
-// ----------------------------------
-
+/**
+ * Class Upgrade
+ *
+ * NivoCart Upgrade Script
+ *
+ * Minimum version supported: v2.0.0
+ *
+ * @package NivoCart
+ */
 class ModelUpgrade extends Model {
-
+	/**
+	 * DataTables
+	 *
+	 * @param $step1 value = false
+	 *
+	 * @throws \Exception
+	 *
+	 * @return $step1
+	 */
 	public function dataTables($step1) {
-		// Load the MySql file
+		// Load the MySql upgrade file
 		$file = DIR_APPLICATION . 'nivocart-upgrade.sql';
 
 		if (!file_exists($file)) {

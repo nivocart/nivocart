@@ -1,8 +1,18 @@
 <?php
+/**
+ * Class Upgrade
+ *
+ * @package NivoCart
+ */
 class ControllerUpgrade extends Controller {
 	private array $error = [];
 
-	public function index() {
+	/**
+	 * Index
+	 *
+	 * @return void
+	 */
+	public function index(): void {
 		$this->document->setTitle($this->language->get('heading_upgrade'));
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
@@ -125,14 +135,6 @@ class ControllerUpgrade extends Controller {
 			}
 
 			mysqli_close($connection);
-		}
-
-		if (DB_DRIVER === 'mpdo') {
-			try {
-				new \PDO("mysql:host=" . DB_HOSTNAME . ";port=" . DB_PORT . ";dbname=" . DB_DATABASE, DB_USERNAME, DB_PASSWORD, array(\PDO::ATTR_PERSISTENT => true));
-			} catch (Exception $e) {
-				$this->error['warning'] = $e->getMessage();
-			}
 		}
 
 		return empty($this->error);

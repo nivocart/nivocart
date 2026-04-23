@@ -1,7 +1,16 @@
 <?php
+/**
+ * Class Footer
+ *
+ * @package NivoCart
+ */
 class ControllerFooter extends Controller {
-
-	public function index() {
+	/**
+	 * Index
+	 *
+	 * @return void
+	 */
+	public function index(): void {
 		$this->data['text_project_home'] = $this->language->get('text_project_home');
 		$this->data['text_footer'] = $this->language->get('text_footer');
 
