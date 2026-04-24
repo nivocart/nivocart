@@ -1,5 +1,13 @@
 <?php
+/**
+ * Class ModelToolExportImportRaw
+ *
+ * @package NivoCart
+ */
 class ModelToolExportImportRaw extends Model {
+	/**
+	 * Functions Export, Import, Get, Check
+	 */
 
 	// Export SQL
 	public function csvExportRaw($table) {
@@ -9,7 +17,7 @@ class ModelToolExportImportRaw extends Model {
 
 		$platform = $this->browser->getPlatform();
 
-		if ($platform == 'Linux' || $platform == 'Debian' || $platform == 'GNU/Linux') {
+		if ($platform === 'Linux' || $platform === 'Debian' || $platform === 'GNU/Linux') {
 			$csv_escaped = "\\";
 		} else {
 			$csv_escaped = '"';
@@ -33,8 +41,8 @@ class ModelToolExportImportRaw extends Model {
 			$fields_cnt = count($row);
 
 			foreach ($row as $k => $v) {
-				if ($row[$k] == '0' || $row[$k] != '') {
-					if ($csv_enclosure == '') {
+				if ($row[$k] === '0' || $row[$k] !== '') {
+					if ($csv_enclosure === '') {
 						$schema_insert .= $row[$k];
 					} else {
 						$row[$k] = str_replace(array("\r","\n","\t"), "", $row[$k]);
@@ -69,7 +77,7 @@ class ModelToolExportImportRaw extends Model {
 		}
 
 		// Get Table name and Columns from header row
-		$columns = array();
+		$columns = [];
 
 		$data = fgetcsv($handle, 1000, ";");
 
@@ -94,7 +102,7 @@ class ModelToolExportImportRaw extends Model {
 
 		$row_count = 0;
 
-		$sql_query_array = array();
+		$sql_query_array = [];
 
 		// Read the file as csv
 		while (($data = fgetcsv($handle, 10000, ";")) !== false) {
@@ -114,10 +122,10 @@ class ModelToolExportImportRaw extends Model {
 				$test2 = preg_match_all($pattern2, $value, $matches);
 
 				if ($test || $test2) {
-					if ($value == date('Y-m-d H:i:s', strtotime($value))) {
+					if ($value === date('Y-m-d H:i:s', strtotime($value))) {
 						$new_value = date('Y-m-d H:i:s', strtotime($value));
 						$data[$key] = "DATETIME('" . $this->db->escape($new_value) . "')";
-					} elseif ($value == date('Y-m-d', strtotime($value))) {
+					} elseif ($value === date('Y-m-d', strtotime($value))) {
 						$new_value = date('Y-m-d', strtotime($value));
 						$data[$key] = "DATE('" . $this->db->escape($new_value) . "')";
 					} else {
@@ -158,12 +166,12 @@ class ModelToolExportImportRaw extends Model {
 	}
 
 	public function getTables() {
-		$table_data = array();
+		$table_data = [];
 
 		$query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
 
 		foreach ($query->rows as $result) {
-			if (substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
+			if (substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) === DB_PREFIX) {
 				if (isset($result['Tables_in_' . DB_DATABASE])) {
 					$table_data[] = $result['Tables_in_' . DB_DATABASE];
 				}
@@ -174,10 +182,10 @@ class ModelToolExportImportRaw extends Model {
 	}
 
 	// Check SQL reserved keywords
-	public function checkReserved($columns = array()) {
-		$checked_columns = array();
+	public function checkReserved($columns = []) {
+		$checked_columns = [];
 
-		$reserved = array (
+		$reserved = [
 			'ACCESSIBLE', 'ACTION', 'ADD', 'AFTER', 'AGAINST', 'AGGREGATE', 'ALGORITHM', 'ALL', 'ALTER', 'ANALYZE', 'AND', 'ANY', 'AS', 'ASC',	'ASCII', 'ASENSITIVE', 'AT', 'AUTHORS',
 			'AUTOEXTEND_SIZE', 'AUTO_INCREMENT', 'AVG', 'AVG_ROW_LENGTH', 'BACKUP', 'BEFORE', 'BEGIN', 'BETWEEN', 'BIGINT', 'BINARY', 'BINLOG', 'BIT', 'BLOB', 'BLOCK', 'BOOL',
 			'BOOLEAN', 'BOTH', 'BTREE', 'BY', 'BYTE', 'CACHE', 'CALL', 'CASCADE', 'CASCADED', 'CASE', 'CATALOG_NAME', 'CHAIN', 'CHANGE', 'CHANGED', 'CHAR', 'CHARACTER', 'CHARSET',
@@ -219,7 +227,7 @@ class ModelToolExportImportRaw extends Model {
 			'UPDATE', 'UPGRADE', 'USAGE', 'USE', 'USER', 'USER_RESOURCES', 'USE_FRM', 'USING', 'UTC_DATE', 'UTC_TIME', 'UTC_TIMESTAMP', 'VALUE', 'VALUES', 'VARBINARY', 'VARCHAR',
 			'VARCHARACTER', 'VARIABLES', 'VARYING', 'VIEW', 'WAIT', 'WARNINGS', 'WEEK', 'WHEN', 'WHERE', 'WHILE', 'WITH', 'WORK', 'WRAPPER', 'WRITE', 'X509', 'XA', 'XML', 'XOR', 'YEAR',
 			'YEAR_MONTH', 'ZEROFILL'
-		);
+		];
 
 		foreach ($columns as $column) {
 			$upcase_column = strtoupper($column);
