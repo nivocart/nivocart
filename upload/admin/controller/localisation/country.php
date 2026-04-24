@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerLocalisationCountry
+ *
+ * @package NivoCart
+ */
 class ControllerLocalisationCountry extends Controller {
 	private $error = [];
 
