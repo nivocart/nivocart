@@ -1,26 +1,34 @@
 <?php
+/**
+ * Class ModelSaleOffer
+ *
+ * @package NivoCart
+ */
 class ModelSaleOffer extends Model {
+	/**
+	 * Functions Get
+	 */
 
 	// Product to Product
 	public function getOfferProductProducts(array $data = []): array {
 		$sql = "SELECT offer_product_product_id, `name`, `type`, discount, logged, date_end, status FROM `" . DB_PREFIX . "offer_product_product`";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'type',
 			'discount',
 			'logged',
 			'date_end',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -53,22 +61,22 @@ class ModelSaleOffer extends Model {
 	public function getOfferProductCategories(array $data = []): array {
 		$sql = "SELECT offer_product_category_id, `name`, `type`, discount, logged, date_end, status FROM `" . DB_PREFIX . "offer_product_category`";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'type',
 			'discount',
 			'logged',
 			'date_end',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -101,22 +109,22 @@ class ModelSaleOffer extends Model {
 	public function getOfferCategoryProducts(array $data = []): array {
 		$sql = "SELECT offer_category_product_id, `name`, `type`, discount, logged, date_end, status FROM `" . DB_PREFIX . "offer_category_product`";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'type',
 			'discount',
 			'logged',
 			'date_end',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -149,22 +157,22 @@ class ModelSaleOffer extends Model {
 	public function getOfferCategoryCategories(array $data = []): array {
 		$sql = "SELECT offer_category_category_id, `name`, `type`, discount, logged, date_end, status FROM `" . DB_PREFIX . "offer_category_category`";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'type',
 			'discount',
 			'logged',
 			'date_end',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

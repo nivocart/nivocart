@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleVoucherTheme
+ *
+ * @package NivoCart
+ */
 class ModelSaleVoucherTheme extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addVoucherTheme(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "voucher_theme` SET `image` = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "'");
 
@@ -89,12 +96,12 @@ class ModelSaleVoucherTheme extends Model {
 	}
 
 	public function getVoucherThemeDescriptions(int $voucher_theme_id): array {
-		$voucher_theme_data = array();
+		$voucher_theme_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "voucher_theme_description` WHERE voucher_theme_id = '" . (int)$voucher_theme_id . "'");
 
 		foreach ($query->rows as $result) {
-			$voucher_theme_data[$result['language_id']] = array('name' => $result['name']);
+			$voucher_theme_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $voucher_theme_data;

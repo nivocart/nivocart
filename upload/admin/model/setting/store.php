@@ -1,8 +1,15 @@
 <?php
+/**
+ * Class ModelSettingStore
+ *
+ * @package NivoCart
+ */
 class ModelSettingStore extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addStore(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "store` SET `name` = '" . $this->db->escape($data['config_name']) . "', url = '" . $this->db->escape($data['config_url']) . "', `ssl` = '" . $this->db->escape($data['config_ssl']) . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "store` SET `name` = '" . $this->db->escape($data['config_name']) . "', `url` = '" . $this->db->escape($data['config_url']) . "', `ssl` = '" . $this->db->escape($data['config_ssl']) . "'");
 
 		$store_id = $this->db->getLastId();
 
@@ -13,7 +20,7 @@ class ModelSettingStore extends Model {
 	}
 
 	public function editStore(int $store_id, array $data = []): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "store` SET `name` = '" . $this->db->escape($data['config_name']) . "', url = '" . $this->db->escape($data['config_url']) . "', `ssl` = '" . $this->db->escape($data['config_ssl']) . "' WHERE store_id = '" . (int)$store_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "store` SET `name` = '" . $this->db->escape($data['config_name']) . "', `url` = '" . $this->db->escape($data['config_url']) . "', `ssl` = '" . $this->db->escape($data['config_ssl']) . "' WHERE store_id = '" . (int)$store_id . "'");
 
 		$this->cache->delete('store');
 	}
@@ -40,18 +47,18 @@ class ModelSettingStore extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "store`";
 
-			$sort_data = array(
+			$sort_data = [
 				'name',
 				'url'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
 			} else {
-				$sql .= " ORDER BY url";
+				$sql .= " ORDER BY `url`";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -77,7 +84,7 @@ class ModelSettingStore extends Model {
 			$store_data = $this->cache->get('store');
 
 			if (!$store_data) {
-				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` ORDER BY url ASC");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` ORDER BY `url` ASC");
 
 				$store_data = $query->rows;
 

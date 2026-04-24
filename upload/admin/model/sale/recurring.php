@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleRecurring
+ *
+ * @package NivoCart
+ */
 class ModelSaleRecurring extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function getProfiles(array $data = []): array {
 		$sql = "SELECT order_recurring_id, order_id, status, created, profile_reference, CONCAT(firstname, ' ', lastname) AS `customer` FROM `" . DB_PREFIX . "order_recurring` LEFT JOIN `" . DB_PREFIX . "order` USING(`order_id`) WHERE order_recurring_id IS NOT NULL";
 
@@ -28,14 +35,14 @@ class ModelSaleRecurring extends Model {
 			$sql .= " AND status = " . (int)$data['filter_status'];
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'order_recurring_id',
 			'order_id',
 			'profile_reference',
 			'customer',
 			'created',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -43,7 +50,7 @@ class ModelSaleRecurring extends Model {
 			$sql .= " ORDER BY order_recurring_id";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -61,31 +68,31 @@ class ModelSaleRecurring extends Model {
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}
 
-		$profiles = array();
+		$profiles = [];
 
 		$results = $this->db->query($sql)->rows;
 
 		foreach ($results as $result) {
-			$profiles[] = array(
+			$profiles[] = [
 				'order_recurring_id' => $result['order_recurring_id'],
 				'order_id'           => $result['order_id'],
 				'status'             => $this->getStatus($result['status']),
 				'created'            => $result['created'],
 				'profile_reference'  => $result['profile_reference'],
 				'customer'           => $result['customer']
-			);
+			];
 		}
 
 		return $profiles;
 	}
 
 	public function getProfile(int $order_recurring_id): array {
-		$profile = array();
+		$profile = [];
 
 		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_recurring` WHERE order_recurring_id = " . (int)$order_recurring_id)->row;
 
 		if ($result) {
-			$profile = array(
+			$profile = [
 				'order_recurring_id'  => $result['order_recurring_id'],
 				'order_id'            => $result['order_id'],
 				'status'              => $this->getStatus($result['status']),
@@ -96,7 +103,7 @@ class ModelSaleRecurring extends Model {
 				'profile_reference'   => $result['profile_reference'],
 				'product_name'        => $result['product_name'],
 				'product_quantity'    => $result['product_quantity']
-			);
+			];
 		}
 
 		return $profile;
@@ -104,82 +111,45 @@ class ModelSaleRecurring extends Model {
 
 	public function getProfileTransactions(int $order_recurring_id): array {
 		$results = $this->db->query("SELECT amount, `type`, created FROM `" . DB_PREFIX . "order_recurring_transaction` WHERE order_recurring_id = " . (int)$order_recurring_id . " ORDER BY created DESC")->rows;
-
-		$transactions = array();
+		$transactions = [];
 
 		foreach ($results as $result) {
-			switch ($result['type']) {
-				case 0:
-					$type = $this->language->get('text_transaction_created');
-					break;
-				case 1:
-					$type = $this->language->get('text_transaction_payment');
-					break;
-				case 2:
-					$type = $this->language->get('text_transaction_outstanding_payment');
-					break;
-				case 3:
-					$type = $this->language->get('text_transaction_skipped');
-					break;
-				case 4:
-					$type = $this->language->get('text_transaction_failed');
-					break;
-				case 5:
-					$type = $this->language->get('text_transaction_cancelled');
-					break;
-				case 6:
-					$type = $this->language->get('text_transaction_suspended');
-					break;
-				case 7:
-					$type = $this->language->get('text_transaction_suspended_failed');
-					break;
-				case 8:
-					$type = $this->language->get('text_transaction_outstanding_failed');
-					break;
-				case 9:
-					$type = $this->language->get('text_transaction_expired');
-					break;
-				default:
-					$type = '';
-					break;
-			}
+			$type = match((int)$result['type']) {
+				0 => $this->language->get('text_transaction_created'),
+				1 => $this->language->get('text_transaction_payment'),
+				2 => $this->language->get('text_transaction_outstanding_payment'),
+				3 => $this->language->get('text_transaction_skipped'),
+				4 => $this->language->get('text_transaction_failed'),
+				5 => $this->language->get('text_transaction_cancelled'),
+				6 => $this->language->get('text_transaction_suspended'),
+				7 => $this->language->get('text_transaction_suspended_failed'),
+				8 => $this->language->get('text_transaction_outstanding_failed'),
+				9 => $this->language->get('text_transaction_expired'),
+				default => ''
+			};
 
-			$transactions[] = array(
+			$transactions[] = [
 				'created' => $result['created'],
 				'amount'  => $result['amount'],
 				'type'    => $type
-			);
+			];
 		}
 
 		return $transactions;
 	}
 
 	private function getStatus($status) {
-		switch ($status) {
-			case 1:
-				$result = $this->language->get('text_status_inactive');
-				break;
-			case 2:
-				$result = $this->language->get('text_status_active');
-				break;
-			case 3:
-				$result = $this->language->get('text_status_suspended');
-				break;
-			case 4:
-				$result = $this->language->get('text_status_cancelled');
-				break;
-			case 5:
-				$result = $this->language->get('text_status_expired');
-				break;
-			case 6:
-				$result = $this->language->get('text_status_pending');
-				break;
-			default:
-				$result = '';
-				break;
-		}
+		$status = $status ?? '';
 
-		return $result;
+		return match((int)$status) {
+			1 => $this->language->get('text_status_inactive'),
+			2 => $this->language->get('text_status_active'),
+			3 => $this->language->get('text_status_suspended'),
+			4 => $this->language->get('text_status_cancelled'),
+			5 => $this->language->get('text_status_expired'),
+			6 => $this->language->get('text_status_pending'),
+			default => ''
+		};
 	}
 
 	public function getTotalProfiles(array $data = []) {

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleOrder
+ *
+ * @package NivoCart
+ */
 class ModelSaleOrder extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addOrder(array $data = []): void {
 		$this->load->model('setting/store');
 
@@ -519,7 +526,7 @@ class ModelSaleOrder extends Model {
 				$language_directory = '';
 			}
 
-			return array(
+			return [
 				'order_id'                => $order_query->row['order_id'],
 				'invoice_no'              => $order_query->row['invoice_no'],
 				'invoice_prefix'          => $order_query->row['invoice_prefix'],
@@ -591,7 +598,7 @@ class ModelSaleOrder extends Model {
 				'date_added'              => $order_query->row['date_added'],
 				'date_modified'           => $order_query->row['date_modified'],
 				'abandoned'               => $order_query->row['abandoned']
-			);
+			];
 
 		} else {
 			return [];
@@ -841,7 +848,7 @@ class ModelSaleOrder extends Model {
 	public function setBackOrdered(int $order_product_id, $backorder) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "order_product` SET backordered = '" . $this->db->escape($backorder) . "' WHERE order_product_id = '" . (int)$order_product_id . "'");
 
-		if ($backorder || mb_strlen($backorder, 'UTF-8') > 0) {
+		if ($backorder || (mb_strlen($backorder, 'UTF-8') > 0)) {
 			$this->setPicked($order_product_id, false);
 		}
 	}

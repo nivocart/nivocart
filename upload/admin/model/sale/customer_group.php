@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleCustomerGroup
+ *
+ * @package NivoCart
+ */
 class ModelSaleCustomerGroup extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCustomerGroup(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_group` SET approval = '" . (int)$data['approval'] . "', company_id_display = '" . (int)$data['company_id_display'] . "', company_id_required = '" . (int)$data['company_id_required'] . "', tax_id_display = '" . (int)$data['tax_id_display'] . "', tax_id_required = '" . (int)$data['tax_id_required'] . "', sort_order = '" . (int)$data['sort_order'] . "'");
 
@@ -52,13 +59,13 @@ class ModelSaleCustomerGroup extends Model {
 	public function getCustomerGroups(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "customer_group` cg LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'cgd.name',
 			'cg.approval',
 			'cg.company_id_display',
 			'cg.tax_id_display',
 			'cg.sort_order'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -66,7 +73,7 @@ class ModelSaleCustomerGroup extends Model {
 			$sql .= " ORDER BY cgd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -95,10 +102,10 @@ class ModelSaleCustomerGroup extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_group_description` WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 
 		foreach ($query->rows as $result) {
-			$customer_group_data[$result['language_id']] = array(
+			$customer_group_data[$result['language_id']] = [
 				'name'        => $result['name'],
 				'description' => $result['description']
-			);
+			];
 		}
 
 		return $customer_group_data;

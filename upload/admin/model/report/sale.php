@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelReportSale
+ *
+ * @package NivoCart
+ */
 class ModelReportSale extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getOrders(array $data = []): array {
 		$sql = "SELECT MIN(tmp.date_added) AS date_start, MAX(tmp.date_added) AS date_end, COUNT(tmp.order_id) AS orders, SUM(tmp.products) AS products, SUM(tmp.tax) AS tax, SUM(tmp.total) AS `total` FROM (SELECT o.order_id, (SELECT SUM(op.quantity) FROM `" . DB_PREFIX . "order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, (SELECT SUM(ot.value) FROM `" . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id) AS tax, o.total, o.date_added FROM `" . DB_PREFIX . "order` o";
 
@@ -20,27 +27,14 @@ class ModelReportSale extends Model {
 
 		$sql .= " GROUP BY o.order_id) tmp";
 
-		if (!empty($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day':
-				$sql .= " GROUP BY DAY(tmp.date_added)";
-				break;
-			default:
-			case 'week':
-				$sql .= " GROUP BY WEEK(tmp.date_added)";
-				break;
-			case 'month':
-				$sql .= " GROUP BY MONTH(tmp.date_added)";
-				break;
-			case 'year':
-				$sql .= " GROUP BY YEAR(tmp.date_added)";
-				break;
-		}
+		$sql .= match($group) {
+			'day'   => " GROUP BY DAY(tmp.date_added)",
+			'month' => " GROUP BY MONTH(tmp.date_added)",
+			'year'  => " GROUP BY YEAR(tmp.date_added)",
+			default => " GROUP BY WEEK(tmp.date_added)"
+		};
 
 		$sql .= " ORDER BY tmp.date_added DESC";
 
@@ -62,27 +56,14 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalOrders(array $data = []): int {
-		if (!empty($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day':
-				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
-				break;
-			default:
-			case 'week':
-				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
-				break;
-			case 'month':
-				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
-				break;
-			case 'year':
-				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS `total` FROM `" . DB_PREFIX . "order`";
-				break;
-		}
+		$sql = match($group) {
+			'day'   => "SELECT COUNT(DISTINCT DAY(date_added)) AS `total` FROM `" . DB_PREFIX . "order`",
+			'month' => "SELECT COUNT(DISTINCT MONTH(date_added)) AS `total` FROM `" . DB_PREFIX . "order`",
+			'year'  => "SELECT COUNT(DISTINCT YEAR(date_added)) AS `total` FROM `" . DB_PREFIX . "order`",
+			default => "SELECT COUNT(DISTINCT WEEK(date_added)) AS `total` FROM `" . DB_PREFIX . "order`"
+		};
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " WHERE order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -104,17 +85,13 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalOrdersByCountry(): array {
-		$query = $this->db->query("SELECT COUNT(*) AS `total`, SUM(o.total) AS amount, c.iso_code_2 AS iso_code_2 FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "country` c ON ((o.payment_country_id = c.country_id) OR (o.shipping_country_id = c.country_id)) WHERE o.order_status_id > '0' GROUP BY c.country_id");
+		$query = $this->db->query("SELECT COUNT(*) AS `total`, SUM(o.total) AS `amount`, c.iso_code_2 AS iso_code_2 FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "country` c ON ((o.payment_country_id = c.country_id) OR (o.shipping_country_id = c.country_id)) WHERE o.order_status_id > '0' GROUP BY c.country_id");
 
 		return $query->rows;
 	}
 
 	public function getTopOrdersByCountry(int $limit): array {
-		if (isset($limit) && $limit > 0) {
-			$limit = (int)$limit;
-		} else {
-			$limit = 1;
-		}
+		$limit = (isset($limit) && $limit > 0) ? (int)$limit : 1;
 
 		$query = $this->db->query("SELECT SUM(o.total) AS amount, c.iso_code_2 AS iso_code_2 FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "country` c ON ((o.payment_country_id = c.country_id) OR (o.shipping_country_id = c.country_id)) WHERE o.order_status_id > '0' GROUP BY c.country_id ORDER BY amount DESC LIMIT 0," . (int)$limit);
 
@@ -156,27 +133,14 @@ class ModelReportSale extends Model {
 			$sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		if (!empty($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day':
-				$sql .= " GROUP BY ot.title, DAY(o.date_added)";
-				break;
-			default:
-			case 'week':
-				$sql .= " GROUP BY ot.title, WEEK(o.date_added)";
-				break;
-			case 'month':
-				$sql .= " GROUP BY ot.title, MONTH(o.date_added)";
-				break;
-			case 'year':
-				$sql .= " GROUP BY ot.title, YEAR(o.date_added)";
-				break;
-		}
+		$sql .= match($group) {
+			'day'   => " GROUP BY ot.title, DAY(o.date_added)",
+			'month' => " GROUP BY ot.title, MONTH(o.date_added)",
+			'year'  => " GROUP BY ot.title, YEAR(o.date_added)",
+			default => " GROUP BY ot.title, WEEK(o.date_added)"
+		};
 
 		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -212,27 +176,14 @@ class ModelReportSale extends Model {
 			$sql .= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		if (!empty($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day':
-				$sql .= " GROUP BY DAY(o.date_added), ot.title";
-				break;
-			default:
-			case 'week':
-				$sql .= " GROUP BY WEEK(o.date_added), ot.title";
-				break;
-			case 'month':
-				$sql .= " GROUP BY MONTH(o.date_added), ot.title";
-				break;
-			case 'year':
-				$sql .= " GROUP BY YEAR(o.date_added), ot.title";
-				break;
-		}
+		$sql .= match($group) {
+			'day'   => " GROUP BY DAY(o.date_added), ot.title",
+			'month' => " GROUP BY MONTH(o.date_added), ot.title",
+			'year'  => " GROUP BY YEAR(o.date_added), ot.title",
+			default => " GROUP BY WEEK(o.date_added), ot.title"
+		};
 
 		$sql .= ") tmp";
 
@@ -258,27 +209,14 @@ class ModelReportSale extends Model {
 			$sql .= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		if (!empty($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day':
-				$sql .= " GROUP BY ot.title, DAY(o.date_added)";
-				break;
-			default:
-			case 'week':
-				$sql .= " GROUP BY ot.title, WEEK(o.date_added)";
-				break;
-			case 'month':
-				$sql .= " GROUP BY ot.title, MONTH(o.date_added)";
-				break;
-			case 'year':
-				$sql .= " GROUP BY ot.title, YEAR(o.date_added)";
-				break;
-		}
+		$sql .= match($group) {
+			'day'   => " GROUP BY ot.title, DAY(o.date_added)",
+			'month' => " GROUP BY ot.title, MONTH(o.date_added)",
+			'year'  => " GROUP BY ot.title, YEAR(o.date_added)",
+			default => " GROUP BY ot.title, WEEK(o.date_added)"
+		};
 
 		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
@@ -298,7 +236,7 @@ class ModelReportSale extends Model {
 	}
 
 	public function getTotalShipping(array $data = []): int {
-		$sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order_total` ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
+		$sql = "SELECT COUNT(*) AS `total` FROM (SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order_total` ot LEFT JOIN `" . DB_PREFIX . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " AND order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -314,27 +252,14 @@ class ModelReportSale extends Model {
 			$sql .= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		if (!empty($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day':
-				$sql .= " GROUP BY DAY(o.date_added), ot.title";
-				break;
-			default:
-			case 'week':
-				$sql .= " GROUP BY WEEK(o.date_added), ot.title";
-				break;
-			case 'month':
-				$sql .= " GROUP BY MONTH(o.date_added), ot.title";
-				break;
-			case 'year':
-				$sql .= " GROUP BY YEAR(o.date_added), ot.title";
-				break;
-		}
+		$sql .= match($group) {
+			'day'   => " GROUP BY DAY(o.date_added), ot.title",
+			'month' => " GROUP BY MONTH(o.date_added), ot.title",
+			'year'  => " GROUP BY YEAR(o.date_added), ot.title",
+			default => " GROUP BY WEEK(o.date_added), ot.title"
+		};
 
 		$sql .= ") tmp";
 

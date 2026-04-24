@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelReportAbandonedCarts
+ *
+ * @package NivoCart
+ */
 class ModelReportAbandonedCarts extends Model {
-
+	/**
+	 * Functions Check, Recover, Get
+	 */
 	public function checkDuplicates($ip) {
 		$query = $this->db->query("SELECT ip FROM `" . DB_PREFIX . "order` WHERE ip = '" . $this->db->escape($ip) . "'");
 
@@ -70,14 +77,14 @@ class ModelReportAbandonedCarts extends Model {
 
 		$sql .= " GROUP BY o.order_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'o.order_id',
 			'name',
 			'o.total',
 			'o.date_added',
 			'o.ip',
 			'o.abandoned'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -85,7 +92,7 @@ class ModelReportAbandonedCarts extends Model {
 			$sql .= " ORDER BY o.order_id";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -125,13 +132,13 @@ class ModelReportAbandonedCarts extends Model {
 	public function getOrder(int $order_id): array {
 		$order_query = $this->db->query("SELECT store_name, store_url, firstname, lastname, email FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "'");
 
-		return array(
-			'store_name'    => $order_query->row['store_name'],
-			'store_url'     => $order_query->row['store_url'],
-			'firstname'     => $order_query->row['firstname'],
-			'lastname'      => $order_query->row['lastname'],
-			'email'         => $order_query->row['email']
-		);
+		return [
+			'store_name' => $order_query->row['store_name'],
+			'store_url'  => $order_query->row['store_url'],
+			'firstname'  => $order_query->row['firstname'],
+			'lastname'   => $order_query->row['lastname'],
+			'email'      => $order_query->row['email']
+		];
 	}
 
 	public function deleteOrder(int $order_id): void {

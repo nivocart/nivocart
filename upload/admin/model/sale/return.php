@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleReturn
+ *
+ * @package NivoCart
+ */
 class ModelSaleReturn extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addReturn(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "return` SET order_id = '" . (int)$data['order_id'] . "', product_id = '" . (int)$data['product_id'] . "', customer_id = '" . (int)$data['customer_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', product = '" . $this->db->escape($data['product']) . "', model = '" . $this->db->escape($data['model']) . "', quantity = '" . (int)$data['quantity'] . "', opened = '" . (int)$data['opened'] . "', return_reason_id = '" . (int)$data['return_reason_id'] . "', return_action_id = '" . (int)$data['return_action_id'] . "', return_status_id = '" . (int)$data['return_status_id'] . "', `comment` = '" . $this->db->escape($data['comment']) . "', date_ordered = '" . $this->db->escape($data['date_ordered']) . "', date_added = NOW(), date_modified = NOW()");
 
@@ -32,7 +39,7 @@ class ModelSaleReturn extends Model {
 	public function getReturns(array $data = []): array {
 		$sql = "SELECT *, CONCAT(r.firstname, ' ', r.lastname) AS `customer`, (SELECT rs.name FROM `" . DB_PREFIX . "return_status` rs WHERE rs.return_status_id = r.return_status_id AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "return` r";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_return_id'])) {
 			$implode[] = "r.return_id = '" . (int)$data['filter_return_id'] . "'";
@@ -70,7 +77,7 @@ class ModelSaleReturn extends Model {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'r.return_id',
 			'r.order_id',
 			'customer',
@@ -79,7 +86,7 @@ class ModelSaleReturn extends Model {
 			'status',
 			'r.date_added',
 			'r.date_modified'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -87,7 +94,7 @@ class ModelSaleReturn extends Model {
 			$sql .= " ORDER BY r.return_id";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -113,7 +120,7 @@ class ModelSaleReturn extends Model {
 	public function getTotalReturns(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "return` r";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_return_id'])) {
 			$implode[] = "r.return_id = '" . (int)$data['filter_return_id'] . "'";

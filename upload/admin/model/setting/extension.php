@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSettingExtension
+ *
+ * @package NivoCart
+ */
 class ModelSettingExtension extends Model {
-
+	/**
+	 * Functions install, uninstall, Get
+	 */
 	public function getInstalled(string $type): array {
 		$extension_data = [];
 

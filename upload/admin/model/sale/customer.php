@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleCustomer
+ *
+ * @package NivoCart
+ */
 class ModelSaleCustomer extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCustomer(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : '0000-00-00') . "', newsletter = '" . (int)$data['newsletter'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int)$data['status'] . "', approved = '" . (int)$data['approved'] . "', date_added = NOW()");
 
@@ -139,7 +146,7 @@ class ModelSaleCustomer extends Model {
 			$sql .= " AND " . implode(" AND ", $implode);
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'c.email',
 			'customer_group',
@@ -147,7 +154,7 @@ class ModelSaleCustomer extends Model {
 			'c.approved',
 			'c.ip',
 			'c.date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -155,7 +162,7 @@ class ModelSaleCustomer extends Model {
 			$sql .= " ORDER BY name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -199,11 +206,11 @@ class ModelSaleCustomer extends Model {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'email',
 			'orders'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -211,7 +218,7 @@ class ModelSaleCustomer extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -330,7 +337,7 @@ class ModelSaleCustomer extends Model {
 				$zone_code = '';
 			}
 
-			return array(
+			return [
 				'address_id'     => $address_query->row['address_id'],
 				'customer_id'    => $address_query->row['customer_id'],
 				'firstname'      => $address_query->row['firstname'],
@@ -350,12 +357,12 @@ class ModelSaleCustomer extends Model {
 				'iso_code_2'     => $iso_code_2,
 				'iso_code_3'     => $iso_code_3,
 				'address_format' => $address_format
-			);
+			];
 		}
 	}
 
 	public function getAddresses(int $customer_id): array {
-		$address_data = array();
+		$address_data = [];
 
 		$query = $this->db->query("SELECT address_id FROM `" . DB_PREFIX . "address` WHERE customer_id = '" . (int)$customer_id . "'");
 
@@ -680,7 +687,7 @@ class ModelSaleCustomer extends Model {
 	public function getCustomerPurchasedProducts(int $customer_id, array $data = []): array {
 		$sql = "SELECT o.order_id, o.currency_code, o.currency_value, o.date_added, op.* FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `" . DB_PREFIX . "order` o ON (o.order_id = op.order_id) WHERE o.order_status_id > '0' AND o.customer_id = '" . (int)$customer_id . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'o.order_id',
 			'o.date_added',
 			'op.name',
@@ -688,7 +695,7 @@ class ModelSaleCustomer extends Model {
 			'op.model',
 			'op.quantity',
 			'op.total'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -696,7 +703,7 @@ class ModelSaleCustomer extends Model {
 			$sql .= " ORDER BY o.order_id";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -722,7 +729,7 @@ class ModelSaleCustomer extends Model {
 	public function getTotalCustomerPurchasedProducts(int $customer_id, array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE o.order_status_id > '0' AND o.customer_id = '" . (int)$customer_id . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'o.order_id',
 			'o.date_added',
 			'op.name',
@@ -730,7 +737,7 @@ class ModelSaleCustomer extends Model {
 			'op.model',
 			'op.quantity',
 			'op.total'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -738,7 +745,7 @@ class ModelSaleCustomer extends Model {
 			$sql .= " ORDER BY o.order_id";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

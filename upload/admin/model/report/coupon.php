@@ -1,10 +1,17 @@
 <?php
+/**
+ * Class ModelReportCoupon
+ *
+ * @package NivoCart
+ */
 class ModelReportCoupon extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getCoupons(array $data = []): array {
 		$sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS orders, SUM(ch.amount) AS `total` FROM `" . DB_PREFIX . "coupon_history` ch LEFT JOIN `" . DB_PREFIX . "coupon` c ON (ch.coupon_id = c.coupon_id)";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(ch.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -40,7 +47,7 @@ class ModelReportCoupon extends Model {
 	public function getTotalCoupons(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT coupon_id) AS `total` FROM `" . DB_PREFIX . "coupon_history`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";

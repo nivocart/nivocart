@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelReportCustomer
+ *
+ * @package NivoCart
+ */
 class ModelReportCustomer extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getOrders(array $data = []): array {
 		$sql = "SELECT tmp.customer_id, tmp.customer, tmp.email, tmp.customer_group, tmp.status, COUNT(tmp.order_id) AS orders, SUM(tmp.products) AS products, SUM(tmp.total) AS `total` FROM (SELECT o.order_id, c.customer_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.email, cgd.name AS customer_group, c.status, (SELECT SUM(op.quantity) FROM `" . DB_PREFIX . "order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, o.total FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > '0' AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
@@ -62,7 +69,7 @@ class ModelReportCustomer extends Model {
 	public function getTotalCustomersDeleted(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM " . DB_PREFIX . "customer_deleted";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_name'])) {
 			$implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
@@ -119,7 +126,7 @@ class ModelReportCustomer extends Model {
 	public function getTotalRewardPoints(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT customer_id) AS `total` FROM `" . DB_PREFIX . "customer_reward`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -172,7 +179,7 @@ class ModelReportCustomer extends Model {
 	public function getTotalCredit(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT customer_id) AS `total` FROM `" . DB_PREFIX . "customer_transaction`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -201,7 +208,7 @@ class ModelReportCustomer extends Model {
 			$data['limit'] = 20;
 		}
 
-		$sql = "SELECT pd.name, p.model, COUNT(*) AS total_wishlisted FROM `" . DB_PREFIX . "customer_wishlist` cw LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (cw.product_id = pd.product_id) LEFT JOIN `" . DB_PREFIX . "product` p ON (cw.product_id = p.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cw.product_id ORDER BY total_wishlisted DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		$sql = "SELECT pd.name, p.model, COUNT(*) AS `total_wishlisted` FROM `" . DB_PREFIX . "customer_wishlist` cw LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (cw.product_id = pd.product_id) LEFT JOIN `" . DB_PREFIX . "product` p ON (cw.product_id = p.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cw.product_id ORDER BY total_wishlisted DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 
 		$query = $this->db->query($sql);
 
@@ -218,7 +225,7 @@ class ModelReportCustomer extends Model {
 	public function getTotalCustomersOnline(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN `" . DB_PREFIX . "customer` c ON (co.customer_id = c.customer_id) WHERE co.date_added > DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_ip'])) {
 			$implode[] = "co.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";

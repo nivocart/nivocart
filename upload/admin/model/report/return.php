@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelReportReturn
+ *
+ * @package NivoCart
+ */
 class ModelReportReturn extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getReturns(array $data = []): array {
 		$sql = "SELECT MIN(r.date_added) AS date_start, MAX(r.date_added) AS date_end, COUNT(r.return_id) AS `returns` FROM `" . DB_PREFIX . "return` r";
 
@@ -18,37 +25,22 @@ class ModelReportReturn extends Model {
 			$sql .= " AND DATE(r.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 		}
 
-		if (isset($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day':
-				$sql .= " GROUP BY DAY(r.date_added)";
-				break;
-			default:
-			case 'week':
-				$sql .= " GROUP BY WEEK(r.date_added)";
-				break;
-			case 'month':
-				$sql .= " GROUP BY MONTH(r.date_added)";
-				break;
-			case 'year':
-				$sql .= " GROUP BY YEAR(r.date_added)";
-				break;
-		}
+		$sql .= match($group) {
+			'day'   => " GROUP BY DAY(r.date_added)",
+			'month' => " GROUP BY MONTH(r.date_added)",
+			'year'  => " GROUP BY YEAR(r.date_added)",
+			default => " GROUP BY WEEK(r.date_added)"
+		};
 
 		if (isset($data['start']) && isset($data['limit'])) {
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
-
 			if ($data['limit'] < 1) {
 				$data['limit'] = 20;
 			}
-
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}
 
@@ -58,27 +50,14 @@ class ModelReportReturn extends Model {
 	}
 
 	public function getTotalReturns(array $data = []): int {
-		if (!empty($data['filter_group'])) {
-			$group = $data['filter_group'];
-		} else {
-			$group = 'week';
-		}
+		$group = $data['filter_group'] ?? 'week';
 
-		switch ($group) {
-			case 'day';
-				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
-				break;
-			default:
-			case 'week':
-				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
-				break;
-			case 'month':
-				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
-				break;
-			case 'year':
-				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS `total` FROM `" . DB_PREFIX . "return`";
-				break;
-		}
+		$sql = match($group) {
+			'day'   => "SELECT COUNT(DISTINCT DAY(date_added)) AS `total` FROM `" . DB_PREFIX . "return`",
+			'month' => "SELECT COUNT(DISTINCT MONTH(date_added)) AS `total` FROM `" . DB_PREFIX . "return`",
+			'year'  => "SELECT COUNT(DISTINCT YEAR(date_added)) AS `total` FROM `" . DB_PREFIX . "return`",
+			default => "SELECT COUNT(DISTINCT WEEK(date_added)) AS `total` FROM `" . DB_PREFIX . "return`"
+		};
 
 		if (!empty($data['filter_return_status_id'])) {
 			$sql .= " WHERE return_status_id = '" . (int)$data['filter_return_status_id'] . "'";

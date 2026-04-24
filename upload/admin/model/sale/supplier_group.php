@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleSupplierGroup
+ *
+ * @package NivoCart
+ */
 class ModelSaleSupplierGroup extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addSupplierGroup(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "supplier_group` SET order_method = '" . $this->db->escape($data['order_method']) . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', sort_order = '" . (int)$data['sort_order'] . "'");
 
@@ -45,12 +52,12 @@ class ModelSaleSupplierGroup extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "supplier_group` sg LEFT JOIN `" . DB_PREFIX . "supplier_group_description` sgd ON (sg.supplier_group_id = sgd.supplier_group_id) WHERE sgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'sgd.name',
 				'sg.order_method',
 				'sg.payment_method',
 				'sg.sort_order'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -58,7 +65,7 @@ class ModelSaleSupplierGroup extends Model {
 				$sql .= " ORDER BY sgd.name";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -96,15 +103,15 @@ class ModelSaleSupplierGroup extends Model {
 	}
 
 	public function getSupplierGroupDescriptions(int $supplier_group_id): array {
-		$supplier_group_data = array();
+		$supplier_group_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "supplier_group_description` WHERE supplier_group_id = '" . (int)$supplier_group_id . "'");
 
 		foreach ($query->rows as $result) {
-			$supplier_group_data[$result['language_id']] = array(
+			$supplier_group_data[$result['language_id']] = [
 				'name'        => $result['name'],
 				'description' => $result['description']
-			);
+			];
 		}
 
 		return $supplier_group_data;

@@ -1,10 +1,17 @@
 <?php
+/**
+ * Class ModelReportAffiliate
+ *
+ * @package NivoCart
+ */
 class ModelReportAffiliate extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getCommission(array $data = []): array {
 		$sql = "SELECT at.affiliate_id, CONCAT(a.firstname, ' ', a.lastname) AS affiliate, a.email, a.status, SUM(at.amount) AS commission, COUNT(o.order_id) AS orders, SUM(o.total) AS `total` FROM `" . DB_PREFIX . "affiliate_transaction` at LEFT JOIN `" . DB_PREFIX . "affiliate` a ON (at.affiliate_id = a.affiliate_id) LEFT JOIN `" . DB_PREFIX . "order` o ON (at.order_id = o.order_id)";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(at.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -40,7 +47,7 @@ class ModelReportAffiliate extends Model {
 	public function getTotalCommission(array $data = []) {
 		$sql = "SELECT COUNT(DISTINCT affiliate_id) AS `total` FROM `" . DB_PREFIX . "affiliate_transaction`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -98,7 +105,7 @@ class ModelReportAffiliate extends Model {
 	public function getTotalProducts(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT product_id) AS `total` FROM `" . DB_PREFIX . "affiliate_transaction`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -120,7 +127,7 @@ class ModelReportAffiliate extends Model {
 	public function getAffiliateActivities(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "affiliate_activity` aa LEFT JOIN `" . DB_PREFIX . "affiliate` a ON (aa.affiliate_id = a.affiliate_id)";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(aa.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -160,7 +167,7 @@ class ModelReportAffiliate extends Model {
 	public function getTotalAffiliateActivities(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "affiliate_activity` aa LEFT JOIN `" . DB_PREFIX . "affiliate` a ON (aa.affiliate_id = a.affiliate_id)";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_date_start'])) {
 			$implode[] = "DATE(aa.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";

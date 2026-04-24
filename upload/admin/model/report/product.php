@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelReportProduct
+ *
+ * @package NivoCart
+ */
 class ModelReportProduct extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getProductsViewed(array $data = []): array {
 		$sql = "SELECT p.product_id, pd.name, p.model, p.viewed FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.viewed > '0' ORDER BY p.viewed DESC";
 
@@ -178,12 +185,12 @@ class ModelReportProduct extends Model {
 
 		$sql .= " GROUP BY p.product_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'p.product_id',
 			'pd.name',
 			'p.price',
 			'p.cost'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -191,7 +198,7 @@ class ModelReportProduct extends Model {
 			$sql .= " ORDER BY pd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

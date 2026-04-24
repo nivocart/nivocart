@@ -1,16 +1,18 @@
 <?php
+/**
+ * Class ModelSettingSetting
+ *
+ * @package NivoCart
+ */
 class ModelSettingSetting extends Model {
 	/**
 	 * Get Settings
-	 *
-	 * Get the record of the setting records in the database.
 	 *
 	 * @param int $store_id
 	 *
 	 * @return array<int, array<string, mixed>> setting records that have store ID
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $results = $this->model_setting_setting->getSettings($store_id);
@@ -30,7 +32,6 @@ class ModelSettingSetting extends Model {
 	 * @return array<string, mixed>
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $setting_info = $this->model_setting_setting->getSetting($group, $store_id);
@@ -61,7 +62,6 @@ class ModelSettingSetting extends Model {
 	 * @return void
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $this->model_setting_setting->editSetting($group, $data, $store_id);
@@ -79,8 +79,6 @@ class ModelSettingSetting extends Model {
 	/**
 	 * Edit Setting Value
 	 *
-	 * Edit setting value record in the database.
-	 *
 	 * @param string              $group
 	 * @param string              $key
 	 * @param array<mixed>|string $value
@@ -89,7 +87,6 @@ class ModelSettingSetting extends Model {
 	 * @return void
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $this->model_setting_setting->editValue($group, $key, $value, $store_id);
@@ -107,7 +104,6 @@ class ModelSettingSetting extends Model {
 	 * @return void
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $this->model_setting_setting->deleteSetting($group, $store_id);
@@ -124,7 +120,6 @@ class ModelSettingSetting extends Model {
 	 * @return void
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $this->model_setting_setting->deleteSettingsByGroup($group);
@@ -141,7 +136,6 @@ class ModelSettingSetting extends Model {
 	 * @return void
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $this->model_setting_setting->deleteSettingsByStoreId($store_id);
@@ -158,7 +152,6 @@ class ModelSettingSetting extends Model {
 	 * @return array
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $this->model_setting_setting->getColors();
@@ -210,7 +203,6 @@ class ModelSettingSetting extends Model {
 	 * @return array
 	 *
 	 * @example
-	 *
 	 * $this->load->model('setting/setting');
 	 *
 	 * $this->model_setting_setting->getShapes();

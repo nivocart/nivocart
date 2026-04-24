@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleSupplier
+ *
+ * @package NivoCart
+ */
 class ModelSaleSupplier extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addSupplier(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "supplier` SET reference = '" . $this->db->escape($data['reference']) . "', company = '" . $this->db->escape($data['company']) . "', account = '" . $this->db->escape($data['account']) . "', description = '" . $this->db->escape($data['description']) . "', contact = '" . $this->db->escape($data['contact']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . (isset($data['telephone']) ? $data['telephone'] : 0) . "', supplier_group_id = '" . (int)$data['supplier_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
@@ -62,7 +69,7 @@ class ModelSaleSupplier extends Model {
 	public function getSuppliers(array $data = []): array {
 		$sql = "SELECT *, sgd.name AS supplier_group FROM `" . DB_PREFIX . "supplier` s LEFT JOIN `" . DB_PREFIX . "supplier_group_description` sgd ON (s.supplier_group_id = sgd.supplier_group_id) WHERE sgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_reference'])) {
 			$implode[] = "s.reference LIKE '%" . $this->db->escape($data['filter_reference']) . "%'";
@@ -92,14 +99,14 @@ class ModelSaleSupplier extends Model {
 			$sql .= " AND " . implode(" AND ", $implode);
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			's.reference',
 			's.company',
 			's.email',
 			'supplier_group',
 			's.status',
 			's.date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -107,7 +114,7 @@ class ModelSaleSupplier extends Model {
 			$sql .= " ORDER BY s.reference";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -158,7 +165,7 @@ class ModelSaleSupplier extends Model {
 				$zone_code = '';
 			}
 
-			return array(
+			return [
 				'address_id'     => $address_query->row['address_id'],
 				'supplier_id'    => $address_query->row['supplier_id'],
 				'company'        => $address_query->row['company'],
@@ -174,12 +181,12 @@ class ModelSaleSupplier extends Model {
 				'iso_code_2'     => $iso_code_2,
 				'iso_code_3'     => $iso_code_3,
 				'address_format' => $address_format
-			);
+			];
 		}
 	}
 
 	public function getAddresses(int $supplier_id): array {
-		$address_data = array();
+		$address_data = [];
 
 		$query = $this->db->query("SELECT address_id FROM `" . DB_PREFIX . "supplier_address` WHERE supplier_id = '" . (int)$supplier_id . "'");
 
@@ -197,7 +204,7 @@ class ModelSaleSupplier extends Model {
 	public function getTotalSuppliers(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "supplier`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_reference'])) {
 			$implode[] = "reference LIKE '%" . $this->db->escape($data['filter_reference']) . "%'";
@@ -285,12 +292,12 @@ class ModelSaleSupplier extends Model {
 	public function getSupplierProductsBySupplierId(int $supplier_id, array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "supplier_product` sp LEFT JOIN `" . DB_PREFIX . "supplier` s ON (s.supplier_id = sp.supplier_id) WHERE sp.supplier_id = '" . (int)$supplier_id . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'sp.name',
 			'sp.model',
 			'sp.price',
 			'sp.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -298,7 +305,7 @@ class ModelSaleSupplier extends Model {
 			$sql .= " ORDER BY sp.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

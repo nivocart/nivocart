@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleCoupon
+ *
+ * @package NivoCart
+ */
 class ModelSaleCoupon extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCoupon(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "coupon` SET `name` = '" . $this->db->escape($data['name']) . "', `code` = '" . $this->db->escape($data['code']) . "', discount = '" . (float)$data['discount'] . "', `type` = '" . $this->db->escape($data['type']) . "', `total` = '" . (float)$data['total'] . "', logged = '" . (int)$data['logged'] . "', shipping = '" . (int)$data['shipping'] . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', uses_total = '" . (int)$data['uses_total'] . "', uses_customer = '" . (int)$data['uses_customer'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
@@ -64,7 +71,7 @@ class ModelSaleCoupon extends Model {
 	public function getCoupons(array $data = []): array {
 		$sql = "SELECT coupon_id, `name`, `code`, `type`, discount, date_start, date_end, status FROM " . DB_PREFIX . "coupon";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'code',
 			'type',
@@ -72,7 +79,7 @@ class ModelSaleCoupon extends Model {
 			'date_start',
 			'date_end',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -80,7 +87,7 @@ class ModelSaleCoupon extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -104,7 +111,7 @@ class ModelSaleCoupon extends Model {
 	}
 
 	public function getCouponProducts(int $coupon_id): array {
-		$coupon_product_data = array();
+		$coupon_product_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon_product` WHERE coupon_id = '" . (int)$coupon_id . "'");
 
@@ -116,7 +123,7 @@ class ModelSaleCoupon extends Model {
 	}
 
 	public function getCouponCategories(int $coupon_id): array {
-		$coupon_category_data = array();
+		$coupon_category_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon_category` WHERE coupon_id = '" . (int)$coupon_id . "'");
 

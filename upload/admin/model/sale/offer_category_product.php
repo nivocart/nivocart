@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleOfferCategoryProduct
+ *
+ * @package NivoCart
+ */
 class ModelSaleOfferCategoryProduct extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addOfferCategoryProduct(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "offer_category_product` SET `name` = '" . $this->db->escape($data['name']) . "', `type` = '" . $this->db->escape($data['type']) . "', discount = '" . (float)$data['discount'] . "', logged = '" . (int)$data['logged'] . "', category_one = '" . $this->db->escape($data['category_one']) . "', product_two = '" . $this->db->escape($data['product_two']) . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
@@ -27,7 +34,7 @@ class ModelSaleOfferCategoryProduct extends Model {
 	public function getOfferCategoryProducts(array $data = []): array {
 		$sql = "SELECT offer_category_product_id, `name`, discount, `type`, logged, date_start, date_end, status FROM `" . DB_PREFIX . "offer_category_product`";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'type',
 			'discount',
@@ -35,7 +42,7 @@ class ModelSaleOfferCategoryProduct extends Model {
 			'date_start',
 			'date_end',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -43,7 +50,7 @@ class ModelSaleOfferCategoryProduct extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -67,7 +74,7 @@ class ModelSaleOfferCategoryProduct extends Model {
 	}
 
 	public function getOfferCategoryProductCategories(int $offer_category_product_id): array {
-		$offer_category_one_data = array();
+		$offer_category_one_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_product` WHERE offer_category_product_id = '" . (int)$offer_category_product_id . "'");
 
@@ -79,7 +86,7 @@ class ModelSaleOfferCategoryProduct extends Model {
 	}
 
 	public function getOfferCategoryProductProducts(int $offer_category_product_id): array {
-		$offer_product_two_data = array();
+		$offer_product_two_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_product` WHERE offer_category_product_id = '" . (int)$offer_category_product_id . "'");
 

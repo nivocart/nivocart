@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleSupplierProduct
+ *
+ * @package NivoCart
+ */
 class ModelSaleSupplierProduct extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addSupplierProduct(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "supplier_product` SET supplier_id = '" . $this->db->escape($data['supplier_id']) . "', `name` = '" . $this->db->escape($data['name']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . (float)$data['price'] . "', tax_class_id = '" . $this->db->escape($data['tax_class_id']) . "', unit = '" . $this->db->escape($data['unit']) . "', color = '" . $this->db->escape($data['color']) . "', `size` = '" . $this->db->escape($data['size']) . "', quantity = '" . (int)$data['quantity'] . "', `length` = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
@@ -26,16 +33,13 @@ class ModelSaleSupplierProduct extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET status = '" . (int)$status . "', date_modified = NOW() WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 	}
 
-	public function copySupplierProduct(int $supplier_product_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "supplier_product` WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
+	public function copySupplierProduct(int $supplier_product_id): void {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "supplier_product` WHERE `supplier_product_id` = '" . (int)$supplier_product_id . "'");
 
 		if ($query->num_rows) {
-			$data = array();
-
 			$data = $query->row;
-
-			$data['status'] = '0';
-
+			$data['status'] = 0;
+			unset($data['supplier_product_id']);
 			$this->addSupplierProduct($data);
 		}
 	}
@@ -53,7 +57,7 @@ class ModelSaleSupplierProduct extends Model {
 	public function getSupplierProducts(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "supplier_product` sp LEFT JOIN `" . DB_PREFIX . "supplier` s ON (s.supplier_id = sp.supplier_id)";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_name'])) {
 			$implode[] = "sp.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -81,13 +85,13 @@ class ModelSaleSupplierProduct extends Model {
 
 		$sql .= " GROUP BY sp.supplier_product_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'sp.name',
 			'sp.model',
 			'supplier',
 			'sp.price',
 			'sp.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -95,7 +99,7 @@ class ModelSaleSupplierProduct extends Model {
 			$sql .= " ORDER BY sp.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -161,7 +165,7 @@ class ModelSaleSupplierProduct extends Model {
 	public function getTotalSupplierProducts(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT sp.supplier_product_id) AS `total` FROM `" . DB_PREFIX . "supplier_product` sp LEFT JOIN `" . DB_PREFIX . "supplier` s ON (s.supplier_id = sp.supplier_id)";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_name'])) {
 			$implode[] = "sp.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

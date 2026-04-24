@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSaleCustomerBanIp
+ *
+ * @package NivoCart
+ */
 class ModelSaleCustomerBanIp extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCustomerBanIp(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_ban_ip` SET ip = '" . $this->db->escape($data['ip']) . "'");
 
@@ -29,7 +36,7 @@ class ModelSaleCustomerBanIp extends Model {
 
 		$sql .= " ORDER BY ip";
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
