@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelUserUserGroup
+ *
+ * @package NivoCart
+ */
 class ModelUserUserGroup extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addUserGroup(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "user_group` SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
 
@@ -53,10 +60,10 @@ class ModelUserUserGroup extends Model {
 
 		$data = unserialize($raw, ['allowed_classes' => false]);
 
-		$user_group = array(
+		$user_group = [
 			'name'       => $query->row['name'],
 			'permission' => $data
-		);
+		];
 
 		return $user_group;
 	}
@@ -66,7 +73,7 @@ class ModelUserUserGroup extends Model {
 
 		$sql .= " ORDER BY `name`";
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

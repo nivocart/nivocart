@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ModelToolEmail
+ *
+ * @package NivoCart
+ */
 class ModelToolEmail extends Model {
 	/**
 	 * Check if email string is valid

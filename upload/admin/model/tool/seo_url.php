@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ModelToolSeoUrl
+ *
+ * @package NivoCart
+ */
 class ModelToolSeoUrl extends Controller {
 	private $db;
 

@@ -38,7 +38,7 @@ class ModelSettingStore extends Model {
 	}
 
 	public function getAllStores(): array {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` ORDER BY url ASC");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` ORDER BY `url` ASC");
 
 		return $query->rows;
 	}

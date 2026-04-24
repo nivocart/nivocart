@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelUserUserLog
+ *
+ * @package NivoCart
+ */
 class ModelUserUserLog extends Model {
-
+	/**
+	 * Functions Delete, Get
+	 */
 	public function getDataLog(array $data = []): array {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "user_log`";
@@ -11,7 +18,7 @@ class ModelUserUserLog extends Model {
 				$sql .= " ORDER BY date";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " ASC";
 			} else {
 				$sql .= " DESC";

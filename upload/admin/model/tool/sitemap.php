@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelToolSitemap
+ *
+ * @package NivoCart
+ */
 class ModelToolSitemap extends Model {
-
+	/**
+	 * Functions Generate, Get
+	 */
 	public function generateText() {
 		$this->language->load('tool/sitemap');
 
@@ -301,7 +308,7 @@ class ModelToolSitemap extends Model {
 		if ($stores_inf) {
 			foreach ($stores_inf as $store_inf) {
 				if ($store_inf['store_id'] !== 0) {
-					$store_info_ids = array();
+					$store_info_ids = [];
 
 					$results = $this->model_catalog_sitemap->getAllInformations();
 
@@ -309,7 +316,7 @@ class ModelToolSitemap extends Model {
 						$store_info_ids = $this->model_catalog_sitemap->getInformationStores($result['information_id']);
 
 						foreach ($store_info_ids as $store_info_id) {
-							if ($store_info_id != 0) {
+							if ($store_info_id !== 0) {
 								$store_url = $this->model_catalog_sitemap->getStoreUrl($store_info_id);
 
 								$output .= $this->generateLinkNode($store_url . 'index.php?route=information/information&information_id=' . $result['information_id'], "monthly", "1.0");
@@ -529,7 +536,7 @@ class ModelToolSitemap extends Model {
 		if ($stores_inf) {
 			foreach ($stores_inf as $store_inf) {
 				if ($store_inf['store_id'] !== 0) {
-					$store_info_ids = array();
+					$store_info_ids = [];
 
 					$informations = $this->model_catalog_sitemap->getAllInformations();
 
@@ -537,7 +544,7 @@ class ModelToolSitemap extends Model {
 						$store_info_ids = $this->model_catalog_sitemap->getInformationStores($information['information_id']);
 
 						foreach ($store_info_ids as $store_info_id) {
-							if ($store_info_id != 0) {
+							if ($store_info_id !== 0) {
 								$store_url = $this->model_catalog_sitemap->getStoreUrl($store_info_id);
 
 								$link_information = mb_convert_encoding($store_url . 'index.php?route=information/information&information_id=' . $information['information_id'], 'UTF-8');

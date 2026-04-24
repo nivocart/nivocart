@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelUserUser
+ *
+ * @package NivoCart
+ */
 class ModelUserUser extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get, Check
+	 */
 	public function addUser(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$data['password'])))) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
@@ -59,14 +66,14 @@ class ModelUserUser extends Model {
 
 		$sql .= " GROUP BY user_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'user_id',
 			'username',
 			'user_group_id',
 			'email',
 			'date_added',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -74,7 +81,7 @@ class ModelUserUser extends Model {
 			$sql .= " ORDER BY username";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

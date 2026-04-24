@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelToolApiKeyManager
+ *
+ * @package NivoCart
+ */
 class ModelToolApiKeyManager extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addApiKey(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "api_key` SET `name` = '" . $this->db->escape($data['name']) . "', `code` = '" . $this->db->escape($data['code']) . "', status = '" . $this->db->escape($data['status']) . "'");
 
@@ -27,11 +34,11 @@ class ModelToolApiKeyManager extends Model {
 	public function getApiKeys(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "api_key`";
 
-		$sort_data = array(
+		$sort_data = [
 			'api_key_id',
 			'name',
 			'code'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -39,7 +46,7 @@ class ModelToolApiKeyManager extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

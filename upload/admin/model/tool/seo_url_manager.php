@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelToolSeoUrlManager
+ *
+ * @package NivoCart
+ */
 class ModelToolSeoUrlManager extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addUrl(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "url_alias` SET `query` = '" . $this->db->escape($data['query']) . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
 
@@ -45,7 +52,7 @@ class ModelToolSeoUrlManager extends Model {
 			$sql .= " ORDER BY keyword";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelToolBlockIp
+ *
+ * @package NivoCart
+ */
 class ModelToolBlockIp extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addBlockIp(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "block_ip` SET from_ip = '" . $this->db->escape($data['from_ip']) . "', to_ip = '" . $this->db->escape($data['to_ip']) . "'");
 
@@ -34,10 +41,10 @@ class ModelToolBlockIp extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "block_ip`";
 
-			$sort_data = array(
+			$sort_data = [
 				'from_ip',
 				'to_ip'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'] ;
@@ -45,7 +52,7 @@ class ModelToolBlockIp extends Model {
 				$sql .= " ORDER BY from_ip";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -71,7 +78,7 @@ class ModelToolBlockIp extends Model {
 			$block_ip_data = $this->cache->get('block_ip');
 
 			if (!$block_ip_data) {
-				$block_ip_data = array();
+				$block_ip_data = [];
 
 				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "block_ip` ORDER BY from_ip ASC");
 
@@ -91,7 +98,7 @@ class ModelToolBlockIp extends Model {
 	}
 
 	// Ban
-	public function isBlockedIp($ip) {
+	public function isBlockedIp($ip): bool {
 		$status = false;
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "block_ip` WHERE INET_ATON('" . $ip . "') BETWEEN INET_ATON(from_ip) AND INET_ATON(to_ip)");

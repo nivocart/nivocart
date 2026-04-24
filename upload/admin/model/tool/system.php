@@ -1,9 +1,14 @@
 <?php
+/**
+ * Class ModelToolSystem
+ *
+ * @package NivoCart
+ */
 class ModelToolSystem extends Model {
 	/**
 	 * deleteDirectory
 	 *
-	 * $var		$dir	directory name
+	 * $var $dir directory name
 	 *
 	 * Required by Image Manager
 	 */
@@ -19,7 +24,7 @@ class ModelToolSystem extends Model {
 		clearstatcache();
 
 		foreach (scandir($dir) as $item) {
-			if ($item == '.' || $item == '..') {
+			if ($item === '.' || $item === '..') {
 				continue;
 			}
 
@@ -48,18 +53,18 @@ class ModelToolSystem extends Model {
 		if (function_exists('apache_get_modules')) {
 			$mod_rewrite = in_array('mod_rewrite', apache_get_modules(), true);
 		} else {
-			$mod_rewrite = ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) == 'on');
+			$mod_rewrite = ((isset($_SERVER['HTTP_MOD_REWRITE']) && strtolower($_SERVER['HTTP_MOD_REWRITE']) === 'on') || strtolower(getenv('HTTP_MOD_REWRITE')) === 'on');
 		}
 
 		if ($mod_rewrite && file_exists('../.htaccess.txt')) {
 			$document = file_get_contents('../.htaccess.txt');
 
 			// Correctly extract the RewriteBase path
-			$root       = rtrim(HTTP_SERVER, '/');
-			$folder     = substr(strrchr($root, '/'), 1);
+			$root = rtrim(HTTP_SERVER, '/');
+			$folder = substr(strrchr($root, '/'), 1);
 			$script_dir = dirname($_SERVER['SCRIPT_NAME']);
-			$path       = str_replace('/' . $folder, '', $script_dir);
-			$path       = rtrim($path, '/') . '/';
+			$path = str_replace('/' . $folder, '', $script_dir);
+			$path = rtrim($path, '/') . '/';
 
 			if (!$path) {
 				$path = '/';

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelToolUpload
+ *
+ * @package NivoCart
+ */
 class ModelToolUpload extends Model {
-
+	/**
+	 * Functions Add, Delete, Get
+	 */
 	public function addUpload(string $name, string $filename) {
 		$code = sha1(uniqid(mt_rand(), true));
 
@@ -22,7 +29,7 @@ class ModelToolUpload extends Model {
 	public function getUploads(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "upload`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_name'])) {
 			$implode[] = "`name` LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -40,11 +47,11 @@ class ModelToolUpload extends Model {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'filename',
 			'date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -52,7 +59,7 @@ class ModelToolUpload extends Model {
 			$sql .= " ORDER BY date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -78,7 +85,7 @@ class ModelToolUpload extends Model {
 	public function getTotalUploads(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "upload`";
 
-		$implode = array();
+		$implode = [];
 
 		if (!empty($data['filter_name'])) {
 			$implode[] = "`name` LIKE '" . $this->db->escape($data['filter_name']) . "%'";

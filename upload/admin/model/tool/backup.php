@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelToolBackup
+ *
+ * @package NivoCart
+ */
 class ModelToolBackup extends Model {
-
+	/**
+	 * Functions Restore, Backup, Get
+	 */
 	public function restore($sql) {
 		foreach (explode(";\n", $sql) as $sql) {
 			$sql = trim($sql);
@@ -14,12 +21,12 @@ class ModelToolBackup extends Model {
 	}
 
 	public function getTables(): array {
-		$table_data = array();
+		$table_data = [];
 
 		$query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
 
 		foreach ($query->rows as $result) {
-			if (utf8_substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
+			if (substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
 				if (isset($result['Tables_in_' . DB_DATABASE])) {
 					$table_data[] = $result['Tables_in_' . DB_DATABASE];
 				}
@@ -34,12 +41,7 @@ class ModelToolBackup extends Model {
 
 		foreach ($tables as $table) {
 			if (DB_PREFIX) {
-				if (strpos($table, DB_PREFIX) === false) {
-					$status = false;
-				} else {
-					$status = true;
-				}
-
+				$status = (strpos($table, DB_PREFIX) === false) ? false : true;
 			} else {
 				$status = true;
 			}
@@ -59,8 +61,8 @@ class ModelToolBackup extends Model {
 					$values = '';
 
 					foreach (array_values($result) as $value) {
-						$value = str_replace(array("\x00", "\x0a", "\x0d", "\x1a"), array('\0', '\n', '\r', '\Z'), $value);
-						$value = str_replace(array("\n", "\r", "\t"), array('\n', '\r', '\t'), $value);
+						$value = str_replace(["\x00", "\x0a", "\x0d", "\x1a"], ['\0', '\n', '\r', '\Z'], $value);
+						$value = str_replace(["\n", "\r", "\t"], ['\n', '\r', '\t'], $value);
 						$value = str_replace('\\', '\\\\', $value);
 						$value = str_replace('\'', '\\\'', $value);
 						$value = str_replace('\\\n', '\n', $value);
