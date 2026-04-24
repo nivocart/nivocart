@@ -141,31 +141,21 @@ $_['text_prepare'] = '<h3>Welcome to NivoCart!</h3>
     <p>This quick guide is designed to help you through the installation process. The installation process
 	 contains 4 steps: 1-Agree to the License, 2-Validate server settings, 3-Install the database,
 	 4-Confirm successful install. In order to perform a smooth installation it is recommended to prepare
-	 a few things before clicking the &ldquo;Continue&rdquo; button below.</p>
+	 a few things before clicking the &ldquo;Continue&rdquo; button below, as follow:</p>
 	<h3>Creating a new empty database</h3>
-	<p>To create a new database, open PhpMyAdmin from your Hosting Provider\'s dashboard. In PhpMyAdmin,
+	<p>To create a new database, open <b>PhpMyAdmin</b> from your Hosting Provider\'s dashboard. In PhpMyAdmin,
 	 the first page should be the one with the option to create a new MySQL database. However, it is advised
 	 before creating your new database, to create a new database user with all the privileges,
 	 then create the database. NivoCart uses &ldquo;utf8mb4_general_ci&rdquo; collation by default,
-	 so it is recommended to select this collation when creating the database. Make sure to write down
-	 your user and MySQL database details before leaving PhpMyAdmin, as they will be required during
-	 the installation process.</p>
+	 so it is recommended to select this collation when creating the database. <b>Make sure to write down
+	 your user and MySQL database details before leaving PhpMyAdmin</b>, as they will be required during
+	 the rest of the installation process.</p>
 	<h3>Re-naming the config-dist files</h3>
-	<p>Re-name both &ldquo;config-dist.php&rdquo; to &ldquo;config.php&rdquo; using your Hosting Provider\'s
-	 File manager. The first one is at the root of the NivoCart\'s package, while the second one
-	 is up one level inside the &ldquo;admin&rdquo; folder. Both files are empty at this time but
-	 the installation routine will write essential information into them, such as your website root
-	 and your database credentials, therefore they should be writable (CHMOD 644 minimum).</p>
-	<h3>Enabling Seo_urls during Installation</h3>
-	<p>You will be able to select the activation of Seo_urls Rewriting during the installation process.
-	 This operation is automated for you. However, if you choose to not activate Seo_urls Rewriting
-	 at this time, it is fine too, as you can activate them at any time in your Admin Settings.</p>
-	<h3>Enabling Maintenance during Installation</h3>
-	<p>You will be able to place your new NivoCart website in Maintenance Mode during the installation
-	 process. This could be useful if you are not quite ready to go live just yet. Again, this option
-	 will also be available from your Admin Settings at any time. It is important to know that, as
-	 the &ldquo;Top Administrator&rdquo; you will still have full access to all pages on your site,
-	 only visitors will be presented with the Maintenance Page.</p>
+	<p>Re-name both &ldquo;<b>config-dist.php</b>&rdquo; to &ldquo;<b>config.php</b>&rdquo; using
+	 your Hosting Provider\'s File manager. The first one is at the <b>root</b> of the NivoCart\'s package,
+	 while the second one is up one level, inside the &ldquo;<b>admin</b>&rdquo; folder. Both files are empty
+	 at this time but the installation routine will write essential information into them, such as your
+	 website root and your database credentials, therefore they should be writable (chmod 644 minimum).</p>
 	<h3>Ready to Continue with the Installation?</h3>
 	<p>To start the Installation, click the <b>continue</b> button below. Enjoy NivoCart!</p>';
 
