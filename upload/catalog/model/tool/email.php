@@ -1,7 +1,16 @@
 <?php
+/**
+ * Class ModelToolEmail
+ *
+ * @package NivoCart
+ */
 class ModelToolEmail extends Model {
-
-	public function verifyMail($email) {
+	/**
+	 * Check if email string is valid
+	 *
+	 * @return bool
+	 */
+	public function verifyMail($email): bool {
 		$valid = false;
 
 		if ($this->url->isLocal()) {

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelToolSearch
+ *
+ * @package NivoCart
+ */
 class ModelToolSearch extends Model {
-
+	/**
+	 * Performs a product search
+	 */
 	public function liveSearch(int $customer_group_id, string $keywords, int $search_limit): array {
 		// Check Limit is valid
 		if ($search_limit && is_numeric($search_limit) && $search_limit > 0) {

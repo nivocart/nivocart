@@ -1,6 +1,10 @@
 <?php
+/**
+ * Class ModelToolSystem
+ *
+ * @package NivoCart
+ */
 class ModelToolSystem extends Model {
-
 	/**
 	 * getRewriteBase (Catalog)
 	 *

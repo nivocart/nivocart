@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ModelToolImage
+ *
+ * @package NivoCart
+ */
 class ModelToolImage extends Model {
 	private string $extension;
 	private string $old_image;
@@ -7,7 +12,7 @@ class ModelToolImage extends Model {
 	public function resize(string $filename, int $width, int $height) {
 		$filename = html_entity_decode($filename, ENT_QUOTES, 'UTF-8');
 
-		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, strlen(DIR_IMAGE)) != DIR_IMAGE) {
+		if (!is_file(DIR_IMAGE . $filename) || substr(str_replace('\\', '/', realpath(DIR_IMAGE . $filename)), 0, strlen(DIR_IMAGE)) !== DIR_IMAGE) {
 			return;
 		}
 
@@ -31,7 +36,7 @@ class ModelToolImage extends Model {
 
 			list($width_orig, $height_orig) = getimagesize(DIR_IMAGE . $old_image);
 
-			if ($width_orig != $width || $height_orig != $height) {
+			if ($width_orig !== $width || $height_orig !== $height) {
 				$image = new Image(DIR_IMAGE . $old_image);
 				$image->resize($width, $height);
 				$image->save(DIR_IMAGE . $new_image);
@@ -42,9 +47,10 @@ class ModelToolImage extends Model {
 
 		$new_image = str_replace(' ', '%20', $new_image);
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
-			return $this->config->get('config_ssl') . 'image/' . $new_image;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			return $this->config->get('config_ssl') . 'image/' . $new_image;
 		} else {
 			return $this->config->get('config_url') . 'image/' . $new_image;
@@ -58,14 +64,14 @@ class ModelToolImage extends Model {
 			return $default;
 		}
 
-		if ($color[0] == '#') {
+		if ($color[0] === '#') {
 			$color = substr($color, 1);
 		}
 
-		if (mb_strlen($color, 'UTF_8') == 6) {
-			$hex = array($color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5]);
-		} elseif (mb_strlen($color, 'UTF_8') == 3) {
-			$hex = array($color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2]);
+		if (mb_strlen($color, 'UTF_8') === 6) {
+			$hex = [$color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5]];
+		} elseif (mb_strlen($color, 'UTF_8') === 3) {
+			$hex = [$color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2]];
 		} else {
 			return $default;
 		}

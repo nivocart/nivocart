@@ -41,11 +41,14 @@ class ModelToolBarcode extends Model {
 		$positionHorizontal = 0;
 
 		foreach ($barcodeData['bars'] as $bar) {
+			// Check to prevent division by 0
+			$max_height = ($barcodeData['maxHeight'] > 0) ? $barcodeData['maxHeight'] : 1;
+
 			$barWidth = round(($bar['width'] * $widthFactor), 3, PHP_ROUND_HALF_UP);
-			$barHeight = round(($bar['height'] * $totalHeight / $barcodeData['maxHeight']), 3, PHP_ROUND_HALF_UP);
+			$barHeight = round((($bar['height'] * $totalHeight) / $max_height), 3, PHP_ROUND_HALF_UP);
 
 			if ($bar['drawBar']) {
-				$positionVertical = round(($bar['positionVertical'] * $totalHeight / $barcodeData['maxHeight']), 3, PHP_ROUND_HALF_UP);
+				$positionVertical = round((($bar['positionVertical'] * $totalHeight) / $max_height), 3, PHP_ROUND_HALF_UP);
 				// Draw bars
 				$html .= '<div style="background-color:' . $color . '; width:' . $barWidth . 'px; height:' . $barHeight . 'px; position:absolute; left:' . $positionHorizontal . 'px; top:' . $positionVertical . 'px;">&nbsp;</div>' . "\n";
 			}
@@ -179,7 +182,7 @@ class ModelToolBarcode extends Model {
 		// Add start and stop codes
 		$code = '*' . $code . '*';
 
-		$bararray = ['code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array[]];
+		$bararray = ['code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => []];
 
 		$k = 0;
 
@@ -924,7 +927,7 @@ class ModelToolBarcode extends Model {
 		// Add start and stop codes
 		$code = 'AA' . strtolower($code) . 'ZA';
 
-		$bararray = ['code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array[]];
+		$bararray = ['code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => []];
 
 		$k = 0;
 
