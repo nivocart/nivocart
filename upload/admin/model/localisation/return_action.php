@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationReturnAction
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationReturnAction extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addReturnAction(array $data = []): void {
 		foreach ($data['return_action'] as $language_id => $value) {
 			if (isset($return_action_id)) {
@@ -44,7 +51,7 @@ class ModelLocalisationReturnAction extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "return_action` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY `name`";
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -82,12 +89,12 @@ class ModelLocalisationReturnAction extends Model {
 	}
 
 	public function getReturnActionDescriptions(int $return_action_id): array {
-		$return_action_data = array();
+		$return_action_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "return_action` WHERE return_action_id = '" . (int)$return_action_id . "'");
 
 		foreach ($query->rows as $result) {
-			$return_action_data[$result['language_id']] = array('name' => $result['name']);
+			$return_action_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $return_action_data;

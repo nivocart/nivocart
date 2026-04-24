@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationReturnReason
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationReturnReason extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addReturnReason(array $data = []): void {
 		foreach ($data['return_reason'] as $language_id => $value) {
 			if (isset($return_reason_id)) {
@@ -44,7 +51,7 @@ class ModelLocalisationReturnReason extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "return_reason` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY `name`";
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -82,12 +89,12 @@ class ModelLocalisationReturnReason extends Model {
 	}
 
 	public function getReturnReasonDescriptions(int $return_reason_id): array {
-		$return_reason_data = array();
+		$return_reason_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "return_reason` WHERE return_reason_id = '" . (int)$return_reason_id . "'");
 
 		foreach ($query->rows as $result) {
-			$return_reason_data[$result['language_id']] = array('name' => $result['name']);
+			$return_reason_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $return_reason_data;

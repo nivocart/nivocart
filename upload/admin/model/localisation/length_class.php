@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationLengthClass
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationLengthClass extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addLengthClass(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "length_class` SET `value` = '" . (float)$data['value'] . "'");
 
@@ -39,19 +46,19 @@ class ModelLocalisationLengthClass extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "length_class` lc LEFT JOIN `" . DB_PREFIX . "length_class_description` lcd ON (lc.length_class_id = lcd.length_class_id) WHERE lcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'title',
 				'unit',
 				'value'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
 			} else {
-				$sql .= " ORDER BY title";
+				$sql .= " ORDER BY `title`";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -101,15 +108,15 @@ class ModelLocalisationLengthClass extends Model {
 	}
 
 	public function getLengthClassDescriptions(int $length_class_id): array {
-		$length_class_data = array();
+		$length_class_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "length_class_description` WHERE length_class_id = '" . (int)$length_class_id . "'");
 
 		foreach ($query->rows as $result) {
-			$length_class_data[$result['language_id']] = array(
+			$length_class_data[$result['language_id']] = [
 				'title' => $result['title'],
 				'unit'  => $result['unit']
-			);
+			];
 		}
 
 		return $length_class_data;

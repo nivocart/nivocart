@@ -1,8 +1,15 @@
 <?php
+/**
+ * Class ModelLocalisationTaxClass
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationTaxClass extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addTaxClass(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "tax_class` SET title = '" . $this->db->escape($data['title']) . "', description = '" . $this->db->escape($data['description']) . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "tax_class` SET `title` = '" . $this->db->escape($data['title']) . "', description = '" . $this->db->escape($data['description']) . "', date_added = NOW()");
 
 		$tax_class_id = $this->db->getLastId();
 
@@ -19,7 +26,7 @@ class ModelLocalisationTaxClass extends Model {
 	}
 
 	public function editTaxClass(int $tax_class_id, array $data = []): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "tax_class` SET title = '" . $this->db->escape($data['title']) . "', description = '" . $this->db->escape($data['description']) . "', date_modified = NOW() WHERE tax_class_id = '" . (int)$tax_class_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "tax_class` SET `title` = '" . $this->db->escape($data['title']) . "', description = '" . $this->db->escape($data['description']) . "', date_modified = NOW() WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "tax_rule` WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 
@@ -49,9 +56,9 @@ class ModelLocalisationTaxClass extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "tax_class`";
 
-			$sql .= " ORDER BY title";
+			$sql .= " ORDER BY `title`";
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";

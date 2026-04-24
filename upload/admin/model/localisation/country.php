@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationCountry
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationCountry extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCountry(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "country` SET iso_code_2 = '" . $this->db->escape($data['iso_code_2']) . "', iso_code_3 = '" . $this->db->escape($data['iso_code_3']) . "', address_format = '" . $this->db->escape($data['address_format']) . "', postcode_required = '" . (int)$data['postcode_required'] . "', status = '" . (int)$data['status'] . "'");
 
@@ -53,12 +60,12 @@ class ModelLocalisationCountry extends Model {
 
 		$sql .= " GROUP BY cd.country_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'cd.name',
 			'c.iso_code_2',
 			'c.iso_code_3',
 			'c.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -66,7 +73,7 @@ class ModelLocalisationCountry extends Model {
 			$sql .= " ORDER BY cd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -93,14 +100,14 @@ class ModelLocalisationCountry extends Model {
 		$country_data = $this->cache->get('country.' . (int)$this->config->get('config_language_id'));
 
 		if (!$country_data) {
-			$country_data = array();
+			$country_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country_description` WHERE country_id = '" . (int)$country_id . "'");
 
 			foreach ($query->rows as $result) {
-				$country_data[$result['language_id']] = array(
+				$country_data[$result['language_id']] = [
 					'name' => $result['name']
-				);
+				];
 			}
 
 			$this->cache->set('country.' . (int)$this->config->get('config_language_id'), $country_data);
@@ -148,9 +155,7 @@ class ModelLocalisationCountry extends Model {
 
 		$sql .= " GROUP BY co.country_id";
 
-		$sort_data = array(
-			'cd.name'
-		);
+		$sort_data = ['cd.name'];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -158,7 +163,7 @@ class ModelLocalisationCountry extends Model {
 			$sql .= " ORDER BY cd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

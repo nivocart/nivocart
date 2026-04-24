@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationLanguage
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationLanguage extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addLanguage(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "language` SET `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "'");
 
@@ -474,13 +481,13 @@ class ModelLocalisationLanguage extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "language`";
 
-			$sort_data = array(
+			$sort_data = [
 				'name',
 				'code',
 				'image',
 				'sort_order',
 				'status'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -488,7 +495,7 @@ class ModelLocalisationLanguage extends Model {
 				$sql .= " ORDER BY sort_order, `name`";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -514,12 +521,12 @@ class ModelLocalisationLanguage extends Model {
 			$language_data = $this->cache->get('language');
 
 			if (!$language_data) {
-				$language_data = array();
+				$language_data = [];
 
 				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` ORDER BY sort_order, `name` ASC");
 
 				foreach ($query->rows as $result) {
-					$language_data[$result['code']] = array(
+					$language_data[$result['code']] = [
 						'language_id' => $result['language_id'],
 						'name'        => $result['name'],
 						'code'        => $result['code'],
@@ -529,7 +536,7 @@ class ModelLocalisationLanguage extends Model {
 						'filename'    => $result['filename'],
 						'sort_order'  => $result['sort_order'],
 						'status'      => $result['status']
-					);
+					];
 				}
 
 				$this->cache->set('language', $language_data);

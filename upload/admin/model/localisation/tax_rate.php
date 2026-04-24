@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationTaxRate
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationTaxRate extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addTaxRate(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "tax_rate` SET geo_zone_id = '" . (int)$data['geo_zone_id'] . "', `name` = '" . $this->db->escape($data['name']) . "', rate = '" . (float)$data['rate'] . "', `type` = '" . $this->db->escape($data['type']) . "', date_added = NOW(), date_modified = NOW()");
 
@@ -42,14 +49,14 @@ class ModelLocalisationTaxRate extends Model {
 	public function getTaxRates(array $data = []): array {
 		$sql = "SELECT tr.tax_rate_id, tr.name AS `name`, tr.rate, tr.type, gz.name AS geo_zone, tr.date_added, tr.date_modified FROM `" . DB_PREFIX . "tax_rate` tr LEFT JOIN `" . DB_PREFIX . "geo_zone` gz ON (tr.geo_zone_id = gz.geo_zone_id)";
 
-		$sort_data = array(
+		$sort_data = [
 			'tr.name',
 			'tr.rate',
 			'tr.type',
 			'gz.name',
 			'tr.date_added',
 			'tr.date_modified'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -57,7 +64,7 @@ class ModelLocalisationTaxRate extends Model {
 			$sql .= " ORDER BY tr.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -81,7 +88,7 @@ class ModelLocalisationTaxRate extends Model {
 	}
 
 	public function getTaxRateCustomerGroups(int $tax_rate_id): array {
-		$tax_customer_group_data = array();
+		$tax_customer_group_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "tax_rate_to_customer_group` WHERE tax_rate_id = '" . (int)$tax_rate_id . "'");
 

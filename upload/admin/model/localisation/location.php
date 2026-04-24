@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationLocation
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationLocation extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addLocation(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "location` SET `name` = '" . $this->db->escape($data['name']) . "', address = '" . $this->db->escape($data['address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', `image` = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "', `open` = '" . $this->db->escape($data['open']) . "', `comment` = '" . $this->db->escape($data['comment']) . "'");
 
@@ -27,14 +34,14 @@ class ModelLocalisationLocation extends Model {
 	public function getLocations(array $data = []): array {
 		$sql = "SELECT location_id, `image`, `name`, address, telephone, latitude, longitude FROM `" . DB_PREFIX . "location`";
 
-		$sort_data = array(
+		$sort_data = [
 			'image',
 			'name',
 			'address',
 			'telephone',
 			'latitude',
 			'longitude'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -42,7 +49,7 @@ class ModelLocalisationLocation extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

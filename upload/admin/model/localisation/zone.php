@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationZone
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationZone extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addZone(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "zone` SET country_id = '" . (int)$data['country_id'] . "', `name` = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', status = '" . (int)$data['status'] . "'");
 
@@ -31,18 +38,18 @@ class ModelLocalisationZone extends Model {
 	}
 
 	public function getZones(array $data = []): array {
-		$sql = "SELECT *, z.name, cd.name AS country FROM `" . DB_PREFIX . "zone` z LEFT JOIN `" . DB_PREFIX . "country` c ON (z.country_id = c.country_id) LEFT JOIN `" . DB_PREFIX . "country_description` cd ON (z.country_id = cd.country_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT *, z.name, cd.name AS `country` FROM `" . DB_PREFIX . "zone` z LEFT JOIN `" . DB_PREFIX . "country` c ON (z.country_id = c.country_id) LEFT JOIN `" . DB_PREFIX . "country_description` cd ON (z.country_id = cd.country_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (isset($data['filter_name'])) {
 			$sql .= " AND cd.name = '" . $data['filter_name'] . "'";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'cd.name',
 			'z.name',
 			'z.code',
 			'z.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -50,7 +57,7 @@ class ModelLocalisationZone extends Model {
 			$sql .= " ORDER BY cd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -77,7 +84,7 @@ class ModelLocalisationZone extends Model {
 		$zone_data = $this->cache->get('zone.' . (int)$country_id);
 
 		if (!$zone_data) {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE country_id = '" . (int)$country_id . "' AND status = '1' ORDER BY name");
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE country_id = '" . (int)$country_id . "' AND status = '1' ORDER BY `name`");
 
 			$zone_data = $query->rows;
 

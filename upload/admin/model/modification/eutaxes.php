@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelModificationEutaxes
+ *
+ * @package NivoCart
+ */
 class ModelModificationEutaxes extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get, Check
+	 */
 	public function addEUCountries(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "eucountry` SET `code` = '" . $this->db->escape($data['code']) . "', `rate` = '" . $this->db->escape($data['rate']) . "', status = '" . (int)$data['status'] . "'");
 
@@ -63,12 +70,12 @@ class ModelModificationEutaxes extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "eucountry` ec LEFT JOIN `" . DB_PREFIX . "eucountry_description` ecd ON (ecd.eucountry_id = ec.eucountry_id) WHERE ecd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'ecd.eucountry',
 				'ec.code',
 				'ec.rate',
 				'ec.status'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -119,10 +126,10 @@ class ModelModificationEutaxes extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "eucountry_description` WHERE eucountry_id = '" . (int)$eucountry_id . "'");
 
 		foreach ($query->rows as $result) {
-			$eucountry_description_data[$result['language_id']] = array(
+			$eucountry_description_data[$result['language_id']] = [
 				'eucountry'   => $result['eucountry'],
 				'description' => $result['description']
-			);
+			];
 		}
 
 		return $eucountry_description_data;
@@ -148,11 +155,11 @@ class ModelModificationEutaxes extends Model {
 
 	public function checkEUCountries() {
 		// check eucountry table
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry` (`eucountry_id` int(11) NOT NULL AUTO_INCREMENT, `code` varchar(3) DEFAULT NULL, `rate` decimal(15,4) NOT NULL DEFAULT '0.0000', `status` tinyint(1) NOT NULL, PRIMARY KEY (`eucountry_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry` (`eucountry_id` int NOT NULL AUTO_INCREMENT, `code` varchar(3) DEFAULT NULL, `rate` decimal(15,4) NOT NULL DEFAULT '0.0000', `status` tinyint(1) NOT NULL, PRIMARY KEY (`eucountry_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 		// check eucountry description table
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_description` (`eucountry_id` int(11) NOT NULL, `language_id` int(11) NOT NULL, `eucountry` varchar(128) NOT NULL, `description` text CHARACTER SET utf8mb4 NOT NULL, PRIMARY KEY (`eucountry_id`,`language_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_description` (`eucountry_id` int NOT NULL, `language_id` int NOT NULL, `eucountry` varchar(128) NOT NULL, `description` text CHARACTER SET utf8mb4 NOT NULL, PRIMARY KEY (`eucountry_id`,`language_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 		// check eucountry store table
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_to_store` (`eucountry_id` int(11) NOT NULL, `store_id` int(11) NOT NULL, PRIMARY KEY (`eucountry_id`,`store_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "eucountry_to_store` (`eucountry_id` int NOT NULL, `store_id` int NOT NULL, PRIMARY KEY (`eucountry_id`,`store_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 		$this->addEUGeoZone();
 		$this->addEUTaxRate();
@@ -226,7 +233,7 @@ class ModelModificationEutaxes extends Model {
 			$geo_zone_id = $this->db->getLastId();
 
 			// Zone-to-geo-zones
-			$zone_to_geo_zone = array('81','14','21','33','55','53','57','195','67','72','74','84','97','103','105','117','123','124','132','150','170','171','56','175','222','189','190','203');
+			$zone_to_geo_zone = ['81','14','21','33','55','53','57','195','67','72','74','84','97','103','105','117','123','124','132','150','170','171','56','175','222','189','190','203'];
 
 			foreach ($zone_to_geo_zone as $country_id) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "zone_to_geo_zone` SET country_id = '" . (int)$country_id . "', zone_id = '0', geo_zone_id = '" . (int)$geo_zone_id . "', date_added = NOW(), date_modified = NOW()");

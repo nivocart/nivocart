@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelFraudFraudLabsPro
+ *
+ * @package NivoCart
+ */
 class ModelFraudFraudLabsPro extends Model {
-
+	/**
+	 * Functions Install, Uninstall, Add, Get
+	 */
 	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "fraudlabspro` (

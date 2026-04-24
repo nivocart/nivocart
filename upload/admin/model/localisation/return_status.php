@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationReturnStatus
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationReturnStatus extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addReturnStatus(array $data = []): void {
 		foreach ($data['return_status'] as $language_id => $value) {
 			if (isset($return_status_id)) {
@@ -44,18 +51,18 @@ class ModelLocalisationReturnStatus extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "return_status` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'return_status_id',
 				'name'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
 			} else {
-				$sql .= " ORDER BY name";
+				$sql .= " ORDER BY `name`";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -93,12 +100,12 @@ class ModelLocalisationReturnStatus extends Model {
 	}
 
 	public function getReturnStatusDescriptions(int $return_status_id): array {
-		$return_status_data = array();
+		$return_status_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "return_status` WHERE return_status_id = '" . (int)$return_status_id . "'");
 
 		foreach ($query->rows as $result) {
-			$return_status_data[$result['language_id']] = array('name' => $result['name']);
+			$return_status_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $return_status_data;

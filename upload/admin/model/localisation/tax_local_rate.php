@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationTaxLocalRate
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationTaxLocalRate extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addTaxLocalRate(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "tax_local_rate` SET `name` = '" . $this->db->escape($data['name']) . "', rate = '" . (float)$data['rate'] . "', status = '" . (int)$data['status'] . "'");
 

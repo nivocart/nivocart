@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationCurrency
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationCurrency extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get, Check
+	 */
 	public function addCurrency(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "currency` SET title = '" . $this->db->escape($data['title']) . "', `code` = '" . $this->db->escape($data['code']) . "', symbol_left = '" . $this->db->escape($data['symbol_left']) . "', symbol_right = '" . $this->db->escape($data['symbol_right']) . "', decimal_place = '" . $this->db->escape($data['decimal_place']) . "', `value` = '" . $this->db->escape($data['value']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW()");
 
@@ -50,21 +57,21 @@ class ModelLocalisationCurrency extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "currency`";
 
-			$sort_data = array(
+			$sort_data = [
 				'title',
 				'code',
 				'value',
 				'date_modified',
 				'status'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
 			} else {
-				$sql .= " ORDER BY title";
+				$sql .= " ORDER BY `title`";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -90,12 +97,12 @@ class ModelLocalisationCurrency extends Model {
 			$currency_data = $this->cache->get('currency');
 
 			if (!$currency_data) {
-				$currency_data = array();
+				$currency_data = [];
 
-				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` ORDER BY title ASC");
+				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` ORDER BY `title` ASC");
 
 				foreach ($query->rows as $result) {
-					$currency_data[$result['code']] = array(
+					$currency_data[$result['code']] = [
 						'currency_id'   => $result['currency_id'],
 						'title'         => $result['title'],
 						'code'          => $result['code'],
@@ -105,7 +112,7 @@ class ModelLocalisationCurrency extends Model {
 						'value'         => $result['value'],
 						'status'        => $result['status'],
 						'date_modified' => $result['date_modified']
-					);
+					];
 				}
 
 				$this->cache->set('currency', $currency_data);
@@ -141,22 +148,22 @@ class ModelLocalisationCurrency extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . trim($default) . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
 
 		if ($query->rows) {
-			$currencies = array();
+			$currencies = [];
 
 			$file_url = 'http://www.floatrates.com/daily/' . mb_strtolower($default, 'UTF-8') . '.xml';
 
 			$file_exists = $this->checkFileExists($file_url);
 
-			$data = array(
+			$data = [
 				'sort'  => 'code',
 				'order' => 'ASC'
-			);
+			];
 
 			$results = $this->getCurrencies($data);
 
 			if ($results && $file_exists) {
 				foreach ($results as $result) {
-					if ($result['code'] != mb_strtoupper($default, 'UTF-8')) {
+					if ($result['code'] !== mb_strtoupper($default, 'UTF-8')) {
 						$currencies[] = $result['code'];
 					}
 				}
@@ -227,7 +234,7 @@ class ModelLocalisationCurrency extends Model {
 				$response_info = json_decode($response, true);
 
 				if (isset($response_info)) {
-					$value = (float) $response_info["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
+					$value = (float)$response_info["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
 
 					$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . $value . "', date_modified = NOW() WHERE `code` = '" . $this->db->escape($result['code']) . "'");
 				}

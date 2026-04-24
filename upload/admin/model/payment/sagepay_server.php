@@ -1,22 +1,29 @@
 <?php
+/**
+ * Class ModelPaymentSagepayServer
+ *
+ * @package NivoCart
+ */
 class ModelPaymentSagepayServer extends Model {
-
+	/**
+	 * Functions Install, Uninstall, Get
+	 */
 	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "sagepay_server_order` (
-				`sagepay_server_order_id` int(11) NOT NULL AUTO_INCREMENT,
-				`order_id` int(11) NOT NULL,
-				`customer_id` int(11) NOT NULL,
+				`sagepay_server_order_id` int NOT NULL AUTO_INCREMENT,
+				`order_id` int NOT NULL,
+				`customer_id` int NOT NULL,
 				`VPSTxId` varchar(50),
 				`VendorTxCode` varchar(50) NOT NULL,
 				`SecurityKey` varchar(50) NOT NULL,
-				`TxAuthNo` int(50),
+				`TxAuthNo` int,
 				`date_added` datetime NOT NULL,
 				`date_modified` datetime NOT NULL,
-				`release_status` int(1) DEFAULT NULL,
-				`void_status` int(1) DEFAULT NULL,
-				`settle_type` int(1) DEFAULT NULL,
-				`rebate_status` int(1) DEFAULT NULL,
+				`release_status` int DEFAULT NULL,
+				`void_status` int DEFAULT NULL,
+				`settle_type` int DEFAULT NULL,
+				`rebate_status` int DEFAULT NULL,
 				`currency_code` varchar(3) NOT NULL,
 				`total` decimal(10, 2) NOT NULL,
 				PRIMARY KEY (`sagepay_server_order_id`)
@@ -25,8 +32,8 @@ class ModelPaymentSagepayServer extends Model {
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "sagepay_server_order_transaction` (
-				`sagepay_server_order_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
-				`sagepay_server_order_id` int(11) NOT NULL,
+				`sagepay_server_order_transaction_id` int NOT NULL AUTO_INCREMENT,
+				`sagepay_server_order_id` int NOT NULL,
 				`date_added` datetime NOT NULL,
 				`type` enum('auth', 'payment', 'rebate', 'void') DEFAULT NULL,
 				`amount` decimal(10, 2) NOT NULL,
@@ -36,13 +43,13 @@ class ModelPaymentSagepayServer extends Model {
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "sagepay_server_order_recurring` (
-				`sagepay_server_order_recurring_id` int(11) NOT NULL AUTO_INCREMENT,
-				`order_id` int(11) NOT NULL,
-				`order_recurring_id` int(11) NOT NULL,
+				`sagepay_server_order_recurring_id` int NOT NULL AUTO_INCREMENT,
+				`order_id` int NOT NULL,
+				`order_recurring_id` int NOT NULL,
 				`VPSTxId` varchar(50),
 				`VendorTxCode` varchar(50) NOT NULL,
 				`SecurityKey` varchar(50) NOT NULL,
-				`TxAuthNo` int(50),
+				`TxAuthNo` int,
 				`date_added` datetime NOT NULL,
 				`date_modified` datetime NOT NULL,
 				`next_payment` datetime NOT NULL,
@@ -56,9 +63,9 @@ class ModelPaymentSagepayServer extends Model {
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "sagepay_server_card` (
-				`card_id` int(11) NOT NULL AUTO_INCREMENT,
-				`customer_id` int(11) NOT NULL,
-				`order_id` int(11) NOT NULL,
+				`card_id` int NOT NULL AUTO_INCREMENT,
+				`customer_id` int NOT NULL,
+				`order_id` int NOT NULL,
 				`token` varchar(50) NOT NULL,
 				`digits` varchar(4) NOT NULL,
 				`expiry` varchar(5) NOT NULL,
@@ -224,7 +231,7 @@ class ModelPaymentSagepayServer extends Model {
 		}
 	}
 
-	public function addTransaction(int $sagepay_server_order_id, $type, $total) {
+	public function addTransaction(int $sagepay_server_order_id, $type, $total): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "sagepay_server_order_transaction` SET sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . (float)$total . "'");
 	}
 

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationOrderStatus
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationOrderStatus extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addOrderStatus(array $data = []): void {
 		foreach ($data['order_status'] as $language_id => $value) {
 			if (isset($order_status_id)) {
@@ -44,10 +51,10 @@ class ModelLocalisationOrderStatus extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "order_status` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'order_status_id',
 				'name'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -55,7 +62,7 @@ class ModelLocalisationOrderStatus extends Model {
 				$sql .= " ORDER BY name";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -93,12 +100,12 @@ class ModelLocalisationOrderStatus extends Model {
 	}
 
 	public function getOrderStatusDescriptions(int $order_status_id): array {
-		$order_status_data = array();
+		$order_status_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_status` WHERE order_status_id = '" . (int)$order_status_id . "'");
 
 		foreach ($query->rows as $result) {
-			$order_status_data[$result['language_id']] = array('name' => $result['name']);
+			$order_status_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $order_status_data;

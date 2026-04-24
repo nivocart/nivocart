@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationGeoZone
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationGeoZone extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addGeoZone(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "geo_zone` SET `name` = '" . $this->db->escape($data['name']) . "', description = '" . $this->db->escape($data['description']) . "', date_added = NOW(), date_modified = NOW()");
 
@@ -49,10 +56,10 @@ class ModelLocalisationGeoZone extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "geo_zone`";
 
-			$sort_data = array(
+			$sort_data = [
 				'name',
 				'description'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];

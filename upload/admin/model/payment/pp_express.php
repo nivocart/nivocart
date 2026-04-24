@@ -1,11 +1,18 @@
 <?php
+/**
+ * Class ModelPaymentPPExpress
+ *
+ * @package NivoCart
+ */
 class ModelPaymentPPExpress extends Model {
-
+	/**
+	 * Functions Install, Uninstall, Get
+	 */
 	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_order` (
-			`paypal_order_id` int(11) NOT NULL AUTO_INCREMENT,
-			`order_id` int(11) NOT NULL,
+			`paypal_order_id` int NOT NULL AUTO_INCREMENT,
+			`order_id` int NOT NULL,
 			`created` DATETIME NOT NULL,
 			`modified` DATETIME NOT NULL,
 			`capture_status` ENUM('Complete', 'NotComplete') DEFAULT NULL,
@@ -18,8 +25,8 @@ class ModelPaymentPPExpress extends Model {
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_order_transaction` (
-			`paypal_order_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
-			`paypal_order_id` int(11) NOT NULL,
+			`paypal_order_transaction_id` int NOT NULL AUTO_INCREMENT,
+			`paypal_order_id` int NOT NULL,
 			`transaction_id` CHAR(20) NOT NULL,
 			`parent_transaction_id` CHAR(20) NOT NULL,
 			`created` DATETIME NOT NULL,
@@ -380,9 +387,7 @@ class ModelPaymentPPExpress extends Model {
 		$header[] = 'Authorization: Bearer ' . $access_token;
 		$header[] = 'PAYPAL_SERVICE_VERSION:1.2.0';
 
-		$additional_opts = [
-			CURLOPT_HTTPHEADER => $header,
-		];
+		$additional_opts = [CURLOPT_HTTPHEADER => $header];
 
 		$curl = $this->curl($endpoint1, $additional_opts);
 

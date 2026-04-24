@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationWeightClass
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationWeightClass extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addWeightClass(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "weight_class` SET `value` = '" . (float)$data['value'] . "'");
 
@@ -45,19 +52,19 @@ class ModelLocalisationWeightClass extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "weight_class` wc LEFT JOIN `" . DB_PREFIX . "weight_class_description` wcd ON (wc.weight_class_id = wcd.weight_class_id) WHERE wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'title',
 				'unit',
 				'value'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
 			} else {
-				$sql .= " ORDER BY title";
+				$sql .= " ORDER BY `title`";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -101,15 +108,15 @@ class ModelLocalisationWeightClass extends Model {
 	}
 
 	public function getWeightClassDescriptions(int $weight_class_id): array {
-		$weight_class_data = array();
+		$weight_class_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "weight_class_description` WHERE weight_class_id = '" . (int)$weight_class_id . "'");
 
 		foreach ($query->rows as $result) {
-			$weight_class_data[$result['language_id']] = array(
+			$weight_class_data[$result['language_id']] = [
 				'title' => $result['title'],
 				'unit'  => $result['unit']
-			);
+			];
 		}
 
 		return $weight_class_data;

@@ -1,11 +1,18 @@
 <?php
+/**
+ * Class ModelPaymentPPProIframe
+ *
+ * @package NivoCart
+ */
 class ModelPaymentPPProIframe extends Model {
-
+	/**
+	 * Functions Install, Uninstall, Get
+	 */
 	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_iframe_order` (
-			`paypal_iframe_order_id` int(11) NOT NULL AUTO_INCREMENT,
-			`order_id` int(11) NOT NULL,
+			`paypal_iframe_order_id` int NOT NULL AUTO_INCREMENT,
+			`order_id` int NOT NULL,
 			`created` DATETIME NOT NULL,
 			`modified` DATETIME NOT NULL,
 			`capture_status` ENUM('Complete', 'NotComplete') DEFAULT NULL,
@@ -18,8 +25,8 @@ class ModelPaymentPPProIframe extends Model {
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_iframe_order_transaction` (
-			`paypal_iframe_order_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
-			`paypal_iframe_order_id` int(11) NOT NULL,
+			`paypal_iframe_order_transaction_id` int NOT NULL AUTO_INCREMENT,
+			`paypal_iframe_order_id` int NOT NULL,
 			`transaction_id` CHAR(20) NOT NULL,
 			`parent_transaction_id` CHAR(20) NOT NULL,
 			`created` DATETIME NOT NULL,
@@ -246,7 +253,7 @@ class ModelPaymentPPProIframe extends Model {
 
 		$this->log($call_parameters, 'Call data');
 
-		$options = array(
+		$options = [
 			CURLOPT_POST            => true,
 			CURLOPT_HEADER          => false,
 			CURLOPT_URL             => $api_endpoint,
@@ -258,7 +265,7 @@ class ModelPaymentPPProIframe extends Model {
 			CURLOPT_SSL_VERIFYPEER  => false,
 			CURLOPT_SSL_VERIFYHOST  => false,
 			CURLOPT_POSTFIELDS      => http_build_query($call_parameters, '', '&')
-		);
+		];
 
 		$ch = curl_init();
 
@@ -266,7 +273,7 @@ class ModelPaymentPPProIframe extends Model {
 
 		$response = curl_exec($ch);
 
-		if (curl_errno($ch) != CURLE_OK) {
+		if (curl_errno($ch) !== CURLE_OK) {
 			$log_data = [
 				'curl_error' => curl_error($ch),
 				'curl_errno' => curl_errno($ch)

@@ -1,10 +1,17 @@
 <?php
+/**
+ * Class ModelPaymentPPPayflowIframe
+ *
+ * @package NivoCart
+ */
 class ModelPaymentPPPayflowIframe extends Model {
-
+	/**
+	 * Functions Install, Uninstall, Get
+	 */
 	public function install(): void {
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_payflow_iframe_order` (
-			`order_id` int(11) NOT NULL DEFAULT 0,
+			`order_id` int NOT NULL DEFAULT 0,
 			`secure_token_id` varchar(255) NOT NULL,
 			`complete` tinyint(1) NOT NULL DEFAULT 0,
 			`currency_code` char(3) NOT NULL,
@@ -17,7 +24,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 
 		$this->db->query("
 			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_payflow_iframe_order_transaction` (
-			`order_id` int(11) NOT NULL,
+			`order_id` int NOT NULL,
 			`transaction_reference` varchar(255) NOT NULL,
 			`parent_transaction_reference` varchar(255) DEFAULT NULL,
 			`void_transaction_reference` varchar(255) DEFAULT NULL,
@@ -292,7 +299,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			CURLOPT_RETURNTRANSFER => true, // Return into a variable
 			CURLOPT_TIMEOUT        => $timeout + 1,
 			CURLOPT_SSL_VERIFYPEER => false, // This line makes it work under https
-			CURLOPT_POSTFIELDS     =>  $post_fields
+			CURLOPT_POSTFIELDS     => $post_fields
 		];
 
 		$ch = curl_init();
@@ -301,7 +308,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 
 		$response = curl_exec($ch);
 
-		if (curl_errno($ch) != CURLE_OK) {
+		if (curl_errno($ch) !== CURLE_OK) {
 			$log_data = [
 				'curl_errno' => curl_errno($ch),
 				'curl_error' => curl_error($ch)
