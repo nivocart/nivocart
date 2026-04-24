@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogCategory
+ *
+ * @package NivoCart
+ */
 class ModelCatalogCategory extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCategory(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "category` SET parent_id = '" . (int)$data['parent_id'] . "', top = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', `column` = '" . (isset($data['column']) ? (int)$data['column'] : 0) . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW(), date_added = NOW()");
 
@@ -81,7 +88,7 @@ class ModelCatalogCategory extends Model {
 				// Delete the path below the current one
 				$this->db->query("DELETE FROM `" . DB_PREFIX . "category_path` WHERE category_id = '" . (int)$category_path['category_id'] . "' AND `level` < '" . (int)$category_path['level'] . "'");
 
-				$path = array();
+				$path = [];
 
 				// Get the nodes new parents
 				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category_path` WHERE category_id = '" . (int)$data['parent_id'] . "' ORDER BY `level` ASC");
@@ -233,11 +240,11 @@ class ModelCatalogCategory extends Model {
 
 		$sql .= " GROUP BY cp.category_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'cd1.name',
 			'c.sort_order',
 			'c.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -245,7 +252,7 @@ class ModelCatalogCategory extends Model {
 			$sql .= " ORDER BY cd1.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -269,17 +276,17 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function getCategoryDescriptions(int $category_id): array {
-		$category_description_data = array();
+		$category_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category_description` WHERE category_id = '" . (int)$category_id . "'");
 
 		foreach ($query->rows as $result) {
-			$category_description_data[$result['language_id']] = array(
+			$category_description_data[$result['language_id']] = [
 				'name'             => $result['name'],
 				'description'      => $result['description'],
 				'meta_description' => $result['meta_description'],
 				'meta_keyword'     => $result['meta_keyword']
-			);
+			];
 		}
 
 		return $category_description_data;
@@ -298,7 +305,7 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function getCategoryFilters(int $category_id): array {
-		$category_filter_data = array();
+		$category_filter_data = [];
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_filter WHERE category_id = '" . (int)$category_id . "'");
 
@@ -310,7 +317,7 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function getCategoryStores(int $category_id): array {
-		$category_store_data = array();
+		$category_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_to_store WHERE category_id = '" . (int)$category_id . "'");
 
@@ -322,7 +329,7 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function getCategoryLayouts(int $category_id): array {
-		$category_layout_data = array();
+		$category_layout_data = [];
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_to_layout WHERE category_id = '" . (int)$category_id . "'");
 
@@ -342,11 +349,11 @@ class ModelCatalogCategory extends Model {
 
 		$sql .= " GROUP BY c.category_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'cd.name',
 			'c.sort_order',
 			'c.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -354,7 +361,7 @@ class ModelCatalogCategory extends Model {
 			$sql .= " ORDER BY cd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

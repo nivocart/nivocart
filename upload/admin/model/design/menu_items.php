@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignMenuItems
+ *
+ * @package NivoCart
+ */
 class ModelDesignMenuItems extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addMenuItem(int $menu_id, array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "menu_item` SET menu_id = '" . (int)$menu_id . "', parent_id = '" . (int)$data['parent_id'] . "', menu_item_link = '" . $this->db->escape($data['link']) . "', external_link = '" . (int)$data['external_link'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '1'");
 
@@ -48,7 +55,7 @@ class ModelDesignMenuItems extends Model {
 				// Delete the path below the current one
 				$this->db->query("DELETE FROM `" . DB_PREFIX . "menu_item_path` WHERE menu_item_id = '" . (int)$menu_item_path['menu_item_id'] . "' AND `level` < '" . (int)$menu_item_path['level'] . "'");
 
-				$path = array();
+				$path = [];
 
 				// Get the nodes new parents
 				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "menu_item_path` WHERE menu_item_id = '" . (int)$data['parent_id'] . "' ORDER BY `level` ASC");
@@ -164,11 +171,11 @@ class ModelDesignMenuItems extends Model {
 
 		$sql .= " GROUP BY mip.menu_item_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'mi.sort_order',
 			'mi.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -176,7 +183,7 @@ class ModelDesignMenuItems extends Model {
 			$sql .= " ORDER BY `name`, mi.sort_order";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -200,32 +207,32 @@ class ModelDesignMenuItems extends Model {
 	}
 
 	public function getMenuItemDescription(int $menu_item_id): array {
-		$menu_description_data = array();
+		$menu_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "menu_item_description` WHERE menu_item_id = '" . (int)$menu_item_id . "'");
 
 		foreach ($query->rows as $result) {
-			$menu_description_data[$result['language_id']] = array(
+			$menu_description_data[$result['language_id']] = [
 				'name'             => $result['menu_item_name'],
 				'meta_description' => $result['meta_description'],
 				'meta_keyword'     => $result['meta_keyword']
-			);
+			];
 		}
 
 		return $menu_description_data;
 	}
 
 	public function getParents(int $menu_id) {
-		$parents_data = array();
+		$parents_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "menu_item` mi LEFT JOIN `" . DB_PREFIX . "menu_item_description` mid ON (mi.menu_item_id = mid.menu_item_id) WHERE mi.menu_id = '" . (int)$menu_id . "' AND mid.language_id = '" . $this->config->get('config_language_id') . "' AND mi.parent_id = '0' ORDER BY mi.sort_order, mid.menu_item_name ASC");
 
 		if ($query->rows) {
 			foreach ($query->rows as $result) {
-				$parents_data[] = array(
+				$parents_data[] = [
 					'menu_item_id' => $result['menu_item_id'],
 					'name'         => $result['menu_item_name']
-				);
+				];
 			}
 
 			return $parents_data;

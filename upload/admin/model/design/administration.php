@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignAdministration
+ *
+ * @package NivoCart
+ */
 class ModelDesignAdministration extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addAdministration(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "administration` SET `name` = '" . $this->db->escape($data['name']) . "', contrast = '" . $this->db->escape($data['contrast']) . "', date_added = NOW(), date_modified = NOW()");
 
@@ -36,7 +43,7 @@ class ModelDesignAdministration extends Model {
 
 			$sql .= " ORDER BY `name`";
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -90,10 +97,10 @@ class ModelDesignAdministration extends Model {
 		$stylesheet_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "administration`");
 
 		if (!$stylesheet_query->rows) {
-			$stylesheets = array();
+			$stylesheets = [];
 
-			$stylesheets[] = array('name' => 'light', 'contrast' => 'light');
-			$stylesheets[] = array('name' => 'dark', 'contrast' => 'dark');
+			$stylesheets[] = ['name' => 'light', 'contrast' => 'light'];
+			$stylesheets[] = ['name' => 'dark', 'contrast' => 'dark'];
 
 			foreach ($stylesheets as $stylesheet) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "administration` SET `name` = '" . $this->db->escape($stylesheet['name']) . "', contrast = '" . $this->db->escape($stylesheet['contrast']) . "', date_added = NOW(), date_modified = NOW()");

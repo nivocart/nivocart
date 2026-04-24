@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignLayout
+ *
+ * @package NivoCart
+ */
 class ModelDesignLayout extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get, Check
+	 */
 	public function addLayout(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = '" . $this->db->escape($data['name']) . "'");
 
@@ -59,7 +66,7 @@ class ModelDesignLayout extends Model {
 	public function getLayouts(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "layout`";
 
-		$sort_data = array('name');
+		$sort_data = ['name'];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -67,7 +74,7 @@ class ModelDesignLayout extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

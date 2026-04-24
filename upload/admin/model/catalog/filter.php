@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogFilter
+ *
+ * @package NivoCart
+ */
 class ModelCatalogFilter extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addFilter(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "filter_group` SET sort_order = '" . (int)$data['sort_order'] . "'");
 
@@ -77,10 +84,10 @@ class ModelCatalogFilter extends Model {
 	public function getFilterGroups(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "filter_group` fg LEFT JOIN `" . DB_PREFIX . "filter_group_description` fgd ON (fg.filter_group_id = fgd.filter_group_id) WHERE fgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'fgd.name',
 			'fg.sort_order'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -88,7 +95,7 @@ class ModelCatalogFilter extends Model {
 			$sql .= " ORDER BY fgd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -112,12 +119,12 @@ class ModelCatalogFilter extends Model {
 	}
 
 	public function getFilterGroupDescriptions(int $filter_group_id): array {
-		$filter_group_data = array();
+		$filter_group_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "filter_group_description` WHERE filter_group_id = '" . (int)$filter_group_id . "'");
 
 		foreach ($query->rows as $result) {
-			$filter_group_data[$result['language_id']] = array('name' => $result['name']);
+			$filter_group_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $filter_group_data;
@@ -156,7 +163,7 @@ class ModelCatalogFilter extends Model {
 	}
 
 	public function getAllFilters(): array {
-		$filter_all_data = array();
+		$filter_all_data = [];
 
 		$filter_group_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "filter_group` fg LEFT JOIN `" . DB_PREFIX . "filter_group_description` fgd ON (fg.filter_group_id = fgd.filter_group_id) WHERE fgd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
@@ -164,11 +171,11 @@ class ModelCatalogFilter extends Model {
 			$filter_value_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "filter` f LEFT JOIN `" . DB_PREFIX . "filter_description` fd ON (f.filter_id = fd.filter_id) WHERE fd.filter_group_id = '" . $filter_group['filter_group_id'] . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY f.filter_group_id, f.sort_order ASC");
 
 			foreach ($filter_value_query->rows as $filter_value) {
-				$filter_all_data[] = array(
+				$filter_all_data[] = [
 					'filter_group_id' => $filter_group['filter_group_id'],
 					'filter_id'       => $filter_value['filter_id'],
 					'name'            => $filter_group['name'] . ' &gt; ' . $filter_value['name']
-				);
+				];
 			}
 		}
 
@@ -179,24 +186,24 @@ class ModelCatalogFilter extends Model {
 		$filter_data = $this->cache->get('filter.' . (int)$this->config->get('config_language_id'));
 
 		if (!$filter_data) {
-			$filter_data = array();
+			$filter_data = [];
 
 			$filter_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "filter` WHERE filter_group_id = '" . (int)$filter_group_id . "'");
 
 			foreach ($filter_query->rows as $filter) {
-				$filter_description_data = array();
+				$filter_description_data = [];
 
 				$filter_description_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "filter_description` WHERE filter_id = '" . (int)$filter['filter_id'] . "'");
 
 				foreach ($filter_description_query->rows as $filter_description) {
-					$filter_description_data[$filter_description['language_id']] = array('name' => $filter_description['name']);
+					$filter_description_data[$filter_description['language_id']] = ['name' => $filter_description['name']];
 				}
 
-				$filter_data[] = array(
+				$filter_data[] = [
 					'filter_id'          => $filter['filter_id'],
 					'filter_description' => $filter_description_data,
 					'sort_order'         => $filter['sort_order']
-				);
+				];
 			}
 
 			$this->cache->set('filter.' . (int)$this->config->get('config_language_id'), $filter_data);

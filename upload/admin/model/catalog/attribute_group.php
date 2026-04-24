@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogAttributeGroup
+ *
+ * @package NivoCart
+ */
 class ModelCatalogAttributeGroup extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addAttributeGroup(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "attribute_group` SET sort_order = '" . (int)$data['sort_order'] . "'");
 
@@ -44,10 +51,10 @@ class ModelCatalogAttributeGroup extends Model {
 	public function getAttributeGroups(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "attribute_group` ag LEFT JOIN `" . DB_PREFIX . "attribute_group_description` agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE agd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'agd.name',
 			'ag.sort_order'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -55,7 +62,7 @@ class ModelCatalogAttributeGroup extends Model {
 			$sql .= " ORDER BY agd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -82,7 +89,7 @@ class ModelCatalogAttributeGroup extends Model {
 		$attribute_group_data = $this->cache->get('attribute.group.' . (int)$this->config->get('config_language_id'));
 
 		if (!$attribute_group_data) {
-			$attribute_group_data = array();
+			$attribute_group_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "attribute_group_description` WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
 

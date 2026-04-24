@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelBlogArticle
+ *
+ * @package NivoCart
+ */
 class ModelBlogArticle extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addArticle(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_article` SET blog_author_id = '" . (int)$data['blog_author_id'] . "', allow_comment = '" . (int)$data['allow_comment'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogReview
+ *
+ * @package NivoCart
+ */
 class ModelCatalogSitemap extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getAllStores(): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store`");
 
@@ -44,7 +51,7 @@ class ModelCatalogSitemap extends Model {
 	}
 
 	public function getInformationStores(int $information_id): array {
-		$information_store_data = array();
+		$information_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "information_to_store` WHERE information_id = '" . (int)$information_id . "'");
 

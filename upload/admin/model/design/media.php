@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignMedia
+ *
+ * @package NivoCart
+ */
 class ModelDesignMedia extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addMedia(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "media` SET `name` = '" . $this->db->escape($data['name']) . "', media = '" .  $this->db->escape(html_entity_decode($data['media'], ENT_QUOTES, 'UTF-8')) . "', credit = '" . $this->db->escape($data['credit']) . "', status = '" . (int)$data['status'] . "'");
 
@@ -33,10 +40,10 @@ class ModelDesignMedia extends Model {
 
 		$sql .= " GROUP BY media_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -44,7 +51,7 @@ class ModelDesignMedia extends Model {
 			$sql .= " ORDER BY name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -80,7 +87,7 @@ class ModelDesignMedia extends Model {
 
 		$ext = substr(strrchr($filename, '.'), 1);
 
-		$available_mimes = array('flv', 'mp3', 'mp4', 'oga', 'ogv', 'ogg', 'webm', 'm4a', 'm4v', 'wav', 'wmv', 'wma');
+		$available_mimes = ['flv', 'mp3', 'mp4', 'oga', 'ogv', 'ogg', 'webm', 'm4a', 'm4v', 'wav', 'wmv', 'wma'];
 
 		if (in_array(strtolower($ext), $available_mimes)) {
 			$image = strtolower($ext) . '.png';
@@ -103,14 +110,14 @@ class ModelDesignMedia extends Model {
 
 			$i = 0;
 
-			$suffix = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
+			$suffix = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
 
 			while (($size / 1024) > 1) {
 				$size = $size / 1024;
 				$i++;
 			}
 
-			$filesize = round(substr($size, 0, strpos($size, '.') + 4), 2) . $suffix[$i];
+			$filesize = round(substr($size, 0, strpos($size, '.') + 4), 2,PHP_ROUND_HALF_UP) . $suffix[$i];
 		}
 
 		return $filesize;

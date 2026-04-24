@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelBlogReport
+ *
+ * @package NivoCart
+ */
 class ModelBlogStatus extends Model {
-
+	/**
+	 * Functions Check
+	 */
 	public function checkBlog(): bool {
 		$table_name = $this->db->escape('blog_%');
 

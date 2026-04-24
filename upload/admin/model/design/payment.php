@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignPayment
+ *
+ * @package NivoCart
+ */
 class ModelDesignPayment extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addPaymentImage(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "payment_image` SET `name` = '" . $this->db->escape($data['name']) . "', payment = '" . $this->db->escape($data['payment']) . "', `image` = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "', status = '" . (int)$data['status'] . "'");
 
@@ -27,13 +34,13 @@ class ModelDesignPayment extends Model {
 	public function getPaymentImages(array $data = []): array {
 		$sql = "SELECT payment_image_id, `name`, payment, `image`, status FROM " . DB_PREFIX . "payment_image";
 
-		$sort_data = array(
+		$sort_data = [
 			'payment_image_id',
 			'name',
 			'payment',
 			'image',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -41,7 +48,7 @@ class ModelDesignPayment extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

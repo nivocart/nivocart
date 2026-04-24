@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelBlogAuthor
+ *
+ * @package NivoCart
+ */
 class ModelBlogAuthor extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addAuthor(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_author` SET `name` = '" . $this->db->escape($data['name']) . "', status='" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
@@ -74,7 +81,7 @@ class ModelBlogAuthor extends Model {
 			$sql .= " ORDER BY ba.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

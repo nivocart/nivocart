@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignMenu
+ *
+ * @package NivoCart
+ */
 class ModelDesignMenu extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addMenu(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "menu` SET title = '" . $this->db->escape($data['title']) . "', status = '1'");
 
@@ -54,16 +61,16 @@ class ModelDesignMenu extends Model {
 	}
 
 	public function getMenus(array $data = []) {
-		$menu_data = array();
+		$menu_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "menu` ORDER BY menu_id ASC");
 
 		foreach ($query->rows as $result) {
-			$menu_data[] = array(
+			$menu_data[] = [
 				'menu_id' => $result['menu_id'],
 				'title'   => $result['title'],
 				'status'  => $result['status']
-			);
+			];
 		}
 
 		if ($menu_data) {
@@ -74,7 +81,7 @@ class ModelDesignMenu extends Model {
 	}
 
 	public function getMenuStores(int $menu_id): array {
-		$menu_store_data = array();
+		$menu_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "menu_to_store` WHERE menu_id = '" . (int)$menu_id . "'");
 

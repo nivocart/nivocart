@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogPalette
+ *
+ * @package NivoCart
+ */
 class ModelCatalogPalette extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addPalette(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "palette` SET `name` = '" . $this->db->escape($data['name']) . "'");
 
@@ -68,7 +75,7 @@ class ModelCatalogPalette extends Model {
 
 		$sql .= " GROUP BY p.palette_id";
 
-		$sort_data = array('p.name');
+		$sort_data = ['p.name'];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -76,7 +83,7 @@ class ModelCatalogPalette extends Model {
 			$sql .= " ORDER BY p.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -112,88 +119,88 @@ class ModelCatalogPalette extends Model {
 	}
 
 	public function getPaletteDescriptions(int $palette_id): array {
-		$color_data = array();
+		$color_data = [];
 
 		$color_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette_color` WHERE palette_id = '" . (int)$palette_id . "'");
 
 		foreach ($color_query->rows as $color) {
-			$color_description_data = array();
+			$color_description_data = [];
 
 			$color_description_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette_color_description` WHERE palette_color_id = '" . (int)$color['palette_color_id'] . "'");
 
 			foreach ($color_description_query->rows as $color_description) {
-				$color_description_data[$color_description['language_id']] = array('title' => $color_description['title']);
+				$color_description_data[$color_description['language_id']] = ['title' => $color_description['title']];
 			}
 
-			$color_data[] = array(
+			$color_data[] = [
 				'palette_color_id'  => $color['palette_color_id'],
 				'color'             => $color['color'],
 				'skin'              => $color['skin'],
 				'color_description' => $color_description_data
-			);
+			];
 		}
 
 		return $color_data;
 	}
 
 	public function getPaletteColors(array $data = []): array {
-		$colors_data = array();
+		$colors_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette_color` pc LEFT JOIN `" . DB_PREFIX . "palette_color_description` pcd ON (pcd.palette_id = pc.palette_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY pcd.palette_color_id ORDER BY pc.palette_id, pcd.title ASC");
 
 		foreach ($query->rows as $result) {
-			$colors_data[] = array(
+			$colors_data[] = [
 				'palette_color_id' => $result['palette_color_id'],
 				'color'            => $result['color'],
 				'skin'             => $result['skin'],
 				'title'            => $result['title']
-			);
+			];
 		}
 
 		return $colors_data;
 	}
 
 	public function getPaletteColorsByPaletteId(int $palette_id): array {
-		$colors_data = array();
+		$colors_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette` p LEFT JOIN `" . DB_PREFIX . "palette_color` pc ON (pc.palette_id = p.palette_id) LEFT JOIN `" . DB_PREFIX . "palette_color_description` pcd ON (pcd.palette_id = p.palette_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pcd.palette_id = '" . (int)$palette_id . "' GROUP BY pcd.palette_color_id ORDER BY p.palette_id, pcd.title ASC");
 
 		foreach ($query->rows as $result) {
-			$colors_data[] = array(
+			$colors_data[] = [
 				'palette_color_id' => $result['palette_color_id'],
 				'color'            => $result['color'],
 				'skin'             => $result['skin'],
 				'title'            => $result['title']
-			);
+			];
 		}
 
 		return $colors_data;
 	}
 
 	public function getPaletteColorsByColorId(int $palette_color_id): array {
-		$palette_colors_data = array();
+		$palette_colors_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette_color` pc LEFT JOIN `" . DB_PREFIX . "palette_color_description` pcd ON (pcd.palette_color_id = pc.palette_color_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pc.palette_color_id = '" . (int)$palette_color_id . "' GROUP BY pc.palette_color_id ORDER BY pcd.title ASC");
 
 		foreach ($query->rows as $result) {
-			$palette_colors_data[] = array(
+			$palette_colors_data[] = [
 				'palette_color_id' => $result['palette_color_id'],
 				'color'            => $result['color'],
 				'skin'             => $result['skin'],
 				'title'            => $result['title']
-			);
+			];
 		}
 
 		return $palette_colors_data;
 	}
 
 	public function getPaletteIds(array $data = []): array {
-		$palette_data = array();
+		$palette_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette`");
 
 		foreach ($query->rows as $result) {
-			$palette_data[] = array('palette_id' => $result['palette_id']);
+			$palette_data[] = ['palette_id' => $result['palette_id']];
 		}
 
 		return $palette_data;

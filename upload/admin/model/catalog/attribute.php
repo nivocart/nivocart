@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogAttribute
+ *
+ * @package NivoCart
+ */
 class ModelCatalogAttribute extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addAttribute(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "attribute` SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "', sort_order = '" . (int)$data['sort_order'] . "'");
 
@@ -46,11 +53,11 @@ class ModelCatalogAttribute extends Model {
 			$sql .= " AND a.attribute_group_id = '" . $this->db->escape($data['filter_attribute_group_id']) . "'";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'ad.name',
 			'attribute_group',
 			'a.sort_order'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -58,7 +65,7 @@ class ModelCatalogAttribute extends Model {
 			$sql .= " ORDER BY attribute_group, ad.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -82,7 +89,7 @@ class ModelCatalogAttribute extends Model {
 	}
 
 	public function getAttributeDescriptions(int $attribute_id): array {
-		$attribute_data = array();
+		$attribute_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "attribute_description` WHERE attribute_id = '" . (int)$attribute_id . "'");
 
@@ -104,11 +111,11 @@ class ModelCatalogAttribute extends Model {
 			$sql .= " AND a.attribute_group_id = '" . $this->db->escape($data['filter_attribute_group_id']) . "'";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'ad.name',
 			'attribute_group',
 			'a.sort_order'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -116,7 +123,7 @@ class ModelCatalogAttribute extends Model {
 			$sql .= " ORDER BY ad.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

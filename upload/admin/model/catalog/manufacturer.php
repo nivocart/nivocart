@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogManufacturer
+ *
+ * @package NivoCart
+ */
 class ModelCatalogManufacturer extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addManufacturer(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "manufacturer` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "'");
 
@@ -91,11 +98,11 @@ class ModelCatalogManufacturer extends Model {
 
 		$sql .= " GROUP BY md.manufacturer_id";
 
-		$sort_data = array(
+		$sort_data = [
 			'md.name',
 			'm.sort_order',
 			'm.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -103,7 +110,7 @@ class ModelCatalogManufacturer extends Model {
 			$sql .= " ORDER BY md.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -133,22 +140,22 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function getManufacturerDescriptions(int $manufacturer_id): array {
-		$manufacturer_data = array();
+		$manufacturer_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer_description` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		foreach ($query->rows as $result) {
-			$manufacturer_data[$result['language_id']] = array(
+			$manufacturer_data[$result['language_id']] = [
 				'name'        => $result['name'],
 				'description' => $result['description']
-			);
+			];
 		}
 
 		return $manufacturer_data;
 	}
 
 	public function getManufacturerStores(int $manufacturer_id): array {
-		$manufacturer_store_data = array();
+		$manufacturer_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "manufacturer_to_store` WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 

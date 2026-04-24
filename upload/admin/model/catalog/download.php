@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogDownload
+ *
+ * @package NivoCart
+ */
 class ModelCatalogDownload extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addDownload(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "download` SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "', date_added = NOW()");
 
@@ -56,10 +63,10 @@ class ModelCatalogDownload extends Model {
 			$sql .= " AND dd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'dd.name',
 			'd.remaining'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -67,7 +74,7 @@ class ModelCatalogDownload extends Model {
 			$sql .= " ORDER BY dd.name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -94,7 +101,7 @@ class ModelCatalogDownload extends Model {
 		$download_description_data = $this->cache->get('download.' . (int)$this->config->get('config_language_id'));
 
 		if (!$download_description_data) {
-			$download_description_data = array();
+			$download_description_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "download_description` WHERE download_id = '" . (int)$download_id . "'");
 
@@ -121,7 +128,7 @@ class ModelCatalogDownload extends Model {
 
 		$ext = utf8_substr(strrchr($filename, '.'), 1);
 
-		$available_mimes = array('zip', 'pdf', 'swf', 'flv', 'mp3', 'mp4', 'oga', 'ogv', 'ogg', 'webm', 'm4a', 'm4v', 'wav', 'wmv', 'wma');
+		$available_mimes = ['zip', 'pdf', 'swf', 'flv', 'mp3', 'mp4', 'oga', 'ogv', 'ogg', 'webm', 'm4a', 'm4v', 'wav', 'wmv', 'wma'];
 
 		if (in_array(strtolower($ext), $available_mimes)) {
 			$image = strtolower($ext) . '.png';

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignBanner
+ *
+ * @package NivoCart
+ */
 class ModelDesignBanner extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addBanner(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "banner` SET `name` = '" . $this->db->escape($data['name']) . "', status = '" . (int)$data['status'] . "'");
 
@@ -56,10 +63,10 @@ class ModelDesignBanner extends Model {
 	public function getBanners(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "banner`";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -67,7 +74,7 @@ class ModelDesignBanner extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -91,27 +98,27 @@ class ModelDesignBanner extends Model {
 	}
 
 	public function getBannerImages(int $banner_id): array {
-		$banner_image_data = array();
+		$banner_image_data = [];
 
 		$banner_image_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "banner_image` WHERE banner_id = '" . (int)$banner_id . "'");
 
 		foreach ($banner_image_query->rows as $banner_image) {
-			$banner_image_description_data = array();
+			$banner_image_description_data = [];
 
 			$banner_image_description_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "banner_image_description` WHERE banner_image_id = '" . (int)$banner_image['banner_image_id'] . "' AND banner_id = '" . (int)$banner_id . "'");
 
 			foreach ($banner_image_description_query->rows as $banner_image_description) {
-				$banner_image_description_data[$banner_image_description['language_id']] = array('title' => $banner_image_description['title']);
+				$banner_image_description_data[$banner_image_description['language_id']] = ['title' => $banner_image_description['title']];
 			}
 
-			$banner_image_data[] = array(
+			$banner_image_data[] = [
 				'banner_image_description' => $banner_image_description_data,
 				'image'                    => $banner_image['image'],
 				'link'                     => $banner_image['link'],
 				'external_link'            => $banner_image['external_link'],
 				'sort_order'               => $banner_image['sort_order'],
 				'clicked'                  => $banner_image['clicked']
-			);
+			];
 		}
 
 		asort($banner_image_data);

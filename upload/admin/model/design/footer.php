@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignFooter
+ *
+ * @package NivoCart
+ */
 class ModelDesignFooter extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addFooter(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "footer` SET position = '" . (int)$data['position'] . "', status = '1'");
 
@@ -94,11 +101,11 @@ class ModelDesignFooter extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "footer` f LEFT JOIN `" . DB_PREFIX . "footer_description` fd ON (f.footer_id = fd.footer_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-			$sort_data = array(
+			$sort_data = [
 				'fd.name',
 				'f.position',
 				'f.status'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -106,7 +113,7 @@ class ModelDesignFooter extends Model {
 				$sql .= " ORDER BY fd.name";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -144,12 +151,12 @@ class ModelDesignFooter extends Model {
 	}
 
 	public function getFooterDescriptions(int $footer_id): array {
-		$footer_description_data = array();
+		$footer_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "footer_description` WHERE footer_id = '" . (int)$footer_id . "'");
 
 		foreach ($query->rows as $result) {
-			$footer_description_data[$result['language_id']] = array('name' => $result['name']);
+			$footer_description_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $footer_description_data;
@@ -162,32 +169,32 @@ class ModelDesignFooter extends Model {
 	}
 
 	public function getFooterRoutes(int $footer_id): array {
-		$footer_route_data = array();
+		$footer_route_data = [];
 
 		$footer_route_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "footer_route` WHERE footer_id = '" . (int)$footer_id . "' ORDER BY sort_order ASC");
 
 		foreach ($footer_route_query->rows as $footer_route) {
-			$footer_route_description_data = array();
+			$footer_route_description_data = [];
 
 			$footer_route_description_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "footer_route_description` WHERE footer_route_id = '" . (int)$footer_route['footer_route_id'] . "' AND footer_id = '" . (int)$footer_id . "'");
 
 			foreach ($footer_route_description_query->rows as $footer_route_description) {
-				$footer_route_description_data[$footer_route_description['language_id']] = array('title' => $footer_route_description['title']);
+				$footer_route_description_data[$footer_route_description['language_id']] = ['title' => $footer_route_description['title']];
 			}
 
-			$footer_route_data[] = array(
+			$footer_route_data[] = [
 				'footer_route_description' => $footer_route_description_data,
 				'route'                    => $footer_route['route'],
 				'external_link'            => $footer_route['external_link'],
 				'sort_order'               => $footer_route['sort_order']
-			);
+			];
 		}
 
 		return $footer_route_data;
 	}
 
 	public function getFooterStores(int $footer_id): array {
-		$footer_store_data = array();
+		$footer_store_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "footer_to_store` WHERE footer_id = '" . (int)$footer_id . "'");
 
@@ -199,12 +206,12 @@ class ModelDesignFooter extends Model {
 	}
 
 	public function getFooterIds(array $data = []): array {
-		$footer_data = array();
+		$footer_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "footer`");
 
 		foreach ($query->rows as $result) {
-			$footer_data[] = array('footer_id' => $result['footer_id']);
+			$footer_data[] = ['footer_id' => $result['footer_id']];
 		}
 
 		return $footer_data;

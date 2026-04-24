@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogProfile
+ *
+ * @package NivoCart
+ */
 class ModelCatalogProfile extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addProfile(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "profile` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', price = '" . (double)$data['price'] . "', frequency = '" . $this->db->escape($data['frequency']) . "', duration = '" . (int)$data['duration'] . "', `cycle` = '" . (int)$data['cycle'] . "', trial_status = '" . (int)$data['trial_status'] . "', trial_price = '" . (double)$data['trial_price'] . "', trial_frequency = '" . $this->db->escape($data['trial_frequency']) . "', trial_duration = '" . (int)$data['trial_duration'] . "', trial_cycle = '" . (int)$data['trial_cycle'] . "'");
 
@@ -39,24 +46,24 @@ class ModelCatalogProfile extends Model {
 	}
 
 	public function getFrequencies(): array {
-		return array(
+		return [
 			'day'        => $this->language->get('text_day'),
 			'week'       => $this->language->get('text_week'),
 			'semi_month' => $this->language->get('text_semi_month'),
 			'month'      => $this->language->get('text_month'),
 			'year'       => $this->language->get('text_year')
-		);
+		];
 	}
 
 	public function getProfiles(array $data = []): array {
 		$sql = "SELECT pf.profile_id, pfd.name, pf.sort_order, pf.status FROM `" . DB_PREFIX . "profile` pf LEFT JOIN `" . DB_PREFIX . "profile_description` pfd ON (pf.profile_id = pfd.profile_id) WHERE pfd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'pf.profile_id',
 			'pfd.name',
 			'pf.sort_order',
 			'pf.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -64,7 +71,7 @@ class ModelCatalogProfile extends Model {
 			$sql .= " ORDER BY pf.sort_order";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -97,14 +104,14 @@ class ModelCatalogProfile extends Model {
 		$profile_description_data = $this->cache->get('profile.' . (int)$this->config->get('config_language_id'));
 
 		if (!$profile_description_data) {
-			$profile_description_data = array();
+			$profile_description_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "profile_description` WHERE profile_id = '" . (int)$profile_id . "'");
 
 			foreach ($query->rows as $result) {
-				$profile_description_data[$result['language_id']] = array(
+				$profile_description_data[$result['language_id']] = [
 					'name' => $result['name']
-				);
+				];
 			}
 
 			$this->cache->set('profile.' . (int)$this->config->get('config_language_id'), $profile_description_data);

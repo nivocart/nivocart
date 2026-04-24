@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogField
+ *
+ * @package NivoCart
+ */
 class ModelCatalogField extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addField(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "field` SET sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "'");
 
@@ -55,11 +62,11 @@ class ModelCatalogField extends Model {
 				$sql .= " AND fd.title LIKE '" . $this->db->escape($data['filter_title']) . "%'";
 			}
 
-			$sort_data = array(
+			$sort_data = [
 				'fd.title',
 				'f.sort_order',
 				'f.status'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -67,7 +74,7 @@ class ModelCatalogField extends Model {
 				$sql .= " ORDER BY fd.title";
 			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";
@@ -111,15 +118,15 @@ class ModelCatalogField extends Model {
 	}
 
 	public function getFieldDescriptions(int $field_id): array {
-		$field_description_data = array();
+		$field_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "field_description` WHERE field_id = '" . (int)$field_id . "'");
 
 		foreach ($query->rows as $result) {
-			$field_description_data[$result['language_id']] = array(
+			$field_description_data[$result['language_id']] = [
 				'title'       => $result['title'],
 				'description' => $result['description']
-			);
+			];
 		}
 
 		return $field_description_data;

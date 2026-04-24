@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelBlogReport
+ *
+ * @package NivoCart
+ */
 class ModelBlogReport extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getTotalBlogViewed(array $data = []): int {
 		$sql = "SELECT COUNT(DISTINCT(bv.blog_view_id)) AS `total` FROM `" . DB_PREFIX . "blog_view` bv LEFT JOIN `" . DB_PREFIX . "blog_article` ba ON (bv.blog_article_id = ba.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id) WHERE bad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bv.view > 0";
 

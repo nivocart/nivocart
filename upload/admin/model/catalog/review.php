@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogReview
+ *
+ * @package NivoCart
+ */
 class ModelCatalogReview extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addReview(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "review` SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', `text` = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 
@@ -53,14 +60,14 @@ class ModelCatalogReview extends Model {
 			$sql .= " AND DATE(r.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'pd.name',
 			'r.author',
 			'r.product_id',
 			'r.date_added',
 			'r.rating',
 			'r.status'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -68,7 +75,7 @@ class ModelCatalogReview extends Model {
 			$sql .= " ORDER BY r.date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

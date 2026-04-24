@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelBlogCategory
+ *
+ * @package NivoCart
+ */
 class ModelBlogCategory extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCategory(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "blog_category` SET parent_id = '" . (int)$data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', `column` = '" . (isset($data['column']) ? (int)$data['column'] : 0) . "', blog_category_column = '" . (int)$data['blog_category_column'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_added = NOW(), date_modified = NOW()");
 

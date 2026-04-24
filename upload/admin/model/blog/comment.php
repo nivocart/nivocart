@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelBlogComment
+ *
+ * @package NivoCart
+ */
 class ModelBlogComment extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addArticleComment(array $data = []): void {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "blog_article_description` WHERE article_title = '" . $this->db->escape($data['article_title']) . "'");
 

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogNewsDownload
+ *
+ * @package NivoCart
+ */
 class ModelCatalogNewsDownload extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addDownload(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "news_download` SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', date_added = NOW()");
 

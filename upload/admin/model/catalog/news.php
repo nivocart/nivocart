@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogNews
+ *
+ * @package NivoCart
+ */
 class ModelCatalogNews extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addNews(array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "news` SET lightbox = '" . $this->db->escape($data['lightbox']) . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
