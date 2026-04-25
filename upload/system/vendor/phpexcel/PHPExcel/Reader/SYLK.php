@@ -31,7 +31,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 	/**
 	 * @ignore
 	 */
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
+	define('PHPEXCEL_ROOT', __DIR__ . '/../../');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -62,7 +62,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 *
 	 * @var array
 	 */
-	private $_formats = array();
+	private $_formats = [];
 
 	/**
 	 * Format Count
@@ -88,14 +88,14 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 		$data = fread($this->_fileHandle, 2048);
 
 		// Count delimiters in file
-		$delimiterCount = substr_count($data, ';');
+		$delimiterCount = substr_count((string) $data, ';');
 		if ($delimiterCount < 1) {
 			return false;
 		}
 
 		// Analyze first line looking for ID; signature
-		$lines = explode("\n", $data);
-		if (substr($lines[0], 0, 4) != 'ID;P') {
+		$lines = explode("\n", (string) $data);
+		if (!str_starts_with((string) $lines[0], 'ID;P')) {
 			return false;
 		}
 
@@ -137,7 +137,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 		$fileHandle = $this->_fileHandle;
 		rewind($fileHandle);
 
-		$worksheetInfo = array();
+		$worksheetInfo = [];
 		$worksheetInfo[0]['worksheetName'] = 'Worksheet';
 		$worksheetInfo[0]['lastColumnLetter'] = 'A';
 		$worksheetInfo[0]['lastColumnIndex'] = 0;
@@ -145,7 +145,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 		$worksheetInfo[0]['totalColumns'] = 0;
 
 		// Loop through file
-		$rowData = array();
+		$rowData = [];
 
 		// loop through one row (line) at a time in the file
 		$rowIndex = 0;
@@ -157,20 +157,20 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 
 			// explode each row at semicolons while taking into account that literal semicolon (;)
 			// is escaped like this (;;)
-			$rowData = explode("\t", str_replace('¤', ';', str_replace(';', "\t", str_replace(';;', '¤', rtrim($rowData)))));
+			$rowData = explode("\t", str_replace('¤', ';', str_replace(';', "\t", str_replace(';;', '¤', rtrim((string) $rowData)))));
 
 			$dataType = array_shift($rowData);
 			if ($dataType == 'C') {
 				//  Read cell value data
 				foreach ($rowData as $rowDatum) {
-					switch ($rowDatum{0}) {
+					switch ($rowDatum[0]) {
 						case 'C' :
 						case 'X' :
-							$columnIndex = substr($rowDatum, 1) - 1;
+							$columnIndex = substr((string) $rowDatum, 1) - 1;
 							break;
 						case 'R' :
 						case 'Y' :
-							$rowIndex = substr($rowDatum, 1);
+							$rowIndex = substr((string) $rowDatum, 1);
 							break;
 					}
 
@@ -228,11 +228,11 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 		}
 		$objPHPExcel->setActiveSheetIndex( $this->_sheetIndex );
 
-		$fromFormats = array('\-', '\ ');
-		$toFormats = array('-',	' ');
+		$fromFormats = ['\-', '\ '];
+		$toFormats = ['-',	' '];
 
 		// Loop through file
-		$rowData = array();
+		$rowData = [];
 		$column = $row = '';
 
 		// loop through one row (line) at a time in the file
@@ -242,24 +242,24 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 
 			// explode each row at semicolons while taking into account that literal semicolon (;)
 			// is escaped like this (;;)
-			$rowData = explode("\t", str_replace('¤', ';', str_replace(';', "\t", str_replace(';;', '¤', rtrim($rowData)))));
+			$rowData = explode("\t", str_replace('¤', ';', str_replace(';', "\t", str_replace(';;', '¤', rtrim((string) $rowData)))));
 
 			$dataType = array_shift($rowData);
 			//	Read shared styles
 			if ($dataType == 'P') {
-				$formatArray = array();
+				$formatArray = [];
 				foreach ($rowData as $rowDatum) {
-					switch ($rowDatum{0}) {
-						case 'P' : $formatArray['numberformat']['code'] = str_replace($fromFormats, $toFormats, substr($rowDatum,1));
+					switch ($rowDatum[0]) {
+						case 'P' : $formatArray['numberformat']['code'] = str_replace($fromFormats, $toFormats, substr((string) $rowDatum,1));
 							break;
 						case 'E' :
-						case 'F' : $formatArray['font']['name'] = substr($rowDatum, 1);
+						case 'F' : $formatArray['font']['name'] = substr((string) $rowDatum, 1);
 							break;
-						case 'L' : $formatArray['font']['size'] = substr($rowDatum, 1);
+						case 'L' : $formatArray['font']['size'] = substr((string) $rowDatum, 1);
 							break;
-						case 'S' : $styleSettings = substr($rowDatum,1);
+						case 'S' : $styleSettings = substr((string) $rowDatum,1);
 							for ($i = 0;$i < strlen($styleSettings); ++$i) {
-								switch ($styleSettings{$i}) {
+								switch ($styleSettings[$i]) {
 									case 'I' : $formatArray['font']['italic'] = true;
 										break;
 									case 'D' : $formatArray['font']['bold'] = true;
@@ -284,23 +284,23 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 				$cellData = $cellDataFormula = '';
 
 				foreach ($rowData as $rowDatum) {
-					switch ($rowDatum{0}) {
+					switch ($rowDatum[0]) {
 						case 'C' :
-						case 'X' : $column = substr($rowDatum, 1);
+						case 'X' : $column = substr((string) $rowDatum, 1);
 									break;
 						case 'R' :
-						case 'Y' : $row = substr($rowDatum, 1);
+						case 'Y' : $row = substr((string) $rowDatum, 1);
 									break;
-						case 'K' : $cellData = substr($rowDatum, 1);
+						case 'K' : $cellData = substr((string) $rowDatum, 1);
 									break;
-						case 'E' : $cellDataFormula = '='.substr($rowDatum, 1);
+						case 'E' : $cellDataFormula = '='.substr((string) $rowDatum, 1);
 									//	Convert R1C1 style references to A1 style references (but only when not quoted)
-									$temp = explode('"', $cellDataFormula);
+									$temp = explode('"', (string) $cellDataFormula);
 									$key = false;
 									foreach ($temp as &$value) {
 										//	Only count/replace in alternate array entries
 										if ($key = !$key) {
-											preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/', $value, $cellReferences, PREG_SET_ORDER + PREG_OFFSET_CAPTURE);
+											preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/', (string) $value, $cellReferences, PREG_SET_ORDER + PREG_OFFSET_CAPTURE);
 											//	Reverse the matches array, otherwise all our offsets will become incorrect if we modify our way
 											//		through the formula from left to right. Reversing means that we work right to left.through
 											//		the formula
@@ -314,8 +314,8 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 													$rowReference = $row;
 												}
 												//	Bracketed R references are relative to the current row
-												if ($rowReference{0} == '[') {
-													$rowReference = $row + trim($rowReference, '[]');
+												if ($rowReference[0] == '[') {
+													$rowReference = $row + trim((string) $rowReference, '[]');
 												}
 												$columnReference = $cellReference[4][0];
 												//	Empty C reference is the current column
@@ -323,12 +323,12 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 													$columnReference = $column;
 												}
 												//	Bracketed C references are relative to the current column
-												if ($columnReference{0} == '[') {
-													$columnReference = $column + trim($columnReference, '[]');
+												if ($columnReference[0] == '[') {
+													$columnReference = $column + trim((string) $columnReference, '[]');
 												}
 												$A1CellReference = PHPExcel_Cell::stringFromColumnIndex($columnReference-1).$rowReference;
 
-												$value = substr_replace($value, $A1CellReference, $cellReference[0][1], strlen($cellReference[0][0]));
+												$value = substr_replace($value, $A1CellReference, $cellReference[0][1], strlen((string) $cellReference[0][0]));
 											}
 										}
 									}
@@ -351,23 +351,23 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 			//	Read cell formatting
 			} elseif ($dataType == 'F') {
 				$formatStyle = $columnWidth = $styleSettings = '';
-				$styleData = array();
+				$styleData = [];
 
 				foreach ($rowData as $rowDatum) {
-					switch ($rowDatum{0}) {
+					switch ($rowDatum[0]) {
 						case 'C' :
-						case 'X' : $column = substr($rowDatum, 1);
+						case 'X' : $column = substr((string) $rowDatum, 1);
 									break;
 						case 'R' :
-						case 'Y' : $row = substr($rowDatum, 1);
+						case 'Y' : $row = substr((string) $rowDatum, 1);
 									break;
 						case 'P' : $formatStyle = $rowDatum;
 									break;
-						case 'W' : list($startCol,$endCol,$columnWidth) = explode(' ', substr($rowDatum,1));
+						case 'W' : [$startCol, $endCol, $columnWidth] = explode(' ', substr((string) $rowDatum,1));
 									break;
-						case 'S' : $styleSettings = substr($rowDatum,1);
+						case 'S' : $styleSettings = substr((string) $rowDatum,1);
 									for ($i = 0;$i < strlen($styleSettings); ++$i) {
-										switch ($styleSettings{$i}) {
+										switch ($styleSettings[$i]) {
 											case 'I' : $styleData['font']['italic'] = true;
 														break;
 											case 'D' : $styleData['font']['bold'] = true;
@@ -413,12 +413,12 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 				}
 			} else {
 				foreach ($rowData as $rowDatum) {
-					switch ($rowDatum{0}) {
+					switch ($rowDatum[0]) {
 						case 'C' :
-						case 'X' : $column = substr($rowDatum, 1);
+						case 'X' : $column = substr((string) $rowDatum, 1);
 									break;
 						case 'R' :
-						case 'Y' : $row = substr($rowDatum, 1);
+						case 'Y' : $row = substr((string) $rowDatum, 1);
 									break;
 					}
 				}

@@ -48,13 +48,13 @@ class PHPExcel_Autoloader {
 	*/
 	public static function Register() {
 		if (function_exists('__autoload')) {
-			spl_autoload_register('__autoload');
+			spl_autoload_register(__autoload(...));
 		}
 
 		if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-			return spl_autoload_register(array('PHPExcel_Autoloader', 'Load'), true, true);
+			return spl_autoload_register(['PHPExcel_Autoloader', 'Load'], true, true);
 		} else {
-			return spl_autoload_register(array('PHPExcel_Autoloader', 'Load'));
+			return spl_autoload_register(['PHPExcel_Autoloader', 'Load']);
 		}
 	}
 
@@ -64,7 +64,7 @@ class PHPExcel_Autoloader {
 	* @param    string    $pClassName     Name of the object to load
 	*/
 	public static function Load($pClassName) {
-		if ((class_exists($pClassName, false)) || (strpos($pClassName, 'PHPExcel') !== 0)) {
+		if ((class_exists($pClassName, false)) || (!str_starts_with($pClassName, 'PHPExcel'))) {
 			return false;
 		}
 

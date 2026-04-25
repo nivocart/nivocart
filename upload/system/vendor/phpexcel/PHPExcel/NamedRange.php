@@ -55,13 +55,6 @@ class PHPExcel_NamedRange {
 	private $_range;
 
 	/**
-	 * Is the named range local? (i.e. can only be used on $this->_worksheet)
-	 *
-	 * @var bool
-	 */
-	private $_localOnly;
-
-	/**
 	 * Scope
 	 *
 	 * @var PHPExcel_Worksheet
@@ -74,11 +67,14 @@ class PHPExcel_NamedRange {
      * @param string $pName
      * @param PHPExcel_Worksheet $pWorksheet
      * @param string $pRange
-     * @param bool $pLocalOnly
+     * @param bool $_localOnly
      * @param PHPExcel_Worksheet|null $pScope	Scope. Only applies when $pLocalOnly = true. Null for global scope.
      * @throws PHPExcel_Exception
      */
-    public function __construct($pName = null, PHPExcel_Worksheet $pWorksheet, $pRange = 'A1', $pLocalOnly = false, $pScope = null) {
+    public function __construct($pName = null, ?PHPExcel_Worksheet $pWorksheet = null, $pRange = 'A1', /**
+     * Is the named range local? (i.e. can only be used on $this->_worksheet)
+     */
+    private $_localOnly = false, $pScope = null) {
     	// Validate data
     	if (($pName === null) || ($pWorksheet === null) || ($pRange === null)) {
     		throw new PHPExcel_Exception('Parameters can not be null.');
@@ -88,8 +84,7 @@ class PHPExcel_NamedRange {
     	$this->_name = $pName;
     	$this->_worksheet = $pWorksheet;
     	$this->_range = $pRange;
-    	$this->_localOnly = $pLocalOnly;
-    	$this->_scope = ($pLocalOnly == true) ? (($pScope == null) ? $pWorksheet : $pScope) : null;
+    	$this->_scope = ($this->_localOnly == true) ? (($pScope == null) ? $pWorksheet : $pScope) : null;
     }
 
     /**
@@ -229,7 +224,7 @@ class PHPExcel_NamedRange {
      * @param PHPExcel_Worksheet|null $pSheet Scope. Use null for global scope
      * @return PHPExcel_NamedRange
      */
-    public static function resolveRange($pNamedRange = '', PHPExcel_Worksheet $pSheet) {
+    public static function resolveRange($pNamedRange = '', ?PHPExcel_Worksheet $pSheet = null) {
 		return $pSheet->getParent()->getNamedRange($pNamedRange, $pSheet);
     }
 

@@ -31,7 +31,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 	/**
 	 * @ignore
 	 */
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
+	define('PHPEXCEL_ROOT', __DIR__ . '/../../');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -72,7 +72,8 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 	 * @return 	boolean
 	 * @throws PHPExcel_Reader_Exception
 	 */
-	public function canRead($pFilename) {
+	#[\Override]
+    public function canRead($pFilename) {
 		// Check if file exists
 		if (!file_exists($pFilename)) {
 			throw new PHPExcel_Reader_Exception("Could not open " . $pFilename . " for reading! File does not exist.");
@@ -92,7 +93,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 		if ($zip->open($pFilename) === true) {
 			// check if it is an OOXML archive
-			$rels = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+			$rels = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 			if ($rels !== false) {
 				foreach ($rels->Relationship as $rel) {
@@ -124,7 +125,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 			throw new PHPExcel_Reader_Exception("Could not open " . $pFilename . " for reading! File does not exist.");
 		}
 
-		$worksheetNames = array();
+		$worksheetNames = [];
 
 		$zipClass = PHPExcel_Settings::getZipClass();
 
@@ -132,13 +133,13 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 		$zip->open($pFilename);
 
 		// The files we're looking at here are small enough that simpleXML is more efficient than XMLReader
-		$rels = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels"), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()));
+		$rels = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels")));
 
 		foreach ($rels->Relationship as $rel) {
 			switch ($rel["Type"]) {
 				case "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument":
 				$xmlWorkbook = simplexml_load_string(
-					$this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}"), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions())
+					(string) $this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}"))
 				);
 
 				if ($xmlWorkbook->sheets) {
@@ -167,23 +168,23 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 			throw new PHPExcel_Reader_Exception("Could not open " . $pFilename . " for reading! File does not exist.");
 		}
 
-		$worksheetInfo = array();
+		$worksheetInfo = [];
 
         $zipClass = PHPExcel_Settings::getZipClass();
 
 		$zip = new $zipClass;
 		$zip->open($pFilename);
 
-		$rels = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+		$rels = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 		foreach ($rels->Relationship as $rel) {
 			if ($rel["Type"] == "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument") {
 				$dir = dirname($rel["Target"]);
 
-				$relsWorkbook = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "$dir/_rels/" . basename($rel["Target"]) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+				$relsWorkbook = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "$dir/_rels/" . basename($rel["Target"]) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 				$relsWorkbook->registerXPathNamespace("rel", "http://schemas.openxmlformats.org/package/2006/relationships");
 
-				$worksheets = array();
+				$worksheets = [];
 
 				foreach ($relsWorkbook->Relationship as $ele) {
 					if ($ele["Type"] == "http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet") {
@@ -191,19 +192,19 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 					}
 				}
 
-				$xmlWorkbook = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+				$xmlWorkbook = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 				if ($xmlWorkbook->sheets) {
 					$dir = dirname($rel["Target"]);
 
 					foreach ($xmlWorkbook->sheets->sheet as $eleSheet) {
-						$tmpInfo = array(
+						$tmpInfo = [
 							'worksheetName'    => (string) $eleSheet["name"],
 							'lastColumnLetter' => 'A',
 							'lastColumnIndex'  => 0,
 							'totalRows'        => 0,
 							'totalColumns'     => 0
-						);
+						];
 
 						$fileWorksheet = $worksheets[(string) self::array_item($eleSheet->attributes("http://schemas.openxmlformats.org/officeDocument/2006/relationships"), "id")];
 
@@ -276,12 +277,12 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 			$instance = (string)$c->f['si'];
 
 			if (!isset($sharedFormulas[(string)$c->f['si']])) {
-				$sharedFormulas[$instance] = array('master' => $r, 'formula' => $value);
+				$sharedFormulas[$instance] = ['master' => $r, 'formula' => $value];
 			} else {
 				$master = PHPExcel_Cell::coordinateFromString($sharedFormulas[$instance]['master']);
 				$current = PHPExcel_Cell::coordinateFromString($r);
 
-				$difference = array(0, 0);
+				$difference = [0, 0];
 				$difference[0] = PHPExcel_Cell::columnIndexFromString($current[0]) - PHPExcel_Cell::columnIndexFromString($master[0]);
 				$difference[1] = $current[1] - $master[1];
 
@@ -296,8 +297,8 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 	public function _getFromZipArchive($archive, $fileName = '') {
 		// Root-relative paths
-		if (strpos($fileName, '//') !== false) {
-			$fileName = substr($fileName, strpos($fileName, '//') + 1);
+		if (str_contains((string) $fileName, '//')) {
+			$fileName = substr((string) $fileName, strpos((string) $fileName, '//') + 1);
 		}
 
 		$fileName = PHPExcel_Shared_File::realpath($fileName);
@@ -340,15 +341,15 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 		$zip->open($pFilename);
 
 		//	Read the theme first, because we need the colour scheme when reading the styles
-		$wbRels = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "xl/_rels/workbook.xml.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+		$wbRels = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "xl/_rels/workbook.xml.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 		foreach ($wbRels->Relationship as $rel) {
 			switch ($rel["Type"]) {
 				case "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme":
-					$themeOrderArray = array('lt1','dk1','lt2','dk2');
+					$themeOrderArray = ['lt1','dk1','lt2','dk2'];
 					$themeOrderAdditional = count($themeOrderArray);
 
-					$xmlTheme = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "xl/{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+					$xmlTheme = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "xl/{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 					if (is_object($xmlTheme)) {
 						$xmlThemeName = $xmlTheme->attributes();
@@ -360,7 +361,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 						$colourSchemeName = (string)$colourScheme['name'];
 						$colourScheme = $xmlTheme->themeElements->clrScheme->children("http://schemas.openxmlformats.org/drawingml/2006/main");
 
-						$themeColours = array();
+						$themeColours = [];
 
 						foreach ($colourScheme as $k => $xmlColour) {
 							$themePos = array_search($k, $themeOrderArray);
@@ -384,12 +385,12 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 			}
 		}
 
-		$rels = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+		$rels = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "_rels/.rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 		foreach ($rels->Relationship as $rel) {
 			switch ($rel["Type"]) {
 				case "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties":
-					$xmlCore = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+					$xmlCore = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 					if (is_object($xmlCore)) {
 						$xmlCore->registerXPathNamespace("dc", "http://purl.org/dc/elements/1.1/");
@@ -400,8 +401,8 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 						$docProps->setCreator((string) self::array_item($xmlCore->xpath("dc:creator")));
 						$docProps->setLastModifiedBy((string) self::array_item($xmlCore->xpath("cp:lastModifiedBy")));
-						$docProps->setCreated(strtotime(self::array_item($xmlCore->xpath("dcterms:created"))));
-						$docProps->setModified(strtotime(self::array_item($xmlCore->xpath("dcterms:modified"))));
+						$docProps->setCreated(strtotime((string) self::array_item($xmlCore->xpath("dcterms:created"))));
+						$docProps->setModified(strtotime((string) self::array_item($xmlCore->xpath("dcterms:modified"))));
 						$docProps->setTitle((string) self::array_item($xmlCore->xpath("dc:title")));
 						$docProps->setDescription((string) self::array_item($xmlCore->xpath("dc:description")));
 						$docProps->setSubject((string) self::array_item($xmlCore->xpath("dc:subject")));
@@ -411,7 +412,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 				break;
 
 				case "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties":
-					$xmlCore = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+					$xmlCore = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 					if (is_object($xmlCore)) {
 						$docProps = $excel->getProperties();
@@ -427,7 +428,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 				break;
 
 				case "http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties":
-					$xmlCore = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+					$xmlCore = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 					if (is_object($xmlCore)) {
 						$docProps = $excel->getProperties();
@@ -458,13 +459,13 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 				case "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument":
 					$dir = dirname($rel["Target"]);
 
-					$relsWorkbook = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "$dir/_rels/" . basename($rel["Target"]) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+					$relsWorkbook = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "$dir/_rels/" . basename($rel["Target"]) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 					$relsWorkbook->registerXPathNamespace("rel", "http://schemas.openxmlformats.org/package/2006/relationships");
 
-					$sharedStrings = array();
+					$sharedStrings = [];
 
 					$xpath = self::array_item($relsWorkbook->xpath("rel:Relationship[@Type='http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings']"));
-					$xmlStrings = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "$dir/$xpath[Target]")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+					$xmlStrings = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "$dir/$xpath[Target]")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 					if (isset($xmlStrings) && isset($xmlStrings->si)) {
 						foreach ($xmlStrings->si as $val) {
@@ -476,7 +477,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 						}
 					}
 
-					$worksheets = array();
+					$worksheets = [];
 					$macros = $customUI = null;
 
 					foreach ($relsWorkbook->Relationship as $ele) {
@@ -507,11 +508,11 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 						}
 					}
 
-					$styles = array();
-					$cellStyles = array();
+					$styles = [];
+					$cellStyles = [];
 
 					$xpath = self::array_item($relsWorkbook->xpath("rel:Relationship[@Type='http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles']"));
-					$xmlStyles = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "$dir/$xpath[Target]")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+					$xmlStyles = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "$dir/$xpath[Target]")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 					$numFmts = null;
 
 					if ($xmlStyles && $xmlStyles->numFmts[0]) {
@@ -546,7 +547,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								$quotePrefix = (boolean) $xf["quotePrefix"];
 							}
 
-							$style = (object) array(
+							$style = (object) [
 								"numFmt"      => $numFmt,
 								"font"        => $xmlStyles->fonts->font[intval($xf["fontId"])],
 								"fill"        => $xmlStyles->fills->fill[intval($xf["fillId"])],
@@ -554,7 +555,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								"alignment"   => $xf->alignment,
 								"protection"  => $xf->protection,
 								"quotePrefix" => $quotePrefix
-							);
+							];
 
 							$styles[] = $style;
 
@@ -578,7 +579,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								}
 							}
 
-							$cellStyle = (object) array(
+							$cellStyle = (object) [
 								"numFmt"      => $numFmt,
 								"font"        => $xmlStyles->fonts->font[intval($xf["fontId"])],
 								"fill"        => $xmlStyles->fills->fill[intval($xf["fillId"])],
@@ -586,7 +587,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								"alignment"   => $xf->alignment,
 								"protection"  => $xf->protection,
 								"quotePrefix" => $quotePrefix
-							);
+							];
 
 							$cellStyles[] = $cellStyle;
 
@@ -598,7 +599,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 						}
 					}
 
-					$dxfs = array();
+					$dxfs = [];
 
 					if (!$this->_readDataOnly && $xmlStyles) {
 						//	Conditional Styles
@@ -625,7 +626,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 						}
 					}
 
-					$xmlWorkbook = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());  //~ http://schemas.openxmlformats.org/spreadsheetml/2006/main");
+					$xmlWorkbook = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "{$rel['Target']}")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());  //~ http://schemas.openxmlformats.org/spreadsheetml/2006/main");
 
 					// Set base date
 					if ($xmlWorkbook->workbookPr) {
@@ -641,9 +642,9 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 					$sheetId = 0; // keep track of new sheet id in final workbook
 					$oldSheetId = -1; // keep track of old sheet id in final workbook
 					$countSkippedSheets = 0; // keep track of number of skipped sheets
-					$mapSheetId = array(); // mapping of sheet ids from old to new
+					$mapSheetId = []; // mapping of sheet ids from old to new
 
-					$charts = $chartDetails = array();
+					$charts = $chartDetails = [];
 
 					if ($xmlWorkbook->sheets) {
 						foreach ($xmlWorkbook->sheets->sheet as $eleSheet) {
@@ -669,9 +670,9 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 							$docSheet->setTitle((string) $eleSheet["name"], false);
 
 							$fileWorksheet = $worksheets[(string) self::array_item($eleSheet->attributes("http://schemas.openxmlformats.org/officeDocument/2006/relationships"), "id")];
-							$xmlSheet = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "$dir/$fileWorksheet")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+							$xmlSheet = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "$dir/$fileWorksheet")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
-							$sharedFormulas = array();
+							$sharedFormulas = [];
 
 							if (isset($eleSheet["state"]) && (string) $eleSheet["state"] != '') {
 								$docSheet->setSheetState((string) $eleSheet["state"]);
@@ -884,7 +885,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 													// Formula
 													$this->_castToFormula($c, $r, $cellDataType, $value, $calculatedValue, $sharedFormulas, '_castToBool');
 													if (isset($c->f['t'])) {
-														$att = array();
+														$att = [];
 														$att = $c->f;
 														$docSheet->getCell($r)->setFormulaAttributes($att);
 													}
@@ -948,7 +949,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								}
 							}
 
-							$conditionals = array();
+							$conditionals = [];
 
 							if (!$this->_readDataOnly && $xmlSheet && $xmlSheet->conditionalFormatting) {
 								foreach ($xmlSheet->conditionalFormatting as $conditional) {
@@ -962,7 +963,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								foreach ($conditionals as $ref => $cfRules) {
 									ksort($cfRules);
 
-									$conditionalStyles = array();
+									$conditionalStyles = [];
 
 									foreach ($cfRules as $cfRule) {
 										$objConditional = new PHPExcel_Style_Conditional();
@@ -995,7 +996,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								}
 							}
 
-							$aKeys = array("sheet", "objects", "scenarios", "formatCells", "formatColumns", "formatRows", "insertColumns", "insertRows", "insertHyperlinks", "deleteColumns", "deleteRows", "selectLockedCells", "sort", "autoFilter", "pivotTables", "selectUnlockedCells");
+							$aKeys = ["sheet", "objects", "scenarios", "formatCells", "formatColumns", "formatRows", "insertColumns", "insertRows", "insertHyperlinks", "deleteColumns", "deleteRows", "selectLockedCells", "sort", "autoFilter", "pivotTables", "selectUnlockedCells"];
 
 							if (!$this->_readDataOnly && $xmlSheet && $xmlSheet->sheetProtection) {
 								foreach ($aKeys as $key) {
@@ -1017,7 +1018,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 							if ($xmlSheet && $xmlSheet->autoFilter && !$this->_readDataOnly) {
 								$autoFilterRange = (string) $xmlSheet->autoFilter["ref"];
 
-								if (strpos($autoFilterRange, ':') !== false) {
+								if (str_contains($autoFilterRange, ':')) {
 									$autoFilter = $docSheet->getAutoFilter();
 									$autoFilter->setRange($autoFilterRange);
 
@@ -1039,14 +1040,14 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 											}
 											//	Or Date Group elements
 											foreach ($filters->dateGroupItem as $dateGroupItem) {
-												$column->createRule()->setRule(null,	array(
+												$column->createRule()->setRule(null,	[
 													'year'		=> (string) $dateGroupItem["year"],
 													'month'	=> (string) $dateGroupItem["month"],
 													'day'		=> (string) $dateGroupItem["day"],
 													'hour'		=> (string) $dateGroupItem["hour"],
 													'minute'	=> (string) $dateGroupItem["minute"],
 													'second'	=> (string) $dateGroupItem["second"]
-												),
+												],
 												(string) $dateGroupItem["dateTimeGrouping"])->setRuleType(PHPExcel_Worksheet_AutoFilter_Column_Rule::AUTOFILTER_RULETYPE_DATEGROUP);
 											}
 										}
@@ -1109,7 +1110,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								foreach ($xmlSheet->mergeCells->mergeCell as $mergeCell) {
 									$mergeRef = (string) $mergeCell["ref"];
 
-									if (strpos($mergeRef, ':') !== false) {
+									if (str_contains($mergeRef, ':')) {
 										$docSheet->mergeCells((string) $mergeCell["ref"]);
 									}
 								}
@@ -1238,12 +1239,12 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 							}
 
 							// Add hyperlinks
-							$hyperlinks = array();
+							$hyperlinks = [];
 
 							if (!$this->_readDataOnly) {
 								// Locate hyperlink relations
 								if ($zip->locateName(dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")) {
-									$relsWorksheet = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
+									$relsWorksheet = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
 
 									foreach ($relsWorksheet->Relationship as $ele) {
 										if ($ele["Type"] == "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink") {
@@ -1282,13 +1283,13 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 							}
 
 							// Add comments
-							$comments = array();
-							$vmlComments = array();
+							$comments = [];
+							$vmlComments = [];
 
 							if (!$this->_readDataOnly) {
 								// Locate comment relations
 								if ($zip->locateName(dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")) {
-									$relsWorksheet = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
+									$relsWorksheet = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
 
 									foreach ($relsWorksheet->Relationship as $ele) {
 										if ($ele["Type"] == "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments") {
@@ -1305,10 +1306,10 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								foreach ($comments as $relName => $relPath) {
 									// Load comments file
 									$relPath = PHPExcel_Shared_File::realpath(dirname("$dir/$fileWorksheet") . "/" . $relPath);
-									$commentsFile = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, $relPath)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+									$commentsFile = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, $relPath)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 									// Utility variables
-									$authors = array();
+									$authors = [];
 
 									// Loop through authors
 									foreach ($commentsFile->authors->author as $author) {
@@ -1329,7 +1330,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 							    foreach ($vmlComments as $relName => $relPath) {
 									// Load VML comments file
 									$relPath = PHPExcel_Shared_File::realpath(dirname("$dir/$fileWorksheet") . "/" . $relPath);
-									$vmlCommentsFile = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, $relPath)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+									$vmlCommentsFile = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, $relPath)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 									$vmlCommentsFile->registerXPathNamespace('v', 'urn:schemas-microsoft-com:vml');
 
 									$shapes = $vmlCommentsFile->xpath('//v:shape');
@@ -1402,7 +1403,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								// Header/footer images
 								if ($xmlSheet && $xmlSheet->legacyDrawingHF && !$this->_readDataOnly) {
 									if ($zip->locateName(dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")) {
-										$relsWorksheet = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
+										$relsWorksheet = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
 
 										$vmlRelationship = '';
 
@@ -1414,9 +1415,9 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 										if ($vmlRelationship != '') {
 											// Fetch linked images
-											$relsVML = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip,  dirname($vmlRelationship) . '/_rels/' . basename($vmlRelationship) . '.rels')), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
+											$relsVML = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip,  dirname((string) $vmlRelationship) . '/_rels/' . basename((string) $vmlRelationship) . '.rels')), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
 
-											$drawings = array();
+											$drawings = [];
 
 											foreach ($relsVML->Relationship as $ele) {
 												if ($ele["Type"] == "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image") {
@@ -1425,10 +1426,10 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 											}
 
 											// Fetch VML document
-											$vmlDrawing = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, $vmlRelationship)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+											$vmlDrawing = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, $vmlRelationship)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 											$vmlDrawing->registerXPathNamespace('v', 'urn:schemas-microsoft-com:vml');
 
-											$hfImages = array();
+											$hfImages = [];
 
 											$shapes = $vmlDrawing->xpath('//v:shape');
 
@@ -1469,9 +1470,9 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 							// TODO: Autoshapes from twoCellAnchors!
 							if ($zip->locateName(dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")) {
-								$relsWorksheet = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
+								$relsWorksheet = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip,  dirname("$dir/$fileWorksheet") . "/_rels/" . basename($fileWorksheet) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
 
-								$drawings = array();
+								$drawings = [];
 
 								foreach ($relsWorksheet->Relationship as $ele) {
 									if ($ele["Type"] == "http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing") {
@@ -1482,9 +1483,9 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								if ($xmlSheet->drawing && !$this->_readDataOnly) {
 									foreach ($xmlSheet->drawing as $drawing) {
 										$fileDrawing = $drawings[(string) self::array_item($drawing->attributes("http://schemas.openxmlformats.org/officeDocument/2006/relationships"), "id")];
-										$relsDrawing = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip,  dirname($fileDrawing) . "/_rels/" . basename($fileDrawing) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
+										$relsDrawing = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip,  dirname((string) $fileDrawing) . "/_rels/" . basename((string) $fileDrawing) . ".rels")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions()); //~ http://schemas.openxmlformats.org/package/2006/relationships");
 
-										$images = array();
+										$images = [];
 
 										if ($relsDrawing && $relsDrawing->Relationship) {
 											foreach ($relsDrawing->Relationship as $ele) {
@@ -1492,13 +1493,13 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 													$images[(string) $ele["Id"]] = self::dir_add($fileDrawing, $ele["Target"]);
 												} elseif ($ele["Type"] == "http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart") {
 													if ($this->_includeCharts) {
-														$charts[self::dir_add($fileDrawing, $ele["Target"])] = array('id' => (string) $ele["Id"], 'sheet' => $docSheet->getTitle());
+														$charts[self::dir_add($fileDrawing, $ele["Target"])] = ['id' => (string) $ele["Id"], 'sheet' => $docSheet->getTitle()];
 													}
 												}
 											}
 										}
 
-										$xmlDrawing = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, $fileDrawing)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions())->children("http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing");
+										$xmlDrawing = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, $fileDrawing)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions())->children("http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing");
 
 										if ($xmlDrawing->oneCellAnchor) {
 											foreach ($xmlDrawing->oneCellAnchor as $oneCellAnchor) {
@@ -1589,7 +1590,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 													$chartRef = $graphic->graphicData->children("http://schemas.openxmlformats.org/drawingml/2006/chart")->chart;
 													$thisChart = (string) $chartRef->attributes("http://schemas.openxmlformats.org/officeDocument/2006/relationships");
 
-													$chartDetails[$docSheet->getTitle() . '!' . $thisChart] = array(
+													$chartDetails[$docSheet->getTitle() . '!' . $thisChart] = [
 														'fromCoordinate' => $fromCoordinate,
 														'fromOffsetX'    => $fromOffsetX,
 														'fromOffsetY'    => $fromOffsetY,
@@ -1597,7 +1598,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 														'toOffsetX'      => $toOffsetX,
 														'toOffsetY'      => $toOffsetY,
 														'worksheetTitle' => $docSheet->getTitle()
-													);
+													];
 												}
 											}
 										}
@@ -1612,8 +1613,8 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 									$extractedRange = (string)$definedName;
 									$extractedRange = preg_replace('/\'(\w+)\'\!/', '', $extractedRange);
 
-									if (($spos = strpos($extractedRange,'!')) !== false) {
-										$extractedRange = substr($extractedRange,0,$spos).str_replace('$', '', substr($extractedRange,$spos));
+									if (($spos = strpos((string) $extractedRange,'!')) !== false) {
+										$extractedRange = substr((string) $extractedRange,0,$spos).str_replace('$', '', substr((string) $extractedRange,$spos));
 									} else {
 										$extractedRange = str_replace('$', '', $extractedRange);
 									}
@@ -1634,7 +1635,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 													foreach ($extractedRange as $range) {
 														$autoFilterRange = $range;
 
-														if (strpos($autoFilterRange, ':') !== false) {
+														if (str_contains($autoFilterRange, ':')) {
 															$docSheet->getAutoFilter()->setRange($autoFilterRange);
 														}
 													}
@@ -1647,27 +1648,27 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 												// Set print titles
 												foreach ($extractedRange as $range) {
-													$matches = array();
+													$matches = [];
 													$range = str_replace('$', '', $range);
 
 													// check for repeating columns, e g. 'A:A' or 'A:D'
 													if (preg_match('/!?([A-Z]+)\:([A-Z]+)$/', $range, $matches)) {
-														$docSheet->getPageSetup()->setColumnsToRepeatAtLeft(array($matches[1], $matches[2]));
+														$docSheet->getPageSetup()->setColumnsToRepeatAtLeft([$matches[1], $matches[2]]);
 													} elseif (preg_match('/!?(\d+)\:(\d+)$/', $range, $matches)) {
-														$docSheet->getPageSetup()->setRowsToRepeatAtTop(array($matches[1], $matches[2]));
+														$docSheet->getPageSetup()->setRowsToRepeatAtTop([$matches[1], $matches[2]]);
 													}
 												}
 												break;
 
 											case '_xlnm.Print_Area':
 												$rangeSets = explode(',', $extractedRange);
-												$newRangeSets = array();
+												$newRangeSets = [];
 
 												foreach ($rangeSets as $rangeSet) {
 													$range = explode('!', $rangeSet);
-													$rangeSet = isset($range[1]) ? $range[1] : $range[0];
+													$rangeSet = $range[1] ?? $range[0];
 
-													if (strpos($rangeSet, ':') === false) {
+													if (!str_contains($rangeSet, ':')) {
 														$rangeSet = $rangeSet . ':' . $rangeSet;
 													}
 
@@ -1694,8 +1695,8 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 								$extractedRange = (string)$definedName;
 								$extractedRange = preg_replace('/\'(\w+)\'\!/', '', $extractedRange);
 
-								if (($spos = strpos($extractedRange,'!')) !== false) {
-									$extractedRange = substr($extractedRange,0,$spos).str_replace('$', '', substr($extractedRange, $spos));
+								if (($spos = strpos((string) $extractedRange,'!')) !== false) {
+									$extractedRange = substr((string) $extractedRange,0,$spos).str_replace('$', '', substr((string) $extractedRange, $spos));
 								} else {
 									$extractedRange = str_replace('$', '', $extractedRange);
 								}
@@ -1738,7 +1739,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 									$locatedSheet = null;
 									$extractedSheetName = '';
 
-									if (strpos((string)$definedName, '!') !== false) {
+									if (str_contains((string)$definedName, '!')) {
 										// Extract sheet name
 										$extractedSheetName = PHPExcel_Worksheet::extractSheetTitle((string)$definedName, true);
 										$extractedSheetName = $extractedSheetName[0];
@@ -1748,7 +1749,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 										// Modify range
 										$range = explode('!', $extractedRange);
-										$extractedRange = isset($range[1]) ? $range[1] : $range[0];
+										$extractedRange = $range[1] ?? $range[0];
 									}
 
 									if ($locatedSheet !== null) {
@@ -1779,14 +1780,14 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 		}
 
 		if (!$this->_readDataOnly) {
-			$contentTypes = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, "[Content_Types].xml")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+			$contentTypes = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, "[Content_Types].xml")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 			foreach ($contentTypes->Override as $contentType) {
 				switch ($contentType["ContentType"]) {
 				case "application/vnd.openxmlformats-officedocument.drawingml.chart+xml":
 					if ($this->_includeCharts) {
 						$chartEntryRef = ltrim($contentType['PartName'], '/');
-						$chartElements = simplexml_load_string($this->securityScan($this->_getFromZipArchive($zip, $chartEntryRef)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+						$chartElements = simplexml_load_string((string) $this->securityScan($this->_getFromZipArchive($zip, $chartEntryRef)), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 						$objChart = PHPExcel_Reader_Excel2007_Chart::readChart($chartElements,basename($chartEntryRef, '.xml'));
 
@@ -2059,14 +2060,14 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 	}
 
 	private function _readRibbon($excel, $customUITarget, $zip) {
-		$baseDir = dirname($customUITarget);
-		$nameCustomUI = basename($customUITarget);
+		$baseDir = dirname((string) $customUITarget);
+		$nameCustomUI = basename((string) $customUITarget);
 
 		// get the xml file (ribbon)
 		$localRibbon = $this->_getFromZipArchive($zip, $customUITarget);
 
-		$customUIImagesNames = array();
-		$customUIImagesBinaries = array();
+		$customUIImagesNames = [];
+		$customUIImagesBinaries = [];
 
 		// something like customUI/_rels/customUI.xml.rels
 		$pathRels = $baseDir . '/_rels/' . $nameCustomUI . '.rels';
@@ -2074,7 +2075,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 
 		if ($dataRels) {
             // exists and not empty if the ribbon have some pictures (other than internal MSO)
-			$UIRels = simplexml_load_string($this->securityScan($dataRels), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
+			$UIRels = simplexml_load_string((string) $this->securityScan($dataRels), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 
 			if ($UIRels) {
 				// we need to save id and target to avoid parsing customUI.xml and "guess" if it's a pseudo callback who load the image
@@ -2104,38 +2105,38 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 	}
 
 	private static function array_item($array, $key = 0) {
-		return (isset($array[$key]) ? $array[$key] : null);
+		return ($array[$key] ?? null);
 	}
 
 	private static function dir_add($base, $add) {
-		return preg_replace('~[^/]+/\.\./~', '', dirname($base) . "/$add");
+		return preg_replace('~[^/]+/\.\./~', '', dirname((string) $base) . "/$add");
 	}
 
 	private static function toCSSArray($style) {
-		$style = str_replace(array("\r","\n"), "", $style);
+		$style = str_replace(["\r","\n"], "", $style);
 
 		$temp = explode(';', $style);
 
-		$style = array();
+		$style = [];
 
 		foreach ($temp as $item) {
 			$item = explode(':', $item);
 
-			if (strpos($item[1], 'px') !== false) {
+			if (str_contains($item[1], 'px')) {
 				$item[1] = str_replace('px', '', $item[1]);
 			}
 
-			if (strpos($item[1], 'pt') !== false) {
+			if (str_contains($item[1], 'pt')) {
 				$item[1] = str_replace('pt', '', $item[1]);
 				$item[1] = PHPExcel_Shared_Font::fontSizeToPixels($item[1]);
 			}
 
-			if (strpos($item[1], 'in') !== false) {
+			if (str_contains((string) $item[1], 'in')) {
 				$item[1] = str_replace('in', '', $item[1]);
 				$item[1] = PHPExcel_Shared_Font::inchSizeToPixels($item[1]);
 			}
 
-			if (strpos($item[1], 'cm') !== false) {
+			if (str_contains((string) $item[1], 'cm')) {
 				$item[1] = str_replace('cm', '', $item[1]);
 				$item[1] = PHPExcel_Shared_Font::centimeterSizeToPixels($item[1]);
 			}

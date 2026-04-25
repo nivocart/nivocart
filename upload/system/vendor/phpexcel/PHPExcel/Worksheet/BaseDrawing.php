@@ -467,7 +467,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable {
     		. $this->_height
     		. $this->_rotation
     		. $this->_shadow->getHashCode()
-    		. __CLASS__
+    		. self::class
     	);
     }
 

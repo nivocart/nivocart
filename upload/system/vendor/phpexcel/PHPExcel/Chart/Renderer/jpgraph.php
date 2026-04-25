@@ -40,12 +40,12 @@ class PHPExcel_Chart_Renderer_jpgraph {
 	private static $_width	= 640;
 	private static $_height = 480;
 
-	private static $_colourSet = array( 'mediumpurple1', 'palegreen3', 'gold1', 'cadetblue1',
+	private static $_colourSet = [ 'mediumpurple1', 'palegreen3', 'gold1', 'cadetblue1',
 		'darkmagenta', 'coral', 'dodgerblue3', 'eggplant', 'mediumblue', 'magenta', 'sandybrown',
 		'cyan', 'firebrick1', 'forestgreen', 'deeppink4', 'darkolivegreen', 'goldenrod2'
-	);
+	];
 
-	private static $_markSet = array(
+	private static $_markSet = [
 		'diamond'  => MARK_DIAMOND,
 		'square'   => MARK_SQUARE,
 		'triangle' => MARK_UTRIANGLE,
@@ -55,9 +55,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		'dash'     => MARK_DTRIANGLE,
 		'circle'   => MARK_CIRCLE,
 		'plus'     => MARK_CROSS
-	);
-
-	private $_chart = null;
+	];
 	private $_graph = null;
 
 	private static $_plotColour = 0;
@@ -269,7 +267,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 
 		$seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
 
-		$seriesPlots = array();
+		$seriesPlots = [];
 
 		if ($grouping == 'percentStacked') {
 			$sumValues = $this->_percentageSumCalculation($groupID, $seriesCount);
@@ -351,7 +349,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		}
 
 		$seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
-		$seriesPlots = array();
+		$seriesPlots = [];
 
 		if ($grouping == 'percentStacked') {
 			$sumValues = $this->_percentageSumCalculation($groupID,$seriesCount);
@@ -423,7 +421,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		$scatterStyle = $bubbleSize = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotStyle();
 
 		$seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
-		$seriesPlots = array();
+		$seriesPlots = [];
 
 		//	Loop through each data series in turn
 		for ($i = 0; $i < $seriesCount; ++$i) {
@@ -441,7 +439,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 				$seriesPlot->link->SetColor(self::$_colourSet[self::$_plotColour]);
 			} elseif ($scatterStyle == 'smoothMarker') {
 				$spline = new Spline($dataValuesY, $dataValuesX);
-				list($splineDataY,$splineDataX) = $spline->Get(count($dataValuesX) * self::$_width / 20);
+				[$splineDataY, $splineDataX] = $spline->Get(count($dataValuesX) * self::$_width / 20);
 				$lplot = new LinePlot($splineDataX, $splineDataY);
 				$lplot->SetColor(self::$_colourSet[self::$_plotColour]);
 
@@ -468,7 +466,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		$radarStyle = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotStyle();
 
 		$seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
-		$seriesPlots = array();
+		$seriesPlots = [];
 
 		//	Loop through each data series in turn
 		for ($i = 0; $i < $seriesCount; ++$i) {
@@ -476,7 +474,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 			$dataValuesX = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($i)->getDataValues();
 			$marker = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($i)->getPointMarker();
 
-			$dataValues = array();
+			$dataValues = [];
 
 			foreach ($dataValuesY as $k => $dataValueY) {
 				$dataValues[$k] = implode(' ', array_reverse($dataValueY));
@@ -509,9 +507,9 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		$contourStyle = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotStyle();
 
 		$seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
-		$seriesPlots = array();
+		$seriesPlots = [];
 
-		$dataValues = array();
+		$dataValues = [];
 		//	Loop through each data series in turn
 		for ($i = 0; $i < $seriesCount; ++$i) {
 			$dataValuesY = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotCategoryByIndex($i)->getDataValues();
@@ -528,7 +526,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		$seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
 		$plotOrder = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder();
 
-		$dataValues = array();
+		$dataValues = [];
 		//	Loop through each data series in turn and build the plot arrays
 		foreach ($plotOrder as $i => $v) {
 			$dataValuesX = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($v)->getDataValues();
@@ -542,7 +540,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 			return;
 		}
 
-		$dataValuesPlot = array();
+		$dataValuesPlot = [];
 		// Flatten the plot arrays to a single dimensional array to work with jpgraph
 		for ($j = 0; $j < count($dataValues[0]); $j++) {
 			for ($i = 0; $i < $seriesCount; $i++) {
@@ -641,7 +639,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 			}
 
 			$seriesCount = $this->_chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotSeriesCount();
-			$seriesPlots = array();
+			$seriesPlots = [];
 			//	For pie charts, we only display the first series: doughnut charts generally display all series
 			$jLimit = ($multiplePlots) ? $seriesCount : 1;
 			//	Loop through each data series in turn
@@ -785,7 +783,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 		if ($groupCount == 1) {
 			$chartType = $this->_chart->getPlotArea()->getPlotGroupByIndex(0)->getPlotType();
 		} else {
-			$chartTypes = array();
+			$chartTypes = [];
 
 			for ($i = 0; $i < $groupCount; ++$i) {
 				$chartTypes[] = $this->_chart->getPlotArea()->getPlotGroupByIndex($i)->getPlotType();
@@ -844,7 +842,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 				$this->_renderContourChart($groupCount, $dimensions);
 				break;
 			case 'stockChart' :
-				$this->_renderStockChart($groupCount, $dimensions);
+				$this->_renderStockChart($groupCount);
 				break;
 			default	:
 				echo $chartType.' is not yet implemented<br />';
@@ -859,8 +857,7 @@ class PHPExcel_Chart_Renderer_jpgraph {
 	/**
 	 * Create a new PHPExcel_Chart_Renderer_jpgraph
 	 */
-	public function __construct(PHPExcel_Chart $chart) {
+	public function __construct(private readonly PHPExcel_Chart $_chart) {
 		$this->_graph = null;
-		$this->_chart = $chart;
 	}
 }

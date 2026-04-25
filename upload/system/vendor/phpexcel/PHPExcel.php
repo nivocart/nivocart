@@ -28,7 +28,7 @@
 
 /** PHPExcel root directory */
 if (!defined('PHPEXCEL_ROOT')) {
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/');
+	define('PHPEXCEL_ROOT', __DIR__ . '/');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -66,7 +66,7 @@ class PHPExcel {
 	*
 	* @var PHPExcel_Worksheet[]
 	*/
-	private $_workSheetCollection = array();
+	private $_workSheetCollection = [];
 
 	/**
 	* Calculation Engine
@@ -87,7 +87,7 @@ class PHPExcel {
 	*
 	* @var PHPExcel_NamedRange[]
 	*/
-	private $_namedRanges = array();
+	private $_namedRanges = [];
 
 	/**
 	* CellXf supervisor
@@ -101,14 +101,14 @@ class PHPExcel {
 	*
 	* @var PHPExcel_Style[]
 	*/
-	private $_cellXfCollection = array();
+	private $_cellXfCollection = [];
 
 	/**
 	* CellStyleXf collection
 	*
 	* @var PHPExcel_Style[]
 	*/
-	private $_cellStyleXfCollection = array();
+	private $_cellStyleXfCollection = [];
 
 	/**
 	* _hasMacros : this workbook have macros ?
@@ -228,7 +228,7 @@ class PHPExcel {
 	*/
 	public function setRibbonXMLData($Target = null, $XMLData = null) {
 		if (!is_null($Target) && !is_null($XMLData)) {
-			$this->_ribbonXMLData=array('target' => $Target, 'data' => $XMLData);
+			$this->_ribbonXMLData=['target' => $Target, 'data' => $XMLData];
 		} else {
 			$this->_ribbonXMLData = null;
 		}
@@ -241,7 +241,7 @@ class PHPExcel {
 	*/
 	public function getRibbonXMLData($What = 'all') { // we need some constants here...
 		$ReturnData = null;
-		$What = strtolower($What);
+		$What = strtolower((string) $What);
 
 		switch ($What) {
 		case 'all':
@@ -263,7 +263,7 @@ class PHPExcel {
 	*/
 	public function setRibbonBinObjects($BinObjectsNames = null, $BinObjectsData = null) {
 		if (!is_null($BinObjectsNames) && !is_null($BinObjectsData)) {
-			$this->_ribbonBinObjects = array('names' => $BinObjectsNames, 'data' => $BinObjectsData);
+			$this->_ribbonBinObjects = ['names' => $BinObjectsNames, 'data' => $BinObjectsData];
 		} else {
 			$this->_ribbonBinObjects = null;
 		}
@@ -274,7 +274,7 @@ class PHPExcel {
 	*
 	*/
 	private function _getExtensionOnly($ThePath) {
-		return pathinfo($ThePath, PATHINFO_EXTENSION);
+		return pathinfo((string) $ThePath, PATHINFO_EXTENSION);
 	}
 
 	/**
@@ -283,7 +283,7 @@ class PHPExcel {
 	*/
 	public function getRibbonBinObjects($What = 'all') {
 		$ReturnData = null;
-		$What = strtolower($What);
+		$What = strtolower((string) $What);
 
 		switch ($What) {
 			case 'all':
@@ -298,9 +298,9 @@ class PHPExcel {
 			case 'types':
 				if (is_array($this->_ribbonBinObjects) && array_key_exists('data', $this->_ribbonBinObjects) && is_array($this->_ribbonBinObjects['data'])) {
 					$tmpTypes = array_keys($this->_ribbonBinObjects['data']);
-					$ReturnData = array_unique(array_map(array($this, '_getExtensionOnly'), $tmpTypes));
+					$ReturnData = array_unique(array_map($this->_getExtensionOnly(...), $tmpTypes));
 				} else {
-					$ReturnData = array(); // the caller want an array... not null if empty
+					$ReturnData = []; // the caller want an array... not null if empty
 				}
 				break;
 		}
@@ -361,7 +361,7 @@ class PHPExcel {
 		$this->_calculationEngine = PHPExcel_Calculation::getInstance($this);
 
 		// Initialise worksheet collection and add one worksheet
-		$this->_workSheetCollection = array();
+		$this->_workSheetCollection = [];
 		$this->_workSheetCollection[] = new PHPExcel_Worksheet($this);
 		$this->_activeSheetIndex = 0;
 
@@ -372,7 +372,7 @@ class PHPExcel {
 		$this->_security = new PHPExcel_DocumentSecurity();
 
 		// Set named ranges
-		$this->_namedRanges = array();
+		$this->_namedRanges = [];
 
 		// Create the cellXf supervisor
 		$this->_cellXfSupervisor = new PHPExcel_Style(true);
@@ -407,7 +407,7 @@ class PHPExcel {
 
 		unset($worksheet);
 
-		$this->_workSheetCollection = array();
+		$this->_workSheetCollection = [];
 	}
 
 	/**
@@ -509,7 +509,7 @@ class PHPExcel {
 			$this->_workSheetCollection[] = $pSheet;
 		} else {
 			// Insert the sheet at the requested index
-			array_splice($this->_workSheetCollection, $iSheetIndex, 0, array($pSheet));
+			array_splice($this->_workSheetCollection, $iSheetIndex, 0, [$pSheet]);
 
 			// Adjust active sheet index if necessary
 			if ($this->_activeSheetIndex >= $iSheetIndex) {
@@ -683,7 +683,7 @@ class PHPExcel {
 	* @return string[]
 	*/
 	public function getSheetNames() {
-		$returnValue = array();
+		$returnValue = [];
 
 		$worksheetCount = $this->getSheetCount();
 
@@ -1014,7 +1014,7 @@ class PHPExcel {
 	*/
 	public function garbageCollect() {
 		// how many references are there to each cellXf ?
-		$countReferencesCellXf = array();
+		$countReferencesCellXf = [];
 
 		foreach ($this->_cellXfCollection as $index => $cellXf) {
 			$countReferencesCellXf[$index] = 0;
@@ -1043,7 +1043,7 @@ class PHPExcel {
 		// remove cellXfs without references and create mapping so we can update xfIndex for all cells and columns
 		$countNeededCellXfs = 0;
 
-		$map = array();
+		$map = [];
 
 		foreach ($this->_cellXfCollection as $index => $cellXf) {
 			if ($countReferencesCellXf[$index] > 0 || $index == 0) { // we must never remove the first cellXf

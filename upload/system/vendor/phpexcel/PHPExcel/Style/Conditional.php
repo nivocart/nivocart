@@ -80,7 +80,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
 	 *
 	 * @var string[]
 	 */
-	private $_condition = array();
+	private $_condition = [];
 
 	/**
 	 * Style
@@ -98,7 +98,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     	$this->_conditionType = PHPExcel_Style_Conditional::CONDITION_NONE;
     	$this->_operatorType = PHPExcel_Style_Conditional::OPERATOR_NONE;
     	$this->_text = null;
-    	$this->_condition = array();
+    	$this->_condition = [];
     	$this->_style = new PHPExcel_Style(false, true);
     }
 
@@ -169,11 +169,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * @return string
      */
     public function getCondition() {
-    	if (isset($this->_condition[0])) {
-    		return $this->_condition[0];
-    	}
-
-    	return '';
+    	return $this->_condition[0] ?? '';
     }
 
     /**
@@ -185,7 +181,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      */
     public function setCondition($pValue = '') {
     	if (!is_array($pValue))
-    		$pValue = array($pValue);
+    		$pValue = [$pValue];
 
     	return $this->setConditions($pValue);
     }
@@ -207,7 +203,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      */
     public function setConditions($pValue) {
     	if (!is_array($pValue))
-    		$pValue = array($pValue);
+    		$pValue = [$pValue];
 
     	$this->_condition = $pValue;
     	return $this;
@@ -256,7 +252,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     		. $this->_operatorType
     		. implode(';', $this->_condition)
     		. $this->_style->getHashCode()
-    		. __CLASS__
+    		. self::class
     	);
     }
 

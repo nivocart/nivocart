@@ -111,7 +111,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
         $this->_isSupervisor = $isSupervisor;
 
         // Initialise values
-        $this->_conditionalStyles = array();
+        $this->_conditionalStyles = [];
 
         $this->_font = new PHPExcel_Style_Font($isSupervisor, $isConditional);
         $this->_fill = new PHPExcel_Style_Fill($isSupervisor, $isConditional);
@@ -166,7 +166,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
 	 * @return array
 	 */
 	public function getStyleArray($array) {
-		return array('quotePrefix' => $array);
+		return ['quotePrefix' => $array];
 	}
 
     public function applyFromArray($pStyles = null, $pAdvanced = true) {
@@ -178,11 +178,11 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
                 $pRange = strtoupper($pRange);
 
                 // Is it a cell range or a single cell?
-                if (strpos($pRange, ':') === false) {
+                if (!str_contains($pRange, ':')) {
                     $rangeA = $pRange;
                     $rangeB = $pRange;
                 } else {
-                    list($rangeA, $rangeB) = explode(':', $pRange);
+                    [$rangeA, $rangeB] = explode(':', $pRange);
                 }
 
                 // Calculate range outer borders
@@ -205,7 +205,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
                 if ($pAdvanced && isset($pStyles['borders'])) {
                     // 'allborders' is a shorthand property for 'outline' and 'inside' and it applies to components that have not been set explicitly
                     if (isset($pStyles['borders']['allborders'])) {
-                        foreach (array('outline', 'inside') as $component) {
+                        foreach (['outline', 'inside'] as $component) {
                             if (!isset($pStyles['borders'][$component])) {
                                 $pStyles['borders'][$component] = $pStyles['borders']['allborders'];
                             }
@@ -216,7 +216,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
 
                     // 'outline' is a shorthand property for 'top', 'right', 'bottom', 'left' it applies to components that have not been set explicitly
                     if (isset($pStyles['borders']['outline'])) {
-                        foreach (array('top', 'right', 'bottom', 'left') as $component) {
+                        foreach (['top', 'right', 'bottom', 'left'] as $component) {
                             if (!isset($pStyles['borders'][$component])) {
                                 $pStyles['borders'][$component] = $pStyles['borders']['outline'];
                             }
@@ -227,7 +227,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
 
                     // 'inside' is a shorthand property for 'vertical' and 'horizontal' it applies to components that have not been set explicitly
                     if (isset($pStyles['borders']['inside'])) {
-                        foreach (array('vertical', 'horizontal') as $component) {
+                        foreach (['vertical', 'horizontal'] as $component) {
                             if (!isset($pStyles['borders'][$component])) {
                                 $pStyles['borders'][$component] = $pStyles['borders']['inside'];
                             }
@@ -250,7 +250,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
 
                         for ($y = 1; $y <= $yMax; ++$y) {
                             // Which edges are touching the region?
-                            $edges = array();
+                            $edges = [];
 
                             // Are we at left edge?
                             if ($x == 1) {
@@ -287,7 +287,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
                             unset($regionStyles['borders']['inside']);
 
                             // What are the inner edges of the region when looking at the selection?
-                            $innerEdges = array_diff(array('top', 'right', 'bottom', 'left'), $edges);
+                            $innerEdges = array_diff(['top', 'right', 'bottom', 'left'], $edges);
 
                             // Inner edges that are not touching the region should take the 'inside' border properties if they have been set
                             foreach ($innerEdges as $innerEdge) {
@@ -334,14 +334,14 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
                 // First loop through columns, rows, or cells to find out which styles are affected by this operation
                 switch ($selectionType) {
                     case 'COLUMN':
-                        $oldXfIndexes = array();
+                        $oldXfIndexes = [];
                         for ($col = $rangeStart[0]; $col <= $rangeEnd[0]; ++$col) {
                             $oldXfIndexes[$this->getActiveSheet()->getColumnDimensionByColumn($col)->getXfIndex()] = true;
                         }
                         break;
 
                     case 'ROW':
-                        $oldXfIndexes = array();
+                        $oldXfIndexes = [];
                         for ($row = $rangeStart[1]; $row <= $rangeEnd[1]; ++$row) {
                             if ($this->getActiveSheet()->getRowDimension($row)->getXfIndex() == null) {
                                 $oldXfIndexes[0] = true; // row without explicit style should be formatted based on default style
@@ -352,7 +352,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
                         break;
 
                     case 'CELL':
-                        $oldXfIndexes = array();
+                        $oldXfIndexes = [];
                         for ($col = $rangeStart[0]; $col <= $rangeEnd[0]; ++$col) {
                             for ($row = $rangeStart[1]; $row <= $rangeEnd[1]; ++$row) {
                                 $oldXfIndexes[$this->getActiveSheet()->getCellByColumnAndRow($col, $row)->getXfIndex()] = true;
@@ -393,7 +393,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
                     case 'ROW':
                         for ($row = $rangeStart[1]; $row <= $rangeEnd[1]; ++$row) {
                             $rowDimension = $this->getActiveSheet()->getRowDimension($row);
-                            $oldXfIndex = $rowDimension->getXfIndex() === null ? 0 : $rowDimension->getXfIndex();
+                            $oldXfIndex = $rowDimension->getXfIndex() ?? 0;
                             $rowDimension->setXfIndex($newXfIndexes[$oldXfIndex]);
                         }
                         break;
@@ -560,7 +560,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
         }
 
         if ($this->_isSupervisor) {
-            $styleArray = array('quotePrefix' => $pValue);
+            $styleArray = ['quotePrefix' => $pValue];
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
         } else {
             $this->_quotePrefix = (boolean)$pValue;
@@ -590,7 +590,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
             . $hashConditionals
             . $this->_protection->getHashCode()
             . ($this->_quotePrefix  ? 't' : 'f')
-            . __CLASS__
+            . self::class
         );
     }
 

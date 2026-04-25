@@ -108,7 +108,8 @@ class PHPExcel_CachedObjectStorage_MemorySerialized extends PHPExcel_CachedObjec
 	 *
 	 * @return  string[]
 	 */
-	public function getCellList() {
+	#[\Override]
+    public function getCellList() {
 		if ($this->_currentObjectID !== null) {
 			$this->_storeData();
 		}
@@ -127,7 +128,7 @@ class PHPExcel_CachedObjectStorage_MemorySerialized extends PHPExcel_CachedObjec
 			$this->_currentObject = $this->_currentObjectID = null;
 		}
 
-		$this->_cellCache = array();
+		$this->_cellCache = [];
 		//	Detach ourself from the worksheet, so that it can then delete this object successfully
 		$this->_parent = null;
 	}

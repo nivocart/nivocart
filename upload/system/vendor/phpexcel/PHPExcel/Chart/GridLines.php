@@ -19,60 +19,60 @@ class PHPExcel_Chart_GridLines extends PHPExcel_Properties {
    *
    */
   private $_object_state = false,
-      $_line_properties = array(
-          'color' => array(
+      $_line_properties = [
+          'color' => [
               'type' => self::EXCEL_COLOR_TYPE_STANDARD,
               'value' => null,
               'alpha' => 0
-          ),
-          'style' => array(
+          ],
+          'style' => [
               'width' => '9525',
               'compound' => self::LINE_STYLE_COMPOUND_SIMPLE,
               'dash' => self::LINE_STYLE_DASH_SOLID,
               'cap' => self::LINE_STYLE_CAP_FLAT,
               'join' => self::LINE_STYLE_JOIN_BEVEL,
-              'arrow' => array(
-                  'head' => array(
+              'arrow' => [
+                  'head' => [
                       'type' => self::LINE_STYLE_ARROW_TYPE_NOARROW,
                       'size' => self::LINE_STYLE_ARROW_SIZE_5
-                  ),
-                  'end' => array(
+                  ],
+                  'end' => [
                       'type' => self::LINE_STYLE_ARROW_TYPE_NOARROW,
                       'size' => self::LINE_STYLE_ARROW_SIZE_8
-                  ),
-              )
-          )
-      ),
-      $_shadow_properties = array(
+                  ],
+              ]
+          ]
+      ],
+      $_shadow_properties = [
           'presets' => self::SHADOW_PRESETS_NOSHADOW,
           'effect' => null,
-          'color' => array(
+          'color' => [
               'type' => self::EXCEL_COLOR_TYPE_STANDARD,
               'value' => 'black',
               'alpha' => 85,
-          ),
-          'size' => array(
+          ],
+          'size' => [
               'sx' => null,
               'sy' => null,
               'kx' => null
-          ),
+          ],
           'blur' => null,
           'direction' => null,
           'distance' => null,
           'algn' => null,
           'rotWithShape' => null
-      ),
-      $_glow_properties = array(
+      ],
+      $_glow_properties = [
           'size' => null,
-          'color' => array(
+          'color' => [
               'type' => self::EXCEL_COLOR_TYPE_STANDARD,
               'value' => 'black',
               'alpha' => 40
-          )
-      ),
-      $_soft_edges = array(
+          ]
+      ],
+      $_soft_edges = [
           'size' => null
-      );
+      ];
 
   /**
    * Get Object State
@@ -253,9 +253,9 @@ class PHPExcel_Chart_GridLines extends PHPExcel_Properties {
         ->_activateObject()
         ->_setShadowPresetsProperties((int) $sh_presets)
         ->_setShadowColor(
-            is_null($sh_color_value) ? $this->_shadow_properties['color']['value'] : $sh_color_value
+            $sh_color_value ?? $this->_shadow_properties['color']['value']
             , is_null($sh_color_alpha) ? (int) $this->_shadow_properties['color']['alpha'] : $this->getTrueAlpha($sh_color_alpha)
-            , is_null($sh_color_type) ? $this->_shadow_properties['color']['type'] : $sh_color_type)
+            , $sh_color_type ?? $this->_shadow_properties['color']['type'])
         ->_setShadowBlur($sh_blur)
         ->_setShadowAngle($sh_angle)
         ->_setShadowDistance($sh_distance);

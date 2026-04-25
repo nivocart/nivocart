@@ -133,7 +133,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	 * @param	string		$pCoord		Coordinate address of the cell to check
 	 * @return	boolean
 	 */
-	public function isDataSet($pCoord) {
+	#[\Override]
+    public function isDataSet($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
 			return true;
 		}
@@ -159,7 +160,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
      * @param	string			$pCoord		Coordinate address of the cell to delete
      * @throws	PHPExcel_Exception
      */
-	public function deleteCacheData($pCoord) {
+	#[\Override]
+    public function deleteCacheData($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
 			$this->_currentObject->detach();
 			$this->_currentObjectID = $this->_currentObject = null;
@@ -182,7 +184,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	 * @param	string		$toAddress		Destination address of the cell to move
 	 * @return	boolean
 	 */
-	public function moveCell($fromAddress, $toAddress) {
+	#[\Override]
+    public function moveCell($fromAddress, $toAddress) {
 		if ($fromAddress === $this->_currentObjectID) {
 			$this->_currentObjectID = $toAddress;
 		}
@@ -211,7 +214,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	 *
 	 * @return	string[]
 	 */
-	public function getCellList() {
+	#[\Override]
+    public function getCellList() {
 		if ($this->_currentObjectID !== null) {
 			$this->_storeData();
 		}
@@ -224,7 +228,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 			throw new PHPExcel_Exception(sqlite_error_string($this->_DBHandle->lastError()));
 		}
 
-		$cellKeys = array();
+		$cellKeys = [];
 
 		foreach ($cellIdsResult as $row) {
 			$cellKeys[] = $row['id'];
@@ -239,7 +243,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	 * @param	PHPExcel_Worksheet	$parent		The new worksheet
 	 * @return	void
 	 */
-	public function copyCellCollection(PHPExcel_Worksheet $parent) {
+	#[\Override]
+    public function copyCellCollection(PHPExcel_Worksheet $parent) {
 		$this->_currentCellIsDirty;
         $this->_storeData();
 
@@ -311,7 +316,8 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	 *
 	 * @return	boolean
 	 */
-	public static function cacheMethodIsAvailable() {
+	#[\Override]
+    public static function cacheMethodIsAvailable() {
 		if (!function_exists('sqlite_open')) {
 			return false;
 		}

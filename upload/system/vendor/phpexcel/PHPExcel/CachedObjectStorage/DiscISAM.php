@@ -67,10 +67,10 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 
 			fseek($this->_fileHandle, 0, SEEK_END);
 
-			$this->_cellCache[$this->_currentObjectID] = array(
+			$this->_cellCache[$this->_currentObjectID] = [
                 'ptr' => ftell($this->_fileHandle),
 				'sz'  => fwrite($this->_fileHandle, serialize($this->_currentObject))
-			);
+			];
 
 			$this->_currentCellIsDirty = false;
 		}
@@ -137,7 +137,8 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	 *
 	 * @return  string[]
 	 */
-	public function getCellList() {
+	#[\Override]
+    public function getCellList() {
 		if ($this->_currentObjectID !== null) {
 			$this->_storeData();
 		}
@@ -151,7 +152,8 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	 * @param	PHPExcel_Worksheet	$parent		The new worksheet
 	 * @return	void
 	 */
-	public function copyCellCollection(PHPExcel_Worksheet $parent) {
+	#[\Override]
+    public function copyCellCollection(PHPExcel_Worksheet $parent) {
 		parent::copyCellCollection($parent);
 		//	Get a new id for the new file name
 		$baseUnique = $this->_getUniqueID();
@@ -179,7 +181,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 			$this->_currentObject = $this->_currentObjectID = null;
 		}
 
-		$this->_cellCache = array();
+		$this->_cellCache = [];
 		//	Detach ourself from the worksheet, so that it can then delete this object successfully
 		$this->_parent = null;
 		//	Close down the temporary cache file

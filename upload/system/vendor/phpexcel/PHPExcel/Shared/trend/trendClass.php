@@ -57,34 +57,34 @@ class trendClass {
 	 *
 	 * @var string[]
 	 **/
-	private static $_trendTypes = array(
+	private static $_trendTypes = [
 		self::TREND_LINEAR,
 		self::TREND_LOGARITHMIC,
 		self::TREND_EXPONENTIAL,
 		self::TREND_POWER
-	);
+	];
 
 	/**
 	 * Names of the best-fit trend polynomial orders
 	 *
 	 * @var string[]
 	 **/
-	private static $_trendTypePolyOrders = array(
+	private static $_trendTypePolyOrders = [
 		self::TREND_POLYNOMIAL_2,
 		self::TREND_POLYNOMIAL_3,
 		self::TREND_POLYNOMIAL_4,
 		self::TREND_POLYNOMIAL_5,
 		self::TREND_POLYNOMIAL_6
-	);
+	];
 
 	/**
 	 * Cached results for each method when trying to identify which provides the best fit
 	 *
 	 * @var PHPExcel_Best_Fit[]
 	 **/
-	private static $_trendCache = array();
+	private static $_trendCache = [];
 
-	public static function calculate($trendType = self::TREND_BEST_FIT, $yValues, $xValues = array(), $const = true) {
+	public static function calculate($trendType = self::TREND_BEST_FIT, $yValues = null, $xValues = [], $const = true) {
 		//	Calculate number of points in each dataset
 		$nY = count($yValues);
 		$nX = count($xValues);
@@ -118,7 +118,7 @@ class trendClass {
 			case self::TREND_POLYNOMIAL_5 :
 			case self::TREND_POLYNOMIAL_6 :
 				if (!isset(self::$_trendCache[$key])) {
-					$order = substr($trendType, -1);
+					$order = substr((string) $trendType, -1);
 					self::$_trendCache[$key] = new PHPExcel_Polynomial_Best_Fit($order, $yValues, $xValues, $const);
 				}
 				return self::$_trendCache[$key];

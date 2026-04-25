@@ -58,6 +58,7 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
      *  @param   string     $pFilename   Name of the file to save as
      *  @throws  PHPExcel_Writer_Exception
      */
+    #[\Override]
     public function save($pFilename = null) {
         $fileHandle = parent::prepareForSave($pFilename);
 

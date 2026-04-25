@@ -31,7 +31,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 	/**
 	 * @ignore
 	 */
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
+	define('PHPEXCEL_ROOT', __DIR__ . '/../../');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -86,7 +86,7 @@ class PHPExcel_Calculation_Functions {
 	 * @access	private
 	 * @var array
 	 */
-	protected static $_errorCodes = array(
+	protected static $_errorCodes = [
 		'null'           => '#NULL!',
 		'divisionbyzero' => '#DIV/0!',
 		'value'          => '#VALUE!',
@@ -95,7 +95,7 @@ class PHPExcel_Calculation_Functions {
 		'num'            => '#NUM!',
 		'na'             => '#N/A',
 		'gettingdata'    => '#GETTING_DATA'
-	);
+	];
 
 	/**
 	 * Set the Compatibility Mode
@@ -274,15 +274,15 @@ class PHPExcel_Calculation_Functions {
 	}
 
 	public static function isMatrixValue($idx) {
-		return ((substr_count($idx, '.') <= 1) || (preg_match('/\.[A-Z]/', $idx) > 0));
+		return ((substr_count((string) $idx, '.') <= 1) || (preg_match('/\.[A-Z]/', (string) $idx) > 0));
 	}
 
 	public static function isValue($idx) {
-		return (substr_count($idx, '.') == 0);
+		return (substr_count((string) $idx, '.') == 0);
 	}
 
 	public static function isCellValue($idx) {
-		return (substr_count($idx, '.') > 1);
+		return (substr_count((string) $idx, '.') > 1);
 	}
 
 	public static function _ifCondition($condition) {
@@ -290,14 +290,14 @@ class PHPExcel_Calculation_Functions {
 
 		if (!isset($condition[0]))
 			$condition = '=""';
-		if (!in_array($condition[0],array('>', '<', '='))) {
+		if (!in_array($condition[0],['>', '<', '='])) {
 			if (!is_numeric($condition)) {
-				$condition = PHPExcel_Calculation::_wrapResult(strtoupper($condition));
+				$condition = PHPExcel_Calculation::_wrapResult(strtoupper((string) $condition));
 			}
 
 			return '=' . $condition;
 		} else {
-			preg_match('/([<>=]+)(.*)/', $condition, $matches);
+			preg_match('/([<>=]+)(.*)/', (string) $condition, $matches);
 
 			list(, $operator, $operand) = $matches;
 
@@ -588,7 +588,7 @@ class PHPExcel_Calculation_Functions {
 			return (array) $array;
 		}
 
-		$arrayValues = array();
+		$arrayValues = [];
 
 		foreach ($array as $value) {
 			if (is_array($value)) {
@@ -620,7 +620,7 @@ class PHPExcel_Calculation_Functions {
 			return (array) $array;
 		}
 
-		$arrayValues = array();
+		$arrayValues = [];
 
 		foreach ($array as $k1 => $value) {
 			if (is_array($value)) {
@@ -685,7 +685,7 @@ if (!function_exists('atanh')) {
 if ((!function_exists('mb_str_replace')) && (function_exists('mb_substr')) && (function_exists('mb_strlen')) && (function_exists('mb_strpos'))) {
 	function mb_str_replace($search, $replace, $subject) {
 		if (is_array($subject)) {
-			$ret = array();
+			$ret = [];
 
 			foreach ($subject as $key => $val) {
 				$ret[$key] = mb_str_replace($search, $replace, $val);
@@ -700,11 +700,11 @@ if ((!function_exists('mb_str_replace')) && (function_exists('mb_substr')) && (f
 			}
 
 			$r = !is_array($replace) ? $replace : (array_key_exists($key, $replace) ? $replace[$key] : '');
-			$pos = mb_strpos($subject, $s, 0, 'UTF-8');
+			$pos = mb_strpos((string) $subject, (string) $s, 0, 'UTF-8');
 
 			while ($pos !== false) {
-				$subject = mb_substr($subject, 0, $pos, 'UTF-8') . $r . mb_substr($subject, $pos + mb_strlen($s, 'UTF-8'), 65535, 'UTF-8');
-				$pos = mb_strpos($subject, $s, $pos + mb_strlen($r, 'UTF-8'), 'UTF-8');
+				$subject = mb_substr((string) $subject, 0, $pos, 'UTF-8') . $r . mb_substr((string) $subject, $pos + mb_strlen((string) $s, 'UTF-8'), 65535, 'UTF-8');
+				$pos = mb_strpos($subject, (string) $s, $pos + mb_strlen((string) $r, 'UTF-8'), 'UTF-8');
 			}
 		}
 

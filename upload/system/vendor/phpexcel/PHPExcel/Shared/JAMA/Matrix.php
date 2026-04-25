@@ -8,7 +8,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 	/**
 	 * @ignore
 	 */
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../../');
+	define('PHPEXCEL_ROOT', __DIR__ . '/../../../');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -36,7 +36,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	 *	@var array
 	 *	@access public
 	 */
-	public $A = array();
+	public $A = [];
 
 	/**
 	 *	Matrix row dimension
@@ -62,7 +62,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function __construct() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				//Rectangular matrix - m x n initialized from 2D array
@@ -162,12 +162,12 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function getMatrix() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				//A($i0...; $j0...)
 				case 'integer,integer':
-					list($i0, $j0) = $args;
+					[$i0, $j0] = $args;
 					if ($i0 >= 0) {
 						$m = $this->m - $i0;
 					} else {
@@ -188,7 +188,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 					break;
 				//A($i0...$iF; $j0...$jF)
 				case 'integer,integer,integer,integer':
-					list($i0, $iF, $j0, $jF) = $args;
+					[$i0, $iF, $j0, $jF] = $args;
 					if (($iF > $i0) && ($this->m >= $iF) && ($i0 >= 0)) {
 						$m = $iF - $i0;
 					} else {
@@ -209,7 +209,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 					break;
 				//$R = array of row indices; $C = array of column indices
 				case 'array,array':
-					list($RL, $CL) = $args;
+					[$RL, $CL] = $args;
 					if (count($RL) > 0) {
 						$m = count($RL);
 					} else {
@@ -230,7 +230,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 					break;
 				//$RL = array of row indices; $CL = array of column indices
 				case 'array,array':
-					list($RL, $CL) = $args;
+					[$RL, $CL] = $args;
 					if (count($RL) > 0) {
 						$m = count($RL);
 					} else {
@@ -251,7 +251,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 					break;
 				//A($i0...$iF); $CL = array of column indices
 				case 'integer,integer,array':
-					list($i0, $iF, $CL) = $args;
+					[$i0, $iF, $CL] = $args;
 					if (($iF > $i0) && ($this->m >= $iF) && ($i0 >= 0)) {
 						$m = $iF - $i0;
 					} else {
@@ -272,7 +272,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 					break;
 				//$RL = array of row indices
 				case 'array,integer,integer':
-					list($RL, $j0, $jF) = $args;
+					[$RL, $j0, $jF] = $args;
 					if (count($RL) > 0) {
 						$m = count($RL);
 					} else {
@@ -452,7 +452,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function plus() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -493,7 +493,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function plusEquals() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -548,7 +548,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function minus() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -589,7 +589,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function minusEquals() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -645,7 +645,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function arrayTimes() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -687,7 +687,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function arrayTimesEquals() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -743,7 +743,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function arrayRightDivide() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -804,7 +804,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function arrayRightDivideEquals() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -846,7 +846,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function arrayLeftDivide() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -888,7 +888,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function arrayLeftDivideEquals() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -929,7 +929,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function times() {
 		if (func_num_args() > 0) {
 			$args  = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -955,7 +955,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 						}
 						return $C;
 					} else {
-						throw new PHPExcel_Calculation_Exception(JAMAError(MatrixDimensionMismatch));
+						throw new PHPExcel_Calculation_Exception(JAMAError(\MATRIXDIMENSIONMISMATCH));
 					}
 					break;
 				case 'array':
@@ -973,7 +973,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 						}
 						return $C;
 					} else {
-						throw new PHPExcel_Calculation_Exception(JAMAError(MatrixDimensionMismatch));
+						throw new PHPExcel_Calculation_Exception(JAMAError(\MATRIXDIMENSIONMISMATCH));
 					}
 					return $M;
 					break;
@@ -1023,7 +1023,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function power() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -1056,7 +1056,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 						$validValues &= PHPExcel_Shared_String::convertToNumberIfFraction($value);
 					}
 					if ($validValues) {
-						$this->A[$i][$j] = pow($this->A[$i][$j],$value);
+						$this->A[$i][$j] = $this->A[$i][$j] ** $value;
 					} else {
 						$this->A[$i][$j] = PHPExcel_Calculation_Functions::NaN();
 					}
@@ -1078,7 +1078,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	public function concat() {
 		if (func_num_args() > 0) {
 			$args = func_get_args();
-			$match = implode(",", array_map('gettype', $args));
+			$match = implode(",", array_map(gettype(...), $args));
 
 			switch ($match) {
 				case 'object':
@@ -1099,7 +1099,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 
 			for ($i = 0; $i < $this->m; ++$i) {
 				for ($j = 0; $j < $this->n; ++$j) {
-					$this->A[$i][$j] = trim($this->A[$i][$j], '"').trim($M->get($i, $j), '"');
+					$this->A[$i][$j] = trim((string) $this->A[$i][$j], '"').trim((string) $M->get($i, $j), '"');
 				}
 			}
 			return $this;

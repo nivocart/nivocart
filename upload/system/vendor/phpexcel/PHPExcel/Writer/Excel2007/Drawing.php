@@ -43,7 +43,7 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @return 	string 				XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	public function writeDrawings(PHPExcel_Worksheet $pWorksheet = null, &$chartRef, $includeCharts = false) {
+	public function writeDrawings(PHPExcel_Worksheet $pWorksheet = null, &$chartRef = null, $includeCharts = false) {
 		// Create XML writer
 		$objWriter = null;
 
@@ -572,7 +572,7 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 */
 	public function allDrawings(PHPExcel $pPHPExcel = null) {
 		// Get an array of all drawings
-		$aDrawings	= array();
+		$aDrawings	= [];
 		// Loop through PHPExcel
 		$sheetCount = $pPHPExcel->getSheetCount();
 

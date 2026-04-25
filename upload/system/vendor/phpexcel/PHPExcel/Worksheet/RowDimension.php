@@ -34,13 +34,6 @@
  */
 class PHPExcel_Worksheet_RowDimension {
 	/**
-	 * Row index
-	 *
-	 * @var int
-	 */
-	private $_rowIndex;
-
-	/**
 	 * Row height (in pt)
 	 *
 	 * When this is set to a negative value, the row height should be ignored by IWriter
@@ -87,14 +80,14 @@ class PHPExcel_Worksheet_RowDimension {
     /**
      * Create a new PHPExcel_Worksheet_RowDimension
      *
-     * @param int $pIndex Numeric row index
+     * @param int $_rowIndex Numeric row index
      */
-    public function __construct($pIndex = 0)
+    public function __construct(/**
+     * Row index
+     */
+    private $_rowIndex = 0)
     {
-    	// Initialise values
-    	$this->_rowIndex		= $pIndex;
-
-		// set row dimension as unformatted by default
+    	// set row dimension as unformatted by default
 		$this->_xfIndex = null;
     }
 

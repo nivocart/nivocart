@@ -38,7 +38,7 @@ class PHPExcel_CalcEngine_CyclicReferenceStack {
 	 *
 	 *  @var mixed[]
 	 */
-	private $_stack = array();
+	private $_stack = [];
 
 	/**
 	 * Return the number of entries on the stack
@@ -80,7 +80,7 @@ class PHPExcel_CalcEngine_CyclicReferenceStack {
 	 * Clear the stack
 	 */
 	public function clear() {
-		$this->_stack = array();
+		$this->_stack = [];
 	}
 
 	/**

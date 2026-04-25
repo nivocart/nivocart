@@ -34,95 +34,11 @@
  */
 class PHPExcel_Chart {
 	/**
-	 * Chart Name
-	 *
-	 * @var string
-	 */
-	private $_name = '';
-
-	/**
 	 * Worksheet
 	 *
 	 * @var PHPExcel_Worksheet
 	 */
 	private $_worksheet = null;
-
-	/**
-	 * Chart Title
-	 *
-	 * @var PHPExcel_Chart_Title
-	 */
-	private $_title = null;
-
-	/**
-	 * Chart Legend
-	 *
-	 * @var PHPExcel_Chart_Legend
-	 */
-	private $_legend = null;
-
-	/**
-	 * X-Axis Label
-	 *
-	 * @var PHPExcel_Chart_Title
-	 */
-	private $_xAxisLabel = null;
-
-	/**
-	 * Y-Axis Label
-	 *
-	 * @var PHPExcel_Chart_Title
-	 */
-	private $_yAxisLabel = null;
-
-	/**
-	 * Chart Plot Area
-	 *
-	 * @var PHPExcel_Chart_PlotArea
-	 */
-	private $_plotArea = null;
-
-	/**
-	 * Plot Visible Only
-	 *
-	 * @var boolean
-	 */
-	private $_plotVisibleOnly = true;
-
-	/**
-	 * Display Blanks as
-	 *
-	 * @var string
-	 */
-	private $_displayBlanksAs = '0';
-
-	/**
-	 * Chart Asix Y as
-	 *
-	 * @var PHPExcel_Chart_Axis
-	 */
-	private $_yAxis = null;
-
-	/**
-     * Chart Asix X as
-     *
-     * @var PHPExcel_Chart_Axis
-     */
-	private $_xAxis = null;
-
-	/**
-     * Chart Major Gridlines as
-     *
-     * @var PHPExcel_Chart_GridLines
-     */
-	private $_majorGridlines = null;
-
-	/**
-     * Chart Minor Gridlines as
-     *
-     * @var PHPExcel_Chart_GridLines
-     */
-	private $_minorGridlines = null;
 
 	/**
 	 * Top-Left Cell Position
@@ -167,22 +83,63 @@ class PHPExcel_Chart {
 	private $_bottomRightYOffset = 10;
 
 	/**
-	 * Create a new PHPExcel_Chart
-	 */
-	public function __construct($name, PHPExcel_Chart_Title $title = null, PHPExcel_Chart_Legend $legend = null, PHPExcel_Chart_PlotArea $plotArea = null, $plotVisibleOnly = true, $displayBlanksAs = '0', PHPExcel_Chart_Title $xAxisLabel = null, PHPExcel_Chart_Title $yAxisLabel = null, PHPExcel_Chart_Axis $xAxis = null, PHPExcel_Chart_Axis $yAxis = null, PHPExcel_Chart_GridLines $majorGridlines = null, PHPExcel_Chart_GridLines $minorGridlines = null) {
-		$this->_name = $name;
-		$this->_title = $title;
-		$this->_legend = $legend;
-		$this->_xAxisLabel = $xAxisLabel;
-		$this->_yAxisLabel = $yAxisLabel;
-		$this->_plotArea = $plotArea;
-		$this->_plotVisibleOnly = $plotVisibleOnly;
-		$this->_displayBlanksAs = $displayBlanksAs;
-		$this->_xAxis = $xAxis;
-		$this->_yAxis = $yAxis;
-		$this->_majorGridlines = $majorGridlines;
-		$this->_minorGridlines = $minorGridlines;
-	}
+     * Create a new PHPExcel_Chart
+     * @param string $name
+     * @param bool $plotVisibleOnly
+     * @param string $displayBlanksAs
+     */
+    public function __construct(
+        /**
+         * Chart Name
+         */
+        private $_name,
+        /**
+         * Chart Title
+         */
+        private ?\PHPExcel_Chart_Title $_title = null,
+        /**
+         * Chart Legend
+         */
+        private ?\PHPExcel_Chart_Legend $_legend = null,
+        /**
+         * Chart Plot Area
+         */
+        private readonly ?\PHPExcel_Chart_PlotArea $_plotArea = null,
+        /**
+         * Plot Visible Only
+         */
+        private $_plotVisibleOnly = true,
+        /**
+         * Display Blanks as
+         */
+        private $_displayBlanksAs = '0',
+        /**
+         * X-Axis Label
+         */
+        private ?\PHPExcel_Chart_Title $_xAxisLabel = null,
+        /**
+         * Y-Axis Label
+         */
+        private ?\PHPExcel_Chart_Title $_yAxisLabel = null,
+        /**
+         * Chart Asix X as
+         */
+        private readonly ?\PHPExcel_Chart_Axis $_xAxis = null,
+        /**
+         * Chart Asix Y as
+         */
+        private readonly ?\PHPExcel_Chart_Axis $_yAxis = null,
+        /**
+         * Chart Major Gridlines as
+         */
+        private readonly ?\PHPExcel_Chart_GridLines $_majorGridlines = null,
+        /**
+         * Chart Minor Gridlines as
+         */
+        private readonly ?\PHPExcel_Chart_GridLines $_minorGridlines = null
+    )
+    {
+    }
 
 	/**
 	 * Get Name
@@ -428,11 +385,11 @@ class PHPExcel_Chart {
 	 * @return array	an associative array containing the cell address, X-Offset and Y-Offset from the top left of that cell
 	 */
 	public function getTopLeftPosition() {
-		return array(
+		return [
 			'cell'		=> $this->_topLeftCellRef,
 			'xOffset'	=> $this->_topLeftXOffset,
 			'yOffset'	=> $this->_topLeftYOffset
-		);
+		];
 	}
 
 	/**
@@ -481,10 +438,10 @@ class PHPExcel_Chart {
 	 * @return integer[]
 	 */
 	public function getTopLeftOffset() {
-		return array(
+		return [
 			'X' => $this->_topLeftXOffset,
 			'Y' => $this->_topLeftYOffset
-		);
+		];
 	}
 
 	public function setTopLeftXOffset($xOffset) {
@@ -535,11 +492,11 @@ class PHPExcel_Chart {
 	 * @return array	an associative array containing the cell address, X-Offset and Y-Offset from the top left of that cell
 	 */
 	public function getBottomRightPosition() {
-		return array(
+		return [
 			'cell'		=> $this->_bottomRightCellRef,
 			'xOffset'	=> $this->_bottomRightXOffset,
 			'yOffset'	=> $this->_bottomRightYOffset
-		);
+		];
 	}
 
 	public function setBottomRightCell($cell) {
@@ -582,10 +539,10 @@ class PHPExcel_Chart {
 	 * @return integer[]
 	 */
 	public function getBottomRightOffset() {
-		return array(
+		return [
 			'X' => $this->_bottomRightXOffset,
 			'Y' => $this->_bottomRightYOffset
-		);
+		];
 	}
 
 	public function setBottomRightXOffset($xOffset) {
@@ -627,7 +584,7 @@ class PHPExcel_Chart {
 		$includePath = str_replace('\\', '/', get_include_path());
 		$rendererPath = str_replace('\\', '/', $libraryPath);
 
-		if (strpos($rendererPath, $includePath) === false) {
+		if (!str_contains($rendererPath, $includePath)) {
 			set_include_path(get_include_path() . PATH_SEPARATOR . $libraryPath);
 		}
 

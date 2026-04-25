@@ -32,7 +32,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 	/**
 	* @ignore
 	*/
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
+	define('PHPEXCEL_ROOT', __DIR__ . '/../../');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -52,9 +52,10 @@ class PHPExcel_Cell_ExportImportValueBinder extends PHPExcel_Cell_DefaultValueBi
 	* @param  mixed          $value   Value to bind in cell
 	* @return boolean
 	*/
-	public function bindValue(PHPExcel_Cell $cell, $value = null) {
+	#[\Override]
+    public function bindValue(PHPExcel_Cell $cell, $value = null) {
 		// sanitize UTF-8 strings
-		if (is_string($value) || strpos($value, "\n") !== false) {
+		if (is_string($value) || str_contains((string) $value, "\n")) {
 			$value = PHPExcel_Shared_String::SanitizeUTF8($value);
 		}
 

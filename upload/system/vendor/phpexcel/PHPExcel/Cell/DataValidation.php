@@ -463,7 +463,7 @@ class PHPExcel_Cell_DataValidation {
             . $this->_error
             . $this->_promptTitle
             . $this->_prompt
-            . __CLASS__
+            . self::class
         );
     }
 

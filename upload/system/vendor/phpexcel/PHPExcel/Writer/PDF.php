@@ -62,7 +62,7 @@ class PHPExcel_Writer_PDF implements PHPExcel_Writer_IWriter {
         $includePath = str_replace('\\', '/', get_include_path());
         $rendererPath = str_replace('\\', '/', $pdfLibraryPath);
 
-        if (strpos($rendererPath, $includePath) === false) {
+        if (!str_contains($rendererPath, $includePath)) {
             set_include_path(get_include_path() . PATH_SEPARATOR . $pdfLibraryPath);
         }
 
@@ -83,7 +83,7 @@ class PHPExcel_Writer_PDF implements PHPExcel_Writer_IWriter {
             throw new PHPExcel_Writer_Exception("PDF Rendering library has not been defined.");
         }
 
-        return call_user_func_array(array($this->_renderer, $name), $arguments);
+        return call_user_func_array([$this->_renderer, $name], $arguments);
     }
 
     /**

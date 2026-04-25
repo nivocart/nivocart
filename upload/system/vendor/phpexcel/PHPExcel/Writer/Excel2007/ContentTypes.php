@@ -138,7 +138,7 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 		}
 
 		// Add media content-types
-		$aMediaContentTypes = array();
+		$aMediaContentTypes = [];
 
 		$mediaCount = $this->getParentWriter()->getDrawingHashTable()->count();
 

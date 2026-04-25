@@ -35,26 +35,23 @@
  */
 class PHPExcel_Chart_PlotArea {
 	/**
-	 * PlotArea Layout
-	 *
-	 * @var PHPExcel_Chart_Layout
-	 */
-	private $_layout = null;
-
-	/**
-	 * Plot Series
-	 *
-	 * @var array of PHPExcel_Chart_DataSeries
-	 */
-	private $_plotSeries = array();
-
-	/**
-	 * Create a new PHPExcel_Chart_PlotArea
-	 */
-	public function __construct(PHPExcel_Chart_Layout $layout = null, $plotSeries = array()) {
-		$this->_layout = $layout;
-		$this->_plotSeries = $plotSeries;
-	}
+     * Create a new PHPExcel_Chart_PlotArea
+     * @param mixed[] $plotSeries
+     */
+    public function __construct(
+        /**
+         * PlotArea Layout
+         */
+        private readonly ?\PHPExcel_Chart_Layout $_layout = null,
+        /**
+         * Plot Series
+         *
+         * @var array of PHPExcel_Chart_DataSeries
+         */
+        private $_plotSeries = []
+    )
+    {
+    }
 
 	/**
 	 * Get Layout
@@ -111,7 +108,7 @@ class PHPExcel_Chart_PlotArea {
 	 * @param [PHPExcel_Chart_DataSeries]
      * @return PHPExcel_Chart_PlotArea
 	 */
-	public function setPlotSeries($plotSeries = array()) {
+	public function setPlotSeries($plotSeries = []) {
 		$this->_plotSeries = $plotSeries;
 
 		return $this;

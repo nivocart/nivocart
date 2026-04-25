@@ -82,39 +82,28 @@ class PHPExcel_Calculation_FormulaToken {
 	const TOKEN_SUBTYPE_INTERSECTION = 'Intersection';
 	const TOKEN_SUBTYPE_UNION = 'Union';
 
-	/**
-	 * Value
-	 *
-	 * @var string
-	 */
-	private $_value;
-
-	/**
-	 * Token Type (represented by TOKEN_TYPE_*)
-	 *
-	 * @var string
-	 */
-	private $_tokenType;
-
-	/**
-	 * Token SubType (represented by TOKEN_SUBTYPE_*)
-	 *
-	 * @var string
-	 */
-	private $_tokenSubType;
-
     /**
      * Create a new PHPExcel_Calculation_FormulaToken
      *
-     * @param string	$pValue
-     * @param string	$pTokenType 	Token type (represented by TOKEN_TYPE_*)
-     * @param string	$pTokenSubType 	Token Subtype (represented by TOKEN_SUBTYPE_*)
+     * @param string $_value
+     * @param string $_tokenType Token type (represented by TOKEN_TYPE_*)
+     * @param string $_tokenSubType Token Subtype (represented by TOKEN_SUBTYPE_*)
      */
-    public function __construct($pValue, $pTokenType = PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_UNKNOWN, $pTokenSubType = PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_NOTHING) {
-    	// Initialise values
-    	$this->_value = $pValue;
-    	$this->_tokenType = $pTokenType;
-    	$this->_tokenSubType = $pTokenSubType;
+    public function __construct(
+        /**
+         * Value
+         */
+        private $_value,
+        /**
+         * Token Type (represented by TOKEN_TYPE_*)
+         */
+        private $_tokenType = PHPExcel_Calculation_FormulaToken::TOKEN_TYPE_UNKNOWN,
+        /**
+         * Token SubType (represented by TOKEN_SUBTYPE_*)
+         */
+        private $_tokenSubType = PHPExcel_Calculation_FormulaToken::TOKEN_SUBTYPE_NOTHING
+    )
+    {
     }
 
     /**

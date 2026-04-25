@@ -61,14 +61,14 @@ class PHPExcel_Best_Fit {
 	 *
 	 * @var	float[]
 	 **/
-	protected $_xValues = array();
+	protected $_xValues = [];
 
 	/**
 	 * Y-value dataseries of values
 	 *
 	 * @var	float[]
 	 **/
-	protected $_yValues = array();
+	protected $_yValues = [];
 
 	/**
 	 * Flag indicating whether values should be adjusted to Y=0
@@ -82,7 +82,7 @@ class PHPExcel_Best_Fit {
 	 *
 	 * @var	float[]
 	 **/
-	protected $_yBestFitValues = array();
+	protected $_yBestFitValues = [];
 	protected $_goodnessOfFit = 1;
 	protected $_stdevOfResiduals = 0;
 	protected $_covariance = 0;
@@ -314,7 +314,7 @@ class PHPExcel_Best_Fit {
 
 		$this->_SSRegression = $this->_goodnessOfFit * $SStot;
 		$this->_covariance = $SScov / $this->_valueCount;
-		$this->_correlation = ($this->_valueCount * $sumXY - $sumX * $sumY) / sqrt(($this->_valueCount * $sumX2 - pow($sumX,2)) * ($this->_valueCount * $sumY2 - pow($sumY,2)));
+		$this->_correlation = ($this->_valueCount * $sumXY - $sumX * $sumY) / sqrt(($this->_valueCount * $sumX2 - $sumX ** 2) * ($this->_valueCount * $sumY2 - $sumY ** 2));
 		$this->_slopeSE = $this->_stdevOfResiduals / sqrt($SSsex);
 		$this->_intersectSE = $this->_stdevOfResiduals * sqrt(1 / ($this->_valueCount - ($sumX * $sumX) / $sumX2));
 
@@ -377,7 +377,7 @@ class PHPExcel_Best_Fit {
 	 * @param	float[]		$xValues	The set of X-values for this regression
 	 * @param	boolean		$const
 	 */
-	function __construct($yValues, $xValues = array(), $const = true) {
+	function __construct($yValues, $xValues = [], $const = true) {
 		//	Calculate number of points
 		$nY = count($yValues);
 		$nX = count($xValues);

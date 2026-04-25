@@ -30,7 +30,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 	/**
 	 * @ignore
 	 */
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
+	define('PHPEXCEL_ROOT', __DIR__ . '/../../');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -61,9 +61,9 @@ class PHPExcel_Calculation_Database {
 	 *
 	 */
 	private static function __fieldExtract($database, $field) {
-		$field = strtoupper(PHPExcel_Calculation_Functions::flattenSingleValue($field));
+		$field = strtoupper((string) PHPExcel_Calculation_Functions::flattenSingleValue($field));
 
-		$fieldNames = array_map('strtoupper', array_shift($database));
+		$fieldNames = array_map(strtoupper(...), array_shift($database));
 
 		if (is_numeric($field)) {
 			$keys = array_keys($fieldNames);
@@ -72,7 +72,7 @@ class PHPExcel_Calculation_Database {
 
 		$key = array_search($field, $fieldNames);
 
-		return ($key) ? $key : null;
+		return $key ?: null;
 	}
 
 	/**
@@ -99,11 +99,11 @@ class PHPExcel_Calculation_Database {
 		$criteriaNames = array_shift($criteria);
 
 		//	Convert the criteria into a set of AND/OR conditions with [:placeholders]
-		$testConditions = $testValues = array();
+		$testConditions = $testValues = [];
 		$testConditionsCount = 0;
 
 		foreach ($criteriaNames as $key => $criteriaName) {
-			$testCondition = array();
+			$testCondition = [];
 			$testConditionCount = 0;
 
 			foreach ($criteria as $row => $criterion) {
@@ -189,7 +189,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -241,7 +241,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -289,7 +289,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -335,7 +335,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -385,7 +385,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -431,7 +431,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -476,7 +476,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -522,7 +522,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -568,7 +568,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -613,7 +613,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -659,7 +659,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];
@@ -705,7 +705,7 @@ class PHPExcel_Calculation_Database {
 		//	reduce the database to a set of rows that match all the criteria
 		$database = self::__filter($database, $criteria);
 		//	extract an array of values for the requested column
-		$colData = array();
+		$colData = [];
 
 		foreach ($database as $row) {
 			$colData[] = $row[$field];

@@ -31,7 +31,7 @@ if (!defined('PHPEXCEL_ROOT')) {
     /**
      * @ignore
      */
-    define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
+    define('PHPEXCEL_ROOT', __DIR__ . '/../../');
     require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -50,6 +50,7 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
      * @param  mixed $value          Value to bind in cell
      * @return boolean
      */
+    #[\Override]
     public function bindValue(PHPExcel_Cell $cell, $value = null) {
         // sanitize UTF-8 strings
         if (is_string($value)) {
@@ -71,13 +72,13 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
             }
 
             // Check for number in scientific format
-            if (preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_NUMBER . '$/', $value)) {
+            if (preg_match('/^' . PHPExcel_Calculation::CALCULATION_REGEXP_NUMBER . '$/', (string) $value)) {
                 $cell->setValueExplicit((float) $value, PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 return true;
             }
 
             // Check for fraction
-            if (preg_match('/^([+-]?)\s*([0-9]+)\s?\/\s*([0-9]+)$/', $value, $matches)) {
+            if (preg_match('/^([+-]?)\s*([0-9]+)\s?\/\s*([0-9]+)$/', (string) $value, $matches)) {
                 // Convert value to number
                 $value = $matches[2] / $matches[3];
 
@@ -90,7 +91,7 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
                 $cell->getWorksheet()->getStyle($cell->getCoordinate())->getNumberFormat()->setFormatCode('??/??');
                 return true;
 
-            } elseif (preg_match('/^([+-]?)([0-9]*) +([0-9]*)\s?\/\s*([0-9]*)$/', $value, $matches)) {
+            } elseif (preg_match('/^([+-]?)([0-9]*) +([0-9]*)\s?\/\s*([0-9]*)$/', (string) $value, $matches)) {
                 // Convert value to number
                 $value = $matches[2] + ($matches[3] / $matches[4]);
 
@@ -105,7 +106,7 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
             }
 
             // Check for percentage
-            if (preg_match('/^\-?[0-9]*\.?[0-9]*\s?\%$/', $value)) {
+            if (preg_match('/^\-?[0-9]*\.?[0-9]*\s?\%$/', (string) $value)) {
                 // Convert value to number
                 $value = (float)str_replace('%', '', $value) / 100;
 
@@ -120,18 +121,18 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
             $decimalSeparator = PHPExcel_Shared_String::getDecimalSeparator();
             $thousandsSeparator = PHPExcel_Shared_String::getThousandsSeparator();
 
-            if (preg_match('/^' . preg_quote($currencyCode) . ' *(\d{1,3}(' . preg_quote($thousandsSeparator) . '\d{3})*|(\d+))(' . preg_quote($decimalSeparator) . '\d{2})?$/', $value)) {
+            if (preg_match('/^' . preg_quote($currencyCode) . ' *(\d{1,3}(' . preg_quote($thousandsSeparator) . '\d{3})*|(\d+))(' . preg_quote($decimalSeparator) . '\d{2})?$/', (string) $value)) {
                 // Convert value to number
-                $value = (float) trim(str_replace(array($currencyCode, $thousandsSeparator, $decimalSeparator), array('', '', '.'), $value));
+                $value = (float) trim(str_replace([$currencyCode, $thousandsSeparator, $decimalSeparator], ['', '', '.'], $value));
 
                 $cell->setValueExplicit($value, PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 // Set style
                 $cell->getWorksheet()->getStyle($cell->getCoordinate())->getNumberFormat()->setFormatCode(str_replace('$', $currencyCode, PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE));
                 return true;
 
-            } elseif (preg_match('/^\$ *(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$/', $value)) {
+            } elseif (preg_match('/^\$ *(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$/', (string) $value)) {
                 // Convert value to number
-                $value = (float)trim(str_replace(array('$', ','), '', $value));
+                $value = (float)trim(str_replace(['$', ','], '', $value));
 
                 $cell->setValueExplicit( $value, PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 // Set style
@@ -140,9 +141,9 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
             }
 
             // Check for time without seconds e.g. '9:45', '09:45'
-            if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d$/', $value)) {
+            if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d$/', (string) $value)) {
                 // Convert value to number
-                list($h, $m) = explode(':', $value);
+                [$h, $m] = explode(':', (string) $value);
 
                 $days = $h / 24 + $m / 1440;
 
@@ -154,9 +155,9 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
             }
 
             // Check for time with seconds '9:45:59', '09:45:59'
-            if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$/', $value)) {
+            if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$/', (string) $value)) {
                 // Convert value to number
-                list($h, $m, $s) = explode(':', $value);
+                [$h, $m, $s] = explode(':', (string) $value);
 
                 $days = $h / 24 + $m / 1440 + $s / 86400;
 
@@ -173,7 +174,7 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
                 // Convert value to number
                 $cell->setValueExplicit($d, PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 // Determine style. Either there is a time part or not. Look for ':'
-                if (strpos($value, ':') !== false) {
+                if (str_contains((string) $value, ':')) {
                     $formatCode = 'yyyy-mm-dd h:mm';
                 } else {
                     $formatCode = 'yyyy-mm-dd';
@@ -184,7 +185,7 @@ class PHPExcel_Cell_AdvancedValueBinder extends PHPExcel_Cell_DefaultValueBinder
             }
 
             // Check for newline character "\n"
-            if (strpos($value, "\n") !== false) {
+            if (str_contains((string) $value, "\n")) {
                 $value = PHPExcel_Shared_String::SanitizeUTF8($value);
 
                 $cell->setValueExplicit($value, PHPExcel_Cell_DataType::TYPE_STRING);

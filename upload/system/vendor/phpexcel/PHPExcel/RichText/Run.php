@@ -77,18 +77,20 @@ class PHPExcel_RichText_Run extends PHPExcel_RichText_TextElement implements PHP
 	 *
 	 * @return string	Hash code
 	 */
-	public function getHashCode() {
+	#[\Override]
+    public function getHashCode() {
 		return md5(
 			$this->getText()
 			. $this->_font->getHashCode()
-			. __CLASS__
+			. self::class
 		);
 	}
 
 	/**
 	 * Implement PHP __clone to create a deep clone, not just a shallow copy.
 	 */
-	public function __clone() {
+	#[\Override]
+    public function __clone() {
 		$vars = get_object_vars($this);
 
 		foreach ($vars as $key => $value) {

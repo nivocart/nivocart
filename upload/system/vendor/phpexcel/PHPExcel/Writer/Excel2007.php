@@ -57,7 +57,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 	 *
 	 * @var PHPExcel_Writer_Excel2007_WriterPart[]
 	 */
-	private $_writerParts = array();
+	private $_writerParts = [];
 
 	/**
 	 * Private PHPExcel
@@ -71,7 +71,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 	 *
 	 * @var string[]
 	 */
-	private $_stringTable = array();
+	private $_stringTable = [];
 
 	/**
 	 * Private unique PHPExcel_Style_Conditional HashTable
@@ -131,7 +131,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
     	// Assign PHPExcel
 		$this->setPHPExcel($pPHPExcel);
 
-    	$writerPartsArray = array(
+    	$writerPartsArray = [
 			'stringtable'		=> 'PHPExcel_Writer_Excel2007_StringTable',
 			'contenttypes'	=> 'PHPExcel_Writer_Excel2007_ContentTypes',
 			'docprops' 		=> 'PHPExcel_Writer_Excel2007_DocProps',
@@ -145,14 +145,14 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 			'chart'			=> 'PHPExcel_Writer_Excel2007_Chart',
 			'relsvba'			=> 'PHPExcel_Writer_Excel2007_RelsVBA',
 			'relsribbonobjects' => 'PHPExcel_Writer_Excel2007_RelsRibbon'
-		);
+		];
 
     	//	Initialise writer parts and Assign their parent IWriters
 		foreach ($writerPartsArray as $writer => $class) {
 			$this->_writerParts[$writer] = new $class($this);
 		}
 
-    	$hashTablesArray = array(
+    	$hashTablesArray = [
 			'_stylesConditionalHashTable',
 			'_fillHashTable',
 			'_fontHashTable',
@@ -160,7 +160,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 			'_numFmtHashTable',
 			'_drawingHashTable',
 			'_styleHashTable'
-		);
+		];
 
 		// Set HashTable variables
 		foreach ($hashTablesArray as $tableName) {
@@ -196,7 +196,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 			// If $pFilename is php://output or php://stdout, make it a temporary file...
 			$originalFilename = $pFilename;
 
-			if (strtolower($pFilename) == 'php://output' || strtolower($pFilename) == 'php://stdout') {
+			if (strtolower((string) $pFilename) == 'php://output' || strtolower((string) $pFilename) == 'php://stdout') {
 				$pFilename = @tempnam(PHPExcel_Shared_File::sys_get_temp_dir(), 'phpxltmp');
 
 				if ($pFilename == '') {
@@ -211,7 +211,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 			PHPExcel_Calculation_Functions::setReturnDateType(PHPExcel_Calculation_Functions::RETURNDATE_EXCEL);
 
 			// Create string lookup table
-			$this->_stringTable = array();
+			$this->_stringTable = [];
 
 			for ($i = 0; $i < $this->_spreadSheet->getSheetCount(); ++$i) {
 				$this->_stringTable = $this->getWriterPart('StringTable')->createStringTable($this->_spreadSheet->getSheet($i), $this->_stringTable);
@@ -272,14 +272,14 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 				$objZip->addFromString($tmpRibbonTarget, $this->_spreadSheet->getRibbonXMLData('data'));
 
 				if ($this->_spreadSheet->hasRibbonBinObjects()) {
-					$tmpRootPath = dirname($tmpRibbonTarget) . '/';
+					$tmpRootPath = dirname((string) $tmpRibbonTarget) . '/';
 					$ribbonBinObjects = $this->_spreadSheet->getRibbonBinObjects('data');// the files to write
 
 					foreach ($ribbonBinObjects as $aPath=>$aContent) {
 						$objZip->addFromString($tmpRootPath . $aPath, $aContent);
 					}
 					// the rels for files
-					$objZip->addFromString($tmpRootPath . '_rels/' . basename($tmpRibbonTarget) . '.rels', $this->getWriterPart('RelsRibbonObjects')->writeRibbonRelationships($this->_spreadSheet));
+					$objZip->addFromString($tmpRootPath . '_rels/' . basename((string) $tmpRibbonTarget) . '.rels', $this->getWriterPart('RelsRibbonObjects')->writeRibbonRelationships($this->_spreadSheet));
 				}
 			}
 
@@ -377,7 +377,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 					$imageContents = null;
 					$imagePath = $this->getDrawingHashTable()->getByIndex($i)->getPath();
 
-					if (strpos($imagePath, 'zip://') !== false) {
+					if (str_contains($imagePath, 'zip://')) {
 						$imagePath = substr($imagePath, 6);
 						$imagePathSplitted = explode('#', $imagePath);
 

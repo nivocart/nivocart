@@ -30,7 +30,7 @@ if (!defined('PHPEXCEL_ROOT')) {
 	/**
 	 * @ignore
 	 */
-	define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../');
+	define('PHPEXCEL_ROOT', __DIR__ . '/../');
 	require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -47,15 +47,15 @@ class PHPExcel_Settings {
 	const PDF_RENDERER_DOMPDF = 'DomPDF';
 	const PDF_RENDERER_MPDF = 'mPDF';
 
-	private static $_chartRenderers = array(
+	private static $_chartRenderers = [
 		self::CHART_RENDERER_JPGRAPH
-	);
+	];
 
-	private static $_pdfRenderers = array(
+	private static $_pdfRenderers = [
 		self::PDF_RENDERER_TCPDF,
 		self::PDF_RENDERER_DOMPDF,
 		self::PDF_RENDERER_MPDF
-	);
+	];
 
 	/**
 	 * Name of the class used for Zip file management
@@ -155,7 +155,7 @@ class PHPExcel_Settings {
 	 * @param array $arguments Optional configuration arguments for the cacheing method
 	 * @return boolean Success or failure
 	 */
-	public static function setCacheStorageMethod($method = PHPExcel_CachedObjectStorageFactory::cache_in_memory, $arguments = array()) {
+	public static function setCacheStorageMethod($method = PHPExcel_CachedObjectStorageFactory::cache_in_memory, $arguments = []) {
 		return PHPExcel_CachedObjectStorageFactory::initialize($method, $arguments);
 	}
 

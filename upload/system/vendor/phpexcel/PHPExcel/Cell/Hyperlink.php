@@ -35,29 +35,22 @@
  */
 class PHPExcel_Cell_Hyperlink {
     /**
-     * URL to link the cell to
-     *
-     * @var string
-     */
-    private $_url;
-
-    /**
-     * Tooltip to display on the hyperlink
-     *
-     * @var string
-     */
-    private $_tooltip;
-
-    /**
      * Create a new PHPExcel_Cell_Hyperlink
      *
-     * @param  string  $pUrl      Url to link the cell to
-     * @param  string  $pTooltip  Tooltip to display on the hyperlink
+     * @param string $_url Url to link the cell to
+     * @param string $_tooltip Tooltip to display on the hyperlink
      */
-    public function __construct($pUrl = '', $pTooltip = '') {
-        // Initialise member variables
-        $this->_url = $pUrl;
-        $this->_tooltip = $pTooltip;
+    public function __construct(
+        /**
+         * URL to link the cell to
+         */
+        private $_url = '',
+        /**
+         * Tooltip to display on the hyperlink
+         */
+        private $_tooltip = ''
+    )
+    {
     }
 
     /**
@@ -108,7 +101,7 @@ class PHPExcel_Cell_Hyperlink {
      * @return boolean
      */
     public function isInternal() {
-        return strpos($this->_url, 'sheet://') !== false;
+        return str_contains($this->_url, 'sheet://');
     }
 
     /**
@@ -120,7 +113,7 @@ class PHPExcel_Cell_Hyperlink {
         return md5(
 			$this->_url
             . $this->_tooltip
-            . __CLASS__
+            . self::class
         );
     }
 }

@@ -102,7 +102,8 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 	 * @param string $parentPropertyName
 	 * @return PHPExcel_Style_Border
 	 */
-	public function bindParent($parent, $parentPropertyName = null)
+	#[\Override]
+    public function bindParent($parent, $parentPropertyName = null)
 	{
 		$this->_parent = $parent;
 		$this->_parentPropertyName = $parentPropertyName;
@@ -170,7 +171,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 		case '_vertical':
 				$key = 'vertical'; break;
 		}
-		return $this->_parent->getStyleArray(array($key => $array));
+		return $this->_parent->getStyleArray([$key => $array]);
 	}
 
 	/**
@@ -237,7 +238,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 			$pValue = PHPExcel_Style_Border::BORDER_MEDIUM;
 		}
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStyleArray(array('style' => $pValue));
+			$styleArray = $this->getStyleArray(['style' => $pValue]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_borderStyle = $pValue;
@@ -266,7 +267,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 		$color = $pValue->getIsSupervisor() ? $pValue->getSharedComponent() : $pValue;
 
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getColor()->getStyleArray(array('argb' => $color->getARGB()));
+			$styleArray = $this->getColor()->getStyleArray(['argb' => $color->getARGB()]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_color = $color;
@@ -286,7 +287,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 		return md5(
 			  $this->_borderStyle
 			. $this->_color->getHashCode()
-			. __CLASS__
+			. self::class
 		);
 	}
 }

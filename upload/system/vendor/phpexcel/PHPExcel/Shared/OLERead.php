@@ -104,7 +104,7 @@ class PHPExcel_Shared_OLERead {
 		// Total number of sectors used by MSAT
 		$this->numExtensionBlocks = self::_GetInt4d($this->data, self::NUM_EXTENSION_BLOCK_POS);
 
-		$bigBlockDepotBlocks = array();
+		$bigBlockDepotBlocks = [];
 
 		$pos = self::BIG_BLOCK_DEPOT_BLOCKS_POS;
 
@@ -206,7 +206,7 @@ class PHPExcel_Shared_OLERead {
 
 			while ($block != -2) {
 				$pos = ($block + 1) * self::BIG_BLOCK_SIZE;
-				$streamData .= substr($this->data, $pos, self::BIG_BLOCK_SIZE);
+				$streamData .= substr((string) $this->data, $pos, self::BIG_BLOCK_SIZE);
 				$block = self::_GetInt4d($this->bigBlockChain, $block * 4);
 			}
 
@@ -226,7 +226,7 @@ class PHPExcel_Shared_OLERead {
 
 		while ($block != -2) {
 			$pos = ($block + 1) * self::BIG_BLOCK_SIZE;
-			$data .= substr($this->data, $pos, self::BIG_BLOCK_SIZE);
+			$data .= substr((string) $this->data, $pos, self::BIG_BLOCK_SIZE);
 			$block = self::_GetInt4d($this->bigBlockChain, $block * 4);
 		}
 
@@ -260,12 +260,12 @@ class PHPExcel_Shared_OLERead {
 
 			$name = str_replace("\x00", "", substr($d, 0, $nameSize));
 
-			$this->props[] = array(
+			$this->props[] = [
 				'name'       => $name,
 				'type'       => $type,
 				'startBlock' => $startBlock,
 				'size'       => $size
-			);
+			];
 
 			// tmp helper to simplify checks
 			$upName = strtoupper($name);

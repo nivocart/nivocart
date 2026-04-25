@@ -50,8 +50,9 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float		$xValue			X-Value
 	 * @return	 float						Y-Value
 	 **/
-	public function getValueOfYForX($xValue) {
-		return $this->getIntersect() * pow(($xValue - $this->_Xoffset), $this->getSlope());
+	#[\Override]
+    public function getValueOfYForX($xValue) {
+		return $this->getIntersect() * ($xValue - $this->_Xoffset) ** $this->getSlope();
 	}
 
 	/**
@@ -60,8 +61,9 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float		$yValue			Y-Value
 	 * @return	 float						X-Value
 	 **/
-	public function getValueOfXForY($yValue) {
-		return pow((($yValue + $this->_Yoffset) / $this->getIntersect()), (1 / $this->getSlope()));
+	#[\Override]
+    public function getValueOfXForY($yValue) {
+		return (($yValue + $this->_Yoffset) / $this->getIntersect()) ** (1 / $this->getSlope());
 	}
 
 	/**
@@ -70,7 +72,8 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getEquation($dp = 0) {
+	#[\Override]
+    public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
 		return 'Y = '.$intersect.' * X^'.$slope;
@@ -82,7 +85,8 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getIntersect($dp = 0) {
+	#[\Override]
+    public function getIntersect($dp = 0) {
 		if ($dp != 0) {
 			return round(exp($this->_intersect), $dp);
 		}
@@ -125,7 +129,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float[]	$xValues	The set of X-values for this regression
 	 * @param	 boolean	$const
 	 */
-	function __construct($yValues, $xValues = array(), $const = true) {
+	function __construct($yValues, $xValues = [], $const = true) {
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_power_regression($yValues, $xValues, $const);
 		}

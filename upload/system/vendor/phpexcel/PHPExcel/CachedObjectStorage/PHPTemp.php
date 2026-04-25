@@ -60,10 +60,10 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
 
 			fseek($this->_fileHandle, 0, SEEK_END);
 
-			$this->_cellCache[$this->_currentObjectID] = array(
+			$this->_cellCache[$this->_currentObjectID] = [
                 'ptr' => ftell($this->_fileHandle),
 				'sz'  => fwrite($this->_fileHandle, serialize($this->_currentObject))
-			);
+			];
 
 			$this->_currentCellIsDirty = false;
 		}
@@ -128,7 +128,8 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
 	 *
 	 * @return  string[]
 	 */
-	public function getCellList() {
+	#[\Override]
+    public function getCellList() {
 		if ($this->_currentObjectID !== null) {
 			$this->_storeData();
 		}
@@ -142,7 +143,8 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
 	 * @param	PHPExcel_Worksheet	$parent		The new worksheet
 	 * @return	void
 	 */
-	public function copyCellCollection(PHPExcel_Worksheet $parent) {
+	#[\Override]
+    public function copyCellCollection(PHPExcel_Worksheet $parent) {
 		parent::copyCellCollection($parent);
 		//	Open a new stream for the cell cache data
 		$newFileHandle = fopen('php://temp/maxmemory:' . $this->_memoryCacheSize, 'a+');
@@ -167,7 +169,7 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
 			$this->_currentObject = $this->_currentObjectID = null;
 		}
 
-		$this->_cellCache = array();
+		$this->_cellCache = [];
 		//	Detach ourself from the worksheet, so that it can then delete this object successfully
 		$this->_parent = null;
 		//	Close down the php://temp file
@@ -181,7 +183,7 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
 	 * @param	array of mixed		$arguments	Additional initialisation arguments
 	 */
 	public function __construct(PHPExcel_Worksheet $parent, $arguments) {
-		$this->_memoryCacheSize	= (isset($arguments['memoryCacheSize'])) ? $arguments['memoryCacheSize'] : '1MB';
+		$this->_memoryCacheSize	= $arguments['memoryCacheSize'] ?? '1MB';
 
 		parent::__construct($parent);
 

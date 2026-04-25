@@ -106,6 +106,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @throws  PHPExcel_Exception
      * @return  boolean
      */
+    #[\Override]
     public function isDataSet($pCoord) {
         // Check if the requested entry is the current object, or exists in the cache
         if (parent::isDataSet($pCoord)) {
@@ -174,7 +175,8 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
 	 *
 	 * @return  string[]
 	 */
-	public function getCellList() {
+	#[\Override]
+    public function getCellList() {
 		if ($this->_currentObjectID !== null) {
 			$this->_storeData();
 		}
@@ -189,6 +191,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @param   string  $pCoord  Coordinate address of the cell to delete
      * @throws  PHPExcel_Exception
      */
+    #[\Override]
     public function deleteCacheData($pCoord) {
         // Delete the entry from APC
         apc_delete($this->_cachePrefix . $pCoord . '.cache');
@@ -204,6 +207,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @throws  PHPExcel_Exception
      * @return  void
      */
+    #[\Override]
     public function copyCellCollection(PHPExcel_Worksheet $parent) {
         parent::copyCellCollection($parent);
         // Get a new id for the new file name
@@ -248,7 +252,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         // Flush the APC cache
         $this->__destruct();
 
-        $this->_cellCache = array();
+        $this->_cellCache = [];
         // Detach ourself from the worksheet, so that it can then delete this object successfully
         $this->_parent = null;
     }
@@ -260,7 +264,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * @param  array of mixed      $arguments  Additional initialisation arguments
      */
     public function __construct(PHPExcel_Worksheet $parent, $arguments) {
-        $cacheTime = (isset($arguments['cacheTime'])) ? $arguments['cacheTime'] : 600;
+        $cacheTime = $arguments['cacheTime'] ?? 600;
 
         if ($this->_cachePrefix === null) {
             $baseUnique = $this->_getUniqueID();
@@ -290,6 +294,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      *
      * @return  boolean
      */
+    #[\Override]
     public static function cacheMethodIsAvailable() {
         if (!function_exists('apc_store')) {
             return false;

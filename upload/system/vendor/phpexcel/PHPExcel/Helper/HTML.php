@@ -1,7 +1,7 @@
 <?php
 class PHPExcel_Helper_HTML {
 
-	protected static $colourMap = array(
+	protected static $colourMap = [
 		'aliceblue' => 'f0f8ff',
 		'antiquewhite' => 'faebd7',
 		'antiquewhite1' => 'ffefdb',
@@ -519,7 +519,7 @@ class PHPExcel_Helper_HTML {
 		'yellow3' => 'cdcd00',
 		'yellow4' => '8b8b00',
 		'yellowgreen' => '9acd32',
-	);
+	];
 
 	protected $face;
 	protected $size;
@@ -532,7 +532,7 @@ class PHPExcel_Helper_HTML {
 	protected $subscript = false;
 	protected $strikethrough = false;
 
-	protected $startTagCallbacks = array(
+	protected $startTagCallbacks = [
 		'font' => 'startFontTag',
 		'b' => 'startBoldTag',
 		'strong' => 'startBoldTag',
@@ -543,9 +543,9 @@ class PHPExcel_Helper_HTML {
 		'del' => 'startStrikethruTag',
 		'sup' => 'startSuperscriptTag',
 		'sub' => 'startSubscriptTag'
-	);
+	];
 
-	protected $endTagCallbacks = array(
+	protected $endTagCallbacks = [
 		'font' => 'endFontTag',
 		'b' => 'endBoldTag',
 		'strong' => 'endBoldTag',
@@ -564,9 +564,9 @@ class PHPExcel_Helper_HTML {
 		'h4' => 'breakTag',
 		'h5' => 'breakTag',
 		'h6' => 'breakTag'
-	);
+	];
 
-	protected $stack = array();
+	protected $stack = [];
 
 	protected $stringData = '';
 
@@ -576,7 +576,7 @@ class PHPExcel_Helper_HTML {
 		$this->face = $this->size = $this->color = null;
 		$this->bold = $this->italic = $this->underline = $this->superscript = $this->subscript = $this->strikethrough = false;
 
-		$this->stack = array();
+		$this->stack = [];
 
 		$this->stringData = '';
 	}
@@ -601,7 +601,7 @@ class PHPExcel_Helper_HTML {
 	protected function buildTextRun() {
 		$text = $this->stringData;
 
-		if (trim($text) === '') {
+		if (trim((string) $text) === '') {
 			return;
 		}
 
@@ -639,13 +639,13 @@ class PHPExcel_Helper_HTML {
 	}
 
 	protected function rgbToColour($rgb) {
-		preg_match_all('/\d+/', $rgb, $values);
+		preg_match_all('/\d+/', (string) $rgb, $values);
 
 		foreach ($values[0] as &$value) {
 			$value = str_pad(dechex($value), 2, '0', STR_PAD_LEFT);
 		}
 
-		return implode($values[0]);
+		return implode('', $values[0]);
 	}
 
 	protected function colourNameLookup($rgb) {
@@ -654,14 +654,14 @@ class PHPExcel_Helper_HTML {
 
 	protected function startFontTag($tag) {
 		foreach ($tag->attributes as $attribute) {
-			$attributeName = strtolower($attribute->name);
+			$attributeName = strtolower((string) $attribute->name);
 			$attributeValue = $attribute->value;
 
 			if ($attributeName == 'color') {
-				if (preg_match('/rgb\s*\(/', $attributeValue)) {
+				if (preg_match('/rgb\s*\(/', (string) $attributeValue)) {
 					$this->$attributeName = $this->rgbToColour($attributeValue);
-				} elseif (strpos(trim($attributeValue), '#') === 0) {
-					$this->$attributeName = ltrim($attributeValue, '#');
+				} elseif (str_starts_with(trim((string) $attributeValue), '#')) {
+					$this->$attributeName = ltrim((string) $attributeValue, '#');
 				} else {
 					$this->$attributeName = $this->colourNameLookup($attributeValue);
 				}
@@ -728,7 +728,7 @@ class PHPExcel_Helper_HTML {
 	}
 
 	protected function parseTextNode(DOMText $textNode) {
-		$domText = preg_replace('/\s+/u', ' ', ltrim($textNode->nodeValue));
+		$domText = preg_replace('/\s+/u', ' ', ltrim((string) $textNode->nodeValue));
 
 		$this->stringData .= $domText;
 		$this->buildTextRun();
@@ -739,7 +739,7 @@ class PHPExcel_Helper_HTML {
 			$elementHandler = $callbacks[$callbackTag];
 
 			if (method_exists($this, $elementHandler)) {
-				call_user_func(array($this, $elementHandler), $element);
+				call_user_func([$this, $elementHandler], $element);
 			}
 		}
 	}

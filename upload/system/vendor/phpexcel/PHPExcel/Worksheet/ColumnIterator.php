@@ -37,13 +37,6 @@
  */
 class PHPExcel_Worksheet_ColumnIterator implements Iterator {
 	/**
-	 * PHPExcel_Worksheet to iterate
-	 *
-	 * @var PHPExcel_Worksheet
-	 */
-	private $_subject;
-
-	/**
 	 * Current iterator position
 	 *
 	 * @var int
@@ -65,15 +58,16 @@ class PHPExcel_Worksheet_ColumnIterator implements Iterator {
 	private $_endColumn = 0;
 
 	/**
-	 * Create a new column iterator
-	 *
-	 * @param	PHPExcel_Worksheet	$subject	The worksheet to iterate over
-	 * @param	string				$startColumn	The column address at which to start iterating
-	 * @param	string				$endColumn	    Optionally, the column address at which to stop iterating
-	 */
-	public function __construct(PHPExcel_Worksheet $subject = null, $startColumn = 'A', $endColumn = null) {
-		// Set subject
-		$this->_subject = $subject;
+     * Create a new column iterator
+     *
+     * @param PHPExcel_Worksheet $_subject The worksheet to iterate over
+     * @param	string				$startColumn	The column address at which to start iterating
+     * @param	string				$endColumn	    Optionally, the column address at which to stop iterating
+     */
+    public function __construct(/**
+     * PHPExcel_Worksheet to iterate
+     */
+    private ?\PHPExcel_Worksheet $_subject = null, $startColumn = 'A', $endColumn = null) {
 		$this->resetEnd($endColumn);
 		$this->resetStart($startColumn);
 	}
@@ -106,7 +100,7 @@ class PHPExcel_Worksheet_ColumnIterator implements Iterator {
      * @return PHPExcel_Worksheet_ColumnIterator
 	 */
 	public function resetEnd($endColumn = null) {
-		$endColumn = ($endColumn) ? $endColumn : $this->_subject->getHighestColumn();
+		$endColumn = $endColumn ?: $this->_subject->getHighestColumn();
 		$this->_endColumn = PHPExcel_Cell::columnIndexFromString($endColumn) - 1;
 
         return $this;

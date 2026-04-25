@@ -261,7 +261,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 				// Calculate freeze coordinates
 				$xSplit = $ySplit = 0;
 
-				list($xSplit, $ySplit) = PHPExcel_Cell::coordinateFromString($topLeftCell);
+				[$xSplit, $ySplit] = PHPExcel_Cell::coordinateFromString($topLeftCell);
 				$xSplit = PHPExcel_Cell::columnIndexFromString($xSplit);
 
 				// pane
@@ -644,7 +644,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 			foreach ($pSheet->getProtectedCells() as $protectedCell => $passwordHash) {
 				// protectedRange
 				$objWriter->startElement('protectedRange');
-				$objWriter->writeAttribute('name', 'p' . md5($protectedCell));
+				$objWriter->writeAttribute('name', 'p' . md5((string) $protectedCell));
 				$objWriter->writeAttribute('sqref', $protectedCell);
 				if (!empty($passwordHash)) {
 					$objWriter->writeAttribute('password',	$passwordHash);
@@ -743,8 +743,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 			$range = PHPExcel_Cell::splitRange($autoFilterRange);
 			$range = $range[0];
 			//	Strip any worksheet ref
-			if (strpos($range[0],'!') !== false) {
-				list($ws,$range[0]) = explode('!', $range[0]);
+			if (str_contains((string) $range[0],'!')) {
+				[$ws, $range[0]] = explode('!', (string) $range[0]);
 			}
 
 			$range = implode(':', $range);
@@ -893,8 +893,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 	 */
 	private function _writeBreaks(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet $pSheet = null) {
 		// Get row and column breaks
-		$aRowBreaks = array();
-		$aColumnBreaks = array();
+		$aRowBreaks = [];
+		$aColumnBreaks = [];
 
 		foreach ($pSheet->getBreaks() as $cell => $breakType) {
 			if ($breakType == PHPExcel_Worksheet::BREAK_ROW) {
@@ -966,7 +966,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 			$highestRow = $pSheet->getHighestRow();
 
 			// Loop through cells
-			$cellsByRow = array();
+			$cellsByRow = [];
 
 			foreach ($pSheet->getCellCollection() as $cellID) {
 				$cellAddress = PHPExcel_Cell::coordinateFromString($cellID);
@@ -1088,7 +1088,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 				switch (strtolower($mappedType)) {
 					case 'inlinestr':	// Inline string
 						if (!$cellValue instanceof PHPExcel_RichText) {
-							$objWriter->writeElement('t', PHPExcel_Shared_String::ControlCharacterPHP2OOXML(htmlspecialchars($cellValue)));
+							$objWriter->writeElement('t', PHPExcel_Shared_String::ControlCharacterPHP2OOXML(htmlspecialchars((string) $cellValue)));
 						} else if ($cellValue instanceof PHPExcel_RichText) {
 							$objWriter->startElement('is');
 							$this->getParentWriter()->getWriterPart('stringtable')->writeRichText($objWriter, $cellValue);
@@ -1115,16 +1115,16 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 							$objWriter->writeAttribute('ref', $pCellAddress);
 							$objWriter->writeAttribute('aca', '1');
 							$objWriter->writeAttribute('ca', '1');
-							$objWriter->text(substr($cellValue, 1));
+							$objWriter->text(substr((string) $cellValue, 1));
 							$objWriter->endElement();
 						} else {
-							$objWriter->writeElement('f', substr($cellValue, 1));
+							$objWriter->writeElement('f', substr((string) $cellValue, 1));
 						}
 
 						if ($this->getParentWriter()->getOffice2003Compatibility() === false) {
 							if ($this->getParentWriter()->getPreCalculateFormulas()) {
 //								$calculatedValue = $pCell->getCalculatedValue();
-								if (!is_array($calculatedValue) && substr($calculatedValue, 0, 1) != '#') {
+								if (!is_array($calculatedValue) && !str_starts_with((string) $calculatedValue, '#')) {
 									$objWriter->writeElement('v', PHPExcel_Shared_String::FormatNumber($calculatedValue));
 								} else {
 									$objWriter->writeElement('v', '0');
@@ -1142,9 +1142,9 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 						$objWriter->writeElement('v', ($cellValue ? '1' : '0'));
 						break;
 					case 'e':			// Error
-						if (substr($cellValue, 0, 1) == '=') {
-							$objWriter->writeElement('f', substr($cellValue, 1));
-							$objWriter->writeElement('v', substr($cellValue, 1));
+						if (str_starts_with((string) $cellValue, '=')) {
+							$objWriter->writeElement('f', substr((string) $cellValue, 1));
+							$objWriter->writeElement('v', substr((string) $cellValue, 1));
 						} else {
 							$objWriter->writeElement('v', $cellValue);
 						}

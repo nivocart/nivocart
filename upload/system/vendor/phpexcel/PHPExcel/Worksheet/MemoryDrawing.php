@@ -83,7 +83,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
     	$this->_imageResource = null;
     	$this->_renderingFunction = self::RENDERING_DEFAULT;
     	$this->_mimeType = self::MIMETYPE_DEFAULT;
-    	$this->_uniqueName = md5(rand(0, 9999). time() . rand(0, 9999));
+    	$this->_uniqueName = md5(random_int(0, 9999). time() . random_int(0, 9999));
 
     	// Initialize parent
     	parent::__construct();
@@ -173,20 +173,22 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
 	 *
 	 * @return string	Hash code
 	 */
-	public function getHashCode() {
+	#[\Override]
+    public function getHashCode() {
     	return md5(
     		  $this->_renderingFunction
     		. $this->_mimeType
     		. $this->_uniqueName
     		. parent::getHashCode()
-    		. __CLASS__
+    		. self::class
     	);
     }
 
 	/**
 	 * Implement PHP __clone to create a deep clone, not just a shallow copy.
 	 */
-	public function __clone() {
+	#[\Override]
+    public function __clone() {
 		$vars = get_object_vars($this);
 
 		foreach ($vars as $key => $value) {

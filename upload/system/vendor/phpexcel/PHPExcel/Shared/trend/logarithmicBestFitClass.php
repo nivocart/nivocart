@@ -53,7 +53,8 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	 float		$xValue			X-Value
 	 * @return	 float						Y-Value
 	 **/
-	public function getValueOfYForX($xValue) {
+	#[\Override]
+    public function getValueOfYForX($xValue) {
 		return $this->getIntersect() + $this->getSlope() * log($xValue - $this->_Xoffset);
 	}	//	function getValueOfYForX()
 
@@ -64,7 +65,8 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	 float		$yValue			Y-Value
 	 * @return	 float						X-Value
 	 **/
-	public function getValueOfXForY($yValue) {
+	#[\Override]
+    public function getValueOfXForY($yValue) {
 		return exp(($yValue - $this->getIntersect()) / $this->getSlope());
 	}	//	function getValueOfXForY()
 
@@ -75,7 +77,8 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getEquation($dp = 0) {
+	#[\Override]
+    public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
 
@@ -111,7 +114,7 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	float[]		$xValues	The set of X-values for this regression
 	 * @param	boolean		$const
 	 */
-	function __construct($yValues, $xValues = array(), $const = true) {
+	function __construct($yValues, $xValues = [], $const = true) {
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_logarithmic_regression($yValues, $xValues, $const);
 		}

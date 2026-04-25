@@ -38,14 +38,14 @@ class PHPExcel_HashTable {
 	 *
 	 * @var array
 	 */
-	public $_items = array();
+	public $_items = [];
 
 	/**
 	 * HashTable key map
 	 *
 	 * @var array
 	 */
-	public $_keyMap = array();
+	public $_keyMap = [];
 
 	/**
 	 * Create a new PHPExcel_HashTable
@@ -127,8 +127,8 @@ class PHPExcel_HashTable {
 	 *
 	 */
 	public function clear() {
-		$this->_items = array();
-		$this->_keyMap = array();
+		$this->_items = [];
+		$this->_keyMap = [];
 	}
 
 	/**
@@ -173,11 +173,7 @@ class PHPExcel_HashTable {
 	 *
 	 */
 	public function getByHashCode($pHashCode = '') {
-		if (isset($this->_items[$pHashCode])) {
-			return $this->_items[$pHashCode];
-		}
-
-		return null;
+		return $this->_items[$pHashCode] ?? null;
 	}
 
 	/**

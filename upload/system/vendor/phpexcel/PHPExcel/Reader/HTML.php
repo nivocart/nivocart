@@ -31,7 +31,7 @@ if (!defined('PHPEXCEL_ROOT')) {
     /**
      * @ignore
      */
-    define('PHPEXCEL_ROOT', dirname(__FILE__) . '/../../');
+    define('PHPEXCEL_ROOT', __DIR__ . '/../../');
     require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
@@ -62,45 +62,45 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
      *
      * @var array
      */
-    protected $_formats = array(
-        'h1' => array('font' => array('bold' => true,
+    protected $_formats = [
+        'h1' => ['font' => ['bold' => true,
                 'size' => 24,
-            ),
-        ), //	Bold, 24pt
-        'h2' => array('font' => array('bold' => true,
+            ],
+        ], //	Bold, 24pt
+        'h2' => ['font' => ['bold' => true,
                 'size' => 18,
-            ),
-        ), //	Bold, 18pt
-        'h3' => array('font' => array('bold' => true,
+            ],
+        ], //	Bold, 18pt
+        'h3' => ['font' => ['bold' => true,
                 'size' => 13.5,
-            ),
-        ), //	Bold, 13.5pt
-        'h4' => array('font' => array('bold' => true,
+            ],
+        ], //	Bold, 13.5pt
+        'h4' => ['font' => ['bold' => true,
                 'size' => 12,
-            ),
-        ), //	Bold, 12pt
-        'h5' => array('font' => array('bold' => true,
+            ],
+        ], //	Bold, 12pt
+        'h5' => ['font' => ['bold' => true,
                 'size' => 10,
-            ),
-        ), //	Bold, 10pt
-        'h6' => array('font' => array('bold' => true,
+            ],
+        ], //	Bold, 10pt
+        'h6' => ['font' => ['bold' => true,
                 'size' => 7.5,
-            ),
-        ), //	Bold, 7.5pt
-        'a' => array('font' => array('underline' => true,
-                'color' => array('argb' => PHPExcel_Style_Color::COLOR_BLUE,
-                ),
-            ),
-        ), //	Blue underlined
-        'hr' => array('borders' => array('bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array(\PHPExcel_Style_Color::COLOR_BLACK,
-                    ),
-                ),
-            ),
-        ), //	Bottom border
-    );
+            ],
+        ], //	Bold, 7.5pt
+        'a' => ['font' => ['underline' => true,
+                'color' => ['argb' => PHPExcel_Style_Color::COLOR_BLUE,
+                ],
+            ],
+        ], //	Blue underlined
+        'hr' => ['borders' => ['bottom' => ['style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => [\PHPExcel_Style_Color::COLOR_BLACK,
+                    ],
+                ],
+            ],
+        ], //	Bottom border
+    ];
 
-    protected $rowspan = array();
+    protected $rowspan = [];
 
     /**
      * Create a new PHPExcel_Reader_HTML
@@ -118,7 +118,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
         //	Reading 2048 bytes should be enough to validate that the format is HTML
         $data = fread($this->_fileHandle, 2048);
 
-        if ((strpos($data, '<') !== false) &&
+        if ((str_contains($data, '<')) &&
                 (strlen($data) !== strlen(strip_tags($data)))) {
             return true;
         }
@@ -162,9 +162,9 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
     }
 
     //	Data Array used for testing only, should write to PHPExcel object on completion of tests
-    protected $_dataArray = array();
+    protected $_dataArray = [];
     protected $_tableLevel = 0;
-    protected $_nestedColumn = array('A');
+    protected $_nestedColumn = ['A'];
 
     protected function _setTableStartColumn($column) {
         if ($this->_tableLevel == 0) {
@@ -209,7 +209,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
     protected function _processDomElement(DOMNode $element, $sheet, &$row, &$column, &$cellContent, $format = null) {
         foreach ($element->childNodes as $child) {
             if ($child instanceof DOMText) {
-                $domText = preg_replace('/\s+/u', ' ', trim($child->nodeValue));
+                $domText = preg_replace('/\s+/u', ' ', trim((string) $child->nodeValue));
                 if (is_string($cellContent)) {
                     //	simply append the text if the cell content is a plain text string
                     $cellContent .= $domText;
@@ -220,7 +220,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
             } elseif ($child instanceof DOMElement) {
 //				echo '<b>DOM ELEMENT: </b>' , strtoupper($child->nodeName) , '<br />';
 
-                $attributeArray = array();
+                $attributeArray = [];
 
                 foreach ($child->attributes as $attribute) {
 //					echo '<b>ATTRIBUTE: </b>' , $attribute->name , ' => ' , $attribute->value , '<br />';
@@ -513,7 +513,8 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 * @param 	string 		$xml
 	 * @throws PHPExcel_Reader_Exception
 	 */
-	public function securityScan($xml) {
+	#[\Override]
+    public function securityScan($xml) {
         $pattern = '/\\0?' . implode('\\0?', str_split('<!ENTITY')) . '\\0?/';
         if (preg_match($pattern, $xml)) {
             throw new PHPExcel_Reader_Exception('Detected use of ENTITY in XML, spreadsheet file load() aborted to prevent XXE/XEE attacks');

@@ -204,7 +204,7 @@ class PHPExcel_Writer_OpenDocument_Content extends PHPExcel_Writer_OpenDocument_
                 case PHPExcel_Cell_DataType::TYPE_FORMULA:
                     try {
                         $formula_value = $cell->getCalculatedValue();
-                    } catch (Exception $e) {
+                    } catch (Exception) {
                         $formula_value = $cell->getValue();
                     }
                     $objWriter->writeAttribute('table:formula', 'of:' . $cell->getValue());

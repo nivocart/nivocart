@@ -49,8 +49,9 @@ class PHPExcel_Exponential_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float		$xValue			X-Value
 	 * @return	 float						Y-Value
 	 **/
-	public function getValueOfYForX($xValue) {
-		return $this->getIntersect() * pow($this->getSlope(),($xValue - $this->_Xoffset));
+	#[\Override]
+    public function getValueOfYForX($xValue) {
+		return $this->getIntersect() * $this->getSlope() ** ($xValue - $this->_Xoffset);
 	}
 
 	/**
@@ -59,7 +60,8 @@ class PHPExcel_Exponential_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float		$yValue			Y-Value
 	 * @return	 float						X-Value
 	 **/
-	public function getValueOfXForY($yValue) {
+	#[\Override]
+    public function getValueOfXForY($yValue) {
 		return log(($yValue + $this->_Yoffset) / $this->getIntersect()) / log($this->getSlope());
 	}
 
@@ -69,7 +71,8 @@ class PHPExcel_Exponential_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getEquation($dp = 0) {
+	#[\Override]
+    public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
 
@@ -82,7 +85,8 @@ class PHPExcel_Exponential_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getSlope($dp = 0) {
+	#[\Override]
+    public function getSlope($dp = 0) {
 		if ($dp != 0) {
 			return round(exp($this->_slope),$dp);
 		}
@@ -95,7 +99,8 @@ class PHPExcel_Exponential_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 int		$dp		Number of places of decimal precision to display
 	 * @return	 string
 	 **/
-	public function getIntersect($dp = 0) {
+	#[\Override]
+    public function getIntersect($dp = 0) {
 		if ($dp != 0) {
 			return round(exp($this->_intersect), $dp);
 		}
@@ -129,7 +134,7 @@ class PHPExcel_Exponential_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	float[]		$xValues	The set of X-values for this regression
 	 * @param	boolean		$const
 	 */
-	function __construct($yValues, $xValues = array(), $const = true) {
+	function __construct($yValues, $xValues = [], $const = true) {
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_exponential_regression($yValues, $xValues, $const);
 		}

@@ -69,20 +69,6 @@ class PHPExcel_Chart_DataSeries {
 	const STYLE_FILLED = 'filled';
 
 	/**
-	 * Series Plot Type
-	 *
-	 * @var string
-	 */
-	private $_plotType = null;
-
-	/**
-	 * Plot Grouping Type
-	 *
-	 * @var boolean
-	 */
-	private $_plotGrouping = null;
-
-	/**
 	 * Plot Direction
 	 *
 	 * @var boolean
@@ -90,54 +76,52 @@ class PHPExcel_Chart_DataSeries {
 	private $_plotDirection = null;
 
 	/**
-	 * Plot Style
-	 *
-	 * @var string
-	 */
-	private $_plotStyle = null;
-
-	/**
-	 * Order of plots in Series
-	 *
-	 * @var array of integer
-	 */
-	private $_plotOrder = array();
-
-	/**
 	 * Plot Label
 	 *
 	 * @var array of PHPExcel_Chart_DataSeriesValues
 	 */
-	private $_plotLabel = array();
+	private $_plotLabel = [];
 
 	/**
 	 * Plot Category
 	 *
 	 * @var array of PHPExcel_Chart_DataSeriesValues
 	 */
-	private $_plotCategory = array();
-
-	/**
-	 * Smooth Line
-	 *
-	 * @var string
-	 */
-	private $_smoothLine = null;
+	private $_plotCategory = [];
 
 	/**
 	 * Plot Values
 	 *
 	 * @var array of PHPExcel_Chart_DataSeriesValues
 	 */
-	private $_plotValues = array();
+	private $_plotValues = [];
 
 	/**
-	 * Create a new PHPExcel_Chart_DataSeries
-	 */
-	public function __construct($plotType = null, $plotGrouping = null, $plotOrder = array(), $plotLabel = array(), $plotCategory = array(), $plotValues = array(), $plotDirection = null, $smoothLine = null, $plotStyle = null) {
-		$this->_plotType = $plotType;
-		$this->_plotGrouping = $plotGrouping;
-		$this->_plotOrder = $plotOrder;
+     * Create a new PHPExcel_Chart_DataSeries
+     * @param string $plotType
+     * @param bool $plotGrouping
+     * @param string $plotStyle
+     * @param mixed[] $plotOrder
+     * @param string $smoothLine
+     */
+    public function __construct(/**
+     * Series Plot Type
+     */
+    private $_plotType = null, /**
+     * Plot Grouping Type
+     */
+    private $_plotGrouping = null, /**
+     * Order of plots in Series
+     *
+     * @var array of integer
+     */
+    private $_plotOrder = [], $plotLabel = [], $plotCategory = [], $plotValues = [], $plotDirection = null, /**
+     * Smooth Line
+     */
+    private $_smoothLine = null, /**
+     * Plot Style
+     */
+    private $_plotStyle = null) {
 		$keys = array_keys($plotValues);
 		$this->_plotValues = $plotValues;
 
@@ -152,8 +136,6 @@ class PHPExcel_Chart_DataSeries {
 		}
 
 		$this->_plotCategory = $plotCategory;
-		$this->_smoothLine = $smoothLine;
-		$this->_plotStyle = $plotStyle;
 
 		if (is_null($plotDirection)) {
 			$plotDirection = self::DIRECTION_COL;

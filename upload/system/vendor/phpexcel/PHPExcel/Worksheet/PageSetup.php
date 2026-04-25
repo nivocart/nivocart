@@ -235,14 +235,14 @@ class PHPExcel_Worksheet_PageSetup {
 	 *
 	 * @var array Containing start column and end column, empty array if option unset
 	 */
-	private $_columnsToRepeatAtLeft = array('', '');
+	private $_columnsToRepeatAtLeft = ['', ''];
 
 	/**
 	 * Rows to repeat at top
 	 *
 	 * @var array Containing start row number and end row number, empty array if option unset
 	 */
-	private $_rowsToRepeatAtTop = array(0, 0);
+	private $_rowsToRepeatAtTop = [0, 0];
 
 	/**
 	 * Center page horizontally
@@ -465,7 +465,7 @@ class PHPExcel_Worksheet_PageSetup {
 	 * @return PHPExcel_Worksheet_PageSetup
 	 */
 	public function setColumnsToRepeatAtLeftByStartAndEnd($pStart = 'A', $pEnd = 'A') {
-		$this->_columnsToRepeatAtLeft = array($pStart, $pEnd);
+		$this->_columnsToRepeatAtLeft = [$pStart, $pEnd];
 		return $this;
 	}
 
@@ -514,7 +514,7 @@ class PHPExcel_Worksheet_PageSetup {
 	 * @return PHPExcel_Worksheet_PageSetup
 	 */
 	public function setRowsToRepeatAtTopByStartAndEnd($pStart = 1, $pEnd = 1) {
-		$this->_rowsToRepeatAtTop = array($pStart, $pEnd);
+		$this->_rowsToRepeatAtTop = [$pStart, $pEnd];
 		return $this;
 	}
 
@@ -640,11 +640,11 @@ class PHPExcel_Worksheet_PageSetup {
 	 * @throws	PHPExcel_Exception
 	 */
 	public function setPrintArea($value, $index = 0, $method = self::SETPRINTRANGE_OVERWRITE) {
-		if (strpos($value,'!') !== false) {
+		if (str_contains($value,'!')) {
 			throw new PHPExcel_Exception('Cell coordinate must not specify a worksheet.');
-		} elseif (strpos($value,':') === false) {
+		} elseif (!str_contains($value,':')) {
 			throw new PHPExcel_Exception('Cell coordinate must be a range of cells.');
-		} elseif (strpos($value,'$') !== false) {
+		} elseif (str_contains($value,'$')) {
 			throw new PHPExcel_Exception('Cell coordinate must not be absolute.');
 		}
 		$value = strtoupper($value);
@@ -674,7 +674,7 @@ class PHPExcel_Worksheet_PageSetup {
 				if ($index > count($printAreas)) {
 		    		throw new PHPExcel_Exception('Invalid index for setting print range.');
 				}
-				$printAreas = array_merge(array_slice($printAreas, 0, $index), array($value), array_slice($printAreas,$index));
+				$printAreas = array_merge(array_slice($printAreas, 0, $index), [$value], array_slice($printAreas,$index));
 				$this->_printArea = implode(',', $printAreas);
 			}
 		} else {

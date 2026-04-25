@@ -87,7 +87,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 	 * XF Writers
 	 * @var PHPExcel_Writer_Excel5_Xf[]
 	 */
-	private $_xfWriters = array();
+	private $_xfWriters = [];
 
 	/**
 	 * Array containing the colour palette
@@ -118,42 +118,42 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 	 *
 	 * @var PHPExcel_Writer_Excel5_Font[]
 	 */
-	private $_fontWriters = array();
+	private $_fontWriters = [];
 
 	/**
 	 * Added fonts. Maps from font's hash => index in workbook
 	 *
 	 * @var array
 	 */
-	private $_addedFonts = array();
+	private $_addedFonts = [];
 
 	/**
 	 * Shared number formats
 	 *
 	 * @var array
 	 */
-	private $_numberFormats = array();
+	private $_numberFormats = [];
 
 	/**
 	 * Added number formats. Maps from numberFormat's hash => index in workbook
 	 *
 	 * @var array
 	 */
-	private $_addedNumberFormats = array();
+	private $_addedNumberFormats = [];
 
 	/**
 	 * Sizes of the binary worksheet streams
 	 *
 	 * @var array
 	 */
-	private $_worksheetSizes = array();
+	private $_worksheetSizes = [];
 
 	/**
 	 * Offsets of the binary worksheet streams relative to the start of the global workbook stream
 	 *
 	 * @var array
 	 */
-	private $_worksheetOffsets = array();
+	private $_worksheetOffsets = [];
 
 	/**
 	 * Total number of shared strings in workbook
@@ -199,13 +199,10 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 	 * @param array		&$colors		Colour Table
 	 * @param mixed		$parser			The formula parser created for the Workbook
 	 */
-	public function __construct(PHPExcel $phpExcel = null, &$str_total, &$str_unique, &$str_table, &$colors, $parser) {
-		// It needs to call its parent's constructor explicitly
-		parent::__construct();
-
+	public function __construct(PHPExcel $phpExcel = null, &$str_total = null, &$str_unique = null, &$str_table = null, &$colors = null, $parser = null) {
 		$this->_parser = $parser;
 		$this->_biffsize = 0;
-		$this->_palette = array();
+		$this->_palette = [];
 		$this->_country_code = -1;
 
 		$this->_str_total = &$str_total;
@@ -324,12 +321,12 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 			if (count($this->_colors) < 57) {
 				// then we add a custom color altering the palette
 				$colorIndex = 8 + count($this->_colors);
-				$this->_palette[$colorIndex] = array(
-					hexdec(substr($rgb, 0, 2)),
-					hexdec(substr($rgb, 2, 2)),
-					hexdec(substr($rgb, 4)),
+				$this->_palette[$colorIndex] = [
+					hexdec(substr((string) $rgb, 0, 2)),
+					hexdec(substr((string) $rgb, 2, 2)),
+					hexdec(substr((string) $rgb, 4)),
 					0
-				);
+				];
 
 				$this->_colors[$rgb] = $colorIndex;
 			} else {
@@ -350,64 +347,64 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 	 * @access private
 	 */
 	function _setPaletteXl97() {
-		$this->_palette = array(
-			0x08 => array(0x00, 0x00, 0x00, 0x00),
-			0x09 => array(0xff, 0xff, 0xff, 0x00),
-			0x0A => array(0xff, 0x00, 0x00, 0x00),
-			0x0B => array(0x00, 0xff, 0x00, 0x00),
-			0x0C => array(0x00, 0x00, 0xff, 0x00),
-			0x0D => array(0xff, 0xff, 0x00, 0x00),
-			0x0E => array(0xff, 0x00, 0xff, 0x00),
-			0x0F => array(0x00, 0xff, 0xff, 0x00),
-			0x10 => array(0x80, 0x00, 0x00, 0x00),
-			0x11 => array(0x00, 0x80, 0x00, 0x00),
-			0x12 => array(0x00, 0x00, 0x80, 0x00),
-			0x13 => array(0x80, 0x80, 0x00, 0x00),
-			0x14 => array(0x80, 0x00, 0x80, 0x00),
-			0x15 => array(0x00, 0x80, 0x80, 0x00),
-			0x16 => array(0xc0, 0xc0, 0xc0, 0x00),
-			0x17 => array(0x80, 0x80, 0x80, 0x00),
-			0x18 => array(0x99, 0x99, 0xff, 0x00),
-			0x19 => array(0x99, 0x33, 0x66, 0x00),
-			0x1A => array(0xff, 0xff, 0xcc, 0x00),
-			0x1B => array(0xcc, 0xff, 0xff, 0x00),
-			0x1C => array(0x66, 0x00, 0x66, 0x00),
-			0x1D => array(0xff, 0x80, 0x80, 0x00),
-			0x1E => array(0x00, 0x66, 0xcc, 0x00),
-			0x1F => array(0xcc, 0xcc, 0xff, 0x00),
-			0x20 => array(0x00, 0x00, 0x80, 0x00),
-			0x21 => array(0xff, 0x00, 0xff, 0x00),
-			0x22 => array(0xff, 0xff, 0x00, 0x00),
-			0x23 => array(0x00, 0xff, 0xff, 0x00),
-			0x24 => array(0x80, 0x00, 0x80, 0x00),
-			0x25 => array(0x80, 0x00, 0x00, 0x00),
-			0x26 => array(0x00, 0x80, 0x80, 0x00),
-			0x27 => array(0x00, 0x00, 0xff, 0x00),
-			0x28 => array(0x00, 0xcc, 0xff, 0x00),
-			0x29 => array(0xcc, 0xff, 0xff, 0x00),
-			0x2A => array(0xcc, 0xff, 0xcc, 0x00),
-			0x2B => array(0xff, 0xff, 0x99, 0x00),
-			0x2C => array(0x99, 0xcc, 0xff, 0x00),
-			0x2D => array(0xff, 0x99, 0xcc, 0x00),
-			0x2E => array(0xcc, 0x99, 0xff, 0x00),
-			0x2F => array(0xff, 0xcc, 0x99, 0x00),
-			0x30 => array(0x33, 0x66, 0xff, 0x00),
-			0x31 => array(0x33, 0xcc, 0xcc, 0x00),
-			0x32 => array(0x99, 0xcc, 0x00, 0x00),
-			0x33 => array(0xff, 0xcc, 0x00, 0x00),
-			0x34 => array(0xff, 0x99, 0x00, 0x00),
-			0x35 => array(0xff, 0x66, 0x00, 0x00),
-			0x36 => array(0x66, 0x66, 0x99, 0x00),
-			0x37 => array(0x96, 0x96, 0x96, 0x00),
-			0x38 => array(0x00, 0x33, 0x66, 0x00),
-			0x39 => array(0x33, 0x99, 0x66, 0x00),
-			0x3A => array(0x00, 0x33, 0x00, 0x00),
-			0x3B => array(0x33, 0x33, 0x00, 0x00),
-			0x3C => array(0x99, 0x33, 0x00, 0x00),
-			0x3D => array(0x99, 0x33, 0x66, 0x00),
-			0x3E => array(0x33, 0x33, 0x99, 0x00),
-			0x3F => array(0x33, 0x33, 0x33, 0x00)
-		);
+		$this->_palette = [
+			0x08 => [0x00, 0x00, 0x00, 0x00],
+			0x09 => [0xff, 0xff, 0xff, 0x00],
+			0x0A => [0xff, 0x00, 0x00, 0x00],
+			0x0B => [0x00, 0xff, 0x00, 0x00],
+			0x0C => [0x00, 0x00, 0xff, 0x00],
+			0x0D => [0xff, 0xff, 0x00, 0x00],
+			0x0E => [0xff, 0x00, 0xff, 0x00],
+			0x0F => [0x00, 0xff, 0xff, 0x00],
+			0x10 => [0x80, 0x00, 0x00, 0x00],
+			0x11 => [0x00, 0x80, 0x00, 0x00],
+			0x12 => [0x00, 0x00, 0x80, 0x00],
+			0x13 => [0x80, 0x80, 0x00, 0x00],
+			0x14 => [0x80, 0x00, 0x80, 0x00],
+			0x15 => [0x00, 0x80, 0x80, 0x00],
+			0x16 => [0xc0, 0xc0, 0xc0, 0x00],
+			0x17 => [0x80, 0x80, 0x80, 0x00],
+			0x18 => [0x99, 0x99, 0xff, 0x00],
+			0x19 => [0x99, 0x33, 0x66, 0x00],
+			0x1A => [0xff, 0xff, 0xcc, 0x00],
+			0x1B => [0xcc, 0xff, 0xff, 0x00],
+			0x1C => [0x66, 0x00, 0x66, 0x00],
+			0x1D => [0xff, 0x80, 0x80, 0x00],
+			0x1E => [0x00, 0x66, 0xcc, 0x00],
+			0x1F => [0xcc, 0xcc, 0xff, 0x00],
+			0x20 => [0x00, 0x00, 0x80, 0x00],
+			0x21 => [0xff, 0x00, 0xff, 0x00],
+			0x22 => [0xff, 0xff, 0x00, 0x00],
+			0x23 => [0x00, 0xff, 0xff, 0x00],
+			0x24 => [0x80, 0x00, 0x80, 0x00],
+			0x25 => [0x80, 0x00, 0x00, 0x00],
+			0x26 => [0x00, 0x80, 0x80, 0x00],
+			0x27 => [0x00, 0x00, 0xff, 0x00],
+			0x28 => [0x00, 0xcc, 0xff, 0x00],
+			0x29 => [0xcc, 0xff, 0xff, 0x00],
+			0x2A => [0xcc, 0xff, 0xcc, 0x00],
+			0x2B => [0xff, 0xff, 0x99, 0x00],
+			0x2C => [0x99, 0xcc, 0xff, 0x00],
+			0x2D => [0xff, 0x99, 0xcc, 0x00],
+			0x2E => [0xcc, 0x99, 0xff, 0x00],
+			0x2F => [0xff, 0xcc, 0x99, 0x00],
+			0x30 => [0x33, 0x66, 0xff, 0x00],
+			0x31 => [0x33, 0xcc, 0xcc, 0x00],
+			0x32 => [0x99, 0xcc, 0x00, 0x00],
+			0x33 => [0xff, 0xcc, 0x00, 0x00],
+			0x34 => [0xff, 0x99, 0x00, 0x00],
+			0x35 => [0xff, 0x66, 0x00, 0x00],
+			0x36 => [0x66, 0x66, 0x99, 0x00],
+			0x37 => [0x96, 0x96, 0x96, 0x00],
+			0x38 => [0x00, 0x33, 0x66, 0x00],
+			0x39 => [0x33, 0x99, 0x66, 0x00],
+			0x3A => [0x00, 0x33, 0x00, 0x00],
+			0x3B => [0x33, 0x33, 0x00, 0x00],
+			0x3C => [0x99, 0x33, 0x00, 0x00],
+			0x3D => [0x99, 0x33, 0x66, 0x00],
+			0x3E => [0x33, 0x33, 0x99, 0x00],
+			0x3F => [0x33, 0x33, 0x33, 0x00]
+		];
 	}
 
 	/**
@@ -666,7 +663,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 					$formulaData = $this->_parser->toReversePolish();
 
 					// make sure tRef3d is of type tRef3dR (0x3A)
-					if (isset($formulaData{0}) and ($formulaData{0} == "\x7A" or $formulaData{0} == "\x5A")) {
+					if (isset($formulaData[0]) and ($formulaData[0] == "\x7A" or $formulaData[0] == "\x5A")) {
 						$formulaData = "\x3A" . substr($formulaData, 1);
 					}
 
@@ -679,7 +676,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 					}
 					$chunk .= $this->writeData($this->_writeDefinedNameBiff8($namedRange->getName(), $formulaData, $scope, false));
 
-				} catch (PHPExcel_Exception $e) {
+				} catch (PHPExcel_Exception) {
 					// do nothing
 				}
 			}
@@ -811,11 +808,11 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 		$name = substr(PHPExcel_Shared_String::UTF8toBIFF8UnicodeLong($name), 2);
 
 		// size of the formula (in bytes)
-		$sz = strlen($formulaData);
+		$sz = strlen((string) $formulaData);
 
 		// combine the parts
 		$data = pack('vCCvvvCCCC', $options, 0, $nlen, $sz, 0, $sheetIndex, 0, 0, 0, 0) . $name . $formulaData;
-		$length = strlen($data);
+		$length = strlen((string) $data);
 
 		$header = pack('vv', $record, $length);
 
@@ -831,7 +828,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 	 * @param	boolean      $isHidden
 	 * @return	string	Complete binary record data
 	 * */
-	private function _writeShortNameBiff8($name, $sheetIndex = 0, $rangeBounds, $isHidden = false) {
+	private function _writeShortNameBiff8($name, $sheetIndex = 0, $rangeBounds = null, $isHidden = false) {
 		$record = 0x0018;
 
 		// option flags
@@ -846,12 +843,12 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 				$rangeBounds[1][0] - 1);
 
 		// size of the formula (in bytes)
-		$sz = strlen($extra);
+		$sz = strlen((string) $extra);
 
 		// combine the parts
 		$data = pack('vCCvvvCCCCC', $options, 0, 1, $sz, 0, $sheetIndex, 0, 0, 0, 0, 0) . $name . $extra;
 
-		$length = strlen($data);
+		$length = strlen((string) $data);
 
 		$header = pack('vv', $record, $length);
 
@@ -913,12 +910,12 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 		$record = 0x0085;                    // Record identifier
 
 		// sheet state
-		switch ($sheet->getSheetState()) {
-			case PHPExcel_Worksheet::SHEETSTATE_VISIBLE: $ss = 0x00; break;
-			case PHPExcel_Worksheet::SHEETSTATE_HIDDEN: $ss = 0x01; break;
-			case PHPExcel_Worksheet::SHEETSTATE_VERYHIDDEN: $ss = 0x02; break;
-			default: $ss = 0x00; break;
-		}
+		$ss = match ($sheet->getSheetState()) {
+            PHPExcel_Worksheet::SHEETSTATE_VISIBLE => 0x00,
+            PHPExcel_Worksheet::SHEETSTATE_HIDDEN => 0x01,
+            PHPExcel_Worksheet::SHEETSTATE_VERYHIDDEN => 0x02,
+            default => 0x00,
+        };
 
 		// sheet type
 		$st = 0x00;
@@ -928,7 +925,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 		$data = pack("VCC", $offset, $ss, $st);
 		$data .= PHPExcel_Shared_String::UTF8toBIFF8UnicodeShort($sheetname);
 
-		$length = strlen($data);
+		$length = strlen((string) $data);
 		$header = pack("vv",  $record, $length);
 
 		$this->_append($header . $data);
@@ -994,7 +991,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 		$record = 0x041E;                      // Record identifier
 
 		$numberFormatString = PHPExcel_Shared_String::UTF8toBIFF8UnicodeLong($format);
-		$length = 2 + strlen($numberFormatString);      // Number of bytes to follow
+		$length = 2 + strlen((string) $numberFormatString);      // Number of bytes to follow
 
 		$header = pack("vv", $record, $length);
 		$data = pack("v", $ifmt) . $numberFormatString;
@@ -1050,9 +1047,9 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 	 */
 	private function _writeExternsheet($sheetname) {
 		$record = 0x0017;                     // Record identifier
-		$length = 0x02 + strlen($sheetname);  // Number of bytes to follow
+		$length = 0x02 + strlen((string) $sheetname);  // Number of bytes to follow
 
-		$cch = strlen($sheetname);         // Length of sheet name
+		$cch = strlen((string) $sheetname);         // Length of sheet name
 		$rgch = 0x03;                       // Filename encoding
 
 		$header = pack("vv",  $record, $length);
@@ -1278,7 +1275,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 		$continue_limit = 8224;
 
 		// initialize array of record data blocks
-		$recordDatas = array();
+		$recordDatas = [];
 
 		// start SST record data block with total number of strings, total number of unique strings
 		$recordData = pack("VV", $this->_str_total, $this->_str_unique);
@@ -1287,7 +1284,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 		foreach (array_keys($this->_str_table) as $string) {
 			// here $string is a BIFF8 encoded string
 			// length = character count
-			$headerinfo = unpack("vlength/Cencoding", $string);
+			$headerinfo = unpack("vlength/Cencoding", (string) $string);
 
 			// currently, this is always 1 = uncompressed
 			$encoding = $headerinfo["encoding"];
@@ -1300,11 +1297,11 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 				// there will be need for more than one cylcle, if string longer than one record data block, there
 				// may be need for even more cycles
 
-				if (strlen($recordData) + strlen($string) <= $continue_limit) {
+				if (strlen((string) $recordData) + strlen((string) $string) <= $continue_limit) {
 					// then we can write the string (or remainder of string) without any problems
 					$recordData .= $string;
 
-					if (strlen($recordData) + strlen($string) == $continue_limit) {
+					if (strlen((string) $recordData) + strlen((string) $string) == $continue_limit) {
 						// we close the record data block, and initialize a new one
 						$recordDatas[] = $recordData;
 						$recordData = '';
@@ -1317,7 +1314,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 					// If the string is very long it may need to be written in more than one CONTINUE record.
 
 					// check how many bytes more there is room for in the current record
-					$space_remaining = $continue_limit - strlen($recordData);
+					$space_remaining = $continue_limit - strlen((string) $recordData);
 
 					// minimum space needed
 					// uncompressed: 2 byte string length length field + 1 byte option flags + 2 byte character
@@ -1344,14 +1341,14 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 						$effective_space_remaining = $space_remaining;
 
 						// for uncompressed strings, sometimes effective space remaining is reduced by 1
-						if ( $encoding == 1 && (strlen($string) - $space_remaining) % 2 == 1 ) {
+						if ( $encoding == 1 && (strlen((string) $string) - $space_remaining) % 2 == 1 ) {
 							--$effective_space_remaining;
 						}
 
 						// one block fininshed, store the block data
-						$recordData .= substr($string, 0, $effective_space_remaining);
+						$recordData .= substr((string) $string, 0, $effective_space_remaining);
 
-						$string = substr($string, $effective_space_remaining); // for next cycle in while loop
+						$string = substr((string) $string, $effective_space_remaining); // for next cycle in while loop
 						$recordDatas[] = $recordData;
 
 						// start new record data block with the repeated option flags
@@ -1363,7 +1360,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 
 		// Store the last record data block unless it is empty
 		// if there was no need for any continue records, this will be the for SST record data block itself
-		if (strlen($recordData) > 0) {
+		if (strlen((string) $recordData) > 0) {
 			$recordDatas[] = $recordData;
 		}
 
@@ -1374,7 +1371,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 			// first block should have the SST record header, remaing should have CONTINUE header
 			$record = ($i == 0) ? 0x00FC : 0x003C;
 
-			$header = pack("vv", $record, strlen($recordData));
+			$header = pack("vv", $record, strlen((string) $recordData));
 			$data = $header . $recordData;
 
 			$chunk .= $this->writeData($data);
@@ -1393,7 +1390,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter 
 			$data = $writer->close();
 
 			$record = 0x00EB;
-			$length = strlen($data);
+			$length = strlen((string) $data);
 			$header = pack("vv",  $record, $length);
 
 			return $this->writeData($header . $data);

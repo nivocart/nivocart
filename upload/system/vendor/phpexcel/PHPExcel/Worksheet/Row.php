@@ -36,30 +36,23 @@
  */
 class PHPExcel_Worksheet_Row {
 	/**
-	 * PHPExcel_Worksheet
-	 *
-	 * @var PHPExcel_Worksheet
-	 */
-	private $_parent;
-
-	/**
-	 * Row index
-	 *
-	 * @var int
-	 */
-	private $_rowIndex = 0;
-
-	/**
-	 * Create a new row
-	 *
-	 * @param PHPExcel_Worksheet 		$parent
-	 * @param int						$rowIndex
-	 */
-	public function __construct(PHPExcel_Worksheet $parent = null, $rowIndex = 1) {
-		// Set parent and row index
-		$this->_parent = $parent;
-		$this->_rowIndex = $rowIndex;
-	}
+     * Create a new row
+     *
+     * @param PHPExcel_Worksheet $_parent
+     * @param int $_rowIndex
+     */
+    public function __construct(
+        /**
+         * PHPExcel_Worksheet
+         */
+        private ?\PHPExcel_Worksheet $_parent = null,
+        /**
+         * Row index
+         */
+        private $_rowIndex = 1
+    )
+    {
+    }
 
 	/**
 	 * Destructor

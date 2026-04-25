@@ -36,30 +36,23 @@
  */
 class PHPExcel_Worksheet_Column {
 	/**
-	 * PHPExcel_Worksheet
-	 *
-	 * @var PHPExcel_Worksheet
-	 */
-	private $_parent;
-
-	/**
-	 * Column index
-	 *
-	 * @var string
-	 */
-	private $_columnIndex;
-
-	/**
-	 * Create a new column
-	 *
-	 * @param PHPExcel_Worksheet		$parent
-	 * @param string		$columnIndex
-	 */
-	public function __construct(PHPExcel_Worksheet $parent = null, $columnIndex = 'A') {
-		// Set parent and column index
-		$this->_parent = $parent;
-		$this->_columnIndex = $columnIndex;
-	}
+     * Create a new column
+     *
+     * @param PHPExcel_Worksheet $_parent
+     * @param string $_columnIndex
+     */
+    public function __construct(
+        /**
+         * PHPExcel_Worksheet
+         */
+        private ?\PHPExcel_Worksheet $_parent = null,
+        /**
+         * Column index
+         */
+        private $_columnIndex = 'A'
+    )
+    {
+    }
 
 	/**
 	 * Destructor

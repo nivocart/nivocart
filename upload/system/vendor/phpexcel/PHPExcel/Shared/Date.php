@@ -46,7 +46,7 @@ class PHPExcel_Shared_Date {
 	 * @public
 	 * @var	string[]
 	 */
-	public static $_monthNames = array(
+	public static $_monthNames = [
 		'Jan' => 'January',
 		'Feb' => 'February',
 		'Mar' => 'March',
@@ -59,7 +59,7 @@ class PHPExcel_Shared_Date {
 		'Oct' => 'October',
 		'Nov' => 'November',
 		'Dec' => 'December'
-	);
+	];
 
 	/*
 	 * Names of the months of the year, indexed by shortname
@@ -68,12 +68,12 @@ class PHPExcel_Shared_Date {
 	 * @public
 	 * @var	string[]
 	 */
-	public static $_numberSuffixes = array(
+	public static $_numberSuffixes = [
 		'st',
 		'nd',
 		'rd',
 		'th'
-	);
+	];
 
 	/*
 	 * Base calendar year to use for calculations
@@ -237,8 +237,8 @@ class PHPExcel_Shared_Date {
 		}
 
 		//	Calculate the Julian Date, then subtract the Excel base date (JD 2415020 = 31-Dec-1899 Giving Excel Date of 0)
-		$century = substr($year, 0, 2);
-		$decade = substr($year, 2, 2);
+		$century = substr((string) $year, 0, 2);
+		$decade = substr((string) $year, 2, 2);
 
 		$excelDate = floor((146097 * $century) / 4) + floor((1461 * $decade) / 4) + floor((153 * $month + 2) / 5) + $day + 1721119 - $my_excelBaseDate + $excel1900isLeapYear;
 
@@ -316,14 +316,14 @@ class PHPExcel_Shared_Date {
 		}
 
 		//	Typically number, currency or accounting (or occasionally fraction) formats
-		if ((substr($pFormatCode,0,1) == '_') || (substr($pFormatCode, 0, 2) == '0 ')) {
+		if ((str_starts_with($pFormatCode, '_')) || (str_starts_with($pFormatCode, '0 '))) {
 			return false;
 		}
 		// Try checking for any of the date formatting characters that don't appear within square braces
 		if (preg_match('/(^|\])[^\[]*['.self::$possibleDateFormatCharacters.']/i', $pFormatCode)) {
 			// We might also have a format mask containing quoted strings...
 			// we don't want to test for any of our characters within the quoted blocks
-			if (strpos($pFormatCode, '"') !== false) {
+			if (str_contains($pFormatCode, '"')) {
 				$segMatcher = false;
 
 				foreach (explode('"', $pFormatCode) as $subVal) {
@@ -360,7 +360,7 @@ class PHPExcel_Shared_Date {
 		if ($dateValueNew === PHPExcel_Calculation_Functions::VALUE()) {
 			return false;
 		} else {
-			if (strpos($dateValue, ':') !== false) {
+			if (str_contains($dateValue, ':')) {
 				$timeValue = PHPExcel_Calculation_DateTime::TIMEVALUE($dateValue);
 
 				if ($timeValue === PHPExcel_Calculation_Functions::VALUE()) {

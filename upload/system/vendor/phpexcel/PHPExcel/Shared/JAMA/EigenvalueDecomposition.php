@@ -38,20 +38,20 @@ class EigenvalueDecomposition {
 	 *	Arrays for internal storage of eigenvalues.
 	 *	@var array
 	 */
-	private $d = array();
-	private $e = array();
+	private $d = [];
+	private $e = [];
 
 	/**
 	 *	Array for internal storage of eigenvectors.
 	 *	@var array
 	 */
-	private $V = array();
+	private $V = [];
 
 	/**
 	*	Array for internal storage of nonsymmetric Hessenberg form.
 	*	@var array
 	*/
-	private $H = array();
+	private $H = [];
 
 	/**
 	*	Working storage for nonsymmetric algorithm.
@@ -82,7 +82,7 @@ class EigenvalueDecomposition {
 			$i_ = $i -1;
 			// Scale to avoid under/overflow.
 			$h = $scale = 0.0;
-			$scale += array_sum(array_map(abs, $this->d));
+			$scale += array_sum(array_map(\ABS, $this->d));
 
 			if ($scale == 0.0) {
 				$this->e[$i] = $this->d[$i_];
@@ -94,7 +94,7 @@ class EigenvalueDecomposition {
 				// Generate Householder vector.
 				for ($k = 0; $k < $i; ++$k) {
 					$this->d[$k] /= $scale;
-					$h += pow($this->d[$k], 2);
+					$h += $this->d[$k] ** 2;
 				}
 				$f = $this->d[$i_];
 				$g = sqrt($h);
@@ -188,7 +188,7 @@ class EigenvalueDecomposition {
 		$this->e[$this->n-1] = 0.0;
 		$f = 0.0;
 		$tst1 = 0.0;
-		$eps  = pow(2.0,-52.0);
+		$eps  = 2.0 ** -52.0;
 
 		for ($l = 0; $l < $this->n; ++$l) {
 			// Find small subdiagonal element
@@ -399,7 +399,7 @@ class EigenvalueDecomposition {
 		$n  = $nn - 1;
 		$low = 0;
 		$high = $nn - 1;
-		$eps = pow(2.0, -52.0);
+		$eps = 2.0 ** -52.0;
 		$exshift = 0.0;
 		$p = $q = $r = $s = $z = 0;
 		// Store roots isolated by balanc and compute matrix norm
@@ -476,7 +476,7 @@ class EigenvalueDecomposition {
 						$this->H[$n][$j] = $q * $this->H[$n][$j] - $p * $z;
 					}
 					// Column modification
-					for ($i = 0; $i <= n; ++$i) {
+					for ($i = 0; $i <= \N; ++$i) {
 						$z = $this->H[$i][$n-1];
 						$this->H[$i][$n-1] = $q * $z + $p * $this->H[$i][$n];
 						$this->H[$i][$n] = $q * $this->H[$i][$n] - $p * $z;
@@ -796,7 +796,7 @@ class EigenvalueDecomposition {
 			$this->tql2();
 		} else {
 			$this->H = $this->A;
-			$this->ort = array();
+			$this->ort = [];
 			// Reduce to Hessenberg form.
 			$this->orthes();
 			// Reduce Hessenberg to real Schur form.

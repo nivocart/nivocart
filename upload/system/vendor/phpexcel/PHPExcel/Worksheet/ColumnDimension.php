@@ -34,13 +34,6 @@
  */
 class PHPExcel_Worksheet_ColumnDimension {
 	/**
-	 * Column index
-	 *
-	 * @var int
-	 */
-	private $_columnIndex;
-
-	/**
 	 * Column width
 	 *
 	 * When this is set to a negative value, the column width should be ignored by IWriter
@@ -87,13 +80,13 @@ class PHPExcel_Worksheet_ColumnDimension {
     /**
      * Create a new PHPExcel_Worksheet_ColumnDimension
      *
-     * @param string $pIndex Character column index
+     * @param string $_columnIndex Character column index
      */
-    public function __construct($pIndex = 'A') {
-    	// Initialise values
-    	$this->_columnIndex = $pIndex;
-
-		// set default index to cellXf
+    public function __construct(/**
+     * Column index
+     */
+    private $_columnIndex = 'A') {
+    	// set default index to cellXf
 		$this->_xfIndex = 0;
     }
 

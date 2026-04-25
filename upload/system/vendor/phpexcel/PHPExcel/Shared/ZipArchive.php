@@ -115,7 +115,7 @@ class PHPExcel_Shared_ZipArchive {
         $list_index = -1;
 
         for ($i = 0; $i < $listCount; ++$i) {
-            if (strtolower($list[$i]["filename"]) == strtolower($fileName) || strtolower($list[$i]["stored_filename"]) == strtolower($fileName)) {
+            if (strtolower((string) $list[$i]["filename"]) == strtolower($fileName) || strtolower((string) $list[$i]["stored_filename"]) == strtolower($fileName)) {
                 $list_index = $i;
                 break;
             }
@@ -138,7 +138,7 @@ class PHPExcel_Shared_ZipArchive {
         $list_index = -1;
 
         for ($i = 0; $i < $listCount; ++$i) {
-            if (strtolower($list[$i]["filename"]) == strtolower($fileName) || strtolower($list[$i]["stored_filename"]) == strtolower($fileName)) {
+            if (strtolower((string) $list[$i]["filename"]) == strtolower($fileName) || strtolower((string) $list[$i]["stored_filename"]) == strtolower($fileName)) {
                 $list_index = $i;
                 break;
             }
@@ -154,7 +154,7 @@ class PHPExcel_Shared_ZipArchive {
             $list_index = -1;
 
             for ($i = 0; $i < $listCount; ++$i) {
-                if (strtolower($list[$i]["filename"]) == strtolower($fileName) || strtolower($list[$i]["stored_filename"]) == strtolower($fileName)) {
+                if (strtolower((string) $list[$i]["filename"]) == strtolower($fileName) || strtolower((string) $list[$i]["stored_filename"]) == strtolower($fileName)) {
                     $list_index = $i;
                     break;
                 }

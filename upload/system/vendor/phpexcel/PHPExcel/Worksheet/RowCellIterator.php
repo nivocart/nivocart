@@ -37,13 +37,6 @@
  */
 class PHPExcel_Worksheet_RowCellIterator extends PHPExcel_Worksheet_CellIterator implements Iterator {
 	/**
-	 * Row index
-	 *
-	 * @var int
-	 */
-	protected $_rowIndex;
-
-	/**
 	 * Start position
 	 *
 	 * @var int
@@ -58,17 +51,19 @@ class PHPExcel_Worksheet_RowCellIterator extends PHPExcel_Worksheet_CellIterator
 	protected $_endColumn = 0;
 
 	/**
-	 * Create a new column iterator
-	 *
-	 * @param	PHPExcel_Worksheet	$subject	    The worksheet to iterate over
-     * @param   integer             $rowIndex       The row that we want to iterate
-	 * @param	string				$startColumn	The column address at which to start iterating
-	 * @param	string				$endColumn	    Optionally, the column address at which to stop iterating
-	 */
-	public function __construct(PHPExcel_Worksheet $subject = null, $rowIndex = 1, $startColumn = 'A', $endColumn = null) {
+     * Create a new column iterator
+     *
+     * @param	PHPExcel_Worksheet	$subject	    The worksheet to iterate over
+     * @param integer $_rowIndex The row that we want to iterate
+     * @param	string				$startColumn	The column address at which to start iterating
+     * @param	string				$endColumn	    Optionally, the column address at which to stop iterating
+     */
+    public function __construct(PHPExcel_Worksheet $subject = null, /**
+     * Row index
+     */
+    protected $_rowIndex = 1, $startColumn = 'A', $endColumn = null) {
 		// Set subject and row index
 		$this->_subject = $subject;
-		$this->_rowIndex = $rowIndex;
 		$this->resetEnd($endColumn);
 		$this->resetStart($startColumn);
 	}
@@ -76,7 +71,8 @@ class PHPExcel_Worksheet_RowCellIterator extends PHPExcel_Worksheet_CellIterator
 	/**
 	 * Destructor
 	 */
-	public function __destruct() {
+	#[\Override]
+    public function __destruct() {
 		unset($this->_subject);
 	}
 
@@ -104,7 +100,7 @@ class PHPExcel_Worksheet_RowCellIterator extends PHPExcel_Worksheet_CellIterator
      * @throws PHPExcel_Exception
 	 */
 	public function resetEnd($endColumn = null) {
-		$endColumn = ($endColumn) ? $endColumn : $this->_subject->getHighestColumn();
+		$endColumn = $endColumn ?: $this->_subject->getHighestColumn();
 		$this->_endColumn = PHPExcel_Cell::columnIndexFromString($endColumn) - 1;
         $this->adjustForExistingOnlyRange();
 

@@ -36,13 +36,6 @@
  */
 class PHPExcel_Worksheet_RowIterator implements Iterator {
 	/**
-	 * PHPExcel_Worksheet to iterate
-	 *
-	 * @var PHPExcel_Worksheet
-	 */
-	private $_subject;
-
-	/**
 	 * Current iterator position
 	 *
 	 * @var int
@@ -64,15 +57,16 @@ class PHPExcel_Worksheet_RowIterator implements Iterator {
 	private $_endRow = 1;
 
 	/**
-	 * Create a new row iterator
-	 *
-	 * @param	PHPExcel_Worksheet	$subject	The worksheet to iterate over
-	 * @param	integer				$startRow	The row number at which to start iterating
-	 * @param	integer				$endRow	    Optionally, the row number at which to stop iterating
-	 */
-	public function __construct(PHPExcel_Worksheet $subject = null, $startRow = 1, $endRow = null) {
-		// Set subject
-		$this->_subject = $subject;
+     * Create a new row iterator
+     *
+     * @param PHPExcel_Worksheet $_subject The worksheet to iterate over
+     * @param	integer				$startRow	The row number at which to start iterating
+     * @param	integer				$endRow	    Optionally, the row number at which to stop iterating
+     */
+    public function __construct(/**
+     * PHPExcel_Worksheet to iterate
+     */
+    private ?\PHPExcel_Worksheet $_subject = null, $startRow = 1, $endRow = null) {
 		$this->resetEnd($endRow);
 		$this->resetStart($startRow);
 	}
@@ -104,7 +98,7 @@ class PHPExcel_Worksheet_RowIterator implements Iterator {
      * @return PHPExcel_Worksheet_RowIterator
 	 */
 	public function resetEnd($endRow = null) {
-		$this->_endRow = ($endRow) ? $endRow : $this->_subject->getHighestRow();
+		$this->_endRow = $endRow ?: $this->_subject->getHighestRow();
 
         return $this;
 	}

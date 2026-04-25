@@ -28,54 +28,6 @@
 */
 class PHPExcel_Shared_OLE_PPS {
 	/**
-	* The PPS index
-	* @var integer
-	*/
-	public $No;
-
-	/**
-	* The PPS name (in Unicode)
-	* @var string
-	*/
-	public $Name;
-
-	/**
-	* The PPS type. Dir, Root or File
-	* @var integer
-	*/
-	public $Type;
-
-	/**
-	* The index of the previous PPS
-	* @var integer
-	*/
-	public $PrevPps;
-
-	/**
-	* The index of the next PPS
-	* @var integer
-	*/
-	public $NextPps;
-
-	/**
-	* The index of it's first child if this is a Dir or Root PPS
-	* @var integer
-	*/
-	public $DirPps;
-
-	/**
-	* A timestamp
-	* @var integer
-	*/
-	public $Time1st;
-
-	/**
-	* A timestamp
-	* @var integer
-	*/
-	public $Time2nd;
-
-	/**
 	* Starting block (small or big) for this PPS's data  inside the container
 	* @var integer
 	*/
@@ -88,51 +40,59 @@ class PHPExcel_Shared_OLE_PPS {
 	public $Size;
 
 	/**
-	* The PPS's data (only used if it's not using a temporary file)
-	* @var string
-	*/
-	public $_data;
-
-	/**
-	* Array of child PPS's (only used by Root and Dir PPS's)
-	* @var array
-	*/
-	public $children = array();
-
-	/**
 	* Pointer to OLE container
 	* @var OLE
 	*/
 	public $ole;
 
 	/**
-	* The constructor
-	*
-	* @access public
-	* @param integer $No   The PPS index
-	* @param string  $name The PPS name
-	* @param integer $type The PPS type. Dir, Root or File
-	* @param integer $prev The index of the previous PPS
-	* @param integer $next The index of the next PPS
-	* @param integer $dir  The index of it's first child if this is a Dir or Root PPS
-	* @param integer $time_1st A timestamp
-	* @param integer $time_2nd A timestamp
-	* @param string  $data  The (usually binary) source data of the PPS
-	* @param array   $children Array containing children PPS for this PPS
-	*/
-	public function __construct($No, $name, $type, $prev, $next, $dir, $time_1st, $time_2nd, $data, $children) {
-		$this->No      = $No;
-		$this->Name    = $name;
-		$this->Type    = $type;
-		$this->PrevPps = $prev;
-		$this->NextPps = $next;
-		$this->DirPps  = $dir;
-		$this->Time1st = $time_1st;
-		$this->Time2nd = $time_2nd;
-		$this->_data      = $data;
-		$this->children   = $children;
-		if ($data != '') {
-			$this->Size = strlen($data);
+     * The constructor
+     *
+     * @access public
+     * @param integer $No   The PPS index
+     * @param string $Name The PPS name
+     * @param integer $Type The PPS type. Dir, Root or File
+     * @param integer $PrevPps The index of the previous PPS
+     * @param integer $NextPps The index of the next PPS
+     * @param integer $DirPps The index of it's first child if this is a Dir or Root PPS
+     * @param integer $Time1st A timestamp
+     * @param integer $Time2nd A timestamp
+     * @param string $_data The (usually binary) source data of the PPS
+     * @param array   $children Array containing children PPS for this PPS
+     */
+    public function __construct(/**
+     * The PPS index
+     */
+    public $No, /**
+     * The PPS name (in Unicode)
+     */
+    public $Name, /**
+     * The PPS type. Dir, Root or File
+     */
+    public $Type, /**
+     * The index of the previous PPS
+     */
+    public $PrevPps, /**
+     * The index of the next PPS
+     */
+    public $NextPps, /**
+     * The index of it's first child if this is a Dir or Root PPS
+     */
+    public $DirPps, /**
+     * A timestamp
+     */
+    public $Time1st, /**
+     * A timestamp
+     */
+    public $Time2nd, /**
+     * The PPS's data (only used if it's not using a temporary file)
+     */
+    public $_data, /**
+     * Array of child PPS's (only used by Root and Dir PPS's)
+     */
+    public $children) {
+		if ($this->_data != '') {
+			$this->Size = strlen($this->_data);
 		} else {
 			$this->Size = 0;
 		}
@@ -179,8 +139,7 @@ class PHPExcel_Shared_OLE_PPS {
 			  . "\x00\x00\x00\x00"                  // 100
 			  . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time1st)       // 108
 			  . PHPExcel_Shared_OLE::LocalDate2OLE($this->Time2nd)       // 116
-			  . pack("V", isset($this->_StartBlock)?
-						$this->_StartBlock:0)        // 120
+			  . pack("V", $this->_StartBlock ?? 0)        // 120
 			  . pack("V", $this->Size)               // 124
 			  . pack("V", 0);                        // 128
 		return $ret;

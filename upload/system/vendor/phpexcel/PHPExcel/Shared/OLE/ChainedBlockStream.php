@@ -195,7 +195,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream {
 	 * @return  array
 	 */
 	public function stream_stat() {
-		return array('size' => strlen($this->data));
+		return ['size' => strlen($this->data)];
 	}
 
 	// Methods used by stream_wrapper_register() that are not implemented:
