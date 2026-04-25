@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -45,23 +46,23 @@ class PHPExcel_Calculation_TextData {
 	private static $_invalidChars = null;
 
 	private static function _uniord($c) {
-		if (ord($c[0]) >=0 && ord($c[0]) <= 127) {
+		if (ord($c[0]) >= 0 && ord($c[0]) <= 127) {
 			return ord($c[0]);
 		}
 		if (ord($c[0]) >= 192 && ord($c[0]) <= 223) {
-			return (ord($c[0])-192)*64 + (ord($c[1])-128);
+			return (ord($c[0]) - 192) * 64 + (ord($c[1]) - 128);
 		}
 		if (ord($c[0]) >= 224 && ord($c[0]) <= 239) {
-			return (ord($c[0])-224)*4096 + (ord($c[1])-128)*64 + (ord($c[2])-128);
+			return (ord($c[0]) - 224) * 4096 + (ord($c[1]) - 128) * 64 + (ord($c[2]) - 128);
 		}
 		if (ord($c[0]) >= 240 && ord($c[0]) <= 247) {
-			return (ord($c[0])-240)*262144 + (ord($c[1])-128)*4096 + (ord($c[2])-128)*64 + (ord($c[3])-128);
+			return (ord($c[0]) - 240) * 262144 + (ord($c[1]) - 128) * 4096 + (ord($c[2]) - 128) * 64 + (ord($c[3]) - 128);
 		}
 		if (ord($c[0]) >= 248 && ord($c[0]) <= 251) {
-			return (ord($c[0])-248)*16777216 + (ord($c[1])-128)*262144 + (ord($c[2])-128)*4096 + (ord($c[3])-128)*64 + (ord($c[4])-128);
+			return (ord($c[0]) - 248) * 16777216 + (ord($c[1]) - 128) * 262144 + (ord($c[2]) - 128) * 4096 + (ord($c[3]) - 128) * 64 + (ord($c[4]) - 128);
 		}
 		if (ord($c[0]) >= 252 && ord($c[0]) <= 253) {
-			return (ord($c[0])-252)*1073741824 + (ord($c[1])-128)*16777216 + (ord($c[2])-128)*262144 + (ord($c[3])-128)*4096 + (ord($c[4])-128)*64 + (ord($c[5])-128);
+			return (ord($c[0]) - 252) * 1073741824 + (ord($c[1]) - 128) * 16777216 + (ord($c[2]) - 128) * 262144 + (ord($c[3]) - 128) * 4096 + (ord($c[4]) - 128) * 64 + (ord($c[5]) - 128);
 		}
 		if (ord($c[0]) >= 254 && ord($c[0]) <= 255) {
 			return PHPExcel_Calculation_Functions::VALUE();
@@ -76,7 +77,7 @@ class PHPExcel_Calculation_TextData {
 	 * @return	int
 	 */
 	public static function CHARACTER($character) {
-		$character	= PHPExcel_Calculation_Functions::flattenSingleValue($character);
+		$character = PHPExcel_Calculation_Functions::flattenSingleValue($character);
 
 		if ((!is_numeric($character)) || ($character < 0)) {
 			return PHPExcel_Calculation_Functions::VALUE();
@@ -96,14 +97,14 @@ class PHPExcel_Calculation_TextData {
 	 * @return	string
 	 */
 	public static function TRIMNONPRINTABLE($stringValue = '') {
-		$stringValue	= PHPExcel_Calculation_Functions::flattenSingleValue($stringValue);
+		$stringValue = PHPExcel_Calculation_Functions::flattenSingleValue($stringValue);
 
 		if (is_bool($stringValue)) {
 			return ($stringValue) ? PHPExcel_Calculation::getTRUE() : PHPExcel_Calculation::getFALSE();
 		}
 
 		if (self::$_invalidChars == null) {
-			self::$_invalidChars = range(chr(0),chr(31));
+			self::$_invalidChars = range(chr(0), chr(31));
 		}
 
 		if (is_string($stringValue) || is_numeric($stringValue)) {
@@ -227,7 +228,7 @@ class PHPExcel_Calculation_TextData {
 			$round = 10 ** abs($decimals);
 
 			if ($value < 0) {
-				$round = 0-$round;
+				$round = 0 - $round;
 			}
 
 			$value = PHPExcel_Calculation_MathTrig::MROUND($value, $round);
@@ -339,7 +340,7 @@ class PHPExcel_Calculation_TextData {
 		}
 
 		if (!$no_commas) {
-			$valueResult = number_format($valueResult,$decimals);
+			$valueResult = number_format($valueResult, $decimals);
 		}
 
 		return (string) $valueResult;
@@ -454,7 +455,7 @@ class PHPExcel_Calculation_TextData {
 	 * @return	string
 	 */
 	public static function LOWERCASE($mixedCaseString) {
-		$mixedCaseString	= PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
+		$mixedCaseString = PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
 
 		if (is_bool($mixedCaseString)) {
 			$mixedCaseString = ($mixedCaseString) ? PHPExcel_Calculation::getTRUE() : PHPExcel_Calculation::getFALSE();
@@ -472,7 +473,7 @@ class PHPExcel_Calculation_TextData {
 	 * @return	string
 	 */
 	public static function UPPERCASE($mixedCaseString) {
-		$mixedCaseString	= PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
+		$mixedCaseString = PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
 
 		if (is_bool($mixedCaseString)) {
 			$mixedCaseString = ($mixedCaseString) ? PHPExcel_Calculation::getTRUE() : PHPExcel_Calculation::getFALSE();
@@ -490,7 +491,7 @@ class PHPExcel_Calculation_TextData {
 	 * @return	string
 	 */
 	public static function PROPERCASE($mixedCaseString) {
-		$mixedCaseString	= PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
+		$mixedCaseString = PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
 
 		if (is_bool($mixedCaseString)) {
 			$mixedCaseString = ($mixedCaseString) ? PHPExcel_Calculation::getTRUE() : PHPExcel_Calculation::getFALSE();
@@ -514,8 +515,8 @@ class PHPExcel_Calculation_TextData {
 		$chars = PHPExcel_Calculation_Functions::flattenSingleValue($chars);
 		$newText = PHPExcel_Calculation_Functions::flattenSingleValue($newText);
 
-		$left = self::LEFT($oldText, $start-1);
-		$right = self::RIGHT($oldText, self::STRINGLENGTH($oldText)-($start+$chars)+1);
+		$left = self::LEFT($oldText, $start - 1);
+		$right = self::RIGHT($oldText, self::STRINGLENGTH($oldText) - ($start + $chars) + 1);
 
 		return $left . $newText . $right;
 	}
@@ -547,9 +548,9 @@ class PHPExcel_Calculation_TextData {
 
 			while ($instance > 0) {
 				if (function_exists('mb_strpos')) {
-					$pos = mb_strpos((string) $text, (string) $fromText, $pos+1, 'UTF-8');
+					$pos = mb_strpos((string) $text, (string) $fromText, $pos + 1, 'UTF-8');
 				} else {
-					$pos = strpos((string) $text, (string) $fromText, $pos+1);
+					$pos = strpos((string) $text, (string) $fromText, $pos + 1);
 				}
 
 				if ($pos === false) {
@@ -577,7 +578,7 @@ class PHPExcel_Calculation_TextData {
 	 * @return	boolean
 	 */
 	public static function RETURNSTRING($testValue = '') {
-		$testValue	= PHPExcel_Calculation_Functions::flattenSingleValue($testValue);
+		$testValue = PHPExcel_Calculation_Functions::flattenSingleValue($testValue);
 
 		if (is_string($testValue)) {
 			return $testValue;

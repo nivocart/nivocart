@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -175,20 +176,20 @@ class PHPExcel_Writer_Excel2007_Rels extends PHPExcel_Writer_Excel2007_WriterPar
 		}
 
 		// Write chart relationships?
-//		$chartCount = 0;
-//		$charts = $pWorksheet->getChartCollection();
-//		echo 'Chart Rels: ' , count($charts) , '<br />';
-//		if (count($charts) > 0) {
-//			foreach ($charts as $chart) {
-//				$this->_writeRelationship(
-//					$objWriter,
-//					++$d,
-//					'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
-//					'../charts/chart' . ++$chartCount . '.xml'
-//				);
-//			}
-//		}
-//
+		//		$chartCount = 0;
+		//		$charts = $pWorksheet->getChartCollection();
+		//		echo 'Chart Rels: ' , count($charts) , '<br />';
+		//		if (count($charts) > 0) {
+		//			foreach ($charts as $chart) {
+		//				$this->_writeRelationship(
+		//					$objWriter,
+		//					++$d,
+		//					'http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart',
+		//					'../charts/chart' . ++$chartCount . '.xml'
+		//				);
+		//			}
+		//		}
+		//
 		// Write hyperlink relationships?
 		$i = 1;
 		foreach ($pWorksheet->getHyperlinkCollection() as $hyperlink) {
@@ -321,16 +322,16 @@ class PHPExcel_Writer_Excel2007_Rels extends PHPExcel_Writer_Excel2007_WriterPar
 	 * @param 	string 						$pTargetMode	Relationship target mode
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	private function _writeRelationship(PHPExcel_Shared_XMLWriter $objWriter = null, $pId = 1, $pType = '', $pTarget = '', $pTargetMode = '') {
+	private function _writeRelationship(PHPExcel_Shared_XMLWriter $objWriter = null, $pId = 1, $pType = '', $pTarget = '', $pTargetMode = ''): void {
 		if ($pType != '' && $pTarget != '') {
 			// Write relationship
 			$objWriter->startElement('Relationship');
 			$objWriter->writeAttribute('Id', 'rId' . $pId);
 			$objWriter->writeAttribute('Type', $pType);
-			$objWriter->writeAttribute('Target',	$pTarget);
+			$objWriter->writeAttribute('Target', $pTarget);
 
 			if ($pTargetMode != '') {
-				$objWriter->writeAttribute('TargetMode',	$pTargetMode);
+				$objWriter->writeAttribute('TargetMode', $pTargetMode);
 			}
 
 			$objWriter->endElement();

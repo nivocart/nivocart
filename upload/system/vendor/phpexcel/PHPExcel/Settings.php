@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -36,25 +37,25 @@ if (!defined('PHPEXCEL_ROOT')) {
 
 class PHPExcel_Settings {
 	/**    Available Zip library classes */
-	const PCLZIP = 'PHPExcel_Shared_ZipArchive';
-	const ZIPARCHIVE = 'ZipArchive';
+	public const PCLZIP = 'PHPExcel_Shared_ZipArchive';
+	public const ZIPARCHIVE = 'ZipArchive';
 
 	/**    Optional Chart Rendering libraries */
-	const CHART_RENDERER_JPGRAPH = 'jpgraph';
+	public const CHART_RENDERER_JPGRAPH = 'jpgraph';
 
 	/**    Optional PDF Rendering libraries */
-	const PDF_RENDERER_TCPDF = 'tcPDF';
-	const PDF_RENDERER_DOMPDF = 'DomPDF';
-	const PDF_RENDERER_MPDF = 'mPDF';
+	public const PDF_RENDERER_TCPDF = 'tcPDF';
+	public const PDF_RENDERER_DOMPDF = 'DomPDF';
+	public const PDF_RENDERER_MPDF = 'mPDF';
 
 	private static $_chartRenderers = [
-		self::CHART_RENDERER_JPGRAPH
+		self::CHART_RENDERER_JPGRAPH,
 	];
 
 	private static $_pdfRenderers = [
 		self::PDF_RENDERER_TCPDF,
 		self::PDF_RENDERER_DOMPDF,
-		self::PDF_RENDERER_MPDF
+		self::PDF_RENDERER_MPDF,
 	];
 
 	/**
@@ -317,7 +318,7 @@ class PHPExcel_Settings {
 	 *
 	 * @param int $options Default options for libxml loader
 	 */
-	public static function setLibXmlLoaderOptions($options = null) {
+	public static function setLibXmlLoaderOptions($options = null): void {
 		if (is_null($options) && defined(LIBXML_DTDLOAD)) {
 			$options = LIBXML_DTDLOAD | LIBXML_DTDATTR;
 		}

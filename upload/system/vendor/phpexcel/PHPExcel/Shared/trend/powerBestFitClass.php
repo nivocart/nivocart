@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -51,7 +52,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @return	 float						Y-Value
 	 **/
 	#[\Override]
-    public function getValueOfYForX($xValue) {
+	public function getValueOfYForX($xValue) {
 		return $this->getIntersect() * ($xValue - $this->_Xoffset) ** $this->getSlope();
 	}
 
@@ -62,7 +63,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @return	 float						X-Value
 	 **/
 	#[\Override]
-    public function getValueOfXForY($yValue) {
+	public function getValueOfXForY($yValue) {
 		return (($yValue + $this->_Yoffset) / $this->getIntersect()) ** (1 / $this->getSlope());
 	}
 
@@ -73,10 +74,10 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @return	 string
 	 **/
 	#[\Override]
-    public function getEquation($dp = 0) {
+	public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
-		return 'Y = '.$intersect.' * X^'.$slope;
+		return 'Y = ' . $intersect . ' * X^' . $slope;
 	}
 
 	/**
@@ -86,7 +87,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @return	 string
 	 **/
 	#[\Override]
-    public function getIntersect($dp = 0) {
+	public function getIntersect($dp = 0) {
 		if ($dp != 0) {
 			return round(exp($this->_intersect), $dp);
 		}
@@ -100,7 +101,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float[]	$xValues	The set of X-values for this regression
 	 * @param	 boolean	$const
 	 */
-	private function _power_regression($yValues, $xValues, $const) {
+	private function _power_regression($yValues, $xValues, $const): void {
 		foreach ($xValues as &$value) {
 			if ($value < 0.0) {
 				$value = 0 - log(abs($value));
@@ -129,7 +130,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float[]	$xValues	The set of X-values for this regression
 	 * @param	 boolean	$const
 	 */
-	function __construct($yValues, $xValues = [], $const = true) {
+	public function __construct($yValues, $xValues = [], $const = true) {
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_power_regression($yValues, $xValues, $const);
 		}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -32,18 +33,17 @@
  */
 class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement {
 	/**
-     * Create a new PHPExcel_RichText_TextElement instance
-     *
-     * @param string $_text Text
-     */
-    public function __construct(
-        /**
-         * Text
-         */
-        private $_text = ''
-    )
-    {
-    }
+	 * Create a new PHPExcel_RichText_TextElement instance
+	 *
+	 * @param string $_text Text
+	 */
+	public function __construct(
+		/**
+		 * Text
+		 */
+		private $_text = ''
+	) {
+	}
 
 	/**
 	 * Get text
@@ -81,11 +81,11 @@ class PHPExcel_RichText_TextElement implements PHPExcel_RichText_ITextElement {
 	 * @return string	Hash code
 	 */
 	public function getHashCode() {
-    	return md5(
+		return md5(
 			$this->_text
-    		. self::class
-    	);
-    }
+			. self::class
+		);
+	}
 
 	/**
 	 * Implement PHP __clone to create a deep clone, not just a shallow copy.

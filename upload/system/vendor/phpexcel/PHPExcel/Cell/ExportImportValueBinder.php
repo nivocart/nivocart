@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -53,7 +54,7 @@ class PHPExcel_Cell_ExportImportValueBinder extends PHPExcel_Cell_DefaultValueBi
 	* @return boolean
 	*/
 	#[\Override]
-    public function bindValue(PHPExcel_Cell $cell, $value = null) {
+	public function bindValue(PHPExcel_Cell $cell, $value = null) {
 		// sanitize UTF-8 strings
 		if (is_string($value) || str_contains((string) $value, "\n")) {
 			$value = PHPExcel_Shared_String::SanitizeUTF8($value);

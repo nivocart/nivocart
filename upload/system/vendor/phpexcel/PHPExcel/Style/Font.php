@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -32,14 +33,13 @@
  * @package	PHPExcel_Style
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable
-{
+class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable {
 	/* Underline types */
-	const UNDERLINE_NONE = 'none';
-	const UNDERLINE_DOUBLE = 'double';
-	const UNDERLINE_DOUBLEACCOUNTING = 'doubleAccounting';
-	const UNDERLINE_SINGLE = 'single';
-	const UNDERLINE_SINGLEACCOUNTING = 'singleAccounting';
+	public const UNDERLINE_NONE = 'none';
+	public const UNDERLINE_DOUBLE = 'double';
+	public const UNDERLINE_DOUBLEACCOUNTING = 'doubleAccounting';
+	public const UNDERLINE_SINGLE = 'single';
+	public const UNDERLINE_SINGLEACCOUNTING = 'singleAccounting';
 
 	/**
 	 * Font Name
@@ -114,8 +114,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 *									Leave this value at default unless you understand exactly what
 	 *										its ramifications are
 	 */
-	public function __construct($isSupervisor = false, $isConditional = false)
-	{
+	public function __construct($isSupervisor = false, $isConditional = false) {
 		// Supervisor?
 		parent::__construct($isSupervisor);
 
@@ -145,8 +144,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 *
 	 * @return PHPExcel_Style_Font
 	 */
-	public function getSharedComponent()
-	{
+	public function getSharedComponent() {
 		return $this->_parent->getSharedComponent()->getFont();
 	}
 
@@ -156,8 +154,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 * @param array $array
 	 * @return array
 	 */
-	public function getStyleArray($array)
-	{
+	public function getStyleArray($array) {
 		return ['font' => $array];
 	}
 
@@ -241,7 +238,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 * @return PHPExcel_Style_Font
 	 */
 	public function setName($pValue = 'Calibri') {
-  		if ($pValue == '') {
+		if ($pValue == '') {
 			$pValue = 'Calibri';
 		}
 		if ($this->_isSupervisor) {
@@ -378,7 +375,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 		return $this;
 	}
 
-		/**
+	/**
 	 * Get SubScript
 	 *
 	 * @return boolean
@@ -515,7 +512,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 			return $this->getSharedComponent()->getHashCode();
 		}
 		return md5(
-			  $this->_name
+			$this->_name
 			. $this->_size
 			. ($this->_bold ? 't' : 'f')
 			. ($this->_italic ? 't' : 'f')

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -91,14 +92,15 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	private $_documentSummaryInformation;
 
 	/**
-     * Create a new PHPExcel_Writer_Excel5
-     *
-     * @param PHPExcel $_phpExcel PHPExcel object
-     */
-    public function __construct(/**
-     * PHPExcel object
-     */
-    private readonly PHPExcel $_phpExcel) {
+	 * Create a new PHPExcel_Writer_Excel5
+	 *
+	 * @param PHPExcel $_phpExcel PHPExcel object
+	 */
+	public function __construct(/**
+	 * PHPExcel object
+	 */
+		private readonly PHPExcel $_phpExcel
+	) {
 		$this->_parser = new PHPExcel_Writer_Excel5_Parser();
 	}
 
@@ -108,7 +110,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	 * @param	string		$pFilename
 	 * @throws	PHPExcel_Writer_Exception
 	 */
-	public function save($pFilename = null) {
+	public function save($pFilename = null): void {
 		// garbage collect
 		$this->_phpExcel->garbageCollect();
 
@@ -197,8 +199,8 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$this->_summaryInformation = $this->_writeSummaryInformation();
 		// initialize OLE Summary Information
 		if (isset($this->_summaryInformation) && !empty($this->_summaryInformation)) {
-		  $OLE_SummaryInformation = new PHPExcel_Shared_OLE_PPS_File(PHPExcel_Shared_OLE::Asc2Ucs(chr(5) . 'SummaryInformation'));
-		  $OLE_SummaryInformation->append($this->_summaryInformation);
+			$OLE_SummaryInformation = new PHPExcel_Shared_OLE_PPS_File(PHPExcel_Shared_OLE::Asc2Ucs(chr(5) . 'SummaryInformation'));
+			$OLE_SummaryInformation->append($this->_summaryInformation);
 		}
 
 		// define OLE Parts
@@ -236,7 +238,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	 * Build the Worksheet Escher objects
 	 *
 	 */
-	private function _buildWorksheetEschers() {
+	private function _buildWorksheetEschers(): void {
 		// 1-based index to BstoreContainer
 		$blipIndex = 0;
 		$lastReducedSpId = 0;
@@ -400,7 +402,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	/**
 	 * Build the Escher object corresponding to the MSODRAWINGGROUP record
 	 */
-	private function _buildWorkbookEscher() {
+	private function _buildWorkbookEscher(): void {
 		$escher = null;
 
 		// any drawings in this workbook?
@@ -606,11 +608,11 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$dataProp = pack('v', 0x0001);
 		$dataProp .= pack('v', 0x0000);
 		// array of UnalignedLpstr
-		  // cch
-		  $dataProp .= pack('v', 0x000A);
-		  $dataProp .= pack('v', 0x0000);
-		  // value
-		  $dataProp .= 'Worksheet'.chr(0);
+		// cch
+		$dataProp .= pack('v', 0x000A);
+		$dataProp .= pack('v', 0x0000);
+		// value
+		$dataProp .= 'Worksheet' . chr(0);
 
 		$dataSection[] = ['summary' => ['pack' => 'V', 'data' => 0x0D], 'offset' => ['pack' => 'V'], 'type' => ['pack' => 'V', 'data' => 0x101E], 'data' => ['data' => $dataProp, 'length' => strlen($dataProp)]];
 		$dataSection_NumProps++;
@@ -643,8 +645,8 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$dataProp .= pack('v', 0x0000);
 		$dataProp .= pack('v', 0x0000);
 
-        $dataSection[] = ['summary' => ['pack' => 'V', 'data' => 0x0C], 'offset' => ['pack' => 'V'], 'type' => ['pack' => 'V', 'data' => 0x100C], 'data' => ['data' => $dataProp, 'length' => strlen($dataProp)]];
-        $dataSection_NumProps++;
+		$dataSection[] = ['summary' => ['pack' => 'V', 'data' => 0x0C], 'offset' => ['pack' => 'V'], 'type' => ['pack' => 'V', 'data' => 0x100C], 'data' => ['data' => $dataProp, 'length' => strlen($dataProp)]];
+		$dataSection_NumProps++;
 
 		// 		4 	Section Length
 		//		4 	Property count
@@ -682,7 +684,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 				$dataProp['data']['data'] .= chr(0);
 				$dataProp['data']['length'] += 1;
 				// Complete the string with null string for being a %4
-				$dataProp['data']['length'] = $dataProp['data']['length'] + ((4 - $dataProp['data']['length'] % 4)==4 ? 0 : (4 - $dataProp['data']['length'] % 4));
+				$dataProp['data']['length'] = $dataProp['data']['length'] + ((4 - $dataProp['data']['length'] % 4) == 4 ? 0 : (4 - $dataProp['data']['length'] % 4));
 				$dataProp['data']['data'] = str_pad($dataProp['data']['data'], $dataProp['data']['length'], chr(0), STR_PAD_RIGHT);
 
 				$dataSection_Content .= pack('V', $dataProp['data']['length']);

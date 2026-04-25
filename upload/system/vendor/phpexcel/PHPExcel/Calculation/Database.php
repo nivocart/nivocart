@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -67,7 +68,7 @@ class PHPExcel_Calculation_Database {
 
 		if (is_numeric($field)) {
 			$keys = array_keys($fieldNames);
-			return $keys[$field-1];
+			return $keys[$field - 1];
 		}
 
 		$key = array_search($field, $fieldNames);

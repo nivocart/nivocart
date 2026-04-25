@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -84,38 +85,38 @@ abstract class PHPExcel_Writer_Abstract implements PHPExcel_Writer_IWriter {
 	 * @return	PHPExcel_Writer_IWriter
 	 */
 	public function setIncludeCharts($pValue = false) {
-		$this->_includeCharts = (boolean) $pValue;
+		$this->_includeCharts = (bool) $pValue;
 
 		return $this;
 	}
 
-    /**
-     * Get Pre-Calculate Formulas flag
+	/**
+	 * Get Pre-Calculate Formulas flag
 	 *     If this is true (the default), then the writer will recalculate all formulae in a workbook when saving,
 	 *        so that the pre-calculated values are immediately available to MS Excel or other office spreadsheet
 	 *        viewer when opening the file
 	 *     If false, then formulae are not calculated on save. This is faster for saving in PHPExcel, but slower
 	 *        when opening the resulting file in MS Excel, because Excel has to recalculate the formulae itself
-     *
-     * @return boolean
-     */
-    public function getPreCalculateFormulas() {
-    	return $this->_preCalculateFormulas;
-    }
+	 *
+	 * @return boolean
+	 */
+	public function getPreCalculateFormulas() {
+		return $this->_preCalculateFormulas;
+	}
 
-    /**
-     * Set Pre-Calculate Formulas
+	/**
+	 * Set Pre-Calculate Formulas
 	 *		Set to true (the default) to advise the Writer to calculate all formulae on save
 	 *		Set to false to prevent precalculation of formulae on save.
-     *
-     * @param boolean $pValue	Pre-Calculate Formulas?
+	 *
+	 * @param boolean $pValue	Pre-Calculate Formulas?
 	 * @return	PHPExcel_Writer_IWriter
-     */
-    public function setPreCalculateFormulas($pValue = true) {
-    	$this->_preCalculateFormulas = (boolean) $pValue;
+	 */
+	public function setPreCalculateFormulas($pValue = true) {
+		$this->_preCalculateFormulas = (bool) $pValue;
 
 		return $this;
-    }
+	}
 
 	/**
 	 * Get use disk caching where possible?
@@ -138,11 +139,11 @@ abstract class PHPExcel_Writer_Abstract implements PHPExcel_Writer_IWriter {
 		$this->_useDiskCaching = $pValue;
 
 		if ($pDirectory !== null) {
-    		if (is_dir($pDirectory)) {
-    			$this->_diskCachingDirectory = $pDirectory;
-    		} else {
-    			throw new PHPExcel_Writer_Exception("Directory does not exist: $pDirectory");
-    		}
+			if (is_dir($pDirectory)) {
+				$this->_diskCachingDirectory = $pDirectory;
+			} else {
+				throw new PHPExcel_Writer_Exception("Directory does not exist: $pDirectory");
+			}
 		}
 
 		return $this;

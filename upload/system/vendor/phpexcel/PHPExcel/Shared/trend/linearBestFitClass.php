@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -42,7 +43,7 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit {
 	 *
 	 * @var	string
 	 **/
-	protected $_bestFitType		= 'linear';
+	protected $_bestFitType = 'linear';
 
 	/**
 	 * Return the Y-Value for a specified value of X
@@ -51,7 +52,7 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit {
 	 * @return	 float						Y-Value
 	 **/
 	#[\Override]
-    public function getValueOfYForX($xValue) {
+	public function getValueOfYForX($xValue) {
 		return $this->getIntersect() + $this->getSlope() * $xValue;
 	}
 
@@ -62,7 +63,7 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit {
 	 * @return	 float						X-Value
 	 **/
 	#[\Override]
-    public function getValueOfXForY($yValue) {
+	public function getValueOfXForY($yValue) {
 		return ($yValue - $this->getIntersect()) / $this->getSlope();
 	}
 
@@ -73,11 +74,11 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit {
 	 * @return	 string
 	 **/
 	#[\Override]
-    public function getEquation($dp = 0) {
+	public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
 
-		return 'Y = '.$intersect.' + '.$slope.' * X';
+		return 'Y = ' . $intersect . ' + ' . $slope . ' * X';
 	}
 
 	/**
@@ -87,8 +88,8 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	 float[]	$xValues	The set of X-values for this regression
 	 * @param	 boolean	$const
 	 */
-	private function _linear_regression($yValues, $xValues, $const) {
-		$this->_leastSquareFit($yValues, $xValues,$const);
+	private function _linear_regression($yValues, $xValues, $const): void {
+		$this->_leastSquareFit($yValues, $xValues, $const);
 	}
 
 	/**
@@ -98,7 +99,7 @@ class PHPExcel_Linear_Best_Fit extends PHPExcel_Best_Fit {
 	 * @param	float[]		$xValues	The set of X-values for this regression
 	 * @param	boolean		$const
 	 */
-	function __construct($yValues, $xValues = [], $const = true) {
+	public function __construct($yValues, $xValues = [], $const = true) {
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_linear_regression($yValues, $xValues, $const);
 		}

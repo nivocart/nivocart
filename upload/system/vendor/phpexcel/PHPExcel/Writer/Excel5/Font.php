@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -42,14 +43,15 @@ class PHPExcel_Writer_Excel5_Font {
 	private $_colorIndex;
 
 	/**
-     * Constructor
-     *
-     * @param PHPExcel_Style_Font $_font
-     */
-    public function __construct(/**
-     * Font
-     */
-    private readonly ?\PHPExcel_Style_Font $_font = null) {
+	 * Constructor
+	 *
+	 * @param PHPExcel_Style_Font $_font
+	 */
+	public function __construct(/**
+	 * Font
+	 */
+		private readonly ?\PHPExcel_Style_Font $_font = null
+	) {
 		$this->_colorIndex = 0x7FFF;
 	}
 
@@ -58,7 +60,7 @@ class PHPExcel_Writer_Excel5_Font {
 	 *
 	 * @param int $colorIndex
 	 */
-	public function setColorIndex($colorIndex) {
+	public function setColorIndex($colorIndex): void {
 		$this->_colorIndex = $colorIndex;
 	}
 
@@ -74,7 +76,7 @@ class PHPExcel_Writer_Excel5_Font {
 		$icv = $this->_colorIndex; // Index to color palette
 		if ($this->_font->getSuperScript()) {
 			$sss = 1;
-		} else if ($this->_font->getSubScript()) {
+		} elseif ($this->_font->getSubScript()) {
 			$sss = 2;
 		} else {
 			$sss = 0;
@@ -98,7 +100,8 @@ class PHPExcel_Writer_Excel5_Font {
 			$grbit |= 0x20;
 		}
 
-		$data = pack("vvvvvCCCC",
+		$data = pack(
+			"vvvvvCCCC",
 			$this->_font->getSize() * 20,						//	Fontsize (in twips)
 			$grbit,
 			$icv,												//	Colour

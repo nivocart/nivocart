@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -34,8 +35,8 @@
  */
 class PHPExcel_Shared_Font {
 	/* Methods for resolving autosize value */
-	const AUTOSIZE_METHOD_APPROX	= 'approx';
-	const AUTOSIZE_METHOD_EXACT = 'exact';
+	public const AUTOSIZE_METHOD_APPROX = 'approx';
+	public const AUTOSIZE_METHOD_EXACT = 'exact';
 
 	private static $_autoSizeMethods = [
 		self::AUTOSIZE_METHOD_APPROX,
@@ -43,87 +44,87 @@ class PHPExcel_Shared_Font {
 	];
 
 	/** Character set codes used by BIFF5-8 in Font records */
-	const CHARSET_ANSI_LATIN = 0x00;
-	const CHARSET_SYSTEM_DEFAULT = 0x01;
-	const CHARSET_SYMBOL = 0x02;
-	const CHARSET_APPLE_ROMAN = 0x4D;
-	const CHARSET_ANSI_JAPANESE_SHIFTJIS = 0x80;
-	const CHARSET_ANSI_KOREAN_HANGUL = 0x81;
-	const CHARSET_ANSI_KOREAN_JOHAB = 0x82;
-	const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;		//	gb2312
-	const CHARSET_ANSI_CHINESE_TRADITIONAL = 0x88;		//	big5
-	const CHARSET_ANSI_GREEK = 0xA1;
-	const CHARSET_ANSI_TURKISH = 0xA2;
-	const CHARSET_ANSI_VIETNAMESE = 0xA3;
-	const CHARSET_ANSI_HEBREW = 0xB1;
-	const CHARSET_ANSI_ARABIC = 0xB2;
-	const CHARSET_ANSI_BALTIC = 0xBA;
-	const CHARSET_ANSI_CYRILLIC = 0xCC;
-	const CHARSET_ANSI_THAI = 0xDD;
-	const CHARSET_ANSI_LATIN_II = 0xEE;
-	const CHARSET_OEM_LATIN_I = 0xFF;
+	public const CHARSET_ANSI_LATIN = 0x00;
+	public const CHARSET_SYSTEM_DEFAULT = 0x01;
+	public const CHARSET_SYMBOL = 0x02;
+	public const CHARSET_APPLE_ROMAN = 0x4D;
+	public const CHARSET_ANSI_JAPANESE_SHIFTJIS = 0x80;
+	public const CHARSET_ANSI_KOREAN_HANGUL = 0x81;
+	public const CHARSET_ANSI_KOREAN_JOHAB = 0x82;
+	public const CHARSET_ANSI_CHINESE_SIMIPLIFIED = 0x86;		//	gb2312
+	public const CHARSET_ANSI_CHINESE_TRADITIONAL = 0x88;		//	big5
+	public const CHARSET_ANSI_GREEK = 0xA1;
+	public const CHARSET_ANSI_TURKISH = 0xA2;
+	public const CHARSET_ANSI_VIETNAMESE = 0xA3;
+	public const CHARSET_ANSI_HEBREW = 0xB1;
+	public const CHARSET_ANSI_ARABIC = 0xB2;
+	public const CHARSET_ANSI_BALTIC = 0xBA;
+	public const CHARSET_ANSI_CYRILLIC = 0xCC;
+	public const CHARSET_ANSI_THAI = 0xDD;
+	public const CHARSET_ANSI_LATIN_II = 0xEE;
+	public const CHARSET_OEM_LATIN_I = 0xFF;
 
 	//  XXX: Constants created!
 	/** Font filenames */
-	const ARIAL = 'arial.ttf';
-	const ARIAL_BOLD = 'arialbd.ttf';
-	const ARIAL_ITALIC = 'ariali.ttf';
-	const ARIAL_BOLD_ITALIC = 'arialbi.ttf';
+	public const ARIAL = 'arial.ttf';
+	public const ARIAL_BOLD = 'arialbd.ttf';
+	public const ARIAL_ITALIC = 'ariali.ttf';
+	public const ARIAL_BOLD_ITALIC = 'arialbi.ttf';
 
-	const CALIBRI = 'CALIBRI.TTF';
-	const CALIBRI_BOLD = 'CALIBRIB.TTF';
-	const CALIBRI_ITALIC = 'CALIBRII.TTF';
-	const CALIBRI_BOLD_ITALIC = 'CALIBRIZ.TTF';
+	public const CALIBRI = 'CALIBRI.TTF';
+	public const CALIBRI_BOLD = 'CALIBRIB.TTF';
+	public const CALIBRI_ITALIC = 'CALIBRII.TTF';
+	public const CALIBRI_BOLD_ITALIC = 'CALIBRIZ.TTF';
 
-	const COMIC_SANS_MS = 'comic.ttf';
-	const COMIC_SANS_MS_BOLD = 'comicbd.ttf';
+	public const COMIC_SANS_MS = 'comic.ttf';
+	public const COMIC_SANS_MS_BOLD = 'comicbd.ttf';
 
-	const COURIER_NEW = 'cour.ttf';
-	const COURIER_NEW_BOLD = 'courbd.ttf';
-	const COURIER_NEW_ITALIC = 'couri.ttf';
-	const COURIER_NEW_BOLD_ITALIC = 'courbi.ttf';
+	public const COURIER_NEW = 'cour.ttf';
+	public const COURIER_NEW_BOLD = 'courbd.ttf';
+	public const COURIER_NEW_ITALIC = 'couri.ttf';
+	public const COURIER_NEW_BOLD_ITALIC = 'courbi.ttf';
 
-	const GEORGIA = 'georgia.ttf';
-	const GEORGIA_BOLD = 'georgiab.ttf';
-	const GEORGIA_ITALIC = 'georgiai.ttf';
-	const GEORGIA_BOLD_ITALIC = 'georgiaz.ttf';
+	public const GEORGIA = 'georgia.ttf';
+	public const GEORGIA_BOLD = 'georgiab.ttf';
+	public const GEORGIA_ITALIC = 'georgiai.ttf';
+	public const GEORGIA_BOLD_ITALIC = 'georgiaz.ttf';
 
-	const IMPACT = 'impact.ttf';
+	public const IMPACT = 'impact.ttf';
 
-	const LIBERATION_SANS = 'LiberationSans-Regular.ttf';
-	const LIBERATION_SANS_BOLD = 'LiberationSans-Bold.ttf';
-	const LIBERATION_SANS_ITALIC = 'LiberationSans-Italic.ttf';
-	const LIBERATION_SANS_BOLD_ITALIC = 'LiberationSans-BoldItalic.ttf';
+	public const LIBERATION_SANS = 'LiberationSans-Regular.ttf';
+	public const LIBERATION_SANS_BOLD = 'LiberationSans-Bold.ttf';
+	public const LIBERATION_SANS_ITALIC = 'LiberationSans-Italic.ttf';
+	public const LIBERATION_SANS_BOLD_ITALIC = 'LiberationSans-BoldItalic.ttf';
 
-	const LUCIDA_CONSOLE = 'lucon.ttf';
-	const LUCIDA_SANS_UNICODE = 'l_10646.ttf';
+	public const LUCIDA_CONSOLE = 'lucon.ttf';
+	public const LUCIDA_SANS_UNICODE = 'l_10646.ttf';
 
-	const MICROSOFT_SANS_SERIF = 'micross.ttf';
+	public const MICROSOFT_SANS_SERIF = 'micross.ttf';
 
-	const PALATINO_LINOTYPE = 'pala.ttf';
-	const PALATINO_LINOTYPE_BOLD = 'palab.ttf';
-	const PALATINO_LINOTYPE_ITALIC = 'palai.ttf';
-	const PALATINO_LINOTYPE_BOLD_ITALIC = 'palabi.ttf';
+	public const PALATINO_LINOTYPE = 'pala.ttf';
+	public const PALATINO_LINOTYPE_BOLD = 'palab.ttf';
+	public const PALATINO_LINOTYPE_ITALIC = 'palai.ttf';
+	public const PALATINO_LINOTYPE_BOLD_ITALIC = 'palabi.ttf';
 
-	const SYMBOL = 'symbol.ttf';
+	public const SYMBOL = 'symbol.ttf';
 
-	const TAHOMA = 'tahoma.ttf';
-	const TAHOMA_BOLD = 'tahomabd.ttf';
+	public const TAHOMA = 'tahoma.ttf';
+	public const TAHOMA_BOLD = 'tahomabd.ttf';
 
-	const TIMES_NEW_ROMAN = 'times.ttf';
-	const TIMES_NEW_ROMAN_BOLD = 'timesbd.ttf';
-	const TIMES_NEW_ROMAN_ITALIC = 'timesi.ttf';
-	const TIMES_NEW_ROMAN_BOLD_ITALIC = 'timesbi.ttf';
+	public const TIMES_NEW_ROMAN = 'times.ttf';
+	public const TIMES_NEW_ROMAN_BOLD = 'timesbd.ttf';
+	public const TIMES_NEW_ROMAN_ITALIC = 'timesi.ttf';
+	public const TIMES_NEW_ROMAN_BOLD_ITALIC = 'timesbi.ttf';
 
-	const TREBUCHET_MS = 'trebuc.ttf';
-	const TREBUCHET_MS_BOLD = 'trebucbd.ttf';
-	const TREBUCHET_MS_ITALIC = 'trebucit.ttf';
-	const TREBUCHET_MS_BOLD_ITALIC = 'trebucbi.ttf';
+	public const TREBUCHET_MS = 'trebuc.ttf';
+	public const TREBUCHET_MS_BOLD = 'trebucbd.ttf';
+	public const TREBUCHET_MS_ITALIC = 'trebucit.ttf';
+	public const TREBUCHET_MS_BOLD_ITALIC = 'trebucbi.ttf';
 
-	const VERDANA = 'verdana.ttf';
-	const VERDANA_BOLD = 'verdanab.ttf';
-	const VERDANA_ITALIC = 'verdanai.ttf';
-	const VERDANA_BOLD_ITALIC = 'verdanaz.ttf';
+	public const VERDANA = 'verdana.ttf';
+	public const VERDANA_BOLD = 'verdanab.ttf';
+	public const VERDANA_ITALIC = 'verdanai.ttf';
+	public const VERDANA_BOLD_ITALIC = 'verdanaz.ttf';
 
 	/**
 	 * AutoSize method
@@ -153,11 +154,11 @@ class PHPExcel_Shared_Font {
 			 3 => ['px' => 32, 'width' => 10.66406250],
 			 4 => ['px' => 32, 'width' => 10.66406250],
 			 5 => ['px' => 40, 'width' => 10.00000000],
-			 6 => ['px' => 48, 'width' =>  9.59765625],
-			 7 => ['px' => 48, 'width' =>  9.59765625],
-			 8 => ['px' => 56, 'width' =>  9.33203125],
-			 9 => ['px' => 64, 'width' =>  9.14062500],
-			10 => ['px' => 64, 'width' =>  9.14062500],
+			 6 => ['px' => 48, 'width' => 9.59765625],
+			 7 => ['px' => 48, 'width' => 9.59765625],
+			 8 => ['px' => 56, 'width' => 9.33203125],
+			 9 => ['px' => 64, 'width' => 9.14062500],
+			10 => ['px' => 64, 'width' => 9.14062500],
 		],
 		'Calibri' => [
 			 1 => ['px' => 24, 'width' => 12.00000000],
@@ -165,12 +166,12 @@ class PHPExcel_Shared_Font {
 			 3 => ['px' => 32, 'width' => 10.66406250],
 			 4 => ['px' => 32, 'width' => 10.66406250],
 			 5 => ['px' => 40, 'width' => 10.00000000],
-			 6 => ['px' => 48, 'width' =>  9.59765625],
-			 7 => ['px' => 48, 'width' =>  9.59765625],
-			 8 => ['px' => 56, 'width' =>  9.33203125],
-			 9 => ['px' => 56, 'width' =>  9.33203125],
-			10 => ['px' => 64, 'width' =>  9.14062500],
-			11 => ['px' => 64, 'width' =>  9.14062500],
+			 6 => ['px' => 48, 'width' => 9.59765625],
+			 7 => ['px' => 48, 'width' => 9.59765625],
+			 8 => ['px' => 56, 'width' => 9.33203125],
+			 9 => ['px' => 56, 'width' => 9.33203125],
+			10 => ['px' => 64, 'width' => 9.14062500],
+			11 => ['px' => 64, 'width' => 9.14062500],
 		],
 		'Verdana' => [
 			 1 => ['px' => 24, 'width' => 12.00000000],
@@ -178,11 +179,11 @@ class PHPExcel_Shared_Font {
 			 3 => ['px' => 32, 'width' => 10.66406250],
 			 4 => ['px' => 32, 'width' => 10.66406250],
 			 5 => ['px' => 40, 'width' => 10.00000000],
-			 6 => ['px' => 48, 'width' =>  9.59765625],
-			 7 => ['px' => 48, 'width' =>  9.59765625],
-			 8 => ['px' => 64, 'width' =>  9.14062500],
-			 9 => ['px' => 72, 'width' =>  9.00000000],
-			10 => ['px' => 72, 'width' =>  9.00000000],
+			 6 => ['px' => 48, 'width' => 9.59765625],
+			 7 => ['px' => 48, 'width' => 9.59765625],
+			 8 => ['px' => 64, 'width' => 9.14062500],
+			 9 => ['px' => 72, 'width' => 9.00000000],
+			10 => ['px' => 72, 'width' => 9.00000000],
 		],
 	];
 
@@ -193,7 +194,7 @@ class PHPExcel_Shared_Font {
 	 * @return	 boolean		Success or failure
 	 */
 	public static function setAutoSizeMethod($pValue = self::AUTOSIZE_METHOD_APPROX) {
-		if (!in_array($pValue,self::$_autoSizeMethods)) {
+		if (!in_array($pValue, self::$_autoSizeMethods)) {
 			return false;
 		}
 
@@ -221,8 +222,7 @@ class PHPExcel_Shared_Font {
 	 *
 	 * @param string $pValue
 	 */
-	public static function setTrueTypeFontPath($pValue = '')
-	{
+	public static function setTrueTypeFontPath($pValue = ''): void {
 		self::$trueTypeFontPath = $pValue;
 	}
 
@@ -282,7 +282,7 @@ class PHPExcel_Shared_Font {
 			// Width of text in pixels excl. padding, approximation
 			// and addition because Excel adds some padding, just use approx width of 'n' glyph
 			$columnWidth = self::getTextWidthPixelsApprox($cellText, $font, $rotation) + $columnWidthAdjust;
-        }
+		}
 
 		// Convert from pixel width to column width
 		$columnWidth = PHPExcel_Shared_Drawing::pixelsToCellDimension($columnWidth, $defaultFont);
@@ -311,14 +311,14 @@ class PHPExcel_Shared_Font {
 		$textBox = imagettfbbox($font->getSize(), $rotation, $fontFile, $text);
 
 		// Get corners positions
-		$lowerLeftCornerX  = $textBox[0];
-//		$lowerLeftCornerY  = $textBox[1];
+		$lowerLeftCornerX = $textBox[0];
+		//		$lowerLeftCornerY  = $textBox[1];
 		$lowerRightCornerX = $textBox[2];
-//		$lowerRightCornerY = $textBox[3];
+		//		$lowerRightCornerY = $textBox[3];
 		$upperRightCornerX = $textBox[4];
-//		$upperRightCornerY = $textBox[5];
-		$upperLeftCornerX  = $textBox[6];
-//		$upperLeftCornerY  = $textBox[7];
+		//		$upperRightCornerY = $textBox[5];
+		$upperLeftCornerX = $textBox[6];
+		//		$upperLeftCornerY  = $textBox[7];
 
 		// Consider the rotation when calculating the width
 		$textWidth = max($lowerRightCornerX - $upperLeftCornerX, $upperRightCornerX - $lowerLeftCornerX);
@@ -429,25 +429,25 @@ class PHPExcel_Shared_Font {
 
 		// Check if we can map font to true type font file
 		$fontFile = match ($name) {
-            'Arial' => $bold ? ($italic ? self::ARIAL_BOLD_ITALIC : self::ARIAL_BOLD) : ($italic ? self::ARIAL_ITALIC : self::ARIAL),
-            'Calibri' => $bold ? ($italic ? self::CALIBRI_BOLD_ITALIC : self::CALIBRI_BOLD) : ($italic ? self::CALIBRI_ITALIC : self::CALIBRI),
-            'Courier New' => $bold ? ($italic ? self::COURIER_NEW_BOLD_ITALIC : self::COURIER_NEW_BOLD) : ($italic ? self::COURIER_NEW_ITALIC : self::COURIER_NEW),
-            'Comic Sans MS' => $bold ? self::COMIC_SANS_MS_BOLD : self::COMIC_SANS_MS,
-            'Georgia' => $bold ? ($italic ? self::GEORGIA_BOLD_ITALIC : self::GEORGIA_BOLD) : ($italic ? self::GEORGIA_ITALIC : self::GEORGIA),
-            'Impact' => self::IMPACT,
-            'Liberation Sans' => $bold ? ($italic ? self::LIBERATION_SANS_BOLD_ITALIC : self::LIBERATION_SANS_BOLD) : ($italic ? self::LIBERATION_SANS_ITALIC : self::LIBERATION_SANS),
-            'Lucida Console' => self::LUCIDA_CONSOLE,
-            'Lucida Sans Unicode' => self::LUCIDA_SANS_UNICODE,
-            'Microsoft Sans Serif' => self::MICROSOFT_SANS_SERIF,
-            'Palatino Linotype' => $bold ? ($italic ? self::PALATINO_LINOTYPE_BOLD_ITALIC : self::PALATINO_LINOTYPE_BOLD) : ($italic ? self::PALATINO_LINOTYPE_ITALIC : self::PALATINO_LINOTYPE),
-            'Symbol' => self::SYMBOL,
-            'Tahoma' => $bold ? self::TAHOMA_BOLD : self::TAHOMA,
-            'Times New Roman' => $bold ? ($italic ? self::TIMES_NEW_ROMAN_BOLD_ITALIC : self::TIMES_NEW_ROMAN_BOLD) : ($italic ? self::TIMES_NEW_ROMAN_ITALIC : self::TIMES_NEW_ROMAN),
-            'Trebuchet MS' => $bold ? ($italic ? self::TREBUCHET_MS_BOLD_ITALIC : self::TREBUCHET_MS_BOLD)
+			'Arial' => $bold ? ($italic ? self::ARIAL_BOLD_ITALIC : self::ARIAL_BOLD) : ($italic ? self::ARIAL_ITALIC : self::ARIAL),
+			'Calibri' => $bold ? ($italic ? self::CALIBRI_BOLD_ITALIC : self::CALIBRI_BOLD) : ($italic ? self::CALIBRI_ITALIC : self::CALIBRI),
+			'Courier New' => $bold ? ($italic ? self::COURIER_NEW_BOLD_ITALIC : self::COURIER_NEW_BOLD) : ($italic ? self::COURIER_NEW_ITALIC : self::COURIER_NEW),
+			'Comic Sans MS' => $bold ? self::COMIC_SANS_MS_BOLD : self::COMIC_SANS_MS,
+			'Georgia' => $bold ? ($italic ? self::GEORGIA_BOLD_ITALIC : self::GEORGIA_BOLD) : ($italic ? self::GEORGIA_ITALIC : self::GEORGIA),
+			'Impact' => self::IMPACT,
+			'Liberation Sans' => $bold ? ($italic ? self::LIBERATION_SANS_BOLD_ITALIC : self::LIBERATION_SANS_BOLD) : ($italic ? self::LIBERATION_SANS_ITALIC : self::LIBERATION_SANS),
+			'Lucida Console' => self::LUCIDA_CONSOLE,
+			'Lucida Sans Unicode' => self::LUCIDA_SANS_UNICODE,
+			'Microsoft Sans Serif' => self::MICROSOFT_SANS_SERIF,
+			'Palatino Linotype' => $bold ? ($italic ? self::PALATINO_LINOTYPE_BOLD_ITALIC : self::PALATINO_LINOTYPE_BOLD) : ($italic ? self::PALATINO_LINOTYPE_ITALIC : self::PALATINO_LINOTYPE),
+			'Symbol' => self::SYMBOL,
+			'Tahoma' => $bold ? self::TAHOMA_BOLD : self::TAHOMA,
+			'Times New Roman' => $bold ? ($italic ? self::TIMES_NEW_ROMAN_BOLD_ITALIC : self::TIMES_NEW_ROMAN_BOLD) : ($italic ? self::TIMES_NEW_ROMAN_ITALIC : self::TIMES_NEW_ROMAN),
+			'Trebuchet MS' => $bold ? ($italic ? self::TREBUCHET_MS_BOLD_ITALIC : self::TREBUCHET_MS_BOLD)
 						  : ($italic ? self::TREBUCHET_MS_ITALIC : self::TREBUCHET_MS),
-            'Verdana' => $bold ? ($italic ? self::VERDANA_BOLD_ITALIC : self::VERDANA_BOLD) : ($italic ? self::VERDANA_ITALIC : self::VERDANA),
-            default => throw new PHPExcel_Exception('Unknown font name "'. $name .'". Cannot map to TrueType font file'),
-        };
+			'Verdana' => $bold ? ($italic ? self::VERDANA_BOLD_ITALIC : self::VERDANA_BOLD) : ($italic ? self::VERDANA_ITALIC : self::VERDANA),
+			default => throw new PHPExcel_Exception('Unknown font name "' . $name . '". Cannot map to TrueType font file'),
+		};
 
 		$fontFile = self::$trueTypeFontPath . $fontFile;
 
@@ -467,12 +467,12 @@ class PHPExcel_Shared_Font {
 	 */
 	public static function getCharsetFromFontName($name) {
 		return match ($name) {
-            'EucrosiaUPC' => self::CHARSET_ANSI_THAI,
-            'Wingdings' => self::CHARSET_SYMBOL,
-            'Wingdings 2' => self::CHARSET_SYMBOL,
-            'Wingdings 3' => self::CHARSET_SYMBOL,
-            default => self::CHARSET_ANSI_LATIN,
-        };
+			'EucrosiaUPC' => self::CHARSET_ANSI_THAI,
+			'Wingdings' => self::CHARSET_SYMBOL,
+			'Wingdings 2' => self::CHARSET_SYMBOL,
+			'Wingdings 3' => self::CHARSET_SYMBOL,
+			default => self::CHARSET_ANSI_LATIN,
+		};
 	}
 
 	/**
@@ -513,71 +513,71 @@ class PHPExcel_Shared_Font {
 	 */
 	public static function getDefaultRowHeightByFont(PHPExcel_Style_Font $font) {
 		$rowHeight = match ($font->getName()) {
-            'Arial' => match ($font->getSize()) {
-                // inspection of Arial 10 workbook says 12.75pt ~17px
-                10 => 12.75,
-                // inspection of Arial 9 workbook says 12.00pt ~16px
-                9 => 12,
-                // inspection of Arial 8 workbook says 11.25pt ~15px
-                8 => 11.25,
-                // inspection of Arial 7 workbook says 9.00pt ~12px
-                7 => 9,
-                // inspection of Arial 5,6 workbook says 8.25pt ~11px
-                6, 5 => 8.25,
-                // inspection of Arial 4 workbook says 6.75pt ~9px
-                4 => 6.75,
-                // inspection of Arial 3 workbook says 6.00pt ~8px
-                3 => 6,
-                // inspection of Arial 1,2 workbook says 5.25pt ~7px
-                2, 1 => 5.25,
-                // use Arial 10 workbook as an approximation, extrapolation
-                default => 12.75 * $font->getSize() / 10,
-            },
-            'Calibri' => match ($font->getSize()) {
-                // inspection of Calibri 11 workbook says 15.00pt ~20px
-                11 => 15,
-                // inspection of Calibri 10 workbook says 12.75pt ~17px
-                10 => 12.75,
-                // inspection of Calibri 9 workbook says 12.00pt ~16px
-                9 => 12,
-                // inspection of Calibri 8 workbook says 11.25pt ~15px
-                8 => 11.25,
-                // inspection of Calibri 7 workbook says 9.00pt ~12px
-                7 => 9,
-                // inspection of Calibri 5,6 workbook says 8.25pt ~11px
-                6, 5 => 8.25,
-                // inspection of Calibri 4 workbook says 6.75pt ~9px
-                4 => 6.75,
-                // inspection of Calibri 3 workbook says 6.00pt ~8px
-                3 => 6.00,
-                // inspection of Calibri 1,2 workbook says 5.25pt ~7px
-                2, 1 => 5.25,
-                // use Calibri 11 workbook as an approximation, extrapolation
-                default => 15 * $font->getSize() / 11,
-            },
-            'Verdana' => match ($font->getSize()) {
-                // inspection of Verdana 10 workbook says 12.75pt ~17px
-                10 => 12.75,
-                // inspection of Verdana 9 workbook says 11.25pt ~15px
-                9 => 11.25,
-                // inspection of Verdana 8 workbook says 10.50pt ~14px
-                8 => 10.50,
-                // inspection of Verdana 7 workbook says 9.00pt ~12px
-                7 => 9.00,
-                // inspection of Verdana 5,6 workbook says 8.25pt ~11px
-                6, 5 => 8.25,
-                // inspection of Verdana 4 workbook says 6.75pt ~9px
-                4 => 6.75,
-                // inspection of Verdana 3 workbook says 6.00pt ~8px
-                3 => 6,
-                // inspection of Verdana 1,2 workbook says 5.25pt ~7px
-                2, 1 => 5.25,
-                // use Verdana 10 workbook as an approximation, extrapolation
-                default => 12.75 * $font->getSize() / 10,
-            },
-            // just use Calibri as an approximation
-            default => 15 * $font->getSize() / 11,
-        };
+			'Arial' => match ($font->getSize()) {
+				// inspection of Arial 10 workbook says 12.75pt ~17px
+				10 => 12.75,
+				// inspection of Arial 9 workbook says 12.00pt ~16px
+				9 => 12,
+				// inspection of Arial 8 workbook says 11.25pt ~15px
+				8 => 11.25,
+				// inspection of Arial 7 workbook says 9.00pt ~12px
+				7 => 9,
+				// inspection of Arial 5,6 workbook says 8.25pt ~11px
+				6, 5 => 8.25,
+				// inspection of Arial 4 workbook says 6.75pt ~9px
+				4 => 6.75,
+				// inspection of Arial 3 workbook says 6.00pt ~8px
+				3 => 6,
+				// inspection of Arial 1,2 workbook says 5.25pt ~7px
+				2, 1 => 5.25,
+				// use Arial 10 workbook as an approximation, extrapolation
+				default => 12.75 * $font->getSize() / 10,
+			},
+			'Calibri' => match ($font->getSize()) {
+				// inspection of Calibri 11 workbook says 15.00pt ~20px
+				11 => 15,
+				// inspection of Calibri 10 workbook says 12.75pt ~17px
+				10 => 12.75,
+				// inspection of Calibri 9 workbook says 12.00pt ~16px
+				9 => 12,
+				// inspection of Calibri 8 workbook says 11.25pt ~15px
+				8 => 11.25,
+				// inspection of Calibri 7 workbook says 9.00pt ~12px
+				7 => 9,
+				// inspection of Calibri 5,6 workbook says 8.25pt ~11px
+				6, 5 => 8.25,
+				// inspection of Calibri 4 workbook says 6.75pt ~9px
+				4 => 6.75,
+				// inspection of Calibri 3 workbook says 6.00pt ~8px
+				3 => 6.00,
+				// inspection of Calibri 1,2 workbook says 5.25pt ~7px
+				2, 1 => 5.25,
+				// use Calibri 11 workbook as an approximation, extrapolation
+				default => 15 * $font->getSize() / 11,
+			},
+			'Verdana' => match ($font->getSize()) {
+				// inspection of Verdana 10 workbook says 12.75pt ~17px
+				10 => 12.75,
+				// inspection of Verdana 9 workbook says 11.25pt ~15px
+				9 => 11.25,
+				// inspection of Verdana 8 workbook says 10.50pt ~14px
+				8 => 10.50,
+				// inspection of Verdana 7 workbook says 9.00pt ~12px
+				7 => 9.00,
+				// inspection of Verdana 5,6 workbook says 8.25pt ~11px
+				6, 5 => 8.25,
+				// inspection of Verdana 4 workbook says 6.75pt ~9px
+				4 => 6.75,
+				// inspection of Verdana 3 workbook says 6.00pt ~8px
+				3 => 6,
+				// inspection of Verdana 1,2 workbook says 5.25pt ~7px
+				2, 1 => 5.25,
+				// use Verdana 10 workbook as an approximation, extrapolation
+				default => 12.75 * $font->getSize() / 10,
+			},
+			// just use Calibri as an approximation
+			default => 15 * $font->getSize() / 11,
+		};
 
 		return $rowHeight;
 	}

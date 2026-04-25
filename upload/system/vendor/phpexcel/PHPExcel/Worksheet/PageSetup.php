@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -106,81 +107,81 @@
  */
 class PHPExcel_Worksheet_PageSetup {
 	/* Paper size */
-	const PAPERSIZE_LETTER = 1;
-	const PAPERSIZE_LETTER_SMALL = 2;
-	const PAPERSIZE_TABLOID = 3;
-	const PAPERSIZE_LEDGER = 4;
-	const PAPERSIZE_LEGAL = 5;
-	const PAPERSIZE_STATEMENT = 6;
-	const PAPERSIZE_EXECUTIVE = 7;
-	const PAPERSIZE_A3 = 8;
-	const PAPERSIZE_A4 = 9;
-	const PAPERSIZE_A4_SMALL = 10;
-	const PAPERSIZE_A5 = 11;
-	const PAPERSIZE_B4 = 12;
-	const PAPERSIZE_B5 = 13;
-	const PAPERSIZE_FOLIO = 14;
-	const PAPERSIZE_QUARTO = 15;
-	const PAPERSIZE_STANDARD_1 = 16;
-	const PAPERSIZE_STANDARD_2 = 17;
-	const PAPERSIZE_NOTE = 18;
-	const PAPERSIZE_NO9_ENVELOPE = 19;
-	const PAPERSIZE_NO10_ENVELOPE = 20;
-	const PAPERSIZE_NO11_ENVELOPE = 21;
-	const PAPERSIZE_NO12_ENVELOPE = 22;
-	const PAPERSIZE_NO14_ENVELOPE = 23;
-	const PAPERSIZE_C = 24;
-	const PAPERSIZE_D = 25;
-	const PAPERSIZE_E = 26;
-	const PAPERSIZE_DL_ENVELOPE = 27;
-	const PAPERSIZE_C5_ENVELOPE = 28;
-	const PAPERSIZE_C3_ENVELOPE = 29;
-	const PAPERSIZE_C4_ENVELOPE = 30;
-	const PAPERSIZE_C6_ENVELOPE = 31;
-	const PAPERSIZE_C65_ENVELOPE = 32;
-	const PAPERSIZE_B4_ENVELOPE = 33;
-	const PAPERSIZE_B5_ENVELOPE = 34;
-	const PAPERSIZE_B6_ENVELOPE = 35;
-	const PAPERSIZE_ITALY_ENVELOPE = 36;
-	const PAPERSIZE_MONARCH_ENVELOPE = 37;
-	const PAPERSIZE_6_3_4_ENVELOPE = 38;
-	const PAPERSIZE_US_STANDARD_FANFOLD = 39;
-	const PAPERSIZE_GERMAN_STANDARD_FANFOLD = 40;
-	const PAPERSIZE_GERMAN_LEGAL_FANFOLD = 41;
-	const PAPERSIZE_ISO_B4 = 42;
-	const PAPERSIZE_JAPANESE_DOUBLE_POSTCARD = 43;
-	const PAPERSIZE_STANDARD_PAPER_1 = 44;
-	const PAPERSIZE_STANDARD_PAPER_2 = 45;
-	const PAPERSIZE_STANDARD_PAPER_3 = 46;
-	const PAPERSIZE_INVITE_ENVELOPE = 47;
-	const PAPERSIZE_LETTER_EXTRA_PAPER = 48;
-	const PAPERSIZE_LEGAL_EXTRA_PAPER = 49;
-	const PAPERSIZE_TABLOID_EXTRA_PAPER = 50;
-	const PAPERSIZE_A4_EXTRA_PAPER = 51;
-	const PAPERSIZE_LETTER_TRANSVERSE_PAPER = 52;
-	const PAPERSIZE_A4_TRANSVERSE_PAPER = 53;
-	const PAPERSIZE_LETTER_EXTRA_TRANSVERSE_PAPER = 54;
-	const PAPERSIZE_SUPERA_SUPERA_A4_PAPER = 55;
-	const PAPERSIZE_SUPERB_SUPERB_A3_PAPER = 56;
-	const PAPERSIZE_LETTER_PLUS_PAPER = 57;
-	const PAPERSIZE_A4_PLUS_PAPER = 58;
-	const PAPERSIZE_A5_TRANSVERSE_PAPER = 59;
-	const PAPERSIZE_JIS_B5_TRANSVERSE_PAPER = 60;
-	const PAPERSIZE_A3_EXTRA_PAPER = 61;
-	const PAPERSIZE_A5_EXTRA_PAPER = 62;
-	const PAPERSIZE_ISO_B5_EXTRA_PAPER = 63;
-	const PAPERSIZE_A2_PAPER = 64;
-	const PAPERSIZE_A3_TRANSVERSE_PAPER = 65;
-	const PAPERSIZE_A3_EXTRA_TRANSVERSE_PAPER = 66;
+	public const PAPERSIZE_LETTER = 1;
+	public const PAPERSIZE_LETTER_SMALL = 2;
+	public const PAPERSIZE_TABLOID = 3;
+	public const PAPERSIZE_LEDGER = 4;
+	public const PAPERSIZE_LEGAL = 5;
+	public const PAPERSIZE_STATEMENT = 6;
+	public const PAPERSIZE_EXECUTIVE = 7;
+	public const PAPERSIZE_A3 = 8;
+	public const PAPERSIZE_A4 = 9;
+	public const PAPERSIZE_A4_SMALL = 10;
+	public const PAPERSIZE_A5 = 11;
+	public const PAPERSIZE_B4 = 12;
+	public const PAPERSIZE_B5 = 13;
+	public const PAPERSIZE_FOLIO = 14;
+	public const PAPERSIZE_QUARTO = 15;
+	public const PAPERSIZE_STANDARD_1 = 16;
+	public const PAPERSIZE_STANDARD_2 = 17;
+	public const PAPERSIZE_NOTE = 18;
+	public const PAPERSIZE_NO9_ENVELOPE = 19;
+	public const PAPERSIZE_NO10_ENVELOPE = 20;
+	public const PAPERSIZE_NO11_ENVELOPE = 21;
+	public const PAPERSIZE_NO12_ENVELOPE = 22;
+	public const PAPERSIZE_NO14_ENVELOPE = 23;
+	public const PAPERSIZE_C = 24;
+	public const PAPERSIZE_D = 25;
+	public const PAPERSIZE_E = 26;
+	public const PAPERSIZE_DL_ENVELOPE = 27;
+	public const PAPERSIZE_C5_ENVELOPE = 28;
+	public const PAPERSIZE_C3_ENVELOPE = 29;
+	public const PAPERSIZE_C4_ENVELOPE = 30;
+	public const PAPERSIZE_C6_ENVELOPE = 31;
+	public const PAPERSIZE_C65_ENVELOPE = 32;
+	public const PAPERSIZE_B4_ENVELOPE = 33;
+	public const PAPERSIZE_B5_ENVELOPE = 34;
+	public const PAPERSIZE_B6_ENVELOPE = 35;
+	public const PAPERSIZE_ITALY_ENVELOPE = 36;
+	public const PAPERSIZE_MONARCH_ENVELOPE = 37;
+	public const PAPERSIZE_6_3_4_ENVELOPE = 38;
+	public const PAPERSIZE_US_STANDARD_FANFOLD = 39;
+	public const PAPERSIZE_GERMAN_STANDARD_FANFOLD = 40;
+	public const PAPERSIZE_GERMAN_LEGAL_FANFOLD = 41;
+	public const PAPERSIZE_ISO_B4 = 42;
+	public const PAPERSIZE_JAPANESE_DOUBLE_POSTCARD = 43;
+	public const PAPERSIZE_STANDARD_PAPER_1 = 44;
+	public const PAPERSIZE_STANDARD_PAPER_2 = 45;
+	public const PAPERSIZE_STANDARD_PAPER_3 = 46;
+	public const PAPERSIZE_INVITE_ENVELOPE = 47;
+	public const PAPERSIZE_LETTER_EXTRA_PAPER = 48;
+	public const PAPERSIZE_LEGAL_EXTRA_PAPER = 49;
+	public const PAPERSIZE_TABLOID_EXTRA_PAPER = 50;
+	public const PAPERSIZE_A4_EXTRA_PAPER = 51;
+	public const PAPERSIZE_LETTER_TRANSVERSE_PAPER = 52;
+	public const PAPERSIZE_A4_TRANSVERSE_PAPER = 53;
+	public const PAPERSIZE_LETTER_EXTRA_TRANSVERSE_PAPER = 54;
+	public const PAPERSIZE_SUPERA_SUPERA_A4_PAPER = 55;
+	public const PAPERSIZE_SUPERB_SUPERB_A3_PAPER = 56;
+	public const PAPERSIZE_LETTER_PLUS_PAPER = 57;
+	public const PAPERSIZE_A4_PLUS_PAPER = 58;
+	public const PAPERSIZE_A5_TRANSVERSE_PAPER = 59;
+	public const PAPERSIZE_JIS_B5_TRANSVERSE_PAPER = 60;
+	public const PAPERSIZE_A3_EXTRA_PAPER = 61;
+	public const PAPERSIZE_A5_EXTRA_PAPER = 62;
+	public const PAPERSIZE_ISO_B5_EXTRA_PAPER = 63;
+	public const PAPERSIZE_A2_PAPER = 64;
+	public const PAPERSIZE_A3_TRANSVERSE_PAPER = 65;
+	public const PAPERSIZE_A3_EXTRA_TRANSVERSE_PAPER = 66;
 
 	/* Page orientation */
-	const ORIENTATION_DEFAULT = 'default';
-	const ORIENTATION_LANDSCAPE = 'landscape';
-	const ORIENTATION_PORTRAIT = 'portrait';
+	public const ORIENTATION_DEFAULT = 'default';
+	public const ORIENTATION_LANDSCAPE = 'landscape';
+	public const ORIENTATION_PORTRAIT = 'portrait';
 
 	/* Print Range Set Method */
-	const SETPRINTRANGE_OVERWRITE = 'O';
-	const SETPRINTRANGE_INSERT = 'I';
+	public const SETPRINTRANGE_OVERWRITE = 'O';
+	public const SETPRINTRANGE_INSERT = 'I';
 
 	/**
 	 * Paper size
@@ -272,51 +273,51 @@ class PHPExcel_Worksheet_PageSetup {
 	 */
 	private $_firstPageNumber = null;
 
-    /**
-     * Create a new PHPExcel_Worksheet_PageSetup
-     */
-    public function __construct() {
-    }
+	/**
+	 * Create a new PHPExcel_Worksheet_PageSetup
+	 */
+	public function __construct() {
+	}
 
-    /**
-     * Get Paper Size
-     *
-     * @return int
-     */
-    public function getPaperSize() {
-    	return $this->_paperSize;
-    }
+	/**
+	 * Get Paper Size
+	 *
+	 * @return int
+	 */
+	public function getPaperSize() {
+		return $this->_paperSize;
+	}
 
-    /**
-     * Set Paper Size
-     *
-     * @param int $pValue
-     * @return PHPExcel_Worksheet_PageSetup
-     */
-    public function setPaperSize($pValue = PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER) {
-    	$this->_paperSize = $pValue;
-    	return $this;
-    }
+	/**
+	 * Set Paper Size
+	 *
+	 * @param int $pValue
+	 * @return PHPExcel_Worksheet_PageSetup
+	 */
+	public function setPaperSize($pValue = PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER) {
+		$this->_paperSize = $pValue;
+		return $this;
+	}
 
-    /**
-     * Get Orientation
-     *
-     * @return string
-     */
-    public function getOrientation() {
-    	return $this->_orientation;
-    }
+	/**
+	 * Get Orientation
+	 *
+	 * @return string
+	 */
+	public function getOrientation() {
+		return $this->_orientation;
+	}
 
-    /**
-     * Set Orientation
-     *
-     * @param string $pValue
-     * @return PHPExcel_Worksheet_PageSetup
-     */
-    public function setOrientation($pValue = PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT) {
-    	$this->_orientation = $pValue;
-    	return $this;
-    }
+	/**
+	 * Set Orientation
+	 *
+	 * @param string $pValue
+	 * @return PHPExcel_Worksheet_PageSetup
+	 */
+	public function setOrientation($pValue = PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT) {
+		$this->_orientation = $pValue;
+		return $this;
+	}
 
 	/**
 	 * Get Scale
@@ -573,8 +574,8 @@ class PHPExcel_Worksheet_PageSetup {
 			return $this->_printArea;
 		}
 		$printAreas = explode(',', $this->_printArea);
-		if (isset($printAreas[$index-1])) {
-			return $printAreas[$index-1];
+		if (isset($printAreas[$index - 1])) {
+			return $printAreas[$index - 1];
 		}
 		throw new PHPExcel_Exception("Requested Print Area does not exist");
 	}
@@ -593,7 +594,7 @@ class PHPExcel_Worksheet_PageSetup {
 			return !is_null($this->_printArea);
 		}
 		$printAreas = explode(',', $this->_printArea);
-		return isset($printAreas[$index-1]);
+		return isset($printAreas[$index - 1]);
 	}
 
 	/**
@@ -609,14 +610,14 @@ class PHPExcel_Worksheet_PageSetup {
 		if ($index == 0) {
 			$this->_printArea = null;
 		} else {
-			$printAreas = explode(',',$this->_printArea);
-			if (isset($printAreas[$index-1])) {
-				unset($printAreas[$index-1]);
+			$printAreas = explode(',', $this->_printArea);
+			if (isset($printAreas[$index - 1])) {
+				unset($printAreas[$index - 1]);
 				$this->_printArea = implode(',', $printAreas);
 			}
 		}
 
-    	return $this;
+		return $this;
 	}
 
 	/**
@@ -640,11 +641,11 @@ class PHPExcel_Worksheet_PageSetup {
 	 * @throws	PHPExcel_Exception
 	 */
 	public function setPrintArea($value, $index = 0, $method = self::SETPRINTRANGE_OVERWRITE) {
-		if (str_contains($value,'!')) {
+		if (str_contains($value, '!')) {
 			throw new PHPExcel_Exception('Cell coordinate must not specify a worksheet.');
-		} elseif (!str_contains($value,':')) {
+		} elseif (!str_contains($value, ':')) {
 			throw new PHPExcel_Exception('Cell coordinate must be a range of cells.');
-		} elseif (str_contains($value,'$')) {
+		} elseif (str_contains($value, '$')) {
 			throw new PHPExcel_Exception('Cell coordinate must not be absolute.');
 		}
 		$value = strtoupper($value);
@@ -658,30 +659,30 @@ class PHPExcel_Worksheet_PageSetup {
 					$index = count($printAreas) - abs($index) + 1;
 				}
 				if (($index <= 0) || ($index > count($printAreas))) {
-		    		throw new PHPExcel_Exception('Invalid index for setting print range.');
+					throw new PHPExcel_Exception('Invalid index for setting print range.');
 				}
-				$printAreas[$index-1] = $value;
+				$printAreas[$index - 1] = $value;
 				$this->_printArea = implode(',', $printAreas);
 			}
 		} elseif ($method == self::SETPRINTRANGE_INSERT) {
 			if ($index == 0) {
-				$this->_printArea .= ($this->_printArea == '') ? $value : ','.$value;
+				$this->_printArea .= ($this->_printArea == '') ? $value : ',' . $value;
 			} else {
 				$printAreas = explode(',', $this->_printArea);
 				if ($index < 0) {
 					$index = abs($index) - 1;
 				}
 				if ($index > count($printAreas)) {
-		    		throw new PHPExcel_Exception('Invalid index for setting print range.');
+					throw new PHPExcel_Exception('Invalid index for setting print range.');
 				}
-				$printAreas = array_merge(array_slice($printAreas, 0, $index), [$value], array_slice($printAreas,$index));
+				$printAreas = array_merge(array_slice($printAreas, 0, $index), [$value], array_slice($printAreas, $index));
 				$this->_printArea = implode(',', $printAreas);
 			}
 		} else {
-    		throw new PHPExcel_Exception('Invalid method for setting print range.');
+			throw new PHPExcel_Exception('Invalid method for setting print range.');
 		}
 
-    	return $this;
+		return $this;
 	}
 
 	/**
@@ -724,9 +725,9 @@ class PHPExcel_Worksheet_PageSetup {
 	 * @return	PHPExcel_Worksheet_PageSetup
 	 * @throws	PHPExcel_Exception
 	 */
-    public function setPrintAreaByColumnAndRow($column1, $row1, $column2, $row2, $index = 0, $method = self::SETPRINTRANGE_OVERWRITE) {
-    	return $this->setPrintArea(PHPExcel_Cell::stringFromColumnIndex($column1) . $row1 . ':' . PHPExcel_Cell::stringFromColumnIndex($column2) . $row2, $index, $method);
-    }
+	public function setPrintAreaByColumnAndRow($column1, $row1, $column2, $row2, $index = 0, $method = self::SETPRINTRANGE_OVERWRITE) {
+		return $this->setPrintArea(PHPExcel_Cell::stringFromColumnIndex($column1) . $row1 . ':' . PHPExcel_Cell::stringFromColumnIndex($column2) . $row2, $index, $method);
+	}
 
 	/**
 	 * Add a new print area to the list of print areas
@@ -744,8 +745,8 @@ class PHPExcel_Worksheet_PageSetup {
 	 * @return	PHPExcel_Worksheet_PageSetup
 	 * @throws	PHPExcel_Exception
 	 */
-    public function addPrintAreaByColumnAndRow($column1, $row1, $column2, $row2, $index = -1) {
-    	return $this->setPrintArea(PHPExcel_Cell::stringFromColumnIndex($column1) . $row1 . ':' . PHPExcel_Cell::stringFromColumnIndex($column2) . $row2, $index, self::SETPRINTRANGE_INSERT);
+	public function addPrintAreaByColumnAndRow($column1, $row1, $column2, $row2, $index = -1) {
+		return $this->setPrintArea(PHPExcel_Cell::stringFromColumnIndex($column1) . $row1 . ':' . PHPExcel_Cell::stringFromColumnIndex($column2) . $row2, $index, self::SETPRINTRANGE_INSERT);
 	}
 
 	/**
@@ -753,29 +754,29 @@ class PHPExcel_Worksheet_PageSetup {
 	 *
 	 * @return int
 	 */
-    public function getFirstPageNumber() {
+	public function getFirstPageNumber() {
 		return $this->_firstPageNumber;
-    }
+	}
 
-    /**
-     * Set first page number
-     *
-     * @param int $value
-     * @return PHPExcel_Worksheet_HeaderFooter
-     */
-    public function setFirstPageNumber($value = null) {
+	/**
+	 * Set first page number
+	 *
+	 * @param int $value
+	 * @return PHPExcel_Worksheet_HeaderFooter
+	 */
+	public function setFirstPageNumber($value = null) {
 		$this->_firstPageNumber = $value;
 		return $this;
-    }
+	}
 
-    /**
-     * Reset first page number
-     *
-     * @return PHPExcel_Worksheet_HeaderFooter
-     */
-    public function resetFirstPageNumber() {
+	/**
+	 * Reset first page number
+	 *
+	 * @return PHPExcel_Worksheet_HeaderFooter
+	 */
+	public function resetFirstPageNumber() {
 		return $this->setFirstPageNumber(null);
-    }
+	}
 
 	/**
 	 * Implement PHP __clone to create a deep clone, not just a shallow copy.

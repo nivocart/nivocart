@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -25,7 +26,6 @@
  * @version	##VERSION##, ##DATE##
  */
 
-
 /**
  * PHPExcel_Chart_Exception
  *
@@ -44,7 +44,7 @@ class PHPExcel_Chart_Exception extends PHPExcel_Exception {
 	 * @param mixed $context
 	 */
 	#[\Override]
-    public static function errorHandlerCallback($code, $string, $file, $line, $context): never {
+	public static function errorHandlerCallback($code, $string, $file, $line, $context): never {
 		$e = new self($string, $code);
 		$e->line = $line;
 		$e->file = $file;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -34,8 +35,7 @@
  * @package    PHPExcel_Worksheet
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-abstract class PHPExcel_Worksheet_CellIterator
-{
+abstract class PHPExcel_Worksheet_CellIterator {
 	/**
 	 * PHPExcel_Worksheet to iterate
 	 *
@@ -69,26 +69,26 @@ abstract class PHPExcel_Worksheet_CellIterator
 	 *
 	 * @return boolean
 	 */
-    public function getIterateOnlyExistingCells() {
-    	return $this->_onlyExistingCells;
-    }
+	public function getIterateOnlyExistingCells() {
+		return $this->_onlyExistingCells;
+	}
 
 	/**
 	 * Validate start/end values for "IterateOnlyExistingCells" mode, and adjust if necessary
 	 *
-     * @throws PHPExcel_Exception
+	 * @throws PHPExcel_Exception
 	 */
-    abstract protected function adjustForExistingOnlyRange();
+	abstract protected function adjustForExistingOnlyRange();
 
 	/**
 	 * Set the iterator to loop only existing cells
 	 *
 	 * @param	boolean		$value
-     * @throws PHPExcel_Exception
+	 * @throws PHPExcel_Exception
 	 */
-    public function setIterateOnlyExistingCells($value = true) {
-    	$this->_onlyExistingCells = (boolean) $value;
+	public function setIterateOnlyExistingCells($value = true): void {
+		$this->_onlyExistingCells = (bool) $value;
 
-        $this->adjustForExistingOnlyRange();
-    }
+		$this->adjustForExistingOnlyRange();
+	}
 }

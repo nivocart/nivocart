@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -36,23 +37,22 @@
  */
 class PHPExcel_Worksheet_Row {
 	/**
-     * Create a new row
-     *
-     * @param PHPExcel_Worksheet $_parent
-     * @param int $_rowIndex
-     */
-    public function __construct(
-        /**
-         * PHPExcel_Worksheet
-         */
-        private ?\PHPExcel_Worksheet $_parent = null,
-        /**
-         * Row index
-         */
-        private $_rowIndex = 1
-    )
-    {
-    }
+	 * Create a new row
+	 *
+	 * @param PHPExcel_Worksheet $_parent
+	 * @param int $_rowIndex
+	 */
+	public function __construct(
+		/**
+		 * PHPExcel_Worksheet
+		 */
+		private ?\PHPExcel_Worksheet $_parent = null,
+		/**
+		 * Row index
+		 */
+		private $_rowIndex = 1
+	) {
+	}
 
 	/**
 	 * Destructor

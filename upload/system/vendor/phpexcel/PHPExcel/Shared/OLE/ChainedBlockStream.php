@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -130,7 +131,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream {
 	 * Implements support for fclose().
 	 *
 	 */
-	public function stream_close() {
+	public function stream_close(): void {
 		$this->ole = null;
 		unset($GLOBALS['_OLE_INSTANCES']);
 	}
@@ -181,7 +182,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream {
 			$this->pos = $offset;
 		} elseif ($whence == SEEK_CUR && -$offset <= $this->pos) {
 			$this->pos += $offset;
-		} elseif ($whence == SEEK_END && -$offset <= sizeof($this->data)) {
+		} elseif ($whence == SEEK_END && -$offset <= count($this->data)) {
 			$this->pos = strlen($this->data) + $offset;
 		} else {
 			return false;

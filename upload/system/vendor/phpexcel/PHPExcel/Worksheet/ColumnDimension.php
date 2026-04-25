@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -61,7 +62,7 @@ class PHPExcel_Worksheet_ColumnDimension {
 	 *
 	 * @var int
 	 */
-	private $_outlineLevel	= 0;
+	private $_outlineLevel = 0;
 
 	/**
 	 * Collapsed
@@ -77,145 +78,146 @@ class PHPExcel_Worksheet_ColumnDimension {
 	 */
 	private $_xfIndex;
 
-    /**
-     * Create a new PHPExcel_Worksheet_ColumnDimension
-     *
-     * @param string $_columnIndex Character column index
-     */
-    public function __construct(/**
-     * Column index
-     */
-    private $_columnIndex = 'A') {
-    	// set default index to cellXf
+	/**
+	 * Create a new PHPExcel_Worksheet_ColumnDimension
+	 *
+	 * @param string $_columnIndex Character column index
+	 */
+	public function __construct(/**
+	 * Column index
+	 */
+		private $_columnIndex = 'A'
+	) {
+		// set default index to cellXf
 		$this->_xfIndex = 0;
-    }
+	}
 
-    /**
-     * Get ColumnIndex
-     *
-     * @return string
-     */
-    public function getColumnIndex() {
-    	return $this->_columnIndex;
-    }
+	/**
+	 * Get ColumnIndex
+	 *
+	 * @return string
+	 */
+	public function getColumnIndex() {
+		return $this->_columnIndex;
+	}
 
-    /**
-     * Set ColumnIndex
-     *
-     * @param string $pValue
-     * @return PHPExcel_Worksheet_ColumnDimension
-     */
-    public function setColumnIndex($pValue) {
-    	$this->_columnIndex = $pValue;
-    	return $this;
-    }
+	/**
+	 * Set ColumnIndex
+	 *
+	 * @param string $pValue
+	 * @return PHPExcel_Worksheet_ColumnDimension
+	 */
+	public function setColumnIndex($pValue) {
+		$this->_columnIndex = $pValue;
+		return $this;
+	}
 
-    /**
-     * Get Width
-     *
-     * @return double
-     */
-    public function getWidth() {
-    	return $this->_width;
-    }
+	/**
+	 * Get Width
+	 *
+	 * @return double
+	 */
+	public function getWidth() {
+		return $this->_width;
+	}
 
-    /**
-     * Set Width
-     *
-     * @param double $pValue
-     * @return PHPExcel_Worksheet_ColumnDimension
-     */
-    public function setWidth($pValue = -1) {
-    	$this->_width = $pValue;
-    	return $this;
-    }
+	/**
+	 * Set Width
+	 *
+	 * @param double $pValue
+	 * @return PHPExcel_Worksheet_ColumnDimension
+	 */
+	public function setWidth($pValue = -1) {
+		$this->_width = $pValue;
+		return $this;
+	}
 
-    /**
-     * Get Auto Size
-     *
-     * @return bool
-     */
-    public function getAutoSize() {
-    	return $this->_autoSize;
-    }
+	/**
+	 * Get Auto Size
+	 *
+	 * @return bool
+	 */
+	public function getAutoSize() {
+		return $this->_autoSize;
+	}
 
-    /**
-     * Set Auto Size
-     *
-     * @param bool $pValue
-     * @return PHPExcel_Worksheet_ColumnDimension
-     */
-    public function setAutoSize($pValue = false) {
-    	$this->_autoSize = $pValue;
-    	return $this;
-    }
+	/**
+	 * Set Auto Size
+	 *
+	 * @param bool $pValue
+	 * @return PHPExcel_Worksheet_ColumnDimension
+	 */
+	public function setAutoSize($pValue = false) {
+		$this->_autoSize = $pValue;
+		return $this;
+	}
 
-    /**
-     * Get Visible
-     *
-     * @return bool
-     */
-    public function getVisible() {
-    	return $this->_visible;
-    }
+	/**
+	 * Get Visible
+	 *
+	 * @return bool
+	 */
+	public function getVisible() {
+		return $this->_visible;
+	}
 
-    /**
-     * Set Visible
-     *
-     * @param bool $pValue
-     * @return PHPExcel_Worksheet_ColumnDimension
-     */
-    public function setVisible($pValue = true) {
-    	$this->_visible = $pValue;
-    	return $this;
-    }
+	/**
+	 * Set Visible
+	 *
+	 * @param bool $pValue
+	 * @return PHPExcel_Worksheet_ColumnDimension
+	 */
+	public function setVisible($pValue = true) {
+		$this->_visible = $pValue;
+		return $this;
+	}
 
-    /**
-     * Get Outline Level
-     *
-     * @return int
-     */
-    public function getOutlineLevel() {
-    	return $this->_outlineLevel;
-    }
+	/**
+	 * Get Outline Level
+	 *
+	 * @return int
+	 */
+	public function getOutlineLevel() {
+		return $this->_outlineLevel;
+	}
 
-    /**
-     * Set Outline Level
-     *
-     * Value must be between 0 and 7
-     *
-     * @param int $pValue
-     * @throws PHPExcel_Exception
-     * @return PHPExcel_Worksheet_ColumnDimension
-     */
-    public function setOutlineLevel($pValue) {
-    	if ($pValue < 0 || $pValue > 7) {
-    		throw new PHPExcel_Exception("Outline level must range between 0 and 7.");
-    	}
+	/**
+	 * Set Outline Level
+	 *
+	 * Value must be between 0 and 7
+	 *
+	 * @param int $pValue
+	 * @throws PHPExcel_Exception
+	 * @return PHPExcel_Worksheet_ColumnDimension
+	 */
+	public function setOutlineLevel($pValue) {
+		if ($pValue < 0 || $pValue > 7) {
+			throw new PHPExcel_Exception("Outline level must range between 0 and 7.");
+		}
 
-    	$this->_outlineLevel = $pValue;
-    	return $this;
-    }
+		$this->_outlineLevel = $pValue;
+		return $this;
+	}
 
-    /**
-     * Get Collapsed
-     *
-     * @return bool
-     */
-    public function getCollapsed() {
-    	return $this->_collapsed;
-    }
+	/**
+	 * Get Collapsed
+	 *
+	 * @return bool
+	 */
+	public function getCollapsed() {
+		return $this->_collapsed;
+	}
 
-    /**
-     * Set Collapsed
-     *
-     * @param bool $pValue
-     * @return PHPExcel_Worksheet_ColumnDimension
-     */
-    public function setCollapsed($pValue = true) {
-    	$this->_collapsed = $pValue;
-    	return $this;
-    }
+	/**
+	 * Set Collapsed
+	 *
+	 * @param bool $pValue
+	 * @return PHPExcel_Worksheet_ColumnDimension
+	 */
+	public function setCollapsed($pValue = true) {
+		$this->_collapsed = $pValue;
+		return $this;
+	}
 
 	/**
 	 * Get index to cellXf

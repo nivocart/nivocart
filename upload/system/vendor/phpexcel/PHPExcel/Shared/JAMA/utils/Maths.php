@@ -1,4 +1,5 @@
 <?php
+
 /**
  *	@package JAMA
  *
@@ -23,7 +24,6 @@ function hypo($a, $b) {
 	}
 	return $r;
 }	//	function hypo()
-
 
 /**
  *	Mike Bommarito's version.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -34,14 +35,14 @@
  * @author     Alexander Pervakov <frost-nzcr4@jagmort.com>
  */
 class PHPExcel_Writer_OpenDocument_Mimetype extends PHPExcel_Writer_OpenDocument_WriterPart {
-    /**
-     * Write mimetype to plain text format
-     *
-     * @param     PHPExcel    $pPHPExcel
-     * @return     string         XML Output
-     * @throws     PHPExcel_Writer_Exception
-     */
-    public function write(PHPExcel $pPHPExcel = null) {
-        return 'application/vnd.oasis.opendocument.spreadsheet';
-    }
+	/**
+	 * Write mimetype to plain text format
+	 *
+	 * @param     PHPExcel    $pPHPExcel
+	 * @return     string         XML Output
+	 * @throws     PHPExcel_Writer_Exception
+	 */
+	public function write(PHPExcel $pPHPExcel = null) {
+		return 'application/vnd.oasis.opendocument.spreadsheet';
+	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -57,7 +58,6 @@ define('SQRT2PI', 2.5066282746310005024157652848110452530069867406099);
  * @copyright	Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Calculation_Statistical {
-
 	private static function _checkTrendArrays(&$array1, &$array2) {
 		if (!is_array($array1)) {
 			$array1 = [$array1];
@@ -185,10 +185,10 @@ class PHPExcel_Calculation_Statistical {
 		$m = 1;
 		$delta = 0.0;
 
-		while ($m <= MAX_ITERATIONS && abs($delta-1.0) > PRECISION) {
+		while ($m <= MAX_ITERATIONS && abs($delta - 1.0) > PRECISION) {
 			$m2 = 2 * $m;
 			// even index for d
-			$d = $m * ($q - $m) * $x / ( ($p_minus + $m2) * ($p + $m2));
+			$d = $m * ($q - $m) * $x / (($p_minus + $m2) * ($p + $m2));
 			$h = 1.0 + $d * $h;
 
 			if (abs($h) < XMININ) {
@@ -287,7 +287,7 @@ class PHPExcel_Calculation_Statistical {
 			28557.24635671635335736389,
 			38484.96228443793359990269,
 			26377.48787624195437963534,
-			7225.813979700288197698961
+			7225.813979700288197698961,
 		];
 		static $lg_p2 = [
 			4.974607845568932035012064,
@@ -297,7 +297,7 @@ class PHPExcel_Calculation_Statistical {
 			1088204.76946882876749847,
 			3338152.967987029735917223,
 			5106661.678927352456275255,
-			3074109.054850539556250927
+			3074109.054850539556250927,
 		];
 		static $lg_p4 = [
 			14745.02166059939948905062,
@@ -307,7 +307,7 @@ class PHPExcel_Calculation_Statistical {
 			29403789566.34553899906876,
 			170266573776.5398868392998,
 			492612579337.743088758812,
-			560625185622.3951465078242
+			560625185622.3951465078242,
 		];
 
 		static $lg_q1 = [
@@ -318,7 +318,7 @@ class PHPExcel_Calculation_Statistical {
 			54993.10206226157329794414,
 			61611.22180066002127833352,
 			36351.27591501940507276287,
-			8785.536302431013170870835
+			8785.536302431013170870835,
 		];
 		static $lg_q2 = [
 			183.0328399370592604055942,
@@ -328,7 +328,7 @@ class PHPExcel_Calculation_Statistical {
 			5267964.117437946917577538,
 			13467014.54311101692290052,
 			17827365.30353274213975932,
-			9533095.591844353613395747
+			9533095.591844353613395747,
 		];
 		static $lg_q4 = [
 			2690.530175870899333379843,
@@ -338,7 +338,7 @@ class PHPExcel_Calculation_Statistical {
 			14886137286.78813811542398,
 			101680358627.2438228077304,
 			341747634550.7377132798597,
-			446315818741.9713286462081
+			446315818741.9713286462081,
 		];
 
 		static $lg_c = [
@@ -348,7 +348,7 @@ class PHPExcel_Calculation_Statistical {
 			7.93650793500350248e-4,
 			-0.002777777777777681622553,
 			0.08333333333333333331554247,
-			0.0057083835261
+			0.0057083835261,
 		];
 
 		// Rough estimate of the fourth root of logGamma_xBig
@@ -439,29 +439,30 @@ class PHPExcel_Calculation_Statistical {
 					$res = $lg_c[6];
 					$ysq = $y * $y;
 
-					for ($i = 0; $i < 6; ++$i)
+					for ($i = 0; $i < 6; ++$i) {
 						$res = $res / $ysq + $lg_c[$i];
 					}
-
-					$res /= $y;
-					$corr = log($y);
-					$res = $res + log(SQRT2PI) - 0.5 * $corr;
-
-					$res += $y * ($corr - 1.0);
 				}
 
-			} else {
-				// --------------------------
-				//	Return for bad arguments
-				// --------------------------
-				$res = MAX_VALUE;
+				$res /= $y;
+				$corr = log($y);
+				$res = $res + log(SQRT2PI) - 0.5 * $corr;
+
+				$res += $y * ($corr - 1.0);
 			}
-			// ------------------------------
-			//	Final adjustments and return
-			// ------------------------------
-			self::$_logGammaCache_x = $x;
-			self::$_logGammaCache_result = $res;
-			return $res;
+
+		} else {
+			// --------------------------
+			//	Return for bad arguments
+			// --------------------------
+			$res = MAX_VALUE;
+		}
+		// ------------------------------
+		//	Final adjustments and return
+		// ------------------------------
+		self::$_logGammaCache_x = $x;
+		self::$_logGammaCache_result = $res;
+		return $res;
 	}
 
 	//
@@ -481,7 +482,7 @@ class PHPExcel_Calculation_Statistical {
 			$summer += ($x ** $n / $divisor);
 		}
 
-		return $x ** $a * exp(0-$x) * $summer;
+		return $x ** $a * exp(0 - $x) * $summer;
 	}
 
 	//
@@ -493,13 +494,13 @@ class PHPExcel_Calculation_Statistical {
 		}
 
 		static $p0 = 1.000000000190015;
-		static $p =  [
+		static $p = [
 			1 => 76.18009172947146,
 			2 => -86.50532032941677,
 			3 => 24.01409824083091,
 			4 => -1.231739572450155,
 			5 => 1.208650973866179e-3,
-			6 => -5.395239384953e-6
+			6 => -5.395239384953e-6,
 		];
 
 		$y = $x = $data;
@@ -544,7 +545,7 @@ class PHPExcel_Calculation_Statistical {
 			3 => -2.759285104469687e+02,
 			4 => 1.383577518672690e+02,
 			5 => -3.066479806614716e+01,
-			6 => 2.506628277459239e+00
+			6 => 2.506628277459239e+00,
 		];
 
 		static $b = [
@@ -552,7 +553,7 @@ class PHPExcel_Calculation_Statistical {
 			2 => 1.615858368580409e+02,
 			3 => -1.556989798598866e+02,
 			4 => 6.680131188771972e+01,
-			5 => -1.328068155288572e+01
+			5 => -1.328068155288572e+01,
 		];
 
 		static $c = [
@@ -561,14 +562,14 @@ class PHPExcel_Calculation_Statistical {
 			3 => -2.400758277161838e+00,
 			4 => -2.549732539343734e+00,
 			5 => 4.374664141464968e+00,
-			6 => 2.938163982698783e+00
+			6 => 2.938163982698783e+00,
 		];
 
 		static $d = [
 			1 => 7.784695709041462e-03,
 			2 => 3.224671290700398e-01,
 			3 => 2.445134137142996e+00,
-			4 => 3.754408661907416e+00
+			4 => 3.754408661907416e+00,
 		];
 
 		//	Define lower and upper region break-points.
@@ -732,7 +733,7 @@ class PHPExcel_Calculation_Statistical {
 
 				$z = ((((((($c7 * $R + $c6) * $R + $c5) * $R + $c4) * $R + $c3) * $R + $c2) * $R + $c1) * $R + $c0) / ((((((($d7 * $R + $d6) * $R + $d5) * $R + $d4) * $R + $d3) * $R + $d2) * $R + $d1) * $R + 1);
 			} else {
-			//	computation for p near 0 or 1.
+				//	computation for p near 0 or 1.
 				$R = $R - $split2;
 
 				$z = ((((((($e7 * $R + $e6) * $R + $e5) * $R + $e4) * $R + $e3) * $R + $e2) * $R + $e1) * $R + $e0) / ((((((($f7 * $R + $f6) * $R + $f5) * $R + $f4) * $R + $f3) * $R + $f2) * $R + $f1) * $R + 1);
@@ -774,7 +775,7 @@ class PHPExcel_Calculation_Statistical {
 			foreach ($aArgs as $k => $arg) {
 				if ((is_bool($arg)) &&
 					((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))) {
-					$arg = (integer) $arg;
+					$arg = (int) $arg;
 				}
 
 				// Is it a numeric value?
@@ -818,7 +819,7 @@ class PHPExcel_Calculation_Statistical {
 		// Loop through arguments
 		foreach (PHPExcel_Calculation_Functions::flattenArrayIndexed(func_get_args()) as $k => $arg) {
 			if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))) {
-				$arg = (integer) $arg;
+				$arg = (int) $arg;
 			}
 
 			// Is it a numeric value?
@@ -863,7 +864,7 @@ class PHPExcel_Calculation_Statistical {
 			} else {
 				if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != '')))) {
 					if (is_bool($arg)) {
-						$arg = (integer) $arg;
+						$arg = (int) $arg;
 					} elseif (is_string($arg)) {
 						$arg = 0;
 					}
@@ -1030,7 +1031,7 @@ class PHPExcel_Calculation_Statistical {
 				return PHPExcel_Calculation_Functions::NA();
 			}
 
-			return round($rMin + $guess * ($rMax - $rMin),12);
+			return round($rMin + $guess * ($rMax - $rMin), 12);
 		}
 
 		return PHPExcel_Calculation_Functions::VALUE();
@@ -1057,7 +1058,7 @@ class PHPExcel_Calculation_Statistical {
 	public static function BINOMDIST($value, $trials, $probability, $cumulative) {
 		$value = floor(PHPExcel_Calculation_Functions::flattenSingleValue($value));
 		$trials = floor(PHPExcel_Calculation_Functions::flattenSingleValue($trials));
-		$probability	= PHPExcel_Calculation_Functions::flattenSingleValue($probability);
+		$probability = PHPExcel_Calculation_Functions::flattenSingleValue($probability);
 
 		if ((is_numeric($value)) && (is_numeric($trials)) && (is_numeric($probability))) {
 			if (($value < 0) || ($value > $trials)) {
@@ -1222,7 +1223,7 @@ class PHPExcel_Calculation_Statistical {
 			return PHPExcel_Calculation_Functions::VALUE();
 		}
 
-		if (!self::_checkTrendArrays($yValues,$xValues)) {
+		if (!self::_checkTrendArrays($yValues, $xValues)) {
 			return PHPExcel_Calculation_Functions::VALUE();
 		}
 
@@ -1261,7 +1262,7 @@ class PHPExcel_Calculation_Statistical {
 
 		foreach ($aArgs as $k => $arg) {
 			if ((is_bool($arg)) && ((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))) {
-				$arg = (integer) $arg;
+				$arg = (int) $arg;
 			}
 
 			// Is it a numeric value?
@@ -1555,7 +1556,7 @@ class PHPExcel_Calculation_Statistical {
 				// Is it a numeric value?
 				if ((is_bool($arg)) &&
 					((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))) {
-					$arg = (integer) $arg;
+					$arg = (int) $arg;
 				}
 
 				if ((is_numeric($arg)) && (!is_string($arg))) {
@@ -1602,9 +1603,9 @@ class PHPExcel_Calculation_Statistical {
 
 			if ((is_numeric($cumulative)) || (is_bool($cumulative))) {
 				if ($cumulative) {
-					return 1 - exp(0-$value*$lambda);
+					return 1 - exp(0 - $value * $lambda);
 				} else {
-					return $lambda * exp(0-$value*$lambda);
+					return $lambda * exp(0 - $value * $lambda);
 				}
 			}
 		}
@@ -1630,7 +1631,7 @@ class PHPExcel_Calculation_Statistical {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
 
-			return 0.5 * log((1+$value)/(1-$value));
+			return 0.5 * log((1 + $value) / (1 - $value));
 		}
 
 		return PHPExcel_Calculation_Functions::VALUE();
@@ -1667,13 +1668,13 @@ class PHPExcel_Calculation_Statistical {
 	 * @return	float
 	 */
 	public static function FORECAST($xValue, $yValues, $xValues) {
-		$xValue	= PHPExcel_Calculation_Functions::flattenSingleValue($xValue);
+		$xValue = PHPExcel_Calculation_Functions::flattenSingleValue($xValue);
 
 		if (!is_numeric($xValue)) {
 			return PHPExcel_Calculation_Functions::VALUE();
 		}
 
-		if (!self::_checkTrendArrays($yValues,$xValues)) {
+		if (!self::_checkTrendArrays($yValues, $xValues)) {
 			return PHPExcel_Calculation_Functions::VALUE();
 		}
 
@@ -1715,9 +1716,9 @@ class PHPExcel_Calculation_Statistical {
 
 			if ((is_numeric($cumulative)) || (is_bool($cumulative))) {
 				if ($cumulative) {
-					return self::_incompleteGamma($a,$value / $b) / self::_gamma($a);
+					return self::_incompleteGamma($a, $value / $b) / self::_gamma($a);
 				} else {
-					return (1 / ($b ** $a * self::_gamma($a))) * $value ** ($a - 1) * exp(0-($value / $b));
+					return (1 / ($b ** $a * self::_gamma($a))) * $value ** ($a - 1) * exp(0 - ($value / $b));
 				}
 			}
 		}
@@ -1861,7 +1862,7 @@ class PHPExcel_Calculation_Statistical {
 		$yValues = PHPExcel_Calculation_Functions::flattenArray($yValues);
 		$xValues = PHPExcel_Calculation_Functions::flattenArray($xValues);
 		$newValues = PHPExcel_Calculation_Functions::flattenArray($newValues);
-		$const = (is_null($const)) ? true : (boolean) PHPExcel_Calculation_Functions::flattenSingleValue($const);
+		$const = (is_null($const)) ? true : (bool) PHPExcel_Calculation_Functions::flattenSingleValue($const);
 
 		$bestFitExponential = trendClass::calculate(trendClass::TREND_EXPONENTIAL, $yValues, $xValues, $const);
 
@@ -1959,9 +1960,9 @@ class PHPExcel_Calculation_Statistical {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
 
-			return PHPExcel_Calculation_MathTrig::COMBIN($populationSuccesses,$sampleSuccesses) *
-				   PHPExcel_Calculation_MathTrig::COMBIN($populationNumber - $populationSuccesses,$sampleNumber - $sampleSuccesses) /
-				   PHPExcel_Calculation_MathTrig::COMBIN($populationNumber,$sampleNumber);
+			return PHPExcel_Calculation_MathTrig::COMBIN($populationSuccesses, $sampleSuccesses) *
+				   PHPExcel_Calculation_MathTrig::COMBIN($populationNumber - $populationSuccesses, $sampleNumber - $sampleSuccesses) /
+				   PHPExcel_Calculation_MathTrig::COMBIN($populationNumber, $sampleNumber);
 		}
 
 		return PHPExcel_Calculation_Functions::VALUE();
@@ -2027,7 +2028,7 @@ class PHPExcel_Calculation_Statistical {
 			}
 
 			if ($count > 3) {
-				return $summer * ($count * ($count+1) / (($count-1) * ($count-2) * ($count-3))) - (3 * ($count - 1) ** 2 / (($count-2) * ($count-3)));
+				return $summer * ($count * ($count + 1) / (($count - 1) * ($count - 2) * ($count - 3))) - (3 * ($count - 1) ** 2 / (($count - 2) * ($count - 3)));
 			}
 		}
 
@@ -2094,8 +2095,8 @@ class PHPExcel_Calculation_Statistical {
 	 * @return	array
 	 */
 	public static function LINEST($yValues, $xValues = null, $const = true, $stats = false) {
-		$const = (is_null($const)) ? true : (boolean) PHPExcel_Calculation_Functions::flattenSingleValue($const);
-		$stats = (is_null($stats)) ? false : (boolean) PHPExcel_Calculation_Functions::flattenSingleValue($stats);
+		$const = (is_null($const)) ? true : (bool) PHPExcel_Calculation_Functions::flattenSingleValue($const);
+		$stats = (is_null($stats)) ? false : (bool) PHPExcel_Calculation_Functions::flattenSingleValue($stats);
 
 		if (is_null($xValues)) {
 			$xValues = range(1, count(PHPExcel_Calculation_Functions::flattenArray($yValues)));
@@ -2119,7 +2120,7 @@ class PHPExcel_Calculation_Statistical {
 		if ($stats) {
 			return [
 				[ $bestFitLinear->getSlope(), $bestFitLinear->getSlopeSE(), $bestFitLinear->getGoodnessOfFit(), $bestFitLinear->getF(), $bestFitLinear->getSSRegression(), ],
-				[ $bestFitLinear->getIntersect(), $bestFitLinear->getIntersectSE(), $bestFitLinear->getStdevOfResiduals(), $bestFitLinear->getDFResiduals(), $bestFitLinear->getSSResiduals() ]
+				[ $bestFitLinear->getIntersect(), $bestFitLinear->getIntersectSE(), $bestFitLinear->getStdevOfResiduals(), $bestFitLinear->getDFResiduals(), $bestFitLinear->getSSResiduals() ],
 			];
 		} else {
 			return [ $bestFitLinear->getSlope(), $bestFitLinear->getIntersect() ];
@@ -2139,8 +2140,8 @@ class PHPExcel_Calculation_Statistical {
 	 * @return	array
 	 */
 	public static function LOGEST($yValues, $xValues = null, $const = true, $stats = false) {
-		$const = (is_null($const)) ? true : (boolean) PHPExcel_Calculation_Functions::flattenSingleValue($const);
-		$stats = (is_null($stats)) ? false : (boolean) PHPExcel_Calculation_Functions::flattenSingleValue($stats);
+		$const = (is_null($const)) ? true : (bool) PHPExcel_Calculation_Functions::flattenSingleValue($const);
+		$stats = (is_null($stats)) ? false : (bool) PHPExcel_Calculation_Functions::flattenSingleValue($stats);
 
 		if (is_null($xValues)) {
 			$xValues = range(1, count(PHPExcel_Calculation_Functions::flattenArray($yValues)));
@@ -2170,7 +2171,7 @@ class PHPExcel_Calculation_Statistical {
 		if ($stats) {
 			return [
 				[ $bestFitExponential->getSlope(), $bestFitExponential->getSlopeSE(), $bestFitExponential->getGoodnessOfFit(), $bestFitExponential->getF(), $bestFitExponential->getSSRegression(), ],
-				[ $bestFitExponential->getIntersect(), $bestFitExponential->getIntersectSE(), $bestFitExponential->getStdevOfResiduals(), $bestFitExponential->getDFResiduals(), $bestFitExponential->getSSResiduals() ]
+				[ $bestFitExponential->getIntersect(), $bestFitExponential->getIntersectSE(), $bestFitExponential->getStdevOfResiduals(), $bestFitExponential->getDFResiduals(), $bestFitExponential->getSSResiduals() ],
 			];
 		} else {
 			return [ $bestFitExponential->getSlope(), $bestFitExponential->getIntersect() ];
@@ -2293,7 +2294,7 @@ class PHPExcel_Calculation_Statistical {
 			// Is it a numeric value?
 			if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != '')))) {
 				if (is_bool($arg)) {
-					$arg = (integer) $arg;
+					$arg = (int) $arg;
 				} elseif (is_string($arg)) {
 					$arg = 0;
 				}
@@ -2458,7 +2459,7 @@ class PHPExcel_Calculation_Statistical {
 			// Is it a numeric value?
 			if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != '')))) {
 				if (is_bool($arg)) {
-					$arg = (integer) $arg;
+					$arg = (int) $arg;
 				} elseif (is_string($arg)) {
 					$arg = 0;
 				}
@@ -2540,8 +2541,8 @@ class PHPExcel_Calculation_Statistical {
 
 			if (!$found) {
 				$frequencyArray[] = [
-					'value'		=> $datum,
-					'frequency'	=> 1
+					'value' => $datum,
+					'frequency' => 1,
 				];
 			}
 		}
@@ -2613,7 +2614,7 @@ class PHPExcel_Calculation_Statistical {
 	public static function NEGBINOMDIST($failures, $successes, $probability) {
 		$failures = floor(PHPExcel_Calculation_Functions::flattenSingleValue($failures));
 		$successes = floor(PHPExcel_Calculation_Functions::flattenSingleValue($successes));
-		$probability	= PHPExcel_Calculation_Functions::flattenSingleValue($probability);
+		$probability = PHPExcel_Calculation_Functions::flattenSingleValue($probability);
 
 		if ((is_numeric($failures)) && (is_numeric($successes)) && (is_numeric($probability))) {
 			if (($failures < 0) || ($successes < 1)) {
@@ -2771,7 +2772,7 @@ class PHPExcel_Calculation_Statistical {
 				sort($mArgs);
 
 				$count = self::COUNT($mArgs);
-				$index = $entry * ($count-1);
+				$index = $entry * ($count - 1);
 				$iBase = floor($index);
 
 				if ($index == $iBase) {
@@ -2801,7 +2802,7 @@ class PHPExcel_Calculation_Statistical {
 		$valueSet = PHPExcel_Calculation_Functions::flattenArray($valueSet);
 		$value = PHPExcel_Calculation_Functions::flattenSingleValue($value);
 
-		$significance = (is_null($significance)) ? 3 : (integer) PHPExcel_Calculation_Functions::flattenSingleValue($significance);
+		$significance = (is_null($significance)) ? 3 : (int) PHPExcel_Calculation_Functions::flattenSingleValue($significance);
 
 		foreach ($valueSet as $key => $valueEntry) {
 			if (!is_numeric($valueEntry)) {
@@ -2898,9 +2899,9 @@ class PHPExcel_Calculation_Statistical {
 						$summer += $mean ** $i / PHPExcel_Calculation_MathTrig::FACT($i);
 					}
 
-					return exp(0-$mean) * $summer;
+					return exp(0 - $mean) * $summer;
 				} else {
-					return (exp(0-$mean) * $mean ** $value) / PHPExcel_Calculation_MathTrig::FACT($value);
+					return (exp(0 - $mean) * $mean ** $value) / PHPExcel_Calculation_MathTrig::FACT($value);
 				}
 			}
 		}
@@ -2935,7 +2936,7 @@ class PHPExcel_Calculation_Statistical {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
 
-			return self::PERCENTILE($aArgs,$entry);
+			return self::PERCENTILE($aArgs, $entry);
 		}
 
 		return PHPExcel_Calculation_Functions::VALUE();
@@ -2955,7 +2956,7 @@ class PHPExcel_Calculation_Statistical {
 		$value = PHPExcel_Calculation_Functions::flattenSingleValue($value);
 		$valueSet = PHPExcel_Calculation_Functions::flattenArray($valueSet);
 
-		$order = (is_null($order)) ? 0 : (integer) PHPExcel_Calculation_Functions::flattenSingleValue($order);
+		$order = (is_null($order)) ? 0 : (int) PHPExcel_Calculation_Functions::flattenSingleValue($order);
 
 		foreach ($valueSet as $key => $valueEntry) {
 			if (!is_numeric($valueEntry)) {
@@ -3038,7 +3039,7 @@ class PHPExcel_Calculation_Statistical {
 		}
 
 		if ($count > 2) {
-			return $summer * ($count / (($count-1) * ($count-2)));
+			return $summer * ($count / (($count - 1) * ($count - 2)));
 		}
 
 		return PHPExcel_Calculation_Functions::DIV0();
@@ -3170,7 +3171,7 @@ class PHPExcel_Calculation_Statistical {
 			foreach ($aArgs as $k => $arg) {
 				if ((is_bool($arg)) &&
 					((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))) {
-					$arg = (integer) $arg;
+					$arg = (int) $arg;
 				}
 				// Is it a numeric value?
 				if ((is_numeric($arg)) && (!is_string($arg))) {
@@ -3221,7 +3222,7 @@ class PHPExcel_Calculation_Statistical {
 					// Is it a numeric value?
 					if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != '')))) {
 						if (is_bool($arg)) {
-							$arg = (integer) $arg;
+							$arg = (int) $arg;
 						} elseif (is_string($arg)) {
 							$arg = 0;
 						}
@@ -3270,7 +3271,7 @@ class PHPExcel_Calculation_Statistical {
 			foreach ($aArgs as $k => $arg) {
 				if ((is_bool($arg)) &&
 					((!PHPExcel_Calculation_Functions::isCellValue($k)) || (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE))) {
-					$arg = (integer) $arg;
+					$arg = (int) $arg;
 				}
 				// Is it a numeric value?
 				if ((is_numeric($arg)) && (!is_string($arg))) {
@@ -3321,7 +3322,7 @@ class PHPExcel_Calculation_Statistical {
 					// Is it a numeric value?
 					if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != '')))) {
 						if (is_bool($arg)) {
-							$arg = (integer) $arg;
+							$arg = (int) $arg;
 						} elseif (is_string($arg)) {
 							$arg = 0;
 						}
@@ -3450,7 +3451,7 @@ class PHPExcel_Calculation_Statistical {
 	 * @return	float
 	 */
 	public static function TINV($probability, $degrees) {
-		$probability	= PHPExcel_Calculation_Functions::flattenSingleValue($probability);
+		$probability = PHPExcel_Calculation_Functions::flattenSingleValue($probability);
 		$degrees = floor(PHPExcel_Calculation_Functions::flattenSingleValue($degrees));
 
 		if ((is_numeric($probability)) && (is_numeric($degrees))) {
@@ -3458,7 +3459,7 @@ class PHPExcel_Calculation_Statistical {
 			$xHi = 0;
 
 			$x = $xNew = 1;
-			$dx	= 1;
+			$dx = 1;
 			$i = 0;
 
 			while ((abs($dx) > PRECISION) && ($i++ < MAX_ITERATIONS)) {
@@ -3515,7 +3516,7 @@ class PHPExcel_Calculation_Statistical {
 		$xValues = PHPExcel_Calculation_Functions::flattenArray($xValues);
 		$newValues = PHPExcel_Calculation_Functions::flattenArray($newValues);
 
-		$const = (is_null($const)) ? true : (boolean) PHPExcel_Calculation_Functions::flattenSingleValue($const);
+		$const = (is_null($const)) ? true : (bool) PHPExcel_Calculation_Functions::flattenSingleValue($const);
 
 		$bestFitLinear = trendClass::calculate(trendClass::TREND_LINEAR, $yValues, $xValues, $const);
 
@@ -3572,7 +3573,7 @@ class PHPExcel_Calculation_Statistical {
 
 			sort($mArgs);
 
-			for ($i=0; $i < $discard; ++$i) {
+			for ($i = 0; $i < $discard; ++$i) {
 				array_pop($mArgs);
 				array_shift($mArgs);
 			}
@@ -3608,7 +3609,7 @@ class PHPExcel_Calculation_Statistical {
 
 		foreach ($aArgs as $arg) {
 			if (is_bool($arg)) {
-				$arg = (integer) $arg;
+				$arg = (int) $arg;
 			}
 			// Is it a numeric value?
 			if ((is_numeric($arg)) && (!is_string($arg))) {
@@ -3660,7 +3661,7 @@ class PHPExcel_Calculation_Statistical {
 				// Is it a numeric value?
 				if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != '')))) {
 					if (is_bool($arg)) {
-						$arg = (integer) $arg;
+						$arg = (int) $arg;
 					} elseif (is_string($arg)) {
 						$arg = 0;
 					}
@@ -3706,7 +3707,7 @@ class PHPExcel_Calculation_Statistical {
 
 		foreach ($aArgs as $arg) {
 			if (is_bool($arg)) {
-				$arg = (integer) $arg;
+				$arg = (int) $arg;
 			}
 			// Is it a numeric value?
 			if ((is_numeric($arg)) && (!is_string($arg))) {
@@ -3758,7 +3759,7 @@ class PHPExcel_Calculation_Statistical {
 				// Is it a numeric value?
 				if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) & ($arg != '')))) {
 					if (is_bool($arg)) {
-						$arg = (integer) $arg;
+						$arg = (int) $arg;
 					} elseif (is_string($arg)) {
 						$arg = 0;
 					}
@@ -3839,6 +3840,6 @@ class PHPExcel_Calculation_Statistical {
 
 		$n = count($dataSet);
 
-		return 1 - self::NORMSDIST((self::AVERAGE($dataSet) - $m0)/($sigma/SQRT($n)));
+		return 1 - self::NORMSDIST((self::AVERAGE($dataSet) - $m0) / ($sigma / SQRT($n)));
 	}
 }

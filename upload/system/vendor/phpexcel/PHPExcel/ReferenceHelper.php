@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -34,10 +35,10 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_ReferenceHelper {
-	const REFHELPER_REGEXP_CELLREF = '((\w*|\'[^!]*\')!)?(?<![:a-z\$])(\$?[a-z]{1,3}\$?\d+)(?=[^:!\d\'])';
-	const REFHELPER_REGEXP_CELLRANGE = '((\w*|\'[^!]*\')!)?(\$?[a-z]{1,3}\$?\d+):(\$?[a-z]{1,3}\$?\d+)';
-	const REFHELPER_REGEXP_ROWRANGE = '((\w*|\'[^!]*\')!)?(\$?\d+):(\$?\d+)';
-	const REFHELPER_REGEXP_COLRANGE = '((\w*|\'[^!]*\')!)?(\$?[a-z]{1,3}):(\$?[a-z]{1,3})';
+	public const REFHELPER_REGEXP_CELLREF = '((\w*|\'[^!]*\')!)?(?<![:a-z\$])(\$?[a-z]{1,3}\$?\d+)(?=[^:!\d\'])';
+	public const REFHELPER_REGEXP_CELLRANGE = '((\w*|\'[^!]*\')!)?(\$?[a-z]{1,3}\$?\d+):(\$?[a-z]{1,3}\$?\d+)';
+	public const REFHELPER_REGEXP_ROWRANGE = '((\w*|\'[^!]*\')!)?(\$?\d+):(\$?\d+)';
+	public const REFHELPER_REGEXP_COLRANGE = '((\w*|\'[^!]*\')!)?(\$?[a-z]{1,3}):(\$?[a-z]{1,3})';
 
 	/**
 	 * Instance of this class
@@ -62,7 +63,8 @@ class PHPExcel_ReferenceHelper {
 	/**
 	 * Create a new PHPExcel_ReferenceHelper
 	 */
-	protected function __construct() { }
+	protected function __construct() {
+	}
 
 	/**
 	 * Compare two column addresses
@@ -161,7 +163,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustPageBreaks(PHPExcel_Worksheet $pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustPageBreaks(PHPExcel_Worksheet $pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aBreaks = $pSheet->getBreaks();
 
 		($pNumCols > 0 || $pNumRows > 0) ? uksort($aBreaks, ['PHPExcel_ReferenceHelper', 'cellReverseSort']) : uksort($aBreaks, ['PHPExcel_ReferenceHelper', 'cellSort']);
@@ -190,7 +192,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustComments($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustComments($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aComments = $pSheet->getComments();
 
 		$aNewComments = []; // the new array of all comments
@@ -218,7 +220,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustHyperlinks($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustHyperlinks($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aHyperlinkCollection = $pSheet->getHyperlinkCollection();
 
 		($pNumCols > 0 || $pNumRows > 0) ? uksort($aHyperlinkCollection, ['PHPExcel_ReferenceHelper', 'cellReverseSort']) : uksort($aHyperlinkCollection, ['PHPExcel_ReferenceHelper', 'cellSort']);
@@ -243,7 +245,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustDataValidations($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustDataValidations($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aDataValidationCollection = $pSheet->getDataValidationCollection();
 
 		($pNumCols > 0 || $pNumRows > 0) ? uksort($aDataValidationCollection, ['PHPExcel_ReferenceHelper', 'cellReverseSort']) : uksort($aDataValidationCollection, ['PHPExcel_ReferenceHelper', 'cellSort']);
@@ -268,7 +270,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustMergeCells($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustMergeCells($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aMergeCells = $pSheet->getMergeCells();
 
 		$aNewMergeCells = []; // the new array of all merge cells
@@ -292,7 +294,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustProtectedCells($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustProtectedCells($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aProtectedCells = $pSheet->getProtectedCells();
 
 		($pNumCols > 0 || $pNumRows > 0) ? uksort($aProtectedCells, ['PHPExcel_ReferenceHelper', 'cellReverseSort']) : uksort($aProtectedCells, ['PHPExcel_ReferenceHelper', 'cellSort']);
@@ -317,7 +319,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustColumnDimensions($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustColumnDimensions($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aColumnDimensions = array_reverse($pSheet->getColumnDimensions(), true);
 
 		if (!empty($aColumnDimensions)) {
@@ -345,14 +347,14 @@ class PHPExcel_ReferenceHelper {
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer             $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 */
-	protected function _adjustRowDimensions($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows) {
+	protected function _adjustRowDimensions($pSheet, $pBefore, $beforeColumnIndex, $pNumCols, $beforeRow, $pNumRows): void {
 		$aRowDimensions = array_reverse($pSheet->getRowDimensions(), true);
 
 		if (!empty($aRowDimensions)) {
 			foreach ($aRowDimensions as $objRowDimension) {
 				$newReference = $this->updateCellReference('A' . $objRowDimension->getRowIndex(), $pBefore, $pNumCols, $pNumRows);
 
-				list(, $newReference) = PHPExcel_Cell::coordinateFromString($newReference);
+				[, $newReference] = PHPExcel_Cell::coordinateFromString($newReference);
 
 				if ($objRowDimension->getRowIndex() != $newReference) {
 					$objRowDimension->setRowIndex($newReference);
@@ -382,7 +384,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param   PHPExcel_Worksheet  $pSheet     The worksheet that we're editing
 	 * @throws  PHPExcel_Exception
 	 */
-	public function insertNewBefore($pBefore = 'A1', $pNumCols = 0, $pNumRows = 0, PHPExcel_Worksheet $pSheet = null) {
+	public function insertNewBefore($pBefore = 'A1', $pNumCols = 0, $pNumRows = 0, PHPExcel_Worksheet $pSheet = null): void {
 		$remove = ($pNumCols < 0 || $pNumRows < 0);
 
 		$aCellCollection = $pSheet->getCellCollection();
@@ -430,22 +432,22 @@ class PHPExcel_ReferenceHelper {
 		}
 
 		// Loop through cells, bottom-up, and change cell coordinates
-        if ($remove) {
-            // It's faster to reverse and pop than to use unshift, especially with large cell collections
-            $aCellCollection = array_reverse($aCellCollection);
-        }
+		if ($remove) {
+			// It's faster to reverse and pop than to use unshift, especially with large cell collections
+			$aCellCollection = array_reverse($aCellCollection);
+		}
 
 		while ($cellID = array_pop($aCellCollection)) {
 			$cell = $pSheet->getCell($cellID);
 
 			$cellIndex = PHPExcel_Cell::columnIndexFromString($cell->getColumn());
 
-			if ($cellIndex-1 + $pNumCols < 0) {
+			if ($cellIndex - 1 + $pNumCols < 0) {
 				continue;
 			}
 
 			// New coordinates
-			$newCoordinates = PHPExcel_Cell::stringFromColumnIndex($cellIndex-1 + $pNumCols) . ($cell->getRow() + $pNumRows);
+			$newCoordinates = PHPExcel_Cell::stringFromColumnIndex($cellIndex - 1 + $pNumCols) . ($cell->getRow() + $pNumRows);
 
 			// Should the cell be updated? Move value and cellXf index from one cell to another.
 			if (($cellIndex >= $beforeColumnIndex) && ($cell->getRow() >= $beforeRow)) {
@@ -479,7 +481,7 @@ class PHPExcel_ReferenceHelper {
 		if ($pNumCols > 0 && $beforeColumnIndex - 2 > 0) {
 			for ($i = $beforeRow; $i <= $highestRow - 1; ++$i) {
 				// Style
-				$coordinate = PHPExcel_Cell::stringFromColumnIndex( $beforeColumnIndex - 2 ) . $i;
+				$coordinate = PHPExcel_Cell::stringFromColumnIndex($beforeColumnIndex - 2) . $i;
 
 				if ($pSheet->cellExists($coordinate)) {
 					$xfIndex = $pSheet->getCell($coordinate)->getXfIndex();
@@ -589,24 +591,24 @@ class PHPExcel_ReferenceHelper {
 						//	Shuffle columns in autofilter range
 						if ($pNumCols > 0) {
 							//	For insert, we shuffle from end to beginning to avoid overwriting
-							$startColID = PHPExcel_Cell::stringFromColumnIndex($startCol-1);
-							$toColID = PHPExcel_Cell::stringFromColumnIndex($startCol+$pNumCols-1);
+							$startColID = PHPExcel_Cell::stringFromColumnIndex($startCol - 1);
+							$toColID = PHPExcel_Cell::stringFromColumnIndex($startCol + $pNumCols - 1);
 							$endColID = PHPExcel_Cell::stringFromColumnIndex($rangeEnd[0]);
 
 							$startColRef = $startCol;
 							$endColRef = $rangeEnd[0];
-							$toColRef = $rangeEnd[0]+$pNumCols;
+							$toColRef = $rangeEnd[0] + $pNumCols;
 
 							do {
-								$autoFilter->shiftColumn(PHPExcel_Cell::stringFromColumnIndex($endColRef-1), PHPExcel_Cell::stringFromColumnIndex($toColRef-1));
+								$autoFilter->shiftColumn(PHPExcel_Cell::stringFromColumnIndex($endColRef - 1), PHPExcel_Cell::stringFromColumnIndex($toColRef - 1));
 								--$endColRef;
 								--$toColRef;
 							} while ($startColRef <= $endColRef);
 
 						} else {
 							//	For delete, we shuffle from beginning to end to avoid overwriting
-							$startColID = PHPExcel_Cell::stringFromColumnIndex($startCol-1);
-							$toColID = PHPExcel_Cell::stringFromColumnIndex($startCol+$pNumCols-1);
+							$startColID = PHPExcel_Cell::stringFromColumnIndex($startCol - 1);
+							$toColID = PHPExcel_Cell::stringFromColumnIndex($startCol + $pNumCols - 1);
 							$endColID = PHPExcel_Cell::stringFromColumnIndex($rangeEnd[0]);
 
 							do {
@@ -696,7 +698,7 @@ class PHPExcel_ReferenceHelper {
 
 								//	Max worksheet size is 1,048,576 rows by 16,384 columns in Excel 2007, so our adjustments need to be at least one digit more
 								$column = 100000;
-								$row = 10000000+trim($match[3], '$');
+								$row = 10000000 + trim($match[3], '$');
 
 								$cellIndex = $column . $row;
 
@@ -802,13 +804,13 @@ class PHPExcel_ReferenceHelper {
 				}
 
 				if ($adjustCount > 0) {
-                    if ($pNumCols > 0 || $pNumRows > 0) {
-                        krsort($cellTokens);
-                        krsort($newCellTokens);
-                      } else {
-                        ksort($cellTokens);
-                        ksort($newCellTokens);
-                    }
+					if ($pNumCols > 0 || $pNumRows > 0) {
+						krsort($cellTokens);
+						krsort($newCellTokens);
+					} else {
+						ksort($cellTokens);
+						ksort($newCellTokens);
+					}
 
 					//  Update cell references in the formula
 					$formulaBlock = str_replace('\\', '', preg_replace($cellTokens, $newCellTokens, $formulaBlock));
@@ -835,7 +837,7 @@ class PHPExcel_ReferenceHelper {
 		// Is it in another worksheet? Will not have to update anything.
 		if (str_contains($pCellRange, "!")) {
 			return $pCellRange;
-		// Is it a range or a single cell?
+			// Is it a range or a single cell?
 		} elseif (!str_contains($pCellRange, ':') && !str_contains($pCellRange, ',')) {
 			// Single cell
 			return $this->_updateSingleCellReference($pCellRange, $pBefore, $pNumCols, $pNumRows);
@@ -855,7 +857,7 @@ class PHPExcel_ReferenceHelper {
 	 * @param string $oldName		Old name (name to replace)
 	 * @param string $newName		New name
 	 */
-	public function updateNamedFormulas(PHPExcel $pPhpExcel, $oldName = '', $newName = '') {
+	public function updateNamedFormulas(PHPExcel $pPhpExcel, $oldName = '', $newName = ''): void {
 		if ($oldName == '') {
 			return;
 		}
@@ -964,7 +966,7 @@ class PHPExcel_ReferenceHelper {
 	 *
 	 * @throws	PHPExcel_Exception
 	 */
-	public final function __clone() {
+	final public function __clone() {
 		throw new PHPExcel_Exception("Cloning a Singleton is not allowed!");
 	}
 }

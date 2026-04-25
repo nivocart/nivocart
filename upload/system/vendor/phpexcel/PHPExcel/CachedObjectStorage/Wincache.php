@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -48,14 +49,14 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 */
 	private $_cacheTime = 600;
 
-    /**
-     * Store cell data in cache for the current cell object if it's "dirty",
-     *     and the 'nullify' the current cell object
-     *
+	/**
+	 * Store cell data in cache for the current cell object if it's "dirty",
+	 *     and the 'nullify' the current cell object
+	 *
 	 * @return	void
-     * @throws	PHPExcel_Exception
-     */
-	protected function _storeData() {
+	 * @throws	PHPExcel_Exception
+	 */
+	protected function _storeData(): void {
 		if ($this->_currentCellIsDirty && !empty($this->_currentObjectID)) {
 			$this->_currentObject->detach();
 
@@ -109,7 +110,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 * @return	boolean
 	 */
 	#[\Override]
-    public function isDataSet($pCoord) {
+	public function isDataSet($pCoord) {
 		//	Check if the requested entry is the current object, or exists in the cache
 		if (parent::isDataSet($pCoord)) {
 			if ($this->_currentObjectID == $pCoord) {
@@ -168,8 +169,8 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 		$this->_currentObjectID = $pCoord;
 
 		$this->_currentObject = unserialize($obj);
-        //  Re-attach this as the cell's parent
-        $this->_currentObject->attach($this);
+		//  Re-attach this as the cell's parent
+		$this->_currentObject->attach($this);
 		//	Return requested entry
 		return $this->_currentObject;
 	}
@@ -180,7 +181,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 * @return  string[]
 	 */
 	#[\Override]
-    public function getCellList() {
+	public function getCellList() {
 		if ($this->_currentObjectID !== null) {
 			$this->_storeData();
 		}
@@ -195,7 +196,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 * @throws	PHPExcel_Exception
 	 */
 	#[\Override]
-    public function deleteCacheData($pCoord) {
+	public function deleteCacheData($pCoord): void {
 		//	Delete the entry from Wincache
 		wincache_ucache_delete($this->_cachePrefix . $pCoord . '.cache');
 		//	Delete the entry from our cell address array
@@ -209,7 +210,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 * @return	void
 	 */
 	#[\Override]
-    public function copyCellCollection(PHPExcel_Worksheet $parent) {
+	public function copyCellCollection(PHPExcel_Worksheet $parent): void {
 		parent::copyCellCollection($parent);
 		//	Get a new id for the new file name
 		$baseUnique = $this->_getUniqueID();
@@ -245,7 +246,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 *
 	 * @return	void
 	 */
-	public function unsetWorksheetCells() {
+	public function unsetWorksheetCells(): void {
 		if (!is_null($this->_currentObject)) {
 			$this->_currentObject->detach();
 			$this->_currentObject = $this->_currentObjectID = null;
@@ -297,7 +298,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 * @return	boolean
 	 */
 	#[\Override]
-    public static function cacheMethodIsAvailable() {
+	public static function cacheMethodIsAvailable() {
 		if (!function_exists('wincache_ucache_add')) {
 			return false;
 		}

@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
@@ -19,7 +20,6 @@
 //
 // $Id: OLE.php,v 1.13 2007/03/07 14:38:25 schmidt Exp $
 
-
 /**
 * Array for storing OLE instances that are accessed from
 * OLE_ChainedBlockStream::stream_open().
@@ -35,14 +35,13 @@ $GLOBALS['_OLE_INSTANCES'] = [];
 * @category   PHPExcel
 * @package    PHPExcel_Shared_OLE
 */
-class PHPExcel_Shared_OLE
-{
-	const OLE_PPS_TYPE_ROOT = 5;
-	const OLE_PPS_TYPE_DIR = 1;
-	const OLE_PPS_TYPE_FILE = 2;
-	const OLE_DATA_SIZE_SMALL = 0x1000;
-	const OLE_LONG_INT_SIZE = 4;
-	const OLE_PPS_SIZE = 0x80;
+class PHPExcel_Shared_OLE {
+	public const OLE_PPS_TYPE_ROOT = 5;
+	public const OLE_PPS_TYPE_DIR = 1;
+	public const OLE_PPS_TYPE_FILE = 2;
+	public const OLE_DATA_SIZE_SMALL = 0x1000;
+	public const OLE_LONG_INT_SIZE = 4;
+	public const OLE_PPS_SIZE = 0x80;
 
 	/**
 	 * The file handle for reading an OLE container
@@ -93,8 +92,7 @@ class PHPExcel_Shared_OLE
 	 * @param string $file
 	 * @return mixed true on success, PEAR_Error on failure
 	*/
-	public function read($file)
-	{
+	public function read($file) {
 		$fh = fopen($file, "r");
 		if (!$fh) {
 			throw new PHPExcel_Reader_Exception("Can't open file $file");
@@ -112,7 +110,7 @@ class PHPExcel_Shared_OLE
 		}
 		// Size of blocks and short blocks in bytes
 		$this->bigBlockSize = 2 ** self::_readInt2($fh);
-		$this->smallBlockSize  = 2 ** self::_readInt2($fh);
+		$this->smallBlockSize = 2 ** self::_readInt2($fh);
 
 		// Skip UID, revision number and version number
 		fseek($fh, 44);
@@ -183,8 +181,7 @@ class PHPExcel_Shared_OLE
 	 * @param  int  byte offset from beginning of file
 	 * @access public
 	 */
-	public function _getBlockOffset($blockId)
-	{
+	public function _getBlockOffset($blockId) {
 		return 512 + $blockId * $this->bigBlockSize;
 	}
 
@@ -194,12 +191,13 @@ class PHPExcel_Shared_OLE
 	* @param   int|PPS   block id or PPS
 	* @return  resource  read-only stream
 	*/
-	public function getStream($blockIdOrPps)
-	{
+	public function getStream($blockIdOrPps) {
 		static $isRegistered = false;
 		if (!$isRegistered) {
-			stream_wrapper_register('ole-chainedblockstream',
-				'PHPExcel_Shared_OLE_ChainedBlockStream');
+			stream_wrapper_register(
+				'ole-chainedblockstream',
+				'PHPExcel_Shared_OLE_ChainedBlockStream'
+			);
 			$isRegistered = true;
 		}
 
@@ -225,9 +223,8 @@ class PHPExcel_Shared_OLE
 	 * @return  int
 	 * @access public
 	 */
-	private static function _readInt1($fh)
-	{
-		list(, $tmp) = unpack("c", fread($fh, 1));
+	private static function _readInt1($fh) {
+		[, $tmp] = unpack("c", fread($fh, 1));
 		return $tmp;
 	}
 
@@ -237,9 +234,8 @@ class PHPExcel_Shared_OLE
 	 * @return  int
 	 * @access public
 	 */
-	private static function _readInt2($fh)
-	{
-		list(, $tmp) = unpack("v", fread($fh, 2));
+	private static function _readInt2($fh) {
+		[, $tmp] = unpack("v", fread($fh, 2));
 		return $tmp;
 	}
 
@@ -249,9 +245,8 @@ class PHPExcel_Shared_OLE
 	 * @return  int
 	 * @access public
 	 */
-	private static function _readInt4($fh)
-	{
-		list(, $tmp) = unpack("V", fread($fh, 4));
+	private static function _readInt4($fh) {
+		[, $tmp] = unpack("V", fread($fh, 4));
 		return $tmp;
 	}
 
@@ -263,8 +258,7 @@ class PHPExcel_Shared_OLE
 	* @param  integer  the block id of the first block
 	* @return mixed true on success, PEAR_Error on failure
 	*/
-	public function _readPpsWks($blockId)
-	{
+	public function _readPpsWks($blockId) {
 		$fh = $this->getStream($blockId);
 		for ($pos = 0; ; $pos += 128) {
 			fseek($fh, $pos, SEEK_SET);
@@ -275,18 +269,18 @@ class PHPExcel_Shared_OLE
 			$name = str_replace("\x00", "", $nameUtf16);
 			$type = self::_readInt1($fh);
 			switch ($type) {
-			case self::OLE_PPS_TYPE_ROOT:
-				$pps = new PHPExcel_Shared_OLE_PPS_Root(null, null, []);
-				$this->root = $pps;
-				break;
-			case self::OLE_PPS_TYPE_DIR:
-				$pps = new PHPExcel_Shared_OLE_PPS(null, null, null, null, null, null, null, null, null, []);
-				break;
-			case self::OLE_PPS_TYPE_FILE:
-				$pps = new PHPExcel_Shared_OLE_PPS_File($name);
-				break;
-			default:
-				break;
+				case self::OLE_PPS_TYPE_ROOT:
+					$pps = new PHPExcel_Shared_OLE_PPS_Root(null, null, []);
+					$this->root = $pps;
+					break;
+				case self::OLE_PPS_TYPE_DIR:
+					$pps = new PHPExcel_Shared_OLE_PPS(null, null, null, null, null, null, null, null, null, []);
+					break;
+				case self::OLE_PPS_TYPE_FILE:
+					$pps = new PHPExcel_Shared_OLE_PPS_File($name);
+					break;
+				default:
+					break;
 			}
 			fseek($fh, 1, SEEK_CUR);
 			$pps->Type = $type;
@@ -339,8 +333,7 @@ class PHPExcel_Shared_OLE
 	* @param integer $index The index of the PPS from which we are checking
 	* @return boolean Whether the PPS tree for the given PPS is complete
 	*/
-	public function _ppsTreeComplete($index)
-	{
+	public function _ppsTreeComplete($index) {
 		return isset($this->_list[$index]) &&
 			   ($pps = $this->_list[$index]) &&
 			   ($pps->PrevPps == -1 ||
@@ -359,8 +352,7 @@ class PHPExcel_Shared_OLE
 	* @param integer $index The index for the PPS
 	* @return bool true if it's a File PPS, false otherwise
 	*/
-	public function isFile($index)
-	{
+	public function isFile($index) {
 		if (isset($this->_list[$index])) {
 			return ($this->_list[$index]->Type == self::OLE_PPS_TYPE_FILE);
 		}
@@ -375,8 +367,7 @@ class PHPExcel_Shared_OLE
 	* @param integer $index The index for the PPS.
 	* @return bool true if it's a Root PPS, false otherwise
 	*/
-	public function isRoot($index)
-	{
+	public function isRoot($index) {
 		if (isset($this->_list[$index])) {
 			return ($this->_list[$index]->Type == self::OLE_PPS_TYPE_ROOT);
 		}
@@ -389,8 +380,7 @@ class PHPExcel_Shared_OLE
 	* @access public
 	* @return integer The total number of PPS's found in the OLE container
 	*/
-	public function ppsTotal()
-	{
+	public function ppsTotal() {
 		return count($this->_list);
 	}
 
@@ -406,8 +396,7 @@ class PHPExcel_Shared_OLE
 	* @return string The binary string containing the data requested
 	* @see OLE_PPS_File::getStream()
 	*/
-	public function getData($index, $position, $length)
-	{
+	public function getData($index, $position, $length) {
 		// if position is not valid return empty string
 		if (!isset($this->_list[$index]) || ($position >= $this->_list[$index]->Size) || ($position < 0)) {
 			return '';
@@ -426,8 +415,7 @@ class PHPExcel_Shared_OLE
 	* @param integer $index    The index for the PPS
 	* @return integer The amount of bytes in data the PPS has
 	*/
-	public function getDataLength($index)
-	{
+	public function getDataLength($index) {
 		if (isset($this->_list[$index])) {
 			return $this->_list[$index]->Size;
 		}
@@ -442,8 +430,7 @@ class PHPExcel_Shared_OLE
 	* @param string $ascii The ASCII string to transform
 	* @return string The string in Unicode
 	*/
-	public static function Asc2Ucs($ascii)
-	{
+	public static function Asc2Ucs($ascii) {
 		$rawname = '';
 		for ($i = 0; $i < strlen((string) $ascii); ++$i) {
 			$rawname .= $ascii[$i] . "\x00";
@@ -460,8 +447,7 @@ class PHPExcel_Shared_OLE
 	* @param integer $date A timestamp
 	* @return string The string for the OLE container
 	*/
-	public static function LocalDate2OLE($date = null)
-	{
+	public static function LocalDate2OLE($date = null) {
 		if (!isset($date)) {
 			return "\x00\x00\x00\x00\x00\x00\x00\x00";
 		}
@@ -472,7 +458,7 @@ class PHPExcel_Shared_OLE
 		// days from 1-1-1601 until the beggining of UNIX era
 		$days = 134774;
 		// calculate seconds
-		$big_date = $days*24*3600 + gmmktime(date("H",$date), date("i",$date), date("s",$date), date("m",$date), date("d",$date), date("Y",$date));
+		$big_date = $days * 24 * 3600 + gmmktime(date("H", $date), date("i", $date), date("s", $date), date("m", $date), date("d", $date), date("Y", $date));
 		// multiply just to make MS happy
 		$big_date *= 10000000;
 
@@ -504,16 +490,15 @@ class PHPExcel_Shared_OLE
 	* @param integer $string A binary string with the encoded date
 	* @return string The timestamp corresponding to the string
 	*/
-	public static function OLE2LocalDate($string)
-	{
+	public static function OLE2LocalDate($string) {
 		if (strlen((string) $string) != 8) {
 			return new PEAR_Error("Expecting 8 byte string");
 		}
 
 		// factor used for separating numbers into 4 bytes parts
 		$factor = 2 ** 32;
-		list(, $high_part) = unpack('V', substr((string) $string, 4, 4));
-		list(, $low_part) = unpack('V', substr((string) $string, 0, 4));
+		[, $high_part] = unpack('V', substr((string) $string, 4, 4));
+		[, $low_part] = unpack('V', substr((string) $string, 0, 4));
 
 		$big_date = ($high_part * $factor) + $low_part;
 		// translate to seconds

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -63,11 +64,11 @@ class PHPExcel_Calculation_Token_Stack {
 	 * @param  mixed  $value
 	 * @param  mixed  $reference
 	 */
-	public function push($type, $value, $reference = null) {
+	public function push($type, $value, $reference = null): void {
 		$this->_stack[$this->_count++] = [
-			'type'      => $type,
-			'value'     => $value,
-			'reference' => $reference
+			'type' => $type,
+			'value' => $value,
+			'reference' => $reference,
 		];
 
 		if ($type == 'Function') {
@@ -109,7 +110,7 @@ class PHPExcel_Calculation_Token_Stack {
 	/**
 	 * Clear the stack
 	 */
-	function clear() {
+	public function clear(): void {
 		$this->_stack = [];
 		$this->_count = 0;
 	}

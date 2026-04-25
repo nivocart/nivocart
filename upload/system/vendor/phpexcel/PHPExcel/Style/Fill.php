@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -32,30 +33,29 @@
  * @package	PHPExcel_Style
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable
-{
+class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable {
 	/* Fill types */
-	const FILL_NONE                    = 'none';
-	const FILL_SOLID                   = 'solid';
-	const FILL_GRADIENT_LINEAR         = 'linear';
-	const FILL_GRADIENT_PATH           = 'path';
-	const FILL_PATTERN_DARKDOWN        = 'darkDown';
-	const FILL_PATTERN_DARKGRAY        = 'darkGray';
-	const FILL_PATTERN_DARKGRID        = 'darkGrid';
-	const FILL_PATTERN_DARKHORIZONTAL  = 'darkHorizontal';
-	const FILL_PATTERN_DARKTRELLIS     = 'darkTrellis';
-	const FILL_PATTERN_DARKUP          = 'darkUp';
-	const FILL_PATTERN_DARKVERTICAL    = 'darkVertical';
-	const FILL_PATTERN_GRAY0625        = 'gray0625';
-	const FILL_PATTERN_GRAY125         = 'gray125';
-	const FILL_PATTERN_LIGHTDOWN       = 'lightDown';
-	const FILL_PATTERN_LIGHTGRAY       = 'lightGray';
-	const FILL_PATTERN_LIGHTGRID       = 'lightGrid';
-	const FILL_PATTERN_LIGHTHORIZONTAL = 'lightHorizontal';
-	const FILL_PATTERN_LIGHTTRELLIS    = 'lightTrellis';
-	const FILL_PATTERN_LIGHTUP         = 'lightUp';
-	const FILL_PATTERN_LIGHTVERTICAL   = 'lightVertical';
-	const FILL_PATTERN_MEDIUMGRAY      = 'mediumGray';
+	public const FILL_NONE = 'none';
+	public const FILL_SOLID = 'solid';
+	public const FILL_GRADIENT_LINEAR = 'linear';
+	public const FILL_GRADIENT_PATH = 'path';
+	public const FILL_PATTERN_DARKDOWN = 'darkDown';
+	public const FILL_PATTERN_DARKGRAY = 'darkGray';
+	public const FILL_PATTERN_DARKGRID = 'darkGrid';
+	public const FILL_PATTERN_DARKHORIZONTAL = 'darkHorizontal';
+	public const FILL_PATTERN_DARKTRELLIS = 'darkTrellis';
+	public const FILL_PATTERN_DARKUP = 'darkUp';
+	public const FILL_PATTERN_DARKVERTICAL = 'darkVertical';
+	public const FILL_PATTERN_GRAY0625 = 'gray0625';
+	public const FILL_PATTERN_GRAY125 = 'gray125';
+	public const FILL_PATTERN_LIGHTDOWN = 'lightDown';
+	public const FILL_PATTERN_LIGHTGRAY = 'lightGray';
+	public const FILL_PATTERN_LIGHTGRID = 'lightGrid';
+	public const FILL_PATTERN_LIGHTHORIZONTAL = 'lightHorizontal';
+	public const FILL_PATTERN_LIGHTTRELLIS = 'lightTrellis';
+	public const FILL_PATTERN_LIGHTUP = 'lightUp';
+	public const FILL_PATTERN_LIGHTVERTICAL = 'lightVertical';
+	public const FILL_PATTERN_MEDIUMGRAY = 'mediumGray';
 
 	/**
 	 * Fill type
@@ -95,14 +95,13 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 *									Leave this value at default unless you understand exactly what
 	 *										its ramifications are
 	 */
-	public function __construct($isSupervisor = FALSE, $isConditional = FALSE)
-	{
+	public function __construct($isSupervisor = false, $isConditional = false) {
 		// Supervisor?
 		parent::__construct($isSupervisor);
 
 		// Initialise values
 		if ($isConditional) {
-			$this->_fillType = NULL;
+			$this->_fillType = null;
 		}
 		$this->_startColor = new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_WHITE, $isSupervisor, $isConditional);
 		$this->_endColor = new PHPExcel_Style_Color(PHPExcel_Style_Color::COLOR_BLACK, $isSupervisor, $isConditional);
@@ -120,8 +119,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 *
 	 * @return PHPExcel_Style_Fill
 	 */
-	public function getSharedComponent()
-	{
+	public function getSharedComponent() {
 		return $this->_parent->getSharedComponent()->getFill();
 	}
 
@@ -131,8 +129,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 * @param array $array
 	 * @return array
 	 */
-	public function getStyleArray($array)
-	{
+	public function getStyleArray($array) {
 		return ['fill' => $array];
 	}
 
@@ -309,7 +306,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 			return $this->getSharedComponent()->getHashCode();
 		}
 		return md5(
-			  $this->getFillType()
+			$this->getFillType()
 			. $this->getRotation()
 			. $this->getStartColor()->getHashCode()
 			. $this->getEndColor()->getHashCode()

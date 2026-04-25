@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -32,8 +33,7 @@
  * @package	PHPExcel_Style
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-abstract class PHPExcel_Style_Supervisor
-{
+abstract class PHPExcel_Style_Supervisor {
 	/**
 	 * Parent. Only used for supervisor
 	 *
@@ -42,20 +42,19 @@ abstract class PHPExcel_Style_Supervisor
 	protected $_parent;
 
 	/**
-     * Create a new PHPExcel_Style_Alignment
-     *
-     * @param boolean $_isSupervisor Flag indicating if this is a supervisor or not
-     * 									Leave this value at default unless you understand exactly what
-     * 										its ramifications are
-     */
-    public function __construct(
-        /**
-         * Supervisor?
-         */
-        protected $_isSupervisor = false
-    )
-    {
-    }
+	 * Create a new PHPExcel_Style_Alignment
+	 *
+	 * @param boolean $_isSupervisor Flag indicating if this is a supervisor or not
+	 * 									Leave this value at default unless you understand exactly what
+	 * 										its ramifications are
+	 */
+	public function __construct(
+		/**
+		 * Supervisor?
+		 */
+		protected $_isSupervisor = false
+	) {
+	}
 
 	/**
 	 * Bind parent. Only used for supervisor
@@ -63,8 +62,7 @@ abstract class PHPExcel_Style_Supervisor
 	 * @param PHPExcel $parent
 	 * @return PHPExcel_Style_Supervisor
 	 */
-	public function bindParent($parent, $parentPropertyName = null)
-	{
+	public function bindParent($parent, $parentPropertyName = null) {
 		$this->_parent = $parent;
 		return $this;
 	}
@@ -74,8 +72,7 @@ abstract class PHPExcel_Style_Supervisor
 	 *
 	 * @return boolean
 	 */
-	public function getIsSupervisor()
-	{
+	public function getIsSupervisor() {
 		return $this->_isSupervisor;
 	}
 
@@ -84,8 +81,7 @@ abstract class PHPExcel_Style_Supervisor
 	 *
 	 * @return PHPExcel_Worksheet
 	 */
-	public function getActiveSheet()
-	{
+	public function getActiveSheet() {
 		return $this->_parent->getActiveSheet();
 	}
 
@@ -95,8 +91,7 @@ abstract class PHPExcel_Style_Supervisor
 	 *
 	 * @return string E.g. 'A1'
 	 */
-	public function getSelectedCells()
-	{
+	public function getSelectedCells() {
 		return $this->getActiveSheet()->getSelectedCells();
 	}
 
@@ -106,8 +101,7 @@ abstract class PHPExcel_Style_Supervisor
 	 *
 	 * @return string E.g. 'A1'
 	 */
-	public function getActiveCell()
-	{
+	public function getActiveCell() {
 		return $this->getActiveSheet()->getActiveCell();
 	}
 

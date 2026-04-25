@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -122,18 +123,18 @@ class PHPExcel_Calculation_Financial {
 	 */
 	private static function _daysPerYear($year, $basis = 0) {
 		switch ($basis) {
-			case 0 :
-			case 2 :
-			case 4 :
+			case 0:
+			case 2:
+			case 4:
 				$daysPerYear = 360;
 				break;
-			case 3 :
+			case 3:
 				$daysPerYear = 365;
 				break;
-			case 1 :
+			case 1:
 				$daysPerYear = (PHPExcel_Calculation_DateTime::_isLeapYear($year)) ? 366 : 365;
 				break;
-			default :
+			default:
 				return PHPExcel_Calculation_Functions::NaN();
 		}
 
@@ -200,8 +201,8 @@ class PHPExcel_Calculation_Financial {
 
 		//	Validate
 		if ((is_numeric($rate)) && (is_numeric($par))) {
-			$rate	= (float) $rate;
-			$par	= (float) $par;
+			$rate = (float) $rate;
+			$par = (float) $par;
 
 			if (($rate <= 0) || ($par <= 0)) {
 				return PHPExcel_Calculation_Functions::NaN();
@@ -253,8 +254,8 @@ class PHPExcel_Calculation_Financial {
 
 		//	Validate
 		if ((is_numeric($rate)) && (is_numeric($par))) {
-			$rate	= (float) $rate;
-			$par	= (float) $par;
+			$rate = (float) $rate;
+			$par = (float) $par;
 
 			if (($rate <= 0) || ($par <= 0)) {
 				return PHPExcel_Calculation_Functions::NaN();
@@ -338,14 +339,14 @@ class PHPExcel_Calculation_Financial {
 		$fRest = $cost - $salvage;
 
 		for ($n = 0; $n < $period; ++$n) {
-			$fNRate = round($rate * $cost,0);
+			$fNRate = round($rate * $cost, 0);
 			$fRest -= $fNRate;
 
 			if ($fRest < 0.0) {
 				return match ($period - $n) {
-                    0, 1 => round($cost * 0.5, 0),
-                    default => 0.0,
-                };
+					0, 1 => round($cost * 0.5, 0),
+					default => 0.0,
+				};
 			}
 
 			$cost -= $fNRate;
@@ -409,7 +410,7 @@ class PHPExcel_Calculation_Financial {
 		} elseif ($period <= $nNumOfFullPeriods) {
 			return $fOneRate;
 		} elseif ($period == ($nNumOfFullPeriods + 1)) {
-            return ($fCostDelta - $fOneRate * $nNumOfFullPeriods - $f0Rate);
+			return ($fCostDelta - $fOneRate * $nNumOfFullPeriods - $f0Rate);
 		} else {
 			return 0.0;
 		}
@@ -525,9 +526,9 @@ class PHPExcel_Calculation_Financial {
 		}
 
 		switch ($basis) {
-			case 3 : // Actual/365
+			case 3: // Actual/365
 				return 365 / $frequency;
-			case 1 : // Actual/actual
+			case 1: // Actual/actual
 				if ($frequency == 1) {
 					$daysPerYear = self::_daysPerYear(PHPExcel_Calculation_DateTime::YEAR($maturity), $basis);
 					return ($daysPerYear / $frequency);
@@ -536,7 +537,8 @@ class PHPExcel_Calculation_Financial {
 					$next = self::_coupFirstPeriodDate($settlement, $maturity, $frequency, true);
 					return ($next - $prev);
 				}
-			default : // US (NASD) 30/360, Actual/360 or European 30/360
+				// no break
+			default: // US (NASD) 30/360, Actual/360 or European 30/360
 				return 360 / $frequency;
 		}
 
@@ -711,19 +713,19 @@ class PHPExcel_Calculation_Financial {
 		$settlement = self::_coupFirstPeriodDate($settlement, $maturity, $frequency, true);
 
 		$daysBetweenSettlementAndMaturity = PHPExcel_Calculation_DateTime::YEARFRAC($settlement, $maturity, $basis) * 365;
-        return match ($frequency) {
-            // annual payments
-            1 => ceil($daysBetweenSettlementAndMaturity / 360),
-            // half-yearly
-            2 => ceil($daysBetweenSettlementAndMaturity / 180),
-            // quarterly
-            4 => ceil($daysBetweenSettlementAndMaturity / 90),
-            // bimonthly
-            6 => ceil($daysBetweenSettlementAndMaturity / 60),
-            // monthly
-            12 => ceil($daysBetweenSettlementAndMaturity / 30),
-            default => PHPExcel_Calculation_Functions::VALUE(),
-        };
+		return match ($frequency) {
+			// annual payments
+			1 => ceil($daysBetweenSettlementAndMaturity / 360),
+			// half-yearly
+			2 => ceil($daysBetweenSettlementAndMaturity / 180),
+			// quarterly
+			4 => ceil($daysBetweenSettlementAndMaturity / 90),
+			// bimonthly
+			6 => ceil($daysBetweenSettlementAndMaturity / 60),
+			// monthly
+			12 => ceil($daysBetweenSettlementAndMaturity / 30),
+			default => PHPExcel_Calculation_Functions::VALUE(),
+		};
 	}
 
 	/**
@@ -1003,7 +1005,7 @@ class PHPExcel_Calculation_Financial {
 			$previousDepreciation = 0;
 
 			for ($per = 1; $per <= $period; ++$per) {
-				$depreciation = min( ($cost - $previousDepreciation) * ($factor / $life), ($cost - $salvage - $previousDepreciation));
+				$depreciation = min(($cost - $previousDepreciation) * ($factor / $life), ($cost - $salvage - $previousDepreciation));
 				$previousDepreciation += $depreciation;
 			}
 
@@ -1367,7 +1369,9 @@ class PHPExcel_Calculation_Financial {
 		$f2 = self::NPV($x2, $values);
 
 		for ($i = 0; $i < FINANCIAL_MAX_ITERATIONS; ++$i) {
-			if (($f1 * $f2) < 0.0) break;
+			if (($f1 * $f2) < 0.0) {
+				break;
+			}
 
 			if (abs($f1) < abs($f2)) {
 				$f1 = self::NPV($x1 += 1.6 * ($x1 - $x2), $values);
@@ -1556,7 +1560,7 @@ class PHPExcel_Calculation_Financial {
 				return PHPExcel_Calculation_Functions::NaN();
 			}
 
-			return (-$pv -$fv) / $pmt;
+			return (-$pv - $fv) / $pmt;
 		}
 	}
 
@@ -1682,7 +1686,7 @@ class PHPExcel_Calculation_Financial {
 		$n = self::COUPNUM($settlement, $maturity, $frequency, $basis);
 		$a = self::COUPDAYBS($settlement, $maturity, $frequency, $basis);
 
-		$baseYF	= 1.0 + ($yield / $frequency);
+		$baseYF = 1.0 + ($yield / $frequency);
 		$rfp = 100 * ($rate / $frequency);
 		$de = $dsc / $e;
 
@@ -1963,7 +1967,7 @@ class PHPExcel_Calculation_Financial {
 				return $daysBetweenSettlementAndMaturity;
 			}
 
-			return $investment / ( 1 - ($discount * $daysBetweenSettlementAndMaturity));
+			return $investment / (1 - ($discount * $daysBetweenSettlementAndMaturity));
 		}
 
 		return PHPExcel_Calculation_Functions::VALUE();
@@ -2403,4 +2407,3 @@ class PHPExcel_Calculation_Financial {
 		return PHPExcel_Calculation_Functions::VALUE();
 	}
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -33,14 +34,14 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage_CacheBase implements PHPExcel_CachedObjectStorage_ICache {
-    /**
-     * Store cell data in cache for the current cell object if it's "dirty",
-     *     and the 'nullify' the current cell object
-     *
+	/**
+	 * Store cell data in cache for the current cell object if it's "dirty",
+	 *     and the 'nullify' the current cell object
+	 *
 	 * @return	void
-     * @throws	PHPExcel_Exception
-     */
-	protected function _storeData() {
+	 * @throws	PHPExcel_Exception
+	 */
+	protected function _storeData(): void {
 		if ($this->_currentCellIsDirty && !empty($this->_currentObjectID)) {
 			$this->_currentObject->detach();
 
@@ -52,14 +53,14 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
 		$this->_currentObjectID = $this->_currentObject = null;
 	}
 
-    /**
-     * Add or Update a cell in cache identified by coordinate address
-     *
-     * @param	string			$pCoord		Coordinate address of the cell to update
-     * @param	PHPExcel_Cell	$cell		Cell to update
+	/**
+	 * Add or Update a cell in cache identified by coordinate address
+	 *
+	 * @param	string			$pCoord		Coordinate address of the cell to update
+	 * @param	PHPExcel_Cell	$cell		Cell to update
 	 * @return	PHPExcel_Cell
-     * @throws	PHPExcel_Exception
-     */
+	 * @throws	PHPExcel_Exception
+	 */
 	public function addCacheData($pCoord, PHPExcel_Cell $cell) {
 		if (($pCoord !== $this->_currentObjectID) && ($this->_currentObjectID !== null)) {
 			$this->_storeData();
@@ -73,13 +74,13 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
 		return $cell;
 	}
 
-    /**
-     * Get cell at a specific coordinate
-     *
-     * @param 	string 			$pCoord		Coordinate of the cell
-     * @throws 	PHPExcel_Exception
-     * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
-     */
+	/**
+	 * Get cell at a specific coordinate
+	 *
+	 * @param 	string 			$pCoord		Coordinate of the cell
+	 * @throws 	PHPExcel_Exception
+	 * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
+	 */
 	public function getCacheData($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
 			return $this->_currentObject;
@@ -97,8 +98,8 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
 		$this->_currentObjectID = $pCoord;
 
 		$this->_currentObject = igbinary_unserialize($this->_cellCache[$pCoord]);
-        // Re-attach this as the cell's parent
-        $this->_currentObject->attach($this);
+		// Re-attach this as the cell's parent
+		$this->_currentObject->attach($this);
 		//	Return requested entry
 		return $this->_currentObject;
 	}
@@ -109,7 +110,7 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
 	 * @return  string[]
 	 */
 	#[\Override]
-    public function getCellList() {
+	public function getCellList() {
 		if ($this->_currentObjectID !== null) {
 			$this->_storeData();
 		}
@@ -122,7 +123,7 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
 	 *
 	 * @return	void
 	 */
-	public function unsetWorksheetCells() {
+	public function unsetWorksheetCells(): void {
 		if (!is_null($this->_currentObject)) {
 			$this->_currentObject->detach();
 
@@ -141,7 +142,7 @@ class PHPExcel_CachedObjectStorage_Igbinary extends PHPExcel_CachedObjectStorage
 	 * @return	boolean
 	 */
 	#[\Override]
-    public static function cacheMethodIsAvailable() {
+	public static function cacheMethodIsAvailable() {
 		if (!function_exists('igbinary_serialize')) {
 			return false;
 		}

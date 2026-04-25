@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -83,63 +84,62 @@ class PHPExcel_Chart {
 	private $_bottomRightYOffset = 10;
 
 	/**
-     * Create a new PHPExcel_Chart
-     * @param string $name
-     * @param bool $plotVisibleOnly
-     * @param string $displayBlanksAs
-     */
-    public function __construct(
-        /**
-         * Chart Name
-         */
-        private $_name,
-        /**
-         * Chart Title
-         */
-        private ?\PHPExcel_Chart_Title $_title = null,
-        /**
-         * Chart Legend
-         */
-        private ?\PHPExcel_Chart_Legend $_legend = null,
-        /**
-         * Chart Plot Area
-         */
-        private readonly ?\PHPExcel_Chart_PlotArea $_plotArea = null,
-        /**
-         * Plot Visible Only
-         */
-        private $_plotVisibleOnly = true,
-        /**
-         * Display Blanks as
-         */
-        private $_displayBlanksAs = '0',
-        /**
-         * X-Axis Label
-         */
-        private ?\PHPExcel_Chart_Title $_xAxisLabel = null,
-        /**
-         * Y-Axis Label
-         */
-        private ?\PHPExcel_Chart_Title $_yAxisLabel = null,
-        /**
-         * Chart Asix X as
-         */
-        private readonly ?\PHPExcel_Chart_Axis $_xAxis = null,
-        /**
-         * Chart Asix Y as
-         */
-        private readonly ?\PHPExcel_Chart_Axis $_yAxis = null,
-        /**
-         * Chart Major Gridlines as
-         */
-        private readonly ?\PHPExcel_Chart_GridLines $_majorGridlines = null,
-        /**
-         * Chart Minor Gridlines as
-         */
-        private readonly ?\PHPExcel_Chart_GridLines $_minorGridlines = null
-    )
-    {
-    }
+	 * Create a new PHPExcel_Chart
+	 * @param string $name
+	 * @param bool $plotVisibleOnly
+	 * @param string $displayBlanksAs
+	 */
+	public function __construct(
+		/**
+		 * Chart Name
+		 */
+		private $_name,
+		/**
+		 * Chart Title
+		 */
+		private ?\PHPExcel_Chart_Title $_title = null,
+		/**
+		 * Chart Legend
+		 */
+		private ?\PHPExcel_Chart_Legend $_legend = null,
+		/**
+		 * Chart Plot Area
+		 */
+		private readonly ?\PHPExcel_Chart_PlotArea $_plotArea = null,
+		/**
+		 * Plot Visible Only
+		 */
+		private $_plotVisibleOnly = true,
+		/**
+		 * Display Blanks as
+		 */
+		private $_displayBlanksAs = '0',
+		/**
+		 * X-Axis Label
+		 */
+		private ?\PHPExcel_Chart_Title $_xAxisLabel = null,
+		/**
+		 * Y-Axis Label
+		 */
+		private ?\PHPExcel_Chart_Title $_yAxisLabel = null,
+		/**
+		 * Chart Asix X as
+		 */
+		private readonly ?\PHPExcel_Chart_Axis $_xAxis = null,
+		/**
+		 * Chart Asix Y as
+		 */
+		private readonly ?\PHPExcel_Chart_Axis $_yAxis = null,
+		/**
+		 * Chart Major Gridlines as
+		 */
+		private readonly ?\PHPExcel_Chart_GridLines $_majorGridlines = null,
+		/**
+		 * Chart Minor Gridlines as
+		 */
+		private readonly ?\PHPExcel_Chart_GridLines $_minorGridlines = null
+	) {
+	}
 
 	/**
 	 * Get Name
@@ -306,10 +306,10 @@ class PHPExcel_Chart {
 	}
 
 	/**
-     * Get yAxis
-     *
-     * @return PHPExcel_Chart_Axis
-     */
+	 * Get yAxis
+	 *
+	 * @return PHPExcel_Chart_Axis
+	 */
 	public function getChartAxisY() {
 		if ($this->_yAxis !== null) {
 			return $this->_yAxis;
@@ -319,10 +319,10 @@ class PHPExcel_Chart {
 	}
 
 	/**
-     * Get xAxis
-     *
-     * @return PHPExcel_Chart_Axis
-     */
+	 * Get xAxis
+	 *
+	 * @return PHPExcel_Chart_Axis
+	 */
 	public function getChartAxisX() {
 		if ($this->_xAxis !== null) {
 			return $this->_xAxis;
@@ -332,10 +332,10 @@ class PHPExcel_Chart {
 	}
 
 	/**
-     * Get Major Gridlines
-     *
-     * @return PHPExcel_Chart_GridLines
-     */
+	 * Get Major Gridlines
+	 *
+	 * @return PHPExcel_Chart_GridLines
+	 */
 	public function getMajorGridlines() {
 		if ($this->_majorGridlines !== null) {
 			return $this->_majorGridlines;
@@ -345,10 +345,10 @@ class PHPExcel_Chart {
 	}
 
 	/**
-     * Get Minor Gridlines
-     *
-     * @return PHPExcel_Chart_GridLines
-     */
+	 * Get Minor Gridlines
+	 *
+	 * @return PHPExcel_Chart_GridLines
+	 */
 	public function getMinorGridlines() {
 		if ($this->_minorGridlines !== null) {
 			return $this->_minorGridlines;
@@ -386,9 +386,9 @@ class PHPExcel_Chart {
 	 */
 	public function getTopLeftPosition() {
 		return [
-			'cell'		=> $this->_topLeftCellRef,
-			'xOffset'	=> $this->_topLeftXOffset,
-			'yOffset'	=> $this->_topLeftYOffset
+			'cell' => $this->_topLeftCellRef,
+			'xOffset' => $this->_topLeftXOffset,
+			'yOffset' => $this->_topLeftYOffset,
 		];
 	}
 
@@ -440,7 +440,7 @@ class PHPExcel_Chart {
 	public function getTopLeftOffset() {
 		return [
 			'X' => $this->_topLeftXOffset,
-			'Y' => $this->_topLeftYOffset
+			'Y' => $this->_topLeftYOffset,
 		];
 	}
 
@@ -493,9 +493,9 @@ class PHPExcel_Chart {
 	 */
 	public function getBottomRightPosition() {
 		return [
-			'cell'		=> $this->_bottomRightCellRef,
-			'xOffset'	=> $this->_bottomRightXOffset,
-			'yOffset'	=> $this->_bottomRightYOffset
+			'cell' => $this->_bottomRightCellRef,
+			'xOffset' => $this->_bottomRightXOffset,
+			'yOffset' => $this->_bottomRightYOffset,
 		];
 	}
 
@@ -541,7 +541,7 @@ class PHPExcel_Chart {
 	public function getBottomRightOffset() {
 		return [
 			'X' => $this->_bottomRightXOffset,
-			'Y' => $this->_bottomRightYOffset
+			'Y' => $this->_bottomRightYOffset,
 		];
 	}
 
@@ -565,7 +565,7 @@ class PHPExcel_Chart {
 		return $this->_bottomRightYOffset;
 	}
 
-	public function refresh() {
+	public function refresh(): void {
 		if ($this->_worksheet !== null) {
 			$this->_plotArea->refresh($this->_worksheet);
 		}

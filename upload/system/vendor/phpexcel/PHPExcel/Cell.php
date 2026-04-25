@@ -1,4 +1,5 @@
 <?php
+
 /**
  *	PHPExcel
  *
@@ -39,7 +40,7 @@ class PHPExcel_Cell implements \Stringable {
 	 *
 	 *  @var  string
 	 */
-	const DEFAULT_RANGE = 'A1:A1';
+	public const DEFAULT_RANGE = 'A1:A1';
 
 	/**
 	 *	Value binder to use
@@ -98,26 +99,29 @@ class PHPExcel_Cell implements \Stringable {
 		return $this;
 	}
 
-	public function detach() {
+	public function detach(): void {
 		$this->_parent = null;
 	}
 
-	public function attach(PHPExcel_CachedObjectStorage_CacheBase $parent) {
+	public function attach(PHPExcel_CachedObjectStorage_CacheBase $parent): void {
 		$this->_parent = $parent;
 	}
 
 	/**
-     *	Create a new Cell
-     *
-     * @param mixed $_value
-     *	@param	string				$pDataType
-     *	@param	PHPExcel_Worksheet	$pSheet
-     *	@throws	PHPExcel_Exception
-     */
-    public function __construct(/**
-     *	Value of the cell
-     */
-    private $_value = null, $pDataType = null, PHPExcel_Worksheet $pSheet = null) {
+	 *	Create a new Cell
+	 *
+	 * @param mixed $_value
+	 *	@param	string				$pDataType
+	 *	@param	PHPExcel_Worksheet	$pSheet
+	 *	@throws	PHPExcel_Exception
+	 */
+	public function __construct(/**
+	 *	Value of the cell
+	 */
+		private $_value = null,
+		$pDataType = null,
+		PHPExcel_Worksheet $pSheet = null
+	) {
 		// Set worksheet cache
 		$this->_parent = $pSheet->getCellCacheController();
 
@@ -129,7 +133,7 @@ class PHPExcel_Cell implements \Stringable {
 
 			$this->_dataType = $pDataType;
 		} elseif (!self::getValueBinder()->bindValue($this, $this->_value)) {
-            throw new PHPExcel_Exception("Value could not be bound to cell.");
+			throw new PHPExcel_Exception("Value could not be bound to cell.");
 		}
 	}
 
@@ -214,6 +218,7 @@ class PHPExcel_Cell implements \Stringable {
 				break;
 			case PHPExcel_Cell_DataType::TYPE_STRING2:
 				$pDataType = PHPExcel_Cell_DataType::TYPE_STRING;
+				// no break
 			case PHPExcel_Cell_DataType::TYPE_STRING:
 			case PHPExcel_Cell_DataType::TYPE_INLINE:
 				$this->_value = PHPExcel_Cell_DataType::checkString($pValue);
@@ -340,14 +345,14 @@ class PHPExcel_Cell implements \Stringable {
 		return $this->notifyCacheController();
 	}
 
-    /**
-     *  Identify if the cell contains a formula
-     *
-     *  @return boolean
-     */
-    public function isFormula() {
-        return $this->_dataType == PHPExcel_Cell_DataType::TYPE_FORMULA;
-    }
+	/**
+	 *  Identify if the cell contains a formula
+	 *
+	 *  @return boolean
+	 */
+	public function isFormula() {
+		return $this->_dataType == PHPExcel_Cell_DataType::TYPE_FORMULA;
+	}
 
 	/**
 	 *	Does this cell contain Data validation rules?
@@ -462,43 +467,43 @@ class PHPExcel_Cell implements \Stringable {
 	 *
 	 *	@return boolean
 	 */
-    public function isInMergeRange() {
-        return (boolean) $this->getMergeRange();
-    }
+	public function isInMergeRange() {
+		return (bool) $this->getMergeRange();
+	}
 
 	/**
 	 *	Is this cell the master (top left cell) in a merge range (that holds the actual data value)
 	 *
 	 *	@return boolean
 	 */
-    public function isMergeRangeValueCell() {
-        if ($mergeRange = $this->getMergeRange()) {
-            $mergeRange = PHPExcel_Cell::splitRange($mergeRange);
+	public function isMergeRangeValueCell() {
+		if ($mergeRange = $this->getMergeRange()) {
+			$mergeRange = PHPExcel_Cell::splitRange($mergeRange);
 
-            [$startCell] = $mergeRange[0];
+			[$startCell] = $mergeRange[0];
 
-            if ($this->getCoordinate() === $startCell) {
-                return true;
-            }
-        }
+			if ($this->getCoordinate() === $startCell) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	/**
 	 *	If this cell is in a merge range, then return the range
 	 *
 	 *	@return string
 	 */
-    public function getMergeRange() {
-        foreach ($this->getWorksheet()->getMergeCells() as $mergeRange) {
-            if ($this->isInRange($mergeRange)) {
-                return $mergeRange;
-            }
-        }
+	public function getMergeRange() {
+		foreach ($this->getWorksheet()->getMergeCells() as $mergeRange) {
+			if ($this->isInRange($mergeRange)) {
+				return $mergeRange;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	/**
 	 *	Get cell style
@@ -531,7 +536,7 @@ class PHPExcel_Cell implements \Stringable {
 		[$rangeStart, $rangeEnd] = self::rangeBoundaries($pRange);
 
 		// Translate properties
-		$myColumn	= self::columnIndexFromString($this->getColumn());
+		$myColumn = self::columnIndexFromString($this->getColumn());
 		$myRow = $this->getRow();
 
 		// Verify if cell is in range
@@ -576,7 +581,9 @@ class PHPExcel_Cell implements \Stringable {
 				[$worksheet, $pCoordinateString] = $cellAddress;
 			}
 
-			if ($worksheet > '')	$worksheet .= '!';
+			if ($worksheet > '') {
+				$worksheet .= '!';
+			}
 
 			// Create absolute coordinate
 			if (ctype_digit($pCoordinateString)) {
@@ -769,7 +776,7 @@ class PHPExcel_Cell implements \Stringable {
 			'A' => 1, 'B' => 2, 'C' => 3, 'D' => 4, 'E' => 5, 'F' => 6, 'G' => 7, 'H' => 8, 'I' => 9, 'J' => 10, 'K' => 11, 'L' => 12, 'M' => 13,
 			'N' => 14, 'O' => 15, 'P' => 16, 'Q' => 17, 'R' => 18, 'S' => 19, 'T' => 20, 'U' => 21, 'V' => 22, 'W' => 23, 'X' => 24, 'Y' => 25, 'Z' => 26,
 			'a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5, 'f' => 6, 'g' => 7, 'h' => 8, 'i' => 9, 'j' => 10, 'k' => 11, 'l' => 12, 'm' => 13,
-			'n' => 14, 'o' => 15, 'p' => 16, 'q' => 17, 'r' => 18, 's' => 19, 't' => 20, 'u' => 21, 'v' => 22, 'w' => 23, 'x' => 24, 'y' => 25, 'z' => 26
+			'n' => 14, 'o' => 15, 'p' => 16, 'q' => 17, 'r' => 18, 's' => 19, 't' => 20, 'u' => 21, 'v' => 22, 'w' => 23, 'x' => 24, 'y' => 25, 'z' => 26,
 		];
 
 		//	We also use the language construct isset() rather than the more costly strlen() function to match the length of $pString for improved performance
@@ -845,7 +852,7 @@ class PHPExcel_Cell implements \Stringable {
 				}
 
 				// Range...
-				[$rangeStart, $rangeEnd]	= $range;
+				[$rangeStart, $rangeEnd] = $range;
 
 				sscanf($rangeStart, '%[A-Z]%d', $startCol, $startRow);
 				sscanf($rangeEnd, '%[A-Z]%d', $endCol, $endRow);
@@ -853,8 +860,8 @@ class PHPExcel_Cell implements \Stringable {
 				$endCol++;
 
 				// Current data
-				$currentCol	= $startCol;
-				$currentRow	= $startRow;
+				$currentCol = $startCol;
+				$currentRow = $startRow;
 
 				// Loop cells
 				while ($currentCol != $endCol) {
@@ -921,7 +928,7 @@ class PHPExcel_Cell implements \Stringable {
 	 * @param PHPExcel_Cell_IValueBinder $binder
 	 * @throws PHPExcel_Exception
 	 */
-	public static function setValueBinder(PHPExcel_Cell_IValueBinder $binder = null) {
+	public static function setValueBinder(PHPExcel_Cell_IValueBinder $binder = null): void {
 		if ($binder === null) {
 			throw new PHPExcel_Exception("A PHPExcel_Cell_IValueBinder is required for PHPExcel to function correctly.");
 		}
@@ -981,11 +988,11 @@ class PHPExcel_Cell implements \Stringable {
 		return $this->_formulaAttributes;
 	}
 
-    /**
-     * Convert to string
-     *
-     * @return string
-     */
+	/**
+	 * Convert to string
+	 *
+	 * @return string
+	 */
 	public function __toString(): string {
 		return (string)$this->getValue();
 	}

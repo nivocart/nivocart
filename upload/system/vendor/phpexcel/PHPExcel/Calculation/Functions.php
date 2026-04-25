@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -56,13 +57,13 @@ define('PRECISION', 8.88E-016);
  */
 class PHPExcel_Calculation_Functions {
 	/** constants */
-	const COMPATIBILITY_EXCEL = 'Excel';
-	const COMPATIBILITY_GNUMERIC = 'Gnumeric';
-	const COMPATIBILITY_OPENOFFICE = 'OpenOfficeCalc';
+	public const COMPATIBILITY_EXCEL = 'Excel';
+	public const COMPATIBILITY_GNUMERIC = 'Gnumeric';
+	public const COMPATIBILITY_OPENOFFICE = 'OpenOfficeCalc';
 
-	const RETURNDATE_PHP_NUMERIC = 'P';
-	const RETURNDATE_PHP_OBJECT = 'O';
-	const RETURNDATE_EXCEL = 'E';
+	public const RETURNDATE_PHP_NUMERIC = 'P';
+	public const RETURNDATE_PHP_OBJECT = 'O';
+	public const RETURNDATE_EXCEL = 'E';
 
 	/**
 	 * Compatibility mode to use for error checking and responses
@@ -87,14 +88,14 @@ class PHPExcel_Calculation_Functions {
 	 * @var array
 	 */
 	protected static $_errorCodes = [
-		'null'           => '#NULL!',
+		'null' => '#NULL!',
 		'divisionbyzero' => '#DIV/0!',
-		'value'          => '#VALUE!',
-		'reference'      => '#REF!',
-		'name'           => '#NAME?',
-		'num'            => '#NUM!',
-		'na'             => '#N/A',
-		'gettingdata'    => '#GETTING_DATA'
+		'value' => '#VALUE!',
+		'reference' => '#REF!',
+		'name' => '#NAME?',
+		'num' => '#NUM!',
+		'na' => '#N/A',
+		'gettingdata' => '#GETTING_DATA',
 	];
 
 	/**
@@ -256,7 +257,7 @@ class PHPExcel_Calculation_Functions {
 	 * @category Error Returns
 	 * @return	string	#NULL!
 	 */
-	public static function NULL() {
+	public static function null() {
 		return self::$_errorCodes['null'];
 	}
 
@@ -286,11 +287,12 @@ class PHPExcel_Calculation_Functions {
 	}
 
 	public static function _ifCondition($condition) {
-		$condition	= PHPExcel_Calculation_Functions::flattenSingleValue($condition);
+		$condition = PHPExcel_Calculation_Functions::flattenSingleValue($condition);
 
-		if (!isset($condition[0]))
+		if (!isset($condition[0])) {
 			$condition = '=""';
-		if (!in_array($condition[0],['>', '<', '='])) {
+		}
+		if (!in_array($condition[0], ['>', '<', '='])) {
 			if (!is_numeric($condition)) {
 				$condition = PHPExcel_Calculation::_wrapResult(strtoupper((string) $condition));
 			}
@@ -299,7 +301,7 @@ class PHPExcel_Calculation_Functions {
 		} else {
 			preg_match('/([<>=]+)(.*)/', (string) $condition, $matches);
 
-			list(, $operator, $operand) = $matches;
+			[, $operator, $operand] = $matches;
 
 			if (!is_numeric($operand)) {
 				$operand = str_replace('"', '""', $operand);
@@ -317,7 +319,7 @@ class PHPExcel_Calculation_Functions {
 	 * @return	boolean
 	 */
 	public static function ERROR_TYPE($value = '') {
-		$value	= self::flattenSingleValue($value);
+		$value = self::flattenSingleValue($value);
 
 		$i = 1;
 
@@ -339,7 +341,7 @@ class PHPExcel_Calculation_Functions {
 	 */
 	public static function IS_BLANK($value = null) {
 		if (!is_null($value)) {
-			$value	= self::flattenSingleValue($value);
+			$value = self::flattenSingleValue($value);
 		}
 
 		return is_null($value);
@@ -505,15 +507,15 @@ class PHPExcel_Calculation_Functions {
 		}
 
 		switch (gettype($value)) {
-			case 'double' :
-			case 'float' :
-			case 'integer' :
+			case 'double':
+			case 'float':
+			case 'integer':
 				return $value;
 				break;
-			case 'boolean' :
-				return (integer) $value;
+			case 'boolean':
+				return (int) $value;
 				break;
-			case 'string' :
+			case 'string':
 				//	Errors
 				if ((strlen($value) > 0) && ($value[0] == '#')) {
 					return $value;
@@ -548,7 +550,7 @@ class PHPExcel_Calculation_Functions {
 			//	Range of cells is an error
 			if (self::isCellValue($a)) {
 				return 16;
-			//	Test for Matrix
+				//	Test for Matrix
 			} elseif (self::isMatrixValue($a)) {
 				return 64;
 			}

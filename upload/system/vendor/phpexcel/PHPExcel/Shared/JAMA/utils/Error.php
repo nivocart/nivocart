@@ -1,4 +1,5 @@
 <?php
+
 /**
  *	@package JAMA
  *
@@ -9,7 +10,6 @@
 
 //Language constant
 define('JAMALANG', 'EN');
-
 
 //All errors may be defined by the following format:
 //define('ExceptionName', N);
@@ -23,7 +23,7 @@ Feel free to correct anything that looks amiss to you.
 
 define('PolymorphicArgumentException', -1);
 $error['EN'][PolymorphicArgumentException] = "Invalid argument pattern for polymorphic function.";
-$error['FR'][PolymorphicArgumentException] = "Modèle inadmissible d'argument pour la fonction polymorphe.".
+$error['FR'][PolymorphicArgumentException] = "Modèle inadmissible d'argument pour la fonction polymorphe." .
 $error['DE'][PolymorphicArgumentException] = "Unzulässiges Argumentmuster für polymorphe Funktion.";
 
 define('ArgumentTypeException', -2);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -35,26 +36,26 @@
  */
 class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable {
 	/* Horizontal alignment styles */
-	const HORIZONTAL_GENERAL = 'general';
-	const HORIZONTAL_LEFT = 'left';
-	const HORIZONTAL_RIGHT = 'right';
-	const HORIZONTAL_CENTER = 'center';
-	const HORIZONTAL_CENTER_CONTINUOUS = 'centerContinuous';
-	const HORIZONTAL_JUSTIFY = 'justify';
-	const HORIZONTAL_FILL = 'fill';
-	const HORIZONTAL_DISTRIBUTED = 'distributed'; // Excel2007 only
+	public const HORIZONTAL_GENERAL = 'general';
+	public const HORIZONTAL_LEFT = 'left';
+	public const HORIZONTAL_RIGHT = 'right';
+	public const HORIZONTAL_CENTER = 'center';
+	public const HORIZONTAL_CENTER_CONTINUOUS = 'centerContinuous';
+	public const HORIZONTAL_JUSTIFY = 'justify';
+	public const HORIZONTAL_FILL = 'fill';
+	public const HORIZONTAL_DISTRIBUTED = 'distributed'; // Excel2007 only
 
 	/* Vertical alignment styles */
-	const VERTICAL_BOTTOM = 'bottom';
-	const VERTICAL_TOP = 'top';
-	const VERTICAL_CENTER = 'center';
-	const VERTICAL_JUSTIFY = 'justify';
-	const VERTICAL_DISTRIBUTED = 'distributed'; // Excel2007 only
+	public const VERTICAL_BOTTOM = 'bottom';
+	public const VERTICAL_TOP = 'top';
+	public const VERTICAL_CENTER = 'center';
+	public const VERTICAL_JUSTIFY = 'justify';
+	public const VERTICAL_DISTRIBUTED = 'distributed'; // Excel2007 only
 
 	/* Read order */
-	const READORDER_CONTEXT = 0;
-	const READORDER_LTR = 1;
-	const READORDER_RTL = 2;
+	public const READORDER_CONTEXT = 0;
+	public const READORDER_LTR = 1;
+	public const READORDER_RTL = 2;
 
 	/**
 	 * Horizontal alignment
@@ -168,7 +169,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 		if (is_array($pStyles)) {
 			if ($this->_isSupervisor) {
 				$this->getActiveSheet()->getStyle($this->getSelectedCells())
-				    ->applyFromArray($this->getStyleArray($pStyles));
+					->applyFromArray($this->getStyleArray($pStyles));
 			} else {
 				if (isset($pStyles['horizontal'])) {
 					$this->setHorizontal($pStyles['horizontal']);
@@ -288,7 +289,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 		}
 
 		// Set rotation
-		if ( ($pValue >= -90 && $pValue <= 90) || $pValue == -165 ) {
+		if (($pValue >= -90 && $pValue <= 90) || $pValue == -165) {
 			if ($this->_isSupervisor) {
 				$styleArray = $this->getStyleArray(['rotation' => $pValue]);
 				$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
@@ -417,7 +418,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	 */
 	public function setReadorder($pValue = 0) {
 		if ($pValue < 0 || $pValue > 2) {
-            $pValue = 0;
+			$pValue = 0;
 		}
 		if ($this->_isSupervisor) {
 			$styleArray = $this->getStyleArray(['readorder' => $pValue]);
@@ -438,7 +439,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 			return $this->getSharedComponent()->getHashCode();
 		}
 		return md5(
-			  $this->_horizontal
+			$this->_horizontal
 			. $this->_vertical
 			. $this->_textRotation
 			. ($this->_wrapText ? 't' : 'f')

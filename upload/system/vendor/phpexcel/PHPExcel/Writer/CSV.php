@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -77,18 +78,17 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 	private $_excelCompatibility = false;
 
 	/**
-     * Create a new PHPExcel_Writer_CSV
-     *
-     * @param PHPExcel $_phpExcel PHPExcel object
-     */
-    public function __construct(
-        /**
-         * PHPExcel object
-         */
-        private readonly PHPExcel $_phpExcel
-    )
-    {
-    }
+	 * Create a new PHPExcel_Writer_CSV
+	 *
+	 * @param PHPExcel $_phpExcel PHPExcel object
+	 */
+	public function __construct(
+		/**
+		 * PHPExcel object
+		 */
+		private readonly PHPExcel $_phpExcel
+	) {
+	}
 
 	/**
 	 * Save PHPExcel to file
@@ -96,7 +96,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 	 * @param	string		$pFilename
 	 * @throws	PHPExcel_Writer_Exception
 	 */
-	public function save($pFilename = null) {
+	public function save($pFilename = null): void {
 		// Fetch sheet
 		$sheet = $this->_phpExcel->getSheet($this->_sheetIndex);
 
@@ -117,7 +117,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 			fwrite($fileHandle, "\xEF\xBB\xBF");	//	Enforce UTF-8 BOM Header
 			$this->setEnclosure('"');					//	Set enclosure to "
 			$this->setDelimiter(";");			    	//	Set delimiter to a semi-colon
-            $this->setLineEnding("\r\n");
+			$this->setLineEnding("\r\n");
 			fwrite($fileHandle, 'sep=' . $this->getDelimiter() . $this->_lineEnding);
 		} elseif ($this->_useBOM) {
 			// Write the UTF-8 BOM code if required
@@ -281,7 +281,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 	 * @param	array	$pValues		Array containing values in a row
 	 * @throws	PHPExcel_Writer_Exception
 	 */
-	private function _writeLine($pFileHandle = null, $pValues = null) {
+	private function _writeLine($pFileHandle = null, $pValues = null): void {
 		if (is_array($pValues)) {
 			// No leading delimiter
 			$writeDelimiter = false;
@@ -308,7 +308,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 			$line .= $this->_lineEnding;
 
 			// Write to file
-            fwrite($pFileHandle, $line);
+			fwrite($pFileHandle, $line);
 		} else {
 			throw new PHPExcel_Writer_Exception("Invalid data row passed to CSV writer.");
 		}

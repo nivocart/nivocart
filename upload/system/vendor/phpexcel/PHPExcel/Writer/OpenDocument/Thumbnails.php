@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -34,14 +35,14 @@
  * @author     Alexander Pervakov <frost-nzcr4@jagmort.com>
  */
 class PHPExcel_Writer_OpenDocument_Thumbnails extends PHPExcel_Writer_OpenDocument_WriterPart {
-    /**
-     * Write Thumbnails/thumbnail.png to PNG format
-     *
-     * @param   PHPExcel                   $pPHPExcel
-     * @return  string                     XML Output
-     * @throws  PHPExcel_Writer_Exception
-     */
-    public function writeThumbnail(PHPExcel $pPHPExcel = null) {
-        return '';
-    }
+	/**
+	 * Write Thumbnails/thumbnail.png to PNG format
+	 *
+	 * @param   PHPExcel                   $pPHPExcel
+	 * @return  string                     XML Output
+	 * @throws  PHPExcel_Writer_Exception
+	 */
+	public function writeThumbnail(PHPExcel $pPHPExcel = null) {
+		return '';
+	}
 }

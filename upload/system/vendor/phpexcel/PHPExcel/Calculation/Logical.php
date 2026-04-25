@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -259,7 +260,7 @@ class PHPExcel_Calculation_Logical {
 	 * @return	mixed	The value of returnIfTrue or returnIfFalse determined by condition
 	 */
 	public static function STATEMENT_IF($condition = true, $returnIfTrue = 0, $returnIfFalse = false) {
-		$condition = (is_null($condition)) ? true : (boolean) PHPExcel_Calculation_Functions::flattenSingleValue($condition);
+		$condition = (is_null($condition)) ? true : (bool) PHPExcel_Calculation_Functions::flattenSingleValue($condition);
 		$returnIfTrue = (is_null($returnIfTrue)) ? 0 : PHPExcel_Calculation_Functions::flattenSingleValue($returnIfTrue);
 		$returnIfFalse = (is_null($returnIfFalse)) ? false : PHPExcel_Calculation_Functions::flattenSingleValue($returnIfFalse);
 

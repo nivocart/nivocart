@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -32,19 +33,18 @@
  * @package	PHPExcel_Style
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable
-{
+class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable {
 	/* Colors */
-	const COLOR_BLACK = 'FF000000';
-	const COLOR_WHITE = 'FFFFFFFF';
-	const COLOR_RED = 'FFFF0000';
-	const COLOR_DARKRED = 'FF800000';
-	const COLOR_BLUE = 'FF0000FF';
-	const COLOR_DARKBLUE = 'FF000080';
-	const COLOR_GREEN = 'FF00FF00';
-	const COLOR_DARKGREEN = 'FF008000';
-	const COLOR_YELLOW = 'FFFFFF00';
-	const COLOR_DARKYELLOW = 'FF808000';
+	public const COLOR_BLACK = 'FF000000';
+	public const COLOR_WHITE = 'FFFFFFFF';
+	public const COLOR_RED = 'FFFF0000';
+	public const COLOR_DARKRED = 'FF800000';
+	public const COLOR_BLUE = 'FF0000FF';
+	public const COLOR_DARKBLUE = 'FF000080';
+	public const COLOR_GREEN = 'FF00FF00';
+	public const COLOR_DARKGREEN = 'FF008000';
+	public const COLOR_YELLOW = 'FFFFFF00';
+	public const COLOR_DARKYELLOW = 'FF808000';
 
 	/**
 	 * Indexed colors array
@@ -67,7 +67,6 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	 */
 	protected $_parentPropertyName;
 
-
 	/**
 	 * Create a new PHPExcel_Style_Color
 	 *
@@ -79,8 +78,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	 *									Leave this value at default unless you understand exactly what
 	 *										its ramifications are
 	 */
-	public function __construct($pARGB = PHPExcel_Style_Color::COLOR_BLACK, $isSupervisor = false, $isConditional = false)
-	{
+	public function __construct($pARGB = PHPExcel_Style_Color::COLOR_BLACK, $isSupervisor = false, $isConditional = false) {
 		//	Supervisor?
 		parent::__construct($isSupervisor);
 
@@ -98,8 +96,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	 * @return PHPExcel_Style_Color
 	 */
 	#[\Override]
-    public function bindParent($parent, $parentPropertyName = null)
-	{
+	public function bindParent($parent, $parentPropertyName = null) {
 		$this->_parent = $parent;
 		$this->_parentPropertyName = $parentPropertyName;
 		return $this;
@@ -111,15 +108,17 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	 *
 	 * @return PHPExcel_Style_Color
 	 */
-	public function getSharedComponent()
-	{
+	public function getSharedComponent() {
 		switch ($this->_parentPropertyName) {
 			case '_endColor':
-				return $this->_parent->getSharedComponent()->getEndColor(); break;
+				return $this->_parent->getSharedComponent()->getEndColor();
+				break;
 			case '_color':
-				return $this->_parent->getSharedComponent()->getColor(); break;
+				return $this->_parent->getSharedComponent()->getColor();
+				break;
 			case '_startColor':
-				return $this->_parent->getSharedComponent()->getStartColor(); break;
+				return $this->_parent->getSharedComponent()->getStartColor();
+				break;
 		}
 	}
 
@@ -129,8 +128,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	 * @param array $array
 	 * @return array
 	 */
-	public function getStyleArray($array)
-	{
+	public function getStyleArray($array) {
 		switch ($this->_parentPropertyName) {
 			case '_endColor':
 				$key = 'endcolor';
@@ -248,8 +246,9 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	 */
 	private static function _getColourComponent($RGB, $offset, $hex = true) {
 		$colour = substr($RGB, $offset, 2);
-		if (!$hex)
+		if (!$hex) {
 			$colour = hexdec($colour);
+		}
 		return $colour;
 	}
 
@@ -299,26 +298,35 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	public static function changeBrightness($hex, $adjustPercentage) {
 		$rgba = (strlen($hex) == 8);
 
-		$red	= self::getRed($hex, false);
-		$green	= self::getGreen($hex, false);
-		$blue	= self::getBlue($hex, false);
+		$red = self::getRed($hex, false);
+		$green = self::getGreen($hex, false);
+		$blue = self::getBlue($hex, false);
 
 		if ($adjustPercentage > 0) {
-			$red	+= (255 - $red) * $adjustPercentage;
-			$green	+= (255 - $green) * $adjustPercentage;
-			$blue	+= (255 - $blue) * $adjustPercentage;
+			$red += (255 - $red) * $adjustPercentage;
+			$green += (255 - $green) * $adjustPercentage;
+			$blue += (255 - $blue) * $adjustPercentage;
 		} else {
-			$red	+= $red * $adjustPercentage;
-			$green	+= $green * $adjustPercentage;
-			$blue	+= $blue * $adjustPercentage;
+			$red += $red * $adjustPercentage;
+			$green += $green * $adjustPercentage;
+			$blue += $blue * $adjustPercentage;
 		}
 
-		if ($red < 0) $red = 0;
-		elseif ($red > 255) $red = 255;
-		if ($green < 0) $green = 0;
-		elseif ($green > 255) $green = 255;
-		if ($blue < 0) $blue = 0;
-		elseif ($blue > 255) $blue = 255;
+		if ($red < 0) {
+			$red = 0;
+		} elseif ($red > 255) {
+			$red = 255;
+		}
+		if ($green < 0) {
+			$green = 0;
+		} elseif ($green > 255) {
+			$green = 255;
+		}
+		if ($blue < 0) {
+			$blue = 0;
+		} elseif ($blue > 255) {
+			$blue = 255;
+		}
 
 		$rgb = strtoupper(str_pad(dechex($red), 2, '0', 0) . str_pad(dechex($green), 2, '0', 0) . str_pad(dechex($blue), 2, '0', 0));
 
@@ -340,62 +348,62 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 		// Indexed colors
 		if (is_null(self::$_indexedColors)) {
 			self::$_indexedColors = [
-					1	=> 'FF000000',	//	System Colour #1 - Black
-					2	=> 'FFFFFFFF',	//	System Colour #2 - White
-					3	=> 'FFFF0000',	//	System Colour #3 - Red
-					4	=> 'FF00FF00',	//	System Colour #4 - Green
-					5	=> 'FF0000FF',	//	System Colour #5 - Blue
-					6	=> 'FFFFFF00',	//	System Colour #6 - Yellow
-					7	=> 'FFFF00FF',	//	System Colour #7- Magenta
-					8	=> 'FF00FFFF',	//	System Colour #8- Cyan
-					9	=> 'FF800000',	//	Standard Colour #9
-					10	=> 'FF008000',	//	Standard Colour #10
-					11	=> 'FF000080',	//	Standard Colour #11
-					12	=> 'FF808000',	//	Standard Colour #12
-					13	=> 'FF800080',	//	Standard Colour #13
-					14	=> 'FF008080',	//	Standard Colour #14
-					15	=> 'FFC0C0C0',	//	Standard Colour #15
-					16	=> 'FF808080',	//	Standard Colour #16
-					17	=> 'FF9999FF',	//	Chart Fill Colour #17
-					18	=> 'FF993366',	//	Chart Fill Colour #18
-					19	=> 'FFFFFFCC',	//	Chart Fill Colour #19
-					20	=> 'FFCCFFFF',	//	Chart Fill Colour #20
-					21	=> 'FF660066',	//	Chart Fill Colour #21
-					22	=> 'FFFF8080',	//	Chart Fill Colour #22
-					23	=> 'FF0066CC',	//	Chart Fill Colour #23
-					24	=> 'FFCCCCFF',	//	Chart Fill Colour #24
-					25	=> 'FF000080',	//	Chart Line Colour #25
-					26	=> 'FFFF00FF',	//	Chart Line Colour #26
-					27	=> 'FFFFFF00',	//	Chart Line Colour #27
-					28	=> 'FF00FFFF',	//	Chart Line Colour #28
-					29	=> 'FF800080',	//	Chart Line Colour #29
-					30	=> 'FF800000',	//	Chart Line Colour #30
-					31	=> 'FF008080',	//	Chart Line Colour #31
-					32	=> 'FF0000FF',	//	Chart Line Colour #32
-					33	=> 'FF00CCFF',	//	Standard Colour #33
-					34	=> 'FFCCFFFF',	//	Standard Colour #34
-					35	=> 'FFCCFFCC',	//	Standard Colour #35
-					36	=> 'FFFFFF99',	//	Standard Colour #36
-					37	=> 'FF99CCFF',	//	Standard Colour #37
-					38	=> 'FFFF99CC',	//	Standard Colour #38
-					39	=> 'FFCC99FF',	//	Standard Colour #39
-					40	=> 'FFFFCC99',	//	Standard Colour #40
-					41	=> 'FF3366FF',	//	Standard Colour #41
-					42	=> 'FF33CCCC',	//	Standard Colour #42
-					43	=> 'FF99CC00',	//	Standard Colour #43
-					44	=> 'FFFFCC00',	//	Standard Colour #44
-					45	=> 'FFFF9900',	//	Standard Colour #45
-					46	=> 'FFFF6600',	//	Standard Colour #46
-					47	=> 'FF666699',	//	Standard Colour #47
-					48	=> 'FF969696',	//	Standard Colour #48
-					49	=> 'FF003366',	//	Standard Colour #49
-					50	=> 'FF339966',	//	Standard Colour #50
-					51	=> 'FF003300',	//	Standard Colour #51
-					52	=> 'FF333300',	//	Standard Colour #52
-					53	=> 'FF993300',	//	Standard Colour #53
-					54	=> 'FF993366',	//	Standard Colour #54
-					55	=> 'FF333399',	//	Standard Colour #55
-					56	=> 'FF333333'	//	Standard Colour #56
+					1 => 'FF000000',	//	System Colour #1 - Black
+					2 => 'FFFFFFFF',	//	System Colour #2 - White
+					3 => 'FFFF0000',	//	System Colour #3 - Red
+					4 => 'FF00FF00',	//	System Colour #4 - Green
+					5 => 'FF0000FF',	//	System Colour #5 - Blue
+					6 => 'FFFFFF00',	//	System Colour #6 - Yellow
+					7 => 'FFFF00FF',	//	System Colour #7- Magenta
+					8 => 'FF00FFFF',	//	System Colour #8- Cyan
+					9 => 'FF800000',	//	Standard Colour #9
+					10 => 'FF008000',	//	Standard Colour #10
+					11 => 'FF000080',	//	Standard Colour #11
+					12 => 'FF808000',	//	Standard Colour #12
+					13 => 'FF800080',	//	Standard Colour #13
+					14 => 'FF008080',	//	Standard Colour #14
+					15 => 'FFC0C0C0',	//	Standard Colour #15
+					16 => 'FF808080',	//	Standard Colour #16
+					17 => 'FF9999FF',	//	Chart Fill Colour #17
+					18 => 'FF993366',	//	Chart Fill Colour #18
+					19 => 'FFFFFFCC',	//	Chart Fill Colour #19
+					20 => 'FFCCFFFF',	//	Chart Fill Colour #20
+					21 => 'FF660066',	//	Chart Fill Colour #21
+					22 => 'FFFF8080',	//	Chart Fill Colour #22
+					23 => 'FF0066CC',	//	Chart Fill Colour #23
+					24 => 'FFCCCCFF',	//	Chart Fill Colour #24
+					25 => 'FF000080',	//	Chart Line Colour #25
+					26 => 'FFFF00FF',	//	Chart Line Colour #26
+					27 => 'FFFFFF00',	//	Chart Line Colour #27
+					28 => 'FF00FFFF',	//	Chart Line Colour #28
+					29 => 'FF800080',	//	Chart Line Colour #29
+					30 => 'FF800000',	//	Chart Line Colour #30
+					31 => 'FF008080',	//	Chart Line Colour #31
+					32 => 'FF0000FF',	//	Chart Line Colour #32
+					33 => 'FF00CCFF',	//	Standard Colour #33
+					34 => 'FFCCFFFF',	//	Standard Colour #34
+					35 => 'FFCCFFCC',	//	Standard Colour #35
+					36 => 'FFFFFF99',	//	Standard Colour #36
+					37 => 'FF99CCFF',	//	Standard Colour #37
+					38 => 'FFFF99CC',	//	Standard Colour #38
+					39 => 'FFCC99FF',	//	Standard Colour #39
+					40 => 'FFFFCC99',	//	Standard Colour #40
+					41 => 'FF3366FF',	//	Standard Colour #41
+					42 => 'FF33CCCC',	//	Standard Colour #42
+					43 => 'FF99CC00',	//	Standard Colour #43
+					44 => 'FFFFCC00',	//	Standard Colour #44
+					45 => 'FFFF9900',	//	Standard Colour #45
+					46 => 'FFFF6600',	//	Standard Colour #46
+					47 => 'FF666699',	//	Standard Colour #47
+					48 => 'FF969696',	//	Standard Colour #48
+					49 => 'FF003366',	//	Standard Colour #49
+					50 => 'FF339966',	//	Standard Colour #50
+					51 => 'FF003300',	//	Standard Colour #51
+					52 => 'FF333300',	//	Standard Colour #52
+					53 => 'FF993300',	//	Standard Colour #53
+					54 => 'FF993366',	//	Standard Colour #54
+					55 => 'FF333399',	//	Standard Colour #55
+					56 => 'FF333333',	//	Standard Colour #56
 				];
 		}
 
@@ -419,7 +427,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 			return $this->getSharedComponent()->getHashCode();
 		}
 		return md5(
-			  $this->_argb
+			$this->_argb
 			. self::class
 		);
 	}

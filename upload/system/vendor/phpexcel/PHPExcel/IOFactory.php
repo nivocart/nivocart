@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -51,7 +52,7 @@ class PHPExcel_IOFactory {
 	 */
 	private static $_searchLocations = [
 		[ 'type' => 'IWriter', 'path' => 'PHPExcel/Writer/{0}.php', 'class' => 'PHPExcel_Writer_{0}' ],
-		[ 'type' => 'IReader', 'path' => 'PHPExcel/Reader/{0}.php', 'class' => 'PHPExcel_Reader_{0}' ]
+		[ 'type' => 'IReader', 'path' => 'PHPExcel/Reader/{0}.php', 'class' => 'PHPExcel_Reader_{0}' ],
 	];
 
 	/**
@@ -69,21 +70,22 @@ class PHPExcel_IOFactory {
 		'SYLK',
 		'Gnumeric',
 		'HTML',
-		'CSV'
+		'CSV',
 	];
 
-    /**
-     *	Private constructor for PHPExcel_IOFactory
-     */
-    private function __construct() { }
+	/**
+	 *	Private constructor for PHPExcel_IOFactory
+	 */
+	private function __construct() {
+	}
 
-    /**
-     * Get search locations
-     *
+	/**
+	 * Get search locations
+	 *
 	 * @static
 	 * @access	public
-     * @return	array
-     */
+	 * @return	array
+	 */
 	public static function getSearchLocations() {
 		return self::$_searchLocations;
 	}
@@ -96,7 +98,7 @@ class PHPExcel_IOFactory {
 	 * @param	array $value
 	 * @throws	PHPExcel_Reader_Exception
 	 */
-	public static function setSearchLocations($value) {
+	public static function setSearchLocations($value): void {
 		if (is_array($value)) {
 			self::$_searchLocations = $value;
 		} else {
@@ -113,7 +115,7 @@ class PHPExcel_IOFactory {
 	 * @param	string $location	Example: PHPExcel/Writer/{0}.php
 	 * @param	string $classname 	Example: PHPExcel_Writer_{0}
 	 */
-	public static function addSearchLocation($type = '', $location = '', $classname = '') {
+	public static function addSearchLocation($type = '', $location = '', $classname = ''): void {
 		self::$_searchLocations[] = [ 'type' => $type, 'path' => $location, 'class' => $classname ];
 	}
 

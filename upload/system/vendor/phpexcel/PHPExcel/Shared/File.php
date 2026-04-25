@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -47,10 +48,9 @@ class PHPExcel_Shared_File {
 	 *
 	 * @param	 boolean	$useUploadTempDir		Use File Upload Temporary directory (true or false)
 	 */
-	public static function setUseUploadTempDirectory($useUploadTempDir = false) {
-		self::$_useUploadTempDirectory = (boolean) $useUploadTempDir;
+	public static function setUseUploadTempDirectory($useUploadTempDir = false): void {
+		self::$_useUploadTempDirectory = (bool) $useUploadTempDir;
 	}	//	function setUseUploadTempDirectory()
-
 
 	/**
 	 * Get the flag indicating whether the File Upload Temp directory should be used for temporary files

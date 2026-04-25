@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -90,7 +91,6 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	 */
 	private $_contiguousRow = -1;
 
-
 	/**
 	 * Create a new PHPExcel_Reader_CSV
 	 */
@@ -104,7 +104,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	 * @return boolean
 	 */
 	protected function _isValidFormat() {
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -130,7 +130,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	 * Move filepointer past any BOM marker
 	 *
 	 */
-	protected function _skipBOM() {
+	protected function _skipBOM(): void {
 		rewind($this->_fileHandle);
 
 		switch ($this->_inputEncoding) {
@@ -169,7 +169,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 		// Open file
 		$this->_openFile($pFilename);
 		if (!$this->_isValidFormat()) {
-			fclose ($this->_fileHandle);
+			fclose($this->_fileHandle);
 			throw new PHPExcel_Reader_Exception($pFilename . " is an Invalid Spreadsheet file.");
 		}
 		$fileHandle = $this->_fileHandle;
@@ -231,7 +231,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 		// Open file
 		$this->_openFile($pFilename);
 		if (!$this->_isValidFormat()) {
-			fclose ($this->_fileHandle);
+			fclose($this->_fileHandle);
 			throw new PHPExcel_Reader_Exception($pFilename . " is an Invalid Spreadsheet file.");
 		}
 		$fileHandle = $this->_fileHandle;
@@ -250,7 +250,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 		// Set our starting row based on whether we're in contiguous mode or not
 		$currentRow = 1;
 		if ($this->_contiguous) {
-			$currentRow = ($this->_contiguousRow == -1) ? $sheet->getHighestRow(): $this->_contiguousRow;
+			$currentRow = ($this->_contiguousRow == -1) ? $sheet->getHighestRow() : $this->_contiguousRow;
 		}
 
 		// Loop through each line of the file in turn

@@ -1,6 +1,6 @@
 <?php
-class PHPExcel_Helper_HTML {
 
+class PHPExcel_Helper_HTML {
 	protected static $colourMap = [
 		'aliceblue' => 'f0f8ff',
 		'antiquewhite' => 'faebd7',
@@ -542,7 +542,7 @@ class PHPExcel_Helper_HTML {
 		'ins' => 'startUnderlineTag',
 		'del' => 'startStrikethruTag',
 		'sup' => 'startSuperscriptTag',
-		'sub' => 'startSubscriptTag'
+		'sub' => 'startSubscriptTag',
 	];
 
 	protected $endTagCallbacks = [
@@ -563,7 +563,7 @@ class PHPExcel_Helper_HTML {
 		'h3' => 'breakTag',
 		'h4' => 'breakTag',
 		'h5' => 'breakTag',
-		'h6' => 'breakTag'
+		'h6' => 'breakTag',
 	];
 
 	protected $stack = [];
@@ -572,7 +572,7 @@ class PHPExcel_Helper_HTML {
 
 	protected $richTextObject;
 
-	protected function initialise() {
+	protected function initialise(): void {
 		$this->face = $this->size = $this->color = null;
 		$this->bold = $this->italic = $this->underline = $this->superscript = $this->subscript = $this->strikethrough = false;
 
@@ -585,7 +585,7 @@ class PHPExcel_Helper_HTML {
 		$this->initialise();
 
 		//	Create a new DOM object
-		$dom = new domDocument;
+		$dom = new domDocument();
 		// Load the HTML file into the DOM object
 		// Note the use of error suppression, because typically this will be an html fragment, so not fully valid markup
 		$loaded = @$dom->loadHTML($html);
@@ -593,12 +593,13 @@ class PHPExcel_Helper_HTML {
 		// Discard excess white space
 		$dom->preserveWhiteSpace = false;
 
-		$this->richTextObject = new PHPExcel_RichText();;
+		$this->richTextObject = new PHPExcel_RichText();
+		;
 		$this->parseElements($dom);
 		return $this->richTextObject;
-    }
+	}
 
-	protected function buildTextRun() {
+	protected function buildTextRun(): void {
 		$text = $this->stringData;
 
 		if (trim((string) $text) === '') {
@@ -652,7 +653,7 @@ class PHPExcel_Helper_HTML {
 		return self::$colourMap[$rgb];
 	}
 
-	protected function startFontTag($tag) {
+	protected function startFontTag($tag): void {
 		foreach ($tag->attributes as $attribute) {
 			$attributeName = strtolower((string) $attribute->name);
 			$attributeValue = $attribute->value;
@@ -671,70 +672,70 @@ class PHPExcel_Helper_HTML {
 		}
 	}
 
-	protected function endFontTag() {
+	protected function endFontTag(): void {
 		$this->face = $this->size = $this->color = null;
 	}
 
-	protected function startBoldTag() {
+	protected function startBoldTag(): void {
 		$this->bold = true;
 	}
 
-	protected function endBoldTag() {
+	protected function endBoldTag(): void {
 		$this->bold = false;
 	}
 
-	protected function startItalicTag() {
+	protected function startItalicTag(): void {
 		$this->italic = true;
 	}
 
-	protected function endItalicTag() {
+	protected function endItalicTag(): void {
 		$this->italic = false;
 	}
 
-	protected function startUnderlineTag() {
+	protected function startUnderlineTag(): void {
 		$this->underline = true;
 	}
 
-	protected function endUnderlineTag() {
+	protected function endUnderlineTag(): void {
 		$this->underline = false;
 	}
 
-	protected function startSubscriptTag() {
+	protected function startSubscriptTag(): void {
 		$this->subscript = true;
 	}
 
-	protected function endSubscriptTag() {
+	protected function endSubscriptTag(): void {
 		$this->subscript = false;
 	}
 
-	protected function startSuperscriptTag() {
+	protected function startSuperscriptTag(): void {
 		$this->superscript = true;
 	}
 
-	protected function endSuperscriptTag() {
+	protected function endSuperscriptTag(): void {
 		$this->superscript = false;
 	}
 
-	protected function startStrikethruTag() {
+	protected function startStrikethruTag(): void {
 		$this->strikethrough = true;
 	}
 
-	protected function endStrikethruTag() {
+	protected function endStrikethruTag(): void {
 		$this->strikethrough = false;
 	}
 
-	protected function breakTag() {
+	protected function breakTag(): void {
 		$this->stringData .= PHP_EOL;
 	}
 
-	protected function parseTextNode(DOMText $textNode) {
+	protected function parseTextNode(DOMText $textNode): void {
 		$domText = preg_replace('/\s+/u', ' ', ltrim((string) $textNode->nodeValue));
 
 		$this->stringData .= $domText;
 		$this->buildTextRun();
 	}
 
-	protected function handleCallback($element, $callbackTag, $callbacks) {
+	protected function handleCallback($element, $callbackTag, $callbacks): void {
 		if (isset($callbacks[$callbackTag])) {
 			$elementHandler = $callbacks[$callbackTag];
 
@@ -744,7 +745,7 @@ class PHPExcel_Helper_HTML {
 		}
 	}
 
-	protected function parseElementNode(DOMElement $element) {
+	protected function parseElementNode(DOMElement $element): void {
 		$callbackTag = strtolower($element->nodeName);
 		$this->stack[] = $callbackTag;
 
@@ -757,7 +758,7 @@ class PHPExcel_Helper_HTML {
 		$this->handleCallback($element, $callbackTag, $this->endTagCallbacks);
 	}
 
-	protected function parseElements(DOMNode $element) {
+	protected function parseElements(DOMNode $element): void {
 		foreach ($element->childNodes as $child) {
 			if ($child instanceof DOMText) {
 				$this->parseTextNode($child);

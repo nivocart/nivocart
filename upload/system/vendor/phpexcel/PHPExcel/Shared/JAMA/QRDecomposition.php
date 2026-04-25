@@ -1,4 +1,5 @@
 <?php
+
 /**
  *	@package JAMA
  *
@@ -17,8 +18,7 @@
  *	@version 1.1
  */
 class PHPExcel_Shared_JAMA_QRDecomposition {
-
-	const MatrixRankException = "Can only perform operation on full-rank matrix.";
+	public const MatrixRankException = "Can only perform operation on full-rank matrix.";
 
 	/**
 	 *	Array for internal storage of decomposition.
@@ -54,8 +54,8 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 		if ($A instanceof PHPExcel_Shared_JAMA_Matrix) {
 			// Initialize.
 			$this->QR = $A->getArrayCopy();
-			$this->m  = $A->getRowDimension();
-			$this->n  = $A->getColumnDimension();
+			$this->m = $A->getRowDimension();
+			$this->n = $A->getColumnDimension();
 			// Main loop.
 			for ($k = 0; $k < $this->n; ++$k) {
 				// Compute 2-norm of k-th column without under/overflow.
@@ -73,12 +73,12 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 					}
 					$this->QR[$k][$k] += 1.0;
 					// Apply transformation to remaining columns.
-					for ($j = $k+1; $j < $this->n; ++$j) {
+					for ($j = $k + 1; $j < $this->n; ++$j) {
 						$s = 0.0;
 						for ($i = $k; $i < $this->m; ++$i) {
 							$s += $this->QR[$i][$k] * $this->QR[$i][$j];
 						}
-						$s = -$s/$this->QR[$k][$k];
+						$s = -$s / $this->QR[$k][$k];
 						for ($i = $k; $i < $this->m; ++$i) {
 							$this->QR[$i][$j] += $s * $this->QR[$i][$k];
 						}
@@ -149,7 +149,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 	 *	@return Matrix orthogonal factor
 	 */
 	public function getQ() {
-		for ($k = $this->n-1; $k >= 0; --$k) {
+		for ($k = $this->n - 1; $k >= 0; --$k) {
 			for ($i = 0; $i < $this->m; ++$i) {
 				$Q[$i][$k] = 0.0;
 			}
@@ -160,7 +160,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 					for ($i = $k; $i < $this->m; ++$i) {
 						$s += $this->QR[$i][$k] * $Q[$i][$j];
 					}
-					$s = -$s/$this->QR[$k][$k];
+					$s = -$s / $this->QR[$k][$k];
 					for ($i = $k; $i < $this->m; ++$i) {
 						$Q[$i][$j] += $s * $this->QR[$i][$k];
 					}
@@ -190,7 +190,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 			if ($this->isFullRank()) {
 				// Copy right hand side
 				$nx = $B->getColumnDimension();
-				$X  = $B->getArrayCopy();
+				$X = $B->getArrayCopy();
 				// Compute Y = transpose(Q)*B
 				for ($k = 0; $k < $this->n; ++$k) {
 					for ($j = 0; $j < $nx; ++$j) {
@@ -198,25 +198,25 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 						for ($i = $k; $i < $this->m; ++$i) {
 							$s += $this->QR[$i][$k] * $X[$i][$j];
 						}
-						$s = -$s/$this->QR[$k][$k];
+						$s = -$s / $this->QR[$k][$k];
 						for ($i = $k; $i < $this->m; ++$i) {
 							$X[$i][$j] += $s * $this->QR[$i][$k];
 						}
 					}
 				}
 				// Solve R*X = Y;
-				for ($k = $this->n-1; $k >= 0; --$k) {
+				for ($k = $this->n - 1; $k >= 0; --$k) {
 					for ($j = 0; $j < $nx; ++$j) {
 						$X[$k][$j] /= $this->Rdiag[$k];
 					}
 					for ($i = 0; $i < $k; ++$i) {
 						for ($j = 0; $j < $nx; ++$j) {
-							$X[$i][$j] -= $X[$k][$j]* $this->QR[$i][$k];
+							$X[$i][$j] -= $X[$k][$j] * $this->QR[$i][$k];
 						}
 					}
 				}
 				$X = new PHPExcel_Shared_JAMA_Matrix($X);
-				return ($X->getMatrix(0, $this->n-1, 0, $nx));
+				return ($X->getMatrix(0, $this->n - 1, 0, $nx));
 			} else {
 				throw new PHPExcel_Calculation_Exception(self::MatrixRankException);
 			}

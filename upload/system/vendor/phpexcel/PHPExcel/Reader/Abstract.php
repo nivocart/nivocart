@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -116,7 +117,7 @@ abstract class PHPExcel_Reader_Abstract implements PHPExcel_Reader_IReader {
 	 * @return	PHPExcel_Reader_IReader
 	 */
 	public function setIncludeCharts($pValue = false) {
-		$this->_includeCharts = (boolean) $pValue;
+		$this->_includeCharts = (bool) $pValue;
 		return $this;
 	}
 
@@ -216,7 +217,7 @@ abstract class PHPExcel_Reader_Abstract implements PHPExcel_Reader_IReader {
 		}
 
 		$readable = $this->_isValidFormat();
-		fclose ($this->_fileHandle);
+		fclose($this->_fileHandle);
 		return $readable;
 	}
 

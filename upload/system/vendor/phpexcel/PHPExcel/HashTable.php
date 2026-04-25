@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -66,7 +67,7 @@ class PHPExcel_HashTable {
 	 * @param	PHPExcel_IComparable[] $pSource	Source array to create HashTable from
 	 * @throws	PHPExcel_Exception
 	 */
-	public function addFromSource($pSource = null) {
+	public function addFromSource($pSource = null): void {
 		// Check if an array was passed
 		if ($pSource == null) {
 			return;
@@ -85,7 +86,7 @@ class PHPExcel_HashTable {
 	 * @param	PHPExcel_IComparable $pSource	Item to add
 	 * @throws	PHPExcel_Exception
 	 */
-	public function add(PHPExcel_IComparable $pSource = null) {
+	public function add(PHPExcel_IComparable $pSource = null): void {
 		$hash = $pSource->getHashCode();
 
 		if (!isset($this->_items[$hash])) {
@@ -100,7 +101,7 @@ class PHPExcel_HashTable {
 	 * @param	PHPExcel_IComparable $pSource	Item to remove
 	 * @throws	PHPExcel_Exception
 	 */
-	public function remove(PHPExcel_IComparable $pSource = null) {
+	public function remove(PHPExcel_IComparable $pSource = null): void {
 		$hash = $pSource->getHashCode();
 
 		if (isset($this->_items[$hash])) {
@@ -126,7 +127,7 @@ class PHPExcel_HashTable {
 	 * Clear HashTable
 	 *
 	 */
-	public function clear() {
+	public function clear(): void {
 		$this->_items = [];
 		$this->_keyMap = [];
 	}

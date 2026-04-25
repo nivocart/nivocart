@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -34,21 +35,20 @@
  */
 class PHPExcel_Chart_Title {
 	/**
-     * Create a new PHPExcel_Chart_Title
-     * @param string $caption
-     */
-    public function __construct(
-        /**
-         * Title Caption
-         */
-        private $_caption = null,
-        /**
-         * Title Layout
-         */
-        private readonly ?\PHPExcel_Chart_Layout $_layout = null
-    )
-    {
-    }
+	 * Create a new PHPExcel_Chart_Title
+	 * @param string $caption
+	 */
+	public function __construct(
+		/**
+		 * Title Caption
+		 */
+		private $_caption = null,
+		/**
+		 * Title Layout
+		 */
+		private readonly ?\PHPExcel_Chart_Layout $_layout = null
+	) {
+	}
 
 	/**
 	 * Get caption

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -35,72 +36,71 @@
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_WorksheetIterator implements Iterator {
-    /**
-     * Current iterator position
-     *
-     * @var int
-     */
-    private $_position = 0;
+	/**
+	 * Current iterator position
+	 *
+	 * @var int
+	 */
+	private $_position = 0;
 
-    /**
-     * Create a new worksheet iterator
-     *
-     * @param PHPExcel $_subject
-     */
-    public function __construct(
-        /**
-         * Spreadsheet to iterate
-         */
-        private ?\PHPExcel $_subject = null
-    )
-    {
-    }
+	/**
+	 * Create a new worksheet iterator
+	 *
+	 * @param PHPExcel $_subject
+	 */
+	public function __construct(
+		/**
+		 * Spreadsheet to iterate
+		 */
+		private ?\PHPExcel $_subject = null
+	) {
+	}
 
-    /**
-     * Destructor
-     */
-    public function __destruct() {
-        unset($this->_subject);
-    }
+	/**
+	 * Destructor
+	 */
+	public function __destruct() {
+		unset($this->_subject);
+	}
 
-    /**
-     * Rewind iterator
-     */
-    public function rewind(): void {
-        $this->_position = 0;
-    }
+	/**
+	 * Rewind iterator
+	 */
+	public function rewind(): void {
+		$this->_position = 0;
+	}
 
-    /**
-     * Current PHPExcel_Worksheet
-     *
-     * @return PHPExcel_Worksheet
-     */
-    public function current(): mixed {
-        return $this->_subject->getSheet($this->_position);
-    }
+	/**
+	 * Current PHPExcel_Worksheet
+	 *
+	 * @return PHPExcel_Worksheet
+	 */
+	public function current(): mixed {
+		return $this->_subject->getSheet($this->_position);
+	}
 
-    /**
-     * Current key
-     *
-     * @return int
-     */
-    public function key(): mixed {
-        return $this->_position;
-    }
+	/**
+	 * Current key
+	 *
+	 * @return int
+	 */
+	public function key(): mixed {
+		return $this->_position;
+	}
 
-    /**
-     * Next value
-     */
-    public function next(): void {
-        ++$this->_position;
-    }
+	/**
+	 * Next value
+	 */
+	public function next(): void {
+		++$this->_position;
+	}
 
-    /**
-     * More PHPExcel_Worksheet instances available?
-     *
-     * @return boolean
-     */
-    public function valid(): bool {
-        return $this->_position < $this->_subject->getSheetCount();
-    }
+	/**
+	 * More PHPExcel_Worksheet instances available?
+	 *
+	 * @return boolean
+	 */
+	public function valid(): bool {
+		return $this->_position < $this->_subject->getSheetCount();
+	}
 }

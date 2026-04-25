@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -54,7 +55,7 @@ class PHPExcel_CalcEngine_CyclicReferenceStack {
 	 *
 	 * @param  mixed  $value
 	 */
-	public function push($value) {
+	public function push($value): void {
 		$this->_stack[$value] = $value;
 	}
 
@@ -79,7 +80,7 @@ class PHPExcel_CalcEngine_CyclicReferenceStack {
 	/**
 	 * Clear the stack
 	 */
-	public function clear() {
+	public function clear(): void {
 		$this->_stack = [];
 	}
 

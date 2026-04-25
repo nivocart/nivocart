@@ -1,4 +1,5 @@
 <?php
+
 /**
  *	@package JAMA
  *
@@ -19,9 +20,8 @@
  *	@license PHP v3.0
  */
 class PHPExcel_Shared_JAMA_LUDecomposition {
-
-	const MatrixSingularException	= "Can only perform operation on singular matrix.";
-	const MatrixSquareException		= "Mismatched Row dimension";
+	public const MatrixSingularException = "Can only perform operation on singular matrix.";
+	public const MatrixSquareException = "Mismatched Row dimension";
 
 	/**
 	 *	Decomposition storage
@@ -53,7 +53,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 	 */
 	private $piv = [];
 
-
 	/**
 	 *	LU Decomposition constructor.
 	 *
@@ -64,8 +63,8 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 		if ($A instanceof PHPExcel_Shared_JAMA_Matrix) {
 			// Use a "left-looking", dot-product, Crout/Doolittle algorithm.
 			$this->LU = $A->getArray();
-			$this->m  = $A->getRowDimension();
-			$this->n  = $A->getColumnDimension();
+			$this->m = $A->getRowDimension();
+			$this->n = $A->getColumnDimension();
 			for ($i = 0; $i < $this->m; ++$i) {
 				$this->piv[$i] = $i;
 			}
@@ -82,7 +81,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 				for ($i = 0; $i < $this->m; ++$i) {
 					$LUrowi = $this->LU[$i];
 					// Most of the time is spent in the following dot product.
-					$kmax = min($i,$j);
+					$kmax = min($i, $j);
 					$s = 0.0;
 					for ($k = 0; $k < $kmax; ++$k) {
 						$s += $LUrowi[$k] * $LUcolj[$k];
@@ -91,7 +90,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 				}
 				// Find pivot and exchange if necessary.
 				$p = $j;
-				for ($i = $j+1; $i < $this->m; ++$i) {
+				for ($i = $j + 1; $i < $this->m; ++$i) {
 					if (abs($LUcolj[$i]) > abs($LUcolj[$p])) {
 						$p = $i;
 					}
@@ -109,7 +108,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 				}
 				// Compute multipliers.
 				if (($j < $this->m) && ($this->LU[$j][$j] != 0.0)) {
-					for ($i = $j+1; $i < $this->m; ++$i) {
+					for ($i = $j + 1; $i < $this->m; ++$i) {
 						$this->LU[$i][$j] /= $this->LU[$j][$j];
 					}
 				}
@@ -118,7 +117,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 			throw new PHPExcel_Calculation_Exception(PHPExcel_Shared_JAMA_Matrix::ArgumentTypeException);
 		}
 	}	//	function __construct()
-
 
 	/**
 	 *	Get lower triangular factor.
@@ -140,7 +138,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 		return new PHPExcel_Shared_JAMA_Matrix($L);
 	}	//	function getL()
 
-
 	/**
 	 *	Get upper triangular factor.
 	 *
@@ -159,7 +156,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 		return new PHPExcel_Shared_JAMA_Matrix($U);
 	}	//	function getU()
 
-
 	/**
 	 *	Return pivot permutation vector.
 	 *
@@ -169,7 +165,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 		return $this->piv;
 	}	//	function getPivot()
 
-
 	/**
 	 *	Alias for getPivot
 	 *
@@ -178,7 +173,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 	public function getDoublePivot() {
 		return $this->getPivot();
 	}	//	function getDoublePivot()
-
 
 	/**
 	 *	Is the matrix nonsingular?
@@ -193,7 +187,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 		}
 		return true;
 	}	//	function isNonsingular()
-
 
 	/**
 	 *	Count determinants
@@ -212,7 +205,6 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 		}
 	}	//	function det()
 
-
 	/**
 	 *	Solve A*X = B
 	 *
@@ -226,17 +218,17 @@ class PHPExcel_Shared_JAMA_LUDecomposition {
 			if ($this->isNonsingular()) {
 				// Copy right hand side with pivoting
 				$nx = $B->getColumnDimension();
-				$X  = $B->getMatrix($this->piv, 0, $nx-1);
+				$X = $B->getMatrix($this->piv, 0, $nx - 1);
 				// Solve L*Y = B(piv,:)
 				for ($k = 0; $k < $this->n; ++$k) {
-					for ($i = $k+1; $i < $this->n; ++$i) {
+					for ($i = $k + 1; $i < $this->n; ++$i) {
 						for ($j = 0; $j < $nx; ++$j) {
 							$X->A[$i][$j] -= $X->A[$k][$j] * $this->LU[$i][$k];
 						}
 					}
 				}
 				// Solve U*X = Y;
-				for ($k = $this->n-1; $k >= 0; --$k) {
+				for ($k = $this->n - 1; $k >= 0; --$k) {
 					for ($j = 0; $j < $nx; ++$j) {
 						$X->A[$k][$j] /= $this->LU[$k][$k];
 					}

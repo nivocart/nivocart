@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -25,9 +26,7 @@
  * @version    ##VERSION##, ##DATE##
  */
 
-
 require_once(PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php');
-
 
 /**
  * PHPExcel_Logarithmic_Best_Fit
@@ -36,16 +35,14 @@ require_once(PHPEXCEL_ROOT . 'PHPExcel/Shared/trend/bestFitClass.php');
  * @package    PHPExcel_Shared_Trend
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
-{
+class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit {
 	/**
 	 * Algorithm type to use for best-fit
 	 * (Name of this trend class)
 	 *
 	 * @var	string
 	 **/
-	protected $_bestFitType		= 'logarithmic';
-
+	protected $_bestFitType = 'logarithmic';
 
 	/**
 	 * Return the Y-Value for a specified value of X
@@ -54,10 +51,9 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @return	 float						Y-Value
 	 **/
 	#[\Override]
-    public function getValueOfYForX($xValue) {
+	public function getValueOfYForX($xValue) {
 		return $this->getIntersect() + $this->getSlope() * log($xValue - $this->_Xoffset);
 	}	//	function getValueOfYForX()
-
 
 	/**
 	 * Return the X-Value for a specified value of Y
@@ -66,10 +62,9 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @return	 float						X-Value
 	 **/
 	#[\Override]
-    public function getValueOfXForY($yValue) {
+	public function getValueOfXForY($yValue) {
 		return exp(($yValue - $this->getIntersect()) / $this->getSlope());
 	}	//	function getValueOfXForY()
-
 
 	/**
 	 * Return the Equation of the best-fit line
@@ -78,13 +73,12 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @return	 string
 	 **/
 	#[\Override]
-    public function getEquation($dp = 0) {
+	public function getEquation($dp = 0) {
 		$slope = $this->getSlope($dp);
 		$intersect = $this->getIntersect($dp);
 
-		return 'Y = '.$intersect.' + '.$slope.' * log(X)';
+		return 'Y = ' . $intersect . ' + ' . $slope . ' * log(X)';
 	}	//	function getEquation()
-
 
 	/**
 	 * Execute the regression and calculate the goodness of fit for a set of X and Y data values
@@ -93,7 +87,7 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	 float[]	$xValues	The set of X-values for this regression
 	 * @param	 boolean	$const
 	 */
-	private function _logarithmic_regression($yValues, $xValues, $const) {
+	private function _logarithmic_regression($yValues, $xValues, $const): void {
 		foreach ($xValues as &$value) {
 			if ($value < 0.0) {
 				$value = 0 - log(abs($value));
@@ -106,7 +100,6 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 		$this->_leastSquareFit($yValues, $xValues, $const);
 	}	//	function _logarithmic_regression()
 
-
 	/**
 	 * Define the regression and calculate the goodness of fit for a set of X and Y data values
 	 *
@@ -114,7 +107,7 @@ class PHPExcel_Logarithmic_Best_Fit extends PHPExcel_Best_Fit
 	 * @param	float[]		$xValues	The set of X-values for this regression
 	 * @param	boolean		$const
 	 */
-	function __construct($yValues, $xValues = [], $const = true) {
+	public function __construct($yValues, $xValues = [], $const = true) {
 		if (parent::__construct($yValues, $xValues) !== false) {
 			$this->_logarithmic_regression($yValues, $xValues, $const);
 		}

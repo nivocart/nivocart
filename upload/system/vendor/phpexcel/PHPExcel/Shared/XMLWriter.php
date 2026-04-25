@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -42,8 +43,8 @@ if (!defined('DEBUGMODE_ENABLED')) {
  */
 class PHPExcel_Shared_XMLWriter extends XMLWriter {
 	/** Temporary storage method */
-	const STORAGE_MEMORY = 1;
-	const STORAGE_DISK = 2;
+	public const STORAGE_MEMORY = 1;
+	public const STORAGE_DISK = 2;
 
 	/**
 	 * Temporary filename

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -60,25 +61,24 @@ class PHPExcel_CalcEngine_Logger {
 	private $_debugLog = [];
 
 	/**
-     * Instantiate a Calculation engine logger
-     *
-     * @param PHPExcel_CalcEngine_CyclicReferenceStack $_cellStack
-     */
-    public function __construct(
-        /**
-         * The calculation engine cell reference stack
-         */
-        private readonly PHPExcel_CalcEngine_CyclicReferenceStack $_cellStack
-    )
-    {
-    }
+	 * Instantiate a Calculation engine logger
+	 *
+	 * @param PHPExcel_CalcEngine_CyclicReferenceStack $_cellStack
+	 */
+	public function __construct(
+		/**
+		 * The calculation engine cell reference stack
+		 */
+		private readonly PHPExcel_CalcEngine_CyclicReferenceStack $_cellStack
+	) {
+	}
 
 	/**
 	 * Enable/Disable Calculation engine logging
 	 *
 	 * @param  boolean $pValue
 	 */
-	public function setWriteDebugLog($pValue = false) {
+	public function setWriteDebugLog($pValue = false): void {
 		$this->_writeDebugLog = $pValue;
 	}
 
@@ -96,7 +96,7 @@ class PHPExcel_CalcEngine_Logger {
 	 *
 	 * @param  boolean $pValue
 	 */
-	public function setEchoDebugLog($pValue = false) {
+	public function setEchoDebugLog($pValue = false): void {
 		$this->_echoDebugLog = $pValue;
 	}
 
@@ -112,7 +112,7 @@ class PHPExcel_CalcEngine_Logger {
 	/**
 	 * Write an entry to the calculation engine debug log
 	 */
-	public function writeDebugLog() {
+	public function writeDebugLog(): void {
 		//	Only write the debug log if logging is enabled
 		if ($this->_writeDebugLog) {
 			$message = implode('', func_get_args());
@@ -130,7 +130,7 @@ class PHPExcel_CalcEngine_Logger {
 	/**
 	 * Clear the calculation engine debug log
 	 */
-	public function clearLog() {
+	public function clearLog(): void {
 		$this->_debugLog = [];
 	}
 

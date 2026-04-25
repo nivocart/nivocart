@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
@@ -46,51 +47,52 @@ class PHPExcel_Shared_OLE_PPS {
 	public $ole;
 
 	/**
-     * The constructor
-     *
-     * @access public
-     * @param integer $No   The PPS index
-     * @param string $Name The PPS name
-     * @param integer $Type The PPS type. Dir, Root or File
-     * @param integer $PrevPps The index of the previous PPS
-     * @param integer $NextPps The index of the next PPS
-     * @param integer $DirPps The index of it's first child if this is a Dir or Root PPS
-     * @param integer $Time1st A timestamp
-     * @param integer $Time2nd A timestamp
-     * @param string $_data The (usually binary) source data of the PPS
-     * @param array   $children Array containing children PPS for this PPS
-     */
-    public function __construct(/**
-     * The PPS index
-     */
-    public $No, /**
-     * The PPS name (in Unicode)
-     */
-    public $Name, /**
-     * The PPS type. Dir, Root or File
-     */
-    public $Type, /**
-     * The index of the previous PPS
-     */
-    public $PrevPps, /**
-     * The index of the next PPS
-     */
-    public $NextPps, /**
-     * The index of it's first child if this is a Dir or Root PPS
-     */
-    public $DirPps, /**
-     * A timestamp
-     */
-    public $Time1st, /**
-     * A timestamp
-     */
-    public $Time2nd, /**
-     * The PPS's data (only used if it's not using a temporary file)
-     */
-    public $_data, /**
-     * Array of child PPS's (only used by Root and Dir PPS's)
-     */
-    public $children) {
+	 * The constructor
+	 *
+	 * @access public
+	 * @param integer $No   The PPS index
+	 * @param string $Name The PPS name
+	 * @param integer $Type The PPS type. Dir, Root or File
+	 * @param integer $PrevPps The index of the previous PPS
+	 * @param integer $NextPps The index of the next PPS
+	 * @param integer $DirPps The index of it's first child if this is a Dir or Root PPS
+	 * @param integer $Time1st A timestamp
+	 * @param integer $Time2nd A timestamp
+	 * @param string $_data The (usually binary) source data of the PPS
+	 * @param array   $children Array containing children PPS for this PPS
+	 */
+	public function __construct(/**
+	 * The PPS index
+	 */
+		public $No, /**
+	 * The PPS name (in Unicode)
+	 */
+		public $Name, /**
+	 * The PPS type. Dir, Root or File
+	 */
+		public $Type, /**
+	 * The index of the previous PPS
+	 */
+		public $PrevPps, /**
+	 * The index of the next PPS
+	 */
+		public $NextPps, /**
+	 * The index of it's first child if this is a Dir or Root PPS
+	 */
+		public $DirPps, /**
+	 * A timestamp
+	 */
+		public $Time1st, /**
+	 * A timestamp
+	 */
+		public $Time2nd, /**
+	 * The PPS's data (only used if it's not using a temporary file)
+	 */
+		public $_data, /**
+	 * Array of child PPS's (only used by Root and Dir PPS's)
+	 */
+		public $children
+	) {
 		if ($this->_data != '') {
 			$this->Size = strlen($this->_data);
 		} else {
@@ -113,7 +115,7 @@ class PHPExcel_Shared_OLE_PPS {
 		//	$stats = fstat($this->_PPS_FILE);
 		//	return $stats[7];
 		//} else {
-			return strlen($this->_data);
+		return strlen($this->_data);
 		//}
 	}
 
@@ -155,27 +157,27 @@ class PHPExcel_Shared_OLE_PPS {
 	* @return integer          The index for this PPS
 	*/
 	public static function _savePpsSetPnt(&$raList, $to_save, $depth = 0) {
-		if ( !is_array($to_save) || (empty($to_save)) ) {
+		if (!is_array($to_save) || (empty($to_save))) {
 			return 0xFFFFFFFF;
 		} elseif (count($to_save) == 1) {
 			$cnt = count($raList);
 			// If the first entry, it's the root... Don't clone it!
-			$raList[$cnt] = ( $depth == 0 ) ? $to_save[0] : clone $to_save[0];
+			$raList[$cnt] = ($depth == 0) ? $to_save[0] : clone $to_save[0];
 			$raList[$cnt]->No = $cnt;
 			$raList[$cnt]->PrevPps = 0xFFFFFFFF;
 			$raList[$cnt]->NextPps = 0xFFFFFFFF;
-			$raList[$cnt]->DirPps  = self::_savePpsSetPnt($raList, @$raList[$cnt]->children, $depth++);
+			$raList[$cnt]->DirPps = self::_savePpsSetPnt($raList, @$raList[$cnt]->children, $depth++);
 		} else {
-			$iPos  = floor(count($to_save) / 2);
+			$iPos = floor(count($to_save) / 2);
 			$aPrev = array_slice($to_save, 0, $iPos);
 			$aNext = array_slice($to_save, $iPos + 1);
-			$cnt   = count($raList);
+			$cnt = count($raList);
 			// If the first entry, it's the root... Don't clone it!
-			$raList[$cnt] = ( $depth == 0 ) ? $to_save[$iPos] : clone $to_save[$iPos];
+			$raList[$cnt] = ($depth == 0) ? $to_save[$iPos] : clone $to_save[$iPos];
 			$raList[$cnt]->No = $cnt;
 			$raList[$cnt]->PrevPps = self::_savePpsSetPnt($raList, $aPrev, $depth++);
 			$raList[$cnt]->NextPps = self::_savePpsSetPnt($raList, $aNext, $depth++);
-			$raList[$cnt]->DirPps  = self::_savePpsSetPnt($raList, @$raList[$cnt]->children, $depth++);
+			$raList[$cnt]->DirPps = self::_savePpsSetPnt($raList, @$raList[$cnt]->children, $depth++);
 
 		}
 		return $cnt;

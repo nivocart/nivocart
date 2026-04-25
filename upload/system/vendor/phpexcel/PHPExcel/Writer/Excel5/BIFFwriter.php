@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -60,7 +61,6 @@
 // *    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // */
 
-
 /**
  * PHPExcel_Writer_Excel5_BIFFwriter
  *
@@ -92,7 +92,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	 * @var integer
 	 * @see _addContinue()
 	 */
-	public $_limit	= 8224;
+	public $_limit = 8224;
 
 	/**
 	 * Constructor
@@ -100,7 +100,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	public function __construct() {
 		$this->_data = '';
 		$this->_datasize = 0;
-//		$this->_limit = 8224;
+		//		$this->_limit = 8224;
 	}
 
 	/**
@@ -113,7 +113,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 		if (!isset(self::$_byte_order)) {
 			// Check if "pack" gives the required IEEE 64bit float
 			$teststr = pack("d", 1.2345);
-			$number  = pack("C8", 0x8D, 0x97, 0x6E, 0x12, 0x83, 0xC0, 0xF3, 0x3F);
+			$number = pack("C8", 0x8D, 0x97, 0x6E, 0x12, 0x83, 0xC0, 0xF3, 0x3F);
 			if ($number == $teststr) {
 				$byte_order = 0;    // Little Endian
 			} elseif ($number == strrev($teststr)) {
@@ -134,12 +134,12 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	 * @param string $data binary data to append
 	 * @access private
 	 */
-	function _append($data) {
+	public function _append($data): void {
 		if (strlen($data) - 4 > $this->_limit) {
 			$data = $this->_addContinue($data);
 		}
-		$this->_data		.= $data;
-		$this->_datasize	+= strlen($data);
+		$this->_data .= $data;
+		$this->_datasize += strlen($data);
 	}
 
 	/**
@@ -165,7 +165,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	 *                       0x0010 Worksheet.
 	 * @access private
 	 */
-	function _storeBof($type) {
+	public function _storeBof($type): void {
 		$record = 0x0809;			// Record identifier	(BIFF5-BIFF8)
 		$length = 0x0010;
 
@@ -177,7 +177,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 
 		$version = 0x0600;			//	BIFF8
 
-		$header = pack("vv",   $record, $length);
+		$header = pack("vv", $record, $length);
 		$data = pack("vvvv", $version, $type, $build, $year);
 		$this->_append($header . $data . $unknown);
 	}
@@ -187,7 +187,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	 *
 	 * @access private
 	 */
-	function _storeEof() {
+	public function _storeEof(): void {
 		$record = 0x000A;   // Record identifier
 		$length = 0x0000;   // Number of bytes to follow
 
@@ -219,7 +219,7 @@ class PHPExcel_Writer_Excel5_BIFFwriter {
 	 * @return string        A very convenient string of continue blocks
 	 * @access private
 	 */
-	function _addContinue($data) {
+	public function _addContinue($data) {
 		$limit = $this->_limit;
 		$record = 0x003C;         // Record identifier
 

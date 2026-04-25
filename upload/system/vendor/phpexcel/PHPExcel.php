@@ -345,7 +345,7 @@ class PHPExcel {
 		$worksheetCount = count($this->_workSheetCollection);
 
 		for ($i = 0; $i < $worksheetCount; ++$i) {
-			if ($this->_workSheetCollection[$i]->getCodeName() == $pName) {
+			if ($this->_workSheetCollection[$i]->getCodeName() === $pName) {
 				return $this->_workSheetCollection[$i];
 			}
 		}
@@ -598,7 +598,7 @@ class PHPExcel {
 	*/
 	public function getIndex(PHPExcel_Worksheet $pSheet) {
 		foreach ($this->_workSheetCollection as $key => $value) {
-			if ($value->getHashCode() == $pSheet->getHashCode()) {
+			if ($value->getHashCode() === $pSheet->getHashCode()) {
 				return $key;
 			}
 		}
@@ -743,7 +743,7 @@ class PHPExcel {
 	* @return PHPExcel
 	*/
 	public function addNamedRange(PHPExcel_NamedRange $namedRange) {
-		if ($namedRange->getScope() == null) {
+		if ($namedRange->getScope() === null) {
 			// global scope
 			$this->_namedRanges[$namedRange->getName()] = $namedRange;
 		} else {
@@ -865,7 +865,7 @@ class PHPExcel {
 	*/
 	public function getCellXfByHashCode($pValue = '') {
 		foreach ($this->_cellXfCollection as $cellXf) {
-			if ($cellXf->getHashCode() == $pValue) {
+			if ($cellXf->getHashCode() === $pValue) {
 				return $cellXf;
 			}
 		}
@@ -930,7 +930,7 @@ class PHPExcel {
 					if ($xfIndex > $pIndex ) {
 						// decrease xf index by 1
 						$cell->setXfIndex($xfIndex - 1);
-					} elseif ($xfIndex == $pIndex) {
+					} elseif ($xfIndex === $pIndex) {
 						// set to default xf index 0
 						$cell->setXfIndex(0);
 					}
@@ -975,7 +975,7 @@ class PHPExcel {
 	*/
 	public function getCellStyleXfByHashCode($pValue = '') {
 		foreach ($this->_cellStyleXfCollection as $cellStyleXf) {
-			if ($cellStyleXf->getHashCode() == $pValue) {
+			if ($cellStyleXf->getHashCode() === $pValue) {
 				return $cellStyleXf;
 			}
 		}
@@ -1046,7 +1046,7 @@ class PHPExcel {
 		$map = [];
 
 		foreach ($this->_cellXfCollection as $index => $cellXf) {
-			if ($countReferencesCellXf[$index] > 0 || $index == 0) { // we must never remove the first cellXf
+			if ($countReferencesCellXf[$index] > 0 || $index === 0) { // we must never remove the first cellXf
 				++$countNeededCellXfs;
 			} else {
 				unset($this->_cellXfCollection[$index]);

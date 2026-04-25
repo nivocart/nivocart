@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -52,7 +53,7 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 		}
 
 		// XML header
-		$objWriter->startDocument('1.0','UTF-8','yes');
+		$objWriter->startDocument('1.0', 'UTF-8', 'yes');
 
 		// Types
 		$objWriter->startElement('Types');
@@ -143,13 +144,13 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 		$mediaCount = $this->getParentWriter()->getDrawingHashTable()->count();
 
 		for ($i = 0; $i < $mediaCount; ++$i) {
-			$extension 	= '';
-			$mimeType 	= '';
+			$extension = '';
+			$mimeType = '';
 
 			if ($this->getParentWriter()->getDrawingHashTable()->getByIndex($i) instanceof PHPExcel_Worksheet_Drawing) {
 				$extension = strtolower($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getExtension());
-				$mimeType = $this->_getImageMimeType( $this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getPath());
-			} else if ($this->getParentWriter()->getDrawingHashTable()->getByIndex($i) instanceof PHPExcel_Worksheet_MemoryDrawing) {
+				$mimeType = $this->_getImageMimeType($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getPath());
+			} elseif ($this->getParentWriter()->getDrawingHashTable()->getByIndex($i) instanceof PHPExcel_Worksheet_MemoryDrawing) {
 				$extension = strtolower($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getMimeType());
 				$extension = explode('/', $extension);
 				$extension = $extension[1];
@@ -180,8 +181,8 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 		for ($i = 0; $i < $sheetCount; ++$i) {
 			if (count($pPHPExcel->getSheet()->getHeaderFooter()->getImages()) > 0) {
 				foreach ($pPHPExcel->getSheet()->getHeaderFooter()->getImages() as $image) {
-					if (!isset( $aMediaContentTypes[strtolower($image->getExtension())])) {
-						$aMediaContentTypes[strtolower($image->getExtension())] = $this->_getImageMimeType( $image->getPath());
+					if (!isset($aMediaContentTypes[strtolower($image->getExtension())])) {
+						$aMediaContentTypes[strtolower($image->getExtension())] = $this->_getImageMimeType($image->getPath());
 
 						$this->_writeDefaultContentType($objWriter, strtolower($image->getExtension()), $aMediaContentTypes[strtolower($image->getExtension())]);
 					}
@@ -218,7 +219,7 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 	 * @param 	string 						$pContentType 	Content type
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	private function _writeDefaultContentType(PHPExcel_Shared_XMLWriter $objWriter = null, $pPartname = '', $pContentType = '') {
+	private function _writeDefaultContentType(PHPExcel_Shared_XMLWriter $objWriter = null, $pPartname = '', $pContentType = ''): void {
 		if ($pPartname != '' && $pContentType != '') {
 			// Write content type
 			$objWriter->startElement('Default');
@@ -240,7 +241,7 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 	 * @param 	string 						$pContentType 	Content type
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
-	private function _writeOverrideContentType(PHPExcel_Shared_XMLWriter $objWriter = null, $pPartname = '', $pContentType = '') {
+	private function _writeOverrideContentType(PHPExcel_Shared_XMLWriter $objWriter = null, $pPartname = '', $pContentType = ''): void {
 		if ($pPartname != '' && $pContentType != '') {
 			// Write content type
 			$objWriter->startElement('Override');

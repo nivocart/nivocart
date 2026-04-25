@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -25,7 +26,6 @@
  * @version    v1.0.0, released: 03-10-2018
  * @edition     NivoCart
  */
-
 
 /**
  * PHPExcel_Best_Fit
@@ -113,7 +113,7 @@ class PHPExcel_Best_Fit {
 	 * @return	 float						Y-Value
 	 */
 	public function getValueOfYForX($xValue) {
-		return False;
+		return false;
 	}
 
 	/**
@@ -123,7 +123,7 @@ class PHPExcel_Best_Fit {
 	 * @return	 float						X-Value
 	 */
 	public function getValueOfXForY($yValue) {
-		return False;
+		return false;
 	}
 
 	/**
@@ -276,7 +276,7 @@ class PHPExcel_Best_Fit {
 		return $this->_yBestFitValues;
 	}
 
-	protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY, $meanX, $meanY, $const) {
+	protected function _calculateGoodnessOfFit($sumX, $sumY, $sumX2, $sumY2, $sumXY, $meanX, $meanY, $const): void {
 		$SSres = $SScov = $SScor = $SStot = $SSsex = 0.0;
 
 		foreach ($this->_xValues as $xKey => $xValue) {
@@ -333,7 +333,7 @@ class PHPExcel_Best_Fit {
 		}
 	}
 
-	protected function _leastSquareFit($yValues, $xValues, $const) {
+	protected function _leastSquareFit($yValues, $xValues, $const): void {
 		// calculate sums
 		$x_sum = array_sum($xValues);
 		$y_sum = array_sum($yValues);
@@ -356,18 +356,18 @@ class PHPExcel_Best_Fit {
 		}
 
 		// calculate slope
-//		$this->_slope = (($this->_valueCount * $xy_sum) - ($x_sum * $y_sum)) / (($this->_valueCount * $xx_sum) - ($x_sum * $x_sum));
+		//		$this->_slope = (($this->_valueCount * $xy_sum) - ($x_sum * $y_sum)) / (($this->_valueCount * $xx_sum) - ($x_sum * $x_sum));
 		$this->_slope = $mBase / $mDivisor;
 
 		// calculate intersect
-//		$this->_intersect = ($y_sum - ($this->_slope * $x_sum)) / $this->_valueCount;
+		//		$this->_intersect = ($y_sum - ($this->_slope * $x_sum)) / $this->_valueCount;
 		if ($const) {
 			$this->_intersect = $meanY - ($this->_slope * $meanX);
 		} else {
 			$this->_intersect = 0;
 		}
 
-		$this->_calculateGoodnessOfFit($x_sum,$y_sum,$xx_sum,$yy_sum,$xy_sum,$meanX,$meanY,$const);
+		$this->_calculateGoodnessOfFit($x_sum, $y_sum, $xx_sum, $yy_sum, $xy_sum, $meanX, $meanY, $const);
 	}
 
 	/**
@@ -377,7 +377,7 @@ class PHPExcel_Best_Fit {
 	 * @param	float[]		$xValues	The set of X-values for this regression
 	 * @param	boolean		$const
 	 */
-	function __construct($yValues, $xValues = [], $const = true) {
+	public function __construct($yValues, $xValues = [], $const = true) {
 		//	Calculate number of points
 		$nY = count($yValues);
 		$nX = count($xValues);

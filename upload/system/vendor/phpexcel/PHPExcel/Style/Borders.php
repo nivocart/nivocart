@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -32,13 +33,12 @@
  * @package    PHPExcel_Style
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable
-{
+class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExcel_IComparable {
 	/* Diagonal directions */
-	const DIAGONAL_NONE = 0;
-	const DIAGONAL_UP = 1;
-	const DIAGONAL_DOWN = 2;
-	const DIAGONAL_BOTH = 3;
+	public const DIAGONAL_NONE = 0;
+	public const DIAGONAL_UP = 1;
+	public const DIAGONAL_DOWN = 2;
+	public const DIAGONAL_BOTH = 3;
 
 	/**
 	 * Left
@@ -118,7 +118,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 	protected $_horizontal;
 
 	/**
-     * Create a new PHPExcel_Style_Borders
+	 * Create a new PHPExcel_Style_Borders
 	 *
 	 * @param	boolean	$isSupervisor	Flag indicating if this is a supervisor or not
 	 *									Leave this value at default unless you understand exactly what
@@ -126,18 +126,17 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 	 * @param	boolean	$isConditional	Flag indicating if this is a conditional style or not
 	 *									Leave this value at default unless you understand exactly what
 	 *										its ramifications are
-     */
-    public function __construct($isSupervisor = false, $isConditional = false)
-    {
-    	// Supervisor?
+	 */
+	public function __construct($isSupervisor = false, $isConditional = false) {
+		// Supervisor?
 		parent::__construct($isSupervisor);
 
-    	// Initialise values
-    	$this->_left = new PHPExcel_Style_Border($isSupervisor, $isConditional);
-    	$this->_right = new PHPExcel_Style_Border($isSupervisor, $isConditional);
-    	$this->_top = new PHPExcel_Style_Border($isSupervisor, $isConditional);
-    	$this->_bottom = new PHPExcel_Style_Border($isSupervisor, $isConditional);
-    	$this->_diagonal = new PHPExcel_Style_Border($isSupervisor, $isConditional);
+		// Initialise values
+		$this->_left = new PHPExcel_Style_Border($isSupervisor, $isConditional);
+		$this->_right = new PHPExcel_Style_Border($isSupervisor, $isConditional);
+		$this->_top = new PHPExcel_Style_Border($isSupervisor, $isConditional);
+		$this->_bottom = new PHPExcel_Style_Border($isSupervisor, $isConditional);
+		$this->_diagonal = new PHPExcel_Style_Border($isSupervisor, $isConditional);
 		$this->_diagonalDirection = PHPExcel_Style_Borders::DIAGONAL_NONE;
 
 		// Specially for supervisor
@@ -161,7 +160,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 			$this->_vertical->bindParent($this, '_vertical');
 			$this->_horizontal->bindParent($this, '_horizontal');
 		}
-    }
+	}
 
 	/**
 	 * Get the shared style component for the currently active cell in currently active sheet.
@@ -169,8 +168,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 	 *
 	 * @return PHPExcel_Style_Borders
 	 */
-	public function getSharedComponent()
-	{
+	public function getSharedComponent() {
 		return $this->_parent->getSharedComponent()->getBorders();
 	}
 
@@ -180,49 +178,48 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 	 * @param array $array
 	 * @return array
 	 */
-	public function getStyleArray($array)
-	{
+	public function getStyleArray($array) {
 		return ['borders' => $array];
 	}
 
 	/**
-     * Apply styles from array
-     *
-     * <code>
-     * $objPHPExcel->getActiveSheet()->getStyle('B2')->getBorders()->applyFromArray(
-     * 		array(
-     * 			'bottom'     => array(
-     * 				'style' => PHPExcel_Style_Border::BORDER_DASHDOT,
-     * 				'color' => array(
-     * 					'rgb' => '808080'
-     * 				)
-     * 			),
-     * 			'top'     => array(
-     * 				'style' => PHPExcel_Style_Border::BORDER_DASHDOT,
-     * 				'color' => array(
-     * 					'rgb' => '808080'
-     * 				)
-     * 			)
-     * 		)
-     * );
-     * </code>
-     * <code>
-     * $objPHPExcel->getActiveSheet()->getStyle('B2')->getBorders()->applyFromArray(
-     * 		array(
-     * 			'allborders' => array(
-     * 				'style' => PHPExcel_Style_Border::BORDER_DASHDOT,
-     * 				'color' => array(
-     * 					'rgb' => '808080'
-     * 				)
-     * 			)
-     * 		)
-     * );
-     * </code>
-     *
-     * @param	array	$pStyles	Array containing style information
-     * @throws	PHPExcel_Exception
-     * @return PHPExcel_Style_Borders
-     */
+	 * Apply styles from array
+	 *
+	 * <code>
+	 * $objPHPExcel->getActiveSheet()->getStyle('B2')->getBorders()->applyFromArray(
+	 * 		array(
+	 * 			'bottom'     => array(
+	 * 				'style' => PHPExcel_Style_Border::BORDER_DASHDOT,
+	 * 				'color' => array(
+	 * 					'rgb' => '808080'
+	 * 				)
+	 * 			),
+	 * 			'top'     => array(
+	 * 				'style' => PHPExcel_Style_Border::BORDER_DASHDOT,
+	 * 				'color' => array(
+	 * 					'rgb' => '808080'
+	 * 				)
+	 * 			)
+	 * 		)
+	 * );
+	 * </code>
+	 * <code>
+	 * $objPHPExcel->getActiveSheet()->getStyle('B2')->getBorders()->applyFromArray(
+	 * 		array(
+	 * 			'allborders' => array(
+	 * 				'style' => PHPExcel_Style_Border::BORDER_DASHDOT,
+	 * 				'color' => array(
+	 * 					'rgb' => '808080'
+	 * 				)
+	 * 			)
+	 * 		)
+	 * );
+	 * </code>
+	 *
+	 * @param	array	$pStyles	Array containing style information
+	 * @throws	PHPExcel_Exception
+	 * @return PHPExcel_Style_Borders
+	 */
 	public function applyFromArray($pStyles = null) {
 		if (is_array($pStyles)) {
 			if ($this->_isSupervisor) {
@@ -259,138 +256,138 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 		return $this;
 	}
 
-    /**
-     * Get Left
-     *
-     * @return PHPExcel_Style_Border
-     */
-    public function getLeft() {
+	/**
+	 * Get Left
+	 *
+	 * @return PHPExcel_Style_Border
+	 */
+	public function getLeft() {
 		return $this->_left;
-    }
+	}
 
-    /**
-     * Get Right
-     *
-     * @return PHPExcel_Style_Border
-     */
-    public function getRight() {
+	/**
+	 * Get Right
+	 *
+	 * @return PHPExcel_Style_Border
+	 */
+	public function getRight() {
 		return $this->_right;
-    }
+	}
 
-    /**
-     * Get Top
-     *
-     * @return PHPExcel_Style_Border
-     */
-    public function getTop() {
+	/**
+	 * Get Top
+	 *
+	 * @return PHPExcel_Style_Border
+	 */
+	public function getTop() {
 		return $this->_top;
-    }
+	}
 
-    /**
-     * Get Bottom
-     *
-     * @return PHPExcel_Style_Border
-     */
-    public function getBottom() {
+	/**
+	 * Get Bottom
+	 *
+	 * @return PHPExcel_Style_Border
+	 */
+	public function getBottom() {
 		return $this->_bottom;
-    }
+	}
 
-    /**
-     * Get Diagonal
-     *
-     * @return PHPExcel_Style_Border
-     */
-    public function getDiagonal() {
+	/**
+	 * Get Diagonal
+	 *
+	 * @return PHPExcel_Style_Border
+	 */
+	public function getDiagonal() {
 		return $this->_diagonal;
-    }
+	}
 
-    /**
-     * Get AllBorders (pseudo-border). Only applies to supervisor.
-     *
-     * @return PHPExcel_Style_Border
-     * @throws PHPExcel_Exception
-     */
-    public function getAllBorders() {
+	/**
+	 * Get AllBorders (pseudo-border). Only applies to supervisor.
+	 *
+	 * @return PHPExcel_Style_Border
+	 * @throws PHPExcel_Exception
+	 */
+	public function getAllBorders() {
 		if (!$this->_isSupervisor) {
 			throw new PHPExcel_Exception('Can only get pseudo-border for supervisor.');
 		}
 		return $this->_allBorders;
-    }
+	}
 
-    /**
-     * Get Outline (pseudo-border). Only applies to supervisor.
-     *
-     * @return boolean
-     * @throws PHPExcel_Exception
-     */
-    public function getOutline() {
+	/**
+	 * Get Outline (pseudo-border). Only applies to supervisor.
+	 *
+	 * @return boolean
+	 * @throws PHPExcel_Exception
+	 */
+	public function getOutline() {
 		if (!$this->_isSupervisor) {
 			throw new PHPExcel_Exception('Can only get pseudo-border for supervisor.');
 		}
-    	return $this->_outline;
-    }
+		return $this->_outline;
+	}
 
-    /**
-     * Get Inside (pseudo-border). Only applies to supervisor.
-     *
-     * @return boolean
-     * @throws PHPExcel_Exception
-     */
-    public function getInside() {
+	/**
+	 * Get Inside (pseudo-border). Only applies to supervisor.
+	 *
+	 * @return boolean
+	 * @throws PHPExcel_Exception
+	 */
+	public function getInside() {
 		if (!$this->_isSupervisor) {
 			throw new PHPExcel_Exception('Can only get pseudo-border for supervisor.');
 		}
-    	return $this->_inside;
-    }
+		return $this->_inside;
+	}
 
-    /**
-     * Get Vertical (pseudo-border). Only applies to supervisor.
-     *
-     * @return PHPExcel_Style_Border
-     * @throws PHPExcel_Exception
-     */
-    public function getVertical() {
+	/**
+	 * Get Vertical (pseudo-border). Only applies to supervisor.
+	 *
+	 * @return PHPExcel_Style_Border
+	 * @throws PHPExcel_Exception
+	 */
+	public function getVertical() {
 		if (!$this->_isSupervisor) {
 			throw new PHPExcel_Exception('Can only get pseudo-border for supervisor.');
 		}
 		return $this->_vertical;
-    }
+	}
 
-    /**
-     * Get Horizontal (pseudo-border). Only applies to supervisor.
-     *
-     * @return PHPExcel_Style_Border
-     * @throws PHPExcel_Exception
-     */
-    public function getHorizontal() {
+	/**
+	 * Get Horizontal (pseudo-border). Only applies to supervisor.
+	 *
+	 * @return PHPExcel_Style_Border
+	 * @throws PHPExcel_Exception
+	 */
+	public function getHorizontal() {
 		if (!$this->_isSupervisor) {
 			throw new PHPExcel_Exception('Can only get pseudo-border for supervisor.');
 		}
 		return $this->_horizontal;
-    }
+	}
 
-    /**
-     * Get DiagonalDirection
-     *
-     * @return int
-     */
-    public function getDiagonalDirection() {
+	/**
+	 * Get DiagonalDirection
+	 *
+	 * @return int
+	 */
+	public function getDiagonalDirection() {
 		if ($this->_isSupervisor) {
 			return $this->getSharedComponent()->getDiagonalDirection();
 		}
-    	return $this->_diagonalDirection;
-    }
+		return $this->_diagonalDirection;
+	}
 
-    /**
-     * Set DiagonalDirection
-     *
-     * @param int $pValue
-     * @return PHPExcel_Style_Borders
-     */
-    public function setDiagonalDirection($pValue = PHPExcel_Style_Borders::DIAGONAL_NONE) {
-        if ($pValue == '') {
-    		$pValue = PHPExcel_Style_Borders::DIAGONAL_NONE;
-    	}
+	/**
+	 * Set DiagonalDirection
+	 *
+	 * @param int $pValue
+	 * @return PHPExcel_Style_Borders
+	 */
+	public function setDiagonalDirection($pValue = PHPExcel_Style_Borders::DIAGONAL_NONE) {
+		if ($pValue == '') {
+			$pValue = PHPExcel_Style_Borders::DIAGONAL_NONE;
+		}
 		if ($this->_isSupervisor) {
 			$styleArray = $this->getStyleArray(['diagonaldirection' => $pValue]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
@@ -398,7 +395,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 			$this->_diagonalDirection = $pValue;
 		}
 		return $this;
-    }
+	}
 
 	/**
 	 * Get hash code
@@ -409,14 +406,14 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 		if ($this->_isSupervisor) {
 			return $this->getSharedComponent()->getHashcode();
 		}
-    	return md5(
-    		  $this->getLeft()->getHashCode()
-    		. $this->getRight()->getHashCode()
-    		. $this->getTop()->getHashCode()
-    		. $this->getBottom()->getHashCode()
-    		. $this->getDiagonal()->getHashCode()
-    		. $this->getDiagonalDirection()
-    		. self::class
-    	);
-    }
+		return md5(
+			$this->getLeft()->getHashCode()
+			. $this->getRight()->getHashCode()
+			. $this->getTop()->getHashCode()
+			. $this->getBottom()->getHashCode()
+			. $this->getDiagonal()->getHashCode()
+			. $this->getDiagonalDirection()
+			. self::class
+		);
+	}
 }

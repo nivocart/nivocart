@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -41,9 +42,9 @@ class PHPExcel_Reader_Excel2007_Chart {
 			if ($format == 'string') {
 				return (string) $attributes[$name];
 			} elseif ($format == 'integer') {
-				return (integer) $attributes[$name];
+				return (int) $attributes[$name];
 			} elseif ($format == 'boolean') {
-				return (boolean) ($attributes[$name] === '0' || $attributes[$name] !== 'true') ? false : true;
+				return (bool) ($attributes[$name] === '0' || $attributes[$name] !== 'true') ? false : true;
 			} else {
 				return (float) $attributes[$name];
 			}
@@ -54,8 +55,8 @@ class PHPExcel_Reader_Excel2007_Chart {
 	private static function _readColor($color, $background = false) {
 		if (isset($color["rgb"])) {
 			return (string)$color["rgb"];
-		} else if (isset($color["indexed"])) {
-			return PHPExcel_Style_Color::indexedColor($color["indexed"]-7, $background)->getARGB();
+		} elseif (isset($color["indexed"])) {
+			return PHPExcel_Style_Color::indexedColor($color["indexed"] - 7, $background)->getARGB();
 		}
 	}
 
@@ -73,124 +74,124 @@ class PHPExcel_Reader_Excel2007_Chart {
 						$chartDetailsC = $chartDetails->children($namespacesChartMeta['c']);
 						switch ($chartDetailsKey) {
 							case "plotArea":
-									$plotAreaLayout = $XaxisLable = $YaxisLable = null;
-									$plotSeries = $plotAttributes = [];
-									foreach ($chartDetails as $chartDetailKey => $chartDetail) {
-										switch ($chartDetailKey) {
-											case "layout":
-												$plotAreaLayout = self::_chartLayoutDetails($chartDetail, $namespacesChartMeta);
-												break;
-											case "catAx":
-												if (isset($chartDetail->title)) {
-													$XaxisLabel = self::_chartTitle($chartDetail->title->children($namespacesChartMeta['c']), $namespacesChartMeta, 'cat');
-												}
-												break;
-											case "dateAx":
-												if (isset($chartDetail->title)) {
-													$XaxisLabel = self::_chartTitle($chartDetail->title->children($namespacesChartMeta['c']), $namespacesChartMeta, 'cat');
-												}
-												break;
-											case "valAx":
-												if (isset($chartDetail->title)) {
-													$YaxisLabel = self::_chartTitle($chartDetail->title->children($namespacesChartMeta['c']), $namespacesChartMeta, 'cat');
-												}
-												break;
-											case "barChart":
-											case "bar3DChart":
-												$barDirection = self::_getAttribute($chartDetail->barDir, 'val', 'string');
-												$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotSer->setPlotDirection($barDirection);
-												$plotSeries[] = $plotSer;
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "lineChart":
-											case "line3DChart":
-												$plotSeries[] = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "areaChart":
-											case "area3DChart":
-												$plotSeries[] = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "doughnutChart":
-											case "pieChart":
-											case "pie3DChart":
-												$explosion = isset($chartDetail->ser->explosion);
-												$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotSer->setPlotStyle($explosion);
-												$plotSeries[] = $plotSer;
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "scatterChart":
-												$scatterStyle = self::_getAttribute($chartDetail->scatterStyle, 'val', 'string');
-												$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotSer->setPlotStyle($scatterStyle);
-												$plotSeries[] = $plotSer;
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "bubbleChart":
-												$bubbleScale = self::_getAttribute($chartDetail->bubbleScale, 'val', 'integer');
-												$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotSer->setPlotStyle($bubbleScale);
-												$plotSeries[] = $plotSer;
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "radarChart":
-												$radarStyle = self::_getAttribute($chartDetail->radarStyle, 'val', 'string');
-												$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotSer->setPlotStyle($radarStyle);
-												$plotSeries[] = $plotSer;
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "surfaceChart":
-											case "surface3DChart":
-												$wireFrame = self::_getAttribute($chartDetail->wireframe, 'val', 'boolean');
-												$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotSer->setPlotStyle($wireFrame);
-												$plotSeries[] = $plotSer;
-												$plotAttributes = self::_readChartAttributes($chartDetail);
-												break;
-											case "stockChart":
-												$plotSeries[] = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
-												$plotAttributes = self::_readChartAttributes($plotAreaLayout);
-												break;
-										}
+								$plotAreaLayout = $XaxisLable = $YaxisLable = null;
+								$plotSeries = $plotAttributes = [];
+								foreach ($chartDetails as $chartDetailKey => $chartDetail) {
+									switch ($chartDetailKey) {
+										case "layout":
+											$plotAreaLayout = self::_chartLayoutDetails($chartDetail, $namespacesChartMeta);
+											break;
+										case "catAx":
+											if (isset($chartDetail->title)) {
+												$XaxisLabel = self::_chartTitle($chartDetail->title->children($namespacesChartMeta['c']), $namespacesChartMeta, 'cat');
+											}
+											break;
+										case "dateAx":
+											if (isset($chartDetail->title)) {
+												$XaxisLabel = self::_chartTitle($chartDetail->title->children($namespacesChartMeta['c']), $namespacesChartMeta, 'cat');
+											}
+											break;
+										case "valAx":
+											if (isset($chartDetail->title)) {
+												$YaxisLabel = self::_chartTitle($chartDetail->title->children($namespacesChartMeta['c']), $namespacesChartMeta, 'cat');
+											}
+											break;
+										case "barChart":
+										case "bar3DChart":
+											$barDirection = self::_getAttribute($chartDetail->barDir, 'val', 'string');
+											$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotSer->setPlotDirection($barDirection);
+											$plotSeries[] = $plotSer;
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "lineChart":
+										case "line3DChart":
+											$plotSeries[] = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "areaChart":
+										case "area3DChart":
+											$plotSeries[] = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "doughnutChart":
+										case "pieChart":
+										case "pie3DChart":
+											$explosion = isset($chartDetail->ser->explosion);
+											$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotSer->setPlotStyle($explosion);
+											$plotSeries[] = $plotSer;
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "scatterChart":
+											$scatterStyle = self::_getAttribute($chartDetail->scatterStyle, 'val', 'string');
+											$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotSer->setPlotStyle($scatterStyle);
+											$plotSeries[] = $plotSer;
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "bubbleChart":
+											$bubbleScale = self::_getAttribute($chartDetail->bubbleScale, 'val', 'integer');
+											$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotSer->setPlotStyle($bubbleScale);
+											$plotSeries[] = $plotSer;
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "radarChart":
+											$radarStyle = self::_getAttribute($chartDetail->radarStyle, 'val', 'string');
+											$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotSer->setPlotStyle($radarStyle);
+											$plotSeries[] = $plotSer;
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "surfaceChart":
+										case "surface3DChart":
+											$wireFrame = self::_getAttribute($chartDetail->wireframe, 'val', 'boolean');
+											$plotSer = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotSer->setPlotStyle($wireFrame);
+											$plotSeries[] = $plotSer;
+											$plotAttributes = self::_readChartAttributes($chartDetail);
+											break;
+										case "stockChart":
+											$plotSeries[] = self::_chartDataSeries($chartDetail, $namespacesChartMeta, $chartDetailKey);
+											$plotAttributes = self::_readChartAttributes($plotAreaLayout);
+											break;
 									}
-									if ($plotAreaLayout == null) {
-										$plotAreaLayout = new PHPExcel_Chart_Layout();
-									}
-									$plotArea = new PHPExcel_Chart_PlotArea($plotAreaLayout, $plotSeries);
-									self::_setChartAttributes($plotAreaLayout, $plotAttributes);
-									break;
+								}
+								if ($plotAreaLayout == null) {
+									$plotAreaLayout = new PHPExcel_Chart_Layout();
+								}
+								$plotArea = new PHPExcel_Chart_PlotArea($plotAreaLayout, $plotSeries);
+								self::_setChartAttributes($plotAreaLayout, $plotAttributes);
+								break;
 							case "plotVisOnly":
-									$plotVisOnly = self::_getAttribute($chartDetails, 'val', 'string');
-									break;
+								$plotVisOnly = self::_getAttribute($chartDetails, 'val', 'string');
+								break;
 							case "dispBlanksAs":
-									$dispBlanksAs = self::_getAttribute($chartDetails, 'val', 'string');
-									break;
+								$dispBlanksAs = self::_getAttribute($chartDetails, 'val', 'string');
+								break;
 							case "title":
-									$title = self::_chartTitle($chartDetails, $namespacesChartMeta, 'title');
-									break;
+								$title = self::_chartTitle($chartDetails, $namespacesChartMeta, 'title');
+								break;
 							case "legend":
-									$legendPos = 'r';
-									$legendLayout = null;
-									$legendOverlay = false;
-									foreach ($chartDetails as $chartDetailKey => $chartDetail) {
-										switch ($chartDetailKey) {
-											case "legendPos":
-												$legendPos = self::_getAttribute($chartDetail, 'val', 'string');
-												break;
-											case "overlay":
-												$legendOverlay = self::_getAttribute($chartDetail, 'val', 'boolean');
-												break;
-											case "layout":
-												$legendLayout = self::_chartLayoutDetails($chartDetail, $namespacesChartMeta);
-												break;
-										}
+								$legendPos = 'r';
+								$legendLayout = null;
+								$legendOverlay = false;
+								foreach ($chartDetails as $chartDetailKey => $chartDetail) {
+									switch ($chartDetailKey) {
+										case "legendPos":
+											$legendPos = self::_getAttribute($chartDetail, 'val', 'string');
+											break;
+										case "overlay":
+											$legendOverlay = self::_getAttribute($chartDetail, 'val', 'boolean');
+											break;
+										case "layout":
+											$legendLayout = self::_chartLayoutDetails($chartDetail, $namespacesChartMeta);
+											break;
 									}
-									$legend = new PHPExcel_Chart_Legend($legendPos, $legendLayout, $legendOverlay);
-									break;
+								}
+								$legend = new PHPExcel_Chart_Legend($legendPos, $legendLayout, $legendOverlay);
+								break;
 						}
 					}
 			}
@@ -225,7 +226,6 @@ class PHPExcel_Reader_Excel2007_Chart {
 		return new PHPExcel_Chart_Title($caption, $titleLayout);
 	}	//	function _chartTitle()
 
-
 	private static function _chartLayoutDetails($chartDetail, $namespacesChartMeta) {
 		if (!isset($chartDetail->manualLayout)) {
 			return null;
@@ -236,12 +236,11 @@ class PHPExcel_Reader_Excel2007_Chart {
 		}
 		$layout = [];
 		foreach ($details as $detailKey => $detail) {
-//			echo $detailKey,' => ',self::_getAttribute($detail, 'val', 'string'),PHP_EOL;
+			//			echo $detailKey,' => ',self::_getAttribute($detail, 'val', 'string'),PHP_EOL;
 			$layout[$detailKey] = self::_getAttribute($detail, 'val', 'string');
 		}
 		return new PHPExcel_Chart_Layout($layout);
 	}	//	function _chartLayoutDetails()
-
 
 	private static function _chartDataSeries($chartDetail, $namespacesChartMeta, $plotType) {
 		$multiSeriesType = null;
@@ -351,7 +350,7 @@ class PHPExcel_Reader_Excel2007_Chart {
 		return [
 			'formatCode' => $formatCode,
 			'pointCount' => $pointCount,
-			'dataValues' => $seriesVal
+			'dataValues' => $seriesVal,
 		];
 	}	//	function _chartDataSeriesValues()
 
@@ -384,7 +383,7 @@ class PHPExcel_Reader_Excel2007_Chart {
 		return [
 			'formatCode' => $formatCode,
 			'pointCount' => $pointCount,
-			'dataValues' => $seriesVal
+			'dataValues' => $seriesVal,
 		];
 	}	//	function _chartDataSeriesValuesMultiLevel()
 
@@ -407,7 +406,7 @@ class PHPExcel_Reader_Excel2007_Chart {
 
 				$fontColor = (self::_getAttribute($titleDetailElement->rPr, 'color', 'string'));
 				if (!is_null($fontColor)) {
-					$objText->getFont()->setColor(new PHPExcel_Style_Color( self::_readColor($fontColor)));
+					$objText->getFont()->setColor(new PHPExcel_Style_Color(self::_readColor($fontColor)));
 				}
 
 				$bold = self::_getAttribute($titleDetailElement->rPr, 'b', 'boolean');
@@ -484,28 +483,28 @@ class PHPExcel_Reader_Excel2007_Chart {
 		return $plotAttributes;
 	}
 
-	private static function _setChartAttributes($plotArea, $plotAttributes) {
+	private static function _setChartAttributes($plotArea, $plotAttributes): void {
 		foreach ($plotAttributes as $plotAttributeKey => $plotAttributeValue) {
 			switch ($plotAttributeKey) {
-				case 'showLegendKey' :
+				case 'showLegendKey':
 					$plotArea->setShowLegendKey($plotAttributeValue);
 					break;
-				case 'showVal' :
+				case 'showVal':
 					$plotArea->setShowVal($plotAttributeValue);
 					break;
-				case 'showCatName' :
+				case 'showCatName':
 					$plotArea->setShowCatName($plotAttributeValue);
 					break;
-				case 'showSerName' :
+				case 'showSerName':
 					$plotArea->setShowSerName($plotAttributeValue);
 					break;
-				case 'showPercent' :
+				case 'showPercent':
 					$plotArea->setShowPercent($plotAttributeValue);
 					break;
-				case 'showBubbleSize' :
+				case 'showBubbleSize':
 					$plotArea->setShowBubbleSize($plotAttributeValue);
 					break;
-				case 'showLeaderLines' :
+				case 'showLeaderLines':
 					$plotArea->setShowLeaderLines($plotAttributeValue);
 					break;
 			}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *	@package JAMA
  *
@@ -16,7 +17,6 @@
  *	@version 1.2
  */
 class CholeskyDecomposition {
-
 	/**
 	 *	Decomposition storage
 	 *	@var array
@@ -67,7 +67,7 @@ class CholeskyDecomposition {
 					}
 				}
 
-				for ($k = $i+1; $k < $this->m; ++$k) {
+				for ($k = $i + 1; $k < $this->m; ++$k) {
 					$this->L[$i][$k] = 0.0;
 				}
 			}

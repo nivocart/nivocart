@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -32,8 +33,7 @@
  * @package    PHPExcel_Writer_Excel2007
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-abstract class PHPExcel_Writer_Excel2007_WriterPart
-{
+abstract class PHPExcel_Writer_Excel2007_WriterPart {
 	/**
 	 * Parent IWriter object
 	 *
@@ -47,7 +47,7 @@ abstract class PHPExcel_Writer_Excel2007_WriterPart
 	 * @param PHPExcel_Writer_IWriter	$pWriter
 	 * @throws PHPExcel_Writer_Exception
 	 */
-	public function setParentWriter(PHPExcel_Writer_IWriter $pWriter = null) {
+	public function setParentWriter(PHPExcel_Writer_IWriter $pWriter = null): void {
 		$this->_parentWriter = $pWriter;
 	}
 

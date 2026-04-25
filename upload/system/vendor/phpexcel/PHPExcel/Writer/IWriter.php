@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  PHPExcel
  *
@@ -33,11 +34,11 @@
  *  @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 interface PHPExcel_Writer_IWriter {
-    /**
-     *  Save PHPExcel to file
-     *
-     *  @param   string       $pFilename  Name of the file to save
-     *  @throws  PHPExcel_Writer_Exception
-     */
-    public function save($pFilename = null);
+	/**
+	 *  Save PHPExcel to file
+	 *
+	 *  @param   string       $pFilename  Name of the file to save
+	 *  @throws  PHPExcel_Writer_Exception
+	 */
+	public function save($pFilename = null);
 }

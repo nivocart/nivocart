@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHPExcel
  *
@@ -34,9 +35,9 @@
  */
 class PHPExcel_Worksheet_SheetView {
 	/* Sheet View types */
-	const SHEETVIEW_NORMAL = 'normal';
-	const SHEETVIEW_PAGE_LAYOUT = 'pageLayout';
-	const SHEETVIEW_PAGE_BREAK_PREVIEW = 'pageBreakPreview';
+	public const SHEETVIEW_NORMAL = 'normal';
+	public const SHEETVIEW_PAGE_LAYOUT = 'pageLayout';
+	public const SHEETVIEW_PAGE_BREAK_PREVIEW = 'pageBreakPreview';
 
 	private static $_sheetViewTypes = [
 		self::SHEETVIEW_NORMAL,
@@ -71,12 +72,11 @@ class PHPExcel_Worksheet_SheetView {
 	 */
 	private $_sheetviewType = self::SHEETVIEW_NORMAL;
 
-    /**
-     * Create a new PHPExcel_Worksheet_SheetView
-     */
-    public function __construct()
-    {
-    }
+	/**
+	 * Create a new PHPExcel_Worksheet_SheetView
+	 */
+	public function __construct() {
+	}
 
 	/**
 	 * Get ZoomScale
@@ -155,11 +155,12 @@ class PHPExcel_Worksheet_SheetView {
 	 * @throws 	PHPExcel_Exception
 	 * @return PHPExcel_Worksheet_SheetView
 	 */
-	public function setView($pValue = NULL) {
+	public function setView($pValue = null) {
 		//	MS Excel 2007 allows setting the view to 'normal', 'pageLayout' or 'pageBreakPreview'
 		//		via the user interface
-		if ($pValue === NULL)
+		if ($pValue === null) {
 			$pValue = self::SHEETVIEW_NORMAL;
+		}
 		if (in_array($pValue, self::$_sheetViewTypes)) {
 			$this->_sheetviewType = $pValue;
 		} else {
