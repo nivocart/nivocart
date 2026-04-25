@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
@@ -18,10 +19,10 @@ return (new Config())
         // (no PHP CS Fixer equivalent needed — not enforced by default)
 
         // EXCLUSION 5: single-line function signatures preferred
-        'function_declaration' => [
-            'closure_function_spacing'  => 'one',
-            'trailing_comma_in_multiline' => false,
-        ],
+		'function_declaration' => [
+			'closure_function_spacing'   => 'one',
+			'trailing_comma_single_line' => false,
+		],
         'method_argument_space' => [
             'on_multiline' => 'ignore',
         ],
@@ -34,15 +35,18 @@ return (new Config())
         // Enforce short array syntax [] over array()
         'array_syntax' => ['syntax' => 'short'],
 
+		// Ignore single/double quotes (protects sql queries)
+        'single_quote' => false,
+
         // No whitespace before semicolons
-        'no_whitespace_before_semicolon' => true,   // ≈ SemicolonSpacing
+        'multiline_whitespace_before_semicolons' => false,   // ≈ SemicolonSpacing
 
         // No trailing whitespace
-        'no_trailing_whitespace'         => true,
+        'no_trailing_whitespace' => true,
         'no_trailing_whitespace_in_comment' => true,
 
         // Consistent spacing inside array brackets
-        'trim_array_spaces'              => true,
+        'trim_array_spaces' => true,
 
         // Disallow multiple statements on a single line
         'no_multiple_statements_per_line' => true,
@@ -53,7 +57,7 @@ return (new Config())
         ],
 
         // No space before colon in switch/match
-        'switch_case_space'   => true,
+        'switch_case_space' => true,
         'switch_case_semicolon_to_colon' => true,
 
 		// Keep TABs as indentation
@@ -66,9 +70,8 @@ return (new Config())
         // These remain PHPCS-only checks, keep phpcs.xml for those
 
         // ── General housekeeping ─────────────────────────────────
-        'no_unused_imports'      => true,
-        'no_extra_blank_lines'   => true,
-        'single_quote'           => true,
+        'no_unused_imports'     => true,
+        'no_extra_blank_lines'  => true,
 		'curly_braces_position' => [
 			'functions_opening_brace'               => 'same_line',
 			'classes_opening_brace'                 => 'same_line',
@@ -80,9 +83,9 @@ return (new Config())
     ->setFinder(
         (new Finder())
             ->in([
-                __DIR__ . '/admin',
-                __DIR__ . '/catalog',
-                __DIR__ . '/system',
+                __DIR__ . '\upload\admin',
+                __DIR__ . '\upload\catalog',
+                __DIR__ . '\upload\system',
             ])
             ->exclude([
                 'vendor',
