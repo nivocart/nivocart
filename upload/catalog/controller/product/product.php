@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerProductProduct
+ *
+ * @package NivoCart
+ */
 class ControllerProductProduct extends Controller {
 	private $image_thumb_width;
 	private $image_thumb_height;
@@ -12,13 +17,13 @@ class ControllerProductProduct extends Controller {
 	public function index() {
 		$this->language->load('product/product');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
 		$this->load->model('catalog/category');
 
@@ -53,11 +58,11 @@ class ControllerProductProduct extends Controller {
 				$category_info = $this->model_catalog_category->getCategory($path_id);
 
 				if ($category_info) {
-					$this->data['breadcrumbs'][] = array(
+					$this->data['breadcrumbs'][] = [
 						'text'      => $category_info['name'],
 						'href'      => $this->url->link('product/category', 'path=' . $path . $url, 'SSL'),
 						'separator' => $this->language->get('text_separator')
-					);
+					];
 				}
 			}
 
@@ -74,22 +79,22 @@ class ControllerProductProduct extends Controller {
 
 				$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-				$this->data['breadcrumbs'][] = array(
+				$this->data['breadcrumbs'][] = [
 					'text'      => $category_info['name'],
 					'href'      => $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url, 'SSL'),
 					'separator' => $this->language->get('text_separator')
-				);
+				];
 			}
 		}
 
 		$this->load->model('catalog/manufacturer');
 
 		if (isset($this->request->get['manufacturer_id'])) {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_brand'),
 				'href'      => $this->url->link('product/manufacturer', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$page_url = array_filter([
 				'sort'  => $this->request->get['sort'] ?? null,
@@ -103,11 +108,11 @@ class ControllerProductProduct extends Controller {
 			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
 
 			if ($manufacturer_info) {
-				$this->data['breadcrumbs'][] = array(
+				$this->data['breadcrumbs'][] = [
 					'text'      => $manufacturer_info['name'],
 					'href'      => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url, 'SSL'),
 					'separator' => $this->language->get('text_separator')
-				);
+				];
 			}
 		}
 
@@ -154,11 +159,11 @@ class ControllerProductProduct extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_search'),
 				'href'      => $this->url->link('product/search', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 		}
 
 		if (isset($this->request->get['product_id'])) {
@@ -226,11 +231,11 @@ class ControllerProductProduct extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $product_info['name'],
 				'href'      => $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'], 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->document->setTitle($product_info['name']);
 			$this->document->setDescription($product_info['meta_description']);

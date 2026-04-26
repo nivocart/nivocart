@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleNews
+ *
+ * @package NivoCart
+ */
 class ControllerModuleNews extends Controller {
 	private $_name = 'news';
 

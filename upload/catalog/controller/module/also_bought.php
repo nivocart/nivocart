@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleAlsoBought
+ *
+ * @package NivoCart
+ */
 class ControllerModuleAlsoBought extends Controller {
 	private $_name = 'also_bought';
 

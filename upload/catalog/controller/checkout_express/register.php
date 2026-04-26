@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCheckoutExpressRegister
+ *
+ * @package NivoCart
+ */
 class ControllerCheckoutExpressRegister extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.min.css');

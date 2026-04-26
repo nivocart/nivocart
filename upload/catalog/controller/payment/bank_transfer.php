@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerPaymentBankTransfer
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentBankTransfer extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->language->load('payment/bank_transfer');

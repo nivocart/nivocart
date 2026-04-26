@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleBlogCategory
+ *
+ * @package NivoCart
+ */
 class ControllerModuleBlogCategory extends Controller {
 	private $_name = 'blog_category';
 

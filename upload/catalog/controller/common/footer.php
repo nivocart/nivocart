@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCommonFooter
+ *
+ * @package NivoCart
+ */
 class ControllerCommonFooter extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->language->load('common/footer');

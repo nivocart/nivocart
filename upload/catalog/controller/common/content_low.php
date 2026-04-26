@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCommonContentLow
+ *
+ * @package NivoCart
+ */
 class ControllerCommonContentLow extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->load->model('design/layout');

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerProductSpecial
+ *
+ * @package NivoCart
+ */
 class ControllerProductSpecial extends Controller {
 	private $image_product_width;
 	private $image_product_height;
@@ -10,51 +15,33 @@ class ControllerProductSpecial extends Controller {
 		$this->load->model('catalog/product');
 
 		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
-			$this->request->get['limit'] = $this->config->get('config_catalog_limit');
+			$limit = $this->config->get('config_catalog_limit');
 		} elseif (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] > 100)) {
-			$this->request->get['limit'] = 100;
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'p.sort_order';
-		}
-
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['limit'])) {
-			$limit = $this->request->get['limit'];
+			$limit = 100;
 		} else {
 			$limit = $this->config->get('config_catalog_limit');
 		}
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'p.sort_order';
+		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $limit,
 			'limit' => $limit
-		);
+		];
 
 		$product_total = $this->model_catalog_product->getTotalProductSpecials($data);
 
@@ -72,10 +59,10 @@ class ControllerProductSpecial extends Controller {
 			$this->load->model('tool/image');
 
 			$page_url = array_filter([
-				'sort'        => $this->request->get['sort'] ?? null,
-				'order'       => $this->request->get['order'] ?? null,
-				'limit'       => $this->request->get['limit'] ?? null,
-				'page'        => $this->request->get['page'] ?? null
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'limit' => $this->request->get['limit'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -155,7 +142,7 @@ class ControllerProductSpecial extends Controller {
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -370,12 +357,12 @@ class ControllerProductSpecial extends Controller {
 			$page_trigger = $product_total - $limit;
 			$page_last = ceil($product_total / $limit);
 
-			if (($page == 1) && ($page_trigger < 1)) {
+			if (($page === 1) && ($page_trigger < 1)) {
 				$this->document->addLink($this->url->link('product/special'), 'canonical');
-			} elseif (($page == 1) && ($page_trigger > 0)) {
+			} elseif (($page === 1) && ($page_trigger > 0)) {
 				$this->document->addLink($this->url->link('product/special'), 'canonical');
 				$this->document->addLink($this->url->link('product/special', 'page=' . ($page + 1) . $url, 'SSL'), 'next');
-			} elseif ($page == $page_last) {
+			} elseif ($page === $page_last) {
 				$this->document->addLink($this->url->link('product/special', 'page=' . $page), 'canonical');
 				$this->document->addLink($this->url->link('product/special', 'page=' . ($page - 1) . $url, 'SSL'), 'prev');
 			} elseif ($this->request->get['page'] > $page_last) {

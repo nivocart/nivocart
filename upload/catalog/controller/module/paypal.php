@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModulePaypal
+ *
+ * @package NivoCart
+ */
 class ControllerModulePaypal extends Controller {
 	private $_name = 'paypal';
 

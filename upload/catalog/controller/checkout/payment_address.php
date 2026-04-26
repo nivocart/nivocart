@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCheckoutPaymentAddress
+ *
+ * @package NivoCart
+ */
 class ControllerCheckoutPaymentAddress extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('checkout/checkout');

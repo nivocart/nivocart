@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerPaymentSagepay
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentSagepay extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->language->load('payment/sagepay');

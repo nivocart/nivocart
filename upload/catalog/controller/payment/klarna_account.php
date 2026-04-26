@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerPaymentKlarnaAccount
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentKlarnaAccount extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->load->model('checkout/order');

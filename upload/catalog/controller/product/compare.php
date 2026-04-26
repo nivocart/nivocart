@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerProductCompare
+ *
+ * @package NivoCart
+ */
 class ControllerProductCompare extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('product/compare');
@@ -8,7 +14,7 @@ class ControllerProductCompare extends Controller {
 		$this->load->model('tool/image');
 
 		if (!isset($this->session->data['compare'])) {
-			$this->session->data['compare'] = array();
+			$this->session->data['compare'] = [];
 		}
 
 		if (isset($this->request->get['remove'])) {
@@ -25,19 +31,19 @@ class ControllerProductCompare extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('product/compare', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleTagCloud
+ *
+ * @package NivoCart
+ */
 class ControllerModuleTagCloud extends Controller {
 	private $_name = 'tagcloud';
 

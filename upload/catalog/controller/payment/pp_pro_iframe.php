@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerPaymentPPProIframe
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentPPProIframe extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->load->model('checkout/order');

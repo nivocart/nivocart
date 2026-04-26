@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCheckoutLogin
+ *
+ * @package NivoCart
+ */
 class ControllerCheckoutLogin extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		// Express checkout redirect

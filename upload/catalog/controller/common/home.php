@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCommonHome
+ *
+ * @package NivoCart
+ */
 class ControllerCommonHome extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->document->setTitle($this->config->get('config_title'));

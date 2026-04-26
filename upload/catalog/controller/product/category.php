@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerProductCategory
+ *
+ * @package NivoCart
+ */
 class ControllerProductCategory extends Controller {
 	private $image_product_width;
 	private $image_product_height;
@@ -11,48 +16,26 @@ class ControllerProductCategory extends Controller {
 		$this->load->model('catalog/product');
 
 		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
-			$this->request->get['limit'] = $this->config->get('config_catalog_limit');
+			$limit = $this->config->get('config_catalog_limit');
 		} elseif (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] > 100)) {
-			$this->request->get['limit'] = 100;
-		}
-
-		if (isset($this->request->get['filter'])) {
-			$filter = $this->request->get['filter'];
-		} else {
-			$filter = '';
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'p.sort_order';
-		}
-
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['limit'])) {
-			$limit = $this->request->get['limit'];
+			$limit = 100;
 		} else {
 			$limit = $this->config->get('config_catalog_limit');
 		}
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$filter = isset($this->request->get['filter']) ? $this->request->get['filter'] : '';
 
-		$this->data['breadcrumbs'] = array();
+		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'p.sort_order';
+		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'DESC';
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'] = [];
+
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['path']) && !is_array($this->request->get['path'])) {
 			$url = '';
@@ -93,11 +76,11 @@ class ControllerProductCategory extends Controller {
 				$category_info = $this->model_catalog_category->getCategory($path_id);
 
 				if ($category_info) {
-					$this->data['breadcrumbs'][] = array(
+					$this->data['breadcrumbs'][] = [
 						'text'      => $category_info['name'],
 						'href'      => $this->url->link('product/category', 'path=' . $path . $url, 'SSL'),
 						'separator' => $this->language->get('text_separator')
-					);
+					];
 				}
 			}
 

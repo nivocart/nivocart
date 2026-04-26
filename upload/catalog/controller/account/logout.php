@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerAccountLogout
+ *
+ * @package NivoCart
+ */
 class ControllerAccountLogout extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		if ($this->customer->isLogged()) {

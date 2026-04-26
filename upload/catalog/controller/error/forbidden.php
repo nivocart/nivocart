@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerErrorForbidden
+ *
+ * @package NivoCart
+ */
 class ControllerErrorForbidden extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$route = '';

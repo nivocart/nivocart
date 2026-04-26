@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerProductCategoryList
+ *
+ * @package NivoCart
+ */
 class ControllerProductCategoryList extends Controller {
 	private $_name = 'category_list';
 
@@ -7,15 +12,15 @@ class ControllerProductCategoryList extends Controller {
 
 		$this->load->model('catalog/category');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-      	);
+      	];
 
-		$category_array = array();
+		$category_array = [];
 
 		$categories_list = $this->model_catalog_category->getCategories($category_array);
 
@@ -28,27 +33,27 @@ class ControllerProductCategoryList extends Controller {
 
 			$this->data['button_continue'] = $this->language->get('button_continue');
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('product/category_list', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->load->model('catalog/product');
 
 			$empty_category = $this->config->get('config_empty_category');
 
-			$this->data['categories'] = array();
+			$this->data['categories'] = [];
 
 			$this->data['ccount'] = 0;
 
 			foreach ($categories_list as $category_1) {
-				$level_2_data = array();
+				$level_2_data = [];
 
 				$categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
 
 				foreach ($categories_2 as $category_2) {
-					$level_3_data = array();
+					$level_3_data = [];
 
 					$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
 
@@ -65,26 +70,26 @@ class ControllerProductCategoryList extends Controller {
 						}
 
 						if ($empty_category || $product_total > 0) {
-							$level_3_data[] = array(
+							$level_3_data[] = [
 								'name' => $category_3['name'],
 								'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id'], 'SSL')
-							);
+							];
 						}
 					}
 
-					$level_2_data[] = array(
+					$level_2_data[] = [
 						'name'     => $category_2['name'],
 						'children' => $level_3_data,
 						'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'], 'SSL')
-					);
+					];
 				}
 
-				$this->data['categories'][] = array(
+				$this->data['categories'][] = [
 					'name'     => $category_1['name'],
 					'children' => $level_2_data,
 					'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'], 'SSL'),
 					'count'    => $this->data['ccount']
-				);
+				];
 
 				$this->data['ccount'] = $this->data['ccount'] + 1;
 			}

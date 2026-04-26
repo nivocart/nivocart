@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCheckoutConfirm
+ *
+ * @package NivoCart
+ */
 class ControllerCheckoutConfirm extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$redirect = '';

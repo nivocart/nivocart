@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerAccountDownload
+ *
+ * @package NivoCart
+ */
 class ControllerAccountDownload extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		if (!$this->customer->isLogged()) {

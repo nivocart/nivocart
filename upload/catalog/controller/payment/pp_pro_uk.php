@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerPaymentPPProUK
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentPPProUK extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->language->load('payment/pp_pro_uk');

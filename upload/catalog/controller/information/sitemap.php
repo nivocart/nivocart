@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerInformationSitemap
+ *
+ * @package NivoCart
+ */
 class ControllerInformationSitemap extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('information/sitemap');

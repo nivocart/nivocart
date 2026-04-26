@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerProductReviewList
+ *
+ * @package NivoCart
+ */
 class ControllerProductReviewList extends Controller {
 	private $image_product_width;
 	private $image_product_height;
@@ -10,60 +15,39 @@ class ControllerProductReviewList extends Controller {
 		$this->load->model('catalog/product');
 		$this->load->model('catalog/review');
 
-		if (isset($this->request->get['filter_name'])) {
-			$filter_name = $this->request->get['filter_name'];
-		} else {
-			$filter_name = '';
-		}
-
-		if (isset($this->request->get['filter_description'])) {
-			$filter_description = $this->request->get['filter_description'];
-		} else {
-			$filter_description = '';
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'p.sort_order';
-		}
-
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'DESC';
-		}
-
-		if (isset($this->request->get['limit'])) {
-			$limit = $this->request->get['limit'];
+		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
+			$limit = $this->config->get('config_catalog_limit');
+		} elseif (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] > 100)) {
+			$limit = 100;
 		} else {
 			$limit = $this->config->get('config_catalog_limit');
 		}
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : '';
+		$filter_description = isset($this->request->get['filter_description']) ? $this->request->get['filter_description'] : '';
 
-		$this->data['breadcrumbs'] = array();
+		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'p.sort_order';
+		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'DESC';
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'] = [];
+
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['reviews'] = array();
+		$this->data['reviews'] = [];
 
-		$data = array(
+		$data = [
 			'filter_name'        => $filter_name,
 			'filter_description' => $filter_description,
 			'sort'               => $sort,
 			'order'              => $order,
 			'start'              => ($page - 1) * $limit,
 			'limit'              => $limit
-		);
+		];
 
 		$review_total = $this->model_catalog_review->getTotalReviews();
 

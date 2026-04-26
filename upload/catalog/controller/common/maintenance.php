@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCommonMaintenance
+ *
+ * @package NivoCart
+ */
 class ControllerCommonMaintenance extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		if ($this->config->get('config_maintenance')) {

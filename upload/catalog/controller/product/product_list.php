@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerProductProductList
+ *
+ * @package NivoCart
+ */
 class ControllerProductProductList extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('product/product_list');
@@ -7,15 +13,15 @@ class ControllerProductProductList extends Controller {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/product');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$category_array = array();
+		$category_array = [];
 
 		$categories_list = $this->model_catalog_category->getCategories($category_array);
 
@@ -33,13 +39,13 @@ class ControllerProductProductList extends Controller {
 
 			$this->data['button_continue'] = $this->language->get('button_continue');
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('product/product_list', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
-			$this->data['categories'] = array();
+			$this->data['categories'] = [];
 
 			$this->data['ctotal'] = 0;
 			$this->data['ctotal1'] = 0;
@@ -47,61 +53,61 @@ class ControllerProductProductList extends Controller {
 			$this->data['ctotal3'] = 0;
 
 			foreach ($categories_list as $category_1) {
-				$level_2_data = array();
+				$level_2_data = [];
 
 				$categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
 
 				foreach ($categories_2 as $category_2) {
-					$level_3_data = array();
+					$level_3_data = [];
 
 					$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
 
 					foreach ($categories_3 as $category_3) {
-						$level_3_data[] = array(
+						$level_3_data[] = [
 							'name' => $category_3['name'],
 							'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id'], 'SSL')
-						);
+						];
 
 						$this->data['ctotal3'] = $this->data['ctotal3'] + 1;
 					}
 
-					$level_2_data[] = array(
+					$level_2_data[] = [
 						'name'     => $category_2['name'],
 						'children' => $level_3_data,
 						'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'], 'SSL')
-					);
+					];
 
 					$this->data['ctotal2'] = $this->data['ctotal2'] + 1;
 				}
 
-				$this->data['categories'][] = array(
+				$this->data['categories'][] = [
 					'name'     => $category_1['name'],
 					'children' => $level_2_data,
 					'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'], 'SSL')
-				);
+				];
 
 				$this->data['ctotal1'] = $this->data['ctotal1'] + 1;
 
 				$this->data['ctotal'] = $this->data['ctotal1'] + $this->data['ctotal2'] + $this->data['ctotal3'];
 			}
 
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 
 			$this->data['ptotal'] = 0;
 			$this->data['pcount'] = 1;
 
-			$products_array = array();
+			$products_array = [];
 
 			$results = $this->model_catalog_product->getProducts($products_array);
 
 			if ($results) {
 				foreach ($results as $result) {
-					$this->data['products'][] = array(
+					$this->data['products'][] = [
 						'product_id' => $result['product_id'],
 						'name'       => $result['name'],
 						'href'       => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL'),
 						'count'      => $this->data['pcount']
-					);
+					];
 
 					$this->data['pcount'] = $this->data['pcount'] + 1;
 					$this->data['ptotal'] = $this->data['ptotal'] + 1;
@@ -136,11 +142,11 @@ class ControllerProductProductList extends Controller {
 			$this->response->setOutput($this->render());
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('product/product_list', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('text_error');
 

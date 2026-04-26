@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerFeedGoogleSitemap
+ *
+ * @package NivoCart
+ */
 class ControllerFeedGoogleSitemap extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		if ($this->config->get('google_sitemap_status')) {

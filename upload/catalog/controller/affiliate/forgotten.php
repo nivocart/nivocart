@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerAffiliateForgotten
+ *
+ * @package NivoCart
+ */
 class ControllerAffiliateForgotten extends Controller {
 	private $error = array();
 

@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerFeedStoreya
+ *
+ * @package NivoCart
+ */
 class ControllerFeedStoreya extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$output = '<?xml version="1.0" encoding="UTF-8" ?>' . "\n";

@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerPaymentPPPayflowIframe
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentPPPayflowIframe extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->language->load('payment/pp_payflow_iframe');

@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerAffiliateTracking
+ *
+ * @package NivoCart
+ */
 class ControllerAffiliateTracking extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		if (!$this->affiliate->isLogged()) {

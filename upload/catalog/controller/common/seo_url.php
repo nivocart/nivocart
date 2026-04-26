@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerCommonSeoUrl
+ *
+ * @package NivoCart
+ */
 class ControllerCommonSeoUrl extends Controller {
 	private $db;
 

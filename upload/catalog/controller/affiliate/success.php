@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerAffiliateSuccess
+ *
+ * @package NivoCart
+ */
 class ControllerAffiliateSuccess extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('affiliate/success');

@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerNodeLanguage
+ *
+ * @package NivoCart
+ */
 class ControllerNodeLanguage extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		if (isset($this->request->post['language_code'])) {
@@ -17,9 +23,10 @@ class ControllerNodeLanguage extends Controller {
 
 		$this->data['text_language'] = $this->language->get('text_language');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] === 'on') || ($this->request->server['HTTPS'] === '1'))) || ($this->request->server['HTTPS'] === '443')) {
-			$connection = 'SSL';
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https') {
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			$connection = 'SSL';
 		} else {
 			$connection = 'NONSSL';
@@ -31,17 +38,17 @@ class ControllerNodeLanguage extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = array();
+		$this->data['languages'] = [];
 
 		$results = $this->model_localisation_language->getLanguages();
 
 		foreach ($results as $result) {
 			if ($result['status']) {
-				$this->data['languages'][] = array(
+				$this->data['languages'][] = [
 					'name'  => $result['name'],
 					'code'  => $result['code'],
 					'image' => $result['image']
-				);
+				];
 			}
 		}
 

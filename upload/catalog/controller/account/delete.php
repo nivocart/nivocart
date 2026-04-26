@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerAccountDelete
+ *
+ * @package NivoCart
+ */
 class ControllerAccountDelete extends Controller {
 	private $error = array();
 

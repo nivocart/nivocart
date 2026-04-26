@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCheckoutCheckoutOneCart
+ *
+ * @package NivoCart
+ */
 class ControllerCheckoutCheckoutOneCart extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('checkout/checkout_one_page');

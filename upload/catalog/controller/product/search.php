@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerProductSearch
+ *
+ * @package NivoCart
+ */
 class ControllerProductSearch extends Controller {
 	private $image_product_width;
 	private $image_product_height;

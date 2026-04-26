@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleHtml
+ *
+ * @package NivoCart
+ */
 class ControllerModuleHtml extends Controller {
 	private $_name = 'html';
 

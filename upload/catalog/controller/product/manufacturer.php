@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerProductManufacturer
+ *
+ * @package NivoCart
+ */
 class ControllerProductManufacturer extends Controller {
 	private $image_product_width;
 	private $image_product_height;
@@ -19,23 +24,23 @@ class ControllerProductManufacturer extends Controller {
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_brand'),
 			'href'      => $this->url->link('product/manufacturer', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['categories'] = array();
+		$this->data['categories'] = [];
 
-		$manufacturers_array = array();
+		$manufacturers_array = [];
 
 		$results = $this->model_catalog_manufacturer->getManufacturers($manufacturers_array);
 
@@ -56,12 +61,12 @@ class ControllerProductManufacturer extends Controller {
 				$this->data['categories'][$key]['name'] = $key;
 			}
 
-			$this->data['categories'][$key]['manufacturer'][] = array(
+			$this->data['categories'][$key]['manufacturer'][] = [
 				'image'  => $image,
 				'name'   => $result['name'],
 				'status' => $result['status'],
 				'href'   => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
@@ -96,54 +101,32 @@ class ControllerProductManufacturer extends Controller {
 		$this->load->model('catalog/product');
 
 		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
-			$this->request->get['limit'] = $this->config->get('config_catalog_limit');
+			$limit = $this->config->get('config_catalog_limit');
 		} elseif (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] > 100)) {
-			$this->request->get['limit'] = 100;
-		}
-
-		if (isset($this->request->get['manufacturer_id'])) {
-			$manufacturer_id = (int)$this->request->get['manufacturer_id'];
-		} else {
-			$manufacturer_id = 0;
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'p.sort_order';
-		}
-
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['limit'])) {
-			$limit = $this->request->get['limit'];
+			$limit = 100;
 		} else {
 			$limit = $this->config->get('config_catalog_limit');
 		}
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'p.sort_order';
+		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_brand'),
 			'href'      => $this->url->link('product/manufacturer', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
+
+		$manufacturer_id = isset($this->request->get['manufacturer_id']) ? (int)$this->request->get['manufacturer_id'] : 0;
 
 		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerCheckoutCheckoutOnePage
+ *
+ * @package NivoCart
+ */
 class ControllerCheckoutCheckoutOnePage extends Controller {
 	private $error = array();
 

@@ -1,10 +1,16 @@
 <?php
+/**
+ * Class ControllerToolUpload
+ *
+ * @package NivoCart
+ */
 class ControllerToolUpload extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('tool/upload');
 
-		$json = array();
+		$json = [];
 
 		if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
 			// Sanitize the filename
@@ -16,7 +22,7 @@ class ControllerToolUpload extends Controller {
 			}
 
 			// Allowed file extension types
-			$allowed = array();
+			$allowed = [];
 
 			$extension_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_ext_allowed'));
 
@@ -31,7 +37,7 @@ class ControllerToolUpload extends Controller {
 			}
 
 			// Allowed file mime types
-			$allowed = array();
+			$allowed = [];
 
 			$mime_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_mime_allowed'));
 
@@ -53,7 +59,7 @@ class ControllerToolUpload extends Controller {
 			}
 
 			// Return any upload error
-			if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
+			if ($this->request->files['file']['error'] !== UPLOAD_ERR_OK) {
 				$json['error'] = $this->language->get('error_upload_' . $this->request->files['file']['error']);
 			}
 

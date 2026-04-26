@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCheckoutFailure
+ *
+ * @package NivoCart
+ */
 class ControllerCheckoutFailure extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		if ($this->config->get('config_secure') && !$this->request->isSecure()) {

@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerErrorNotFound
+ *
+ * @package NivoCart
+ */
 class ControllerErrorNotFound extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('error/not_found');
@@ -29,9 +35,10 @@ class ControllerErrorNotFound extends Controller {
 				$url = '&' . urldecode(http_build_query($data, '', '&'));
 			}
 
-			if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
-				$connection = 'SSL';
-			} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+			// Resolve server base URL
+			if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+				(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+				(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 				$connection = 'SSL';
 			} else {
 				$connection = 'NONSSL';
