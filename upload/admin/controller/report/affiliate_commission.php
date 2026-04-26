@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerReportAffiliateCommission
+ *
+ * @package NivoCart
+ */
 class ControllerReportAffiliateCommission extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('report/affiliate_commission');

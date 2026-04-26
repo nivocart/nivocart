@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerToolErrorLog
+ *
+ * @package NivoCart
+ */
 class ControllerToolErrorLog extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('tool/error_log');

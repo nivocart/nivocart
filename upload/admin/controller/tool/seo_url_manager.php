@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerToolSeoUrlManager
+ *
+ * @package NivoCart
+ */
 class ControllerToolSeoUrlManager extends Controller {
 	private $error = [];
 

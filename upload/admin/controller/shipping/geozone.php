@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerShippingGeoZone
+ *
+ * @package NivoCart
+ */
 class ControllerShippingGeoZone extends Controller {
 	private $error = [];
 	private $_name = 'geozone';

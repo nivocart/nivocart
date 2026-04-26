@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerUserUserPermission
+ *
+ * @package NivoCart
+ */
 class ControllerUserUserPermission extends Controller {
 	private $error = [];
 

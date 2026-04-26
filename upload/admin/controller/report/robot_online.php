@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerReportRobotOnline
+ *
+ * @package NivoCart
+ */
 class ControllerReportRobotOnline extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('report/robot_online');

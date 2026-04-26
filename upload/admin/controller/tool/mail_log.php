@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerToolMailLog
+ *
+ * @package NivoCart
+ */
 class ControllerToolMailLog extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('tool/mail_log');

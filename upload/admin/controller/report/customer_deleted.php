@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerReportCustomerDeleted
+ *
+ * @package NivoCart
+ */
 class ControllerReportCustomerDeleted extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('report/customer_deleted');

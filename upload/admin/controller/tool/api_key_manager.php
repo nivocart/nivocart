@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerToolApiKeyManager
+ *
+ * @package NivoCart
+ */
 class ControllerToolApiKeyManager extends Controller {
 	private $error = [];
 

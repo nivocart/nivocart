@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerToolConfiguration
+ *
+ * @package NivoCart
+ */
 class ControllerToolConfiguration extends Controller {
 	private $error = [];
 	private $_name = 'configuration';

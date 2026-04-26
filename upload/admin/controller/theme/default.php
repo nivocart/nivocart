@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerThemeDefault
+ *
+ * @package NivoCart
+ */
 class ControllerThemeDefault extends Controller {
 	private $error = [];
 	private $_name = 'default';

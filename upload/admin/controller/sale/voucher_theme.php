@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerSaleVoucherTheme
+ *
+ * @package NivoCart
+ */
 class ControllerSaleVoucherTheme extends Controller {
 	private $error = [];
 

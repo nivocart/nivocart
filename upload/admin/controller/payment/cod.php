@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerPaymentCod
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentCod extends Controller {
 	private $error = [];
 

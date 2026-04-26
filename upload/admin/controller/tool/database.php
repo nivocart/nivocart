@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerToolDatabase
+ *
+ * @package NivoCart
+ */
 class ControllerToolDatabase extends Controller {
 	private $error = [];
 	private $_name = 'database';

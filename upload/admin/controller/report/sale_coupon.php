@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerReportSaleCoupon
+ *
+ * @package NivoCart
+ */
 class ControllerReportSaleCoupon extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('report/sale_coupon');

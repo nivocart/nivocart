@@ -1,11 +1,14 @@
 <?php
+/**
+ * Class ControllerPaymentPPProIframe
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentPPProIframe extends Controller {
 	const DEBUG_LOG_FILE = 'pp_pro_iframe.log';
-	private $errors;
+	private $errors = [];
 
 	public function index() {
-		$this->errors = [];
-
 		$this->language->load('payment/pp_pro_iframe');
 
 		$this->document->setTitle($this->language->get('heading_title'));

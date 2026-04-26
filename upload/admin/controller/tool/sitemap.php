@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerToolSitemap
+ *
+ * @package NivoCart
+ */
 class ControllerToolSitemap extends Controller {
 	private $error = [];
 	private $_name = 'sitemap';

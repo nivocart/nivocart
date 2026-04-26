@@ -1,12 +1,14 @@
 <?php
+/**
+ * Class ControllerPaymentPPExpress
+ *
+ * @package NivoCart
+ */
 class ControllerPaymentPPExpress extends Controller {
 	const DEBUG_LOG_FILE = 'pp_express.log';
-
-	private $errors;
+	private $errors = [];
 
 	public function index() {
-		$this->errors = [];
-
 		$this->language->load('payment/pp_express');
 
 		$this->document->setTitle($this->language->get('heading_title'));

@@ -1,6 +1,11 @@
 <?php
+/**
+ * Class ControllerToolExportImport
+ *
+ * @package NivoCart
+ */
 class ControllerToolExportImport extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/export_import');
@@ -21,7 +26,7 @@ class ControllerToolExportImport extends Controller {
 
 		$this->load->model('tool/export_import');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateUploadForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateUploadForm()) {
 			if ((isset($this->request->files['upload'])) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
 				$file = $this->request->files['upload']['tmp_name'];
 
@@ -76,22 +81,22 @@ class ControllerToolExportImport extends Controller {
 
 		$this->load->model('tool/export_import');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateDownloadForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateDownloadForm()) {
 			$export_type = $this->request->post['export_type'];
 
 			switch ($export_type) {
 				case 'm':
 					$min = null;
-					if (isset($this->request->post['min']) && ($this->request->post['min'] != '')) {
+					if (isset($this->request->post['min']) && ($this->request->post['min'] !== '')) {
 						$min = $this->request->post['min'];
 					}
 					$max = null;
-					if (isset($this->request->post['max']) && ($this->request->post['max'] != '')) {
+					if (isset($this->request->post['max']) && ($this->request->post['max'] !== '')) {
 						$max = $this->request->post['max'];
 					}
 					if (($min == null) || ($max == null)) {
 						$this->model_tool_export_import->download($export_type, null, null, null, null);
-					} elseif ($this->request->post['range_type'] == 'id') {
+					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
 					} else {
 						$this->model_tool_export_import->download($export_type, $min * ($max-1-1), $min, null, null);
@@ -99,16 +104,16 @@ class ControllerToolExportImport extends Controller {
 					break;
 				case 'c':
 					$min = null;
-					if (isset($this->request->post['min']) && ($this->request->post['min'] != '')) {
+					if (isset($this->request->post['min']) && ($this->request->post['min'] !== '')) {
 						$min = $this->request->post['min'];
 					}
 					$max = null;
-					if (isset($this->request->post['max']) && ($this->request->post['max'] != '')) {
+					if (isset($this->request->post['max']) && ($this->request->post['max'] !== '')) {
 						$max = $this->request->post['max'];
 					}
 					if (($min == null) || ($max == null)) {
 						$this->model_tool_export_import->download($export_type, null, null, null, null);
-					} elseif ($this->request->post['range_type'] == 'id') {
+					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
 					} else {
 						$this->model_tool_export_import->download($export_type, $min * ($max-1-1), $min, null, null);
@@ -116,16 +121,16 @@ class ControllerToolExportImport extends Controller {
 					break;
 				case 'p':
 					$min = null;
-					if (isset($this->request->post['min']) && ($this->request->post['min'] != '')) {
+					if (isset($this->request->post['min']) && ($this->request->post['min'] !== '')) {
 						$min = $this->request->post['min'];
 					}
 					$max = null;
-					if (isset($this->request->post['max']) && ($this->request->post['max'] != '')) {
+					if (isset($this->request->post['max']) && ($this->request->post['max'] !== '')) {
 						$max = $this->request->post['max'];
 					}
 					if (($min == null) || ($max == null)) {
 						$this->model_tool_export_import->download($export_type, null, null, null, null);
-					} elseif ($this->request->post['range_type'] == 'id') {
+					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
 					} else {
 						$this->model_tool_export_import->download($export_type, $min * ($max-1-1), $min, null, null);

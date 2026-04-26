@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerToolBlockIp
+ *
+ * @package NivoCart
+ */
 class ControllerToolBlockIp extends Controller {
 	private $error = [];
 

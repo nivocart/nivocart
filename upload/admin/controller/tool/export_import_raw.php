@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerToolExportImportRaw
+ *
+ * @package NivoCart
+ */
 class ControllerToolExportImportRaw extends Controller {
 	private $error = array();
 
