@@ -60,8 +60,16 @@ return (new Config())
         'switch_case_space' => true,
         'switch_case_semicolon_to_colon' => true,
 
-		// Keep TABs as indentation
-		'indentation_type' => true,
+		// Helps maintain definitions alignment for comments (Language Definitions)
+		'align_multiline_comment' => true,
+
+		// Helps preserve spaces for array alignment
+		'binary_operator_spaces' => [
+			'default'   => 'single_space',
+			'operators' => [
+				'=>' => 'align_single_space_minimal',
+			],
+		],
 
         // ── Warnings in PHPCS — informational only in CS Fixer ──
         // (PHP CS Fixer has no warning level, these are just noted)
@@ -86,11 +94,13 @@ return (new Config())
                 __DIR__ . '\upload\admin',
                 __DIR__ . '\upload\catalog',
                 __DIR__ . '\upload\system',
+				__DIR__ . '\upload\install',
             ])
             ->exclude([
                 'vendor',
                 'node_modules',
                 'storage',
+				'language',
             ])
     )
 ;
