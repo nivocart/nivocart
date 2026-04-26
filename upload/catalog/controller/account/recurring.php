@@ -26,19 +26,19 @@ class ControllerAccountRecurring extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$url = '';
 
@@ -46,11 +46,11 @@ class ControllerAccountRecurring extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/recurring', $url, 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -71,7 +71,7 @@ class ControllerAccountRecurring extends Controller {
 			$page = 1;
 		}
 
-		$this->data['orders'] = array();
+		$this->data['orders'] = [];
 
 		$this->load->model('account/recurring');
 
@@ -79,28 +79,28 @@ class ControllerAccountRecurring extends Controller {
 
 		$results = $this->model_account_recurring->getAllProfiles(($page - 1) * 10, 10);
 
-		$this->data['profiles'] = array();
+		$this->data['profiles'] = [];
 
 		if ($results) {
 			foreach ($results as $result) {
-				$this->data['profiles'][] = array(
+				$this->data['profiles'][] = [
 					'id'      => $result['order_recurring_id'],
 					'name'    => $result['product_name'],
 					'status'  => $result['status'],
 					'created' => date($this->language->get('date_format_short'), strtotime($result['created'])),
 					'href'    => $this->url->link('account/recurring/info', 'token=' . $this->session->data['token'] . '&order_recurring_id=' . $result['order_recurring_id'], 'SSL')
-				);
+				];
 			}
 		}
 
-		$this->data['status_types'] = array(
+		$this->data['status_types'] = [
 			1 => $this->language->get('text_status_inactive'),
 			2 => $this->language->get('text_status_active'),
 			3 => $this->language->get('text_status_suspended'),
 			4 => $this->language->get('text_status_cancelled'),
 			5 => $this->language->get('text_status_expired'),
 			6 => $this->language->get('text_status_pending')
-		);
+		];
 
 		$pagination = new Pagination();
 		$pagination->total = $recurring_total;
@@ -122,7 +122,7 @@ class ControllerAccountRecurring extends Controller {
 			$this->template = 'default/template/account/recurring_list.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -131,7 +131,7 @@ class ControllerAccountRecurring extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -184,16 +184,16 @@ class ControllerAccountRecurring extends Controller {
 			}
 		}
 
-		$this->data['status_types'] = array(
+		$this->data['status_types'] = [
 			1 => $this->language->get('text_status_inactive'),
 			2 => $this->language->get('text_status_active'),
 			3 => $this->language->get('text_status_suspended'),
 			4 => $this->language->get('text_status_cancelled'),
 			5 => $this->language->get('text_status_expired'),
 			6 => $this->language->get('text_status_pending')
-		);
+		];
 
-		$this->data['transaction_types'] = array(
+		$this->data['transaction_types'] = [
 			0 => $this->language->get('text_transaction_created'),
 			1 => $this->language->get('text_transaction_payment'),
 			2 => $this->language->get('text_transaction_outstanding_payment'),
@@ -204,24 +204,24 @@ class ControllerAccountRecurring extends Controller {
 			7 => $this->language->get('text_transaction_suspended_failed'),
 			8 => $this->language->get('text_transaction_outstanding_failed'),
 			9 => $this->language->get('text_transaction_expired')
-		);
+		];
 
 		if ($profile) {
 			$this->document->setTitle($this->language->get('text_recurring'));
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', '', 'SSL'),
 				'separator' => false
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_account'),
 				'href'      => $this->url->link('account/account', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$url = '';
 
@@ -229,17 +229,17 @@ class ControllerAccountRecurring extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('account/recurring', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_recurring'),
 				'href'      => $this->url->link('account/recurring/info', 'order_recurring_id=' . $this->request->get['order_recurring_id'] . $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['token'] = $this->request->get['token'];
 
@@ -281,7 +281,7 @@ class ControllerAccountRecurring extends Controller {
 				$this->template = 'default/template/account/recurring_info.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -290,7 +290,7 @@ class ControllerAccountRecurring extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 

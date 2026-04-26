@@ -18,7 +18,7 @@ class ControllerProductCategoryList extends Controller {
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-      	];
+		  ];
 
 		$category_array = [];
 
@@ -58,10 +58,10 @@ class ControllerProductCategoryList extends Controller {
 					$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
 
 					foreach ($categories_3 as $category_3) {
-						$data = array(
+						$data = [
 							'filter_category_id'  => $category_3['category_id'],
 							'filter_sub_category' => true
-						);
+						];
 
 						if (!$empty_category) {
 							$product_total = $this->model_catalog_product->getTotalProducts($data);
@@ -110,7 +110,7 @@ class ControllerProductCategoryList extends Controller {
 				$this->template = 'default/template/product/' . $this->_name . '.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -119,16 +119,16 @@ class ControllerProductCategoryList extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('product/category_list', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('text_error');
 
@@ -147,7 +147,7 @@ class ControllerProductCategoryList extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -156,7 +156,7 @@ class ControllerProductCategoryList extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());

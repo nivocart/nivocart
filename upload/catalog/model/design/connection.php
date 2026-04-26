@@ -17,11 +17,11 @@ class ModelDesignConnection extends Model {
 	public function getConnections(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "connection`";
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'backend',
 			'frontend'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -56,12 +56,12 @@ class ModelDesignConnection extends Model {
 		$connection_data = $this->cache->get('connection.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'));
 
 		if (!$connection_data) {
-			$connection_data = array();
+			$connection_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "connection`");
 
 			foreach ($query->rows as $result) {
-				$connection_data[] = array('connection_id' => $result['connection_id']);
+				$connection_data[] = ['connection_id' => $result['connection_id']];
 			}
 
 			$this->cache->set('connection.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $connection_data);

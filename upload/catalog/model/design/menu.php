@@ -35,7 +35,7 @@ class ModelDesignMenu extends Model {
 			$menu_item_data = $this->cache->get('menu_items.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$parent_id);
 
 			if (!$menu_item_data) {
-				$menu_item_data = array();
+				$menu_item_data = [];
 
 				$query = $this->db->query("SELECT *, mid.menu_item_name AS `name` FROM `" . DB_PREFIX . "menu_item` mi LEFT JOIN `" . DB_PREFIX . "menu_item_description` mid ON (mi.menu_item_id = mid.menu_item_id) LEFT JOIN `" . DB_PREFIX . "menu_to_store` m2s ON (mi.menu_id = m2s.menu_id) WHERE mi.parent_id = '" . (int)$parent_id . "' AND mi.menu_id='" . (int)$menu_id . "' AND mid.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND mi.status = '1' ORDER BY mi.sort_order, mid.menu_item_name ASC");
 

@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerPaymentPPExpress extends Controller {
-	const DEBUG_LOG_FILE = 'pp_express.log';
+	public const DEBUG_LOG_FILE = 'pp_express.log';
 	private $errors = [];
 
 	public function index() {
@@ -537,15 +537,15 @@ class ControllerPaymentPPExpress extends Controller {
 			foreach ($results as $result) {
 				$this->data['transactions'][] = [
 					'paypal_order_transaction_id' => $result['paypal_order_transaction_id'],
-					'transaction_id' => $result['transaction_id'],
-					'amount'         => $result['amount'],
-					'payment_type'   => $result['payment_type'],
-					'payment_status' => $result['payment_status'],
-					'pending_reason' => $result['pending_reason'],
-					'created'        => date($this->language->get('date_format_time'), strtotime($result['created'])),
-					'view'           => $this->url->link('payment/pp_express/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . (int)$order_id . '&referrer=detail', 'SSL'),
-					'refund'         => $this->url->link('payment/pp_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . (int)$order_id, 'SSL'),
-					'resend'         => $this->url->link('payment/pp_express/do_resend', 'token=' . $this->session->data['token'] . '&paypal_order_transaction_id=' . $result['paypal_order_transaction_id'], 'SSL')
+					'transaction_id'              => $result['transaction_id'],
+					'amount'                      => $result['amount'],
+					'payment_type'                => $result['payment_type'],
+					'payment_status'              => $result['payment_status'],
+					'pending_reason'              => $result['pending_reason'],
+					'created'                     => date($this->language->get('date_format_time'), strtotime($result['created'])),
+					'view'                        => $this->url->link('payment/pp_express/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . (int)$order_id . '&referrer=detail', 'SSL'),
+					'refund'                      => $this->url->link('payment/pp_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . (int)$order_id, 'SSL'),
+					'resend'                      => $this->url->link('payment/pp_express/do_resend', 'token=' . $this->session->data['token'] . '&paypal_order_transaction_id=' . $result['paypal_order_transaction_id'], 'SSL')
 				];
 			}
 		}
@@ -590,18 +590,18 @@ class ControllerPaymentPPExpress extends Controller {
 
 				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] != 'Failure') && ($response['ACK'] != 'FailureWithWarning')) {
 					$transaction = [
-						'paypal_order_id'       => $paypal_order['paypal_order_id'],
-						'transaction_id'        => $response['TRANSACTIONID'],
-						'parent_id'             => $paypal_order['authorization_id'],
-						'note'                  => '',
-						'msgsubid'              => $response['MSGSUBID'],
-						'receipt_id'            => '',
-						'payment_type'          => $response['PAYMENTTYPE'],
-						'payment_status'        => $response['PAYMENTSTATUS'],
-						'pending_reason'        => (isset($response['PENDINGREASON']) ? $response['PENDINGREASON'] : ''),
-						'transaction_entity'    => 'payment',
-						'amount'                => $response['AMT'],
-						'debug_data'            => json_encode($response)
+						'paypal_order_id'    => $paypal_order['paypal_order_id'],
+						'transaction_id'     => $response['TRANSACTIONID'],
+						'parent_id'          => $paypal_order['authorization_id'],
+						'note'               => '',
+						'msgsubid'           => $response['MSGSUBID'],
+						'receipt_id'         => '',
+						'payment_type'       => $response['PAYMENTTYPE'],
+						'payment_status'     => $response['PAYMENTSTATUS'],
+						'pending_reason'     => (isset($response['PENDINGREASON']) ? $response['PENDINGREASON'] : ''),
+						'transaction_entity' => 'payment',
+						'amount'             => $response['AMT'],
+						'debug_data'         => json_encode($response)
 					];
 
 					$this->model_payment_pp_express->addTransaction($transaction);
@@ -761,7 +761,7 @@ class ControllerPaymentPPExpress extends Controller {
 
 			if ($this->request->post['refund_full'] === 0 && $this->request->post['amount'] === 0) {
 				$json['error'] = $this->language->get('error_partial_amt');
-			} else if ($this->request->post['amount'] <= 0) {
+			} elseif ($this->request->post['amount'] <= 0) {
 				$json['error'] = $this->language->get('error_positive_amt');
 			} else {
 				$order_id = $this->model_payment_pp_express->getOrderId($this->request->post['transaction_id']);
@@ -1298,7 +1298,7 @@ class ControllerPaymentPPExpress extends Controller {
 		if (isset($this->request->get['referrer'])) {
 			if ($this->request->get['referrer'] === 'detail' && isset($this->request->get['order_id'])) {
 				$this->data['back'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id, 'SSL');
-			} else if ($this->request->get['referrer'] === 'search') {
+			} elseif ($this->request->get['referrer'] === 'search') {
 				$this->data['back'] = $this->url->link('payment/pp_express/search', 'token=' . $this->session->data['token'], 'SSL');
 			}
 		}

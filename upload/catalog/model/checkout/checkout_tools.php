@@ -19,7 +19,7 @@ class ModelCheckoutCheckoutTools extends Model {
 	}
 
 	public function generatePassword(): array {
-		$passwords = array(
+		$passwords = [
 			"qwerty", "azerty", "test", "love", "hello", "monkey", "dragon", "express", "shadow",
 			"sunshine", "master", "computer", "princess", "tiger", "football", "angel", "whatever",
 			"freedom", "soccer", "superman", "michael", "cheese", "internet", "blessed", "baseball",
@@ -36,7 +36,7 @@ class ModelCheckoutCheckoutTools extends Model {
 			"praise", "dallas", "green", "maverick", "morpheus", "friend", "destiny", "bubbles", "mustang",
 			"loving", "scooby", "maxwell", "baby", "prince", "chelsea", "dexter", "kitten", "stella",
 			"prayer", "hotdog", "zappa", "macadam", "ginseng", "orinoco", "chocolat", "mint"
-		);
+		];
 
 		return $passwords[array_rand($passwords)];
 	}

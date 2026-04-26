@@ -37,14 +37,14 @@ class ModelPaymentKlarnaAccount extends Model {
 			}
 
 			// Maps countries to currencies
-			$country_to_currency = array(
+			$country_to_currency = [
 				'NOR' => 'NOK',
 				'SWE' => 'SEK',
 				'FIN' => 'EUR',
 				'DNK' => 'DKK',
 				'DEU' => 'EUR',
 				'NLD' => 'EUR'
-			);
+			];
 
 			if (!isset($country_to_currency[$address['iso_code_3']]) || !$this->currency->has($country_to_currency[$address['iso_code_3']])) {
 				$status = false;
@@ -55,7 +55,7 @@ class ModelPaymentKlarnaAccount extends Model {
 			}
 		}
 
-		$payment_option = array();
+		$payment_option = [];
 
 		if ($status) {
 			$total = $this->currency->format($total, $country_to_currency[$address['iso_code_3']], '', false);
@@ -65,7 +65,7 @@ class ModelPaymentKlarnaAccount extends Model {
 			if (isset($pclasses[$address['iso_code_3']])) {
 				$pclasses = $pclasses[$address['iso_code_3']];
 			} else {
-				$pclasses = array();
+				$pclasses = [];
 			}
 
 			foreach ($pclasses as $pclass) {
@@ -73,7 +73,7 @@ class ModelPaymentKlarnaAccount extends Model {
 				// 1 - Account
 				// 2 - Special
 				// 3 - Fixed
-				if (!in_array($pclass['type'], array(0, 1, 3))) {
+				if (!in_array($pclass['type'], [0, 1, 3])) {
 					continue;
 				}
 
@@ -108,7 +108,7 @@ class ModelPaymentKlarnaAccount extends Model {
 						$payment += $monthly_fee;
 						$balance = $sum;
 
-						$pay_data = array();
+						$pay_data = [];
 
 						$months = $pclass['months'];
 
@@ -161,7 +161,7 @@ class ModelPaymentKlarnaAccount extends Model {
 			$status = false;
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($payment_option as $key => $value) {
 			$sort_order[$key] = $value['monthly_cost'];
@@ -173,15 +173,15 @@ class ModelPaymentKlarnaAccount extends Model {
 			$status = false;
 		}
 
-		$method = array();
+		$method = [];
 
 		if ($status) {
-			$method = array(
+			$method = [
 				'code'       => 'klarna_account',
 				'title'      => sprintf($this->language->get('text_title'), $this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$address['iso_code_3']], $this->currency->getCode()), 1, 1, $this->config->get('config_currency'))),
 				'terms'      => sprintf($this->language->get('text_terms'), $klarna_account[$address['iso_code_3']]['merchant'], strtolower($address['iso_code_2'])),
 				'sort_order' => $klarna_account[$address['iso_code_3']]['sort_order']
-			);
+			];
 		}
 
 		return $method;

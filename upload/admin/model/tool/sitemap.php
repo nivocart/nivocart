@@ -11,7 +11,7 @@ class ModelToolSitemap extends Model {
 	public function generateText() {
 		$this->language->load('tool/sitemap');
 
-		$parent_id = 0; 
+		$parent_id = 0;
 		$current_path = '';
 
 		$output = '';
@@ -30,7 +30,7 @@ class ModelToolSitemap extends Model {
 	public function generateXml() {
 		$this->language->load('tool/sitemap');
 
-		$parent_id = 0; 
+		$parent_id = 0;
 		$current_path = '';
 
 		$output = '';
@@ -63,7 +63,7 @@ class ModelToolSitemap extends Model {
 		if ($fp_out = gzopen('../sitemap.xml.gz', 'wb9')) {
 			if ($fp_in = fopen('../sitemap.xml', 'rb')) {
 				while (!feof($fp_in)) {
-					gzwrite ($fp_out, fread($fp_in, 10000));
+					gzwrite($fp_out, fread($fp_in, 10000));
 				}
 				fclose($fp_in);
 			}

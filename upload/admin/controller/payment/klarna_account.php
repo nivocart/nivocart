@@ -119,33 +119,33 @@ class ControllerPaymentKlarnaAccount extends Controller {
 		$this->data['countries'] = [];
 
 		$this->data['countries'][] = [
-			'name'  => $this->language->get('text_germany'),
-			'code'  => 'DEU'
+			'name' => $this->language->get('text_germany'),
+			'code' => 'DEU'
 		];
 
 		$this->data['countries'][] = [
-			'name'  => $this->language->get('text_netherlands'),
-			'code'  => 'NLD'
+			'name' => $this->language->get('text_netherlands'),
+			'code' => 'NLD'
 		];
 
 		$this->data['countries'][] = [
-			'name'  => $this->language->get('text_denmark'),
-			'code'  => 'DNK'
+			'name' => $this->language->get('text_denmark'),
+			'code' => 'DNK'
 		];
 
 		$this->data['countries'][] = [
-			'name'  => $this->language->get('text_sweden'),
-			'code'  => 'SWE'
+			'name' => $this->language->get('text_sweden'),
+			'code' => 'SWE'
 		];
 
 		$this->data['countries'][] = [
-			'name'  => $this->language->get('text_norway'),
-			'code'  => 'NOR'
+			'name' => $this->language->get('text_norway'),
+			'code' => 'NOR'
 		];
 
 		$this->data['countries'][] = [
-			'name'  => $this->language->get('text_finland'),
-			'code'  => 'FIN'
+			'name' => $this->language->get('text_finland'),
+			'code' => 'FIN'
 		];
 
 		if (isset($this->request->post['klarna_account'])) {
@@ -193,32 +193,32 @@ class ControllerPaymentKlarnaAccount extends Controller {
 		$country = [
 			'NOR' => [
 				'currency' => 1,
-				'country' => 164,
+				'country'  => 164,
 				'language' => 97
 			],
 			'SWE' => [
 				'currency' => 0,
-				'country' => 209,
+				'country'  => 209,
 				'language' => 138
 			],
 			'FIN' => [
 				'currency' => 2,
-				'country' => 73,
+				'country'  => 73,
 				'language' => 101
 			],
 			'DNK' => [
 				'currency' => 3,
-				'country' => 59,
+				'country'  => 59,
 				'language' => 27
 			],
 			'DEU' => [
 				'currency' => 2,
-				'country' => 81,
+				'country'  => 81,
 				'language' => 28
 			],
 			'NLD' => [
 				'currency' => 2,
-				'country' => 154,
+				'country'  => 154,
 				'language' => 101
 			]
 		];
@@ -227,7 +227,7 @@ class ControllerPaymentKlarnaAccount extends Controller {
 			if ($klarna_account['status']) {
 				$digest = base64_encode(pack("H*", hash('sha256', $klarna_account['merchant']  . ':' . $country[$key]['currency'] . ':' . $klarna_account['secret'])));
 
-				$xml  = '<methodCall>';
+				$xml = '<methodCall>';
 				$xml .= '  <methodName>get_pclasses</methodName>';
 				$xml .= '  <params>';
 				$xml .= '    <param><value><string>4.1</string></value></param>';

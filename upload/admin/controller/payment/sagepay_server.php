@@ -393,8 +393,8 @@ class ControllerPaymentSagepayServer extends Controller {
 				$json['data'] = [];
 				$json['data']['date_added'] = date("Y-m-d H:i:s");
 				$json['data']['amount'] = $this->request->post['amount'] * -1;
-				$json['data']['total_released'] = (double)$total_released;
-				$json['data']['total_rebated'] = (double)$total_rebated;
+				$json['data']['total_released'] = (float)$total_released;
+				$json['data']['total_rebated'] = (float)$total_rebated;
 				$json['data']['rebate_status'] = $rebate_status;
 
 				$json['error'] = false;

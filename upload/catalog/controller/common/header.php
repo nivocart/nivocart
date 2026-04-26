@@ -87,7 +87,7 @@ class ControllerCommonHeader extends Controller {
 		$status = true;
 
 		if (isset($this->request->server['HTTP_USER_AGENT'])) {
-			$robots = explode("\n", str_replace(array("\r\n", "\r"), "\n", trim($this->config->get('config_robots'))));
+			$robots = explode("\n", str_replace(["\r\n", "\r"], "\n", trim($this->config->get('config_robots'))));
 
 			foreach ($robots as $robot) {
 				if ($robot && strpos($this->request->server['HTTP_USER_AGENT'], trim($robot)) !== false) {
@@ -117,7 +117,7 @@ class ControllerCommonHeader extends Controller {
 			$this->data['stores'][] = $server . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();
 
 			$stores_array = [];
-			
+
 			$stores = $this->model_setting_store->getStores($stores_array);
 
 			foreach ($stores as $store) {

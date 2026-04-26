@@ -73,7 +73,7 @@ class ModelUpgrade extends Model {
 				$field_data[] = [
 					'name'          => trim($match[1][$key]),
 					'type'          => strtoupper(trim($match[3][$key])),
-					'size'          => str_replace(array('(', ')'), '', trim($match[4][$key])),
+					'size'          => str_replace(['(', ')'], '', trim($match[4][$key])),
 					'sizeext'       => trim($match[6][$key]),
 					'collation'     => trim($match[7][$key]),
 					'unsigned'      => trim($match[8][$key]),

@@ -11,7 +11,7 @@ class ModelShippingGeoZone extends Model {
 	public function getQuote($address) {
 		$this->language->load('shipping/geozone');
 
-		$quote_data = array();
+		$quote_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "geo_zone` ORDER BY `name`");
 
@@ -68,29 +68,29 @@ class ModelShippingGeoZone extends Model {
 					if ((float)$cost && ($zone_id == $address['zone_id']) || $zone_id == 0) {
 						$zone_status = true;
 
-						$quote_data['geozone_' . $result['geo_zone_id']] = array(
+						$quote_data['geozone_' . $result['geo_zone_id']] = [
 							'code'         => 'geozone.geozone_' . $result['geo_zone_id'],
 							'title'        => $result['name'] . ' (' . $this->language->get('text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')',
 							'cost'         => $cost,
 							'tax_class_id' => $this->config->get('geozone_tax_class_id'),
 							'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
-						);
+						];
 					}
 				}
 			}
 
 			if ((float)$cost && $zone_id == 0 && !$zone_status) {
-				$quote_data = array();
+				$quote_data = [];
 
 				$all_zone_status = true;
 
-				$quote_data['geozone_' . $result['geo_zone_id']] = array(
+				$quote_data['geozone_' . $result['geo_zone_id']] = [
 					'code'         => 'geozone.geozone_' . $result['geo_zone_id'],
 					'title'        => $result['name'] . ' (' . $this->language->get('text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')',
 					'cost'         => $cost,
 					'tax_class_id' => $this->config->get('geozone_tax_class_id'),
 					'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
-				);
+				];
 			}
 		}
 
@@ -109,26 +109,26 @@ class ModelShippingGeoZone extends Model {
 			}
 
 			if ((float)$cost) {
-				$quote_data['geozone_00'] = array(
+				$quote_data['geozone_00'] = [
 					'code'         => 'geozone.geozone_00',
 					'title'        => $address['country'] . '  (' . $this->language->get('text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')',
 					'cost'         => $cost,
 					'tax_class_id' => $this->config->get('geozone_tax_class_id'),
 					'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('geozone_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
-				);
+				];
 			}
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($quote_data) {
-			$method_data = array(
+			$method_data = [
 				'code'       => 'geozone',
 				'title'      => $this->language->get('text_title'),
 				'quote'      => $quote_data,
 				'sort_order' => $this->config->get('geozone_sort_order'),
 				'error'      => false
-			);
+			];
 		}
 
 		return $method_data;

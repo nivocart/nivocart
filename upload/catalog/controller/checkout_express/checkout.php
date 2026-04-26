@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerCheckoutExpressCheckout extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if ($this->config->get('config_one_page_checkout')) {
@@ -66,7 +66,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 
 		// Voucher session
 		if (!isset($this->session->data['vouchers'])) {
-			$this->session->data['vouchers'] = array();
+			$this->session->data['vouchers'] = [];
 		}
 
 		if (isset($this->request->post['voucher']) && $this->validateVoucher()) {
@@ -108,25 +108,25 @@ class ControllerCheckoutExpressCheckout extends Controller {
 			$this->redirect($this->url->link('checkout_express/checkout', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_cart'),
 			'href'      => $this->url->link('checkout/cart', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_express'),
 			'href'      => $this->url->link('checkout_express/checkout', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -158,16 +158,16 @@ class ControllerCheckoutExpressCheckout extends Controller {
 		}
 
 		// Gift Voucher
-		$this->data['vouchers'] = array();
+		$this->data['vouchers'] = [];
 
 		if (!empty($this->session->data['vouchers'])) {
 			foreach ($this->session->data['vouchers'] as $key => $voucher) {
-				$this->data['vouchers'][] = array(
+				$this->data['vouchers'][] = [
 					'key'         => $key,
 					'description' => $voucher['description'],
 					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
 					'remove'      => $this->url->link('checkout_express/checkout', 'remove=' . $key, 'SSL')
-				);
+				];
 			}
 		}
 
@@ -299,7 +299,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 			$this->template = 'default/template/checkout_express/checkout.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -308,13 +308,13 @@ class ControllerCheckoutExpressCheckout extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	public function country() {
-		$json = array();
+		$json = [];
 
 		$this->load->model('localisation/country');
 
@@ -323,7 +323,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 		if ($country_info) {
 			$this->load->model('localisation/zone');
 
-			$json = array(
+			$json = [
 				'country_id'        => $country_info['country_id'],
 				'name'              => $country_info['name'],
 				'iso_code_2'        => $country_info['iso_code_2'],
@@ -332,7 +332,7 @@ class ControllerCheckoutExpressCheckout extends Controller {
 				'postcode_required' => $country_info['postcode_required'],
 				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
 				'status'            => $country_info['status']
-			);
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

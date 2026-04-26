@@ -115,9 +115,9 @@ class ControllerReportCustomerOrder extends Controller {
 
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 		$this->data['text_all_status'] = $this->language->get('text_all_status');
-		$this->data['text_enabled'] =$this->language->get('text_enabled');
-		$this->data['text_disabled'] =$this->language->get('text_disabled');
-		$this->data['text_deleted'] =$this->language->get('text_deleted');
+		$this->data['text_enabled'] = $this->language->get('text_enabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_deleted'] = $this->language->get('text_deleted');
 
 		$this->data['column_customer'] = $this->language->get('column_customer');
 		$this->data['column_email'] = $this->language->get('column_email');

@@ -147,7 +147,7 @@ class ControllerLocalisationCurrency extends Controller {
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['currencies'] = array();
+		$this->data['currencies'] = [];
 
 		$sort = $this->request->get['sort'] ?? 'title';
 		$order = $this->request->get['order'] ?? 'ASC';

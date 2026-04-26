@@ -21,29 +21,29 @@ class ControllerFeedStoreya extends Controller {
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
 
-		$data = array();
+		$data = [];
 
 		if ($this->config->get('fromcount')) {
-			$data['start']=$this->config->get('fromcount');
+			$data['start'] = $this->config->get('fromcount');
 		}
 
-		 $this->config->get('tocount');
+		$this->config->get('tocount');
 
 		if ($this->config->get('tocount')) {
-			$data['limit']=$this->config->get('tocount');
+			$data['limit'] = $this->config->get('tocount');
 		}
 
 		if (isset($this->request->get['currency'])) {
-			$currency=$this->request->get['currency'];
+			$currency = $this->request->get['currency'];
 		} elseif ($this->config->get('currency')) {
-			$currency= $this->config->get('currency');
+			$currency = $this->config->get('currency');
 		}
 
 		if (isset($this->request->get['language']) && ($this->request->get['language'] !== $this->session->data['language'])) {
 			$this->session->data['language'] = $this->request->get['language'];
 			$this->redirect($_SERVER['REQUEST_URI']);
 		} elseif (($this->config->get('language') != $this->session->data['language']) && !isset($this->request->get['language'])) {
-			$this->session->data['language']=$this->config->get('language');
+			$this->session->data['language'] = $this->config->get('language');
 			$this->redirect($_SERVER['REQUEST_URI']);
 		}
 
@@ -150,8 +150,8 @@ class ControllerFeedStoreya extends Controller {
 	}
 
 	protected function replaceProblemCharacters($text) {
-		$formattags = array("&");
-		$replacevals = array("&#38;");
+		$formattags = ["&"];
+		$replacevals = ["&#38;"];
 
 		$text = str_replace($formattags, $replacevals, $text);
 
@@ -198,7 +198,7 @@ class ControllerFeedStoreya extends Controller {
 		// This will remove HTML tags, javascript sections and white spaces.
 		// It will also convert some common HTML entities to their text equivalent.
 
-		$search = array ("'<script[^>]*?>.*?</script>'si",
+		$search = ["'<script[^>]*?>.*?</script>'si",
 			 "'<[/!]*?[^<>]*?>'si",
 			 "'&(quot|#34);'i",
 			 "'&(lt|#60);'i",
@@ -209,9 +209,9 @@ class ControllerFeedStoreya extends Controller {
 			 "'&(pound|#163);'i",
 			 "'&(copy|#169);'i",
 			 "'&#(d+);'e"
-		);
+		];
 
-		$replace = array ("", "", "\"", "&", "<", ">", " ", chr(160), chr(161), chr(162), chr(163), chr(169), "chr(\1)");
+		$replace = ["", "", "\"", "&", "<", ">", " ", chr(160), chr(161), chr(162), chr(163), chr(169), "chr(\1)"];
 
 		return preg_replace($search, $replace, $str);
 	}

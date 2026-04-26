@@ -34,7 +34,7 @@ class ControllerToolSitemap extends Controller {
 		$this->data['button_refresh'] = $this->language->get('button_refresh');
 		$this->data['button_close'] = $this->language->get('button_close');
 
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';
@@ -102,17 +102,17 @@ class ControllerToolSitemap extends Controller {
 
 			switch ($button) {
 				case "gentext": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateText', 'token=' . $this->session->data['token'], 'SSL'));
-				break;
+					break;
 				case "genxml": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateXml', 'token=' . $this->session->data['token'], 'SSL'));
-				break;
+					break;
 				case "gengzip": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/generateGzip', 'token=' . $this->session->data['token'], 'SSL'));
-				break;
+					break;
 				case "loadtext": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadText', 'token=' . $this->session->data['token'], 'SSL'));
-				break;
+					break;
 				case "loadxml": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadXml', 'token=' . $this->session->data['token'], 'SSL'));
-				break;
+					break;
 				case "loadgzip": $this->data['sitemap'] = $this->redirect($this->url->link('tool/' . $this->_name . '/downloadGzip', 'token=' . $this->session->data['token'], 'SSL'));
-				break;
+					break;
 			}
 		}
 

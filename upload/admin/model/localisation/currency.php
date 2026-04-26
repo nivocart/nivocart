@@ -122,25 +122,25 @@ class ModelLocalisationCurrency extends Model {
 		}
 	}
 
-//----------------------------------------------------------------------------------
-// FloatRates follows 148 currencies using 19 data sources.
-//
-// Example USD: http://www.floatrates.com/daily/usd.xml
-//
-// Example XML Response:
-// ---------------------
-// <item>
-//	<title>1 USD = 0.81253219 EUR</title>
-//	<link>http://www.floatrates.com/usd/eur/</link>
-//	<description>1 U.S. Dollar = 0.81253219 Euro</description>
-//	<pubDate>Mon, 12 Mar 2018 12:00:01 GMT</pubDate>
-//	<baseCurrency>USD</baseCurrency>
-//	<baseName>U.S. Dollar</baseName>
-//	<targetCurrency>EUR</targetCurrency>
-//	<targetName>Euro</targetName>
-//	<exchangeRate>0.81253219</exchangeRate>
-// </item>
-//----------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------
+	// FloatRates follows 148 currencies using 19 data sources.
+	//
+	// Example USD: http://www.floatrates.com/daily/usd.xml
+	//
+	// Example XML Response:
+	// ---------------------
+	// <item>
+	//	<title>1 USD = 0.81253219 EUR</title>
+	//	<link>http://www.floatrates.com/usd/eur/</link>
+	//	<description>1 U.S. Dollar = 0.81253219 Euro</description>
+	//	<pubDate>Mon, 12 Mar 2018 12:00:01 GMT</pubDate>
+	//	<baseCurrency>USD</baseCurrency>
+	//	<baseName>U.S. Dollar</baseName>
+	//	<targetCurrency>EUR</targetCurrency>
+	//	<targetName>Euro</targetName>
+	//	<exchangeRate>0.81253219</exchangeRate>
+	// </item>
+	//----------------------------------------------------------------------------------
 
 	public function updateCurrencies($default = '') {
 		$default = $this->config->get('config_currency');
@@ -187,21 +187,21 @@ class ModelLocalisationCurrency extends Model {
 		}
 	}
 
-//----------------------------------------------------------------------------------
-// Alpha Vantage : Currency_Exchange_Rate API
-//
-// replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
-//
-// Example PHP/Json Response:
-// --------------------------
-// $json = file_get_contents('https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=JPY&apikey=demo');
-//
-// $data = json_decode($json,true);
-//
-// print_r($data);
-//
-// exit;
-//----------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------
+	// Alpha Vantage : Currency_Exchange_Rate API
+	//
+	// replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+	//
+	// Example PHP/Json Response:
+	// --------------------------
+	// $json = file_get_contents('https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=JPY&apikey=demo');
+	//
+	// $data = json_decode($json,true);
+	//
+	// print_r($data);
+	//
+	// exit;
+	//----------------------------------------------------------------------------------
 
 	public function updateAlphaVantageCurrencies() {
 		$default = $this->config->get('config_currency');

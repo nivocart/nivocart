@@ -107,7 +107,7 @@ class ModelSaleOrder extends Model {
 		$sql .= " shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "',";
 		$sql .= " `comment` = '" . $this->db->escape($data['comment']) . "', order_status_id = '" . (int)$data['order_status_id'] . "',";
 		$sql .= " affiliate_id  = '" . (int)$data['affiliate_id'] . "', language_id = '" . (int)$this->config->get('config_language_id') . "',";
-		$sql .= " currency_id = '" . (int)$currency_id . "', currency_code = '" . $this->db->escape($currency_code) . "', currency_value = '" . (double)$currency_value . "',";
+		$sql .= " currency_id = '" . (int)$currency_id . "', currency_code = '" . $this->db->escape($currency_code) . "', currency_value = '" . (float)$currency_value . "',";
 		$sql .= " ip = '" . $this->db->escape($ip) . "', forwarded_ip = '" .  $this->db->escape($forwarded_ip) . "', user_agent = '" . $this->db->escape($user_agent) . "', accept_language = '" . $this->db->escape($accept_language) . "',";
 		$sql .= " date_added = NOW(), date_modified = NOW(), abandoned = '0'";
 
@@ -117,7 +117,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_product'])) {
 			foreach ($data['order_product'] as $order_product) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` SET order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (double)$order_product['price'] . "', `total` = '" . (double)$order_product['total'] . "', tax = '" . (double)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` SET order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (float)$order_product['price'] . "', `total` = '" . (float)$order_product['total'] . "', tax = '" . (float)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
 
 				$order_product_id = $this->db->getLastId();
 
@@ -141,7 +141,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_voucher'])) {
 			foreach ($data['order_voucher'] as $order_voucher) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_voucher` SET order_id = '" . (int)$order_id . "', voucher_id = '" . (int)$order_voucher['voucher_id'] . "', description = '" . $this->db->escape($order_voucher['description']) . "', `code` = '" . $this->db->escape($order_voucher['code']) . "', from_name = '" . $this->db->escape($order_voucher['from_name']) . "', from_email = '" . $this->db->escape($order_voucher['from_email']) . "', to_name = '" . $this->db->escape($order_voucher['to_name']) . "', to_email = '" . $this->db->escape($order_voucher['to_email']) . "', voucher_theme_id = '" . (int)$order_voucher['voucher_theme_id'] . "', message = '" . $this->db->escape($order_voucher['message']) . "', amount = '" . (double)$order_voucher['amount'] . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_voucher` SET order_id = '" . (int)$order_id . "', voucher_id = '" . (int)$order_voucher['voucher_id'] . "', description = '" . $this->db->escape($order_voucher['description']) . "', `code` = '" . $this->db->escape($order_voucher['code']) . "', from_name = '" . $this->db->escape($order_voucher['from_name']) . "', from_email = '" . $this->db->escape($order_voucher['from_email']) . "', to_name = '" . $this->db->escape($order_voucher['to_name']) . "', to_email = '" . $this->db->escape($order_voucher['to_email']) . "', voucher_theme_id = '" . (int)$order_voucher['voucher_theme_id'] . "', message = '" . $this->db->escape($order_voucher['message']) . "', amount = '" . (float)$order_voucher['amount'] . "'");
 
 				$this->db->query("UPDATE `" . DB_PREFIX . "voucher` SET order_id = '" . (int)$order_id . "' WHERE voucher_id = '" . (int)$order_voucher['voucher_id'] . "'");
 			}
@@ -154,7 +154,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_total'])) {
 			foreach ($data['order_total'] as $order_total) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_total` SET order_id = '" . (int)$order_id . "', `code` = '" . $this->db->escape($order_total['code']) . "', title = '" . $this->db->escape($order_total['title']) . "', `text` = '" . $this->db->escape($order_total['text']) . "', `value` = '" . (double)$order_total['value'] . "', sort_order = '" . (int)$order_total['sort_order'] . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_total` SET order_id = '" . (int)$order_id . "', `code` = '" . $this->db->escape($order_total['code']) . "', title = '" . $this->db->escape($order_total['title']) . "', `text` = '" . $this->db->escape($order_total['text']) . "', `value` = '" . (float)$order_total['value'] . "', sort_order = '" . (int)$order_total['sort_order'] . "'");
 
 				if ($order_total['code'] === 'coupon') {
 					$coupon_value = $order_total['value'];
@@ -175,7 +175,7 @@ class ModelSaleOrder extends Model {
 			$coupon_info = $this->model_sale_coupon->getCouponByCode($data['coupon']);
 
 			if ($coupon_info) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "coupon_history` SET coupon_id = '" . (int)$coupon_info['coupon_id'] . "', order_id = '" . (int)$order_id . "', customer_id = '" . (int)$data['customer_id'] . "', amount = '" . (double)$coupon_value . "', date_added = NOW()");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "coupon_history` SET coupon_id = '" . (int)$coupon_info['coupon_id'] . "', order_id = '" . (int)$order_id . "', customer_id = '" . (int)$data['customer_id'] . "', amount = '" . (float)$coupon_value . "', date_added = NOW()");
 			}
 		}
 
@@ -186,18 +186,18 @@ class ModelSaleOrder extends Model {
 			$voucher_info = $this->model_sale_voucher->getVoucherByCode($data['voucher']);
 
 			if ($voucher_info) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "voucher_history` SET voucher_id = '" . (int)$voucher_info['voucher_id'] . "', order_id = '" . (int)$order_id . "', amount = '" . (double)$voucher_value . "', date_added = NOW()");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "voucher_history` SET voucher_id = '" . (int)$voucher_info['voucher_id'] . "', order_id = '" . (int)$order_id . "', amount = '" . (float)$voucher_value . "', date_added = NOW()");
 			}
 		}
 
 		// Reward
 		if (!empty($data['reward'])) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_reward` SET customer_id = '" . (int)$data['customer_id'] . "', description = '" . $this->db->escape($this->language->get('text_order_id') . ' #' . (int)$order_id) . "', points = '" . (double)-$data['reward'] . "', date_added = NOW()");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_reward` SET customer_id = '" . (int)$data['customer_id'] . "', description = '" . $this->db->escape($this->language->get('text_order_id') . ' #' . (int)$order_id) . "', points = '" . (float)-$data['reward'] . "', date_added = NOW()");
 		}
 
 		// Credit
 		if (!empty($credit)) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_transaction` SET customer_id = '" . (int)$data['customer_id'] . "', order_id = '" . (int)$order_id . "', description = '" . $this->db->escape($this->language->get('text_order_id') . ' #' . (int)$order_id) . "', amount = '" . (double)$credit . "', date_added = NOW()");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_transaction` SET customer_id = '" . (int)$data['customer_id'] . "', order_id = '" . (int)$order_id . "', description = '" . $this->db->escape($this->language->get('text_order_id') . ' #' . (int)$order_id) . "', amount = '" . (float)$credit . "', date_added = NOW()");
 		}
 
 		// Affiliate
@@ -216,7 +216,7 @@ class ModelSaleOrder extends Model {
 		}
 
 		// Update order total
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `total` = '" . (double)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (double)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `total` = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
 	}
 
 	public function editOrder(int $order_id, array $data = []): void {
@@ -279,7 +279,7 @@ class ModelSaleOrder extends Model {
 		// Total and Affiliate Commission are being added further down
 
 		// Update order
-		$sql ="UPDATE `" . DB_PREFIX . "order` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "',";
+		$sql = "UPDATE `" . DB_PREFIX . "order` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "',";
 		$sql .= " payment_firstname = '" . $this->db->escape((string)$data['payment_firstname']) . "', payment_lastname = '" . $this->db->escape((string)$data['payment_lastname']) . "', payment_company = '" . $this->db->escape((string)$data['payment_company']) . "', payment_company_id = '" . $this->db->escape($data['payment_company_id']) . "', payment_tax_id = '" . $this->db->escape($data['payment_tax_id']) . "',";
 		$sql .= " payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', payment_city = '" . $this->db->escape($data['payment_city']) . "', payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', payment_country = '" . $this->db->escape($payment_country) . "', payment_country_id = '" . (int)$data['payment_country_id'] . "', payment_zone = '" . $this->db->escape($payment_zone) . "', payment_zone_id = '" . (int)$data['payment_zone_id'] . "', payment_address_format = '" . $this->db->escape($payment_address_format) . "',";
 		$sql .= " payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',";
@@ -297,7 +297,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_product'])) {
 			foreach ($data['order_product'] as $order_product) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` SET order_product_id = '" . (int)$order_product['order_product_id'] . "', order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (double)$order_product['price'] . "', `total` = '" . (double)$order_product['total'] . "', tax = '" . (double)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_product` SET order_product_id = '" . (int)$order_product['order_product_id'] . "', order_id = '" . (int)$order_id . "', product_id = '" . (int)$order_product['product_id'] . "', `name` = '" . $this->db->escape($order_product['name']) . "', model = '" . $this->db->escape($order_product['model']) . "', quantity = '" . (int)$order_product['quantity'] . "', price = '" . (float)$order_product['price'] . "', `total` = '" . (float)$order_product['total'] . "', tax = '" . (float)$order_product['tax'] . "', reward = '" . (int)$order_product['reward'] . "', picked = '" . (isset($order_product['picked']) ? (int)$order_product['picked'] : 0) . "', backordered = '" . (isset($order_product['backordered']) ? $this->db->escape($order_product['backordered']) : '') . "'");
 
 				$order_product_id = $this->db->getLastId();
 
@@ -323,7 +323,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_voucher'])) {
 			foreach ($data['order_voucher'] as $order_voucher) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_voucher` SET order_voucher_id = '" . (int)$order_voucher['order_voucher_id'] . "', order_id = '" . (int)$order_id . "', voucher_id = '" . (int)$order_voucher['voucher_id'] . "', description = '" . $this->db->escape($order_voucher['description']) . "', `code` = '" . $this->db->escape($order_voucher['code']) . "', from_name = '" . $this->db->escape($order_voucher['from_name']) . "', from_email = '" . $this->db->escape($order_voucher['from_email']) . "', to_name = '" . $this->db->escape($order_voucher['to_name']) . "', to_email = '" . $this->db->escape($order_voucher['to_email']) . "', voucher_theme_id = '" . (int)$order_voucher['voucher_theme_id'] . "', message = '" . $this->db->escape($order_voucher['message']) . "', amount = '" . (double)$order_voucher['amount'] . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_voucher` SET order_voucher_id = '" . (int)$order_voucher['order_voucher_id'] . "', order_id = '" . (int)$order_id . "', voucher_id = '" . (int)$order_voucher['voucher_id'] . "', description = '" . $this->db->escape($order_voucher['description']) . "', `code` = '" . $this->db->escape($order_voucher['code']) . "', from_name = '" . $this->db->escape($order_voucher['from_name']) . "', from_email = '" . $this->db->escape($order_voucher['from_email']) . "', to_name = '" . $this->db->escape($order_voucher['to_name']) . "', to_email = '" . $this->db->escape($order_voucher['to_email']) . "', voucher_theme_id = '" . (int)$order_voucher['voucher_theme_id'] . "', message = '" . $this->db->escape($order_voucher['message']) . "', amount = '" . (float)$order_voucher['amount'] . "'");
 
 				$this->db->query("UPDATE `" . DB_PREFIX . "voucher` SET order_id = '" . (int)$order_id . "' WHERE voucher_id = '" . (int)$order_voucher['voucher_id'] . "'");
 			}
@@ -338,7 +338,7 @@ class ModelSaleOrder extends Model {
 
 		if (isset($data['order_total'])) {
 			foreach ($data['order_total'] as $order_total) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_total` SET order_total_id = '" . (int)$order_total['order_total_id'] . "', order_id = '" . (int)$order_id . "', `code` = '" . $this->db->escape($order_total['code']) . "', title = '" . $this->db->escape($order_total['title']) . "', `text` = '" . $this->db->escape($order_total['text']) . "', `value` = '" . (double)$order_total['value'] . "', sort_order = '" . (int)$order_total['sort_order'] . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "order_total` SET order_total_id = '" . (int)$order_total['order_total_id'] . "', order_id = '" . (int)$order_id . "', `code` = '" . $this->db->escape($order_total['code']) . "', title = '" . $this->db->escape($order_total['title']) . "', `text` = '" . $this->db->escape($order_total['text']) . "', `value` = '" . (float)$order_total['value'] . "', sort_order = '" . (int)$order_total['sort_order'] . "'");
 
 				if ($order_total['code'] === 'coupon') {
 					$coupon_value = $order_total['value'];
@@ -408,7 +408,7 @@ class ModelSaleOrder extends Model {
 			}
 		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `total` = '" . (double)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (double)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `total` = '" . (float)$total . "', affiliate_id = '" . (int)$affiliate_id . "', commission = '" . (float)$commission . "' WHERE order_id = '" . (int)$order_id . "'");
 
 		$this->cache->delete('product.bestseller');
 	}
@@ -799,7 +799,7 @@ class ModelSaleOrder extends Model {
 	}
 
 	public function getTotalSalesByMonth($month) {
-      	$query = $this->db->query("SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $month . "'");
+		$query = $this->db->query("SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $month . "'");
 
 		if ($query->row['total']) {
 			return $query->row['total'];

@@ -28,13 +28,13 @@ class ControllerModuleInformation extends Controller {
 
 		$this->load->model('catalog/information');
 
-		$this->data['informations'] = array();
+		$this->data['informations'] = [];
 
 		foreach ($this->model_catalog_information->getInformations() as $result) {
-			$this->data['informations'][] = array(
+			$this->data['informations'][] = [
 				'title' => $result['title'],
 				'href'  => $this->url->link('information/information', 'information_id=' . $result['information_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['contact'] = $this->url->link('information/contact', '', 'SSL');

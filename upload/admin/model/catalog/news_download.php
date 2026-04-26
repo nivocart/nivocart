@@ -82,7 +82,7 @@ class ModelCatalogNewsDownload extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_download_description` WHERE news_download_id = '" . (int)$news_download_id . "'");
 
 		foreach ($query->rows as $result) {
-			$news_download_description_data[$result['language_id']] = array('name' => $result['name']);
+			$news_download_description_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $news_download_description_data;

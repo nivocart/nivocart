@@ -25,15 +25,15 @@ class ModelPaymentPPPayflowIframe extends Model {
 			$status = false;
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($status) {
-			$method_data = array(
+			$method_data = [
 				'code'       => 'pp_payflow_iframe',
 				'title'      => $this->language->get('text_title'),
 				'terms'      => '',
 				'sort_order' => $this->config->get('pp_payflow_iframe_sort_order')
-			);
+			];
 		}
 
 		return $method_data;
@@ -74,7 +74,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			. (isset($data['parent_transaction_reference']) ? "parent_transaction_reference = '" . $this->db->escape($data['parent_transaction_reference']) . "', " : null)
 			. (isset($data['void_transaction_reference']) ? "void_transaction_reference = '" . $this->db->escape($data['void_transaction_reference']) . "', " : null)
 			. (isset($data['transaction_type']) ? "transaction_type = '" . $this->db->escape($data['transaction_type']) . "', " : null)
-			. (isset($data['amount']) ? "amount = " . (double)$data['amount'] . ", " : null)
+			. (isset($data['amount']) ? "amount = " . (float)$data['amount'] . ", " : null)
 			. "date_added = NOW(), date_modified = NOW()");
 
 			return $this->db->getLastId();
@@ -97,20 +97,20 @@ class ModelPaymentPPPayflowIframe extends Model {
 			$host = 'payflowpro.paypal.com';
 		}
 
-		$user_parameters = array(
+		$user_parameters = [
 			'USER'         => html_entity_decode($this->config->get('pp_payflow_iframe_username'), ENT_QUOTES, 'UTF-8'),
 			'VENDOR'       => html_entity_decode($this->config->get('pp_payflow_iframe_vendor'), ENT_QUOTES, 'UTF-8'),
 			'PWD'          => html_entity_decode($this->config->get('pp_payflow_iframe_password'), ENT_QUOTES, 'UTF-8'),
 			'PARTNER'      => html_entity_decode($this->config->get('pp_payflow_iframe_partner'), ENT_QUOTES, 'UTF-8'),
 			'BUTTONSOURCE' => 'NivoCart_PFP' // (Optional) Identification code for use by third-party applications to identify transactions.
-		);
+		];
 
 		$call_parameters = array_merge($data, $user_parameters);
 
 		$this->log($call_parameters, 'Call data');
 
 		// NVP format with length
-		$call_parameters_with_length = array();
+		$call_parameters_with_length = [];
 
 		foreach ($call_parameters as $key => $value) {
 			$call_parameters_with_length[] = $key . '[' . strlen($value) . ']=' . $value;
@@ -120,7 +120,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		$timeout = $this->config->has('pp_payflow_iframe_timeout') ? $this->config->get('pp_payflow_iframe_timeout') : 30;
 
 		// Standard HTTP Headers
-		$headers = array();
+		$headers = [];
 		$headers[] = 'Content-Type: text/name value';
 		$headers[] = 'Content-Length: ' . strlen($post_fields);
 		$headers[] = 'Host: ' . $host;
@@ -130,7 +130,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 		// Optional Headers
 		$headers[] = 'X-VPS-VIT-INTEGRATION-PRODUCT: NivoCart with PPPayflowIframe Extension';
 
-		$options = array(
+		$options = [
 			CURLOPT_URL            => 'https://' . $host,
 			CURLOPT_PORT           => 443,
 			CURLOPT_HTTPHEADER     => $headers,
@@ -141,7 +141,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			CURLOPT_TIMEOUT        => $timeout + 1,
 			CURLOPT_SSL_VERIFYPEER => false, // This line makes it work under https
 			CURLOPT_POSTFIELDS     => $post_fields
-		);
+		];
 
 		$ch = curl_init();
 
@@ -150,10 +150,10 @@ class ModelPaymentPPPayflowIframe extends Model {
 		$response = curl_exec($ch);
 
 		if (curl_errno($ch) != CURLE_OK) {
-			$log_data = array(
+			$log_data = [
 				'curl_errno' => curl_errno($ch),
 				'curl_error' => curl_error($ch)
-			);
+			];
 
 			$this->log($log_data, 'cURL failed');
 			return false;
@@ -171,7 +171,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 	// Parses a response string from Payflow and returns an associative array of response parameters.
 	private function parse_payflow_string($str) {
 		$workstr = $str;
-		$out = array();
+		$out = [];
 
 		while (strlen($workstr) > 0) {
 			$loc = strpos($workstr, '=');

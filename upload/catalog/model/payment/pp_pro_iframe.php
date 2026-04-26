@@ -25,15 +25,15 @@ class ModelPaymentPPProIframe extends Model {
 			$status = false;
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($status) {
-			$method_data = array(
+			$method_data = [
 				'code'       => 'pp_pro_iframe',
 				'title'      => $this->language->get('text_title'),
 				'terms'      => '',
 				'sort_order' => $this->config->get('pp_pro_iframe_sort_order')
-			);
+			];
 		}
 
 		return $method_data;
@@ -46,7 +46,7 @@ class ModelPaymentPPProIframe extends Model {
 		. "modified = NOW(), "
 		. "capture_status = '" . (isset($order_data['capture_status']) ? $this->db->escape($order_data['capture_status']) : null) . "', "
 		. "currency_code = '" . (isset($order_data['currency_code']) ? $this->db->escape($order_data['currency_code']) : null) . "', "
-		. "total = " . (isset($order_data['total']) ? (double)$order_data['total'] : 0.0) . ", "
+		. "total = " . (isset($order_data['total']) ? (float)$order_data['total'] : 0.0) . ", "
 		. "authorization_id = '" . (isset($order_data['authorization_id']) ? $this->db->escape($order_data['authorization_id']) : null) . "'");
 
 		return $this->db->getLastId();
@@ -65,7 +65,7 @@ class ModelPaymentPPProIframe extends Model {
 		. "payment_status = '" . (isset($transaction_data['payment_status']) ? $this->db->escape($transaction_data['payment_status']) : null) . "', "
 		. "pending_reason = '" . (isset($transaction_data['pending_reason']) ? $this->db->escape($transaction_data['pending_reason']) : null) . "', "
 		. "transaction_entity = '" . (isset($transaction_data['transaction_entity']) ? $this->db->escape($transaction_data['transaction_entity']) : null) . "', "
-		. "amount = " . (isset($transaction_data['amount']) ? (double)$transaction_data['amount'] : 0.0) . ", "
+		. "amount = " . (isset($transaction_data['amount']) ? (float)$transaction_data['amount'] : 0.0) . ", "
 		. "debug_data = '" . (isset($transaction_data['debug_data']) ? $this->db->escape($transaction_data['debug_data']) : null) . "'");
 
 		return $this->db->getLastId();

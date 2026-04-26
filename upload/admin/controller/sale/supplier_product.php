@@ -436,7 +436,7 @@ class ControllerSaleSupplierProduct extends Controller {
 		$this->data['column_action'] = $this->language->get('column_action');
 
 		$this->data['button_enable'] = $this->language->get('button_enable');
-        $this->data['button_disable'] = $this->language->get('button_disable');
+		$this->data['button_disable'] = $this->language->get('button_disable');
 		$this->data['button_copy'] = $this->language->get('button_copy');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
@@ -1196,7 +1196,7 @@ class ControllerSaleSupplierProduct extends Controller {
 
 	// Autocomplete Supplier Products
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_model']) || isset($this->request->get['filter_supplier'])) {
 			$this->load->model('sale/supplier_product');

@@ -46,25 +46,25 @@ class ControllerAccountNewsletter extends Controller {
 			$this->redirect($this->url->link('account/account', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_newsletter'),
 			'href'      => $this->url->link('account/newsletter', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -92,7 +92,7 @@ class ControllerAccountNewsletter extends Controller {
 			$this->template = 'default/template/account/newsletter.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -101,7 +101,7 @@ class ControllerAccountNewsletter extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

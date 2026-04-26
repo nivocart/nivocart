@@ -29,7 +29,7 @@ class ControllerAccountWishList extends Controller {
 		$this->load->model('tool/image');
 
 		if (!isset($this->session->data['wishlist'])) {
-			$this->session->data['wishlist'] = array();
+			$this->session->data['wishlist'] = [];
 		}
 
 		if (isset($this->request->get['remove'])) {
@@ -48,25 +48,25 @@ class ControllerAccountWishList extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/wishlist', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -98,11 +98,11 @@ class ControllerAccountWishList extends Controller {
 
 		$this->load->model('catalog/offer');
 
-		$offers_wishlist = array();
+		$offers_wishlist = [];
 
 		$offers = $this->model_catalog_offer->getListProductOffers($offers_wishlist);
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		foreach ($this->session->data['wishlist'] as $key => $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
@@ -150,7 +150,7 @@ class ControllerAccountWishList extends Controller {
 					$quote = false;
 				}
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'product_id'     => $product_info['product_id'],
 					'thumb'          => $image,
 					'offer'          => $offer,
@@ -164,7 +164,7 @@ class ControllerAccountWishList extends Controller {
 					'special'        => $special,
 					'href'           => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL'),
 					'remove'         => $this->url->link('account/wishlist', 'remove=' . $product_info['product_id'], 'SSL')
-				);
+				];
 
 			} else {
 				unset($this->session->data['wishlist'][$key]);
@@ -182,7 +182,7 @@ class ControllerAccountWishList extends Controller {
 			$this->template = 'default/template/account/wishlist.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -191,7 +191,7 @@ class ControllerAccountWishList extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -199,10 +199,10 @@ class ControllerAccountWishList extends Controller {
 	public function add() {
 		$this->language->load('account/wishlist');
 
-		$json = array();
+		$json = [];
 
 		if (!isset($this->session->data['wishlist'])) {
-			$this->session->data['wishlist'] = array();
+			$this->session->data['wishlist'] = [];
 		}
 
 		if (isset($this->request->post['product_id'])) {

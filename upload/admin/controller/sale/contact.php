@@ -126,7 +126,7 @@ class ControllerSaleContact extends Controller {
 			'customer' => [
 				$this->resolveIndividualEmails(
 					$this->request->post['customer'] ?? [],
-					fn($id) => $this->model_sale_customer->getCustomer($id)
+					fn ($id) => $this->model_sale_customer->getCustomer($id)
 				),
 				0
 			],
@@ -136,7 +136,7 @@ class ControllerSaleContact extends Controller {
 			'affiliate' => [
 				$this->resolveIndividualEmails(
 					$this->request->post['affiliate'] ?? [],
-					fn($id) => $this->model_sale_affiliate->getAffiliate($id)
+					fn ($id) => $this->model_sale_affiliate->getAffiliate($id)
 				),
 				0
 			],
@@ -154,7 +154,7 @@ class ControllerSaleContact extends Controller {
 
 			$json['next'] = ($end < $email_total) ? str_replace('&amp;', '&', $this->url->link('sale/contact/send', 'token=' . $this->session->data['token'] . '&page=' . ($page + 1), 'SSL')) : '';
 
-			$message  = '<html dir="ltr" lang="en">' . "\n";
+			$message = '<html dir="ltr" lang="en">' . "\n";
 			$message .= '<head>' . "\n";
 			$message .= '<title>' . $this->request->post['subject'] . '</title>' . "\n";
 			$message .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . "\n";

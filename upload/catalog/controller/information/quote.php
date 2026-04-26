@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerInformationQuote extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('information/quote');
@@ -44,19 +44,19 @@ class ControllerInformationQuote extends Controller {
 			$this->redirect($this->url->link('information/quote/success', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('information/quote', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -127,9 +127,9 @@ class ControllerInformationQuote extends Controller {
 			$this->data['email'] = '';
 		}
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
-		$products_array = array();
+		$products_array = [];
 
 		$results = $this->model_catalog_product->getProducts($products_array);
 
@@ -141,12 +141,12 @@ class ControllerInformationQuote extends Controller {
 			}
 
 			if ($result['quote']) {
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'product_id' => $result['product_id'],
 					'name'       => $result['name'],
 					'quote'      => $result['quote'],
 					'model'      => $model
-				);
+				];
 			}
 		}
 
@@ -204,7 +204,7 @@ class ControllerInformationQuote extends Controller {
 			$this->template = 'default/template/information/quote.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -213,7 +213,7 @@ class ControllerInformationQuote extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -223,19 +223,19 @@ class ControllerInformationQuote extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('information/quote', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -254,7 +254,7 @@ class ControllerInformationQuote extends Controller {
 			$this->template = 'default/template/common/success.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -263,7 +263,7 @@ class ControllerInformationQuote extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -302,7 +302,7 @@ class ControllerInformationQuote extends Controller {
 	public function upload() {
 		$this->language->load('information/quote');
 
-		$json = array();
+		$json = [];
 
 		if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
 			$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8')));
@@ -312,9 +312,9 @@ class ControllerInformationQuote extends Controller {
 			}
 
 			// Allowed file extension types
-			$allowed = array();
+			$allowed = [];
 
-			$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_extension_allowed')));
+			$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_extension_allowed')));
 
 			foreach ($filetypes as $filetype) {
 				$allowed[] = trim($filetype);
@@ -325,9 +325,9 @@ class ControllerInformationQuote extends Controller {
 			}
 
 			// Allowed file mime types
-			$allowed = array();
+			$allowed = [];
 
-			$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_mime_allowed')));
+			$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_mime_allowed')));
 
 			foreach ($filetypes as $filetype) {
 				$allowed[] = trim($filetype);
@@ -338,11 +338,11 @@ class ControllerInformationQuote extends Controller {
 			}
 
 			// Check to see if any PHP files are trying to be uploaded
- 			$content = file_get_contents($this->request->files['file']['tmp_name']);
+			$content = file_get_contents($this->request->files['file']['tmp_name']);
 
 			if (preg_match('/\<\?php/i', $content)) {
 				$json['error'] = $this->language->get('error_filetype');
- 			}
+			}
 
 			if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
 				$json['error'] = $this->language->get('error_upload_' . $this->request->files['file']['error']);

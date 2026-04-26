@@ -77,7 +77,7 @@ class Customer {
 	 *
 	 * @param 	$registry
 	 */
-    public function __construct(Registry $registry) {
+	public function __construct(Registry $registry) {
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');
@@ -172,7 +172,7 @@ class Customer {
 			// check string before unserialize
 			if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])) {
 				if (!isset($this->session->data['wishlist'])) {
-					$this->session->data['wishlist'] = array();
+					$this->session->data['wishlist'] = [];
 				}
 
 				$wishlist = unserialize($customer_query->row['wishlist'], ['allowed_classes' => false]);
@@ -220,7 +220,7 @@ class Customer {
 	public function logout(): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 
-		$this->session->data['cart'] = array();
+		$this->session->data['cart'] = [];
 
 		unset($this->session->data['customer_id']);
 		unset($this->session->data['customer_cookie']);

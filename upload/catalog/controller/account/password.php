@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAccountPassword extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if (!$this->customer->isLogged()) {
@@ -48,25 +48,25 @@ class ControllerAccountPassword extends Controller {
 			}
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/password', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -137,7 +137,7 @@ class ControllerAccountPassword extends Controller {
 			$this->template = 'default/template/account/password.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -146,7 +146,7 @@ class ControllerAccountPassword extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

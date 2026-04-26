@@ -1,4 +1,4 @@
-<?php 
+<?php
 class Pagination {
 	public int $total = 0;
 	public int $page = 1;

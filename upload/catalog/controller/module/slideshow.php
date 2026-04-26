@@ -39,7 +39,7 @@ class ControllerModuleSlideshow extends Controller {
 		$this->load->model('design/banner');
 		$this->load->model('tool/image');
 
-		$this->data['banners'] = array();
+		$this->data['banners'] = [];
 
 		if (isset($setting['banner_id'])) {
 			$results = $this->model_design_banner->getBanner($setting['banner_id']);
@@ -56,12 +56,12 @@ class ControllerModuleSlideshow extends Controller {
 				}
 
 				if (file_exists(DIR_IMAGE . $result['image'])) {
-					$this->data['banners'][] = array(
+					$this->data['banners'][] = [
 						'banner_image_id' => $result['banner_image_id'],
 						'title'           => $result['title'],
 						'link'            => $image_link,
 						'image'           => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])
-					);
+					];
 				}
 			}
 		}

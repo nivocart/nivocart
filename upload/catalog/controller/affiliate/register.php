@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAffiliateRegister extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if ($this->affiliate->isLogged()) {
@@ -34,25 +34,25 @@ class ControllerAffiliateRegister extends Controller {
 			$this->redirect($this->url->link('affiliate/success', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_register'),
 			'href'      => $this->url->link('affiliate/register', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -362,7 +362,7 @@ class ControllerAffiliateRegister extends Controller {
 			$this->template = 'default/template/affiliate/register.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -371,7 +371,7 @@ class ControllerAffiliateRegister extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -434,7 +434,7 @@ class ControllerAffiliateRegister extends Controller {
 		}
 
 		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {
- 			$this->error['zone'] = $this->language->get('error_zone');
+			$this->error['zone'] = $this->language->get('error_zone');
 		}
 
 		if (!isset($this->request->post['password']) || (mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
@@ -463,7 +463,7 @@ class ControllerAffiliateRegister extends Controller {
 	}
 
 	public function country() {
-		$json = array();
+		$json = [];
 
 		$this->load->model('localisation/country');
 
@@ -472,7 +472,7 @@ class ControllerAffiliateRegister extends Controller {
 		if ($country_info) {
 			$this->load->model('localisation/zone');
 
-			$json = array(
+			$json = [
 				'country_id'        => $country_info['country_id'],
 				'name'              => $country_info['name'],
 				'iso_code_2'        => $country_info['iso_code_2'],
@@ -481,7 +481,7 @@ class ControllerAffiliateRegister extends Controller {
 				'postcode_required' => $country_info['postcode_required'],
 				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
 				'status'            => $country_info['status']
-			);
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

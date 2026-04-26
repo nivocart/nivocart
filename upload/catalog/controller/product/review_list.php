@@ -90,11 +90,11 @@ class ControllerProductReviewList extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('product/review_list', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			if (isset($this->request->get['filter_name'])) {
 				$this->data['heading_title'] = $this->language->get('heading_title') . ' - ' . $this->request->get['filter_name'];
@@ -232,7 +232,7 @@ class ControllerProductReviewList extends Controller {
 
 				$review_total_product = $this->model_catalog_review->getTotalReviewsByProductId($result['product_id']);
 
-				$this->data['reviews'][] = array(
+				$this->data['reviews'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
 					'label'           => $label,
@@ -259,7 +259,7 @@ class ControllerProductReviewList extends Controller {
 					'date_added'      => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 					'reviews'         => sprintf($this->language->get('text_reviews'), $review_total_product),
 					'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url, 'SSL')
-				);
+				];
 			}
 
 			$url = '';
@@ -272,63 +272,63 @@ class ControllerProductReviewList extends Controller {
 				$url .= '&filter_description=' . $this->request->get['filter_description'];
 			}
 
-			$this->data['sorts'] = array();
+			$this->data['sorts'] = [];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_default'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_default'),
 				'value' => 'p.sort_order-DESC',
-				'href' => $this->url->link('product/review_list', 'sort=p.sort_order&order=DESC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/review_list', 'sort=p.sort_order&order=DESC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_name_asc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_name_asc'),
 				'value' => 'pd.name-ASC',
-				'href' => $this->url->link('product/review_list', 'sort=pd.name&order=ASC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/review_list', 'sort=pd.name&order=ASC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_name_desc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_name_desc'),
 				'value' => 'pd.name-DESC',
-				'href' => $this->url->link('product/review_list', 'sort=pd.name&order=DESC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/review_list', 'sort=pd.name&order=DESC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_price_asc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_price_asc'),
 				'value' => 'p.price-ASC',
-				'href' => $this->url->link('product/review_list', 'sort=p.price&order=ASC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/review_list', 'sort=p.price&order=ASC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_price_desc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_price_desc'),
 				'value' => 'p.price-DESC',
-				'href' => $this->url->link('product/review_list', 'sort=p.price&order=DESC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/review_list', 'sort=p.price&order=DESC' . $url, 'SSL')
+			];
 
 			if ($this->config->get('config_review_status')) {
-				$this->data['sorts'][] = array(
-					'text' => $this->language->get('text_rating_desc'),
+				$this->data['sorts'][] = [
+					'text'  => $this->language->get('text_rating_desc'),
 					'value' => 'r.rating-DESC',
-					'href' => $this->url->link('product/review_list', 'sort=r.rating&order=DESC' . $url, 'SSL')
-				);
+					'href'  => $this->url->link('product/review_list', 'sort=r.rating&order=DESC' . $url, 'SSL')
+				];
 
-				$this->data['sorts'][] = array(
-					'text' => $this->language->get('text_rating_asc'),
+				$this->data['sorts'][] = [
+					'text'  => $this->language->get('text_rating_asc'),
 					'value' => 'r.rating-ASC',
-					'href' => $this->url->link('product/review_list', 'sort=r.rating&order=ASC' . $url, 'SSL')
-				);
+					'href'  => $this->url->link('product/review_list', 'sort=r.rating&order=ASC' . $url, 'SSL')
+				];
 			}
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_date_asc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_date_asc'),
 				'value' => 'r.date_added-ASC',
-				'href' => $this->url->link('product/review_list', 'sort=r.date_added&order=ASC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/review_list', 'sort=r.date_added&order=ASC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_date_desc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_date_desc'),
 				'value' => 'r.date_added-DESC',
-				'href' => $this->url->link('product/review_list', 'sort=r.date_added&order=DESC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/review_list', 'sort=r.date_added&order=DESC' . $url, 'SSL')
+			];
 
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
@@ -352,18 +352,18 @@ class ControllerProductReviewList extends Controller {
 				$url .= '&order=' . $this->request->get['order'];
 			}
 
-			$this->data['limits'] = array();
+			$this->data['limits'] = [];
 
-			$limits = array_unique(array($this->config->get('config_catalog_limit'), 25, 50, 75, 100));
+			$limits = array_unique([$this->config->get('config_catalog_limit'), 25, 50, 75, 100]);
 
-			sort ($limits);
+			sort($limits);
 
 			foreach ($limits as $value) {
-				$this->data['limits'][] = array(
+				$this->data['limits'][] = [
 					'text'  => $value,
 					'value' => $value,
 					'href'  => $this->url->link('product/review_list', $url . '&limit=' . $value, 'SSL')
-				);
+				];
 			}
 
 			$url = '';
@@ -433,7 +433,7 @@ class ControllerProductReviewList extends Controller {
 				$this->template = 'default/template/product/review_list.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -442,7 +442,7 @@ class ControllerProductReviewList extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
@@ -473,11 +473,11 @@ class ControllerProductReviewList extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('product/review_list', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -496,7 +496,7 @@ class ControllerProductReviewList extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -505,7 +505,7 @@ class ControllerProductReviewList extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());

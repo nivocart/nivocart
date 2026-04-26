@@ -472,10 +472,10 @@ class ControllerCatalogDownload extends Controller {
 		}
 
 		$this->template = 'catalog/download_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -550,7 +550,7 @@ class ControllerCatalogDownload extends Controller {
 				// Allowed file extension types
 				$allowed = [];
 
-				$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_extension_allowed')));
+				$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_extension_allowed')));
 
 				foreach ($filetypes as $filetype) {
 					$allowed[] = trim($filetype);
@@ -563,7 +563,7 @@ class ControllerCatalogDownload extends Controller {
 				// Allowed file mime types
 				$allowed = [];
 
-				$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_mime_allowed')));
+				$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_mime_allowed')));
 
 				foreach ($filetypes as $filetype) {
 					$allowed[] = trim($filetype);

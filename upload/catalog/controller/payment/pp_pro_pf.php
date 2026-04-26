@@ -34,55 +34,55 @@ class ControllerPaymentPPProPF extends Controller {
 
 		$this->data['owner'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
 
-		$this->data['cards'] = array();
+		$this->data['cards'] = [];
 
-		$this->data['cards'][] = array(
-			'text' => 'Visa',
+		$this->data['cards'][] = [
+			'text'  => 'Visa',
 			'value' => '0'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'MasterCard',
+		$this->data['cards'][] = [
+			'text'  => 'MasterCard',
 			'value' => '1'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'Maestro',
+		$this->data['cards'][] = [
+			'text'  => 'Maestro',
 			'value' => '9'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'Solo',
+		$this->data['cards'][] = [
+			'text'  => 'Solo',
 			'value' => 'S'
-		);
+		];
 
-		$this->data['months'] = array();
+		$this->data['months'] = [];
 
 		for ($i = 1; $i <= 12; $i++) {
-			$this->data['months'][] = array(
-				'text' => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
+			$this->data['months'][] = [
+				'text'  => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
 				'value' => sprintf('%02d', $i)
-			);
+			];
 		}
 
 		$today = getdate();
 
-		$this->data['year_valid'] = array();
+		$this->data['year_valid'] = [];
 
 		for ($i = $today['year'] - 10; $i < $today['year'] + 1; $i++) {
-			$this->data['year_valid'][] = array(
-				'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
+			$this->data['year_valid'][] = [
+				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))
-			);
+			];
 		}
 
-		$this->data['year_expire'] = array();
+		$this->data['year_expire'] = [];
 
 		for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
-			$this->data['year_expire'][] = array(
-				'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
+			$this->data['year_expire'][] = [
+				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))
-			);
+			];
 		}
 
 		// Theme
@@ -148,11 +148,11 @@ class ControllerPaymentPPProPF extends Controller {
 		curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
 		curl_setopt($curl, CURLOPT_POST, 1);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array('X-VPS-REQUEST-ID: ' . md5($this->session->data['order_id'] . mt_rand())));
+		curl_setopt($curl, CURLOPT_HTTPHEADER, ['X-VPS-REQUEST-ID: ' . md5($this->session->data['order_id'] . mt_rand())]);
 
 		$response = curl_exec($curl);
 
-		$json = array();
+		$json = [];
 
 		if (curl_errno($curl) != CURLE_OK) {
 			$this->log->write('DoDirectPayment failed: ' . curl_error($curl) . ' (' . curl_errno($curl) . ')');
@@ -160,7 +160,7 @@ class ControllerPaymentPPProPF extends Controller {
 			$json['error'] = 'CURL ERROR (' . curl_errno($curl) . ') :: ' . curl_error($curl);
 
 		} elseif ($response) {
-			$response_info = array();
+			$response_info = [];
 
 			parse_str($response, $response_info);
 

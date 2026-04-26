@@ -21,26 +21,26 @@ class ModelShippingFlat3 extends Model {
 			$status = false;
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($status) {
-			$quote_data = array();
+			$quote_data = [];
 
-			$quote_data['flat_3'] = array(
+			$quote_data['flat_3'] = [
 				'code'         => 'flat_3.flat_3',
 				'title'        => $this->language->get('text_description'),
 				'cost'         => $this->config->get('flat_3_cost'),
 				'tax_class_id' => $this->config->get('flat_3_tax_class_id'),
 				'text'         => $this->currency->format($this->tax->calculate($this->config->get('flat_3_cost'), $this->config->get('flat_3_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
-			);
+			];
 
-			$method_data = array(
+			$method_data = [
 				'code'       => 'flat_3',
 				'title'      => $this->language->get('text_title'),
 				'quote'      => $quote_data,
 				'sort_order' => $this->config->get('flat_3_sort_order'),
 				'error'      => false
-			);
+			];
 		}
 
 		return $method_data;

@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAffiliateLogin extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if ($this->affiliate->isLogged()) {
@@ -39,25 +39,25 @@ class ControllerAffiliateLogin extends Controller {
 			}
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_login'),
 			'href'      => $this->url->link('affiliate/login', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -123,7 +123,7 @@ class ControllerAffiliateLogin extends Controller {
 			$this->template = 'default/template/affiliate/login.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -132,7 +132,7 @@ class ControllerAffiliateLogin extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

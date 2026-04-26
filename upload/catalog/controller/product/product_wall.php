@@ -59,10 +59,10 @@ class ControllerProductProductWall extends Controller {
 			$this->load->model('tool/image');
 
 			$page_url = array_filter([
-				'sort'        => $this->request->get['sort'] ?? null,
-				'order'       => $this->request->get['order'] ?? null,
-				'limit'       => $this->request->get['limit'] ?? null,
-				'page'        => $this->request->get['page'] ?? null
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'limit' => $this->request->get['limit'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -211,7 +211,7 @@ class ControllerProductProductWall extends Controller {
 					$quote = false;
 				}
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
 					'label'           => $label,
@@ -237,69 +237,69 @@ class ControllerProductProductWall extends Controller {
 					'rating'          => $rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 					'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url, 'SSL')
-				);
+				];
 			}
 
 			// Jquery sorting url
 			$url = '';
 
-			$this->data['sorts'] = array();
+			$this->data['sorts'] = [];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_default'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_default'),
 				'value' => 'p.sort_order-ASC',
-				'href' => $this->url->link('product/product_wall', 'sort=p.sort_order&order=ASC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/product_wall', 'sort=p.sort_order&order=ASC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_name_asc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_name_asc'),
 				'value' => 'pd.name-ASC',
-				'href' => $this->url->link('product/product_wall', 'sort=pd.name&order=ASC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/product_wall', 'sort=pd.name&order=ASC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_name_desc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_name_desc'),
 				'value' => 'pd.name-DESC',
-				'href' => $this->url->link('product/product_wall', 'sort=pd.name&order=DESC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/product_wall', 'sort=pd.name&order=DESC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_price_asc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_price_asc'),
 				'value' => 'p.price-ASC',
-				'href' => $this->url->link('product/product_wall', 'sort=p.price&order=ASC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/product_wall', 'sort=p.price&order=ASC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_price_desc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_price_desc'),
 				'value' => 'p.price-DESC',
-				'href' => $this->url->link('product/product_wall', 'sort=p.price&order=DESC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/product_wall', 'sort=p.price&order=DESC' . $url, 'SSL')
+			];
 
 			if ($this->config->get('config_review_status')) {
-				$this->data['sorts'][] = array(
-					'text' => $this->language->get('text_rating_desc'),
+				$this->data['sorts'][] = [
+					'text'  => $this->language->get('text_rating_desc'),
 					'value' => 'rating-DESC',
-					'href' => $this->url->link('product/product_wall', 'sort=rating&order=DESC' . $url, 'SSL')
-				);
+					'href'  => $this->url->link('product/product_wall', 'sort=rating&order=DESC' . $url, 'SSL')
+				];
 
-				$this->data['sorts'][] = array(
-					'text' => $this->language->get('text_rating_asc'),
+				$this->data['sorts'][] = [
+					'text'  => $this->language->get('text_rating_asc'),
 					'value' => 'rating-ASC',
-					'href' => $this->url->link('product/product_wall', 'sort=rating&order=ASC' . $url, 'SSL')
-				);
+					'href'  => $this->url->link('product/product_wall', 'sort=rating&order=ASC' . $url, 'SSL')
+				];
 			}
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_model_asc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_model_asc'),
 				'value' => 'p.model-ASC',
-				'href' => $this->url->link('product/product_wall', 'sort=p.model&order=ASC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/product_wall', 'sort=p.model&order=ASC' . $url, 'SSL')
+			];
 
-			$this->data['sorts'][] = array(
-				'text' => $this->language->get('text_model_desc'),
+			$this->data['sorts'][] = [
+				'text'  => $this->language->get('text_model_desc'),
 				'value' => 'p.model-DESC',
-				'href' => $this->url->link('product/product_wall', 'sort=p.model&order=DESC' . $url, 'SSL')
-			);
+				'href'  => $this->url->link('product/product_wall', 'sort=p.model&order=DESC' . $url, 'SSL')
+			];
 
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
@@ -315,18 +315,18 @@ class ControllerProductProductWall extends Controller {
 				$url .= '&order=' . $this->request->get['order'];
 			}
 
-			$this->data['limits'] = array();
+			$this->data['limits'] = [];
 
-			$limits = array_unique(array($this->config->get('config_catalog_limit'), 25, 50, 75, 100));
+			$limits = array_unique([$this->config->get('config_catalog_limit'), 25, 50, 75, 100]);
 
-			sort ($limits);
+			sort($limits);
 
 			foreach ($limits as $value) {
-				$this->data['limits'][] = array(
+				$this->data['limits'][] = [
 					'text'  => $value,
 					'value' => $value,
 					'href'  => $this->url->link('product/product_wall', $url . '&limit=' . $value, 'SSL')
-				);
+				];
 			}
 
 			// Pagination url
@@ -386,7 +386,7 @@ class ControllerProductProductWall extends Controller {
 				$this->template = 'default/template/product/product_wall.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -395,25 +395,25 @@ class ControllerProductProductWall extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
 		} else {
 			$page_url = array_filter([
-				'sort'        => $this->request->get['sort'] ?? null,
-				'order'       => $this->request->get['order'] ?? null,
-				'limit'       => $this->request->get['limit'] ?? null,
-				'page'        => $this->request->get['page'] ?? null
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'limit' => $this->request->get['limit'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('product/product_wall', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -432,7 +432,7 @@ class ControllerProductProductWall extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -441,7 +441,7 @@ class ControllerProductProductWall extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());

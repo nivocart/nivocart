@@ -659,7 +659,7 @@ class ControllerCatalogNews extends Controller {
 			}
 		}
 
-		$allowed = array('jpg','jpeg','png','gif');
+		$allowed = ['jpg','jpeg','png','gif'];
 
 		if ($this->request->post['image']) {
 			$ext = substr(strrchr($this->request->post['image'], '.'), 1);

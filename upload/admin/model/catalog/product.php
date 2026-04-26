@@ -122,7 +122,7 @@ class ModelCatalogProduct extends Model {
 
 					$product_option_id = $this->db->getLastId();
 
-					if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0 ) {
+					if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0) {
 						foreach ($product_option['product_option_value'] as $product_option_value) {
 							$this->db->query("INSERT INTO `" . DB_PREFIX . "product_option_value` SET product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
 						}
@@ -324,7 +324,7 @@ class ModelCatalogProduct extends Model {
 
 					$product_option_id = $this->db->getLastId();
 
-					if (isset($product_option['product_option_value'])  && count($product_option['product_option_value']) > 0 ) {
+					if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0) {
 						foreach ($product_option['product_option_value'] as $product_option_value) {
 							$this->db->query("INSERT INTO `" . DB_PREFIX . "product_option_value` SET product_option_value_id = '" . (int)$product_option_value['product_option_value_id'] . "', product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
 						}
@@ -403,12 +403,12 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function editProductStatus(int $product_id, int $status): void {
-        $this->db->query("UPDATE `" . DB_PREFIX . "product` SET status = '" . (int)$status . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET status = '" . (int)$status . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
 
 		$this->cache->delete('seo_url_map');
 		$this->cache->delete('product');
 		$this->cache->delete('store');
-    }
+	}
 
 	public function copyProduct(int $product_id): void {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
@@ -781,12 +781,12 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getProductRewards(int $product_id): array {
-		$product_reward_data = array();
+		$product_reward_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_reward` WHERE product_id = '" . (int)$product_id . "'");
 
 		foreach ($query->rows as $result) {
-			$product_reward_data[$result['customer_group_id']] = array('points' => $result['points']);
+			$product_reward_data[$result['customer_group_id']] = ['points' => $result['points']];
 		}
 
 		return $product_reward_data;

@@ -36,7 +36,7 @@ class ModelAccountRecurring extends Model {
 		$results = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_recurring_transaction` WHERE order_recurring_id = '" . (int)$order_recurring_id . "'");
 
 		if ($results->num_rows > 0) {
-			$transactions = array();
+			$transactions = [];
 
 			foreach ($results->rows as $transaction) {
 				$transaction['amount'] = $this->currency->format($transaction['amount'], $profile['currency_code'], 1);
@@ -62,7 +62,7 @@ class ModelAccountRecurring extends Model {
 		$result = $this->db->query("SELECT orc.*, o.payment_method, o.currency_id, o.currency_value FROM `" . DB_PREFIX . "order_recurring` orc LEFT JOIN `" . DB_PREFIX . "order` o ON (orc.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);
 
 		if ($result->num_rows > 0) {
-			$profiles = array();
+			$profiles = [];
 
 			foreach ($result->rows as $profile) {
 				$profiles[] = $profile;
@@ -85,7 +85,7 @@ class ModelAccountRecurring extends Model {
 	}
 
 	public function addOrderRecurringTransaction(int $order_recurring_id, int $type, $amount = 0): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET order_recurring_id = '" . (int)$order_recurring_id . "', created = NOW(), amount = '" . (double)$amount . "', `type` = '" . (int)$type . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET order_recurring_id = '" . (int)$order_recurring_id . "', created = NOW(), amount = '" . (float)$amount . "', `type` = '" . (int)$type . "'");
 	}
 
 	public function updateOrderRecurringStatus(int $order_recurring_id, int $status): void {

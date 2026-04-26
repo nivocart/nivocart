@@ -16,19 +16,19 @@ class ControllerInformationNewsList extends Controller {
 
 		$this->load->model('catalog/news');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('information/news_list', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -45,7 +45,7 @@ class ControllerInformationNewsList extends Controller {
 
 		$this->data['total_news'] = $total_news;
 
-		$this->data['news_data'] = array();
+		$this->data['news_data'] = [];
 
 		$news_data = $this->model_catalog_news->getNewsAll();
 
@@ -69,7 +69,7 @@ class ControllerInformationNewsList extends Controller {
 					$image = false;
 				}
 
-				$this->data['news_data'][] = array(
+				$this->data['news_data'][] = [
 					'news_id'     => $result['news_id'],
 					'image'       => $image,
 					'title'       => $result['title'],
@@ -77,7 +77,7 @@ class ControllerInformationNewsList extends Controller {
 					'viewed'      => $result['viewed'],
 					'date_added'  => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 					'href'        => $this->url->link('information/news', 'news_id=' . $result['news_id'], 'SSL')
-				);
+				];
 			}
 
 			// Theme
@@ -89,7 +89,7 @@ class ControllerInformationNewsList extends Controller {
 				$this->template = 'default/template/information/news_list.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -98,7 +98,7 @@ class ControllerInformationNewsList extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
@@ -120,7 +120,7 @@ class ControllerInformationNewsList extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -129,7 +129,7 @@ class ControllerInformationNewsList extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());

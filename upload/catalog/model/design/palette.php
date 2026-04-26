@@ -17,7 +17,7 @@ class ModelDesignPalette extends Model {
 	public function getPalettes(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "palette`";
 
-		$sort_data = array('name');
+		$sort_data = ['name'];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -49,12 +49,12 @@ class ModelDesignPalette extends Model {
 	}
 
 	public function getPaletteIds(array $data = []): array {
-		$palette_data = array();
+		$palette_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette`");
 
 		foreach ($query->rows as $result) {
-			$palette_data[] = array('palette_id' => $result['palette_id']);
+			$palette_data[] = ['palette_id' => $result['palette_id']];
 		}
 
 		return $palette_data;
@@ -67,7 +67,7 @@ class ModelDesignPalette extends Model {
 	}
 
 	public function getProductColors(int $product_id): array {
-		$product_color_data = array();
+		$product_color_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_color` WHERE product_id = '" . (int)$product_id . "'");
 
@@ -79,9 +79,9 @@ class ModelDesignPalette extends Model {
 	}
 
 	public function getPaletteColorGroups() {
-		$names = array();
-		$totals = array();
-		$colors = array();
+		$names = [];
+		$totals = [];
+		$colors = [];
 
 		$colorcloud = false;
 
@@ -108,7 +108,7 @@ class ModelDesignPalette extends Model {
 
 		arsort($colors);
 
-		$cloud = array();
+		$cloud = [];
 
 		foreach ($colors as $key => $value) {
 			$key = trim(str_replace('&', '&amp;', (string)$key));
@@ -128,34 +128,34 @@ class ModelDesignPalette extends Model {
 	}
 
 	public function getPaletteColorsByPaletteId(int $palette_id): array {
-		$colors_data = array();
+		$colors_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette` p LEFT JOIN `" . DB_PREFIX . "palette_color` pc ON (p.palette_id = pc.palette_id) LEFT JOIN `" . DB_PREFIX . "palette_color_description` pcd ON (p.palette_id = pcd.palette_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pcd.palette_id = '" . (int)$palette_id . "' GROUP BY pcd.palette_color_id ORDER BY p.palette_id, pcd.title ASC");
 
 		foreach ($query->rows as $result) {
-			$colors_data[] = array(
+			$colors_data[] = [
 				'palette_color_id' => $result['palette_color_id'],
 				'color'            => $result['color'],
 				'skin'             => $result['skin'],
 				'title'            => $result['title']
-			);
+			];
 		}
 
 		return $colors_data;
 	}
 
 	public function getPaletteColorsByColorId(int $palette_color_id): array {
-		$palette_colors_data = array();
+		$palette_colors_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "palette_color` pc LEFT JOIN `" . DB_PREFIX . "palette_color_description` pcd ON (pc.palette_color_id = pcd.palette_color_id) WHERE pcd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pc.palette_color_id = '" . (int)$palette_color_id . "' GROUP BY pc.palette_color_id ORDER BY pcd.title ASC");
 
 		foreach ($query->rows as $result) {
-			$palette_colors_data[] = array(
+			$palette_colors_data[] = [
 				'palette_color_id' => $result['palette_color_id'],
 				'color'            => $result['color'],
 				'skin'             => $result['skin'],
 				'title'            => $result['title']
-			);
+			];
 		}
 
 		return $palette_colors_data;
@@ -180,40 +180,40 @@ class ModelDesignPalette extends Model {
 	}
 
 	public function getColors(): array {
-		$skins = array();
+		$skins = [];
 
-		$skins[] = array('skin' => 'white','color' => '#FFFFFF','title' => 'White');
-		$skins[] = array('skin' => 'beige','color' => '#F5F5DC','title' => 'Beige');
-		$skins[] = array('skin' => 'ash','color' => '#E5E5D0','title' => 'Ash');
-		$skins[] = array('skin' => 'silver','color' => '#C2C2C2','title' => 'Silver');
-		$skins[] = array('skin' => 'grey','color' => '#808080','title' => 'Grey');
-		$skins[] = array('skin' => 'charcoal','color' => '#36454F','title' => 'Charcoal');
-		$skins[] = array('skin' => 'black','color' => '#000000','title' => 'Black');
-		$skins[] = array('skin' => 'pistachio','color' => '#93C572','title' => 'Pistachio');
-		$skins[] = array('skin' => 'lime','color' => '#A4C400','title' => 'Lime');
-		$skins[] = array('skin' => 'green','color' => '#60A917','title' => 'Green');
-		$skins[] = array('skin' => 'emerald','color' => '#008A00','title' => 'Emerald');
-		$skins[] = array('skin' => 'teal','color' => '#00ABA9','title' => 'Teal');
-		$skins[] = array('skin' => 'cyan','color' => '#1BA1E2','title' => 'Cyan');
-		$skins[] = array('skin' => 'cobalt','color' => '#0000FF','title' => 'Cobalt');
-		$skins[] = array('skin' => 'navy','color' => '#000084','title' => 'Navy');
-		$skins[] = array('skin' => 'indigo','color' => '#6A00FF','title' => 'Indigo');
-		$skins[] = array('skin' => 'violet','color' => '#AA00FF','title' => 'Violet');
-		$skins[] = array('skin' => 'pink','color' => '#F472D0','title' => 'Pink');
-		$skins[] = array('skin' => 'magenta','color' => '#D80073','title' => 'Magenta');
-		$skins[] = array('skin' => 'crimson','color' => '#A20025','title' => 'Crimson');
-		$skins[] = array('skin' => 'red','color' => '#E51400','title' => 'Red');
-		$skins[] = array('skin' => 'orange','color' => '#FA6800','title' => 'Orange');
-		$skins[] = array('skin' => 'amber','color' => '#F0A30A','title' => 'Amber');
-		$skins[] = array('skin' => 'citrus','color' => '#FFF033','title' => 'Citrus');
-		$skins[] = array('skin' => 'yellow','color' => '#E3C800','title' => 'Yellow');
-		$skins[] = array('skin' => 'brown','color' => '#825A2C','title' => 'Brown');
-		$skins[] = array('skin' => 'olive','color' => '#6D8759','title' => 'Olive');
-		$skins[] = array('skin' => 'steel','color' => '#647687','title' => 'Steel');
-		$skins[] = array('skin' => 'mauve','color' => '#76608A','title' => 'Mauve');
-		$skins[] = array('skin' => 'sienna','color' => '#B77733','title' => 'Sienna');
-		$skins[] = array('skin' => 'mist','color' => '#F2F2F2','title' => 'Mist');
-		$skins[] = array('skin' => 'clear','color' => 'transparent','title' => 'Clear');
+		$skins[] = ['skin' => 'white','color' => '#FFFFFF','title' => 'White'];
+		$skins[] = ['skin' => 'beige','color' => '#F5F5DC','title' => 'Beige'];
+		$skins[] = ['skin' => 'ash','color' => '#E5E5D0','title' => 'Ash'];
+		$skins[] = ['skin' => 'silver','color' => '#C2C2C2','title' => 'Silver'];
+		$skins[] = ['skin' => 'grey','color' => '#808080','title' => 'Grey'];
+		$skins[] = ['skin' => 'charcoal','color' => '#36454F','title' => 'Charcoal'];
+		$skins[] = ['skin' => 'black','color' => '#000000','title' => 'Black'];
+		$skins[] = ['skin' => 'pistachio','color' => '#93C572','title' => 'Pistachio'];
+		$skins[] = ['skin' => 'lime','color' => '#A4C400','title' => 'Lime'];
+		$skins[] = ['skin' => 'green','color' => '#60A917','title' => 'Green'];
+		$skins[] = ['skin' => 'emerald','color' => '#008A00','title' => 'Emerald'];
+		$skins[] = ['skin' => 'teal','color' => '#00ABA9','title' => 'Teal'];
+		$skins[] = ['skin' => 'cyan','color' => '#1BA1E2','title' => 'Cyan'];
+		$skins[] = ['skin' => 'cobalt','color' => '#0000FF','title' => 'Cobalt'];
+		$skins[] = ['skin' => 'navy','color' => '#000084','title' => 'Navy'];
+		$skins[] = ['skin' => 'indigo','color' => '#6A00FF','title' => 'Indigo'];
+		$skins[] = ['skin' => 'violet','color' => '#AA00FF','title' => 'Violet'];
+		$skins[] = ['skin' => 'pink','color' => '#F472D0','title' => 'Pink'];
+		$skins[] = ['skin' => 'magenta','color' => '#D80073','title' => 'Magenta'];
+		$skins[] = ['skin' => 'crimson','color' => '#A20025','title' => 'Crimson'];
+		$skins[] = ['skin' => 'red','color' => '#E51400','title' => 'Red'];
+		$skins[] = ['skin' => 'orange','color' => '#FA6800','title' => 'Orange'];
+		$skins[] = ['skin' => 'amber','color' => '#F0A30A','title' => 'Amber'];
+		$skins[] = ['skin' => 'citrus','color' => '#FFF033','title' => 'Citrus'];
+		$skins[] = ['skin' => 'yellow','color' => '#E3C800','title' => 'Yellow'];
+		$skins[] = ['skin' => 'brown','color' => '#825A2C','title' => 'Brown'];
+		$skins[] = ['skin' => 'olive','color' => '#6D8759','title' => 'Olive'];
+		$skins[] = ['skin' => 'steel','color' => '#647687','title' => 'Steel'];
+		$skins[] = ['skin' => 'mauve','color' => '#76608A','title' => 'Mauve'];
+		$skins[] = ['skin' => 'sienna','color' => '#B77733','title' => 'Sienna'];
+		$skins[] = ['skin' => 'mist','color' => '#F2F2F2','title' => 'Mist'];
+		$skins[] = ['skin' => 'clear','color' => 'transparent','title' => 'Clear'];
 
 		return $skins;
 	}

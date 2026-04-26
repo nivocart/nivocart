@@ -6,15 +6,15 @@
  */
 class ModelToolBarcode extends Model {
 	/**
-	* Get the barcode
-	*
-	* @param string $code code to print
-	* @param string $type type of barcode
-	* @param int $factor
-	* @param int $height
-	* @param string $color
-	* @return string html barcode string
-	*/
+	 * Get the barcode
+	 *
+	 * @param string $code code to print
+	 * @param string $type type of barcode
+	 * @param int $factor
+	 * @param int $height
+	 * @param string $color
+	 * @return string html barcode string
+	 */
 	public function getBarcode(string $code, string $type, int $factor, int $height, string $color = 'black'): string {
 		// Parameters
 		if (isset($code) && isset($type)) {
@@ -70,37 +70,37 @@ class ModelToolBarcode extends Model {
 	 */
 	protected function getBarcodeData(string $code, string $type): array {
 		$arrcode = match(strtoupper($type)) {
-			'TYPE_CODE_39'                    => $this->barcodeCode39($code, false, false), // CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9
-			'TYPE_CODE_39_CHECKSUM'           => $this->barcodeCode39($code, false, true),  // CODE 39 with checksum
-			'TYPE_CODE_39E'                   => $this->barcodeCode39($code, true, false),  // CODE 39 EXTENDED
-			'TYPE_CODE_39E_CHECKSUM'          => $this->barcodeCode39($code, true, true),   // CODE 39 EXTENDED + CHECKSUM
-			'TYPE_CODE_93'                    => $this->barcodeCode93($code),               // CODE 93 - USS-93
-			'TYPE_STANDARD_2_5'               => $this->barcodeS25($code, false),           // Standard 2 of 5
-			'TYPE_STANDARD_2_5_CHECKSUM'      => $this->barcodeS25($code, true),            // Standard 2 of 5 + CHECKSUM
-			'TYPE_INTERLEAVED_2_5'            => $this->barcodeI25($code, false),           // Interleaved 2 of 5
-			'TYPE_INTERLEAVED_2_5_CHECKSUM'   => $this->barcodeI25($code, true),            // Interleaved 2 of 5 + CHECKSUM
-			'TYPE_CODE_128'                   => $this->barcodeC128($code, ''),             // CODE 128
-			'TYPE_CODE_128_A'                 => $this->barcodeC128($code, 'A'),            // CODE 128 A
-			'TYPE_CODE_128_B'                 => $this->barcodeC128($code, 'B'),            // CODE 128 B
-			'TYPE_CODE_128_C'                 => $this->barcodeC128($code, 'C'),            // CODE 128 C
-			'TYPE_EAN_2'                      => $this->barcodeEanext($code, 2),            // 2-Digits UPC-Based Extension
-			'TYPE_EAN_5'                      => $this->barcodeEanext($code, 5),            // 5-Digits UPC-Based Extension
-			'TYPE_EAN_8'                      => $this->barcodeEanupc($code, 8),            // EAN 8
-			'TYPE_EAN_13'                     => $this->barcodeEanupc($code, 13),           // EAN 13
-			'TYPE_UPC_A'                      => $this->barcodeEanupc($code, 12),           // UPC-A
-			'TYPE_UPC_E'                      => $this->barcodeEanupc($code, 6),            // UPC-E
-			'TYPE_MSI'                        => $this->barcodeMsi($code, false),           // MSI (Variation of Plessey code)
-			'TYPE_MSI_CHECKSUM'               => $this->barcodeMsi($code, true),            // MSI + CHECKSUM (modulo 11)
-			'TYPE_POSTNET'                    => $this->barcodePostnet($code, false),       // POSTNET
-			'TYPE_PLANET'                     => $this->barcodePostnet($code, true),        // PLANET
-			'TYPE_RMS4CC'                     => $this->barcodeRms4cc($code, false),        // RMS4CC (Royal Mail 4-state Customer Code)
-			'TYPE_KIX'                        => $this->barcodeRms4cc($code, true),         // KIX (Klant index - Customer index)
-			'TYPE_IMB'                        => $this->barcodeImb($code),                  // IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200
-			'TYPE_CODABAR'                    => $this->barcodeCodabar($code),              // CODABAR
-			'TYPE_CODE_11'                    => $this->barcodeCode11($code),               // CODE 11
-			'TYPE_PHARMA_CODE'                => $this->barcodePharmacode($code),           // PHARMACODE
-			'TYPE_PHARMA_CODE_TWO_TRACKS'     => $this->barcodePharmacode2t($code),         // PHARMACODE TWO-TRACKS
-			default                           => false
+			'TYPE_CODE_39'                  => $this->barcodeCode39($code, false, false), // CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9
+			'TYPE_CODE_39_CHECKSUM'         => $this->barcodeCode39($code, false, true),  // CODE 39 with checksum
+			'TYPE_CODE_39E'                 => $this->barcodeCode39($code, true, false),  // CODE 39 EXTENDED
+			'TYPE_CODE_39E_CHECKSUM'        => $this->barcodeCode39($code, true, true),   // CODE 39 EXTENDED + CHECKSUM
+			'TYPE_CODE_93'                  => $this->barcodeCode93($code),               // CODE 93 - USS-93
+			'TYPE_STANDARD_2_5'             => $this->barcodeS25($code, false),           // Standard 2 of 5
+			'TYPE_STANDARD_2_5_CHECKSUM'    => $this->barcodeS25($code, true),            // Standard 2 of 5 + CHECKSUM
+			'TYPE_INTERLEAVED_2_5'          => $this->barcodeI25($code, false),           // Interleaved 2 of 5
+			'TYPE_INTERLEAVED_2_5_CHECKSUM' => $this->barcodeI25($code, true),            // Interleaved 2 of 5 + CHECKSUM
+			'TYPE_CODE_128'                 => $this->barcodeC128($code, ''),             // CODE 128
+			'TYPE_CODE_128_A'               => $this->barcodeC128($code, 'A'),            // CODE 128 A
+			'TYPE_CODE_128_B'               => $this->barcodeC128($code, 'B'),            // CODE 128 B
+			'TYPE_CODE_128_C'               => $this->barcodeC128($code, 'C'),            // CODE 128 C
+			'TYPE_EAN_2'                    => $this->barcodeEanext($code, 2),            // 2-Digits UPC-Based Extension
+			'TYPE_EAN_5'                    => $this->barcodeEanext($code, 5),            // 5-Digits UPC-Based Extension
+			'TYPE_EAN_8'                    => $this->barcodeEanupc($code, 8),            // EAN 8
+			'TYPE_EAN_13'                   => $this->barcodeEanupc($code, 13),           // EAN 13
+			'TYPE_UPC_A'                    => $this->barcodeEanupc($code, 12),           // UPC-A
+			'TYPE_UPC_E'                    => $this->barcodeEanupc($code, 6),            // UPC-E
+			'TYPE_MSI'                      => $this->barcodeMsi($code, false),           // MSI (Variation of Plessey code)
+			'TYPE_MSI_CHECKSUM'             => $this->barcodeMsi($code, true),            // MSI + CHECKSUM (modulo 11)
+			'TYPE_POSTNET'                  => $this->barcodePostnet($code, false),       // POSTNET
+			'TYPE_PLANET'                   => $this->barcodePostnet($code, true),        // PLANET
+			'TYPE_RMS4CC'                   => $this->barcodeRms4cc($code, false),        // RMS4CC (Royal Mail 4-state Customer Code)
+			'TYPE_KIX'                      => $this->barcodeRms4cc($code, true),         // KIX (Klant index - Customer index)
+			'TYPE_IMB'                      => $this->barcodeImb($code),                  // IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200
+			'TYPE_CODABAR'                  => $this->barcodeCodabar($code),              // CODABAR
+			'TYPE_CODE_11'                  => $this->barcodeCode11($code),               // CODE 11
+			'TYPE_PHARMA_CODE'              => $this->barcodePharmacode($code),           // PHARMACODE
+			'TYPE_PHARMA_CODE_TWO_TRACKS'   => $this->barcodePharmacode2t($code),         // PHARMACODE TWO-TRACKS
+			default                         => false
 		};
 
 		$arrcode = $this->convertBarcodeArrayToNewStyle($arrcode);
@@ -109,14 +109,14 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.
-	* General-purpose code very widely used world-wide
-	*
-	* @param $code (string) code to represent.
-	* @param $extended (boolean) if true uses the extended mode.
-	* @param $checksum (boolean) if true add a checksum to the code.
-	* @return array barcode representation.
-	*/
+	 * CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.
+	 * General-purpose code very widely used world-wide
+	 *
+	 * @param $code (string) code to represent.
+	 * @param $extended (boolean) if true uses the extended mode.
+	 * @param $checksum (boolean) if true add a checksum to the code.
+	 * @return array barcode representation.
+	 */
 	protected function barcodeCode39(string $code, bool $extended = false, bool $checksum = false): array {
 		$chr = [];
 
@@ -219,11 +219,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Encode a string to be used for CODE 39 Extended mode.
-	*
-	* @param string $code code to represent.
-	* @return bool|string encoded string.
-	*/
+	 * Encode a string to be used for CODE 39 Extended mode.
+	 *
+	 * @param string $code code to represent.
+	 * @return bool|string encoded string.
+	 */
 	protected function encodeCode39Ext(string $code): string {
 		$encode = [
 			chr(0)   => '%U',
@@ -372,11 +372,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Calculate CODE 39 checksum (modulo 43).
-	*
-	* @param string $code code to represent.
-	* @return string char checksum.
-	*/
+	 * Calculate CODE 39 checksum (modulo 43).
+	 *
+	 * @param string $code code to represent.
+	 * @return string char checksum.
+	 */
 	protected function checksumCode39(string $code): string {
 		$chars = [
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -399,12 +399,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* CODE 93 - USS-93
-	* Compact code similar to Code 39
-	*
-	* @param $code (string) code to represent.
-	* @return array barcode representation.
-	*/
+	 * CODE 93 - USS-93
+	 * Compact code similar to Code 39
+	 *
+	 * @param $code (string) code to represent.
+	 * @return array barcode representation.
+	 */
 	protected function barcodeCode93(string $code): array {
 		$chr = [];
 
@@ -643,11 +643,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Calculate CODE 93 checksum (modulo 47).
-	*
-	* @param $code (string) code to represent.
-	* @return string checksum code.
-	*/
+	 * Calculate CODE 93 checksum (modulo 47).
+	 *
+	 * @param $code (string) code to represent.
+	 * @return string checksum code.
+	 */
 	protected function checksumCode93(string $code): string {
 		$chars = [
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -701,11 +701,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Checksum for standard 2 of 5 barcodes.
-	*
-	* @param $code (string) code to process.
-	* @return int checksum.
-	*/
+	 * Checksum for standard 2 of 5 barcodes.
+	 *
+	 * @param $code (string) code to process.
+	 * @return int checksum.
+	 */
 	protected function checksumS25(string $code): int {
 		$len = strlen($code);
 
@@ -731,14 +731,14 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* MSI.
-	* Variation of Plessey code, with similar applications
-	* Contains digits (0 to 9) and encodes the data only in the width of bars.
-	*
-	* @param $code (string) code to represent.
-	* @param $checksum (boolean) if true add a checksum to the code (modulo 11)
-	* @return array barcode representation.
-	*/
+	 * MSI.
+	 * Variation of Plessey code, with similar applications
+	 * Contains digits (0 to 9) and encodes the data only in the width of bars.
+	 *
+	 * @param $code (string) code to represent.
+	 * @param $checksum (boolean) if true add a checksum to the code (modulo 11)
+	 * @return array barcode representation.
+	 */
 	protected function barcodeMsi(string $code, bool $checksum = false): array {
 		$chr = [];
 
@@ -803,14 +803,14 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Standard 2 of 5 barcodes.
-	* Used in airline ticket marking, photofinishing
-	* Contains digits (0 to 9) and encodes the data only in the width of bars.
-	*
-	* @param $code (string) code to represent.
-	* @param $checksum (boolean) if true add a checksum to the code
-	* @return array barcode representation.
-	*/
+	 * Standard 2 of 5 barcodes.
+	 * Used in airline ticket marking, photofinishing
+	 * Contains digits (0 to 9) and encodes the data only in the width of bars.
+	 *
+	 * @param $code (string) code to represent.
+	 * @param $checksum (boolean) if true add a checksum to the code
+	 * @return array barcode representation.
+	 */
 	protected function barcodeS25(string $code, bool $checksum = false): array {
 		$chr = [];
 
@@ -857,13 +857,13 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Convert binary barcode sequence to barcode array.
-	*
-	* @param $seq (string) barcode as binary sequence.
-	* @param $bararray (array) barcode array.
-	* @param array $bararray barcode array to fill up
-	* @return array barcode representation.
-	*/
+	 * Convert binary barcode sequence to barcode array.
+	 *
+	 * @param $seq (string) barcode as binary sequence.
+	 * @param $bararray (array) barcode array.
+	 * @param array $bararray barcode array to fill up
+	 * @return array barcode representation.
+	 */
 	protected function binseqToArray(string $seq, array $bararray = []): array {
 		$len = strlen($seq);
 		$w = 0;
@@ -890,14 +890,14 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Interleaved 2 of 5 barcodes.
-	* Compact numeric code, widely used in industry, air cargo
-	* Contains digits (0 to 9) and encodes the data in the width of both bars and spaces.
-	*
-	* @param $code (string) code to represent.
-	* @param $checksum (boolean) if true add a checksum to the code
-	* @return array barcode representation.
-	*/
+	 * Interleaved 2 of 5 barcodes.
+	 * Compact numeric code, widely used in industry, air cargo
+	 * Contains digits (0 to 9) and encodes the data in the width of both bars and spaces.
+	 *
+	 * @param $code (string) code to represent.
+	 * @param $checksum (boolean) if true add a checksum to the code
+	 * @return array barcode representation.
+	 */
 	protected function barcodeI25(string $code, bool $checksum = false): array {
 		$chr = [];
 
@@ -971,13 +971,13 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* C128 barcodes.
-	* Very capable code, excellent density, high reliability; very widely used world-wide
-	*
-	* @param $code (string) code to represent.
-	* @param $type (string) barcode type: A, B, C or empty for automatic switch (AUTO mode)
-	* @return array barcode representation.
-	*/
+	 * C128 barcodes.
+	 * Very capable code, excellent density, high reliability; very widely used world-wide
+	 *
+	 * @param $code (string) code to represent.
+	 * @param $type (string) barcode type: A, B, C or empty for automatic switch (AUTO mode)
+	 * @return array barcode representation.
+	 */
 	protected function barcodeC128(string $code, string $type = ''): array {
 		$chr = [
 			'212222', /* 00 */
@@ -1175,10 +1175,10 @@ class ModelToolBarcode extends Model {
 			}
 			default: { // MODE AUTO
 				// Split code into sequences
-				$sequence = array();
+				$sequence = [];
 
 				// Get numeric sequences (if any)
-				$numseq = array();
+				$numseq = [];
 
 				preg_match_all('/([0-9]{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
 
@@ -1350,11 +1350,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Split text code in A/B sequence for 128 code
-	*
-	* @param $code (string) code to split.
-	* @return array sequence
-	*/
+	 * Split text code in A/B sequence for 128 code
+	 *
+	 * @param $code (string) code to split.
+	 * @return array sequence
+	 */
 	protected function get128ABsequence(string $code): array {
 		$len = strlen($code);
 
@@ -1397,15 +1397,15 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* EAN13 and UPC-A barcodes.
-	* EAN13: European Article Numbering international retail product code
-	* UPC-A: Universal product code seen on almost all retail products in the USA and Canada
-	* UPC-E: Short version of UPC symbol
-	*
-	* @param $code (string) code to represent.
-	* @param $len (string) barcode type: 6 = UPC-E, 8 = EAN8, 13 = EAN13, 12 = UPC-A
-	* @return array barcode representation.
-	*/
+	 * EAN13 and UPC-A barcodes.
+	 * EAN13: European Article Numbering international retail product code
+	 * UPC-A: Universal product code seen on almost all retail products in the USA and Canada
+	 * UPC-E: Short version of UPC symbol
+	 *
+	 * @param $code (string) code to represent.
+	 * @param $len (string) barcode type: 6 = UPC-E, 8 = EAN8, 13 = EAN13, 12 = UPC-A
+	 * @return array barcode representation.
+	 */
 	protected function barcodeEanupc(string $code, int $len = 13): array {
 		$upce = false;
 
@@ -1636,14 +1636,14 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* UPC-Based Extensions
-	* 2-Digit Ext.: Used to indicate magazines and newspaper issue numbers
-	* 5-Digit Ext.: Used to mark suggested retail price of books
-	*
-	* @param $code (string) code to represent.
-	* @param $len (int) barcode type: 2 = 2-Digit, 5 = 5-Digit
-	* @return array barcode representation.
-	*/
+	 * UPC-Based Extensions
+	 * 2-Digit Ext.: Used to indicate magazines and newspaper issue numbers
+	 * 5-Digit Ext.: Used to mark suggested retail price of books
+	 *
+	 * @param $code (string) code to represent.
+	 * @param $len (int) barcode type: 2 = 2-Digit, 5 = 5-Digit
+	 * @return array barcode representation.
+	 */
 	protected function barcodeEanext(string $code, int $len = 5): array {
 		// Padding
 		$code = str_pad($code, $len, '0', STR_PAD_LEFT);
@@ -1724,13 +1724,13 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* POSTNET and PLANET barcodes.
-	* Used by U.S. Postal Service for automated mail sorting
-	*
-	* @param $code (string) zip code to represent. Must be a string containing a zip code of the form DDDDD or DDDDD-DDDD.
-	* @param $planet (boolean) if true print the PLANET barcode, otherwise print POSTNET
-	* @return array barcode representation.
-	*/
+	 * POSTNET and PLANET barcodes.
+	 * Used by U.S. Postal Service for automated mail sorting
+	 *
+	 * @param $code (string) zip code to represent. Must be a string containing a zip code of the form DDDDD or DDDDD-DDDD.
+	 * @param $planet (boolean) if true print the PLANET barcode, otherwise print POSTNET
+	 * @return array barcode representation.
+	 */
 	protected function barcodePostnet(string $code, bool $planet = false): array {
 		// Bar length
 		if ($planet) {
@@ -1818,15 +1818,15 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* RMS4CC - CBC - KIX
-	* RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code) - KIX (Klant index - Customer index)
-	* RM4SCC is the name of the barcode symbology used by the Royal Mail for its Cleanmail service.
-	*
-	* @param $code (string) code to print
-	* @param $kix (boolean) if true prints the KIX variation (doesn't use the start and end symbols, and the checksum)
-	*     - in this case the house number must be suffixed with an X and placed at the end of the code.
-	* @return array barcode representation.
-	*/
+	 * RMS4CC - CBC - KIX
+	 * RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code) - KIX (Klant index - Customer index)
+	 * RM4SCC is the name of the barcode symbology used by the Royal Mail for its Cleanmail service.
+	 *
+	 * @param $code (string) code to print
+	 * @param $kix (boolean) if true prints the KIX variation (doesn't use the start and end symbols, and the checksum)
+	 *     - in this case the house number must be suffixed with an X and placed at the end of the code.
+	 * @return array barcode representation.
+	 */
 	protected function barcodeRms4cc(string $code, bool $kix = false): array {
 		$notkix = !$kix;
 		// Bar mode
@@ -1971,12 +1971,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* CODABAR barcodes.
-	* Older code often used in library systems
-	*
-	* @param $code (string) code to represent.
-	* @return array barcode representation.
-	*/
+	 * CODABAR barcodes.
+	 * Older code often used in library systems
+	 *
+	 * @param $code (string) code to represent.
+	 * @return array barcode representation.
+	 */
 	protected function barcodeCodabar(string $code): array {
 		$chr = [
 			'0' => '11111221',
@@ -2035,12 +2035,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* CODE11 barcodes.
-	* Used primarily for labeling telecommunications equipment
-	*
-	* @param $code (string) code to represent.
-	* @return array barcode representation.
-	*/
+	 * CODE11 barcodes.
+	 * Used primarily for labeling telecommunications equipment
+	 *
+	 * @param $code (string) code to represent.
+	 * @return array barcode representation.
+	 */
 	protected function barcodeCode11(string $code): array {
 		$chr = [
 			'0' => '111121',
@@ -2150,12 +2150,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Pharmacode
-	* Contains digits (0 to 9)
-	*
-	* @param $code (string) code to represent.
-	* @return array barcode representation.
-	*/
+	 * Pharmacode
+	 * Contains digits (0 to 9)
+	 *
+	 * @param $code (string) code to represent.
+	 * @return array barcode representation.
+	 */
 	protected function barcodePharmacode(string $code): array {
 		$seq = '';
 		$code = intval($code);
@@ -2181,12 +2181,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Pharmacode two-track
-	* Contains digits (0 to 9)
-	*
-	* @param $code (string) code to represent.
-	* @return array barcode representation.
-	*/
+	 * Pharmacode two-track
+	 * Contains digits (0 to 9)
+	 *
+	 * @param $code (string) code to represent.
+	 * @return array barcode representation.
+	 */
 	protected function barcodePharmacode2t(string $code): array {
 		$seq = '';
 		$code = intval($code);
@@ -2225,30 +2225,30 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200 (requires PHP bcmath extension)
-	* Intelligent Mail barcode is a 65-bar code for use on mail in the United States.
-	* The fields are described as follows: The Barcode Identifier shall be assigned by USPS to encode the
-	* presort identification that is currently printed in human readable form on the optional endorsement line (OEL)
-	* as well as for future USPS use. This shall be two digits, with the second digit in the range of 0–4. The
-	* allowable encoding ranges shall be 00–04, 10–14, 20–24, 30–34, 40–44, 50–54, 60–64, 70–74, 80–84, and
-	* 90–94. The Service Type Identifier shall be assigned by USPS for any combination of services requested
-	* on the mailpiece. The allowable encoding range shall be 000http://it2.php.net/manual/en/function.dechex.php–999.
-	* Each 3-digit value shall correspond to a particular mail class with a particular combination of service(s). Each
-	* service program, such as OneCode Confirm and OneCode ACS, shall provide the list of Service Type Identifier
-	* values. The Mailer or Customer Identifier shall be assigned by USPS as a unique, 6 or 9 digit number
-	* that identifies a business entity. The allowable encoding range for the 6 digit Mailer ID shall be 000000-
-	* 899999, while the allowable encoding range for the 9 digit Mailer ID shall be 900000000-999999999. The
-	* Serial or Sequence Number shall be assigned by the mailer for uniquely identifying and tracking mailpieces. The
-	* allowable encoding range shall be 000000000–999999999 when used with a 6 digit Mailer ID and 000000-999999 when
-	* used with a 9 digit Mailer ID. e. The Delivery Point ZIP Code shall be assigned by the mailer for routing the
-	* mailpiece. This shall replace POSTNET for routing the mailpiece to its final delivery point. The length may be
-	* 0, 5, 9, or 11 digits. The allowable encoding ranges shall be no ZIP Code, 00000–99999,  000000000–999999999,
-	* and 00000000000–99999999999.
-	*
-	* @param $code (string) code to print, separate the ZIP (routing code) from the rest using a minus char '-'
-	*     (BarcodeID_ServiceTypeID_MailerID_SerialNumber-RoutingCode)
-	* @return array barcode representation.
-	*/
+	 * IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200 (requires PHP bcmath extension)
+	 * Intelligent Mail barcode is a 65-bar code for use on mail in the United States.
+	 * The fields are described as follows: The Barcode Identifier shall be assigned by USPS to encode the
+	 * presort identification that is currently printed in human readable form on the optional endorsement line (OEL)
+	 * as well as for future USPS use. This shall be two digits, with the second digit in the range of 0–4. The
+	 * allowable encoding ranges shall be 00–04, 10–14, 20–24, 30–34, 40–44, 50–54, 60–64, 70–74, 80–84, and
+	 * 90–94. The Service Type Identifier shall be assigned by USPS for any combination of services requested
+	 * on the mailpiece. The allowable encoding range shall be 000http://it2.php.net/manual/en/function.dechex.php–999.
+	 * Each 3-digit value shall correspond to a particular mail class with a particular combination of service(s). Each
+	 * service program, such as OneCode Confirm and OneCode ACS, shall provide the list of Service Type Identifier
+	 * values. The Mailer or Customer Identifier shall be assigned by USPS as a unique, 6 or 9 digit number
+	 * that identifies a business entity. The allowable encoding range for the 6 digit Mailer ID shall be 000000-
+	 * 899999, while the allowable encoding range for the 9 digit Mailer ID shall be 900000000-999999999. The
+	 * Serial or Sequence Number shall be assigned by the mailer for uniquely identifying and tracking mailpieces. The
+	 * allowable encoding range shall be 000000000–999999999 when used with a 6 digit Mailer ID and 000000-999999 when
+	 * used with a 9 digit Mailer ID. e. The Delivery Point ZIP Code shall be assigned by the mailer for routing the
+	 * mailpiece. This shall replace POSTNET for routing the mailpiece to its final delivery point. The length may be
+	 * 0, 5, 9, or 11 digits. The allowable encoding ranges shall be no ZIP Code, 00000–99999,  000000000–999999999,
+	 * and 00000000000–99999999999.
+	 *
+	 * @param $code (string) code to print, separate the ZIP (routing code) from the rest using a minus char '-'
+	 *     (BarcodeID_ServiceTypeID_MailerID_SerialNumber-RoutingCode)
+	 * @return array barcode representation.
+	 */
 	protected function barcodeImb(string $code): array {
 		$asc_chr = [
 			4,
@@ -2530,10 +2530,10 @@ class ModelToolBarcode extends Model {
 
 		// Conversion of Routing Code
 		$binary_code = match(strlen($routing_code)) {
-			0  => 0,
-			5  => bcadd($routing_code, '1'),
-			9  => bcadd($routing_code, '100001'),
-			11 => bcadd($routing_code, '1000100001'),
+			0       => 0,
+			5       => bcadd($routing_code, '1'),
+			9       => bcadd($routing_code, '100001'),
+			11      => bcadd($routing_code, '1000100001'),
 			default => false
 		};
 
@@ -2651,11 +2651,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200
-	*
-	* @param $code (string) pre-formatted IMB barcode (65 chars "FADT")
-	* @return array barcode representation.
-	*/
+	 * IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200
+	 *
+	 * @param $code (string) pre-formatted IMB barcode (65 chars "FADT")
+	 * @return array barcode representation.
+	 */
 	protected function barcodeImbPre(string $code): array {
 		if (!preg_match('/^[fadtFADT]{65}$/', $code) === 1) {
 			return false;
@@ -2687,12 +2687,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Convert large integer number to hexadecimal representation.
-	* (requires PHP bcmath extension)
-	*
-	* @param $number (string) number to convert specified as a string
-	* @return string hexadecimal representation
-	*/
+	 * Convert large integer number to hexadecimal representation.
+	 * (requires PHP bcmath extension)
+	 *
+	 * @param $number (string) number to convert specified as a string
+	 * @return string hexadecimal representation
+	 */
 	protected function decToHex(string $number): string {
 		$hex = [];
 
@@ -2716,12 +2716,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Convert large hexadecimal number to decimal representation (string).
-	* (requires PHP bcmath extension)
-	*
-	* @param $hex (string) hexadecimal number to convert specified as a string
-	* @return string hexadecimal representation
-	*/
+	 * Convert large hexadecimal number to decimal representation (string).
+	 * (requires PHP bcmath extension)
+	 *
+	 * @param $hex (string) hexadecimal number to convert specified as a string
+	 * @return string hexadecimal representation
+	 */
 	protected function hexToDec(string $hex): string {
 		$dec = 0;
 		$bitval = 1;
@@ -2737,11 +2737,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Intelligent Mail Barcode calculation of Frame Check Sequence
-	*
-	* @param $code_arr (string) array of hexadecimal values (13 bytes holding 102 bits right justified).
-	* @return int 11 bit Frame Check Sequence as integer (decimal base)
-	*/
+	 * Intelligent Mail Barcode calculation of Frame Check Sequence
+	 *
+	 * @param $code_arr (string) array of hexadecimal values (13 bytes holding 102 bits right justified).
+	 * @return int 11 bit Frame Check Sequence as integer (decimal base)
+	 */
 	protected function imbCrc11fcs(string $code_arr): int {
 		$genpoly = 0x0F35; // Generator polynomial
 		$fcs = 0x07FF; // Frame Check Sequence
@@ -2780,11 +2780,11 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Reverse unsigned short value
-	*
-	* @param $num (int) value to reversr
-	* @return int reversed value
-	*/
+	 * Reverse unsigned short value
+	 *
+	 * @param $num (int) value to reversr
+	 * @return int reversed value
+	 */
 	protected function imbReverseUs(int $num): int {
 		$rev = 0;
 
@@ -2798,12 +2798,12 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* generate Nof13 tables used for Intelligent Mail Barcode
-	*
-	* @param $n (int) is the type of table: 2 for 2of13 table, 5 for 5of13table
-	* @param $size (int) size of table (78 for n=2 and 1287 for n=5)
-	* @return array requested table
-	*/
+	 * generate Nof13 tables used for Intelligent Mail Barcode
+	 *
+	 * @param $n (int) is the type of table: 2 for 2of13 table, 5 for 5of13table
+	 * @param $size (int) size of table (78 for n=2 and 1287 for n=5)
+	 * @return array requested table
+	 */
 	protected function imbTables(int $n, int $size): array {
 		$table = [];
 
@@ -2842,10 +2842,10 @@ class ModelToolBarcode extends Model {
 	}
 
 	/**
-	* Convert BarcodeData to Array
-	*
-	* @return output array
-	*/
+	 * Convert BarcodeData to Array
+	 *
+	 * @return output array
+	 */
 	protected function convertBarcodeArrayToNewStyle($oldBarcodeArray): array {
 		$newBarcodeArray = [];
 

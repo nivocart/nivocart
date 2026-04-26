@@ -49,14 +49,14 @@ class ControllerModuleSpecial extends Controller {
 
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'pd.name',
 			'order' => 'ASC',
 			'start' => 0,
 			'limit' => $setting['limit']
-		);
+		];
 
 		$results = $this->model_catalog_product->getProductSpecials($data);
 
@@ -110,7 +110,7 @@ class ControllerModuleSpecial extends Controller {
 			// Quote redirect
 			$quote = ($result['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'product_id'      => $result['product_id'],
 				'thumb'           => $image,
 				'label'           => $label,
@@ -132,7 +132,7 @@ class ControllerModuleSpecial extends Controller {
 				'rating'          => (int)$rating,
 				'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 				'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['module'] = $module++;

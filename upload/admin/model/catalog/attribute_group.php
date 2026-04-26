@@ -94,7 +94,7 @@ class ModelCatalogAttributeGroup extends Model {
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "attribute_group_description` WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
 
 			foreach ($query->rows as $result) {
-				$attribute_group_data[$result['language_id']] = array('name' => $result['name']);
+				$attribute_group_data[$result['language_id']] = ['name' => $result['name']];
 			}
 
 			$this->cache->set('attribute.group.' . (int)$this->config->get('config_language_id'), $attribute_group_data);

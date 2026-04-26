@@ -57,7 +57,7 @@ class Language {
 	 * @return array<string, string>
 	 */
 	public function load(string $filename): array {
-		$_ = array();
+		$_ = [];
 
 		$file = DIR_LANGUAGE . $this->standard . '/' . $filename . '.php';
 

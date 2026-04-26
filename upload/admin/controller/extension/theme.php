@@ -94,7 +94,7 @@ class ControllerExtensionTheme extends Controller {
 
 				// Check if template is Active
 				$active = ($template === $extension) ? true : false;
-	
+
 				$action = [];
 
 				if (!in_array($extension, $extensions)) {

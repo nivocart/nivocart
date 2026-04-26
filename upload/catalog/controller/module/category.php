@@ -27,7 +27,7 @@ class ControllerModuleCategory extends Controller {
 		if (isset($this->request->get['path']) && !is_array($this->request->get['path'])) {
 			$parts = explode('_', (string)$this->request->get['path']);
 		} else {
-			$parts = array();
+			$parts = [];
 		}
 
 		$this->data['category_id'] = (isset($parts[0])) ? $parts[0] : 0;
@@ -36,17 +36,17 @@ class ControllerModuleCategory extends Controller {
 		$empty_category = $this->config->get('config_empty_category');
 		$product_count = $this->config->get('config_product_count');
 
-		$this->data['categories'] = array();
+		$this->data['categories'] = [];
 
 		$parent_id = 0;
 
 		$categories = $this->model_catalog_category->getCategories($parent_id);
 
 		foreach ($categories as $category) {
-			$data = array(
+			$data = [
 				'filter_category_id'  => $category['category_id'],
 				'filter_sub_category' => true
-			);
+			];
 
 			if ($product_count) {
 				$total = $this->model_catalog_product->getTotalProducts($data);
@@ -54,15 +54,15 @@ class ControllerModuleCategory extends Controller {
 				$total = 0;
 			}
 
-			$children_data = array();
+			$children_data = [];
 
 			$children = $this->model_catalog_category->getCategories($category['category_id']);
 
 			foreach ($children as $child) {
-				$data = array(
+				$data = [
 					'filter_category_id'  => $child['category_id'],
 					'filter_sub_category' => true
-				);
+				];
 
 				if (!$empty_category || $product_count) {
 					$product_total = $this->model_catalog_product->getTotalProducts($data);
@@ -71,20 +71,20 @@ class ControllerModuleCategory extends Controller {
 				}
 
 				if ($empty_category || $product_total > 0) {
-					$children_data[] = array(
+					$children_data[] = [
 						'category_id' => $child['category_id'],
 						'name'        => $child['name'] . ($product_count ? ' (' . $product_total . ')' : ''),
 						'href'        => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'], 'SSL')
-					);
+					];
 				}
 			}
 
-			$this->data['categories'][] = array(
+			$this->data['categories'][] = [
 				'category_id' => $category['category_id'],
 				'name'        => $category['name'] . ($product_count ? ' (' . $total . ')' : ''),
 				'children'    => $children_data,
 				'href'        => $this->url->link('product/category', 'path=' . $category['category_id'], 'SSL')
-			);
+			];
 		}
 
 		// Template
@@ -97,5 +97,5 @@ class ControllerModuleCategory extends Controller {
 		}
 
 		$this->render();
-  	}
+	}
 }

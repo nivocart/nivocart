@@ -21,7 +21,7 @@ class ModelShippingDigital extends Model {
 			$status = false;
 		}
 
-		$total_data = array();
+		$total_data = [];
 		$total = 0;
 		$taxes = $this->cart->getTaxes();
 
@@ -42,7 +42,7 @@ class ModelShippingDigital extends Model {
 				$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
 			}
 
-			$sort_order = array();
+			$sort_order = [];
 
 			foreach ($total_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -55,26 +55,26 @@ class ModelShippingDigital extends Model {
 			$status = false;
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($status) {
-			$quote_data = array();
+			$quote_data = [];
 
-			$quote_data['digital'] = array(
+			$quote_data['digital'] = [
 				'code'         => 'digital.digital',
 				'title'        => $this->language->get('text_description'),
 				'cost'         => 0.00,
 				'tax_class_id' => 0,
 				'text'         => $this->currency->format(0.00, $this->config->get('config_currency'))
-			);
+			];
 
-			$method_data = array(
+			$method_data = [
 				'code'       => 'digital',
 				'title'      => $this->language->get('text_title'),
 				'quote'      => $quote_data,
 				'sort_order' => $this->config->get('digital_sort_order'),
 				'error'      => false
-			);
+			];
 		}
 
 		return $method_data;

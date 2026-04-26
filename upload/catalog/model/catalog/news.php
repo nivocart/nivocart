@@ -23,13 +23,13 @@ class ModelCatalogNews extends Model {
 	public function getNews(array $data = []): array {
 		$sql = "SELECT *, nd.title AS title FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (nd.news_id = n.news_id) LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n2s.news_id = n.news_id) WHERE n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.status = '1'";
 
-		$sort_data = array(
+		$sort_data = [
 			'nd.title',
 			'nd.description',
 			'n.date_added',
 			'n.sort_order',
 			'n.viewed'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
@@ -64,7 +64,7 @@ class ModelCatalogNews extends Model {
 		$news_data = $this->cache->get('news_short.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$limit);
 
 		if (!$news_data) {
-			$news_data = array();
+			$news_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n.news_id = n2s.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'  GROUP BY n.date_added ORDER BY n.date_added DESC, n.sort_order ASC LIMIT 0," . (int)$limit);
 
@@ -82,7 +82,7 @@ class ModelCatalogNews extends Model {
 		$news_data = $this->cache->get('news_all.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'));
 
 		if (!$news_data) {
-			$news_data = array();
+			$news_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news` n LEFT JOIN `" . DB_PREFIX . "news_description` nd ON (n.news_id = nd.news_id) LEFT JOIN `" . DB_PREFIX . "news_to_store` n2s ON (n.news_id = n2s.news_id) WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND n.status = '1'  GROUP BY n.date_added ORDER BY n.date_added DESC, n.sort_order ASC");
 
@@ -111,41 +111,41 @@ class ModelCatalogNews extends Model {
 
 	// Download
 	public function getDownloads(): array {
-		$news_download_data = array();
+		$news_download_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_download`");
 
 		foreach ($query->rows as $result) {
-			$news_download_data[] = array(
+			$news_download_data[] = [
 				'news_download_id' => $result['news_download_id'],
 				'filename'         => $result['filename'],
 				'mask'             => $result['mask'],
 				'date_added'       => $result['date_added']
-			);
+			];
 		}
 
 		return $news_download_data;
 	}
 
 	public function getNewsDownloads(int $news_id): array {
-		$news_downloads_data = array();
+		$news_downloads_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_to_download` WHERE news_id = '" . (int)$news_id . "'");
 
 		foreach ($query->rows as $result) {
-			$news_downloads_data [] = array('news_download_id' => $result['news_download_id']);
+			$news_downloads_data [] = ['news_download_id' => $result['news_download_id']];
 		}
 
 		return $news_downloads_data;
 	}
 
 	public function getNewsDownloadDescription(int $news_download_id): array {
-		$news_download_description_data = array();
+		$news_download_description_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "news_download_description` WHERE news_download_id = '" . (int)$news_download_id . "'");
 
 		foreach ($query->rows as $result) {
-			$news_download_description_data[$result['language_id']] = array('name' => $result['name']);
+			$news_download_description_data[$result['language_id']] = ['name' => $result['name']];
 		}
 
 		return $news_download_description_data;

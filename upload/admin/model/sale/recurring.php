@@ -115,16 +115,16 @@ class ModelSaleRecurring extends Model {
 
 		foreach ($results as $result) {
 			$type = match((int)$result['type']) {
-				0 => $this->language->get('text_transaction_created'),
-				1 => $this->language->get('text_transaction_payment'),
-				2 => $this->language->get('text_transaction_outstanding_payment'),
-				3 => $this->language->get('text_transaction_skipped'),
-				4 => $this->language->get('text_transaction_failed'),
-				5 => $this->language->get('text_transaction_cancelled'),
-				6 => $this->language->get('text_transaction_suspended'),
-				7 => $this->language->get('text_transaction_suspended_failed'),
-				8 => $this->language->get('text_transaction_outstanding_failed'),
-				9 => $this->language->get('text_transaction_expired'),
+				0       => $this->language->get('text_transaction_created'),
+				1       => $this->language->get('text_transaction_payment'),
+				2       => $this->language->get('text_transaction_outstanding_payment'),
+				3       => $this->language->get('text_transaction_skipped'),
+				4       => $this->language->get('text_transaction_failed'),
+				5       => $this->language->get('text_transaction_cancelled'),
+				6       => $this->language->get('text_transaction_suspended'),
+				7       => $this->language->get('text_transaction_suspended_failed'),
+				8       => $this->language->get('text_transaction_outstanding_failed'),
+				9       => $this->language->get('text_transaction_expired'),
 				default => ''
 			};
 
@@ -142,12 +142,12 @@ class ModelSaleRecurring extends Model {
 		$status = $status ?? '';
 
 		return match((int)$status) {
-			1 => $this->language->get('text_status_inactive'),
-			2 => $this->language->get('text_status_active'),
-			3 => $this->language->get('text_status_suspended'),
-			4 => $this->language->get('text_status_cancelled'),
-			5 => $this->language->get('text_status_expired'),
-			6 => $this->language->get('text_status_pending'),
+			1       => $this->language->get('text_status_inactive'),
+			2       => $this->language->get('text_status_active'),
+			3       => $this->language->get('text_status_suspended'),
+			4       => $this->language->get('text_status_cancelled'),
+			5       => $this->language->get('text_status_expired'),
+			6       => $this->language->get('text_status_pending'),
 			default => ''
 		};
 	}
@@ -185,7 +185,7 @@ class ModelSaleRecurring extends Model {
 	}
 
 	public function addOrderRecurringTransaction(int $order_recurring_id, int $type, $amount = 0): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$order_recurring_id . "', `type` = '" . (int)$type . "', `amount` = " . (double)$amount) . ", `created` = NOW()";
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_recurring_transaction` SET `order_recurring_id` = '" . (int)$order_recurring_id . "', `type` = '" . (int)$type . "', `amount` = " . (float)$amount) . ", `created` = NOW()";
 	}
 
 	public function updateOrderRecurringStatus(int $order_recurring_id, int $status): void {

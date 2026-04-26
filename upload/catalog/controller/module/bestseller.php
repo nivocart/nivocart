@@ -12,7 +12,7 @@ class ControllerModuleBestSeller extends Controller {
 
 		$this->language->load('module/' . $this->_name);
 
-      	$this->data['heading_title'] = $this->language->get('heading_title');
+		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		// Module
 		$this->data['theme'] = $this->config->get($this->_name . '_theme');
@@ -49,7 +49,7 @@ class ControllerModuleBestSeller extends Controller {
 
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$results = $this->model_catalog_product->getBestSellerProducts($setting['limit']);
 
@@ -103,7 +103,7 @@ class ControllerModuleBestSeller extends Controller {
 			// Quote redirect
 			$quote = ($result['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'product_id'      => $result['product_id'],
 				'thumb'           => $image,
 				'label'           => $label,
@@ -125,7 +125,7 @@ class ControllerModuleBestSeller extends Controller {
 				'rating'          => (int)$rating,
 				'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 				'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['module'] = $module++;

@@ -193,7 +193,7 @@ class ControllerBlogComment extends Controller {
 		$page = $this->request->get['page'] ?? 1;
 
 		$data = [
-			'sort' => $sort,
+			'sort'  => $sort,
 			'order' => $order,
 			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit' => $this->config->get('config_admin_limit')
@@ -337,7 +337,7 @@ class ControllerBlogComment extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-	 	if (isset($this->error['article_title'])) {
+		if (isset($this->error['article_title'])) {
 			$this->data['error_article_title'] = $this->error['article_title'];
 		} else {
 			$this->data['error_article_title'] = '';
@@ -349,7 +349,7 @@ class ControllerBlogComment extends Controller {
 			$this->data['error_author'] = '';
 		}
 
-	 	if (isset($this->error['comment'])) {
+		if (isset($this->error['comment'])) {
 			$this->data['error_comment'] = $this->error['comment'];
 		} else {
 			$this->data['error_comment'] = '';

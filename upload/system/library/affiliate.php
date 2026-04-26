@@ -62,7 +62,7 @@ class Affiliate {
 	 *
 	 * @param 	$registry
 	 */
-    public function __construct(Registry $registry) {
+	public function __construct(Registry $registry) {
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');

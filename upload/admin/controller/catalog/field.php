@@ -231,12 +231,12 @@ class ControllerCatalogField extends Controller {
 			];
 
 			$this->data['fields'][] = [
-				'field_id'       => $result['field_id'],
-				'title'          => $result['title'],
-				'sort_order'     => $result['sort_order'],
-				'status'         => $result['status'],
-				'selected'       => isset($this->request->post['selected']) && in_array($result['field_id'], $this->request->post['selected']),
-				'action'         => $action
+				'field_id'   => $result['field_id'],
+				'title'      => $result['title'],
+				'sort_order' => $result['sort_order'],
+				'status'     => $result['status'],
+				'selected'   => isset($this->request->post['selected']) && in_array($result['field_id'], $this->request->post['selected']),
+				'action'     => $action
 			];
 		}
 

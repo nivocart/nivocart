@@ -86,8 +86,8 @@ abstract class Controller {
 	 * @param int $status
 	 */
 	protected function redirect(string $url, int $status = 302) {
-		header('Location: ' . str_replace(array('&amp;', "\n", "\r"), array('&', '', ''), $url), true, $status);
-		exit(); 
+		header('Location: ' . str_replace(['&amp;', "\n", "\r"], ['&', '', ''], $url), true, $status);
+		exit();
 	}
 
 	/**
@@ -110,7 +110,7 @@ abstract class Controller {
 
 		} else {
 			trigger_error('Error: Could not load controller ' . $child . '!');
-			exit(); 
+			exit();
 		}
 	}
 
@@ -167,7 +167,7 @@ abstract class Controller {
 
 		} else {
 			trigger_error('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
-			exit(); 
+			exit();
 		}
 	}
 }

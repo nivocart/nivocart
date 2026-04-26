@@ -53,7 +53,7 @@ class ControllerCommonContentHigh extends Controller {
 			$layout_id = $this->config->get('config_layout_id');
 		}
 
-		$module_data = array();
+		$module_data = [];
 
 		$this->load->model('setting/extension');
 
@@ -65,17 +65,17 @@ class ControllerCommonContentHigh extends Controller {
 			if ($modules) {
 				foreach ($modules as $module) {
 					if ($module['layout_id'] == $layout_id && $module['position'] == 'content_high' && $module['status']) {
-						$module_data[] = array(
+						$module_data[] = [
 							'code'       => $extension['code'],
 							'setting'    => $module,
 							'sort_order' => $module['sort_order']
-						);
+						];
 					}
 				}
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($module_data as $key => $value) {
 			$sort_order[$key] = $value['sort_order'];
@@ -83,7 +83,7 @@ class ControllerCommonContentHigh extends Controller {
 
 		array_multisort($sort_order, SORT_ASC, $module_data);
 
-		$this->data['modules'] = array();
+		$this->data['modules'] = [];
 
 		foreach ($module_data as $module) {
 			$module = $this->getChild('module/' . $module['code'], $module['setting']);

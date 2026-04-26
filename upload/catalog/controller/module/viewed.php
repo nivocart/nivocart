@@ -49,7 +49,7 @@ class ControllerModuleViewed extends Controller {
 
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
-		$products = array();
+		$products = [];
 
 		if (isset($this->request->cookie['viewed'])) {
 			$products = explode(',', $this->request->cookie['viewed']);
@@ -60,7 +60,7 @@ class ControllerModuleViewed extends Controller {
 		if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/product') {
 			$product_id = $this->request->get['product_id'];
 
-			$products = array_diff($products, array($product_id));
+			$products = array_diff($products, [$product_id]);
 
 			array_unshift($products, $product_id);
 
@@ -73,7 +73,7 @@ class ControllerModuleViewed extends Controller {
 
 		$products = array_slice($products, 0, (int)$setting['limit']);
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		foreach ($products as $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
@@ -127,8 +127,8 @@ class ControllerModuleViewed extends Controller {
 
 				// Quote redirect
 				$quote = ($product_info['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
-	
-				$this->data['products'][] = array(
+
+				$this->data['products'][] = [
 					'product_id'      => $product_info['product_id'],
 					'thumb'           => $image,
 					'label'           => $label,
@@ -150,7 +150,7 @@ class ControllerModuleViewed extends Controller {
 					'rating'          => (int)$rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 					'href'            => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL')
-				);
+				];
 			}
 		}
 

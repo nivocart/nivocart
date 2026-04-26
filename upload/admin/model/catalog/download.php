@@ -106,7 +106,7 @@ class ModelCatalogDownload extends Model {
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "download_description` WHERE download_id = '" . (int)$download_id . "'");
 
 			foreach ($query->rows as $result) {
-				$download_description_data[$result['language_id']] = array('name' => $result['name']);
+				$download_description_data[$result['language_id']] = ['name' => $result['name']];
 			}
 
 			$this->cache->set('download.' . (int)$this->config->get('config_language_id'), $download_description_data);

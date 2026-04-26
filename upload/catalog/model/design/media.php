@@ -31,7 +31,7 @@ class ModelDesignMedia extends Model {
 
 		$ext = substr(strrchr($filename, '.'), 1);
 
-		$video = array('mp4','ogv','ogg','webm','m4v','wmv','flv');
+		$video = ['mp4','ogv','ogg','webm','m4v','wmv','flv'];
 
 		if (!in_array(strtolower($ext), $video)) {
 			$type = 'audio';

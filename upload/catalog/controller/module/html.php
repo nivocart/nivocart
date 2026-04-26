@@ -30,10 +30,10 @@ class ControllerModuleHtml extends Controller {
 
 			switch ($position) {
 				case "tab" . $i:
-				$this->data['code'] = $this->data['code' . $i];
-				$this->data['theme'] = $this->data['theme' . $i];
-				$this->data['title'] = $this->data['title' . $i];
-				break;
+					$this->data['code'] = $this->data['code' . $i];
+					$this->data['theme'] = $this->data['theme' . $i];
+					$this->data['title'] = $this->data['title' . $i];
+					break;
 			}
 		}
 

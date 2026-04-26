@@ -51,24 +51,24 @@ class ControllerToolExportImport extends Controller {
 
 		switch (strtolower(substr($val, -1))) {
 			case 'm': $val = (int)substr($val, 0, -1) * 1048576;
-			break;
+				break;
 			case 'k': $val = (int)substr($val, 0, -1) * 1024;
-			break;
+				break;
 			case 'g': $val = (int)substr($val, 0, -1) * 1073741824;
-			break;
+				break;
 			case 'b':
-			switch (strtolower(substr($val, -2, 1))) {
-				case 'm': $val = (int)substr($val, 0, -2) * 1048576;
-				break;
-				case 'k': $val = (int)substr($val, 0, -2) * 1024;
-				break;
-				case 'g': $val = (int)substr($val, 0, -2) * 1073741824;
-				break;
-				default:
-				break;
-			} break;
+				switch (strtolower(substr($val, -2, 1))) {
+					case 'm': $val = (int)substr($val, 0, -2) * 1048576;
+						break;
+					case 'k': $val = (int)substr($val, 0, -2) * 1024;
+						break;
+					case 'g': $val = (int)substr($val, 0, -2) * 1073741824;
+						break;
+					default:
+						break;
+				} break;
 			default:
-			break;
+				break;
 		}
 
 		return $val;
@@ -99,7 +99,7 @@ class ControllerToolExportImport extends Controller {
 					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
 					} else {
-						$this->model_tool_export_import->download($export_type, $min * ($max-1-1), $min, null, null);
+						$this->model_tool_export_import->download($export_type, $min * ($max - 1 - 1), $min, null, null);
 					}
 					break;
 				case 'c':
@@ -116,7 +116,7 @@ class ControllerToolExportImport extends Controller {
 					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
 					} else {
-						$this->model_tool_export_import->download($export_type, $min * ($max-1-1), $min, null, null);
+						$this->model_tool_export_import->download($export_type, $min * ($max - 1 - 1), $min, null, null);
 					}
 					break;
 				case 'p':
@@ -133,7 +133,7 @@ class ControllerToolExportImport extends Controller {
 					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
 					} else {
-						$this->model_tool_export_import->download($export_type, $min * ($max-1-1), $min, null, null);
+						$this->model_tool_export_import->download($export_type, $min * ($max - 1 - 1), $min, null, null);
 					}
 					break;
 				case 'o':
@@ -309,7 +309,7 @@ class ControllerToolExportImport extends Controller {
 			$this->error['warning'] = $this->session->data['export_import_error']['errstr'];
 		}
 
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 
 			if (!empty($this->session->data['export_import_nochange'])) {
@@ -331,19 +331,19 @@ class ControllerToolExportImport extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['refresh'] = $this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL');
@@ -494,10 +494,10 @@ class ControllerToolExportImport extends Controller {
 		$this->data['count_product'] = $count_product;
 
 		$this->template = 'tool/export_import.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

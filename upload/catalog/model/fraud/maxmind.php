@@ -66,7 +66,7 @@ class ModelFraudMaxMind extends Model {
 			if ($response) {
 				$customer_id = $data['customer_id'];
 
-				$data = array();
+				$data = [];
 
 				$parts = explode(';', $response);
 

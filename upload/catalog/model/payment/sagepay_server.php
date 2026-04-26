@@ -25,15 +25,15 @@ class ModelPaymentSagePayServer extends Model {
 			$status = false;
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($status) {
-			$method_data = array(
+			$method_data = [
 				'code'       => 'sagepay_server',
 				'title'      => $this->language->get('text_title'),
 				'terms'      => '',
 				'sort_order' => $this->config->get('sagepay_server_sort_order')
-			);
+			];
 		}
 
 		return $method_data;
@@ -42,20 +42,20 @@ class ModelPaymentSagePayServer extends Model {
 	public function getCards(int $customer_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sagepay_server_card WHERE customer_id = '" . (int)$customer_id . "'");
 
-		$card_data = array();
+		$card_data = [];
 
 		$this->load->model('account/address');
 
 		foreach ($query->rows as $row) {
 
-			$card_data[] = array(
+			$card_data[] = [
 				'card_id'     => $row['card_id'],
 				'customer_id' => $row['customer_id'],
 				'token'       => $row['token'],
 				'digits'      => '**** ' . $row['digits'],
 				'expiry'      => $row['expiry'],
 				'type'        => $row['type']
-			);
+			];
 		}
 
 		return $card_data;
@@ -278,7 +278,7 @@ class ModelPaymentSagePayServer extends Model {
 
 		$recurrings = $this->getProfiles();
 
-		$cron_data = array();
+		$cron_data = [];
 
 		$i = 0;
 
@@ -390,7 +390,7 @@ class ModelPaymentSagePayServer extends Model {
 
 		$qry = $this->db->query($sql);
 
-		$order_recurring = array();
+		$order_recurring = [];
 
 		foreach ($qry->rows as $recurring) {
 			$order_recurring[] = $this->getProfile($recurring['order_recurring_id']);

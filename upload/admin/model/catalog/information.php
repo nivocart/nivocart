@@ -82,12 +82,12 @@ class ModelCatalogInformation extends Model {
 	}
 
 	public function editInformationStatus(int $information_id, int $status) {
-        $this->db->query("UPDATE `" . DB_PREFIX . "information` SET status = '" . (int)$status . "'WHERE information_id = '" . (int)$information_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "information` SET status = '" . (int)$status . "'WHERE information_id = '" . (int)$information_id . "'");
 
 		$this->cache->delete('seo_url_map');
 		$this->cache->delete('information');
 		$this->cache->delete('store');
-    }
+	}
 
 	public function deleteInformation(int $information_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "information` WHERE information_id = '" . (int)$information_id . "'");

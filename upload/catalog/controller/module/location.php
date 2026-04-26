@@ -28,7 +28,7 @@ class ControllerModuleLocation extends Controller {
 		$this->load->model('localisation/location');
 		$this->load->model('tool/image');
 
-		$this->data['locations'] = array();
+		$this->data['locations'] = [];
 
 		$results = $this->model_localisation_location->getLocations($setting['limit']);
 
@@ -40,13 +40,13 @@ class ControllerModuleLocation extends Controller {
 					$image = false;
 				}
 
-				$this->data['locations'][] = array(
+				$this->data['locations'][] = [
 					'location_id' => $result['location_id'],
 					'thumb'       => $image,
 					'name'        => $result['name'],
 					'address'     => nl2br($result['address']),
 					'details'     => sprintf($this->language->get('text_details'), $this->url->link('module/location/info', 'location_id=' . $result['location_id'], 'SSL'), $result['name'])
-				);
+				];
 
 				$this->data['location_id'] = $result['location_id'];
 			}

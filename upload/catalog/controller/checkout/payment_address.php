@@ -35,7 +35,7 @@ class ControllerCheckoutPaymentAddress extends Controller {
 			$this->data['address_id'] = $this->customer->getAddressId();
 		}
 
-		$this->data['addresses'] = array();
+		$this->data['addresses'] = [];
 
 		$this->load->model('account/address');
 
@@ -100,7 +100,7 @@ class ControllerCheckoutPaymentAddress extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout');
 
-		$json = array();
+		$json = [];
 
 		// Validate if customer is logged in
 		if (!$this->customer->isLogged()) {

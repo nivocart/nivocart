@@ -259,7 +259,7 @@ class ControllerToolConfiguration extends Controller {
 		// System Files Integrity
 		// -----------------------
 		// Ensure correct slashes are used
-		$ds = function(string $path): string {
+		$ds = function (string $path): string {
 			return str_replace('\\', '/', $path);
 		};
 

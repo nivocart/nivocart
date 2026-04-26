@@ -170,12 +170,12 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function editCategoryStatus(int $category_id, int $status): void {
-        $this->db->query("UPDATE `" . DB_PREFIX . "category` SET status = '" . (int)$status . "', date_modified = NOW() WHERE category_id = '" . (int)$category_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "category` SET status = '" . (int)$status . "', date_modified = NOW() WHERE category_id = '" . (int)$category_id . "'");
 
 		$this->cache->delete('seo_url_map');
 		$this->cache->delete('category');
 		$this->cache->delete('store');
-    }
+	}
 
 	public function deleteCategory(int $category_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "category_path` WHERE category_id = '" . (int)$category_id . "'");

@@ -166,7 +166,7 @@ class ControllerCommonFooter extends Controller {
 	public function add() {
 		$this->load->model('design/banner');
 
-		$json = array();
+		$json = [];
 
 		$banner_image_id = isset($this->request->post['banner_image_id']) ? $this->request->post['banner_image_id'] : 0;
 

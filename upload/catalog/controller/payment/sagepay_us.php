@@ -20,24 +20,24 @@ class ControllerPaymentSagepayUS extends Controller {
 
 		$this->data['button_confirm'] = $this->language->get('button_confirm');
 
-		$this->data['months'] = array();
+		$this->data['months'] = [];
 
 		for ($i = 1; $i <= 12; $i++) {
-			$this->data['months'][] = array(
-				'text' => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
+			$this->data['months'][] = [
+				'text'  => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
 				'value' => sprintf('%02d', $i)
-			);
+			];
 		}
 
 		$today = getdate();
 
-		$this->data['year_expire'] = array();
+		$this->data['year_expire'] = [];
 
 		for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
-			$this->data['year_expire'][] = array(
-				'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
+			$this->data['year_expire'][] = [
+				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))
-			);
+			];
 		}
 
 		// Theme
@@ -85,7 +85,7 @@ class ControllerPaymentSagepayUS extends Controller {
 
 		curl_close($ch);
 
-		$json = array();
+		$json = [];
 
 		if ($response[1] == 'A') {
 			$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('config_order_status_id'));

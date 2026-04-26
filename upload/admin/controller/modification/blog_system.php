@@ -211,9 +211,9 @@ class ControllerModificationBlogSystem extends Controller {
 	}
 
 	public function install(): void {
-	// Create blog article table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article (
+		// Create blog article table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article (
   `blog_article_id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_author_id` int(11) NOT NULL,
   `allow_comment` tinyint(1) NOT NULL,
@@ -228,9 +228,9 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article (
   PRIMARY KEY (`blog_article_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog article description table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_description`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_description (
+		// Create blog article description table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_description`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_description (
   `blog_article_description_id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_article_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -241,46 +241,46 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_descr
   PRIMARY KEY (`blog_article_description_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog article table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_description_additional`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_description_additional (
+		// Create blog article table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_description_additional`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_description_additional (
   `blog_article_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `additional_description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog article product related table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_product_related`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_product_related (
+		// Create blog article product related table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_product_related`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_product_related (
   `blog_article_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog article to category table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_category`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_category (
+		// Create blog article to category table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_category`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_category (
   `blog_article_id` int(11) NOT NULL,
   `blog_category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog article to layout table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_layout`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_layout (
+		// Create blog article to layout table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_layout`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_layout (
   `blog_article_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog article to store table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_store`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_store (
+		// Create blog article to store table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_article_to_store`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_article_to_store (
   `blog_article_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog author table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_author`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author (
+		// Create blog author table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_author`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author (
   `blog_author_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `image` text NOT NULL,
@@ -290,9 +290,9 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author (
   PRIMARY KEY (`blog_author_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog author description table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_author_description`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author_description (
+		// Create blog author description table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_author_description`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author_description (
   `blog_author_description_id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_author_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -303,9 +303,9 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_author_descri
   PRIMARY KEY (`blog_author_description_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog category table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category (
+		// Create blog category table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category (
   `blog_category_id` int(11) NOT NULL AUTO_INCREMENT,
   `image` text NOT NULL,
   `parent_id` int(11) NOT NULL,
@@ -319,9 +319,9 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category (
   PRIMARY KEY (`blog_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog category description table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_category`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_description (
+		// Create blog category description table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_category`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_description (
   `blog_category_description_id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -332,24 +332,24 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_desc
   PRIMARY KEY (`blog_category_description_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog category to layout table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_to_layout`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_to_layout (
+		// Create blog category to layout table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_to_layout`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_to_layout (
   `blog_category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog category to store table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_to_store`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_to_store (
+		// Create blog category to store table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_category_to_store`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_category_to_store (
   `blog_category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog comment table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_comment`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_comment (
+		// Create blog comment table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_comment`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_comment (
   `blog_comment_id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_article_id` int(11) NOT NULL,
   `blog_article_reply_id` int(11) NOT NULL,
@@ -362,8 +362,8 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_comment (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 		// Create blog related article table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_related_article`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_related_article (
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_related_article`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_related_article (
   `blog_related_article_id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_article_id` int(11) NOT NULL,
   `blog_article_related_id` int(11) NOT NULL,
@@ -373,9 +373,9 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_related_artic
   PRIMARY KEY (`blog_related_article_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
-	// Create blog view table
-$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_view`");
-$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
+		// Create blog view table
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "blog_view`");
+		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
   `blog_view_id` int(11) NOT NULL AUTO_INCREMENT,
   `blog_article_id` int(11) NOT NULL,
   `view` int(11) NOT NULL,
@@ -392,7 +392,7 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 
 			$layout_id = $this->db->getLastId();
 
-			$routes = array('blog/article_info', 'blog/article_list', 'blog/article_author', 'blog/category');
+			$routes = ['blog/article_info', 'blog/article_list', 'blog/article_author', 'blog/category'];
 
 			foreach ($routes as $route) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id= '" . (int)$layout_id . "', store_id = '0', `route` = '" . $route . "'");
@@ -426,5 +426,5 @@ $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "blog_view (
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE 'blog_article_id=%'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE 'blog_author_id=%'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE 'blog_category_id=%'");
-    }
+	}
 }

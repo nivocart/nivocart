@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAccountVoucher extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
@@ -17,11 +17,11 @@ class ControllerAccountVoucher extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		if (!isset($this->session->data['vouchers'])) {
-			$this->session->data['vouchers'] = array();
+			$this->session->data['vouchers'] = [];
 		}
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->session->data['vouchers'][mt_rand()] = array(
+			$this->session->data['vouchers'][mt_rand()] = [
 				'description'      => sprintf($this->language->get('text_for'), $this->currency->format($this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency'))), $this->request->post['to_name']),
 				'to_name'          => $this->request->post['to_name'],
 				'to_email'         => $this->request->post['to_email'],
@@ -30,30 +30,30 @@ class ControllerAccountVoucher extends Controller {
 				'voucher_theme_id' => $this->request->post['voucher_theme_id'],
 				'message'          => $this->request->post['message'],
 				'amount'           => $this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency'))
-			);
+			];
 
 			$this->redirect($this->url->link('account/voucher/success'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_voucher'),
 			'href'      => $this->url->link('account/voucher', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -179,7 +179,7 @@ class ControllerAccountVoucher extends Controller {
 			$this->template = 'default/template/account/voucher.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -188,7 +188,7 @@ class ControllerAccountVoucher extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -198,19 +198,19 @@ class ControllerAccountVoucher extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/voucher', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -229,7 +229,7 @@ class ControllerAccountVoucher extends Controller {
 			$this->template = 'default/template/common/success.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -238,7 +238,7 @@ class ControllerAccountVoucher extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

@@ -14,7 +14,7 @@ class ModelSettingTheme extends Model {
 		$theme_file = DIR_APPLICATION . 'model/theme/' . $template . '.php';
 
 		if (file_exists($theme_file)) {
-			$theme_data = array();
+			$theme_data = [];
 
 			$this->load->model('theme/' . $template);
 

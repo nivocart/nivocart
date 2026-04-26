@@ -11,7 +11,7 @@ class ModelShippingAirmail extends Model {
 	public function getQuote($address) {
 		$this->language->load('shipping/airmail');
 
-		$quote_data = array();
+		$quote_data = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "geo_zone` ORDER BY `name`");
 
@@ -46,27 +46,27 @@ class ModelShippingAirmail extends Model {
 				}
 
 				if ((string)$cost != '') {
-					$quote_data['airmail_' . $result['geo_zone_id']] = array(
+					$quote_data['airmail_' . $result['geo_zone_id']] = [
 						'code'         => 'airmail.airmail_' . $result['geo_zone_id'],
 						'title'        => 'Airmail - ' . $result['name'] . ' (' . $this->language->get('text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')',
 						'cost'         => $cost,
 						'tax_class_id' => $this->config->get('airmail_tax_class_id'),
 						'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('airmail_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
-					);
+					];
 				}
 			}
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($quote_data) {
-			$method_data = array(
+			$method_data = [
 				'code'       => 'airmail',
 				'title'      => $this->language->get('text_title'),
 				'quote'      => $quote_data,
 				'sort_order' => $this->config->get('airmail_sort_order'),
 				'error'      => false
-			);
+			];
 		}
 
 		return $method_data;

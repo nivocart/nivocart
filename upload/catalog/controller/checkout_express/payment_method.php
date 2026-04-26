@@ -21,7 +21,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 				}
 			}
 
-			$points = min ($points, $points_total);
+			$points = min($points, $points_total);
 
 			if ($points && $this->config->get('reward_status') && $this->config->get('buy_reward')) {
 				$this->session->data['reward'] = $points;
@@ -52,13 +52,13 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 
 		if (!empty($payment_address)) {
 			// Totals
-			$total_data = array();
+			$total_data = [];
 			$total = 0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = array();
+			$sort_order = [];
 
 			$total_results = $this->model_setting_extension->getExtensions('total');
 
@@ -77,7 +77,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 			}
 
 			// Payment Methods
-			$method_data = array();
+			$method_data = [];
 
 			$payment_results = $this->model_setting_extension->getExtensions('payment');
 
@@ -104,7 +104,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 				}
 			}
 
-			$sort_order = array();
+			$sort_order = [];
 
 			foreach ($method_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -119,9 +119,9 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 		$this->load->model('design/payment');
 		$this->load->model('tool/image');
 
-		$this->data['payment_images'] = array();
+		$this->data['payment_images'] = [];
 
-		$payment_images_array = array();
+		$payment_images_array = [];
 
 		$image_results = $this->model_design_payment->getPaymentImages($payment_images_array);
 
@@ -133,11 +133,11 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 					$method_image = '';
 				}
 
-				$this->data['payment_images'][] = array(
+				$this->data['payment_images'][] = [
 					'payment' => strtolower($image_result['payment']),
 					'image'   => $method_image,
 					'status'  => $image_result['status']
-				);
+				];
 			}
 		}
 
@@ -184,7 +184,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 		if (isset($this->session->data['payment_methods'])) {
 			$this->data['payment_methods'] = $this->session->data['payment_methods'];
 		} else {
-			$this->data['payment_methods'] = array();
+			$this->data['payment_methods'] = [];
 		}
 
 		if (isset($this->session->data['payment_method']['code'])) {
@@ -235,7 +235,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout_express');
 
-		$json = array();
+		$json = [];
 
 		// Validate if payment address has been set
 		$this->load->model('account/address');
@@ -258,7 +258,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 			} else {
 				$payment_address['zone_id'] = '';
 			}
-        }
+		}
 
 		if (empty($payment_address)) {
 			$json['redirect'] = $this->url->link('checkout_express/checkout', '', 'SSL');

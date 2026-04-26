@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerCheckoutCheckoutOnePage extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		// Express checkout redirect
@@ -80,7 +80,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		// Voucher session
 		if (!isset($this->session->data['vouchers'])) {
-			$this->session->data['vouchers'] = array();
+			$this->session->data['vouchers'] = [];
 		}
 
 		if (isset($this->request->post['voucher']) && $this->validateVoucher()) {
@@ -132,25 +132,25 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_cart'),
 			'href'      => $this->url->link('checkout/cart', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('checkout/checkout_one_page', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -182,16 +182,16 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		// Gift Voucher
-		$this->data['vouchers'] = array();
+		$this->data['vouchers'] = [];
 
 		if (!empty($this->session->data['vouchers'])) {
 			foreach ($this->session->data['vouchers'] as $key => $voucher) {
-				$this->data['vouchers'][] = array(
+				$this->data['vouchers'][] = [
 					'key'         => $key,
 					'description' => $voucher['description'],
 					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
 					'remove'      => $this->url->link('checkout/checkout_one_page', 'remove=' . $key, 'SSL')
-				);
+				];
 			}
 		}
 
@@ -304,7 +304,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 					$newsletter = 0;
 				}
 
-				$customer_data = array();
+				$customer_data = [];
 
 				$customer_data['customer_group_id'] = $customer_info['customer_group_id'];
 				$customer_data['firstname'] = $customer_info['firstname'];
@@ -336,7 +336,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				}
 			}
 
-			$data = array();
+			$data = [];
 
 			if ($this->customer->isLogged()) {
 				$data['customer_id'] = $this->customer->getId();
@@ -354,7 +354,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				if ($default_address_id) {
 					$customer_address = $this->model_account_address->getAddress($default_address_id);
 				} else {
-					$customer_address = array();
+					$customer_address = [];
 
 					$customer_address['customer_id'] = $this->customer->getId();
 					$customer_address['firstname'] = $customer_info['firstname'];
@@ -410,7 +410,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			if (isset($this->session->data['payment_methods'])) {
 				$data['payment_methods'] = $this->session->data['payment_methods'];
 			} else {
-				$data['payment_methods'] = array();
+				$data['payment_methods'] = [];
 			}
 
 			if (isset($this->session->data['payment_method']['title'])) {
@@ -484,7 +484,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			if (isset($this->session->data['shipping_methods'])) {
 				$data['shipping_methods'] = $this->session->data['shipping_methods'];
 			} else {
-				$data['shipping_methods'] = array();
+				$data['shipping_methods'] = [];
 			}
 
 			if (isset($this->session->data['shipping_method']['title'])) {
@@ -500,13 +500,13 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			}
 
 			// Validate minimum quantity requirements
-			$total_data = array();
+			$total_data = [];
 			$total = 0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = array();
+			$sort_order = [];
 
 			$results = $this->model_setting_extension->getExtensions('total');
 
@@ -524,7 +524,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				}
 			}
 
-			$sort_order = array();
+			$sort_order = [];
 
 			foreach ($total_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -532,11 +532,11 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 			array_multisort($sort_order, SORT_ASC, $total_data);
 
-			$product_data = array();
+			$product_data = [];
 
 			// Get cart products
 			foreach ($this->cart->getProducts() as $product) {
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
 					if ($option['type'] != 'file') {
@@ -545,7 +545,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 						$value = $this->encryption->decrypt($option['option_value']);
 					}
 
-					$option_data[] = array(
+					$option_data[] = [
 						'product_option_id'       => $option['product_option_id'],
 						'product_option_value_id' => $option['product_option_value_id'],
 						'option_id'               => $option['option_id'],
@@ -553,10 +553,10 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 						'name'                    => $option['name'],
 						'value'                   => $value,
 						'type'                    => $option['type']
-					);
+					];
 				}
 
-				$product_data[] = array(
+				$product_data[] = [
 					'product_id' => $product['product_id'],
 					'name'       => $product['name'],
 					'model'      => $product['model'],
@@ -569,15 +569,15 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 					'total'      => $product['total'],
 					'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']),
 					'reward'     => $product['reward']
-				);
+				];
 			}
 
 			// Gift Voucher
-			$voucher_data = array();
+			$voucher_data = [];
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {
-					$voucher_data[] = array(
+					$voucher_data[] = [
 						'description'      => $voucher['description'],
 						'code'             => substr(md5(mt_rand()), 0, 10),
 						'to_name'          => $voucher['to_name'],
@@ -587,7 +587,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 						'voucher_theme_id' => $voucher['voucher_theme_id'],
 						'message'          => $voucher['message'],
 						'amount'           => $voucher['amount']
-					);
+					];
 				}
 			}
 
@@ -923,7 +923,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		$this->load->model('account/customer_group');
 
-		$this->data['customer_groups'] = array();
+		$this->data['customer_groups'] = [];
 
 		if (is_array($this->config->get('config_customer_group_display'))) {
 			$customer_groups = $this->model_account_customer_group->getCustomerGroups();
@@ -1155,7 +1155,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		$this->data['shipping_required'] = $this->cart->hasShipping();
 
 		// Shipping data
-		$data = array();
+		$data = [];
 
 		$data['firstname'] = $this->data['firstname'];
 		$data['lastname'] = $this->data['lastname'];
@@ -1174,7 +1174,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		$payment_address = $data;
 
 		if (isset($this->request->post['check_shipping_address'])) {
-			$data_shipping = array();
+			$data_shipping = [];
 
 			$data_shipping['firstname'] = $this->data['firstname'];
 			$data_shipping['lastname'] = $this->data['lastname'];
@@ -1192,7 +1192,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$shipping_address = $data_shipping;
 
 		} else {
-			$data_shipping = array();
+			$data_shipping = [];
 
 			$data_shipping['firstname'] = $this->data['shipping_firstname'];
 			$data_shipping['lastname'] = $this->data['shipping_lastname'];
@@ -1211,7 +1211,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		// Shipping methods
-		$quote_data = array();
+		$quote_data = [];
 
 		$this->load->model('setting/extension');
 
@@ -1224,17 +1224,17 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				$quote = $this->{'model_shipping_' . $result['code']}->getQuote($shipping_address);
 
 				if ($quote) {
-					$quote_data[$result['code']] = array(
+					$quote_data[$result['code']] = [
 						'title'      => $quote['title'],
 						'quote'      => $quote['quote'],
 						'sort_order' => $quote['sort_order'],
 						'error'      => $quote['error']
-					);
+					];
 				}
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($quote_data as $key => $value) {
 			$sort_order[$key] = $value['sort_order'];
@@ -1254,13 +1254,13 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		// Payment methods
 		if (!empty($payment_address)) {
-			$total_data = array();
+			$total_data = [];
 			$total = 0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = array();
+			$sort_order = [];
 
 			$results = $this->model_setting_extension->getExtensions('total');
 
@@ -1278,7 +1278,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				}
 			}
 
-			$method_data = array();
+			$method_data = [];
 
 			$results = $this->model_setting_extension->getExtensions('payment');
 
@@ -1305,7 +1305,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				}
 			}
 
-			$sort_order = array();
+			$sort_order = [];
 
 			foreach ($method_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -1322,9 +1322,9 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		$this->load->model('design/payment');
 		$this->load->model('tool/image');
 
-		$this->data['payment_images'] = array();
+		$this->data['payment_images'] = [];
 
-		$payment_images_array = array();
+		$payment_images_array = [];
 
 		$image_results = $this->model_design_payment->getPaymentImages($payment_images_array);
 
@@ -1336,11 +1336,11 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 					$method_image = '';
 				}
 
-				$this->data['payment_images'][] = array(
+				$this->data['payment_images'][] = [
 					'payment' => strtolower($image_result['payment']),
 					'image'   => $method_image,
 					'status'  => $image_result['status']
-				);
+				];
 			}
 		}
 
@@ -1403,7 +1403,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->template = 'default/template/checkout/checkout_one_page.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -1412,7 +1412,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -1580,7 +1580,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 	}
 
 	public function country() {
-		$json = array();
+		$json = [];
 
 		$this->load->model('localisation/country');
 
@@ -1589,7 +1589,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		if ($country_info) {
 			$this->load->model('localisation/zone');
 
-			$json = array(
+			$json = [
 				'country_id'        => $country_info['country_id'],
 				'name'              => $country_info['name'],
 				'iso_code_2'        => $country_info['iso_code_2'],
@@ -1598,7 +1598,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				'postcode_required' => $country_info['postcode_required'],
 				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
 				'status'            => $country_info['status']
-			);
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
@@ -1606,7 +1606,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 	}
 
 	public function shippingMethod() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['shipping_method'])) {
 			$shipping = explode('.', $this->request->post['shipping_method']);
@@ -1623,7 +1623,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 	}
 
 	public function paymentMethod() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->post['payment_method'])) {
 			$payment = $this->request->post['payment_method'];
@@ -1640,7 +1640,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 	}
 
 	public function checkoutSubmit() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->session->data['payment_method']['code']) && isset($this->session->data['order_id'])) {
 			$json['payment'] = $this->getChild('payment/' . $this->session->data['payment_method']['code']);

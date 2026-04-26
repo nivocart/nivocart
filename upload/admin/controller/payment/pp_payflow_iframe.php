@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerPaymentPPPayflowIframe extends Controller {
-	const DEBUG_LOG_FILE = 'pp_payflow_iframe.log';
+	public const DEBUG_LOG_FILE = 'pp_payflow_iframe.log';
 	private $errors = [];
 
 	public function index() {
@@ -137,7 +137,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		if (isset($this->request->post['pp_payflow_iframe_partner'])) {
 			$this->data['pp_payflow_iframe_partner'] = $this->request->post['pp_payflow_iframe_partner'];
-		} else if ($this->config->has('pp_payflow_iframe_partner')) {
+		} elseif ($this->config->has('pp_payflow_iframe_partner')) {
 			$this->data['pp_payflow_iframe_partner'] = $this->config->get('pp_payflow_iframe_partner');
 		} else {
 			$this->data['pp_payflow_iframe_partner'] = 'paypal';
@@ -169,7 +169,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		if (isset($this->request->post['pp_payflow_iframe_timeout'])) {
 			$this->data['pp_payflow_iframe_timeout'] = $this->request->post['pp_payflow_iframe_timeout'];
-		} else if ($this->config->has('pp_payflow_iframe_timeout')) {
+		} elseif ($this->config->has('pp_payflow_iframe_timeout')) {
 			$this->data['pp_payflow_iframe_timeout'] = $this->config->get('pp_payflow_iframe_timeout');
 		} else {
 			$this->data['pp_payflow_iframe_timeout'] = 30;
@@ -526,10 +526,10 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		if (isset($this->request->post['order_id']) && ($this->request->post['order_id'] != '') && isset($this->request->post['amount'])) {
 			$order_id = $this->request->post['order_id'];
-			$amount = (double)$this->request->post['amount'];
+			$amount = (float)$this->request->post['amount'];
 
 			// If this is the final amount to capture or not.
-			$complete = (isset($this->request->post['complete']) && $this->request->post['complete']) ?  true : false;
+			$complete = (isset($this->request->post['complete']) && $this->request->post['complete']) ? true : false;
 
 			$this->load->model('payment/pp_payflow_iframe');
 
@@ -570,7 +570,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 									'TRXTYPE'         => 'D',  // Delayed Capture
 									'ORIGID'          => $authorization['transaction_reference'],
 									'AMT'             => number_format($amount, 2, '.', ''),
-									'CAPTURECOMPLETE'	=> ($complete ? 'Y' : 'N')
+									'CAPTURECOMPLETE' => ($complete ? 'Y' : 'N')
 								];
 
 								$response = $this->model_payment_pp_payflow_iframe->call($request);
@@ -666,7 +666,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 	public function do_void() {
 		// Used to void delayed capture, sale, credit, authorization, and voice authorization transactions.
 		// Once a void is processed, it can't be reversed. You must issue a new authorization or sale by using a "New Reference Transaction."
-		$json = array();
+		$json = [];
 
 		$this->language->load('payment/pp_payflow_iframe_order');
 
@@ -924,7 +924,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 		if (isset($this->request->post['order_id']) && ($this->request->post['order_id'] !== '') && isset($this->request->post['transaction_reference']) && isset($this->request->post['amount'])) {
 			$order_id = $this->request->post['order_id'];
 			$reference = $this->request->post['transaction_reference'];
-			$amount = (double)$this->request->post['amount'];
+			$amount = (float)$this->request->post['amount'];
 
 			$this->load->model('payment/pp_payflow_iframe');
 
@@ -1024,7 +1024,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		if (isset($this->request->post['order_id']) && ($this->request->post['order_id'] != '') && isset($this->request->post['amount'])) {
 			$order_id = $this->request->post['order_id'];
-			$amount = (double)$this->request->post['amount'];
+			$amount = (float)$this->request->post['amount'];
 
 			$this->load->model('payment/pp_payflow_iframe');
 
@@ -1043,13 +1043,13 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 								$remaining = $root_transaction['amount'] - $captured + $refunded;
 
 								if ($amount <= $remaining) {
-									$request = array(
+									$request = [
 										'TRXTYPE'           => 'A',
 										'TENDER'            => 'C',
 										'ORIGID'            => $root_transaction['transaction_reference'],
 										'DOREAUTHORIZATION' => 1,
 										'AMT'               => number_format($amount, 2, '.', ''),
-									);
+									];
 
 									$response = $this->model_payment_pp_payflow_iframe->call($request);
 

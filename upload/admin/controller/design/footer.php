@@ -491,7 +491,7 @@ class ControllerDesignFooter extends Controller {
 		$routes = $this->model_tool_route->getRoutes($routes_footer);
 
 		if ($routes) {
-			$output  = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";
+			$output = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";
 			$output .= '<head>' . "\n";
 			$output .= '  <title>' . $info_title . '</title>' . "\n";
 			$output .= '  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . "\n";

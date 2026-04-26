@@ -20,13 +20,13 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
 		if (!empty($payment_address)) {
 			// Totals
-			$total_data = array();
+			$total_data = [];
 			$total = 0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = array();
+			$sort_order = [];
 
 			$total_results = $this->model_setting_extension->getExtensions('total');
 
@@ -45,7 +45,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 			}
 
 			// Payment Methods
-			$method_data = array();
+			$method_data = [];
 
 			$payment_results = $this->model_setting_extension->getExtensions('payment');
 
@@ -72,7 +72,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 				}
 			}
 
-			$sort_order = array();
+			$sort_order = [];
 
 			foreach ($method_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -87,9 +87,9 @@ class ControllerCheckoutPaymentMethod extends Controller {
 		$this->load->model('design/payment');
 		$this->load->model('tool/image');
 
-		$this->data['payment_images'] = array();
+		$this->data['payment_images'] = [];
 
-		$payment_images_array = array();
+		$payment_images_array = [];
 
 		$image_results = $this->model_design_payment->getPaymentImages($payment_images_array);
 
@@ -101,11 +101,11 @@ class ControllerCheckoutPaymentMethod extends Controller {
 					$method_image = '';
 				}
 
-				$this->data['payment_images'][] = array(
+				$this->data['payment_images'][] = [
 					'payment' => strtolower($image_result['payment']),
 					'image'   => $method_image,
 					'status'  => $image_result['status']
-				);
+				];
 			}
 		}
 
@@ -149,7 +149,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 		if (isset($this->session->data['payment_methods'])) {
 			$this->data['payment_methods'] = $this->session->data['payment_methods'];
 		} else {
-			$this->data['payment_methods'] = array();
+			$this->data['payment_methods'] = [];
 		}
 
 		if (isset($this->session->data['payment_method']['code'])) {
@@ -200,7 +200,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout');
 
-		$json = array();
+		$json = [];
 
 		// Validate if payment address has been set
 		$this->load->model('account/address');

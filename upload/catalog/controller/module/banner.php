@@ -27,7 +27,6 @@ class ControllerModuleBanner extends Controller {
 
 		$animation = $this->config->get($this->_name . '_transition');
 
-
 		$this->data['animation'] = ($animation == 'fade') ? 'fade' : 'slide';
 		$this->data['direction'] = ($animation == 'horizontal') ? 'horizontal' : 'vertical';
 
@@ -37,7 +36,7 @@ class ControllerModuleBanner extends Controller {
 		$this->load->model('design/banner');
 		$this->load->model('tool/image');
 
-		$this->data['banners'] = array();
+		$this->data['banners'] = [];
 
 		$results = $this->model_design_banner->getBanner($setting['banner_id']);
 
@@ -53,12 +52,12 @@ class ControllerModuleBanner extends Controller {
 					$image_link = '';
 				}
 
-				$this->data['banners'][] = array(
+				$this->data['banners'][] = [
 					'banner_image_id' => $result['banner_image_id'],
 					'title'           => $result['title'],
 					'link'            => $image_link,
 					'image'           => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])
-				);
+				];
 			}
 		}
 

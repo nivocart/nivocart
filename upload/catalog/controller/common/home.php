@@ -22,7 +22,7 @@ class ControllerCommonHome extends Controller {
 			$this->template = 'default/template/common/home.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -31,7 +31,7 @@ class ControllerCommonHome extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

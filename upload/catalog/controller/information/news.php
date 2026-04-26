@@ -14,11 +14,11 @@ class ControllerInformationNews extends Controller {
 
 		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
 		// Get current news id
 		$news_id = isset($this->request->get['news_id']) ? $this->request->get['news_id'] : 0;
@@ -31,17 +31,17 @@ class ControllerInformationNews extends Controller {
 
 			$this->model_catalog_news->updateViewed($news_id);
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('information/news_list', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $news_info['title'],
 				'href'      => $this->url->link('information/news', 'news_id=' . $news_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['news_info'] = $news_info;
 
@@ -131,7 +131,7 @@ class ControllerInformationNews extends Controller {
 
 			// ShareThis
 			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
-	
+
 			$this->data['news_sharethis'] = $this->config->get('config_news_sharethis') ? true : false;
 
 			// Downloads
@@ -145,12 +145,12 @@ class ControllerInformationNews extends Controller {
 				$files = $this->model_catalog_news->getDownloads();
 
 				foreach ($files as $file) {
-					$this->data['download_files'][] = array(
+					$this->data['download_files'][] = [
 						'news_download_id' => $file['news_download_id'],
 						'filename'         => $file['filename'],
 						'mask'             => $file['mask'],
 						'date_added'       => $file['date_added']
-					);
+					];
 
 					foreach ($download_results as $result) {
 						if ($file['news_download_id'] === $result['news_download_id']) {
@@ -167,13 +167,13 @@ class ControllerInformationNews extends Controller {
 								}
 							}
 
-							$this->data['downloads'][] = array(
+							$this->data['downloads'][] = [
 								'news_download_id' => $file['news_download_id'],
 								'name'             => $file['mask'],
 								'size'             => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
 								'date_added'       => date($this->language->get('date_format_short'), strtotime($file['date_added'])),
 								'href'             => $this->url->link('information/news/download', 'news_download_id=' . (int)$file['news_download_id'], 'SSL')
-							);
+							];
 						}
 					}
 				}
@@ -255,7 +255,7 @@ class ControllerInformationNews extends Controller {
 
 				$quote = $product_info['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'product_id'      => $product_info['product_id'],
 					'thumb'           => $image,
 					'stock_label'     => $stock_label,
@@ -278,7 +278,7 @@ class ControllerInformationNews extends Controller {
 					'rating'          => $rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 					'href'            => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL')
-				);
+				];
 			}
 
 			// Theme
@@ -290,7 +290,7 @@ class ControllerInformationNews extends Controller {
 				$this->template = 'default/template/information/news.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -299,18 +299,18 @@ class ControllerInformationNews extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
 		} else {
 			$this->document->setTitle($this->language->get('text_error'));
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_error'),
 				'href'      => $this->url->link('information/news', 'news_id=' . $news_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('text_error');
 
@@ -329,7 +329,7 @@ class ControllerInformationNews extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -338,7 +338,7 @@ class ControllerInformationNews extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 			$this->response->setOutput($this->render());

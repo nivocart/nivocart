@@ -55,7 +55,7 @@ class ControllerCheckoutLogin extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout');
 
-		$json = array();
+		$json = [];
 
 		// Validate if customer is already logged in
 		if ($this->customer->isLogged()) {

@@ -344,7 +344,7 @@ class ControllerCatalogCategory extends Controller {
 		$this->data['column_action'] = $this->language->get('column_action');
 
 		$this->data['button_enable'] = $this->language->get('button_enable');
-        $this->data['button_disable'] = $this->language->get('button_disable');
+		$this->data['button_disable'] = $this->language->get('button_disable');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
 		$this->data['button_repair'] = $this->language->get('button_repair');
@@ -743,7 +743,7 @@ class ControllerCatalogCategory extends Controller {
 			}
 		}
 
-		$allowed = array('jpg','jpeg','png','gif');
+		$allowed = ['jpg','jpeg','png','gif'];
 
 		if ($this->request->post['image']) {
 			$ext = substr(strrchr($this->request->post['image'], '.'), 1);

@@ -33,7 +33,7 @@ class ControllerModuleMenuVertical extends Controller {
 		// Module - Menu Vertical
 		$this->load->model('design/menu');
 
-		$this->data['menu_vertical'] = array();
+		$this->data['menu_vertical'] = [];
 
 		$menu_id = $setting['menu_id'];
 		$parent_id = 0;
@@ -51,7 +51,7 @@ class ControllerModuleMenuVertical extends Controller {
 				$href = '';
 			}
 
-			$children_data = array();
+			$children_data = [];
 
 			$children = $this->model_design_menu->getMenuItems($menu_id, $menu_item['menu_item_id']);
 
@@ -66,19 +66,19 @@ class ControllerModuleMenuVertical extends Controller {
 					$child_href = '';
 				}
 
-				$children_data[] = array(
+				$children_data[] = [
 					'item_id' => $child['menu_item_id'],
 					'name'    => $child['name'],
 					'href'    => $child_href
-				);
+				];
 			}
 
-			$this->data['menu_vertical'][] = array(
+			$this->data['menu_vertical'][] = [
 				'item_id'  => $menu_item['menu_item_id'],
 				'name'     => $menu_item['menu_item_name'],
 				'children' => $children_data,
 				'href'     => $href
-			);
+			];
 		}
 
 		// Template

@@ -259,7 +259,7 @@ class ControllerCatalogReview extends Controller {
 		];
 
 		$this->data['enabled'] = $this->url->link('catalog/review/enable', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['disabled'] = $this->url->link('catalog/review/disable', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['disabled'] = $this->url->link('catalog/review/disable', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['insert'] = $this->url->link('catalog/review/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('catalog/review/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
@@ -321,7 +321,7 @@ class ControllerCatalogReview extends Controller {
 		$this->data['column_action'] = $this->language->get('column_action');
 
 		$this->data['button_enable'] = $this->language->get('button_enable');
-        $this->data['button_disable'] = $this->language->get('button_disable');
+		$this->data['button_disable'] = $this->language->get('button_disable');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
 		$this->data['button_filter'] = $this->language->get('button_filter');

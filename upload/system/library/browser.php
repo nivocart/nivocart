@@ -4,29 +4,29 @@ class Browser {
 	 * @var array <array<string, mixed>>
 	 */
 	private $browserVersion = [];
-	
-	var $agent = null;
 
-	var $isRobot = false;
-	var $isBrowser = false;
-	var $isPad = false;
-	var $isMobile = false;
+	public $agent = null;
 
-	var $languages = [];
-	var $charsets = [];
+	public $isRobot = false;
+	public $isBrowser = false;
+	public $isPad = false;
+	public $isMobile = false;
 
-	var $platforms = [];
-	var $robots = [];
-	var $browsers = [];
-	var $pads = [];
-	var $mobiles = [];
+	public $languages = [];
+	public $charsets = [];
 
-	var $platform = '';
-	var $robot = '';
-	var $browser = '';
-	var $version = '';
-	var $pad = '';
-	var $mobile = '';
+	public $platforms = [];
+	public $robots = [];
+	public $browsers = [];
+	public $pads = [];
+	public $mobiles = [];
+
+	public $platform = '';
+	public $robot = '';
+	public $browser = '';
+	public $version = '';
+	public $pad = '';
+	public $mobile = '';
 
 	public function __construct() {
 		if (isset($_SERVER['HTTP_USER_AGENT'])) {
@@ -89,7 +89,7 @@ class Browser {
 	protected function compileData() {
 		$this->setPlatform();
 
-		foreach (array('setRobot', 'setBrowser', 'setPad', 'setMobile') as $function) {
+		foreach (['setRobot', 'setBrowser', 'setPad', 'setMobile'] as $function) {
 			if ($this->$function() === true) {
 				break;
 			}
@@ -140,7 +140,7 @@ class Browser {
 					$this->browser = $val;
 
 					if ($this->setPad() === false) {
-					    $this->setMobile();
+						$this->setMobile();
 					}
 
 					return true;
@@ -194,7 +194,7 @@ class Browser {
 		}
 
 		if (count($this->acceptLanguages) === 0) {
-			$this->acceptLanguages = array('Undefined');
+			$this->acceptLanguages = ['Undefined'];
 		}
 	}
 
@@ -207,7 +207,7 @@ class Browser {
 		}
 
 		if (count($this->acceptCharsets) === 0) {
-			$this->acceptCharsets = array('Undefined');
+			$this->acceptCharsets = ['Undefined'];
 		}
 	}
 

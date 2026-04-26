@@ -98,7 +98,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			. (isset($data['parent_transaction_reference']) ? "parent_transaction_reference = '" . $this->db->escape($data['parent_transaction_reference']) . "', " : null)
 			. (isset($data['void_transaction_reference']) ? "void_transaction_reference = '" . $this->db->escape($data['void_transaction_reference']) . "', " : null)
 			. (isset($data['transaction_type']) ? "transaction_type = '" . $this->db->escape($data['transaction_type']) . "', " : null)
-			. (isset($data['amount']) ? "amount = " . (double)$data['amount'] . ", " : null)
+			. (isset($data['amount']) ? "amount = " . (float)$data['amount'] . ", " : null)
 			. "date_added = NOW(), date_modified = NOW()");
 
 			return $this->db->getLastId();
@@ -114,7 +114,7 @@ class ModelPaymentPPPayflowIframe extends Model {
 			. (isset($data['parent_transaction_reference']) ? "parent_transaction_reference = '" . $this->db->escape($data['parent_transaction_reference']) . "', " : null)
 			. (isset($data['void_transaction_reference']) ? "void_transaction_reference = '" . $this->db->escape($data['void_transaction_reference']) . "', " : null)
 			. (isset($data['transaction_type']) ? "transaction_type = '" . $this->db->escape($data['transaction_type']) . "', " : null)
-			. (isset($data['amount']) ? "amount = " . (double)$data['amount'] . ", " : null)
+			. (isset($data['amount']) ? "amount = " . (float)$data['amount'] . ", " : null)
 			. "date_modified = NOW() WHERE transaction_reference = '" . $this->db->escape($transaction_reference) . "'");
 
 			return $result;

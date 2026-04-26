@@ -72,7 +72,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->load->model('design/menu');
 
-		$this->data['menu_horizontal'] = array();
+		$this->data['menu_horizontal'] = [];
 
 		$menu_id = $setting['menu_id'];
 		$parent_id = 0;
@@ -90,7 +90,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 				$href = '';
 			}
 
-			$children_data = array();
+			$children_data = [];
 
 			$children = $this->model_design_menu->getMenuItems($menu_id, $menu_item['menu_item_id']);
 
@@ -107,20 +107,20 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 				$child_total = $this->model_design_menu->getTotalMenuItemsByParentId($menu_id, $menu_item['parent_id']);
 
-				$children_data[] = array(
+				$children_data[] = [
 					'item_id' => $child['menu_item_id'],
 					'name'    => $child['name'],
 					'total'   => $child_total,
 					'href'    => $child_href
-				);
+				];
 			}
 
-			$this->data['menu_horizontal'][] = array(
+			$this->data['menu_horizontal'][] = [
 				'item_id'  => $menu_item['menu_item_id'],
 				'name'     => $menu_item['menu_item_name'],
 				'children' => $children_data,
 				'href'     => $href
-			);
+			];
 		}
 
 		$this->data['module'] = $module++;

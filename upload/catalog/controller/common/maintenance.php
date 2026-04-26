@@ -48,10 +48,10 @@ class ControllerCommonMaintenance extends Controller {
 			$this->template = 'default/template/common/maintenance.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		if ($this->request->server['SERVER_PROTOCOL'] == 'HTTP/1.1') {
 			$this->response->addHeader('HTTP/1.1 503 Service Unavailable');

@@ -117,7 +117,7 @@ class ModelDesignMedia extends Model {
 				$i++;
 			}
 
-			$filesize = round(substr($size, 0, strpos($size, '.') + 4), 2,PHP_ROUND_HALF_UP) . $suffix[$i];
+			$filesize = round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i];
 		}
 
 		return $filesize;

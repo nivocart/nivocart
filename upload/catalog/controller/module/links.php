@@ -30,9 +30,9 @@ class ControllerModuleLinks extends Controller {
 		$connection_total = $this->model_design_connection->getTotalCatalogConnections();
 
 		if ($connection_total > 0) {
-			$this->data['connections_li'] = array();
+			$this->data['connections_li'] = [];
 
-			$connections_array = array();
+			$connections_array = [];
 
 			$connections = $this->model_design_connection->getConnections($connections_array);
 
@@ -41,11 +41,11 @@ class ControllerModuleLinks extends Controller {
 					$connection_routes = $this->model_design_connection->getConnectionRoutes($connection['connection_id']);
 
 					foreach ($connection_routes as $connection_route) {
-						$this->data['connections_li'][] = array(
-							'icon' => $connection_route['icon'],
+						$this->data['connections_li'][] = [
+							'icon'  => $connection_route['icon'],
 							'title' => $connection_route['title'],
 							'route' => html_entity_decode($connection_route['route'], ENT_QUOTES, 'UTF-8')
-						);
+						];
 					}
 				}
 			}

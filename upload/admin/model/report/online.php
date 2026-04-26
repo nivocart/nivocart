@@ -101,7 +101,7 @@ class ModelReportOnline extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalRobotsOnline($data = array()): int {
+	public function getTotalRobotsOnline($data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "robot_online`";
 
 		$implode = [];

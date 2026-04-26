@@ -18,25 +18,25 @@ class ControllerAffiliateTracking extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('affiliate/tracking', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -63,7 +63,7 @@ class ControllerAffiliateTracking extends Controller {
 			$this->template = 'default/template/affiliate/tracking.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -72,30 +72,30 @@ class ControllerAffiliateTracking extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/product');
 
-			$filter_data = array(
+			$filter_data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 5
-			);
+			];
 
 			$results = $this->model_catalog_product->getProducts($filter_data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
 					'link' => $this->url->link('product/product', 'product_id=' . $result['product_id'] . '&tracking=' . $this->affiliate->getCode(), 'SSL')
-				);
+				];
 			}
 		}
 

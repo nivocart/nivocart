@@ -26,25 +26,25 @@ class ControllerAccountDownload extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_downloads'),
 			'href'      => $this->url->link('account/download', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->load->model('account/download');
 
@@ -68,7 +68,7 @@ class ControllerAccountDownload extends Controller {
 				$page = 1;
 			}
 
-			$this->data['downloads'] = array();
+			$this->data['downloads'] = [];
 
 			$results = $this->model_account_download->getDownloads(($page - 1) * $this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit'));
 
@@ -78,21 +78,21 @@ class ControllerAccountDownload extends Controller {
 
 					$i = 0;
 
-					$suffix = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+					$suffix = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 					while (($size / 1024) > 1) {
 						$size = $size / 1024;
 						$i++;
 					}
 
-					$this->data['downloads'][] = array(
+					$this->data['downloads'][] = [
 						'order_id'   => $result['order_id'],
 						'date_added' => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
 						'name'       => $result['name'],
 						'remaining'  => $result['remaining'],
 						'size'       => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
 						'href'       => $this->url->link('account/download/download', 'order_download_id=' . $result['order_download_id'], 'SSL')
-					);
+					];
 				}
 			}
 
@@ -118,7 +118,7 @@ class ControllerAccountDownload extends Controller {
 				$this->template = 'default/template/account/download.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -127,7 +127,7 @@ class ControllerAccountDownload extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
@@ -150,7 +150,7 @@ class ControllerAccountDownload extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -159,7 +159,7 @@ class ControllerAccountDownload extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 

@@ -9,9 +9,9 @@ class ModelCatalogTagCloud extends Model {
 	 * Functions Get, Generate
 	 */
 	public function getRandomTags(int $limit, $min_font_size, $max_font_size, $font_weight, $random) {
-		$names = array();
-		$totals = array();
-		$tags = array();
+		$names = [];
+		$totals = [];
+		$tags = [];
 
 		$tagcloud = false;
 
@@ -48,7 +48,7 @@ class ModelCatalogTagCloud extends Model {
 
 			$step = ((int)$max_font_size - (int)$min_font_size) / ($spread);
 
-			$cloud = array();
+			$cloud = [];
 
 			foreach ($tags as $key => $value) {
 				if ($random) {

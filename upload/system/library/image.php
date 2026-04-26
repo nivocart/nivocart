@@ -137,13 +137,13 @@ class Image {
 
 		if (is_object($this->image) || is_resource($this->image)) {
 			$result = match($extension) {
-				'jpg', 'jpeg' => (function() use ($imagefile, $quality) {
+				'jpg', 'jpeg' => (function () use ($imagefile, $quality) {
 					imageinterlace($this->image, true);
 					return imagejpeg($this->image, $imagefile, $quality);
 				})(),
-				'png'  => imagepng($this->image, $imagefile),
-				'gif'  => imagegif($this->image, $imagefile),
-				'webp' => imagewebp($this->image, $imagefile),
+				'png'   => imagepng($this->image, $imagefile),
+				'gif'   => imagegif($this->image, $imagefile),
+				'webp'  => imagewebp($this->image, $imagefile),
 				default => ''
 			};
 

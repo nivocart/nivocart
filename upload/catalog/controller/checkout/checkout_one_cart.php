@@ -28,13 +28,13 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			}
 		}
 
-		$total_data = array();
+		$total_data = [];
 		$total = 0;
 		$taxes = $this->cart->getTaxes();
 
 		$this->load->model('setting/extension');
 
-		$sort_order = array();
+		$sort_order = [];
 
 		$results = $this->model_setting_extension->getExtensions('total');
 
@@ -52,7 +52,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			}
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($total_data as $key => $value) {
 			$sort_order[$key] = $value['sort_order'];
@@ -60,7 +60,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 
 		array_multisort($sort_order, SORT_ASC, $total_data);
 
-		$data = array();
+		$data = [];
 
 		$data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
 		$data['store_id'] = $this->config->get('config_store_id');
@@ -98,10 +98,10 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 		}
 
 		// Get cart products
-		$product_data = array();
+		$product_data = [];
 
 		foreach ($this->cart->getProducts() as $product) {
-			$option_data = array();
+			$option_data = [];
 
 			foreach ($product['option'] as $option) {
 				if ($option['type'] != 'file') {
@@ -110,7 +110,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 					$value = $this->encryption->decrypt($option['option_value']);
 				}
 
-				$option_data[] = array(
+				$option_data[] = [
 					'product_option_id'       => $option['product_option_id'],
 					'product_option_value_id' => $option['product_option_value_id'],
 					'option_id'               => $option['option_id'],
@@ -118,10 +118,10 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 					'name'                    => $option['name'],
 					'value'                   => $value,
 					'type'                    => $option['type']
-				);
+				];
 			}
 
-			$product_data[] = array(
+			$product_data[] = [
 				'product_id' => $product['product_id'],
 				'name'       => $product['name'],
 				'model'      => $product['model'],
@@ -134,15 +134,15 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 				'total'      => $product['total'],
 				'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']),
 				'reward'     => $product['reward']
-			);
+			];
 		}
 
 		// Gift Voucher
-		$voucher_data = array();
+		$voucher_data = [];
 
 		if (!empty($this->session->data['vouchers'])) {
 			foreach ($this->session->data['vouchers'] as $voucher) {
-				$voucher_data[] = array(
+				$voucher_data[] = [
 					'description'      => $voucher['description'],
 					'code'             => substr(md5(mt_rand()), 0, 10),
 					'to_name'          => $voucher['to_name'],
@@ -152,7 +152,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 					'voucher_theme_id' => $voucher['voucher_theme_id'],
 					'message'          => $voucher['message'],
 					'amount'           => $voucher['amount']
-				);
+				];
 			}
 		}
 
@@ -239,7 +239,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 		$this->data['text_recurring_item'] = $this->language->get('text_recurring_item');
 		$this->data['text_payment_profile'] = $this->language->get('text_payment_profile');
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		foreach ($this->cart->getProducts() as $product) {
 			$product_total = 0;
@@ -255,7 +255,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			}
 
 			// Option
-			$option_data = array();
+			$option_data = [];
 
 			foreach ($product['option'] as $option) {
 				if ($option['type'] != 'file') {
@@ -266,10 +266,10 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 					$value = substr($filename, 0, strrpos($filename, '.'));
 				}
 
-				$option_data[] = array(
+				$option_data[] = [
 					'name'  => $option['name'],
 					'value' => (mb_strlen($value, 'UTF-8') > 20 ? substr($value, 0, 20) . '..' : $value)
-				);
+				];
 			}
 
 			// Display prices & totals
@@ -284,13 +284,13 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			$profile_description = '';
 
 			if ($product['recurring']) {
-				$frequencies = array(
+				$frequencies = [
 					'day'        => $this->language->get('text_day'),
 					'week'       => $this->language->get('text_week'),
 					'semi_month' => $this->language->get('text_semi_month'),
 					'month'      => $this->language->get('text_month'),
 					'year'       => $this->language->get('text_year')
-				);
+				];
 
 				if ($product['recurring_trial']) {
 					$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -332,7 +332,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 
 			$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')) - ($product['price'] * $product['quantity']));
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'product_id'          => $product['product_id'],
 				'key'                 => $product['key'],
 				'name'                => $product['name'],
@@ -352,24 +352,24 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 				'profile_description' => $profile_description,
 				'total'               => $total,
 				'href'                => $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL')
-			);
+			];
 		}
 
-		$this->data['products_recurring'] = array();
+		$this->data['products_recurring'] = [];
 
 		$this->data['age_minimum'] = ($age_minimum) ? (int)$age_minimum : 0;
 		$this->data['age_logged'] = $age_logged;
 		$this->data['age_checked'] = $age_checked;
 
 		// Gift Voucher
-		$this->data['vouchers'] = array();
+		$this->data['vouchers'] = [];
 
 		if (!empty($this->session->data['vouchers'])) {
 			foreach ($this->session->data['vouchers'] as $voucher) {
-				$this->data['vouchers'][] = array(
+				$this->data['vouchers'][] = [
 					'description' => $voucher['description'],
 					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency'))
-				);
+				];
 			}
 		}
 

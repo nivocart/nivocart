@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAffiliateProduct extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if (!$this->affiliate->isLogged()) {
@@ -138,25 +138,25 @@ class ControllerAffiliateProduct extends Controller {
 	}
 
 	protected function getList() {
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('affiliate/product', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -182,12 +182,12 @@ class ControllerAffiliateProduct extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$results = $this->model_affiliate_affiliate->getAffiliateProducts($this->affiliate->getId());
 
 		foreach ($results as $result) {
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'affiliate_product_id' => $result['affiliate_product_id'],
 				'product_id'           => $result['product_id'],
 				'name'                 => $result['name'],
@@ -195,7 +195,7 @@ class ControllerAffiliateProduct extends Controller {
 				'date_added'           => $result['date_added'],
 				'update'               => $this->url->link('affiliate/product/update', 'affiliate_product_id=' . $result['affiliate_product_id'] . '&affiliate_token=' . $this->session->data['affiliate_token'], 'SSL'),
 				'delete'               => $this->url->link('affiliate/product/delete', 'affiliate_product_id=' . $result['affiliate_product_id'] . '&affiliate_token=' . $this->session->data['affiliate_token'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['insert'] = $this->url->link('affiliate/product/insert', '', 'SSL');
@@ -210,7 +210,7 @@ class ControllerAffiliateProduct extends Controller {
 			$this->template = 'default/template/affiliate/product_list.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -219,45 +219,45 @@ class ControllerAffiliateProduct extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	protected function getForm() {
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('affiliate/product', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		if (!isset($this->request->get['affiliate_product_id'])) {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_edit_product'),
 				'href'      => $this->url->link('affiliate/product/insert', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_edit_product'),
 				'href'      => $this->url->link('affiliate/product/update', 'affiliate_product_id=' . $this->request->get['affiliate_product_id'], 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -314,7 +314,7 @@ class ControllerAffiliateProduct extends Controller {
 			$this->template = 'default/template/affiliate/product_form.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -323,7 +323,7 @@ class ControllerAffiliateProduct extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -337,24 +337,24 @@ class ControllerAffiliateProduct extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/product');
 
-			$filter_data = array(
+			$filter_data = [
 				'filter_name' => $this->request->get['filter_name'],
 				'start'       => 0,
 				'limit'       => 5
-			);
+			];
 
 			$results = $this->model_catalog_product->getProducts($filter_data);
 
 			foreach ($results as $result) {
-				$json[] = array(
+				$json[] = [
 					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
 					'product_id' => $result['product_id']
-				);
+				];
 			}
 		}
 

@@ -70,7 +70,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 		$this->data['button_remove'] = $this->language->get('button_remove');
 		$this->data['button_manager'] = $this->language->get('button_manager');
 
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';

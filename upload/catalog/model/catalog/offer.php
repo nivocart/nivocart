@@ -13,7 +13,7 @@ class ModelCatalogOffer extends Model {
 
 		$this->load->model('checkout/offers');
 
-		$offer_products = array();
+		$offer_products = [];
 
 		// Product Product
 		$offer_product_products = $this->model_checkout_offers->getOfferProductProducts();
@@ -29,28 +29,28 @@ class ModelCatalogOffer extends Model {
 				}
 
 				if (($result['one'] === $product_id) && ($result['two'] === $product_id)) {
-					$offer_products[] = array(
+					$offer_products[] = [
 						'group' => 'G241',
 						'one'   => $result['one'],
 						'two'   => $result['two'],
 						'type'  => $type
-					);
+					];
 
 				} elseif ($result['two'] === $product_id) {
-					$offer_products[] = array(
+					$offer_products[] = [
 						'group' => 'G142D',
 						'one'   => $result['one'],
 						'two'   => $result['two'],
 						'type'  => $type
-					);
+					];
 
 				} elseif ($result['one'] === $product_id) {
-					$offer_products[] = array(
+					$offer_products[] = [
 						'group' => 'G242D',
 						'one'   => $result['one'],
 						'two'   => $result['two'],
 						'type'  => $type
-					);
+					];
 
 				} else {
 					continue;
@@ -78,28 +78,28 @@ class ModelCatalogOffer extends Model {
 
 					foreach ($product_lists as $product) {
 						if (($result['one'] === $product_id) && ($product === $product_id)) {
-							$offer_products[] = array(
+							$offer_products[] = [
 								'group' => 'G241D',
 								'one'   => $result['one'],
 								'two'   => $product,
 								'type'  => $type
-							);
+							];
 
 						} elseif ($product === $product_id) {
-							$offer_products[] = array(
+							$offer_products[] = [
 								'group' => 'G142D',
 								'one'   => $result['one'],
 								'two'   => $product,
 								'type'  => $type
-							);
+							];
 
 						} elseif ($result['one'] === $product_id) {
-							$offer_products[] = array(
+							$offer_products[] = [
 								'group' => 'G242D',
 								'one'   => $result['one'],
 								'two'   => $product,
 								'type'  => $type
-							);
+							];
 
 						} else {
 							continue;
@@ -132,28 +132,28 @@ class ModelCatalogOffer extends Model {
 
 					foreach ($product_lists as $product) {
 						if (($product === $product_id) && ($result['two'] === $product_id)) {
-							$offer_products[] = array(
+							$offer_products[] = [
 								'group' => 'G241D',
 								'one'   => $product,
 								'two'   => $result['two'],
 								'type'  => $type
-							);
+							];
 
 						} elseif ($result['two'] === $product_id) {
-							$offer_products[] = array(
+							$offer_products[] = [
 								'group' => 'G142D',
 								'one'   => $product,
 								'two'   => $result['two'],
 								'type'  => $type
-							);
+							];
 
 						} elseif ($product === $product_id) {
-							$offer_products[] = array(
+							$offer_products[] = [
 								'group' => 'G242D',
 								'one'   => $product,
 								'two'   => $result['two'],
 								'type'  => $type
-							);
+							];
 
 						} else {
 							continue;
@@ -189,28 +189,28 @@ class ModelCatalogOffer extends Model {
 					foreach ($product_one_lists as $product_one) {
 						foreach ($product_two_lists as $product_two) {
 							if (($product_one === $product_id) && ($product_two === $product_id)) {
-								$offer_products[] = array(
+								$offer_products[] = [
 									'group' => 'G241D',
 									'one'   => $product_one,
 									'two'   => $product_two,
 									'type'  => $type
-								);
+								];
 
 							} elseif ($product_two === $product_id) {
-								$offer_products[] = array(
+								$offer_products[] = [
 									'group' => 'G142D',
 									'one'   => $product_one,
 									'two'   => $product_two,
 									'type'  => $type
-								);
+								];
 
 							} elseif ($product_one === $product_id) {
-								$offer_products[] = array(
+								$offer_products[] = [
 									'group' => 'G242D',
 									'one'   => $product_one,
 									'two'   => $product_two,
 									'type'  => $type
-								);
+								];
 
 							} else {
 								continue;
@@ -228,7 +228,7 @@ class ModelCatalogOffer extends Model {
 	public function getListProductOffers(): array {
 		$this->load->model('checkout/offers');
 
-		$offer_products = array();
+		$offer_products = [];
 
 		// Product Product
 		$offer_product_products = $this->model_checkout_offers->getOfferProductProducts();
@@ -254,7 +254,7 @@ class ModelCatalogOffer extends Model {
 					$offer_products[] = $pc_result['one'];
 				}
 
-				$product_lists = array();
+				$product_lists = [];
 
 				$product_lists = $this->getCategoryProducts($pc_result['two']);
 
@@ -273,7 +273,7 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_category_products) {
 			foreach ($offer_category_products as $cp_result) {
-				$product_lists = array();
+				$product_lists = [];
 
 				$product_lists = $this->getCategoryProducts($cp_result['one']);
 
@@ -296,7 +296,7 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_category_categories) {
 			foreach ($offer_category_categories as $cc_result) {
-				$product_one_lists = array();
+				$product_one_lists = [];
 
 				$product_one_lists = $this->getCategoryProducts($cc_result['one']);
 
@@ -308,7 +308,7 @@ class ModelCatalogOffer extends Model {
 					}
 				}
 
-				$product_two_lists = array();
+				$product_two_lists = [];
 
 				$product_two_lists = $this->getCategoryProducts($cc_result['two']);
 
@@ -327,7 +327,7 @@ class ModelCatalogOffer extends Model {
 
 	// Product List from Category
 	protected function getCategoryProducts(int $category_id): array {
-		$product_list = array();
+		$product_list = [];
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_to_category` WHERE category_id = '" . (int)$category_id . "'");
 

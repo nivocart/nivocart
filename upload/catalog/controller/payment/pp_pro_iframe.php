@@ -125,15 +125,15 @@ class ControllerPaymentPPProIframe extends Controller {
 				$request .= '&' . http_build_query($this->request->post, '', '&');
 			}
 
-			$options = array(
-				CURLOPT_POST            => true,
-				CURLOPT_HEADER          => false,
-				CURLOPT_URL             => $url,
-				CURLOPT_RETURNTRANSFER  => true,
-				CURLOPT_TIMEOUT         => 30,
-				CURLOPT_SSL_VERIFYPEER  => false,
-				CURLOPT_POSTFIELDS      => $request
-			);
+			$options = [
+				CURLOPT_POST           => true,
+				CURLOPT_HEADER         => false,
+				CURLOPT_URL            => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_TIMEOUT        => 30,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_POSTFIELDS     => $request
+			];
 
 			$ch = curl_init();
 
@@ -142,18 +142,18 @@ class ControllerPaymentPPProIframe extends Controller {
 			$response = curl_exec($ch);
 
 			if (curl_errno($ch) != CURLE_OK) {
-				$log_data = array(
+				$log_data = [
 					'curl_errno' => curl_errno($ch),
 					'curl_error' => curl_error($ch)
-				);
+				];
 
 				$this->model_payment_pp_pro_iframe->log($log_data, 'CURL failed');
 
 			} else {
-				$log_data = array(
+				$log_data = [
 					'IPN REQUEST'  => $request,
 					'IPN RESPONSE' => $response
-				);
+				];
 
 				$this->model_payment_pp_pro_iframe->log($log_data, 'Notify');
 
@@ -194,17 +194,17 @@ class ControllerPaymentPPProIframe extends Controller {
 					}
 
 					if (!empty($order_info['order_status_id'])) {
-						$paypal_order_data = array(
+						$paypal_order_data = [
 							'order_id'         => $order_id,
 							'capture_status'   => ($this->config->get('pp_pro_iframe_transaction_method') == 'sale' ? 'Complete' : 'NotComplete'),
 							'currency_code'    => $this->request->post['mc_currency'],
 							'authorization_id' => $this->request->post['txn_id'],
 							'total'            => $this->request->post['mc_gross']
-						);
+						];
 
 						$paypal_iframe_order_id = $this->model_payment_pp_pro_iframe->addOrder($paypal_order_data);
 
-						$paypal_transaction_data = array(
+						$paypal_transaction_data = [
 							'paypal_iframe_order_id' => $paypal_iframe_order_id,
 							'transaction_id'         => $this->request->post['txn_id'],
 							'parent_transaction_id'  => '',
@@ -217,7 +217,7 @@ class ControllerPaymentPPProIframe extends Controller {
 							'transaction_entity'     => ($this->config->get('pp_pro_iframe_transaction_method') == 'sale' ? 'payment' : 'auth'),
 							'amount'                 => $this->request->post['mc_gross'],
 							'debug_data'             => json_encode($this->request->post)
-						);
+						];
 
 						$this->model_payment_pp_pro_iframe->addTransaction($paypal_transaction_data);
 
@@ -239,7 +239,7 @@ class ControllerPaymentPPProIframe extends Controller {
 	private function constructButtonData($order_info) {
 		$this->load->model('payment/pp_pro_iframe');
 
-		$s_data = array();
+		$s_data = [];
 
 		$s_data['METHOD'] = 'BMCreateButton';
 		$s_data['VERSION'] = '65.2';
@@ -318,10 +318,10 @@ class ControllerPaymentPPProIframe extends Controller {
 			$url = 'https://api-3t.paypal.com/nvp';
 		}
 
-		$options = array(
+		$options = [
 			CURLOPT_POST           => true,
 			CURLOPT_HEADER         => false,
-			CURLOPT_HTTPHEADER     => array('X-VPS-REQUEST-ID: ' . md5($order_info['order_id'] . mt_rand())),
+			CURLOPT_HTTPHEADER     => ['X-VPS-REQUEST-ID: ' . md5($order_info['order_id'] . mt_rand())],
 			CURLOPT_URL            => $url,
 			CURLOPT_PORT           => 443,
 			CURLOPT_FRESH_CONNECT  => true,
@@ -329,7 +329,7 @@ class ControllerPaymentPPProIframe extends Controller {
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_FORBID_REUSE   => true,
 			CURLOPT_POSTFIELDS     => http_build_query($s_data, '', '&')
-		);
+		];
 
 		$ch = curl_init();
 
@@ -338,10 +338,10 @@ class ControllerPaymentPPProIframe extends Controller {
 		$response = curl_exec($ch);
 
 		if (curl_errno($ch) != CURLE_OK) {
-			$log_data = array(
+			$log_data = [
 				'curl_errno' => curl_errno($ch),
 				'curl_error' => curl_error($ch)
-			);
+			];
 
 			$this->model_payment_pp_pro_iframe->log($log_data, 'cURL failed');
 
@@ -350,7 +350,7 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		curl_close($ch);
 
-		$response_data = array();
+		$response_data = [];
 
 		parse_str($response, $response_data);
 

@@ -9,7 +9,7 @@ class ModelFraudFraudLabsPro extends Model {
 	 * Functions Hash, Check, Get
 	 */
 	private function hashIt($s, $prefix = 'fraudlabspro_') {
-	  	$hash = $prefix . $s;
+		$hash = $prefix . $s;
 
 		for ($i = 0; $i < 65536; $i++) {
 			$hash = sha1($prefix . $hash);

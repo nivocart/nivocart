@@ -28,12 +28,12 @@ class ControllerModuleBlog extends Controller {
 		$this->load->model('blog/article');
 		$this->load->model('tool/image');
 
-		$this->data['articles'] = array();
+		$this->data['articles'] = [];
 
-		$data = array(
+		$data = [
 			'start' => 0,
 			'limit' => $setting['limit']
-		);
+		];
 
 		$results = $this->model_blog_article->getArticleModuleWise($data);
 
@@ -54,7 +54,7 @@ class ControllerModuleBlog extends Controller {
 				$total_comments .= $this->language->get('text_comment');
 			}
 
-			$this->data['articles'][] = array(
+			$this->data['articles'][] = [
 				'blog_article_id' => $result['blog_article_id'],
 				'article_title'   => $result['article_title'],
 				'author_name'     => $result['author_name'],
@@ -67,7 +67,7 @@ class ControllerModuleBlog extends Controller {
 				'comment_href'    => $this->url->link('blog/article_info', 'blog_article_id=' . $result['blog_article_id'] . '#comment-section', 'SSL'),
 				'allow_comment'   => $result['allow_comment'],
 				'total_comment'   => $total_comments
-			);
+			];
 		}
 
 		$this->data['article_link'] = $this->url->link('blog/article_list', '', 'SSL');

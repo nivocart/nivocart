@@ -25,35 +25,35 @@ class ModelPaymentSagePayDirect extends Model {
 			$status = false;
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($status) {
-			$method_data = array(
+			$method_data = [
 				'code'       => 'sagepay_direct',
 				'title'      => $this->language->get('text_title'),
 				'terms'      => '',
 				'sort_order' => $this->config->get('sagepay_direct_sort_order')
-			);
+			];
 		}
 
 		return $method_data;
 	}
 
 	public function getCards(int $customer_id) {
-		$card_data = array();
+		$card_data = [];
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sagepay_direct_card WHERE customer_id = '" . (int)$customer_id . "' ORDER BY card_id");
 
 		foreach ($query->rows as $row) {
 
-			$card_data[] = array(
+			$card_data[] = [
 				'card_id'     => $row['card_id'],
 				'customer_id' => $row['customer_id'],
 				'token'       => $row['token'],
 				'digits'      => '**** ' . $row['digits'],
 				'expiry'      => $row['expiry'],
 				'type'        => $row['type']
-			);
+			];
 		}
 
 		return $card_data;
@@ -270,7 +270,7 @@ class ModelPaymentSagePayDirect extends Model {
 
 		$recurrings = $this->getProfiles();
 
-		$cron_data = array();
+		$cron_data = [];
 
 		$i = 0;
 
@@ -383,7 +383,7 @@ class ModelPaymentSagePayDirect extends Model {
 
 		$query = $this->db->query($sql);
 
-		$order_recurring = array();
+		$order_recurring = [];
 
 		foreach ($query->rows as $recurring) {
 			$order_recurring[] = $this->getProfile($recurring['order_recurring_id']);

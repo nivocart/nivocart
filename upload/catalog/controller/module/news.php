@@ -38,7 +38,7 @@ class ControllerModuleNews extends Controller {
 
 		$chars = (isset($numchars)) ? $numchars : 100;
 
-		$this->data['news'] = array();
+		$this->data['news'] = [];
 
 		$results = $this->model_catalog_news->getNewsShort($setting['limit']);
 
@@ -57,13 +57,13 @@ class ControllerModuleNews extends Controller {
 				$description = '<p>' . html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8') . '</p>';
 			}
 
-			$this->data['news'][] = array(
+			$this->data['news'][] = [
 				'title'       => $result['title'],
 				'image'       => $image,
 				'description' => $description,
 				'posted'      => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'href'        => $this->url->link('information/news', 'news_id=' . $result['news_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['module'] = $module++;

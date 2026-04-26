@@ -26,25 +26,25 @@ class ControllerAccountReward extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_reward'),
 			'href'      => $this->url->link('account/reward', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->load->model('account/reward');
 
@@ -68,27 +68,27 @@ class ControllerAccountReward extends Controller {
 			$page = 1;
 		}
 
-		$this->data['rewards'] = array();
+		$this->data['rewards'] = [];
 
-		$data = array(
+		$data = [
 			'sort'  => 'date_added',
 			'order' => 'DESC',
 			'start' => ($page - 1) * 10,
 			'limit' => 10
-		);
+		];
 
 		$reward_total = $this->model_account_reward->getTotalRewards($data);
 
 		$results = $this->model_account_reward->getRewards($data);
 
 		foreach ($results as $result) {
-			$this->data['rewards'][] = array(
+			$this->data['rewards'][] = [
 				'order_id'    => $result['order_id'],
 				'points'      => $result['points'],
 				'description' => $result['description'],
 				'date_added'  => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'href'        => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['total'] = (int)$this->customer->getRewardPoints();
@@ -113,7 +113,7 @@ class ControllerAccountReward extends Controller {
 			$this->template = 'default/template/account/reward.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -122,7 +122,7 @@ class ControllerAccountReward extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

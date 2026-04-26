@@ -396,7 +396,7 @@ class ControllerCommonHome extends Controller {
 		// Today - New Sales
 		$this->load->model('report/sale');
 
-		$total_sales_today = $this->model_report_sale->getTotalSales(array('filter_date_added' => date('Y-m-d')));
+		$total_sales_today = $this->model_report_sale->getTotalSales(['filter_date_added' => date('Y-m-d')]);
 
 		$this->data['total_sale_today'] = $this->currency->format($total_sales_today, $this->config->get('config_currency'));
 
@@ -519,7 +519,7 @@ class ControllerCommonHome extends Controller {
 
 			$action_missed[] = [
 				'text' => $this->language->get('text_view'),
-                'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$customer_result['email'] . '&filter_order_status_id=0', 'SSL')
+				'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_email=' . (string)$customer_result['email'] . '&filter_order_status_id=0', 'SSL')
 			];
 
 			if ($this->config->get('config_customer_dob')) {
@@ -571,7 +571,7 @@ class ControllerCommonHome extends Controller {
 
 			$action_rated[] = [
 				'text' => $this->language->get('text_view'),
-                'href' => $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . '&filter_review=' . (int)$review_result['review_id'] . '&filter_order_status_id=0', 'SSL')
+				'href' => $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . '&filter_review=' . (int)$review_result['review_id'] . '&filter_order_status_id=0', 'SSL')
 			];
 
 			$this->data['reviews'][] = [
@@ -632,7 +632,7 @@ class ControllerCommonHome extends Controller {
 
 		$return_results = $this->model_sale_return->getReturns($data);
 
-    	foreach ($return_results as $return_result) {
+		foreach ($return_results as $return_result) {
 			$action = [];
 
 			$action[] = [
@@ -659,7 +659,7 @@ class ControllerCommonHome extends Controller {
 				'product'        => $return_result['product'],
 				'status'         => $return_result['status'],
 				'date_added'     => date($this->language->get('date_format_time'), strtotime($return_result['date_added'])),
-                'return_history' => $this->model_sale_customer->getTotalCustomersReturns($return_result['customer_id']),
+				'return_history' => $this->model_sale_customer->getTotalCustomersReturns($return_result['customer_id']),
 				'action_return'  => $action_return,
 				'action'         => $action
 			];
@@ -887,7 +887,7 @@ class ControllerCommonHome extends Controller {
 					$data['xaxis'][] = [$i, date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y')))];
 				}
 				break;
-				default:
+			default:
 			case 'week':
 				$date_start = strtotime('-' . date('w') . ' days');
 

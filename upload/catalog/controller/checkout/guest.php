@@ -85,7 +85,7 @@ class ControllerCheckoutGuest extends Controller {
 
 		$this->load->model('account/customer_group');
 
-		$this->data['customer_groups'] = array();
+		$this->data['customer_groups'] = [];
 
 		if (is_array($this->config->get('config_customer_group_display'))) {
 			$customer_groups = $this->model_account_customer_group->getCustomerGroups();
@@ -186,7 +186,7 @@ class ControllerCheckoutGuest extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout');
 
-		$json = array();
+		$json = [];
 
 		// Validate if customer is logged in
 		if ($this->customer->isLogged()) {

@@ -103,12 +103,12 @@ class ModelDesignMenuItems extends Model {
 	}
 
 	public function editMenuItemStatus(int $menu_item_id, int $status): void {
-        $this->db->query("UPDATE `" . DB_PREFIX . "menu_item` SET status = '" . (int)$status . "' WHERE menu_item_id = '" . (int)$menu_item_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "menu_item` SET status = '" . (int)$status . "' WHERE menu_item_id = '" . (int)$menu_item_id . "'");
 
-        $this->cache->delete('menu_items');
+		$this->cache->delete('menu_items');
 		$this->cache->delete('menu_items.total');
 		$this->cache->delete('menu_items.parents.total');
-    }
+	}
 
 	public function deleteMenuItem(int $menu_item_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "menu_item_path` WHERE menu_item_id = '" . (int)$menu_item_id . "'");

@@ -36,7 +36,7 @@ class Cart {
 	 *
 	 * @param 	$registry
 	 */
-    public function __construct(Registry $registry) {
+	public function __construct(Registry $registry) {
 		$this->config = $registry->get('config');
 		$this->customer = $registry->get('customer');
 		$this->session = $registry->get('session');
@@ -296,8 +296,8 @@ class Cart {
 
 					// Stock
 					if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $quantity)) {
- 						$stock = false;
- 					}
+						$stock = false;
+					}
 
 					$recurring = false;
 					$recurring_frequency = 0;

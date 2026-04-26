@@ -309,7 +309,7 @@ class ControllerBlogCategory extends Controller {
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
-	   	$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_none'] = $this->language->get('text_none');
 		$this->data['text_default'] = $this->language->get('text_default');
 		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
@@ -356,7 +356,7 @@ class ControllerBlogCategory extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-	 	if (isset($this->error['name'])) {
+		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
 			$this->data['error_name'] = [];
@@ -406,7 +406,7 @@ class ControllerBlogCategory extends Controller {
 		} elseif (isset($this->request->get['blog_category_id'])) {
 			$this->data['category_description'] = $this->model_blog_category->getCategoryDescriptions($this->request->get['blog_category_id']);
 		} else {
-			$this->data['category_description'] = array();
+			$this->data['category_description'] = [];
 		}
 
 		$parent_id = 0;

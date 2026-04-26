@@ -246,7 +246,7 @@ class ModelAccountCustomer extends Model {
 	public function getCustomers(array $data = []): array {
 		$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS `name`, cgd.name AS `customer_group` FROM `" . DB_PREFIX . "customer` c LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) ";
 
-		$implode = array();
+		$implode = [];
 
 		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
 			$implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "%'";
@@ -280,14 +280,14 @@ class ModelAccountCustomer extends Model {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}
 
-		$sort_data = array(
+		$sort_data = [
 			'name',
 			'c.email',
 			'customer_group',
 			'c.status',
 			'c.ip',
 			'c.date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];

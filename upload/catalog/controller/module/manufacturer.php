@@ -25,13 +25,13 @@ class ControllerModuleManufacturer extends Controller {
 		$this->load->model('tool/image');
 		$this->load->model('catalog/manufacturer');
 
-		$this->data['manufacturers'] = array();
+		$this->data['manufacturers'] = [];
 
-		$data = array(
+		$data = [
 			'order' => 'ASC',
 			'start' => 0,
 			'limit' => $setting['limit']
-		);
+		];
 
 		$results = $this->model_catalog_manufacturer->getManufacturers($data);
 
@@ -42,12 +42,12 @@ class ControllerModuleManufacturer extends Controller {
 				$image = $this->model_tool_image->resize('no_image.jpg', 48, 48);
 			}
 
-			$this->data['manufacturers'][] = array(
+			$this->data['manufacturers'][] = [
 				'manufacturer_id' => $result['manufacturer_id'],
 				'image'           => $image,
 				'name'            => $result['name'],
 				'href'            => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['module'] = $module++;

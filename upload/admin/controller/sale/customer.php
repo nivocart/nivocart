@@ -453,7 +453,7 @@ class ControllerSaleCustomer extends Controller {
 		$order = $this->request->get['order'] ?? 'ASC';
 		$page = $this->request->get['page'] ?? 1;
 
-		$filter_data = array(
+		$filter_data = [
 			'filter_name'              => $filter_name,
 			'filter_email'             => $filter_email,
 			'filter_customer_group_id' => $filter_customer_group_id,
@@ -465,7 +465,7 @@ class ControllerSaleCustomer extends Controller {
 			'order'                    => $order,
 			'start'                    => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'                    => $this->config->get('config_admin_limit')
-		);
+		];
 
 		$customer_total = $this->model_sale_customer->getTotalCustomers($filter_data);
 
@@ -1578,7 +1578,7 @@ class ControllerSaleCustomer extends Controller {
 			$this->error['warning'] = $this->language->get('error_action');
 		}
 
- 		if (!$this->request->post['amount']) {
+		if (!$this->request->post['amount']) {
 			$this->error['warning'] = $this->language->get('error_amount');
 		}
 
@@ -1706,7 +1706,7 @@ class ControllerSaleCustomer extends Controller {
 			$this->error['warning'] = $this->language->get('error_action');
 		}
 
- 		if (!$this->request->post['points']) {
+		if (!$this->request->post['points']) {
 			$this->error['warning'] = $this->language->get('error_points');
 		}
 

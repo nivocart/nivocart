@@ -5,7 +5,6 @@
  * @package NivoCart
  */
 class ModelToolRoute extends Model {
-
 	public function getRoutes(array $data = []): array {
 		$routes_data = [];
 
@@ -26,41 +25,41 @@ class ModelToolRoute extends Model {
 		$this->load->model('catalog/sitemap');
 
 		// Common Pages
-		$links_data[] = ['link'	=> 'common/home', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/account', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/login', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/register', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/edit', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/password', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/address', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/wishlist', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/order', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/download', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/reward', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/return', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/return/insert', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/transaction', 'name' => ''];
-		$links_data[] = ['link'	=> 'account/newsletter', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/account', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/login', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/register', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/edit', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/password', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/payment', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/product', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/tracking', 'name' => ''];
-		$links_data[] = ['link'	=> 'affiliate/transaction', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/search', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/special', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/compare', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/product_list', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/product_wall', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/review_list', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/category_list', 'name' => ''];
-		$links_data[] = ['link'	=> 'product/manufacturer', 'name' => ''];
-		$links_data[] = ['link'	=> 'information/contact', 'name' => ''];
-		$links_data[] = ['link'	=> 'information/sitemap', 'name' => ''];
-		$links_data[] = ['link'	=> 'information/news_list', 'name' => ''];
+		$links_data[] = ['link' => 'common/home', 'name' => ''];
+		$links_data[] = ['link' => 'account/account', 'name' => ''];
+		$links_data[] = ['link' => 'account/login', 'name' => ''];
+		$links_data[] = ['link' => 'account/register', 'name' => ''];
+		$links_data[] = ['link' => 'account/edit', 'name' => ''];
+		$links_data[] = ['link' => 'account/password', 'name' => ''];
+		$links_data[] = ['link' => 'account/address', 'name' => ''];
+		$links_data[] = ['link' => 'account/wishlist', 'name' => ''];
+		$links_data[] = ['link' => 'account/order', 'name' => ''];
+		$links_data[] = ['link' => 'account/download', 'name' => ''];
+		$links_data[] = ['link' => 'account/reward', 'name' => ''];
+		$links_data[] = ['link' => 'account/return', 'name' => ''];
+		$links_data[] = ['link' => 'account/return/insert', 'name' => ''];
+		$links_data[] = ['link' => 'account/transaction', 'name' => ''];
+		$links_data[] = ['link' => 'account/newsletter', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/account', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/login', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/register', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/edit', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/password', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/payment', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/product', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/tracking', 'name' => ''];
+		$links_data[] = ['link' => 'affiliate/transaction', 'name' => ''];
+		$links_data[] = ['link' => 'product/search', 'name' => ''];
+		$links_data[] = ['link' => 'product/special', 'name' => ''];
+		$links_data[] = ['link' => 'product/compare', 'name' => ''];
+		$links_data[] = ['link' => 'product/product_list', 'name' => ''];
+		$links_data[] = ['link' => 'product/product_wall', 'name' => ''];
+		$links_data[] = ['link' => 'product/review_list', 'name' => ''];
+		$links_data[] = ['link' => 'product/category_list', 'name' => ''];
+		$links_data[] = ['link' => 'product/manufacturer', 'name' => ''];
+		$links_data[] = ['link' => 'information/contact', 'name' => ''];
+		$links_data[] = ['link' => 'information/sitemap', 'name' => ''];
+		$links_data[] = ['link' => 'information/news_list', 'name' => ''];
 
 		// Information
 		$information_data = [];

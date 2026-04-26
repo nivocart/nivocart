@@ -25,12 +25,12 @@ class ModelCheckoutOffers extends Model {
 			$product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_product_product` WHERE offer_product_product_id = '" . (int)$result['offer_product_product_id'] . "'");
 
 			if ($product_query->num_rows) {
-				$product_product_data[] = array(
+				$product_product_data[] = [
 					'one'  => $product_query->row['product_one'],
 					'two'  => $product_query->row['product_two'],
 					'type' => $product_query->row['type'],
 					'disc' => $product_query->row['discount']
-				);
+				];
 
 			} else {
 				$status = false;
@@ -60,12 +60,12 @@ class ModelCheckoutOffers extends Model {
 			$product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_product_category` WHERE offer_product_category_id = '" . (int)$result['offer_product_category_id'] . "'");
 
 			if ($product_query->num_rows) {
-				$product_category_data[] = array(
+				$product_category_data[] = [
 					'one'  => $product_query->row['product_one'],
 					'two'  => $product_query->row['category_two'],
 					'type' => $product_query->row['type'],
 					'disc' => $product_query->row['discount']
-				);
+				];
 
 			} else {
 				$status = false;
@@ -95,12 +95,12 @@ class ModelCheckoutOffers extends Model {
 			$category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_product` WHERE offer_category_product_id = '" . (int)$result['offer_category_product_id'] . "'");
 
 			if ($category_query->num_rows) {
-				$category_product_data[] = array(
+				$category_product_data[] = [
 					'one'  => $category_query->row['category_one'],
 					'two'  => $category_query->row['product_two'],
 					'type' => $category_query->row['type'],
 					'disc' => $category_query->row['discount']
-				);
+				];
 
 			} else {
 				$status = false;
@@ -130,12 +130,12 @@ class ModelCheckoutOffers extends Model {
 			$category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_category` WHERE offer_category_category_id = '" . (int)$result['offer_category_category_id'] . "'");
 
 			if ($category_query->num_rows) {
-				$category_category_data[] = array(
+				$category_category_data[] = [
 					'one'  => $category_query->row['category_one'],
 					'two'  => $category_query->row['category_two'],
 					'type' => $category_query->row['type'],
 					'disc' => $category_query->row['discount']
-				);
+				];
 
 			} else {
 				$status = false;
@@ -151,7 +151,7 @@ class ModelCheckoutOffers extends Model {
 
 	// Category List
 	public function getCategoryList(int $product_id): array {
-		$category_list = array();
+		$category_list = [];
 
 		$query = $this->db->query("SELECT category_id FROM `" . DB_PREFIX . "product_to_category` WHERE product_id = '" . (int)$product_id . "'");
 

@@ -336,10 +336,10 @@ class ControllerDesignMenu extends Controller {
 		}
 
 		$this->template = 'design/menu_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAffiliateForgotten extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if ($this->affiliate->isLogged()) {
@@ -64,25 +64,25 @@ class ControllerAffiliateForgotten extends Controller {
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_forgotten'),
 			'href'      => $this->url->link('affiliate/forgotten', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -112,7 +112,7 @@ class ControllerAffiliateForgotten extends Controller {
 			$this->template = 'default/template/affiliate/forgotten.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -121,7 +121,7 @@ class ControllerAffiliateForgotten extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -154,7 +154,7 @@ class ControllerAffiliateForgotten extends Controller {
 		$affiliate_info = $this->model_affiliate_affiliate->getAffiliateByEmail($this->request->post['email']);
 
 		if ($affiliate_info && !$affiliate_info['approved']) {
-		    $this->error['warning'] = $this->language->get('error_approved');
+			$this->error['warning'] = $this->language->get('error_approved');
 		}
 
 		return empty($this->error);

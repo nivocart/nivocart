@@ -49,25 +49,25 @@ class ControllerAccountRegister extends Controller {
 			$this->redirect($this->url->link('account/success', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_register'),
 			'href'      => $this->url->link('account/register', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -255,7 +255,7 @@ class ControllerAccountRegister extends Controller {
 
 		$this->load->model('account/customer_group');
 
-		$this->data['customer_groups'] = array();
+		$this->data['customer_groups'] = [];
 
 		if (is_array($this->config->get('config_customer_group_display'))) {
 			$customer_groups = $this->model_account_customer_group->getCustomerGroups();
@@ -396,7 +396,7 @@ class ControllerAccountRegister extends Controller {
 			$this->template = 'default/template/account/register.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -405,14 +405,14 @@ class ControllerAccountRegister extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	protected function validate() {
 		if (!isset($this->request->post['firstname']) || (mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
- 			$this->error['firstname'] = $this->language->get('error_firstname');
+			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
 		if (!isset($this->request->post['lastname']) || (mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
@@ -543,7 +543,7 @@ class ControllerAccountRegister extends Controller {
 	}
 
 	public function country() {
-		$json = array();
+		$json = [];
 
 		$this->load->model('localisation/country');
 
@@ -552,7 +552,7 @@ class ControllerAccountRegister extends Controller {
 		if ($country_info) {
 			$this->load->model('localisation/zone');
 
-			$json = array(
+			$json = [
 				'country_id'        => $country_info['country_id'],
 				'name'              => $country_info['name'],
 				'iso_code_2'        => $country_info['iso_code_2'],
@@ -561,7 +561,7 @@ class ControllerAccountRegister extends Controller {
 				'postcode_required' => $country_info['postcode_required'],
 				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
 				'status'            => $country_info['status']
-			);
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

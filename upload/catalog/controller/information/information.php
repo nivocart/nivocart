@@ -12,13 +12,13 @@ class ControllerInformationInformation extends Controller {
 
 		$this->load->model('catalog/information');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
 		if (isset($this->request->get['information_id'])) {
 			$information_id = (int)$this->request->get['information_id'];
@@ -33,11 +33,11 @@ class ControllerInformationInformation extends Controller {
 
 			$this->document->addLink($this->url->link('information/information', 'information_id=' . $information_info['information_id']), 'canonical');
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $information_info['title'],
 				'href'      => $this->url->link('information/information', 'information_id=' . $information_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $information_info['title'];
 
@@ -56,7 +56,7 @@ class ControllerInformationInformation extends Controller {
 				$this->template = 'default/template/information/information.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -65,18 +65,18 @@ class ControllerInformationInformation extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
 		} else {
 			$this->document->setTitle($this->language->get('text_error'));
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_error'),
 				'href'      => $this->url->link('information/information', 'information_id=' . $information_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('text_error');
 
@@ -95,7 +95,7 @@ class ControllerInformationInformation extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -104,7 +104,7 @@ class ControllerInformationInformation extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());

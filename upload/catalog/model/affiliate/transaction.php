@@ -11,11 +11,11 @@ class ModelAffiliateTransaction extends Model {
 	public function getTransactions(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "affiliate_transaction` WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'";
 
-		$sort_data = array(
+		$sort_data = [
 			'amount',
 			'description',
 			'date_added'
-		);
+		];
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];

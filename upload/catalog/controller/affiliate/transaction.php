@@ -18,25 +18,25 @@ class ControllerAffiliateTransaction extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_transaction'),
 			'href'      => $this->url->link('affiliate/transaction', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->load->model('affiliate/transaction');
 
@@ -57,25 +57,25 @@ class ControllerAffiliateTransaction extends Controller {
 			$page = 1;
 		}
 
-		$this->data['transactions'] = array();
+		$this->data['transactions'] = [];
 
-		$filter_data = array(
+		$filter_data = [
 			'sort'  => 'date_added',
 			'order' => 'DESC',
 			'start' => ($page - 1) * 10,
 			'limit' => 10
-		);
+		];
 
 		$transaction_total = $this->model_affiliate_transaction->getTotalTransactions($filter_data);
 
 		$results = $this->model_affiliate_transaction->getTransactions($filter_data);
 
 		foreach ($results as $result) {
-			$this->data['transactions'][] = array(
+			$this->data['transactions'][] = [
 				'amount'      => $this->currency->format($result['amount'], $this->config->get('config_currency')),
 				'description' => $result['description'],
 				'date_added'  => date($this->language->get('date_format_time'), strtotime($result['date_added']))
-			);
+			];
 		}
 
 		$this->data['balance'] = $this->currency->format($this->model_affiliate_transaction->getBalance(), $this->config->get('config_currency'));
@@ -100,7 +100,7 @@ class ControllerAffiliateTransaction extends Controller {
 			$this->template = 'default/template/affiliate/transaction.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -109,7 +109,7 @@ class ControllerAffiliateTransaction extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

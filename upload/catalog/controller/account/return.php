@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAccountReturn extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if (!$this->customer->isLogged()) {
@@ -26,19 +26,19 @@ class ControllerAccountReturn extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$url = '';
 
@@ -46,11 +46,11 @@ class ControllerAccountReturn extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/return', $url, 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -72,21 +72,21 @@ class ControllerAccountReturn extends Controller {
 			$page = 1;
 		}
 
-		$this->data['returns'] = array();
+		$this->data['returns'] = [];
 
 		$return_total = $this->model_account_return->getTotalReturns();
 
 		$results = $this->model_account_return->getReturns(($page - 1) * 10, 10);
 
 		foreach ($results as $result) {
-			$this->data['returns'][] = array(
+			$this->data['returns'][] = [
 				'return_id'  => $result['return_id'],
 				'order_id'   => $result['order_id'],
 				'name'       => $result['firstname'] . ' ' . $result['lastname'],
 				'status'     => $result['status'],
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'href'       => $this->url->link('account/return/info', 'return_id=' . $result['return_id'] . $url, 'SSL')
-			);
+			];
 		}
 
 		$pagination = new Pagination();
@@ -109,7 +109,7 @@ class ControllerAccountReturn extends Controller {
 			$this->template = 'default/template/account/return_list.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -118,7 +118,7 @@ class ControllerAccountReturn extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -153,19 +153,19 @@ class ControllerAccountReturn extends Controller {
 		if ($return_info) {
 			$this->document->setTitle($this->language->get('text_return'));
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', '', 'SSL'),
 				'separator' => false
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_account'),
 				'href'      => $this->url->link('account/account', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$url = '';
 
@@ -173,17 +173,17 @@ class ControllerAccountReturn extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('account/return', $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_return'),
 				'href'      => $this->url->link('account/return/info', 'return_id=' . $this->request->get['return_id'] . $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('text_return');
 
@@ -228,16 +228,16 @@ class ControllerAccountReturn extends Controller {
 			$this->data['comment'] = nl2br($return_info['comment']);
 			$this->data['action'] = $return_info['action'];
 
-			$this->data['histories'] = array();
+			$this->data['histories'] = [];
 
 			$results = $this->model_account_return->getReturnHistories($this->request->get['return_id']);
 
 			foreach ($results as $result) {
-				$this->data['histories'][] = array(
+				$this->data['histories'][] = [
 					'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 					'status'     => $result['status'],
 					'comment'    => nl2br($result['comment'])
-				);
+				];
 			}
 
 			$this->data['continue'] = $this->url->link('account/return', $url, 'SSL');
@@ -251,7 +251,7 @@ class ControllerAccountReturn extends Controller {
 				$this->template = 'default/template/account/return_info.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -260,32 +260,32 @@ class ControllerAccountReturn extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
 		} else {
 			$this->document->setTitle($this->language->get('text_return'));
 
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
 				'href'      => $this->url->link('common/home', '', 'SSL'),
 				'separator' => false
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_account'),
 				'href'      => $this->url->link('account/account', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
 				'href'      => $this->url->link('account/return', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$url = '';
 
@@ -293,11 +293,11 @@ class ControllerAccountReturn extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_return'),
 				'href'      => $this->url->link('account/return/info', 'return_id=' . $return_id . $url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 			$this->data['heading_title'] = $this->language->get('text_return');
 
@@ -316,7 +316,7 @@ class ControllerAccountReturn extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -325,7 +325,7 @@ class ControllerAccountReturn extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 			$this->response->setOutput($this->render());
@@ -354,25 +354,25 @@ class ControllerAccountReturn extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
 		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.css');
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/return/insert', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -612,7 +612,7 @@ class ControllerAccountReturn extends Controller {
 			$this->template = 'default/template/account/return_form.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -621,7 +621,7 @@ class ControllerAccountReturn extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -635,19 +635,19 @@ class ControllerAccountReturn extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/return', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -666,7 +666,7 @@ class ControllerAccountReturn extends Controller {
 			$this->template = 'default/template/common/success.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -675,7 +675,7 @@ class ControllerAccountReturn extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

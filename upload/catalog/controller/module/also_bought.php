@@ -58,7 +58,7 @@ class ControllerModuleAlsoBought extends Controller {
 
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$results = $this->model_catalog_product->getAlsoBoughtProducts($product_id, $setting['limit']);
 
@@ -112,7 +112,7 @@ class ControllerModuleAlsoBought extends Controller {
 			// Quote redirect
 			$quote = ($result['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'product_id'      => $result['product_id'],
 				'thumb'           => $image,
 				'label'           => $label,
@@ -134,7 +134,7 @@ class ControllerModuleAlsoBought extends Controller {
 				'rating'          => (int)$rating,
 				'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 				'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['module'] = $module++;

@@ -30,12 +30,12 @@ class ControllerPaymentPPStandard extends Controller {
 			$this->data['business'] = $this->config->get('pp_standard_email');
 			$this->data['item_name'] = html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
 
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 
 			$subtotal = 0;
 
 			foreach ($this->cart->getProducts() as $product) {
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
 					if ($option['type'] != 'file') {
@@ -52,24 +52,24 @@ class ControllerPaymentPPStandard extends Controller {
 						}
 					}
 
-					$option_data[] = array(
+					$option_data[] = [
 						'name'  => (utf8_strlen($option['name']) > 64 ? utf8_substr($option['name'], 0, 62) . '..' : $option['name']),
 						'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
-					);
+					];
 				}
 
 				$price = $this->currency->format($product['price'], $order_info['currency_code'], false, false);
 
 				$subtotal += $price * $product['quantity'];
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'name'     => htmlspecialchars($product['name']),
 					'model'    => htmlspecialchars($product['model']),
 					'price'    => $price,
 					'quantity' => $product['quantity'],
 					'option'   => $option_data,
 					'weight'   => $product['weight']
-				);
+				];
 			}
 
 			$this->data['discount_amount_cart'] = 0;
@@ -77,14 +77,14 @@ class ControllerPaymentPPStandard extends Controller {
 			$total = $this->currency->format($order_info['total'] - $subtotal, $order_info['currency_code'], false, false);
 
 			if ($total > 0) {
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'name'     => $this->language->get('text_total'),
 					'model'    => '',
 					'price'    => $total,
 					'quantity' => 1,
-					'option'   => array(),
+					'option'   => [],
 					'weight'   => 0
-				);
+				];
 
 			} else {
 				$this->data['discount_amount_cart'] -= $total;

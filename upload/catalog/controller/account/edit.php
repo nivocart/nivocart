@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAccountEdit extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if (!$this->customer->isLogged()) {
@@ -48,25 +48,25 @@ class ControllerAccountEdit extends Controller {
 			}
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_edit'),
 			'href'      => $this->url->link('account/edit', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -221,7 +221,7 @@ class ControllerAccountEdit extends Controller {
 			$this->template = 'default/template/account/edit.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -230,7 +230,7 @@ class ControllerAccountEdit extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -326,8 +326,8 @@ class ControllerAccountEdit extends Controller {
 			$this->data['logo'] = '';
 		}
 
-		$this->data['customers'] = array();
-		$this->data['addresses'] = array();
+		$this->data['customers'] = [];
+		$this->data['addresses'] = [];
 
 		if ($customer_id) {
 			$customer_info = $this->model_account_customer->getCustomer($customer_id);
@@ -374,7 +374,7 @@ class ControllerAccountEdit extends Controller {
 					$customer_user_agent = '';
 				}
 
-				$this->data['customers'][] = array(
+				$this->data['customers'][] = [
 					'customer_id'          => $customer_id,
 					'date_added'           => date($this->language->get('date_format_short'), strtotime($customer_info['date_added'])),
 					'store_name'           => $this->config->get('config_name'),
@@ -392,7 +392,7 @@ class ControllerAccountEdit extends Controller {
 					'date_of_birth'        => $customer_date_of_birth,
 					'user_agent'           => $customer_user_agent,
 					'ip'                   => $customer_info['ip']
-				);
+				];
 
 				// Addresses
 				$results = $this->model_account_address->getAddresses();
@@ -404,7 +404,7 @@ class ControllerAccountEdit extends Controller {
 						$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 					}
 
-					$find = array(
+					$find = [
 						'{firstname}',
 						'{lastname}',
 						'{company}',
@@ -415,9 +415,9 @@ class ControllerAccountEdit extends Controller {
 						'{zone}',
 						'{zone_code}',
 						'{country}'
-					);
+					];
 
-					$replace = array(
+					$replace = [
 						'firstname' => $result['firstname'],
 						'lastname'  => $result['lastname'],
 						'company'   => $result['company'],
@@ -428,12 +428,12 @@ class ControllerAccountEdit extends Controller {
 						'zone'      => $result['zone'],
 						'zone_code' => $result['zone_code'],
 						'country'   => $result['country']
-					);
+					];
 
-					$this->data['addresses'][] = array(
+					$this->data['addresses'][] = [
 						'address_id' => $result['address_id'],
-						'address'    => str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))))
-					);
+						'address'    => str_replace(["\r\n", "\r", "\n"], '<br />', preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />', trim(str_replace($find, $replace, $format))))
+					];
 				}
 			}
 		}
@@ -447,7 +447,7 @@ class ControllerAccountEdit extends Controller {
 			$this->template = 'default/template/account/account_data.tpl';
 		}
 
-		// Dompdf 
+		// Dompdf
 		if ($pdf) {
 			$document_type = $this->language->get('text_customer_data');
 

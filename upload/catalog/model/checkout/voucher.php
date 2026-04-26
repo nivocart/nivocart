@@ -49,7 +49,7 @@ class ModelCheckoutVoucher extends Model {
 		}
 
 		if ($status) {
-			return array(
+			return [
 				'voucher_id'       => $voucher_query->row['voucher_id'],
 				'code'             => $voucher_query->row['code'],
 				'from_name'        => $voucher_query->row['from_name'],
@@ -63,7 +63,7 @@ class ModelCheckoutVoucher extends Model {
 				'amount'           => round($amount, 2, PHP_ROUND_HALF_UP),
 				'status'           => $voucher_query->row['status'],
 				'date_added'       => $voucher_query->row['date_added']
-			);
+			];
 		}
 	}
 

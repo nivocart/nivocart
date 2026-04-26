@@ -603,7 +603,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['column_action'] = $this->language->get('column_action');
 
 		$this->data['button_enable'] = $this->language->get('button_enable');
-        $this->data['button_disable'] = $this->language->get('button_disable');
+		$this->data['button_disable'] = $this->language->get('button_disable');
 		$this->data['button_copy'] = $this->language->get('button_copy');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
@@ -768,7 +768,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['column_profile'] = $this->language->get('column_profile');
 		$this->data['column_customer_group'] = $this->language->get('column_customer_group');
 		$this->data['column_quantity'] = $this->language->get('column_quantity');
-		$this->data['column_priority']	= $this->language->get('column_priority');
+		$this->data['column_priority'] = $this->language->get('column_priority');
 		$this->data['column_price'] = $this->language->get('column_price');
 		$this->data['column_date_start'] = $this->language->get('column_date_start');
 		$this->data['column_date_end'] = $this->language->get('column_date_end');

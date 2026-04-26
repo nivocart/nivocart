@@ -13,7 +13,7 @@ class ControllerPaymentInStore extends Controller {
 		$this->data['text_wait'] = $this->language->get('text_wait');
 		$this->data['text_instruction'] = $this->language->get('text_instruction');
 
-    	$this->data['button_confirm'] = $this->language->get('button_confirm');
+		$this->data['button_confirm'] = $this->language->get('button_confirm');
 
 		$this->data['continue'] = $this->url->link('checkout/success', '', 'SSL');
 

@@ -10,7 +10,7 @@
 |
 */
 
-$platforms = array (
+$platforms = [
 	'windows nt 10.0' => 'Windows 10/11',
 	'windows nt 6.3'  => 'Windows 8.1',
 	'windows nt 6.2'  => 'Windows 8',
@@ -49,9 +49,9 @@ $platforms = array (
 	'openbsd'         => 'OpenBSD',
 	'gnu'             => 'GNU/Linux',
 	'unix'            => 'Unknown Unix OS'
-);
+];
 
-$browsers = array(
+$browsers = [
 	'Flock'        => 'Flock',
 	'Edge'         => 'Microsoft Edge',
 	'OPR'          => 'Opera',
@@ -92,9 +92,9 @@ $browsers = array(
 	'Vivaldi'      => 'Vivaldi',
 	'IBrowse'      => 'IBrowse',
 	'Android'      => 'Android Browser'
-);
+];
 
-$pads = array(
+$pads = [
 	'ipad'     => 'Apple iPad',
 	'kindle'   => 'Kindle',
 	'kobo'     => 'Kobo',
@@ -106,9 +106,9 @@ $pads = array(
 	'android'  => 'Android',
 	'tablet'   => 'Tablet',
 	'xoom'     => 'Xoom'
-);
+];
 
-$mobiles = array(
+$mobiles = [
 	'mobileexplorer' => 'Mobile Explorer',
 	'palmsource'     => 'Palm',
 	'palmscape'      => 'Palmscape',
@@ -158,39 +158,39 @@ $mobiles = array(
 	'ruggex'         => 'Ruggex',
 
 	// Operating Systems
-	'symbian'        => 'Symbian',
-	'symbianos'      => 'SymbianOS',
-	'elaine'         => 'Palm',
-	'palm'           => 'Palm',
-	'series60'       => 'Symbian S60',
-	'windows ce'     => 'Windows CE',
-	'windows phone'  => 'Windows Phone',
-	'webos'          => 'WebOS',
-	'android'        => 'Android',
+	'symbian'       => 'Symbian',
+	'symbianos'     => 'SymbianOS',
+	'elaine'        => 'Palm',
+	'palm'          => 'Palm',
+	'series60'      => 'Symbian S60',
+	'windows ce'    => 'Windows CE',
+	'windows phone' => 'Windows Phone',
+	'webos'         => 'WebOS',
+	'android'       => 'Android',
 
 	// Other
-	'digital paths'  => 'Digital Paths',
-	'avantgo'        => 'AvantGo',
-	'xiino'          => 'Xiino',
-	'novarra'        => 'Novarra Transcoder',
-	'vodafone'       => 'Vodafone',
-	'docomo'         => 'NTT DoCoMo',
-	'o2'             => 'O2',
+	'digital paths' => 'Digital Paths',
+	'avantgo'       => 'AvantGo',
+	'xiino'         => 'Xiino',
+	'novarra'       => 'Novarra Transcoder',
+	'vodafone'      => 'Vodafone',
+	'docomo'        => 'NTT DoCoMo',
+	'o2'            => 'O2',
 
 	// Fallback
-	'mobile'         => 'Generic Mobile',
-	'wireless'       => 'Generic Mobile',
-	'j2me'           => 'Generic Mobile',
-	'midp'           => 'Generic Mobile',
-	'cldc'           => 'Generic Mobile',
-	'up.link'        => 'Generic Mobile',
-	'up.browser'     => 'Generic Mobile',
-	'smartphone'     => 'Generic Mobile',
-	'cellphone'      => 'Generic Mobile'
-);
+	'mobile'     => 'Generic Mobile',
+	'wireless'   => 'Generic Mobile',
+	'j2me'       => 'Generic Mobile',
+	'midp'       => 'Generic Mobile',
+	'cldc'       => 'Generic Mobile',
+	'up.link'    => 'Generic Mobile',
+	'up.browser' => 'Generic Mobile',
+	'smartphone' => 'Generic Mobile',
+	'cellphone'  => 'Generic Mobile'
+];
 
 // Most common robots
-$robots = array(
+$robots = [
 	'Yandex'                      => 'Yandex',
 	'Googlebot'                   => 'Google',
 	'Mediapartners-Google'        => 'Mediapartners-Google (Adsense)',
@@ -286,4 +286,4 @@ $robots = array(
 	'GSiteCrawler'                => 'GSiteCrawler',
 	'HTTrack'                     => 'HTTrack',
 	'Wget'                        => 'Wget'
-);
+];

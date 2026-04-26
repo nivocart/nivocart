@@ -44,24 +44,24 @@ class ControllerModuleStore extends Controller {
 
 			$this->data['store_id'] = $this->config->get('config_store_id');
 
-			$this->data['stores'] = array();
+			$this->data['stores'] = [];
 
-			$this->data['stores'][] = array(
+			$this->data['stores'][] = [
 				'store_id' => 0,
 				'name'     => $this->language->get('text_default'),
 				'url'      => HTTP_SERVER . 'index.php?route=common/home&session_id=' . $this->session->getId()
-			);
+			];
 
 			$this->load->model('setting/store');
 
 			$results = $this->model_setting_store->getStores();
 
 			foreach ($results as $result) {
-				$this->data['stores'][] = array(
+				$this->data['stores'][] = [
 					'store_id' => $result['store_id'],
 					'name'     => $result['name'],
 					'url'      => $result['url'] . 'index.php?route=common/home&session_id=' . $this->session->getId()
-				);
+				];
 			}
 
 			$this->data['access'] = isset($setting['access']) ? 1 : 0;

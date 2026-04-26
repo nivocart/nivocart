@@ -48,7 +48,7 @@ class Session {
 	 * @param string $value
 	 *
 	 * @return string returns the current session ID
-	 */	
+	 */
 	public function start(string $key = 'default', string $value = ''): string {
 		if ($value) {
 			$this->session_id = $value;
@@ -59,7 +59,7 @@ class Session {
 		}
 
 		if (!isset($_SESSION[$this->session_id])) {
-			$_SESSION[$this->session_id] = array();
+			$_SESSION[$this->session_id] = [];
 		}
 
 		$this->data = &$_SESSION[$this->session_id];

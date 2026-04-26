@@ -74,7 +74,7 @@ class ControllerModuleAlsoBought extends Controller {
 		if (isset($this->error['image'])) {
 			$this->data['error_image'] = $this->error['image'];
 		} else {
-			$this->data['error_image'] = array();
+			$this->data['error_image'] = [];
 		}
 
 		$this->data['breadcrumbs'] = [];

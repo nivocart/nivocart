@@ -53,10 +53,10 @@ class ControllerCommonFileManager extends Controller {
 		$this->data['text_folder_content'] = $this->language->get('text_folder_content');
 		$this->data['text_file_delete'] = $this->language->get('text_file_delete');
 		$this->data['text_file_action'] = $this->language->get('text_file_action');
-		$this->data['text_no_image']	= $this->language->get('text_no_image');
+		$this->data['text_no_image'] = $this->language->get('text_no_image');
 		$this->data['text_select_image'] = $this->language->get('text_select_image');
 		$this->data['text_update_image'] = $this->language->get('text_update_image');
-		$this->data['text_yes_execute']= $this->language->get('text_yes_execute');
+		$this->data['text_yes_execute'] = $this->language->get('text_yes_execute');
 		$this->data['text_yes_delete'] = $this->language->get('text_yes_delete');
 		$this->data['text_no_cancel'] = $this->language->get('text_no_cancel');
 		$this->data['text_upload_plus'] = $this->language->get('text_upload_plus');

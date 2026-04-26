@@ -407,10 +407,10 @@ class ControllerDesignBanner extends Controller {
 		}
 
 		$this->template = 'design/banner_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -477,7 +477,7 @@ class ControllerDesignBanner extends Controller {
 		$routes = $this->model_tool_route->getRoutes($routes_banners);
 
 		if ($routes) {
-			$output  = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";
+			$output = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";
 			$output .= '<head>' . "\n";
 			$output .= '  <title>' . $info_title . '</title>' . "\n";
 			$output .= '  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . "\n";

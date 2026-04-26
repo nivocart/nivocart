@@ -46,7 +46,7 @@ class ControllerFeedStoreya extends Controller {
 		$this->data['storeya_link'] = html_entity_decode('https://www.storeya.com/marketing', ENT_QUOTES, 'UTF-8');
 
 		// Error
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';

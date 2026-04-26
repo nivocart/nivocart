@@ -141,16 +141,16 @@ class ControllerUserUserLog extends Controller {
 			$entry_url = preg_replace("/&token=[a-z0-9]+/", "", htmlspecialchars_decode($entry['url']));
 
 			$this->data['entries'][] = [
-				'log_id'       => $entry['log_id'],
-				'user'         => $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $entry['user_id'], 'SSL'),
-				'username'     => $entry['username'],
-				'action'       => $entry['action'],
-				'allowed'      => $entry['allowed'],
-				'url_link'     => $entry_url . '&token=' . $this->session->data['token'],
-				'url'          => $entry_url,
-				'ip'           => $entry['ip'],
-				'date'         => date('d.m.Y H:i:s', strtotime($entry['date'])),
-				'selected'     => isset($this->request->post['selected']) && in_array($entry['log_id'], $this->request->post['selected'])
+				'log_id'   => $entry['log_id'],
+				'user'     => $this->url->link('user/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $entry['user_id'], 'SSL'),
+				'username' => $entry['username'],
+				'action'   => $entry['action'],
+				'allowed'  => $entry['allowed'],
+				'url_link' => $entry_url . '&token=' . $this->session->data['token'],
+				'url'      => $entry_url,
+				'ip'       => $entry['ip'],
+				'date'     => date('d.m.Y H:i:s', strtotime($entry['date'])),
+				'selected' => isset($this->request->post['selected']) && in_array($entry['log_id'], $this->request->post['selected'])
 			];
 		}
 

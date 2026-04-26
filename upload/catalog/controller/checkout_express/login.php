@@ -42,7 +42,7 @@ class ControllerCheckoutExpressLogin extends Controller {
 	public function validateEmail() {
 		$this->language->load('checkout/checkout_express');
 
-		$json = array();
+		$json = [];
 
 		if ($this->customer->isLogged()) {
 			$json['redirect'] = $this->url->link('checkout_express/checkout', '', 'SSL');
@@ -78,7 +78,7 @@ class ControllerCheckoutExpressLogin extends Controller {
 	public function validateLogin() {
 		$this->language->load('checkout/checkout_express');
 
-		$json = array();
+		$json = [];
 
 		if ($this->customer->isLogged()) {
 			$json['redirect'] = $this->url->link('checkout_express/checkout', '', 'SSL');

@@ -47,7 +47,7 @@ class User {
 	 *
 	 * @param 	$registry
 	 */
-    public function __construct(Registry $registry) {
+	public function __construct(Registry $registry) {
 		$this->db = $registry->get('db');
 		$this->request = $registry->get('request');
 		$this->session = $registry->get('session');
@@ -80,7 +80,7 @@ class User {
 				if (is_array($permissions)) {
 					foreach ($permissions as $key => $value) {
 						$this->permission[$key] = $value;
-	  				}
+					}
 				}
 
 			} else {

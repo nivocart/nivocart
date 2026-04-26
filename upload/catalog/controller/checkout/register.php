@@ -54,7 +54,7 @@ class ControllerCheckoutRegister extends Controller {
 
 		$this->data['gender'] = 0;
 
-		$this->data['customer_groups'] = array();
+		$this->data['customer_groups'] = [];
 
 		if (is_array($this->config->get('config_customer_group_display'))) {
 			$this->load->model('account/customer_group');
@@ -124,7 +124,7 @@ class ControllerCheckoutRegister extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout');
 
-		$json = array();
+		$json = [];
 
 		// Validate if customer is already logged in
 		if ($this->customer->isLogged()) {

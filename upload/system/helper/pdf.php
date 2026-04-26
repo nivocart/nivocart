@@ -7,7 +7,7 @@ require_once(DIR_SYSTEM . 'vendor/dompdf/src/Dompdf.php');
 function pdf($data, $type, $number) {
 	$doc_type = str_replace(" ", "", $type);
 
-    $title = $doc_type . '-' . $number;
+	$title = $doc_type . '-' . $number;
 
 	$pdf = new Dompdf\Dompdf();
 

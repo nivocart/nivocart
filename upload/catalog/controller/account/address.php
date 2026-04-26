@@ -202,25 +202,25 @@ class ControllerAccountAddress extends Controller {
 	}
 
 	protected function getList() {
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/address', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -245,7 +245,7 @@ class ControllerAccountAddress extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['addresses'] = array();
+		$this->data['addresses'] = [];
 
 		$results = $this->model_account_address->getAddresses();
 
@@ -256,7 +256,7 @@ class ControllerAccountAddress extends Controller {
 				$format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
 			}
 
-			$find = array(
+			$find = [
 				'{firstname}',
 				'{lastname}',
 				'{company}',
@@ -267,9 +267,9 @@ class ControllerAccountAddress extends Controller {
 				'{zone}',
 				'{zone_code}',
 				'{country}'
-			);
+			];
 
-			$replace = array(
+			$replace = [
 				'firstname' => $result['firstname'],
 				'lastname'  => $result['lastname'],
 				'company'   => $result['company'],
@@ -280,14 +280,14 @@ class ControllerAccountAddress extends Controller {
 				'zone'      => $result['zone'],
 				'zone_code' => $result['zone_code'],
 				'country'   => $result['country']
-			);
+			];
 
-			$this->data['addresses'][] = array(
+			$this->data['addresses'][] = [
 				'address_id' => $result['address_id'],
-				'address'    => str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))),
+				'address'    => str_replace(["\r\n", "\r", "\n"], '<br />', preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />', trim(str_replace($find, $replace, $format)))),
 				'update'     => $this->url->link('account/address/update', 'address_id=' . $result['address_id'] . '&customer_token=' . $this->session->data['customer_token'], 'SSL'),
 				'delete'     => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'] . '&customer_token=' . $this->session->data['customer_token'], 'SSL')
-			);
+			];
 		}
 
 		$this->data['insert'] = $this->url->link('account/address/insert', '', 'SSL');
@@ -302,7 +302,7 @@ class ControllerAccountAddress extends Controller {
 			$this->template = 'default/template/account/address_list.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -311,45 +311,45 @@ class ControllerAccountAddress extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
 
 	protected function getForm() {
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('account/address', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		if (!isset($this->request->get['address_id'])) {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_edit_address'),
 				'href'      => $this->url->link('account/address/insert', '', 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 
 		} else {
-			$this->data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_edit_address'),
 				'href'      => $this->url->link('account/address/update', 'address_id=' . $this->request->get['address_id'], 'SSL'),
 				'separator' => $this->language->get('text_separator')
-			);
+			];
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -567,7 +567,7 @@ class ControllerAccountAddress extends Controller {
 			$this->template = 'default/template/account/address_form.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -576,7 +576,7 @@ class ControllerAccountAddress extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -639,7 +639,7 @@ class ControllerAccountAddress extends Controller {
 	}
 
 	public function country() {
-		$json = array();
+		$json = [];
 
 		$this->load->model('localisation/country');
 
@@ -648,7 +648,7 @@ class ControllerAccountAddress extends Controller {
 		if ($country_info) {
 			$this->load->model('localisation/zone');
 
-			$json = array(
+			$json = [
 				'country_id'        => $country_info['country_id'],
 				'name'              => $country_info['name'],
 				'iso_code_2'        => $country_info['iso_code_2'],
@@ -657,7 +657,7 @@ class ControllerAccountAddress extends Controller {
 				'postcode_required' => $country_info['postcode_required'],
 				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
 				'status'            => $country_info['status']
-			);
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

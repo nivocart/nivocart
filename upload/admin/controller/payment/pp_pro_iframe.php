@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerPaymentPPProIframe extends Controller {
-	const DEBUG_LOG_FILE = 'pp_pro_iframe.log';
+	public const DEBUG_LOG_FILE = 'pp_pro_iframe.log';
 	private $errors = [];
 
 	public function index() {
@@ -456,15 +456,15 @@ class ControllerPaymentPPProIframe extends Controller {
 			foreach ($results as $result) {
 				$this->data['transactions'][] = [
 					'paypal_iframe_order_transaction_id' => $result['paypal_iframe_order_transaction_id'],
-					'transaction_id' => $result['transaction_id'],
-					'amount'         => $result['amount'],
-					'payment_type'   => $result['payment_type'],
-					'payment_status' => $result['payment_status'],
-					'pending_reason' => $result['pending_reason'],
-					'created'        => date($this->language->get('date_format_time'), strtotime($result['created'])),
-					'view'           => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id . '&referrer=detail', 'SSL'),
-					'refund'         => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id, 'SSL'),
-					'resend'         => $this->url->link('payment/pp_pro_iframe/do_resend', 'token=' . $this->session->data['token'] . '&paypal_iframe_order_transaction_id=' . $result['paypal_iframe_order_transaction_id'], 'SSL')
+					'transaction_id'                     => $result['transaction_id'],
+					'amount'                             => $result['amount'],
+					'payment_type'                       => $result['payment_type'],
+					'payment_status'                     => $result['payment_status'],
+					'pending_reason'                     => $result['pending_reason'],
+					'created'                            => date($this->language->get('date_format_time'), strtotime($result['created'])),
+					'view'                               => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id . '&referrer=detail', 'SSL'),
+					'refund'                             => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $result['transaction_id'] . '&order_id=' . $order_id, 'SSL'),
+					'resend'                             => $this->url->link('payment/pp_pro_iframe/do_resend', 'token=' . $this->session->data['token'] . '&paypal_iframe_order_transaction_id=' . $result['paypal_iframe_order_transaction_id'], 'SSL')
 				];
 			}
 		}
@@ -677,7 +677,7 @@ class ControllerPaymentPPProIframe extends Controller {
 		];
 
 		$this->data['action'] = $this->url->link('payment/pp_pro_iframe/do_refund', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id , 'SSL');
+		$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id, 'SSL');
 
 		$this->data['transaction_id'] = $transaction_id;
 
@@ -738,7 +738,7 @@ class ControllerPaymentPPProIframe extends Controller {
 
 			if ($this->request->post['refund_full'] === 0 && $this->request->post['amount'] === 0) {
 				$json['error'] = $this->language->get('error_partial_amt');
-			} else if ($this->request->post['amount'] <= 0) {
+			} elseif ($this->request->post['amount'] <= 0) {
 				$json['error'] = $this->language->get('error_positive_amt');
 			} else {
 				$order_id = $this->model_payment_pp_pro_iframe->getOrderId($this->request->post['transaction_id']);

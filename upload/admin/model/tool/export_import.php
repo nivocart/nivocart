@@ -114,7 +114,7 @@ class ModelToolExportImport extends Model {
 			return false;
 		}
 
-		return (mb_substr($haystack, strlen($haystack)-strlen($needle), strlen($needle), 'UTF-8') === $needle);
+		return (mb_substr($haystack, strlen($haystack) - strlen($needle), strlen($needle), 'UTF-8') === $needle);
 	}
 
 	public function getDefaultLanguageId() {
@@ -136,7 +136,7 @@ class ModelToolExportImport extends Model {
 	}
 
 	protected function getDefaultWeightUnit() {
-		$weight_class_id = $this->config->get( 'config_weight_class_id' );
+		$weight_class_id = $this->config->get('config_weight_class_id');
 
 		$language_id = $this->getDefaultLanguageId();
 
@@ -564,7 +564,7 @@ class ModelToolExportImport extends Model {
 		return;
 	}
 
-	protected function uploadCustomers(&$reader, $incremental, &$available_customer_ids = array()) {
+	protected function uploadCustomers(&$reader, $incremental, &$available_customer_ids = []) {
 		// Get worksheet, if not there return immediately
 		$data = $reader->getSheetByName('Customers');
 
@@ -892,7 +892,7 @@ class ModelToolExportImport extends Model {
 			$address['default'] = $default;
 
 			if (($incremental) && ($customer_id !== $previous_customer_id)) {
-				$this->deleteAddress( $customer_id );
+				$this->deleteAddress($customer_id);
 
 				if (isset($unlisted_customer_ids[$customer_id])) {
 					unset($unlisted_customer_ids[$customer_id]);
@@ -1078,7 +1078,7 @@ class ModelToolExportImport extends Model {
 		return;
 	}
 
-	protected function uploadCategories($reader, $incremental, &$available_category_ids = array()) {
+	protected function uploadCategories($reader, $incremental, &$available_category_ids = []) {
 		// Get worksheet if present
 		$data = $reader->getSheetByName('Categories');
 
@@ -1136,7 +1136,7 @@ class ModelToolExportImport extends Model {
 			$names = [];
 
 			while ($this->startsWith($first_row[$j - 1], "name(")) {
-				$language_code = substr($first_row[$j - 1], strlen("name("), strlen($first_row[$j - 1]) - strlen("name(")- 1);
+				$language_code = substr($first_row[$j - 1], strlen("name("), strlen($first_row[$j - 1]) - strlen("name(") - 1);
 				$name = $this->getCell($data, $i, $j++);
 				$name = htmlspecialchars($name);
 				$names[$language_code] = $name;
@@ -1196,12 +1196,12 @@ class ModelToolExportImport extends Model {
 
 			$store_ids = trim($this->clean($store_ids, false));
 
-			$category['store_ids'] = ($store_ids === "") ? array() : explode(",", $store_ids);
+			$category['store_ids'] = ($store_ids === "") ? [] : explode(",", $store_ids);
 			if ($category['store_ids'] === false) {
 				$category['store_ids'] = [];
 			}
 
-			$category['layout'] = ($layout === "") ? array() : explode(",", $layout);
+			$category['layout'] = ($layout === "") ? [] : explode(",", $layout);
 			if ($category['layout'] === false) {
 				$category['layout'] = [];
 			}
@@ -1673,7 +1673,7 @@ class ModelToolExportImport extends Model {
 		return;
 	}
 
-	protected function uploadProducts($reader, $incremental, &$available_product_ids = array()) {
+	protected function uploadProducts($reader, $incremental, &$available_product_ids = []) {
 		// Get worksheet, if not there return immediately
 		$data = $reader->getSheetByName('Products');
 
@@ -4433,17 +4433,17 @@ class ModelToolExportImport extends Model {
 					return false;
 				}
 
-				if ($bracket_end+1 !== strlen($entry)) {
+				if ($bracket_end + 1 !== strlen($entry)) {
 					return false;
 				}
 
-				$language_code = strtolower(substr($entry, $bracket_start + 1, $bracket_end-$bracket_start - 1));
+				$language_code = strtolower(substr($entry, $bracket_start + 1, $bracket_end - $bracket_start - 1));
 
 				if (count($heading) <= 0) {
 					return false;
 				}
 
-				if ($heading[count($heading)-1] !== $name) {
+				if ($heading[count($heading) - 1] !== $name) {
 					$heading[] = $name;
 				}
 			}
@@ -4889,7 +4889,7 @@ class ModelToolExportImport extends Model {
 			if ($category_id === "") {
 				if (!$has_missing_category_ids) {
 					$msg = str_replace('%1', 'Categories', $this->language->get('error_missing_category_id'));
-					$this->log->write( $msg );
+					$this->log->write($msg);
 					$has_missing_category_ids = true;
 				}
 				$ok = false;
@@ -4898,14 +4898,14 @@ class ModelToolExportImport extends Model {
 
 			if (!$this->isInteger($category_id)) {
 				$msg = str_replace('%2', $category_id, str_replace('%1', 'Categories', $this->language->get('error_invalid_category_id')));
-				$this->log->write( $msg );
+				$this->log->write($msg);
 				$ok = false;
 				continue;
 			}
 
-			if (in_array( $category_id, $category_ids )) {
+			if (in_array($category_id, $category_ids)) {
 				$msg = str_replace('%2', $category_id, str_replace('%1', 'Categories', $this->language->get('error_duplicate_category_id')));
-				$this->log->write( $msg );
+				$this->log->write($msg);
 				$ok = false;
 			}
 
@@ -4913,7 +4913,7 @@ class ModelToolExportImport extends Model {
 
 			if ($category_id < $previous_category_id) {
 				$msg = str_replace('%2', $category_id, str_replace('%1', 'Categories', $this->language->get('error_wrong_order_category_id')));
-				$this->log->write( $msg );
+				$this->log->write($msg);
 				$ok = false;
 			}
 
@@ -4944,7 +4944,7 @@ class ModelToolExportImport extends Model {
 				if ($category_id === "") {
 					if (!$has_missing_category_ids) {
 						$msg = str_replace('%1', $worksheet, $this->language->get('error_missing_category_id'));
-						$this->log->write( $msg );
+						$this->log->write($msg);
 						$has_missing_category_ids = true;
 					}
 					$ok = false;
@@ -4953,23 +4953,23 @@ class ModelToolExportImport extends Model {
 
 				if (!$this->isInteger($category_id)) {
 					$msg = str_replace('%2', $category_id, str_replace('%1', $worksheet, $this->language->get('error_invalid_category_id')));
-					$this->log->write( $msg );
+					$this->log->write($msg);
 					$ok = false;
 					continue;
 				}
 
-				if (!in_array( $category_id, $category_ids )) {
-					if (!in_array( $category_id, $unlisted_category_ids )) {
+				if (!in_array($category_id, $category_ids)) {
+					if (!in_array($category_id, $unlisted_category_ids)) {
 						$unlisted_category_ids[] = $category_id;
 						$msg = str_replace('%2', $category_id, str_replace('%1', $worksheet, $this->language->get('error_unlisted_category_id')));
-						$this->log->write( $msg );
+						$this->log->write($msg);
 						$ok = false;
 					}
 				}
 
 				if ($category_id < $previous_category_id) {
 					$msg = str_replace('%2', $category_id, str_replace('%1', $worksheet, $this->language->get('error_wrong_order_category_id')));
-					$this->log->write( $msg );
+					$this->log->write($msg);
 					$ok = false;
 				}
 
@@ -5021,7 +5021,7 @@ class ModelToolExportImport extends Model {
 
 			if (in_array($product_id, $product_ids)) {
 				$msg = str_replace('%2', $product_id, str_replace('%1', 'Products', $this->language->get('error_duplicate_product_id')));
-				$this->log->write( $msg );
+				$this->log->write($msg);
 
 				$ok = false;
 				continue;
@@ -5031,7 +5031,7 @@ class ModelToolExportImport extends Model {
 		}
 
 		// Make sure product_ids are numeric entries and are also mentioned in worksheet 'Products'
-		$worksheets = array('AdditionalImages', 'Specials', 'Discounts', 'Rewards', 'ProductOptions', 'ProductOptionValues', 'ProductColors',  'ProductFields', 'ProductAttributes');
+		$worksheets = ['AdditionalImages', 'Specials', 'Discounts', 'Rewards', 'ProductOptions', 'ProductOptionValues', 'ProductColors',  'ProductFields', 'ProductAttributes'];
 
 		foreach ($worksheets as $worksheet) {
 			$data = $reader->getSheetByName($worksheet);
@@ -5074,7 +5074,7 @@ class ModelToolExportImport extends Model {
 						$unlisted_product_ids[] = $product_id;
 
 						$msg = str_replace('%2', $product_id, str_replace('%1', $worksheet, $this->language->get('error_unlisted_product_id')));
-						$this->log->write( $msg );
+						$this->log->write($msg);
 
 						$ok = false;
 						continue;
@@ -5110,7 +5110,7 @@ class ModelToolExportImport extends Model {
 			if ($customer_id === "") {
 				if (!$has_missing_customer_ids) {
 					$msg = str_replace('%1', 'Customers', $this->language->get('error_missing_customer_id'));
-					$this->log->write( $msg );
+					$this->log->write($msg);
 					$has_missing_customer_ids = true;
 				}
 				$ok = false;
@@ -5119,14 +5119,14 @@ class ModelToolExportImport extends Model {
 
 			if (!$this->isInteger($customer_id)) {
 				$msg = str_replace('%2', $customer_id, str_replace('%1', 'Customers', $this->language->get('error_invalid_customer_id')));
-				$this->log->write( $msg );
+				$this->log->write($msg);
 				$ok = false;
 				continue;
 			}
 
-			if (in_array( $customer_id, $customer_ids )) {
+			if (in_array($customer_id, $customer_ids)) {
 				$msg = str_replace('%2', $customer_id, str_replace('%1', 'Customers', $this->language->get('error_duplicate_customer_id')));
-				$this->log->write( $msg );
+				$this->log->write($msg);
 				$ok = false;
 			}
 
@@ -5134,7 +5134,7 @@ class ModelToolExportImport extends Model {
 
 			if ($customer_id < $previous_customer_id) {
 				$msg = str_replace('%2', $customer_id, str_replace('%1', 'Customers', $this->language->get('error_wrong_order_customer_id')));
-				$this->log->write( $msg );
+				$this->log->write($msg);
 				$ok = false;
 			}
 
@@ -5142,7 +5142,7 @@ class ModelToolExportImport extends Model {
 		}
 
 		// Make sure customer_ids are numeric entries and are also mentioned in worksheet 'Customers'
-		$worksheets = array('Addresses');
+		$worksheets = ['Addresses'];
 
 		foreach ($worksheets as $worksheet) {
 			$data = $reader->getSheetByName($worksheet);
@@ -5165,7 +5165,7 @@ class ModelToolExportImport extends Model {
 				if ($customer_id === "") {
 					if (!$has_missing_customer_ids) {
 						$msg = str_replace('%1', $worksheet, $this->language->get('error_missing_customer_id'));
-						$this->log->write( $msg );
+						$this->log->write($msg);
 						$has_missing_customer_ids = true;
 					}
 					$ok = false;
@@ -5174,23 +5174,23 @@ class ModelToolExportImport extends Model {
 
 				if (!$this->isInteger($customer_id)) {
 					$msg = str_replace('%2', $customer_id, str_replace('%1', $worksheet, $this->language->get('error_invalid_customer_id')));
-					$this->log->write( $msg );
+					$this->log->write($msg);
 					$ok = false;
 					continue;
 				}
 
-				if (!in_array( $customer_id, $customer_ids )) {
-					if (!in_array( $customer_id, $unlisted_customer_ids )) {
+				if (!in_array($customer_id, $customer_ids)) {
+					if (!in_array($customer_id, $unlisted_customer_ids)) {
 						$unlisted_customer_ids[] = $customer_id;
 						$msg = str_replace('%2', $customer_id, str_replace('%1', $worksheet, $this->language->get('error_unlisted_customer_id')));
-						$this->log->write( $msg );
+						$this->log->write($msg);
 					}
 					$ok = false;
 				}
 
 				if ($customer_id < $previous_customer_id) {
 					$msg = str_replace('%2', $customer_id, str_replace('%1', $worksheet, $this->language->get('error_wrong_order_customer_id')));
-					$this->log->write( $msg );
+					$this->log->write($msg);
 					$ok = false;
 				}
 
@@ -5222,7 +5222,7 @@ class ModelToolExportImport extends Model {
 
 			if ($entry === 'country') {
 				$country_col = $j;
-			} else if ($entry === 'zone') {
+			} elseif ($entry === 'zone') {
 				$zone_col = $j;
 			}
 		}
@@ -5230,14 +5230,14 @@ class ModelToolExportImport extends Model {
 		if ($country_col === 0) {
 			$msg = $this->language->get('error_missing_country_col');
 			$msg = str_replace('%1', 'Addresses', $msg);
-			$this->log->write( $msg );
+			$this->log->write($msg);
 			$ok = false;
 		}
 
 		if ($zone_col === 0) {
 			$msg = $this->language->get('error_missing_zone_col');
 			$msg = str_replace('%1', 'Addresses', $msg);
-			$this->log->write( $msg );
+			$this->log->write($msg);
 			$ok = false;
 		}
 
@@ -5261,7 +5261,7 @@ class ModelToolExportImport extends Model {
 				$country = html_entity_decode($country, ENT_QUOTES, 'UTF-8');
 
 				if (!isset($available_country_ids[$country])) {
-					if (!in_array( $country, $undefined_countries )) {
+					if (!in_array($country, $undefined_countries)) {
 						$undefined_countries[] = $country;
 
 						$msg = $this->language->get('error_undefined_country');
@@ -5319,7 +5319,7 @@ class ModelToolExportImport extends Model {
 
 	protected function validateCustomerGroupColumns(&$reader) {
 		// All customer_groups mentioned in the worksheets must be defined
-		$worksheets = array('Specials', 'Discounts', 'Rewards', 'Customers');
+		$worksheets = ['Specials', 'Discounts', 'Rewards', 'Customers'];
 
 		$ok = true;
 
@@ -5506,7 +5506,7 @@ class ModelToolExportImport extends Model {
 					$msg = str_replace('%2', $option_name, $msg);
 					$this->log->write($msg);
 
-					$ok= false;
+					$ok = false;
 					continue;
 				}
 
@@ -5645,7 +5645,7 @@ class ModelToolExportImport extends Model {
 					$msg = str_replace('%2', $option_name, $msg);
 					$this->log->write($msg);
 
-					$ok= false;
+					$ok = false;
 					continue;
 				}
 
@@ -6401,7 +6401,7 @@ class ModelToolExportImport extends Model {
 
 		// Make sure at least one of worksheet names is valid
 		if (!$this->validateWorksheetNames($reader)) {
-			$this->log->write( $this->language->get('error_worksheets'));
+			$this->log->write($this->language->get('error_worksheets'));
 			$ok = false;
 		}
 
@@ -6863,19 +6863,19 @@ class ModelToolExportImport extends Model {
 				$string_out .= '';
 			} else {
 				switch ($stripped_string[$i]) {
-				case '&':
-					$string_out .= '&amp;';
-					break;
-				case '"':
-					$string_out .= '&quot;';
-					break;
-				default:
-					$string_out .= $stripped_string[$i];
+					case '&':
+						$string_out .= '&amp;';
+						break;
+					case '"':
+						$string_out .= '&quot;';
+						break;
+					default:
+						$string_out .= $stripped_string[$i];
 				}
 			}
 		}
 
-		$clean_string_out = str_replace(array('/', '&amp;nbsp;', '&amp;amp;', '&amp;ndash;', '&amp;mdash;', '&amp;trade;', '&amp;reg;', '&amp;deg;', '&amp;rsquo;', '&amp;quot;', '&amp;#39;', '&amp;acute;'), ' ', $string_out);
+		$clean_string_out = str_replace(['/', '&amp;nbsp;', '&amp;amp;', '&amp;ndash;', '&amp;mdash;', '&amp;trade;', '&amp;reg;', '&amp;deg;', '&amp;rsquo;', '&amp;quot;', '&amp;#39;', '&amp;acute;'], ' ', $string_out);
 
 		return $clean_string_out;
 	}
@@ -7037,26 +7037,26 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('store_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname')+4, 20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname')+4, 20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('email')+4, 25)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('telephone')+4, 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('gender'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_of_birth'), 12)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('password'), 24)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('salt'), 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('cart'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('wishlist'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('newsletter')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('address_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('ip'), 12)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('status')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('approved')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('token'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('store_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname') + 4, 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname') + 4, 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('email') + 4, 25) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('telephone') + 4, 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('gender'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_of_birth'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('password'), 24) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('salt'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('cart'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('wishlist'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('newsletter') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('address_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('ip'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('status') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('approved') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('token'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19) + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -7113,7 +7113,7 @@ class ModelToolExportImport extends Model {
 		$length = count($customers);
 
 		$min_id = ($length > 0) ? $customers[0]['customer_id'] : 0;
-		$max_id = ($length > 0) ? $customers[$length-1]['customer_id'] : 0;
+		$max_id = ($length > 0) ? $customers[$length - 1]['customer_id'] : 0;
 
 		foreach ($customers as $row) {
 			$data = [];
@@ -7172,19 +7172,19 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname'), 20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname'), 20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company'), 30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company_id'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_id'), 15)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_1'), 30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_2'), 30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('city'), 30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('postcode'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('zone'), 20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('country'), 20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('default'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company'), 30) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company_id'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_id'), 15) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_1'), 30) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_2'), 30) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('city'), 30) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('postcode'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('zone'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('country'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('default'), 5) + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -7383,28 +7383,28 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('category_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('parent_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('category_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('parent_id') + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description')+4, 48)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description') + 4, 48) + 1);
 		}
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_description')+4, 32)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_description') + 4, 32) + 1);
 		}
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords')+4, 24)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords') + 4, 24) + 1);
 		}
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('sort_order')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image_name'), 30)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 19)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('seo_keyword'), 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('layout'), 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('sort_order') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image_name'), 30) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('seo_keyword'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('layout'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 5) + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -7463,7 +7463,7 @@ class ModelToolExportImport extends Model {
 		$length = count($categories);
 
 		$min_id = ($length > 0) ? $categories[0]['category_id'] : 0;
-		$max_id = ($length > 0) ? $categories[$length-1]['category_id'] : 0;
+		$max_id = ($length > 0) ? $categories[$length - 1]['category_id'] : 0;
 
 		foreach ($categories as $row) {
 			$data = [];
@@ -7580,19 +7580,19 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('category_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('category_id') + 1);
 		if ($this->config->get('export_import_settings_use_filter_group_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_group_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_group_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group'), 30) + 1);
 		}
 		if ($this->config->get('export_import_settings_use_filter_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter'), 30) + 1);
 		}
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('text')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('text') + 4, 30) + 1);
 		}
 
 		// The heading row and column styles
@@ -7751,7 +7751,7 @@ class ModelToolExportImport extends Model {
 				if ($this->posted_categories) {
 					$sql .= " AND pc.category_id IN " . $this->posted_categories;
 				}
-			} else if ($this->posted_categories) {
+			} elseif ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
 			$sql .= " GROUP BY p.product_id ";
@@ -7833,7 +7833,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc2.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc2.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " GROUP BY p.product_id";
@@ -7891,65 +7891,65 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('product_id'), 4)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('product_id'), 4) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('categories'), 12)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sku'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('upc'), 12)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('ean'), 14)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('jan'), 13)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('isbn'), 13)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('mpn'), 15)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('location'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quantity'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('model'), 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('manufacturer_name'), 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image_name')+4, 36)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('label_name')+4, 36)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('video_code')+4, 19)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('shipping'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('cost'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quote'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('age_minimum'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 19)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_available'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_id'), 3)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight'), 6)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight_unit'), 3)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('length'), 8)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('width'), 8)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('height'), 8)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('length_unit'), 3)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_class_id'), 3)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_local_rate_id'), 3)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('seo_keyword'), 16)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('categories'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sku'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('upc'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('ean'), 14) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('jan'), 13) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('isbn'), 13) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('mpn'), 15) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('location'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quantity'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('model'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('manufacturer_name'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image_name') + 4, 36) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('label_name') + 4, 36) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('video_code') + 4, 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('shipping'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('cost'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quote'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('age_minimum'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_available'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_id'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight_unit'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('length'), 8) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('width'), 8) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('height'), 8) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('length_unit'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_class_id'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_local_rate_id'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('seo_keyword'), 16) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description')+4, 48)+1);
-		}
-		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_description')+4, 32)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description') + 4, 48) + 1);
 		}
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords')+4, 24)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_description') + 4, 32) + 1);
 		}
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('stock_status_id'), 3)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('layout'), 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('related_ids'), 16)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('location_ids'), 16)+1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tags')+4, 24)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords') + 4, 24) + 1);
 		}
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('subtract'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('minimum'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('viewed'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('stock_status_id'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('layout'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('related_ids'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('location_ids'), 16) + 1);
+		foreach ($languages as $language) {
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tags') + 4, 24) + 1);
+		}
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('subtract'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('minimum'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('viewed'), 5) + 1);
 
 		// The product headings row and column styles
 		$styles = [];
@@ -8064,7 +8064,7 @@ class ModelToolExportImport extends Model {
 		$length = count($products);
 
 		$min_id = ($length > 0) ? $products[0]['product_id'] : 0;
-		$max_id = ($length > 0) ? $products[$length-1]['product_id'] : 0;
+		$max_id = ($length > 0) ? $products[$length - 1]['product_id'] : 0;
 
 		foreach ($products as $row) {
 			$data = [];
@@ -8165,7 +8165,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY p.product_id, pia.image, pia.sort_order";
@@ -8179,10 +8179,10 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('product_id'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image')+4, 36)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_color_id'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('product_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image') + 4, 36) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_color_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
 
 		// The additional images headings row and colum styles
 		$styles = [];
@@ -8237,7 +8237,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " AND pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY ps.product_id, cgd.`name`, ps.priority";
@@ -8251,12 +8251,12 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('priority')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_start'), 19)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_end'), 19)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('priority') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_start'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_end'), 19) + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -8318,7 +8318,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " AND pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY pd.product_id, cgd.`name`, pd.quantity";
@@ -8332,13 +8332,13 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('quantity')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('priority')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_start'), 19)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_end'), 19)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('quantity') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('priority') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_start'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_end'), 19) + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -8402,7 +8402,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " AND pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY pr.product_id";
@@ -8416,9 +8416,9 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('points')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('points') + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -8481,7 +8481,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY p1.product_id ASC) AS p";
@@ -8499,14 +8499,14 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
 		if ($this->config->get('export_import_settings_use_option_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('option_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('option_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option'), 30) + 1);
 		}
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('default_option_value')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('required'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('default_option_value') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('required'), 5) + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -8571,7 +8571,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY p1.product_id ASC) AS p";
@@ -8591,25 +8591,25 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
 		if ($this->config->get('export_import_settings_use_option_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('option_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('option_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option'), 30) + 1);
 		}
 		if ($this->config->get('export_import_settings_use_option_value_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('option_value_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('option_value_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_value'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_value'), 30) + 1);
 		}
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quantity'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('subtract'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price_prefix'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points_prefix'), 5)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight_prefix'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quantity'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('subtract'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price_prefix'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points_prefix'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight_prefix'), 5) + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -8699,7 +8699,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY pc1.product_id, pc1.palette_color_id";
@@ -8725,9 +8725,9 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_color_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('palette_color_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_color_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('palette_color_id') + 1);
 
 		// The heading row and column styles
 		$styles = [];
@@ -8777,7 +8777,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY pf.product_id, pf.field_id";
@@ -8828,10 +8828,10 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('field_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('field_id') + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('text')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('text') + 4, 30) + 1);
 		}
 
 		// The heading row and column styles
@@ -8927,7 +8927,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY pa.product_id, ag.attribute_group_id, pa.attribute_id";
@@ -8982,19 +8982,19 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
 		if ($this->config->get('export_import_settings_use_attribute_group_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('attribute_group_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('attribute_group_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_group'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_group'), 30) + 1);
 		}
 		if ($this->config->get('export_import_settings_use_attribute_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('attribute_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('attribute_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute'), 30) + 1);
 		}
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('text')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('text') + 4, 30) + 1);
 		}
 
 		// The heading row and column styles
@@ -9079,7 +9079,7 @@ class ModelToolExportImport extends Model {
 			if ($this->posted_categories) {
 				$sql .= " AND pc.category_id IN " . $this->posted_categories;
 			}
-		} else if ($this->posted_categories) {
+		} elseif ($this->posted_categories) {
 			$sql .= " WHERE pc.category_id IN " . $this->posted_categories;
 		}
 		$sql .= " ORDER BY pf.product_id ASC, fg.filter_group_id ASC, pf.filter_id ASC";
@@ -9105,16 +9105,16 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id')+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('product_id') + 1);
 		if ($this->config->get('export_import_settings_use_filter_group_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_group_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_group_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group'), 30) + 1);
 		}
 		if ($this->config->get('export_import_settings_use_filter_id')) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_id')+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('filter_id') + 1);
 		} else {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter'), 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter'), 30) + 1);
 		}
 
 		// The heading row and column styles
@@ -9225,11 +9225,11 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_id'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('type'), 10)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('type'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
 
 		// The options headings row and column styles
@@ -9326,14 +9326,14 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_value_id'), 2)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_id'), 4)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_value_id'), 2) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('option_id'), 4) + 1);
 		if ($exist_image) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image'), 12)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image'), 12) + 1);
 		}
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
 
 		// The option values headings row and column styles
@@ -9432,10 +9432,10 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_group_id'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_group_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
 
 		// The attribute groups headings row and column styles
@@ -9525,11 +9525,11 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_id'), 2)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_group_id'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_id'), 2) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('attribute_group_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
 
 		// The attributes headings row and column styles
@@ -9621,10 +9621,10 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group_id'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
 
 		// The filter groups headings row and column styles
@@ -9714,11 +9714,11 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_id'), 2)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group_id'), 4)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_id'), 2) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('filter_group_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1);
 		}
 
 		// The filters headings row and column styles
@@ -9816,14 +9816,14 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('field_id'), 2)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 2)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 2)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('field_id'), 2) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 2) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 2) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('title')+4, 10)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('title') + 4, 10) + 1);
 		}
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description')+4, 30)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description') + 4, 30) + 1);
 		}
 
 		// The fields headings row and column styles
@@ -9925,13 +9925,13 @@ class ModelToolExportImport extends Model {
 		// Set the column widths
 		$j = 0;
 
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_color_id'), 2)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_id'), 2)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name')+4, 20)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('color')+4, 12)+1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('skin')+4, 12)+1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_color_id'), 2) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_id'), 2) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('color') + 4, 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('skin') + 4, 12) + 1);
 		foreach ($languages as $language) {
-			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('title')+4, 15)+1);
+			$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('title') + 4, 15) + 1);
 		}
 
 		// The palettes headings row and column styles
@@ -10177,7 +10177,7 @@ class ModelToolExportImport extends Model {
 			// Pre-define some commonly used styles
 			$box_format = [
 				'fill' => [
-					'type' => PHPExcel_Style_Fill::FILL_SOLID,
+					'type'  => PHPExcel_Style_Fill::FILL_SOLID,
 					'color' => ['argb' => 'FFF0F0F0']
 				]
 			];
@@ -10545,7 +10545,7 @@ class ModelToolExportImport extends Model {
 			$errfile = $e->getFile();
 			$errno = $e->getCode();
 
-			$this->session->data['export_import_error'] = array('errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline);
+			$this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
 
 			if ($this->config->get('config_error_log')) {
 				$this->log->write('PHP ' . get_class($e) . ': ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
@@ -10683,7 +10683,7 @@ class ModelToolExportImport extends Model {
 
 	public function existField() {
 		$query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "field'");
-		$exist_table_field= ($query->num_rows > 0);
+		$exist_table_field = ($query->num_rows > 0);
 
 		$query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "field_description'");
 		$exist_table_field_description = ($query->num_rows > 0);

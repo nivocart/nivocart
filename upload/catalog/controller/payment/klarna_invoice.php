@@ -35,40 +35,40 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 			$this->data['button_confirm'] = $this->language->get('button_confirm');
 
-			$this->data['days'] = array();
+			$this->data['days'] = [];
 
 			for ($i = 1; $i <= 31; $i++) {
-				$this->data['days'][] = array(
+				$this->data['days'][] = [
 					'text'  => sprintf('%02d', $i),
 					'value' => $i
-				);
+				];
 			}
 
-			$this->data['months'] = array();
+			$this->data['months'] = [];
 
 			for ($i = 1; $i <= 12; $i++) {
-				$this->data['months'][] = array(
+				$this->data['months'][] = [
 					'text'  => sprintf('%02d', $i),
 					'value' => $i
-				);
+				];
 			}
 
-			$this->data['years'] = array();
+			$this->data['years'] = [];
 
 			for ($i = date('Y'); $i >= 1900; $i--) {
-				$this->data['years'][] = array(
+				$this->data['years'][] = [
 					'text'  => $i,
 					'value' => $i
-				);
+				];
 			}
 
 			// Store Taxes to send to Klarna
-			$total_data = array();
+			$total_data = [];
 			$total = 0;
 
 			$this->load->model('setting/extension');
 
-			$sort_order = array();
+			$sort_order = [];
 
 			$results = $this->model_setting_extension->getExtensions('total');
 
@@ -78,13 +78,13 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 			array_multisort($sort_order, SORT_ASC, $results);
 
-			$klarna_tax = array();
+			$klarna_tax = [];
 
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('total/' . $result['code']);
 
-					$taxes = array();
+					$taxes = [];
 
 					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
 
@@ -176,7 +176,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 	public function send() {
 		$this->language->load('payment/klarna_invoice');
 
-		$json = array();
+		$json = [];
 
 		$this->load->model('checkout/order');
 
@@ -201,14 +201,14 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					$url = 'https://payment.testdrive.klarna.com/';
 				}
 
-				$country_to_currency = array(
+				$country_to_currency = [
 					'NOR' => 'NOK',
 					'SWE' => 'SEK',
 					'FIN' => 'EUR',
 					'DNK' => 'DKK',
 					'DEU' => 'EUR',
 					'NLD' => 'EUR'
-				);
+				];
 
 				switch ($order_info['payment_iso_code_3']) {
 					// Sweden
@@ -218,35 +218,35 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 						$encoding = 2;
 						$currency = 0;
 						break;
-					// Finland
+						// Finland
 					case 'FIN':
 						$country = 73;
 						$language = 37;
 						$encoding = 4;
 						$currency = 2;
 						break;
-					// Denmark
+						// Denmark
 					case 'DNK':
 						$country = 59;
 						$language = 27;
 						$encoding = 5;
 						$currency = 3;
 						break;
-					// Norway
+						// Norway
 					case 'NOR':
 						$country = 164;
 						$language = 97;
 						$encoding = 3;
 						$currency = 1;
 						break;
-					// Germany
+						// Germany
 					case 'DEU':
 						$country = 81;
 						$language = 28;
 						$encoding = 6;
 						$currency = 2;
 						break;
-					// Netherlands
+						// Netherlands
 					case 'NLD':
 						$country = 154;
 						$language = 101;
@@ -273,7 +273,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					$house_ext = '';
 				}
 
-				$address = array(
+				$address = [
 					'email'           => $order_info['email'],
 					'telno'           => $this->request->post['phone_no'],
 					'cellno'          => '',
@@ -287,43 +287,43 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					'zip'             => $order_info['payment_postcode'],
 					'city'            => $order_info['payment_city'],
 					'country'         => $country
-				);
+				];
 
 				$product_query = $this->db->query("SELECT name, model, price, quantity, tax / price * 100 AS 'tax_rate' FROM " . DB_PREFIX . "order_product WHERE order_id = " . (int)$order_info['order_id'] . " UNION ALL SELECT '', `code`, `amount`, '1', 0.00 FROM " . DB_PREFIX . "order_voucher WHERE order_id = " . (int)$order_info['order_id']);
 
 				foreach ($product_query->rows as $product) {
-					$goods_list[] = array(
+					$goods_list[] = [
 						'qty'   => (int)$product['quantity'],
-						'goods' => array(
+						'goods' => [
 							'artno'    => $product['model'],
 							'title'    => $product['name'],
 							'price'    => (int)str_replace('.', '', $this->currency->format($product['price'], $country_to_currency[$order_info['payment_iso_code_3']], '', false)),
 							'vat'      => (float)$product['tax_rate'],
 							'discount' => 0.0,
 							'flags'    => 0
-						)
-					);
+						]
+					];
 				}
 
 				if (isset($this->session->data['klarna'][$this->session->data['order_id']])) {
 					$totals = $this->session->data['klarna'][$this->session->data['order_id']];
 				} else {
-					$totals = array();
+					$totals = [];
 				}
 
 				foreach ($totals as $total) {
 					if ($total['code'] != 'sub_total' && $total['code'] != 'tax' && $total['code'] != 'total') {
-						$goods_list[] = array(
+						$goods_list[] = [
 							'qty'   => 1,
-							'goods' => array(
+							'goods' => [
 								'artno'    => '',
 								'title'    => $total['title'],
 								'price'    => (int)str_replace('.', '', $this->currency->format($total['value'], $country_to_currency[$order_info['payment_iso_code_3']], '', false)),
 								'vat'      => (float)$total['tax_rate'],
 								'discount' => 0.0,
 								'flags'    => 0
-							)
-						);
+							]
+						];
 					}
 				}
 
@@ -349,7 +349,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					$gender = '';
 				}
 
-				$transaction = array(
+				$transaction = [
 					'4.1',
 					'API:OPENCART:' . VERSION,
 					$pno,
@@ -371,13 +371,13 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					$pclass,
 					$goods_list,
 					$order_info['comment'],
-					array('delay_adjust' => 1),
-					array(),
-					array(),
-					array(),
-					array(),
-					array()
-				);
+					['delay_adjust' => 1],
+					[],
+					[],
+					[],
+					[],
+					[]
+				];
 
 				$xml = '<methodCall>';
 				$xml .= '  <methodName>add_invoice</methodName>';
@@ -390,7 +390,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				$xml .= '  </params>';
 				$xml .= '</methodCall>';
 
-				$header = array();
+				$header = [];
 
 				$header[] = 'Content-Type: text/xml';
 				$header[] = 'Content-Length: ' . strlen($xml);
@@ -512,16 +512,16 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 	}
 
 	private function splitAddress($address) {
-		$numbers = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+		$numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-		$characters = array('-', '/', ' ', '#', '.', 'a', 'b', 'c', 'd', 'e',
+		$characters = ['-', '/', ' ', '#', '.', 'a', 'b', 'c', 'd', 'e',
 						'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
 						'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A',
 						'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 						'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-						'X', 'Y', 'Z');
+						'X', 'Y', 'Z'];
 
-		$specialchars = array('-', '/', ' ', '#', '.');
+		$specialchars = ['-', '/', ' ', '#', '.'];
 
 		$num_pos = $this->strposArr($address, $numbers, 2);
 
@@ -542,14 +542,14 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			$house_extension = '';
 		}
 
-		return array($street_name, $house_number, $house_extension);
+		return [$street_name, $house_number, $house_extension];
 	}
 
 	private function strposArr($haystack, $needle, $where) {
 		$defpos = 10000;
 
 		if (!is_array($needle)) {
-			$needle = array($needle);
+			$needle = [$needle];
 		}
 
 		foreach ($needle as $what) {

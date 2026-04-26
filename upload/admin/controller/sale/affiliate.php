@@ -1365,7 +1365,7 @@ class ControllerSaleAffiliate extends Controller {
 			$this->error['warning'] = $this->language->get('error_action');
 		}
 
- 		if (!$this->request->post['amount']) {
+		if (!$this->request->post['amount']) {
 			$this->error['warning'] = $this->language->get('error_amount');
 		}
 

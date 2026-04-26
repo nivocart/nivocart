@@ -12,7 +12,7 @@ class ControllerBlogInstall extends Controller {
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
-		} elseif (isset($this->session->data['warning']) ) {
+		} elseif (isset($this->session->data['warning'])) {
 			$this->data['error_warning'] = $this->session->data['warning'];
 
 			unset($this->session->data['warning']);

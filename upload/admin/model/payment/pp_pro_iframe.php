@@ -83,7 +83,7 @@ class ModelPaymentPPProIframe extends Model {
 		. "payment_status = '" . (isset($transaction_data['payment_status']) ? $this->db->escape($transaction_data['payment_status']) : null) . "', "
 		. "pending_reason = '" . (isset($transaction_data['pending_reason']) ? $this->db->escape($transaction_data['pending_reason']) : null) . "', "
 		. "transaction_entity = '" . (isset($transaction_data['transaction_entity']) ? $this->db->escape($transaction_data['transaction_entity']) : null) . "', "
-		. "amount = " . (isset($transaction_data['amount']) ? (double)$transaction_data['amount'] : 0.0) . ", "
+		. "amount = " . (isset($transaction_data['amount']) ? (float)$transaction_data['amount'] : 0.0) . ", "
 		. "debug_data = '" . (isset($transaction_data['debug_data']) ? $this->db->escape($transaction_data['debug_data']) : null) . "'"
 		. (!empty($request_data) ? ", call_data = '" . $this->db->escape(json_encode($request_data)) . "'" : null));
 
@@ -105,7 +105,7 @@ class ModelPaymentPPProIframe extends Model {
 		. "payment_status = '" . (isset($transaction['payment_status']) ? $this->db->escape($transaction['payment_status']) : null) . "', "
 		. "pending_reason = '" . (isset($transaction['pending_reason']) ? $this->db->escape($transaction['pending_reason']) : null) . "', "
 		. "transaction_entity = '" . (isset($transaction['transaction_entity']) ? $this->db->escape($transaction['transaction_entity']) : null) . "', "
-		. "amount = " . (isset($transaction['amount']) ? (double)$transaction['amount'] : 0.0) . ", "
+		. "amount = " . (isset($transaction['amount']) ? (float)$transaction['amount'] : 0.0) . ", "
 		. "debug_data = '" . (isset($transaction['debug_data']) ? $this->db->escape($transaction['debug_data']) : null) . "', "
 		. "call_data = '" . (isset($transaction['call_data']) ? $this->db->escape($transaction['call_data']) : null) . "' "
 		. "WHERE paypal_iframe_order_transaction_id = " . (int)$transaction['paypal_iframe_order_transaction_id']);
@@ -254,17 +254,17 @@ class ModelPaymentPPProIframe extends Model {
 		$this->log($call_parameters, 'Call data');
 
 		$options = [
-			CURLOPT_POST            => true,
-			CURLOPT_HEADER          => false,
-			CURLOPT_URL             => $api_endpoint,
-			CURLOPT_USERAGENT       => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1",
-			CURLOPT_FRESH_CONNECT   => true,
-			CURLOPT_RETURNTRANSFER  => true,
-			CURLOPT_FORBID_REUSE    => true,
-			CURLOPT_TIMEOUT         => 0,
-			CURLOPT_SSL_VERIFYPEER  => false,
-			CURLOPT_SSL_VERIFYHOST  => false,
-			CURLOPT_POSTFIELDS      => http_build_query($call_parameters, '', '&')
+			CURLOPT_POST           => true,
+			CURLOPT_HEADER         => false,
+			CURLOPT_URL            => $api_endpoint,
+			CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1",
+			CURLOPT_FRESH_CONNECT  => true,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FORBID_REUSE   => true,
+			CURLOPT_TIMEOUT        => 0,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => false,
+			CURLOPT_POSTFIELDS     => http_build_query($call_parameters, '', '&')
 		];
 
 		$ch = curl_init();

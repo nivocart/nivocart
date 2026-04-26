@@ -41,14 +41,14 @@ if (!function_exists('json_encode')) {
 					$c3 = ord($string[++$i]);
 
 					if (($c1 & 16) === 0) {
-						$json .= sprintf("\\u%04x", (($c1 - 224) <<12) + (($c2 - 128) << 6) + ($c3 - 128));
+						$json .= sprintf("\\u%04x", (($c1 - 224) << 12) + (($c2 - 128) << 6) + ($c3 - 128));
 						continue;
 					}
 
 					# Quadruple
 					$c4 = ord($string[++$i]);
 
-					if (($c1 & 8 ) === 0) {
+					if (($c1 & 8) === 0) {
 						$u = (($c1 & 15) << 2) + (($c2 >> 4) & 3) - 1;
 
 						$w1 = (54 << 10) + ($u << 6) + (($c2 & 15) << 2) + (($c3 >> 4) & 3);
@@ -60,7 +60,7 @@ if (!function_exists('json_encode')) {
 				return $json;
 			case 'array':
 				if (empty($data) || array_keys($data) === range(0, sizeof($data) - 1)) {
-					$output = array();
+					$output = [];
 
 					foreach ($data as $value) {
 						$output[] = json_encode($value);
@@ -68,8 +68,9 @@ if (!function_exists('json_encode')) {
 
 					return '[' . implode(',', $output) . ']';
 				}
+				// no break
 			case 'object':
-				$output = array();
+				$output = [];
 
 				foreach ($data as $key => $value) {
 					$output[] = json_encode(strval($key)) . ':' . json_encode($value);
@@ -96,8 +97,8 @@ if (!function_exists('json_decode')) {
 			return null;
 		}
 
-		$s2m = array();
-		$m2s = array();
+		$s2m = [];
+		$m2s = [];
 
 		preg_match_all($match, $json, $m);
 
@@ -111,13 +112,13 @@ if (!function_exists('json_decode')) {
 
 		$a = ($assoc) ? '' : '(object) ';
 
-		$data = array(
+		$data = [
 			':' => '=>',
 			'[' => 'array(',
 			'{' => "{$a}array(",
 			']' => ')',
 			'}' => ')'
-		);
+		];
 
 		$json = strtr($json, $data);
 
@@ -125,7 +126,7 @@ if (!function_exists('json_decode')) {
 
 		$json = strtr($json, array_map('stripcslashes', $m2s));
 
-		$function = function() {
+		$function = function () {
 			return $json;
 		};
 

@@ -99,7 +99,7 @@ class ControllerCheckoutExpressRegister extends Controller {
 			$this->data['password'] = '';
 		}
 
-		$this->data['customer_groups'] = array();
+		$this->data['customer_groups'] = [];
 
 		if (is_array($this->config->get('config_customer_group_display'))) {
 			$this->load->model('account/customer_group');
@@ -169,7 +169,7 @@ class ControllerCheckoutExpressRegister extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout_express');
 
-		$json = array();
+		$json = [];
 
 		// Validate if customer is already logged in
 		if ($this->customer->isLogged()) {

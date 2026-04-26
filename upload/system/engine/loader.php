@@ -52,7 +52,7 @@ final class Loader {
 
 		if (is_file($file)) {
 			include_once($file);
-			$this->registry->set('model_' . str_replace(array('/', '-', '.'), array('_', '', ''), (string)$route), new $class($this->registry));
+			$this->registry->set('model_' . str_replace(['/', '-', '.'], ['_', '', ''], (string)$route), new $class($this->registry));
 		} else {
 			throw new \Exception('Error: Could not load model ' . $route . '!');
 		}

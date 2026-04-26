@@ -7,7 +7,7 @@
 class ControllerCatalogNewsDownload extends Controller {
 	private $error = [];
 
-  	public function index() {
+	public function index() {
 		$this->language->load('catalog/news_download');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -166,12 +166,12 @@ class ControllerCatalogNewsDownload extends Controller {
 		$results = $this->model_catalog_news_download->getDownloads($data);
 
 		foreach ($results as $result) {
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => $this->language->get('text_edit'),
 				'href' => $this->url->link('catalog/news_download/update', 'token=' . $this->session->data['token'] . '&news_download_id=' . $result['news_download_id'] . $url, 'SSL')
-			);
+			];
 
 			$this->data['downloads'][] = [
 				'news_download_id' => $result['news_download_id'],
@@ -194,7 +194,7 @@ class ControllerCatalogNewsDownload extends Controller {
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
 
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';
@@ -271,25 +271,25 @@ class ControllerCatalogNewsDownload extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';
 		}
 
- 		if (isset($this->error['name'])) {
+		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
 			$this->data['error_name'] = [];
 		}
 
-  		if (isset($this->error['filename'])) {
+		if (isset($this->error['filename'])) {
 			$this->data['error_filename'] = $this->error['filename'];
 		} else {
 			$this->data['error_filename'] = '';
 		}
 
-  		if (isset($this->error['mask'])) {
+		if (isset($this->error['mask'])) {
 			$this->data['error_mask'] = $this->error['mask'];
 		} else {
 			$this->data['error_mask'] = '';
@@ -415,7 +415,7 @@ class ControllerCatalogNewsDownload extends Controller {
 			$news_downloads = $this->model_catalog_news_download->getNewsDownloads($news_download_id);
 
 			if ($news_downloads) {
-	  			$this->error['warning'] = sprintf($this->language->get('error_news'), $news_downloads);
+				$this->error['warning'] = sprintf($this->language->get('error_news'), $news_downloads);
 			}
 		}
 
@@ -425,7 +425,7 @@ class ControllerCatalogNewsDownload extends Controller {
 	public function upload() {
 		$this->language->load('catalog/news_download');
 
-		$json = array();
+		$json = [];
 
 		if (!$this->user->hasPermission('modify', 'catalog/news_download')) {
 			$json['error'] = $this->language->get('error_permission');
@@ -442,7 +442,7 @@ class ControllerCatalogNewsDownload extends Controller {
 				// Allowed file extension types
 				$allowed = [];
 
-				$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_extension_allowed')));
+				$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_extension_allowed')));
 
 				foreach ($filetypes as $filetype) {
 					$allowed[] = trim($filetype);
@@ -455,7 +455,7 @@ class ControllerCatalogNewsDownload extends Controller {
 				// Allowed file mime types
 				$allowed = [];
 
-				$filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_mime_allowed')));
+				$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_mime_allowed')));
 
 				foreach ($filetypes as $filetype) {
 					$allowed[] = trim($filetype);

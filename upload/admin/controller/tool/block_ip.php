@@ -172,7 +172,7 @@ class ControllerToolBlockIp extends Controller {
 				'href' => $this->url->link('tool/block_ip/update', 'token=' . $this->session->data['token'] . '&block_ip_id=' . $result['block_ip_id'] . $url, 'SSL')
 			];
 
-      		$this->data['block_ips'][] = [
+			$this->data['block_ips'][] = [
 				'block_ip_id' => $result['block_ip_id'],
 				'from_ip'     => $result['from_ip'],
 				'to_ip'       => $result['to_ip'],
@@ -277,7 +277,7 @@ class ControllerToolBlockIp extends Controller {
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 		$this->data['button_info'] = $this->language->get('button_info');
 
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';

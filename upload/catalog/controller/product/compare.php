@@ -85,9 +85,9 @@ class ControllerProductCompare extends Controller {
 
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
-		$this->data['attribute_groups'] = array();
+		$this->data['attribute_groups'] = [];
 
 		foreach ($this->session->data['compare'] as $key => $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
@@ -138,7 +138,7 @@ class ControllerProductCompare extends Controller {
 					$stock_label = '';
 				}
 
-				$attribute_data = array();
+				$attribute_data = [];
 
 				$attribute_groups = $this->model_catalog_product->getProductAttributes($product_id);
 
@@ -199,7 +199,7 @@ class ControllerProductCompare extends Controller {
 					$quote = false;
 				}
 
-				$this->data['products'][$product_id] = array(
+				$this->data['products'][$product_id] = [
 					'product_id'        => $product_info['product_id'],
 					'name'              => $product_info['name'],
 					'thumb'             => $image,
@@ -230,7 +230,7 @@ class ControllerProductCompare extends Controller {
 					'attribute'         => $attribute_data,
 					'href'              => $this->url->link('product/product', 'product_id=' . $product_id, 'SSL'),
 					'remove'            => $this->url->link('product/compare', 'remove=' . $product_id, 'SSL')
-				);
+				];
 
 				foreach ($attribute_groups as $attribute_group) {
 					$this->data['attribute_groups'][$attribute_group['attribute_group_id']]['name'] = $attribute_group['name'];
@@ -256,7 +256,7 @@ class ControllerProductCompare extends Controller {
 			$this->template = 'default/template/product/compare.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -265,7 +265,7 @@ class ControllerProductCompare extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -273,10 +273,10 @@ class ControllerProductCompare extends Controller {
 	public function add() {
 		$this->language->load('product/compare');
 
-		$json = array();
+		$json = [];
 
 		if (!isset($this->session->data['compare'])) {
-			$this->session->data['compare'] = array();
+			$this->session->data['compare'] = [];
 		}
 
 		if (isset($this->request->post['product_id'])) {

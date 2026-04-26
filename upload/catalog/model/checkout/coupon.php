@@ -43,7 +43,7 @@ class ModelCheckoutCoupon extends Model {
 			}
 
 			// Products
-			$coupon_product_data = array();
+			$coupon_product_data = [];
 
 			$coupon_product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon_product` WHERE coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'");
 
@@ -89,7 +89,7 @@ class ModelCheckoutCoupon extends Model {
 		}
 
 		if ($status) {
-			return array(
+			return [
 				'coupon_id'     => $coupon_query->row['coupon_id'],
 				'code'          => $coupon_query->row['code'],
 				'name'          => $coupon_query->row['name'],
@@ -104,7 +104,7 @@ class ModelCheckoutCoupon extends Model {
 				'uses_customer' => $coupon_query->row['uses_customer'],
 				'status'        => $coupon_query->row['status'],
 				'date_added'    => $coupon_query->row['date_added']
-			);
+			];
 
 		} else {
 			return [];

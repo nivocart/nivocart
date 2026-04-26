@@ -105,19 +105,19 @@ class ControllerCheckoutCart extends Controller {
 			$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('checkout/cart', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
 			$this->document->setTitle($this->language->get('heading_title'));
@@ -281,15 +281,15 @@ class ControllerCheckoutCart extends Controller {
 			// Get Products
 			$this->load->model('tool/image');
 
-			$frequencies = array(
+			$frequencies = [
 				'day'        => $this->language->get('text_day'),
 				'week'       => $this->language->get('text_week'),
 				'semi_month' => $this->language->get('text_semi_month'),
 				'month'      => $this->language->get('text_month'),
 				'year'       => $this->language->get('text_year')
-			);
+			];
 
-			$this->data['products'] = array();
+			$this->data['products'] = [];
 
 			$products = $this->cart->getProducts();
 
@@ -344,7 +344,7 @@ class ControllerCheckoutCart extends Controller {
 					$offer = false;
 				}
 
-				$option_data = array();
+				$option_data = [];
 
 				foreach ($product['option'] as $option) {
 					if ($option['type'] != 'file') {
@@ -355,10 +355,10 @@ class ControllerCheckoutCart extends Controller {
 						$value = substr($filename, 0, strrpos($filename, '.'));
 					}
 
-					$option_data[] = array(
+					$option_data[] = [
 						'name'  => $option['name'],
 						'value' => (mb_strlen($value, 'UTF-8') > 20) ? substr($value, 0, 20) . '..' : $value
-					);
+					];
 				}
 
 				// Display prices
@@ -422,7 +422,7 @@ class ControllerCheckoutCart extends Controller {
 
 				$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')) - ($product['price'] * $product['quantity']));
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'product_id'          => $product['product_id'],
 					'key'                 => $product['key'],
 					'thumb'               => $image,
@@ -450,26 +450,26 @@ class ControllerCheckoutCart extends Controller {
 					'total'               => $total,
 					'href'                => $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL'),
 					'remove'              => $this->url->link('checkout/cart', 'remove=' . $product['key'], 'SSL')
-				);
+				];
 			}
 
-			$this->data['products_recurring'] = array();
+			$this->data['products_recurring'] = [];
 
 			$this->data['age_minimum'] = ($age_minimum) ? (int)$age_minimum : 0;
 			$this->data['age_logged'] = $age_logged;
 			$this->data['age_checked'] = $age_checked;
 
 			// Gift Voucher
-			$this->data['vouchers'] = array();
+			$this->data['vouchers'] = [];
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $key => $voucher) {
-					$this->data['vouchers'][] = array(
+					$this->data['vouchers'][] = [
 						'key'         => $key,
 						'description' => $voucher['description'],
 						'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
 						'remove'      => $this->url->link('checkout/cart', 'remove=' . $key, 'SSL')
-					);
+					];
 				}
 			}
 
@@ -579,8 +579,7 @@ class ControllerCheckoutCart extends Controller {
 			$results = $this->model_setting_extension->getExtensions('total');
 
 			// Sort extensions by their configured sort_order
-			usort($results, fn($a, $b) =>
-				$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
 			);
 
 			foreach ($results as $result) {
@@ -592,13 +591,13 @@ class ControllerCheckoutCart extends Controller {
 					$contribution = $model->getTotal($taxes, $total);
 
 					$total_data = array_merge($total_data, $contribution['total_data']);
-					$total     += $contribution['total'];
-					$taxes     += $contribution['taxes'];
+					$total += $contribution['total'];
+					$taxes += $contribution['taxes'];
 				}
 			}
 
 			// Sort the final total_data rows by sort_order
-			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
+			usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
 			$this->data['totals'] = $total_data;
 
@@ -606,7 +605,7 @@ class ControllerCheckoutCart extends Controller {
 
 			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
-			$this->data['checkout_buttons'] = array();
+			$this->data['checkout_buttons'] = [];
 
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
@@ -617,7 +616,7 @@ class ControllerCheckoutCart extends Controller {
 				$this->template = 'default/template/checkout/cart.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -626,7 +625,7 @@ class ControllerCheckoutCart extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->setOutput($this->render());
 
@@ -650,7 +649,7 @@ class ControllerCheckoutCart extends Controller {
 				$this->template = 'default/template/error/not_found.tpl';
 			}
 
-			$this->children = array(
+			$this->children = [
 				'common/content_higher',
 				'common/content_high',
 				'common/content_left',
@@ -659,7 +658,7 @@ class ControllerCheckoutCart extends Controller {
 				'common/content_lower',
 				'common/footer',
 				'common/header'
-			);
+			];
 
 			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
 			$this->response->setOutput($this->render());
@@ -826,8 +825,7 @@ class ControllerCheckoutCart extends Controller {
 					$results = $this->model_setting_extension->getExtensions('total');
 
 					// Sort extensions by their configured sort_order
-					usort($results, fn($a, $b) =>
-						$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+					usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
 					);
 
 					foreach ($results as $result) {
@@ -839,13 +837,13 @@ class ControllerCheckoutCart extends Controller {
 							$contribution = $model->getTotal($taxes, $total);
 
 							$total_data = array_merge($total_data, $contribution['total_data']);
-							$total     += $contribution['total'];
-							$taxes     += $contribution['taxes'];
+							$total += $contribution['total'];
+							$taxes += $contribution['taxes'];
 						}
 					}
 
 					// Sort the final total_data rows by sort_order
-					usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
+					usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 				}
 
 				$json['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->config->get('config_currency')));
@@ -920,7 +918,7 @@ class ControllerCheckoutCart extends Controller {
 				$zone_code = '';
 			}
 
-			$address_data = array(
+			$address_data = [
 				'firstname'      => '',
 				'lastname'       => '',
 				'company'        => '',
@@ -936,9 +934,9 @@ class ControllerCheckoutCart extends Controller {
 				'iso_code_2'     => $iso_code_2,
 				'iso_code_3'     => $iso_code_3,
 				'address_format' => $address_format
-			);
+			];
 
-			$quote_data = array();
+			$quote_data = [];
 
 			$this->load->model('setting/extension');
 
@@ -951,17 +949,17 @@ class ControllerCheckoutCart extends Controller {
 					$quote = $this->{'model_shipping_' . $result['code']}->getQuote($address_data);
 
 					if ($quote) {
-						$quote_data[$result['code']] = array(
+						$quote_data[$result['code']] = [
 							'title'      => $quote['title'],
 							'quote'      => $quote['quote'],
 							'sort_order' => $quote['sort_order'],
 							'error'      => $quote['error']
-						);
+						];
 					}
 				}
 			}
 
-			$sort_order = array();
+			$sort_order = [];
 
 			foreach ($quote_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -992,7 +990,7 @@ class ControllerCheckoutCart extends Controller {
 		if ($country_info) {
 			$this->load->model('localisation/zone');
 
-			$json = array(
+			$json = [
 				'country_id'        => $country_info['country_id'],
 				'name'              => $country_info['name'],
 				'iso_code_2'        => $country_info['iso_code_2'],
@@ -1001,7 +999,7 @@ class ControllerCheckoutCart extends Controller {
 				'postcode_required' => $country_info['postcode_required'],
 				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
 				'status'            => $country_info['status']
-			);
+			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

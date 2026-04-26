@@ -167,27 +167,27 @@ class ControllerCheckoutManual extends Controller {
 				$option_data = [];
 
 				foreach ($product['option'] as $option) {
-					$option_data[] = array(
+					$option_data[] = [
 						'product_option_id'       => $option['product_option_id'],
 						'product_option_value_id' => $option['product_option_value_id'],
 						'name'                    => $option['name'],
 						'value'                   => $option['option_value'],
 						'type'                    => $option['type']
-					);
+					];
 				}
 
 				$download_data = [];
 
 				foreach ($product['download'] as $download) {
-					$download_data[] = array(
+					$download_data[] = [
 						'name'      => $download['name'],
 						'filename'  => $download['filename'],
 						'mask'      => $download['mask'],
 						'remaining' => $download['remaining']
-					);
+					];
 				}
 
-				$json['order_product'][] = array(
+				$json['order_product'][] = [
 					'product_id' => $product['product_id'],
 					'name'       => $product['name'],
 					'model'      => $product['model'],
@@ -199,7 +199,7 @@ class ControllerCheckoutManual extends Controller {
 					'total'      => $product['total'],
 					'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']),
 					'reward'     => $product['reward']
-				);
+				];
 			}
 
 			// Voucher
@@ -207,7 +207,7 @@ class ControllerCheckoutManual extends Controller {
 
 			if (isset($this->request->post['order_voucher'])) {
 				foreach ($this->request->post['order_voucher'] as $voucher) {
-					$this->session->data['vouchers'][] = array(
+					$this->session->data['vouchers'][] = [
 						'voucher_id'       => $voucher['voucher_id'],
 						'description'      => $voucher['description'],
 						'code'             => substr(md5(mt_rand()), 0, 10),
@@ -218,7 +218,7 @@ class ControllerCheckoutManual extends Controller {
 						'voucher_theme_id' => $voucher['voucher_theme_id'],
 						'message'          => $voucher['message'],
 						'amount'           => $voucher['amount']
-					);
+					];
 				}
 			}
 
@@ -245,7 +245,7 @@ class ControllerCheckoutManual extends Controller {
 				}
 
 				if (!isset($json['error']['vouchers'])) {
-					$voucher_data = array(
+					$voucher_data = [
 						'order_id'         => 0,
 						'code'             => substr(md5(mt_rand()), 0, 10),
 						'from_name'        => $this->request->post['from_name'],
@@ -256,7 +256,7 @@ class ControllerCheckoutManual extends Controller {
 						'message'          => $this->request->post['message'],
 						'amount'           => $this->request->post['amount'],
 						'status'           => true
-					);
+					];
 
 					$this->load->model('checkout/voucher');
 
@@ -264,7 +264,7 @@ class ControllerCheckoutManual extends Controller {
 
 					$voucher_id = $this->model_checkout_voucher->addVoucher($order_id, $voucher_data);
 
-					$this->session->data['vouchers'][] = array(
+					$this->session->data['vouchers'][] = [
 						'voucher_id'       => $voucher_id,
 						'description'      => sprintf($this->language->get('text_for'), $this->currency->format($this->request->post['amount'], $this->config->get('config_currency')), $this->request->post['to_name']),
 						'code'             => substr(md5(mt_rand()), 0, 10),
@@ -275,14 +275,14 @@ class ControllerCheckoutManual extends Controller {
 						'voucher_theme_id' => $this->request->post['voucher_theme_id'],
 						'message'          => $this->request->post['message'],
 						'amount'           => $this->request->post['amount']
-					);
+					];
 				}
 			}
 
 			$json['order_voucher'] = [];
 
 			foreach ($this->session->data['vouchers'] as $voucher) {
-				$json['order_voucher'][] = array(
+				$json['order_voucher'][] = [
 					'voucher_id'       => $voucher['voucher_id'],
 					'description'      => $voucher['description'],
 					'code'             => $voucher['code'],
@@ -293,7 +293,7 @@ class ControllerCheckoutManual extends Controller {
 					'voucher_theme_id' => $voucher['voucher_theme_id'],
 					'message'          => $voucher['message'],
 					'amount'           => $voucher['amount']
-				);
+				];
 			}
 
 			$this->load->model('setting/extension');
@@ -341,7 +341,7 @@ class ControllerCheckoutManual extends Controller {
 						$zone_code = '';
 					}
 
-					$address_data = array(
+					$address_data = [
 						'firstname'      => $this->request->post['shipping_firstname'],
 						'lastname'       => $this->request->post['shipping_lastname'],
 						'company'        => $this->request->post['shipping_company'],
@@ -357,7 +357,7 @@ class ControllerCheckoutManual extends Controller {
 						'iso_code_2'     => $iso_code_2,
 						'iso_code_3'     => $iso_code_3,
 						'address_format' => $address_format
-					);
+					];
 
 					$results = $this->model_setting_extension->getExtensions('shipping');
 
@@ -369,12 +369,12 @@ class ControllerCheckoutManual extends Controller {
 							$quote = $this->{'model_shipping_' . $result['code']}->getQuote($address_data);
 
 							if ($quote) {
-								$json['shipping_method'][$result['code']] = array(
+								$json['shipping_method'][$result['code']] = [
 									'title'      => $quote['title'],
 									'quote'      => $quote['quote'],
 									'sort_order' => $quote['sort_order'],
 									'error'      => $quote['error']
-								);
+								];
 							}
 						}
 					}
@@ -478,8 +478,7 @@ class ControllerCheckoutManual extends Controller {
 			$results = $this->model_setting_extension->getExtensions('total');
 
 			// Sort extensions by their configured sort_order
-			usort($results, fn($a, $b) =>
-				$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
 			);
 
 			foreach ($results as $result) {
@@ -491,13 +490,13 @@ class ControllerCheckoutManual extends Controller {
 					$contribution = $model->getTotal($taxes, $total);
 
 					$total_data = array_merge($total_data, $contribution['total_data']);
-					$total     += $contribution['total'];
-					$taxes     += $contribution['taxes'];
+					$total += $contribution['total'];
+					$taxes += $contribution['taxes'];
 				}
 			}
 
 			// Sort the final total_data rows by sort_order
-			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
+			usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
 			$json['order_total'] = $total_data;
 
@@ -519,7 +518,7 @@ class ControllerCheckoutManual extends Controller {
 			}
 
 			if (!isset($json['error']['payment'])) {
-				$json['payment_methods'] = array();
+				$json['payment_methods'] = [];
 
 				$country_info = $this->model_localisation_country->getCountry($this->request->post['payment_country_id']);
 
@@ -545,7 +544,7 @@ class ControllerCheckoutManual extends Controller {
 					$zone_code = '';
 				}
 
-				$address_data = array(
+				$address_data = [
 					'firstname'      => $this->request->post['payment_firstname'],
 					'lastname'       => $this->request->post['payment_lastname'],
 					'company'        => $this->request->post['payment_company'],
@@ -561,7 +560,7 @@ class ControllerCheckoutManual extends Controller {
 					'iso_code_2'     => $iso_code_2,
 					'iso_code_3'     => $iso_code_3,
 					'address_format' => $address_format
-				);
+				];
 
 				$json['payment_method'] = [];
 

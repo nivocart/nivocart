@@ -5,11 +5,11 @@
  * @package NivoCart
  */
 class ControllerModulePalette extends Controller {
-    private $error = [];
+	private $error = [];
 	private $_name = 'palette';
 
-    public function index() {
-        $this->language->load('module/' . $this->_name);
+	public function index() {
+		$this->language->load('module/' . $this->_name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 

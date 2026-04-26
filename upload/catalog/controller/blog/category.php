@@ -161,7 +161,7 @@ class ControllerBlogCategory extends Controller {
 					$total_comments .= $this->language->get('text_comment');
 				}
 
-				$this->data['articles'][] = array(
+				$this->data['articles'][] = [
 					'blog_article_id' => $result['blog_article_id'],
 					'article_title'   => $result['article_title'],
 					'author_name'     => $result['author_name'],
@@ -173,7 +173,7 @@ class ControllerBlogCategory extends Controller {
 					'comment_href'    => $this->url->link('blog/article_info', 'blog_article_id=' . $result['blog_article_id'], 'SSL'),
 					'allow_comment'   => $result['allow_comment'],
 					'total_comment'   => $total_comments
-				);
+				];
 			}
 
 			$this->data['button_continue_reading'] = $this->language->get('button_continue_reading');

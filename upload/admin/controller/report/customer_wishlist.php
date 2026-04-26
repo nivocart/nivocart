@@ -63,10 +63,10 @@ class ControllerReportCustomerWishlist extends Controller {
 			}
 
 			$this->data['products'][] = [
-				'name'        => $result['name'],
-				'model'       => $result['model'],
-				'wishlisted'  => $result['total_wishlisted'],
-				'percent'     => $percent . '%'
+				'name'       => $result['name'],
+				'model'      => $result['model'],
+				'wishlisted' => $result['total_wishlisted'],
+				'percent'    => $percent . '%'
 			];
 		}
 

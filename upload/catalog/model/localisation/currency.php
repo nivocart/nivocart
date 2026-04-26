@@ -18,12 +18,12 @@ class ModelLocalisationCurrency extends Model {
 		$currency_data = $this->cache->get('currency');
 
 		if (!$currency_data) {
-			$currency_data = array();
+			$currency_data = [];
 
 			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` ORDER BY `title` ASC");
 
 			foreach ($query->rows as $result) {
-				$currency_data[$result['code']] = array(
+				$currency_data[$result['code']] = [
 					'currency_id'   => $result['currency_id'],
 					'title'         => $result['title'],
 					'code'          => $result['code'],
@@ -33,7 +33,7 @@ class ModelLocalisationCurrency extends Model {
 					'value'         => $result['value'],
 					'status'        => $result['status'],
 					'date_modified' => $result['date_modified']
-				);
+				];
 			}
 
 			$this->cache->set('currency', $currency_data);

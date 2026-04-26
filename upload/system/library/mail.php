@@ -175,7 +175,7 @@ class Mail {
 			$message .= 'Content-Transfer-Encoding: 8bit' . PHP_EOL . PHP_EOL;
 			$message .= $this->text . PHP_EOL;
 		} else {
-			$message  = '--' . $boundary . PHP_EOL;
+			$message = '--' . $boundary . PHP_EOL;
 			$message .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '_alt"' . PHP_EOL . PHP_EOL;
 			$message .= '--' . $boundary . '_alt' . PHP_EOL;
 			$message .= 'Content-Type: text/plain; charset="utf-8"' . PHP_EOL;
@@ -257,7 +257,7 @@ class Mail {
 						$reply = '';
 						continue;
 
-					} else if (substr($line, 3, 1) === ' ') {
+					} elseif (substr($line, 3, 1) === ' ') {
 						break;
 					}
 				}

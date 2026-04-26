@@ -374,13 +374,13 @@ class ControllerBlogArticle extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-	 	if (isset($this->error['article_title'])) {
+		if (isset($this->error['article_title'])) {
 			$this->data['error_article_title'] = $this->error['article_title'];
 		} else {
 			$this->data['error_article_title'] = [];
 		}
 
-	 	if (isset($this->error['description'])) {
+		if (isset($this->error['description'])) {
 			$this->data['error_description'] = $this->error['description'];
 		} else {
 			$this->data['error_description'] = [];
@@ -710,7 +710,7 @@ class ControllerBlogArticle extends Controller {
 	}
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['article_name'])) {
 			if (isset($this->request->get['article_name'])) {

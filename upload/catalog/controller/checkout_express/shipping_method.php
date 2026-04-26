@@ -20,7 +20,7 @@ class ControllerCheckoutExpressShippingMethod extends Controller {
 
 		// Shipping Methods
 		if (!empty($shipping_address)) {
-			$quote_data = array();
+			$quote_data = [];
 
 			$this->load->model('setting/extension');
 
@@ -33,17 +33,17 @@ class ControllerCheckoutExpressShippingMethod extends Controller {
 					$quote = $this->{'model_shipping_' . $result['code']}->getQuote($shipping_address);
 
 					if ($quote) {
-						$quote_data[$result['code']] = array(
+						$quote_data[$result['code']] = [
 							'title'      => $quote['title'],
 							'quote'      => $quote['quote'],
 							'sort_order' => $quote['sort_order'],
 							'error'      => $quote['error']
-						);
+						];
 					}
 				}
 			}
 
-			$sort_order = array();
+			$sort_order = [];
 
 			foreach ($quote_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];
@@ -71,7 +71,7 @@ class ControllerCheckoutExpressShippingMethod extends Controller {
 		if (isset($this->session->data['shipping_methods'])) {
 			$this->data['shipping_methods'] = $this->session->data['shipping_methods'];
 		} else {
-			$this->data['shipping_methods'] = array();
+			$this->data['shipping_methods'] = [];
 		}
 
 		if (isset($this->session->data['shipping_method']['code'])) {
@@ -101,7 +101,7 @@ class ControllerCheckoutExpressShippingMethod extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout_express');
 
-		$json = array();
+		$json = [];
 
 		// Validate if shipping is required. If not the customer should not have reached this page
 		if (!$this->cart->hasShipping()) {

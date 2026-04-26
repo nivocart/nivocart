@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerToolExportImportRaw extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		$this->language->load('tool/export_import_raw');
@@ -63,7 +63,7 @@ class ControllerToolExportImportRaw extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
- 		if (isset($this->session->data['error'])) {
+		if (isset($this->session->data['error'])) {
 			$this->data['error_warning'] = $this->session->data['error'];
 
 			unset($this->session->data['error']);
@@ -81,19 +81,19 @@ class ControllerToolExportImportRaw extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
-		);
+		];
 
 		$this->data['csv_import'] = $this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['csv_export'] = $this->url->link('tool/export_import_raw/export', 'token=' . $this->session->data['token'], 'SSL');
@@ -104,10 +104,10 @@ class ControllerToolExportImportRaw extends Controller {
 		$this->data['tables'] = $this->model_tool_export_import_raw->getTables();
 
 		$this->template = 'tool/export_import_raw.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

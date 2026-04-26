@@ -457,7 +457,7 @@ class ControllerDesignMenuItems extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
- 		if (isset($this->error['name'])) {
+		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
 			$this->data['error_name'] = [];
@@ -637,7 +637,7 @@ class ControllerDesignMenuItems extends Controller {
 		$routes = $this->model_tool_route->getRoutes($routes_menu);
 
 		if ($routes) {
-			$output  = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";
+			$output = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";
 			$output .= '<head>' . "\n";
 			$output .= '  <title>' . $info_title . '</title>' . "\n";
 			$output .= '  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . "\n";

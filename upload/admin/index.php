@@ -64,15 +64,15 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 	switch ($errno) {
 		case E_NOTICE:
 		case E_USER_NOTICE: $error = 'Notice';
-		break;
+			break;
 		case E_WARNING:
 		case E_USER_WARNING: $error = 'Warning';
-		break;
+			break;
 		case E_ERROR:
 		case E_USER_ERROR: $error = 'Fatal Error';
-		break;
+			break;
 		default: $error = 'Unknown';
-		break;
+			break;
 	}
 
 	if ($config->get('config_error_display')) {

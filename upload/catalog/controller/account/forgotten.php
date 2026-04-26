@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerAccountForgotten extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if ($this->customer->isLogged()) {
@@ -63,25 +63,25 @@ class ControllerAccountForgotten extends Controller {
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_forgotten'),
 			'href'      => $this->url->link('account/forgotten', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -111,7 +111,7 @@ class ControllerAccountForgotten extends Controller {
 			$this->template = 'default/template/account/forgotten.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -120,7 +120,7 @@ class ControllerAccountForgotten extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

@@ -169,7 +169,7 @@ class ModelPaymentSagepayServer extends Model {
 		$sagepay_server_order = $this->getOrder($order_id);
 
 		if (!empty($sagepay_server_order) && $sagepay_server_order['rebate_status'] != 1) {
-			$refund_data = array();
+			$refund_data = [];
 
 			if ($this->config->get('sagepay_server_test') === 'live') {
 				$url = 'https://live.sagepay.com/gateway/service/refund.vsp';
@@ -238,13 +238,13 @@ class ModelPaymentSagepayServer extends Model {
 	public function getTotalReleased(int $sagepay_server_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "sagepay_server_order_transaction` WHERE sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
 
-		return (double)$query->row['total'];
+		return (float)$query->row['total'];
 	}
 
 	public function getTotalRebated(int $sagepay_server_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "sagepay_server_order_transaction` WHERE sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "' AND 'rebate'");
 
-		return (double)$query->row['total'];
+		return (float)$query->row['total'];
 	}
 
 	public function sendCurl($url, $payment_data) {

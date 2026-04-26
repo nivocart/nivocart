@@ -20,7 +20,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 			$order_info = $this->model_checkout_order->getOrder($order_id);
 
 			if ($order_info) {
-				if (in_array(strtoupper($order_info['currency_code']), array('AUD','CAD','EUR','GBP','JPY','USD'))) {
+				if (in_array(strtoupper($order_info['currency_code']), ['AUD','CAD','EUR','GBP','JPY','USD'])) {
 					if ($this->config->get('pp_payflow_iframe_test')) {
 						$mode = 'TEST';
 						$payflow_url = 'https://pilot-payflowlink.paypal.com';
@@ -47,14 +47,14 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 					$bill_to_street = explode('@_@', wordwrap(trim($order_info['payment_address_1'] . ' ' . $order_info['payment_address_2']), 30, '@_@'));
 					$ship_to_street = explode('@_@', wordwrap(trim($order_info['shipping_address_1'] . ' ' . $order_info['shipping_address_2']), 30, '@_@'));
 
-					$request = array(
-						'TENDER'                => 'C',
-						'TRXTYPE'               => $transaction_type,
-						'AMT'                   => number_format($order_info['total'], 2, '.', ''),
-						'CURRENCY'              => strtoupper($order_info['currency_code']),
-						'CREATESECURETOKEN'     => 'Y',
-						'SECURETOKENID'         => $secure_token_id,
-						'TEMPLATE'              => $template,  // Dynamically configure the hosted checkout page.
+					$request = [
+						'TENDER'            => 'C',
+						'TRXTYPE'           => $transaction_type,
+						'AMT'               => number_format($order_info['total'], 2, '.', ''),
+						'CURRENCY'          => strtoupper($order_info['currency_code']),
+						'CREATESECURETOKEN' => 'Y',
+						'SECURETOKENID'     => $secure_token_id,
+						'TEMPLATE'          => $template,  // Dynamically configure the hosted checkout page.
 						// Passing the URLs here gives bad results: Payflow adds $payflow_url as prefix and encodes them.
 
 						// Color parameters (unused but seems working)
@@ -65,28 +65,28 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 //						'LABELTEXTCOLOR'        => '330000',
 
 						// Address Verification Service Parameters
-						'BILLTOFIRSTNAME'   => $order_info['payment_firstname'],
-						'BILLTOLASTNAME'    => $order_info['payment_lastname'],
-						'BILLTOSTREET'      => isset($bill_to_street[0]) ? trim($bill_to_street[0]) : '',
-						'BILLTOSTREET2'     => isset($bill_to_street[1]) ? trim($bill_to_street[1]) : '',
-						'BILLTOCITY'        => $order_info['payment_city'],
-						'BILLTOSTATE'       => $order_info['payment_zone_code'],
-						'BILLTOZIP'         => $order_info['payment_postcode'],
-						'BILLTOCOUNTRY'     => $order_info['payment_iso_code_2'],
+						'BILLTOFIRSTNAME' => $order_info['payment_firstname'],
+						'BILLTOLASTNAME'  => $order_info['payment_lastname'],
+						'BILLTOSTREET'    => isset($bill_to_street[0]) ? trim($bill_to_street[0]) : '',
+						'BILLTOSTREET2'   => isset($bill_to_street[1]) ? trim($bill_to_street[1]) : '',
+						'BILLTOCITY'      => $order_info['payment_city'],
+						'BILLTOSTATE'     => $order_info['payment_zone_code'],
+						'BILLTOZIP'       => $order_info['payment_postcode'],
+						'BILLTOCOUNTRY'   => $order_info['payment_iso_code_2'],
 
-						'SHIPTOFIRSTNAME'   => $order_info['shipping_firstname'],
-						'SHIPTOLASTNAME'    => $order_info['shipping_lastname'],
-						'SHIPTOSTREET'      => isset($ship_to_street[0]) ? trim($ship_to_street[0]) : '',
-						'SHIPTOSTREET2'     => isset($ship_to_street[1]) ? trim($ship_to_street[1]) : '',
-						'SHIPTOCITY'        => $order_info['shipping_city'],
-						'SHIPTOSTATE'       => $order_info['shipping_zone_code'],
-						'SHIPTOZIP'         => $order_info['shipping_postcode'],
-						'SHIPTOCOUNTRY'     => $order_info['shipping_iso_code_2'],
+						'SHIPTOFIRSTNAME' => $order_info['shipping_firstname'],
+						'SHIPTOLASTNAME'  => $order_info['shipping_lastname'],
+						'SHIPTOSTREET'    => isset($ship_to_street[0]) ? trim($ship_to_street[0]) : '',
+						'SHIPTOSTREET2'   => isset($ship_to_street[1]) ? trim($ship_to_street[1]) : '',
+						'SHIPTOCITY'      => $order_info['shipping_city'],
+						'SHIPTOSTATE'     => $order_info['shipping_zone_code'],
+						'SHIPTOZIP'       => $order_info['shipping_postcode'],
+						'SHIPTOCOUNTRY'   => $order_info['shipping_iso_code_2'],
 
-						'CUSTIP'            => $order_info['ip'],
+						'CUSTIP' => $order_info['ip'],
 						// Session information is lost when redirected so we pass 'order_id' as user parameter.
-						'USER1'             => $order_info['order_id']
-					);
+						'USER1' => $order_info['order_id']
+					];
 
 					$response = $this->model_payment_pp_payflow_iframe->call($request);
 
@@ -98,11 +98,11 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 							// Get the secure token
 							$secure_token = (isset($response['SECURETOKEN']) ? $response['SECURETOKEN'] : '');
 
-							$iframe_params = array(
+							$iframe_params = [
 								'MODE'          => $mode, // Deprecated
 								'SECURETOKENID' => $request['SECURETOKENID'],
 								'SECURETOKEN'   => $secure_token
-							);
+							];
 
 							// Use parameters to embed the PayPal hosted page in an iframe tag.
 							$this->data['iframe_url'] = $payflow_url . '?' . http_build_query($iframe_params, '', '&');
@@ -200,12 +200,12 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
 		if ($order_info) {
 			// Inquire status of the transaction from Paypal
-			$request = array(
-				'TENDER'    => 'C',
-				'TRXTYPE'   => 'I',
-				'ORIGID'    => $this->request->post['PNREF'],
+			$request = [
+				'TENDER'  => 'C',
+				'TRXTYPE' => 'I',
+				'ORIGID'  => $this->request->post['PNREF'],
 //  			'VERBOSITY' => 'HIGH'
-			);
+			];
 
 			$response = $this->model_payment_pp_payflow_iframe->call($request);
 
@@ -215,22 +215,22 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 			} elseif (is_array($response) && isset($response['RESULT']) && $order_info['order_status_id'] == 0) {
 
 				if (intval($response['RESULT']) == 0) {
-					$paypal_order = array(
+					$paypal_order = [
 						'order_id'        => $order_info['order_id'],
 						'secure_token_id' => $this->request->post['SECURETOKENID'],
 						'complete'        => ($this->request->post['TYPE'] == 'S') ? 1 : 0,
 						'currency'        => strtoupper($order_info['currency_code'])
-					);
+					];
 
 					$this->model_payment_pp_payflow_iframe->addPaypalOrder($paypal_order);
 
-					$paypal_transaction = array(
+					$paypal_transaction = [
 						'order_id'                     => $order_info['order_id'],
 						'transaction_reference'        => $this->request->post['PNREF'],
 						'transaction_type'             => $this->request->post['TYPE'],
 						'parent_transaction_reference' => '',
 						'amount'                       => $this->request->post['AMT']
-					);
+					];
 
 					$this->model_payment_pp_payflow_iframe->addPaypalTransaction($paypal_transaction);
 

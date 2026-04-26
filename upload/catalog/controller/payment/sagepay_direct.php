@@ -41,80 +41,80 @@ class ControllerPaymentSagepayDirect extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['cards'] = array();
+		$this->data['cards'] = [];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'Visa',
 			'value' => 'VISA'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'MasterCard',
 			'value' => 'MC'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'Visa Delta/Debit',
 			'value' => 'DELTA'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'Solo',
 			'value' => 'SOLO'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'Maestro',
 			'value' => 'MAESTRO'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'Visa Electron UK Debit',
 			'value' => 'UKE'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'American Express',
 			'value' => 'AMEX'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'Diners Club',
 			'value' => 'DC'
-		);
+		];
 
-		$this->data['cards'][] = array(
+		$this->data['cards'][] = [
 			'text'  => 'Japan Credit Bureau',
 			'value' => 'JCB'
-		);
+		];
 
-		$this->data['months'] = array();
+		$this->data['months'] = [];
 
 		for ($i = 1; $i <= 12; $i++) {
-			$this->data['months'][] = array(
+			$this->data['months'][] = [
 				'text'  => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
 				'value' => sprintf('%02d', $i)
-			);
+			];
 		}
 
 		$today = getdate();
 
-		$this->data['year_valid'] = array();
+		$this->data['year_valid'] = [];
 
 		for ($i = $today['year'] - 10; $i < $today['year'] + 1; $i++) {
-			$this->data['year_valid'][] = array(
+			$this->data['year_valid'][] = [
 				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))
-			);
+			];
 		}
 
-		$this->data['year_expire'] = array();
+		$this->data['year_expire'] = [];
 
 		for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
-			$this->data['year_expire'][] = array(
+			$this->data['year_expire'][] = [
 				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))
-			);
+			];
 		}
 
 		if ($this->config->get('sagepay_direct_card') == '1') {
@@ -123,7 +123,7 @@ class ControllerPaymentSagepayDirect extends Controller {
 			$this->data['sagepay_direct_card'] = false;
 		}
 
-		$this->data['existing_cards'] = array();
+		$this->data['existing_cards'] = [];
 
 		if ($this->customer->isLogged() && $this->data['sagepay_direct_card']) {
 			$this->load->model('payment/sagepay_direct');
@@ -150,7 +150,7 @@ class ControllerPaymentSagepayDirect extends Controller {
 		$this->load->model('payment/sagepay_direct');
 		$this->load->model('account/order');
 
-		$payment_data = array();
+		$payment_data = [];
 
 		if ($this->config->get('sagepay_direct_test') == 'live') {
 			$url = 'https://live.sagepay.com/gateway/service/vspdirect-register.vsp';
@@ -280,7 +280,7 @@ class ControllerPaymentSagepayDirect extends Controller {
 
 		$response_data = $this->model_payment_sagepay_direct->sendCurl($url, $payment_data);
 
-		$json = array();
+		$json = [];
 
 		if ($response_data['Status'] == '3DAUTH') {
 			$json['ACSURL'] = $response_data['ACSURL'];
@@ -294,7 +294,7 @@ class ControllerPaymentSagepayDirect extends Controller {
 			$card_id = '';
 
 			if (!empty($payment_data['CreateToken']) && $this->customer->isLogged()) {
-				$card_data = array();
+				$card_data = [];
 				$card_data['customer_id'] = $this->customer->getId();
 				$card_data['Token'] = '';
 				$card_data['Last4Digits'] = substr(str_replace(' ', '', $payment_data['CardNumber']), -4, 4);
@@ -350,7 +350,7 @@ class ControllerPaymentSagepayDirect extends Controller {
 			$card_id = '';
 
 			if (!empty($payment_data['CreateToken']) && !empty($response_data['Token']) && $this->customer->isLogged()) {
-				$card_data = array();
+				$card_data = [];
 				$card_data['customer_id'] = $this->customer->getId();
 				$card_data['Token'] = $response_data['Token'];
 				$card_data['Last4Digits'] = substr(str_replace(' ', '', $payment_data['CardNumber']), -4, 4);

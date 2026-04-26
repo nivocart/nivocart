@@ -18,11 +18,11 @@ class ModelCatalogManufacturer extends Model {
 		if ($data) {
 			$sql = "SELECT *, md.name AS `name` FROM `" . DB_PREFIX . "manufacturer` m LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN `" . DB_PREFIX . "manufacturer_to_store` m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' AND m.status = '1'";
 
-			$sort_data = array(
+			$sort_data = [
 				'md.name',
 				'm.sort_order',
 				'm.status'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];

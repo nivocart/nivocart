@@ -112,7 +112,7 @@ class ControllerLocalisationCountry extends Controller {
 
 		if (isset($this->request->post['selected']) && $this->validate()) {
 			foreach ($this->request->post['selected'] as $country_id) {
-			  	$country_info = $this->model_localisation_country->getCountry($country_id);
+				$country_info = $this->model_localisation_country->getCountry($country_id);
 
 				if ($country_info && !$country_info['status']) {
 					$this->model_localisation_country->enableCountry($country_id);
@@ -151,7 +151,7 @@ class ControllerLocalisationCountry extends Controller {
 
 		if (isset($this->request->post['selected']) && $this->validate()) {
 			foreach ($this->request->post['selected'] as $country_id) {
-			  	$country_info = $this->model_localisation_country->getCountry($country_id);
+				$country_info = $this->model_localisation_country->getCountry($country_id);
 
 				if ($country_info && $country_info['status']) {
 					$this->model_localisation_country->disableCountry($country_id);

@@ -70,7 +70,7 @@ class ControllerModuleMediaPlayer extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
- 		if (isset($this->error['warning'])) {
+		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';

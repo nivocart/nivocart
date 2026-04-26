@@ -364,10 +364,10 @@ class ControllerToolApiKeyManager extends Controller {
 		}
 
 		$this->template = 'tool/api_key_manager_form.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

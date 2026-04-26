@@ -36,7 +36,7 @@ class ControllerPaymentSagepayServer extends Controller {
 			$this->data['sagepay_server_card'] = false;
 		}
 
-		$this->data['cards'] = array();
+		$this->data['cards'] = [];
 
 		if ($this->customer->isLogged() && $this->data['sagepay_server_card']) {
 			$this->load->model('payment/sagepay_server');
@@ -63,7 +63,7 @@ class ControllerPaymentSagepayServer extends Controller {
 		$this->load->model('payment/sagepay_server');
 		$this->load->model('account/order');
 
-		$payment_data = array();
+		$payment_data = [];
 
 		if ($this->config->get('sagepay_server_test') == 'live') {
 			$url = 'https://live.sagepay.com/gateway/service/vspserver-register.vsp';
@@ -186,7 +186,7 @@ class ControllerPaymentSagepayServer extends Controller {
 
 		$response_data = $this->model_payment_sagepay_server->sendCurl($url, $payment_data);
 
-		$json = array();
+		$json = [];
 
 		if ((substr($response_data['Status'], 0, 2) == "OK") || $response_data['Status'] == 'AUTHENTICATED' || $response_data['Status'] == 'REGISTERED') {
 			$json['redirect'] = $response_data['NextURL'];

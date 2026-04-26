@@ -37,21 +37,21 @@ class ModelPaymentKlarnaInvoice extends Model {
 			}
 
 			// Maps countries to currencies
-			$country_to_currency = array(
+			$country_to_currency = [
 				'NOR' => 'NOK',
 				'SWE' => 'SEK',
 				'FIN' => 'EUR',
 				'DNK' => 'DKK',
 				'DEU' => 'EUR',
 				'NLD' => 'EUR'
-			);
+			];
 
 			if (!isset($country_to_currency[$address['iso_code_3']]) || !$this->currency->has($country_to_currency[$address['iso_code_3']])) {
 				$status = false;
 			}
 		}
 
-		$method = array();
+		$method = [];
 
 		if ($status) {
 			$klarna_fee = $this->config->get('klarna_fee');
@@ -62,12 +62,12 @@ class ModelPaymentKlarnaInvoice extends Model {
 				$terms = sprintf($this->language->get('text_terms_no_fee'), $klarna_invoice[$address['iso_code_3']]['merchant'], strtolower($address['iso_code_2']));
 			}
 
-			$method = array(
+			$method = [
 				'code'       => 'klarna_invoice',
 				'title'      => $this->language->get('text_title'),
 				'terms'      => $terms,
 				'sort_order' => $klarna_invoice[$address['iso_code_3']]['sort_order']
-			);
+			];
 		}
 
 		return $method;

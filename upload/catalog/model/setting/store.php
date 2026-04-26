@@ -12,10 +12,10 @@ class ModelSettingStore extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "store`";
 
-			$sort_data = array(
+			$sort_data = [
 				'name',
 				'url'
-			);
+			];
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];

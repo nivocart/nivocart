@@ -12,19 +12,19 @@ class ControllerInformationSitemap extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('text_home'),
 			'href'      => $this->url->link('common/home', '', 'SSL'),
 			'separator' => false
-		);
+		];
 
-		$this->data['breadcrumbs'][] = array(
+		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
 			'href'      => $this->url->link('information/sitemap', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
-		);
+		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -76,27 +76,27 @@ class ControllerInformationSitemap extends Controller {
 		// Product Categories
 		$empty_category = $this->config->get('config_empty_category');
 
-		$this->data['categories'] = array();
+		$this->data['categories'] = [];
 
 		$parent_id = 0;
 
 		$categories_1 = $this->model_catalog_category->getCategories($parent_id);
 
 		foreach ($categories_1 as $category_1) {
-			$level_2_data = array();
+			$level_2_data = [];
 
 			$categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
 
 			foreach ($categories_2 as $category_2) {
-				$level_3_data = array();
+				$level_3_data = [];
 
 				$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
 
 				foreach ($categories_3 as $category_3) {
-					$data = array(
+					$data = [
 						'filter_category_id'  => $category_3['category_id'],
 						'filter_sub_category' => true
-					);
+					];
 
 					if (!$empty_category) {
 						$product_total = $this->model_catalog_product->getTotalProducts($data);
@@ -105,32 +105,32 @@ class ControllerInformationSitemap extends Controller {
 					}
 
 					if ($empty_category || $product_total > 0) {
-						$level_3_data[] = array(
+						$level_3_data[] = [
 							'name' => $category_3['name'],
 							'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id'], 'SSL')
-						);
+						];
 					}
 				}
 
-				$level_2_data[] = array(
+				$level_2_data[] = [
 					'name'     => $category_2['name'],
 					'children' => $level_3_data,
 					'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'], 'SSL')
-				);
+				];
 			}
 
-			$this->data['categories'][] = array(
+			$this->data['categories'][] = [
 				'name'     => $category_1['name'],
 				'children' => $level_2_data,
 				'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'], 'SSL')
-			);
+			];
 		}
 
 		// Blog Categories
 		$this->load->model('blog/article');
 		$this->load->model('blog/status');
 
-		$this->data['blog_categories'] = array();
+		$this->data['blog_categories'] = [];
 
 		$blog_tables = $this->model_blog_status->checkBlog();
 
@@ -140,22 +140,22 @@ class ControllerInformationSitemap extends Controller {
 			$blog_categories_1 = $this->model_blog_article->getCategories($parent_id);
 
 			foreach ($blog_categories_1 as $blog_category_1) {
-				$level_2_data = array();
+				$level_2_data = [];
 
 				$blog_categories_2 = $this->model_blog_article->getCategories($blog_category_1['blog_category_id']);
 
 				foreach ($blog_categories_2 as $blog_category_2) {
-					$level_2_data[] = array(
-						'name'     => $blog_category_2['name'],
-						'href'     => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_2['blog_category_id'], 'SSL')
-					);
+					$level_2_data[] = [
+						'name' => $blog_category_2['name'],
+						'href' => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_2['blog_category_id'], 'SSL')
+					];
 				}
 
-				$this->data['blog_categories'][] = array(
+				$this->data['blog_categories'][] = [
 					'name'     => $blog_category_1['name'],
 					'children' => $level_2_data,
 					'href'     => $this->url->link('blog/category', 'blog_category_id=' . $blog_category_1['blog_category_id'], 'SSL')
-				);
+				];
 			}
 		}
 
@@ -186,7 +186,7 @@ class ControllerInformationSitemap extends Controller {
 		$this->data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
 
 		$this->data['affiliate_account'] = $this->url->link('affiliate/account', '', 'SSL');
-		$this->data['affiliate_login'] =$this->url->link('affiliate/login', '', 'SSL');
+		$this->data['affiliate_login'] = $this->url->link('affiliate/login', '', 'SSL');
 		$this->data['affiliate_edit'] = $this->url->link('affiliate/edit', '', 'SSL');
 		$this->data['affiliate_password'] = $this->url->link('affiliate/password', '', 'SSL');
 		$this->data['affiliate_payment'] = $this->url->link('affiliate/payment', '', 'SSL');
@@ -201,15 +201,15 @@ class ControllerInformationSitemap extends Controller {
 
 		$this->load->model('catalog/information');
 
-		$this->data['informations'] = array();
+		$this->data['informations'] = [];
 
 		$informations = $this->model_catalog_information->getInformations();
 
 		foreach ($informations as $result) {
-			$this->data['informations'][] = array(
+			$this->data['informations'][] = [
 				'title' => $result['title'],
 				'href'  => $this->url->link('information/information', 'information_id=' . $result['information_id'], 'SSL')
-			);
+			];
 		}
 
 		// Allow Returns/Affiliates
@@ -225,7 +225,7 @@ class ControllerInformationSitemap extends Controller {
 			$this->template = 'default/template/information/sitemap.tpl';
 		}
 
-		$this->children = array(
+		$this->children = [
 			'common/content_higher',
 			'common/content_high',
 			'common/content_left',
@@ -234,7 +234,7 @@ class ControllerInformationSitemap extends Controller {
 			'common/content_lower',
 			'common/footer',
 			'common/header'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}

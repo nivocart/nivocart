@@ -24,65 +24,65 @@ class ControllerPaymentPPProUK extends Controller {
 
 		$this->data['button_confirm'] = $this->language->get('button_confirm');
 
-		$this->data['cards'] = array();
+		$this->data['cards'] = [];
 
-		$this->data['cards'][] = array(
-			'text' => 'Visa',
+		$this->data['cards'][] = [
+			'text'  => 'Visa',
 			'value' => 'VISA'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'MasterCard',
+		$this->data['cards'][] = [
+			'text'  => 'MasterCard',
 			'value' => 'MASTERCARD'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'Discover Card',
+		$this->data['cards'][] = [
+			'text'  => 'Discover Card',
 			'value' => 'DISCOVER'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'American Express',
+		$this->data['cards'][] = [
+			'text'  => 'American Express',
 			'value' => 'AMEX'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'Maestro',
+		$this->data['cards'][] = [
+			'text'  => 'Maestro',
 			'value' => 'SWITCH'
-		);
+		];
 
-		$this->data['cards'][] = array(
-			'text' => 'Solo',
+		$this->data['cards'][] = [
+			'text'  => 'Solo',
 			'value' => 'SOLO'
-		);
+		];
 
-		$this->data['months'] = array();
+		$this->data['months'] = [];
 
 		for ($i = 1; $i <= 12; $i++) {
-			$this->data['months'][] = array(
-				'text' => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
+			$this->data['months'][] = [
+				'text'  => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)),
 				'value' => sprintf('%02d', $i)
-			);
+			];
 		}
 
 		$today = getdate();
 
-		$this->data['year_valid'] = array();
+		$this->data['year_valid'] = [];
 
 		for ($i = $today['year'] - 10; $i < $today['year'] + 1; $i++) {
-			$this->data['year_valid'][] = array(
-				'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
+			$this->data['year_valid'][] = [
+				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))
-			);
+			];
 		}
 
-		$this->data['year_expire'] = array();
+		$this->data['year_expire'] = [];
 
 		for ($i = $today['year']; $i < $today['year'] + 11; $i++) {
-			$this->data['year_expire'][] = array(
-				'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
+			$this->data['year_expire'][] = [
+				'text'  => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)),
 				'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i))
-			);
+			];
 		}
 
 		// Theme
@@ -178,11 +178,11 @@ class ControllerPaymentPPProUK extends Controller {
 
 		curl_close($curl);
 
-		$response_info = array();
+		$response_info = [];
 
 		parse_str($response, $response_info);
 
-		$json = array();
+		$json = [];
 
 		if (($response_info['ACK'] == 'Success') || ($response_info['ACK'] == 'SuccessWithWarning')) {
 			$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('config_order_status_id'));

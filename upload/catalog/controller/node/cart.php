@@ -27,8 +27,7 @@ class ControllerNodeCart extends Controller {
 			$results = $this->model_setting_extension->getExtensions('total');
 
 			// Sort extensions by their configured sort_order
-			usort($results, fn($a, $b) =>
-				$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
 			);
 
 			foreach ($results as $result) {
@@ -40,13 +39,13 @@ class ControllerNodeCart extends Controller {
 					$contribution = $model->getTotal($taxes, $total);
 
 					$total_data = array_merge($total_data, $contribution['total_data']);
-					$total     += $contribution['total'];
-					$taxes     += $contribution['taxes'];
+					$total += $contribution['total'];
+					$taxes += $contribution['taxes'];
 				}
 			}
 
 			// Sort the final total_data rows by sort_order
-			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
+			usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 		}
 
 		$price_hide = (bool)$this->config->get('config_price_hide');
@@ -77,7 +76,7 @@ class ControllerNodeCart extends Controller {
 
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		foreach ($this->cart->getProducts() as $product) {
 			if ($product['image']) {
@@ -110,7 +109,7 @@ class ControllerNodeCart extends Controller {
 				$offer = false;
 			}
 
-			$option_data = array();
+			$option_data = [];
 
 			foreach ($product['option'] as $option) {
 				if ($option['type'] != 'file') {
@@ -121,11 +120,11 @@ class ControllerNodeCart extends Controller {
 					$value = substr($filename, 0, strrpos($filename, '.'));
 				}
 
-				$option_data[] = array(
+				$option_data[] = [
 					'name'  => $option['name'],
 					'value' => (mb_strlen($value, 'UTF-8') > 20) ? substr($value, 0, 20) . '..' : $value,
 					'type'  => $option['type']
-				);
+				];
 			}
 
 			// Display price
@@ -142,7 +141,7 @@ class ControllerNodeCart extends Controller {
 				$total = false;
 			}
 
-			$this->data['products'][] = array(
+			$this->data['products'][] = [
 				'key'           => $product['key'],
 				'thumb'         => $image,
 				'stock_label'   => $stock_label,
@@ -159,19 +158,19 @@ class ControllerNodeCart extends Controller {
 				'recurring'     => $product['recurring'],
 				'profile'       => $product['profile_name'],
 				'href'          => $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL')
-			);
+			];
 		}
 
 		// Gift Voucher
-		$this->data['vouchers'] = array();
+		$this->data['vouchers'] = [];
 
 		if (!empty($this->session->data['vouchers'])) {
 			foreach ($this->session->data['vouchers'] as $key => $voucher) {
-				$this->data['vouchers'][] = array(
+				$this->data['vouchers'][] = [
 					'key'         => $key,
 					'description' => $voucher['description'],
 					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency'))
-				);
+				];
 			}
 		}
 

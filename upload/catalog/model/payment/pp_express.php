@@ -25,15 +25,15 @@ class ModelPaymentPPExpress extends Model {
 			$status = false;
 		}
 
-		$method_data = array();
+		$method_data = [];
 
 		if ($status) {
-			$method_data = array(
+			$method_data = [
 				'code'       => 'pp_express',
 				'title'      => $this->language->get('text_title'),
 				'terms'      => '',
 				'sort_order' => $this->config->get('pp_express_sort_order')
-			);
+			];
 		}
 
 		return $method_data;
@@ -47,7 +47,7 @@ class ModelPaymentPPExpress extends Model {
 		. "modified = NOW(), "
 		. "capture_status = '" . (isset($order_data['capture_status']) ? $this->db->escape($order_data['capture_status']) : null) . "', "
 		. "currency_code = '" . (isset($order_data['currency_code']) ? $this->db->escape($order_data['currency_code']) : null) . "', "
-		. "total = " . (isset($order_data['total']) ? (double)$order_data['total'] : 0.0) . ", "
+		. "total = " . (isset($order_data['total']) ? (float)$order_data['total'] : 0.0) . ", "
 		. "authorization_id = '" . (isset($order_data['authorization_id']) ? $this->db->escape($order_data['authorization_id']) : null) . "'");
 
 		return $this->db->getLastId();
@@ -66,7 +66,7 @@ class ModelPaymentPPExpress extends Model {
 		. "payment_status = '" . (isset($transaction_data['payment_status']) ? $this->db->escape($transaction_data['payment_status']) : null) . "', "
 		. "pending_reason = '" . (isset($transaction_data['pending_reason']) ? $this->db->escape($transaction_data['pending_reason']) : null) . "', "
 		. "transaction_entity = '" . (isset($transaction_data['transaction_entity']) ? $this->db->escape($transaction_data['transaction_entity']) : null) . "', "
-		. "amount = " . (isset($transaction_data['amount']) ? (double)$transaction_data['amount'] : 0.0) . ", "
+		. "amount = " . (isset($transaction_data['amount']) ? (float)$transaction_data['amount'] : 0.0) . ", "
 		. "debug_data = '" . (isset($transaction_data['debug_data']) ? $this->db->escape($transaction_data['debug_data']) : null) . "'");
 	}
 
@@ -147,13 +147,13 @@ class ModelPaymentPPExpress extends Model {
 		// Totals
 		$this->load->model('setting/extension');
 
-		$total_data = array();
+		$total_data = [];
 		$taxes = $this->cart->getTaxes();
 		$total = 0;
 
 		// Display prices
 		if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-			$sort_order = array();
+			$sort_order = [];
 
 			$results = $this->model_setting_extension->getExtensions('total');
 
@@ -170,7 +170,7 @@ class ModelPaymentPPExpress extends Model {
 					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
 				}
 
-				$sort_order = array();
+				$sort_order = [];
 
 				foreach ($total_data as $key => $value) {
 					$sort_order[$key] = $value['sort_order'];
@@ -181,7 +181,7 @@ class ModelPaymentPPExpress extends Model {
 		}
 
 		foreach ($total_data as $total_row) {
-			if (!in_array($total_row['code'], array('total', 'sub_total'))) {
+			if (!in_array($total_row['code'], ['total', 'sub_total'])) {
 				if ($total_row['value'] != 0) {
 					$item_price = $this->currency->format($total_row['value'], false, false, false, $this->config->get('config_currency'));
 
@@ -212,12 +212,12 @@ class ModelPaymentPPExpress extends Model {
 				if ($item['recurring_trial'] == 1) {
 					$trial_amt = $this->currency->format($this->tax->calculate($item['recurring_trial_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false, $this->config->get('config_currency')) * $item['quantity'] . ' ' . $this->currency->getCode();
 
-					$trial_text =  sprintf($this->language->get('text_trial'), $trial_amt, $item['recurring_trial_cycle'], $item['recurring_trial_frequency'], $item['recurring_trial_duration']);
+					$trial_text = sprintf($this->language->get('text_trial'), $trial_amt, $item['recurring_trial_cycle'], $item['recurring_trial_frequency'], $item['recurring_trial_duration']);
 				} else {
 					$trial_text = '';
 				}
 
-				$recurring_amt = $this->currency->format($this->tax->calculate($item['recurring_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false, $this->config->get('config_currency'))  * $item['quantity'] . ' ' . $this->currency->getCode();
+				$recurring_amt = $this->currency->format($this->tax->calculate($item['recurring_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false, $this->config->get('config_currency')) * $item['quantity'] . ' ' . $this->currency->getCode();
 
 				$recurring_description = $trial_text . sprintf($this->language->get('text_recurring'), $recurring_amt, $item['recurring_cycle'], $item['recurring_frequency']);
 
@@ -281,19 +281,19 @@ class ModelPaymentPPExpress extends Model {
 			$signature = $this->config->get('pp_express_signature');
 		}
 
-		$default_parameters = array(
+		$default_parameters = [
 			'USER'         => $user,
 			'PWD'          => $password,
 			'SIGNATURE'    => $signature,
 			'VERSION'      => '109.0',
 			'BUTTONSOURCE' => 'OpenCart_Cart_EC'
-		);
+		];
 
 		$call_parameters = array_merge($data, $default_parameters);
 
 		$this->log($call_parameters, 'Call data');
 
-		$options = array(
+		$options = [
 			CURLOPT_POST           => true,
 			CURLOPT_HEADER         => false,
 			CURLOPT_URL            => $api_endpoint,
@@ -305,7 +305,7 @@ class ModelPaymentPPExpress extends Model {
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_POSTFIELDS     => http_build_query($call_parameters, '', '&')
-		);
+		];
 
 		$ch = curl_init();
 
@@ -314,10 +314,10 @@ class ModelPaymentPPExpress extends Model {
 		$response = curl_exec($ch);
 
 		if (curl_errno($ch) != CURLE_OK) {
-			$log_data = array(
+			$log_data = [
 				'curl_error' => curl_error($ch),
 				'curl_errno' => curl_errno($ch)
-			);
+			];
 
 			$this->log($log_data, 'cURL failed');
 			return false;
@@ -342,9 +342,9 @@ class ModelPaymentPPExpress extends Model {
 
 	public function createToken($len = 32) {
 		$base = 'ABCDEFGHKLMNOPQRSTWXYZabcdefghjkmnpqrstwxyz123456789';
-		$max = strlen($base)-1;
+		$max = strlen($base) - 1;
 		$activate_code = '';
-		mt_srand((double)microtime() * 1000000);
+		mt_srand((float)microtime() * 1000000);
 
 		while (strlen($activate_code) < $len + 1) {
 			$activate_code .= $base{mt_rand(0, $max)};
@@ -362,7 +362,7 @@ class ModelPaymentPPExpress extends Model {
 	public function cleanReturn($data) {
 		$data = explode('&', $data);
 
-		$arr = array();
+		$arr = [];
 
 		foreach ($data as $k => $v) {
 			$tmp = explode('=', $v);
@@ -373,11 +373,11 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	public function recurringCancel($reference) {
-		$data = array(
+		$data = [
 			'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
 			'PROFILEID' => $reference,
 			'ACTION'    => 'Cancel'
-		);
+		];
 
 		return $this->call($data);
 	}

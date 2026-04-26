@@ -40,7 +40,7 @@ final class Action {
 				continue;
 			}
 
-			$file = DIR_APPLICATION . 'controller/' . str_replace(array('../', '..\\', '..'), '', (string)$path) . '.php';
+			$file = DIR_APPLICATION . 'controller/' . str_replace(['../', '..\\', '..'], '', (string)$path) . '.php';
 
 			if (is_file($file)) {
 				$this->file = $file;

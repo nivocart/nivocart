@@ -29,7 +29,7 @@ final class Front {
 
 	/**
 	 * Pre Action
-	 * 
+	 *
 	 * @param $pre_action
 	 */
 	public function addPreAction($pre_action) {
@@ -38,7 +38,7 @@ final class Front {
 
 	/**
 	 * Dispatch
-	 * 
+	 *
 	 * @param $action
 	 * @param $error
 	 */
@@ -61,7 +61,7 @@ final class Front {
 
 	/**
 	 * Execute
-	 * 
+	 *
 	 * @param $action
 	 */
 	private function execute($action) {
@@ -72,8 +72,8 @@ final class Front {
 
 			$controller = new $class($this->registry);
 
-			if (is_callable(array($controller, $action->getMethod())) && mb_substr($action->getMethod(), 0, 2, 'UTF-8') != '__') {
-				$action = call_user_func_array(array($controller, $action->getMethod()), $action->getArgs());
+			if (is_callable([$controller, $action->getMethod()]) && mb_substr($action->getMethod(), 0, 2, 'UTF-8') != '__') {
+				$action = call_user_func_array([$controller, $action->getMethod()], $action->getArgs());
 			} else {
 				$action = $this->error;
 				$this->error = '';

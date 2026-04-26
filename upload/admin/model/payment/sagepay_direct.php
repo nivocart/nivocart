@@ -237,13 +237,13 @@ class ModelPaymentSagepayDirect extends Model {
 	public function getTotalReleased(int $sagepay_direct_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "sagepay_direct_order_transaction` WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "' AND (`type` = 'payment' OR `type` = 'rebate')");
 
-		return (double)$query->row['total'];
+		return (float)$query->row['total'];
 	}
 
 	public function getTotalRebated(int $sagepay_direct_order_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "sagepay_direct_order_transaction` WHERE sagepay_direct_order_id = '" . (int)$sagepay_direct_order_id . "' AND 'rebate'");
 
-		return (double)$query->row['total'];
+		return (float)$query->row['total'];
 	}
 
 	public function sendCurl($url, $payment_data) {

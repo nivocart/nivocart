@@ -137,8 +137,8 @@ class ModelToolSeoUrl extends Controller {
 
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {
-				if (($data['route'] === 'product/product' && $key === 'product_id') || 
-				(($data['route'] === 'product/manufacturer/info' || $data['route'] === 'product/product') && $key === 'manufacturer_id') || 
+				if (($data['route'] === 'product/product' && $key === 'product_id') ||
+				(($data['route'] === 'product/manufacturer/info' || $data['route'] === 'product/product') && $key === 'manufacturer_id') ||
 				($data['route'] === 'information/information' && $key === 'information_id') || ($data['route'] === 'information/news' && $key === 'news_id') ||
 				($data['route'] === 'blog/article_info' && $key === 'blog_article_id') || ($data['route'] === 'blog/article_author' && $key === 'blog_author_id')) {
 					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");

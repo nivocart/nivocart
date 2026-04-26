@@ -94,8 +94,7 @@ class ControllerCheckoutConfirm extends Controller {
 			$results = $this->model_setting_extension->getExtensions('total');
 
 			// Sort extensions by their configured sort_order
-			usort($results, fn($a, $b) =>
-				$this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
+			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
 			);
 
 			foreach ($results as $result) {
@@ -107,13 +106,13 @@ class ControllerCheckoutConfirm extends Controller {
 					$contribution = $model->getTotal($taxes, $total);
 
 					$total_data = array_merge($total_data, $contribution['total_data']);
-					$total     += $contribution['total'];
-					$taxes     += $contribution['taxes'];
+					$total += $contribution['total'];
+					$taxes += $contribution['taxes'];
 				}
 			}
 
 			// Sort the final total_data rows by sort_order
-			usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
+			usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
 			// Confirm Data
 			$this->language->load('checkout/checkout');
@@ -244,7 +243,7 @@ class ControllerCheckoutConfirm extends Controller {
 						$value = $this->encryption->decrypt($option['option_value']);
 					}
 
-					$option_data[] = array(
+					$option_data[] = [
 						'product_option_id'       => $option['product_option_id'],
 						'product_option_value_id' => $option['product_option_value_id'],
 						'option_id'               => $option['option_id'],
@@ -252,10 +251,10 @@ class ControllerCheckoutConfirm extends Controller {
 						'name'                    => $option['name'],
 						'value'                   => $value,
 						'type'                    => $option['type']
-					);
+					];
 				}
 
-				$product_data[] = array(
+				$product_data[] = [
 					'product_id' => $product['product_id'],
 					'name'       => $product['name'],
 					'model'      => $product['model'],
@@ -268,7 +267,7 @@ class ControllerCheckoutConfirm extends Controller {
 					'total'      => $product['total'],
 					'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']),
 					'reward'     => $product['reward']
-				);
+				];
 			}
 
 			// Gift Voucher
@@ -276,7 +275,7 @@ class ControllerCheckoutConfirm extends Controller {
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {
-					$voucher_data[] = array(
+					$voucher_data[] = [
 						'description'      => $voucher['description'],
 						'code'             => substr(md5(mt_rand()), 0, 10),
 						'to_name'          => $voucher['to_name'],
@@ -286,7 +285,7 @@ class ControllerCheckoutConfirm extends Controller {
 						'voucher_theme_id' => $voucher['voucher_theme_id'],
 						'message'          => $voucher['message'],
 						'amount'           => $voucher['amount']
-					);
+					];
 				}
 			}
 
@@ -374,13 +373,13 @@ class ControllerCheckoutConfirm extends Controller {
 			$this->data['text_recurring_item'] = $this->language->get('text_recurring_item');
 			$this->data['text_payment_profile'] = $this->language->get('text_payment_profile');
 
-			$frequencies = array(
+			$frequencies = [
 				'day'        => $this->language->get('text_day'),
 				'week'       => $this->language->get('text_week'),
 				'semi_month' => $this->language->get('text_semi_month'),
 				'month'      => $this->language->get('text_month'),
 				'year'       => $this->language->get('text_year')
-			);
+			];
 
 			// Get tax breakdown
 			if ($this->config->get('config_tax_breakdown')) {
@@ -405,10 +404,10 @@ class ControllerCheckoutConfirm extends Controller {
 						$value = substr($filename, 0, strrpos($filename, '.'));
 					}
 
-					$option_data[] = array(
+					$option_data[] = [
 						'name'  => $option['name'],
 						'value' => (mb_strlen($value, 'UTF-8') > 20) ? substr($value, 0, 20) . '..' : $value
-					);
+					];
 				}
 
 				// Profile
@@ -432,7 +431,7 @@ class ControllerCheckoutConfirm extends Controller {
 
 				$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')) - ($product['price'] * $product['quantity']));
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'key'                 => $product['key'],
 					'product_id'          => $product['product_id'],
 					'name'                => $product['name'],
@@ -449,7 +448,7 @@ class ControllerCheckoutConfirm extends Controller {
 					'recurring'           => $product['recurring'],
 					'profile_name'        => $product['profile_name'],
 					'profile_description' => $profile_description
-				);
+				];
 			}
 
 			// Gift Voucher
@@ -457,10 +456,10 @@ class ControllerCheckoutConfirm extends Controller {
 
 			if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $voucher) {
-					$this->data['vouchers'][] = array(
+					$this->data['vouchers'][] = [
 						'description' => $voucher['description'],
 						'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency'))
-					);
+					];
 				}
 			}
 

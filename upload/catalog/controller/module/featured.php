@@ -59,22 +59,22 @@ class ControllerModuleFeatured extends Controller {
 
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
-		$this->data['manufacturers'] = array();
+		$this->data['manufacturers'] = [];
 
-		$manufacturers_array = array();
+		$manufacturers_array = [];
 
 		$results = $this->model_catalog_manufacturer->getManufacturers($manufacturers_array);
 
 		foreach ($results as $result) {
-			$this->data['manufacturers'][] = array(
+			$this->data['manufacturers'][] = [
 				'store_id'        => $result['store_id'],
 				'manufacturer_id' => $result['manufacturer_id'],
 				'name'            => $result['name'],
 				'href'            => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'], 'SSL')
-			);
+			];
 		}
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$get_products = explode(',', $this->config->get('featured_product'));
 
@@ -136,7 +136,7 @@ class ControllerModuleFeatured extends Controller {
 				// Quote redirect
 				$quote = ($product_info['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
 
-				$this->data['products'][] = array(
+				$this->data['products'][] = [
 					'product_id'      => $product_info['product_id'],
 					'thumb'           => $image,
 					'label'           => $label,
@@ -162,7 +162,7 @@ class ControllerModuleFeatured extends Controller {
 					'rating'          => (int)$rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 					'href'            => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL')
-				);
+				];
 			}
 		}
 

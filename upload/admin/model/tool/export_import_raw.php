@@ -32,7 +32,7 @@ class ModelToolExportImportRaw extends Model {
 		$output = '';
 
 		// Header
-	 	$output .= '"' . $table . '.' . stripslashes(implode('"' . $csv_delimiter . '"' . $table . '.', $columns)) . "\"\n";
+		$output .= '"' . $table . '.' . stripslashes(implode('"' . $csv_delimiter . '"' . $table . '.', $columns)) . "\"\n";
 
 		// Data
 		foreach ($result->rows as $row) {
@@ -45,7 +45,7 @@ class ModelToolExportImportRaw extends Model {
 					if ($csv_enclosure === '') {
 						$schema_insert .= $row[$k];
 					} else {
-						$row[$k] = str_replace(array("\r","\n","\t"), "", $row[$k]);
+						$row[$k] = str_replace(["\r","\n","\t"], "", $row[$k]);
 						$row[$k] = html_entity_decode($row[$k], ENT_COMPAT, 'UTF-8');
 
 						$schema_insert .= $csv_enclosure . str_replace($csv_enclosure, $csv_escaped . $csv_enclosure, $row[$k]) . $csv_enclosure;

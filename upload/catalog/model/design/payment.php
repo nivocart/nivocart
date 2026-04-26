@@ -9,16 +9,16 @@ class ModelDesignPayment extends Model {
 	 * Functions Get
 	 */
 	public function getPaymentImages(array $data = []): array {
-		$payment_image_data = array();
+		$payment_image_data = [];
 
 		$payment_images_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "payment_image` ORDER BY payment");
 
 		foreach ($payment_images_query->rows as $payment_image) {
-			$payment_image_data[] = array(
+			$payment_image_data[] = [
 				'payment' => $payment_image['payment'],
 				'image'   => $payment_image['image'],
 				'status'  => $payment_image['status']
-			);
+			];
 		}
 
 		return $payment_image_data;

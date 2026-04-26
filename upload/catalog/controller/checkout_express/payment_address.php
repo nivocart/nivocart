@@ -47,7 +47,7 @@ class ControllerCheckoutExpressPaymentAddress extends Controller {
 			$this->data['lastname'] = $this->customer->getLastName();
 		}
 
-		$this->data['addresses'] = array();
+		$this->data['addresses'] = [];
 
 		$this->load->model('account/address');
 
@@ -128,7 +128,7 @@ class ControllerCheckoutExpressPaymentAddress extends Controller {
 	public function validate() {
 		$this->language->load('checkout/checkout_express');
 
-		$json = array();
+		$json = [];
 
 		// Validate if customer is logged in
 		if (!$this->customer->isLogged()) {

@@ -27,7 +27,7 @@ class ControllerPaymentSagepay extends Controller {
 
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-		$data = array();
+		$data = [];
 
 		$data['VendorTxCode'] = $this->session->data['order_id'];
 		$data['ReferrerID'] = 'E511AF91-E4A0-42DE-80B0-09C981A3FB61';
@@ -110,7 +110,7 @@ class ControllerPaymentSagepay extends Controller {
 		$this->data['transaction'] = $this->config->get('sagepay_transaction');
 		$this->data['vendor'] = $vendor;
 
-		$crypt_data = array();
+		$crypt_data = [];
 
 		foreach ($data as $key => $value) {
 			$crypt_data[] = $key . '=' . $value;
@@ -199,7 +199,7 @@ class ControllerPaymentSagepay extends Controller {
 	}
 
 	protected function simpleXor($string, $password) {
-		$data = array();
+		$data = [];
 
 		for ($i = 0; $i < strlen($password); $i++) {
 			$data[$i] = ord(substr($password, $i, 1));
@@ -215,7 +215,7 @@ class ControllerPaymentSagepay extends Controller {
 	}
 
 	protected function getToken($string) {
-		$tokens = array(
+		$tokens = [
 			'Status',
 			'StatusDetail',
 			'VendorTxCode',
@@ -234,10 +234,10 @@ class ControllerPaymentSagepay extends Controller {
 			'Last4Digits',
 			'PayerStatus',
 			'CardType'
-		);
+		];
 
-		$output = array();
-		$data = array();
+		$output = [];
+		$data = [];
 
 		for ($i = count($tokens) - 1; $i >= 0; $i--) {
 			$start = strpos($string, $tokens[$i]);
@@ -248,7 +248,7 @@ class ControllerPaymentSagepay extends Controller {
 			}
 		}
 
-		sort ($data);
+		sort($data);
 
 		for ($i = 0; $i < count($data); $i++) {
 			$start = $data[$i]['start'] + strlen($data[$i]['token']) + 1;
@@ -256,7 +256,7 @@ class ControllerPaymentSagepay extends Controller {
 			if ($i == (count($data) - 1)) {
 				$output[$data[$i]['token']] = substr($string, $start);
 			} else {
-				$length = $data[$i+1]['start'] - $data[$i]['start'] - strlen($data[$i]['token']) - 2;
+				$length = $data[$i + 1]['start'] - $data[$i]['start'] - strlen($data[$i]['token']) - 2;
 
 				$output[$data[$i]['token']] = substr($string, $start, $length);
 			}

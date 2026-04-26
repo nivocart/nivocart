@@ -420,7 +420,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 		$this->load->model('blog/article');
 
-		$json = array();
+		$json = [];
 
 		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
