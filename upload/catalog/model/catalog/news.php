@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogNews
+ *
+ * @package NivoCart
+ */
 class ModelCatalogNews extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function updateViewed(int $news_id): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "news` SET viewed = (viewed + 1) WHERE news_id = '" . (int)$news_id . "'");
 
@@ -30,7 +37,7 @@ class ModelCatalogNews extends Model {
 			$sql .= " ORDER BY n.date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

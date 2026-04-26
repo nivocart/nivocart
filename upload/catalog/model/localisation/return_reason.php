@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationReturnReason
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationReturnReason extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addReturnReason(array $data = []): void {
 		foreach ($data['return_reason'] as $language_id => $value) {
 			if (isset($return_reason_id)) {

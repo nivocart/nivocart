@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignLayout
+ *
+ * @package NivoCart
+ */
 class ModelDesignLayout extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getLayout($route) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "layout_route` WHERE '" . $this->db->escape($route) . "' LIKE CONCAT(route, '%') AND store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY route DESC LIMIT 0,1");
 

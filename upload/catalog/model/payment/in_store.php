@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelPaymentInStore
+ *
+ * @package NivoCart
+ */
 class ModelPaymentInStore extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getMethod($address, $total) {
 		$this->language->load('payment/in_store');
 

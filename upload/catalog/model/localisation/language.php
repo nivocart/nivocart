@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationLanguage
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationLanguage extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getLanguage(int $language_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE language_id = '" . (int)$language_id . "'");
 

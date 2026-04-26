@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalVoucher
+ *
+ * @package NivoCart
+ */
 class ModelTotalVoucher extends Model {
-
+	/**
+	 * Functions Get, Confirm
+	 */
     public function getTotal(array $taxes, float $total): array {
         if (!isset($this->session->data['voucher'])) {
             return ['total_data' => [], 'total' => 0.0, 'taxes' => []];

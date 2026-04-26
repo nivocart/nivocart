@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalGiftWrapping
+ *
+ * @package NivoCart
+ */
 class ModelTotalGiftWrapping extends Model {
-
+	/**
+	 * Functions Get
+	 */
     public function getTotal(array $taxes, float $total): array {
         if (!isset($this->session->data['wrapping']) || !$this->config->get('gift_wrapping_status') || $this->cart->getSubTotal() <= 0) {
             return ['total_data' => [], 'total' => 0.0, 'taxes' => []];

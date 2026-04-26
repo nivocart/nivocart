@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelPaymentSagePayUS
+ *
+ * @package NivoCart
+ */
 class ModelPaymentSagePayUS extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getMethod($address, $total) {
 		$this->language->load('payment/sagepay_us');
 

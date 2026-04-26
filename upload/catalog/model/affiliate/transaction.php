@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelAffiliateTransaction
+ *
+ * @package NivoCart
+ */
 class ModelAffiliateTransaction extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getTransactions(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "affiliate_transaction` WHERE affiliate_id = '" . (int)$this->affiliate->getId() . "'";
 
@@ -16,7 +23,7 @@ class ModelAffiliateTransaction extends Model {
 			$sql .= " ORDER BY date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

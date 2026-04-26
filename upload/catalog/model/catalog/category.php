@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogCategory
+ *
+ * @package NivoCart
+ */
 class ModelCatalogCategory extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getCategory(int $category_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "category` c LEFT JOIN `" . DB_PREFIX . "category_description` cd ON (c.category_id = cd.category_id) LEFT JOIN `" . DB_PREFIX . "category_to_store` c2s ON (c.category_id = c2s.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND c.status = '1'");
 
@@ -8,7 +15,7 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function getCategories($parent_id = 0): array {
-		if ($parent_id == 0) {
+		if ($parent_id === 0) {
 			$category_data = $this->cache->get('categories.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$parent_id);
 
 			if (!$category_data) {

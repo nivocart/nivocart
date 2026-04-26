@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelAccountWishlist
+ *
+ * @package NivoCart
+ */
 class ModelAccountWishlist extends Model {
-
+	/**
+	 * Functions Get, Add
+	 */
 	public function addWishlist(int $product_id): void {
 		$this->deleteWishlist($product_id);
 

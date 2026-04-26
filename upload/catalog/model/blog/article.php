@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelBlogArticle
+ *
+ * @package NivoCart
+ */
 class ModelBlogArticle extends Model {
-
+	/**
+	 * Functions Get, Add
+	 */
 	public function getArticles(array $data = []): array {
 		$sql = "SELECT ba.*, bad.*, bau.name AS `author_name` FROM `" . DB_PREFIX . "blog_article` ba LEFT JOIN `" . DB_PREFIX . "blog_article_description` bad ON (ba.blog_article_id = bad.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_article_to_store` ba2s ON (ba.blog_article_id = ba2s.blog_article_id) LEFT JOIN `" . DB_PREFIX . "blog_author` bau ON (ba.blog_author_id = bau.blog_author_id)";
 		$sql .= " WHERE ba.status = '1' AND bau.status = '1' AND ba2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND bad.language_id = '" . (int)$this->config->get('config_language_id') . "'";

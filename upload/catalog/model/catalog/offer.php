@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogOffer
+ *
+ * @package NivoCart
+ */
 class ModelCatalogOffer extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getOfferProducts(int $product_id): array {
 		$this->language->load('total/offers');
 
@@ -13,15 +20,15 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_product_products) {
 			foreach ($offer_product_products as $result) {
-				if ($result['type'] == 'F') {
+				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
-				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
+				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
 					$type = $this->language->get('text_free');
 				} else {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
 				}
 
-				if (($result['one'] == $product_id) && ($result['two'] == $product_id)) {
+				if (($result['one'] === $product_id) && ($result['two'] === $product_id)) {
 					$offer_products[] = array(
 						'group' => 'G241',
 						'one'   => $result['one'],
@@ -29,7 +36,7 @@ class ModelCatalogOffer extends Model {
 						'type'  => $type
 					);
 
-				} elseif ($result['two'] == $product_id) {
+				} elseif ($result['two'] === $product_id) {
 					$offer_products[] = array(
 						'group' => 'G142D',
 						'one'   => $result['one'],
@@ -37,7 +44,7 @@ class ModelCatalogOffer extends Model {
 						'type'  => $type
 					);
 
-				} elseif ($result['one'] == $product_id) {
+				} elseif ($result['one'] === $product_id) {
 					$offer_products[] = array(
 						'group' => 'G242D',
 						'one'   => $result['one'],
@@ -56,9 +63,9 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_product_categories) {
 			foreach ($offer_product_categories as $result) {
-				if ($result['type'] == 'F') {
+				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
-				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
+				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
 					$type = $this->language->get('text_free');
 				} else {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
@@ -70,7 +77,7 @@ class ModelCatalogOffer extends Model {
 					$product = 0;
 
 					foreach ($product_lists as $product) {
-						if (($result['one'] == $product_id) && ($product == $product_id)) {
+						if (($result['one'] === $product_id) && ($product === $product_id)) {
 							$offer_products[] = array(
 								'group' => 'G241D',
 								'one'   => $result['one'],
@@ -78,7 +85,7 @@ class ModelCatalogOffer extends Model {
 								'type'  => $type
 							);
 
-						} elseif ($product == $product_id) {
+						} elseif ($product === $product_id) {
 							$offer_products[] = array(
 								'group' => 'G142D',
 								'one'   => $result['one'],
@@ -86,7 +93,7 @@ class ModelCatalogOffer extends Model {
 								'type'  => $type
 							);
 
-						} elseif ($result['one'] == $product_id) {
+						} elseif ($result['one'] === $product_id) {
 							$offer_products[] = array(
 								'group' => 'G242D',
 								'one'   => $result['one'],
@@ -110,9 +117,9 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_category_products) {
 			foreach ($offer_category_products as $result) {
-				if ($result['type'] == 'F') {
+				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
-				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
+				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
 					$type = $this->language->get('text_free');
 				} else {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
@@ -124,7 +131,7 @@ class ModelCatalogOffer extends Model {
 					$product = 0;
 
 					foreach ($product_lists as $product) {
-						if (($product == $product_id) && ($result['two'] == $product_id)) {
+						if (($product === $product_id) && ($result['two'] === $product_id)) {
 							$offer_products[] = array(
 								'group' => 'G241D',
 								'one'   => $product,
@@ -132,7 +139,7 @@ class ModelCatalogOffer extends Model {
 								'type'  => $type
 							);
 
-						} elseif ($result['two'] == $product_id) {
+						} elseif ($result['two'] === $product_id) {
 							$offer_products[] = array(
 								'group' => 'G142D',
 								'one'   => $product,
@@ -140,7 +147,7 @@ class ModelCatalogOffer extends Model {
 								'type'  => $type
 							);
 
-						} elseif ($product == $product_id) {
+						} elseif ($product === $product_id) {
 							$offer_products[] = array(
 								'group' => 'G242D',
 								'one'   => $product,
@@ -164,9 +171,9 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_category_categories) {
 			foreach ($offer_category_categories as $result) {
-				if ($result['type'] == 'F') {
+				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
-				} elseif (($result['type'] == 'P') && ((int)$result['disc'] == '100')) {
+				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
 					$type = $this->language->get('text_free');
 				} else {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
@@ -181,7 +188,7 @@ class ModelCatalogOffer extends Model {
 
 					foreach ($product_one_lists as $product_one) {
 						foreach ($product_two_lists as $product_two) {
-							if (($product_one == $product_id) && ($product_two == $product_id)) {
+							if (($product_one === $product_id) && ($product_two === $product_id)) {
 								$offer_products[] = array(
 									'group' => 'G241D',
 									'one'   => $product_one,
@@ -189,7 +196,7 @@ class ModelCatalogOffer extends Model {
 									'type'  => $type
 								);
 
-							} elseif ($product_two == $product_id) {
+							} elseif ($product_two === $product_id) {
 								$offer_products[] = array(
 									'group' => 'G142D',
 									'one'   => $product_one,
@@ -197,7 +204,7 @@ class ModelCatalogOffer extends Model {
 									'type'  => $type
 								);
 
-							} elseif ($product_one == $product_id) {
+							} elseif ($product_one === $product_id) {
 								$offer_products[] = array(
 									'group' => 'G242D',
 									'one'   => $product_one,

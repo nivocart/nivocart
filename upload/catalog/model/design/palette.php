@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignPalette
+ *
+ * @package NivoCart
+ */
 class ModelDesignPalette extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getPalette(int $palette_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "palette` WHERE palette_id = '" . (int)$palette_id . "'");
 
@@ -18,7 +25,7 @@ class ModelDesignPalette extends Model {
 			$sql .= " ORDER BY `name`";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

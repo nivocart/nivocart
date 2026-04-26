@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelFraudMaxMind
+ *
+ * @package NivoCart
+ */
 class ModelFraudMaxMind extends Model {
-
+	/**
+	 * Functions Check, Get
+	 */
 	public function check(array $data = []) {
 		$risk_score = 0;
 

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelShippingGeoZone
+ *
+ * @package NivoCart
+ */
 class ModelShippingGeoZone extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getQuote($address) {
 		$this->language->load('shipping/geozone');
 

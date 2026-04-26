@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelPaymentPPExpress
+ *
+ * @package NivoCart
+ */
 class ModelPaymentPPExpress extends Model {
-
+	/**
+	 * Functions Get, Add
+	 */
 	public function getMethod($address, $total) {
 		$this->language->load('payment/pp_express');
 

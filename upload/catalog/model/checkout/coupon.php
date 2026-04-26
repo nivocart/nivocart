@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCheckoutCoupon
+ *
+ * @package NivoCart
+ */
 class ModelCheckoutCoupon extends Model {
-
+	/**
+	 * Functions Get, Redeem
+	 */
 	public function getCoupon($code, $limits = true, $verify = true): array {
 		$status = true;
 

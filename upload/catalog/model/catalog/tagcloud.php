@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogTagCloud
+ *
+ * @package NivoCart
+ */
 class ModelCatalogTagCloud extends Model {
-
+	/**
+	 * Functions Get, Generate
+	 */
 	public function getRandomTags(int $limit, $min_font_size, $max_font_size, $font_weight, $random) {
 		$names = array();
 		$totals = array();
@@ -27,7 +34,7 @@ class ModelCatalogTagCloud extends Model {
 	}
 
 	protected function generateTagCloud($tags, $resize = true, $min_font_size, $max_font_size, $font_weight, $random) {
-		if ($resize == true) {
+		if ($resize === true) {
 			arsort($tags);
 
 			$max_qty = max(array_values($tags));
@@ -35,7 +42,7 @@ class ModelCatalogTagCloud extends Model {
 
 			$spread = $max_qty - $min_qty;
 
-			if ($spread == 0) {
+			if ($spread === 0) {
 				$spread = 1;
 			}
 

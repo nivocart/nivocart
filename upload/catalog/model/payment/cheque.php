@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelPaymentCheque
+ *
+ * @package NivoCart
+ */
 class ModelPaymentCheque extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getMethod($address, $total) {
 		$this->language->load('payment/cheque');
 

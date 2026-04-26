@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationLocation
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationLocation extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getLocation(int $location_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "location` WHERE location_id = '" . (int)$location_id . "'");
 

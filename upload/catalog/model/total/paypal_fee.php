@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalPayPalFee
+ *
+ * @package NivoCart
+ */
 class ModelTotalPayPalFee extends Model {
-
+	/**
+	 * Functions Get, Calculate
+	 */
     public function getTotal(array $taxes, float $total): array {
         $cart_total = (float)$this->cart->getTotal();
 

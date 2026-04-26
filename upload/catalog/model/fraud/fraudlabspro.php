@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelFraudFraudLabsPro
+ *
+ * @package NivoCart
+ */
 class ModelFraudFraudLabsPro extends Model {
-
+	/**
+	 * Functions Hash, Check, Get
+	 */
 	private function hashIt($s, $prefix = 'fraudlabspro_') {
 	  	$hash = $prefix . $s;
 

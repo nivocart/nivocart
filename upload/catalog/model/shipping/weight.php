@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelShippingWeight
+ *
+ * @package NivoCart
+ */
 class ModelShippingWeight extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getQuote($address) {
 		$this->language->load('shipping/weight');
 

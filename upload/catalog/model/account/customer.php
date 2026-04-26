@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelAccountCustomer
+ *
+ * @package NivoCart
+ */
 class ModelAccountCustomer extends Model {
-
+	/**
+	 * Functions Add, Edit, Delete, Get
+	 */
 	public function addCustomer(array $data = []): void {
 		if (isset($data['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display'))) {
 			$customer_group_id = $data['customer_group_id'];
@@ -288,7 +295,7 @@ class ModelAccountCustomer extends Model {
 			$sql .= " ORDER BY name";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";
@@ -324,7 +331,7 @@ class ModelAccountCustomer extends Model {
 	public function getDeletedByCustomerId(int $customer_id) {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_deleted` WHERE customer_id = '" . (int)$customer_id . "'");
 
-		if ($query->row['total'] == 0) {
+		if ($query->row['total'] === 0) {
 			return false;
 		} else {
 			return true;

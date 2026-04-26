@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelPaymentFreeCheckout
+ *
+ * @package NivoCart
+ */
 class ModelPaymentFreeCheckout extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getMethod($address, $total) {
 		$this->language->load('payment/free_checkout');
 

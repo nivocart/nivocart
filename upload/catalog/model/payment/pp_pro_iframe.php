@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelPaymentPPProIframe
+ *
+ * @package NivoCart
+ */
 class ModelPaymentPPProIframe extends Model {
-
+	/**
+	 * Functions Get, Add
+	 */
 	public function getMethod($address, $total) {
 		$this->load->language('payment/pp_pro_iframe');
 

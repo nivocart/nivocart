@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCheckoutCheckoutTools
+ *
+ * @package NivoCart
+ */
 class ModelCheckoutCheckoutTools extends Model {
-
+	/**
+	 * Functions Get, Generate
+	 */
 	public function getJoinName(array $data = []) {
 		if ($data['firstname'] && $data['lastname']) {
 			return $data['firstname'] . ' ' . $data['lastname'];

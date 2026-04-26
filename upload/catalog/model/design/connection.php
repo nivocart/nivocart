@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignConnection
+ *
+ * @package NivoCart
+ */
 class ModelDesignConnection extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getConnection(int $connection_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "connection` WHERE connection_id = '" . (int)$connection_id . "'");
 

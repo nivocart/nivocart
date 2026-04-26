@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelPaymentBankTransfer
+ *
+ * @package NivoCart
+ */
 class ModelPaymentBankTransfer extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getMethod($address, $total) {
 		$this->language->load('payment/bank_transfer');
 

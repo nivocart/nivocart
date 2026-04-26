@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelAccountOrder
+ *
+ * @package NivoCart
+ */
 class ModelAccountOrder extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getOrder(int $order_id) {
 		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id > '0'");
 

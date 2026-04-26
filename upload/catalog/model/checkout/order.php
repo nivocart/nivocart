@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCheckoutOrder
+ *
+ * @package NivoCart
+ */
 class ModelCheckoutOrder extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function addOrder(array $data = []): void {
 		// Order Status Id
 		$order_status_id = $this->config->get('config_order_status_id') ? $this->config->get('config_order_status_id') : 1;
@@ -280,7 +287,7 @@ class ModelCheckoutOrder extends Model {
 			}
 
 			// Send out any gift voucher mails
-			if ($this->config->get('config_complete_status_id') == $order_status_id) {
+			if ($this->config->get('config_complete_status_id') === $order_status_id) {
 				$this->model_checkout_voucher->confirm($order_id);
 			}
 
@@ -684,7 +691,7 @@ class ModelCheckoutOrder extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "order_history` SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$order_status_id . "', notify = '" . (int)$notify . "', `comment` = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
 			// Send out any gift voucher mails
-			if ($this->config->get('config_complete_status_id') == $order_status_id) {
+			if ($this->config->get('config_complete_status_id') === $order_status_id) {
 				$this->load->model('checkout/voucher');
 
 				$this->model_checkout_voucher->confirm($order_id);

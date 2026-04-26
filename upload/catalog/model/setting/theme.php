@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSettingTheme
+ *
+ * @package NivoCart
+ */
 class ModelSettingTheme extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getTheme() {
 		$template = $this->config->get('config_template');
 

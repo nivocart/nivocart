@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignPayment
+ *
+ * @package NivoCart
+ */
 class ModelDesignPayment extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getPaymentImages(array $data = []): array {
 		$payment_image_data = array();
 

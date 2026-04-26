@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogProduct
+ *
+ * @package NivoCart
+ */
 class ModelCatalogProduct extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function updateViewed(int $product_id): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
@@ -195,9 +202,9 @@ class ModelCatalogProduct extends Model {
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
+			if ($data['sort'] === 'pd.name' || $data['sort'] === 'p.model') {
 				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
-			} elseif ($data['sort'] == 'p.price') {
+			} elseif ($data['sort'] === 'p.price') {
 				$sql .= " ORDER BY (CASE WHEN special IS NOT NULL THEN special WHEN discount IS NOT NULL THEN discount ELSE p.price END)";
 			} else {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -207,7 +214,7 @@ class ModelCatalogProduct extends Model {
 			$sql .= " ORDER BY p.sort_order";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC, LCASE(pd.name) DESC";
 		} else {
 			$sql .= " ASC, LCASE(pd.name) ASC";
@@ -259,7 +266,7 @@ class ModelCatalogProduct extends Model {
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
+			if ($data['sort'] === 'pd.name' || $data['sort'] === 'p.model') {
 				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
 			} else {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -268,7 +275,7 @@ class ModelCatalogProduct extends Model {
 			$sql .= " ORDER BY p.sort_order";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC, LCASE(pd.name) DESC";
 		} else {
 			$sql .= " ASC, LCASE(pd.name) ASC";
@@ -451,7 +458,7 @@ class ModelCatalogProduct extends Model {
 		$product_option_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_option` po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN `" . DB_PREFIX . "option_description` od ON (o.option_id = od.option_id) WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.sort_order");
 
 		foreach ($product_option_query->rows as $product_option) {
-			if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
+			if ($product_option['type'] === 'select' || $product_option['type'] === 'radio' || $product_option['type'] === 'checkbox' || $product_option['type'] === 'image') {
 				$product_option_value_data = array();
 
 				$product_option_value_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_option_value` pov LEFT JOIN `" . DB_PREFIX . "option_value` ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN `" . DB_PREFIX . "option_value_description` ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_id = '" . (int)$product_id . "' AND pov.product_option_id = '" . (int)$product_option['product_option_id'] . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ov.sort_order");

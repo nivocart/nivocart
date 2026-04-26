@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalKlarnaFee
+ *
+ * @package NivoCart
+ */
 class ModelTotalKlarnaFee extends Model {
-
+	/**
+	 * Functions Get, Resolve
+	 */
     public function getTotal(array $taxes, float $total): array {
         $this->language->load('total/klarna_fee');
 

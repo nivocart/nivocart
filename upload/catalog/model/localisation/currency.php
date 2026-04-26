@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelLocalisationCurrency
+ *
+ * @package NivoCart
+ */
 class ModelLocalisationCurrency extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getCurrencyByCode(string $code) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "currency` WHERE `code` = '" . $this->db->escape((string)$code) . "'");
 

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalShipping
+ *
+ * @package NivoCart
+ */
 class ModelTotalShipping extends Model {
-
+	/**
+	 * Functions Get
+	 */
     public function getTotal(array $taxes, float $total): array {
         if (!$this->cart->hasShipping() || !isset($this->session->data['shipping_method'])) {
             return $this->emptyResult();

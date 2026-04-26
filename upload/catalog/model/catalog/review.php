@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelCatalogReview
+ *
+ * @package NivoCart
+ */
 class ModelCatalogReview extends Model {
-
+	/**
+	 * Functions Get, Add
+	 */
 	public function addReview(int $product_id, array $data = []): void {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "review` SET author = '" . $this->db->escape($data['name']) . "', customer_id = '" . (int)$this->customer->getId() . "', product_id = '" . (int)$product_id . "', `text` = '" . $this->db->escape($data['text']) . "', rating = '" . (int)$data['rating'] . "', date_added = NOW(), date_modified = NOW()");
 	}
@@ -28,7 +35,7 @@ class ModelCatalogReview extends Model {
 		);
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			if ($data['sort'] == 'pd.name') {
+			if ($data['sort'] === 'pd.name') {
 				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
 			} else {
 				$sql .= " ORDER BY " . $data['sort'];
@@ -37,7 +44,7 @@ class ModelCatalogReview extends Model {
 			$sql .= " ORDER BY r.date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC, LCASE(pd.name) DESC";
 		} else {
 			$sql .= " ASC, LCASE(pd.name) ASC";

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelSettingStore
+ *
+ * @package NivoCart
+ */
 class ModelSettingStore extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getStores(array $data = []): array {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "store`";

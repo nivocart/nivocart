@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelShippingAirmail
+ *
+ * @package NivoCart
+ */
 class ModelShippingAirmail extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getQuote($address) {
 		$this->language->load('shipping/airmail');
 

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelAccountReward
+ *
+ * @package NivoCart
+ */
 class ModelAccountReward extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getRewards(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "customer_reward` WHERE customer_id = '" . (int)$this->customer->getId() . "'";
 
@@ -16,7 +23,7 @@ class ModelAccountReward extends Model {
 			$sql .= " ORDER BY date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalCredit
+ *
+ * @package NivoCart
+ */
 class ModelTotalCredit extends Model {
-
+	/**
+	 * Functions Get, Confirm
+	 */
     public function getTotal(array $taxes, float $total): array {
         $current_credit = abs((float)($this->session->data['current_credit'] ?? 0));
 

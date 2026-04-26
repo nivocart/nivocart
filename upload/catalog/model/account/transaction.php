@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelAccountTransaction
+ *
+ * @package NivoCart
+ */
 class ModelAccountTransaction extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getTransactions(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "customer_transaction` WHERE customer_id = '" . (int)$this->customer->getId() . "'";
 
@@ -16,7 +23,7 @@ class ModelAccountTransaction extends Model {
 			$sql .= " ORDER BY date_added";
 		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+		if (isset($data['order']) && ($data['order'] === 'DESC')) {
 			$sql .= " DESC";
 		} else {
 			$sql .= " ASC";

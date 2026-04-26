@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelAccountRecurring
+ *
+ * @package NivoCart
+ */
 class ModelAccountRecurring extends Model {
-
+	/**
+	 * Functions Get, Add
+	 */
 	public function getProfile(int $order_recurring_id) {
 		$result = $this->db->query("SELECT orc.*, o.payment_method, o.payment_code, o.currency_code FROM `" . DB_PREFIX . "order_recurring` orc LEFT JOIN `" . DB_PREFIX . "order` o ON (orc.order_id = o.order_id) WHERE orc.order_recurring_id = '" . (int)$order_recurring_id . "' AND o.customer_id = '" . (int)$this->customer->getId() . "' LIMIT 0,1");
 

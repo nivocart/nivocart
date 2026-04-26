@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelDesignFooter
+ *
+ * @package NivoCart
+ */
 class ModelDesignFooter extends Model {
-
+	/**
+	 * Functions Get
+	 */
 	public function getFooter(int $footer_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "footer` f LEFT JOIN `" . DB_PREFIX . "footer_description` fd ON (f.footer_id = fd.footer_id) LEFT JOIN `" . DB_PREFIX . "footer_to_store` f2s ON (f.footer_id = f2s.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.footer_id = '" . (int)$this->config->get('config_language_id') . "' AND f2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND f.status = '1'");
 

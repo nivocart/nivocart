@@ -1,5 +1,13 @@
 <?php
+/**
+ * Class ModelCheckoutOffers
+ *
+ * @package NivoCart
+ */
 class ModelCheckoutOffers extends Model {
+	/**
+	 * Functions Get
+	 */
 
 	// Product Product
 	public function getOfferProductProducts(): array {

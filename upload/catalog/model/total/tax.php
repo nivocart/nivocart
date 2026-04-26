@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalTax
+ *
+ * @package NivoCart
+ */
 class ModelTotalTax extends Model {
-
+	/**
+	 * Functions Get
+	 */
     public function getTotal(array $taxes, float $total): array {
         $total_data = [];
         $total_added = 0.0;

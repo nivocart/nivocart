@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ModelSettingSetting
+ *
+ * @package NivoCart
+ */
 class ModelSettingSetting extends Model {
 	/**
 	 * Get Settings

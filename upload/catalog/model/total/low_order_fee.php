@@ -1,6 +1,13 @@
 <?php
+/**
+ * Class ModelTotalLowOrderFee
+ *
+ * @package NivoCart
+ */
 class ModelTotalLowOrderFee extends Model {
-
+	/**
+	 * Functions Get
+	 */
     public function getTotal(array $taxes, float $total): array {
         $sub_total = (float)$this->cart->getSubTotal();
 

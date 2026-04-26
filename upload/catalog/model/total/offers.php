@@ -33,7 +33,12 @@ class Offer {
     }
 }
 
-class ModelTotalOffers {
+/**
+ * Class ModelTotalOffers
+ *
+ * @package NivoCart
+ */
+class ModelTotalOffers extends Model {
     protected $registry;
     protected array $discount_list = [];
 
