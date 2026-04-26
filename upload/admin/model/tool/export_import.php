@@ -58,11 +58,11 @@ function error_handler_for_export_import($errno, $errstr, $errfile, $errline) {
 }
 
 function fatal_error_shutdown_handler_for_export_import() {
-	$last_error = error_get_last();
+    $last_error = error_get_last();
 
-	if ($last_error['type'] === E_ERROR) {
-		error_handler_for_export_import(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line']);
-	}
+    if ($last_error !== null && $last_error['type'] === E_ERROR) {
+        error_handler_for_export_import(E_ERROR, $last_error['message'], $last_error['file'], $last_error['line']);
+    }
 }
 
 /**
@@ -71,6 +71,7 @@ function fatal_error_shutdown_handler_for_export_import() {
  * @package NivoCart
  */
 class ModelToolExportImport extends Model {
+	protected $posted_categories = '';
 	protected $null_array = [];
 
 	protected function clean(&$str, $allowBlanks = false) {
@@ -92,11 +93,14 @@ class ModelToolExportImport extends Model {
 	}
 
 	protected function multiquery($sql) {
-		foreach (explode(";\n", $sql) as $sql) {
-			$sql = trim($sql);
+		if (empty($sql)) {
+			return;
+		}
+		foreach (explode(";\n", $sql) as $statement) {
+			$statement = trim($statement);
 
-			if ($sql) {
-				$this->db->query($sql);
+			if ($statement) {
+				$this->db->query($statement);
 			}
 		}
 	}
@@ -10150,14 +10154,16 @@ class ModelToolExportImport extends Model {
 			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 		}
 
-		// Export as ZIP (Beta)
+		// Export as ZIP
 		if ($this->config->get('export_import_settings_use_export_pclzip')) {
 			PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
 		}
 
-		$posted_categories = new stdClass();
+		// Create Object from string
+		$posted_categories = $this->getPostedCategories();
 
-		$this->posted_categories = $this->getPostedCategories();
+		// Post Object
+		$this->posted_categories = $posted_categories;
 
 		try {
 			// Set appropriate timeout limit

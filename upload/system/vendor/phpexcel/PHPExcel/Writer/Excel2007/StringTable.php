@@ -63,9 +63,9 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
 				$cell = $pSheet->getCell($cellID);
 				$cellValue = $cell->getValue();
 
-				if (!is_object($cellValue) && ($cellValue !== null) && $cellValue !== '' && !isset($aFlippedStringTable[$cellValue]) && ($cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING2 || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_NULL)) {
+				if (!is_object($cellValue) && ($cellValue !== null) && $cellValue !== '' && !isset($aFlippedStringTable[(string)$cellValue]) && ($cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_STRING2 || $cell->getDataType() == PHPExcel_Cell_DataType::TYPE_NULL)) {
 					$aStringTable[] = $cellValue;
-					$aFlippedStringTable[$cellValue] = true;
+					$aFlippedStringTable[(string)$cellValue] = true;
 				} elseif ($cellValue instanceof PHPExcel_RichText && ($cellValue !== null) && !isset($aFlippedStringTable[$cellValue->getHashCode()])) {
 					$aStringTable[] = $cellValue;
 					$aFlippedStringTable[$cellValue->getHashCode()] = true;
