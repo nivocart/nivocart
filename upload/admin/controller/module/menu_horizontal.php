@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleMenuHorizontal
+ *
+ * @package NivoCart
+ */
 class ControllerModuleMenuHorizontal extends Controller {
 	private $error = [];
 	private $_name = 'menu_horizontal';

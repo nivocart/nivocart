@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerFeedRSSFeed
+ *
+ * @package NivoCart
+ */
 class ControllerFeedRSSFeed extends Controller {
 	private $error = [];
 	private $_name = 'rss_feed';

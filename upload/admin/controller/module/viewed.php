@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleViewed
+ *
+ * @package NivoCart
+ */
 class ControllerModuleViewed extends Controller {
 	private $error = [];
 	private $_name = 'viewed';

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerDesignMenu
+ *
+ * @package NivoCart
+ */
 class ControllerDesignMenu extends Controller {
 	private $error = [];
 	private $_name = 'menu';

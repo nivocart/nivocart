@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerDesignFooter
+ *
+ * @package NivoCart
+ */
 class ControllerDesignFooter extends Controller {
 	private $error = [];
 	private $_name = 'footer';

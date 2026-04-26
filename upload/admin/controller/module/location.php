@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleLocation
+ *
+ * @package NivoCart
+ */
 class ControllerModuleLocation extends Controller {
 	private $error = [];
 	private $_name = 'location';

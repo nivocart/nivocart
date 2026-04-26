@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCommonNotification
+ *
+ * @package NivoCart
+ */
 class ControllerCommonNotification extends Controller {
+	/** Error array Placeholder */
 
 	protected function index() {
 		$this->data['title'] = $this->document->getTitle();

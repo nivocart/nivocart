@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleMediaPlayer
+ *
+ * @package NivoCart
+ */
 class ControllerModuleMediaPlayer extends Controller {
 	private $error = [];
 	private $_name = 'mediaplayer';

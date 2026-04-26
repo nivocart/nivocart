@@ -1,6 +1,11 @@
 <?php
+/**
+ * Class ControllerCommonForgotten
+ *
+ * @package NivoCart
+ */
 class ControllerCommonForgotten extends Controller {
-	private $error = array();
+	private $error = [];
 
 	public function index() {
 		if (!$this->config->get('config_password')) {
@@ -16,7 +21,7 @@ class ControllerCommonForgotten extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->language->load('mail/forgotten');
 
-			$code = sha1(uniqid(mt_rand(), true));
+			$code = substr(md5(mt_rand()), 0, 10);
 
 			$this->model_user_user->editCode($this->request->post['email'], $code);
 

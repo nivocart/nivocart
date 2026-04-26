@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerFeedGoogleSitemap
+ *
+ * @package NivoCart
+ */
 class ControllerFeedGoogleSitemap extends Controller {
 	private $error = [];
 

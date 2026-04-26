@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModificationBlogSystem
+ *
+ * @package NivoCart
+ */
 class ControllerModificationBlogSystem extends Controller {
 	private $error = [];
 	private $_name = 'blog_system';

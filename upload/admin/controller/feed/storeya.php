@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerFeedStoreya
+ *
+ * @package NivoCart
+ */
 class ControllerFeedStoreya extends Controller {
 	private $error = [];
 	private $_name = 'storeya';

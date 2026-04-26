@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerCommonLogout
+ *
+ * @package NivoCart
+ */
 class ControllerCommonLogout extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->user->logout();

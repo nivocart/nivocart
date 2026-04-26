@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerCatalogAttributeGroup
+ *
+ * @package NivoCart
+ */
 class ControllerCatalogAttributeGroup extends Controller {
 	private $error = [];
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModuleLatest
+ *
+ * @package NivoCart
+ */
 class ControllerModuleLatest extends Controller {
 	private $error = [];
 	private $_name = 'latest';

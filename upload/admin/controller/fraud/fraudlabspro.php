@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerFraudFraudLabsPro
+ *
+ * @package NivoCart
+ */
 class ControllerFraudFraudLabsPro extends Controller {
 	private $error = [];
 	private $_name = 'fraudlabspro';

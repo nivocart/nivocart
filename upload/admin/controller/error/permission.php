@@ -1,5 +1,11 @@
 <?php
+/**
+ * Class ControllerErrorPermission
+ *
+ * @package NivoCart
+ */
 class ControllerErrorPermission extends Controller {
+	/** Error array Placeholder */
 
 	public function index() {
 		$this->language->load('error/permission');

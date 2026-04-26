@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerLocalisationGeoZone
+ *
+ * @package NivoCart
+ */
 class ControllerLocalisationGeoZone extends Controller {
 	private $error = [];
 

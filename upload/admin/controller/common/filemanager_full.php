@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerCommonFileManagerFull
+ *
+ * @package NivoCart
+ */
 class ControllerCommonFileManagerFull extends Controller {
 	private $_name = 'filemanager_full';
 

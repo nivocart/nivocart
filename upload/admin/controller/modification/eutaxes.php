@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModificationEutaxes
+ *
+ * @package NivoCart
+ */
 class ControllerModificationEutaxes extends Controller {
 	private $error = [];
 	private $_name = 'eutaxes';

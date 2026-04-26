@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ControllerModulefilter
+ *
+ * @package NivoCart
+ */
 class ControllerModulefilter extends Controller {
 	private $error = [];
 	private $_name = 'filter';
