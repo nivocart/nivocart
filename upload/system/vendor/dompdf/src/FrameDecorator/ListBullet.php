@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
@@ -18,62 +19,61 @@ use Dompdf\Frame;
  * @package dompdf
  */
 class ListBullet extends AbstractFrameDecorator {
+	public const BULLET_PADDING = 1; // Distance from bullet to text in pt
+	public const BULLET_THICKNESS = 0.04; // Thickness of bullet outline. Screen: 0.08, print: better less, e.g. 0.04
+	public const BULLET_DESCENT = 0.3; //descent of font below baseline. Todo: Guessed for now.
+	public const BULLET_SIZE = 0.35; // bullet diameter. For now 0.5 of font_size without descent.
 
-    const BULLET_PADDING = 1; // Distance from bullet to text in pt
-    const BULLET_THICKNESS = 0.04; // Thickness of bullet outline. Screen: 0.08, print: better less, e.g. 0.04
-    const BULLET_DESCENT = 0.3; //descent of font below baseline. Todo: Guessed for now.
-    const BULLET_SIZE = 0.35; // bullet diameter. For now 0.5 of font_size without descent.
+	public static $BULLET_TYPES = ["disc", "circle", "square"];
 
-    static $BULLET_TYPES = array("disc", "circle", "square");
+	/**
+	 * ListBullet constructor.
+	 * @param Frame $frame
+	 * @param Dompdf $dompdf
+	 */
+	public function __construct(Frame $frame, Dompdf $dompdf) {
+		parent::__construct($frame, $dompdf);
+	}
 
-    /**
-     * ListBullet constructor.
-     * @param Frame $frame
-     * @param Dompdf $dompdf
-     */
-    function __construct(Frame $frame, Dompdf $dompdf) {
-        parent::__construct($frame, $dompdf);
-    }
+	/**
+	 * @return float|int
+	 */
+	public function get_margin_width() {
+		$style = $this->_frame->get_style();
 
-    /**
-     * @return float|int
-     */
-    function get_margin_width() {
-        $style = $this->_frame->get_style();
+		if ($style->list_style_type === "none") {
+			return 0;
+		}
 
-        if ($style->list_style_type === "none") {
-            return 0;
-        }
+		return $style->get_font_size() * self::BULLET_SIZE + 2 * self::BULLET_PADDING;
+	}
 
-        return $style->get_font_size() * self::BULLET_SIZE + 2 * self::BULLET_PADDING;
-    }
+	/**
+	 * hits only on "inset" lists items, to increase height of box
+	 *
+	 * @return float|int
+	 */
+	public function get_margin_height() {
+		$style = $this->_frame->get_style();
 
-    /**
-     * hits only on "inset" lists items, to increase height of box
-     *
-     * @return float|int
-     */
-    function get_margin_height() {
-        $style = $this->_frame->get_style();
+		if ($style->list_style_type === "none") {
+			return 0;
+		}
 
-        if ($style->list_style_type === "none") {
-            return 0;
-        }
+		return $style->get_font_size() * self::BULLET_SIZE + 2 * self::BULLET_PADDING;
+	}
 
-        return $style->get_font_size() * self::BULLET_SIZE + 2 * self::BULLET_PADDING;
-    }
+	/**
+	 * @return float|int
+	 */
+	public function get_width() {
+		return $this->get_margin_width();
+	}
 
-    /**
-     * @return float|int
-     */
-    function get_width() {
-        return $this->get_margin_width();
-    }
-
-    /**
-     * @return float|int
-     */
-    function get_height() {
-        return $this->get_margin_height();
-    }
+	/**
+	 * @return float|int
+	 */
+	public function get_height() {
+		return $this->get_margin_height();
+	}
 }

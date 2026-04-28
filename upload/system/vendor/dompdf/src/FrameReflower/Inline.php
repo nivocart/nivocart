@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
@@ -18,82 +19,81 @@ use Dompdf\FrameDecorator\Text as TextFrameDecorator;
  * @package dompdf
  */
 class Inline extends AbstractFrameReflower {
+	/**
+	 * Inline constructor.
+	 * @param Frame $frame
+	 */
+	public function __construct(Frame $frame) {
+		parent::__construct($frame);
+	}
 
-    /**
-     * Inline constructor.
-     * @param Frame $frame
-     */
-    function __construct(Frame $frame) {
-        parent::__construct($frame);
-    }
+	/**
+	 * @param BlockFrameDecorator|null $block
+	 */
+	public function reflow(BlockFrameDecorator $block = null): void {
+		$frame = $this->_frame;
 
-    /**
-     * @param BlockFrameDecorator|null $block
-     */
-    function reflow(BlockFrameDecorator $block = null) {
-        $frame = $this->_frame;
+		// Check if a page break is forced
+		$page = $frame->get_root();
+		$page->check_forced_page_break($frame);
 
-        // Check if a page break is forced
-        $page = $frame->get_root();
-        $page->check_forced_page_break($frame);
+		if ($page->is_full()) {
+			return;
+		}
 
-        if ($page->is_full()) {
-            return;
-        }
+		$style = $frame->get_style();
 
-        $style = $frame->get_style();
+		// Generated content
+		$this->_set_content();
 
-        // Generated content
-        $this->_set_content();
+		$frame->position();
 
-        $frame->position();
+		$cb = $frame->get_containing_block();
 
-        $cb = $frame->get_containing_block();
+		// Add our margin, padding & border to the first and last children
+		if (($f = $frame->get_first_child()) && $f instanceof TextFrameDecorator) {
+			$f_style = $f->get_style();
+			$f_style->margin_left = $style->margin_left;
+			$f_style->padding_left = $style->padding_left;
+			$f_style->border_left = $style->border_left;
+		}
 
-        // Add our margin, padding & border to the first and last children
-        if (($f = $frame->get_first_child()) && $f instanceof TextFrameDecorator) {
-            $f_style = $f->get_style();
-            $f_style->margin_left = $style->margin_left;
-            $f_style->padding_left = $style->padding_left;
-            $f_style->border_left = $style->border_left;
-        }
+		if (($l = $frame->get_last_child()) && $l instanceof TextFrameDecorator) {
+			$l_style = $l->get_style();
+			$l_style->margin_right = $style->margin_right;
+			$l_style->padding_right = $style->padding_right;
+			$l_style->border_right = $style->border_right;
+		}
 
-        if (($l = $frame->get_last_child()) && $l instanceof TextFrameDecorator) {
-            $l_style = $l->get_style();
-            $l_style->margin_right = $style->margin_right;
-            $l_style->padding_right = $style->padding_right;
-            $l_style->border_right = $style->border_right;
-        }
+		if ($block) {
+			$block->add_frame_to_line($this->_frame);
+		}
 
-        if ($block) {
-            $block->add_frame_to_line($this->_frame);
-        }
+		// Set the containing blocks and reflow each child. The containing block is not changed by line boxes.
+		foreach ($frame->get_children() as $child) {
+			$child->set_containing_block($cb);
+			$child->reflow($block);
+		}
+	}
 
-        // Set the containing blocks and reflow each child. The containing block is not changed by line boxes.
-        foreach ($frame->get_children() as $child) {
-            $child->set_containing_block($cb);
-            $child->reflow($block);
-        }
-    }
+	/**
+	 * Determine current frame width based on contents
+	 *
+	 * @return float
+	 */
+	public function calculate_auto_width() {
+		$width = 0;
 
-    /**
-     * Determine current frame width based on contents
-     *
-     * @return float
-     */
-    public function calculate_auto_width() {
-        $width = 0;
+		foreach ($this->_frame->get_children() as $child) {
+			if ($child->get_original_style()->width == 'auto') {
+				$width += $child->calculate_auto_width();
+			} else {
+				$width += $child->get_margin_width();
+			}
+		}
 
-        foreach ($this->_frame->get_children() as $child) {
-            if ($child->get_original_style()->width == 'auto') {
-                $width += $child->calculate_auto_width();
-            } else {
-                $width += $child->get_margin_width();
-            }
-        }
+		$this->_frame->get_style()->width = $width;
 
-        $this->_frame->get_style()->width = $width;
-
-        return $this->_frame->get_margin_width();
-    }
+		return $this->_frame->get_margin_width();
+	}
 }

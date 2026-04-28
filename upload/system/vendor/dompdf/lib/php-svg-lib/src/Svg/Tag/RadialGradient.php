@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
@@ -9,7 +10,6 @@
 namespace Svg\Tag;
 
 class RadialGradient extends AbstractTag {
-
-    public function start($attributes) {
-    }
+	public function start($attributes): void {
+	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
@@ -8,4 +9,5 @@
 
 namespace Svg\Tag;
 
-class Anchor extends Group { }
+class Anchor extends Group {
+}

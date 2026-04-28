@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
@@ -8,24 +9,21 @@
 
 namespace Svg\Tag;
 
-use Svg\Style;
-
 class Group extends AbstractTag {
+	protected function before($attributes): void {
+		$surface = $this->document->getSurface();
 
-    protected function before($attributes) {
-        $surface = $this->document->getSurface();
+		$surface->save();
 
-        $surface->save();
+		$style = $this->makeStyle($attributes);
 
-        $style = $this->makeStyle($attributes);
+		$this->setStyle($style);
+		$surface->setStyle($style);
 
-        $this->setStyle($style);
-        $surface->setStyle($style);
+		$this->applyTransform($attributes);
+	}
 
-        $this->applyTransform($attributes);
-    }
-
-    protected function after() {
-        $this->document->getSurface()->restore();
-    }
+	protected function after(): void {
+		$this->document->getSurface()->restore();
+	}
 }

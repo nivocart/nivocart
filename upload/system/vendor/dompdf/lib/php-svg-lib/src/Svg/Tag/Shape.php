@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
@@ -8,54 +9,51 @@
 
 namespace Svg\Tag;
 
-use Svg\Style;
-
 class Shape extends AbstractTag {
+	protected function before($attributes): void {
+		$surface = $this->document->getSurface();
 
-    protected function before($attributes) {
-        $surface = $this->document->getSurface();
+		$surface->save();
 
-        $surface->save();
+		$style = $this->makeStyle($attributes);
 
-        $style = $this->makeStyle($attributes);
+		$this->setStyle($style);
+		$surface->setStyle($style);
 
-        $this->setStyle($style);
-        $surface->setStyle($style);
+		$this->applyTransform($attributes);
+	}
 
-        $this->applyTransform($attributes);
-    }
+	protected function after(): void {
+		$surface = $this->document->getSurface();
 
-    protected function after() {
-        $surface = $this->document->getSurface();
+		if ($this->hasShape) {
+			$style = $surface->getStyle();
 
-        if ($this->hasShape) {
-            $style = $surface->getStyle();
+			$fill = $style->fill && $style->fill !== "none";
+			$stroke = $style->stroke && $style->stroke !== "none";
 
-            $fill   = $style->fill   && $style->fill   !== "none";
-            $stroke = $style->stroke && $style->stroke !== "none";
+			if ($fill) {
+				if ($stroke) {
+					$surface->fillStroke();
+				} else {
+					//                    if (is_string($style->fill)) {
+					//                        /** @var LinearGradient|RadialGradient $gradient */
+					//                        $gradient = $this->getDocument()->getDef($style->fill);
+					//
+					//                        var_dump($gradient->getStops());
+					//                    }
 
-            if ($fill) {
-                if ($stroke) {
-                    $surface->fillStroke();
-                } else {
-//                    if (is_string($style->fill)) {
-//                        /** @var LinearGradient|RadialGradient $gradient */
-//                        $gradient = $this->getDocument()->getDef($style->fill);
-//
-//                        var_dump($gradient->getStops());
-//                    }
+					$surface->fill();
+				}
 
-                    $surface->fill();
-                }
+			} elseif ($stroke) {
+				$surface->stroke();
 
-            } elseif ($stroke) {
-                $surface->stroke();
+			} else {
+				$surface->endPath();
+			}
+		}
 
-            } else {
-                $surface->endPath();
-            }
-        }
-
-        $surface->restore();
-    }
+		$surface->restore();
+	}
 }

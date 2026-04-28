@@ -12,22 +12,22 @@ use IteratorAggregate;
  * @package dompdf
  */
 class FrameList implements IteratorAggregate {
-    /**
-     * @var Frame
-     */
-    protected $_frame;
+	/**
+	 * @var Frame
+	 */
+	protected $_frame;
 
-    /**
-     * @param Frame $frame
-     */
-    function __construct($frame) {
-        $this->_frame = $frame;
-    }
+	/**
+	 * @param Frame $frame
+	 */
+	public function __construct($frame) {
+		$this->_frame = $frame;
+	}
 
-    /**
-     * @return FrameListIterator
-     */
-    function getIterator() {
-        return new FrameListIterator($this->_frame);
-    }
+	/**
+	 * @return FrameListIterator
+	 */
+	public function getIterator() {
+		return new FrameListIterator($this->_frame);
+	}
 }

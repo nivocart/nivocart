@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package php-font-lib
  * @link    https://github.com/PhenX/php-font-lib
@@ -18,110 +19,110 @@ use FontLib\BinaryStream;
  * @package php-font-lib
  */
 class DirectoryEntry extends BinaryStream {
-  /**
-   * @var File
-   */
-  protected $font;
+	/**
+	 * @var File
+	 */
+	protected $font;
 
-  /**
-   * @var Table
-   */
-  protected $font_table;
+	/**
+	 * @var Table
+	 */
+	protected $font_table;
 
-  public $entryLength = 4;
+	public $entryLength = 4;
 
-  public $tag;
-  public $checksum;
-  public $offset;
-  public $length;
+	public $tag;
+	public $checksum;
+	public $offset;
+	public $length;
 
-  protected $origF;
+	protected $origF;
 
-  static function computeChecksum($data) {
-    $len = strlen($data);
-    $mod = $len % 4;
+	public static function computeChecksum($data) {
+		$len = strlen($data);
+		$mod = $len % 4;
 
-    if ($mod) {
-      $data = str_pad($data, $len + (4 - $mod), "\0");
-    }
+		if ($mod) {
+			$data = str_pad($data, $len + (4 - $mod), "\0");
+		}
 
-    $len = strlen($data);
+		$len = strlen($data);
 
-    $hi = 0x0000;
-    $lo = 0x0000;
+		$hi = 0x0000;
+		$lo = 0x0000;
 
-    for ($i = 0; $i < $len; $i += 4) {
-      $hi += (ord($data[$i]) << 8) + ord($data[$i + 1]);
-      $lo += (ord($data[$i + 2]) << 8) + ord($data[$i + 3]);
+		for ($i = 0; $i < $len; $i += 4) {
+			$hi += (ord($data[$i]) << 8) + ord($data[$i + 1]);
+			$lo += (ord($data[$i + 2]) << 8) + ord($data[$i + 3]);
 
-      $hi += $lo >> 16;
+			$hi += $lo >> 16;
 
-      $lo = $lo & 0xFFFF;
-      $hi = $hi & 0xFFFF;
-    }
+			$lo = $lo & 0xFFFF;
+			$hi = $hi & 0xFFFF;
+		}
 
-    return ($hi << 8) + $lo;
-  }
+		return ($hi << 8) + $lo;
+	}
 
-  function __construct(File $font) {
-    $this->font = $font;
-    $this->f = $font->f;
-  }
+	public function __construct(File $font) {
+		$this->font = $font;
+		$this->f = $font->f;
+	}
 
-  function parse() {
-    $this->tag = $this->font->read(4);
-  }
+	public function parse(): void {
+		$this->tag = $this->font->read(4);
+	}
 
-  function open($filename, $mode = self::modeRead) {
-  }
+	public function open($filename, $mode = self::modeRead): void {
+	}
 
-  function setTable(Table $font_table) {
-    $this->font_table = $font_table;
-  }
+	public function setTable(Table $font_table): void {
+		$this->font_table = $font_table;
+	}
 
-  function encode($entry_offset) {
-    Font::d("\n==== $this->tag ====");
+	public function encode($entry_offset): void {
+		Font::d("\n==== $this->tag ====");
 
-    $data = $this->font_table;
-    $font = $this->font;
+		$data = $this->font_table;
+		$font = $this->font;
 
-    $table_offset = $font->pos();
-    $this->offset = $table_offset;
-    $table_length = $data->encode();
+		$table_offset = $font->pos();
+		$this->offset = $table_offset;
+		$table_length = $data->encode();
 
-    $font->seek($table_offset);
-    $table_data = $font->read($table_length);
+		$font->seek($table_offset);
+		$table_data = $font->read($table_length);
 
-    $font->seek($entry_offset);
+		$font->seek($entry_offset);
 
-    $font->write($this->tag, 4);
-    $font->writeUInt32(self::computeChecksum($table_data));
-    $font->writeUInt32($table_offset);
-    $font->writeUInt32($table_length);
+		$font->write($this->tag, 4);
+		$font->writeUInt32(self::computeChecksum($table_data));
+		$font->writeUInt32($table_offset);
+		$font->writeUInt32($table_length);
 
-    Font::d("Bytes written = $table_length");
+		Font::d("Bytes written = $table_length");
 
-    $font->seek($table_offset + $table_length);
-  }
+		$font->seek($table_offset + $table_length);
+	}
 
-  /**
-   * @return File
-   */
-  function getFont() {
-    return $this->font;
-  }
+	/**
+	 * @return File
+	 */
+	public function getFont() {
+		return $this->font;
+	}
 
-  function startRead() {
-    $this->font->seek($this->offset);
-  }
+	public function startRead(): void {
+		$this->font->seek($this->offset);
+	}
 
-  function endRead() {
-  }
+	public function endRead(): void {
+	}
 
-  function startWrite() {
-    $this->font->seek($this->offset);
-  }
+	public function startWrite(): void {
+		$this->font->seek($this->offset);
+	}
 
-  function endWrite() {
-  }
+	public function endWrite(): void {
+	}
 }

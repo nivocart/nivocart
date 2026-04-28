@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package php-font-lib
  * @link    https://github.com/PhenX/php-font-lib
@@ -16,20 +17,20 @@ use FontLib\Table\DirectoryEntry;
  * @package php-font-lib
  */
 class TableDirectoryEntry extends DirectoryEntry {
-  public $origLength;
+	public $origLength;
 
-  function __construct(File $font) {
-    parent::__construct($font);
-  }
+	public function __construct(File $font) {
+		parent::__construct($font);
+	}
 
-  function parse() {
-    parent::parse();
+	public function parse(): void {
+		parent::parse();
 
-    $font = $this->font;
+		$font = $this->font;
 
-    $this->offset = $font->readUInt32();
-    $this->length = $font->readUInt32();
-    $this->origLength = $font->readUInt32();
-    $this->checksum = $font->readUInt32();
-  }
+		$this->offset = $font->readUInt32();
+		$this->length = $font->readUInt32();
+		$this->origLength = $font->readUInt32();
+		$this->checksum = $font->readUInt32();
+	}
 }

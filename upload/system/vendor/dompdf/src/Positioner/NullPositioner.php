@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
@@ -16,11 +17,10 @@ use Dompdf\FrameDecorator\AbstractFrameDecorator;
  * @package dompdf
  */
 class NullPositioner extends AbstractPositioner {
-
-    /**
-     * @param AbstractFrameDecorator $frame
-     */
-    function position(AbstractFrameDecorator $frame) {
-        return;
-    }
+	/**
+	 * @param AbstractFrameDecorator $frame
+	 */
+	public function position(AbstractFrameDecorator $frame): void {
+		return;
+	}
 }

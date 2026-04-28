@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
@@ -17,39 +18,38 @@ use Dompdf\FrameDecorator\AbstractFrameDecorator;
  * @package dompdf
  */
 class Block extends AbstractPositioner {
+	public function position(AbstractFrameDecorator $frame): void {
+		$style = $frame->get_style();
 
-    function position(AbstractFrameDecorator $frame) {
-        $style = $frame->get_style();
+		$cb = $frame->get_containing_block();
+		$p = $frame->find_block_parent();
 
-        $cb = $frame->get_containing_block();
-        $p = $frame->find_block_parent();
+		if ($p) {
+			$float = $style->float;
 
-        if ($p) {
-            $float = $style->float;
+			if (!$float || $float === "none") {
+				$p->add_line(true);
+			}
 
-            if (!$float || $float === "none") {
-                $p->add_line(true);
-            }
+			$y = $p->get_current_line_box()->y;
 
-            $y = $p->get_current_line_box()->y;
+		} else {
+			$y = $cb["y"];
+		}
 
-        } else {
-            $y = $cb["y"];
-        }
+		$x = $cb["x"];
 
-        $x = $cb["x"];
+		// Relative positioning
+		if ($style->position === "relative") {
+			$top = (float)$style->length_in_pt($style->top, $cb["h"]);
+			//$right = (float)$style->length_in_pt($style->right, $cb["w"]);
+			//$bottom = (float)$style->length_in_pt($style->bottom, $cb["h"]);
+			$left = (float)$style->length_in_pt($style->left, $cb["w"]);
 
-        // Relative positioning
-        if ($style->position === "relative") {
-            $top = (float)$style->length_in_pt($style->top, $cb["h"]);
-            //$right = (float)$style->length_in_pt($style->right, $cb["w"]);
-            //$bottom = (float)$style->length_in_pt($style->bottom, $cb["h"]);
-            $left = (float)$style->length_in_pt($style->left, $cb["w"]);
+			$x += $left;
+			$y += $top;
+		}
 
-            $x += $left;
-            $y += $top;
-        }
-
-        $frame->set_position($x, $y);
-    }
+		$frame->set_position($x, $y);
+	}
 }
