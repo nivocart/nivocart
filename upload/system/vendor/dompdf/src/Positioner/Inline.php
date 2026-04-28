@@ -23,7 +23,7 @@ class Inline extends AbstractPositioner {
 	 * @param AbstractFrameDecorator $frame
 	 * @throws Exception
 	 */
-	public function position(AbstractFrameDecorator $frame): void {
+	public function position(AbstractFrameDecorator $frame) {
 		/**
 		 * Find our nearest block level parent and access its lines property.
 		 * @var BlockFrameDecorator
@@ -31,7 +31,11 @@ class Inline extends AbstractPositioner {
 		$p = $frame->find_block_parent();
 
 		if (!$p) {
-			throw new Exception("No block-level parent found.  Not good.");
+			// Fallback: try the frame's direct parent
+			$p = $frame->get_parent();
+			if (!$p) {
+				return; // Nothing we can do, skip positioning this frame
+			}
 		}
 
 		$f = $frame;

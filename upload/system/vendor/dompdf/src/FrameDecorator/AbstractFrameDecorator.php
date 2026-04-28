@@ -518,7 +518,7 @@ abstract class AbstractFrameDecorator extends Frame {
 		return new FrameTreeList($this);
 	}
 
-	public function set_positioner(AbstractPositioner $posn): void {
+	public function set_positioner(AbstractPositioner $posn) {
 		$this->_positioner = $posn;
 
 		if ($this->_frame instanceof AbstractFrameDecorator) {
@@ -526,7 +526,7 @@ abstract class AbstractFrameDecorator extends Frame {
 		}
 	}
 
-	public function set_reflower(AbstractFrameReflower $reflower): void {
+	public function set_reflower(AbstractFrameReflower $reflower) {
 		$this->_reflower = $reflower;
 
 		if ($this->_frame instanceof AbstractFrameDecorator) {
@@ -544,7 +544,7 @@ abstract class AbstractFrameDecorator extends Frame {
 	/**
 	 * @param Frame $root
 	 */
-	public function set_root(Frame $root): void {
+	public function set_root(Frame $root) {
 		$this->_root = $root;
 
 		if ($this->_frame instanceof AbstractFrameDecorator) {
@@ -611,7 +611,7 @@ abstract class AbstractFrameDecorator extends Frame {
 	 * @throws Exception
 	 * @return void
 	 */
-	public function split(Frame $child = null, $force_pagebreak = false): void {
+	public function split(Frame $child = null, $force_pagebreak = false) {
 		// decrement any counters that were incremented on the current node, unless that node is the body
 		$style = $this->_frame->get_style();
 
@@ -834,14 +834,14 @@ abstract class AbstractFrameDecorator extends Frame {
 	 * @param $offset_y
 	 * @param bool $ignore_self
 	 */
-	final public function move($offset_x, $offset_y, $ignore_self = false): void {
+	final public function move($offset_x, $offset_y, $ignore_self = false) {
 		$this->_positioner->move($this, $offset_x, $offset_y, $ignore_self);
 	}
 
 	/**
 	 * @param Block|null $block
 	 */
-	final public function reflow(Block $block = null): void {
+	final public function reflow(Block $block = null) {
 		// Uncomment this to see the frames before they're laid out, instead of during rendering.
 		$this->_reflower->reflow($block);
 	}

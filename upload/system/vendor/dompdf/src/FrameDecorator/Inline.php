@@ -36,7 +36,7 @@ class Inline extends AbstractFrameDecorator {
 	 * @param bool $force_pagebreak
 	 * @throws Exception
 	 */
-	public function split(Frame $frame = null, $force_pagebreak = false): void {
+	public function split(Frame $frame = null, $force_pagebreak = false) {
 		if (is_null($frame)) {
 			$this->get_parent()->split($this, $force_pagebreak);
 			return;

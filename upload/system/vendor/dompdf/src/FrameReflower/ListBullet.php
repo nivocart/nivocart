@@ -29,7 +29,7 @@ class ListBullet extends AbstractFrameReflower {
 	/**
 	 * @param BlockFrameDecorator|null $block
 	 */
-	public function reflow(BlockFrameDecorator $block = null): void {
+	public function reflow(BlockFrameDecorator $block = null) {
 		$style = $this->_frame->get_style();
 
 		$style->width = $this->_frame->get_width();

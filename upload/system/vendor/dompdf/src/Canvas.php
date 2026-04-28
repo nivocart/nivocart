@@ -67,7 +67,7 @@ interface Canvas {
 	 * @param float $width
 	 * @param array $style
 	 */
-	public function line($x1, $y1, $x2, $y2, $color, $width, $style = null);
+	public function line($x1, $y1, $x2, $y2, $color, $width, array $style = []);
 
 	/**
 	 * Draws a rectangle at x1,y1 with width w and height h
@@ -84,7 +84,7 @@ interface Canvas {
 	 * @param float $width
 	 * @param array $style
 	 */
-	public function rectangle($x1, $y1, $w, $h, $color, $width, $style = null);
+	public function rectangle($x1, $y1, $w, $h, $color, $width, array $style = []);
 
 	/**
 	 * Draws a filled rectangle at x1,y1 with width w and height h
@@ -214,7 +214,7 @@ interface Canvas {
 	 * @param array $style
 	 * @param bool $fill Fills the polygon if true
 	 */
-	public function polygon($points, $color, $width = null, $style = null, $fill = false);
+	public function polygon($points, $color, $width = null, array $style = [], $fill = false);
 
 	/**
 	 * Draws a circle at $x,$y with radius $r
@@ -231,7 +231,7 @@ interface Canvas {
 	 * @param array $style
 	 * @param bool $fill Fills the circle if true
 	 */
-	public function circle($x, $y, $r, $color, $width = null, $style = null, $fill = false);
+	public function circle($x, $y, $r, $color, $width = null, array $style = [], $fill = false);
 
 	/**
 	 * Add an image to the pdf.
@@ -262,7 +262,7 @@ interface Canvas {
 	 * @param float $width
 	 * @param array $style
 	 */
-	public function arc($x, $y, $r1, $r2, $astart, $aend, $color, $width, $style = []);
+	public function arc($x, $y, $r1, $r2, $astart, $aend, $color, $width, array $style = []);
 
 	/**
 	 * Writes text at the specified x and y coordinates
@@ -387,14 +387,14 @@ interface Canvas {
 	 *
 	 * @return void
 	 */
-	public function set_default_view($view, $options = []): void;
+	public function set_default_view($view, array $options = []);
 
 	/**
 	 * @param string $script
 	 *
 	 * @return void
 	 */
-	public function javascript($script): void;
+	public function javascript($script);
 
 	/**
 	 * Starts a new page
@@ -409,7 +409,7 @@ interface Canvas {
 	 * @param string $filename The filename to present to the browser.
 	 * @param array $options Associative array: 'compress' => 1 or 0 (default 1); 'Attachment' => 1 or 0 (default 1).
 	 */
-	public function stream($filename, $options = []);
+	public function stream($filename, array $options = []);
 
 	/**
 	 * Returns the PDF as a string.
@@ -417,5 +417,5 @@ interface Canvas {
 	 * @param array $options Associative array: 'compress' => 1 or 0 (default 1).
 	 * @return string
 	 */
-	public function output($options = []);
+	public function output(array $options = []);
 }

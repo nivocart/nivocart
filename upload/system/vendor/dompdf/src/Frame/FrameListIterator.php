@@ -50,27 +50,28 @@ class FrameListIterator implements Iterator {
 	/**
 	 * @return bool
 	 */
-	public function valid() {
+	public function valid(): bool {
 		return isset($this->_cur);
 	}
 
 	/**
-	 * @return int
+	 * @return mixed
 	 */
-	public function key() {
+	public function key(): mixed {
 		return $this->_num;
 	}
 
 	/**
 	 * @return Frame
 	 */
-	public function current() {
+	public function current(): mixed {
 		return $this->_cur;
 	}
 
 	/**
 	 * @return Frame
 	 */
+	#[\ReturnTypeWillChange]
 	public function next() {
 		$ret = $this->_cur;
 

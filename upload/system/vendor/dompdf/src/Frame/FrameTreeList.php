@@ -27,7 +27,7 @@ class FrameTreeList implements IteratorAggregate {
 	/**
 	 * @return FrameTreeIterator
 	 */
-	public function getIterator() {
+	public function getIterator(): \Traversable {
 		return new FrameTreeIterator($this->_root);
 	}
 }

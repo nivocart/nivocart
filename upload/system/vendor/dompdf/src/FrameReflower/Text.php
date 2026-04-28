@@ -157,7 +157,7 @@ class Text extends AbstractFrameReflower {
 	/**
 	 *
 	 */
-	protected function _layout_line(): void {
+	protected function _layout_line() {
 		$frame = $this->_frame;
 		$style = $frame->get_style();
 		$text = $frame->get_text();
@@ -309,7 +309,7 @@ class Text extends AbstractFrameReflower {
 	/**
 	 * @param BlockFrameDecorator|null $block
 	 */
-	public function reflow(BlockFrameDecorator $block = null): void {
+	public function reflow(BlockFrameDecorator $block = null) {
 		$frame = $this->_frame;
 		$page = $frame->get_root();
 

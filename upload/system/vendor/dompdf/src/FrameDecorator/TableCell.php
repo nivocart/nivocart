@@ -52,14 +52,14 @@ class TableCell extends BlockFrameDecorator {
 	/**
 	 * @param $height
 	 */
-	public function set_content_height($height): void {
+	public function set_content_height($height) {
 		$this->_content_height = $height;
 	}
 
 	/**
 	 * @param $height
 	 */
-	public function set_cell_height($height): void {
+	public function set_cell_height($height) {
 		$style = $this->get_style();
 
 		$v_space = (float)$style->length_in_pt(
@@ -114,7 +114,7 @@ class TableCell extends BlockFrameDecorator {
 	 * @param $side
 	 * @param $border_spec
 	 */
-	public function set_resolved_border($side, $border_spec): void {
+	public function set_resolved_border($side, $border_spec) {
 		$this->_resolved_borders[$side] = $border_spec;
 	}
 

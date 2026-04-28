@@ -731,11 +731,10 @@ class Dompdf {
 
 		$defaultOptionPaperSize = $this->getPaperSize($options->getDefaultPaperSize());
 		// If there is a CSS defined paper size compare to the paper size used to create the canvas to determine a recreation need
-		if (is_array($basePageStyle->size)) {
+		if ($basePageStyle !== null && is_array($basePageStyle->size)) {
 			$basePageStyleSize = $basePageStyle->size;
 			$this->setPaper([0, 0, $basePageStyleSize[0], $basePageStyleSize[1]]);
 		}
-
 		$paperSize = $this->getPaperSize();
 
 		if ($defaultOptionPaperSize[2] !== $paperSize[2] || $defaultOptionPaperSize[3] !== $paperSize[3] || $options->getDefaultPaperOrientation() !== $this->paperOrientation) {

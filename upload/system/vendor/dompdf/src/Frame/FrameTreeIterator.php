@@ -48,27 +48,28 @@ class FrameTreeIterator implements Iterator {
 	/**
 	 * @return bool
 	 */
-	public function valid() {
+	public function valid(): bool {
 		return count($this->_stack) > 0;
 	}
 
 	/**
-	 * @return int
+	 * @return mixed
 	 */
-	public function key() {
+	public function key(): mixed {
 		return $this->_num;
 	}
 
 	/**
 	 * @return Frame
 	 */
-	public function current() {
+	public function current(): mixed {
 		return end($this->_stack);
 	}
 
 	/**
 	 * @return Frame
 	 */
+	#[\ReturnTypeWillChange]
 	public function next() {
 		$b = end($this->_stack);
 

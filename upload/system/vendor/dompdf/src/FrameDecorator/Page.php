@@ -76,7 +76,7 @@ class Page extends AbstractFrameDecorator {
 	 *
 	 * @param Renderer $renderer the renderer to use
 	 */
-	public function set_renderer($renderer): void {
+	public function set_renderer($renderer) {
 		$this->_renderer = $renderer;
 	}
 
@@ -117,7 +117,7 @@ class Page extends AbstractFrameDecorator {
 	/**
 	 * Start a new page by resetting the full flag.
 	 */
-	public function next_page(): void {
+	public function next_page() {
 		$this->_floating_frames = [];
 		$this->_renderer->new_page();
 		$this->_page_full = false;
@@ -126,14 +126,14 @@ class Page extends AbstractFrameDecorator {
 	/**
 	 * Indicate to the page that a table is currently being reflowed.
 	 */
-	public function table_reflow_start(): void {
+	public function table_reflow_start() {
 		$this->_in_table++;
 	}
 
 	/**
 	 * Indicate to the page that table reflow is finished.
 	 */
-	public function table_reflow_end(): void {
+	public function table_reflow_end() {
 		$this->_in_table--;
 	}
 

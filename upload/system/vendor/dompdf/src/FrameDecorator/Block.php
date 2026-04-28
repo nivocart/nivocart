@@ -99,7 +99,7 @@ class Block extends AbstractFrameDecorator {
 	/**
 	 * @param Frame $frame
 	 */
-	public function add_frame_to_line(Frame $frame): void {
+	public function add_frame_to_line(Frame $frame) {
 		if (!$frame->is_in_flow()) {
 			return;
 		}
@@ -156,7 +156,7 @@ class Block extends AbstractFrameDecorator {
 	/**
 	 * @param Frame $frame
 	 */
-	public function remove_frames_from_line(Frame $frame): void {
+	public function remove_frames_from_line(Frame $frame) {
 		// Search backwards through the lines for $frame
 		$i = $this->_cl;
 		$j = null;
@@ -203,7 +203,7 @@ class Block extends AbstractFrameDecorator {
 	/**
 	 * @param float $w
 	 */
-	public function increase_line_width($w): void {
+	public function increase_line_width($w) {
 		$this->_line_boxes[$this->_cl]->w += $w;
 	}
 
@@ -211,7 +211,7 @@ class Block extends AbstractFrameDecorator {
 	 * @param $val
 	 * @param Frame $frame
 	 */
-	public function maximize_line_height($val, Frame $frame): void {
+	public function maximize_line_height($val, Frame $frame) {
 		if ($val > $this->_line_boxes[$this->_cl]->h) {
 			$this->_line_boxes[$this->_cl]->tallest_frame = $frame;
 			$this->_line_boxes[$this->_cl]->h = $val;
@@ -221,7 +221,7 @@ class Block extends AbstractFrameDecorator {
 	/**
 	 * @param bool $br
 	 */
-	public function add_line($br = false): void {
+	public function add_line($br = false) {
 		$this->_line_boxes[$this->_cl]->br = $br;
 
 		$y = $this->_line_boxes[$this->_cl]->y + $this->_line_boxes[$this->_cl]->h;

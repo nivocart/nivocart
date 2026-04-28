@@ -50,7 +50,7 @@ class Table extends AbstractFrameReflower {
 		$this->_min_max_cache = null;
 	}
 
-	protected function _assign_widths(): void {
+	protected function _assign_widths() {
 		$style = $this->_frame->get_style();
 
 		// Find the min/max width of the table and sort the columns into absolute/percent/auto arrays
@@ -366,7 +366,7 @@ class Table extends AbstractFrameReflower {
 	/**
 	 * @param BlockFrameDecorator $block
 	 */
-	public function reflow(BlockFrameDecorator $block = null): void {
+	public function reflow(BlockFrameDecorator $block = null) {
 		$frame = $this->_frame;
 
 		// Check if a page break is forced

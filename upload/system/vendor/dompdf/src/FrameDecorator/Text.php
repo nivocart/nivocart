@@ -96,7 +96,7 @@ class Text extends AbstractFrameDecorator {
 	/**
 	 * @param $spacing
 	 */
-	public function set_text_spacing($spacing): void {
+	public function set_text_spacing($spacing) {
 		$style = $this->_frame->get_style();
 
 		$this->_text_spacing = $spacing;
@@ -154,14 +154,14 @@ class Text extends AbstractFrameDecorator {
 	 * @param $offset
 	 * @param $count
 	 */
-	public function delete_text($offset, $count): void {
+	public function delete_text($offset, $count) {
 		$this->_frame->get_node()->deleteData($offset, $count);
 	}
 
 	/**
 	 * @param $text
 	 */
-	public function set_text($text): void {
+	public function set_text($text) {
 		$this->_frame->get_node()->data = $text;
 	}
 }

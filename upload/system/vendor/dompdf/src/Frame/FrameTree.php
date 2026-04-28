@@ -128,7 +128,7 @@ class FrameTree {
 	/**
 	 * Builds the tree
 	 */
-	public function build_tree(): void {
+	public function build_tree() {
 		$html = $this->_dom->getElementsByTagName("html")->item(0);
 
 		if (is_null($html)) {

@@ -29,7 +29,7 @@ class TableRowGroup extends AbstractFrameReflower {
 	/**
 	 * @param BlockFrameDecorator|null $block
 	 */
-	public function reflow(BlockFrameDecorator $block = null): void {
+	public function reflow(BlockFrameDecorator $block = null) {
 		$page = $this->_frame->get_root();
 
 		$style = $this->_frame->get_style();

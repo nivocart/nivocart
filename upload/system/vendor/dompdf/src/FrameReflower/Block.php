@@ -573,7 +573,7 @@ class Block extends AbstractFrameReflower {
 	 * Align inline children vertically.
 	 * Aligns each child vertically after each line is reflowed
 	 */
-	public function vertical_align(): void {
+	public function vertical_align() {
 		$canvas = null;
 
 		foreach ($this->_frame->get_line_boxes() as $line) {
@@ -697,7 +697,7 @@ class Block extends AbstractFrameReflower {
 	/**
 	 * @param Frame $child
 	 */
-	public function process_clear(Frame $child): void {
+	public function process_clear(Frame $child) {
 		$child_style = $child->get_style();
 		$root = $this->_frame->get_root();
 
@@ -733,7 +733,7 @@ class Block extends AbstractFrameReflower {
 	 * @param float $cb_x
 	 * @param float $cb_w
 	 */
-	public function process_float(Frame $child, $cb_x, $cb_w): void {
+	public function process_float(Frame $child, $cb_x, $cb_w) {
 		$child_style = $child->get_style();
 		$root = $this->_frame->get_root();
 

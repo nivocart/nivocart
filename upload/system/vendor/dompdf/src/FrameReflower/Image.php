@@ -31,7 +31,7 @@ class Image extends AbstractFrameReflower {
 	/**
 	 * @param BlockFrameDecorator|null $block
 	 */
-	public function reflow(BlockFrameDecorator $block = null): void {
+	public function reflow(BlockFrameDecorator $block = null) {
 		$this->_frame->position();
 
 		// Set the frame's width

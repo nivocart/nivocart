@@ -49,6 +49,6 @@ class CanvasFactory {
 			}
 		}
 
-		return new $class($paper, $orientation, $dompdf);
+		return new $class($dompdf, $paper, $orientation);
 	}
 }

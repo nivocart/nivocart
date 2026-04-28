@@ -32,7 +32,7 @@ class TableRow extends AbstractFrameDecorator {
 	 * Remove all non table-cell frames from this row and move them after
 	 * the table.
 	 */
-	public function normalise(): void {
+	public function normalise() {
 		// Find our table parent
 		$p = TableFrameDecorator::find_parent_table($this);
 
@@ -52,7 +52,7 @@ class TableRow extends AbstractFrameDecorator {
 		}
 	}
 
-	public function split(Frame $child = null, $force_pagebreak = false): void {
+	public function split(Frame $child = null, $force_pagebreak = false) {
 		$this->_already_pushed = true;
 
 		if (is_null($child)) {
