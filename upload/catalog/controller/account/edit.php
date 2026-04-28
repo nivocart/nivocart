@@ -28,8 +28,8 @@ class ControllerAccountEdit extends Controller {
 
 		$this->load->model('account/customer');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] != $this->session->data['customer_token']) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] !== $this->session->data['customer_token']) {
 				$this->customer->logout();
 
 				$this->session->data['redirect'] = $this->url->link('account/edit', '', 'SSL');
@@ -152,7 +152,7 @@ class ControllerAccountEdit extends Controller {
 		$this->data['close_account'] = $this->url->link('account/delete', '', 'SSL');
 		$this->data['customer_data'] = $this->url->link('account/edit/personal', '', 'SSL');
 
-		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
 			$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 		}
 
@@ -257,7 +257,7 @@ class ControllerAccountEdit extends Controller {
 		}
 
 		if ($this->config->get('config_customer_dob')) {
-			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
+			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') === 10)) {
 				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
@@ -274,9 +274,10 @@ class ControllerAccountEdit extends Controller {
 
 		$this->data['title'] = $this->language->get('heading_title');
 
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
-			$this->data['base'] = HTTPS_SERVER;
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			$this->data['base'] = HTTPS_SERVER;
 		} else {
 			$this->data['base'] = HTTP_SERVER;
@@ -316,15 +317,23 @@ class ControllerAccountEdit extends Controller {
 		$this->load->model('account/address');
 		$this->load->model('setting/setting');
 
-		$customer_id = $this->customer->getId();
-
+		// Check PDF
 		$pdf = (isset($this->request->get['pdf'])) ? true : false;
 
+		// Get Store Logo
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
+			if ($pdf) {
+				// Convert Windows backslashes for DomPDF compatibility
+				$this->data['logo'] = str_replace('\\', '/', DIR_IMAGE . $this->config->get('config_logo'));
+			} else {
+				$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
+			}
 		} else {
 			$this->data['logo'] = '';
 		}
+
+		// Get Customer's data
+		$customer_id = $this->customer->getId();
 
 		$this->data['customers'] = [];
 		$this->data['addresses'] = [];
