@@ -52,8 +52,8 @@ class ControllerAccountAddress extends Controller {
 
 		$this->load->model('account/address');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] != $this->session->data['customer_token']) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] !== $this->session->data['customer_token']) {
 				$this->customer->logout();
 
 				$this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
@@ -96,8 +96,8 @@ class ControllerAccountAddress extends Controller {
 
 		$this->load->model('account/address');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] != $this->session->data['customer_token']) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] !== $this->session->data['customer_token']) {
 				$this->customer->logout();
 
 				$this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
@@ -111,7 +111,7 @@ class ControllerAccountAddress extends Controller {
 				$this->model_account_address->editAddress($this->request->get['address_id'], $this->request->post);
 
 				// Default Shipping Address
-				if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] == $this->session->data['shipping_address_id'])) {
+				if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] === $this->session->data['shipping_address_id'])) {
 					$this->session->data['shipping_country_id'] = $this->request->post['country_id'];
 					$this->session->data['shipping_zone_id'] = $this->request->post['zone_id'];
 					$this->session->data['shipping_postcode'] = $this->request->post['postcode'];
@@ -121,7 +121,7 @@ class ControllerAccountAddress extends Controller {
 				}
 
 				// Default Payment Address
-				if (isset($this->session->data['payment_address_id']) && ($this->request->get['address_id'] == $this->session->data['payment_address_id'])) {
+				if (isset($this->session->data['payment_address_id']) && ($this->request->get['address_id'] === $this->session->data['payment_address_id'])) {
 					$this->session->data['payment_country_id'] = $this->request->post['country_id'];
 					$this->session->data['payment_zone_id'] = $this->request->post['zone_id'];
 
@@ -160,7 +160,7 @@ class ControllerAccountAddress extends Controller {
 		$this->load->model('account/address');
 
 		if (isset($this->request->get['address_id'])) {
-			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] != $this->session->data['customer_token']) {
+			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] !== $this->session->data['customer_token']) {
 				$this->customer->logout();
 
 				$this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
@@ -174,7 +174,7 @@ class ControllerAccountAddress extends Controller {
 				$this->model_account_address->deleteAddress($this->request->get['address_id']);
 
 				// Default Shipping Address
-				if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] == $this->session->data['shipping_address_id'])) {
+				if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] === $this->session->data['shipping_address_id'])) {
 					unset($this->session->data['shipping_address_id']);
 					unset($this->session->data['shipping_country_id']);
 					unset($this->session->data['shipping_zone_id']);
@@ -184,7 +184,7 @@ class ControllerAccountAddress extends Controller {
 				}
 
 				// Default Payment Address
-				if (isset($this->session->data['payment_address_id']) && ($this->request->get['address_id'] == $this->session->data['payment_address_id'])) {
+				if (isset($this->session->data['payment_address_id']) && ($this->request->get['address_id'] === $this->session->data['payment_address_id'])) {
 					unset($this->session->data['payment_address_id']);
 					unset($this->session->data['payment_country_id']);
 					unset($this->session->data['payment_zone_id']);
@@ -436,7 +436,7 @@ class ControllerAccountAddress extends Controller {
 			$this->data['action'] = $this->url->link('account/address/update', 'address_id=' . $this->request->get['address_id'] . '&customer_token=' . $this->session->data['customer_token'], 'SSL');
 		}
 
-		if (isset($this->request->get['address_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['address_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$address_info = $this->model_account_address->getAddress($this->request->get['address_id']);
 		}
 
@@ -551,7 +551,7 @@ class ControllerAccountAddress extends Controller {
 		if (isset($this->request->post['default'])) {
 			$this->data['default'] = $this->request->post['default'];
 		} elseif (isset($this->request->get['address_id'])) {
-			$this->data['default'] = $this->customer->getAddressId() == $this->request->get['address_id'];
+			$this->data['default'] = $this->customer->getAddressId() === $this->request->get['address_id'];
 		} else {
 			$this->data['default'] = false;
 		}
@@ -610,16 +610,16 @@ class ControllerAccountAddress extends Controller {
 			// VAT Validation (system/helper/vat)
 			$this->load->helper('vat');
 
-			if ($this->config->get('config_vat') && isset($this->request->post['tax_id']) && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+			if ($this->config->get('config_vat') && isset($this->request->post['tax_id']) && $this->request->post['tax_id'] !== '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
 				$this->error['tax_id'] = $this->language->get('error_vat');
 			}
 		}
 
-		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '' || !is_numeric($this->request->post['country_id'])) {
+		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '' || !is_numeric($this->request->post['country_id'])) {
 			$this->error['country'] = $this->language->get('error_country');
 		}
 
-		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {
+		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '' || !is_numeric($this->request->post['zone_id'])) {
 			$this->error['zone'] = $this->language->get('error_zone');
 		}
 
@@ -627,11 +627,11 @@ class ControllerAccountAddress extends Controller {
 	}
 
 	protected function validateDelete() {
-		if ($this->model_account_address->getTotalAddresses() == 1) {
+		if ($this->model_account_address->getTotalAddresses() === 1) {
 			$this->error['warning'] = $this->language->get('error_delete');
 		}
 
-		if ($this->customer->getAddressId() == $this->request->get['address_id']) {
+		if ($this->customer->getAddressId() === $this->request->get['address_id']) {
 			$this->error['warning'] = $this->language->get('error_default');
 		}
 

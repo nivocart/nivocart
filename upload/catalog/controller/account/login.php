@@ -47,13 +47,13 @@ class ControllerAccountLogin extends Controller {
 				$address_info = $this->model_account_address->getAddress($this->customer->getAddressId());
 
 				if ($address_info) {
-					if ($this->config->get('config_tax_customer') == 'shipping') {
+					if ($this->config->get('config_tax_customer') === 'shipping') {
 						$this->session->data['shipping_country_id'] = $address_info['country_id'];
 						$this->session->data['shipping_zone_id'] = $address_info['zone_id'];
 						$this->session->data['shipping_postcode'] = $address_info['postcode'];
 					}
 
-					if ($this->config->get('config_tax_customer') == 'payment') {
+					if ($this->config->get('config_tax_customer') === 'payment') {
 						$this->session->data['payment_country_id'] = $address_info['country_id'];
 						$this->session->data['payment_zone_id'] = $address_info['zone_id'];
 					}
@@ -79,7 +79,7 @@ class ControllerAccountLogin extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			unset($this->session->data['guest']);
 
 			// Default Shipping Address
@@ -88,13 +88,13 @@ class ControllerAccountLogin extends Controller {
 			$address_info = $this->model_account_address->getAddress($this->customer->getAddressId());
 
 			if ($address_info) {
-				if ($this->config->get('config_tax_customer') == 'shipping') {
+				if ($this->config->get('config_tax_customer') === 'shipping') {
 					$this->session->data['shipping_country_id'] = $address_info['country_id'];
 					$this->session->data['shipping_zone_id'] = $address_info['zone_id'];
 					$this->session->data['shipping_postcode'] = $address_info['postcode'];
 				}
 
-				if ($this->config->get('config_tax_customer') == 'payment') {
+				if ($this->config->get('config_tax_customer') === 'payment') {
 					$this->session->data['payment_country_id'] = $address_info['country_id'];
 					$this->session->data['payment_zone_id'] = $address_info['zone_id'];
 				}
