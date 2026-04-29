@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="<?php echo $direction; ?>" lang="<?php echo $language; ?>" xml:lang="<?php echo $language; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>My Account Information</title>
+<title>Account Information</title>
 <style>
 html {
     margin: 0;
