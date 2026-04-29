@@ -20,7 +20,7 @@ class ControllerAffiliateEdit extends Controller {
 
 		$this->load->model('affiliate/affiliate');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_affiliate_affiliate->editAffiliate($this->request->post);
 
 			// Add to activity log
@@ -141,7 +141,7 @@ class ControllerAffiliateEdit extends Controller {
 
 		$this->data['action'] = $this->url->link('affiliate/edit', '', 'SSL');
 
-		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
 			$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($this->affiliate->getId());
 		}
 
@@ -307,11 +307,11 @@ class ControllerAffiliateEdit extends Controller {
 			$this->error['postcode'] = $this->language->get('error_postcode');
 		}
 
-		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '' || !is_numeric($this->request->post['country_id'])) {
+		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '' || !is_numeric($this->request->post['country_id'])) {
 			$this->error['country'] = $this->language->get('error_country');
 		}
 
-		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {
+		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '' || !is_numeric($this->request->post['zone_id'])) {
 			$this->error['zone'] = $this->language->get('error_zone');
 		}
 

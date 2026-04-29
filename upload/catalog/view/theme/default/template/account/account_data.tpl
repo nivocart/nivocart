@@ -2,17 +2,96 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="<?php echo $direction; ?>" lang="<?php echo $language; ?>" xml:lang="<?php echo $language; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title><?php echo $title; ?></title>
-<base href="<?php echo $base; ?>" />
-<link rel="icon" type="image/png" href="admin/docicon.png" />
-<link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/account-data.css" media="screen, print" />
+<title>My Account Information</title>
+<style>
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body {
+    background: #FFF;
+}
+body, td, th, input, select, textarea, option, optgroup {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+}
+td span {
+    font-size: 10px;
+}
+td > img {
+    margin: 2px 2px 0 0;
+}
+h1 {
+    text-transform: uppercase;
+    color: #BBB;
+    text-align: right;
+    font-size: 24px;
+    font-weight: normal;
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #DDD;
+}
+.documents {
+    margin: 0 5px;
+}
+.store {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.top-left {
+    width: 50%;
+}
+.top-right {
+    float: right;
+    width: 50%;
+    text-align: left;
+    vertical-align: top;
+}
+.center {
+    text-align: center;
+}
+table.address, table.personal {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+table.personal > tbody {
+    border: 1px solid #DDD;
+}
+table.personal > tbody > tr > td:first-child {
+    width: 180px;
+}
+table.personal > tbody > tr > td {
+    padding: 10px;
+    border-bottom: 1px dotted #CCC;
+}
+table.bank {
+    width: 100%;
+    margin-top: 20px;
+}
+.address {
+    width: 100%;
+    margin-bottom: 20px;
+    border-top: 1px solid #DDD;
+    border-right: 1px solid #DDD;
+}
+.address td {
+    padding: 5px;
+    border-left: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
+    vertical-align: text-bottom;
+    margin-bottom: 10px;
+}
+</style>
 </head>
 <body>
 <?php foreach ($customers as $customer) { ?>
 <div class="documents">
   <?php if ($logo) { ?>
-    <img src="<?php echo $logo; ?>" alt="" style="padding:15px 0 0 5px;" />
+    <img src="<?php echo $image_base; ?>data/logo.png" alt="" style="padding:15px 0 0 5px;" />
   <?php } ?>
   <h1><?php echo $text_customer_data; ?></h1>
   <table class="store">
@@ -20,14 +99,14 @@
       <td class="top-left">
         <b><?php echo $customer['store_name']; ?></b><br />
         <?php echo $customer['store_address']; ?><br /><br />
-        <img src="catalog/view/theme/<?php echo $template; ?>/image/location/phone.png" alt="" height="14" width="14" /> <?php echo $customer['store_telephone']; ?><br />
-        <img src="catalog/view/theme/<?php echo $template; ?>/image/location/mail.png" alt="" height="14" width="14" /> <?php echo $customer['store_email']; ?><br />
-		<img src="catalog/view/theme/<?php echo $template; ?>/image/location/global.png" alt="" height="14" width="14" /> <?php echo $customer['store_url']; ?><br />
+        <img src="<?php echo $catalog_base; ?>view/theme/<?php echo $template; ?>/image/location/phone.png" alt="" height="14" width="14" /> <?php echo $customer['store_telephone']; ?><br />
+        <img src="<?php echo $catalog_base; ?>view/theme/<?php echo $template; ?>/image/location/mail.png" alt="" height="14" width="14" /> <?php echo $customer['store_email']; ?><br />
+        <img src="<?php echo $catalog_base; ?>view/theme/<?php echo $template; ?>/image/location/global.png" alt="" height="14" width="14" /> <?php echo $customer['store_url']; ?><br />
         <?php if ($customer['store_company_id']) { ?>
-          <img src="catalog/view/theme/<?php echo $template; ?>/image/location/company.png" alt="" height="14" width="14" /> <?php echo $customer['store_company_id']; ?><br />
+          <img src="<?php echo $catalog_base; ?>view/theme/<?php echo $template; ?>/image/location/company.png" alt="" height="14" width="14" /> <?php echo $customer['store_company_id']; ?><br />
         <?php } ?>
         <?php if ($customer['store_company_tax_id']) { ?>
-          <img src="catalog/view/theme/<?php echo $template; ?>/image/location/tax.png" alt="" height="14" width="14" /> <?php echo $customer['store_company_tax_id']; ?><br />
+          <img src="<?php echo $catalog_base; ?>view/theme/<?php echo $template; ?>/image/location/tax.png" alt="" height="14" width="14" /> <?php echo $customer['store_company_tax_id']; ?><br />
         <?php } ?>
       </td>
       <td class="top-right">

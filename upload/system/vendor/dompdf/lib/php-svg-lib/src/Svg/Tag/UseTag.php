@@ -1,94 +1,96 @@
 <?php
-
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
  * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
 namespace Svg\Tag;
 
-class UseTag extends AbstractTag {
-	protected $x = 0;
-	protected $y = 0;
-	protected $width;
-	protected $height;
+class UseTag extends AbstractTag
+{
+    protected $x = 0;
+    protected $y = 0;
+    protected $width;
+    protected $height;
 
-	protected $reference;
+    /** @var AbstractTag */
+    protected $reference;
 
-	protected function before($attributes): void {
-		if (isset($attributes['x'])) {
-			$this->x = $attributes['x'];
-		}
+    protected function before($attributes)
+    {
+        if (isset($attributes['x'])) {
+            $this->x = $attributes['x'];
+        }
+        if (isset($attributes['y'])) {
+            $this->y = $attributes['y'];
+        }
 
-		if (isset($attributes['y'])) {
-			$this->y = $attributes['y'];
-		}
+        if (isset($attributes['width'])) {
+            $this->width = $attributes['width'];
+        }
+        if (isset($attributes['height'])) {
+            $this->height = $attributes['height'];
+        }
 
-		if (isset($attributes['width'])) {
-			$this->width = $attributes['width'];
-		}
+        parent::before($attributes);
 
-		if (isset($attributes['height'])) {
-			$this->height = $attributes['height'];
-		}
+        $document = $this->getDocument();
 
-		parent::before($attributes);
+        $link = $attributes["xlink:href"];
+        $this->reference = $document->getDef($link);
 
-		$document = $this->getDocument();
+        if ($this->reference) {
+            $this->reference->before($attributes);
+        }
 
-		$link = $attributes["xlink:href"];
-		$this->reference = $document->getDef($link);
+        $surface = $document->getSurface();
+        $surface->save();
 
-		if ($this->reference) {
-			$this->reference->before($attributes);
-		}
+        $surface->translate($this->x, $this->y);
+    }
 
-		$surface = $document->getSurface();
-		$surface->save();
+    protected function after() {
+        parent::after();
 
-		$surface->translate($this->x, $this->y);
-	}
+        if ($this->reference) {
+            $this->reference->after();
+        }
 
-	protected function after(): void {
-		parent::after();
+        $this->getDocument()->getSurface()->restore();
+    }
 
-		if ($this->reference) {
-			$this->reference->after();
-		}
+    public function handle($attributes)
+    {
+        parent::handle($attributes);
 
-		$this->getDocument()->getSurface()->restore();
-	}
+        if (!$this->reference) {
+            return;
+        }
 
-	public function handle($attributes): void {
-		parent::handle($attributes);
+        $attributes = array_merge($this->reference->attributes, $attributes);
 
-		if (!$this->reference) {
-			return;
-		}
+        $this->reference->handle($attributes);
 
-		$attributes = array_merge($this->reference->attributes, $attributes);
+        foreach ($this->reference->children as $_child) {
+            $_attributes = array_merge($_child->attributes, $attributes);
+            $_child->handle($_attributes);
+        }
+    }
 
-		$this->reference->handle($attributes);
+    public function handleEnd()
+    {
+        parent::handleEnd();
 
-		foreach ($this->reference->children as $_child) {
-			$_attributes = array_merge($_child->attributes, $attributes);
-			$_child->handle($_attributes);
-		}
-	}
+        if (!$this->reference) {
+            return;
+        }
 
-	public function handleEnd(): void {
-		parent::handleEnd();
+        $this->reference->handleEnd();
 
-		if (!$this->reference) {
-			return;
-		}
-
-		$this->reference->handleEnd();
-
-		foreach ($this->reference->children as $_child) {
-			$_child->handleEnd();
-		}
-	}
-}
+        foreach ($this->reference->children as $_child) {
+            $_child->handleEnd();
+        }
+    }
+} 

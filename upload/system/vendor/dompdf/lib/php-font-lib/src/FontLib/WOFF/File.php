@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package php-font-lib
  * @link    https://github.com/PhenX/php-font-lib
@@ -19,68 +18,64 @@ use FontLib\Table\DirectoryEntry;
  * @property TableDirectoryEntry[] $directory
  */
 class File extends \FontLib\TrueType\File {
-	public function parseHeader(): void {
-		if (!empty($this->header)) {
-			return;
-		}
+  function parseHeader() {
+    if (!empty($this->header)) {
+      return;
+    }
 
-		$this->header = new Header($this);
-		$this->header->parse();
-	}
+    $this->header = new Header($this);
+    $this->header->parse();
+  }
 
-	public function load($file): void {
-		parent::load($file);
+  public function load($file) {
+    parent::load($file);
 
-		$this->parseTableEntries();
-		$dataOffset = $this->pos() + count($this->directory) * 20;
+    $this->parseTableEntries();
+    $dataOffset = $this->pos() + count($this->directory) * 20;
 
-		$fw = $this->getTempFile(false);
-		$fr = $this->f;
+    $fw = $this->getTempFile(false);
+    $fr = $this->f;
 
-		$this->f = $fw;
-		$offset = $this->header->encode();
+    $this->f = $fw;
+    $offset  = $this->header->encode();
 
-		foreach ($this->directory as $entry) {
-			// Read ...
-			$this->f = $fr;
-			$this->seek($entry->offset);
+    foreach ($this->directory as $entry) {
+      // Read ...
+      $this->f = $fr;
+      $this->seek($entry->offset);
+      $data = $this->read($entry->length);
 
-			$data = $this->read($entry->length);
+      if ($entry->length < $entry->origLength) {
+        $data = (string) gzuncompress($data);
+      }
 
-			if ($entry->length < $entry->origLength) {
-				$data = gzuncompress($data);
-			}
+      // Prepare data ...
+      $length        = mb_strlen($data, '8bit');
+      $entry->length = $entry->origLength = $length;
+      $entry->offset = $dataOffset;
 
-			// Prepare data ...
-			$length = strlen($data);
+      // Write ...
+      $this->f = $fw;
 
-			$entry->length = $entry->origLength = $length;
-			$entry->offset = $dataOffset;
+      // Woff Entry
+      $this->seek($offset);
+      $offset += $this->write($entry->tag, 4); // tag
+      $offset += $this->writeUInt32($dataOffset); // offset
+      $offset += $this->writeUInt32($length); // length
+      $offset += $this->writeUInt32($length); // origLength
+      $offset += $this->writeUInt32(DirectoryEntry::computeChecksum($data)); // checksum
 
-			// Write ...
-			$this->f = $fw;
+      // Data
+      $this->seek($dataOffset);
+      $dataOffset += $this->write($data, $length);
+    }
 
-			// Woff Entry
-			$this->seek($offset);
+    $this->f = $fw;
+    $this->seek(0);
 
-			$offset += $this->write($entry->tag, 4); // tag
-			$offset += $this->writeUInt32($dataOffset); // offset
-			$offset += $this->writeUInt32($length); // length
-			$offset += $this->writeUInt32($length); // origLength
-			$offset += $this->writeUInt32(DirectoryEntry::computeChecksum($data)); // checksum
-
-			// Data
-			$this->seek($dataOffset);
-			$dataOffset += $this->write($data, $length);
-		}
-
-		$this->f = $fw;
-		$this->seek(0);
-
-		// Need to re-parse this, don't know why
-		$this->header = null;
-		$this->directory = [];
-
-		$this->parseTableEntries();
-	}
+    // Need to re-parse this, don't know why
+    $this->header    = null;
+    $this->directory = array();
+    $this->parseTableEntries();
+  }
 }

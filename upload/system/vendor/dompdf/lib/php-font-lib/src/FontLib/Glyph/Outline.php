@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package php-font-lib
  * @link    https://github.com/PhenX/php-font-lib
@@ -7,7 +6,6 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  * @version $Id: Font_Table_glyf.php 46 2012-04-02 20:22:38Z fabien.menager $
  */
-
 namespace FontLib\Glyph;
 
 use FontLib\Table\Type\glyf;
@@ -20,89 +18,92 @@ use FontLib\BinaryStream;
  * @package php-font-lib
  */
 class Outline extends BinaryStream {
-	/**
-	 * @var \FontLib\Table\Type\glyf
-	 */
-	protected $table;
+  /**
+   * @var \FontLib\Table\Type\glyf
+   */
+  protected $table;
 
-	protected $offset;
-	protected $size;
+  protected $offset;
+  protected $size;
 
-	// Data
-	public $numberOfContours;
-	public $xMin;
-	public $yMin;
-	public $xMax;
-	public $yMax;
+  // Data
+  public $numberOfContours;
+  public $xMin;
+  public $yMin;
+  public $xMax;
+  public $yMax;
 
-	public $raw;
+  /**
+   * @var string|null
+   */
+  public $raw;
 
-	/**
-	 * @param glyf $table
-	 * @param   $offset
-	 * @param   $size
-	 *
-	 * @return Outline
-	 */
-	public static function init(glyf $table, $offset, $size, BinaryStream $font) {
-		$font->seek($offset);
+  /**
+   * @param glyf $table
+   * @param                 $offset
+   * @param                 $size
+   *
+   * @return Outline
+   */
+  static function init(glyf $table, $offset, $size, BinaryStream $font) {
+    $font->seek($offset);
 
-		if ($font->readInt16() > -1) {
-			$glyph = new OutlineSimple($table, $offset, $size);
-		} else {
-			$glyph = new OutlineComposite($table, $offset, $size);
-		}
+    if ($font->readInt16() > -1) {
+      /** @var OutlineSimple $glyph */
+      $glyph = new OutlineSimple($table, $offset, $size);
+    }
+    else {
+      /** @var OutlineComposite $glyph */
+      $glyph = new OutlineComposite($table, $offset, $size);
+    }
 
-		$glyph->parse($font);
+    $glyph->parse($font);
 
-		return $glyph;
-	}
+    return $glyph;
+  }
 
-	/**
-	 * @return File
-	 */
-	public function getFont() {
-		return $this->table->getFont();
-	}
+  /**
+   * @return File
+   */
+  function getFont() {
+    return $this->table->getFont();
+  }
 
-	public function __construct(glyf $table, $offset = null, $size = null) {
-		$this->table = $table;
-		$this->offset = $offset;
-		$this->size = $size;
-	}
+  function __construct(glyf $table, $offset = null, $size = null) {
+    $this->table  = $table;
+    $this->offset = $offset;
+    $this->size   = $size;
+  }
 
-	public function parse(BinaryStream $font): void {
-		$font->seek($this->offset);
+  function parse(BinaryStream $font) {
+    $font->seek($this->offset);
 
-		if (!$this->size) {
-			return;
-		}
+      $this->raw = $font->read($this->size);
+  }
 
-		$this->raw = $font->read($this->size);
-	}
+  function parseData() {
+    $font = $this->getFont();
+    $font->seek($this->offset);
 
-	public function parseData(): void {
-		$font = $this->getFont();
-		$font->seek($this->offset);
+    $this->numberOfContours = $font->readInt16();
+    $this->xMin             = $font->readFWord();
+    $this->yMin             = $font->readFWord();
+    $this->xMax             = $font->readFWord();
+    $this->yMax             = $font->readFWord();
+  }
 
-		$this->numberOfContours = $font->readInt16();
-		$this->xMin = $font->readFWord();
-		$this->yMin = $font->readFWord();
-		$this->xMax = $font->readFWord();
-		$this->yMax = $font->readFWord();
-	}
+  function encode() {
+    $font = $this->getFont();
 
-	public function encode() {
-		$font = $this->getFont();
+    return $font->write($this->raw, mb_strlen((string) $this->raw, '8bit'));
+  }
 
-		return $font->write($this->raw, strlen($this->raw));
-	}
+  function getSVGContours() {
+    // Inherit
+  }
 
-	public function getSVGContours(): void {
-		// Inherit
-	}
-
-	public function getGlyphIDs() {
-		return [];
-	}
+  function getGlyphIDs() {
+    return array();
+  }
 }
+

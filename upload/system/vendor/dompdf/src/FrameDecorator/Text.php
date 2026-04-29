@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
@@ -8,7 +7,6 @@
  * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-
 namespace Dompdf\FrameDecorator;
 
 use Dompdf\Dompdf;
@@ -21,147 +19,179 @@ use Dompdf\Exception;
  * @access  private
  * @package dompdf
  */
-class Text extends AbstractFrameDecorator {
-	// protected members
-	protected $_text_spacing;
+class Text extends AbstractFrameDecorator
+{
+    /**
+     * @var float|null
+     */
+    protected $_text_spacing;
 
-	/**
-	 * Text constructor.
-	 * @param Frame $frame
-	 * @param Dompdf $dompdf
-	 * @throws Exception
-	 */
-	public function __construct(Frame $frame, Dompdf $dompdf) {
-		if (!$frame->is_text_node()) {
-			throw new Exception("Text_Decorator can only be applied to #text nodes.");
-		}
+    /**
+     * Text constructor.
+     * @param Frame $frame
+     * @param Dompdf $dompdf
+     * @throws Exception
+     */
+    function __construct(Frame $frame, Dompdf $dompdf)
+    {
+        if (!$frame->is_text_node()) {
+            throw new Exception("Text_Decorator can only be applied to #text nodes.");
+        }
 
-		parent::__construct($frame, $dompdf);
-		$this->_text_spacing = null;
-	}
+        parent::__construct($frame, $dompdf);
+        $this->_text_spacing = null;
+    }
 
-	public function reset(): void {
-		parent::reset();
-		$this->_text_spacing = null;
-	}
+    function reset()
+    {
+        parent::reset();
+        $this->_text_spacing = null;
+    }
 
-	/**
-	 * @return null
-	 */
-	public function get_text_spacing() {
-		return $this->_text_spacing;
-	}
+    // Accessor methods
 
-	/**
-	 * @return string
-	 */
-	public function get_text() {
-		// this should be in a child class (and is incorrect)
-		return $this->_frame->get_node()->data;
-	}
+    /**
+     * @return float|null
+     */
+    function get_text_spacing()
+    {
+        return $this->_text_spacing;
+    }
 
-	/**
-	 * Vertical margins & padding do not apply to text frames
-	 *
-	 * http://www.w3.org/TR/CSS21/visudet.html#inline-non-replaced:
-	 *
-	 * The vertical padding, border and margin of an inline, non-replaced box
-	 * start at the top and bottom of the content area, not the
-	 * 'line-height'. But only the 'line-height' is used to calculate the
-	 * height of the line box.
-	 *
-	 * @return float|int
-	 */
-	public function get_margin_height() {
-		// This function is called in add_frame_to_line() and is used to
-		// determine the line height, so we actually want to return the
-		// 'line-height' property, not the actual margin box
-		$style = $this->get_parent()->get_style();
-		$font = $style->font_family;
-		$size = $style->font_size;
+    /**
+     * @return string
+     */
+    function get_text()
+    {
+        // FIXME: this should be in a child class (and is incorrect)
+//    if ( $this->_frame->get_style()->content !== "normal" ) {
+//      $this->_frame->get_node()->data = $this->_frame->get_style()->content;
+//      $this->_frame->get_style()->content = "normal";
+//    }
 
-		return ($style->line_height / ($size > 0 ? $size : 1)) * $this->_dompdf->getFontMetrics()->getFontHeight($font, $size);
-	}
+//      Helpers::pre_r("---");
+//      $style = $this->_frame->get_style();
+//      var_dump($text = $this->_frame->get_node()->data);
+//      var_dump($asc = utf8_decode($text));
+//      for ($i = 0; $i < strlen($asc); $i++)
+//        Helpers::pre_r("$i: " . $asc[$i] . " - " . ord($asc[$i]));
+//      Helpers::pre_r("width: " . $this->_dompdf->getFontMetrics()->getTextWidth($text, $style->font_family, $style->font_size));
 
-	/**
-	 * @return array
-	 */
-	public function get_padding_box() {
-		$pb = $this->_frame->get_padding_box();
-		$pb[3] = $pb["h"] = $this->_frame->get_style()->height;
+        return $this->_frame->get_node()->data;
+    }
 
-		return $pb;
-	}
+    //........................................................................
 
-	/**
-	 * @param $spacing
-	 */
-	public function set_text_spacing($spacing) {
-		$style = $this->_frame->get_style();
+    /**
+     * Vertical padding, border, and margin do not apply when determining the
+     * height for inline frames.
+     *
+     * http://www.w3.org/TR/CSS21/visudet.html#inline-non-replaced
+     *
+     * The vertical padding, border and margin of an inline, non-replaced box
+     * start at the top and bottom of the content area, not the
+     * 'line-height'. But only the 'line-height' is used to calculate the
+     * height of the line box.
+     *
+     * @return float
+     */
+    public function get_margin_height(): float
+    {
+        // This function is also called in add_frame_to_line() and is used to
+        // determine the line height
+        $style = $this->get_style();
+        $font = $style->font_family;
+        $size = $style->font_size;
+        $fontHeight = $this->_dompdf->getFontMetrics()->getFontHeight($font, $size);
 
-		$this->_text_spacing = $spacing;
-		$char_spacing = (float)$style->length_in_pt($style->letter_spacing);
+        return ($style->line_height / ($size > 0 ? $size : 1)) * $fontHeight;
+    }
 
-		// Re-adjust our width to account for the change in spacing
-		$style->width = $this->_dompdf->getFontMetrics()->getTextWidth($this->get_text(), $style->font_family, $style->font_size, $spacing, $char_spacing);
-	}
+    public function get_padding_box(): array
+    {
+        $style = $this->_frame->get_style();
+        $pb = $this->_frame->get_padding_box();
+        $pb[3] = $pb["h"] = (float) $style->length_in_pt($style->height);
+        return $pb;
+    }
 
-	/**
-	 *  Recalculate the text width
-	 *
-	 * @return float
-	 */
-	public function recalculate_width() {
-		$style = $this->get_style();
-		$text = $this->get_text();
+    /**
+     * @param float $spacing
+     */
+    function set_text_spacing($spacing)
+    {
+        $style = $this->_frame->get_style();
 
-		$size = $style->font_size;
-		$font = $style->font_family;
+        $this->_text_spacing = $spacing;
+        $char_spacing = (float)$style->length_in_pt($style->letter_spacing);
 
-		$word_spacing = (float)$style->length_in_pt($style->word_spacing);
-		$char_spacing = (float)$style->length_in_pt($style->letter_spacing);
+        // Re-adjust our width to account for the change in spacing
+        $style->width = $this->_dompdf->getFontMetrics()->getTextWidth($this->get_text(), $style->font_family, $style->font_size, $spacing, $char_spacing);
+    }
 
-		return $style->width = $this->_dompdf->getFontMetrics()->getTextWidth($text, $font, $size, $word_spacing, $char_spacing);
-	}
+    /**
+     *  Recalculate the text width
+     *
+     * @return float
+     */
+    function recalculate_width()
+    {
+        $style = $this->get_style();
+        $text = $this->get_text();
+        $size = $style->font_size;
+        $font = $style->font_family;
+        $word_spacing = (float)$style->length_in_pt($style->word_spacing);
+        $char_spacing = (float)$style->length_in_pt($style->letter_spacing);
 
-	/**
-	 * split the text in this frame at the offset specified.  The remaining
-	 * text is added a sibling frame following this one and is returned.
-	 *
-	 * @param $offset
-	 * @return Frame|null
-	 */
-	public function split_text($offset) {
-		if ($offset == 0) {
-			return null;
-		}
+        return $style->width = $this->_dompdf->getFontMetrics()->getTextWidth($text, $font, $size, $word_spacing, $char_spacing);
+    }
 
-		$split = $this->_frame->get_node()->splitText($offset);
+    // Text manipulation methods
 
-		$deco = $this->copy($split);
+    /**
+     * split the text in this frame at the offset specified.  The remaining
+     * text is added a sibling frame following this one and is returned.
+     *
+     * @param int $offset
+     * @return Frame|null
+     */
+    function split_text($offset)
+    {
+        if ($offset == 0) {
+            return null;
+        }
 
-		$p = $this->get_parent();
-		$p->insert_child_after($deco, $this, false);
+        $split = $this->_frame->get_node()->splitText($offset);
+        if ($split === false) {
+            return null;
+        }
+        
+        $deco = $this->copy($split);
 
-		if ($p instanceof Inline) {
-			$p->split($deco);
-		}
+        $p = $this->get_parent();
+        $p->insert_child_after($deco, $this, false);
 
-		return $deco;
-	}
+        if ($p instanceof Inline) {
+            $p->split($deco);
+        }
 
-	/**
-	 * @param $offset
-	 * @param $count
-	 */
-	public function delete_text($offset, $count) {
-		$this->_frame->get_node()->deleteData($offset, $count);
-	}
+        return $deco;
+    }
 
-	/**
-	 * @param $text
-	 */
-	public function set_text($text) {
-		$this->_frame->get_node()->data = $text;
-	}
+    /**
+     * @param int $offset
+     * @param int $count
+     */
+    function delete_text($offset, $count)
+    {
+        $this->_frame->get_node()->deleteData($offset, $count);
+    }
+
+    /**
+     * @param string $text
+     */
+    function set_text($text)
+    {
+        $this->_frame->get_node()->data = $text;
+    }
 }

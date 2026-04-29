@@ -1,10 +1,8 @@
 <?php
-
 namespace Dompdf\Frame;
 
 use Iterator;
 use Dompdf\Frame;
-
 /**
  * Linked-list Iterator
  *
@@ -15,73 +13,48 @@ use Dompdf\Frame;
  * @package dompdf
  */
 class FrameListIterator implements Iterator {
-	/**
-	 * @var Frame
-	 */
-	protected $_parent;
+    /**
+     * @var Frame
+     */
+    protected $_parent;
+    /**
+     * @var Frame|null
+     */
+    protected $_cur;
+    /**
+     * @var int
+     */
+    protected $_num;
 
-	/**
-	 * @var Frame
-	 */
-	protected $_cur;
+    /**
+     * @param Frame $frame
+     */
+    public function __construct(Frame $frame) {
+        $this->_parent = $frame;
+        $this->rewind();
+    }
 
-	/**
-	 * @var int
-	 */
-	protected $_num;
+    public function rewind(): void {
+        $this->_cur = $this->_parent->get_first_child();
+        $this->_num = 0;
+    }
 
-	/**
-	 * @param Frame $frame
-	 */
-	public function __construct(Frame $frame) {
-		$this->_parent = $frame;
-		$this->_cur = $frame->get_first_child();
-		$this->_num = 0;
-	}
+    public function valid(): bool {
+        return isset($this->_cur);
+    }
 
-	/**
-	 *
-	 */
-	public function rewind(): void {
-		$this->_cur = $this->_parent->get_first_child();
-		$this->_num = 0;
-	}
+    public function key(): mixed {
+        return $this->_num;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function valid(): bool {
-		return isset($this->_cur);
-	}
+    public function current(): mixed {
+        return $this->_cur;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function key(): mixed {
-		return $this->_num;
-	}
-
-	/**
-	 * @return Frame
-	 */
-	public function current(): mixed {
-		return $this->_cur;
-	}
-
-	/**
-	 * @return Frame
-	 */
-	#[\ReturnTypeWillChange]
-	public function next() {
-		$ret = $this->_cur;
-
-		if (!$ret) {
-			return null;
-		}
-
-		$this->_cur = $this->_cur->get_next_sibling();
-		$this->_num++;
-
-		return $ret;
-	}
+    public function next(): void {
+        if ($this->_cur) {
+            $this->_cur = $this->_cur->get_next_sibling();
+            $this->_num++;
+        }
+    }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package php-font-lib
  * @link    https://github.com/PhenX/php-font-lib
@@ -15,4 +14,5 @@ namespace FontLib\OpenType;
  * @package php-font-lib
  */
 class File extends \FontLib\TrueType\File {
+  //
 }

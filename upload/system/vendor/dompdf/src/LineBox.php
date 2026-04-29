@@ -1,16 +1,16 @@
 <?php
-
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
  * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-
 namespace Dompdf;
 
+use Dompdf\FrameDecorator\AbstractFrameDecorator;
 use Dompdf\FrameDecorator\Block;
 use Dompdf\FrameDecorator\Page;
+use Dompdf\Positioner\Inline as InlinePositioner;
 
 /**
  * The line box class
@@ -20,269 +20,328 @@ use Dompdf\FrameDecorator\Page;
  *
  * @package dompdf
  */
-class LineBox {
-	/**
-	 * @var Block
-	 */
-	protected $_block_frame;
+class LineBox
+{
 
-	/**
-	 * @var Frame[]
-	 */
-	protected $_frames = [];
+    /**
+     * @var Block
+     */
+    protected $_block_frame;
 
-	/**
-	 * @var integer
-	 */
-	public $wc = 0;
+    /**
+     * @var AbstractFrameDecorator[]
+     */
+    protected $_frames = [];
 
-	/**
-	 * @var float
-	 */
-	public $y = null;
+    /**
+     * @var int
+     */
+    public $wc = 0;
 
-	/**
-	 * @var float
-	 */
-	public $w = 0.0;
+    /**
+     * @var float
+     */
+    public $y = null;
 
-	/**
-	 * @var float
-	 */
-	public $h = 0.0;
+    /**
+     * @var float
+     */
+    public $w = 0.0;
 
-	/**
-	 * @var float
-	 */
-	public $left = 0.0;
+    /**
+     * @var float
+     */
+    public $h = 0.0;
 
-	/**
-	 * @var float
-	 */
-	public $right = 0.0;
+    /**
+     * @var float
+     */
+    public $left = 0.0;
 
-	/**
-	 * @var Frame
-	 */
-	public $tallest_frame = null;
+    /**
+     * @var float
+     */
+    public $right = 0.0;
 
-	/**
-	 * @var bool[]
-	 */
-	public $floating_blocks = [];
+    /**
+     * @var AbstractFrameDecorator
+     */
+    public $tallest_frame = null;
 
-	/**
-	 * @var bool
-	 */
-	public $br = false;
+    /**
+     * @var bool[]
+     */
+    public $floating_blocks = [];
 
-	/**
-	 * Class constructor
-	 *
-	 * @param Block $frame the Block containing this line
-	 * @param int $y
-	 */
-	public function __construct(Block $frame, $y = 0) {
-		$this->_block_frame = $frame;
-		$this->_frames = [];
-		$this->y = $y;
+    /**
+     * @var bool
+     */
+    public $br = false;
 
-		$this->get_float_offsets();
-	}
+    /**
+     * Whether the line box contains any inline-positioned frames.
+     *
+     * @var bool
+     */
+    public $inline = false;
 
-	/**
-	 * Returns the floating elements inside the first floating parent
-	 *
-	 * @param Page $root
-	 *
-	 * @return Frame[]
-	 */
-	public function get_floats_inside(Page $root) {
-		$floating_frames = $root->get_floating_frames();
+    /**
+     * Class constructor
+     *
+     * @param Block $frame the Block containing this line
+     * @param int $y
+     */
+    public function __construct(Block $frame, $y = 0)
+    {
+        $this->_block_frame = $frame;
+        $this->_frames = [];
+        $this->y = $y;
 
-		if (count($floating_frames) == 0) {
-			return $floating_frames;
-		}
+        $this->get_float_offsets();
+    }
 
-		// Find nearest floating element
-		$p = $this->_block_frame;
+    /**
+     * Returns the floating elements inside the first floating parent
+     *
+     * @param Page $root
+     *
+     * @return Frame[]
+     */
+    public function get_floats_inside(Page $root)
+    {
+        $floating_frames = $root->get_floating_frames();
 
-		while ($p->get_style()->float === "none") {
-			$parent = $p->get_parent();
+        if (count($floating_frames) == 0) {
+            return $floating_frames;
+        }
 
-			if (!$parent) {
-				break;
-			}
+        // Find nearest floating element
+        $p = $this->_block_frame;
+        while ($p->get_style()->float === "none") {
+            $parent = $p->get_parent();
 
-			$p = $parent;
-		}
+            if (!$parent) {
+                break;
+            }
 
-		if ($p == $root) {
-			return $floating_frames;
-		}
+            $p = $parent;
+        }
 
-		$parent = $p;
+        if ($p == $root) {
+            return $floating_frames;
+        }
 
-		$childs = [];
+        $parent = $p;
 
-		foreach ($floating_frames as $_floating) {
-			$p = $_floating->get_parent();
+        $childs = [];
 
-			while (($p = $p->get_parent()) && $p !== $parent) {
-				$child = $p;
-				break;
-			}
+        foreach ($floating_frames as $_floating) {
+            $p = $_floating->get_parent();
 
-			if ($child) {
-				$childs[] = $child;
-			}
-		}
+            while (($p = $p->get_parent()) && $p !== $parent);
 
-		return $childs;
-	}
+            if ($p) {
+                $childs[] = $p;
+            }
+        }
 
-	/**
-	 *
-	 */
-	public function get_float_offsets(): void {
-		static $anti_infinite_loop = 10000; // smelly hack
+        return $childs;
+    }
 
-		$reflower = $this->_block_frame->get_reflower();
+    public function get_float_offsets()
+    {
+        static $anti_infinite_loop = 10000; // FIXME smelly hack
 
-		if (!$reflower) {
-			return;
-		}
+        $reflower = $this->_block_frame->get_reflower();
 
-		$cb_w = null;
+        if (!$reflower) {
+            return;
+        }
 
-		$block = $this->_block_frame;
-		$root = $block->get_root();
+        $cb_w = null;
 
-		if (!$root) {
-			return;
-		}
+        $block = $this->_block_frame;
+        $root = $block->get_root();
 
-		$style = $this->_block_frame->get_style();
-		$floating_frames = $this->get_floats_inside($root);
+        if (!$root) {
+            return;
+        }
 
-		$inside_left_floating_width = 0;
-		$inside_right_floating_width = 0;
-		$outside_left_floating_width = 0;
-		$outside_right_floating_width = 0;
+        $style = $this->_block_frame->get_style();
+        $floating_frames = $this->get_floats_inside($root);
+        $inside_left_floating_width = 0;
+        $inside_right_floating_width = 0;
+        $outside_left_floating_width = 0;
+        $outside_right_floating_width = 0;
 
-		foreach ($floating_frames as $child_key => $floating_frame) {
-			$floating_frame_parent = $floating_frame->get_parent();
-			$id = $floating_frame->get_id();
+        foreach ($floating_frames as $child_key => $floating_frame) {
+            $floating_frame_parent = $floating_frame->get_parent();
+            $id = $floating_frame->get_id();
 
-			if (isset($this->floating_blocks[$id])) {
-				continue;
-			}
+            if (isset($this->floating_blocks[$id])) {
+                continue;
+            }
 
-			$float = $floating_frame->get_style()->float;
-			$floating_width = $floating_frame->get_margin_width();
+            $float = $floating_frame->get_style()->float;
+            $floating_width = $floating_frame->get_margin_width();
 
-			if (!$cb_w) {
-				$cb_w = $floating_frame->get_containing_block("w");
-			}
+            if (!$cb_w) {
+                $cb_w = $floating_frame->get_containing_block("w");
+            }
 
-			$line_w = $this->get_width();
+            $line_w = $this->get_width();
 
-			if (!$floating_frame->_float_next_line && ($cb_w <= $line_w + $floating_width) && ($cb_w > $line_w)) {
-				$floating_frame->_float_next_line = true;
-				continue;
-			}
+            if (!$floating_frame->_float_next_line && ($cb_w <= $line_w + $floating_width) && ($cb_w > $line_w)) {
+                $floating_frame->_float_next_line = true;
+                continue;
+            }
 
-			// If the child is still shifted by the floating element
-			if ($anti_infinite_loop-- > 0 && $floating_frame->get_position("y") + $floating_frame->get_margin_height() >= $this->y && $block->get_position("x") + $block->get_margin_width() >= $floating_frame->get_position("x")) {
-				if ($float === "left") {
-					if ($floating_frame_parent === $this->_block_frame) {
-						$inside_left_floating_width += $floating_width;
-					} else {
-						$outside_left_floating_width += $floating_width;
-					}
-				} elseif ($float === "right") {
-					if ($floating_frame_parent === $this->_block_frame) {
-						$inside_right_floating_width += $floating_width;
-					} else {
-						$outside_right_floating_width += $floating_width;
-					}
-				}
+            // If the child is still shifted by the floating element
+            if ($anti_infinite_loop-- > 0 &&
+                $floating_frame->get_position("y") + $floating_frame->get_margin_height() >= $this->y &&
+                $block->get_position("x") + $block->get_margin_width() >= $floating_frame->get_position("x")
+            ) {
+                if ($float === "left") {
+                    if ($floating_frame_parent === $this->_block_frame) {
+                        $inside_left_floating_width += $floating_width;
+                    } else {
+                        $outside_left_floating_width += $floating_width;
+                    }
+                } elseif ($float === "right") {
+                    if ($floating_frame_parent === $this->_block_frame) {
+                        $inside_right_floating_width += $floating_width;
+                    } else {
+                        $outside_right_floating_width += $floating_width;
+                    }
+                }
 
-				$this->floating_blocks[$id] = true;
-			} else {
-				$root->remove_floating_frame($child_key);
-			}
-		}
+                $this->floating_blocks[$id] = true;
+            } // else, the floating element won't shift anymore
+            else {
+                $root->remove_floating_frame($child_key);
+            }
+        }
 
-		$this->left += $inside_left_floating_width;
+        $this->left += $inside_left_floating_width;
+        if ($outside_left_floating_width > 0 && $outside_left_floating_width > ((float)$style->length_in_pt($style->margin_left) + (float)$style->length_in_pt($style->padding_left))) {
+            $this->left += $outside_left_floating_width - (float)$style->length_in_pt($style->margin_left) - (float)$style->length_in_pt($style->padding_left);
+        }
+        $this->right += $inside_right_floating_width;
+        if ($outside_right_floating_width > 0 && $outside_right_floating_width > ((float)$style->length_in_pt($style->margin_left) + (float)$style->length_in_pt($style->padding_right))) {
+            $this->right += $outside_right_floating_width - (float)$style->length_in_pt($style->margin_right) - (float)$style->length_in_pt($style->padding_right);
+        }
+    }
 
-		if ($outside_left_floating_width > 0 && $outside_left_floating_width > ((float)$style->length_in_pt($style->margin_left) + (float)$style->length_in_pt($style->padding_left))) {
-			$this->left += $outside_left_floating_width - (float)$style->length_in_pt($style->margin_left) - (float)$style->length_in_pt($style->padding_left);
-		}
+    /**
+     * @return float
+     */
+    public function get_width()
+    {
+        return $this->left + $this->w + $this->right;
+    }
 
-		$this->right += $inside_right_floating_width;
+    /**
+     * @return Block
+     */
+    public function get_block_frame()
+    {
+        return $this->_block_frame;
+    }
 
-		if ($outside_right_floating_width > 0 && $outside_right_floating_width > ((float)$style->length_in_pt($style->margin_left) + (float)$style->length_in_pt($style->padding_right))) {
-			$this->right += $outside_right_floating_width - (float)$style->length_in_pt($style->margin_right) - (float)$style->length_in_pt($style->padding_right);
-		}
-	}
+    /**
+     * @return AbstractFrameDecorator[]
+     */
+    function &get_frames()
+    {
+        return $this->_frames;
+    }
 
-	/**
-	 * @return float
-	 */
-	public function get_width() {
-		return $this->left + $this->w + $this->right;
-	}
+    /**
+     * @param AbstractFrameDecorator $frame
+     */
+    public function add_frame(Frame $frame)
+    {
+        $this->_frames[] = $frame;
 
-	/**
-	 * @return Block
-	 */
-	public function get_block_frame() {
-		return $this->_block_frame;
-	}
+        if ($frame->get_positioner() instanceof InlinePositioner) {
+            $this->inline = true;
+        }
+    }
 
-	/**
-	 * @return Frame[]
-	 */
-	public function &get_frames() {
-		return $this->_frames;
-	}
+    /**
+     * Remove the frame at the given index and all following frames from the
+     * line.
+     *
+     * @param int $index
+     */
+    public function remove_frames(int $index): void
+    {
+        $lastIndex = count($this->_frames) - 1;
 
-	/**
-	 * @param Frame $frame
-	 */
-	public function add_frame(Frame $frame): void {
-		$this->_frames[] = $frame;
-	}
+        if ($index < 0 || $index > $lastIndex) {
+            return;
+        }
 
-	/**
-	 * Recalculate LineBox width based on the contained frames total width.
-	 *
-	 * @return float
-	 */
-	public function recalculate_width() {
-		$width = 0;
+        for ($i = $lastIndex; $i >= $index; $i--) {
+            $f = $this->_frames[$i];
+            unset($this->_frames[$i]);
+            $this->w -= $f->get_margin_width();
+        }
 
-		foreach ($this->get_frames() as $frame) {
-			$width += $frame->calculate_auto_width();
-		}
+        // Reset array indices
+        $this->_frames = array_values($this->_frames);
 
-		return $this->w = $width;
-	}
+        // Recalculate the height of the line
+        $h = 0.0;
+        $this->inline = false;
 
-	/**
-	 * @return string
-	 */
-	public function __toString() {
-		$props = ["wc", "y", "w", "h", "left", "right", "br"];
-		$s = "";
+        foreach ($this->_frames as $f) {
+            $h = max($h, $f->get_margin_height());
 
-		foreach ($props as $prop) {
-			$s .= "$prop: " . $this->$prop . "\n";
-		}
+            if ($f->get_positioner() instanceof InlinePositioner) {
+                $this->inline = true;
+            }
+        }
 
-		$s .= count($this->_frames) . " frames\n";
+        $this->h = $h;
+    }
 
-		return $s;
-	}
+    /**
+     * Recalculate LineBox width based on the contained frames total width.
+     *
+     * @return float
+     */
+    public function recalculate_width()
+    {
+        $width = 0;
+
+        foreach ($this->_frames as $frame) {
+            $width += $frame->get_margin_width();
+        }
+
+        return $this->w = $width;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $props = ["wc", "y", "w", "h", "left", "right", "br"];
+        $s = "";
+        foreach ($props as $prop) {
+            $s .= "$prop: " . $this->$prop . "\n";
+        }
+        $s .= count($this->_frames) . " frames\n";
+
+        return $s;
+    }
 }
+
+/*
+class LineBoxList implements Iterator {
+  private $_p = 0;
+  private $_lines = array();
+
+}
+*/

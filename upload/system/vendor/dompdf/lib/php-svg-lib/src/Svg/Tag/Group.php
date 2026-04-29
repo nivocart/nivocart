@@ -1,29 +1,33 @@
 <?php
-
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @author  Fabien MÃ©nager <fabien.menager@gmail.com>
+ * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
 namespace Svg\Tag;
 
-class Group extends AbstractTag {
-	protected function before($attributes): void {
-		$surface = $this->document->getSurface();
+use Svg\Style;
 
-		$surface->save();
+class Group extends AbstractTag
+{
+    protected function before($attributes)
+    {
+        $surface = $this->document->getSurface();
 
-		$style = $this->makeStyle($attributes);
+        $surface->save();
 
-		$this->setStyle($style);
-		$surface->setStyle($style);
+        $style = $this->makeStyle($attributes);
 
-		$this->applyTransform($attributes);
-	}
+        $this->setStyle($style);
+        $surface->setStyle($style);
 
-	protected function after(): void {
-		$this->document->getSurface()->restore();
-	}
-}
+        $this->applyTransform($attributes);
+    }
+
+    protected function after()
+    {
+        $this->document->getSurface()->restore();
+    }
+} 

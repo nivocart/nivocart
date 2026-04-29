@@ -279,8 +279,12 @@ class ControllerAccountEdit extends Controller {
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
 			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			$this->data['base'] = HTTPS_SERVER;
+			$image_base = HTTPS_IMAGE;
+			$catalog_base = HTTPS_SERVER . '/catalog/';
 		} else {
 			$this->data['base'] = HTTP_SERVER;
+			$image_base = HTTP_IMAGE;
+			$catalog_base = HTTP_SERVER . '/catalog/';
 		}
 
 		$this->data['direction'] = $this->language->get('direction');
@@ -323,8 +327,7 @@ class ControllerAccountEdit extends Controller {
 		// Get Store Logo
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
 			if ($pdf) {
-				// Convert Windows backslashes for DomPDF compatibility
-				$this->data['logo'] = str_replace('\\', '/', DIR_IMAGE . $this->config->get('config_logo'));
+				$this->data['logo'] = DIR_IMAGE . $this->config->get('config_logo');
 			} else {
 				$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
 			}
@@ -458,12 +461,18 @@ class ControllerAccountEdit extends Controller {
 
 		// Dompdf
 		if ($pdf) {
+			$this->data['image_base'] = DIR_IMAGE;
+			$this->data['catalog_base'] = DIR_APPLICATION;
+
 			$document_type = $this->language->get('text_customer_data');
 
 			$document = str_replace(' ', '-', $document_type);
 
 			$this->response->setOutput(pdf($this->render(), $document, $this->customer->getId()));
 		} else {
+			$this->data['image_base'] = $image_base;
+			$this->data['catalog_base'] = $catalog_base;
+
 			$this->response->setOutput($this->render());
 		}
 	}

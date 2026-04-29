@@ -1,12 +1,10 @@
 <?php
-
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
  * @author  Fabien Ménager <fabien.menager@gmail.com>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-
 namespace Dompdf;
 
 /**
@@ -14,36 +12,41 @@ namespace Dompdf;
  *
  * @package dompdf
  */
-class JavascriptEmbedder {
-	/**
-	 * @var Dompdf
-	 */
-	protected $_dompdf;
+class JavascriptEmbedder
+{
 
-	/**
-	 * JavascriptEmbedder constructor.
-	 *
-	 * @param Dompdf $dompdf
-	 */
-	public function __construct(Dompdf $dompdf) {
-		$this->_dompdf = $dompdf;
-	}
+    /**
+     * @var Dompdf
+     */
+    protected $_dompdf;
 
-	/**
-	 * @param $script
-	 */
-	public function insert($script): void {
-		$this->_dompdf->getCanvas()->javascript($script);
-	}
+    /**
+     * JavascriptEmbedder constructor.
+     *
+     * @param Dompdf $dompdf
+     */
+    public function __construct(Dompdf $dompdf)
+    {
+        $this->_dompdf = $dompdf;
+    }
 
-	/**
-	 * @param Frame $frame
-	 */
-	public function render(Frame $frame): void {
-		if (!$this->_dompdf->getOptions()->getIsJavascriptEnabled()) {
-			return;
-		}
+    /**
+     * @param $script
+     */
+    public function insert($script)
+    {
+        $this->_dompdf->getCanvas()->javascript($script);
+    }
 
-		$this->insert($frame->get_node()->nodeValue);
-	}
+    /**
+     * @param Frame $frame
+     */
+    public function render(Frame $frame)
+    {
+        if (!$this->_dompdf->getOptions()->getIsJavascriptEnabled()) {
+            return;
+        }
+
+        $this->insert($frame->get_node()->nodeValue);
+    }
 }

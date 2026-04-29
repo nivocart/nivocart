@@ -1,12 +1,10 @@
 <?php
-
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
  * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-
 namespace Dompdf\Renderer;
 
 use Dompdf\Frame;
@@ -16,36 +14,28 @@ use Dompdf\Frame;
  *
  * @package dompdf
  */
-class TableRowGroup extends Block {
-	/**
-	 * @param Frame $frame
-	 */
-	public function render(Frame $frame): void {
-		$style = $frame->get_style();
+class TableRowGroup extends Block
+{
 
-		$this->_set_opacity($frame->get_opacity($style->opacity));
+    /**
+     * @param Frame $frame
+     */
+    function render(Frame $frame)
+    {
+        $style = $frame->get_style();
 
-		$this->_render_border($frame);
-		$this->_render_outline($frame);
+        $this->_set_opacity($frame->get_opacity($style->opacity));
 
-		if ($this->_dompdf->getOptions()->getDebugLayout() && $this->_dompdf->getOptions()->getDebugLayoutBlocks()) {
-			$this->_debug_layout($frame->get_border_box(), "red");
+        $border_box = $frame->get_border_box();
 
-			if ($this->_dompdf->getOptions()->getDebugLayoutPaddingBox()) {
-				$this->_debug_layout($frame->get_padding_box(), "red", [0.5, 0.5]);
-			}
-		}
+        $this->_render_border($frame, $border_box);
+        $this->_render_outline($frame, $border_box);
 
-		if ($this->_dompdf->getOptions()->getDebugLayout() && $this->_dompdf->getOptions()->getDebugLayoutLines() && $frame->get_decorator()) {
-			foreach ($frame->get_decorator()->get_line_boxes() as $line) {
-				$frame->_debug_layout([$line->x, $line->y, $line->w, $line->h], "orange");
-			}
-		}
+        $id = $frame->get_node()->getAttribute("id");
+        if (strlen($id) > 0) {
+            $this->_canvas->add_named_dest($id);
+        }
 
-		$id = $frame->get_node()->getAttribute("id");
-
-		if (strlen($id) > 0) {
-			$this->_canvas->add_named_dest($id);
-		}
-	}
+        $this->debugBlockLayout($frame, "red");
+    }
 }

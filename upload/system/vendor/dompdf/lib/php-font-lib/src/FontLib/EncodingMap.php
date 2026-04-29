@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package php-font-lib
  * @link    https://github.com/PhenX/php-font-lib
@@ -15,25 +14,24 @@ namespace FontLib;
  * @package php-font-lib
  */
 class EncodingMap {
-	private $f;
+  private $f;
 
-	public function __construct($file) {
-		$this->f = fopen($file, "r");
-	}
+  function __construct($file) {
+    $this->f = fopen($file, "r");
+  }
 
-	public function parse() {
-		$map = [];
+  function parse() {
+    $map = array();
 
-		while ($line = fgets($this->f)) {
-			if (preg_match('/^[\!\=]([0-9A-F]{2,})\s+U\+([0-9A-F]{2})([0-9A-F]{2})\s+([^\s]+)/', $line, $matches)) {
-				$unicode = (hexdec($matches[2]) << 8) + hexdec($matches[3]);
+    while ($line = fgets($this->f)) {
+      if (preg_match('/^[\!\=]([0-9A-F]{2,})\s+U\+([0-9A-F]{2})([0-9A-F]{2})\s+([^\s]+)/', $line, $matches)) {
+        $unicode = (hexdec($matches[2]) << 8) + hexdec($matches[3]);
+        $map[hexdec($matches[1])] = array($unicode, $matches[4]);
+      }
+    }
 
-				$map[hexdec($matches[1])] = [$unicode, $matches[4]];
-			}
-		}
+    ksort($map);
 
-		ksort($map);
-
-		return $map;
-	}
+    return $map;
+  }
 }

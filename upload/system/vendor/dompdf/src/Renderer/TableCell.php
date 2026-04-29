@@ -1,12 +1,10 @@
 <?php
-
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
  * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-
 namespace Dompdf\Renderer;
 
 use Dompdf\Frame;
@@ -17,171 +15,175 @@ use Dompdf\FrameDecorator\Table;
  *
  * @package dompdf
  */
-class TableCell extends Block {
-	/**
-	 * @param Frame $frame
-	 */
-	public function render(Frame $frame): void {
-		$style = $frame->get_style();
+class TableCell extends Block
+{
 
-		if (trim($frame->get_node()->nodeValue) === "" && $style->empty_cells === "hide") {
-			return;
-		}
+    /**
+     * @param Frame $frame
+     */
+    function render(Frame $frame)
+    {
+        $style = $frame->get_style();
 
-		$this->_set_opacity($frame->get_opacity($style->opacity));
+        if (trim($frame->get_node()->nodeValue) === "" && $style->empty_cells === "hide") {
+            return;
+        }
 
-		[$x, $y, $w, $h] = $frame->get_border_box();
+        $this->_set_opacity($frame->get_opacity($style->opacity));
 
-		// Draw our background, border and content
-		if (($bg = $style->background_color) !== "transparent") {
-			$this->_canvas->filled_rectangle($x, $y, (float)$w, (float)$h, $bg);
-		}
+        $border_box = $frame->get_border_box();
+        $table = Table::find_parent_table($frame);
 
-		if (($url = $style->background_image) && $url !== "none") {
-			$this->_background_image($url, $x, $y, $w, $h, $style);
-		}
+        if ($table->get_style()->border_collapse !== "collapse") {
+            $this->_render_background($frame, $border_box);
+            $this->_render_border($frame, $border_box);
+            $this->_render_outline($frame, $border_box);
+        } else {
+            // The collapsed case is slightly complicated...
 
-		$table = Table::find_parent_table($frame);
+            $cells = $table->get_cellmap()->get_spanned_cells($frame);
 
-		if ($table->get_style()->border_collapse !== "collapse") {
-			$this->_render_border($frame);
-			$this->_render_outline($frame);
-			return;
-		}
+            if (is_null($cells)) {
+                return;
+            }
 
-		// The collapsed case is slightly complicated...
-		$cellmap = $table->get_cellmap();
-		$cells = $cellmap->get_spanned_cells($frame);
+            // Render the background to the padding box, as the cells are
+            // rendered individually one after another, and we don't want the
+            // background to overlap an adjacent border
+            $padding_box = $frame->get_padding_box();
 
-		if (is_null($cells)) {
-			return;
-		}
+            $this->_render_background($frame, $padding_box);
+            $this->_render_collapsed_border($frame, $table);
 
-		$num_rows = $cellmap->get_num_rows();
-		$num_cols = $cellmap->get_num_cols();
+            // FIXME: Outline should be drawn over other cells
+            $this->_render_outline($frame, $border_box);
+        }
 
-		// Determine the top row spanned by this cell
-		$i = $cells["rows"][0];
-		$top_row = $cellmap->get_row($i);
+        $id = $frame->get_node()->getAttribute("id");
+        if (strlen($id) > 0) {
+            $this->_canvas->add_named_dest($id);
+        }
 
-		// Determine if this cell borders on the bottom of the table.  If so,
-		// then we draw its bottom border. Otherwise the next row down will
-		// draw its top border instead.
+        // $this->debugBlockLayout($frame, "red", false);
+    }
 
-		if (in_array($num_rows - 1, $cells["rows"])) {
-			$draw_bottom = true;
-			$bottom_row = $cellmap->get_row($num_rows - 1);
-		} else {
-			$draw_bottom = false;
-		}
+    /**
+     * @param Frame $frame
+     * @param Table $table
+     */
+    protected function _render_collapsed_border(Frame $frame, Table $table): void
+    {
+        $cellmap = $table->get_cellmap();
+        $cells = $cellmap->get_spanned_cells($frame);
+        $num_rows = $cellmap->get_num_rows();
+        $num_cols = $cellmap->get_num_cols();
 
-		// Draw the horizontal borders
-		foreach ($cells["columns"] as $j) {
-			$bp = $cellmap->get_border_properties($i, $j);
+        [$table_x, $table_y] = $table->get_position();
 
-			$y = $top_row["y"] - $bp["top"]["width"] / 2;
+        // Determine the top row spanned by this cell
+        $i = $cells["rows"][0];
+        $top_row = $cellmap->get_row($i);
 
-			$col = $cellmap->get_column($j);
-			$x = $col["x"] - $bp["left"]["width"] / 2;
-			$w = $col["used-width"] + ($bp["left"]["width"] + $bp["right"]["width"]) / 2;
+        // Determine if this cell borders on the bottom of the table.  If so,
+        // then we draw its bottom border.  Otherwise the next row down will
+        // draw its top border instead.
+        if (in_array($num_rows - 1, $cells["rows"])) {
+            $draw_bottom = true;
+            $bottom_row = $cellmap->get_row($num_rows - 1);
+        } else {
+            $draw_bottom = false;
+        }
 
-			if ($bp["top"]["style"] !== "none" && $bp["top"]["width"] > 0) {
-				$widths = [
-					(float)$bp["top"]["width"],
-					(float)$bp["right"]["width"],
-					(float)$bp["bottom"]["width"],
-					(float)$bp["left"]["width"],
-				];
+        // Draw the horizontal borders
+        foreach ($cells["columns"] as $j) {
+            $bp = $cellmap->get_border_properties($i, $j);
+            $col = $cellmap->get_column($j);
 
-				$method = "_border_" . $bp["top"]["style"];
+            $x = $table_x + $col["x"] - $bp["left"]["width"] / 2;
+            $y = $table_y + $top_row["y"] - $bp["top"]["width"] / 2;
+            $w = $col["used-width"] + ($bp["left"]["width"] + $bp["right"]["width"]) / 2;
 
-				$this->$method($x, $y, $w, $bp["top"]["color"], $widths, "top", "square");
-			}
+            if ($bp["top"]["width"] > 0) {
+                $widths = [
+                    (float)$bp["top"]["width"],
+                    (float)$bp["right"]["width"],
+                    (float)$bp["bottom"]["width"],
+                    (float)$bp["left"]["width"]
+                ];
 
-			if ($draw_bottom) {
-				$bp = $cellmap->get_border_properties($num_rows - 1, $j);
+                $method = "_border_" . $bp["top"]["style"];
+                $this->$method($x, $y, $w, $bp["top"]["color"], $widths, "top", "square");
+            }
 
-				if ($bp["bottom"]["style"] === "none" || $bp["bottom"]["width"] <= 0) {
-					continue;
-				}
+            if ($draw_bottom) {
+                $bp = $cellmap->get_border_properties($num_rows - 1, $j);
+                if ($bp["bottom"]["width"] <= 0) {
+                    continue;
+                }
+                
+                $widths = [
+                    (float)$bp["top"]["width"],
+                    (float)$bp["right"]["width"],
+                    (float)$bp["bottom"]["width"],
+                    (float)$bp["left"]["width"]
+                ];
 
-				$y = $bottom_row["y"] + $bottom_row["height"] + $bp["bottom"]["width"] / 2;
+                $y = $table_y + $bottom_row["y"] + $bottom_row["height"] + $bp["bottom"]["width"] / 2;
 
-				$widths = [
-					(float)$bp["top"]["width"],
-					(float)$bp["right"]["width"],
-					(float)$bp["bottom"]["width"],
-					(float)$bp["left"]["width"],
-				];
+                $method = "_border_" . $bp["bottom"]["style"];
+                $this->$method($x, $y, $w, $bp["bottom"]["color"], $widths, "bottom", "square");
+            }
+        }
 
-				$method = "_border_" . $bp["bottom"]["style"];
+        $j = $cells["columns"][0];
+        $left_col = $cellmap->get_column($j);
 
-				$this->$method($x, $y, $w, $bp["bottom"]["color"], $widths, "bottom", "square");
+        if (in_array($num_cols - 1, $cells["columns"])) {
+            $draw_right = true;
+            $right_col = $cellmap->get_column($num_cols - 1);
+        } else {
+            $draw_right = false;
+        }
 
-			}
-		}
+        // Draw the vertical borders
+        foreach ($cells["rows"] as $i) {
+            $bp = $cellmap->get_border_properties($i, $j);
+            $row = $cellmap->get_row($i);
 
-		$j = $cells["columns"][0];
+            $x = $table_x + $left_col["x"] - $bp["left"]["width"] / 2;
+            $y = $table_y + $row["y"] - $bp["top"]["width"] / 2;
+            $h = $row["height"] + ($bp["top"]["width"] + $bp["bottom"]["width"]) / 2;
 
-		$left_col = $cellmap->get_column($j);
+            if ($bp["left"]["width"] > 0) {
+                $widths = [
+                    (float)$bp["top"]["width"],
+                    (float)$bp["right"]["width"],
+                    (float)$bp["bottom"]["width"],
+                    (float)$bp["left"]["width"]
+                ];
 
-		if (in_array($num_cols - 1, $cells["columns"])) {
-			$draw_right = true;
-			$right_col = $cellmap->get_column($num_cols - 1);
-		} else {
-			$draw_right = false;
-		}
+                $method = "_border_" . $bp["left"]["style"];
+                $this->$method($x, $y, $h, $bp["left"]["color"], $widths, "left", "square");
+            }
 
-		// Draw the vertical borders
-		foreach ($cells["rows"] as $i) {
-			$bp = $cellmap->get_border_properties($i, $j);
+            if ($draw_right) {
+                $bp = $cellmap->get_border_properties($i, $num_cols - 1);
+                if ($bp["right"]["width"] <= 0) {
+                    continue;
+                }
 
-			$x = $left_col["x"] - $bp["left"]["width"] / 2;
+                $widths = [
+                    (float)$bp["top"]["width"],
+                    (float)$bp["right"]["width"],
+                    (float)$bp["bottom"]["width"],
+                    (float)$bp["left"]["width"]
+                ];
 
-			$row = $cellmap->get_row($i);
+                $x = $table_x + $right_col["x"] + $right_col["used-width"] + $bp["right"]["width"] / 2;
 
-			$y = $row["y"] - $bp["top"]["width"] / 2;
-			$h = $row["height"] + ($bp["top"]["width"] + $bp["bottom"]["width"]) / 2;
-
-			if ($bp["left"]["style"] !== "none" && $bp["left"]["width"] > 0) {
-				$widths = [
-					(float)$bp["top"]["width"],
-					(float)$bp["right"]["width"],
-					(float)$bp["bottom"]["width"],
-					(float)$bp["left"]["width"],
-				];
-
-				$method = "_border_" . $bp["left"]["style"];
-
-				$this->$method($x, $y, $h, $bp["left"]["color"], $widths, "left", "square");
-			}
-
-			if ($draw_right) {
-				$bp = $cellmap->get_border_properties($i, $num_cols - 1);
-
-				if ($bp["right"]["style"] === "none" || $bp["right"]["width"] <= 0) {
-					continue;
-				}
-
-				$x = $right_col["x"] + $right_col["used-width"] + $bp["right"]["width"] / 2;
-
-				$widths = [
-					(float)$bp["top"]["width"],
-					(float)$bp["right"]["width"],
-					(float)$bp["bottom"]["width"],
-					(float)$bp["left"]["width"],
-				];
-
-				$method = "_border_" . $bp["right"]["style"];
-
-				$this->$method($x, $y, $h, $bp["right"]["color"], $widths, "right", "square");
-			}
-		}
-
-		$id = $frame->get_node()->getAttribute("id");
-
-		if (strlen($id) > 0) {
-			$this->_canvas->add_named_dest($id);
-		}
-	}
+                $method = "_border_" . $bp["right"]["style"];
+                $this->$method($x, $y, $h, $bp["right"]["color"], $widths, "right", "square");
+            }
+        }
+    }
 }
