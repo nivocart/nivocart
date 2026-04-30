@@ -20,6 +20,16 @@ class ModelAccountRecurring extends Model {
 		}
 	}
 
+	public function getProfileId(int $order_id): int {
+		$query = $this->db->query("SELECT profile_id FROM `" . DB_PREFIX . "order_recurring` WHERE profile_reference = '" . $this->db->escape((int)$order_id) . "'");
+
+		if ($query->row) {
+			return $query->row;
+		} else {
+			return 0;
+		}
+	}
+
 	public function getProfileByRef(string $profile_reference) {
 		$profile = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_recurring` WHERE profile_reference = '" . $this->db->escape((string)$profile_reference) . "' LIMIT 0,1");
 

@@ -24,6 +24,7 @@ class ControllerAccountOrder extends Controller {
 
 		$this->language->load('account/order');
 
+		$this->load->model('account/recurring');
 		$this->load->model('account/order');
 
 		if (isset($this->request->get['order_id'])) {
@@ -31,6 +32,7 @@ class ControllerAccountOrder extends Controller {
 
 			if ($order_info) {
 				$order_products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+				$profile_id = $this->model_account_recurring->getProfileId($this->request->get['order_id']);
 
 				foreach ($order_products as $order_product) {
 					$option_data = [];
@@ -52,7 +54,7 @@ class ControllerAccountOrder extends Controller {
 					$this->session->data['success'] = sprintf($this->language->get('text_success'), $this->request->get['order_id']);
 
 					// $this->cart->add($product_id, $profile_id, $quantity, $option);
-					$this->cart->add($order_product['product_id'], 0, $order_product['quantity'], $option_data);
+					$this->cart->add($order_product['product_id'], (int)$profile_id, $order_product['quantity'], $option_data);
 				}
 
 				$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
