@@ -86,6 +86,7 @@ class ControllerCommonFooter extends Controller {
 		if ($footer_theme === 'custom') {
 			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/footer/footer-custom.css');
 
+			// Forces the use of footer_dark for better contrast with lighter skins
 			if ($mod_color === 'white-skin' || $mod_color === 'beige-skin' || $mod_color === 'ash-skin' || $mod_color === 'silver-skin' || $mod_color === 'citrus-skin' || $mod_color === 'yellow-skin' || $mod_color === 'mist-skin' || $mod_color === 'clear-skin') {
 				$footer_class = 'footer-dark';
 			} else {

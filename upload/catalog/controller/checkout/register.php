@@ -188,8 +188,8 @@ class ControllerCheckoutRegister extends Controller {
 			}
 
 			if ($this->config->get('config_customer_dob')) {
-				if (isset($this->request->post['date_of_birth']) && (utf8_strlen($this->request->post['date_of_birth']) === 10)) {
-					if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
+				if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') === 10)) {
+					if ($this->request->post['date_of_birth'] !== date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 						$json['error']['date_of_birth'] = $this->language->get('error_date_of_birth');
 					}
 				} else {
@@ -241,7 +241,7 @@ class ControllerCheckoutRegister extends Controller {
 				if ($customer_group && $customer_group['tax_id_display']) {
 					$this->load->helper('vat');
 
-					if ($this->config->get('config_vat') && ($this->request->post['tax_id'] != '') && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
+					if ($this->config->get('config_vat') && ($this->request->post['tax_id'] !== '') && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
 						$json['error']['tax_id'] = $this->language->get('error_vat');
 					}
 				}

@@ -62,15 +62,16 @@ class ControllerFeedRSSFeed extends Controller {
 					if ($show_price) {
 						if ($include_tax) {
 							if ((float)$product['special']) {
-								$price = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id']), $currency, false, true);
+								// $tax = $this->tax->calculate($value, $tax_class_id, $calculate = true);
+								$price = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id']), $currency);
 							} else {
-								$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id']), $currency, false, true);
+								$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id']), $currency);
 							}
 						} else {
 							if ((float)$product['special']) {
-								$price = $this->currency->format($product['special'], $currency, false, true);
+								$price = $this->currency->format($product['special'], $currency);
 							} else {
-								$price = $this->currency->format($product['price'], $currency, false, true);
+								$price = $this->currency->format($product['price'], $currency);
 							}
 						}
 

@@ -18,7 +18,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$products = $this->model_catalog_product->getProducts();
 
 			foreach ($products as $product) {
-				$date_modified = ($product['date_modified'] != '0000-00-00 00:00:00') ? $product['date_modified'] : $product['date_added'];
+				$date_modified = ($product['date_modified'] !== '0000-00-00 00:00:00') ? $product['date_modified'] : $product['date_added'];
 
 				$output .= '<url>';
 				$output .= '<loc>' . $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL') . '</loc>';

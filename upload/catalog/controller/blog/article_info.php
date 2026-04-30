@@ -169,7 +169,7 @@ class ControllerBlogArticleInfo extends Controller {
 
 						$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-						if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+						if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 							$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 							if ($customer_age >= $product_info['age_minimum']) {

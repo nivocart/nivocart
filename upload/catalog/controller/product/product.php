@@ -1099,14 +1099,14 @@ class ControllerProductProduct extends Controller {
 
 			foreach ($profile_info as $result) {
 				if ($result['trial_status'] === 1) {
-					$price = $this->currency->format($this->tax->calculate($result['trial_price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+					$price = $this->currency->format($this->tax->calculate(($result['trial_price'] * $quantity), $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 					$trial_text = sprintf($this->language->get('text_trial_description'), $price, $result['trial_cycle'], $frequencies[$result['trial_frequency']], $result['trial_duration']) . ' ';
 				} else {
 					$trial_text = '';
 				}
 
-				$price = $this->currency->format($this->tax->calculate($result['price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+				$price = $this->currency->format($this->tax->calculate(($result['price'] * $quantity), $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 				if ($result['duration']) {
 					$text = $trial_text . sprintf($this->language->get('text_payment_description'), $price, $result['cycle'], $frequencies[$result['frequency']], $result['duration']);
@@ -1142,7 +1142,7 @@ class ControllerProductProduct extends Controller {
 				$json['error'] = $this->language->get('error_rating');
 			}
 
-			if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
+			if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
 				$json['error'] = $this->language->get('error_captcha');
 			}
 
@@ -1204,7 +1204,7 @@ class ControllerProductProduct extends Controller {
 				$json['error'] = $this->language->get('error_filetype');
 			}
 
-			if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
+			if ($this->request->files['file']['error'] !== UPLOAD_ERR_OK) {
 				$json['error'] = $this->language->get('error_upload_' . $this->request->files['file']['error']);
 			}
 
@@ -1213,7 +1213,7 @@ class ControllerProductProduct extends Controller {
 		}
 
 		if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-			$file = basename($filename) . '.' . mb_substr(md5(uniqid(rand(), true)), 0, 10, 'UTF-8');
+			$file = basename($filename) . '.' . substr(md5(mt_rand()), 0, 10);
 
 			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_UPLOAD . $file);
 

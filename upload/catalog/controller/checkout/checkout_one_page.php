@@ -234,13 +234,13 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->data['reward_point'] = false;
 		}
 
-		if ($this->config->get('config_one_page_point') == 2) {
+		if ($this->config->get('config_one_page_point') === 2) {
 			$this->data['show_point'] = false;
 
 			if ($points && $this->config->get('reward_status')) {
 				$this->session->data['reward'] = $reward_points;
 			}
-		} elseif ($this->config->get('config_one_page_point') == 1) {
+		} elseif ($this->config->get('config_one_page_point') === 1) {
 			$this->data['show_point'] = true;
 		} else {
 			$this->data['show_point'] = false;
@@ -291,18 +291,14 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		$this->load->model('localisation/zone');
 
 		// Insert order
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$customer_info = $this->request->post;
 
 			if (!$this->customer->isLogged()) {
 				$this->load->model('account/customer');
 				$this->load->model('checkout/checkout_tools');
 
-				if ($this->config->get('config_one_page_newsletter') == 1) {
-					$newsletter = 1;
-				} else {
-					$newsletter = 0;
-				}
+				$newsletter = ($this->config->get('config_one_page_newsletter') === 1) ? 1 : 0;
 
 				$customer_data = [];
 
@@ -375,7 +371,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			}
 
 			// Get country name
-			$country_name_array = $this->model_localisation_country->getCountry($customer_info['country_id']);
+			$country_name_array = $this->model_localisation_country->getCountry((int)$customer_info['country_id']);
 
 			if ($country_name_array) {
 				$country_name = $country_name_array['name'];
@@ -384,7 +380,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			}
 
 			// Get zone name
-			$zone_name_array = $this->model_localisation_zone->getZone($customer_info['zone_id']);
+			$zone_name_array = $this->model_localisation_zone->getZone((int)$customer_info['zone_id']);
 
 			if ($zone_name_array) {
 				$zone_name = $zone_name_array['name'];
@@ -625,7 +621,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			if ($data['store_id']) {
 				$data['store_url'] = $this->config->get('config_url');
 			} else {
-				$data['store_url'] = HTTP_SERVER;
+				$data['store_url'] = $this->request->server['HTTPS'] ? HTTPS_SERVER : HTTP_SERVER;
 			}
 
 			$data['language_id'] = $this->config->get('config_language_id');
@@ -818,7 +814,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		// Shipping options
-		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST')) {
 			$this->data['check_shipping_address'] = isset($this->request->post['check_shipping_address']) ? 1 : 0;
 		} elseif (isset($this->session->data['check_shipping_address'])) {
 			$this->data['check_shipping_address'] = $this->session->data['check_shipping_address'];
@@ -1294,7 +1290,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 					if ($method) {
 						if ($cart_has_recurring > 0) {
 							if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments')) {
-								if ($this->{'model_payment_' . $result['code']}->recurringPayments() == true) {
+								if ($this->{'model_payment_' . $result['code']}->recurringPayments() === true) {
 									$method_data[$result['code']] = $method;
 								}
 							}
@@ -1463,8 +1459,8 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		if ($this->config->get('config_customer_dob')) {
-			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
-				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
+			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') === 10)) {
+				if ($this->request->post['date_of_birth'] !== date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
 			} else {
@@ -1516,17 +1512,17 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			if ($customer_group && $customer_group['tax_id_display']) {
 				$this->load->helper('vat');
 
-				if ($this->config->get('config_vat') && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+				if ($this->config->get('config_vat') && $this->request->post['tax_id'] !== '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
 					$this->error['tax_id'] = $this->language->get('error_vat');
 				}
 			}
 		}
 
-		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '') {
+		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '') {
 			$this->error['country'] = $this->language->get('error_country');
 		}
 
-		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
+		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '') {
 			$this->error['zone'] = $this->language->get('error_zone');
 		}
 
@@ -1547,7 +1543,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				$this->error['shipping_city'] = $this->language->get('error_city');
 			}
 
-			if ($this->request->post['shipping_country_id'] == '') {
+			if ($this->request->post['shipping_country_id'] === '') {
 				$this->error['shipping_country'] = $this->language->get('error_country');
 			}
 

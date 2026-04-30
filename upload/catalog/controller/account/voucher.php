@@ -265,11 +265,8 @@ class ControllerAccountVoucher extends Controller {
 		}
 
 		// system/library/currency: $currency = $this->currency->convert($value, $from, $to);
-		if (($this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency')) < $this->config->get('config_voucher_min'))
-			|| ($this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency')) > $this->config->get('config_voucher_max'))) {
-				$this->error['amount'] = sprintf($this->language->get('error_amount'), 
-				$this->currency->format($this->config->get('config_voucher_min'), $this->config->get('config_currency')), 
-				$this->currency->format($this->config->get('config_voucher_max'), $this->config->get('config_currency')) . ' ' . $this->currency->getCode());
+		if (($this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency')) < $this->config->get('config_voucher_min')) || ($this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency')) > $this->config->get('config_voucher_max'))) {
+				$this->error['amount'] = sprintf($this->language->get('error_amount'), $this->currency->format($this->config->get('config_voucher_min'), false, 1), $this->currency->format($this->config->get('config_voucher_max'), false, 1) . ' ' . $this->currency->getCode());
 		}
 
 		if (!isset($this->request->post['agree'])) {

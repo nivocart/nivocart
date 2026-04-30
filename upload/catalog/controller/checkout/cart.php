@@ -474,11 +474,7 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			// Free Cart - Hides Coupon/Vouchers/Reward/Shipping options
-			if ($this->cart->getSubTotal() > 0) {
-				$this->data['free_cart'] = false;
-			} else {
-				$this->data['free_cart'] = true;
-			}
+			$this->data['free_cart'] = ($this->cart->getSubTotal() > 0) ? false : true;
 
 			if (isset($this->request->post['next'])) {
 				$this->data['next'] = $this->request->post['next'];

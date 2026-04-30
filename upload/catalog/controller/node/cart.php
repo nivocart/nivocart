@@ -112,7 +112,7 @@ class ControllerNodeCart extends Controller {
 			$option_data = [];
 
 			foreach ($product['option'] as $option) {
-				if ($option['type'] != 'file') {
+				if ($option['type'] !== 'file') {
 					$value = $option['option_value'];
 				} else {
 					$filename = $this->encryption->decrypt($option['option_value']);

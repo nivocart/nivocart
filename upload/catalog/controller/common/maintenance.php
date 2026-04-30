@@ -24,7 +24,7 @@ class ControllerCommonMaintenance extends Controller {
 
 			$this->user = new User($this->registry);
 
-			if (($route != 'payment') && !$this->user->isLogged()) {
+			if (($route !== 'payment') && !$this->user->isLogged()) {
 				return $this->forward('common/maintenance/info');
 			}
 		}
@@ -53,7 +53,7 @@ class ControllerCommonMaintenance extends Controller {
 			'common/header'
 		];
 
-		if ($this->request->server['SERVER_PROTOCOL'] == 'HTTP/1.1') {
+		if ($this->request->server['SERVER_PROTOCOL'] === 'HTTP/1.1') {
 			$this->response->addHeader('HTTP/1.1 503 Service Unavailable');
 		} else {
 			$this->response->addHeader('HTTP/1.0 503 Service Unavailable');

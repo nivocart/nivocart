@@ -275,7 +275,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			// Display prices & totals
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-				$total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'], $this->config->get('config_currency'));
+				$total = $this->currency->format($this->tax->calculate(($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']), $this->config->get('config_currency'));
 			} else {
 				$price = false;
 				$total = false;
@@ -293,12 +293,12 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 				];
 
 				if ($product['recurring_trial']) {
-					$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+					$recurring_price = $this->currency->format($this->tax->calculate(($product['recurring_trial_price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 					$profile_description = sprintf($this->language->get('text_trial_description'), $recurring_price, $product['recurring_trial_cycle'], $frequencies[$product['recurring_trial_frequency']], $product['recurring_trial_duration']) . ' ';
 				}
 
-				$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+				$recurring_price = $this->currency->format($this->tax->calculate(($product['recurring_price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 
 				if ($product['recurring_duration']) {
 					$profile_description .= sprintf($this->language->get('text_payment_description'), $recurring_price, $product['recurring_cycle'], $frequencies[$product['recurring_frequency']], $product['recurring_duration']);
@@ -320,7 +320,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 
 					$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-					if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+					if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 						$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 						if ($customer_age >= $product['age_minimum']) {

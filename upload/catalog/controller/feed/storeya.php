@@ -8,12 +8,21 @@ class ControllerFeedStoreya extends Controller {
 	/** Error array Placeholder */
 
 	public function index() {
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			$base = HTTPS_SERVER;
+		} else {
+			$base = HTTP_SERVER;
+		}
+
 		$output = '<?xml version="1.0" encoding="UTF-8" ?>' . "\n";
 		$output .= '<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">' . "\n";
 		$output .= '<channel>'. "\n";
 		$output .= '<title>' . $this->config->get('config_name') . '</title>' . "\n";
 		$output .= '<description>' . $this->config->get('config_meta_description') . '</description>' . "\n";
-		$output .= '<link>' . HTTP_SERVER . '</link>' . "\n";
+		$output .= '<link>' . $base . '</link>' . "\n";
 		$output .= '<storeya_plugin_version> 2.2 </storeya_plugin_version>' . "\n";
 		$output .= '<img src="http://www.storeya.com/Widgets/Admin?p=OpenCartFeed"/>'. "\n";
 
@@ -42,7 +51,7 @@ class ControllerFeedStoreya extends Controller {
 		if (isset($this->request->get['language']) && ($this->request->get['language'] !== $this->session->data['language'])) {
 			$this->session->data['language'] = $this->request->get['language'];
 			$this->redirect($_SERVER['REQUEST_URI']);
-		} elseif (($this->config->get('language') != $this->session->data['language']) && !isset($this->request->get['language'])) {
+		} elseif (($this->config->get('language') !== $this->session->data['language']) && !isset($this->request->get['language'])) {
 			$this->session->data['language'] = $this->config->get('language');
 			$this->redirect($_SERVER['REQUEST_URI']);
 		}
