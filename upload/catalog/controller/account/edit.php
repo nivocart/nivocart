@@ -150,6 +150,7 @@ class ControllerAccountEdit extends Controller {
 		$this->data['action'] = $this->url->link('account/edit', 'customer_token=' . $this->session->data['customer_token'], 'SSL');
 
 		$this->data['close_account'] = $this->url->link('account/delete', '', 'SSL');
+		// Redirects to Personal page to View, Download(pdf) and Print GDPR data
 		$this->data['customer_data'] = $this->url->link('account/edit/personal', '', 'SSL');
 
 		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
@@ -269,6 +270,14 @@ class ControllerAccountEdit extends Controller {
 		return empty($this->error);
 	}
 
+	/**
+	 * Function personal
+	 *
+	 * Standalone page to View, Download(pdf) and Print GDPR data.
+	 * Uses Dompdf. Strict urls and inline CSS are required.
+	 * 
+	 * Calls -> account_data.tpl
+	 */
 	public function personal() {
 		$this->language->load('account/edit');
 
@@ -278,11 +287,9 @@ class ControllerAccountEdit extends Controller {
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
 			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
-			$this->data['base'] = HTTPS_SERVER;
 			$image_base = HTTPS_IMAGE;
 			$catalog_base = HTTPS_SERVER . '/catalog/';
 		} else {
-			$this->data['base'] = HTTP_SERVER;
 			$image_base = HTTP_IMAGE;
 			$catalog_base = HTTP_SERVER . '/catalog/';
 		}
@@ -321,7 +328,7 @@ class ControllerAccountEdit extends Controller {
 		$this->load->model('account/address');
 		$this->load->model('setting/setting');
 
-		// Check PDF
+		// Check if pdf has been selected
 		$pdf = (isset($this->request->get['pdf'])) ? true : false;
 
 		// Get Store Logo
@@ -335,7 +342,7 @@ class ControllerAccountEdit extends Controller {
 			$this->data['logo'] = '';
 		}
 
-		// Get Customer's data
+		// Build Customer's data
 		$customer_id = $this->customer->getId();
 
 		$this->data['customers'] = [];
@@ -450,7 +457,7 @@ class ControllerAccountEdit extends Controller {
 			}
 		}
 
-		// Theme
+		// Get Theme
 		$this->data['template'] = $this->config->get('config_template');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/account_data.tpl')) {
@@ -459,7 +466,7 @@ class ControllerAccountEdit extends Controller {
 			$this->template = 'default/template/account/account_data.tpl';
 		}
 
-		// Dompdf
+		// Dompdf or View/Print output
 		if ($pdf) {
 			$this->data['image_base'] = DIR_IMAGE;
 			$this->data['catalog_base'] = DIR_APPLICATION;

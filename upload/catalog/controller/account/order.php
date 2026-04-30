@@ -124,7 +124,7 @@ class ControllerAccountOrder extends Controller {
 				'status'     => $result['status'],
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'products'   => ($product_total + $voucher_total),
-				'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value'], true),
+				'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
 				'picklist'   => $this->url->link('account/order/picklist', 'order_id=' . $result['order_id'], 'SSL'),
 				'href'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
 				'download'   => $this->url->link('account/order/download', 'order_id=' . $result['order_id'], 'SSL'),
@@ -168,6 +168,9 @@ class ControllerAccountOrder extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	/**
+	 * Function picklist
+	 */
 	public function picklist() {
 		$this->language->load('account/order');
 
@@ -258,8 +261,8 @@ class ControllerAccountOrder extends Controller {
 					'model'       => $product['model'],
 					'option'      => $option_data,
 					'quantity'    => $product['quantity'],
-					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value'], true),
-					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], true),
+					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'return'      => $this->url->link('account/return/insert', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
 					'picked'      => $product['picked'],
 					'backordered' => $product['backordered']
@@ -354,6 +357,9 @@ class ControllerAccountOrder extends Controller {
 		}
 	}
 
+	/**
+	 * Function info
+	 */
 	public function info() {
 		if (isset($this->request->get['order_id'])) {
 			$order_id = $this->request->get['order_id'];
@@ -496,7 +502,6 @@ class ControllerAccountOrder extends Controller {
 			];
 
 			$this->data['payment_address'] = str_replace(["\r\n", "\r", "\n"], '<br />', preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />', trim(str_replace($find, $replace, $format))));
-
 			$this->data['payment_method'] = $order_info['payment_method'];
 
 			if ($order_info['shipping_address_format']) {
@@ -532,7 +537,6 @@ class ControllerAccountOrder extends Controller {
 			];
 
 			$this->data['shipping_address'] = str_replace(["\r\n", "\r", "\n"], '<br />', preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />', trim(str_replace($find, $replace, $format))));
-
 			$this->data['shipping_method'] = $order_info['shipping_method'];
 
 			$this->data['products'] = [];
@@ -545,7 +549,7 @@ class ControllerAccountOrder extends Controller {
 				$options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
 
 				foreach ($options as $option) {
-					if ($option['type'] != 'file') {
+					if ($option['type'] !== 'file') {
 						$value = $option['value'];
 					} else {
 						$value = substr($option['value'], 0, strrpos($option['value'], '.'));
@@ -562,10 +566,10 @@ class ControllerAccountOrder extends Controller {
 					'model'       => $product['model'],
 					'option'      => $option_data,
 					'quantity'    => $product['quantity'],
-					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value'], true),
-					'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], true),
+					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'tax_percent' => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], true),
+					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'return'      => $this->url->link('account/return/insert', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL')
 				];
 			}
@@ -580,14 +584,17 @@ class ControllerAccountOrder extends Controller {
 			foreach ($vouchers as $voucher) {
 				$this->data['vouchers'][] = [
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value'], true)
+					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value'])
 				];
 			}
 
+			// Totals
 			$this->data['totals'] = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
 
+			// Comment
 			$this->data['comment'] = nl2br($order_info['comment']);
 
+			// History
 			$this->data['histories'] = [];
 
 			$results = $this->model_account_order->getOrderHistories($this->request->get['order_id']);
@@ -686,6 +693,14 @@ class ControllerAccountOrder extends Controller {
 		}
 	}
 
+	/**
+	 * Function personal
+	 *
+	 * Standalone page to View, Download(pdf) and Pick data.
+	 * Uses Dompdf. Strict urls and inline CSS are required.
+	 * 
+	 * Calls -> order_download.tpl
+	 */
 	public function download() {
 		$this->language->load('account/order');
 
@@ -695,9 +710,11 @@ class ControllerAccountOrder extends Controller {
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
 			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
-			$this->data['base'] = HTTPS_SERVER;
+			$image_base = HTTPS_IMAGE;
+			$catalog_base = HTTPS_SERVER . '/catalog/';
 		} else {
-			$this->data['base'] = HTTP_SERVER;
+			$image_base = HTTP_IMAGE;
+			$catalog_base = HTTP_SERVER . '/catalog/';
 		}
 
 		$this->data['direction'] = $this->language->get('direction');
@@ -739,6 +756,7 @@ class ControllerAccountOrder extends Controller {
 		$this->load->model('account/order');
 		$this->load->model('setting/setting');
 
+		// Check if pdf has been selected
 		$pdf = (isset($this->request->get['pdf'])) ? true : false;
 
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
@@ -766,12 +784,10 @@ class ControllerAccountOrder extends Controller {
 				$this->data['store_address'] = nl2br($store_info['config_address']);
 				$this->data['store_email'] = $store_info['config_email'];
 				$this->data['store_telephone'] = $store_info['config_telephone'];
-				$this->data['store_fax'] = $store_info['config_fax'];
 			} else {
 				$this->data['store_address'] = nl2br($this->config->get('config_address'));
 				$this->data['store_email'] = $this->config->get('config_email');
 				$this->data['store_telephone'] = $this->config->get('config_telephone');
-				$this->data['store_fax'] = $this->config->get('config_fax');
 			}
 
 			$this->data['store_name'] = $order_info['store_name'];
@@ -834,11 +850,10 @@ class ControllerAccountOrder extends Controller {
 			];
 
 			$this->data['payment_address'] = str_replace(["\r\n", "\r", "\n"], '<br />', preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />', trim(str_replace($find, $replace, $format))));
+			$this->data['payment_method'] = $order_info['payment_method'];
 
 			$this->data['email'] = $order_info['email'];
 			$this->data['telephone'] = $order_info['telephone'];
-
-			$this->data['payment_method'] = $order_info['payment_method'];
 
 			if ($order_info['shipping_address_format']) {
 				$format = $order_info['shipping_address_format'];
@@ -873,12 +888,12 @@ class ControllerAccountOrder extends Controller {
 			];
 
 			$this->data['shipping_address'] = str_replace(["\r\n", "\r", "\n"], '<br />', preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />', trim(str_replace($find, $replace, $format))));
-
 			$this->data['shipping_method'] = $order_info['shipping_method'];
 
 			$this->data['payment_company'] = ($order_info['payment_company']) ? $order_info['payment_company'] : false;
 			$this->data['payment_company_id'] = ($order_info['payment_company_id']) ? $order_info['payment_company_id'] : false;
 
+			// Build order products
 			$this->data['products'] = [];
 
 			$products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
@@ -906,10 +921,10 @@ class ControllerAccountOrder extends Controller {
 					'model'       => $product['model'],
 					'option'      => $option_data,
 					'quantity'    => $product['quantity'],
-					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value'], true),
-					'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], true),
+					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'tax_percent' => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'], true)
+					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
 				];
 			}
 
@@ -921,14 +936,15 @@ class ControllerAccountOrder extends Controller {
 			foreach ($vouchers as $voucher) {
 				$this->data['vouchers'][] = [
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value'], true)
+					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value'])
 				];
 			}
 
+			// Totals
 			$this->data['totals'] = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
 		}
 
-		// Theme
+		// Get Theme
 		$this->data['template'] = $this->config->get('config_template');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_download.tpl')) {
@@ -937,14 +953,20 @@ class ControllerAccountOrder extends Controller {
 			$this->template = 'default/template/account/order_download.tpl';
 		}
 
-		// Dompdf
+		// Dompdf or View/Print output
 		if ($pdf) {
+			$this->data['image_base'] = DIR_IMAGE;
+			$this->data['catalog_base'] = DIR_APPLICATION;
+
 			$document_type = $this->language->get('text_order_invoice');
 
 			$document = str_replace(' ', '-', $document_type);
 
 			$this->response->setOutput(pdf($this->render(), $document, $order_id));
 		} else {
+			$this->data['image_base'] = $image_base;
+			$this->data['catalog_base'] = $catalog_base;
+
 			$this->response->setOutput($this->render());
 		}
 	}
