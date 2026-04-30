@@ -157,31 +157,16 @@
             <?php } ?>
           <?php } ?>
         <?php } ?>
-        <?php if ($one_page_fax) { ?>
-          <?php if (isset($this->session->data['order_id'])) { ?>
-            <tr>
-              <td colspan="2"><?php echo $entry_fax; ?>: <b><?php echo $fax; ?></b>
-                <input type="hidden" name="fax" value="<?php echo $fax; ?>" />
-              </td>
-            </tr>
-          <?php } else { ?>
-            <tr>
-              <td colspan="2"><label for="fax" class="hidden">fax</label>
-                <input type="text" name="fax" id="fax" placeholder="<?php echo $entry_fax; ?>" value="<?php echo $fax; ?>" size="26" />
-              </td>
-            </tr>
-          <?php } ?>
-        <?php } ?>
         <?php if ($one_page_gender) { ?>
           <?php if (isset($this->session->data['order_id'])) { ?>
             <tr>
-              <td colspan="2"><?php echo $entry_gender; ?>: <b><?php echo ($gender == 0) ? $text_male : $text_female; ?></b>
+              <td colspan="2"><?php echo $entry_gender; ?>: <b><?php echo ($gender === 0) ? $text_male : $text_female; ?></b>
                 <input type="hidden" name="gender" value="<?php echo $gender; ?>" />
               </td>
             </tr>
           <?php } else { ?>
             <tr>
-              <td colspan="2"><?php if ($gender == 0) { ?>
+              <td colspan="2"><?php if ($gender === 0) { ?>
                 <input type="radio" name="gender" value="0" checked="checked" /><?php echo $text_male; ?>&nbsp;&nbsp;
                 <input type="radio" name="gender" value="1" /><?php echo $text_female; ?>
               <?php } else { ?>
@@ -436,7 +421,7 @@
           <?php } ?>
         <?php } ?>
         <?php if (isset($this->session->data['order_id'])) { ?>
-          <?php if ($check_shipping_address == 0) { ?>
+          <?php if ($check_shipping_address === 0) { ?>
             <tr>
               <td colspan="2"><?php echo $entry_lastname; ?>: <b><?php echo $shipping_lastname; ?></b>
                 <input type="hidden" name="shipping_lastname" value="<?php echo $shipping_lastname; ?>" />
@@ -456,7 +441,7 @@
           <?php } ?>
         <?php } ?>
         <?php if (isset($this->session->data['order_id'])) { ?>
-          <?php if ($check_shipping_address == 0) { ?>
+          <?php if ($check_shipping_address === 0) { ?>
             <?php if ($shipping_company) { ?>
               <tr>
                 <td colspan="2"><?php echo $entry_company; ?>: <b><?php echo $shipping_company; ?></b>
@@ -473,7 +458,7 @@
           </tr>
         <?php } ?>
         <?php if (isset($this->session->data['order_id'])) { ?>
-          <?php if ($check_shipping_address == 0) { ?>
+          <?php if ($check_shipping_address === 0) { ?>
             <tr>
               <td colspan="2"><?php echo $entry_address_1; ?>: <b><?php echo $shipping_address_1; ?></b>
                 <input type="hidden" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" />
@@ -493,7 +478,7 @@
           <?php } ?>
         <?php } ?>
         <?php if (isset($this->session->data['order_id'])) { ?>
-          <?php if ($check_shipping_address == 0) { ?>
+          <?php if ($check_shipping_address === 0) { ?>
             <?php if ($shipping_address_2) { ?>
               <tr>
                 <td colspan="2"><?php echo $entry_address_2; ?>: <b><?php echo $shipping_address_2; ?></b>
@@ -510,7 +495,7 @@
           </tr>
         <?php } ?>
         <?php if (isset($this->session->data['order_id'])) { ?>
-          <?php if ($check_shipping_address == 0) { ?>
+          <?php if ($check_shipping_address === 0) { ?>
             <tr>
               <td colspan="2"><?php echo $entry_city; ?>: <b><?php echo $shipping_city; ?></b>
                 <input type="hidden" name="shipping_city" value="<?php echo $shipping_city; ?>" />
@@ -530,7 +515,7 @@
           <?php } ?>
         <?php } ?>
         <?php if (isset($this->session->data['order_id'])) { ?>
-          <?php if ($check_shipping_address == 0) { ?>
+          <?php if ($check_shipping_address === 0) { ?>
             <?php if ($shipping_postcode) { ?>
               <tr>
                 <td colspan="2"><?php echo $entry_postcode; ?>: <b><?php echo $shipping_postcode; ?></b>
@@ -552,7 +537,7 @@
           <?php } ?>
         <?php } ?>
         <?php if (isset($this->session->data['order_id'])) { ?>
-          <?php if ($check_shipping_address == 0) { ?>
+          <?php if ($check_shipping_address === 0) { ?>
             <tr>
               <td colspan="2"><?php echo $entry_country; ?>: <b><?php echo $shipping_country_name; ?></b>
                 <input type="hidden" name="shipping_country_id" value="<?php echo $shipping_country_id; ?>" />
@@ -569,7 +554,7 @@
             <td colspan="2"><select name="shipping_country_id">
               <option value=""><?php echo $text_select; ?></option>
               <?php foreach ($countries as $country) { ?>
-                <?php if ($country['country_id'] == $shipping_country_id) { ?>
+                <?php if ($country['country_id'] === $shipping_country_id) { ?>
                   <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $country['country_id']; ?>"><?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?></option>
@@ -618,7 +603,7 @@
                   <?php if (!$shipping_method['error']) { ?>
                     <?php foreach ($shipping_method['quote'] as $quote) { ?>
                     <tr class="highlight">
-                      <td><?php if ($quote['code'] == $shipping_method_code) { ?>
+                      <td><?php if ($quote['code'] === $shipping_method_code) { ?>
                         <?php $code = $quote['code']; ?>
                         <input type="radio" name="shipping_method" value="<?php echo $quote['code']; ?>" id="<?php echo $quote['code']; ?>" checked="checked" />
                       <?php } else { ?>
@@ -650,7 +635,7 @@
                   <?php } ?>
                   <table id="payment-lock" class="radio" style="margin-bottom:2px;">
                   <?php foreach ($payment_methods as $payment_method) { ?>
-                    <?php $apply_paypal_fee = ((substr($payment_method['code'], 0, 3) == "pp_") || ($payment_method['code'] == "paypal_email")) ? true : false; ?>
+                    <?php $apply_paypal_fee = ((substr($payment_method['code'], 0, 3) === "pp_") || ($payment_method['code'] === "paypal_email")) ? true : false; ?>
                     <tr class="highlight">
                       <td><?php if ($payment_method['code'] == $payment_method_code) { ?>
                         <?php $code = $payment_method['code']; ?>
@@ -660,7 +645,7 @@
                       <?php } ?></td>
                       <td><?php if ($payment_images) { ?>
                         <?php foreach ($payment_images as $payment_image) { ?>
-                          <?php if ($payment_image['payment'] == strtolower($payment_method['code'])) { ?>
+                          <?php if ($payment_image['payment'] === strtolower($payment_method['code'])) { ?>
                             <?php if ($payment_image['status']) { ?>
                               <label for="<?php echo $payment_method['code']; ?>"><img src="<?php echo $payment_image['image']; ?>" title="<?php echo $payment_method['title']; ?>" alt="<?php echo $payment_method['title']; ?>" />
                               <?php if ($paypal_fee && $apply_paypal_fee) { ?>
@@ -740,7 +725,7 @@
 <script type="text/javascript"><!--
 var check_shipping_address = $('input[name=\'check_shipping_address\']').attr('checked');
 
-if (check_shipping_address == 'checked') {
+if (check_shipping_address === 'checked') {
 	$('#shipping-address-display').hide();
 } else {
 	$('#shipping-address-display').show();
@@ -768,25 +753,25 @@ $('input[name=\'customer_group_id\']:checked').on('change', function() {
 <?php } ?>
 
 	if (customer_group[this.value]) {
-		if (customer_group[this.value]['company_id_display'] == '1') {
+		if (customer_group[this.value]['company_id_display'] === '1') {
 			$('#company-id-display').show();
 		} else {
 			$('#company-id-display').hide();
 		}
 
-		if (customer_group[this.value]['company_id_required'] == '1') {
+		if (customer_group[this.value]['company_id_required'] === '1') {
 			$('#company-id-required').show();
 		} else {
 			$('#company-id-required').hide();
 		}
 
-		if (customer_group[this.value]['tax_id_display'] == '1') {
+		if (customer_group[this.value]['tax_id_display'] === '1') {
 			$('#tax-id-display').show();
 		} else {
 			$('#tax-id-display').hide();
 		}
 
-		if (customer_group[this.value]['tax_id_required'] == '1') {
+		if (customer_group[this.value]['tax_id_required'] === '1') {
 			$('#tax-id-required').show();
 		} else {
 			$('#tax-id-required').hide();
@@ -814,7 +799,7 @@ $('select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#payment-postcode-required').show();
 			} else {
 				$('#payment-postcode-required').hide();
@@ -847,7 +832,7 @@ $('select[name=\'country_id\']').on('change', function() {
 $('select[name=\'country_id\']').trigger('change');
 
 $('select[name=\'country_id\']').on('change', function() {
-	if ($(this).val() != <?php echo $country_id; ?>) {
+	if ($(this).val() !== <?php echo $country_id; ?>) {
 		$('#shipping-refresh').fadeIn(500);
 
 		$('#shipping-lock').hide();
@@ -865,7 +850,7 @@ $('select[name=\'country_id\']').trigger('change');
 
 <script type="text/javascript"><!--
 $('select[name=\'shipping_country_id\']').on('change', function() {
-	if (this.value == '') {
+	if (this.value === '') {
 		return;
 	}
 
@@ -880,7 +865,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#payment-postcode-required').show();
 			} else {
 				$('#payment-postcode-required').hide();
@@ -892,7 +877,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 						html += ' selected="selected"';
 					}
 
@@ -913,7 +898,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
 $('select[name=\'shipping_country_id\']').trigger('change');
 
 $('select[name=\'shipping_country_id\']').on('change', function() {
-	if ($(this).val() != <?php echo $shipping_country_id; ?>) {
+	if ($(this).val() !== <?php echo $shipping_country_id; ?>) {
 		$('#shipping-refresh').fadeIn(500);
 
 		$('#shipping-lock').hide();

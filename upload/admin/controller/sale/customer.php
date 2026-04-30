@@ -1193,7 +1193,7 @@ class ControllerSaleCustomer extends Controller {
 
 				$this->load->model('localisation/country');
 
-				$country_info = $this->model_localisation_country->getCountry($value['country_id']);
+				$country_info = $this->model_localisation_country->getCountry((int)$value['country_id']);
 
 				if ($country_info) {
 					if ($country_info['postcode_required'] && (mb_strlen($value['postcode'], 'UTF-8') < 2) || (mb_strlen($value['postcode'], 'UTF-8') > 10)) {

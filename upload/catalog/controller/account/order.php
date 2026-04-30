@@ -51,7 +51,8 @@ class ControllerAccountOrder extends Controller {
 
 					$this->session->data['success'] = sprintf($this->language->get('text_success'), $this->request->get['order_id']);
 
-					$this->cart->add($order_product['product_id'], $order_product['quantity'], $option_data);
+					// $this->cart->add($product_id, $profile_id, $quantity, $option);
+					$this->cart->add($order_product['product_id'], 0, $order_product['quantity'], $option_data);
 				}
 
 				$this->redirect($this->url->link('checkout/cart', '', 'SSL'));

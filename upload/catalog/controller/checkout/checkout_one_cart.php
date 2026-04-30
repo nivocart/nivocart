@@ -17,7 +17,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -258,7 +258,7 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			$option_data = [];
 
 			foreach ($product['option'] as $option) {
-				if ($option['type'] != 'file') {
+				if ($option['type'] !== 'file') {
 					$value = $option['option_value'];
 				} else {
 					$filename = $this->encryption->decrypt($option['option_value']);
@@ -272,15 +272,25 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 				];
 			}
 
-			// Display prices & totals
+			// Display prices
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-				$total = $this->currency->format($this->tax->calculate(($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']), $this->config->get('config_currency'));
+				if (($product['price'] === '0.0000') && $this->config->get('config_price_free')) {
+					$price = $this->language->get('text_free');
+				} else {
+					$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+				}
 			} else {
 				$price = false;
+			}
+
+			// Display totals
+			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+				$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+			} else {
 				$total = false;
 			}
 
+			// Display profile
 			$profile_description = '';
 
 			if ($product['recurring']) {
