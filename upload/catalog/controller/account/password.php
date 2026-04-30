@@ -26,8 +26,8 @@ class ControllerAccountPassword extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] != $this->session->data['customer_token']) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || $this->request->get['customer_token'] !== $this->session->data['customer_token']) {
 				$this->customer->logout();
 
 				$this->session->data['redirect'] = $this->url->link('account/password', '', 'SSL');
@@ -169,7 +169,7 @@ class ControllerAccountPassword extends Controller {
 			$this->error['password'] = $this->language->get('error_password');
 		}
 
-		if ($this->request->post['confirm'] != $this->request->post['password']) {
+		if ($this->request->post['confirm'] !== $this->request->post['password']) {
 			$this->error['confirm'] = $this->language->get('error_confirm');
 		}
 

@@ -25,20 +25,20 @@ class ControllerAccountRegister extends Controller {
 
 		$this->load->model('account/customer');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_account_customer->addCustomer($this->request->post);
 
 			$this->customer->login($this->request->post['email'], $this->request->post['password']);
 
 			// Default Shipping Address
-			if ($this->config->get('config_tax_customer') == 'shipping') {
+			if ($this->config->get('config_tax_customer') === 'shipping') {
 				$this->session->data['shipping_country_id'] = $this->request->post['country_id'];
 				$this->session->data['shipping_zone_id'] = $this->request->post['zone_id'];
 				$this->session->data['shipping_postcode'] = $this->request->post['postcode'];
 			}
 
 			// Default Payment Address
-			if ($this->config->get('config_tax_customer') == 'payment') {
+			if ($this->config->get('config_tax_customer') === 'payment') {
 				$this->session->data['payment_country_id'] = $this->request->post['country_id'];
 				$this->session->data['payment_zone_id'] = $this->request->post['zone_id'];
 			}
@@ -448,8 +448,8 @@ class ControllerAccountRegister extends Controller {
 		}
 
 		if ($this->config->get('config_customer_dob')) {
-			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') == 10)) {
-				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
+			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') === 10)) {
+				if ($this->request->post['date_of_birth'] !== date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
 			} else {
@@ -490,7 +490,7 @@ class ControllerAccountRegister extends Controller {
 
 		$this->load->model('localisation/country');
 
-		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '' || !is_numeric($this->request->post['country_id'])) {
+		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '' || !is_numeric($this->request->post['country_id'])) {
 			$this->error['country'] = $this->language->get('error_country');
 		} else {
 			$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
@@ -504,14 +504,14 @@ class ControllerAccountRegister extends Controller {
 				if ($customer_group && $customer_group['tax_id_display']) {
 					$this->load->helper('vat');
 
-					if ($this->config->get('config_vat') && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+					if ($this->config->get('config_vat') && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
 						$this->error['tax_id'] = $this->language->get('error_vat');
 					}
 				}
 			}
 		}
 
-		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {
+		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '' || !is_numeric($this->request->post['zone_id'])) {
 			$this->error['zone'] = $this->language->get('error_zone');
 		}
 
@@ -519,7 +519,7 @@ class ControllerAccountRegister extends Controller {
 			$this->error['password'] = $this->language->get('error_password');
 		}
 
-		if (!isset($this->request->post['confirm']) || $this->request->post['confirm'] != $this->request->post['password']) {
+		if (!isset($this->request->post['confirm']) || $this->request->post['confirm'] !== $this->request->post['password']) {
 			$this->error['confirm'] = $this->language->get('error_confirm');
 		}
 

@@ -177,9 +177,9 @@ class ControllerAccountRecurring extends Controller {
 		$profile['product_link'] = $this->url->link('product/product', 'product_id=' . $profile['product_id'], 'SSL');
 		$profile['order_link'] = $this->url->link('account/order/info', 'order_id=' . $profile['order_id'], 'SSL');
 
-		if ($profile['status'] == 1 || $profile['status'] == 2) {
+		if ($profile['status'] === 1 || $profile['status'] === 2) {
 			// If the payment profiles payment type has a cancel action then link to that. If not then hide the button.
-			if (!empty($profile['payment_code']) && $this->hasAction('payment/' . $profile['payment_code'] . '/recurringCancel') == true && $this->config->get($profile['payment_code'] . '_recurring_cancel')) {
+			if (!empty($profile['payment_code']) && $this->hasAction('payment/' . $profile['payment_code'] . '/recurringCancel') === true && $this->config->get($profile['payment_code'] . '_recurring_cancel')) {
 				$this->data['payment_code'] = $profile['payment_code'];
 			}
 		}

@@ -341,7 +341,7 @@ class ControllerAccountReturn extends Controller {
 
 		$this->load->model('account/return');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_account_return->addReturn($this->request->post);
 
 			unset($this->session->data['captcha']);
@@ -557,7 +557,9 @@ class ControllerAccountReturn extends Controller {
 
 		$this->load->model('localisation/return_reason');
 
-		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons();
+		$return_reasons_array = [];
+
+		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons($return_reasons_array);
 
 		if (isset($this->request->post['comment'])) {
 			$this->data['comment'] = $this->request->post['comment'];
@@ -713,7 +715,7 @@ class ControllerAccountReturn extends Controller {
 			$this->error['reason'] = $this->language->get('error_reason');
 		}
 
-		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != ($this->request->post['captcha']))) {
+		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== ($this->request->post['captcha']))) {
 			$this->error['captcha'] = $this->language->get('error_captcha');
 		}
 
