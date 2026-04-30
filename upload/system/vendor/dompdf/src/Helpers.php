@@ -1,8 +1,7 @@
 <?php
 namespace Dompdf;
 
-class Helpers
-{
+class Helpers {
     /**
      * print_r wrapper for html/cli output
      *
@@ -14,8 +13,7 @@ class Helpers
      *
      * @return string|null
      */
-    public static function pre_r($mixed, $return = false)
-    {
+    public static function pre_r($mixed, $return = false) {
         if ($return) {
             return "<pre>" . print_r($mixed, true) . "</pre>";
         }
@@ -54,9 +52,9 @@ class Helpers
      * Vice versa, on using the local file system path of a file, make sure that the slash
      * is appended (o.k. also for Windows)
      */
-    public static function build_url($protocol, $host, $base_path, $url)
-    {
-        $protocol = mb_strtolower($protocol);
+    public static function build_url($protocol, $host, $base_path, $url) {
+		$protocol = mb_strtolower($protocol ?? '', 'UTF-8');
+
         if (strlen($url) == 0) {
             //return $protocol . $host . rtrim($base_path, "/\\") . "/";
             return $protocol . $host . $base_path;
@@ -64,7 +62,7 @@ class Helpers
 
         // Is the url already fully qualified, a Data URI, or a reference to a named anchor?
         // File-protocol URLs may require additional processing (e.g. for URLs with a relative path)
-        if ((mb_strpos($url, "://") !== false && substr($url, 0, 7) !== "file://") || mb_substr($url, 0, 1) === "#" || mb_strpos($url, "data:") === 0 || mb_strpos($url, "mailto:") === 0 || mb_strpos($url, "tel:") === 0) {
+        if ((strpos($url, "://") !== false && substr($url, 0, 7) !== "file://") || substr($url, 0, 1) === "#" || strpos($url, "data:") === 0 || strpos($url, "mailto:") === 0 || strpos($url, "tel:") === 0) {
             return $url;
         }
 
@@ -78,12 +76,12 @@ class Helpers
             $ret = $protocol;
         }
 
-        if (!in_array(mb_strtolower($protocol), ["http://", "https://", "ftp://", "ftps://"])) {
+        if (!in_array(mb_strtolower($protocol, 'UTF-8'), ["http://", "https://", "ftp://", "ftps://"])) {
             //On Windows local file, an abs path can begin also with a '\' or a drive letter and colon
             //drive: followed by a relative path would be a drive specific default folder.
             //not known in php app code, treat as abs path
             //($url[1] !== ':' || ($url[2]!=='\\' && $url[2]!=='/'))
-            if ($url[0] !== '/' && (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || (mb_strlen($url) > 1 && $url[0] !== '\\' && $url[1] !== ':'))) {
+            if ($url[0] !== '/' && (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || (mb_strlen($url, 'UTF-8') > 1 && $url[0] !== '\\' && $url[1] !== ':'))) {
                 // For rel path and local access we ignore the host, and run the path through realpath()
                 $ret .= realpath($base_path) . '/';
             }
@@ -121,7 +119,7 @@ class Helpers
         
         // partially reproduced from https://stackoverflow.com/a/1243431/264628
         /* replace '//' or '/./' or '/foo/../' with '/' */
-        $re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#');
+        $re = ['#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#'];
         for ($n=1; $n>0; $path=preg_replace($re, '/', $path, -1, $n)) {}
 
         $ret = "$scheme$user$pass$host$port$path$query$fragment";
@@ -141,8 +139,7 @@ class Helpers
      * @param string $filename
      * @return string
      */
-    public static function buildContentDispositionHeader($dispositionType, $filename)
-    {
+    public static function buildContentDispositionHeader($dispositionType, $filename) {
         $encoding = mb_detect_encoding($filename);
         $fallbackfilename = mb_convert_encoding($filename, "ISO-8859-1", $encoding);
         $fallbackfilename = str_replace("\"", "", $fallbackfilename);
@@ -169,9 +166,7 @@ class Helpers
      * @throws Exception
      * @return string
      */
-    public static function dec2roman($num): string
-    {
-
+    public static function dec2roman($num): string {
         static $ones = ["", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix"];
         static $tens = ["", "x", "xx", "xxx", "xl", "l", "lx", "lxx", "lxxx", "xc"];
         static $hund = ["", "c", "cc", "ccc", "cd", "d", "dc", "dcc", "dccc", "cm"];
@@ -188,7 +183,8 @@ class Helpers
         $num = strrev((string)$num);
 
         $ret = "";
-        switch (mb_strlen($num)) {
+
+        switch (mb_strlen($num, 'UTF-8')) {
             /** @noinspection PhpMissingBreakStatementInspection */
             case 4:
                 $ret .= $thou[$num[3]];
@@ -215,8 +211,7 @@ class Helpers
      *
      * @return bool
      */
-    public static function is_percent($value)
-    {
+    public static function is_percent($value) {
         return false !== mb_strpos($value, "%");
     }
 
@@ -228,13 +223,13 @@ class Helpers
      *
      * @return array|bool The result with charset, mime type and decoded data
      */
-    public static function parse_data_uri($data_uri)
-    {
+    public static function parse_data_uri($data_uri) {
         if (!preg_match('/^data:(?P<mime>[a-z0-9\/+-.]+)(;charset=(?P<charset>[a-z0-9-])+)?(?P<base64>;base64)?\,(?P<data>.*)?/is', $data_uri, $match)) {
             return false;
         }
 
         $match['data'] = rawurldecode($match['data']);
+
         $result = [
             'charset' => $match['charset'] ? $match['charset'] : 'US-ASCII',
             'mime' => $match['mime'] ? $match['mime'] : 'text/plain',
@@ -272,6 +267,7 @@ class Helpers
         $score = [
             '%23'=>'#'
         ];
+
         return strtr(rawurlencode(rawurldecode($uri)), array_merge($reserved, $unescaped, $score));
     }
 
@@ -284,8 +280,7 @@ class Helpers
      *
      * @return string
      */
-    public static function rle8_decode($str, $width)
-    {
+    public static function rle8_decode($str, $width) {
         $lineWidth = $width + (3 - ($width - 1) % 4);
         $out = '';
         $cnt = strlen($str);
@@ -337,8 +332,7 @@ class Helpers
      *
      * @return string
      */
-    public static function rle4_decode($str, $width)
-    {
+    public static function rle4_decode($str, $width) {
         $w = floor($width / 2) + ($width % 2);
         $lineWidth = $w + (3 - (($width - 1) / 2) % 4);
         $pixels = [];
@@ -409,16 +403,16 @@ class Helpers
      * @param string $url
      * @return array
      */
-    public static function explode_url($url)
-    {
+    public static function explode_url($url) {
         $protocol = "";
         $host = "";
         $path = "";
         $file = "";
 
         $arr = parse_url($url);
-        if ( isset($arr["scheme"]) ) {
-            $arr["scheme"] = mb_strtolower($arr["scheme"]);
+
+        if (isset($arr["scheme"]) ) {
+            $arr["scheme"] = mb_strtolower($arr["scheme"], 'UTF-8');
         }
 
         // Exclude windows drive letters...
@@ -445,7 +439,7 @@ class Helpers
 
             if (isset($arr["path"]) && $arr["path"] !== "") {
                 // Do we have a trailing slash?
-                if ($arr["path"][mb_strlen($arr["path"]) - 1] === "/") {
+                if ($arr["path"][mb_strlen($arr["path"], 'UTF-8') - 1] === "/") {
                     $path = $arr["path"];
                     $file = "";
                 } else {
@@ -463,10 +457,10 @@ class Helpers
             }
 
         } else {
+            $i = stripos($url, "file://");
 
-            $i = mb_stripos($url, "file://");
             if ($i !== false) {
-                $url = mb_substr($url, $i + 7);
+                $url = mb_substr($url, $i + 7, 'UTF-8');
             }
 
             $protocol = ""; // "file://"; ? why doesn't this work... It's because of
@@ -509,9 +503,9 @@ class Helpers
      * @param string $type The type of debug messages to print
      * @param string $msg The message to show
      */
-    public static function dompdf_debug($type, $msg)
-    {
+    public static function dompdf_debug($type, $msg) {
         global $_DOMPDF_DEBUG_TYPES, $_dompdf_show_warnings, $_dompdf_debug;
+
         if (isset($_DOMPDF_DEBUG_TYPES[$type]) && ($_dompdf_show_warnings || $_dompdf_debug)) {
             $arr = debug_backtrace();
 
@@ -535,8 +529,7 @@ class Helpers
      *
      * @throws Exception
      */
-    public static function record_warnings($errno, $errstr, $errfile, $errline)
-    {
+    public static function record_warnings($errno, $errstr, $errfile, $errline) {
         // Not a warning or notice
         if (!($errno & (E_WARNING | E_NOTICE | E_USER_NOTICE | E_USER_WARNING | E_STRICT | E_DEPRECATED | E_USER_DEPRECATED))) {
             throw new Exception($errstr . " $errno");
@@ -556,8 +549,7 @@ class Helpers
      * @param $c
      * @return bool|string
      */
-    public static function unichr($c)
-    {
+    public static function unichr($c) {
         if ($c <= 0x7F) {
             return chr($c);
         } else if ($c <= 0x7FF) {
@@ -583,8 +575,7 @@ class Helpers
      *
      * @return float[]
      */
-    public static function cmyk_to_rgb($c, $m = null, $y = null, $k = null)
-    {
+    public static function cmyk_to_rgb($c, $m = null, $y = null, $k = null) {
         if (is_array($c)) {
             [$c, $m, $y, $k] = $c;
         }
@@ -621,8 +612,7 @@ class Helpers
      * @param resource $context
      * @return array The same format as getimagesize($filename)
      */
-    public static function dompdf_getimagesize($filename, $context = null)
-    {
+    public static function dompdf_getimagesize($filename, $context = null) {
         static $cache = [];
 
         if (isset($cache[$filename])) {
@@ -671,8 +661,7 @@ class Helpers
      * http://www.programmierer-forum.de/function-imagecreatefrombmp-welche-variante-laeuft-t143137.htm
      * Modified by Fabien Menager to support RGB555 BMP format
      */
-    public static function imagecreatefrombmp($filename, $context = null)
-    {
+    public static function imagecreatefrombmp($filename, $context = null) {
         if (!function_exists("imagecreatetruecolor")) {
             trigger_error("The PHP GD extension is required, but is not installed.", E_ERROR);
             return false;
@@ -708,6 +697,7 @@ class Helpers
         // set bytes and padding
         $meta['bytes'] = $meta['bits'] / 8;
         $meta['decal'] = 4 - (4 * (($meta['width'] * $meta['bytes'] / 4) - floor($meta['width'] * $meta['bytes'] / 4)));
+
         if ($meta['decal'] == 4) {
             $meta['decal'] = 0;
         }
@@ -730,6 +720,7 @@ class Helpers
 
         // read color palette
         $palette = [];
+
         if ($meta['bits'] < 16) {
             $palette = unpack('l' . $meta['colors'], fread($fh, $meta['colors'] * 4));
             // in rare cases the color value is signed
@@ -856,8 +847,7 @@ class Helpers
      * @param int $maxlen (ignored if curl is used)
      * @return string[]
      */
-    public static function getFileContent($uri, $context = null, $offset = 0, $maxlen = null)
-    {
+    public static function getFileContent($uri, $context = null, $offset = 0, $maxlen = null) {
         $content = null;
         $headers = null;
         [$proto, $host, $path, $file] = Helpers::explode_url($uri);
@@ -915,24 +905,25 @@ class Helpers
     }
 
     public static function mb_ucwords($str) {
-        $max_len = mb_strlen($str);
+        $max_len = mb_strlen($str, 'UTF-8');
+
         if ($max_len === 1) {
-            return mb_strtoupper($str);
+            return mb_strtoupper($str, 'UTF-8');
         }
 
-        $str = mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1);
+        $str = mb_strtoupper(substr($str, 0, 1), 'UTF-8') . substr($str, 1);
 
         foreach ([' ', '.', ',', '!', '?', '-', '+'] as $s) {
             $pos = 0;
-            while (($pos = mb_strpos($str, $s, $pos)) !== false) {
+            while (($pos = strpos($str, $s, $pos)) !== false) {
                 $pos++;
                 // Nothing to do if the separator is the last char of the string
                 if ($pos !== false && $pos < $max_len) {
                     // If the char we want to upper is the last char there is nothing to append behind
                     if ($pos + 1 < $max_len) {
-                        $str = mb_substr($str, 0, $pos) . mb_strtoupper(mb_substr($str, $pos, 1)) . mb_substr($str, $pos + 1);
+                        $str = substr($str, 0, $pos) . mb_strtoupper(substr($str, $pos, 1), 'UTF-8') . substr($str, $pos + 1);
                     } else {
-                        $str = mb_substr($str, 0, $pos) . mb_strtoupper(mb_substr($str, $pos, 1));
+                        $str = substr($str, 0, $pos) . mb_strtoupper(substr($str, $pos, 1), 'UTF-8');
                     }
                 }
             }
