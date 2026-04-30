@@ -44,8 +44,8 @@ class ControllerAffiliateProduct extends Controller {
 
 		$this->load->model('affiliate/affiliate');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			if (!isset($this->request->get['affiliate_token']) || !isset($this->session->data['affiliate_token']) || $this->request->get['affiliate_token'] != $this->session->data['affiliate_token']) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!isset($this->request->get['affiliate_token']) || !isset($this->session->data['affiliate_token']) || $this->request->get['affiliate_token'] !== $this->session->data['affiliate_token']) {
 				$this->affiliate->logout();
 
 				$this->session->data['redirect'] = $this->url->link('affiliate/product', '', 'SSL');
@@ -80,8 +80,8 @@ class ControllerAffiliateProduct extends Controller {
 
 		$this->load->model('affiliate/affiliate');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-			if (!isset($this->request->get['affiliate_token']) || !isset($this->session->data['affiliate_token']) || $this->request->get['affiliate_token'] != $this->session->data['affiliate_token']) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!isset($this->request->get['affiliate_token']) || !isset($this->session->data['affiliate_token']) || $this->request->get['affiliate_token'] !== $this->session->data['affiliate_token']) {
 				$this->affiliate->logout();
 
 				$this->session->data['redirect'] = $this->url->link('affiliate/product', '', 'SSL');
@@ -117,7 +117,7 @@ class ControllerAffiliateProduct extends Controller {
 		$this->load->model('affiliate/affiliate');
 
 		if (isset($this->request->get['affiliate_product_id'])) {
-			if (!isset($this->request->get['affiliate_token']) || !isset($this->session->data['affiliate_token']) || $this->request->get['affiliate_token'] != $this->session->data['affiliate_token']) {
+			if (!isset($this->request->get['affiliate_token']) || !isset($this->session->data['affiliate_token']) || $this->request->get['affiliate_token'] !== $this->session->data['affiliate_token']) {
 				$this->affiliate->logout();
 
 				$this->session->data['redirect'] = $this->url->link('affiliate/product', '', 'SSL');
@@ -283,7 +283,7 @@ class ControllerAffiliateProduct extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
-		if (isset($this->request->get['affiliate_product_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if (isset($this->request->get['affiliate_product_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$product_info = $this->model_affiliate_affiliate->getAffiliateProduct($this->request->get['affiliate_product_id']);
 		}
 
@@ -329,7 +329,7 @@ class ControllerAffiliateProduct extends Controller {
 	}
 
 	protected function validateForm() {
-		if (!isset($this->request->post['product_id']) || $this->request->post['product_id'] == '' || !is_numeric($this->request->post['product_id'])) {
+		if (!isset($this->request->post['product_id']) || $this->request->post['product_id'] === '' || !is_numeric($this->request->post['product_id'])) {
 			$this->error['product'] = $this->language->get('error_product');
 		}
 

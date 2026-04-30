@@ -20,7 +20,7 @@ class ControllerAffiliatePayment extends Controller {
 
 		$this->load->model('affiliate/affiliate');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$this->model_affiliate_affiliate->editPayment($this->request->post);
 
 			// Add to activity log
@@ -78,7 +78,7 @@ class ControllerAffiliatePayment extends Controller {
 
 		$this->data['action'] = $this->url->link('affiliate/payment', '', 'SSL');
 
-		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
 			$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($this->affiliate->getId());
 		}
 

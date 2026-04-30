@@ -21,7 +21,7 @@ class ControllerAffiliateRegister extends Controller {
 
 		$this->load->model('affiliate/affiliate');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_affiliate_affiliate->addAffiliate($this->request->post);
 
 			// Clear any previous login attempts if not registered
@@ -423,7 +423,7 @@ class ControllerAffiliateRegister extends Controller {
 
 		$this->load->model('localisation/country');
 
-		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '' || !is_numeric($this->request->post['country_id'])) {
+		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] === '' || !is_numeric($this->request->post['country_id'])) {
 			$this->error['country'] = $this->language->get('error_country');
 		} else {
 			$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
@@ -433,7 +433,7 @@ class ControllerAffiliateRegister extends Controller {
 			}
 		}
 
-		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '' || !is_numeric($this->request->post['zone_id'])) {
+		if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] === '' || !is_numeric($this->request->post['zone_id'])) {
 			$this->error['zone'] = $this->language->get('error_zone');
 		}
 
@@ -441,11 +441,11 @@ class ControllerAffiliateRegister extends Controller {
 			$this->error['password'] = $this->language->get('error_password');
 		}
 
-		if (!isset($this->request->post['confirm']) || $this->request->post['confirm'] != $this->request->post['password']) {
+		if (!isset($this->request->post['confirm']) || $this->request->post['confirm'] !== $this->request->post['password']) {
 			$this->error['confirm'] = $this->language->get('error_confirm');
 		}
 
-		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != ($this->request->post['captcha']))) {
+		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== ($this->request->post['captcha']))) {
 			$this->error['captcha'] = $this->language->get('error_captcha');
 		}
 

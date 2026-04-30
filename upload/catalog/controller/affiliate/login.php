@@ -22,7 +22,7 @@ class ControllerAffiliateLogin extends Controller {
 
 		$this->load->model('affiliate/affiliate');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['email']) && isset($this->request->post['password']) && $this->validate()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && isset($this->request->post['email']) && isset($this->request->post['password']) && $this->validate()) {
 			// Add to activity log
 			if ($this->config->get('config_affiliate_activity')) {
 				$affiliate_id = $this->affiliate->getId();
