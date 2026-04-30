@@ -95,6 +95,7 @@ class ControllerAffiliateRegister extends Controller {
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -173,6 +174,7 @@ class ControllerAffiliateRegister extends Controller {
 			$this->data['error_captcha'] = '';
 		}
 
+		// Submit data
 		$this->data['action'] = $this->url->link('affiliate/register', '', 'SSL');
 
 		if (isset($this->request->post['firstname'])) {

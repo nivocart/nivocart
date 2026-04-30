@@ -109,6 +109,7 @@ class ControllerAccountRegister extends Controller {
 
 		$this->data['account_captcha'] = $this->config->get('config_account_captcha');
 
+		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -205,6 +206,7 @@ class ControllerAccountRegister extends Controller {
 			$this->data['error_captcha'] = '';
 		}
 
+		// Submit data
 		$this->data['action'] = $this->url->link('account/register', '', 'SSL');
 
 		if (isset($this->request->post['firstname'])) {
@@ -504,7 +506,7 @@ class ControllerAccountRegister extends Controller {
 				if ($customer_group && $customer_group['tax_id_display']) {
 					$this->load->helper('vat');
 
-					if ($this->config->get('config_vat') && $this->request->post['tax_id'] != '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
+					if ($this->config->get('config_vat') && $this->request->post['tax_id'] !== '' && (vat_validation($country_info['iso_code_2'], $this->request->post['tax_id']) === 'invalid')) {
 						$this->error['tax_id'] = $this->language->get('error_vat');
 					}
 				}
@@ -524,7 +526,7 @@ class ControllerAccountRegister extends Controller {
 		}
 
 		if ($this->config->get('config_account_captcha')) {
-			if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] != ($this->request->post['captcha']))) {
+			if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== ($this->request->post['captcha']))) {
 				$this->error['captcha'] = $this->language->get('error_captcha');
 			}
 		}
