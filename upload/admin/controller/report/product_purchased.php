@@ -108,7 +108,7 @@ class ControllerReportProductPurchased extends Controller {
 				'model'    => $result['model'],
 				'price'    => $this->currency->format($result['price'], $this->config->get('config_currency')),
 				'cost'     => $this->currency->format($result['cost'], $this->config->get('config_currency')),
-				'special'  => $special,
+				'special'  => round($special, 2, PHP_ROUND_HALF_UP),
 				'quantity' => $result['quantity'],
 				'subtotal' => $this->currency->format($subtotal, $this->config->get('config_currency')),
 				'total'    => $this->currency->format($result['total'], $this->config->get('config_currency'))
