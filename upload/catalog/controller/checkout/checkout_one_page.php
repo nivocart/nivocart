@@ -17,31 +17,66 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
 		}
 
-		// Validate cart has products and has stock
-		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
-			$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
-		}
+		// If order already placed, skip straight to payment submission page
+		if (isset($this->request->get['payment']) && isset($this->session->data['order_id'])) {
+			$this->language->load('checkout/checkout_one_page');
+			
+			$this->document->setTitle($this->language->get('heading_title'));
 
-		// Validate minimum quantity requirements
-		$products = $this->cart->getProducts();
+			$this->data['heading_title'] = $this->language->get('heading_title');
 
-		foreach ($products as $product) {
-			$product_total = 0;
+			// Theme
+			$this->data['template'] = $this->config->get('config_template');
 
-			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
-					$product_total += $product_2['quantity'];
-				}
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout_one_page.tpl')) {
+				$this->template = $this->config->get('config_template') . '/template/checkout/checkout_one_page.tpl';
+			} else {
+				$this->template = 'default/template/checkout/checkout_one_page.tpl';
 			}
 
-			if ($product['minimum'] > $product_total) {
+			$this->children = [
+				'common/content_higher',
+				'common/content_high',
+				'common/content_left',
+				'common/content_right',
+				'common/content_low',
+				'common/content_lower',
+				'common/footer',
+				'common/header'
+			];
+
+			$this->response->setOutput($this->render());
+			return;
+		}
+
+		// Validate cart has products and has stock
+		// Allow through if order_id is already in session (cart cleared after addOrder)
+		if (!isset($this->session->data['order_id'])) {
+			if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 				$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
 			}
 
-			// Validate minimum age
-			if ($this->config->get('config_customer_dob') && ($product['age_minimum'] > 0)) {
-				if (!$this->customer->isLogged() || !$this->customer->isSecure()) {
-					$this->redirect($this->url->link('account/login', '', 'SSL'));
+			// Validate minimum quantity requirements
+			$products = $this->cart->getProducts();
+
+			foreach ($products as $product) {
+				$product_total = 0;
+
+				foreach ($products as $product_2) {
+					if ($product_2['product_id'] === $product['product_id']) {
+						$product_total += $product_2['quantity'];
+					}
+				}
+
+				if ($product['minimum'] > $product_total) {
+					$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
+				}
+
+				// Validate minimum age
+				if ($this->config->get('config_customer_dob') && ($product['age_minimum'] > 0)) {
+					if (!$this->customer->isLogged() || !$this->customer->isSecure()) {
+						$this->redirect($this->url->link('account/login', '', 'SSL'));
+					}
 				}
 			}
 		}
@@ -497,36 +532,32 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 			// Validate minimum quantity requirements
 			$total_data = [];
-			$total = 0;
+			$total = 0.0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = [];
-
 			$results = $this->model_setting_extension->getExtensions('total');
 
-			foreach ($results as $key => $value) {
-				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-			}
-
-			array_multisort($sort_order, SORT_ASC, $results);
+			// Sort extensions by their configured sort_order
+			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
 
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('total/' . $result['code']);
 
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+					$model = $this->{'model_total_' . $result['code']};
+
+					$contribution = $model->getTotal($taxes, $total);
+
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total += $contribution['total'];
+					$taxes += $contribution['taxes'];
 				}
 			}
 
-			$sort_order = [];
-
-			foreach ($total_data as $key => $value) {
-				$sort_order[$key] = $value['sort_order'];
-			}
-
-			array_multisort($sort_order, SORT_ASC, $total_data);
+			// Sort the final total_data rows by sort_order
+			usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
 			$product_data = [];
 
@@ -652,13 +683,44 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				$data['accept_language'] = '';
 			}
 
-			if (isset($this->session->data['order_id'])) {
-				unset($this->session->data['order_id']);
-			}
+			// Store order data in session for the confirm page
+			$this->session->data['one_page_order'] = [
+				'customer_group_id'   => isset($customer_info['customer_group_id']) ? $customer_info['customer_group_id'] : '',
+				'firstname'           => $data['payment_firstname'],
+				'lastname'            => $data['payment_lastname'],
+				'email'               => isset($customer_info['email']) ? $customer_info['email'] : '',
+				'telephone'           => isset($customer_info['telephone']) ? $customer_info['telephone'] : '',
+				'gender'              => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
+				'date_of_birth'       => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
+				'payment_firstname'   => $data['payment_firstname'],
+				'payment_lastname'    => $data['payment_lastname'],
+				'payment_company'     => $data['payment_company'],
+				'payment_company_id'  => $data['payment_company_id'],
+				'payment_tax_id'      => $data['payment_tax_id'],
+				'payment_address_1'   => $data['payment_address_1'],
+				'payment_address_2'   => $data['payment_address_2'],
+				'payment_city'        => $data['payment_city'],
+				'payment_postcode'    => $data['payment_postcode'],
+				'payment_zone'        => $data['payment_zone'],
+				'payment_zone_id'     => $data['payment_zone_id'],
+				'payment_country'     => $data['payment_country'],
+				'payment_country_id'  => $data['payment_country_id'],
+				'shipping_firstname'  => $data['shipping_firstname'],
+				'shipping_lastname'   => $data['shipping_lastname'],
+				'shipping_company'    => $data['shipping_company'],
+				'shipping_address_1'  => $data['shipping_address_1'],
+				'shipping_address_2'  => $data['shipping_address_2'],
+				'shipping_city'       => $data['shipping_city'],
+				'shipping_postcode'   => $data['shipping_postcode'],
+				'shipping_zone'       => $data['shipping_zone'],
+				'shipping_zone_id'    => $data['shipping_zone_id'],
+				'shipping_country'    => $data['shipping_country'],
+				'shipping_country_id' => $data['shipping_country_id'],
+				'comment'             => $data['comment']
+			];
 
-			$this->session->data['order_id'] = $this->model_checkout_order->addOrder($data);
-
-			$this->redirect($this->url->link('checkout/checkout_one_page', 'payment=1', 'SSL'));
+			// Redirect to confirm page — addOrder() happens there
+			$this->redirect($this->url->link('checkout/checkout_one_page_confirm', '', 'SSL'));
 		}
 
 		// Guest
@@ -1250,29 +1312,34 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		// Payment methods
 		if (!empty($payment_address)) {
+			// Totals
 			$total_data = [];
-			$total = 0;
+			$total = 0.0;
 			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
-			$sort_order = [];
-
 			$results = $this->model_setting_extension->getExtensions('total');
 
-			foreach ($results as $key => $value) {
-				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-			}
-
-			array_multisort($sort_order, SORT_ASC, $results);
+			// Sort extensions by their configured sort_order
+			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
 
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('total/' . $result['code']);
 
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+					$model = $this->{'model_total_' . $result['code']};
+
+					$contribution = $model->getTotal($taxes, $total);
+
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total += $contribution['total'];
+					$taxes += $contribution['taxes'];
 				}
 			}
+
+			// Sort the final total_data rows by sort_order
+			usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
 			$method_data = [];
 

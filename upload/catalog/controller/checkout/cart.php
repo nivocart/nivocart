@@ -156,7 +156,7 @@ class ControllerCheckoutCart extends Controller {
 
 			// Gift Wrapping
 			if ($this->config->get('gift_wrapping_status')) {
-				$wrapping_fee = $this->currency->format($this->config->get('gift_wrapping_price'));
+				$wrapping_fee = $this->currency->format($this->config->get('gift_wrapping_price'), $this->config->get('config_currency'));
 			} else {
 				$wrapping_fee = 0;
 			}

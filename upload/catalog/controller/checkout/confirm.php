@@ -94,8 +94,7 @@ class ControllerCheckoutConfirm extends Controller {
 			$results = $this->model_setting_extension->getExtensions('total');
 
 			// Sort extensions by their configured sort_order
-			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
-			);
+			usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
 
 			foreach ($results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {

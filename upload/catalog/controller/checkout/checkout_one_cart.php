@@ -28,37 +28,34 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 			}
 		}
 
+		// Totals
 		$total_data = [];
-		$total = 0;
+		$total = 0.0;
 		$taxes = $this->cart->getTaxes();
 
 		$this->load->model('setting/extension');
 
-		$sort_order = [];
-
 		$results = $this->model_setting_extension->getExtensions('total');
 
-		foreach ($results as $key => $value) {
-			$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-		}
-
-		array_multisort($sort_order, SORT_ASC, $results);
+		// Sort extensions by their configured sort_order
+		usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
 
 		foreach ($results as $result) {
 			if ($this->config->get($result['code'] . '_status')) {
 				$this->load->model('total/' . $result['code']);
 
-				$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+				$model = $this->{'model_total_' . $result['code']};
+
+				$contribution = $model->getTotal($taxes, $total);
+
+				$total_data = array_merge($total_data, $contribution['total_data']);
+				$total += $contribution['total'];
+				$taxes += $contribution['taxes'];
 			}
 		}
 
-		$sort_order = [];
-
-		foreach ($total_data as $key => $value) {
-			$sort_order[$key] = $value['sort_order'];
-		}
-
-		array_multisort($sort_order, SORT_ASC, $total_data);
+		// Sort the final total_data rows by sort_order
+		usort($total_data, fn ($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
 		$data = [];
 
