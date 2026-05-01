@@ -3207,7 +3207,14 @@ class ControllerSaleOrder extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	// Shipping Labels
+	/**
+	 * Function shippingLabel
+	 *
+	 * Standalone page to View, Download(pdf) and Print data.
+	 * Uses Dompdf. Strict urls and inline CSS are required.
+	 * 
+	 * Calls -> order_shipping_label.tpl
+	 */
 	public function shippingLabel() {
 		$this->language->load('sale/order');
 
@@ -3217,9 +3224,11 @@ class ControllerSaleOrder extends Controller {
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
 			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
-			$this->data['base'] = HTTPS_SERVER;
+			$image_base = HTTPS_IMAGE;
+			$admin_base = HTTPS_SERVER;
 		} else {
-			$this->data['base'] = HTTP_SERVER;
+			$image_base = HTTP_IMAGE;
+			$admin_base = HTTP_SERVER;
 		}
 
 		$this->data['direction'] = $this->language->get('direction');
@@ -3251,7 +3260,7 @@ class ControllerSaleOrder extends Controller {
 		}
 
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_CATALOG . 'image/' . $this->config->get('config_logo') : HTTP_CATALOG . 'image/' . $this->config->get('config_logo');
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
 		} else {
 			$this->data['logo'] = '';
 		}
@@ -3307,16 +3316,30 @@ class ControllerSaleOrder extends Controller {
 
 		$this->template = 'sale/order_shipping_label.tpl';
 
+		// Dompdf or View/Print output
 		if ($pdf) {
+			$this->data['image_base'] = DIR_IMAGE;
+			$this->data['admin_base'] = DIR_APPLICATION;
+
 			$document_type = $this->language->get('text_shipping_label');
 
 			$this->response->setOutput(pdf($this->render(), $document_type, $this->request->get['order_id']));
 		} else {
+			$this->data['image_base'] = $image_base;
+			$this->data['admin_base'] = $admin_base;
+
 			$this->response->setOutput($this->render());
 		}
 	}
 
-	// Picklist
+	/**
+	 * Function pickList
+	 *
+	 * Standalone page to View, Download(pdf) and Print data.
+	 * Uses Dompdf. Strict urls and inline CSS are required.
+	 * 
+	 * Calls -> order_pick_list.tpl
+	 */
 	public function pickList() {
 		$this->language->load('sale/order');
 
@@ -3326,9 +3349,11 @@ class ControllerSaleOrder extends Controller {
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
 			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
-			$this->data['base'] = HTTPS_SERVER;
+			$image_base = HTTPS_IMAGE;
+			$admin_base = HTTPS_SERVER;
 		} else {
-			$this->data['base'] = HTTP_SERVER;
+			$image_base = HTTP_IMAGE;
+			$admin_base = HTTP_SERVER;
 		}
 
 		$this->data['direction'] = $this->language->get('direction');
@@ -3388,7 +3413,7 @@ class ControllerSaleOrder extends Controller {
 		}
 
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_CATALOG . 'image/' . $this->config->get('config_logo') : HTTP_CATALOG . 'image/' . $this->config->get('config_logo');
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
 		} else {
 			$this->data['logo'] = '';
 		}
@@ -3559,16 +3584,30 @@ class ControllerSaleOrder extends Controller {
 
 		$this->template = 'sale/order_pick_list.tpl';
 
+		// Dompdf or View/Print output
 		if ($pdf) {
+			$this->data['image_base'] = DIR_IMAGE;
+			$this->data['admin_base'] = DIR_APPLICATION;
+
 			$document_type = $this->language->get('text_pick_list');
 
 			$this->response->setOutput(pdf($this->render(), $document_type, $this->request->get['order_id']));
 		} else {
+			$this->data['image_base'] = $image_base;
+			$this->data['admin_base'] = $admin_base;
+
 			$this->response->setOutput($this->render());
 		}
 	}
 
-	// Delivery note
+	/**
+	 * Function deliveryNote
+	 *
+	 * Standalone page to View, Download(pdf) and Print data.
+	 * Uses Dompdf. Strict urls and inline CSS are required.
+	 * 
+	 * Calls -> order_delivery_note.tpl
+	 */
 	public function deliveryNote() {
 		$this->language->load('sale/order');
 
@@ -3578,9 +3617,11 @@ class ControllerSaleOrder extends Controller {
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
 			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
-			$this->data['base'] = HTTPS_SERVER;
+			$image_base = HTTPS_IMAGE;
+			$admin_base = HTTPS_SERVER;
 		} else {
-			$this->data['base'] = HTTP_SERVER;
+			$image_base = HTTP_IMAGE;
+			$admin_base = HTTP_SERVER;
 		}
 
 		$this->data['direction'] = $this->language->get('direction');
@@ -3640,7 +3681,7 @@ class ControllerSaleOrder extends Controller {
 		}
 
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_CATALOG . 'image/' . $this->config->get('config_logo') : HTTP_CATALOG . 'image/' . $this->config->get('config_logo');
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
 		} else {
 			$this->data['logo'] = '';
 		}
@@ -3799,16 +3840,30 @@ class ControllerSaleOrder extends Controller {
 
 		$this->template = 'sale/order_delivery_note.tpl';
 
+		// Dompdf or View/Print output
 		if ($pdf) {
+			$this->data['image_base'] = DIR_IMAGE;
+			$this->data['admin_base'] = DIR_APPLICATION;
+
 			$document_type = $this->language->get('text_delivery_note');
 
 			$this->response->setOutput(pdf($this->render(), $document_type, $this->request->get['order_id']));
 		} else {
+			$this->data['image_base'] = $image_base;
+			$this->data['admin_base'] = $admin_base;
+
 			$this->response->setOutput($this->render());
 		}
 	}
 
-	// Invoice
+	/**
+	 * Function invoice
+	 *
+	 * Standalone page to View, Download(pdf) and Print data.
+	 * Uses Dompdf. Strict urls and inline CSS are required.
+	 * 
+	 * Calls -> order_invoice.tpl
+	 */
 	public function invoice() {
 		$this->language->load('sale/order');
 
@@ -3818,9 +3873,11 @@ class ControllerSaleOrder extends Controller {
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
 			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
-			$this->data['base'] = HTTPS_SERVER;
+			$image_base = HTTPS_IMAGE;
+			$admin_base = HTTPS_SERVER;
 		} else {
-			$this->data['base'] = HTTP_SERVER;
+			$image_base = HTTP_IMAGE;
+			$admin_base = HTTP_SERVER;
 		}
 
 		$this->data['direction'] = $this->language->get('direction');
@@ -3877,7 +3934,7 @@ class ControllerSaleOrder extends Controller {
 		}
 
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_CATALOG . 'image/' . $this->config->get('config_logo') : HTTP_CATALOG . 'image/' . $this->config->get('config_logo');
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
 		} else {
 			$this->data['logo'] = '';
 		}
@@ -4055,11 +4112,18 @@ class ControllerSaleOrder extends Controller {
 
 		$this->template = 'sale/order_invoice.tpl';
 
+		// Dompdf or View/Print output
 		if ($pdf) {
+			$this->data['image_base'] = DIR_IMAGE;
+			$this->data['admin_base'] = DIR_APPLICATION;
+
 			$document_type = $this->language->get('text_invoice');
 
 			$this->response->setOutput(pdf($this->render(), $document_type, $this->request->get['order_id']));
 		} else {
+			$this->data['image_base'] = $image_base;
+			$this->data['admin_base'] = $admin_base;
+
 			$this->response->setOutput($this->render());
 		}
 	}

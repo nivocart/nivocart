@@ -2,17 +2,149 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="<?php echo $direction; ?>" lang="<?php echo $language; ?>" xml:lang="<?php echo $language; ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title><?php echo $title; ?></title>
-<base href="<?php echo $base; ?>" />
-<link rel="icon" type="image/png" href="docicon.png" />
-<link rel="stylesheet" type="text/css" href="view/stylesheet/invoice.css" media="screen, print" />
+<title>Delivery Note</title>
+<style>
+html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+body {
+	background: #FFF;
+}
+body, td, th, input, select, textarea, option, optgroup {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #000;
+}
+td span {
+	font-size: 10px;
+}
+td > img {
+	margin: 2px 2px 0 0;
+}
+h1 {
+	text-transform: uppercase;
+	color: #BBB;
+	text-align: right;
+	font-size: 24px;
+	font-weight: normal;
+	padding-bottom: 5px;
+	margin-top: 0;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #DDD;
+}
+/* General */
+.documents {
+	margin: 0 5px;
+}
+.store {
+	width: 100%;
+	margin-bottom: 20px;
+}
+.div2 {
+	float: left;
+	display: inline-block;
+}
+.div3 {
+	float: right;
+	display: inline-block;
+	padding: 5px;
+}
+.heading td {
+	background: #F2F2F2;
+}
+/* Table */
+table.address, table.product, table.comment, table.delivery {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+table.bank {
+	width: 100%;
+	margin-top: 20px;
+}
+.left {
+	text-align: left;
+}
+.right {
+	text-align: right;
+}
+.center {
+	text-align: center;
+}
+.top-left {
+	width: 50%;
+}
+.top-right {
+	float: right;
+	width: 50%;
+	text-align: left;
+	vertical-align: top;
+}
+/* Address */
+.address {
+	width: 100%;
+	margin-bottom: 20px;
+	border-top: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+}
+.address th, .address td {
+	border-left: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	padding: 5px;
+	vertical-align: text-bottom;
+}
+.address td {
+	width: 50%;
+}
+/* Product */
+.product {
+	width: 100%;
+	margin-bottom: 20px;
+	border-top: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+}
+.product td {
+	border-left: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	padding: 5px;
+}
+/* Comment */
+.comment {
+	width: 100%;
+	margin-bottom: 20px;
+	border-top: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+}
+.comment td {
+	border-left: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	padding: 5px;
+}
+/* Delivery */
+.delivery {
+	width: 100%;
+	margin-bottom: 20px;
+	border-top: 1px solid #DDD;
+	border-right: 1px solid #DDD;
+}
+.delivery th, .delivery td {
+	border-left: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
+	padding: 5px;
+	vertical-align: text-bottom;
+}
+.delivery td {
+	width: 50%;
+}
+</style>
 </head>
 <body>
 <?php foreach ($orders as $order) { ?>
 <div class="documents">
   <?php if ($logo) { ?>
-    <img src="<?php echo $logo; ?>" alt="" style="padding:15px 0 0 5px;" />
+    <img src="<?php echo $image_base; ?>data/logo.png" alt="" style="padding:15px 0 0 5px;" />
   <?php } ?>
   <h1><?php echo $text_delivery_note; ?></h1>
   <table class="store">
@@ -20,17 +152,14 @@
       <td class="top-left">
         <b><?php echo $order['store_name']; ?></b><br />
         <?php echo $order['store_address']; ?><br /><br />
-        <img src="view/image/location/phone.png" alt="" height="14" width="14" /> <?php echo $order['store_telephone']; ?><br />
-        <?php if ($order['store_fax']) { ?>
-          <img src="view/image/location/fax.png" alt="" height="14" width="14" /> <?php echo $text_fax; ?> <?php echo $order['store_fax']; ?><br />
-        <?php } ?>
-        <img src="view/image/location/mail.png" alt="" height="14" width="14" /> <?php echo $order['store_email']; ?><br />
-        <img src="view/image/location/global.png" alt="" height="14" width="14" /> <?php echo $order['store_url']; ?><br />
+        <img src="<?php echo $admin_base; ?>view/image/location/phone.png" alt="" height="14" width="14" /> <?php echo $order['store_telephone']; ?><br />
+        <img src="<?php echo $admin_base; ?>view/image/location/mail.png" alt="" height="14" width="14" /> <?php echo $order['store_email']; ?><br />
+        <img src="<?php echo $admin_base; ?>view/image/location/global.png" alt="" height="14" width="14" /> <?php echo $order['store_url']; ?><br />
         <?php if ($order['store_company_id']) { ?>
-          <img src="view/image/location/company.png" alt="" height="14" width="14" /> <?php echo $order['store_company_id']; ?><br />
+          <img src="<?php echo $admin_base; ?>view/image/location/company.png" alt="" height="14" width="14" /> <?php echo $order['store_company_id']; ?><br />
         <?php } ?>
         <?php if ($order['store_company_tax_id']) { ?>
-          <img src="view/image/location/tax.png" alt="" height="14" width="14" /> <?php echo $order['store_company_tax_id']; ?><br />
+          <img src="<?php echo $admin_base; ?>view/image/location/tax.png" alt="" height="14" width="14" /> <?php echo $order['store_company_tax_id']; ?><br />
         <?php } ?>
       </td>
       <td class="top-right">
@@ -71,12 +200,12 @@
     <tr>
       <td>
         <?php echo $order['payment_address']; ?><br/><br/>
-        <img src="view/image/location/phone.png" alt="" height="14" width="14" /> <?php echo $order['telephone']; ?><br/>
+        <img src="<?php echo $admin_base; ?>view/image/location/phone.png" alt="" height="14" width="14" /> <?php echo $order['telephone']; ?><br/>
         <?php if ($order['payment_company']) { ?>
-          <img src="view/image/location/company.png" alt="" height="14" width="14" /> <?php echo $order['payment_company']; ?><br/>
+          <img src="<?php echo $admin_base; ?>view/image/location/company.png" alt="" height="14" width="14" /> <?php echo $order['payment_company']; ?><br/>
         <?php } ?>
         <?php if ($order['payment_company_id']) { ?>
-          <img src="view/image/location/tax.png" alt="" height="14" width="14" /> <?php echo $order['payment_company_id']; ?><br/>
+          <img src="<?php echo $admin_base; ?>view/image/location/tax.png" alt="" height="14" width="14" /> <?php echo $order['payment_company_id']; ?><br/>
         <?php } ?>
       </td>
       <td><?php echo $order['shipping_address']; ?></td>
