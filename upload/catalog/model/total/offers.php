@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Class Offers (Enum)
+ *
+ * @package NivoCart
+ */
 enum OfferVariation: string {
 	case ProToPro = '1';
 	case ProToCat = '2';
@@ -7,6 +11,11 @@ enum OfferVariation: string {
 	case CatToPro = '4';
 }
 
+/**
+ * Class Offer
+ *
+ * @package NivoCart
+ */
 class Offer {
 	public string $item1;
 	public string $item2;
@@ -42,13 +51,23 @@ class ModelTotalOffers extends Model {
 	protected $registry;
 	protected array $discount_list = [];
 
+	/**
+	 * Construct
+	 */
 	public function __construct(Registry $registry) {
 		$this->registry = $registry;
 		$this->offers();
 	}
 
-	public function __get(string $name): mixed {
-		return $this->registry->get($name);
+	/**
+	 * Get
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public function get(string $key): mixed {
+		return (isset($this->data[$key]) ? $this->data[$key] : null);
 	}
 
 	protected function getDiscount(array $discount_item, array &$discountable_products, array &$already_discounted_items = [], int $one_to_many = 0): float {
