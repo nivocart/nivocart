@@ -8,152 +8,137 @@ class ModelTotalCoupon extends Model {
 	/**
 	 * Functions Get, Calculate, Resolve, Confirm
 	 */
-	public function getTotal(array $taxes, float $total): array {
-		if (!isset($this->session->data['coupon'])) {
-			return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
-		}
+    public function getTotal(array $taxes, float $total): array {
+        if (!isset($this->session->data['coupon'])) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-		$this->language->load('total/coupon');
+        $this->language->load('total/coupon');
 
-		$this->load->model('checkout/coupon');
-		$this->load->model('catalog/product');
+        $this->load->model('checkout/coupon');
+        $this->load->model('catalog/product');
 
-		$coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
+        $coupon_info = $this->model_checkout_coupon->getCoupon($this->session->data['coupon']);
 
-		if (!$coupon_info) {
-			return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
-		}
+        if (!$coupon_info) {
+            return ['total_data' => [], 'total' => 0.0, 'taxes' => []];
+        }
 
-		[$discount_total, $tax_adjustments] = $this->calculateDiscount($coupon_info, $total);
+        [$discount_total, $tax_adjustments] = $this->calculateDiscount($coupon_info, $total);
 
-		return [
-			'total_data' => [[
-				'code'       => 'coupon',
-				'title'      => sprintf($this->language->get('text_coupon'), $this->session->data['coupon']),
-				'text'       => $this->currency->format(-$discount_total, $this->config->get('config_currency')),
-				'value'      => -$discount_total,
-				'sort_order' => $this->config->get('coupon_sort_order')
-			]],
-			'total' => -$discount_total,
-			'taxes' => $tax_adjustments,
-		];
-	}
+        return [
+            'total_data' => [[
+                'code'       => 'coupon',
+                'title'      => sprintf($this->language->get('text_coupon'), $this->session->data['coupon']),
+                'text'       => $this->currency->format(-$discount_total, $this->config->get('config_currency')),
+                'value'      => -$discount_total,
+                'sort_order' => $this->config->get('coupon_sort_order')
+            ]],
+            'total' => -$discount_total,
+            'taxes' => $tax_adjustments,
+        ];
+    }
 
-	private function calculateDiscount(array $coupon_info, float $total): array {
-		$coupon_special = $this->config->get('config_coupon_special');
-		$discount_total = 0.0;
-		$tax_adjustments = [];
+    public function confirm(array $order_info, array $order_total): void {
+        $code = OrderTotalHelper::extractCodeFromTitle($order_total['title']);
 
-		$sub_total = $this->resolveSubTotal($coupon_info);
+        $this->load->model('checkout/coupon');
 
-		if ($coupon_info['type'] === 'F') {
-			$coupon_info['discount'] = min((float)$coupon_info['discount'], $sub_total);
-		}
+        $coupon_info = $this->model_checkout_coupon->getCoupon($code, false, false);
 
-		foreach ($this->cart->getProducts() as $product) {
-			if (!$this->productIsEligible($product, $coupon_info, $coupon_special)) {
-				continue;
-			}
+        if ($coupon_info) {
+            $this->model_checkout_coupon->redeem(
+                $coupon_info['coupon_id'],
+                $order_info['order_id'],
+                $order_info['customer_id'],
+                $order_total['value']
+            );
+        }
+    }
 
-			$discount = $this->calculateProductDiscount($product, $coupon_info, $sub_total);
+    private function calculateDiscount(array $coupon_info, float $total): array {
+        $coupon_special = (bool)$this->config->get('config_coupon_special');
+        $discount_total = 0.0;
+        $tax_adjustments = [];
 
-			if ($product['tax_class_id'] && $discount > 0) {
-				foreach ($this->tax->getRates($discount, $product['tax_class_id']) as $tax_rate) {
-					if ($tax_rate['type'] === 'P') {
-						$tax_adjustments[$tax_rate['tax_rate_id']] = ($tax_adjustments[$tax_rate['tax_rate_id']] ?? 0) - $tax_rate['amount'];
-					}
-				}
-			}
+        $sub_total = $this->resolveSubTotal($coupon_info);
 
-			$discount_total += $discount;
-		}
+        if ($coupon_info['type'] === 'F') {
+            $coupon_info['discount'] = min((float)$coupon_info['discount'], $sub_total);
+        }
 
-		// Shipping discount
-		if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'])) {
-			$shipping = $this->session->data['shipping_method'];
+        foreach ($this->cart->getProducts() as $product) {
+            if (!$this->productIsEligible($product, $coupon_info, $coupon_special)) {
+                continue;
+            }
 
-			if (!empty($shipping['tax_class_id'])) {
-				foreach ($this->tax->getRates($shipping['cost'], $shipping['tax_class_id']) as $tax_rate) {
-					if ($tax_rate['type'] === 'P') {
-						$tax_adjustments[$tax_rate['tax_rate_id']] = ($tax_adjustments[$tax_rate['tax_rate_id']] ?? 0) - $tax_rate['amount'];
-					}
-				}
-			}
+            $discount = $this->calculateProductDiscount($product, $coupon_info, $sub_total);
 
-			$discount_total += (float)$shipping['cost'];
-		}
+            if ($product['tax_class_id'] && $discount > 0) {
+                foreach ($this->tax->getRates($discount, $product['tax_class_id']) as $tax_rate) {
+                    if ($tax_rate['type'] === 'P') {
+                        $tax_adjustments[$tax_rate['tax_rate_id']] = ($tax_adjustments[$tax_rate['tax_rate_id']] ?? 0) - $tax_rate['amount'];
+                    }
+                }
+            }
 
-		// Discount can never exceed the running total
-		$discount_total = min($discount_total, $total);
+            $discount_total += $discount;
+        }
 
-		return [$discount_total, $tax_adjustments];
-	}
+        if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'])) {
+            $shipping = $this->session->data['shipping_method'];
 
-	private function resolveSubTotal(array $coupon_info): float {
-		if (!$coupon_info['product']) {
-			return (float)$this->cart->getSubTotal();
-		}
+            if (!empty($shipping['tax_class_id'])) {
+                foreach ($this->tax->getRates($shipping['cost'], $shipping['tax_class_id']) as $tax_rate) {
+                    if ($tax_rate['type'] === 'P') {
+                        $tax_adjustments[$tax_rate['tax_rate_id']] = ($tax_adjustments[$tax_rate['tax_rate_id']] ?? 0) - $tax_rate['amount'];
+                    }
+                }
+            }
 
-		$sub_total = 0.0;
+            $discount_total += (float)$shipping['cost'];
+        }
 
-		foreach ($this->cart->getProducts() as $product) {
-			if (in_array($product['product_id'], $coupon_info['product'], strict: true)) {
-				$sub_total += (float)$product['total'];
-			}
-		}
+        return [min($discount_total, $total), $tax_adjustments];
+    }
 
-		return $sub_total;
-	}
+    private function resolveSubTotal(array $coupon_info): float {
+        if (!$coupon_info['product']) {
+            return (float)$this->cart->getSubTotal();
+        }
 
-	// Function might need rework
-	private function productIsEligible(array $product, array $coupon_info, bool $coupon_special): bool {
-		if (!$coupon_info['product'] && !in_array($product['product_id'], $coupon_info['product'], strict: true)) {
-			return false;
-		}
+        $sub_total = 0.0;
 
-		if (!$coupon_special) {
-			$result = $this->model_catalog_product->getProduct($product['product_id']);
-			if (!empty($result['special'])) {
-				return false;
-			}
-		}
+        foreach ($this->cart->getProducts() as $product) {
+            if (in_array($product['product_id'], $coupon_info['product'], strict: true)) {
+                $sub_total += (float)$product['total'];
+            }
+        }
 
-		return true;
-	}
+        return $sub_total;
+    }
 
-	private function calculateProductDiscount(array $product, array $coupon_info, float $sub_total): float {
-		return match($coupon_info['type']) {
-			'F'     => (float)$coupon_info['discount'] * ((float)$product['total'] / $sub_total),
-			'P'     => (float)$product['total'] / 100 * (float)$coupon_info['discount'],
-			default => 0.0,
-		};
-	}
+    private function productIsEligible(array $product, array $coupon_info, bool $coupon_special): bool {
+        if ($coupon_info['product'] && !in_array($product['product_id'], $coupon_info['product'], strict: true)) {
+            return false;
+        }
 
-	public function confirm(array $order_info, array $order_total): void {
-		$code = $this->extractCodeFromTitle($order_total['title']);
+        if (!$coupon_special) {
+            $result = $this->model_catalog_product->getProduct($product['product_id']);
 
-		$this->load->model('checkout/coupon');
+            if (!empty($result['special'])) {
+                return false;
+            }
+        }
 
-		$coupon_info = $this->model_checkout_coupon->getCoupon($code, false, false);
+        return true;
+    }
 
-		if ($coupon_info) {
-			$this->model_checkout_coupon->redeem(
-				$coupon_info['coupon_id'],
-				$order_info['order_id'],
-				$order_info['customer_id'],
-				$order_total['value']
-			);
-		}
-	}
-
-	private function extractCodeFromTitle(string $title): string {
-		$start = strpos($title, '(');
-		$end = strrpos($title, ')');
-
-		if ($start !== false && $end !== false && $end > $start) {
-			return substr($title, $start + 1, $end - $start - 1);
-		}
-
-		return '';
-	}
+    private function calculateProductDiscount(array $product, array $coupon_info, float $sub_total): float {
+        return match($coupon_info['type']) {
+            'F'     => (float)$coupon_info['discount'] * ((float)$product['total'] / $sub_total),
+            'P'     => (float)$product['total'] / 100 * (float)$coupon_info['discount'],
+            default => 0.0,
+        };
+    }
 }

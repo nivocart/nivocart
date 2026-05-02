@@ -77,6 +77,7 @@ require_once(DIR_SYSTEM . 'library/browser.php');
 require_once(DIR_SYSTEM . 'helper/agent.php');
 require_once(DIR_SYSTEM . 'helper/crypto.php');
 require_once(DIR_SYSTEM . 'helper/pdf.php');
+require_once(DIR_SYSTEM . 'helper/totals.php');
 require_once(DIR_SYSTEM . 'helper/utf8.php');
 
 // Vendor
