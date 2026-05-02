@@ -158,7 +158,7 @@ class ControllerToolConfiguration extends Controller {
 		$database_name = DB_DRIVER;
 
 		if ($database_name === 'mysqli') {
-			$this->data['database_name'] = 'MySQLi';
+			$this->data['database_name'] = 'MySQLi / MariaDB';
 		} else {
 			$this->data['database_name'] = 'SQL';
 		}
@@ -316,6 +316,7 @@ class ControllerToolConfiguration extends Controller {
 			'length'     => $ds(DIR_SYSTEM . 'library/length.php'),
 			'log'        => $ds(DIR_SYSTEM . 'library/log.php'),
 			'mail'       => $ds(DIR_SYSTEM . 'library/mail.php'),
+			'offer'      => $ds(DIR_SYSTEM . 'library/offer.php'),
 			'pagination' => $ds(DIR_SYSTEM . 'library/pagination.php'),
 			'request'    => $ds(DIR_SYSTEM . 'library/request.php'),
 			'response'   => $ds(DIR_SYSTEM . 'library/response.php'),
