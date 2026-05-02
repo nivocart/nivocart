@@ -1,5 +1,5 @@
 /*
- Common v1.0.5 | @nivocart | NivoCart | OSL v3.0
+ Common v2.0.0 | @nivocart | NivoCart | OSL v3.0
  ---------------------------------------------------------------------------
  Common.js file for development. Use minified version for production.
  ---------------------------------------------------------------------------
@@ -59,9 +59,10 @@ $(document).ready(function() {
 		}
 	});
 
-	// Close X Classes remove
-	$('.success, .warning, .attention, .tooltip').on('click', 'img', function() {
-		$(this).parent().fadeOut('slow', function() {
+	// Close X Classes remove — delegated to document for dynamic/JSON content
+	$(document).on('click', '.success img, .warning img, .attention img, .tooltip img', function() {
+		var $parent = $(this).parent();
+		$parent.fadeOut('slow', function() {
 			$(this).remove();
 		});
 	});
