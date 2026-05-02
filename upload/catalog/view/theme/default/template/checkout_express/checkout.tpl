@@ -26,15 +26,15 @@
             <input type="submit" name="add_wrapping" value="<?php echo $button_wrapping_add; ?>" class="button-wrap-add" />
           <?php } ?>
         </form>
-      <?php } ?>
+      <?php } ?>  
       <?php if ($this->config->get('config_express_coupon')) { ?>
-        <a onclick="$('#coupon').show(500);$('#voucher').hide();$('#reward').hide();" class="button"><?php echo $text_express_coupon; ?></a>
+        <a onclick="$('#coupon').toggle(500);$('#voucher').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_express_coupon; ?></a>
       <?php } ?>
       <?php if ($this->config->get('config_express_voucher')) { ?>
-        <a onclick="$('#voucher').show(500);$('#coupon').hide();$('#reward').hide();" class="button"><?php echo $text_express_voucher; ?></a>
+        <a onclick="$('#voucher').toggle(500);$('#coupon').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_express_voucher; ?></a>
       <?php } ?>
       <?php if ($show_point && $reward_point) { ?>
-        <a onclick="$('#reward').show(500);$('#voucher').hide();$('#coupon').hide();" class="button"><?php echo $text_express_reward; ?></a>
+        <a onclick="$('#reward').toggle(500);$('#coupon').hide(500);$('#voucher').hide(500);" class="button"><?php echo $text_express_reward; ?></a>
       <?php } ?>
       <div id="coupon" class="content" style="margin-top:10px; margin-bottom:20px; display:none;">
         <img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" onclick="dismiss1('coupon');" class="close" />
@@ -825,13 +825,13 @@ function quickConfirm(module) {
 
 <script type="text/javascript"><!--
 function dismiss1(coupon) {
-	document.getElementById('coupon').style.display="none";
+	document.getElementById('coupon').style.display = "none";
 }
 function dismiss2(voucher) {
-	document.getElementById('voucher').style.display="none";
+	document.getElementById('voucher').style.display = "none";
 }
 function dismiss3(reward) {
-	document.getElementById('reward').style.display="none";
+	document.getElementById('reward').style.display = "none";
 }
 //--></script>
 

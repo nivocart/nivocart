@@ -88,6 +88,7 @@ $_['error_shipping']                          = 'Shipping method is required!';
 $_['error_no_shipping']                       = 'No Shipping options are available. Please <a href="%s">contact us</a> for assistance!';
 $_['error_payment']                           = 'Payment method is required!';
 $_['error_no_payment']                        = 'No Payment options are available. Please <a href="%s">contact us</a> for assistance!';
+$_['error_stock']                             = 'Warning: One or more products are not currently in stock!';
 $_['error_coupon']                            = 'Warning: Coupon is either invalid, expired or reached it\'s usage limit!';
 $_['error_voucher']                           = 'Warning: Gift Voucher is either invalid or the balance has been used up!';
 $_['error_reward']                            = 'Warning: Please enter the amount of reward points to use!';

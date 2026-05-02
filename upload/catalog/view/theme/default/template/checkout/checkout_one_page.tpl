@@ -25,13 +25,13 @@
         </form>
       <?php } ?>
       <?php if ($this->config->get('config_one_page_coupon')) { ?>
-        <a onclick="$('#coupon').show(500);$('#voucher').hide();$('#reward').hide();" class="button"><?php echo $text_one_page_coupon; ?></a>
+        <a onclick="$('#coupon').toggle(500);$('#voucher').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_one_page_coupon; ?></a>
       <?php } ?>
       <?php if ($this->config->get('config_one_page_voucher')) { ?>
-        <a onclick="$('#voucher').show(500);$('#coupon').hide();$('#reward').hide();" class="button"><?php echo $text_one_page_voucher; ?></a>
+        <a onclick="$('#voucher').toggle(500);$('#coupon').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_one_page_voucher; ?></a>
       <?php } ?>
       <?php if ($show_point && $reward_point) { ?>
-        <a onclick="$('#reward').show(500);$('#voucher').hide();$('#coupon').hide();" class="button"><?php echo $text_one_page_reward; ?></a>
+        <a onclick="$('#reward').toggle(500);$('#coupon').hide(500);$('#voucher').hide(500);" class="button"><?php echo $text_one_page_reward; ?></a>
       <?php } ?>
       <div id="coupon" class="content" style="margin-top:10px; margin-bottom:20px; display:none;">
         <img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" onclick="dismiss1('coupon');" class="close" />
@@ -415,7 +415,6 @@
           <h2><?php echo $text_comments; ?></h2>
           <textarea name="comment" rows="4" style="width:100%;"><?php echo $comment; ?></textarea>
         </div>
-
         <div>
           <?php if ($error_agree) { ?>
             <div class="attention" style="margin:5px 0;"><?php echo $error_agree; ?></div>
@@ -427,7 +426,7 @@
               </div>
             </div>
           <?php } ?>
-          <div id="order-errors" style="display:none;"></div>
+          <div id="order-errors"></div>
           <input type="button" value="<?php echo $button_continue; ?>" id="button-order" class="button" style="float:right; margin-bottom:10px;" />
         </div>
       </div>
@@ -493,7 +492,7 @@ $('select[name=\'country_id\']').on('change', function() {
     url: 'index.php?route=checkout/checkout_one_page/country&country_id=' + this.value,
     dataType: 'json',
     beforeSend: function() {
-      $('.attention, .error').remove();
+      $('.attention, .warning, .error').remove();
       $('select[name=\'country_id\']').after('<span class="wait">&nbsp;<img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /></span>');
     },
     complete: function() {
@@ -552,7 +551,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
     url: 'index.php?route=checkout/checkout_one_page/country&country_id=' + this.value,
     dataType: 'json',
     beforeSend: function() {
-      $('.attention, .error').remove();
+      $('.attention, .warning, .error').remove();
       $('select[name=\'shipping_country_id\']').after('<span class="wait">&nbsp;<img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /></span>');
     },
     complete: function() {
@@ -598,7 +597,7 @@ $('select[name=\'shipping_country_id\']').trigger('change');
 
 <script type="text/javascript"><!--
 function refresh() {
-  $('.attention, .error, .wait').remove();
+  $('.attention, .warning, .error, .wait').remove();
   $('#form').append('<input type="hidden" id="refresh" name="refresh" value="1" />');
   $('#form').submit();
 }
@@ -662,17 +661,22 @@ $('#button-order').on('click', function() {
       $('#button-order').attr('disabled', false);
       $('.wait').remove();
     },
-    success: function(json) {
-      $('.warning, .error, .attention').remove();
 
-      if (json['redirect']) {
-        location = json['redirect'];
-      } else if (json['error']) {
-        if (json['error']['warning']) {
-          $('#order-errors').html('<div class="warning">' + json['error']['warning'] + '</div>').show();
-        }
-      }
-    },
+	success: function(json) {
+		$('.warning, .error, .attention').remove();
+
+		if (json['redirect']) {
+			location = json['redirect'];
+		} else if (json['error']) {
+			var errorHtml = '<div class="warning">';
+			$.each(json['error'], function(field, message) {
+				errorHtml += message + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /><br />';
+			});
+			errorHtml += '</div>';
+			$('#order-errors').html(errorHtml).show();
+			$('html, body').animate({ scrollTop: $('#order-errors').offset().top - 20 }, 500);
+		}
+	},
     error: function(xhr, ajaxOptions, thrownError) {
       alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
     }

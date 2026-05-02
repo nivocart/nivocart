@@ -13,8 +13,14 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->redirect($this->url->link('checkout_express/checkout', '', 'SSL'));
 		}
 
+		// Secure redirect
 		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
 			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+		}
+
+		// Customer Login redirect
+		if (!$this->customer->isLogged() || !$this->customer->isSecure()) {
+			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
 		// Validate cart has products and has stock
@@ -29,7 +35,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -145,6 +151,8 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
+		} elseif (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {
+			$this->data['error_warning'] = $this->language->get('error_stock');
 		} else {
 			$this->data['error_warning'] = '';
 		}
@@ -205,7 +213,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		$max_points = min($points / $points_rate, $points_total);
-		$sub_total  = $this->cart->getSubTotal();
+		$sub_total = $this->cart->getSubTotal();
 
 		$reward_points = ($points && $max_points > $sub_total) ? $sub_total : $max_points;
 
@@ -293,185 +301,195 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		// -----------------------------------------------------------------------
 		// POST — validate, store session data, return JSON redirect to confirm
 		// -----------------------------------------------------------------------
-		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
-			$customer_info = $this->request->post;
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if ($this->validate()) {
+				$customer_info = $this->request->post;
 
-			// Auto-register guest customers
-			if (!$this->customer->isLogged()) {
-				$this->load->model('account/customer');
-				$this->load->model('checkout/checkout_tools');
+				// Auto-register guest customers
+				if (!$this->customer->isLogged()) {
+					$this->load->model('account/customer');
+					$this->load->model('checkout/checkout_tools');
 
-				$newsletter = ($this->config->get('config_one_page_newsletter') === 1) ? 1 : 0;
+					$newsletter = ($this->config->get('config_one_page_newsletter') === 1) ? 1 : 0;
 
-				$customer_data = [
-					'customer_group_id' => $customer_info['customer_group_id'],
-					'firstname'         => $customer_info['firstname'],
-					'lastname'          => $customer_info['lastname'],
-					'email'             => $customer_info['email'],
-					'telephone'         => isset($customer_info['telephone']) ? $customer_info['telephone'] : '000',
-					'gender'            => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
-					'date_of_birth'     => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
-					'password'          => $this->model_checkout_checkout_tools->generatePassword(),
-					'newsletter'        => $newsletter,
-					'company'           => $customer_info['company'],
-					'company_id'        => $customer_info['company_id'],
-					'tax_id'            => $customer_info['tax_id'],
-					'address_1'         => $customer_info['address_1'],
-					'address_2'         => $customer_info['address_2'],
-					'postcode'          => $customer_info['postcode'],
-					'city'              => $customer_info['city'],
-					'zone_id'           => $customer_info['zone_id'],
-					'country_id'        => $customer_info['country_id']
+					$customer_data = [
+						'customer_group_id' => $customer_info['customer_group_id'],
+						'firstname'         => $customer_info['firstname'],
+						'lastname'          => $customer_info['lastname'],
+						'email'             => $customer_info['email'],
+						'telephone'         => isset($customer_info['telephone']) ? $customer_info['telephone'] : '000',
+						'gender'            => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
+						'date_of_birth'     => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
+						'password'          => $this->model_checkout_checkout_tools->generatePassword(),
+						'newsletter'        => $newsletter,
+						'company'           => $customer_info['company'],
+						'company_id'        => $customer_info['company_id'],
+						'tax_id'            => $customer_info['tax_id'],
+						'address_1'         => $customer_info['address_1'],
+						'address_2'         => $customer_info['address_2'],
+						'postcode'          => $customer_info['postcode'],
+						'city'              => $customer_info['city'],
+						'zone_id'           => $customer_info['zone_id'],
+						'country_id'        => $customer_info['country_id']
+					];
+
+					$this->model_account_customer->addCustomer($customer_data);
+
+					$customer_status = $this->model_account_customer->getCustomerByEmail($customer_info['email']);
+
+					if ($customer_status && !$customer_status['approved']) {
+						$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
+					} else {
+						$this->customer->login($customer_data['email'], $customer_data['password']);
+					}
+				}
+
+				// Ensure logged-in customer has a default address
+				if ($this->customer->isLogged()) {
+					$default_address_id = $this->model_account_address->getDefaultAddressId($this->customer->getId());
+
+					if (!$default_address_id) {
+						$this->model_account_address->addAddress([
+							'customer_id' => $this->customer->getId(),
+							'firstname'   => $customer_info['firstname'],
+							'lastname'    => $customer_info['lastname'],
+							'company'     => $customer_info['company'],
+							'company_id'  => $customer_info['company_id'],
+							'tax_id'      => $customer_info['tax_id'],
+							'address_1'   => $customer_info['address_1'],
+							'address_2'   => $customer_info['address_2'],
+							'postcode'    => $customer_info['postcode'],
+							'city'        => $customer_info['city'],
+							'zone_id'     => $customer_info['zone_id'],
+							'country_id'  => $customer_info['country_id'],
+							'default'     => 1
+						]);
+					}
+				}
+
+				// Resolve country and zone names
+				$country_info = $this->model_localisation_country->getCountry((int)$customer_info['country_id']);
+				$country_name = $country_info ? $country_info['name'] : '';
+
+				$zone_info = $this->model_localisation_zone->getZone((int)$customer_info['zone_id']);
+				$zone_name = $zone_info ? $zone_info['name'] : '';
+
+				// Payment address
+				$payment = [
+					'firstname'      => $customer_info['firstname'],
+					'lastname'       => $customer_info['lastname'],
+					'company'        => $customer_info['company'],
+					'company_id'     => $customer_info['company_id'],
+					'tax_id'         => $customer_info['tax_id'],
+					'address_1'      => $customer_info['address_1'],
+					'address_2'      => $customer_info['address_2'],
+					'city'           => $customer_info['city'],
+					'postcode'       => $customer_info['postcode'],
+					'zone'           => $zone_name,
+					'zone_id'        => $customer_info['zone_id'],
+					'country'        => $country_name,
+					'country_id'     => $customer_info['country_id'],
+					'payment_method' => isset($this->session->data['payment_method']['title']) ? $this->session->data['payment_method']['title'] : (isset($customer_info['payment_method']) ? $customer_info['payment_method'] : ''),
+					'payment_code'   => isset($this->session->data['payment_method']['code'])  ? $this->session->data['payment_method']['code']  : (isset($customer_info['code']) ? $customer_info['code'] : '')
 				];
 
-				$this->model_account_customer->addCustomer($customer_data);
-
-				$customer_status = $this->model_account_customer->getCustomerByEmail($customer_info['email']);
-
-				if ($customer_status && !$customer_status['approved']) {
-					$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
-				} else {
-					$this->customer->login($customer_data['email'], $customer_data['password']);
-				}
-			}
-
-			// Ensure logged-in customer has a default address
-			if ($this->customer->isLogged()) {
-				$default_address_id = $this->model_account_address->getDefaultAddressId($this->customer->getId());
-
-				if (!$default_address_id) {
-					$this->model_account_address->addAddress([
-						'customer_id' => $this->customer->getId(),
+				// Shipping address
+				if (isset($customer_info['check_shipping_address'])) {
+					// Same as payment address
+					$shipping = [
 						'firstname'   => $customer_info['firstname'],
 						'lastname'    => $customer_info['lastname'],
 						'company'     => $customer_info['company'],
-						'company_id'  => $customer_info['company_id'],
-						'tax_id'      => $customer_info['tax_id'],
 						'address_1'   => $customer_info['address_1'],
 						'address_2'   => $customer_info['address_2'],
-						'postcode'    => $customer_info['postcode'],
 						'city'        => $customer_info['city'],
+						'postcode'    => $customer_info['postcode'],
+						'zone'        => $zone_name,
 						'zone_id'     => $customer_info['zone_id'],
-						'country_id'  => $customer_info['country_id'],
-						'default'     => 1
-					]);
+						'country'     => $country_name,
+						'country_id'  => $customer_info['country_id']
+					];
+
+					$this->session->data['check_shipping_address'] = 1;
+				} else {
+					$s_country_info = $this->model_localisation_country->getCountry((int)$customer_info['shipping_country_id']);
+					$s_country_name = $s_country_info ? $s_country_info['name'] : '';
+
+					$s_zone_info = $this->model_localisation_zone->getZone((int)$customer_info['shipping_zone_id']);
+					$s_zone_name = $s_zone_info ? $s_zone_info['name'] : '';
+
+					$shipping = [
+						'firstname'  => $customer_info['shipping_firstname'],
+						'lastname'   => $customer_info['shipping_lastname'],
+						'company'    => $customer_info['shipping_company'],
+						'address_1'  => $customer_info['shipping_address_1'],
+						'address_2'  => $customer_info['shipping_address_2'],
+						'city'       => $customer_info['shipping_city'],
+						'postcode'   => $customer_info['shipping_postcode'],
+						'zone'       => $s_zone_name,
+						'zone_id'    => $customer_info['shipping_zone_id'],
+						'country'    => $s_country_name,
+						'country_id' => $customer_info['shipping_country_id']
+					];
+
+					$this->session->data['check_shipping_address'] = 0;
 				}
-			}
 
-			// Resolve country and zone names
-			$country_info = $this->model_localisation_country->getCountry((int)$customer_info['country_id']);
-			$country_name = $country_info ? $country_info['name'] : '';
-
-			$zone_info = $this->model_localisation_zone->getZone((int)$customer_info['zone_id']);
-			$zone_name = $zone_info ? $zone_info['name'] : '';
-
-			// Payment address
-			$payment = [
-				'firstname'      => $customer_info['firstname'],
-				'lastname'       => $customer_info['lastname'],
-				'company'        => $customer_info['company'],
-				'company_id'     => $customer_info['company_id'],
-				'tax_id'         => $customer_info['tax_id'],
-				'address_1'      => $customer_info['address_1'],
-				'address_2'      => $customer_info['address_2'],
-				'city'           => $customer_info['city'],
-				'postcode'       => $customer_info['postcode'],
-				'zone'           => $zone_name,
-				'zone_id'        => $customer_info['zone_id'],
-				'country'        => $country_name,
-				'country_id'     => $customer_info['country_id'],
-				'payment_method' => isset($this->session->data['payment_method']['title']) ? $this->session->data['payment_method']['title'] : (isset($customer_info['payment_method']) ? $customer_info['payment_method'] : ''),
-				'payment_code'   => isset($this->session->data['payment_method']['code'])  ? $this->session->data['payment_method']['code']  : (isset($customer_info['code']) ? $customer_info['code'] : '')
-			];
-
-			// Shipping address
-			if (isset($customer_info['check_shipping_address'])) {
-				// Same as payment address
-				$shipping = [
-					'firstname'   => $customer_info['firstname'],
-					'lastname'    => $customer_info['lastname'],
-					'company'     => $customer_info['company'],
-					'address_1'   => $customer_info['address_1'],
-					'address_2'   => $customer_info['address_2'],
-					'city'        => $customer_info['city'],
-					'postcode'    => $customer_info['postcode'],
-					'zone'        => $zone_name,
-					'zone_id'     => $customer_info['zone_id'],
-					'country'     => $country_name,
-					'country_id'  => $customer_info['country_id']
+				// Store all order data in session for the confirm controller
+				$this->session->data['one_page_order'] = [
+					'customer_group_id'   => isset($customer_info['customer_group_id']) ? $customer_info['customer_group_id'] : '',
+					'firstname'           => $payment['firstname'],
+					'lastname'            => $payment['lastname'],
+					'email'               => isset($customer_info['email']) ? $customer_info['email'] : '',
+					'telephone'           => isset($customer_info['telephone']) ? $customer_info['telephone'] : '',
+					'gender'              => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
+					'date_of_birth'       => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
+					'payment_firstname'   => $payment['firstname'],
+					'payment_lastname'    => $payment['lastname'],
+					'payment_company'     => $payment['company'],
+					'payment_company_id'  => $payment['company_id'],
+					'payment_tax_id'      => $payment['tax_id'],
+					'payment_address_1'   => $payment['address_1'],
+					'payment_address_2'   => $payment['address_2'],
+					'payment_city'        => $payment['city'],
+					'payment_postcode'    => $payment['postcode'],
+					'payment_zone'        => $payment['zone'],
+					'payment_zone_id'     => $payment['zone_id'],
+					'payment_country'     => $payment['country'],
+					'payment_country_id'  => $payment['country_id'],
+					'payment_method'      => $payment['payment_method'],
+					'payment_code'        => $payment['payment_code'],
+					'shipping_firstname'  => $shipping['firstname'],
+					'shipping_lastname'   => $shipping['lastname'],
+					'shipping_company'    => $shipping['company'],
+					'shipping_address_1'  => $shipping['address_1'],
+					'shipping_address_2'  => $shipping['address_2'],
+					'shipping_city'       => $shipping['city'],
+					'shipping_postcode'   => $shipping['postcode'],
+					'shipping_zone'       => $shipping['zone'],
+					'shipping_zone_id'    => $shipping['zone_id'],
+					'shipping_country'    => $shipping['country'],
+					'shipping_country_id' => $shipping['country_id'],
+					'shipping_method'     => isset($this->session->data['shipping_method']['title']) ? $this->session->data['shipping_method']['title'] : '',
+					'shipping_code'       => isset($this->session->data['shipping_method']['code'])  ? $this->session->data['shipping_method']['code']  : '',
+					'comment'             => isset($customer_info['comment']) ? $customer_info['comment'] : ''
 				];
 
-				$this->session->data['check_shipping_address'] = 1;
+				// Return JSON redirect to confirm controller
+				$json = ['redirect' => $this->url->link('checkout/checkout_one_page_confirm', '', 'SSL')];
+
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+				return;
+
 			} else {
-				$s_country_info = $this->model_localisation_country->getCountry((int)$customer_info['shipping_country_id']);
-				$s_country_name = $s_country_info ? $s_country_info['name'] : '';
+				// Validation failed — return errors as JSON
+				$json = ['error' => $this->error];
 
-				$s_zone_info = $this->model_localisation_zone->getZone((int)$customer_info['shipping_zone_id']);
-				$s_zone_name = $s_zone_info ? $s_zone_info['name'] : '';
-
-				$shipping = [
-					'firstname'  => $customer_info['shipping_firstname'],
-					'lastname'   => $customer_info['shipping_lastname'],
-					'company'    => $customer_info['shipping_company'],
-					'address_1'  => $customer_info['shipping_address_1'],
-					'address_2'  => $customer_info['shipping_address_2'],
-					'city'       => $customer_info['shipping_city'],
-					'postcode'   => $customer_info['shipping_postcode'],
-					'zone'       => $s_zone_name,
-					'zone_id'    => $customer_info['shipping_zone_id'],
-					'country'    => $s_country_name,
-					'country_id' => $customer_info['shipping_country_id']
-				];
-
-				$this->session->data['check_shipping_address'] = 0;
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+				return;
 			}
-
-			// Store all order data in session for the confirm controller
-			$this->session->data['one_page_order'] = [
-				'customer_group_id'   => isset($customer_info['customer_group_id']) ? $customer_info['customer_group_id'] : '',
-				'firstname'           => $payment['firstname'],
-				'lastname'            => $payment['lastname'],
-				'email'               => isset($customer_info['email']) ? $customer_info['email'] : '',
-				'telephone'           => isset($customer_info['telephone']) ? $customer_info['telephone'] : '',
-				'gender'              => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
-				'date_of_birth'       => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
-				'payment_firstname'   => $payment['firstname'],
-				'payment_lastname'    => $payment['lastname'],
-				'payment_company'     => $payment['company'],
-				'payment_company_id'  => $payment['company_id'],
-				'payment_tax_id'      => $payment['tax_id'],
-				'payment_address_1'   => $payment['address_1'],
-				'payment_address_2'   => $payment['address_2'],
-				'payment_city'        => $payment['city'],
-				'payment_postcode'    => $payment['postcode'],
-				'payment_zone'        => $payment['zone'],
-				'payment_zone_id'     => $payment['zone_id'],
-				'payment_country'     => $payment['country'],
-				'payment_country_id'  => $payment['country_id'],
-				'payment_method'      => $payment['payment_method'],
-				'payment_code'        => $payment['payment_code'],
-				'shipping_firstname'  => $shipping['firstname'],
-				'shipping_lastname'   => $shipping['lastname'],
-				'shipping_company'    => $shipping['company'],
-				'shipping_address_1'  => $shipping['address_1'],
-				'shipping_address_2'  => $shipping['address_2'],
-				'shipping_city'       => $shipping['city'],
-				'shipping_postcode'   => $shipping['postcode'],
-				'shipping_zone'       => $shipping['zone'],
-				'shipping_zone_id'    => $shipping['zone_id'],
-				'shipping_country'    => $shipping['country'],
-				'shipping_country_id' => $shipping['country_id'],
-				'shipping_method'     => isset($this->session->data['shipping_method']['title']) ? $this->session->data['shipping_method']['title'] : '',
-				'shipping_code'       => isset($this->session->data['shipping_method']['code'])  ? $this->session->data['shipping_method']['code']  : '',
-				'comment'             => isset($customer_info['comment']) ? $customer_info['comment'] : ''
-			];
-
-			// Return JSON redirect to confirm controller
-			$json = ['redirect' => $this->url->link('checkout/checkout_one_page_confirm', '', 'SSL')];
-
-			$this->response->addHeader('Content-Type: application/json');
-			$this->response->setOutput(json_encode($json));
-			return;
 		}
 
 		// -----------------------------------------------------------------------
