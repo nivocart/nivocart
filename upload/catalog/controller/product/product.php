@@ -28,20 +28,16 @@ class ControllerProductProduct extends Controller {
 		$this->load->model('catalog/category');
 
 		if (isset($this->request->get['path']) && !is_array($this->request->get['path'])) {
-			$url = '';
+			// Get url
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
+			// Get path
 			$path = '';
 
 			$parts = explode('_', (string)$this->request->get['path']);
@@ -117,47 +113,41 @@ class ControllerProductProduct extends Controller {
 		}
 
 		if (isset($this->request->get['search']) || isset($this->request->get['tag']) || isset($this->request->get['color'])) {
-			$url = '';
+			// Text fields: decode any HTML entities then re-encode cleanly for URL safety
+			$text_fields = ['search', 'tag', 'color'];
 
-			if (isset($this->request->get['search'])) {
-				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			// Numeric/boolean fields: cast to expected types to prevent injection
+			$int_fields = ['category_id', 'limit', 'page'];
+
+			// Whitelisted string values - only allow known safe values
+			$whitelist_fields = [
+				'description'  => ['0', '1'],
+				'sub_category' => ['0', '1'],
+				'order'        => ['ASC', 'DESC'],
+				'sort'         => ['p.sort_order', 'pd.name', 'p.price', 'p.model', 'rating', 'p.quantity', 'p.date_added'],
+			];
+
+			$params = [];
+
+			foreach ($text_fields as $field) {
+				if (isset($this->request->get[$field])) {
+					$params[$field] = urlencode(html_entity_decode((string)$this->request->get[$field], ENT_QUOTES, 'UTF-8'));
+				}
 			}
 
-			if (isset($this->request->get['tag'])) {
-				$url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+			foreach ($int_fields as $field) {
+				if (isset($this->request->get[$field])) {
+					$params[$field] = (int)$this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['color'])) {
-				$url .= '&color=' . urlencode(html_entity_decode($this->request->get['color'], ENT_QUOTES, 'UTF-8'));
+			foreach ($whitelist_fields as $field => $allowed) {
+				if (isset($this->request->get[$field]) && in_array($this->request->get[$field], $allowed, true)) {
+					$params[$field] = $this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['description'])) {
-				$url .= '&description=' . $this->request->get['description'];
-			}
-
-			if (isset($this->request->get['category_id'])) {
-				$url .= '&category_id=' . $this->request->get['category_id'];
-			}
-
-			if (isset($this->request->get['sub_category'])) {
-				$url .= '&sub_category=' . $this->request->get['sub_category'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $params ? '&' . http_build_query($params) : '';
 
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_search'),
@@ -177,63 +167,55 @@ class ControllerProductProduct extends Controller {
 		$product_info = $this->model_catalog_product->getProduct($product_id);
 
 		if ($product_info) {
-			$url = '';
+			// Breadcrumbs
+			$text_fields = ['search', 'tag', 'color'];
 
-			if (isset($this->request->get['path'])) {
-				$url .= '&path=' . $this->request->get['path'];
+			$int_fields = ['manufacturer_id', 'category_id', 'limit', 'page'];
+
+			$whitelist_fields = [
+				'description'  => ['0', '1'],
+				'sub_category' => ['0', '1'],
+				'order'        => ['ASC', 'DESC'],
+				'sort'         => ['p.sort_order', 'pd.name', 'p.price', 'p.model', 'rating', 'p.quantity', 'p.date_added'],
+			];
+
+			// Validated pattern fields
+			$pattern_fields = [
+				'path'   => '/^[0-9_]+$/',       // e.g. 20_27_34
+				'filter' => '/^[0-9,]+$/',       // e.g. 11,24,30
+			];
+
+			$params = [];
+
+			foreach ($text_fields as $field) {
+				if (isset($this->request->get[$field])) {
+					$params[$field] = urlencode(html_entity_decode((string)$this->request->get[$field], ENT_QUOTES, 'UTF-8'));
+				}
 			}
 
-			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
+			foreach ($int_fields as $field) {
+				if (isset($this->request->get[$field])) {
+					$params[$field] = (int)$this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['manufacturer_id'])) {
-				$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
+			foreach ($whitelist_fields as $field => $allowed) {
+				if (isset($this->request->get[$field]) && in_array($this->request->get[$field], $allowed, true)) {
+					$params[$field] = $this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['search'])) {
-				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			foreach ($pattern_fields as $field => $pattern) {
+				if (isset($this->request->get[$field]) && preg_match($pattern, $this->request->get[$field])) {
+					$params[$field] = $this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['tag'])) {
-				$url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['color'])) {
-				$url .= '&color=' . urlencode(html_entity_decode($this->request->get['color'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['description'])) {
-				$url .= '&description=' . $this->request->get['description'];
-			}
-
-			if (isset($this->request->get['category_id'])) {
-				$url .= '&category_id=' . $this->request->get['category_id'];
-			}
-
-			if (isset($this->request->get['sub_category'])) {
-				$url .= '&sub_category=' . $this->request->get['sub_category'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $params ? '&' . http_build_query($params) : '';
 
 			$this->data['breadcrumbs'][] = [
 				'text'      => $product_info['name'],
-				'href'      => $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'], 'SSL'),
+				'href'      => $this->url->link('product/product', $url . '&product_id=' . $product_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			];
 
@@ -241,7 +223,7 @@ class ControllerProductProduct extends Controller {
 			$this->document->setDescription($product_info['meta_description']);
 			$this->document->setKeywords($product_info['meta_keyword']);
 
-			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id'], 'SSL'), 'canonical');
+			$this->document->addLink($this->url->link('product/product', 'product_id=' . $product_id, 'SSL'), 'canonical');
 
 			$this->document->addScript('catalog/view/javascript/jquery/panels/panels.min.js');
 
@@ -596,7 +578,7 @@ class ControllerProductProduct extends Controller {
 
 					$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-					if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+					if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 						$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 						if ($customer_age >= $product_info['age_minimum']) {
@@ -911,62 +893,54 @@ class ControllerProductProduct extends Controller {
 			$this->response->setOutput($this->render());
 
 		} else {
-			$url = '';
+			// Breadcrumbs
+			$text_fields = ['search', 'tag', 'color'];
 
-			if (isset($this->request->get['path'])) {
-				$url .= '&path=' . $this->request->get['path'];
+			$int_fields = ['manufacturer_id', 'category_id', 'limit', 'page'];
+
+			$whitelist_fields = [
+				'description'  => ['0', '1'],
+				'sub_category' => ['0', '1'],
+				'order'        => ['ASC', 'DESC'],
+				'sort'         => ['p.sort_order', 'pd.name', 'p.price', 'p.model', 'rating', 'p.quantity', 'p.date_added'],
+			];
+
+			// Validated pattern fields
+			$pattern_fields = [
+				'path'   => '/^[0-9_]+$/',       // e.g. 20_27_34
+				'filter' => '/^[0-9,]+$/',       // e.g. 11,24,30
+			];
+
+			$params = [];
+
+			foreach ($text_fields as $field) {
+				if (isset($this->request->get[$field])) {
+					$params[$field] = urlencode(html_entity_decode((string)$this->request->get[$field], ENT_QUOTES, 'UTF-8'));
+				}
 			}
 
-			if (isset($this->request->get['filter'])) {
-				$url .= '&filter=' . $this->request->get['filter'];
+			foreach ($int_fields as $field) {
+				if (isset($this->request->get[$field])) {
+					$params[$field] = (int)$this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['manufacturer_id'])) {
-				$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
+			foreach ($whitelist_fields as $field => $allowed) {
+				if (isset($this->request->get[$field]) && in_array($this->request->get[$field], $allowed, true)) {
+					$params[$field] = $this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['search'])) {
-				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			foreach ($pattern_fields as $field => $pattern) {
+				if (isset($this->request->get[$field]) && preg_match($pattern, $this->request->get[$field])) {
+					$params[$field] = $this->request->get[$field];
+				}
 			}
 
-			if (isset($this->request->get['tag'])) {
-				$url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['color'])) {
-				$url .= '&color=' . urlencode(html_entity_decode($this->request->get['color'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['description'])) {
-				$url .= '&description=' . $this->request->get['description'];
-			}
-
-			if (isset($this->request->get['category_id'])) {
-				$url .= '&category_id=' . $this->request->get['category_id'];
-			}
-
-			if (isset($this->request->get['sub_category'])) {
-				$url .= '&sub_category=' . $this->request->get['sub_category'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $params ? '&' . http_build_query($params) : '';
 
 			$this->data['breadcrumbs'][] = [
-				'text'      => $this->language->get('heading_title'),
+				'text'      => $product_info['name'],
 				'href'      => $this->url->link('product/product', $url . '&product_id=' . $product_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			];
