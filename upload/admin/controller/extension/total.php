@@ -33,6 +33,7 @@ class ControllerExtensionTotal extends Controller {
 		$this->data['text_confirm_uninstall'] = $this->language->get('text_confirm_uninstall');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_total_info'] = $this->language->get('text_total_info');
 
 		$this->data['column_name'] = $this->language->get('column_name');
 		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
@@ -41,6 +42,7 @@ class ControllerExtensionTotal extends Controller {
 
 		$this->data['button_filter'] = $this->language->get('button_filter');
 		$this->data['button_close'] = $this->language->get('button_close');
+		$this->data['button_info'] = $this->language->get('button_info');
 
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 

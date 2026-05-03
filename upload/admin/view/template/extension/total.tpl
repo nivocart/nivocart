@@ -20,6 +20,9 @@
       </div>
     </div>
     <div class="content-body">
+      <div class="toggler" style="padding:0 0 10px 0;">
+        <fieldset><p><?php echo $text_total_info; ?></p></fieldset>
+      </div>
       <table class="list">
         <thead>
           <tr>
@@ -59,6 +62,16 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$('.toggler').hide().before('<a id="<?php echo 'toggler'; ?>" class="button ripple" style="margin:10px auto;"><i class="fa fa-info-circle"></i> &nbsp; <?php echo $button_info; ?></a>');
+	$('#<?php echo 'toggler'; ?>').click(function() {
+		$('.toggler').slideToggle(600);
+		return false;
+	});
+});
+//--></script>
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
