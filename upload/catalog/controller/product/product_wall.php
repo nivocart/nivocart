@@ -143,7 +143,7 @@ class ControllerProductProductWall extends Controller {
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -195,7 +195,7 @@ class ControllerProductProductWall extends Controller {
 
 						$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-						if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+						if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 							$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 							if ($customer_age >= $result['age_minimum']) {
@@ -360,12 +360,12 @@ class ControllerProductProductWall extends Controller {
 			$page_trigger = $product_total - $limit;
 			$page_last = ceil($product_total / $limit);
 
-			if (($page == 1) && ($page_trigger < 1)) {
+			if (($page === 1) && ($page_trigger < 1)) {
 				$this->document->addLink($this->url->link('product/product_wall'), 'canonical');
-			} elseif (($page == 1) && ($page_trigger > 0)) {
+			} elseif (($page === 1) && ($page_trigger > 0)) {
 				$this->document->addLink($this->url->link('product/product_wall'), 'canonical');
 				$this->document->addLink($this->url->link('product/product_wall', 'page=' . ($page + 1) . $url, 'SSL'), 'next');
-			} elseif ($page == $page_last) {
+			} elseif ($page === $page_last) {
 				$this->document->addLink($this->url->link('product/product_wall', 'page=' . $page), 'canonical');
 				$this->document->addLink($this->url->link('product/product_wall', 'page=' . ($page - 1) . $url, 'SSL'), 'prev');
 			} elseif ($this->request->get['page'] > $page_last) {
