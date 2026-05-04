@@ -20,6 +20,9 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_product_products) {
 			foreach ($offer_product_products as $result) {
+				$one = (int)$result['one'];
+				$two = (int)$result['two'];
+
 				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
@@ -28,30 +31,12 @@ class ModelCatalogOffer extends Model {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
 				}
 
-				if (($result['one'] === $product_id) && ($result['two'] === $product_id)) {
-					$offer_products[] = [
-						'group' => 'G241',
-						'one'   => $result['one'],
-						'two'   => $result['two'],
-						'type'  => $type
-					];
-
-				} elseif ($result['two'] === $product_id) {
-					$offer_products[] = [
-						'group' => 'G142D',
-						'one'   => $result['one'],
-						'two'   => $result['two'],
-						'type'  => $type
-					];
-
-				} elseif ($result['one'] === $product_id) {
-					$offer_products[] = [
-						'group' => 'G242D',
-						'one'   => $result['one'],
-						'two'   => $result['two'],
-						'type'  => $type
-					];
-
+				if (($one === $product_id) && ($two === $product_id)) {
+					$offer_products[] = ['group' => 'G241', 'one' => $one, 'two' => $two, 'type' => $type];
+				} elseif ($two === $product_id) {
+					$offer_products[] = ['group' => 'G142D', 'one' => $one, 'two' => $two, 'type' => $type];
+				} elseif ($one === $product_id) {
+					$offer_products[] = ['group' => 'G242D', 'one' => $one, 'two' => $two, 'type' => $type];
 				} else {
 					continue;
 				}
@@ -63,6 +48,9 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_product_categories) {
 			foreach ($offer_product_categories as $result) {
+				$one = (int)$result['one'];
+				$two = (int)$result['two'];
+
 				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
@@ -71,36 +59,18 @@ class ModelCatalogOffer extends Model {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
 				}
 
-				$product_lists = $this->getCategoryProducts($result['two']);
+				$product_lists = $this->getCategoryProducts($two);
 
 				if ($product_lists) {
 					$product = 0;
 
 					foreach ($product_lists as $product) {
-						if (($result['one'] === $product_id) && ($product === $product_id)) {
-							$offer_products[] = [
-								'group' => 'G241D',
-								'one'   => $result['one'],
-								'two'   => $product,
-								'type'  => $type
-							];
-
+						if (($one === $product_id) && ($product === $product_id)) {
+							$offer_products[] = ['group' => 'G241D', 'one' => $one, 'two' => $product, 'type' => $type];
 						} elseif ($product === $product_id) {
-							$offer_products[] = [
-								'group' => 'G142D',
-								'one'   => $result['one'],
-								'two'   => $product,
-								'type'  => $type
-							];
-
+							$offer_products[] = ['group' => 'G142D', 'one' => $one, 'two' => $product, 'type' => $type];
 						} elseif ($result['one'] === $product_id) {
-							$offer_products[] = [
-								'group' => 'G242D',
-								'one'   => $result['one'],
-								'two'   => $product,
-								'type'  => $type
-							];
-
+							$offer_products[] = ['group' => 'G242D', 'one' => $one, 'two' => $product, 'type' => $type];
 						} else {
 							continue;
 						}
@@ -117,6 +87,9 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_category_products) {
 			foreach ($offer_category_products as $result) {
+				$one = (int)$result['one'];
+				$two = (int)$result['two'];
+
 				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
@@ -125,36 +98,18 @@ class ModelCatalogOffer extends Model {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
 				}
 
-				$product_lists = $this->getCategoryProducts($result['one']);
+				$product_lists = $this->getCategoryProducts($one);
 
 				if ($product_lists) {
 					$product = 0;
 
 					foreach ($product_lists as $product) {
-						if (($product === $product_id) && ($result['two'] === $product_id)) {
-							$offer_products[] = [
-								'group' => 'G241D',
-								'one'   => $product,
-								'two'   => $result['two'],
-								'type'  => $type
-							];
-
+						if (($product === $product_id) && ($two === $product_id)) {
+							$offer_products[] = ['group' => 'G241D', 'one' => $product, 'two' => $two, 'type' => $type];
 						} elseif ($result['two'] === $product_id) {
-							$offer_products[] = [
-								'group' => 'G142D',
-								'one'   => $product,
-								'two'   => $result['two'],
-								'type'  => $type
-							];
-
+							$offer_products[] = ['group' => 'G142D', 'one' => $product, 'two' => $two, 'type' => $type];
 						} elseif ($product === $product_id) {
-							$offer_products[] = [
-								'group' => 'G242D',
-								'one'   => $product,
-								'two'   => $result['two'],
-								'type'  => $type
-							];
-
+							$offer_products[] = ['group' => 'G242D', 'one' => $product, 'two' => $two, 'type' => $type];
 						} else {
 							continue;
 						}
@@ -171,6 +126,9 @@ class ModelCatalogOffer extends Model {
 
 		if ($offer_category_categories) {
 			foreach ($offer_category_categories as $result) {
+				$one = (int)$result['one'];
+				$two = (int)$result['two'];
+
 				if ($result['type'] === 'F') {
 					$type = $this->currency->format($result['disc'], $this->config->get('config_currency')) . ' ' . $this->language->get('text_off');
 				} elseif (($result['type'] === 'P') && ((int)$result['disc'] === '100')) {
@@ -179,8 +137,8 @@ class ModelCatalogOffer extends Model {
 					$type = (int)$result['disc'] . '% ' . $this->language->get('text_off');
 				}
 
-				$product_one_lists = $this->getCategoryProducts($result['one']);
-				$product_two_lists = $this->getCategoryProducts($result['two']);
+				$product_one_lists = $this->getCategoryProducts($one);
+				$product_two_lists = $this->getCategoryProducts($two);
 
 				if ($product_one_lists && $product_two_lists) {
 					$product_one = 0;
@@ -189,29 +147,11 @@ class ModelCatalogOffer extends Model {
 					foreach ($product_one_lists as $product_one) {
 						foreach ($product_two_lists as $product_two) {
 							if (($product_one === $product_id) && ($product_two === $product_id)) {
-								$offer_products[] = [
-									'group' => 'G241D',
-									'one'   => $product_one,
-									'two'   => $product_two,
-									'type'  => $type
-								];
-
+								$offer_products[] = ['group' => 'G241D', 'one' => $product_one, 'two' => $product_two, 'type' => $type];
 							} elseif ($product_two === $product_id) {
-								$offer_products[] = [
-									'group' => 'G142D',
-									'one'   => $product_one,
-									'two'   => $product_two,
-									'type'  => $type
-								];
-
+								$offer_products[] = ['group' => 'G142D', 'one' => $product_one, 'two' => $product_two, 'type' => $type];
 							} elseif ($product_one === $product_id) {
-								$offer_products[] = [
-									'group' => 'G242D',
-									'one'   => $product_one,
-									'two'   => $product_two,
-									'type'  => $type
-								];
-
+								$offer_products[] = ['group' => 'G242D', 'one' => $product_one, 'two' => $product_two, 'type' => $type];
 							} else {
 								continue;
 							}
@@ -224,7 +164,7 @@ class ModelCatalogOffer extends Model {
 		return $offer_products;
 	}
 
-	// Called in Shopping Cart
+	// Called in Product Wall, Shopping Cart, ..
 	public function getListProductOffers(): array {
 		$this->load->model('checkout/offers');
 
@@ -333,7 +273,7 @@ class ModelCatalogOffer extends Model {
 
 		if ($query->num_rows) {
 			foreach ($query->rows as $result) {
-				$product_list[] = $result['product_id'];
+				$product_list[] = (int)$result['product_id'];
 			}
 		}
 

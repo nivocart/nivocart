@@ -25,11 +25,23 @@ class ModelCheckoutOffers extends Model {
 			$product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_product_product` WHERE offer_product_product_id = '" . (int)$result['offer_product_product_id'] . "'");
 
 			if ($product_query->num_rows) {
+				// Format discount values
+				$discount_type = $product_query->row['type'];
+				$discount_value = $product_query->row['discount'];
+
+				if (($discount_type === 'P') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 0, PHP_ROUND_HALF_UP);
+				}
+
+				if (($discount_type === 'F') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 2, PHP_ROUND_HALF_UP);
+				}
+
 				$product_product_data[] = [
 					'one'  => $product_query->row['product_one'],
 					'two'  => $product_query->row['product_two'],
-					'type' => $product_query->row['type'],
-					'disc' => $product_query->row['discount']
+					'type' => $discount_type,
+					'disc' => $discount_value
 				];
 
 			} else {
@@ -60,11 +72,23 @@ class ModelCheckoutOffers extends Model {
 			$product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_product_category` WHERE offer_product_category_id = '" . (int)$result['offer_product_category_id'] . "'");
 
 			if ($product_query->num_rows) {
+				// Format discount values
+				$discount_type = $product_query->row['type'];
+				$discount_value = $product_query->row['discount'];
+
+				if (($discount_type === 'P') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 0, PHP_ROUND_HALF_UP);
+				}
+
+				if (($discount_type === 'F') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 2, PHP_ROUND_HALF_UP);
+				}
+
 				$product_category_data[] = [
 					'one'  => $product_query->row['product_one'],
 					'two'  => $product_query->row['category_two'],
-					'type' => $product_query->row['type'],
-					'disc' => $product_query->row['discount']
+					'type' => $discount_type,
+					'disc' => $discount_value
 				];
 
 			} else {
@@ -94,12 +118,24 @@ class ModelCheckoutOffers extends Model {
 
 			$category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_product` WHERE offer_category_product_id = '" . (int)$result['offer_category_product_id'] . "'");
 
-			if ($category_query->num_rows) {
+			if ($product_query->num_rows) {
+				// Format discount values
+				$discount_type = $product_query->row['type'];
+				$discount_value = $product_query->row['discount'];
+
+				if (($discount_type === 'P') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 0, PHP_ROUND_HALF_UP);
+				}
+
+				if (($discount_type === 'F') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 2, PHP_ROUND_HALF_UP);
+				}
+
 				$category_product_data[] = [
 					'one'  => $category_query->row['category_one'],
 					'two'  => $category_query->row['product_two'],
-					'type' => $category_query->row['type'],
-					'disc' => $category_query->row['discount']
+					'type' => $discount_type,
+					'disc' => $discount_value
 				];
 
 			} else {
@@ -129,12 +165,24 @@ class ModelCheckoutOffers extends Model {
 
 			$category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_category` WHERE offer_category_category_id = '" . (int)$result['offer_category_category_id'] . "'");
 
-			if ($category_query->num_rows) {
+			if ($product_query->num_rows) {
+				// Format discount values
+				$discount_type = $product_query->row['type'];
+				$discount_value = $product_query->row['discount'];
+
+				if (($discount_type === 'P') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 0, PHP_ROUND_HALF_UP);
+				}
+
+				if (($discount_type === 'F') && ($discount_value > 0)) {
+					$discount_value = round($discount_value, 2, PHP_ROUND_HALF_UP);
+				}
+
 				$category_category_data[] = [
 					'one'  => $category_query->row['category_one'],
 					'two'  => $category_query->row['category_two'],
-					'type' => $category_query->row['type'],
-					'disc' => $category_query->row['discount']
+					'type' => $discount_type,
+					'disc' => $discount_value
 				];
 
 			} else {
