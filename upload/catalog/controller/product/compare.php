@@ -31,6 +31,7 @@ class ControllerProductCompare extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+		// Breadcrumbs
 		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = [
@@ -86,13 +87,16 @@ class ControllerProductCompare extends Controller {
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
 		$this->data['products'] = [];
-
 		$this->data['attribute_groups'] = [];
 
 		foreach ($this->session->data['compare'] as $key => $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
 
 			if ($product_info) {
+				// Cast int on product id
+				$current_product_id = (int)$product_info['product_id'];
+
+				// Image
 				if ($product_info['image']) {
 					$image = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_compare_width'), $this->config->get('config_image_compare_height'));
 					$label_ratio = round((($this->config->get('config_image_compare_width') * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
@@ -101,6 +105,7 @@ class ControllerProductCompare extends Controller {
 					$label_ratio = 50;
 				}
 
+				// Label
 				if ($product_info['label']) {
 					$label = $this->model_tool_image->resize($product_info['label'], round(($this->config->get('config_image_compare_width') / 3), 0, PHP_ROUND_HALF_UP), round(($this->config->get('config_image_compare_height') / 3), 0, PHP_ROUND_HALF_UP));
 					$label_style = round(($this->config->get('config_image_compare_width') / 3), 0, PHP_ROUND_HALF_UP);
@@ -109,8 +114,9 @@ class ControllerProductCompare extends Controller {
 					$label_style = '';
 				}
 
+				// Price
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($product_info['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -119,6 +125,7 @@ class ControllerProductCompare extends Controller {
 					$price = false;
 				}
 
+				// Special
 				if ((float)$product_info['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
 					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -127,6 +134,7 @@ class ControllerProductCompare extends Controller {
 					$special = false;
 				}
 
+				// Stock Quantity
 				if ($product_info['quantity'] <= 0) {
 					$availability = $product_info['stock_status'];
 					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
@@ -138,9 +146,10 @@ class ControllerProductCompare extends Controller {
 					$stock_label = '';
 				}
 
+				// Attributes
 				$attribute_data = [];
 
-				$attribute_groups = $this->model_catalog_product->getProductAttributes($product_id);
+				$attribute_groups = $this->model_catalog_product->getProductAttributes($current_product_id);
 
 				foreach ($attribute_groups as $attribute_group) {
 					foreach ($attribute_group['attribute'] as $attribute) {
@@ -157,31 +166,36 @@ class ControllerProductCompare extends Controller {
 					$offer = false;
 				}
 
-				$product_offers = $this->model_catalog_offer->getOfferProducts($product_info['product_id']);
+				$product_offers = $this->model_catalog_offer->getOfferProducts($current_product_id);
 
 				if ($product_offers) {
 					foreach ($product_offers as $product_offer) {
-						if ($product_offer['one'] == $product_info['product_id']) {
-							$offer_name = $this->model_catalog_offer->getOfferProductName($product_offer['two']);
-							$offer_mirror_name = $this->model_catalog_offer->getOfferProductName($product_offer['one']);
-							$offer_product = $product_offer['two'];
-						} elseif ($product_offer['two'] == $product_info['product_id']) {
-							$offer_name = $this->model_catalog_offer->getOfferProductName($product_offer['one']);
-							$offer_mirror_name = $this->model_catalog_offer->getOfferProductName($product_offer['two']);
-							$offer_product = $product_offer['one'];
+						$product_offer_one = (int)$product_offer['one'];
+						$product_offer_two = (int)$product_offer['two'];
+
+						if ($product_offer_one === $current_product_id) {
+							$offer_name = $this->model_catalog_offer->getOfferProductName($product_offer_two);
+							$offer_mirror_name = $this->model_catalog_offer->getOfferProductName($product_offer_one);
+							$offer_product = $product_offer_two;
+						} elseif ($product_offer_two === $current_product_id) {
+							$offer_name = $this->model_catalog_offer->getOfferProductName($product_offer_one);
+							$offer_mirror_name = $this->model_catalog_offer->getOfferProductName($product_offer_two);
+							$offer_product = $product_offer_one;
 						} else {
 							$offer_name = '';
 							$offer_mirror_name = '';
 							$offer_product = '';
 						}
 
-						if ($product_offer['group'] == 'G241') {
+						$product_offer_group = (string)$product_offer['group'];
+
+						if ($product_offer_group === 'G241') {
 							$offer_description = sprintf($this->language->get('text_G241'), $product_offer['type']);
-						} elseif ($product_offer['group'] == 'G241D') {
+						} elseif ($product_offer_group === 'G241D') {
 							$offer_description = sprintf($this->language->get('text_G241D'), $offer_mirror_name, $offer_name, $product_offer['type']);
-						} elseif ($product_offer['group'] == 'G242D') {
+						} elseif ($product_offer_group === 'G242D') {
 							$offer_description = sprintf($this->language->get('text_G242D'), $offer_mirror_name, $offer_name, $product_offer['type']);
-						} elseif ($product_offer['group'] == 'G142D') {
+						} elseif ($product_offer_group === 'G142D') {
 							$offer_description = sprintf($this->language->get('text_G142D'), $product_offer['type'], $offer_mirror_name, $offer_name);
 						} else {
 							$offer_description = '';
@@ -193,14 +207,12 @@ class ControllerProductCompare extends Controller {
 					$offer_description = '';
 				}
 
-				if ($product_info['quote']) {
-					$quote = $this->url->link('information/quote', '', 'SSL');
-				} else {
-					$quote = false;
-				}
+				// Quote
+				$quote = $product_info['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
+				// Products array
 				$this->data['products'][$product_id] = [
-					'product_id'        => $product_info['product_id'],
+					'product_id'        => $current_product_id,
 					'name'              => $product_info['name'],
 					'thumb'             => $image,
 					'label'             => $label,
@@ -218,7 +230,7 @@ class ControllerProductCompare extends Controller {
 					'availability'      => $availability,
 					'stock_status'      => $product_info['stock_status'],
 					'stock_quantity'    => $product_info['quantity'],
-					'stock_remaining'   => ($product_info['subtract']) ? sprintf($this->language->get('text_remaining'), $product_info['quantity']) : '',
+					'stock_remaining'   => $product_info['subtract'] ? sprintf($this->language->get('text_remaining'), $product_info['quantity']) : '',
 					'offer_href'        => $this->url->link('product/product', 'product_id=' . $offer_product, 'SSL'),
 					'offer_description' => $offer_description,
 					'rating'            => (int)$product_info['rating'],
@@ -228,8 +240,8 @@ class ControllerProductCompare extends Controller {
 					'width'             => $this->length->format($product_info['width'], $product_info['length_class_id']),
 					'height'            => $this->length->format($product_info['height'], $product_info['length_class_id']),
 					'attribute'         => $attribute_data,
-					'href'              => $this->url->link('product/product', 'product_id=' . $product_id, 'SSL'),
-					'remove'            => $this->url->link('product/compare', 'remove=' . $product_id, 'SSL')
+					'href'              => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL'),
+					'remove'            => $this->url->link('product/compare', 'remove=' . $product_info['product_id'], 'SSL')
 				];
 
 				foreach ($attribute_groups as $attribute_group) {
@@ -279,18 +291,14 @@ class ControllerProductCompare extends Controller {
 			$this->session->data['compare'] = [];
 		}
 
-		if (isset($this->request->post['product_id'])) {
-			$product_id = $this->request->post['product_id'];
-		} else {
-			$product_id = 0;
-		}
+		$product_id = isset($this->request->post['product_id']) ? $this->request->post['product_id'] : 0;
 
 		$this->load->model('catalog/product');
 
 		$product_info = $this->model_catalog_product->getProduct($product_id);
 
 		if ($product_info) {
-			if (!in_array($this->request->post['product_id'], $this->session->data['compare'])) {
+			if (!in_array($product_id, $this->session->data['compare'])) {
 				if (count($this->session->data['compare']) >= 4) {
 					array_shift($this->session->data['compare']);
 				}
@@ -298,7 +306,7 @@ class ControllerProductCompare extends Controller {
 				$this->session->data['compare'][] = $this->request->post['product_id'];
 			}
 
-			$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id'], 'SSL'), $product_info['name'], $this->url->link('product/compare', '', 'SSL'));
+			$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $product_id, 'SSL'), $product_info['name'], $this->url->link('product/compare', '', 'SSL'));
 
 			$json['total'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare'])) ? count($this->session->data['compare']) : 0);
 		}

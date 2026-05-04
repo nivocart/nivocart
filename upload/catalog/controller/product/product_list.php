@@ -54,18 +54,25 @@ class ControllerProductProductList extends Controller {
 
 			foreach ($categories_list as $category_1) {
 				$level_2_data = [];
+				// Cast int on Category 1 id
+				$category_1_id = (int)$category_1['category_id'];
 
-				$categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
+				$categories_2 = $this->model_catalog_category->getCategories($category_1_id);
 
 				foreach ($categories_2 as $category_2) {
 					$level_3_data = [];
+					// Cast int on Category 2 id
+					$category_2_id = (int)$category_2['category_id'];
 
-					$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
+					$categories_3 = $this->model_catalog_category->getCategories($category_2_id);
 
 					foreach ($categories_3 as $category_3) {
+						// Cast int on Category 3 id
+						$category_3_id = (int)$category_3['category_id'];
+
 						$level_3_data[] = [
 							'name' => $category_3['name'],
-							'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id'], 'SSL')
+							'href' => $this->url->link('product/category', 'path=' . $category_1_id . '_' . $category_2_id . '_' . $category_3_id, 'SSL')
 						];
 
 						$this->data['ctotal3'] = $this->data['ctotal3'] + 1;
@@ -74,7 +81,7 @@ class ControllerProductProductList extends Controller {
 					$level_2_data[] = [
 						'name'     => $category_2['name'],
 						'children' => $level_3_data,
-						'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'], 'SSL')
+						'href'     => $this->url->link('product/category', 'path=' . $category_1_id . '_' . $category_2_id, 'SSL')
 					];
 
 					$this->data['ctotal2'] = $this->data['ctotal2'] + 1;
@@ -83,7 +90,7 @@ class ControllerProductProductList extends Controller {
 				$this->data['categories'][] = [
 					'name'     => $category_1['name'],
 					'children' => $level_2_data,
-					'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'], 'SSL')
+					'href'     => $this->url->link('product/category', 'path=' . $category_1_id, 'SSL')
 				];
 
 				$this->data['ctotal1'] = $this->data['ctotal1'] + 1;

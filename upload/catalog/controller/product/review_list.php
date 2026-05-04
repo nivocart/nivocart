@@ -64,31 +64,30 @@ class ControllerProductReviewList extends Controller {
 
 			$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
 
-			$url = '';
-
+			// Breadcrumbs
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = null;
 			}
 
+			// Html is not translated
 			if (isset($this->request->get['filter_description'])) {
-				$url .= '&filter_description=' . $this->request->get['filter_description'];
+				$filter_description = $this->request->get['filter_description'];
+			} else {
+				$filter_description = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name'        => $filter_name,
+				'filter_description' => $filter_description,
+				'sort'               => $this->request->get['sort'] ?? null,
+				'order'              => $this->request->get['order'] ?? null,
+				'limit'              => $this->request->get['limit'] ?? $this->config->get('config_catalog_limit'),
+				'page'               => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
@@ -142,9 +141,10 @@ class ControllerProductReviewList extends Controller {
 			$this->load->model('catalog/product');
 			$this->load->model('account/customer');
 
-			$offers = $this->model_catalog_offer->getListProductOffers(0);
+			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			foreach ($review_results as $result) {
+				// Image
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->image_product_width, $this->image_product_height);
 					$label_ratio = round((($this->image_product_width * $this->label_size_ratio) / 100), 0, PHP_ROUND_HALF_UP);
@@ -153,6 +153,7 @@ class ControllerProductReviewList extends Controller {
 					$label_ratio = 50;
 				}
 
+				// Label
 				if ($result['label']) {
 					$label = $this->model_tool_image->resize($result['label'], round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP), round(($this->image_product_height / 3), 0, PHP_ROUND_HALF_UP));
 					$label_style = round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP);
@@ -161,8 +162,9 @@ class ControllerProductReviewList extends Controller {
 					$label_style = '';
 				}
 
+				// Price
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -171,6 +173,7 @@ class ControllerProductReviewList extends Controller {
 					$price = false;
 				}
 
+				// Special
 				if ((float)$result['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
 					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -179,24 +182,26 @@ class ControllerProductReviewList extends Controller {
 					$special = false;
 				}
 
+				// Tax
 				if ($this->config->get('config_tax')) {
 					$tax = $this->currency->format(((float)$result['special'] ? $result['special'] : $result['price']), $this->config->get('config_currency'));
 				} else {
 					$tax = false;
 				}
 
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$result['rating'];
-				} else {
-					$rating = false;
-				}
+				// Review Rating
+				$rating = $this->config->get('config_review_status') ? (int)$result['rating'] : false;
+				
+				$review_total_product = $this->model_catalog_review->getTotalReviewsByProductId($result['product_id']);
 
+				// Stock Quantity
 				if ($result['quantity'] <= 0) {
 					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
 				} else {
 					$stock_label = false;
 				}
 
+				// Offers
 				if (in_array($result['product_id'], $offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
 					$offer = true;
@@ -205,6 +210,7 @@ class ControllerProductReviewList extends Controller {
 					$offer = false;
 				}
 
+				// Age Check
 				$age_logged = false;
 				$age_checked = false;
 
@@ -214,7 +220,7 @@ class ControllerProductReviewList extends Controller {
 
 						$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-						if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+						if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 							$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 							if ($customer_age >= $result['age_minimum']) {
@@ -224,14 +230,10 @@ class ControllerProductReviewList extends Controller {
 					}
 				}
 
-				if ($result['quote']) {
-					$quote = $this->url->link('information/quote', '', 'SSL');
-				} else {
-					$quote = false;
-				}
+				// Quote
+				$quote = $result['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
-				$review_total_product = $this->model_catalog_review->getTotalReviewsByProductId($result['product_id']);
-
+				// Reviews array
 				$this->data['reviews'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
@@ -248,7 +250,7 @@ class ControllerProductReviewList extends Controller {
 					'age_checked'     => $age_checked,
 					'stock_status'    => $result['stock_status'],
 					'stock_quantity'  => $result['quantity'],
-					'stock_remaining' => ($result['subtract']) ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
+					'stock_remaining' => $result['subtract'] ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
 					'quote'           => $quote,
 					'price'           => $price,
 					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($result['product_id']),
@@ -407,12 +409,12 @@ class ControllerProductReviewList extends Controller {
 			$page_trigger = $review_total - $limit;
 			$page_last = ceil($review_total / $limit);
 
-			if (($page == 1) && ($page_trigger < 1)) {
+			if (($page === 1) && ($page_trigger < 1)) {
 				$this->document->addLink($this->url->link('product/review_list'), 'canonical');
-			} elseif (($page == 1) && ($page_trigger > 0)) {
+			} elseif (($page === 1) && ($page_trigger > 0)) {
 				$this->document->addLink($this->url->link('product/review_list'), 'canonical');
 				$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page + 1) . $url, 'SSL'), 'next');
-			} elseif ($page == $page_last) {
+			} elseif ($page === $page_last) {
 				$this->document->addLink($this->url->link('product/review_list', 'page=' . $page), 'canonical');
 				$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page - 1) . $url, 'SSL'), 'prev');
 			} elseif ($this->request->get['page'] > $page_last) {
@@ -447,31 +449,29 @@ class ControllerProductReviewList extends Controller {
 			$this->response->setOutput($this->render());
 
 		} else {
-			$url = '';
-
+			// Breadcrumbs
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			} else {
+				$filter_name = null;
 			}
 
 			if (isset($this->request->get['filter_description'])) {
-				$url .= '&filter_description=' . $this->request->get['filter_description'];
+				$filter_description = $this->request->get['filter_description'];
+			} else {
+				$filter_description = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name'        => $filter_name,
+				'filter_description' => $filter_description,
+				'sort'               => $this->request->get['sort'] ?? null,
+				'order'              => $this->request->get['order'] ?? null,
+				'limit'              => $this->request->get['limit'] ?? $this->config->get('config_catalog_limit'),
+				'page'               => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),

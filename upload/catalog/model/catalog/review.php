@@ -36,7 +36,7 @@ class ModelCatalogReview extends Model {
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			if ($data['sort'] === 'pd.name') {
-				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
+				$sql .= " ORDER BY LOWER(" . $data['sort'] . ")";
 			} else {
 				$sql .= " ORDER BY " . $data['sort'];
 			}
@@ -45,9 +45,9 @@ class ModelCatalogReview extends Model {
 		}
 
 		if (isset($data['order']) && ($data['order'] === 'DESC')) {
-			$sql .= " DESC, LCASE(pd.name) DESC";
+			$sql .= " DESC, LOWER(pd.name) DESC";
 		} else {
-			$sql .= " ASC, LCASE(pd.name) ASC";
+			$sql .= " ASC, LOWER(pd.name) ASC";
 		}
 
 		if (isset($data['start']) && isset($data['limit'])) {

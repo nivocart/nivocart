@@ -14,6 +14,7 @@ class ControllerProductSpecial extends Controller {
 
 		$this->load->model('catalog/product');
 
+		// Breadcrumbs
 		if (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] < 1)) {
 			$limit = $this->config->get('config_catalog_limit');
 		} elseif (isset($this->request->get['limit']) && ((int)$this->request->get['limit'] > 100)) {
@@ -119,6 +120,10 @@ class ControllerProductSpecial extends Controller {
 			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			foreach ($product_results as $result) {
+				// Cast int on product id
+				$result_product_id = (int)$result['product_id'];
+
+				// Image
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->image_product_width, $this->image_product_height);
 					$label_ratio = round((($this->image_product_width * $this->label_size_ratio) / 100), 0, PHP_ROUND_HALF_UP);
@@ -127,6 +132,7 @@ class ControllerProductSpecial extends Controller {
 					$label_ratio = 50;
 				}
 
+				// Label
 				if ($result['label']) {
 					$label = $this->model_tool_image->resize($result['label'], round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP), round(($this->image_product_height / 3), 0, PHP_ROUND_HALF_UP));
 					$label_style = round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP);
@@ -135,12 +141,10 @@ class ControllerProductSpecial extends Controller {
 					$label_style = '';
 				}
 
-				if ($result['manufacturer']) {
-					$manufacturer = $result['manufacturer'];
-				} else {
-					$manufacturer = false;
-				}
+				// Manufacturer
+				$manufacturer = $result['manufacturer'] ? $result['manufacturer'] : false;
 
+				// Price
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 					if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
@@ -151,6 +155,7 @@ class ControllerProductSpecial extends Controller {
 					$price = false;
 				}
 
+				// Special
 				if ((float)$result['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
 					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -159,24 +164,24 @@ class ControllerProductSpecial extends Controller {
 					$special = false;
 				}
 
+				// Tax
 				if ($this->config->get('config_tax')) {
 					$tax = $this->currency->format(((float)$result['special'] ? $result['special'] : $result['price']), $this->config->get('config_currency'));
 				} else {
 					$tax = false;
 				}
 
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$result['rating'];
-				} else {
-					$rating = false;
-				}
+				// Review Rating
+				$rating = $this->config->get('config_review_status') ? (int)$result['rating'] : false;
 
+				// Stock Quantity
 				if ($result['quantity'] <= 0) {
 					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
 				} else {
 					$stock_label = false;
 				}
 
+				// Offers
 				if (in_array($result['product_id'], $offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
 					$offer = true;
@@ -185,6 +190,7 @@ class ControllerProductSpecial extends Controller {
 					$offer = false;
 				}
 
+				// Age Check
 				$age_logged = false;
 				$age_checked = false;
 
@@ -194,7 +200,7 @@ class ControllerProductSpecial extends Controller {
 
 						$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-						if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+						if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 							$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 							if ($customer_age >= $result['age_minimum']) {
@@ -211,7 +217,7 @@ class ControllerProductSpecial extends Controller {
 				}
 
 				$this->data['products'][] = [
-					'product_id'      => $result['product_id'],
+					'product_id'      => $result_product_id,
 					'thumb'           => $image,
 					'label'           => $label,
 					'label_style'     => $label_style,
@@ -227,15 +233,15 @@ class ControllerProductSpecial extends Controller {
 					'age_checked'     => $age_checked,
 					'stock_status'    => $result['stock_status'],
 					'stock_quantity'  => $result['quantity'],
-					'stock_remaining' => ($result['subtract']) ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
+					'stock_remaining' => $result['subtract'] ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
 					'quote'           => $quote,
 					'price'           => $price,
-					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($result['product_id']),
+					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($result_product_id),
 					'special'         => $special,
 					'tax'             => $tax,
 					'rating'          => $rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
-					'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url, 'SSL')
+					'href'            => $this->url->link('product/product', 'product_id=' . $result_product_id . $url, 'SSL')
 				];
 			}
 

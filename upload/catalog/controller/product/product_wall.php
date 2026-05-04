@@ -120,6 +120,7 @@ class ControllerProductProductWall extends Controller {
 			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			foreach ($product_results as $result) {
+				// Image
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->image_product_width, $this->image_product_height);
 					$label_ratio = round((($this->image_product_width * $this->label_size_ratio) / 100), 0, PHP_ROUND_HALF_UP);
@@ -128,6 +129,7 @@ class ControllerProductProductWall extends Controller {
 					$label_ratio = 50;
 				}
 
+				// Label
 				if ($result['label']) {
 					$label = $this->model_tool_image->resize($result['label'], round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP), round(($this->image_product_height / 3), 0, PHP_ROUND_HALF_UP));
 					$label_style = round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP);
@@ -136,12 +138,10 @@ class ControllerProductProductWall extends Controller {
 					$label_style = '';
 				}
 
-				if ($result['manufacturer']) {
-					$manufacturer = $result['manufacturer'];
-				} else {
-					$manufacturer = false;
-				}
+				// Manufacturer
+				$manufacturer = $result['manufacturer'] ? $result['manufacturer'] : false;
 
+				// Price
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 					if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
@@ -152,6 +152,7 @@ class ControllerProductProductWall extends Controller {
 					$price = false;
 				}
 
+				// Special
 				if ((float)$result['special']) {
 					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
 					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -160,24 +161,24 @@ class ControllerProductProductWall extends Controller {
 					$special = false;
 				}
 
+				// Tax
 				if ($this->config->get('config_tax')) {
 					$tax = $this->currency->format(((float)$result['special'] ? $result['special'] : $result['price']), $this->config->get('config_currency'));
 				} else {
 					$tax = false;
 				}
 
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$result['rating'];
-				} else {
-					$rating = false;
-				}
+				// Review Rating
+				$rating = $this->config->get('config_review_status') ? (int)$result['rating'] : false;
 
+				// Stock Quantity
 				if ($result['quantity'] <= 0) {
 					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
 				} else {
 					$stock_label = false;
 				}
 
+				// Offers
 				if (in_array($result['product_id'], $offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
 					$offer = true;
@@ -186,6 +187,7 @@ class ControllerProductProductWall extends Controller {
 					$offer = false;
 				}
 
+				// Age Check
 				$age_logged = false;
 				$age_checked = false;
 
@@ -205,12 +207,10 @@ class ControllerProductProductWall extends Controller {
 					}
 				}
 
-				if ($result['quote']) {
-					$quote = $this->url->link('information/quote', '', 'SSL');
-				} else {
-					$quote = false;
-				}
+				// Quote
+				$quote = $result['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
+				// Products array
 				$this->data['products'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
@@ -228,7 +228,7 @@ class ControllerProductProductWall extends Controller {
 					'age_checked'     => $age_checked,
 					'stock_status'    => $result['stock_status'],
 					'stock_quantity'  => $result['quantity'],
-					'stock_remaining' => ($result['subtract']) ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
+					'stock_remaining' => $result['subtract'] ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
 					'quote'           => $quote,
 					'price'           => $price,
 					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($result['product_id']),

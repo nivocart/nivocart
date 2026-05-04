@@ -838,7 +838,7 @@ class ControllerProductProduct extends Controller {
 					'name'            => $result['name'],
 					'stock_status'    => $result['stock_status'],
 					'stock_quantity'  => $result['quantity'],
-					'stock_remaining' => ($result['subtract']) ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
+					'stock_remaining' => $result['subtract'] ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
 					'quote'           => $quote,
 					'price'           => $price,
 					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($result['product_id']),
@@ -993,17 +993,16 @@ class ControllerProductProduct extends Controller {
 		$this->data['text_on'] = $this->language->get('text_on');
 		$this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+		// Cast int on product id
+		$product_id = (int)$this->request->get['product_id'];
 
 		$this->data['reviews'] = [];
 
-		$review_total = $this->model_catalog_review->getTotalReviewsByProductId($this->request->get['product_id']);
+		$review_total = $this->model_catalog_review->getTotalReviewsByProductId($product_id);
 
-		$results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 3, 3);
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+
+		$results = $this->model_catalog_review->getReviewsByProductId($product_id, ($page - 1) * 3, 3);
 
 		foreach ($results as $result) {
 			$this->data['reviews'][] = [
@@ -1020,7 +1019,7 @@ class ControllerProductProduct extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = 3;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('product/product/review', 'product_id=' . $this->request->get['product_id'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('product/product/review', 'product_id=' . $product_id . '&page={page}', 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -1107,6 +1106,9 @@ class ControllerProductProduct extends Controller {
 
 		$this->load->model('catalog/review');
 
+		// Cast int on product id
+		$product_id = (int)$this->request->get['product_id'];
+
 		$json = [];
 
 		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->config->get('config_review_status')) {
@@ -1129,7 +1131,7 @@ class ControllerProductProduct extends Controller {
 			if (!isset($json['error'])) {
 				unset($this->session->data['captcha']);
 
-				$this->model_catalog_review->addReview($this->request->get['product_id'], $this->request->post);
+				$this->model_catalog_review->addReview($product_id, $this->request->post);
 
 				$json['success'] = $this->language->get('text_success');
 			}

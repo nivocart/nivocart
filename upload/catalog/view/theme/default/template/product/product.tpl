@@ -867,9 +867,9 @@ new AjaxUpload('#button-option-<?php echo $option['product_option_id']; ?>', {
 
 <!-- Reviews Scripts //-->
 <script type="text/javascript"><!--
-$('#reviews .pagination').on('click', 'a', function() {
+$('#reviews').on('click', 'a', function() {
 	$('#reviews').fadeOut('slow');
-	$('#review').load('index.php?route=product/product/reviews&product_id=<?php echo $product_id; ?>');
+	$('#review').load('index.php?route=product/product/review&product_id=<?php echo $product_id; ?>');
 	$('#reviews').fadeIn('slow');
 });
 
@@ -878,7 +878,12 @@ $('#button-review').on('click', function() {
 		url: 'index.php?route=product/product/write&product_id=<?php echo $product_id; ?>',
 		type: 'post',
 		dataType: 'json',
-		data: 'name=' + encodeURIComponent($('input[name=\'name\']').val()) + '&text=' + encodeURIComponent($('textarea[name=\'text\']').val()) + '&rating=' + encodeURIComponent($('input[name=\'rating\']:checked').val() ? $('input[name=\'rating\']:checked').val() : '') + '&captcha=' + encodeURIComponent($('input[name=\'captcha\']').val()),
+		data: {
+			name: $('input[name="name"]').val(),
+			text: $('textarea[name="text"]').val(),
+			rating: $('input[name="rating"]:checked').val() || '',
+			captcha: $('input[name="captcha"]').val()
+		},
 		beforeSend: function() {
 			$('.success, .warning').remove();
 			$('#button-review').attr('disabled', true);
