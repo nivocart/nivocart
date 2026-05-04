@@ -156,6 +156,7 @@ class ControllerProductProduct extends Controller {
 			];
 		}
 
+		// Get product id. Request only once
 		if (isset($this->request->get['product_id'])) {
 			$product_id = (int)$this->request->get['product_id'];
 		} else {
@@ -412,7 +413,7 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['images'] = [];
 
-			$results = $this->model_catalog_product->getProductImages($this->request->get['product_id']);
+			$results = $this->model_catalog_product->getProductImages($product_id);
 
 			foreach ($results as $result) {
 				$this->data['images'][] = [
@@ -424,7 +425,7 @@ class ControllerProductProduct extends Controller {
 
 			// YouTube
 			if (isset($this->request->get['product_id'])) {
-				$this->data['video_code'] = $this->model_catalog_product->getProductVideos($this->request->get['product_id']);
+				$this->data['video_code'] = $this->model_catalog_product->getProductVideos($product_id);
 			} else {
 				$this->data['video_code'] = false;
 			}
@@ -447,7 +448,7 @@ class ControllerProductProduct extends Controller {
 			// Fields
 			$this->data['product_fields'] = [];
 
-			$product_fields = $this->model_catalog_product->getProductFields($this->request->get['product_id']);
+			$product_fields = $this->model_catalog_product->getProductFields($product_id);
 
 			if ($product_fields) {
 				foreach ($product_fields as $product_field) {
@@ -489,7 +490,7 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['locations'] = [];
 
-			$location_results = $this->model_catalog_product->getProductLocationId($this->request->get['product_id']);
+			$location_results = $this->model_catalog_product->getProductLocationId($product_id);
 
 			arsort($location_results);
 
@@ -504,7 +505,7 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['product_colors'] = [];
 
-			$product_colors = $this->model_design_palette->getProductColors($this->request->get['product_id']);
+			$product_colors = $this->model_design_palette->getProductColors($product_id);
 
 			if ($product_colors) {
 				foreach ($product_colors as $product_color_id) {
@@ -526,7 +527,7 @@ class ControllerProductProduct extends Controller {
 			// Price
 			$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
 
-			$this->data['price_option'] = $this->model_catalog_product->hasOptionPriceIncrease($this->request->get['product_id']);
+			$this->data['price_option'] = $this->model_catalog_product->hasOptionPriceIncrease($product_id);
 
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				if (($product_info['price'] === '0.0000') && $this->config->get('config_price_free')) {
@@ -552,7 +553,7 @@ class ControllerProductProduct extends Controller {
 				$this->data['tax'] = false;
 			}
 
-			$discounts = $this->model_catalog_product->getProductDiscounts($this->request->get['product_id']);
+			$discounts = $this->model_catalog_product->getProductDiscounts($product_id);
 
 			$this->data['discounts'] = [];
 
@@ -603,7 +604,7 @@ class ControllerProductProduct extends Controller {
 			// Options
 			$this->data['options'] = [];
 
-			foreach ($this->model_catalog_product->getProductOptions($this->request->get['product_id']) as $option) {
+			foreach ($this->model_catalog_product->getProductOptions($product_id) as $option) {
 				if ($option['type'] === 'select' || $option['type'] === 'radio' || $option['type'] === 'checkbox' || $option['type'] === 'image') {
 					$option_value_data = [];
 
@@ -659,7 +660,7 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['offers'] = [];
 
-			$product_offers = $this->model_catalog_offer->getOfferProducts($this->request->get['product_id']);
+			$product_offers = $this->model_catalog_offer->getOfferProducts($product_id);
 
 			if ($product_offers) {
 				$this->data['offer_label_large'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
@@ -669,7 +670,7 @@ class ControllerProductProduct extends Controller {
 				$this->data['offer_label_medium'] = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio_medium, $label_ratio_medium);
 
 				foreach ($product_offers as $product_offer) {
-					if ($product_offer['one'] === $this->request->get['product_id']) {
+					if ($product_offer['one'] === $product_id) {
 						$product_offer_image = $this->model_catalog_offer->getOfferProductImage($product_offer['two']);
 
 						if ($product_offer_image) {
@@ -683,7 +684,7 @@ class ControllerProductProduct extends Controller {
 
 						$offer_product = $product_offer['two'];
 
-					} elseif ($product_offer['two'] === $this->request->get['product_id']) {
+					} elseif ($product_offer['two'] === $product_id) {
 						$product_offer_image = $this->model_catalog_offer->getOfferProductImage($product_offer['one']);
 
 						if ($product_offer_image) {
@@ -761,7 +762,7 @@ class ControllerProductProduct extends Controller {
 			$this->data['captcha_image'] = $this->session->data['captcha'];
 
 			// Attributes
-			$attribute_groups = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
+			$attribute_groups = $this->model_catalog_product->getProductAttributes($product_id);
 
 			$this->data['attribute_groups'] = array_reverse($attribute_groups, true);
 
@@ -770,7 +771,7 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['products'] = [];
 
-			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
+			$results = $this->model_catalog_product->getProductRelated($product_id);
 
 			foreach ($results as $result) {
 				if ($result['image']) {
@@ -862,13 +863,13 @@ class ControllerProductProduct extends Controller {
 			if ($this->customer->isLogged()) {
 				$this->data['text_payment_profile'] = $this->language->get('text_payment_profile');
 
-				$this->data['profiles'] = $this->model_catalog_product->getProfiles($this->request->get['product_id']);
+				$this->data['profiles'] = $this->model_catalog_product->getProfiles($product_id);
 			} else {
 				$this->data['profiles'] = false;
 			}
 
 			// Update viewed
-			$this->model_catalog_product->updateViewed($this->request->get['product_id']);
+			$this->model_catalog_product->updateViewed($product_id);
 
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
