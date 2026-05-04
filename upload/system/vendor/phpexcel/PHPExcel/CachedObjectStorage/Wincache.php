@@ -137,7 +137,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	 *
 	 * @param	string			$pCoord		Coordinate of the cell
 	 * @throws	PHPExcel_Exception
-	 * @return	PHPExcel_Cell	Cell that was found, or null if not found
+	 * @return	PHPExcel_Cell|null	Cell that was found, or null if not found
 	 */
 	public function getCacheData($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
@@ -269,7 +269,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	public function __construct(PHPExcel_Worksheet $parent, $arguments) {
 		$cacheTime = $arguments['cacheTime'] ?? 600;
 
-		if (is_null($this->_cachePrefix)) {
+		if ($this->_cachePrefix === null) {
 			$baseUnique = $this->_getUniqueID();
 
 			$this->_cachePrefix = substr(md5($baseUnique), 0, 8) . '.';

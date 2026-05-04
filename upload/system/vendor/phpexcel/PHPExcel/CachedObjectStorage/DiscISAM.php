@@ -44,7 +44,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	/**
 	 * File handle for this cache file
 	 *
-	 * @var resource
+	 * @var resource|null
 	 */
 	private $_fileHandle = null;
 
@@ -104,7 +104,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	 *
 	 * @param 	string 			$pCoord		Coordinate of the cell
 	 * @throws 	PHPExcel_Exception
-	 * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
+	 * @return 	PHPExcel_Cell|null 	Cell that was found, or null if not found
 	 */
 	public function getCacheData($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
@@ -168,6 +168,10 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 
 		//	Open the copied cell cache file
 		$this->_fileHandle = fopen($this->_fileName, 'a+');
+
+		if ($this->_fileHandle === false) {
+			throw new PHPExcel_Exception('Failed to open cache file: ' . $this->_fileName);
+		}
 	}
 
 	/**
@@ -176,7 +180,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	 * @return	void
 	 */
 	public function unsetWorksheetCells(): void {
-		if (!is_null($this->_currentObject)) {
+		if ($this->_currentObject !== null) {
 			$this->_currentObject->detach();
 
 			$this->_currentObject = $this->_currentObjectID = null;
@@ -200,12 +204,16 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 
 		parent::__construct($parent);
 
-		if (is_null($this->_fileHandle)) {
+		if ($this->_fileHandle === null) {
 			$baseUnique = $this->_getUniqueID();
 
 			$this->_fileName = $this->_cacheDirectory . '/PHPExcel.' . $baseUnique . '.cache';
 
 			$this->_fileHandle = fopen($this->_fileName, 'a+');
+
+			if ($this->_fileHandle === false) {
+				throw new PHPExcel_Exception('Failed to open cache file: ' . $this->_fileName);
+			}
 		}
 	}
 
@@ -213,7 +221,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	 * Destroy this cell collection
 	 */
 	public function __destruct() {
-		if (!is_null($this->_fileHandle)) {
+		if ($this->_fileHandle !== null) {
 			fclose($this->_fileHandle);
 			unlink($this->_fileName);
 		}

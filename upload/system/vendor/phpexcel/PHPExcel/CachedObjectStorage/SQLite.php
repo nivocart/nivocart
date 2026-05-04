@@ -45,7 +45,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	/**
 	 * Database handle
 	 *
-	 * @var resource
+	 * @var SQLiteDatabase|null
 	 */
 	private $_DBHandle = null;
 
@@ -96,7 +96,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	 *
 	 * @param 	string 			$pCoord		Coordinate of the cell
 	 * @throws 	PHPExcel_Exception
-	 * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
+	 * @return 	PHPExcel_Cell|null 	Cell that was found, or null if not found
 	 */
 	public function getCacheData($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
@@ -246,7 +246,6 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 	 */
 	#[\Override]
 	public function copyCellCollection(PHPExcel_Worksheet $parent): void {
-		$this->_currentCellIsDirty;
 		$this->_storeData();
 
 		//	Get a new id for the new table name

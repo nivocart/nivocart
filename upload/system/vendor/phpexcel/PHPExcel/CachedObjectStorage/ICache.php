@@ -57,7 +57,7 @@ interface PHPExcel_CachedObjectStorage_ICache {
 	 * Fetch a cell from cache identified by coordinate address
 	 *
 	 * @param	string			$pCoord		Coordinate address of the cell to retrieve
-	 * @return PHPExcel_Cell 	Cell that was found, or null if not found
+	 * @return  PHPExcel_Cell|null 	Cell that was found, or null if not found
 	 * @throws	PHPExcel_Exception
 	 */
 	public function getCacheData($pCoord);

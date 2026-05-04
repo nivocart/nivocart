@@ -64,7 +64,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
 	 *
 	 * @param 	string 			$pCoord		Coordinate of the cell
 	 * @throws 	PHPExcel_Exception
-	 * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
+	 * @return 	PHPExcel_Cell|null 	Cell that was found, or null if not found
 	 */
 	public function getCacheData($pCoord) {
 		//	Check if the entry that has been requested actually exists
@@ -92,7 +92,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
 
 		$newCollection = [];
 
-		foreach ($this->_cellCache as $k => &$cell) {
+		foreach ($this->_cellCache as $k => $cell) {
 			$newCollection[$k] = clone $cell;
 			$newCollection[$k]->attach($this);
 		}
@@ -107,12 +107,10 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
 	 */
 	public function unsetWorksheetCells(): void {
 		//	Because cells are all stored as intact objects in memory, we need to detach each one from the parent
-		foreach ($this->_cellCache as $k => &$cell) {
+		foreach ($this->_cellCache as $k => $cell) {
 			$cell->detach();
 			$this->_cellCache[$k] = null;
 		}
-
-		unset($cell);
 
 		$this->_cellCache = [];
 		//	Detach ourself from the worksheet, so that it can then delete this object successfully

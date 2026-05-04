@@ -45,7 +45,7 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
 	/**
 	 * Database handle
 	 *
-	 * @var resource
+	 * @var SQLite3|null
 	 */
 	private $_DBHandle = null;
 
@@ -129,7 +129,7 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
 	 *
 	 * @param 	string 			$pCoord		Coordinate of the cell
 	 * @throws 	PHPExcel_Exception
-	 * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
+	 * @return 	PHPExcel_Cell|null 	Cell that was found, or null if not found
 	 */
 	public function getCacheData($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
@@ -282,7 +282,6 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
 	 */
 	#[\Override]
 	public function copyCellCollection(PHPExcel_Worksheet $parent): void {
-		$this->_currentCellIsDirty;
 		$this->_storeData();
 		//	Get a new id for the new table name
 		$tableName = str_replace('.', '_', $this->_getUniqueID());
@@ -326,8 +325,8 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
 
 			$this->_DBHandle = new SQLite3($_DBName);
 
-			if ($this->_DBHandle === false) {
-				throw new PHPExcel_Exception($this->_DBHandle->lastErrorMsg());
+			if ($this->_DBHandle === null) {
+				throw new PHPExcel_Exception('Failed to create SQLite3 database handle');
 			}
 
 			if (!$this->_DBHandle->exec('CREATE TABLE kvp_' . $this->_TableName . ' (id VARCHAR(12) PRIMARY KEY, value BLOB)')) {

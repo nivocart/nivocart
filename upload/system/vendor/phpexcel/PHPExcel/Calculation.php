@@ -3224,8 +3224,10 @@ class PHPExcel_Calculation {
 					} else {	// did we somehow push a non-function on the stack? this should never happen
 						return $this->_raiseFormulaError("Formula Error: Internal error, non-function on stack");
 					}
-					//	Check the argument count
+					// Check the argument count
 					$argumentCountError = false;
+					// initialise before any branch sets it
+					$expectedArgumentCountString = '';
 
 					if (is_numeric($expectedArgumentCount)) {
 						if ($expectedArgumentCount < 0) {
@@ -3820,6 +3822,10 @@ class PHPExcel_Calculation {
 				}
 
 				if ((isset(self::$_PHPExcelFunctions[$functionName])) || (isset(self::$_controlFunctions[$functionName]))) {	// function
+					$functionCall = null;
+					$passByReference = false;
+					$passCellReference = false;
+
 					if (isset(self::$_PHPExcelFunctions[$functionName])) {
 						$functionCall = self::$_PHPExcelFunctions[$functionName]['functionCall'];
 						$passByReference = isset(self::$_PHPExcelFunctions[$functionName]['passByReference']);
@@ -4035,6 +4041,7 @@ class PHPExcel_Calculation {
 		$useLowercaseFirstComparison = is_string($operand1) && is_string($operand2) && PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE;
 
 		//	Execute the necessary operation
+		$result = false; // default if no operation matches
 		switch ($operation) {
 			//	Greater than
 			case '>':
@@ -4143,23 +4150,23 @@ class PHPExcel_Calculation {
 				$result = PHPExcel_Calculation_Functions::VALUE();
 			} else {
 				//	If we're dealing with non-matrix operations, execute the necessary operation
+				$result = PHPExcel_Calculation_Functions::VALUE(); // default if no operation matches
 				switch ($operation) {
 					//	Addition
 					case '+':
 						$result = $operand1 + $operand2;
 						break;
-						//	Subtraction
+					//	Subtraction
 					case '-':
 						$result = $operand1 - $operand2;
 						break;
-						//	Multiplication
+					//	Multiplication
 					case '*':
 						$result = $operand1 * $operand2;
 						break;
-						//	Division
+					//	Division
 					case '/':
 						if ($operand2 == 0) {
-							//	Trap for Divide by Zero error
 							$stack->push('Value', '#DIV/0!');
 							$this->_debugLog->writeDebugLog('Evaluation Result is ', $this->_showTypeDetails('#DIV/0!'));
 							return false;
@@ -4167,7 +4174,7 @@ class PHPExcel_Calculation {
 							$result = $operand1 / $operand2;
 						}
 						break;
-						//	Power
+					//	Power
 					case '^':
 						$result = $operand1 ** $operand2;
 						break;
@@ -4182,9 +4189,14 @@ class PHPExcel_Calculation {
 		return true;
 	}
 
-	// trigger an error, but nicely, if need be
-	protected function _raiseFormulaError($errorMessage): void {
+	/**
+	 * @param string $errorMessage
+	 *
+	 * @return bool Always returns false
+	 */
+	protected function _raiseFormulaError($errorMessage): bool {
 		$this->formulaError = $errorMessage;
+
 		$this->_cyclicReferenceStack->clear();
 
 		if (!$this->suppressFormulaErrors) {
@@ -4192,6 +4204,8 @@ class PHPExcel_Calculation {
 		}
 
 		trigger_error($errorMessage, E_USER_ERROR);
+
+		return false;
 	}
 
 	/**

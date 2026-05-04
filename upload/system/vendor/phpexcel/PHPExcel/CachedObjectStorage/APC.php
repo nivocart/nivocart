@@ -135,7 +135,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
 	 * @access  public
 	 * @param   string         $pCoord  Coordinate of the cell
 	 * @throws  PHPExcel_Exception
-	 * @return  PHPExcel_Cell  Cell that was found, or null if not found
+	 * @return  PHPExcel_Cell|null  Cell that was found, or null if not found
 	 */
 	public function getCacheData($pCoord) {
 		if ($pCoord === $this->_currentObjectID) {
@@ -300,7 +300,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
 			return false;
 		}
 
-		if (apc_sma_info() === false) {
+		if (!apc_sma_info()) {
 			return false;
 		}
 
