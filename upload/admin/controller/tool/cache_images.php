@@ -5,156 +5,167 @@
  * @package NivoCart
  */
 class ControllerToolCacheImages extends Controller {
-	private $error = [];
+    private $error = [];
 
-	public function index() {
-		$this->language->load('tool/cache_images');
+    public function index() {
+        $this->language->load('tool/cache_images');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		$this->data['breadcrumbs'] = [];
+        $this->data['breadcrumbs'] = [];
 
-		$this->data['breadcrumbs'][] = [
-			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-			'separator' => false
-		];
+        $this->data['breadcrumbs'][] = [
+            'text'      => $this->language->get('text_home'),
+            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'separator' => false
+        ];
 
-		$this->data['breadcrumbs'][] = [
-			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('tool/cache_images', 'token=' . $this->session->data['token'], 'SSL'),
-			'separator' => ' :: '
-		];
+        $this->data['breadcrumbs'][] = [
+            'text'      => $this->language->get('heading_title'),
+            'href'      => $this->url->link('tool/cache_images', 'token=' . $this->session->data['token'], 'SSL'),
+            'separator' => ' :: '
+        ];
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
+        $this->data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
+        $this->data['text_no_results'] = $this->language->get('text_no_results');
+		$this->data['text_total_size'] = $this->language->get('text_total_size');
 
-		$this->data['column_name'] = $this->language->get('column_name');
-		$this->data['column_size'] = $this->language->get('column_size');
+        $this->data['column_name'] = $this->language->get('column_name');
+        $this->data['column_size'] = $this->language->get('column_size');
+		$this->data['column_modified'] = $this->language->get('column_modified');
 
-		$this->data['button_delete'] = $this->language->get('button_delete');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
+        $this->data['button_delete'] = $this->language->get('button_delete');
+        $this->data['button_cancel'] = $this->language->get('button_cancel');
 
-		$this->data['delete'] = $this->url->link('tool/cache_images/delete', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['delete'] = $this->url->link('tool/cache_images/delete', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['cancel'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 
-		// Get Cache images (needs more work)
-		$this->data['cache_images'] = [];
+        // Scan image cache directory recursively
+        $this->data['cache_images'] = [];
+        $this->data['cache_total_size'] = 0;
 
-		$suffix = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        $cache_dir = DIR_IMAGE . 'cache/';
 
-		if (is_dir(DIR_IMAGE)) {
-			$iterator = new FilesystemIterator(DIR_IMAGE, FilesystemIterator::SKIP_DOTS);
+        if (is_dir($cache_dir)) {
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($cache_dir, FilesystemIterator::SKIP_DOTS)
+            );
 
-			foreach ($iterator as $entry) {
-				if (!$entry->isFile()) {
-					continue;
-				}
+            $suffix = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-				$filename = $entry->getFilename();
+            foreach ($iterator as $entry) {
+                if (!$entry->isFile()) {
+                    continue;
+                }
 
-				if (!str_starts_with($filename, 'cache.')) {
-					continue;
-				}
+                // Skip index.html placeholder files
+                if ($entry->getFilename() === 'index.html') {
+                    continue;
+                }
 
-				if ($filename === 'index.html') {
-					continue;
-				}
+                // Only process known image extensions
+                $ext = strtolower($entry->getExtension());
 
-				// Expiry timestamp is the last segment after the final dot
-				$time = substr(strrchr($filename, '.'), 1);
+                if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
+                    continue;
+                }
 
-				if (!is_numeric($time)) {
-					continue;
-				}
+                $full_path = $entry->getPathname();
+                $relative_path = str_replace('\\', '/', substr($full_path, strlen(DIR_IMAGE)));
+                $size_bytes = $entry->getSize();
 
-				$size = $entry->getSize();
-				$i = 0;
+                $this->data['cache_total_size'] += $size_bytes;
 
-				while (($size / 1024) > 1) {
-					$size = $size / 1024;
-					$i++;
-				}
+                // Format file size
+                $size = $size_bytes;
+                $i = 0;
 
-				$this->data['cache_images'][] = [
-					'name'     => $filename,
-					'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
-					'time'     => round((((int)$time - time()) / 60), 0, PHP_ROUND_HALF_UP),
-					'selected' => isset($this->request->post['selected']) && in_array($filename, $this->request->post['selected'])
-				];
-			}
-		}
+                while ($size >= 1024 && $i < count($suffix) - 1) {
+                    $size /= 1024;
+                    $i++;
+                }
 
-		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
+                $this->data['cache_images'][] = [
+                    'name'     => $relative_path,
+                    'size'     => round($size, 2, PHP_ROUND_HALF_UP) . ' ' . $suffix[$i],
+                    'modified' => date('Y-m-d H:i:s', $entry->getMTime()),
+                    'selected' => isset($this->request->post['selected']) && in_array($relative_path, $this->request->post['selected'])
+                ];
+            }
 
-		if (isset($this->session->data['attention'])) {
-			$this->data['attention'] = $this->session->data['attention'];
+            // Format total size
+            $total = $this->data['cache_total_size'];
+            $i = 0;
 
-			unset($this->session->data['attention']);
-		} else {
-			$this->data['attention'] = '';
-		}
+            while ($total >= 1024 && $i < count($suffix) - 1) {
+                $total /= 1024;
+                $i++;
+            }
 
-		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
+            $this->data['cache_total_size'] = round($total, 2, PHP_ROUND_HALF_UP) . ' ' . $suffix[$i];
+        }
 
-			unset($this->session->data['success']);
-		} else {
-			$this->data['success'] = '';
-		}
+        $this->data['error_warning'] = $this->error['warning'] ?? '';
+        $this->data['attention'] = $this->session->data['attention'] ?? '';
+        $this->data['success'] = $this->session->data['success'] ?? '';
 
-		$this->template = 'tool/cache_images.tpl';
-		$this->children = [
-			'common/header',
-			'common/footer'
-		];
+        unset($this->session->data['attention'], $this->session->data['success']);
 
-		$this->response->setOutput($this->render());
-	}
+        $this->template = 'tool/cache_images.tpl';
+        $this->children = [
+            'common/header',
+            'common/footer'
+        ];
 
-	public function delete() {
-		$this->language->load('tool/cache_images');
+        $this->response->setOutput($this->render());
+    }
 
-		$this->document->setTitle($this->language->get('heading_title'));
+    public function delete() {
+        $this->language->load('tool/cache_images');
 
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $name) {
-				// Sanitise: strip any path traversal and accept only the bare filename
-				$name = basename($name);
+        if (isset($this->request->post['selected']) && $this->validateDelete()) {
+            foreach ($this->request->post['selected'] as $relative_path) {
+                // Normalise separators and strip any traversal attempts
+                $relative_path = str_replace('\\', '/', $relative_path);
 
-				// Ensure it matches the cache file naming convention before touching it
-				if (!str_starts_with($name, 'cache.') || $name === 'index.html') {
-					continue;
-				}
+                if (str_contains($relative_path, '..')) {
+                    continue;
+                }
 
-				$file = DIR_IMAGE . $name;
+                // Must sit inside cache/
+                if (!str_starts_with($relative_path, 'cache/')) {
+                    continue;
+                }
 
-				if (is_file($file)) {
-					unlink($file);
-				}
-			}
+                // Only allow image extensions
+                $ext = strtolower(pathinfo($relative_path, PATHINFO_EXTENSION));
 
-			$this->session->data['success'] = $this->language->get('text_success');
+                if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
+                    continue;
+                }
 
-			$this->redirect($this->url->link('tool/cache_images', 'token=' . $this->session->data['token'], 'SSL'));
+                $file = DIR_IMAGE . $relative_path;
 
-		} else {
-			$this->session->data['attention'] = $this->language->get('text_attention');
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
 
-			$this->redirect($this->url->link('tool/cache_images', 'token=' . $this->session->data['token'], 'SSL'));
-		}
-	}
+            $this->session->data['success'] = $this->language->get('text_success');
 
-	protected function validateDelete() {
-		if (!$this->user->hasPermission('modify', 'tool/cache_images')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+        } else {
+            $this->session->data['attention'] = $this->language->get('text_attention');
+        }
 
-		return empty($this->error);
-	}
+        $this->redirect($this->url->link('tool/cache_images', 'token=' . $this->session->data['token'], 'SSL'));
+    }
+
+    protected function validateDelete() {
+        if (!$this->user->hasPermission('modify', 'tool/cache_images')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        return empty($this->error);
+    }
 }

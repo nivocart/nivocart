@@ -27,33 +27,42 @@
       <table class="list">
         <thead>
           <tr>
-            <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
-            <label for="check-all"><span></span></label></td>
+            <td width="1" style="text-align:center;">
+              <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
+              <label for="check-all"><span></span></label>
+            </td>
             <td class="left"><?php echo $column_name; ?></td>
             <td class="left"><?php echo $column_size; ?></td>
+            <td class="left"><?php echo $column_modified; ?></td>
           </tr>
         </thead>
         <tbody>
         <?php if ($cache_images) { ?>
           <?php foreach ($cache_images as $cache_image) { ?>
           <tr>
-            <td style="text-align:center;"><?php if ($cache_image['selected']) { ?>
-              <input type="checkbox" name="selected[]" value="<?php echo $cache_image['name']; ?>" id="<?php echo $cache_image['name']; ?>" class="checkbox" checked />
+            <td style="text-align:center;">
+              <input type="checkbox" name="selected[]" value="<?php echo $cache_image['name']; ?>" id="<?php echo $cache_image['name']; ?>" class="checkbox"<?php echo $cache_image['selected'] ? ' checked' : ''; ?> />
               <label for="<?php echo $cache_image['name']; ?>"><span></span></label>
-            <?php } else { ?>
-              <input type="checkbox" name="selected[]" value="<?php echo $cache_image['name']; ?>" id="<?php echo $cache_image['name']; ?>" class="checkbox" />
-              <label for="<?php echo $cache_image['name']; ?>"><span></span></label>
-            <?php } ?></td>
+            </td>
             <td class="left"><?php echo $cache_image['name']; ?></td>
             <td class="left"><?php echo $cache_image['size']; ?></td>
+            <td class="left"><?php echo $cache_image['modified']; ?></td>
           </tr>
           <?php } ?>
         <?php } else { ?>
           <tr>
-            <td class="center" colspan="3"><?php echo $text_no_results; ?></td>
+            <td class="center" colspan="4"><?php echo $text_no_results; ?></td>
           </tr>
         <?php } ?>
         </tbody>
+        <?php if ($cache_images) { ?>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="left"><strong><?php echo $text_total_size; ?></strong></td>
+            <td colspan="2" class="left"><strong><?php echo $cache_total_size; ?></strong></td>
+          </tr>
+        </tfoot>
+        <?php } ?>
       </table>
     </form>
     </div>

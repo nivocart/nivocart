@@ -6,10 +6,12 @@ $_['heading_title']    = 'Cache Images';
 $_['text_success']     = 'Success: You have deleted <b>Cache Images</b> !';
 $_['text_attention']   = 'Attention: You must select at least one file !';
 $_['text_no_results']  = 'Cache Images folder is empty !';
+$_['text_total_size']  = 'Total Cache Size';
 
 // Column
 $_['column_name']      = 'Cache Image Name';
 $_['column_size']      = 'Cache Image Size';
+$_['column_modified']  = 'Last Modified';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify <b>Cache Images</b> !';
