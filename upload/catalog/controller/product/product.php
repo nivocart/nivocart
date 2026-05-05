@@ -735,7 +735,10 @@ class ControllerProductProduct extends Controller {
 				$this->data['offer_label_medium'] = '';
 			}
 
-			// Reviews
+			// Reviews - Display
+			$this->data['review_block'] = $this->reviews();
+
+			// Reviews - Write
 			$review_status = $this->config->get('config_review_status');
 			$review_login = $this->config->get('config_review_login');
 
@@ -993,10 +996,9 @@ class ControllerProductProduct extends Controller {
 		$this->data['text_on'] = $this->language->get('text_on');
 		$this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
 
-		// Cast int on product id
 		$product_id = (int)$this->request->get['product_id'];
 
-		$this->data['reviews'] = [];
+		$this->data['latest_reviews'] = [];
 
 		$review_total = $this->model_catalog_review->getTotalReviewsByProductId($product_id);
 
@@ -1005,7 +1007,7 @@ class ControllerProductProduct extends Controller {
 		$results = $this->model_catalog_review->getReviewsByProductId($product_id, ($page - 1) * 3, 3);
 
 		foreach ($results as $result) {
-			$this->data['reviews'][] = [
+			$this->data['latest_reviews'][] = [
 				'author'     => $result['author'],
 				'text'       => nl2br($result['text']),
 				'rating'     => (int)$result['rating'],
@@ -1019,20 +1021,53 @@ class ControllerProductProduct extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = 3;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('product/product/review', 'product_id=' . $product_id . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('product/product/product_reviews', 'product_id=' . $product_id . '&page={page}', 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
 
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/review.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/product/review.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product_reviews.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/product/product_reviews.tpl';
 		} else {
-			$this->template = 'default/template/product/review.tpl';
+			$this->template = 'default/template/product/product_reviews.tpl';
 		}
 
-		$this->response->setOutput($this->render());
+		return $this->render();
+	}
+
+	public function write() {
+		$this->language->load('product/product');
+
+		$this->load->model('catalog/review');
+
+		$product_id = isset($this->request->post['product_id']) ? (int)$this->request->post['product_id'] : (int)$this->request->get['product_id'];
+
+		$json = [];
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->config->get('config_review_status')) {
+			if (empty($this->request->post['name']) || (mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
+				$json['error'] = $this->language->get('error_name');
+			} else if (empty($this->request->post['text']) || (mb_strlen($this->request->post['text'], 'UTF-8') < 25) || (mb_strlen($this->request->post['text'], 'UTF-8') > 1000)) {
+				$json['error'] = $this->language->get('error_text');
+			} else if (empty($this->request->post['rating'])) {
+				$json['error'] = $this->language->get('error_rating');
+			} else if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
+				$json['error'] = $this->language->get('error_captcha');
+			}
+
+			if (!isset($json['error'])) {
+				unset($this->session->data['captcha']);
+
+				$this->model_catalog_review->addReview($product_id, $this->request->post);
+
+				$json['success'] = $this->language->get('text_success');
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
 
 	public function getRecurringDescription() {
@@ -1094,46 +1129,6 @@ class ControllerProductProduct extends Controller {
 				}
 
 				$json['success'] = $text;
-			}
-		}
-
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
-
-	public function write() {
-		$this->language->load('product/product');
-
-		$this->load->model('catalog/review');
-
-		// Cast int on product id
-		$product_id = (int)$this->request->get['product_id'];
-
-		$json = [];
-
-		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->config->get('config_review_status')) {
-			if (empty($this->request->post['name']) || (mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
-				$json['error'] = $this->language->get('error_name');
-			}
-
-			if (empty($this->request->post['text']) || (mb_strlen($this->request->post['text'], 'UTF-8') < 25) || (mb_strlen($this->request->post['text'], 'UTF-8') > 1000)) {
-				$json['error'] = $this->language->get('error_text');
-			}
-
-			if (empty($this->request->post['rating'])) {
-				$json['error'] = $this->language->get('error_rating');
-			}
-
-			if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
-				$json['error'] = $this->language->get('error_captcha');
-			}
-
-			if (!isset($json['error'])) {
-				unset($this->session->data['captcha']);
-
-				$this->model_catalog_review->addReview($product_id, $this->request->post);
-
-				$json['success'] = $this->language->get('text_success');
 			}
 		}
 

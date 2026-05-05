@@ -20,7 +20,7 @@ $_['text_age_minimum']                        = 'You must be <b>%s or over</b> t
 $_['text_age_restriction']                    = 'This product has a minimum age restriction. Please <a href="%s">Login</a> or <a href="%s">Register</a>.';
 $_['text_age_band']                           = 'Age Band:';
 $_['text_or']                                 = '- OR -';
-$_['text_reviews']                            = '%s reviews';
+$_['text_reviews']                            = '%s review(s)';
 $_['text_write']                              = 'Write a review';
 $_['text_latest']                             = 'Latest reviews';
 $_['text_no_reviews']                         = 'There are no reviews for this product.';

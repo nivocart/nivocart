@@ -1,6 +1,6 @@
-<?php if ($reviews) { ?>
+<?php if ($latest_reviews) { ?>
   <h2><?php echo $text_latest; ?></h2>
-  <?php foreach ($reviews as $review) { ?>
+  <?php foreach ($latest_reviews as $review) { ?>
     <div class="review-box">
       <div class="rating"><img src="catalog/view/theme/<?php echo $template; ?>/image/stars-<?php echo $review['rating'] . '.png'; ?>" alt="<?php echo $review['reviews']; ?>" /></div>
       <div class="author"><b><?php echo $review['author']; ?></b> <?php echo $text_on; ?> <?php echo $review['date_added']; ?></div>

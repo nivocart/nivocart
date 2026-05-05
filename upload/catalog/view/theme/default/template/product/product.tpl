@@ -442,8 +442,7 @@
           <meta itemprop="value" content="<?php echo $rating; ?>" />
           <meta itemprop="best" content="5" />
           <img src="catalog/view/theme/<?php echo $template; ?>/image/stars-<?php echo $rating; ?>.png" alt="<?php echo $reviews; ?>" />
-          <a onclick="goToReviews('<?php echo $product_id; ?>');" style="margin:0 15px;"><?php echo $reviews; ?></a>
-          <a onclick="goToReviews('<?php echo $product_id; ?>');" title="<?php echo $text_write; ?>" class="button-add"><i class="fa fa-comments"></i></a>
+          <span style="padding-left:15px;"><?php echo $reviews; ?></span>
         </div>
         <?php if ($share_sharethis) { ?>
         <div class="share">
@@ -579,7 +578,9 @@
     <div class="panel-collapsed">
       <h3><?php echo $tab_review; ?><i class="fa"></i></h3>
       <div class="panel-content">
-        <div id="review"></div>
+        <div id="review">
+          <?php echo $review_block; ?>
+        </div>
         <div id="add-review">
         <?php if ($review_allowed) { ?>
           <h2 id="review-title"><?php echo $text_write; ?></h2>
@@ -867,18 +868,24 @@ new AjaxUpload('#button-option-<?php echo $option['product_option_id']; ?>', {
 
 <!-- Reviews Scripts //-->
 <script type="text/javascript"><!--
-$('#reviews').on('click', 'a', function() {
-	$('#reviews').fadeOut('slow');
-	$('#review').load('index.php?route=product/product/review&product_id=<?php echo $product_id; ?>');
-	$('#reviews').fadeIn('slow');
+$(document).on('click', '#review .pagination a', function(e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    $('#review').fadeOut('slow', function() {
+        $('#review').load(url, function() {
+            $('#review').fadeIn('slow');
+        });
+    });
 });
 
 $('#button-review').on('click', function() {
 	$.ajax({
-		url: 'index.php?route=product/product/write&product_id=<?php echo $product_id; ?>',
+		url: 'index.php?route=product/product/write',
 		type: 'post',
 		dataType: 'json',
+		contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
 		data: {
+			product_id: <?php echo $product_id; ?>,
 			name: $('input[name="name"]').val(),
 			text: $('textarea[name="text"]').val(),
 			rating: $('input[name="rating"]:checked').val() || '',
