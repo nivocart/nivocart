@@ -56,6 +56,7 @@ $_['text_information']                 = 'Information';
 $_['text_language']                    = 'Languages';
 $_['text_layout']                      = 'Layouts';
 $_['text_length_class']                = 'Length Classes';
+$_['text_license']                     = 'License';
 $_['text_localisation']                = 'Localisation';
 $_['text_location']                    = 'Locations';
 $_['text_logout']                      = 'Logout';

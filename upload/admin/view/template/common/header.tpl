@@ -312,6 +312,7 @@
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-support"></i>' : ''; ?><?php echo $text_help; ?></a>
             <ul>
               <li><a onclick="window.open('https://nivocart.org');" title=""><?php echo ($icons) ? '<i class="fa fa-home"></i>' : ''; ?><?php echo $text_nivocart; ?></a></li>
+			  <li><a href="<?php echo $license; ?>"><?php echo ($icons) ? '<i class="fa fa-legal"></i>' : ''; ?><?php echo $text_license; ?></a></li>
             </ul>
           </li>
         </ul>
