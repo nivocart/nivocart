@@ -1053,14 +1053,17 @@ class ControllerCommonHome extends Controller {
 			$config_ignore = [];
 
 			if ($this->config->get('config_token_ignore')) {
-				// check string before unserialize
-				$raw = $this->config->get('config_token_ignore') ?? null;
+				$raw = $this->config->get('config_token_ignore');
 
-				if (!is_string($raw)) {
-					$this->error['warning'] = $this->language->get('error_unserialize');
+				if (!is_string($raw) || $raw === '') {
+					$config_ignore = [];
+				} else {
+					$config_ignore = json_decode($raw, true);
 				}
 
-				$config_ignore = unserialize($raw, ['allowed_classes' => false]);
+				if (!is_array($config_ignore)) {
+					$config_ignore = [];
+				}
 			}
 
 			$ignore = array_merge($ignore, $config_ignore);

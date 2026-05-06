@@ -9,7 +9,7 @@ class ModelUserUserGroup extends Model {
 	 * Functions Add, Edit, Delete, Get
 	 */
 	public function addUserGroup(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "user_group` SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user_group` SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? json_encode($data['permission'], JSON_THROW_ON_ERROR) : '') . "'");
 
 		$user_group_id = $this->db->getLastId();
 
@@ -18,7 +18,7 @@ class ModelUserUserGroup extends Model {
 	}
 
 	public function editUserGroup(int $user_group_id, array $data = []): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' WHERE user_group_id = '" . (int)$user_group_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET `name` = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? json_encode($data['permission'], JSON_THROW_ON_ERROR) : '') . "' WHERE user_group_id = '" . (int)$user_group_id . "'");
 	}
 
 	public function deleteUserGroup(int $user_group_id): void {
@@ -32,18 +32,17 @@ class ModelUserUserGroup extends Model {
 			$user_group_query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "user_group` WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
 			if ($user_group_query->num_rows) {
-				// check string before unserialize
-				$raw = $user_group_query->row['permission'] ?? null;
+				$raw = $user_group_query->row['permission'] ?? '';
 
-				if (!is_string($raw)) {
-					throw new \InvalidArgumentException("Expected a serialized string.");
+				$data = $raw ? json_decode($raw, true) : [];
+
+				if (!is_array($data)) {
+					$data = [];
 				}
-
-				$data = unserialize($raw, ['allowed_classes' => false]);
 
 				$data[$type][] = $page;
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET permission = '" . serialize($data) . "' WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "user_group` SET permission = '" . $this->db->escape(json_encode($data, JSON_THROW_ON_ERROR)) . "' WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 			}
 		}
 	}
@@ -51,14 +50,13 @@ class ModelUserUserGroup extends Model {
 	public function getUserGroup(int $user_group_id): array {
 		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "user_group` WHERE user_group_id = '" . (int)$user_group_id . "'");
 
-		// check string before unserialize
-		$raw = $query->row['permission'] ?? null;
+		$raw = $query->row['permission'] ?? '';
 
-		if (!is_string($raw)) {
-			throw new \InvalidArgumentException("Expected a serialized string.");
+		$data = $raw ? json_decode($raw, true) : [];
+
+		if (!is_array($data)) {
+			$data = [];
 		}
-
-		$data = unserialize($raw, ['allowed_classes' => false]);
 
 		$user_group = [
 			'name'       => $query->row['name'],

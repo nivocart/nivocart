@@ -150,8 +150,8 @@ $_['text_prepare'] = '<h3>Welcome to NivoCart!</h3>
 	 so it is recommended to select this collation when creating the database. <b>Make sure to write down
 	 your user and MySQL database details before leaving PhpMyAdmin</b>, as they will be required during
 	 the rest of the installation process.</p>
-	<h3>Re-naming the config-dist files</h3>
-	<p>Re-name both &ldquo;<b>config-dist.php</b>&rdquo; to &ldquo;<b>config.php</b>&rdquo; using
+	<h3>Renaming the config-dist files</h3>
+	<p>Rename both &ldquo;<b>config-dist.php</b>&rdquo; to &ldquo;<b>config.php</b>&rdquo; using
 	 your Hosting Provider\'s File manager. The first one is at the <b>root</b> of the NivoCart\'s package,
 	 while the second one is up one level, inside the &ldquo;<b>admin</b>&rdquo; folder. Both files are empty
 	 at this time but the installation routine will write essential information into them, such as your
@@ -681,14 +681,11 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	<p>END OF TERMS AND CONDITIONS</p>
 	<p>This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or any later version.
-
-	This program is distributed in the hope that it will be useful,
+	the Free Software Foundation, either version 3 of the License, or any later version.</p>
+	<p>This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-	
-	Copyright (C) 2026 - Philippe Marion</p>
+	GNU General Public License for more details.</p>
+	<p>You should have received a copy of the GNU General Public License
+	along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</p>
+	<p>Copyright (C) 2026 - NivoCart</p>';

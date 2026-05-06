@@ -65,9 +65,10 @@ class User {
 
 				$user_group_query = $this->db->query("SELECT permission FROM `" . DB_PREFIX . "user_group` WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
-				// check string before unserialize
 				if ($user_group_query->row['permission'] && is_string($user_group_query->row['permission'])) {
-					$permissions = unserialize($user_group_query->row['permission'], ['allowed_classes' => false]);
+					$raw = $user_group_query->row['permission'];
+
+					$permissions = json_decode($raw, true);
 				} else {
 					$permissions = [];
 				}
@@ -77,10 +78,8 @@ class User {
 					throw new \Exception('Error: Permissions must be an array.');
 				}
 
-				if (is_array($permissions)) {
-					foreach ($permissions as $key => $value) {
-						$this->permission[$key] = $value;
-					}
+				foreach ($permissions as $key => $value) {
+					$this->permission[$key] = $value;
 				}
 
 			} else {
@@ -118,17 +117,21 @@ class User {
 
 			$user_group_query = $this->db->query("SELECT permission FROM `" . DB_PREFIX . "user_group` WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
-			// check string before unserialize
 			if ($user_group_query->row['permission'] && is_string($user_group_query->row['permission'])) {
-				$permissions = unserialize($user_group_query->row['permission'], ['allowed_classes' => false]);
+				$raw = $user_group_query->row['permission'];
+
+				$permissions = json_decode($raw, true);
 			} else {
 				$permissions = [];
 			}
 
-			if (is_array($permissions)) {
-				foreach ($permissions as $key => $value) {
-					$this->permission[$key] = $value;
-				}
+			// Enforce expected type
+			if (!is_array($permissions)) {
+				throw new \Exception('Error: Permissions must be an array.');
+			}
+
+			foreach ($permissions as $key => $value) {
+				$this->permission[$key] = $value;
 			}
 
 			// User Log

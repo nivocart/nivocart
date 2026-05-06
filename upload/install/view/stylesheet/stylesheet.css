@@ -1,6 +1,6 @@
 /* -----------------------------------
 * NivoCart - Install/Upgrade CSS
-* Copyright © 2018
+* Copyright © 2026
 * ------------------------------------
 */
 
@@ -49,6 +49,9 @@ h2 {
 	color: #EAEAEA;
 	font-size: 22px;
 	font-weight: bold;
+}
+h4 {
+	color: #111;
 }
 p {
 	margin: 0 0 20px 0;
@@ -354,7 +357,7 @@ a.button-go:hover {
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
 }
-.terms h3, .terms p, .terms ul, .terms ol {
+.terms h3, .terms h4, .terms p, .terms ul, .terms ol {
 	color: #111;
 }
 /* Footer */

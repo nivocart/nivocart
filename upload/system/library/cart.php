@@ -65,26 +65,18 @@ class Cart {
 				$product_id = $product[0];
 				$stock = true;
 
-				// Options: check string before unserialize
 				if (!empty($product[1])) {
-					$decoded = base64_decode($product[1], true); // strict mode
+					$decoded = base64_decode($product[1], true);
 
-					if ($decoded === false) {
+					if ($decoded === false || !is_string($decoded) || strlen($decoded) === 0) {
 						throw new \Exception('Error: Invalid base64 encoding in product options.');
 					}
 
-					// Basic sanity check: unserialize expects a specific format
-					if (!is_string($decoded) || strlen($decoded) === 0) {
-						throw new \Exception('Error: Decoded product option is not a valid string.');
-					}
+					$options = json_decode($decoded, true);
 
-					$options = unserialize($decoded, ['allowed_classes' => false]);
-
-					// Enforce expected type
 					if (!is_array($options)) {
 						throw new \Exception('Error: Product options must be an array.');
 					}
-
 				} else {
 					$options = [];
 				}
@@ -421,8 +413,8 @@ class Cart {
 	public function add(int $product_id, int $profile_id, int $quantity = 1, array $option = []): void {
 		$key = (int)$product_id . ':';
 
-		if ($option || !is_array($option)) {
-			$key .= base64_encode(serialize($option)) . ':';
+		if ($option && is_array($option)) {
+			$key .= base64_encode(json_encode($option, JSON_THROW_ON_ERROR)) . ':';
 		} else {
 			$key .= ':';
 		}

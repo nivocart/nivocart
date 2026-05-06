@@ -98,7 +98,7 @@ class Customer {
 				$this->newsletter = $customer_query->row['newsletter'];
 				$this->address_id = $customer_query->row['address_id'];
 
-				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? json_encode($this->session->data['cart'], JSON_THROW_ON_ERROR) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? json_encode($this->session->data['wishlist'], JSON_THROW_ON_ERROR) : '') . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 
 				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_ip` WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
 
@@ -151,11 +151,11 @@ class Customer {
 			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
 			$this->session->data['customer_login_time'] = time();
 
-			// check string before unserialize
 			if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
-				$cart = unserialize($customer_query->row['cart'], ['allowed_classes' => false]);
+				$raw = $customer_query->row['cart'];
 
-				// Enforce expected type
+				$cart = json_decode($raw, true);
+
 				if (!is_array($cart)) {
 					throw new \Exception('Error: Cart must be an array.');
 				}
@@ -169,15 +169,15 @@ class Customer {
 				}
 			}
 
-			// check string before unserialize
 			if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])) {
 				if (!isset($this->session->data['wishlist'])) {
 					$this->session->data['wishlist'] = [];
 				}
 
-				$wishlist = unserialize($customer_query->row['wishlist'], ['allowed_classes' => false]);
+				$raw = $customer_query->row['wishlist'];
 
-				// Enforce expected type
+				$wishlist = json_decode($raw, true);
+
 				if (!is_array($wishlist)) {
 					throw new \Exception('Error: Wishlist must be an array.');
 				}
@@ -218,7 +218,7 @@ class Customer {
 	 * $this->customer->logout();
 	 */
 	public function logout(): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? json_encode($this->session->data['cart'], JSON_THROW_ON_ERROR) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? json_encode($this->session->data['wishlist'], JSON_THROW_ON_ERROR) : '') . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 
 		$this->session->data['cart'] = [];
 
