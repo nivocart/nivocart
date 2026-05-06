@@ -28,8 +28,35 @@ class ControllerProductReviewList extends Controller {
 
 		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'p.sort_order';
 		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'DESC';
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+		$page = isset($this->request->get['page']) ? (int)$this->request->get['page'] : 1;
 
+		// ------------------------------------------------------------------
+		// Build a single reusable filter URL used by sorts, limits,
+		// pagination and SEO canonical/prev/next links throughout the page.
+		// ------------------------------------------------------------------
+		$filter_url = '';
+
+		if (isset($this->request->get['filter_name'])) {
+			$filter_url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+		}
+
+		if (isset($this->request->get['filter_description'])) {
+			$filter_url .= '&filter_description=' . $this->request->get['filter_description'];
+		}
+
+		if (isset($this->request->get['sort'])) {
+			$filter_url .= '&sort=' . $this->request->get['sort'];
+		}
+
+		if (isset($this->request->get['order'])) {
+			$filter_url .= '&order=' . $this->request->get['order'];
+		}
+
+		if (isset($this->request->get['limit'])) {
+			$filter_url .= '&limit=' . $this->request->get['limit'];
+		}
+
+		// Breadcrumbs
 		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = [
@@ -49,11 +76,11 @@ class ControllerProductReviewList extends Controller {
 			'limit'              => $limit
 		];
 
-		$review_total = $this->model_catalog_review->getTotalReviews();
-
+		$review_total   = $this->model_catalog_review->getTotalReviews();
 		$review_results = $this->model_catalog_review->getReviews($data);
 
 		if ($review_results) {
+			// Page
 			$title_page = ($page > 1) ? ' - Page ' . $page : '';
 
 			if (isset($this->request->get['filter_name'])) {
@@ -64,34 +91,10 @@ class ControllerProductReviewList extends Controller {
 
 			$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
 
-			// Breadcrumbs
-			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			} else {
-				$filter_name = null;
-			}
-
-			// Html is not translated
-			if (isset($this->request->get['filter_description'])) {
-				$filter_description = $this->request->get['filter_description'];
-			} else {
-				$filter_description = null;
-			}
-
-			$page_url = array_filter([
-				'filter_name'        => $filter_name,
-				'filter_description' => $filter_description,
-				'sort'               => $this->request->get['sort'] ?? null,
-				'order'              => $this->request->get['order'] ?? null,
-				'limit'              => $this->request->get['limit'] ?? $this->config->get('config_catalog_limit'),
-				'page'               => $this->request->get['page'] ?? null
-			]);
-
-			$url = $page_url ? '&' . http_build_query($page_url) : '';
-
+			// Breadcrumb entry
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('product/review_list', $url, 'SSL'),
+				'href'      => $this->url->link('product/review_list', $filter_url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			];
 
@@ -131,7 +134,7 @@ class ControllerProductReviewList extends Controller {
 			$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 			$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
 
-			// Image Size Variables
+			// Models
 			$this->image_product_width = $this->config->get('config_image_product_width');
 			$this->image_product_height = $this->config->get('config_image_product_height');
 			$this->label_size_ratio = $this->config->get('config_label_size_ratio');
@@ -143,6 +146,7 @@ class ControllerProductReviewList extends Controller {
 
 			$offers = $this->model_catalog_offer->getListProductOffers();
 
+			// Review results loop
 			foreach ($review_results as $result) {
 				// Image
 				if ($result['image']) {
@@ -189,19 +193,19 @@ class ControllerProductReviewList extends Controller {
 					$tax = false;
 				}
 
-				// Review Rating
+				// Rating
 				$rating = $this->config->get('config_review_status') ? (int)$result['rating'] : false;
-				
+
 				$review_total_product = $this->model_catalog_review->getTotalReviewsByProductId($result['product_id']);
 
-				// Stock Quantity
+				// Stock label
 				if ($result['quantity'] <= 0) {
 					$stock_label = $this->model_tool_image->resize($this->config->get('config_label_stock'), $label_ratio, $label_ratio);
 				} else {
 					$stock_label = false;
 				}
 
-				// Offers
+				// Offer label
 				if (in_array($result['product_id'], $offers, true)) {
 					$offer_label = $this->model_tool_image->resize($this->config->get('config_label_offer'), $label_ratio, $label_ratio);
 					$offer = true;
@@ -210,7 +214,7 @@ class ControllerProductReviewList extends Controller {
 					$offer = false;
 				}
 
-				// Age Check
+				// Age check
 				$age_logged = false;
 				$age_checked = false;
 
@@ -233,7 +237,8 @@ class ControllerProductReviewList extends Controller {
 				// Quote
 				$quote = $result['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
-				// Reviews array
+				// Build reviews array — product href uses $filter_url so sort/filter
+				// state is preserved when navigating to a product page and back.
 				$this->data['reviews'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
@@ -260,100 +265,70 @@ class ControllerProductReviewList extends Controller {
 					'author'          => $result['author'],
 					'date_added'      => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 					'reviews'         => sprintf($this->language->get('text_reviews'), $review_total_product),
-					'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url, 'SSL')
+					'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $filter_url, 'SSL')
 				];
 			}
 
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['filter_description'])) {
-				$url .= '&filter_description=' . $this->request->get['filter_description'];
-			}
-
+			// Sorts — all use $filter_url consistently
 			$this->data['sorts'] = [];
 
 			$this->data['sorts'][] = [
 				'text'  => $this->language->get('text_default'),
 				'value' => 'p.sort_order-DESC',
-				'href'  => $this->url->link('product/review_list', 'sort=p.sort_order&order=DESC' . $url, 'SSL')
+				'href'  => $this->url->link('product/review_list', 'sort=p.sort_order&order=DESC' . $filter_url, 'SSL')
 			];
 
 			$this->data['sorts'][] = [
 				'text'  => $this->language->get('text_name_asc'),
 				'value' => 'pd.name-ASC',
-				'href'  => $this->url->link('product/review_list', 'sort=pd.name&order=ASC' . $url, 'SSL')
+				'href'  => $this->url->link('product/review_list', 'sort=pd.name&order=ASC' . $filter_url, 'SSL')
 			];
 
 			$this->data['sorts'][] = [
 				'text'  => $this->language->get('text_name_desc'),
 				'value' => 'pd.name-DESC',
-				'href'  => $this->url->link('product/review_list', 'sort=pd.name&order=DESC' . $url, 'SSL')
+				'href'  => $this->url->link('product/review_list', 'sort=pd.name&order=DESC' . $filter_url, 'SSL')
 			];
 
 			$this->data['sorts'][] = [
 				'text'  => $this->language->get('text_price_asc'),
 				'value' => 'p.price-ASC',
-				'href'  => $this->url->link('product/review_list', 'sort=p.price&order=ASC' . $url, 'SSL')
+				'href'  => $this->url->link('product/review_list', 'sort=p.price&order=ASC' . $filter_url, 'SSL')
 			];
 
 			$this->data['sorts'][] = [
 				'text'  => $this->language->get('text_price_desc'),
 				'value' => 'p.price-DESC',
-				'href'  => $this->url->link('product/review_list', 'sort=p.price&order=DESC' . $url, 'SSL')
+				'href'  => $this->url->link('product/review_list', 'sort=p.price&order=DESC' . $filter_url, 'SSL')
 			];
 
 			if ($this->config->get('config_review_status')) {
 				$this->data['sorts'][] = [
 					'text'  => $this->language->get('text_rating_desc'),
 					'value' => 'r.rating-DESC',
-					'href'  => $this->url->link('product/review_list', 'sort=r.rating&order=DESC' . $url, 'SSL')
+					'href'  => $this->url->link('product/review_list', 'sort=r.rating&order=DESC' . $filter_url, 'SSL')
 				];
 
 				$this->data['sorts'][] = [
 					'text'  => $this->language->get('text_rating_asc'),
 					'value' => 'r.rating-ASC',
-					'href'  => $this->url->link('product/review_list', 'sort=r.rating&order=ASC' . $url, 'SSL')
+					'href'  => $this->url->link('product/review_list', 'sort=r.rating&order=ASC' . $filter_url, 'SSL')
 				];
 			}
 
 			$this->data['sorts'][] = [
 				'text'  => $this->language->get('text_date_asc'),
 				'value' => 'r.date_added-ASC',
-				'href'  => $this->url->link('product/review_list', 'sort=r.date_added&order=ASC' . $url, 'SSL')
+				'href'  => $this->url->link('product/review_list', 'sort=r.date_added&order=ASC' . $filter_url, 'SSL')
 			];
 
 			$this->data['sorts'][] = [
 				'text'  => $this->language->get('text_date_desc'),
 				'value' => 'r.date_added-DESC',
-				'href'  => $this->url->link('product/review_list', 'sort=r.date_added&order=DESC' . $url, 'SSL')
+				'href'  => $this->url->link('product/review_list', 'sort=r.date_added&order=DESC' . $filter_url, 'SSL')
 			];
 
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['filter_description'])) {
-				$url .= '&filter_description=' . $this->request->get['filter_description'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
+			// Limits — all use $filter_url consistently
 			$this->data['limits'] = [];
 
 			$limits = array_unique([$this->config->get('config_catalog_limit'), 25, 50, 75, 100]);
@@ -364,69 +339,57 @@ class ControllerProductReviewList extends Controller {
 				$this->data['limits'][] = [
 					'text'  => $value,
 					'value' => $value,
-					'href'  => $this->url->link('product/review_list', $url . '&limit=' . $value, 'SSL')
+					'href'  => $this->url->link('product/review_list', $filter_url . '&limit=' . $value, 'SSL')
 				];
 			}
 
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['filter_description'])) {
-				$url .= '&filter_description=' . $this->request->get['filter_description'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
+			// Pagination — uses $filter_url consistently
 			$pagination = new Pagination();
 			$pagination->total = $review_total;
 			$pagination->page = $page;
 			$pagination->limit = $limit;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('product/review_list', $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('product/review_list', $filter_url . '&page={page}', 'SSL');
 
 			$this->data['pagination'] = $pagination->render();
 
 			$this->data['filter_name'] = $filter_name;
 			$this->data['filter_description'] = $filter_description;
 
-			$this->data['sort'] = $sort;
+			$this->data['sort']  = $sort;
 			$this->data['order'] = $order;
 			$this->data['limit'] = $limit;
 
-			$page_trigger = $review_total - $limit;
-			$page_last = ceil($review_total / $limit);
+			// ------------------------------------------------------------------
+			// SEO canonical / prev / next links
+			// Uses $page (int) throughout. Handles all edge cases cleanly.
+			// ------------------------------------------------------------------
+			if ($review_total > 0) {
+				$page_last = (int)ceil($review_total / $limit);
 
-			if (($page === 1) && ($page_trigger < 1)) {
-				$this->document->addLink($this->url->link('product/review_list'), 'canonical');
-			} elseif (($page === 1) && ($page_trigger > 0)) {
-				$this->document->addLink($this->url->link('product/review_list'), 'canonical');
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page + 1) . $url, 'SSL'), 'next');
-			} elseif ($page === $page_last) {
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . $page), 'canonical');
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page - 1) . $url, 'SSL'), 'prev');
-			} elseif ($this->request->get['page'] > $page_last) {
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . $page), 'canonical');
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . $page_last . $url, 'SSL'), 'prev');
-			} elseif (($page > 1) && ($page < $page_last)) {
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . $page), 'canonical');
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page - 1) . $url, 'SSL'), 'prev');
-				$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page + 1) . $url, 'SSL'), 'next');
+				if ($page === 1 && $review_total <= $limit) {
+					// Single page — canonical only, no prev/next needed
+					$this->document->addLink($this->url->link('product/review_list'), 'canonical');
+
+				} elseif ($page === 1) {
+					// First of multiple pages
+					$this->document->addLink($this->url->link('product/review_list'), 'canonical');
+					$this->document->addLink($this->url->link('product/review_list', $filter_url . '&page=2', 'SSL'), 'next');
+
+				} elseif ($page >= $page_last) {
+					// Last page (>= catches out-of-range requests gracefully)
+					$this->document->addLink($this->url->link('product/review_list', 'page=' . $page_last . $filter_url, 'SSL'), 'canonical');
+					$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page_last - 1) . $filter_url, 'SSL'), 'prev');
+
+				} else {
+					// Middle pages
+					$this->document->addLink($this->url->link('product/review_list', 'page=' . $page . $filter_url, 'SSL'), 'canonical');
+					$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page - 1) . $filter_url, 'SSL'), 'prev');
+					$this->document->addLink($this->url->link('product/review_list', 'page=' . ($page + 1) . $filter_url, 'SSL'), 'next');
+				}
 			}
 
-			// Theme
+			// Template
 			$this->data['template'] = $this->config->get('config_template');
 
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/review_list.tpl')) {
@@ -449,45 +412,17 @@ class ControllerProductReviewList extends Controller {
 			$this->response->setOutput($this->render());
 
 		} else {
-			// Breadcrumbs
-			if (isset($this->request->get['filter_name'])) {
-				$filter_name = urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			} else {
-				$filter_name = null;
-			}
-
-			if (isset($this->request->get['filter_description'])) {
-				$filter_description = $this->request->get['filter_description'];
-			} else {
-				$filter_description = null;
-			}
-
-			$page_url = array_filter([
-				'filter_name'        => $filter_name,
-				'filter_description' => $filter_description,
-				'sort'               => $this->request->get['sort'] ?? null,
-				'order'              => $this->request->get['order'] ?? null,
-				'limit'              => $this->request->get['limit'] ?? $this->config->get('config_catalog_limit'),
-				'page'               => $this->request->get['page'] ?? null
-			]);
-
-			$url = $page_url ? '&' . http_build_query($page_url) : '';
-
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('product/review_list', $url, 'SSL'),
+				'href'      => $this->url->link('product/review_list', $filter_url, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			];
 
 			$this->data['heading_title'] = $this->language->get('heading_title');
-
 			$this->data['text_error'] = $this->language->get('text_empty');
-
 			$this->data['button_continue'] = $this->language->get('button_continue');
-
 			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
 
-			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
@@ -507,7 +442,7 @@ class ControllerProductReviewList extends Controller {
 				'common/header'
 			];
 
-			$this->response->addheader($this->request->server['SERVER_PROTOCOL'] . ' 404 not found');
+			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 			$this->response->setOutput($this->render());
 		}
 	}
