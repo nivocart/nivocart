@@ -245,6 +245,13 @@
       <li id="system"><a class="top"><?php echo $text_system; ?></a>
         <ul>
           <li><a href="<?php echo $setting; ?>"><?php echo ($icons) ? '<i class="fa fa-gears"></i>' : ''; ?><?php echo $text_setting; ?></a></li>
+          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-user"></i>' : ''; ?><?php echo $text_users; ?></a>
+            <ul>
+              <li><a href="<?php echo $user; ?>"><?php echo ($icons) ? '<i class="fa fa-user"></i>' : ''; ?><?php echo $text_user; ?></a></li>
+              <li><a href="<?php echo $user_group; ?>"><?php echo ($icons) ? '<i class="fa fa-group"></i>' : ''; ?><?php echo $text_user_group; ?></a></li>
+              <li><a href="<?php echo $user_log; ?>"><?php echo ($icons) ? '<i class="fa fa-user-secret"></i>' : ''; ?><?php echo $text_user_log; ?></a></li>
+            </ul>
+          </li>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-paint-brush"></i>' : ''; ?><?php echo $text_design; ?></a>
             <ul>
               <li><a href="<?php echo $administration; ?>"><?php echo ($icons) ? '<i class="fa fa-magic"></i>' : ''; ?><?php echo $text_administration; ?></a></li>
@@ -255,13 +262,6 @@
               <li><a href="<?php echo $connection; ?>"><?php echo ($icons) ? '<i class="fa fa-chain"></i>' : ''; ?><?php echo $text_connection; ?></a></li>
               <li><a href="<?php echo $menu_manager; ?>"><?php echo ($icons) ? '<i class="fa fa-reorder"></i>' : ''; ?><?php echo $text_menu_manager; ?></a></li>
               <li><a href="<?php echo $payment_image; ?>"><?php echo ($icons) ? '<i class="fa fa-money"></i>' : ''; ?><?php echo $text_payment_image; ?></a></li>
-            </ul>
-          </li>
-          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-user"></i>' : ''; ?><?php echo $text_users; ?></a>
-            <ul>
-              <li><a href="<?php echo $user; ?>"><?php echo ($icons) ? '<i class="fa fa-user"></i>' : ''; ?><?php echo $text_user; ?></a></li>
-              <li><a href="<?php echo $user_group; ?>"><?php echo ($icons) ? '<i class="fa fa-group"></i>' : ''; ?><?php echo $text_user_group; ?></a></li>
-              <li><a href="<?php echo $user_log; ?>"><?php echo ($icons) ? '<i class="fa fa-user-secret"></i>' : ''; ?><?php echo $text_user_log; ?></a></li>
             </ul>
           </li>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-map-marker"></i>' : ''; ?><?php echo $text_localisation; ?></a>
