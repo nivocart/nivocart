@@ -32,7 +32,7 @@
 	<p>Developers that use the GNU GPL protect your rights with two steps:
 	  (1) assert copyright on the software, and (2) offer you this License
 	  giving you legal permission to copy, distribute and/or modify it.</p>
-	<p>For the developers' and authors\' protection, the GPL clearly explains
+	<p>For the developers' and authors' protection, the GPL clearly explains
 	  that there is no warranty for this free software.  For both users' and
 	  authors' sake, the GPL requires that modified versions be marked as
 	  changed, so that their problems will not be attributed erroneously to
@@ -519,14 +519,15 @@
 	<p>END OF TERMS AND CONDITIONS</p>
 	<p>This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or any later version.
+	the Free Software Foundation, either version 3 of the License, 
+	or any later version.</p>
 
-	This program is distributed in the hope that it will be useful,
+	<p>This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+	GNU General Public License for more details.</p>
 
-	You should have received a copy of the GNU General Public License
-	along with this program. If not, see http://www.gnu.org/licenses/.
+	<p>You should have received a copy of the GNU General Public License
+	along with this program. If not, see http://www.gnu.org/licenses/.</p>
 	
-	Copyright (C) 2026 - Philippe Marion</p>
+	<p>Copyright (C) 2026 - Philippe Marion</p>
