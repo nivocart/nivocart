@@ -522,12 +522,12 @@
 	the Free Software Foundation, either version 3 of the License, 
 	or any later version.</p>
 
-	<p>This program is distributed in the hope that it will be useful,
+	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.</p>
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
 
-	<p>You should have received a copy of the GNU General Public License
-	along with this program. If not, see http://www.gnu.org/licenses/.</p>
+	You should have received a copy of the GNU General Public License
+	along with this program. If not, see http://www.gnu.org/licenses/.
 	
-	<p>Copyright (C) 2026 - Philippe Marion</p>
+	Copyright (C) 2026 - Philippe Marion
