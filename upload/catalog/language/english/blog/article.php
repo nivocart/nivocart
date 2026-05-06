@@ -48,4 +48,4 @@ $_['button_submit']              = 'Submit';
 // Error
 $_['error_name']                 = 'Warning: Author Name must be between 3 and 25 characters!';
 $_['error_text']                 = 'Warning: Comment must be between 3 and 1000 characters!';
-$_['error_captcha']              = 'Warning: Verification code does not match the image!';
+$_['error_captcha']              = 'Warning: Verification codes do not match!';

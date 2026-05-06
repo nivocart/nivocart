@@ -27,4 +27,4 @@ $_['dialog_resource']  = 'Please be aware that this feature is from an external 
 $_['error_name']       = 'Name must be between 3 and 32 characters!';
 $_['error_email']      = 'Email Address does not appear to be valid!';
 $_['error_enquiry']    = 'Enquiry must be between 10 and 3000 characters!';
-$_['error_captcha']    = 'Verification code does not match the image!';
+$_['error_captcha']    = 'Warning: Verification codes do not match!';

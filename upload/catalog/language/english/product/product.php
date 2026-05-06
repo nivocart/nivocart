@@ -27,7 +27,7 @@ $_['text_no_reviews']                         = 'There are no reviews for this p
 $_['text_on']                                 = ' on ';
 $_['text_note']                               = '<span style="color:#DE5954;">Note:</span> HTML is not translated!';
 $_['text_share']                              = 'Share';
-$_['text_success']                            = 'Thank you for your review.<br />It has been submitted for approval.';
+$_['text_success']                            = 'Review submitted. Thank you!';
 $_['text_upload']                             = 'Your file was successfully uploaded!';
 $_['text_wait']                               = 'Please Wait!';
 $_['text_tags']                               = 'Tags:';
@@ -79,7 +79,7 @@ $_['help_review_logged']                      = 'You must be logged-in to post a
 $_['error_name']                              = 'Warning: Review Name must be between 3 and 25 characters!';
 $_['error_text']                              = 'Warning: Review Text must be between 25 and 1000 characters!';
 $_['error_rating']                            = 'Warning: Please select a review rating!';
-$_['error_captcha']                           = 'Warning: Verification code does not match the image!';
+$_['error_captcha']                           = 'Warning: Verification codes do not match!';
 $_['error_upload']                            = 'Upload required!';
 $_['error_filename']                          = 'Filename must be between 3 and 64 characters!';
 $_['error_filetype']                          = 'Invalid file type!';
