@@ -403,7 +403,7 @@ class ModelToolExportImport extends Model {
 
 		$manufacturers = [];
 
-		$sql = "SELECT m2s.manufacturer_id, m2s.store_id, md.name AS `name` FROM `" . DB_PREFIX . "manufacturer` m";
+		$sql = "SELECT m2s.manufacturer_id, m2s.store_id, md.name AS `name`, md.description FROM `" . DB_PREFIX . "manufacturer` m";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "manufacturer_to_store` m2s ON (m2s.manufacturer_id = m.manufacturer_id)";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (md.manufacturer_id = m.manufacturer_id)";
 		$sql .= " WHERE md.language_id = '" . (int)$default_language_id . "'";
@@ -1465,14 +1465,14 @@ class ModelToolExportImport extends Model {
 		$viewed = $product['viewed'];
 
 		if ($manufacturer_name) {
-			$this->storeManufacturerIntoDatabase($manufacturers, $manufacturer_name, $store_ids, $available_store_ids);
+			$this->storeManufacturerIntoDatabase($manufacturers, $manufacturer_name, $manufacturers[$manufacturer_name]['description'] ?? '', $store_ids, $available_store_ids);
 
 			$manufacturer_id = $manufacturers[$manufacturer_name]['manufacturer_id'];
 		} else {
 			$manufacturer_id = 0;
 		}
 
-		// Generate and execute SQL for inserting the product
+		// Generate and execute SQL for inserting the products
 		$sql = "INSERT INTO `" . DB_PREFIX . "product` (`product_id`,`quantity`,`sku`,`upc`,`ean`,`jan`,`isbn`,`mpn`,";
 		$sql .= "`location`,`stock_status_id`,`model`,`manufacturer_id`,`image`,`label`,`shipping`,`price`,`cost`,`quote`,`age_minimum`,`points`,`date_added`,`date_modified`,`date_available`,`palette_id`,`weight`,`weight_class_id`,`status`,";
 		$sql .= "`tax_class_id`,`length`,`width`,`height`,`length_class_id`,`sort_order`,`subtract`,`minimum`,`viewed`) VALUES";
