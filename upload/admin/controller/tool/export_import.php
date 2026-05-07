@@ -242,11 +242,6 @@ class ControllerToolExportImport extends Controller {
 		$this->data['entry_settings_use_export_cache'] = $this->language->get('entry_settings_use_export_cache');
 		$this->data['entry_settings_use_import_cache'] = $this->language->get('entry_settings_use_import_cache');
 
-		$this->data['title_name_id'] = $this->language->get('title_name_id');
-		$this->data['title_html_tags'] = $this->language->get('title_html_tags');
-		$this->data['title_pclzip'] = $this->language->get('title_pclzip');
-		$this->data['title_phptemp'] = $this->language->get('title_phptemp');
-
 		$this->data['tab_export'] = $this->language->get('tab_export');
 		$this->data['tab_import'] = $this->language->get('tab_import');
 		$this->data['tab_settings'] = $this->language->get('tab_settings');

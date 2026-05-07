@@ -51,12 +51,6 @@ $_['entry_settings_use_export_pclzip']                  = 'Use Export and Import
 $_['entry_settings_use_export_cache']                   = 'Use phpTemp cache for large Exports (will be slightly slower)';
 $_['entry_settings_use_import_cache']                   = 'Use phpTemp cache for large Imports (will be slightly slower)';
 
-// Title (Settings)
-$_['title_name_id']                                     = 'Use Names or Ids';
-$_['title_html_tags']                                   = 'Use Html Tags';
-$_['title_pclzip']                                      = 'Use Pclzip';
-$_['title_phptemp']                                     = 'Use PHPTemp';
-
 // Error
 $_['error_permission']                                  = 'Warning: You do not have permission to modify <b>Export / Import (XLSX)</b> !';
 $_['error_upload']                                      = 'Uploaded spreadsheet file has validation errors!';
