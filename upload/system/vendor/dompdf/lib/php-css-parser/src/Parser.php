@@ -9,8 +9,7 @@ use Sabberworm\CSS\Parsing\SourceException;
 /**
  * This class parses CSS from text into a data structure.
  */
-class Parser
-{
+class Parser {
     /**
      * @var ParserState
      */
@@ -21,8 +20,7 @@ class Parser
      * @param Settings|null $oParserSettings
      * @param int $iLineNo the line number (starting from 1, not from 0)
      */
-    public function __construct($sText, Settings $oParserSettings = null, $iLineNo = 1)
-    {
+    public function __construct($sText, Settings $oParserSettings = null, $iLineNo = 1) {
         if ($oParserSettings === null) {
             $oParserSettings = Settings::create();
         }
@@ -34,16 +32,14 @@ class Parser
      *
      * @return void
      */
-    public function setCharset($sCharset)
-    {
+    public function setCharset($sCharset) {
         $this->oParserState->setCharset($sCharset);
     }
 
     /**
      * @return void
      */
-    public function getCharset()
-    {
+    public function getCharset() {
         // Note: The `return` statement is missing here. This is a bug that needs to be fixed.
         $this->oParserState->getCharset();
     }
@@ -53,8 +49,7 @@ class Parser
      *
      * @throws SourceException
      */
-    public function parse()
-    {
+    public function parse() {
         return Document::parse($this->oParserState);
     }
 }

@@ -7,6 +7,5 @@ namespace Sabberworm\CSS\Parsing;
  *
  * Extends `UnexpectedTokenException` in order to preserve backwards compatibility.
  */
-class UnexpectedEOFException extends UnexpectedTokenException
-{
+class UnexpectedEOFException extends UnexpectedTokenException {
 }

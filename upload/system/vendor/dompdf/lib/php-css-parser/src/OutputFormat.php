@@ -8,8 +8,7 @@ namespace Sabberworm\CSS;
  * @method OutputFormat setSemicolonAfterLastRule(bool $bSemicolonAfterLastRule) Set whether semicolons are added after
  *     last rule.
  */
-class OutputFormat
-{
+class OutputFormat {
     /**
      * Value format: `"` means double-quote, `'` means single-quote
      *
@@ -158,8 +157,7 @@ class OutputFormat
      */
     private $iIndentationLevel = 0;
 
-    public function __construct()
-    {
+    public function __construct() {
     }
 
     /**
@@ -167,15 +165,16 @@ class OutputFormat
      *
      * @return string|null
      */
-    public function get($sName)
-    {
+    public function get($sName) {
         $aVarPrefixes = ['a', 's', 'm', 'b', 'f', 'o', 'c', 'i'];
+
         foreach ($aVarPrefixes as $sPrefix) {
             $sFieldName = $sPrefix . ucfirst($sName);
             if (isset($this->$sFieldName)) {
                 return $this->$sFieldName;
             }
         }
+
         return null;
     }
 
@@ -185,9 +184,9 @@ class OutputFormat
      *
      * @return self|false
      */
-    public function set($aNames, $mValue)
-    {
+    public function set($aNames, $mValue) {
         $aVarPrefixes = ['a', 's', 'm', 'b', 'f', 'o', 'c', 'i'];
+
         if (is_string($aNames) && strpos($aNames, '*') !== false) {
             $aNames =
                 [
@@ -198,8 +197,10 @@ class OutputFormat
         } elseif (!is_array($aNames)) {
             $aNames = [$aNames];
         }
+
         foreach ($aVarPrefixes as $sPrefix) {
             $bDidReplace = false;
+
             foreach ($aNames as $sName) {
                 $sFieldName = $sPrefix . ucfirst($sName);
                 if (isset($this->$sFieldName)) {
@@ -207,6 +208,7 @@ class OutputFormat
                     $bDidReplace = true;
                 }
             }
+
             if ($bDidReplace) {
                 return $this;
             }
@@ -223,8 +225,7 @@ class OutputFormat
      *
      * @throws \Exception
      */
-    public function __call($sMethodName, array $aArguments)
-    {
+    public function __call($sMethodName, array $aArguments) {
         if (strpos($sMethodName, 'set') === 0) {
             return $this->set(substr($sMethodName, 3), $aArguments[0]);
         } elseif (strpos($sMethodName, 'get') === 0) {
@@ -241,8 +242,7 @@ class OutputFormat
      *
      * @return self
      */
-    public function indentWithTabs($iNumber = 1)
-    {
+    public function indentWithTabs($iNumber = 1) {
         return $this->setIndentation(str_repeat("\t", $iNumber));
     }
 
@@ -251,48 +251,45 @@ class OutputFormat
      *
      * @return self
      */
-    public function indentWithSpaces($iNumber = 2)
-    {
+    public function indentWithSpaces($iNumber = 2) {
         return $this->setIndentation(str_repeat(" ", $iNumber));
     }
 
     /**
      * @return OutputFormat
      */
-    public function nextLevel()
-    {
+    public function nextLevel() {
         if ($this->oNextLevelFormat === null) {
             $this->oNextLevelFormat = clone $this;
             $this->oNextLevelFormat->iIndentationLevel++;
             $this->oNextLevelFormat->oFormatter = null;
         }
+
         return $this->oNextLevelFormat;
     }
 
     /**
      * @return void
      */
-    public function beLenient()
-    {
+    public function beLenient() {
         $this->bIgnoreExceptions = true;
     }
 
     /**
      * @return OutputFormatter
      */
-    public function getFormatter()
-    {
+    public function getFormatter() {
         if ($this->oFormatter === null) {
             $this->oFormatter = new OutputFormatter($this);
         }
+
         return $this->oFormatter;
     }
 
     /**
      * @return int
      */
-    public function level()
-    {
+    public function level() {
         return $this->iIndentationLevel;
     }
 
@@ -301,8 +298,7 @@ class OutputFormat
      *
      * @return self
      */
-    public static function create()
-    {
+    public static function create() {
         return new OutputFormat();
     }
 
@@ -311,8 +307,7 @@ class OutputFormat
      *
      * @return self
      */
-    public static function createCompact()
-    {
+    public static function createCompact() {
         $format = self::create();
         $format->set('Space*Rules', "")->set('Space*Blocks', "")->setSpaceAfterRuleName('')
             ->setSpaceBeforeOpeningBrace('')->setSpaceAfterSelectorSeparator('');
@@ -324,8 +319,7 @@ class OutputFormat
      *
      * @return self
      */
-    public static function createPretty()
-    {
+    public static function createPretty() {
         $format = self::create();
         $format->set('Space*Rules', "\n")->set('Space*Blocks', "\n")
             ->setSpaceBetweenBlocks("\n\n")->set('SpaceAfterListArgumentSeparator', ['default' => '', ',' => ' ']);

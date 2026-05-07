@@ -5,8 +5,7 @@ namespace Sabberworm\CSS\Parsing;
 /**
  * Thrown if the CSS parser encounters a token it did not expect.
  */
-class UnexpectedTokenException extends SourceException
-{
+class UnexpectedTokenException extends SourceException {
     /**
      * @var string
      */
@@ -30,12 +29,13 @@ class UnexpectedTokenException extends SourceException
      * @param string $sMatchType
      * @param int $iLineNo
      */
-    public function __construct($sExpected, $sFound, $sMatchType = 'literal', $iLineNo = 0)
-    {
+    public function __construct($sExpected, $sFound, $sMatchType = 'literal', $iLineNo = 0) {
         $this->sExpected = $sExpected;
         $this->sFound = $sFound;
         $this->sMatchType = $sMatchType;
+
         $sMessage = "Token “{$sExpected}” ({$sMatchType}) not found. Got “{$sFound}”.";
+
         if ($this->sMatchType === 'search') {
             $sMessage = "Search for “{$sExpected}” returned no results. Context: “{$sFound}”.";
         } elseif ($this->sMatchType === 'count') {

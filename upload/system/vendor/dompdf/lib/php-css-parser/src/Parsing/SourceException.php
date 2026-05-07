@@ -2,8 +2,7 @@
 
 namespace Sabberworm\CSS\Parsing;
 
-class SourceException extends \Exception
-{
+class SourceException extends \Exception {
     /**
      * @var int
      */
@@ -13,20 +12,20 @@ class SourceException extends \Exception
      * @param string $sMessage
      * @param int $iLineNo
      */
-    public function __construct($sMessage, $iLineNo = 0)
-    {
+    public function __construct($sMessage, $iLineNo = 0) {
         $this->iLineNo = $iLineNo;
+
         if (!empty($iLineNo)) {
             $sMessage .= " [line no: $iLineNo]";
         }
+
         parent::__construct($sMessage);
     }
 
     /**
      * @return int
      */
-    public function getLineNo()
-    {
+    public function getLineNo() {
         return $this->iLineNo;
     }
 }

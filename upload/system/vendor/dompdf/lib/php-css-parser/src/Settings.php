@@ -7,8 +7,7 @@ namespace Sabberworm\CSS;
  *
  * Configure parser behaviour here.
  */
-class Settings
-{
+class Settings {
     /**
      * Multi-byte string support.
      * If true (mbstring extension must be enabled), will use (slower) `mb_strlen`, `mb_convert_case`, `mb_substr`
@@ -33,16 +32,14 @@ class Settings
      */
     public $bLenientParsing = true;
 
-    private function __construct()
-    {
+    private function __construct() {
         $this->bMultibyteSupport = extension_loaded('mbstring');
     }
 
     /**
      * @return self new instance
      */
-    public static function create()
-    {
+    public static function create() {
         return new Settings();
     }
 
@@ -51,8 +48,7 @@ class Settings
      *
      * @return self fluent interface
      */
-    public function withMultibyteSupport($bMultibyteSupport = true)
-    {
+    public function withMultibyteSupport($bMultibyteSupport = true) {
         $this->bMultibyteSupport = $bMultibyteSupport;
         return $this;
     }
@@ -62,8 +58,7 @@ class Settings
      *
      * @return self fluent interface
      */
-    public function withDefaultCharset($sDefaultCharset)
-    {
+    public function withDefaultCharset($sDefaultCharset) {
         $this->sDefaultCharset = $sDefaultCharset;
         return $this;
     }
@@ -73,8 +68,7 @@ class Settings
      *
      * @return self fluent interface
      */
-    public function withLenientParsing($bLenientParsing = true)
-    {
+    public function withLenientParsing($bLenientParsing = true) {
         $this->bLenientParsing = $bLenientParsing;
         return $this;
     }
@@ -82,8 +76,7 @@ class Settings
     /**
      * @return self fluent interface
      */
-    public function beStrict()
-    {
+    public function beStrict() {
         return $this->withLenientParsing(false);
     }
 }

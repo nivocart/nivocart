@@ -29,8 +29,7 @@ use Sabberworm\CSS\Value\Value;
  *
  * Also, it may contain `Import` and `Charset` objects stemming from at-rules.
  */
-abstract class CSSList implements Renderable, Commentable
-{
+abstract class CSSList implements Renderable, Commentable {
     /**
      * @var array<array-key, Comment>
      */
@@ -49,8 +48,7 @@ abstract class CSSList implements Renderable, Commentable
     /**
      * @param int $iLineNo
      */
-    public function __construct($iLineNo = 0)
-    {
+    public function __construct($iLineNo = 0) {
         $this->aComments = [];
         $this->aContents = [];
         $this->iLineNo = $iLineNo;
@@ -62,13 +60,15 @@ abstract class CSSList implements Renderable, Commentable
      * @throws UnexpectedTokenException
      * @throws SourceException
      */
-    public static function parseList(ParserState $oParserState, CSSList $oList)
-    {
+    public static function parseList(ParserState $oParserState, CSSList $oList) {
         $bIsRoot = $oList instanceof Document;
+
         if (is_string($oParserState)) {
             $oParserState = new ParserState($oParserState, Settings::create());
         }
+
         $bLenientParsing = $oParserState->getSettings()->bLenientParsing;
+
         while (!$oParserState->isEnd()) {
             $comments = $oParserState->consumeWhiteSpace();
             $oListItem = null;
@@ -81,16 +81,20 @@ abstract class CSSList implements Renderable, Commentable
             } else {
                 $oListItem = self::parseListItem($oParserState, $oList);
             }
+
             if ($oListItem === null) {
                 // List parsing finished
                 return;
             }
+
             if ($oListItem) {
                 $oListItem->setComments($comments);
                 $oList->append($oListItem);
             }
+
             $oParserState->consumeWhiteSpace();
         }
+
         if (!$bIsRoot && !$bLenientParsing) {
             throw new SourceException("Unexpected end of document", $oParserState->currentLine());
         }
@@ -103,11 +107,12 @@ abstract class CSSList implements Renderable, Commentable
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    private static function parseListItem(ParserState $oParserState, CSSList $oList)
-    {
+    private static function parseListItem(ParserState $oParserState, CSSList $oList) {
         $bIsRoot = $oList instanceof Document;
+
         if ($oParserState->comes('@')) {
             $oAtRule = self::parseAtRule($oParserState);
+
             if ($oAtRule instanceof Charset) {
                 if (!$bIsRoot) {
                     throw new UnexpectedTokenException(
@@ -117,6 +122,7 @@ abstract class CSSList implements Renderable, Commentable
                         $oParserState->currentLine()
                     );
                 }
+
                 if (count($oList->getContents()) > 0) {
                     throw new UnexpectedTokenException(
                         '@charset must be the first parseable token in a document',
@@ -125,9 +131,12 @@ abstract class CSSList implements Renderable, Commentable
                         $oParserState->currentLine()
                     );
                 }
+
                 $oParserState->setCharset($oAtRule->getCharset()->getString());
             }
+
             return $oAtRule;
+
         } elseif ($oParserState->comes('}')) {
             if (!$oParserState->getSettings()->bLenientParsing) {
                 throw new UnexpectedTokenException('CSS selector', '}', 'identifier', $oParserState->currentLine());
@@ -142,6 +151,7 @@ abstract class CSSList implements Renderable, Commentable
                     return null;
                 }
             }
+
         } else {
             return DeclarationBlock::parse($oParserState, $oList);
         }
@@ -156,46 +166,59 @@ abstract class CSSList implements Renderable, Commentable
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    private static function parseAtRule(ParserState $oParserState)
-    {
+    private static function parseAtRule(ParserState $oParserState) {
         $oParserState->consume('@');
         $sIdentifier = $oParserState->parseIdentifier();
         $iIdentifierLineNum = $oParserState->currentLine();
         $oParserState->consumeWhiteSpace();
+
         if ($sIdentifier === 'import') {
             $oLocation = URL::parse($oParserState);
             $oParserState->consumeWhiteSpace();
             $sMediaQuery = null;
+
             if (!$oParserState->comes(';')) {
                 $sMediaQuery = trim($oParserState->consumeUntil([';', ParserState::EOF]));
             }
+
             $oParserState->consumeUntil([';', ParserState::EOF], true, true);
+
             return new Import($oLocation, $sMediaQuery ?: null, $iIdentifierLineNum);
+
         } elseif ($sIdentifier === 'charset') {
             $sCharset = CSSString::parse($oParserState);
             $oParserState->consumeWhiteSpace();
             $oParserState->consumeUntil([';', ParserState::EOF], true, true);
+
             return new Charset($sCharset, $iIdentifierLineNum);
+
         } elseif (self::identifierIs($sIdentifier, 'keyframes')) {
             $oResult = new KeyFrame($iIdentifierLineNum);
             $oResult->setVendorKeyFrame($sIdentifier);
             $oResult->setAnimationName(trim($oParserState->consumeUntil('{', false, true)));
             CSSList::parseList($oParserState, $oResult);
+
             if ($oParserState->comes('}')) {
                 $oParserState->consume('}');
             }
+
             return $oResult;
+
         } elseif ($sIdentifier === 'namespace') {
             $sPrefix = null;
             $mUrl = Value::parsePrimitiveValue($oParserState);
+
             if (!$oParserState->comes(';')) {
                 $sPrefix = $mUrl;
                 $mUrl = Value::parsePrimitiveValue($oParserState);
             }
+
             $oParserState->consumeUntil([';', ParserState::EOF], true, true);
+
             if ($sPrefix !== null && !is_string($sPrefix)) {
                 throw new UnexpectedTokenException('Wrong namespace prefix', $sPrefix, 'custom', $iIdentifierLineNum);
             }
+
             if (!($mUrl instanceof CSSString || $mUrl instanceof URL)) {
                 throw new UnexpectedTokenException(
                     'Wrong namespace url of invalid type',
@@ -204,10 +227,13 @@ abstract class CSSList implements Renderable, Commentable
                     $iIdentifierLineNum
                 );
             }
+
             return new CSSNamespace($mUrl, $sPrefix, $iIdentifierLineNum);
+
         } else {
             // Unknown other at rule (font-face or such)
             $sArgs = trim($oParserState->consumeUntil('{', false, true));
+
             if (substr_count($sArgs, "(") != substr_count($sArgs, ")")) {
                 if ($oParserState->getSettings()->bLenientParsing) {
                     return null;
@@ -215,13 +241,16 @@ abstract class CSSList implements Renderable, Commentable
                     throw new SourceException("Unmatched brace count in media query", $oParserState->currentLine());
                 }
             }
+
             $bUseRuleSet = true;
+
             foreach (explode('/', AtRule::BLOCK_RULES) as $sBlockRuleName) {
                 if (self::identifierIs($sIdentifier, $sBlockRuleName)) {
                     $bUseRuleSet = false;
                     break;
                 }
             }
+
             if ($bUseRuleSet) {
                 $oAtRule = new AtRuleSet($sIdentifier, $sArgs, $iIdentifierLineNum);
                 RuleSet::parseRuleSet($oParserState, $oAtRule);
@@ -232,6 +261,7 @@ abstract class CSSList implements Renderable, Commentable
                     $oParserState->consume('}');
                 }
             }
+
             return $oAtRule;
         }
     }
@@ -245,17 +275,14 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return bool
      */
-    private static function identifierIs($sIdentifier, $sMatch)
-    {
-        return (strcasecmp($sIdentifier, $sMatch) === 0)
-            ?: preg_match("/^(-\\w+-)?$sMatch$/i", $sIdentifier) === 1;
+    private static function identifierIs($sIdentifier, $sMatch) {
+        return (strcasecmp($sIdentifier, $sMatch) === 0) ?: preg_match("/^(-\\w+-)?$sMatch$/i", $sIdentifier) === 1;
     }
 
     /**
      * @return int
      */
-    public function getLineNo()
-    {
+    public function getLineNo() {
         return $this->iLineNo;
     }
 
@@ -266,8 +293,7 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return void
      */
-    public function prepend($oItem)
-    {
+    public function prepend($oItem) {
         array_unshift($this->aContents, $oItem);
     }
 
@@ -278,8 +304,7 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return void
      */
-    public function append($oItem)
-    {
+    public function append($oItem) {
         $this->aContents[] = $oItem;
     }
 
@@ -292,8 +317,7 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return void
      */
-    public function splice($iOffset, $iLength = null, $mReplacement = null)
-    {
+    public function splice($iOffset, $iLength = null, $mReplacement = null) {
         array_splice($this->aContents, $iOffset, $iLength, $mReplacement);
     }
 
@@ -306,13 +330,14 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return bool whether the item was removed
      */
-    public function remove($oItemToRemove)
-    {
+    public function remove($oItemToRemove) {
         $iKey = array_search($oItemToRemove, $this->aContents, true);
+
         if ($iKey !== false) {
             unset($this->aContents[$iKey]);
             return true;
         }
+
         return false;
     }
 
@@ -325,26 +350,28 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return bool
      */
-    public function replace($oOldItem, $mNewItem)
-    {
+    public function replace($oOldItem, $mNewItem) {
         $iKey = array_search($oOldItem, $this->aContents, true);
+
         if ($iKey !== false) {
             if (is_array($mNewItem)) {
                 array_splice($this->aContents, $iKey, 1, $mNewItem);
             } else {
                 array_splice($this->aContents, $iKey, 1, [$mNewItem]);
             }
+
             return true;
         }
+
         return false;
     }
 
     /**
      * @param array<int, RuleSet|Import|Charset|CSSList> $aContents
      */
-    public function setContents(array $aContents)
-    {
+    public function setContents(array $aContents) {
         $this->aContents = [];
+
         foreach ($aContents as $content) {
             $this->append($content);
         }
@@ -358,14 +385,15 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return void
      */
-    public function removeDeclarationBlockBySelector($mSelector, $bRemoveAll = false)
-    {
+    public function removeDeclarationBlockBySelector($mSelector, $bRemoveAll = false) {
         if ($mSelector instanceof DeclarationBlock) {
             $mSelector = $mSelector->getSelectors();
         }
+
         if (!is_array($mSelector)) {
             $mSelector = explode(',', $mSelector);
         }
+
         foreach ($mSelector as $iKey => &$mSel) {
             if (!($mSel instanceof Selector)) {
                 if (!Selector::isValid($mSel)) {
@@ -378,10 +406,12 @@ abstract class CSSList implements Renderable, Commentable
                 $mSel = new Selector($mSel);
             }
         }
+
         foreach ($this->aContents as $iKey => $mItem) {
             if (!($mItem instanceof DeclarationBlock)) {
                 continue;
             }
+
             if ($mItem->getSelectors() == $mSelector) {
                 unset($this->aContents[$iKey]);
                 if (!$bRemoveAll) {
@@ -394,16 +424,14 @@ abstract class CSSList implements Renderable, Commentable
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         $sResult = '';
         $bIsFirst = true;
         $oNextLevel = $oOutputFormat;
@@ -417,6 +445,7 @@ abstract class CSSList implements Renderable, Commentable
             if ($sRendered === null) {
                 continue;
             }
+
             if ($bIsFirst) {
                 $bIsFirst = false;
                 $sResult .= $oNextLevel->spaceBeforeBlocks();
@@ -444,8 +473,7 @@ abstract class CSSList implements Renderable, Commentable
     /**
      * @return array<int, RuleSet|Import|Charset|CSSList>
      */
-    public function getContents()
-    {
+    public function getContents() {
         return $this->aContents;
     }
 
@@ -454,16 +482,14 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return void
      */
-    public function addComments(array $aComments)
-    {
+    public function addComments(array $aComments) {
         $this->aComments = array_merge($this->aComments, $aComments);
     }
 
     /**
      * @return array<array-key, Comment>
      */
-    public function getComments()
-    {
+    public function getComments() {
         return $this->aComments;
     }
 
@@ -472,8 +498,7 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @return void
      */
-    public function setComments(array $aComments)
-    {
+    public function setComments(array $aComments) {
         $this->aComments = $aComments;
     }
 }

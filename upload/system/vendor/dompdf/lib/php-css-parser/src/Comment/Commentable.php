@@ -2,8 +2,7 @@
 
 namespace Sabberworm\CSS\Comment;
 
-interface Commentable
-{
+interface Commentable {
     /**
      * @param array<array-key, Comment> $aComments
      *

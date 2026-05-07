@@ -14,13 +14,11 @@ use Sabberworm\CSS\Value\Value;
  * The root `CSSList` of a parsed file. Contains all top-level CSS contents, mostly declaration blocks,
  * but also any at-rules encountered.
  */
-class Document extends CSSBlockList
-{
+class Document extends CSSBlockList {
     /**
      * @param int $iLineNo
      */
-    public function __construct($iLineNo = 0)
-    {
+    public function __construct($iLineNo = 0) {
         parent::__construct($iLineNo);
     }
 
@@ -29,10 +27,10 @@ class Document extends CSSBlockList
      *
      * @throws SourceException
      */
-    public static function parse(ParserState $oParserState)
-    {
+    public static function parse(ParserState $oParserState) {
         $oDocument = new Document($oParserState->currentLine());
         CSSList::parseList($oParserState, $oDocument);
+
         return $oDocument;
     }
 
@@ -41,11 +39,11 @@ class Document extends CSSBlockList
      *
      * @return array<int, DeclarationBlock>
      */
-    public function getAllDeclarationBlocks()
-    {
+    public function getAllDeclarationBlocks() {
         /** @var array<int, DeclarationBlock> $aResult */
         $aResult = [];
         $this->allDeclarationBlocks($aResult);
+
         return $aResult;
     }
 
@@ -56,8 +54,7 @@ class Document extends CSSBlockList
      *
      * @deprecated will be removed in version 9.0; use `getAllDeclarationBlocks()` instead
      */
-    public function getAllSelectors()
-    {
+    public function getAllSelectors() {
         return $this->getAllDeclarationBlocks();
     }
 
@@ -66,8 +63,7 @@ class Document extends CSSBlockList
      *
      * @return array<int, RuleSet>
      */
-    public function getAllRuleSets()
-    {
+    public function getAllRuleSets() {
         /** @var array<int, RuleSet> $aResult */
         $aResult = [];
         $this->allRuleSets($aResult);
@@ -86,18 +82,21 @@ class Document extends CSSBlockList
      *
      * @see RuleSet->getRules()
      */
-    public function getAllValues($mElement = null, $bSearchInFunctionArguments = false)
-    {
+    public function getAllValues($mElement = null, $bSearchInFunctionArguments = false) {
         $sSearchString = null;
+
         if ($mElement === null) {
             $mElement = $this;
         } elseif (is_string($mElement)) {
             $sSearchString = $mElement;
             $mElement = $this;
         }
+
         /** @var array<int, Value> $aResult */
         $aResult = [];
+
         $this->allValues($mElement, $aResult, $sSearchString, $bSearchInFunctionArguments);
+
         return $aResult;
     }
 
@@ -115,11 +114,12 @@ class Document extends CSSBlockList
      * @example `getSelectorsBySpecificity('>= 100')`
      *
      */
-    public function getSelectorsBySpecificity($sSpecificitySearch = null)
-    {
+    public function getSelectorsBySpecificity($sSpecificitySearch = null) {
         /** @var array<int, Selector> $aResult */
         $aResult = [];
+
         $this->allSelectors($aResult, $sSpecificitySearch);
+
         return $aResult;
     }
 
@@ -128,8 +128,7 @@ class Document extends CSSBlockList
      *
      * @return void
      */
-    public function expandShorthands()
-    {
+    public function expandShorthands(){
         foreach ($this->getAllDeclarationBlocks() as $oDeclaration) {
             $oDeclaration->expandShorthands();
         }
@@ -140,8 +139,7 @@ class Document extends CSSBlockList
      *
      * @return void
      */
-    public function createShorthands()
-    {
+    public function createShorthands() {
         foreach ($this->getAllDeclarationBlocks() as $oDeclaration) {
             $oDeclaration->createShorthands();
         }
@@ -154,19 +152,18 @@ class Document extends CSSBlockList
      *
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat = null)
-    {
+    public function render(OutputFormat $oOutputFormat = null) {
         if ($oOutputFormat === null) {
             $oOutputFormat = new OutputFormat();
         }
+
         return parent::render($oOutputFormat);
     }
 
     /**
      * @return bool
      */
-    public function isRootList()
-    {
+    public function isRootList() {
         return true;
     }
 }

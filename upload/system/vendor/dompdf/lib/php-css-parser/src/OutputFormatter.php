@@ -4,15 +4,13 @@ namespace Sabberworm\CSS;
 
 use Sabberworm\CSS\Parsing\OutputException;
 
-class OutputFormatter
-{
+class OutputFormatter {
     /**
      * @var OutputFormat
      */
     private $oFormat;
 
-    public function __construct(OutputFormat $oFormat)
-    {
+    public function __construct(OutputFormat $oFormat) {
         $this->oFormat = $oFormat;
     }
 
@@ -22,8 +20,7 @@ class OutputFormatter
      *
      * @return string
      */
-    public function space($sName, $sType = null)
-    {
+    public function space($sName, $sType = null) {
         $sSpaceString = $this->oFormat->get("Space$sName");
         // If $sSpaceString is an array, we have multiple values configured
         // depending on the type of object the space applies to
@@ -34,78 +31,70 @@ class OutputFormatter
                 $sSpaceString = reset($sSpaceString);
             }
         }
+
         return $this->prepareSpace($sSpaceString);
     }
 
     /**
      * @return string
      */
-    public function spaceAfterRuleName()
-    {
+    public function spaceAfterRuleName() {
         return $this->space('AfterRuleName');
     }
 
     /**
      * @return string
      */
-    public function spaceBeforeRules()
-    {
+    public function spaceBeforeRules() {
         return $this->space('BeforeRules');
     }
 
     /**
      * @return string
      */
-    public function spaceAfterRules()
-    {
+    public function spaceAfterRules() {
         return $this->space('AfterRules');
     }
 
     /**
      * @return string
      */
-    public function spaceBetweenRules()
-    {
+    public function spaceBetweenRules() {
         return $this->space('BetweenRules');
     }
 
     /**
      * @return string
      */
-    public function spaceBeforeBlocks()
-    {
+    public function spaceBeforeBlocks() {
         return $this->space('BeforeBlocks');
     }
 
     /**
      * @return string
      */
-    public function spaceAfterBlocks()
-    {
+    public function spaceAfterBlocks() {
         return $this->space('AfterBlocks');
     }
 
     /**
      * @return string
      */
-    public function spaceBetweenBlocks()
-    {
+    public function spaceBetweenBlocks() {
         return $this->space('BetweenBlocks');
     }
 
     /**
      * @return string
      */
-    public function spaceBeforeSelectorSeparator()
-    {
+    public function spaceBeforeSelectorSeparator() {
         return $this->space('BeforeSelectorSeparator');
     }
 
     /**
      * @return string
      */
-    public function spaceAfterSelectorSeparator()
-    {
+    public function spaceAfterSelectorSeparator() {
         return $this->space('AfterSelectorSeparator');
     }
 
@@ -114,8 +103,7 @@ class OutputFormatter
      *
      * @return string
      */
-    public function spaceBeforeListArgumentSeparator($sSeparator)
-    {
+    public function spaceBeforeListArgumentSeparator($sSeparator) {
         return $this->space('BeforeListArgumentSeparator', $sSeparator);
     }
 
@@ -124,16 +112,14 @@ class OutputFormatter
      *
      * @return string
      */
-    public function spaceAfterListArgumentSeparator($sSeparator)
-    {
+    public function spaceAfterListArgumentSeparator($sSeparator) {
         return $this->space('AfterListArgumentSeparator', $sSeparator);
     }
 
     /**
      * @return string
      */
-    public function spaceBeforeOpeningBrace()
-    {
+    public function spaceBeforeOpeningBrace() {
         return $this->space('BeforeOpeningBrace');
     }
 
@@ -144,8 +130,7 @@ class OutputFormatter
      *
      * @return string|null
      */
-    public function safely($cCode)
-    {
+    public function safely($cCode) {
         if ($this->oFormat->get('IgnoreExceptions')) {
             // If output exceptions are ignored, run the code with exception guards
             try {
@@ -168,14 +153,16 @@ class OutputFormatter
      *
      * @return string
      */
-    public function implode($sSeparator, array $aValues, $bIncreaseLevel = false)
-    {
+    public function implode($sSeparator, array $aValues, $bIncreaseLevel = false) {
         $sResult = '';
         $oFormat = $this->oFormat;
+
         if ($bIncreaseLevel) {
             $oFormat = $oFormat->nextLevel();
         }
+
         $bIsFirst = true;
+
         foreach ($aValues as $mValue) {
             if ($bIsFirst) {
                 $bIsFirst = false;
@@ -188,6 +175,7 @@ class OutputFormatter
                 $sResult .= $mValue;
             }
         }
+
         return $sResult;
     }
 
@@ -196,18 +184,21 @@ class OutputFormatter
      *
      * @return string
      */
-    public function removeLastSemicolon($sString)
-    {
+    public function removeLastSemicolon($sString) {
         if ($this->oFormat->get('SemicolonAfterLastRule')) {
             return $sString;
         }
+
         $sString = explode(';', $sString);
+
         if (count($sString) < 2) {
             return $sString[0];
         }
+
         $sLast = array_pop($sString);
         $sNextToLast = array_pop($sString);
         array_push($sString, $sNextToLast . $sLast);
+
         return implode(';', $sString);
     }
 
@@ -216,16 +207,14 @@ class OutputFormatter
      *
      * @return string
      */
-    private function prepareSpace($sSpaceString)
-    {
+    private function prepareSpace($sSpaceString) {
         return str_replace("\n", "\n" . $this->indent(), $sSpaceString);
     }
 
     /**
      * @return string
      */
-    private function indent()
-    {
+    private function indent() {
         return str_repeat($this->oFormat->sIndentation, $this->oFormat->level());
     }
 }

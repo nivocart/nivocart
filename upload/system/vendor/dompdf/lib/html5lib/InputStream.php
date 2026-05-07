@@ -145,6 +145,7 @@ class HTML5_InputStream {
                 $data,
                 $matches
             );
+
             for ($i = 0; $i < $count; $i++) {
                 $this->errors[] = [
                     'type' => HTML5_Tokenizer::PARSEERROR,
@@ -221,9 +222,7 @@ class HTML5_InputStream {
      * @return bool|string
      */
     public function char() {
-        return ($this->char++ < $this->EOF)
-            ? $this->data[$this->char - 1]
-            : false;
+        return ($this->char++ < $this->EOF) ? $this->data[$this->char - 1] : false;
     }
 
     /**
@@ -236,6 +235,7 @@ class HTML5_InputStream {
         if ($this->char < $this->EOF) {
             $data = substr($this->data, $this->char);
             $this->char = $this->EOF;
+
             return $data;
         } else {
             return false;
@@ -257,8 +257,10 @@ class HTML5_InputStream {
             } else {
                 $len = strcspn($this->data, $bytes, $this->char);
             }
+
             $string = (string) substr($this->data, $this->char, $len);
             $this->char += $len;
+
             return $string;
         } else {
             return false;
@@ -280,8 +282,10 @@ class HTML5_InputStream {
             } else {
                 $len = strspn($this->data, $bytes, $this->char);
             }
+
             $string = (string) substr($this->data, $this->char, $len);
             $this->char += $len;
+
             return $string;
         } else {
             return false;

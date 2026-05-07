@@ -16,13 +16,11 @@ use Sabberworm\CSS\Value\ValueList;
  *
  * Most `CSSList`s conform to this category but some at-rules (such as `@keyframes`) do not.
  */
-abstract class CSSBlockList extends CSSList
-{
+abstract class CSSBlockList extends CSSList {
     /**
      * @param int $iLineNo
      */
-    public function __construct($iLineNo = 0)
-    {
+    public function __construct($iLineNo = 0) {
         parent::__construct($iLineNo);
     }
 
@@ -31,8 +29,7 @@ abstract class CSSBlockList extends CSSList
      *
      * @return void
      */
-    protected function allDeclarationBlocks(array &$aResult)
-    {
+    protected function allDeclarationBlocks(array &$aResult) {
         foreach ($this->aContents as $mContent) {
             if ($mContent instanceof DeclarationBlock) {
                 $aResult[] = $mContent;
@@ -47,8 +44,7 @@ abstract class CSSBlockList extends CSSList
      *
      * @return void
      */
-    protected function allRuleSets(array &$aResult)
-    {
+    protected function allRuleSets(array &$aResult) {
         foreach ($this->aContents as $mContent) {
             if ($mContent instanceof RuleSet) {
                 $aResult[] = $mContent;
@@ -66,8 +62,7 @@ abstract class CSSBlockList extends CSSList
      *
      * @return void
      */
-    protected function allValues($oElement, array &$aResult, $sSearchString = null, $bSearchInFunctionArguments = false)
-    {
+    protected function allValues($oElement, array &$aResult, $sSearchString = null, $bSearchInFunctionArguments = false) {
         if ($oElement instanceof CSSBlockList) {
             foreach ($oElement->getContents() as $oContent) {
                 $this->allValues($oContent, $aResult, $sSearchString, $bSearchInFunctionArguments);
@@ -96,11 +91,12 @@ abstract class CSSBlockList extends CSSList
      *
      * @return void
      */
-    protected function allSelectors(array &$aResult, $sSpecificitySearch = null)
-    {
+    protected function allSelectors(array &$aResult, $sSpecificitySearch = null) {
         /** @var array<int, DeclarationBlock> $aDeclarationBlocks */
         $aDeclarationBlocks = [];
+
         $this->allDeclarationBlocks($aDeclarationBlocks);
+
         foreach ($aDeclarationBlocks as $oBlock) {
             foreach ($oBlock->getSelectors() as $oSelector) {
                 if ($sSpecificitySearch === null) {
@@ -109,13 +105,16 @@ abstract class CSSBlockList extends CSSList
                     $sComparator = '===';
                     $aSpecificitySearch = explode(' ', $sSpecificitySearch);
                     $iTargetSpecificity = $aSpecificitySearch[0];
+
                     if (count($aSpecificitySearch) > 1) {
                         $sComparator = $aSpecificitySearch[0];
                         $iTargetSpecificity = $aSpecificitySearch[1];
                     }
+
                     $iTargetSpecificity = (int)$iTargetSpecificity;
                     $iSelectorSpecificity = $oSelector->getSpecificity();
                     $bMatches = false;
+
                     switch ($sComparator) {
                         case '<=':
                             $bMatches = $iSelectorSpecificity <= $iTargetSpecificity;
@@ -133,6 +132,7 @@ abstract class CSSBlockList extends CSSList
                             $bMatches = $iSelectorSpecificity === $iTargetSpecificity;
                             break;
                     }
+
                     if ($bMatches) {
                         $aResult[] = $oSelector;
                     }

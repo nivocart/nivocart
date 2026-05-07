@@ -5,8 +5,7 @@ namespace Sabberworm\CSS\Comment;
 use Sabberworm\CSS\OutputFormat;
 use Sabberworm\CSS\Renderable;
 
-class Comment implements Renderable
-{
+class Comment implements Renderable {
     /**
      * @var int
      */
@@ -21,8 +20,7 @@ class Comment implements Renderable
      * @param string $sComment
      * @param int $iLineNo
      */
-    public function __construct($sComment = '', $iLineNo = 0)
-    {
+    public function __construct($sComment = '', $iLineNo = 0) {
         $this->sComment = $sComment;
         $this->iLineNo = $iLineNo;
     }
@@ -30,16 +28,14 @@ class Comment implements Renderable
     /**
      * @return string
      */
-    public function getComment()
-    {
+    public function getComment() {
         return $this->sComment;
     }
 
     /**
      * @return int
      */
-    public function getLineNo()
-    {
+    public function getLineNo() {
         return $this->iLineNo;
     }
 
@@ -48,24 +44,21 @@ class Comment implements Renderable
      *
      * @return void
      */
-    public function setComment($sComment)
-    {
+    public function setComment($sComment) {
         $this->sComment = $sComment;
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         return '/*' . $this->sComment . '*/';
     }
 }

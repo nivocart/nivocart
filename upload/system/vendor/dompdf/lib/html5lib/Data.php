@@ -66,6 +66,7 @@ class HTML5_Data {
             self::$namedCharacterReferences = unserialize(
                 file_get_contents(dirname(__FILE__) . '/named-character-references.ser'));
         }
+
         return self::$namedCharacterReferences;
     }
 
@@ -84,6 +85,7 @@ class HTML5_Data {
           }*/
 
         $y = $z = $w = 0;
+
         if ($code < 0x80) {
             // regular ASCII character
             $x = $code;
@@ -104,6 +106,7 @@ class HTML5_Data {
         }
         // set up the actual character
         $ret = '';
+
         if ($w) {
             $ret .= chr($w);
         }
@@ -113,9 +116,9 @@ class HTML5_Data {
         if ($y) {
             $ret .= chr($y);
         }
+
         $ret .= chr($x);
 
         return $ret;
     }
-
 }

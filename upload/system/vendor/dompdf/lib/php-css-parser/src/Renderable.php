@@ -2,8 +2,7 @@
 
 namespace Sabberworm\CSS;
 
-interface Renderable
-{
+interface Renderable {
     /**
      * @return string
      */
