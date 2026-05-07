@@ -49,7 +49,6 @@
               <td>
                 <a onclick="GenText();" class="button-save ripple"><?php echo $generate; ?></a> &nbsp; 
                 <a onclick="LoadText();" class="button-form ripple"><?php echo $download; ?></a> &nbsp; 
-                <a onclick="window.open('<?php echo $checktext; ?>');" title="" class="button-repair ripple"><?php echo $button_check; ?></a>
               </td>
             </tr>
           <?php } else { ?>

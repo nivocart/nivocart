@@ -30,7 +30,6 @@ class ControllerToolSitemap extends Controller {
 		$this->data['text_head_date'] = $this->language->get('text_head_date');
 		$this->data['text_head_action'] = $this->language->get('text_head_action');
 
-		$this->data['button_check'] = $this->language->get('button_check');
 		$this->data['button_refresh'] = $this->language->get('button_refresh');
 		$this->data['button_close'] = $this->language->get('button_close');
 
@@ -152,7 +151,6 @@ class ControllerToolSitemap extends Controller {
 			$this->data['text_nametext'] = $this->language->get('text_nametext');
 			$this->data['text_sizetext'] = round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i];
 			$this->data['text_datetext'] = sprintf($this->language->get('text_datetext'), date("d-m-Y H:i:s", filemtime($filetext)));
-			$this->data['checktext'] = HTTP_CATALOG . "sitemap.txt";
 		} else {
 			$this->data['sitemaptext'] = '';
 			$this->data['text_text'] = $this->language->get('text_text');

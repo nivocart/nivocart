@@ -38,7 +38,6 @@ $_['text_create']       = 'Creating sitemaps: Click on the Generate buttons to c
 $_['text_publish']      = 'Publishing sitemaps: Click on any of the Search Engine links above to visit your Webmaster Dashboard and Submit your sitemaps.';
 
 // Buttons
-$_['button_check']      = 'Verify';
 $_['button_refresh']    = 'Refresh';
 
 // Error
