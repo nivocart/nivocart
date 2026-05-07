@@ -8,8 +8,7 @@ use Sabberworm\CSS\Parsing\SourceException;
 use Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
-class CSSString extends PrimitiveValue
-{
+class CSSString extends PrimitiveValue {
     /**
      * @var string
      */
@@ -19,8 +18,7 @@ class CSSString extends PrimitiveValue
      * @param string $sString
      * @param int $iLineNo
      */
-    public function __construct($sString, $iLineNo = 0)
-    {
+    public function __construct($sString, $iLineNo = 0) {
         $this->sString = $sString;
         parent::__construct($iLineNo);
     }
@@ -32,20 +30,23 @@ class CSSString extends PrimitiveValue
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parse(ParserState $oParserState)
-    {
+    public static function parse(ParserState $oParserState) {
         $sBegin = $oParserState->peek();
         $sQuote = null;
+
         if ($sBegin === "'") {
             $sQuote = "'";
         } elseif ($sBegin === '"') {
             $sQuote = '"';
         }
+
         if ($sQuote !== null) {
             $oParserState->consume($sQuote);
         }
+
         $sResult = "";
         $sContent = null;
+
         if ($sQuote === null) {
             // Unquoted strings end in whitespace or with braces, brackets, parentheses
             while (!preg_match('/[\\s{}()<>\\[\\]]/isu', $oParserState->peek())) {
@@ -64,6 +65,7 @@ class CSSString extends PrimitiveValue
             }
             $oParserState->consume($sQuote);
         }
+
         return new CSSString($sResult, $oParserState->currentLine());
     }
 
@@ -72,34 +74,31 @@ class CSSString extends PrimitiveValue
      *
      * @return void
      */
-    public function setString($sString)
-    {
+    public function setString($sString) {
         $this->sString = $sString;
     }
 
     /**
      * @return string
      */
-    public function getString()
-    {
+    public function getString() {
         return $this->sString;
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         $sString = addslashes($this->sString);
         $sString = str_replace("\n", '\A', $sString);
+
         return $oOutputFormat->getStringQuotingType() . $sString . $oOutputFormat->getStringQuotingType();
     }
 }

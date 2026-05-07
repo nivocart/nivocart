@@ -7,14 +7,12 @@ use Sabberworm\CSS\Parsing\ParserState;
 use Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
-class LineName extends ValueList
-{
+class LineName extends ValueList {
     /**
      * @param array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string> $aComponents
      * @param int $iLineNo
      */
-    public function __construct(array $aComponents = [], $iLineNo = 0)
-    {
+    public function __construct(array $aComponents = [], $iLineNo = 0) {
         parent::__construct($aComponents, ' ', $iLineNo);
     }
 
@@ -24,11 +22,11 @@ class LineName extends ValueList
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    public static function parse(ParserState $oParserState)
-    {
+    public static function parse(ParserState $oParserState) {
         $oParserState->consume('[');
         $oParserState->consumeWhiteSpace();
         $aNames = [];
+
         do {
             if ($oParserState->getSettings()->bLenientParsing) {
                 try {
@@ -43,23 +41,23 @@ class LineName extends ValueList
             }
             $oParserState->consumeWhiteSpace();
         } while (!$oParserState->comes(']'));
+
         $oParserState->consume(']');
+
         return new LineName($aNames, $oParserState->currentLine());
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         return '[' . parent::render(OutputFormat::createCompact()) . ']';
     }
 }

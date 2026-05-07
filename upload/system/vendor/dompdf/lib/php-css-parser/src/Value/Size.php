@@ -7,8 +7,7 @@ use Sabberworm\CSS\Parsing\ParserState;
 use Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
-class Size extends PrimitiveValue
-{
+class Size extends PrimitiveValue {
     /**
      * vh/vw/vm(ax)/vmin/rem are absolute insofar as they don’t scale to the immediate parent (only the viewport)
      *
@@ -52,8 +51,7 @@ class Size extends PrimitiveValue
      * @param bool $bIsColorComponent
      * @param int $iLineNo
      */
-    public function __construct($fSize, $sUnit = null, $bIsColorComponent = false, $iLineNo = 0)
-    {
+    public function __construct($fSize, $sUnit = null, $bIsColorComponent = false, $iLineNo = 0) {
         parent::__construct($iLineNo);
         $this->fSize = (float)$fSize;
         $this->sUnit = $sUnit;
@@ -68,12 +66,13 @@ class Size extends PrimitiveValue
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parse(ParserState $oParserState, $bIsColorComponent = false)
-    {
+    public static function parse(ParserState $oParserState, $bIsColorComponent = false) {
         $sSize = '';
+
         if ($oParserState->comes('-')) {
             $sSize .= $oParserState->consume('-');
         }
+
         while (is_numeric($oParserState->peek()) || $oParserState->comes('.')) {
             if ($oParserState->comes('.')) {
                 $sSize .= $oParserState->consume('.');
@@ -84,6 +83,7 @@ class Size extends PrimitiveValue
 
         $sUnit = null;
         $aSizeUnits = self::getSizeUnits();
+
         foreach ($aSizeUnits as $iLength => &$aValues) {
             $sKey = strtolower($oParserState->peek($iLength));
             if (array_key_exists($sKey, $aValues)) {
@@ -99,15 +99,16 @@ class Size extends PrimitiveValue
     /**
      * @return array<int, array<string, string>>
      */
-    private static function getSizeUnits()
-    {
+    private static function getSizeUnits() {
         if (!is_array(self::$SIZE_UNITS)) {
             self::$SIZE_UNITS = [];
+
             foreach (array_merge(self::ABSOLUTE_SIZE_UNITS, self::RELATIVE_SIZE_UNITS, self::NON_SIZE_UNITS) as $val) {
                 $iSize = strlen($val);
                 if (!isset(self::$SIZE_UNITS[$iSize])) {
                     self::$SIZE_UNITS[$iSize] = [];
                 }
+
                 self::$SIZE_UNITS[$iSize][strtolower($val)] = $val;
             }
 
@@ -122,40 +123,35 @@ class Size extends PrimitiveValue
      *
      * @return void
      */
-    public function setUnit($sUnit)
-    {
+    public function setUnit($sUnit) {
         $this->sUnit = $sUnit;
     }
 
     /**
      * @return string|null
      */
-    public function getUnit()
-    {
+    public function getUnit() {
         return $this->sUnit;
     }
 
     /**
      * @param float|int|string $fSize
      */
-    public function setSize($fSize)
-    {
+    public function setSize($fSize) {
         $this->fSize = (float)$fSize;
     }
 
     /**
      * @return float
      */
-    public function getSize()
-    {
+    public function getSize() {
         return $this->fSize;
     }
 
     /**
      * @return bool
      */
-    public function isColorComponent()
-    {
+    public function isColorComponent() {
         return $this->bIsColorComponent;
     }
 
@@ -164,46 +160,44 @@ class Size extends PrimitiveValue
      *
      * @return false if the unit an angle, a duration, a frequency or the number is a component in a Color object.
      */
-    public function isSize()
-    {
+    public function isSize() {
         if (in_array($this->sUnit, self::NON_SIZE_UNITS, true)) {
             return false;
         }
+
         return !$this->isColorComponent();
     }
 
     /**
      * @return bool
      */
-    public function isRelative()
-    {
+    public function isRelative() {
         if (in_array($this->sUnit, self::RELATIVE_SIZE_UNITS, true)) {
             return true;
         }
+
         if ($this->sUnit === null && $this->fSize != 0) {
             return true;
         }
+
         return false;
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         $l = localeconv();
         $sPoint = preg_quote($l['decimal_point'], '/');
-        $sSize = preg_match("/[\d\.]+e[+-]?\d+/i", (string)$this->fSize)
-            ? preg_replace("/$sPoint?0+$/", "", sprintf("%f", $this->fSize)) : $this->fSize;
-        return preg_replace(["/$sPoint/", "/^(-?)0\./"], ['.', '$1.'], $sSize)
-            . ($this->sUnit === null ? '' : $this->sUnit);
+        $sSize = preg_match("/[\d\.]+e[+-]?\d+/i", (string)$this->fSize) ? preg_replace("/$sPoint?0+$/", "", sprintf("%f", $this->fSize)) : $this->fSize;
+			
+        return preg_replace(["/$sPoint/", "/^(-?)0\./"], ['.', '$1.'], $sSize) . ($this->sUnit === null ? '' : $this->sUnit);
     }
 }

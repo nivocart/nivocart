@@ -6,8 +6,7 @@ use Sabberworm\CSS\Parsing\ParserState;
 use Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
-class CalcFunction extends CSSFunction
-{
+class CalcFunction extends CSSFunction {
     /**
      * @var int
      */
@@ -24,16 +23,17 @@ class CalcFunction extends CSSFunction
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    public static function parse(ParserState $oParserState)
-    {
+    public static function parse(ParserState $oParserState) {
         $aOperators = ['+', '-', '*', '/'];
         $sFunction = trim($oParserState->consumeUntil('(', false, true));
         $oCalcList = new CalcRuleValueList($oParserState->currentLine());
         $oList = new RuleValueList(',', $oParserState->currentLine());
         $iNestingLevel = 0;
         $iLastComponentType = null;
+
         while (!$oParserState->comes(')') || $iNestingLevel > 0) {
             $oParserState->consumeWhiteSpace();
+
             if ($oParserState->comes('(')) {
                 $iNestingLevel++;
                 $oCalcList->addListComponent($oParserState->consume(1));
@@ -45,6 +45,7 @@ class CalcFunction extends CSSFunction
                 $oParserState->consumeWhiteSpace();
                 continue;
             }
+
             if ($iLastComponentType != CalcFunction::T_OPERAND) {
                 $oVal = Value::parsePrimitiveValue($oParserState);
                 $oCalcList->addListComponent($oVal);
@@ -80,10 +81,13 @@ class CalcFunction extends CSSFunction
                     );
                 }
             }
+
             $oParserState->consumeWhiteSpace();
         }
+
         $oList->addListComponent($oCalcList);
         $oParserState->consume(')');
+
         return new CalcFunction($sFunction, $oList, ',', $oParserState->currentLine());
     }
 }

@@ -4,8 +4,7 @@ namespace Sabberworm\CSS\Value;
 
 use Sabberworm\CSS\OutputFormat;
 
-abstract class ValueList extends Value
-{
+abstract class ValueList extends Value {
     /**
      * @var array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
      */
@@ -22,12 +21,13 @@ abstract class ValueList extends Value
      * @param string $sSeparator
      * @param int $iLineNo
      */
-    public function __construct($aComponents = [], $sSeparator = ',', $iLineNo = 0)
-    {
+    public function __construct($aComponents = [], $sSeparator = ',', $iLineNo = 0) {
         parent::__construct($iLineNo);
+
         if (!is_array($aComponents)) {
             $aComponents = [$aComponents];
         }
+
         $this->aComponents = $aComponents;
         $this->sSeparator = $sSeparator;
     }
@@ -37,16 +37,14 @@ abstract class ValueList extends Value
      *
      * @return void
      */
-    public function addListComponent($mComponent)
-    {
+    public function addListComponent($mComponent) {
         $this->aComponents[] = $mComponent;
     }
 
     /**
      * @return array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
      */
-    public function getListComponents()
-    {
+    public function getListComponents() {
         return $this->aComponents;
     }
 
@@ -55,16 +53,14 @@ abstract class ValueList extends Value
      *
      * @return void
      */
-    public function setListComponents(array $aComponents)
-    {
+    public function setListComponents(array $aComponents) {
         $this->aComponents = $aComponents;
     }
 
     /**
      * @return string
      */
-    public function getListSeparator()
-    {
+    public function getListSeparator() {
         return $this->sSeparator;
     }
 
@@ -73,24 +69,21 @@ abstract class ValueList extends Value
      *
      * @return void
      */
-    public function setListSeparator($sSeparator)
-    {
+    public function setListSeparator($sSeparator) {
         $this->sSeparator = $sSeparator;
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         return $oOutputFormat->implode(
             $oOutputFormat->spaceBeforeListArgumentSeparator($this->sSeparator) . $this->sSeparator
             . $oOutputFormat->spaceAfterListArgumentSeparator($this->sSeparator),

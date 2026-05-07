@@ -7,14 +7,12 @@ use Sabberworm\CSS\Parsing\ParserState;
 use Sabberworm\CSS\Parsing\UnexpectedEOFException;
 use Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
-class Color extends CSSFunction
-{
+class Color extends CSSFunction {
     /**
      * @param array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string> $aColor
      * @param int $iLineNo
      */
-    public function __construct(array $aColor, $iLineNo = 0)
-    {
+    public function __construct(array $aColor, $iLineNo = 0) {
         parent::__construct(implode('', array_keys($aColor)), $aColor, ',', $iLineNo);
     }
 
@@ -24,12 +22,13 @@ class Color extends CSSFunction
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
      */
-    public static function parse(ParserState $oParserState)
-    {
+    public static function parse(ParserState $oParserState) {
         $aColor = [];
+
         if ($oParserState->comes('#')) {
             $oParserState->consume('#');
             $sValue = $oParserState->parseIdentifier(false);
+
             if ($oParserState->strlen($sValue) === 3) {
                 $sValue = $sValue[0] . $sValue[0] . $sValue[1] . $sValue[1] . $sValue[2] . $sValue[2];
             } elseif ($oParserState->strlen($sValue) === 4) {
@@ -63,6 +62,7 @@ class Color extends CSSFunction
 
             $bContainsVar = false;
             $iLength = $oParserState->strlen($sColorMode);
+
             for ($i = 0; $i < $iLength; ++$i) {
                 $oParserState->consumeWhiteSpace();
                 if ($oParserState->comes('var')) {
@@ -82,12 +82,14 @@ class Color extends CSSFunction
                     $oParserState->consume(',');
                 }
             }
+
             $oParserState->consume(')');
 
             if ($bContainsVar) {
                 return new CSSFunction($sColorMode, array_values($aColor), ',', $oParserState->currentLine());
             }
         }
+
         return new Color($aColor, $oParserState->currentLine());
     }
 
@@ -100,21 +102,20 @@ class Color extends CSSFunction
      *
      * @return float
      */
-    private static function mapRange($fVal, $fFromMin, $fFromMax, $fToMin, $fToMax)
-    {
+    private static function mapRange($fVal, $fFromMin, $fFromMax, $fToMin, $fToMax) {
         $fFromRange = $fFromMax - $fFromMin;
         $fToRange = $fToMax - $fToMin;
         $fMultiplier = $fToRange / $fFromRange;
         $fNewVal = $fVal - $fFromMin;
         $fNewVal *= $fMultiplier;
+
         return $fNewVal + $fToMin;
     }
 
     /**
      * @return array<int, RuleValueList|CSSFunction|CSSString|LineName|Size|URL|string>
      */
-    public function getColor()
-    {
+    public function getColor() {
         return $this->aComponents;
     }
 
@@ -123,8 +124,7 @@ class Color extends CSSFunction
      *
      * @return void
      */
-    public function setColor(array $aColor)
-    {
+    public function setColor(array $aColor) {
         $this->setName(implode('', array_keys($aColor)));
         $this->aComponents = $aColor;
     }
@@ -132,24 +132,21 @@ class Color extends CSSFunction
     /**
      * @return string
      */
-    public function getColorDescription()
-    {
+    public function getColorDescription() {
         return $this->getName();
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         // Shorthand RGB color values
         if ($oOutputFormat->getRGBHashNotation() && implode('', array_keys($this->aComponents)) === 'rgb') {
             $sResult = sprintf(
@@ -161,6 +158,7 @@ class Color extends CSSFunction
             return '#' . (($sResult[0] == $sResult[1]) && ($sResult[2] == $sResult[3]) && ($sResult[4] == $sResult[5])
                     ? "$sResult[0]$sResult[2]$sResult[4]" : $sResult);
         }
+
         return parent::render($oOutputFormat);
     }
 }
