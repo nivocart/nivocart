@@ -138,7 +138,7 @@ class ModelToolExportImport extends Model {
 		return $language_id;
 	}
 
-	protected function getLanguages() {
+	protected function getLanguages(): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE status = '1' ORDER BY `code` ASC");
 
 		return $query->rows;
@@ -319,7 +319,7 @@ class ModelToolExportImport extends Model {
 	}
 
 	// Find all video product ids
-	protected function getExistingVideoProductIds() {
+	protected function getExistingVideoProductIds(): array {
 		$product_ids = [0];
 
 		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_youtube`");
@@ -334,7 +334,7 @@ class ModelToolExportImport extends Model {
 	}
 
 	// Find all product tax local rate ids
-	protected function getExistingProductTaxLocalRateIds() {
+	protected function getExistingProductTaxLocalRateIds(): array {
 		$product_ids = [0];
 
 		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_tax_local_rate`");
@@ -349,7 +349,7 @@ class ModelToolExportImport extends Model {
 	}
 
 	// Find all available store ids
-	protected function getAvailableStoreIds() {
+	protected function getAvailableStoreIds(): array {
 		$store_ids = [0];
 
 		$result = $this->db->query("SELECT store_id FROM `" . DB_PREFIX . "store`");
@@ -364,7 +364,7 @@ class ModelToolExportImport extends Model {
 	}
 
 	// Find all available product ids
-	protected function getAvailableProductIds(&$data) {
+	protected function getAvailableProductIds(&$data): array {
 		$available_product_ids = [];
 
 		$k = $data->getHighestRow();
@@ -385,7 +385,7 @@ class ModelToolExportImport extends Model {
 	}
 
 	// Find available category ids
-	protected function getAvailableCategoryIds() {
+	protected function getAvailableCategoryIds(): array {
 		$category_ids = [];
 
 		$result = $this->db->query("SELECT category_id FROM `" . DB_PREFIX . "category`");
