@@ -30,7 +30,6 @@ class ControllerStep3 extends Controller {
 		$this->data['text_db_administration'] = $this->language->get('text_db_administration');
 		$this->data['text_db_option'] = $this->language->get('text_db_option');
 		$this->data['text_mysqli'] = $this->language->get('text_mysqli');
-		$this->data['text_mpdo'] = $this->language->get('text_mpdo');
 		$this->data['text_activate'] = $this->language->get('text_activate');
 		$this->data['text_remove'] = $this->language->get('text_remove');
 		$this->data['text_is_installing'] = $this->language->get('text_is_installing');
@@ -179,7 +178,6 @@ class ControllerStep3 extends Controller {
 		}
 
 		$this->data['mysqli'] = extension_loaded('mysqli');
-		$this->data['pdo'] = extension_loaded('pdo');
 
 		// Advanced Options
 		if (file_exists('../.htaccess.txt') && is_writable('../.htaccess.txt')) {
@@ -252,14 +250,6 @@ class ControllerStep3 extends Controller {
 
 			} else {
 				$this->error['db_driver'] = $this->language->get('error_db_mysqli');
-			}
-		}
-
-		if ($this->request->post['db_driver'] === 'mpdo') {
-			try {
-				new \PDO("mysql:host=" . $this->request->post['db_hostname'] . ";port=" . $this->request->post['db_port'] . ";dbname=" . $this->request->post['db_database'], html_entity_decode($this->request->post['db_username'], ENT_QUOTES, 'UTF-8'), html_entity_decode($this->request->post['db_password'], ENT_QUOTES, 'UTF-8'), [\PDO::ATTR_PERSISTENT => true]);
-			} catch (Exception $e) {
-				$this->error['warning'] = $e->getMessage();
 			}
 		}
 

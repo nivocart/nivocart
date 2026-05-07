@@ -52,7 +52,7 @@ $_['text_magic']             = 'Magic Quotes GPC';
 $_['text_file_upload']       = 'File Uploads';
 $_['text_session']           = 'Session Auto Start';
 $_['text_db']                = 'Database';
-$_['text_mysqli']            = 'MySQL / MariaDB';
+$_['text_mysqli']            = 'MySQLi / MariaDB';
 $_['text_gd']                = 'GD';
 $_['text_curl']              = 'cURL';
 $_['text_dom']               = 'DOM';
@@ -123,7 +123,7 @@ $_['error_db_port']          = 'Database Port is required and must be numeric!';
 $_['error_db_prefix']        = 'DB Prefix can only contain lowercase characters in the a-z range, 0-9 and underscores.';
 $_['error_db_connect']       = 'Error: Could not connect to the database please make sure the database server, username and password is correct!';
 $_['error_db_not_exist']     = 'Error: Database does not exist!';
-$_['error_db_mysqli']        = 'MySQL/MariaDB is not supported on your server!';
+$_['error_db_mysqli']        = 'MySQLi / MariaDB is not supported on your server!';
 $_['error_username']         = 'Username is required!';
 $_['error_password']         = 'Password is required!';
 $_['error_email']            = 'Invalid Email address!';
@@ -217,8 +217,8 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  patents cannot be used to render the program non-free.</p>
 	<p>The precise terms and conditions for copying, distribution and
 	  modification follow.</p>
-	<h3><a name="terms"></a>TERMS AND CONDITIONS</h3>
-	<h4><a id="section0"></a>0. Definitions.</h4>
+	<h3>TERMS AND CONDITIONS</h3>
+	<h4>0. Definitions.</h4>
 	<p>&ldquo;This License&rdquo; refers to version 3 of the GNU General Public License.</p>
 	<p>&ldquo;Copyright&rdquo; also means copyright-like laws that apply to other kinds of
 	  works, such as semiconductor masks.</p>
@@ -248,7 +248,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  work under this License, and how to view a copy of this License.  If
 	  the interface presents a list of user commands or options, such as a
 	  menu, a prominent item in the list meets this criterion.</p>
-	<h4><a id="section1"></a>1. Source Code.</h4>
+	<h4>1. Source Code.</h4>
 	<p>The &ldquo;source code&rdquo; for a work means the preferred form of the work
 	  for making modifications to it.  &ldquo;Object code&rdquo; means any non-source
 	  form of a work.</p>
@@ -283,7 +283,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  Source.</p>
 	<p>The Corresponding Source for a work in source code form is that
 	  same work.</p>
-	<h4><a id="section2"></a>2. Basic Permissions.</h4>
+	<h4>2. Basic Permissions.</h4>
 	<p>All rights granted under this License are granted for the term of
 	  copyright on the Program, and are irrevocable provided the stated
 	  conditions are met.  This License explicitly affirms your unlimited
@@ -304,7 +304,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	<p>Conveying under any other circumstances is permitted solely under
 	  the conditions stated below.  Sublicensing is not allowed; section 10
 	  makes it unnecessary.</p>
-	<h4><a id="section3"></a>3. Protecting Users\' Legal Rights From Anti-Circumvention Law.</h4>
+	<h4>3. Protecting Users\' Legal Rights From Anti-Circumvention Law.</h4>
 	<p>No covered work shall be deemed part of an effective technological
 	  measure under any applicable law fulfilling obligations under article
 	  11 of the WIPO copyright treaty adopted on 20 December 1996, or
@@ -317,7 +317,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  modification of the work as a means of enforcing, against the work\'s
 	  users, your or third parties\' legal rights to forbid circumvention of
 	  technological measures.</p>
-	<h4><a id="section4"></a>4. Conveying Verbatim Copies.</h4>
+	<h4>4. Conveying Verbatim Copies.</h4>
 	<p>You may convey verbatim copies of the Program\'s source code as you
 	  receive it, in any medium, provided that you conspicuously and
 	  appropriately publish on each copy an appropriate copyright notice;
@@ -327,7 +327,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  recipients a copy of this License along with the Program.</p>
 	<p>You may charge any price or no price for each copy that you convey,
 	  and you may offer support or warranty protection for a fee.</p>
-	<h4><a id="section5"></a>5. Conveying Modified Source Versions.</h4>
+	<h4>5. Conveying Modified Source Versions.</h4>
 	<p>You may convey a work based on the Program, or the modifications to
 	  produce it from the Program, in the form of source code under the
 	  terms of section 4, provided that you also meet all of these conditions:</p>
@@ -359,7 +359,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  beyond what the individual works permit.  Inclusion of a covered work
 	  in an aggregate does not cause this License to apply to the other
 	  parts of the aggregate.</p>
-	<h4><a id="section6"></a>6. Conveying Non-Source Forms.</h4>
+	<h4>6. Conveying Non-Source Forms.</h4>
 	<p>You may convey a covered work in object code form under the terms
 	  of sections 4 and 5, provided that you also convey the
 	  machine-readable Corresponding Source under the terms of this License,
@@ -446,7 +446,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  documented (and with an implementation available to the public in
 	  source code form), and must require no special password or key for
 	  unpacking, reading or copying.</p>
-	<h4><a id="section7"></a>7. Additional Terms.</h4>
+	<h4>7. Additional Terms.</h4>
 	<p>&ldquo;Additional permissions&rdquo; are terms that supplement the terms of this
 	  License by making exceptions from one or more of its conditions.
 	  Additional permissions that are applicable to the entire Program shall
@@ -499,7 +499,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	<p>Additional terms, permissive or non-permissive, may be stated in the
 	  form of a separately written license, or stated as exceptions;
 	  the above requirements apply either way.</p>
-	<h4><a id="section8"></a>8. Termination.</h4>
+	<h4>8. Termination.</h4>
 	<p>You may not propagate or modify a covered work except as expressly
 	  provided under this License.  Any attempt otherwise to propagate or
 	  modify it is void, and will automatically terminate your rights under
@@ -522,7 +522,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  this License.  If your rights have been terminated and not permanently
 	  reinstated, you do not qualify to receive new licenses for the same
 	  material under section 10.</p>
-	<h4><a id="section9"></a>9. Acceptance Not Required for Having Copies.</h4>
+	<h4>9. Acceptance Not Required for Having Copies.</h4>
 	<p>You are not required to accept this License in order to receive or
 	  run a copy of the Program.  Ancillary propagation of a covered work
 	  occurring solely as a consequence of using peer-to-peer transmission
@@ -531,7 +531,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  modify any covered work.  These actions infringe copyright if you do
 	  not accept this License.  Therefore, by modifying or propagating a
 	  covered work, you indicate your acceptance of this License to do so.</p>
-	<h4><a id="section10"></a>10. Automatic Licensing of Downstream Recipients.</h4>
+	<h4>10. Automatic Licensing of Downstream Recipients.</h4>
 	<p>Each time you convey a covered work, the recipient automatically
 	  receives a license from the original licensors, to run, modify and
 	  propagate that work, subject to this License.  You are not responsible
@@ -552,7 +552,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  (including a cross-claim or counterclaim in a lawsuit) alleging that
 	  any patent claim is infringed by making, using, selling, offering for
 	  sale, or importing the Program or any portion of it.</p>
-	<h4><a id="section11"></a>11. Patents.</h4>
+	<h4>11. Patents.</h4>
 	<p>A &ldquo;contributor&rdquo; is a copyright holder who authorizes use under this
 	  License of the Program or a work on which the Program is based.  The
 	  work thus licensed is called the contributor\'s &ldquo;contributor version&rdquo;.</p>
@@ -612,7 +612,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	<p>Nothing in this License shall be construed as excluding or limiting
 	  any implied license or other defenses to infringement that may
 	  otherwise be available to you under applicable patent law.</p>
-	<h4><a id="section12"></a>12. No Surrender of Others\' Freedom.</h4>
+	<h4>12. No Surrender of Others\' Freedom.</h4>
 	<p>If conditions are imposed on you (whether by court order, agreement or
 	  otherwise) that contradict the conditions of this License, they do not
 	  excuse you from the conditions of this License.  If you cannot convey a
@@ -622,7 +622,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  to collect a royalty for further conveying from those to whom you convey
 	  the Program, the only way you could satisfy both those terms and this
 	  License would be to refrain entirely from conveying the Program.</p>
-	<h4><a id="section13"></a>13. Use with the GNU Affero General Public License.</h4>
+	<h4>13. Use with the GNU Affero General Public License.</h4>
 	<p>Notwithstanding any other provision of this License, you have
 	  permission to link or combine any covered work with a work licensed
 	  under version 3 of the GNU Affero General Public License into a single
@@ -631,7 +631,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  but the special requirements of the GNU Affero General Public License,
 	  section 13, concerning interaction through a network will apply to the
 	  combination as such.</p>
-	<h4><a id="section14"></a>14. Revised Versions of this License.</h4>
+	<h4>14. Revised Versions of this License.</h4>
 	<p>The Free Software Foundation may publish revised and/or new versions of
 	  the GNU General Public License from time to time.  Such new versions will
 	  be similar in spirit to the present version, but may differ in detail to
@@ -652,7 +652,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  permissions.  However, no additional obligations are imposed on any
 	  author or copyright holder as a result of your choosing to follow a
 	  later version.</p>
-	<h4><a id="section15"></a>15. Disclaimer of Warranty.</h4>
+	<h4>15. Disclaimer of Warranty.</h4>
 	<p>THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
 	  APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
 	  HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM &ldquo;AS IS&rdquo; WITHOUT WARRANTY
@@ -661,7 +661,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
 	  IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
 	  ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</p>
-	<h4><a id="section16"></a>16. Limitation of Liability.</h4>
+	<h4>16. Limitation of Liability.</h4>
 	<p>IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
 	  WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
 	  THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
@@ -671,7 +671,7 @@ $_['text_terms'] = '<h3>GNU GENERAL PUBLIC LICENSE</h3>
 	  PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
 	  EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 	  SUCH DAMAGES.</p>
-	<h4><a id="section17"></a>17. Interpretation of Sections 15 and 16.</h4>
+	<h4>17. Interpretation of Sections 15 and 16.</h4>
 	<p>If the disclaimer of warranty and limitation of liability provided
 	  above cannot be given local legal effect according to their terms,
 	  reviewing courts shall apply local law that most closely approximates

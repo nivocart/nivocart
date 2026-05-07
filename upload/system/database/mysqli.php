@@ -1,4 +1,9 @@
 <?php
+/**
+ * Final Class DBMySQLi
+ *
+ * @package NivoCart
+ */
 final class DBMySQLi {
 	/**
 	 * @var ?\mysqli
