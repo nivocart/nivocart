@@ -5,8 +5,7 @@ namespace Sabberworm\CSS\Property;
 use Sabberworm\CSS\Comment\Commentable;
 use Sabberworm\CSS\Renderable;
 
-interface AtRule extends Renderable, Commentable
-{
+interface AtRule extends Renderable, Commentable {
     /**
      * Since there are more set rules than block rules,
      * we’re whitelisting the block rules and have anything else be treated as a set rule.

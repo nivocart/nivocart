@@ -2,8 +2,7 @@
 
 namespace Sabberworm\CSS\Property;
 
-class KeyframeSelector extends Selector
-{
+class KeyframeSelector extends Selector {
     /**
      * regexp for specificity calculations
      *

@@ -13,8 +13,7 @@ use Sabberworm\CSS\OutputFormat;
  * - May only appear at the very top of a Document’s contents.
  * - Must not appear more than once.
  */
-class Charset implements AtRule
-{
+class Charset implements AtRule {
     /**
      * @var string
      */
@@ -34,8 +33,7 @@ class Charset implements AtRule
      * @param string $sCharset
      * @param int $iLineNo
      */
-    public function __construct($sCharset, $iLineNo = 0)
-    {
+    public function __construct($sCharset, $iLineNo = 0) {
         $this->sCharset = $sCharset;
         $this->iLineNo = $iLineNo;
         $this->aComments = [];
@@ -44,8 +42,7 @@ class Charset implements AtRule
     /**
      * @return int
      */
-    public function getLineNo()
-    {
+    public function getLineNo() {
         return $this->iLineNo;
     }
 
@@ -54,48 +51,42 @@ class Charset implements AtRule
      *
      * @return void
      */
-    public function setCharset($sCharset)
-    {
+    public function setCharset($sCharset) {
         $this->sCharset = $sCharset;
     }
 
     /**
      * @return string
      */
-    public function getCharset()
-    {
+    public function getCharset() {
         return $this->sCharset;
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         return "@charset {$this->sCharset->render($oOutputFormat)};";
     }
 
     /**
      * @return string
      */
-    public function atRuleName()
-    {
+    public function atRuleName() {
         return 'charset';
     }
 
     /**
      * @return string
      */
-    public function atRuleArgs()
-    {
+    public function atRuleArgs() {
         return $this->sCharset;
     }
 
@@ -104,16 +95,14 @@ class Charset implements AtRule
      *
      * @return void
      */
-    public function addComments(array $aComments)
-    {
+    public function addComments(array $aComments) {
         $this->aComments = array_merge($this->aComments, $aComments);
     }
 
     /**
      * @return array<array-key, Comment>
      */
-    public function getComments()
-    {
+    public function getComments() {
         return $this->aComments;
     }
 
@@ -122,8 +111,7 @@ class Charset implements AtRule
      *
      * @return void
      */
-    public function setComments(array $aComments)
-    {
+    public function setComments(array $aComments) {
         $this->aComments = $aComments;
     }
 }

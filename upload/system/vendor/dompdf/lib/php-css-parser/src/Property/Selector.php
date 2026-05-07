@@ -6,8 +6,7 @@ namespace Sabberworm\CSS\Property;
  * Class representing a single CSS selector. Selectors have to be split by the comma prior to being passed into this
  * class.
  */
-class Selector
-{
+class Selector {
     /**
      * regexp for specificity calculations
      *
@@ -75,8 +74,7 @@ class Selector
      *
      * @return bool
      */
-    public static function isValid($sSelector)
-    {
+    public static function isValid($sSelector) {
         return preg_match(static::SELECTOR_VALIDATION_RX, $sSelector);
     }
 
@@ -84,9 +82,9 @@ class Selector
      * @param string $sSelector
      * @param bool $bCalculateSpecificity
      */
-    public function __construct($sSelector, $bCalculateSpecificity = false)
-    {
+    public function __construct($sSelector, $bCalculateSpecificity = false) {
         $this->setSelector($sSelector);
+
         if ($bCalculateSpecificity) {
             $this->getSpecificity();
         }
@@ -95,8 +93,7 @@ class Selector
     /**
      * @return string
      */
-    public function getSelector()
-    {
+    public function getSelector() {
         return $this->sSelector;
     }
 
@@ -105,8 +102,7 @@ class Selector
      *
      * @return void
      */
-    public function setSelector($sSelector)
-    {
+    public function setSelector($sSelector) {
         $this->sSelector = trim($sSelector);
         $this->iSpecificity = null;
     }
@@ -114,16 +110,14 @@ class Selector
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->getSelector();
     }
 
     /**
      * @return int
      */
-    public function getSpecificity()
-    {
+    public function getSpecificity() {
         if ($this->iSpecificity === null) {
             $a = 0;
             /// @todo should exclude \# as well as "#"
@@ -133,6 +127,7 @@ class Selector
             $d = preg_match_all(self::ELEMENTS_AND_PSEUDO_ELEMENTS_RX, $this->sSelector, $aMatches);
             $this->iSpecificity = ($a * 1000) + ($b * 100) + ($c * 10) + $d;
         }
+
         return $this->iSpecificity;
     }
 }

@@ -15,8 +15,7 @@ use Sabberworm\CSS\Rule\Rule;
  * RuleSet is a generic superclass denoting rules. The typical example for rule sets are declaration block.
  * However, unknown At-Rules (like `@font-face`) are also rule sets.
  */
-abstract class RuleSet implements Renderable, Commentable
-{
+abstract class RuleSet implements Renderable, Commentable {
     /**
      * @var array<string, Rule>
      */
@@ -35,8 +34,7 @@ abstract class RuleSet implements Renderable, Commentable
     /**
      * @param int $iLineNo
      */
-    public function __construct($iLineNo = 0)
-    {
+    public function __construct($iLineNo = 0) {
         $this->aRules = [];
         $this->iLineNo = $iLineNo;
         $this->aComments = [];
@@ -48,13 +46,14 @@ abstract class RuleSet implements Renderable, Commentable
      * @throws UnexpectedTokenException
      * @throws UnexpectedEOFException
      */
-    public static function parseRuleSet(ParserState $oParserState, RuleSet $oRuleSet)
-    {
+    public static function parseRuleSet(ParserState $oParserState, RuleSet $oRuleSet) {
         while ($oParserState->comes(';')) {
             $oParserState->consume(';');
         }
+
         while (!$oParserState->comes('}')) {
             $oRule = null;
+
             if ($oParserState->getSettings()->bLenientParsing) {
                 try {
                     $oRule = Rule::parse($oParserState);
@@ -77,18 +76,19 @@ abstract class RuleSet implements Renderable, Commentable
             } else {
                 $oRule = Rule::parse($oParserState);
             }
+
             if ($oRule) {
                 $oRuleSet->addRule($oRule);
             }
         }
+
         $oParserState->consume('}');
     }
 
     /**
      * @return int
      */
-    public function getLineNo()
-    {
+    public function getLineNo() {
         return $this->iLineNo;
     }
 
@@ -97,8 +97,7 @@ abstract class RuleSet implements Renderable, Commentable
      *
      * @return void
      */
-    public function addRule(Rule $oRule, Rule $oSibling = null)
-    {
+    public function addRule(Rule $oRule, Rule $oSibling = null) {
         $sRule = $oRule->getRule();
         if (!isset($this->aRules[$sRule])) {
             $this->aRules[$sRule] = [];
@@ -108,15 +107,18 @@ abstract class RuleSet implements Renderable, Commentable
 
         if ($oSibling !== null) {
             $iSiblingPos = array_search($oSibling, $this->aRules[$sRule], true);
+
             if ($iSiblingPos !== false) {
                 $iPosition = $iSiblingPos;
                 $oRule->setPosition($oSibling->getLineNo(), $oSibling->getColNo() - 1);
             }
         }
+
         if ($oRule->getLineNo() === 0 && $oRule->getColNo() === 0) {
             //this node is added manually, give it the next best line
             $rules = $this->getRules();
             $pos = count($rules);
+
             if ($pos > 0) {
                 $last = $rules[$pos - 1];
                 $oRule->setPosition($last->getLineNo() + 1, 0);
@@ -142,13 +144,13 @@ abstract class RuleSet implements Renderable, Commentable
      *
      * @return array<int, Rule>
      */
-    public function getRules($mRule = null)
-    {
+    public function getRules($mRule = null) {
         if ($mRule instanceof Rule) {
             $mRule = $mRule->getRule();
         }
         /** @var array<int, Rule> $aResult */
         $aResult = [];
+
         foreach ($this->aRules as $sName => $aRules) {
             // Either no search rule is given or the search rule matches the found rule exactly
             // or the search rule ends in “-” and the found rule starts with the search rule.
@@ -162,12 +164,15 @@ abstract class RuleSet implements Renderable, Commentable
                 $aResult = array_merge($aResult, $aRules);
             }
         }
+
         usort($aResult, function (Rule $first, Rule $second) {
             if ($first->getLineNo() === $second->getLineNo()) {
                 return $first->getColNo() - $second->getColNo();
             }
+
             return $first->getLineNo() - $second->getLineNo();
         });
+
         return $aResult;
     }
 
@@ -178,9 +183,9 @@ abstract class RuleSet implements Renderable, Commentable
      *
      * @return void
      */
-    public function setRules(array $aRules)
-    {
+    public function setRules(array $aRules) {
         $this->aRules = [];
+
         foreach ($aRules as $rule) {
             $this->addRule($rule);
         }
@@ -201,13 +206,14 @@ abstract class RuleSet implements Renderable, Commentable
      *
      * @return array<string, Rule>
      */
-    public function getRulesAssoc($mRule = null)
-    {
+    public function getRulesAssoc($mRule = null) {
         /** @var array<string, Rule> $aResult */
         $aResult = [];
+
         foreach ($this->getRules($mRule) as $oRule) {
             $aResult[$oRule->getRule()] = $oRule;
         }
+
         return $aResult;
     }
 
@@ -227,13 +233,14 @@ abstract class RuleSet implements Renderable, Commentable
      *
      * @return void
      */
-    public function removeRule($mRule)
-    {
+    public function removeRule($mRule) {
         if ($mRule instanceof Rule) {
             $sRule = $mRule->getRule();
+
             if (!isset($this->aRules[$sRule])) {
                 return;
             }
+
             foreach ($this->aRules[$sRule] as $iKey => $oRule) {
                 if ($oRule === $mRule) {
                     unset($this->aRules[$sRule][$iKey]);
@@ -258,32 +265,34 @@ abstract class RuleSet implements Renderable, Commentable
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->render(new OutputFormat());
     }
 
     /**
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
-    {
+    public function render(OutputFormat $oOutputFormat) {
         $sResult = '';
         $bIsFirst = true;
+
         foreach ($this->aRules as $aRules) {
             foreach ($aRules as $oRule) {
                 $sRendered = $oOutputFormat->safely(function () use ($oRule, $oOutputFormat) {
                     return $oRule->render($oOutputFormat->nextLevel());
                 });
+
                 if ($sRendered === null) {
                     continue;
                 }
+
                 if ($bIsFirst) {
                     $bIsFirst = false;
                     $sResult .= $oOutputFormat->nextLevel()->spaceBeforeRules();
                 } else {
                     $sResult .= $oOutputFormat->nextLevel()->spaceBetweenRules();
                 }
+
                 $sResult .= $sRendered;
             }
         }
@@ -301,16 +310,14 @@ abstract class RuleSet implements Renderable, Commentable
      *
      * @return void
      */
-    public function addComments(array $aComments)
-    {
+    public function addComments(array $aComments) {
         $this->aComments = array_merge($this->aComments, $aComments);
     }
 
     /**
      * @return array<string, Comment>
      */
-    public function getComments()
-    {
+    public function getComments() {
         return $this->aComments;
     }
 
@@ -319,8 +326,7 @@ abstract class RuleSet implements Renderable, Commentable
      *
      * @return void
      */
-    public function setComments(array $aComments)
-    {
+    public function setComments(array $aComments) {
         $this->aComments = $aComments;
     }
 }
