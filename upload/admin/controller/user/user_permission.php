@@ -181,6 +181,7 @@ class ControllerUserUserPermission extends Controller {
 
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
+		$this->data['text_user_info'] = $this->language->get('text_user_info');
 		$this->data['text_confirm_delete'] = $this->language->get('text_confirm_delete');
 
 		$this->data['column_name'] = $this->language->get('column_name');
@@ -189,6 +190,7 @@ class ControllerUserUserPermission extends Controller {
 
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
+		$this->data['button_info'] = $this->language->get('button_info');
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
