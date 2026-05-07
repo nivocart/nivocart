@@ -174,7 +174,7 @@ class ControllerToolExportImport extends Controller {
 
 		$this->load->model('tool/export_import');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateSettingsForm()) {
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateSettingsForm()) {
 			if (!isset($this->request->post['export_import_settings_use_export_cache'])) {
 				$this->request->post['export_import_settings_use_export_cache'] = '0';
 			}
@@ -241,6 +241,11 @@ class ControllerToolExportImport extends Controller {
 		$this->data['entry_settings_use_export_pclzip'] = $this->language->get('entry_settings_use_export_pclzip');
 		$this->data['entry_settings_use_export_cache'] = $this->language->get('entry_settings_use_export_cache');
 		$this->data['entry_settings_use_import_cache'] = $this->language->get('entry_settings_use_import_cache');
+
+		$this->data['title_name_id'] = $this->language->get('title_name_id');
+		$this->data['title_html_tags'] = $this->language->get('title_html_tags');
+		$this->data['title_pclzip'] = $this->language->get('title_pclzip');
+		$this->data['title_phptemp'] = $this->language->get('title_phptemp');
 
 		$this->data['tab_export'] = $this->language->get('tab_export');
 		$this->data['tab_import'] = $this->language->get('tab_import');
@@ -393,6 +398,8 @@ class ControllerToolExportImport extends Controller {
 		}
 
 		// Settings
+		//----------
+		// Use Names (default) or Ids
 		if (isset($this->request->post['export_import_settings_use_option_id'])) {
 			$this->data['settings_use_option_id'] = $this->request->post['export_import_settings_use_option_id'];
 		} elseif ($this->config->get('export_import_settings_use_option_id')) {
@@ -441,6 +448,7 @@ class ControllerToolExportImport extends Controller {
 			$this->data['settings_use_filter_id'] = '0';
 		}
 
+		// Use Html encoding (default ON)
 		if (isset($this->request->post['export_import_settings_use_export_tags'])) {
 			$this->data['settings_use_export_tags'] = $this->request->post['export_import_settings_use_export_tags'];
 		} elseif ($this->config->get('export_import_settings_use_export_tags')) {
@@ -449,6 +457,7 @@ class ControllerToolExportImport extends Controller {
 			$this->data['settings_use_export_tags'] = '0';
 		}
 
+		// Use Pclzip function (default OFF)
 		if (isset($this->request->post['export_import_settings_use_export_pclzip'])) {
 			$this->data['settings_use_export_pclzip'] = $this->request->post['export_import_settings_use_export_pclzip'];
 		} elseif ($this->config->get('export_import_settings_use_export_pclzip')) {
@@ -457,6 +466,7 @@ class ControllerToolExportImport extends Controller {
 			$this->data['settings_use_export_pclzip'] = '0';
 		}
 
+		// Use PHPTemp for Export (default OFF)
 		if (isset($this->request->post['export_import_settings_use_export_cache'])) {
 			$this->data['settings_use_export_cache'] = $this->request->post['export_import_settings_use_export_cache'];
 		} elseif ($this->config->get('export_import_settings_use_export_cache')) {
@@ -465,6 +475,7 @@ class ControllerToolExportImport extends Controller {
 			$this->data['settings_use_export_cache'] = '0';
 		}
 
+		// Use PHPTemp for Import (default OFF)
 		if (isset($this->request->post['export_import_settings_use_import_cache'])) {
 			$this->data['settings_use_import_cache'] = $this->request->post['export_import_settings_use_import_cache'];
 		} elseif ($this->config->get('export_import_settings_use_import_cache')) {
@@ -577,8 +588,8 @@ class ControllerToolExportImport extends Controller {
 		if ($this->user->hasPermission('modify', 'tool/export_import')) {
 			if (!isset($this->request->post['incremental'])) {
 				$this->error['warning'] = $this->language->get('error_incremental');
-			} elseif ($this->request->post['incremental'] != '0') {
-				if ($this->request->post['incremental'] != '1') {
+			} elseif ($this->request->post['incremental'] !== '0') {
+				if ($this->request->post['incremental'] !== '1') {
 					$this->error['warning'] = $this->language->get('error_incremental');
 				}
 			}
@@ -593,7 +604,7 @@ class ControllerToolExportImport extends Controller {
 			} else {
 				$ext = strtolower(pathinfo($this->request->files['upload']['name'], PATHINFO_EXTENSION));
 
-				if (($ext != 'xls') && ($ext != 'xlsx') && ($ext != 'ods') && ($ext != 'zip')) {
+				if (($ext !== 'xls') && ($ext !== 'xlsx') && ($ext !== 'ods') && ($ext !== 'zip')) {
 					if (isset($this->error['warning'])) {
 						$this->error['warning'] .= "<br /\n" . $this->language->get('error_upload_ext');
 					} else {

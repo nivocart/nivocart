@@ -37,35 +37,35 @@
               <td style="vertical-align:top;">
                 <b><?php echo $entry_export_type; ?></b>
                 <br /><br />
-                <?php if ($export_type == 'm') { ?>
+                <?php if ($export_type === 'm') { ?>
                   <input type="radio" name="export_type" value="m" id="export-m" class="radio" checked />
                 <?php } else { ?>
                   <input type="radio" name="export_type" value="m" id="export-m" class="radio" />
                 <?php } ?>
                 <label for="export-m"><span><span></span></span> <?php echo $text_export_type_customer; ?></label>
                 <br />
-                <?php if ($export_type == 'c') { ?>
+                <?php if ($export_type === 'c') { ?>
                   <input type="radio" name="export_type" value="c" id="export-c" class="radio" checked />
                 <?php } else { ?>
                   <input type="radio" name="export_type" value="c" id="export-c" class="radio" />
                 <?php } ?>
                 <label for="export-c"><span><span></span></span> <?php echo $text_export_type_category; ?></label>
                 <br />
-                <?php if ($export_type == 'p') { ?>
+                <?php if ($export_type === 'p') { ?>
                   <input type="radio" name="export_type" value="p" id="export-p" class="radio" checked />
                 <?php } else { ?>
                   <input type="radio" name="export_type" value="p" id="export-p" class="radio" />
                 <?php } ?>
                 <label for="export-p"><span><span></span></span> <?php echo $text_export_type_product; ?></label>
                 <br />
-                <?php if ($export_type == 'o') { ?>
+                <?php if ($export_type === 'o') { ?>
                   <input type="radio" name="export_type" value="o" id="export-o" class="radio" checked />
                 <?php } else { ?>
                   <input type="radio" name="export_type" value="o" id="export-o" class="radio" />
                 <?php } ?>
                 <label for="export-o"><span><span></span></span> <?php echo $text_export_type_option; ?></label>
                 <br />
-                <?php if ($export_type == 'a') { ?>
+                <?php if ($export_type === 'a') { ?>
                   <input type="radio" name="export_type" value="a" id="export-a" class="radio" checked />
                 <?php } else { ?>
                   <input type="radio" name="export_type" value="a" id="export-a" class="radio" />
@@ -73,7 +73,7 @@
                 <label for="export-a"><span><span></span></span> <?php echo $text_export_type_attribute; ?></label>
                 <br />
                 <?php if ($exist_filter) { ?>
-                  <?php if ($export_type == 'f') { ?>
+                  <?php if ($export_type === 'f') { ?>
                     <input type="radio" name="export_type" value="f" id="export-f" class="radio" checked />
                   <?php } else { ?>
                     <input type="radio" name="export_type" value="f" id="export-f" class="radio" />
@@ -82,7 +82,7 @@
                   <br />
                 <?php } ?>
                 <?php if ($exist_field) { ?>
-                  <?php if ($export_type == 'e') { ?>
+                  <?php if ($export_type === 'e') { ?>
                     <input type="radio" name="export_type" value="e" id="export-e" class="radio" checked />
                   <?php } else { ?>
                     <input type="radio" name="export_type" value="e" id="export-e" class="radio" />
@@ -90,7 +90,7 @@
                   <label for="export-e"><span><span></span></span> <?php echo $text_export_type_field; ?></label>
                   <br />
                 <?php } ?>
-                <?php if ($export_type == 't') { ?>
+                <?php if ($export_type === 't') { ?>
                   <input type="radio" name="export_type" value="t" id="export-t" class="radio" checked />
                 <?php } else { ?>
                   <input type="radio" name="export_type" value="t" id="export-t" class="radio" />
@@ -330,7 +330,7 @@
           </tr>
           <tr>
             <td><?php echo $text_export_import_website; ?></td>
-            <td><a class="about" onclick="window.open('https://nivocart.com');" title="">https://nivocart.com</a></td>
+            <td><a class="about" onclick="window.open('https://nivocart.org');" title="">https://nivocart.org</a></td>
           </tr>
           <tr>
             <td><?php echo $text_export_import_support; ?></td>
@@ -403,7 +403,7 @@ $('#tabs a').tabs();
 
 <script type="text/javascript"><!--
 function check_range_type(export_type) {
-	if ((export_type == 'm') || (export_type == 'c') || (export_type == 'p')) {
+	if ((export_type === 'm') || (export_type === 'c') || (export_type === 'p')) {
 		$('#range_type').fadeIn(500);
 		$('#range_type_id').prop('checked', true);
 		$('#range_type_page').prop('checked', false);
@@ -489,7 +489,7 @@ function validateExportForm(id) {
 	var min = $("input[name=min]").val();
 	var max = $("input[name=max]").val();
 
-	if ((min == '') && (max == '')) {
+	if ((min === '') && (max === '')) {
 		return true;
 	}
 
@@ -500,9 +500,9 @@ function validateExportForm(id) {
 
 	var export_type = $('input[name=export_type]:checked').val();
 
-	if (export_type == 'm') {
+	if (export_type === 'm') {
 		var count_item = <?php echo $count_customer-1; ?>;
-	} else if (export_type == 'c') {
+	} else if (export_type === 'c') {
 		var count_item = <?php echo $count_category-1; ?>;
 	} else {
 		var count_item = <?php echo $count_product-1; ?>;
@@ -510,10 +510,10 @@ function validateExportForm(id) {
 
 	var batchNo = parseInt(count_item/parseInt(min))+1;
 
-	if (parseInt(export_type == 'm')) {
+	if (parseInt(export_type === 'm')) {
 		var minItemId = <?php echo $min_customer_id; ?>;
 		var maxItemId = <?php echo $max_customer_id; ?>;
-	} else if (parseInt(export_type == 'c')) {
+	} else if (parseInt(export_type === 'c')) {
 		var minItemId = <?php echo $min_category_id; ?>;
 		var maxItemId = <?php echo $max_category_id; ?>;
 	} else {
@@ -521,7 +521,7 @@ function validateExportForm(id) {
 		var maxItemId = <?php echo $max_product_id; ?>;
 	}
 
-	if (val == "page") {
+	if (val === "page") {
 		if (parseInt(max) <= 0) {
 			alert("<?php echo $error_batch_number; ?>");
 			return false;

@@ -7,7 +7,7 @@ $_['header_phpexcel']                                   = 'PHPExcel';
 
 // Text
 $_['text_success']                                      = 'Success: You have successfully imported your data!';
-$_['text_success_settings']                             = 'Success: You have successfully updated the <b>Export / Import (XLSX)</b> settings !';
+$_['text_success_settings']                             = 'Success: You have successfully updated the <b>Export / Import (XLSX)</b> settings!';
 $_['text_export_type_customer']                         = 'Customers (including addresses)';
 $_['text_export_type_category']                         = 'Categories (including category data and filters)';
 $_['text_export_type_category_old']                     = 'Categories';
@@ -50,6 +50,12 @@ $_['entry_settings_use_export_tags']                    = 'Use <b>html tags</b> 
 $_['entry_settings_use_export_pclzip']                  = 'Use Export and Import with <b>PclZip</b>. (Beta)';
 $_['entry_settings_use_export_cache']                   = 'Use phpTemp cache for large Exports (will be slightly slower)';
 $_['entry_settings_use_import_cache']                   = 'Use phpTemp cache for large Imports (will be slightly slower)';
+
+// Title (Settings)
+$_['title_name_id']                                     = 'Use Names or Ids';
+$_['title_html_tags']                                   = 'Use Html Tags';
+$_['title_pclzip']                                      = 'Use Pclzip';
+$_['title_phptemp']                                     = 'Use PHPTemp';
 
 // Error
 $_['error_permission']                                  = 'Warning: You do not have permission to modify <b>Export / Import (XLSX)</b> !';
@@ -227,14 +233,14 @@ $_['text_phpexcel_website']                             = 'PHPExcel GitHub:';
 $_['text_phpexcel_license']                             = 'PHPExcel License:';
 
 // Version
-$_['export_import_description']                         = '<b>Export / Import</b> is a spreadsheet importer-exporter for NivoCart, based on the original <b>Export/Import Tool</b> by JNeuhoff, and integrating the latest <b>PHPExcel</b> Core Files!';
-$_['export_import_version']                             = '1.0.0 - NivoCart';
+$_['export_import_description']                         = '<b>Export / Import</b> is a spreadsheet importer-exporter for NivoCart, based on the original <b>Export/Import Tool</b> by JNeuhoff, and integrating Opensource <b>PHPExcel</b> Core Files, updated to support PHP 8+!';
+$_['export_import_version']                             = '2.0.0 - NivoCart';
 $_['export_import_author']                              = 'Nivocart';
-$_['export_import_support']                             = 'contact@nivocart.com';
+$_['export_import_support']                             = 'contact@nivocart.org';
 $_['export_import_license']                             = 'GPLv3 (GNU General Public License)';
-$_['export_tool_version']                               = '3.20';
+$_['export_tool_version']                               = 'Based on v3.20';
 $_['export_tool_author']                                = 'J.Neuhoff t/a MHCCORP.COM';
 $_['export_tool_license']                               = 'GPLv3 (GNU General Public License)';
-$_['phpexcel_version']                                  = 'PHPExcel v1.8.1 (GitHub)';
+$_['phpexcel_version']                                  = 'PHPExcel v1.8.1 (Opensource) - Adapted for NivoCart';
 $_['phpexcel_author']                                   = 'phpexcel.codeplex.com';
 $_['phpexcel_license']                                  = 'LGPL (GNU LESSER GENERAL PUBLIC LICENSE)';
