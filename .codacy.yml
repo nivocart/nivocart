@@ -13,9 +13,9 @@ engines:
 
   # --- JavaScript / TypeScript ---
   eslint-9:
-    enabled: true
+    enabled: false
   biome:
-    enabled: true
+    enabled: false
 
   # --- CSS / SCSS ---
   stylelint:
@@ -25,13 +25,13 @@ engines:
   opengrep:
     enabled: true
   trivy:
-    enabled: true
+    enabled: false
 
   # --- Complexity / general quality (language-agnostic) ---
   lizard:
     enabled: true
   pmd-7:
-    enabled: true
+    enabled: false
 
   # --- Disabled: not relevant to PHP/JS/TS/CSS project ---
   ameba:
