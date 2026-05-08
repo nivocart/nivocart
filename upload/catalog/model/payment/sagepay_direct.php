@@ -42,7 +42,7 @@ class ModelPaymentSagePayDirect extends Model {
 	public function getCards(int $customer_id) {
 		$card_data = [];
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sagepay_direct_card WHERE customer_id = '" . (int)$customer_id . "' ORDER BY card_id");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "sagepay_direct_card` WHERE customer_id = '" . (int)$customer_id . "' ORDER BY card_id");
 
 		foreach ($query->rows as $row) {
 
@@ -60,7 +60,7 @@ class ModelPaymentSagePayDirect extends Model {
 	}
 
 	public function addCard($card_data) {
-		$this->db->query("INSERT into " . DB_PREFIX . "sagepay_direct_card SET customer_id = '" . $this->db->escape($card_data['customer_id']) . "', digits = '" . $this->db->escape($card_data['Last4Digits']) . "', expiry = '" . $this->db->escape($card_data['ExpiryDate']) . "', `type` = '" . $this->db->escape($card_data['CardType']) . "', token = '" . $this->db->escape($card_data['Token']) . "'");
+		$this->db->query("INSERT into `" . DB_PREFIX . "sagepay_direct_card` SET customer_id = '" . $this->db->escape($card_data['customer_id']) . "', digits = '" . $this->db->escape($card_data['Last4Digits']) . "', expiry = '" . $this->db->escape($card_data['ExpiryDate']) . "', `type` = '" . $this->db->escape($card_data['CardType']) . "', token = '" . $this->db->escape($card_data['Token']) . "'");
 
 		return $this->db->getLastId();
 	}
