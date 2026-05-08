@@ -14,5 +14,5 @@ namespace FontLib\OpenType;
  * @package php-font-lib
  */
 class TableDirectoryEntry extends \FontLib\TrueType\TableDirectoryEntry {
-
+	//
 }
