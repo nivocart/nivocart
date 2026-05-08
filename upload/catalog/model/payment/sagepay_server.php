@@ -158,7 +158,7 @@ class ModelPaymentSagePayServer extends Model {
 		$order_info = $this->model_checkout_order->getOrder($order_details['order_id']);
 
 		// trial information
-		if ($item['trial'] == 1) {
+		if ($item['trial'] === 1) {
 			$price = $this->currency->format($item['trial_price'], $this->session->data['currency'], false, false);
 		} else {
 			$price = $this->currency->format($item['recurring_price'], $this->session->data['currency'], false, false);
@@ -170,10 +170,10 @@ class ModelPaymentSagePayServer extends Model {
 		$trial_end = new DateTime('now');
 		$subscription_end = new DateTime('now');
 
-		if ($item['trial'] == 1 && $item['trial_duration'] != 0) {
+		if ($item['trial'] === 1 && $item['trial_duration'] !== 0) {
 			$next_payment = $this->calculateSchedule($item['trial_frequency'], $next_payment, $item['trial_cycle']);
 			$trial_end = $this->calculateSchedule($item['trial_frequency'], $trial_end, $item['trial_cycle'] * $item['trial_duration']);
-		} elseif ($item['trial'] == 1) {
+		} elseif ($item['trial'] === 1) {
 			$next_payment = $this->calculateSchedule($item['trial_frequency'], $next_payment, $item['trial_cycle']);
 			$trial_end = new DateTime('0000-00-00');
 		}
@@ -203,13 +203,13 @@ class ModelPaymentSagePayServer extends Model {
 	}
 
 	private function setPaymentData($order_info, $sagepay_order_info, $price, $order_recurring_id, $recurring_name, $i = null) {
-		if ($this->config->get('sagepay_server_test') == 'live') {
+		if ($this->config->get('sagepay_server_test') === 'live') {
 			$url = 'https://live.sagepay.com/gateway/service/repeat.vsp';
 			$payment_data['VPSProtocol'] = '3.00';
-		} elseif ($this->config->get('sagepay_server_test') == 'test') {
+		} elseif ($this->config->get('sagepay_server_test') === 'test') {
 			$url = 'https://test.sagepay.com/gateway/service/repeat.vsp';
 			$payment_data['VPSProtocol'] = '3.00';
-		} elseif ($this->config->get('sagepay_server_test') == 'sim') {
+		} elseif ($this->config->get('sagepay_server_test') === 'sim') {
 			$url = 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorRepeatTx';
 			$payment_data['VPSProtocol'] = '2.23';
 		}
@@ -238,7 +238,7 @@ class ModelPaymentSagePayServer extends Model {
 			$payment_data['DeliveryPostCode'] = substr($order_info['shipping_postcode'], 0, 10);
 			$payment_data['DeliveryCountry'] = $order_info['shipping_iso_code_2'];
 
-			if ($order_info['shipping_iso_code_2'] == 'US') {
+			if ($order_info['shipping_iso_code_2'] === 'US') {
 				$payment_data['DeliveryState'] = $order_info['shipping_zone_code'];
 			}
 
@@ -257,7 +257,7 @@ class ModelPaymentSagePayServer extends Model {
 			$payment_data['DeliveryPostCode'] = $order_info['payment_postcode'];
 			$payment_data['DeliveryCountry'] = $order_info['payment_iso_code_2'];
 
-			if ($order_info['payment_iso_code_2'] == 'US') {
+			if ($order_info['payment_iso_code_2'] === 'US') {
 				$payment_data['DeliveryState'] = $order_info['payment_zone_code'];
 			}
 
