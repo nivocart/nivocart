@@ -7,6 +7,7 @@
  */
 
 namespace FontLib\Table\Type;
+
 use FontLib\Table\Table;
 
 /**
@@ -15,66 +16,70 @@ use FontLib\Table\Table;
  * @package php-font-lib
  */
 class kern extends Table {
-  protected function _parse() {
-    $font = $this->getFont();
+	/**
+	 * @ _parse.
+	 */
+	protected function _parse() {
+		$font = $this->getFont();
 
-    $data = $font->unpack(array(
-      "version"         => self::uint16,
-      "nTables"         => self::uint16,
+		$data = $font->unpack([
+			"version"         => self::uint16,
+			"nTables"         => self::uint16,
 
-      // only the first subtable will be parsed
-      "subtableVersion" => self::uint16,
-      "length"          => self::uint16,
-      "coverage"        => self::uint16,
-    ));
+			// only the first subtable will be parsed
+			"subtableVersion" => self::uint16,
+			"length"          => self::uint16,
+			"coverage"        => self::uint16,
+		]);
 
-    $data["format"] = ($data["coverage"] >> 8);
+		$data["format"] = ($data["coverage"] >> 8);
 
-    $subtable = array();
+		$subtable = [];
 
-    switch ($data["format"]) {
-      case 0:
-        $subtable = $font->unpack(array(
-          "nPairs"        => self::uint16,
-          "searchRange"   => self::uint16,
-          "entrySelector" => self::uint16,
-          "rangeShift"    => self::uint16,
-        ));
+		switch ($data["format"]) {
+		  case 0:
+			$subtable = $font->unpack([
+				"nPairs"        => self::uint16,
+				"searchRange"   => self::uint16,
+				"entrySelector" => self::uint16,
+				"rangeShift"    => self::uint16,
+			]);
 
-        $pairs = array();
-        $tree  = array();
+			$pairs = [];
+			$tree = [];
 
-        $values = $font->readUInt16Many($subtable["nPairs"] * 3);
-        for ($i = 0, $idx = 0; $i < $subtable["nPairs"]; $i++) {
-          $left  = $values[$idx++];
-          $right = $values[$idx++];
-          $value = $values[$idx++];
+			$values = $font->readUInt16Many($subtable["nPairs"] * 3);
 
-          if ($value >= 0x8000) {
-            $value -= 0x10000;
-          }
+			for ($i = 0, $idx = 0; $i < $subtable["nPairs"]; $i++) {
+				$left = $values[$idx++];
+				$right = $values[$idx++];
+				$value = $values[$idx++];
 
-          $pairs[] = array(
-            "left"  => $left,
-            "right" => $right,
-            "value" => $value,
-          );
+				if ($value >= 0x8000) {
+					$value -= 0x10000;
+				}
 
-          $tree[$left][$right] = $value;
-        }
+				$pairs[] = [
+					"left"  => $left,
+					"right" => $right,
+					"value" => $value,
+				];
 
-        //$subtable["pairs"] = $pairs;
-        $subtable["tree"] = $tree;
-        break;
+				$tree[$left][$right] = $value;
+			}
 
-      case 1:
-      case 2:
-      case 3:
-        break;
-    }
+			//$subtable["pairs"] = $pairs;
+			$subtable["tree"] = $tree;
+			break;
 
-    $data["subtable"] = $subtable;
+		  case 1:
+		  case 2:
+		  case 3:
+			break;
+		}
 
-    $this->data = $data;
-  }
+		$data["subtable"] = $subtable;
+
+		$this->data = $data;
+	}
 }

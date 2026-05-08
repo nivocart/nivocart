@@ -7,6 +7,7 @@
  */
 
 namespace FontLib\Table\Type;
+
 use FontLib\Table\Table;
 use FontLib\TrueType\File;
 
@@ -16,128 +17,128 @@ use FontLib\TrueType\File;
  * @package php-font-lib
  */
 class post extends Table {
-  protected $def = array(
-    "format"             => self::Fixed,
-    "italicAngle"        => self::Fixed,
-    "underlinePosition"  => self::FWord,
-    "underlineThickness" => self::FWord,
-    "isFixedPitch"       => self::uint32,
-    "minMemType42"       => self::uint32,
-    "maxMemType42"       => self::uint32,
-    "minMemType1"        => self::uint32,
-    "maxMemType1"        => self::uint32,
-  );
+	protected $def = [
+		"format"             => self::Fixed,
+		"italicAngle"        => self::Fixed,
+		"underlinePosition"  => self::FWord,
+		"underlineThickness" => self::FWord,
+		"isFixedPitch"       => self::uint32,
+		"minMemType42"       => self::uint32,
+		"maxMemType42"       => self::uint32,
+		"minMemType1"        => self::uint32,
+		"maxMemType1"        => self::uint32,
+	];
 
-  protected function _parse() {
-    $font = $this->getFont();
-    $data = $font->unpack($this->def);
+	protected function _parse() {
+		$font = $this->getFont();
+		$data = $font->unpack($this->def);
 
-    $names = array();
+		$names = [];
 
-    switch ($data["format"]) {
-      case 1:
-        $names = File::$macCharNames;
-        break;
+		switch ($data["format"]) {
+		  case 1:
+			$names = File::$macCharNames;
+			break;
 
-      case 2:
-        $data["numberOfGlyphs"] = $font->readUInt16();
+		  case 2:
+			$data["numberOfGlyphs"] = $font->readUInt16();
 
-        $glyphNameIndex = $font->readUInt16Many($data["numberOfGlyphs"]);
+			$glyphNameIndex = $font->readUInt16Many($data["numberOfGlyphs"]);
 
-        $data["glyphNameIndex"] = $glyphNameIndex;
+			$data["glyphNameIndex"] = $glyphNameIndex;
 
-        $namesPascal = array();
-        for ($i = 0; $i < $data["numberOfGlyphs"]; $i++) {
-          $len           = $font->readUInt8();
-          $namesPascal[] = $font->read($len);
-        }
+			$namesPascal = [];
 
-        foreach ($glyphNameIndex as $g => $index) {
-          if ($index < 258) {
-            $names[$g] = File::$macCharNames[$index];
-          }
-          else {
-            if (array_key_exists($index - 258, $namesPascal)) {
-              $names[$g] = $namesPascal[$index - 258];
-            }
-          }
-        }
+			for ($i = 0; $i < $data["numberOfGlyphs"]; $i++) {
+			  $len = $font->readUInt8();
+			  $namesPascal[] = $font->read($len);
+			}
 
-        break;
+			foreach ($glyphNameIndex as $g => $index) {
+				if ($index < 258) {
+					$names[$g] = File::$macCharNames[$index];
+				} else {
+					if (array_key_exists($index - 258, $namesPascal)) {
+						$names[$g] = $namesPascal[$index - 258];
+					}
+				}
+			}
 
-      case 2.5:
-        // TODO
-        break;
+			break;
 
-      case 3:
-        // nothing
-        break;
+		  case 2.5:
+			// TODO
+			break;
 
-      case 4:
-        // TODO
-        break;
-    }
+		  case 3:
+			// nothing
+			break;
 
-    $data["names"] = $names;
+		  case 4:
+			// TODO
+			break;
+		}
 
-    $this->data = $data;
-  }
+		$data["names"] = $names;
 
-  function _encode() {
-    $font           = $this->getFont();
-    $data           = $this->data;
-    $data["format"] = 3;
+		$this->data = $data;
+	}
 
-    $length = $font->pack($this->def, $data);
+	function _encode() {
+		$font = $this->getFont();
+		$data = $this->data;
+		$data["format"] = 3;
 
-    return $length;
-    /*
-    $subset = $font->getSubset();
+		$length = $font->pack($this->def, $data);
 
-    switch($data["format"]) {
-      case 1:
-        // nothing to do
-      break;
+		return $length;
+		/*
+		$subset = $font->getSubset();
 
-      case 2:
-        $old_names = $data["names"];
+		switch($data["format"]) {
+		  case 1:
+			// nothing to do
+		  break;
 
-        $glyphNameIndex = range(0, count($subset));
+		  case 2:
+			$old_names = $data["names"];
 
-        $names = array();
-        foreach($subset as $gid) {
-          $names[] = $data["names"][$data["glyphNameIndex"][$gid]];
-        }
+			$glyphNameIndex = range(0, count($subset));
 
-        $numberOfGlyphs = count($names);
-        $length += $font->writeUInt16($numberOfGlyphs);
+			$names = array();
+			foreach($subset as $gid) {
+			  $names[] = $data["names"][$data["glyphNameIndex"][$gid]];
+			}
 
-        foreach($glyphNameIndex as $gni) {
-          $length += $font->writeUInt16($gni);
-        }
+			$numberOfGlyphs = count($names);
+			$length += $font->writeUInt16($numberOfGlyphs);
 
-        //$names = array_slice($names, 257);
-        foreach($names as $name) {
-          $len = strlen($name);
-          $length += $font->writeUInt8($len);
-          $length += $font->write($name, $len);
-        }
+			foreach($glyphNameIndex as $gni) {
+			  $length += $font->writeUInt16($gni);
+			}
 
-      break;
+			//$names = array_slice($names, 257);
+			foreach($names as $name) {
+			  $len = strlen($name);
+			  $length += $font->writeUInt8($len);
+			  $length += $font->write($name, $len);
+			}
 
-      case 2.5:
-        // TODO
-      break;
+		  break;
 
-      case 3:
-        // nothing
-      break;
+		  case 2.5:
+			// TODO
+		  break;
 
-      case 4:
-        // TODO
-      break;
-    }
+		  case 3:
+			// nothing
+		  break;
 
-    return $length;*/
-  }
+		  case 4:
+			// TODO
+		  break;
+		}
+
+		return $length;*/
+	}
 }

@@ -19,136 +19,143 @@ use FontLib\Glyph\OutlineSimple;
  * @property Outline[] $data
  */
 class glyf extends Table {
-  protected function _parse() {
-    $font   = $this->getFont();
-    $offset = $font->pos();
+	/**
+	 * @ _parse.
+	 */
+	protected function _parse(): array {
+		$font = $this->getFont();
+		$offset = $font->pos();
 
-    $loca      = $font->getData("loca");
-    $real_loca = array_slice($loca, 0, -1); // Not the last dummy loca entry
+		$loca = $font->getData("loca");
+		$real_loca = array_slice($loca, 0, -1); // Not the last dummy loca entry
 
-    $data = array();
+		$data = [];
 
-    foreach ($real_loca as $gid => $location) {
-      $_offset    = $offset + $loca[$gid];
-      $_size      = $loca[$gid + 1] - $loca[$gid];
-      $data[$gid] = Outline::init($this, $_offset, $_size, $font);
-    }
+		foreach ($real_loca as $gid => $location) {
+			$_offset = $offset + $loca[$gid];
+			$_size = $loca[$gid + 1] - $loca[$gid];
+			$data[$gid] = Outline::init($this, $_offset, $_size, $font);
+		}
 
-    $this->data = $data;
-  }
+		$this->data = $data;
+	}
 
-  public function getGlyphIDs($gids = array()) {
-    $glyphIDs = array();
+	public function getGlyphIDs($gids = []) {
+		$glyphIDs = [];
 
-    foreach ($gids as $_gid) {
-      $_glyph   = $this->data[$_gid];
-      $glyphIDs = array_merge($glyphIDs, $_glyph->getGlyphIDs());
-    }
+		foreach ($gids as $_gid): array {
+			$_glyph = $this->data[$_gid];
+			$glyphIDs = array_merge($glyphIDs, $_glyph->getGlyphIDs());
+		}
 
-    return array_unique(array_merge($gids, $glyphIDs));
-  }
+		return array_unique(array_merge($gids, $glyphIDs));
+	}
 
-  public function toHTML() {
-    $max  = 160;
-    $font = $this->getFont();
+	public function toHTML() {
+		$max = 160;
+		$font = $this->getFont();
 
-    $head      = $font->getData("head");
-    $head_json = json_encode($head);
+		$head = $font->getData("head");
+		$head_json = json_encode($head);
 
-    $os2      = $font->getData("OS/2");
-    $os2_json = json_encode($os2);
+		$os2 = $font->getData("OS/2");
+		$os2_json = json_encode($os2);
 
-    $hmtx      = $font->getData("hmtx");
-    $hmtx_json = json_encode($hmtx);
+		$hmtx = $font->getData("hmtx");
+		$hmtx_json = json_encode($hmtx);
 
-    $names           = $font->getData("post", "names");
-    $glyphIndexArray = array_flip($font->getUnicodeCharMap());
+		$names = $font->getData("post", "names");
 
-    $width  = (abs($head["xMin"]) + $head["xMax"]);
-    $height = (abs($head["yMin"]) + $head["yMax"]);
+		$glyphIndexArray = array_flip($font->getUnicodeCharMap());
 
-    $ratio = 1;
-    if ($width > $max || $height > $max) {
-      $ratio  = max($width, $height) / $max;
-      $width  = round($width / $ratio);
-      $height = round($height / $ratio);
-    }
+		$width = (abs($head["xMin"]) + $head["xMax"]);
+		$height = (abs($head["yMin"]) + $head["yMax"]);
 
-    $n = 500;
+		$ratio = 1;
 
-    $s = "<h3>" . "Only the first $n simple glyphs are shown (" . count($this->data) . " total)
-    <div class='glyph-view simple'>Simple glyph</div>
-    <div class='glyph-view composite'>Composite glyph</div>
-    Zoom: <input type='range' value='100' max='400' onchange='Glyph.resize(this.value)' />
-    </h3>
-    <script>
-      Glyph.ratio  = $ratio;
-      Glyph.head   = $head_json;
-      Glyph.os2    = $os2_json;
-      Glyph.hmtx   = $hmtx_json;
-      Glyph.width  = $width;
-      Glyph.height = $height;
-    </script>";
+		if ($width > $max || $height > $max) {
+			$ratio = max($width, $height) / $max;
+			$width = round($width / $ratio);
+			$height = round($height / $ratio);
+		}
 
-    foreach ($this->data as $g => $glyph) {
-      if ($n-- <= 0) {
-        break;
-      }
+		$n = 500;
 
-      $glyph->parseData();
+		$s = "<h3>" . "Only the first $n simple glyphs are shown (" . count($this->data) . " total)
+		<div class='glyph-view simple'>Simple glyph</div>
+		<div class='glyph-view composite'>Composite glyph</div>
+		Zoom: <input type='range' value='100' max='400' onchange='Glyph.resize(this.value)' />
+		</h3>
+		<script>
+		  Glyph.ratio  = $ratio;
+		  Glyph.head   = $head_json;
+		  Glyph.os2    = $os2_json;
+		  Glyph.hmtx   = $hmtx_json;
+		  Glyph.width  = $width;
+		  Glyph.height = $height;
+		</script>";
 
-      $shape      = array(
-        "SVGContours" => $glyph->getSVGContours(),
-        "xMin"        => $glyph->xMin,
-        "yMin"        => $glyph->yMin,
-        "xMax"        => $glyph->xMax,
-        "yMax"        => $glyph->yMax,
-      );
-      $shape_json = json_encode($shape);
+		foreach ($this->data as $g => $glyph) {
+			if ($n-- <= 0) {
+				break;
+			}
 
-      $type = ($glyph instanceof OutlineSimple ? "simple" : "composite");
-      $char = isset($glyphIndexArray[$g]) ? $glyphIndexArray[$g] : 0;
-      $name = isset($names[$g]) ? $names[$g] : sprintf("uni%04x", $char);
-      $char = $char ? "&#{$glyphIndexArray[$g]};" : "";
+			$glyph->parseData();
 
-      $s .= "<div class='glyph-view $type' id='glyph-$g'>
-              <span class='glyph-id'>$g</span>
-              <span class='char'>$char</span>
-              <span class='char-name'>$name</span>
-              ";
+			$shape = [
+				"SVGContours" => $glyph->getSVGContours(),
+				"xMin"        => $glyph->xMin,
+				"yMin"        => $glyph->yMin,
+				"xMax"        => $glyph->xMax,
+				"yMax"        => $glyph->yMax,
+			];
 
-      if ($type == "composite") {
-        foreach ($glyph->getGlyphIDs() as $_id) {
-          $s .= "<a href='#glyph-$_id' class='glyph-component-id'>$_id</a> ";
-        }
-      }
+			$shape_json = json_encode($shape);
 
-      $s .= "<br />
+			$type = ($glyph instanceof OutlineSimple ? "simple" : "composite");
+			$char = isset($glyphIndexArray[$g]) ? $glyphIndexArray[$g] : 0;
+			$name = isset($names[$g]) ? $names[$g] : sprintf("uni%04x", $char);
+			$char = $char ? "&#{$glyphIndexArray[$g]};" : "";
+
+			$s .= "<div class='glyph-view $type' id='glyph-$g'>
+				  <span class='glyph-id'>$g</span>
+				  <span class='char'>$char</span>
+				  <span class='char-name'>$name</span>
+				  ";
+
+			if ($type === "composite") {
+				foreach ($glyph->getGlyphIDs() as $_id) {
+					$s .= "<a href='#glyph-$_id' class='glyph-component-id'>$_id</a> ";
+				}
+			}
+
+			$s .= "<br />
             <canvas width='$width' height='$height' id='glyph-canvas-$g'></canvas>
             </div>
             <script>Glyph.glyphs.push([$g,$shape_json]);</script>";
-    }
+		}
 
-    return $s;
-  }
+		return $s;
+	}
 
+	protected function _encode() {
+		$font = $this->getFont();
+		$subset = $font->getSubset();
+		$data = $this->data;
 
-  protected function _encode() {
-    $font   = $this->getFont();
-    $subset = $font->getSubset();
-    $data   = $this->data;
+		$loca = [];
 
-    $loca = array();
+		$length = 0;
 
-    $length = 0;
-    foreach ($subset as $gid) {
-      $loca[] = $length;
-      $length += $data[$gid]->encode();
-    }
+		foreach ($subset as $gid) {
+			$loca[] = $length;
+			$length += $data[$gid]->encode();
+		}
 
-    $loca[]                             = $length; // dummy loca
-    $font->getTableObject("loca")->data = $loca;
+		$loca[] = $length;
 
-    return $length;
-  }
+		$font->getTableObject("loca")->data = $loca;
+
+		return $length;
+	}
 }
