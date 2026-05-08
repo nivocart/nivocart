@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class ModelToolExportImport
+ *
+ * @package NivoCart
+ */
 static $registry = null;
 
 // Error Handler
