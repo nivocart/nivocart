@@ -1,6 +1,10 @@
-# ---
+---
 # .codacy.yml — Codacy project configuration for NivoCart
 # Docs: https://docs.codacy.com/repositories-configure/codacy-configuration-file/
+#
+# Current focus: PHP 8+ and CSS quality.
+# JavaScript tools disabled temporarily pending jQuery 3.6/3.7 upgrade.
+# Trivy disabled (paid tier required).
 
 engines:
   # --- PHP ---
@@ -11,7 +15,9 @@ engines:
   phpmd:
     enabled: true
 
-  # --- JavaScript / TypeScript ---
+  # --- JavaScript / TypeScript (disabled — revisit after jQuery upgrade) ---
+  eslint-8:
+    enabled: false
   eslint-9:
     enabled: false
   biome:
@@ -25,15 +31,15 @@ engines:
   opengrep:
     enabled: true
   trivy:
-    enabled: false
+    enabled: false  # Requires paid Codacy tier
 
-  # --- Complexity / general quality (language-agnostic) ---
+  # --- Complexity / general quality ---
   lizard:
     enabled: true
   pmd-7:
     enabled: false
 
-  # --- Disabled: not relevant to PHP/JS/TS/CSS project ---
+  # --- Disabled: not relevant to PHP/CSS project ---
   ameba:
     enabled: false
   bandit:
@@ -58,8 +64,6 @@ engines:
     enabled: false
   detekt:
     enabled: false
-  eslint-8:
-    enabled: false
   flawfinder:
     enabled: false
   hadolint:
@@ -68,8 +72,6 @@ engines:
     enabled: false
   markdownlint:
     enabled: false
-  phpcs:
-    enabled: true   # already listed above, kept for clarity
   pmd:
     enabled: false
   prospector:
@@ -130,7 +132,7 @@ exclude_paths:
   - "*.cache"
   - "tmp/**"
 
-  # Test fixtures & snapshots (optional — remove if you want tests scanned)
+  # Test fixtures & snapshots
   - "tests/fixtures/**"
   - "**/__snapshots__/**"
 
