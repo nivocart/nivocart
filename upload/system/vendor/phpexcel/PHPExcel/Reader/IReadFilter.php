@@ -1,5 +1,4 @@
 <?php
-
 /**
  * PHPExcel
  *
@@ -43,7 +42,5 @@ interface PHPExcel_Reader_IReadFilter {
 	 * @param	$worksheetName	Optional worksheet name
 	 * @return	boolean
 	 */
-	public function readCell($column, $row, $worksheetName = '') {
-		return;
-	}
+	public function readCell($column, $row, $worksheetName = '');
 }

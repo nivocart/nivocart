@@ -1,5 +1,4 @@
 <?php
-
 /**
  * PHPExcel
  *
@@ -321,6 +320,7 @@ class PHPExcel_Reader_OOCalc extends PHPExcel_Reader_Abstract implements PHPExce
 				return true;
 			}
 		}
+
 		return false;
 	}
 
