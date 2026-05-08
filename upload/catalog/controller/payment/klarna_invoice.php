@@ -116,7 +116,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			$this->session->data['klarna'][$this->session->data['order_id']] = $total_data;
 
 			// Order must have identical shipping and billing address or have no shipping address at all
-			if ($this->cart->hasShipping() && !($order_info['payment_firstname'] == $order_info['shipping_firstname'] && $order_info['payment_lastname'] == $order_info['shipping_lastname'] && $order_info['payment_address_1'] == $order_info['shipping_address_1'] && $order_info['payment_address_2'] == $order_info['shipping_address_2'] && $order_info['payment_postcode'] == $order_info['shipping_postcode'] && $order_info['payment_city'] == $order_info['shipping_city'] && $order_info['payment_zone_id'] == $order_info['shipping_zone_id'] && $order_info['payment_zone_code'] == $order_info['shipping_zone_code'] && $order_info['payment_country_id'] == $order_info['shipping_country_id'] && $order_info['payment_country'] == $order_info['shipping_country'] && $order_info['payment_iso_code_3'] == $order_info['shipping_iso_code_3'])) {
+			if ($this->cart->hasShipping() && !($order_info['payment_firstname'] === $order_info['shipping_firstname'] && $order_info['payment_lastname'] === $order_info['shipping_lastname'] && $order_info['payment_address_1'] === $order_info['shipping_address_1'] && $order_info['payment_address_2'] === $order_info['shipping_address_2'] && $order_info['payment_postcode'] === $order_info['shipping_postcode'] && $order_info['payment_city'] === $order_info['shipping_city'] && $order_info['payment_zone_id'] === $order_info['shipping_zone_id'] && $order_info['payment_zone_code'] === $order_info['shipping_zone_code'] && $order_info['payment_country_id'] === $order_info['shipping_country_id'] && $order_info['payment_country'] === $order_info['shipping_country'] && $order_info['payment_iso_code_3'] === $order_info['shipping_iso_code_3'])) {
 				$this->data['error_warning'] = $this->language->get('error_address_match');
 			} else {
 				$this->data['error_warning'] = '';
@@ -130,14 +130,14 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			$this->data['merchant'] = $klarna_invoice[$order_info['payment_iso_code_3']]['merchant'];
 			$this->data['phone_number'] = $order_info['telephone'];
 
-			if ($order_info['payment_iso_code_3'] == 'DEU' || $order_info['payment_iso_code_3'] == 'NLD') {
+			if ($order_info['payment_iso_code_3'] === 'DEU' || $order_info['payment_iso_code_3'] === 'NLD') {
 				$address = $this->splitAddress($order_info['payment_address_1']);
 
 				$this->data['street'] = $address[0];
 				$this->data['street_number'] = $address[1];
 				$this->data['street_extension'] = $address[2];
 
-				if ($order_info['payment_iso_code_3'] == 'DEU') {
+				if ($order_info['payment_iso_code_3'] === 'DEU') {
 					$this->data['street_number'] = trim($address[1] . ' ' . $address[2]);
 				}
 
@@ -184,18 +184,18 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 		// Order must have identical shipping and billing address or have no shipping address at all
 		if ($order_info) {
-			if ($order_info['payment_iso_code_3'] == 'DEU' && empty($this->request->post['deu_terms'])) {
+			if ($order_info['payment_iso_code_3'] === 'DEU' && empty($this->request->post['deu_terms'])) {
 				$json['error'] = $this->language->get('error_deu_terms');
 			}
 
-			if ($this->cart->hasShipping() && !($order_info['payment_firstname'] == $order_info['shipping_firstname'] && $order_info['payment_lastname'] == $order_info['shipping_lastname'] && $order_info['payment_address_1'] == $order_info['shipping_address_1'] && $order_info['payment_address_2'] == $order_info['shipping_address_2'] && $order_info['payment_postcode'] == $order_info['shipping_postcode'] && $order_info['payment_city'] == $order_info['shipping_city'] && $order_info['payment_zone_id'] == $order_info['shipping_zone_id'] && $order_info['payment_zone_code'] == $order_info['shipping_zone_code'] && $order_info['payment_country_id'] == $order_info['shipping_country_id'] && $order_info['payment_country'] == $order_info['shipping_country'] && $order_info['payment_iso_code_3'] == $order_info['shipping_iso_code_3'])) {
+			if ($this->cart->hasShipping() && !($order_info['payment_firstname'] === $order_info['shipping_firstname'] && $order_info['payment_lastname'] === $order_info['shipping_lastname'] && $order_info['payment_address_1'] === $order_info['shipping_address_1'] && $order_info['payment_address_2'] === $order_info['shipping_address_2'] && $order_info['payment_postcode'] === $order_info['shipping_postcode'] && $order_info['payment_city'] === $order_info['shipping_city'] && $order_info['payment_zone_id'] === $order_info['shipping_zone_id'] && $order_info['payment_zone_code'] === $order_info['shipping_zone_code'] && $order_info['payment_country_id'] === $order_info['shipping_country_id'] && $order_info['payment_country'] === $order_info['shipping_country'] && $order_info['payment_iso_code_3'] === $order_info['shipping_iso_code_3'])) {
 				$json['error'] = $this->language->get('error_address_match');
 			}
 
 			if (!$json) {
 				$klarna_invoice = $this->config->get('klarna_invoice');
 
-				if ($klarna_invoice[$order_info['payment_iso_code_3']]['server'] == 'live') {
+				if ($klarna_invoice[$order_info['payment_iso_code_3']]['server'] === 'live') {
 					$url = 'https://payment.klarna.com/';
 				} else {
 					$url = 'https://payment.testdrive.klarna.com/';
@@ -330,7 +330,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				$digest = '';
 
 				foreach ($goods_list as $goods) {
-					$digest .= utf8_decode(htmlspecialchars(html_entity_decode($goods['goods']['title'], ENT_COMPAT, "UTF-8"))) . ':';
+					$digest .= htmlspecialchars(html_entity_decode($goods['goods']['title'], ENT_QUOTES, "UTF-8")) . ':';
 				}
 
 				$digest = base64_encode(pack('H*', hash('sha256', $digest . $klarna_invoice[$order_info['payment_iso_code_3']]['secret'])));
@@ -343,7 +343,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 				$pclass = -1;
 
-				if (isset($this->request->post['gender']) && ($order_info['payment_iso_code_3'] == 'DEU' || $order_info['payment_iso_code_3'] == 'NLD')) {
+				if (isset($this->request->post['gender']) && ($order_info['payment_iso_code_3'] === 'DEU' || $order_info['payment_iso_code_3'] === 'NLD')) {
 					$gender = (int)$this->request->post['gender'];
 				} else {
 					$gender = '';
@@ -398,10 +398,10 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				$curl = curl_init();
 
 				curl_setopt($curl, CURLOPT_URL, $url);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 1);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
 				curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
 
@@ -420,9 +420,18 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 						preg_match('/<member><name>faultCode<\/name><value><int>([0-9]+)<\/int><\/value><\/member>/', $response, $match2);
 
 						$log = new Log('klarna_invoice.log');
-						$log->write('Failed to create an invoice for order #' . $order_info['order_id'] . '. Message: ' . utf8_encode($match[1]) . ' Code: ' . $match2[1]);
 
-						$json['error'] = utf8_encode($match[1]);
+						$message = $match[1] ?? '';
+
+						if (function_exists('mb_convert_encoding')) {
+							$message = mb_convert_encoding($message, 'UTF-8', 'ISO-8859-1');
+						} else {
+							$message = iconv('ISO-8859-1', 'UTF-8//TRANSLIT', $message);
+						}
+
+						$log->write('Failed to create an invoice for order #' . $order_info['order_id'] . '. Message: ' . $message . ' Code: ' . ($match2[1] ?? ''));
+
+						$json['error'] = $message;
 
 					} else {
 						$xml = new DOMDocument();
@@ -431,9 +440,9 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 						$invoice_number = $xml->getElementsByTagName('string')->item(0)->nodeValue;
 						$klarna_order_status = $xml->getElementsByTagName('int')->item(0)->nodeValue;
 
-						if ($klarna_order_status == '1') {
+						if ($klarna_order_status === '1') {
 							$order_status = $klarna_invoice[$order_info['payment_iso_code_3']]['accepted_status_id'];
-						} elseif ($klarna_order_status == '2') {
+						} elseif ($klarna_order_status === '2') {
 							$order_status = $klarna_invoice[$order_info['payment_iso_code_3']]['pending_status_id'];
 						} else {
 							$order_status = $this->config->get('config_order_status_id');
@@ -460,7 +469,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 		switch ($type) {
 			case 'boolean':
-				if ($data == true) {
+				if ($data === true) {
 					$value = 1;
 				} else {
 					$value = false;

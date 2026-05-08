@@ -157,7 +157,7 @@ class ControllerPaymentPPStandard extends Controller {
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_HEADER, false);
 			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 
 			$response = curl_exec($curl);
 
@@ -170,7 +170,7 @@ class ControllerPaymentPPStandard extends Controller {
 				$this->log->write('PP_STANDARD :: IPN RESPONSE: ' . $response);
 			}
 
-			if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($this->request->post['payment_status'])) {
+			if ((strcmp($response, 'VERIFIED') === 0 || strcmp($response, 'UNVERIFIED') === 0) && isset($this->request->post['payment_status'])) {
 				$order_status_id = $this->config->get('config_order_status_id');
 
 				switch ($this->request->post['payment_status']) {
@@ -178,9 +178,9 @@ class ControllerPaymentPPStandard extends Controller {
 						$order_status_id = $this->config->get('pp_standard_canceled_reversal_status_id');
 						break;
 					case 'Completed':
-						$receiver_match = (strtolower($this->request->post['receiver_email']) == strtolower($this->config->get('pp_standard_email')));
+						$receiver_match = (strtolower($this->request->post['receiver_email']) === strtolower($this->config->get('pp_standard_email')));
 
-						$total_paid_match = ((float)$this->request->post['mc_gross'] == $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false));
+						$total_paid_match = ((float)$this->request->post['mc_gross'] === $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false));
 
 						if ($receiver_match && $total_paid_match) {
 							$order_status_id = $this->config->get('pp_standard_completed_status_id');

@@ -254,10 +254,10 @@ class ControllerPaymentKlarnaAccount extends Controller {
 				$header[] = 'Content-Length: ' . strlen($xml);
 
 				curl_setopt($curl, CURLOPT_URL, $url);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
 				curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
 

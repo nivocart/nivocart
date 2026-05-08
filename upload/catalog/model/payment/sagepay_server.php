@@ -80,7 +80,7 @@ class ModelPaymentSagePayServer extends Model {
 	}
 
 	public function addOrder($order_info) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "sagepay_server_order SET order_id = '" . (int)$order_info['order_id'] . "', customer_id = '" . (int)$this->customer->getId() . "', VPSTxId = '" . $this->db->escape($order_info['VPSTxId']) . "',  VendorTxCode = '" . $this->db->escape($order_info['VendorTxCode']) . "', SecurityKey = '" . $this->db->escape($order_info['SecurityKey']) . "', date_added = NOW(), date_modified = NOW(), currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false, $this->config->get('config_currency')) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "sagepay_server_order SET order_id = '" . (int)$order_info['order_id'] . "', customer_id = '" . (int)$this->customer->getId() . "', VPSTxId = '" . $this->db->escape($order_info['VPSTxId']) . "',  VendorTxCode = '" . $this->db->escape($order_info['VendorTxCode']) . "', SecurityKey = '" . $this->db->escape($order_info['SecurityKey']) . "', date_added = NOW(), date_modified = NOW(), currency_code = '" . $this->db->escape($order_info['currency_code']) . "', total = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false) . "'");
 	}
 
 	public function getOrder(int $order_id, $vpstx_id = null) {
@@ -107,7 +107,7 @@ class ModelPaymentSagePayServer extends Model {
 	}
 
 	public function addTransaction(int $sagepay_server_order_id, $type, $order_info): void {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "sagepay_server_order_transaction SET sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false, $this->config->get('config_currency')) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "sagepay_server_order_transaction SET sagepay_server_order_id = '" . (int)$sagepay_server_order_id . "', date_added = NOW(), `type` = '" . $this->db->escape($type) . "', amount = '" . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false) . "'");
 	}
 
 	private function getTransactions(int $sagepay_server_order_id) {
@@ -133,13 +133,13 @@ class ModelPaymentSagePayServer extends Model {
 
 		// trial information
 		if ($item['recurring_trial'] == 1) {
-			$trial_amt = $this->currency->format($this->tax->calculate($item['recurring_trial_price'], $item['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'], false, false, $this->config->get('config_currency')) * $item['quantity'] . ' ' . $this->currency->getCode();
+			$trial_amt = $this->currency->format($this->tax->calculate($item['recurring_trial_price'], $item['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'], false, false) * $item['quantity'] . ' ' . $this->currency->getCode();
 			$trial_text = sprintf($this->language->get('text_trial'), $trial_amt, $item['recurring_trial_cycle'], $item['recurring_trial_frequency'], $item['recurring_trial_duration']);
 		} else {
 			$trial_text = '';
 		}
 
-		$recurring_amt = $this->currency->format($this->tax->calculate($item['recurring_price'], $item['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'], false, false, $this->config->get('config_currency')) * $item['quantity'] . ' ' . $this->currency->getCode();
+		$recurring_amt = $this->currency->format($this->tax->calculate($item['recurring_price'], $item['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency'], false, false) * $item['quantity'] . ' ' . $this->currency->getCode();
 		$recurring_description = $trial_text . sprintf($this->language->get('text_recurring'), $recurring_amt, $item['recurring_cycle'], $item['recurring_frequency']);
 
 		if ($item['recurring_duration'] > 0) {
@@ -178,15 +178,15 @@ class ModelPaymentSagePayServer extends Model {
 			$trial_end = new DateTime('0000-00-00');
 		}
 
-		if ($trial_end > $subscription_end && $item['recurring_duration'] != 0) {
+		if ($trial_end > $subscription_end && $item['recurring_duration'] !== 0) {
 			$subscription_end = new DateTime(date_format($trial_end, 'Y-m-d H:i:s'));
 			$subscription_end = $this->calculateSchedule($item['recurring_frequency'], $subscription_end, $item['recurring_cycle'] * $item['recurring_duration']);
-		} elseif ($trial_end == $subscription_end && $item['recurring_duration'] != 0) {
+		} elseif ($trial_end == $subscription_end && $item['recurring_duration'] !== 0) {
 			$next_payment = $this->calculateSchedule($item['recurring_frequency'], $next_payment, $item['recurring_cycle']);
 			$subscription_end = $this->calculateSchedule($item['recurring_frequency'], $subscription_end, $item['recurring_cycle'] * $item['recurring_duration']);
-		} elseif ($trial_end > $subscription_end && $item['recurring_duration'] == 0) {
+		} elseif ($trial_end > $subscription_end && $item['recurring_duration'] === 0) {
 			$subscription_end = new DateTime('0000-00-00');
-		} elseif ($trial_end == $subscription_end && $item['recurring_duration'] == 0) {
+		} elseif ($trial_end == $subscription_end && $item['recurring_duration'] === 0) {
 			$next_payment = $this->calculateSchedule($item['recurring_frequency'], $next_payment, $item['recurring_cycle']);
 			$subscription_end = new DateTime('0000-00-00');
 		}
@@ -217,7 +217,7 @@ class ModelPaymentSagePayServer extends Model {
 		$payment_data['TxType'] = 'REPEAT';
 		$payment_data['Vendor'] = $this->config->get('sagepay_server_vendor');
 		$payment_data['VendorTxCode'] = $order_recurring_id . 'RSD' . strftime("%Y%m%d%H%M%S") . mt_rand(1, 999);
-		$payment_data['Amount'] = $this->currency->format($price, $this->session->data['currency'], false, false, $this->config->get('config_currency'));
+		$payment_data['Amount'] = $this->currency->format($price, $this->session->data['currency'], false, false);
 		$payment_data['Currency'] = $this->currency->getCode();
 		$payment_data['Description'] = substr($recurring_name, 0, 100);
 		$payment_data['RelatedVPSTxId'] = trim($sagepay_order_info['VPSTxId'], '{}');
@@ -293,12 +293,12 @@ class ModelPaymentSagePayServer extends Model {
 
 			$order_info = $this->model_account_order->getOrder($recurring['order_id']);
 
-			if (($today > $next_payment) && ($trial_end > $today || $trial_end == $unlimited)) {
-				$price = $this->currency->format($recurring['trial_price'], $order_info['currency_code'], false, false, $this->config->get('config_currency'));
+			if (($today > $next_payment) && ($trial_end > $today || $trial_end === $unlimited)) {
+				$price = $this->currency->format($recurring['trial_price'], $order_info['currency_code'], false, false);
 				$frequency = $recurring['trial_frequency'];
 				$cycle = $recurring['trial_cycle'];
-			} elseif (($today > $next_payment) && ($subscription_end > $today || $subscription_end == $unlimited)) {
-				$price = $this->currency->format($recurring['recurring_price'], $order_info['currency_code'], false, false, $this->config->get('config_currency'));
+			} elseif (($today > $next_payment) && ($subscription_end > $today || $subscription_end === $unlimited)) {
+				$price = $this->currency->format($recurring['recurring_price'], $order_info['currency_code'], false, false);
 				$frequency = $recurring['recurring_frequency'];
 				$cycle = $recurring['recurring_cycle'];
 			} else {
@@ -311,7 +311,7 @@ class ModelPaymentSagePayServer extends Model {
 
 			$cron_data[] = $response_data;
 
-			if ($response_data['RepeatResponseData_' . $i++]['Status'] == 'OK') {
+			if ($response_data['RepeatResponseData_' . $i++]['Status'] === 'OK') {
 				$this->addRecurringTransaction($recurring['order_recurring_id'], $response_data, 1);
 				$next_payment = $this->calculateSchedule($frequency, $next_payment, $cycle);
 				$next_payment = date_format($next_payment, 'Y-m-d H:i:s');
@@ -369,7 +369,7 @@ class ModelPaymentSagePayServer extends Model {
 	}
 
 	private function addRecurringOrder(int $order_id, $response_data, int $order_recurring_id, $trial_end, $subscription_end) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "sagepay_server_order_recurring SET order_id = '" . (int)$order_id . "', order_recurring_id = '" . (int)$order_recurring_id . "', VPSTxId = '" . $this->db->escape($response_data['VPSTxId']) . "', VendorTxCode = '" . $this->db->escape($response_data['VendorTxCode']) . "', SecurityKey = '" . $this->db->escape($response_data['SecurityKey']) . "', TxAuthNo = '" . $this->db->escape($response_data['TxAuthNo']) . "', date_added = NOW(), date_modified = NOW(), next_payment = NOW(), trial_end = '" . $trial_end . "', subscription_end = '" . $subscription_end . "', currency_code = '" . $this->db->escape($response_data['Currency']) . "', total = '" . $this->currency->format($response_data['Amount'], $response_data['Currency'], false, false, $this->config->get('config_currency')) . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "sagepay_server_order_recurring SET order_id = '" . (int)$order_id . "', order_recurring_id = '" . (int)$order_recurring_id . "', VPSTxId = '" . $this->db->escape($response_data['VPSTxId']) . "', VendorTxCode = '" . $this->db->escape($response_data['VendorTxCode']) . "', SecurityKey = '" . $this->db->escape($response_data['SecurityKey']) . "', TxAuthNo = '" . $this->db->escape($response_data['TxAuthNo']) . "', date_added = NOW(), date_modified = NOW(), next_payment = NOW(), trial_end = '" . $trial_end . "', subscription_end = '" . $subscription_end . "', currency_code = '" . $this->db->escape($response_data['Currency']) . "', total = '" . $this->currency->format($response_data['Amount'], $response_data['Currency'], false, false) . "'");
 	}
 
 	private function updateRecurringOrder(int $order_recurring_id, $next_payment) {
@@ -414,8 +414,8 @@ class ModelPaymentSagePayServer extends Model {
 		$curl = curl_init($url);
 
 		curl_setopt($curl, CURLOPT_PORT, 443);
-		curl_setopt($curl, CURLOPT_HEADER, 0);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
 		curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);

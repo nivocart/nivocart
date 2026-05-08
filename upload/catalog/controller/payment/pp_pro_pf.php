@@ -141,12 +141,12 @@ class ControllerPaymentPPProPF extends Controller {
 		}
 
 		curl_setopt($curl, CURLOPT_PORT, 443);
-		curl_setopt($curl, CURLOPT_HEADER, 0);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
-		curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
-		curl_setopt($curl, CURLOPT_POST, 1);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
+		curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
+		curl_setopt($curl, CURLOPT_POST, true);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, ['X-VPS-REQUEST-ID: ' . md5($this->session->data['order_id'] . mt_rand())]);
 
@@ -154,7 +154,7 @@ class ControllerPaymentPPProPF extends Controller {
 
 		$json = [];
 
-		if (curl_errno($curl) != CURLE_OK) {
+		if (curl_errno($curl) !== CURLE_OK) {
 			$this->log->write('DoDirectPayment failed: ' . curl_error($curl) . ' (' . curl_errno($curl) . ')');
 
 			$json['error'] = 'CURL ERROR (' . curl_errno($curl) . ') :: ' . curl_error($curl);
@@ -164,7 +164,7 @@ class ControllerPaymentPPProPF extends Controller {
 
 			parse_str($response, $response_info);
 
-			if ($response_info['RESULT'] == '0') {
+			if ($response_info['RESULT'] === '0') {
 				$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('config_order_status_id'));
 
 				$message = '';
