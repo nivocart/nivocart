@@ -17,201 +17,206 @@ use FontLib\TrueType\File;
  * @package php-font-lib
  */
 class AdobeFontMetrics {
-  private $f;
+	private $f;
 
-  /**
-   * @var File
-   */
-  private $font;
+	/**
+	* @var File
+	*/
+	private $font;
 
-  function __construct(File $font) {
-    $this->font = $font;
-  }
+	function __construct(File $font) {
+		$this->font = $font;
+	}
 
-  function write($file, $encoding = null) {
-    $map_data = array();
+	function write($file, $encoding = null) {
+		$map_data = [];
 
-    if ($encoding) {
-      $encoding = preg_replace("/[^a-z0-9-_]/", "", $encoding);
-      $map_file = dirname(__FILE__) . "/../maps/$encoding.map";
-      if (!file_exists($map_file)) {
-        throw new \Exception("Unknown encoding ($encoding)");
-      }
+		if ($encoding) {
+			$encoding = preg_replace("/[^a-z0-9-_]/", "", $encoding);
+			$map_file = dirname(__FILE__) . "/../maps/$encoding.map";
 
-      $map      = new EncodingMap($map_file);
-      $map_data = $map->parse();
-    }
+			if (!file_exists($map_file)) {
+				throw new \Exception("Unknown encoding ($encoding)");
+			}
 
-    $this->f = fopen($file, "w+");
+			$map = new EncodingMap($map_file);
+			$map_data = $map->parse();
+		}
 
-    $font = $this->font;
+		$this->f = fopen($file, "w+");
 
-    $this->startSection("FontMetrics", 4.1);
-    $this->addPair("Notice", "Converted by PHP-font-lib");
-    $this->addPair("Comment", "https://github.com/PhenX/php-font-lib");
+		$font = $this->font;
 
-    $encoding_scheme = ($encoding ? $encoding : "FontSpecific");
-    $this->addPair("EncodingScheme", $encoding_scheme);
+		$this->startSection("FontMetrics", 4.1);
+		$this->addPair("Notice", "Converted by PHP-font-lib");
+		$this->addPair("Comment", "https://github.com/PhenX/php-font-lib");
 
-    $records = $font->getData("name", "records");
-    foreach ($records as $id => $record) {
-      if (!isset(name::$nameIdCodes[$id]) || preg_match("/[\r\n]/", $record->string)) {
-        continue;
-      }
+		$encoding_scheme = ($encoding ? $encoding : "FontSpecific");
+		$this->addPair("EncodingScheme", $encoding_scheme);
 
-      $this->addPair(name::$nameIdCodes[$id], $record->string);
-    }
+		$records = $font->getData("name", "records");
 
-    $os2 = $font->getData("OS/2");
-    $this->addPair("Weight", ($os2["usWeightClass"] > 400 ? "Bold" : "Medium"));
+		foreach ($records as $id => $record) {
+			if (!isset(name::$nameIdCodes[$id]) || preg_match("/[\r\n]/", $record->string)) {
+				continue;
+			}
 
-    $post = $font->getData("post");
-    $this->addPair("ItalicAngle", $post["italicAngle"]);
-    $this->addPair("IsFixedPitch", ($post["isFixedPitch"] ? "true" : "false"));
-    $this->addPair("UnderlineThickness", $font->normalizeFUnit($post["underlineThickness"]));
-    $this->addPair("UnderlinePosition", $font->normalizeFUnit($post["underlinePosition"]));
+			$this->addPair(name::$nameIdCodes[$id], $record->string);
+		}
 
-    $hhea = $font->getData("hhea");
+		$os2 = $font->getData("OS/2");
+		$this->addPair("Weight", ($os2["usWeightClass"] > 400 ? "Bold" : "Medium"));
 
-    if (isset($hhea["ascent"])) {
-      $this->addPair("FontHeightOffset", $font->normalizeFUnit($hhea["lineGap"]));
-      $this->addPair("Ascender", $font->normalizeFUnit($hhea["ascent"]));
-      $this->addPair("Descender", $font->normalizeFUnit($hhea["descent"]));
-    }
-    else {
-      $this->addPair("FontHeightOffset", $font->normalizeFUnit($os2["typoLineGap"]));
-      $this->addPair("Ascender", $font->normalizeFUnit($os2["typoAscender"]));
-      $this->addPair("Descender", -abs($font->normalizeFUnit($os2["typoDescender"])));
-    }
+		$post = $font->getData("post");
+		$this->addPair("ItalicAngle", $post["italicAngle"]);
+		$this->addPair("IsFixedPitch", ($post["isFixedPitch"] ? "true" : "false"));
+		$this->addPair("UnderlineThickness", $font->normalizeFUnit($post["underlineThickness"]));
+		$this->addPair("UnderlinePosition", $font->normalizeFUnit($post["underlinePosition"]));
 
-    $head = $font->getData("head");
-    $this->addArray("FontBBox", array(
-      $font->normalizeFUnit($head["xMin"]),
-      $font->normalizeFUnit($head["yMin"]),
-      $font->normalizeFUnit($head["xMax"]),
-      $font->normalizeFUnit($head["yMax"]),
-    ));
+		$hhea = $font->getData("hhea");
 
-    $glyphIndexArray = $font->getUnicodeCharMap();
+		if (isset($hhea["ascent"])) {
+			$this->addPair("FontHeightOffset", $font->normalizeFUnit($hhea["lineGap"]));
+			$this->addPair("Ascender", $font->normalizeFUnit($hhea["ascent"]));
+			$this->addPair("Descender", $font->normalizeFUnit($hhea["descent"]));
+		} else {
+			$this->addPair("FontHeightOffset", $font->normalizeFUnit($os2["typoLineGap"]));
+			$this->addPair("Ascender", $font->normalizeFUnit($os2["typoAscender"]));
+			$this->addPair("Descender", -abs($font->normalizeFUnit($os2["typoDescender"])));
+		}
 
-    if ($glyphIndexArray) {
-      $hmtx  = $font->getData("hmtx");
-      $names = $font->getData("post", "names");
+		$head = $font->getData("head");
 
-      $this->startSection("CharMetrics", count($hmtx));
+		$this->addArray("FontBBox", [
+			$font->normalizeFUnit($head["xMin"]),
+			$font->normalizeFUnit($head["yMin"]),
+			$font->normalizeFUnit($head["xMax"]),
+			$font->normalizeFUnit($head["yMax"]),
+		]);
 
-      if ($encoding) {
-        foreach ($map_data as $code => $value) {
-          list($c, $name) = $value;
+		$glyphIndexArray = $font->getUnicodeCharMap();
 
-          if (!isset($glyphIndexArray[$c])) {
-            continue;
-          }
+		if ($glyphIndexArray) {
+			$hmtx = $font->getData("hmtx");
+			$names = $font->getData("post", "names");
 
-          $g = $glyphIndexArray[$c];
+			$this->startSection("CharMetrics", count($hmtx));
 
-          if (!isset($hmtx[$g])) {
-            $hmtx[$g] = $hmtx[0];
-          }
+			if ($encoding) {
+				foreach ($map_data as $code => $value) {
+					list($c, $name) = $value;
 
-          $this->addMetric(array(
-            "C"  => ($code > 255 ? -1 : $code),
-            "WX" => $font->normalizeFUnit($hmtx[$g][0]),
-            "N"  => $name,
-          ));
-        }
-      }
-      else {
-        foreach ($glyphIndexArray as $c => $g) {
-          if (!isset($hmtx[$g])) {
-            $hmtx[$g] = $hmtx[0];
-          }
+					if (!isset($glyphIndexArray[$c])) {
+						continue;
+					}
 
-          $this->addMetric(array(
-            "U"  => $c,
-            "WX" => $font->normalizeFUnit($hmtx[$g][0]),
-            "N"  => (isset($names[$g]) ? $names[$g] : sprintf("uni%04x", $c)),
-            "G"  => $g,
-          ));
-        }
-      }
+					$g = $glyphIndexArray[$c];
 
-      $this->endSection("CharMetrics");
+					if (!isset($hmtx[$g])) {
+						$hmtx[$g] = $hmtx[0];
+					}
 
-      $kern = $font->getData("kern", "subtable");
-      $tree = is_array($kern) ? $kern["tree"] : null;
+					$this->addMetric([
+						"C"  => ($code > 255 ? -1 : $code),
+						"WX" => $font->normalizeFUnit($hmtx[$g][0]),
+						"N"  => $name,
+					]);
+				}
 
-      if (!$encoding && is_array($tree)) {
-        $this->startSection("KernData");
-        $this->startSection("KernPairs", count($tree, COUNT_RECURSIVE) - count($tree));
+			} else {
+				foreach ($glyphIndexArray as $c => $g) {
+					if (!isset($hmtx[$g])) {
+						$hmtx[$g] = $hmtx[0];
+					}
 
-        foreach ($tree as $left => $values) {
-          if (!is_array($values)) {
-            continue;
-          }
-          if (!isset($glyphIndexArray[$left])) {
-            continue;
-          }
+					$this->addMetric([
+						"U"  => $c,
+						"WX" => $font->normalizeFUnit($hmtx[$g][0]),
+						"N"  => (isset($names[$g]) ? $names[$g] : sprintf("uni%04x", $c)),
+						"G"  => $g,
+					]);
+				}
+			}
 
-          $left_gid = $glyphIndexArray[$left];
+			$this->endSection("CharMetrics");
 
-          if (!isset($names[$left_gid])) {
-            continue;
-          }
+			$kern = $font->getData("kern", "subtable");
+			$tree = is_array($kern) ? $kern["tree"] : null;
 
-          $left_name = $names[$left_gid];
+			if (!$encoding && is_array($tree)) {
+				$this->startSection("KernData");
+				$this->startSection("KernPairs", count($tree, COUNT_RECURSIVE) - count($tree));
 
-          $this->addLine("");
+				foreach ($tree as $left => $values) {
+					if (!is_array($values)) {
+						continue;
+					}
 
-          foreach ($values as $right => $value) {
-            if (!isset($glyphIndexArray[$right])) {
-              continue;
-            }
+					if (!isset($glyphIndexArray[$left])) {
+						continue;
+					}
 
-            $right_gid = $glyphIndexArray[$right];
+					$left_gid = $glyphIndexArray[$left];
 
-            if (!isset($names[$right_gid])) {
-              continue;
-            }
+					if (!isset($names[$left_gid])) {
+						continue;
+					}
 
-            $right_name = $names[$right_gid];
-            $this->addPair("KPX", "$left_name $right_name $value");
-          }
-        }
+					$left_name = $names[$left_gid];
 
-        $this->endSection("KernPairs");
-        $this->endSection("KernData");
-      }
-    }
+					$this->addLine("");
 
-    $this->endSection("FontMetrics");
-  }
+					foreach ($values as $right => $value) {
+						if (!isset($glyphIndexArray[$right])) {
+							continue;
+						}
 
-  function addLine($line) {
-    fwrite($this->f, "$line\n");
-  }
+						$right_gid = $glyphIndexArray[$right];
 
-  function addPair($key, $value) {
-    $this->addLine("$key $value");
-  }
+						if (!isset($names[$right_gid])) {
+							continue;
+						}
 
-  function addArray($key, $array) {
-    $this->addLine("$key " . implode(" ", $array));
-  }
+						$right_name = $names[$right_gid];
+						$this->addPair("KPX", "$left_name $right_name $value");
+					}
+				}
 
-  function addMetric($data) {
-    $array = array();
-    foreach ($data as $key => $value) {
-      $array[] = "$key $value";
-    }
-    $this->addLine(implode(" ; ", $array));
-  }
+				$this->endSection("KernPairs");
+				$this->endSection("KernData");
+			}
+		}
 
-  function startSection($name, $value = "") {
-    $this->addLine("Start$name $value");
-  }
+		$this->endSection("FontMetrics");
+	}
 
-  function endSection($name) {
-    $this->addLine("End$name");
-  }
+	function addLine($line) {
+		fwrite($this->f, "$line\n");
+	}
+
+	function addPair($key, $value) {
+		$this->addLine("$key $value");
+	}
+
+	function addArray($key, $array) {
+		$this->addLine("$key " . implode(" ", $array));
+	}
+
+	function addMetric($data) {
+		$array = [];
+
+		foreach ($data as $key => $value) {
+			$array[] = "$key $value";
+		}
+
+		$this->addLine(implode(" ; ", $array));
+	}
+
+	function startSection($name, $value = "") {
+		$this->addLine("Start$name $value");
+	}
+
+	function endSection($name) {
+		$this->addLine("End$name");
+	}
 }
