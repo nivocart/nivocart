@@ -15,23 +15,23 @@ use FontLib\TrueType\File;
  * @package php-font-lib
  */
 abstract class Header extends BinaryStream {
-  /**
-   * @var File
-   */
-  protected $font;
-  protected $def = array();
+	/**
+	 * @var File
+	 */
+	protected $font;
+	protected $def = array();
 
-  public $data;
+	public $data;
 
-  public function __construct(File $font) {
-    $this->font = $font;
-  }
+	public function __construct(File $font) {
+		$this->font = $font;
+	}
 
-  public function encode() {
-    return $this->font->pack($this->def, $this->data);
-  }
+	public function encode() {
+		return $this->font->pack($this->def, $this->data);
+	}
 
-  public function parse() {
-    $this->data = $this->font->unpack($this->def);
-  }
+	public function parse() {
+		$this->data = $this->font->unpack($this->def);
+	}
 }

@@ -20,8 +20,8 @@ class AdobeFontMetrics {
 	private $f;
 
 	/**
-	* @var File
-	*/
+	 * @var File
+	 */
 	private $font;
 
 	function __construct(File $font) {
