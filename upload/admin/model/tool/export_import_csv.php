@@ -1,16 +1,16 @@
 <?php
 /**
- * Class ModelToolExportImportRaw
+ * Class ModelToolExportImportCsv
  *
  * @package NivoCart
  */
-class ModelToolExportImportRaw extends Model {
+class ModelToolExportImportCsv extends Model {
 	/**
 	 * Functions Export, Import, Get, Check
 	 */
 
 	// Export SQL
-	public function csvExportRaw($table) {
+	public function exportCsv($table) {
 		$csv_delimiter = ";";
 		$csv_enclosure = '"';
 		$csv_terminated = "\n";
@@ -67,7 +67,7 @@ class ModelToolExportImportRaw extends Model {
 	}
 
 	// Import SQL
-	public function csvImportRaw($file) {
+	public function importCsv($file) {
 		ini_set('max_execution_time', 3600);
 
 		$handle = fopen($file, 'r');

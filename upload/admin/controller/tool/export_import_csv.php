@@ -1,22 +1,22 @@
 <?php
 /**
- * Class ControllerToolExportImportRaw
+ * Class ControllerToolExportImportCsv
  *
  * @package NivoCart
  */
-class ControllerToolExportImportRaw extends Controller {
+class ControllerToolExportImportCsv extends Controller {
 	private $error = [];
 
 	public function index() {
-		$this->language->load('tool/export_import_raw');
+		$this->language->load('tool/export_import_csv');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->document->addStyle('view/javascript/jquery/sfi/css/jquery.simplefileinput.min.css');
 
-		$this->load->model('tool/export_import_raw');
+		$this->load->model('tool/export_import_csv');
 
-		if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate()) {
 			if (is_uploaded_file($this->request->files['csv_import']['tmp_name'])) {
 				$content = file_get_contents($this->request->files['csv_import']['tmp_name']);
 
@@ -26,11 +26,11 @@ class ControllerToolExportImportRaw extends Controller {
 			}
 
 			if ($content) {
-				$this->model_tool_export_import_raw->csvImportRaw($filename);
+				$this->model_tool_export_import_csv->importCsv($filename);
 
 				$this->session->data['success'] = $this->language->get('text_success');
 
-				$this->redirect($this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL'));
+				$this->redirect($this->url->link('tool/export_import_csv', 'token=' . $this->session->data['token'], 'SSL'));
 			} else {
 				$this->error['warning'] = $this->language->get('error_empty');
 			}
@@ -91,19 +91,19 @@ class ControllerToolExportImportRaw extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('tool/export_import_csv', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
-		$this->data['csv_import'] = $this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['csv_export'] = $this->url->link('tool/export_import_raw/export', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['csv_import'] = $this->url->link('tool/export_import_csv', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['csv_export'] = $this->url->link('tool/export_import_csv/export', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['refresh'] = $this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['refresh'] = $this->url->link('tool/export_import_csv', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['tables'] = $this->model_tool_export_import_raw->getTables();
+		$this->data['tables'] = $this->model_tool_export_import_csv->getTables();
 
-		$this->template = 'tool/export_import_raw.tpl';
+		$this->template = 'tool/export_import_csv.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
@@ -113,10 +113,10 @@ class ControllerToolExportImportRaw extends Controller {
 	}
 
 	public function export() {
-		if ($this->request->server['REQUEST_METHOD'] == 'POST' && isset($this->request->post['csv_export']) && $this->validate()) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && isset($this->request->post['csv_export']) && $this->validate()) {
 			$ReflectionResponse = new ReflectionClass($this->response);
 
-			if ($ReflectionResponse->getMethod('addheader')->getNumberOfParameters() == 2) {
+			if ($ReflectionResponse->getMethod('addheader')->getNumberOfParameters() === 2) {
 				$this->response->addheader('Pragma', 'public');
 				$this->response->addheader('Expires', '0');
 				$this->response->addheader('Content-Description', 'File Transfer');
@@ -134,28 +134,28 @@ class ControllerToolExportImportRaw extends Controller {
 				$this->response->addheader('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			}
 
-			$this->load->model('tool/export_import_raw');
+			$this->load->model('tool/export_import_csv');
 
-			$this->response->setOutput($this->model_tool_export_import_raw->csvExportRaw($this->request->post['csv_export']));
+			$this->response->setOutput($this->model_tool_export_import_csv->exportCsv($this->request->post['csv_export']));
 
-		} elseif (!$this->user->hasPermission('modify', 'tool/export_import_raw')) {
-			$this->language->load('tool/export_import_raw');
+		} elseif (!$this->user->hasPermission('modify', 'tool/export_import_csv')) {
+			$this->language->load('tool/export_import_csv');
 
 			$this->session->data['error'] = $this->language->get('error_permission');
 
-			$this->redirect($this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL'));
+			$this->redirect($this->url->link('tool/export_import_csv', 'token=' . $this->session->data['token'], 'SSL'));
 
 		} else {
-			$this->language->load('tool/export_import_raw');
+			$this->language->load('tool/export_import_csv');
 
 			$this->session->data['error'] = $this->language->get('error_export');
 
-			$this->redirect($this->url->link('tool/export_import_raw', 'token=' . $this->session->data['token'], 'SSL'));
+			$this->redirect($this->url->link('tool/export_import_csv', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'tool/export_import_raw')) {
+		if (!$this->user->hasPermission('modify', 'tool/export_import_csv')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
