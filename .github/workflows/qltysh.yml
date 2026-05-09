@@ -1,7 +1,7 @@
 - name: Run PHPUnit with coverage (clover)
   run: |
     mkdir -p coverage
-    ./vendor/bin/phpunit --coverage-clover=coverage/clover.xml
+    ./upload/system/vendor/bin/phpunit --coverage-clover=coverage/clover.xml
 
 - uses: qltysh/qlty-action/coverage@v2
   with:
