@@ -15,8 +15,7 @@ use Svg\Style;
  *
  * @package Svg
  */
-interface SurfaceInterface
-{
+interface SurfaceInterface {
     public function save();
 
     public function restore();

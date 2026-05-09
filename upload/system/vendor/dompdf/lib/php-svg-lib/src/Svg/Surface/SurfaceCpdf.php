@@ -11,21 +11,17 @@ namespace Svg\Surface;
 use Svg\Document;
 use Svg\Style;
 
-class SurfaceCpdf implements SurfaceInterface
-{
+class SurfaceCpdf implements SurfaceInterface {
     const DEBUG = false;
 
     /** @var \Svg\Surface\CPdf */
     private $canvas;
-
     private $width;
     private $height;
-
     /** @var Style */
     private $style;
 
-    public function __construct(Document $doc, $canvas = null)
-    {
+    public function __construct(Document $doc, $canvas = null) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         $dimensions = $doc->getDimensions();
@@ -33,121 +29,95 @@ class SurfaceCpdf implements SurfaceInterface
         $h = $dimensions["height"];
 
         if (!$canvas) {
-            $canvas = new \Svg\Surface\CPdf(array(0, 0, $w, $h));
+            $canvas = new \Svg\Surface\CPdf([0, 0, $w, $h]);
             $refl = new \ReflectionClass($canvas);
             $canvas->fontcache = realpath(dirname($refl->getFileName()) . "/../../fonts/")."/";
         }
 
         // Flip PDF coordinate system so that the origin is in
         // the top left rather than the bottom left
-        $canvas->transform(array(
-            1,  0,
-            0, -1,
-            0, $h
-        ));
+        $canvas->transform([1, 0, 0, -1, 0, $h]);
 
-        $this->width  = $w;
+        $this->width = $w;
         $this->height = $h;
 
         $this->canvas = $canvas;
     }
 
-    function out()
-    {
+    function out() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         return $this->canvas->output();
     }
 
-    public function save()
-    {
+    public function save() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->save();
     }
 
-    public function restore()
-    {
+    public function restore() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->restore();
     }
 
-    public function scale($x, $y)
-    {
+    public function scale($x, $y) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         $this->transform($x, 0, 0, $y, 0, 0);
     }
 
-    public function rotate($angle)
-    {
+    public function rotate($angle) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         $a = deg2rad($angle);
         $cos_a = cos($a);
         $sin_a = sin($a);
 
-        $this->transform(
-            $cos_a,                         $sin_a,
-            -$sin_a,                         $cos_a,
-            0, 0
-        );
+        $this->transform($cos_a, $sin_a, -$sin_a, $cos_a, 0, 0);
     }
 
-    public function translate($x, $y)
-    {
+    public function translate($x, $y) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
-        $this->transform(
-            1,  0,
-            0,  1,
-            $x, $y
-        );
+        $this->transform(1, 0, 0, 1, $x, $y);
     }
 
-    public function transform($a, $b, $c, $d, $e, $f)
-    {
+    public function transform($a, $b, $c, $d, $e, $f) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         $this->canvas->transform(array($a, $b, $c, $d, $e, $f));
     }
 
-    public function beginPath()
-    {
+    public function beginPath() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         // TODO: Implement beginPath() method.
     }
 
-    public function closePath()
-    {
+    public function closePath() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->closePath();
     }
 
-    public function fillStroke()
-    {
+    public function fillStroke() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->fillStroke();
     }
 
-    public function clip()
-    {
+    public function clip() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->clip();
     }
 
-    public function fillText($text, $x, $y, $maxWidth = null)
-    {
+    public function fillText($text, $x, $y, $maxWidth = null) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->addText($x, $y, $this->style->fontSize, $text);
     }
 
-    public function strokeText($text, $x, $y, $maxWidth = null)
-    {
+    public function strokeText($text, $x, $y, $maxWidth = null) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->addText($x, $y, $this->style->fontSize, $text);
     }
 
-    public function drawImage($image, $sx, $sy, $sw = null, $sh = null, $dx = null, $dy = null, $dw = null, $dh = null)
-    {
+    public function drawImage($image, $sx, $sy, $sw = null, $sh = null, $dx = null, $dy = null, $dw = null, $dh = null) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         if (strpos($image, "data:") === 0) {
@@ -157,6 +127,7 @@ class SurfaceCpdf implements SurfaceInterface
             $base64 = false;
 
             $token = strtok($parts[0], ';');
+
             while ($token !== false) {
                 if ($token == 'base64') {
                     $base64 = true;
@@ -168,23 +139,21 @@ class SurfaceCpdf implements SurfaceInterface
             if ($base64) {
                 $data = base64_decode($data);
             }
-        }
-        else {
+        } else {
             $data = file_get_contents($image);
         }
 
         $image = tempnam(sys_get_temp_dir(), "svg");
+
         file_put_contents($image, $data);
 
         $img = $this->image($image, $sx, $sy, $sw, $sh, "normal");
 
-
         unlink($image);
     }
 
-    public static function getimagesize($filename)
-    {
-        static $cache = array();
+    public static function getimagesize($filename) {
+        static $cache = [];
 
         if (isset($cache[$filename])) {
             return $cache[$filename];
@@ -203,11 +172,10 @@ class SurfaceCpdf implements SurfaceInterface
             }
         }
 
-        return $cache[$filename] = array($width, $height, $type);
+        return $cache[$filename] = [$width, $height, $type];
     }
 
-    function image($img, $x, $y, $w, $h, $resolution = "normal")
-    {
+    function image($img, $x, $y, $w, $h, $resolution = "normal") {
         list($width, $height, $type) = $this->getimagesize($img);
 
         switch ($type) {
@@ -228,71 +196,60 @@ class SurfaceCpdf implements SurfaceInterface
         }
     }
 
-    public function lineTo($x, $y)
-    {
+    public function lineTo($x, $y) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->lineTo($x, $y);
     }
 
-    public function moveTo($x, $y)
-    {
+    public function moveTo($x, $y) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->moveTo($x, $y);
     }
 
-    public function quadraticCurveTo($cpx, $cpy, $x, $y)
-    {
+    public function quadraticCurveTo($cpx, $cpy, $x, $y) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         // FIXME not accurate
         $this->canvas->quadTo($cpx, $cpy, $x, $y);
     }
 
-    public function bezierCurveTo($cp1x, $cp1y, $cp2x, $cp2y, $x, $y)
-    {
+    public function bezierCurveTo($cp1x, $cp1y, $cp2x, $cp2y, $x, $y) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->curveTo($cp1x, $cp1y, $cp2x, $cp2y, $x, $y);
     }
 
-    public function arcTo($x1, $y1, $x2, $y2, $radius)
-    {
+    public function arcTo($x1, $y1, $x2, $y2, $radius) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
     }
 
-    public function arc($x, $y, $radius, $startAngle, $endAngle, $anticlockwise = false)
-    {
+    public function arc($x, $y, $radius, $startAngle, $endAngle, $anticlockwise = false) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->ellipse($x, $y, $radius, $radius, 0, 8, $startAngle, $endAngle, false, false, false, true);
     }
 
-    public function circle($x, $y, $radius)
-    {
+    public function circle($x, $y, $radius) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->ellipse($x, $y, $radius, $radius, 0, 8, 0, 360, true, false, false, false);
     }
 
-    public function ellipse($x, $y, $radiusX, $radiusY, $rotation, $startAngle, $endAngle, $anticlockwise)
-    {
+    public function ellipse($x, $y, $radiusX, $radiusY, $rotation, $startAngle, $endAngle, $anticlockwise) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->ellipse($x, $y, $radiusX, $radiusY, 0, 8, 0, 360, false, false, false, false);
     }
 
-    public function fillRect($x, $y, $w, $h)
-    {
+    public function fillRect($x, $y, $w, $h) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->rect($x, $y, $w, $h);
         $this->fill();
     }
 
-    public function rect($x, $y, $w, $h, $rx = 0, $ry = 0)
-    {
+    public function rect($x, $y, $w, $h, $rx = 0, $ry = 0) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         $canvas = $this->canvas;
 
         if ($rx <= 0.000001/* && $ry <= 0.000001*/) {
             $canvas->rect($x, $y, $w, $h);
-
             return;
         }
 
@@ -329,33 +286,28 @@ class SurfaceCpdf implements SurfaceInterface
         $this->arc($x + $rx, $y + $rx, $rx, 180, 270);
     }
 
-    public function fill()
-    {
+    public function fill() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->fill();
     }
 
-    public function strokeRect($x, $y, $w, $h)
-    {
+    public function strokeRect($x, $y, $w, $h) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->rect($x, $y, $w, $h);
         $this->stroke();
     }
 
-    public function stroke()
-    {
+    public function stroke() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->stroke();
     }
 
-    public function endPath()
-    {
+    public function endPath() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $this->canvas->endPath();
     }
 
-    public function measureText($text)
-    {
+    public function measureText($text) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         $style = $this->getStyle();
         $this->setFont($style->fontFamily, $style->fontStyle, $style->fontWeight);
@@ -363,25 +315,23 @@ class SurfaceCpdf implements SurfaceInterface
         return $this->canvas->getTextWidth($this->getStyle()->fontSize, $text);
     }
 
-    public function getStyle()
-    {
+    public function getStyle() {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
         return $this->style;
     }
 
-    public function setStyle(Style $style)
-    {
+    public function setStyle(Style $style) {
         if (self::DEBUG) echo __FUNCTION__ . "\n";
 
         $this->style = $style;
         $canvas = $this->canvas;
 
         if (is_array($style->stroke) && $stroke = $style->stroke) {
-            $canvas->setStrokeColor(array((float)$stroke[0]/255, (float)$stroke[1]/255, (float)$stroke[2]/255), true);
+		$canvas->setStrokeColor([(float)$stroke[0]/255, (float)$stroke[1]/255, (float)$stroke[2]/255], true);
         }
 
         if (is_array($style->fill) && $fill = $style->fill) {
-            $canvas->setColor(array((float)$fill[0]/255, (float)$fill[1]/255, (float)$fill[2]/255), true);
+            $canvas->setColor([(float)$fill[0]/255, (float)$fill[1]/255, (float)$fill[2]/255], true);
         }
 
         if ($fillRule = strtolower($style->fillRule)) {
@@ -389,21 +339,23 @@ class SurfaceCpdf implements SurfaceInterface
         }
 
         $opacity = $style->opacity;
+
         if ($opacity !== null && $opacity < 1.0) {
             $canvas->setLineTransparency("Normal", $opacity);
             $canvas->currentLineTransparency = null;
 
             $canvas->setFillTransparency("Normal", $opacity);
             $canvas->currentFillTransparency = null;
-        }
-        else {
+        } else {
             $fillOpacity = $style->fillOpacity;
+
             if ($fillOpacity !== null && $fillOpacity < 1.0) {
                 $canvas->setFillTransparency("Normal", $fillOpacity);
                 $canvas->currentFillTransparency = null;
             }
 
             $strokeOpacity = $style->strokeOpacity;
+
             if ($strokeOpacity !== null && $strokeOpacity < 1.0) {
                 $canvas->setLineTransparency("Normal", $strokeOpacity);
                 $canvas->currentLineTransparency = null;
@@ -411,16 +363,16 @@ class SurfaceCpdf implements SurfaceInterface
         }
 
         $dashArray = null;
+
         if ($style->strokeDasharray) {
             $dashArray = preg_split('/\s*,\s*/', $style->strokeDasharray);
         }
 
+        $phase = 0;
 
-        $phase=0;
         if ($style->strokeDashoffset) {
            $phase = $style->strokeDashoffset;
         }
-
 
         $canvas->setLineStyle(
             $style->strokeWidth,
@@ -433,40 +385,38 @@ class SurfaceCpdf implements SurfaceInterface
         $this->setFont($style->fontFamily, $style->fontStyle, $style->fontWeight);
     }
 
-    public function setFont($family, $style, $weight)
-    {
-        $map = array(
+    public function setFont($family, $style, $weight) {
+        $map = [
             "serif"      => "Times",
             "sans-serif" => "Helvetica",
             "fantasy"    => "Symbol",
             "cursive"    => "Times",
             "monospace"  => "Courier",
-
             "arial"      => "Helvetica",
             "verdana"    => "Helvetica",
-        );
+        ];
 
-        $styleMap = array(
-            'Helvetica' => array(
+        $styleMap = [
+            'Helvetica' => [
                 'b'  => 'Helvetica-Bold',
                 'i'  => 'Helvetica-Oblique',
                 'bi' => 'Helvetica-BoldOblique',
-            ),
-            'Courier' => array(
+            ],
+            'Courier' => [
                 'b'  => 'Courier-Bold',
                 'i'  => 'Courier-Oblique',
                 'bi' => 'Courier-BoldOblique',
-            ),
-            'Times' => array(
+            ],
+            'Times' => [
                 ''   => 'Times-Roman',
                 'b'  => 'Times-Bold',
                 'i'  => 'Times-Italic',
                 'bi' => 'Times-BoldItalic',
-            ),
-        );
+            ],
+        ];
 
         $family = strtolower($family);
-        $style  = strtolower($style);
+        $style = strtolower($style);
         $weight = strtolower($weight);
 
         if (isset($map[$family])) {

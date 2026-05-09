@@ -10,10 +10,8 @@ namespace Svg\Tag;
 
 use Svg\Style;
 
-class Shape extends AbstractTag
-{
-    protected function before($attributes)
-    {
+class Shape extends AbstractTag {
+    protected function before($attributes) {
         $surface = $this->document->getSurface();
 
         $surface->save();
@@ -26,14 +24,13 @@ class Shape extends AbstractTag
         $this->applyTransform($attributes);
     }
 
-    protected function after()
-    {
+    protected function after() {
         $surface = $this->document->getSurface();
 
         if ($this->hasShape) {
             $style = $surface->getStyle();
 
-            $fill   = $style->fill   && is_array($style->fill);
+            $fill = $style->fill && is_array($style->fill);
             $stroke = $style->stroke && is_array($style->stroke);
 
             if ($fill) {
@@ -46,18 +43,15 @@ class Shape extends AbstractTag
 //
 //                        var_dump($gradient->getStops());
 //                    }
-
                     $surface->fill();
                 }
-            }
-            elseif ($stroke) {
+            } elseif ($stroke) {
                 $surface->stroke();
-            }
-            else {
+            } else {
                 $surface->endPath();
             }
         }
 
         $surface->restore();
     }
-} 
+}

@@ -10,18 +10,15 @@ namespace Svg\Tag;
 
 use Sabberworm\CSS;
 
-class StyleTag extends AbstractTag
-{
+class StyleTag extends AbstractTag {
     protected $text = "";
 
-    public function end()
-    {
+    public function end() {
         $parser = new CSS\Parser($this->text);
         $this->document->appendStyleSheet($parser->parse());
     }
 
-    public function appendText($text)
-    {
+    public function appendText($text) {
         $this->text .= $text;
     }
-} 
+}

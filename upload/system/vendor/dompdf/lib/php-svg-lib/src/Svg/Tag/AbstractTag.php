@@ -11,8 +11,7 @@ namespace Svg\Tag;
 use Svg\Document;
 use Svg\Style;
 
-abstract class AbstractTag
-{
+abstract class AbstractTag {
     /** @var Document */
     protected $document;
 
@@ -20,16 +19,12 @@ abstract class AbstractTag
 
     /** @var Style */
     protected $style;
-
-    protected $attributes = array();
-
+    protected $attributes = [];
     protected $hasShape = true;
-
     /** @var self[] */
-    protected $children = array();
+    protected $children = [];
 
-    public function __construct(Document $document, $tagName)
-    {
+    public function __construct(Document $document, $tagName) {
         $this->document = $document;
         $this->tagName = $tagName;
     }
@@ -43,6 +38,7 @@ abstract class AbstractTag
      */
     public function getParentGroup() {
         $stack = $this->getDocument()->getStack();
+
         for ($i = count($stack)-2; $i >= 0; $i--) {
             $tag = $stack[$i];
 
@@ -54,8 +50,7 @@ abstract class AbstractTag
         return null;
     }
 
-    public function handle($attributes)
-    {
+    public function handle($attributes) {
         $this->attributes = $attributes;
 
         if (!$this->getDocument()->inDefs) {
@@ -64,37 +59,34 @@ abstract class AbstractTag
         }
     }
 
-    public function handleEnd()
-    {
+    public function handleEnd() {
         if (!$this->getDocument()->inDefs) {
             $this->end();
             $this->after();
         }
     }
 
-    protected function before($attributes)
-    {
+    protected function before($attributes) {
+		//
     }
 
-    protected function start($attributes)
-    {
+    protected function start($attributes) {
+		//
     }
 
-    protected function end()
-    {
+    protected function end() {
+		//
     }
 
-    protected function after()
-    {
+    protected function after() {
+		//
     }
 
-    public function getAttributes()
-    {
+    public function getAttributes() {
         return $this->attributes;
     }
 
-    protected function setStyle(Style $style)
-    {
+    protected function setStyle(Style $style) {
         $this->style = $style;
 
         if ($style->display === "none") {
@@ -105,8 +97,7 @@ abstract class AbstractTag
     /**
      * @return Style
      */
-    public function getStyle()
-    {
+    public function getStyle() {
         return $this->style;
     }
 
@@ -126,15 +117,14 @@ abstract class AbstractTag
         return $style;
     }
 
-    protected function applyTransform($attributes)
-    {
-
+    protected function applyTransform($attributes) {
         if (isset($attributes["transform"])) {
             $surface = $this->document->getSurface();
 
             $transform = $attributes["transform"];
 
-            $match = array();
+            $match = [];
+
             preg_match_all(
                 '/(matrix|translate|scale|rotate|skewX|skewY)\((.*?)\)/is',
                 $transform,
@@ -142,7 +132,8 @@ abstract class AbstractTag
                 PREG_SET_ORDER
             );
 
-            $transformations = array();
+            $transformations = [];
+
             if (count($match[0])) {
                 foreach ($match as $_match) {
                     $arguments = preg_split('/[ ,]+/', $_match[2]);
@@ -187,4 +178,4 @@ abstract class AbstractTag
             }
         }
     }
-} 
+}

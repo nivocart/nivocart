@@ -8,16 +8,14 @@
 
 namespace Svg\Tag;
 
-class Image extends AbstractTag
-{
+class Image extends AbstractTag {
     protected $x = 0;
     protected $y = 0;
     protected $width = 0;
     protected $height = 0;
     protected $href = null;
 
-    protected function before($attributes)
-    {
+    protected function before($attributes) {
         parent::before($attributes);
 
         $surface = $this->document->getSurface();
@@ -26,8 +24,7 @@ class Image extends AbstractTag
         $this->applyTransform($attributes);
     }
 
-    public function start($attributes)
-    {
+    public function start($attributes) {
         $document = $this->document;
         $height = $this->document->getHeight();
         $this->y = $height;
@@ -35,6 +32,7 @@ class Image extends AbstractTag
         if (isset($attributes['x'])) {
             $this->x = $attributes['x'];
         }
+
         if (isset($attributes['y'])) {
             $this->y = $height - $attributes['y'];
         }
@@ -42,6 +40,7 @@ class Image extends AbstractTag
         if (isset($attributes['width'])) {
             $this->width = $attributes['width'];
         }
+
         if (isset($attributes['height'])) {
             $this->height = $attributes['height'];
         }
@@ -55,8 +54,7 @@ class Image extends AbstractTag
         $document->getSurface()->drawImage($this->href, $this->x, $this->y, $this->width, $this->height);
     }
 
-    protected function after()
-    {
+    protected function after() {
         $this->document->getSurface()->restore();
     }
-} 
+}

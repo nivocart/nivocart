@@ -8,14 +8,12 @@
 
 namespace Svg\Tag;
 
-class Text extends Shape
-{
+class Text extends Shape {
     protected $x = 0;
     protected $y = 0;
     protected $text = "";
 
-    public function start($attributes)
-    {
+    public function start($attributes) {
         $document = $this->document;
         $height = $this->document->getHeight();
         $this->y = $height;
@@ -23,6 +21,7 @@ class Text extends Shape
         if (isset($attributes['x'])) {
             $this->x = $attributes['x'];
         }
+
         if (isset($attributes['y'])) {
             $this->y = $height - $attributes['y'];
         }
@@ -30,8 +29,7 @@ class Text extends Shape
         $document->getSurface()->transform(1, 0, 0, -1, 0, $height);
     }
 
-    public function end()
-    {
+    public function end(){
         $surface = $this->document->getSurface();
         $x = $this->x;
         $y = $this->y;
@@ -53,18 +51,15 @@ class Text extends Shape
         $surface->fillText($this->getText(), $x, $y);
     }
 
-    protected function after()
-    {
+    protected function after() {
         $this->document->getSurface()->restore();
     }
 
-    public function appendText($text)
-    {
+    public function appendText($text) {
         $this->text .= $text;
     }
 
-    public function getText()
-    {
+    public function getText() {
         return trim($this->text);
     }
-} 
+}

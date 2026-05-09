@@ -10,10 +10,8 @@ namespace Svg\Tag;
 
 use Svg\Style;
 
-class ClipPath extends AbstractTag
-{
-    protected function before($attributes)
-    {
+class ClipPath extends AbstractTag {
+    protected function before($attributes) {
         $surface = $this->document->getSurface();
 
         $surface->save();
@@ -26,8 +24,7 @@ class ClipPath extends AbstractTag
         $this->applyTransform($attributes);
     }
 
-    protected function after()
-    {
+    protected function after() {
         $this->document->getSurface()->restore();
     }
-} 
+}

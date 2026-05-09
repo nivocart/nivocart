@@ -10,8 +10,7 @@ namespace Svg\Tag;
 
 use Svg\Surface\SurfaceInterface;
 
-class Path extends Shape
-{
+class Path extends Shape {
     // kindly borrowed from fabric.util.parsePath.
     /* @see https://github.com/fabricjs/fabric.js/blob/master/src/util/path.js#L664 */
     const NUMBER_PATTERN = '([-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?)\s*';
@@ -33,7 +32,7 @@ class Path extends Shape
         . self::NUMBER_PATTERN
         . '/';
 
-    static $commandLengths = array(
+    static $commandLengths = [
         'm' => 2,
         'l' => 2,
         'h' => 1,
@@ -43,19 +42,20 @@ class Path extends Shape
         'q' => 4,
         't' => 2,
         'a' => 7,
-    );
+    ];
 
-    static $repeatedCommands = array(
+    static $repeatedCommands = [
         'm' => 'l',
         'M' => 'L',
-    );
+    ];
 
-    public static function parse(string $commandSequence): array
-    {
-        $commands = array();
+    public static function parse(string $commandSequence): array {
+        $commands = [];
+
         preg_match_all('/([MZLHVCSQTAmzlhvcsqta])([eE ,\-.\d]+)*/', $commandSequence, $commands, PREG_SET_ORDER);
-        
-        $path = array();
+
+        $path = [];
+
         foreach ($commands as $c) {
             if (count($c) == 3) {
                 $commandLower = strtolower($c[1]);
@@ -63,6 +63,7 @@ class Path extends Shape
                 // arcs have special flags that apparently don't require spaces.
                 if ($commandLower === 'a' && preg_match_all(static::ARC_REGEXP, $c[2], $matches)) {
                     $numberOfMatches = count($matches[0]);
+
                     for ($k = 0; $k < $numberOfMatches; ++$k) {
                         $path[] = [
                             $c[1],
@@ -75,11 +76,14 @@ class Path extends Shape
                             $matches[7][$k],
                         ];
                     }
+
                     continue;
                 }
 
-                $arguments = array();
+                $arguments = [];
+
                 preg_match_all('/([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/i', $c[2], $arguments, PREG_PATTERN_ORDER);
+
                 $item = $arguments[0];
 
                 if (
@@ -103,7 +107,7 @@ class Path extends Shape
                 }
 
             } else {
-                $item = array($c[1]);
+                $item = [$c[1]];
 
                 $path[] = $item;
             }
@@ -112,11 +116,9 @@ class Path extends Shape
         return $path;
     }
 
-    public function start($attributes)
-    {
+    public function start($attributes) {
         if (!isset($attributes['d'])) {
             $this->hasShape = false;
-
             return;
         }
 
@@ -223,7 +225,6 @@ class Path extends Shape
                     break;
 
                 case 's': // shorthand cubic bezierCurveTo, relative
-
                     // transform to absolute x,y
                     $tempX = $x + $current[3];
                     $tempY = $y + $current[4];
@@ -290,7 +291,6 @@ class Path extends Shape
                     // the previous command relative to the current point."
                     $controlX = $current[1];
                     $controlY = $current[2];
-
                     break;
 
                 case 'q': // quadraticCurveTo, relative
@@ -431,12 +431,12 @@ class Path extends Shape
                     $surface->closePath();
                     break;
             }
+
             $previous = $current;
         }
     }
 
-    function drawArc(SurfaceInterface $surface, $fx, $fy, $coords)
-    {
+    function drawArc(SurfaceInterface $surface, $fx, $fy, $coords) {
         $rx = $coords[0];
         $ry = $coords[1];
         $rot = $coords[2];
@@ -444,12 +444,12 @@ class Path extends Shape
         $sweep = $coords[4];
         $tx = $coords[5];
         $ty = $coords[6];
-        $segs = array(
-            array(),
-            array(),
-            array(),
-            array(),
-        );
+        $segs = [
+            [],
+            [],
+            [],
+            [],
+        ];
 
         $segsNorm = $this->arcToSegments($tx - $fx, $ty - $fy, $rx, $ry, $large, $sweep, $rot);
 
@@ -465,8 +465,7 @@ class Path extends Shape
         }
     }
 
-    function arcToSegments($toX, $toY, $rx, $ry, $large, $sweep, $rotateX)
-    {
+    function arcToSegments($toX, $toY, $rx, $ry, $large, $sweep, $rotateX) {
         $th = $rotateX * M_PI / 180;
         $sinTh = sin($th);
         $cosTh = cos($th);
@@ -510,7 +509,7 @@ class Path extends Shape
 
         // $Convert $into $cubic $bezier $segments <= 90deg
         $segments = ceil(abs($dtheta / M_PI * 2));
-        $result = array();
+        $result = [];
         $mDelta = $dtheta / $segments;
         $mT = 8 / 3 * sin($mDelta / 4) * sin($mDelta / 4) / sin($mDelta / 2);
         $th3 = $mTheta + $mDelta;
@@ -538,8 +537,7 @@ class Path extends Shape
         return $result;
     }
 
-    function segmentToBezier($th2, $th3, $cosTh, $sinTh, $rx, $ry, $cx1, $cy1, $mT, $fromX, $fromY)
-    {
+    function segmentToBezier($th2, $th3, $cosTh, $sinTh, $rx, $ry, $cx1, $cy1, $mT, $fromX, $fromY) {
         $costh2 = cos($th2);
         $sinth2 = sin($th2);
         $costh3 = cos($th3);
@@ -551,20 +549,20 @@ class Path extends Shape
         $cp2X = $toX + $mT * ($cosTh * $rx * $sinth3 + $sinTh * $ry * $costh3);
         $cp2Y = $toY + $mT * ($sinTh * $rx * $sinth3 - $cosTh * $ry * $costh3);
 
-        return array(
+        return [
             $cp1X,
             $cp1Y,
             $cp2X,
             $cp2Y,
             $toX,
             $toY
-        );
+        ];
     }
 
-    function calcVectorAngle($ux, $uy, $vx, $vy)
-    {
+    function calcVectorAngle($ux, $uy, $vx, $vy) {
         $ta = atan2($uy, $ux);
         $tb = atan2($vy, $vx);
+
         if ($tb >= $ta) {
             return $tb - $ta;
         } else {

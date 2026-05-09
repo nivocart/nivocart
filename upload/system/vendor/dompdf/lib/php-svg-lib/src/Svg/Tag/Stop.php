@@ -8,10 +8,8 @@
 
 namespace Svg\Tag;
 
-class Stop extends AbstractTag
-{
-    public function start($attributes)
-    {
-
+class Stop extends AbstractTag {
+    public function start($attributes) {
+		//
     }
-} 
+}

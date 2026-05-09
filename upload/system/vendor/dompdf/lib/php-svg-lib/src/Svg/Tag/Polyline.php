@@ -8,18 +8,19 @@
 
 namespace Svg\Tag;
 
-class Polyline extends Shape
-{
-    public function start($attributes)
-    {
-        $tmp = array();
+class Polyline extends Shape {
+    public function start($attributes) {
+        $tmp = [];
+
         preg_match_all('/([\-]*[0-9\.]+)/', $attributes['points'], $tmp);
 
         $points = $tmp[0];
         $count = count($points);
 
         $surface = $this->document->getSurface();
+
         list($x, $y) = $points;
+
         $surface->moveTo($x, $y);
 
         for ($i = 2; $i < $count; $i += 2) {
@@ -28,4 +29,4 @@ class Polyline extends Shape
             $surface->lineTo($x, $y);
         }
     }
-} 
+}

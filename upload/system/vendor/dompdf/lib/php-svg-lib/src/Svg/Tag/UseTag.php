@@ -8,21 +8,19 @@
 
 namespace Svg\Tag;
 
-class UseTag extends AbstractTag
-{
+class UseTag extends AbstractTag {
     protected $x = 0;
     protected $y = 0;
     protected $width;
     protected $height;
-
     /** @var AbstractTag */
     protected $reference;
 
-    protected function before($attributes)
-    {
+    protected function before($attributes) {
         if (isset($attributes['x'])) {
             $this->x = $attributes['x'];
         }
+
         if (isset($attributes['y'])) {
             $this->y = $attributes['y'];
         }
@@ -30,6 +28,7 @@ class UseTag extends AbstractTag
         if (isset($attributes['width'])) {
             $this->width = $attributes['width'];
         }
+
         if (isset($attributes['height'])) {
             $this->height = $attributes['height'];
         }
@@ -61,8 +60,7 @@ class UseTag extends AbstractTag
         $this->getDocument()->getSurface()->restore();
     }
 
-    public function handle($attributes)
-    {
+    public function handle($attributes) {
         parent::handle($attributes);
 
         if (!$this->reference) {
@@ -79,8 +77,7 @@ class UseTag extends AbstractTag
         }
     }
 
-    public function handleEnd()
-    {
+    public function handleEnd() {
         parent::handleEnd();
 
         if (!$this->reference) {
@@ -93,4 +90,4 @@ class UseTag extends AbstractTag
             $_child->handleEnd();
         }
     }
-} 
+}
