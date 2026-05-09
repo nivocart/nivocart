@@ -379,7 +379,26 @@ function dirPermissions(): void {
 		DIR_SYSTEM . 'logs/'
 	];
 
-	exec('chmod o+w -R ' . implode(' ', $dirs));
+	$mode = 0o0777; // equivalent to "o+w" (world-writable). Consider a stricter mode if possible.
+
+	foreach ($dirs as $dir) {
+		$dir = rtrim($dir, "/\\");
+
+		if (!is_dir($dir)) {
+			continue;
+		}
+
+		@chmod($dir, $mode);
+
+		$it = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::SELF_FIRST
+		);
+
+		foreach ($it as $path) {
+			@chmod($path->getPathname(), $mode);
+		}
+	}
 }
 
 $argv = $_SERVER['argv'];
