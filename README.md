@@ -1,5 +1,6 @@
 # NivoCart
 
+ [![Maintainability](https://qlty.sh/gh/nivocart/projects/nivocart/maintainability.svg)](https://qlty.sh/gh/nivocart/projects/nivocart)
  [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/nivocart/nivocart/issues)
  [![BuyMeACoffee](https://raw.githubusercontent.com/pachadotdev/buymeacoffee-badges/main/bmc-donate-yellow.svg)](https://www.buymeacoffee.com/nivocart)
 
