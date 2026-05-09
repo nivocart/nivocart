@@ -46,6 +46,7 @@ class ControllerToolExportImport extends Controller {
 		$this->getForm();
 	}
 
+	// Defines the 8 available Export types
 	protected function returnBytes($val) {
 		$val = trim($val);
 
