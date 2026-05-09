@@ -1111,7 +1111,7 @@ class ModelToolBarcode extends Model {
 		// Note: Not converted to match () due to complexity
 		// -------------------------------------------------
 		switch (strtoupper($type)) {
-			case 'A': { // MODE A
+			case 'A': // MODE A
 				$startid = 103;
 
 				for ($i = 0; $i < $len; ++$i) {
@@ -1127,8 +1127,8 @@ class ModelToolBarcode extends Model {
 					}
 				}
 				break;
-			}
-			case 'B': { // MODE B
+
+			case 'B': // MODE B
 				$startid = 104;
 
 				for ($i = 0; $i < $len; ++$i) {
@@ -1144,8 +1144,8 @@ class ModelToolBarcode extends Model {
 					}
 				}
 				break;
-			}
-			case 'C': { // MODE C
+
+			case 'C': // MODE C
 				$startid = 105;
 
 				if (ord($code[0]) === 241) {
@@ -1162,22 +1162,22 @@ class ModelToolBarcode extends Model {
 				for ($i = 0; $i < $len; $i += 2) {
 					$chrnum = $code[$i] . $code[$i + 1];
 
-					if (preg_match ('/([0-9]{2})/', $chrnum) > 0) {
+					if (preg_match ('/(\d{2})/', $chrnum) > 0) {
 						$code_data[] = intval($chrnum);
 					} else {
 						return false;
 					}
 				}
 				break;
-			}
-			default: { // MODE AUTO
+
+			default: // MODE AUTO
 				// Split code into sequences
 				$sequence = [];
 
 				// Get numeric sequences (if any)
 				$numseq = [];
 
-				preg_match_all('/([0-9]{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
+				preg_match_all('/(\d{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
 
 				if (isset($numseq[1]) && !empty($numseq[1])) {
 					$end_offset = 0;
@@ -1215,7 +1215,7 @@ class ModelToolBarcode extends Model {
 				// Process the sequence
 				foreach ($sequence as $key => $seq) {
 					switch ($seq[0]) {
-						case 'A': {
+						case 'A':
 							if ($key === 0) {
 								$startid = 103;
 							} elseif ($sequence[($key - 1)][0] != 'A') {
@@ -1240,8 +1240,8 @@ class ModelToolBarcode extends Model {
 								}
 							}
 							break;
-						}
-						case 'B': {
+
+						case 'B':
 							if ($key === 0) {
 								$tmpchr = ord($seq[1][0]);
 
@@ -1287,8 +1287,8 @@ class ModelToolBarcode extends Model {
 								}
 							}
 							break;
-						}
-						case 'C': {
+
+						case 'C':
 							if ($key === 0) {
 								$startid = 105;
 							} elseif ($sequence[($key - 1)][0] != 'C') {
@@ -1300,10 +1300,8 @@ class ModelToolBarcode extends Model {
 								$code_data[] = intval($chrnum);
 							}
 							break;
-						}
 					}
 				}
-			}
 		}
 
 		// Calculate check character
