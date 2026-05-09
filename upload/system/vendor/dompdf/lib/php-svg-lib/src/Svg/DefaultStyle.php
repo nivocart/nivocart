@@ -8,8 +8,7 @@
 
 namespace Svg;
 
-class DefaultStyle extends Style
-{
+class DefaultStyle extends Style {
     public $color = '';
     public $opacity = 1.0;
     public $display = 'inline';

@@ -10,8 +10,7 @@ namespace Svg;
 
 use Svg\Tag\AbstractTag;
 
-class Style
-{
+class Style {
     const TYPE_COLOR = 1;
     const TYPE_LENGTH = 2;
     const TYPE_NAME = 3;
@@ -41,32 +40,31 @@ class Style
     public $fontStyle = 'normal';
     public $textAnchor = 'start';
 
-    protected function getStyleMap()
-    {
-        return array(
-            'color'             => array('color', self::TYPE_COLOR),
-            'opacity'           => array('opacity', self::TYPE_NUMBER),
-            'display'           => array('display', self::TYPE_NAME),
+    protected function getStyleMap() {
+        return [
+            'color'             => ['color', self::TYPE_COLOR],
+            'opacity'           => ['opacity', self::TYPE_NUMBER],
+            'display'           => ['display', self::TYPE_NAME],
 
-            'fill'              => array('fill', self::TYPE_COLOR),
-            'fill-opacity'      => array('fillOpacity', self::TYPE_NUMBER),
-            'fill-rule'         => array('fillRule', self::TYPE_NAME),
+            'fill'              => ['fill', self::TYPE_COLOR],
+            'fill-opacity'      => ['fillOpacity', self::TYPE_NUMBER],
+            'fill-rule'         => ['fillRule', self::TYPE_NAME],
 
-            'stroke'            => array('stroke', self::TYPE_COLOR),
-            'stroke-dasharray'  => array('strokeDasharray', self::TYPE_NAME),
-            'stroke-dashoffset' => array('strokeDashoffset', self::TYPE_NUMBER),
-            'stroke-linecap'    => array('strokeLinecap', self::TYPE_NAME),
-            'stroke-linejoin'   => array('strokeLinejoin', self::TYPE_NAME),
-            'stroke-miterlimit' => array('strokeMiterlimit', self::TYPE_NUMBER),
-            'stroke-opacity'    => array('strokeOpacity', self::TYPE_NUMBER),
-            'stroke-width'      => array('strokeWidth', self::TYPE_NUMBER),
+            'stroke'            => ['stroke', self::TYPE_COLOR],
+            'stroke-dasharray'  => ['strokeDasharray', self::TYPE_NAME],
+            'stroke-dashoffset' => ['strokeDashoffset', self::TYPE_NUMBER],
+            'stroke-linecap'    => ['strokeLinecap', self::TYPE_NAME],
+            'stroke-linejoin'   => ['strokeLinejoin', self::TYPE_NAME],
+            'stroke-miterlimit' => ['strokeMiterlimit', self::TYPE_NUMBER],
+            'stroke-opacity'    => ['strokeOpacity', self::TYPE_NUMBER],
+            'stroke-width'      => ['strokeWidth', self::TYPE_NUMBER],
 
-            'font-family'       => array('fontFamily', self::TYPE_NAME),
-            'font-size'         => array('fontSize', self::TYPE_NUMBER),
-            'font-weight'       => array('fontWeight', self::TYPE_NAME),
-            'font-style'        => array('fontStyle', self::TYPE_NAME),
-            'text-anchor'       => array('textAnchor', self::TYPE_NAME),
-        );
+            'font-family'       => ['fontFamily', self::TYPE_NAME],
+            'font-size'         => ['fontSize', self::TYPE_NUMBER],
+            'font-weight'       => ['fontWeight', self::TYPE_NAME],
+            'font-style'        => ['fontStyle', self::TYPE_NAME],
+            'text-anchor'       => ['textAnchor', self::TYPE_NAME]
+        ];
     }
 
     /**
@@ -74,8 +72,7 @@ class Style
      *
      * @return Style
      */
-    public function fromAttributes($attributes)
-    {
+    public function fromAttributes($attributes) {
         $this->fillStyles($attributes);
 
         if (isset($attributes["style"])) {
@@ -86,6 +83,7 @@ class Style
 
     public function inherit(AbstractTag $tag) {
         $group = $tag->getParentGroup();
+
         if ($group) {
             $parent_style = $group->getStyle();
 
@@ -102,13 +100,11 @@ class Style
 
         $stylesheets = $tag->getDocument()->getStyleSheets();
 
-        $styles = array();
+        $styles = [];
 
         foreach ($stylesheets as $_sc) {
-
             /** @var \Sabberworm\CSS\RuleSet\DeclarationBlock $_decl */
             foreach ($_sc->getAllDeclarationBlocks() as $_decl) {
-
                 /** @var \Sabberworm\CSS\Property\Selector $_selector */
                 foreach ($_decl->getSelectors() as $_selector) {
                     $_selector = $_selector->getSelector();
@@ -143,12 +139,12 @@ class Style
         $this->fillStyles($styles);
     }
 
-    protected function fillStyles($styles)
-    {
+    protected function fillStyles($styles) {
         foreach ($this->getStyleMap() as $from => $spec) {
             if (isset($styles[$from])) {
                 list($to, $type) = $spec;
                 $value = null;
+
                 switch ($type) {
                     case self::TYPE_COLOR:
                         $value = self::parseColor($styles[$from]);
@@ -169,16 +165,14 @@ class Style
         }
     }
 
-    static function parseColor($color)
-    {
+    static function parseColor($color) {
         $color = strtolower(trim($color));
 
         $parts = preg_split('/[^,]\s+/', $color, 2);
 
         if (count($parts) == 2) {
             $color = $parts[1];
-        }
-        else {
+        } else {
             $color = $parts[0];
         }
 
@@ -215,6 +209,7 @@ class Style
             $g = $l;
             $b = $l;
             $v = ($l <= 0.5) ? ($l * (1.0 + $s)) : ($l + $s - $l * $s);
+
             if ($v > 0) {
                 $m = $l + $l - $v;
                 $sv = ($v - $m) / $v;
@@ -259,11 +254,11 @@ class Style
                 }
             }
 
-            return array(
+            return [
                 $r * 255.0,
                 $g * 255.0,
                 $b * 255.0,
-            );
+            ];
         }
 
         // Gradient
@@ -303,12 +298,10 @@ class Style
             if ($percent) {
                 if ($triplet[$c][strlen($triplet[$c]) - 1] === "%") {
                     $triplet[$c] = floatval($triplet[$c]) / 100;
-                }
-                else {
+                } else {
                     $triplet[$c] = $triplet[$c] / 255;
                 }
-            }
-            else {
+            } else {
                 if ($triplet[$c][strlen($triplet[$c]) - 1] === "%") {
                     $triplet[$c] = round(floatval($triplet[$c]) * 2.55);
                 }
@@ -318,9 +311,8 @@ class Style
         return $triplet;
     }
 
-    static function parseHexColor($hex)
-    {
-        $c = array(0, 0, 0);
+    static function parseHexColor($hex) {
+        $c = [0, 0, 0];
 
         // #FFFFFF
         if (isset($hex[6])) {
@@ -343,12 +335,13 @@ class Style
      *
      * @return array
      */
-    static function parseCssStyle($style)
-    {
-        $matches = array();
+    static function parseCssStyle($style) {
+        $matches = [];
+
         preg_match_all("/([a-z-]+)\\s*:\\s*([^;$]+)/si", $style, $matches, PREG_SET_ORDER);
 
-        $styles = array();
+        $styles = [];
+
         foreach ($matches as $match) {
             $styles[$match[1]] = $match[2];
         }
@@ -397,7 +390,7 @@ class Style
         return null;
     }
 
-    static $colorNames = array(
+    static $colorNames = [
         'antiquewhite'         => '#FAEBD7',
         'aqua'                 => '#00FFFF',
         'aquamarine'           => '#7FFFD4',
@@ -545,6 +538,6 @@ class Style
         'violet'               => '#ee82ee',
         'wheat'                => '#f5deb3',
         'whitesmoke'           => '#f5f5f5',
-        'yellowgreen'          => '#9acd32',
-    );
+        'yellowgreen'          => '#9acd32'
+    ];
 }
