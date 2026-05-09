@@ -183,17 +183,65 @@ class ControllerFraudFraudLabsPro extends Controller {
 
 		// Action of the Approve/Reject button click
 		if (isset($_POST['flp_id'])) {
-			$flp_status = $_POST['new_flp_status'];
+			$flp_status = $_POST['new_flp_status'] ?? '';
 
 			$this->data['flp_status'] = $flp_status;
 
-			// Feedback FLP status to server
-			$fraudlabspro_key = $this->config->get('fraudlabspro_key');
+			$fraudlabspro_key = (string)$this->config->get('fraudlabspro_key');
+
+			/**
+			 * Allowlist / validation
+			 * (Adjust allowed actions to exactly what your integration supports.)
+			 */
+			$allowedStatuses = ['APPROVE', 'REJECT', 'REVIEW'];
+
+			$flp_status = strtoupper(trim($flp_status));
+
+			if (!in_array($flp_status, $allowedStatuses, true)) {
+				throw new \InvalidArgumentException('Invalid FLP status.');
+			}
+
+			$flp_id = $_POST['flp_id'] ?? '';
+
+			if (!is_string($flp_id) || !preg_match('/^\d{1,20}$/', $flp_id)) {
+				throw new \InvalidArgumentException('Invalid FLP id.');
+			}
+
+			/**
+			 * Constant, allowlisted destination (prevents SSRF)
+			 */
+			$baseUrl = 'https://api.fraudlabspro.com/v1/order/feedback';
+			$allowedHost = 'api.fraudlabspro.com';
+
+			$query = http_build_query([
+				'key'    => $fraudlabspro_key,
+				'format' => 'json',
+				'id'     => $flp_id,
+				'action' => $flp_status,
+			], '', '&', PHP_QUERY_RFC3986);
+
+			$url = $baseUrl . '?' . $query;
+
+			// Optional defensive check (should always pass since baseUrl is constant)
+			$parts = parse_url($url);
+
+			if (($parts['scheme'] ?? '') !== 'https' || ($parts['host'] ?? '') !== $allowedHost) {
+				throw new \RuntimeException('Blocked unexpected destination.');
+			}
+
+			$context = stream_context_create([
+				'http' => [
+					'method'  => 'GET',
+					'timeout' => 5,
+					'header'  => "Accept: application/json\r\n",
+				],
+			]);
+
+			$result = false;
 
 			for ($i = 0; $i < 3; $i++) {
-				$result = @file_get_contents('https://api.fraudlabspro.com/v1/order/feedback?key=' . $fraudlabspro_key . '&format=json&id=' . $_POST['flp_id'] . '&action=' . $flp_status);
-
-				if ($result) {
+				$result = file_get_contents($url, false, $context);
+				if ($result !== false && $result !== '') {
 					break;
 				}
 			}
@@ -400,7 +448,7 @@ class ControllerFraudFraudLabsPro extends Controller {
 	private function fixCase(string $s): string {
 		$s = ucwords(strtolower($s));
 		$s = preg_replace_callback("/( [ a-zA-Z]{1}')([a-zA-Z0-9]{1})/s", function ($matches) {
-			return $matches[1].strtoupper($matches[2]);
+			return $matches[1] . strtoupper($matches[2]);
 		}, $s);
 		return $s;
 	}
