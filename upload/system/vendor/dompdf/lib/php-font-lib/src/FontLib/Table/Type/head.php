@@ -40,7 +40,7 @@ class head extends Table {
 	protected function _parse() {
 		parent::_parse();
 
-		if ($this->data["magicNumber"] != 0x5F0F3CF5) {
+		if ($this->data["magicNumber"] !== 0x5F0F3CF5) {
 			throw new Exception("Incorrect magic number (" . dechex($this->data["magicNumber"]) . ")");
 		}
 	}
