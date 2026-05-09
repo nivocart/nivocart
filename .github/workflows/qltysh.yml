@@ -1,4 +1,10 @@
+- name: Run PHPUnit with coverage (clover)
+  run: |
+    mkdir -p coverage
+    ./upload/system/vendor/bin/phpunit --coverage-clover=coverage/clover.xml
+
 - uses: qltysh/qlty-action/coverage@v2
   with:
     token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
     files: coverage/clover.xml
+    
