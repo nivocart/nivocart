@@ -181,6 +181,9 @@ class ControllerFraudFraudLabsPro extends Controller {
 
 		$this->load->model('fraud/fraudlabspro');
 
+		// Get current Order Id
+		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
+
 		// Action of the Approve/Reject button click
 		if (isset($_POST['flp_id'])) {
 			$flp_status = $_POST['new_flp_status'] ?? '';
@@ -246,7 +249,7 @@ class ControllerFraudFraudLabsPro extends Controller {
 				}
 			}
 
-			$this->db->query("UPDATE `" . DB_PREFIX . "fraudlabspro` SET fraudlabspro_status = '" . $this->db->escape($flp_status) . "' WHERE order_id = " . $this->db->escape($this->request->get['order_id']));
+			$this->model_fraud_fraudlabspro->updateFeedback($order_id, $flp_status);
 
 			// Update history record
 			if (strtolower($flp_status) === 'approve') {
@@ -256,7 +259,7 @@ class ControllerFraudFraudLabsPro extends Controller {
 					'comment'         => $this->language->get('text_comment_approve')
 				];
 
-				$this->model_fraud_fraudlabspro->addOrderHistory($this->request->get['order_id'], $data_temp);
+				$this->model_fraud_fraudlabspro->addOrderHistory($order_id, $data_temp);
 
 			} elseif (strtolower($flp_status) === 'reject') {
 				$data_temp = [
@@ -268,9 +271,6 @@ class ControllerFraudFraudLabsPro extends Controller {
 				$this->model_fraud_fraudlabspro->addOrderHistory($this->request->get['order_id'], $data_temp);
 			}
 		}
-
-		// Get current Order Id
-		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
 
 		$fraud_info = $this->model_fraud_fraudlabspro->getOrder($order_id);
 

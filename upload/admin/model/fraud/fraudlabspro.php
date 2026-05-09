@@ -93,6 +93,10 @@ class ModelFraudFraudLabsPro extends Model {
 		return $query->row;
 	}
 
+	public function updateFeedback(int $order_id, $flp_status): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "fraudlabspro` SET fraudlabspro_status = '" . $this->db->escape($flp_status) . "' WHERE order_id = " . $this->db->escape((int)$order_id));
+	}
+
 	public function addOrderHistory(int $order_id, $store_id = 0, array $data = []) {
 		$json = [];
 
