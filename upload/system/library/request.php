@@ -52,7 +52,7 @@ class Request {
 				$data[$this->clean($key)] = $this->clean($value);
 			}
 		} else {
-			$data = htmlspecialchars($data, ENT_COMPAT, 'UTF-8');
+			$data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 		}
 
 		return $data;
@@ -63,10 +63,10 @@ class Request {
 	 *
 	 * @return bool
 	 */
-	public function isSecure() {
-		if ((isset($this->server['HTTPS']) && (($this->server['HTTPS'] === 'on') || ($this->server['HTTPS'] === '1'))) || ($this->server['SERVER_PORT'] === '443')) {
-			return true;
-		} elseif (!empty($this->server['HTTP_X_FORWARDED_PROTO']) && $this->server['HTTP_X_FORWARDED_PROTO'] === 'https' || !empty($this->server['HTTP_X_FORWARDED_SSL']) && $this->server['HTTP_X_FORWARDED_SSL'] === 'on') {
+	public function isSecure(): bool {
+		if ((isset($this->server['HTTPS']) && in_array($this->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->server['SERVER_PORT']) && $this->server['SERVER_PORT'] === '443') ||
+			(isset($this->server['HTTP_X_FORWARDED_PROTO']) && $this->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			return true;
 		} else {
 			return false;
