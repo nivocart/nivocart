@@ -95,7 +95,7 @@ class ControllerToolExportImport extends Controller {
 					if (isset($this->request->post['max']) && ($this->request->post['max'] !== '')) {
 						$max = $this->request->post['max'];
 					}
-					if (($min == null) || ($max == null)) {
+					if (($min === null) || ($max === null)) {
 						$this->model_tool_export_import->download($export_type, null, null, null, null);
 					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
@@ -129,7 +129,7 @@ class ControllerToolExportImport extends Controller {
 					if (isset($this->request->post['max']) && ($this->request->post['max'] !== '')) {
 						$max = $this->request->post['max'];
 					}
-					if (($min == null) || ($max == null)) {
+					if (($min === null) || ($max === null)) {
 						$this->model_tool_export_import->download($export_type, null, null, null, null);
 					} elseif ($this->request->post['range_type'] === 'id') {
 						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
@@ -386,7 +386,7 @@ class ControllerToolExportImport extends Controller {
 			$this->data['incremental'] = '1';
 		}
 
-		// Hide Settings if Permission Modify not allowed.
+		// Hide Settings if Permission Modify not allowed
 		if ($this->user->hasPermission('modify', 'tool/export_import')) {
 			$this->data['show_settings'] = true;
 		} else {
