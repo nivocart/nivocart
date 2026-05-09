@@ -131,7 +131,7 @@ function valid(array $options = []): array {
 
 	$valid = count($missing) === 0;
 
-	return array($valid, $missing);
+	return [$valid, $missing];
 }
 
 function install(array $options = []): void {
@@ -236,7 +236,7 @@ function checkRequirements(): array {
 		$error = 'Warning: Image data directory needs to be writable for NivoCart to work!';
 	}
 
-	return array($error === null, $error);
+	return [$error === null, $error];
 }
 
 function setupDb($data): void {

@@ -143,7 +143,7 @@ if (isset($session->data['language']) && array_key_exists($session->data['langua
 	if (isset($request->server['HTTP_ACCEPT_LANGUAGE']) && $request->server['HTTP_ACCEPT_LANGUAGE']) {
 		$browser_accept = explode(',', $request->server['HTTP_ACCEPT_LANGUAGE']);
 
-		$browser_languages = preg_replace(array('/;.*/', '/\s/'), '', $browser_accept);
+		$browser_languages = preg_replace(['/;.*/', '/\s/'], '', $browser_accept);
 
 		foreach ($browser_languages as $browser_language) {
 			foreach ($languages as $key => $value) {

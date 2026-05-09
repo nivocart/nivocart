@@ -66,7 +66,7 @@ class ModelToolBarcode extends Model {
 	 * @return array barcode array
 	 */
 	protected function getBarcodeData(string $code, string $type): array {
-		$arrcode = match(strtoupper($type)) {
+		$arrcode = match (strtoupper($type)) {
 			'TYPE_CODE_39'                  => $this->barcodeCode39($code, false, false), // CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9
 			'TYPE_CODE_39_CHECKSUM'         => $this->barcodeCode39($code, false, true),  // CODE 39 with checksum
 			'TYPE_CODE_39E'                 => $this->barcodeCode39($code, true, false),  // CODE 39 EXTENDED
@@ -1108,7 +1108,7 @@ class ModelToolBarcode extends Model {
 		$len = strlen($code);
 
 		// -------------------------------------------------
-		// Note: Not converted to match() due to complexity
+		// Note: Not converted to match () due to complexity
 		// -------------------------------------------------
 		switch (strtoupper($type)) {
 			case 'A': { // MODE A
@@ -1162,7 +1162,7 @@ class ModelToolBarcode extends Model {
 				for ($i = 0; $i < $len; $i += 2) {
 					$chrnum = $code[$i] . $code[$i + 1];
 
-					if (preg_match('/([0-9]{2})/', $chrnum) > 0) {
+					if (preg_match ('/([0-9]{2})/', $chrnum) > 0) {
 						$code_data[] = intval($chrnum);
 					} else {
 						return false;
@@ -1945,7 +1945,7 @@ class ModelToolBarcode extends Model {
 
 		for ($i = 0; $i < $len; ++$i) {
 			for ($j = 0; $j < 4; ++$j) {
-				[$h, $p] = match($barmode[$code[$i]][$j]) {
+				[$h, $p] = match ($barmode[$code[$i]][$j]) {
 					1 => [2, 0],
 					2 => [3, 0],
 					3 => [1, 1],
@@ -2189,7 +2189,7 @@ class ModelToolBarcode extends Model {
 		$code = intval($code);
 
 		do {
-			[$seq, $code] = match($code % 3) {
+			[$seq, $code] = match ($code % 3) {
 				0 => [$seq . '3', ($code - 3) / 3],
 				1 => [$seq . '1', ($code - 1) / 3],
 				2 => [$seq . '2', ($code - 2) / 3]
@@ -2204,7 +2204,7 @@ class ModelToolBarcode extends Model {
 		$len = strlen($seq);
 
 		for ($i = 0; $i < $len; ++$i) {
-			[$h, $p] = match($seq[$i]) {
+			[$h, $p] = match ($seq[$i]) {
 				'1' => [1, 1],
 				'2' => [1, 0],
 				'3' => [2, 0]
@@ -2526,7 +2526,7 @@ class ModelToolBarcode extends Model {
 		$routing_code = $code_arr[1] ?? '';
 
 		// Conversion of Routing Code
-		$binary_code = match(strlen($routing_code)) {
+		$binary_code = match (strlen($routing_code)) {
 			0       => 0,
 			5       => bcadd($routing_code, '1'),
 			9       => bcadd($routing_code, '100001'),
@@ -2654,7 +2654,7 @@ class ModelToolBarcode extends Model {
 	 * @return array barcode representation.
 	 */
 	protected function barcodeImbPre(string $code): array {
-		if (!preg_match('/^[fadtFADT]{65}$/', $code) === 1) {
+		if (!preg_match ('/^[fadtFADT]{65}$/', $code) === 1) {
 			return false;
 		}
 
@@ -2665,7 +2665,7 @@ class ModelToolBarcode extends Model {
 		$bararray = ['code' => $code, 'maxw' => 0, 'maxh' => 3, 'bcode' => []];
 
 		for ($i = 0; $i < 65; ++$i) {
-			[$h, $p] = match($characters[$i]) {
+			[$h, $p] = match ($characters[$i]) {
 				'f' => [3, 0], // full bar
 				'a' => [2, 0], // ascender
 				'd' => [2, 1], // descender

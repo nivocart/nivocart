@@ -665,7 +665,7 @@ class ModelSaleCustomer extends Model {
 		return $query->rows;
 	}
 
-	public function getTotalRewards(int $customer_id): Int {
+	public function getTotalRewards(int $customer_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer_reward` WHERE customer_id = '" . (int)$customer_id . "'");
 
 		return $query->row['total'];
