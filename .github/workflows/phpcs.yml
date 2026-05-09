@@ -19,4 +19,4 @@ jobs:
         run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Run PHPCS (uses phpcs.xml)
-        run: ./vendor/bin/phpcs --standard=phpcs.xml
+        run: ./upload/system/vendor/bin/phpcs --standard=phpcs.xml
