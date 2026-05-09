@@ -5,12 +5,12 @@
  * @package NivoCart
  */
 class ControllerModuleBanner extends Controller {
-	private $_name = 'banner';
+	private $name = 'banner';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -18,20 +18,20 @@ class ControllerModuleBanner extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/flexslider/jquery.flexslider-min.js');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
 		}
 
-		$animation = $this->config->get($this->_name . '_transition');
+		$animation = $this->config->get($this->name . '_transition');
 
-		$this->data['animation'] = ($animation == 'fade') ? 'fade' : 'slide';
-		$this->data['direction'] = ($animation == 'horizontal') ? 'horizontal' : 'vertical';
+		$this->data['animation'] = ($animation === 'fade') ? 'fade' : 'slide';
+		$this->data['direction'] = ($animation === 'horizontal') ? 'horizontal' : 'vertical';
 
-		$this->data['duration'] = ($this->config->get($this->_name . '_duration')) ? $this->config->get($this->_name . '_duration') : 5000;
-		$this->data['speed'] = ($this->config->get($this->_name . '_speed')) ? $this->config->get($this->_name . '_speed') : 500;
+		$this->data['duration'] = ($this->config->get($this->name . '_duration')) ? $this->config->get($this->name . '_duration') : 5000;
+		$this->data['speed'] = ($this->config->get($this->name . '_speed')) ? $this->config->get($this->name . '_speed') : 500;
 
 		$this->load->model('design/banner');
 		$this->load->model('tool/image');
@@ -62,7 +62,7 @@ class ControllerModuleBanner extends Controller {
 		}
 
 		// Shuffle
-		$random = $this->config->get($this->_name . '_random');
+		$random = $this->config->get($this->name . '_random');
 
 		if ($random) {
 			shuffle($this->data['banners']);
@@ -73,10 +73,10 @@ class ControllerModuleBanner extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

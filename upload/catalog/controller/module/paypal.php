@@ -5,10 +5,10 @@
  * @package NivoCart
  */
 class ControllerModulePaypal extends Controller {
-	private $_name = 'paypal';
+	private $name = 'paypal';
 
 	protected function index($setting) {
-		$force_display = $this->config->get($this->_name . '_force_display');
+		$force_display = $this->config->get($this->name . '_force_display');
 
 		$status = true;
 
@@ -18,7 +18,9 @@ class ControllerModulePaypal extends Controller {
 
 		$cart_status = true;
 
-		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout')) || (!$this->customer->isLogged() && ($this->cart->hasRecurringProducts() || $this->cart->hasDownload()))) {
+		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) ||
+			(!$this->cart->hasStock() && !$this->config->get('config_stock_checkout')) ||
+			(!$this->customer->isLogged() && ($this->cart->hasRecurringProducts() || $this->cart->hasDownload()))) {
 			$cart_status = false;
 		}
 
@@ -49,10 +51,10 @@ class ControllerModulePaypal extends Controller {
 				$this->data['pp_ready'] = 'border:2px solid #DE5954; -webkit-border-radius:7px; -moz-border-radius:7px; -khtml-border-radius:7px; border-radius:7px;';
 			}
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+				$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 			} else {
-				$this->template = 'default/template/module/' . $this->_name . '.tpl';
+				$this->template = 'default/template/module/' . $this->name . '.tpl';
 			}
 
 			$this->render();

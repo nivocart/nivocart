@@ -1218,7 +1218,7 @@ class ModelToolBarcode extends Model {
 						case 'A':
 							if ($key === 0) {
 								$startid = 103;
-							} elseif ($sequence[($key - 1)][0] != 'A') {
+							} elseif ($sequence[($key - 1)][0] !== 'A') {
 								if (($seq[2] === 1) && ($key > 0) && ($sequence[($key - 1)][0] === 'B') && (!isset($sequence[($key - 1)][3]))) {
 									// Single character shift
 									$code_data[] = 98;
@@ -1245,27 +1245,22 @@ class ModelToolBarcode extends Model {
 							if ($key === 0) {
 								$tmpchr = ord($seq[1][0]);
 
-								if (($seq[2] === 1) && ($tmpchr >= 241) && ($tmpchr <= 244) && isset($sequence[($key + 1)]) && ($sequence[($key + 1)][0] != 'B')) {
-									switch ($sequence[($key + 1)][0]) {
-										case 'A': {
-											$startid = 103;
-											$sequence[$key][0] = 'A';
-											$code_data[] = $fnc_a[$tmpchr];
-											break;
-										}
-										case 'C': {
-											$startid = 105;
-											$sequence[$key][0] = 'C';
-											$code_data[] = $fnc_a[$tmpchr];
-											break;
-										}
+								if (($seq[2] === 1) && ($tmpchr >= 241) && ($tmpchr <= 244) && isset($sequence[($key + 1)]) && ($sequence[($key + 1)][0] !== 'B')) {
+									if ($sequence[($key + 1)][0] === 'A') {
+										$startid = 103;
+										$sequence[$key][0] = 'A';
+										$code_data[] = $fnc_a[$tmpchr];
+									} elseif ($sequence[($key + 1)][0] === 'C') {
+										$startid = 105;
+										$sequence[$key][0] = 'C';
+										$code_data[] = $fnc_a[$tmpchr];
 									}
 									break;
 								} else {
 									$startid = 104;
 								}
 
-							} elseif ($sequence[($key - 1)][0] != 'B') {
+							} elseif ($sequence[($key - 1)][0] !== 'B') {
 								if (($seq[2] === 1) && ($key > 0) && ($sequence[($key - 1)][0] === 'A') && (!isset($sequence[($key - 1)][3]))) {
 									// Single character shift
 									$code_data[] = 98;
@@ -1291,7 +1286,7 @@ class ModelToolBarcode extends Model {
 						case 'C':
 							if ($key === 0) {
 								$startid = 105;
-							} elseif ($sequence[($key - 1)][0] != 'C') {
+							} elseif ($sequence[($key - 1)][0] !== 'C') {
 								$code_data[] = 99;
 							}
 

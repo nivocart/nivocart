@@ -5,21 +5,21 @@
  * @package NivoCart
  */
 class ControllerModuleBlog extends Controller {
-	private $_name = 'blog';
+	private $name = 'blog';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/blog-system.css');
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
 
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
@@ -48,7 +48,7 @@ class ControllerModuleBlog extends Controller {
 
 			$total_comments = $this->model_blog_article->getTotalComments($result['blog_article_id']);
 
-			if ($total_comments != 1) {
+			if ($total_comments !== 1) {
 				$total_comments .= $this->language->get('text_comments');
 			} else {
 				$total_comments .= $this->language->get('text_comment');
@@ -57,7 +57,7 @@ class ControllerModuleBlog extends Controller {
 			$this->data['articles'][] = [
 				'blog_article_id' => $result['blog_article_id'],
 				'article_title'   => $result['article_title'],
-				'author_name'     => $result['author_name'],
+				'authorname'      => $result['authorname'],
 				'image'           => $image,
 				'featured_found'  => '',
 				'description'     => $description,

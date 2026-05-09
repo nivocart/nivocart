@@ -5,24 +5,24 @@
  * @package NivoCart
  */
 class ControllerModuleAffiliate extends Controller {
-	private $_name = 'affiliate';
+	private $name = 'affiliate';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
 		}
 
-		$this->data['mode'] = $this->config->get($this->_name . '_mode');
+		$this->data['mode'] = $this->config->get($this->name . '_mode');
 
 		$this->data['text_register'] = $this->language->get('text_register');
 		$this->data['text_login'] = $this->language->get('text_login');
@@ -43,22 +43,22 @@ class ControllerModuleAffiliate extends Controller {
 		$this->data['entry_password'] = $this->language->get('entry_password');
 
 		$this->data['logged'] = $this->affiliate->isLogged();
-		$this->data['register'] = $this->url->link($this->_name . '/register', '', 'SSL');
-		$this->data['login'] = $this->url->link($this->_name . '/login', '', 'SSL');
-		$this->data['logout'] = $this->url->link($this->_name . '/logout', '', 'SSL');
-		$this->data['forgotten'] = $this->url->link($this->_name . '/forgotten', '', 'SSL');
-		$this->data['account'] = $this->url->link($this->_name . '/account', '', 'SSL');
-		$this->data['edit'] = $this->url->link($this->_name . '/edit', '', 'SSL');
-		$this->data['password'] = $this->url->link($this->_name . '/password', '', 'SSL');
-		$this->data['payment'] = $this->url->link($this->_name . '/payment', '', 'SSL');
-		$this->data['product'] = $this->url->link($this->_name . '/product', '', 'SSL');
-		$this->data['tracking'] = $this->url->link($this->_name . '/tracking', '', 'SSL');
-		$this->data['transaction'] = $this->url->link($this->_name . '/transaction', '', 'SSL');
+		$this->data['register'] = $this->url->link($this->name . '/register', '', 'SSL');
+		$this->data['login'] = $this->url->link($this->name . '/login', '', 'SSL');
+		$this->data['logout'] = $this->url->link($this->name . '/logout', '', 'SSL');
+		$this->data['forgotten'] = $this->url->link($this->name . '/forgotten', '', 'SSL');
+		$this->data['account'] = $this->url->link($this->name . '/account', '', 'SSL');
+		$this->data['edit'] = $this->url->link($this->name . '/edit', '', 'SSL');
+		$this->data['password'] = $this->url->link($this->name . '/password', '', 'SSL');
+		$this->data['payment'] = $this->url->link($this->name . '/payment', '', 'SSL');
+		$this->data['product'] = $this->url->link($this->name . '/product', '', 'SSL');
+		$this->data['tracking'] = $this->url->link($this->name . '/tracking', '', 'SSL');
+		$this->data['transaction'] = $this->url->link($this->name . '/transaction', '', 'SSL');
 
 		$this->data['button_login'] = $this->language->get('button_login');
 		$this->data['button_logout'] = $this->language->get('button_logout');
 
-		$this->data['action'] = $this->url->link($this->_name . '/login', '', 'SSL');
+		$this->data['action'] = $this->url->link($this->name . '/login', '', 'SSL');
 		$this->data['logout'] = $this->url->link('affiliate/logout', '', 'SSL');
 
 		$this->data['module'] = $module++;
@@ -66,11 +66,11 @@ class ControllerModuleAffiliate extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (!$this->affiliate->isLogged() || ($this->affiliate->isLogged() && $this->config->get($this->_name . '_mode') > 0)) {
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (!$this->affiliate->isLogged() || ($this->affiliate->isLogged() && $this->config->get($this->name . '_mode') > 0)) {
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+				$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 			} else {
-				$this->template = 'default/template/module/' . $this->_name . '.tpl';
+				$this->template = 'default/template/module/' . $this->name . '.tpl';
 			}
 
 			$this->render();

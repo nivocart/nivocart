@@ -5,18 +5,18 @@
  * @package NivoCart
  */
 class ControllerModuleViewed extends Controller {
-	private $_name = 'viewed';
+	private $name = 'viewed';
 
 	public function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
@@ -33,15 +33,15 @@ class ControllerModuleViewed extends Controller {
 		$this->data['button_compare'] = $this->language->get('button_compare');
 		$this->data['button_wishlist'] = $this->language->get('button_wishlist');
 
-		$this->data['viewproduct'] = $this->config->get($this->_name . '_viewproduct');
-		$this->data['addproduct'] = $this->config->get($this->_name . '_addproduct');
+		$this->data['viewproduct'] = $this->config->get($this->name . '_viewproduct');
+		$this->data['addproduct'] = $this->config->get($this->name . '_addproduct');
 
 		$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 		$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
 
 		$display_style = $setting['style'] ? $setting['style'] : 'box';
 
-		$this->data['boxed'] = ($display_style == 'box') ? true : false;
+		$this->data['boxed'] = ($display_style === 'box') ? true : false;
 
 		$this->load->model('catalog/product');
 		$this->load->model('catalog/offer');
@@ -81,22 +81,22 @@ class ControllerModuleViewed extends Controller {
 			if ($product_info) {
 				if ($product_info['image']) {
 					$image = $this->model_tool_image->resize($product_info['image'], $setting['image_width'], $setting['image_height']);
-					$label_ratio = round((($setting['image_width'] * $this->config->get('config_label_size_ratio')) / 100), 0);
+					$label_ratio = round((($setting['image_width'] * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$image = false;
 					$label_ratio = 50;
 				}
 
 				if ($product_info['label']) {
-					$label = $this->model_tool_image->resize($product_info['label'], round(($setting['image_width'] / 3), 0), round(($setting['image_height'] / 3), 0));
-					$label_style = round(($setting['image_width'] / 3), 0);
+					$label = $this->model_tool_image->resize($product_info['label'], round(($setting['image_width'] / 3), 0, PHP_ROUND_HALF_UP), round(($setting['image_height'] / 3), 0, PHP_ROUND_HALF_UP));
+					$label_style = round(($setting['image_width'] / 3), 0, PHP_ROUND_HALF_UP);
 				} else {
 					$label = '';
 					$label_style = '';
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($product_info['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($product_info['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -126,7 +126,7 @@ class ControllerModuleViewed extends Controller {
 				}
 
 				// Quote redirect
-				$quote = ($product_info['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
+				$quote = $product_info['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
 				$this->data['products'][] = [
 					'product_id'      => $product_info['product_id'],
@@ -140,7 +140,7 @@ class ControllerModuleViewed extends Controller {
 					'name'            => $product_info['name'],
 					'stock_status'    => $product_info['stock_status'],
 					'stock_quantity'  => $product_info['quantity'],
-					'stock_remaining' => ($product_info['subtract']) ? sprintf($this->language->get('text_remaining'), $product_info['quantity']) : '',
+					'stock_remaining' => $product_info['subtract'] ? sprintf($this->language->get('text_remaining'), $product_info['quantity']) : '',
 					'quote'           => $quote,
 					'price'           => $price,
 					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($product_info['product_id']),
@@ -159,10 +159,10 @@ class ControllerModuleViewed extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

@@ -5,12 +5,12 @@
  * @package NivoCart
  */
 class ControllerModuleCarousel extends Controller {
-	private $_name = 'carousel';
+	private $name = 'carousel';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -20,20 +20,20 @@ class ControllerModuleCarousel extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/jquery.easing.min.js');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
 		}
 
-		$this->data['duration'] = ($this->config->get($this->_name . '_duration')) ? $this->config->get($this->_name . '_duration') : 3000;
-		$this->data['speed'] = ($this->config->get($this->_name . '_speed')) ? $this->config->get($this->_name . '_speed') : 300;
+		$this->data['duration'] = ($this->config->get($this->name . '_duration')) ? $this->config->get($this->name . '_duration') : 3000;
+		$this->data['speed'] = ($this->config->get($this->name . '_speed')) ? $this->config->get($this->name . '_speed') : 300;
 
 		$this->data['track_style'] = 'margin:0 30px 20px 30px;';
 
 		// Responsive
-		$show_max = round($setting['show'], 0);
+		$show_max = round($setting['show'], 0, PHP_ROUND_HALF_UP);
 
 		$show_1440 = ($show_max > 6) ? ($show_max - 1) : $show_max;
 		$show_1280 = ($show_1440 > 5) ? ($show_max - 1) : $show_1440;
@@ -81,7 +81,7 @@ class ControllerModuleCarousel extends Controller {
 		}
 
 		// Shuffle
-		$random = $this->config->get($this->_name . '_random');
+		$random = $this->config->get($this->name . '_random');
 
 		if ($random) {
 			shuffle($this->data['banners']);
@@ -92,10 +92,10 @@ class ControllerModuleCarousel extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

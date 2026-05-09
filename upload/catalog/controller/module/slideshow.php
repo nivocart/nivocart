@@ -5,12 +5,12 @@
  * @package NivoCart
  */
 class ControllerModuleSlideshow extends Controller {
-	private $_name = 'slideshow';
+	private $name = 'slideshow';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -18,23 +18,23 @@ class ControllerModuleSlideshow extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/flexslider/jquery.flexslider-min.js');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
 		}
 
-		$animation = $this->config->get($this->_name . '_transition');
+		$animation = $this->config->get($this->name . '_transition');
 
-		$this->data['animation'] = ($animation == 'fade') ? 'fade' : 'slide';
-		$this->data['direction'] = ($animation == 'horizontal') ? 'horizontal' : 'vertical';
+		$this->data['animation'] = $animation === 'fade' ? 'fade' : 'slide';
+		$this->data['direction'] = $animation === 'horizontal' ? 'horizontal' : 'vertical';
 
-		$this->data['duration'] = ($this->config->get($this->_name . '_duration')) ? $this->config->get($this->_name . '_duration') : 5000;
-		$this->data['speed'] = ($this->config->get($this->_name . '_speed')) ? $this->config->get($this->_name . '_speed') : 500;
+		$this->data['duration'] = $this->config->get($this->name . '_duration') ? $this->config->get($this->name . '_duration') : 5000;
+		$this->data['speed'] = $this->config->get($this->name . '_speed') ? $this->config->get($this->name . '_speed') : 500;
 
-		$this->data['dots'] = ($this->config->get($this->_name . '_dots')) ? 'true' : 'false';
-		$this->data['arrows'] = ($this->config->get($this->_name . '_arrows')) ? 'true' : 'false';
+		$this->data['dots'] = $this->config->get($this->name . '_dots') ? 'true' : 'false';
+		$this->data['arrows'] = $this->config->get($this->name . '_arrows') ? 'true' : 'false';
 
 		$this->load->model('design/banner');
 		$this->load->model('tool/image');
@@ -67,7 +67,7 @@ class ControllerModuleSlideshow extends Controller {
 		}
 
 		// Shuffle
-		$random = $this->config->get($this->_name . '_random');
+		$random = $this->config->get($this->name . '_random');
 
 		if ($random) {
 			shuffle($this->data['banners']);

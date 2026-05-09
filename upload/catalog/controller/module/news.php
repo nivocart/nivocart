@@ -5,25 +5,25 @@
  * @package NivoCart
  */
 class ControllerModuleNews extends Controller {
-	private $_name = 'news';
+	private $name = 'news';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
 
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
 		}
 
-		$this->data['show_button'] = $this->config->get($this->_name . '_headline');
+		$this->data['show_button'] = $this->config->get($this->name . '_headline');
 
 		$this->data['text_more'] = $this->language->get('text_more');
 
@@ -36,7 +36,7 @@ class ControllerModuleNews extends Controller {
 
 		$numchars = $setting['numchars'];
 
-		$chars = (isset($numchars)) ? $numchars : 100;
+		$chars = isset($numchars) ? $numchars : 100;
 
 		$this->data['news'] = [];
 
@@ -71,10 +71,10 @@ class ControllerModuleNews extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

@@ -5,18 +5,18 @@
  * @package NivoCart
  */
 class ControllerModulePopular extends Controller {
-	private $_name = 'popular';
+	private $name = 'popular';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
@@ -33,15 +33,15 @@ class ControllerModulePopular extends Controller {
 		$this->data['button_compare'] = $this->language->get('button_compare');
 		$this->data['button_wishlist'] = $this->language->get('button_wishlist');
 
-		$this->data['viewproduct'] = $this->config->get($this->_name . '_viewproduct');
-		$this->data['addproduct'] = $this->config->get($this->_name . '_addproduct');
+		$this->data['viewproduct'] = $this->config->get($this->name . '_viewproduct');
+		$this->data['addproduct'] = $this->config->get($this->name . '_addproduct');
 
 		$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 		$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
 
 		$display_style = $setting['style'] ? $setting['style'] : 'box';
 
-		$this->data['boxed'] = ($display_style == 'box') ? true : false;
+		$this->data['boxed'] = ($display_style === 'box') ? true : false;
 
 		$this->load->model('catalog/product');
 		$this->load->model('catalog/offer');
@@ -56,22 +56,22 @@ class ControllerModulePopular extends Controller {
 		foreach ($results as $result) {
 			if ($result['image']) {
 				$image = $this->model_tool_image->resize($result['image'], $setting['image_width'], $setting['image_height']);
-				$label_ratio = round((($setting['image_width'] * $this->config->get('config_label_size_ratio')) / 100), 0);
+				$label_ratio = round((($setting['image_width'] * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 			} else {
 				$image = false;
 				$label_ratio = 50;
 			}
 
 			if ($result['label']) {
-				$label = $this->model_tool_image->resize($result['label'], round(($setting['image_width'] / 3), 0), round(($setting['image_height'] / 3), 0));
-				$label_style = round(($setting['image_width'] / 3), 0);
+				$label = $this->model_tool_image->resize($result['label'], round(($setting['image_width'] / 3), 0, PHP_ROUND_HALF_UP), round(($setting['image_height'] / 3), 0, PHP_ROUND_HALF_UP));
+				$label_style = round(($setting['image_width'] / 3), 0, PHP_ROUND_HALF_UP);
 			} else {
 				$label = '';
 				$label_style = '';
 			}
 
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
+				if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 					$price = $this->language->get('text_free');
 				} else {
 					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -101,7 +101,7 @@ class ControllerModulePopular extends Controller {
 			}
 
 			// Quote redirect
-			$quote = ($result['quote']) ? $this->url->link('information/quote', '', 'SSL') : false;
+			$quote = $result['quote'] ? $this->url->link('information/quote', '', 'SSL') : false;
 
 			$this->data['products'][] = [
 				'product_id'      => $result['product_id'],
@@ -115,7 +115,7 @@ class ControllerModulePopular extends Controller {
 				'name'            => $result['name'],
 				'stock_status'    => $result['stock_status'],
 				'stock_quantity'  => $result['quantity'],
-				'stock_remaining' => ($result['subtract']) ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
+				'stock_remaining' => $result['subtract'] ? sprintf($this->language->get('text_remaining'), $result['quantity']) : '',
 				'quote'           => $quote,
 				'price'           => $price,
 				'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($result['product_id']),
@@ -133,10 +133,10 @@ class ControllerModulePopular extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

@@ -5,32 +5,32 @@
  * @package NivoCart
  */
 class ControllerModuleMenuHorizontal extends Controller {
-	private $_name = 'menu_horizontal';
+	private $name = 'menu_horizontal';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$template = $this->config->get('config_template');
 
 		// Style Options
-		$menu_theme = $this->config->get($this->_name . '_theme');
+		$menu_theme = $this->config->get($this->name . '_theme');
 
-		$header_color = $this->config->get($this->_name . '_header_color');
-		$header_shape = $this->config->get($this->_name . '_header_shape');
+		$header_color = $this->config->get($this->name . '_header_color');
+		$header_shape = $this->config->get($this->name . '_header_shape');
 
-		$mod_color = ($header_color) ? $header_color . '-skin' : 'white-skin';
-		$mod_shape = ($header_shape) ? $header_shape : 'rounded-0';
+		$mod_color = $header_color ? $header_color . '-skin' : 'white-skin';
+		$mod_shape = $header_shape ? $header_shape : 'rounded-0';
 
 		$menu_direction = $setting['direction'] ? 'ltr' : 'rtl';
 
-		if ($menu_theme == 'custom') {
+		if ($menu_theme === 'custom') {
 			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-' . $menu_direction . '.css');
 
-			if ($mod_color == 'white-skin' || $mod_color == 'beige-skin' || $mod_color == 'ash-skin' || $mod_color == 'silver-skin' || $mod_color == 'citrus-skin' || $mod_color == 'yellow-skin' || $mod_color == 'mist-skin' || $mod_color == 'clear-skin') {
+			if ($mod_color === 'white-skin' || $mod_color === 'beige-skin' || $mod_color === 'ash-skin' || $mod_color === 'silver-skin' || $mod_color === 'citrus-skin' || $mod_color === 'yellow-skin' || $mod_color === 'mist-skin' || $mod_color === 'clear-skin') {
 				$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-dark.css');
 				$menu_theme = 'light';
 			} else {
@@ -53,13 +53,13 @@ class ControllerModuleMenuHorizontal extends Controller {
 		$this->data['menu_theme'] = $menu_theme;
 		$this->data['menu_direction'] = $menu_direction;
 
-		$this->data['column_limit'] = $this->config->get($this->_name . '_column_limit') ? $this->config->get($this->_name . '_column_limit') : 10;
-		$this->data['column_number'] = $this->config->get($this->_name . '_column_number') ? $this->config->get($this->_name . '_column_number') : 4;
+		$this->data['column_limit'] = $this->config->get($this->name . '_column_limit') ? $this->config->get($this->name . '_column_limit') : 10;
+		$this->data['column_number'] = $this->config->get($this->name . '_column_number') ? $this->config->get($this->name . '_column_number') : 4;
 
-		// Check connection type
-		if ((isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) || ($this->request->server['HTTPS'] == '443')) {
-			$connection = 'SSL';
-		} elseif (isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] == 'https') {
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 			$connection = 'SSL';
 		} else {
 			$connection = 'NONSSL';
@@ -128,10 +128,10 @@ class ControllerModuleMenuHorizontal extends Controller {
 		// Template
 		$this->data['template'] = $template;
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

@@ -5,14 +5,14 @@
  * @package NivoCart
  */
 class ControllerModuleWelcome extends Controller {
-	private $_name = 'welcome';
+	private $name = 'welcome';
 
 	protected function index($setting) {
 		static $module = 0;
 
 		$this->language->load('module/welcome');
 
-		$this->data['heading_title'] = sprintf($this->language->get('heading_title'), $this->config->get('config_name'));
+		$this->data['heading_title'] = sprintf($this->language->get('heading_title'), $this->config->get('configname'));
 
 		// Module
 		$this->data['theme'] = $setting['theme'];
@@ -30,10 +30,10 @@ class ControllerModuleWelcome extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

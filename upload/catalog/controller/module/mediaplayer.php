@@ -5,12 +5,12 @@
  * @package NivoCart
  */
 class ControllerModuleMediaPlayer extends Controller {
-	private $_name = 'mediaplayer';
+	private $name = 'mediaplayer';
 
 	protected function index($setting) {
 		static $module = 0;
 
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -20,8 +20,8 @@ class ControllerModuleMediaPlayer extends Controller {
 		$this->document->addScript('catalog/view/javascript/jquery/plyr/dist/plyr.min.js');
 
 		// Module
-		$this->data['theme'] = $this->config->get($this->_name . '_theme');
-		$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+		$this->data['theme'] = $this->config->get($this->name . '_theme');
+		$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 		if (!$this->data['title']) {
 			$this->data['title'] = $this->data['heading_title'];
@@ -46,12 +46,12 @@ class ControllerModuleMediaPlayer extends Controller {
 			$this->data['media_id'] = false;
 		}
 
-		$this->data['width'] = ($setting['image_width']) ? $setting['image_width'] : 480;
-		$this->data['height'] = ($setting['image_height']) ? $setting['image_height'] : 320;
+		$this->data['width'] = $setting['image_width'] ? $setting['image_width'] : 480;
+		$this->data['height'] = $setting['image_height'] ? $setting['image_height'] : 320;
 
 		$this->data['icons'] = HTTPS_SERVER . 'catalog/view/javascript/jquery/plyr/dist/plyr.svg';
 
-		$poster = html_entity_decode($this->config->get($this->_name . '_image'), ENT_QUOTES, 'UTF-8');
+		$poster = html_entity_decode($this->config->get($this->name . '_image'), ENT_QUOTES, 'UTF-8');
 
 		if ($poster) {
 			$this->data['poster'] = $this->model_tool_image->resize($poster, $this->data['width'], $this->data['height']);
@@ -64,10 +64,10 @@ class ControllerModuleMediaPlayer extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 		} else {
-			$this->template = 'default/template/module/' . $this->_name . '.tpl';
+			$this->template = 'default/template/module/' . $this->name . '.tpl';
 		}
 
 		$this->render();

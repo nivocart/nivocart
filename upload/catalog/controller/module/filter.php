@@ -5,7 +5,7 @@
  * @package NivoCart
  */
 class ControllerModuleFilter extends Controller {
-	private $_name = 'filter';
+	private $name = 'filter';
 
 	protected function index($setting) {
 		if (isset($this->request->get['path']) && !is_array($this->request->get['path'])) {
@@ -21,13 +21,13 @@ class ControllerModuleFilter extends Controller {
 		$category_info = $this->model_catalog_category->getCategory($category_id);
 
 		if ($category_info) {
-			$this->language->load('module/' . $this->_name);
+			$this->language->load('module/' . $this->name);
 
 			$this->data['heading_title'] = $this->language->get('heading_title');
 
 			// Module
-			$this->data['theme'] = $this->config->get($this->_name . '_theme');
-			$this->data['title'] = $this->config->get($this->_name . '_title' . $this->config->get('config_language_id'));
+			$this->data['theme'] = $this->config->get($this->name . '_theme');
+			$this->data['title'] = $this->config->get($this->name . '_title' . $this->config->get('config_language_id'));
 
 			if (!$this->data['title']) {
 				$this->data['title'] = $this->data['heading_title'];
@@ -70,7 +70,7 @@ class ControllerModuleFilter extends Controller {
 
 						$filter_data[] = [
 							'filter_id' => $filter['filter_id'],
-							'name'      => $filter['name'] . ($this->config->get('config_product_count')) ? ' (' . $this->model_catalog_product->getTotalProducts($data) . ')' : ''
+							'name'      => $filter['name'] . $this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($data) . ')' : ''
 						];
 					}
 
@@ -84,10 +84,10 @@ class ControllerModuleFilter extends Controller {
 				// Template
 				$this->data['template'] = $this->config->get('config_template');
 
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/module/' . $this->_name . '.tpl';
+				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
+					$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
 				} else {
-					$this->template = 'default/template/module/' . $this->_name . '.tpl';
+					$this->template = 'default/template/module/' . $this->name . '.tpl';
 				}
 
 				$this->render();
