@@ -24,10 +24,11 @@ $_['entry_export']      = 'Export a CSV file:<span class="help">Select a databas
 $_['button_import']     = 'Import';
 $_['button_export']     = 'Export';
 $_['button_refresh']    = 'Refresh';
+$_['button_info']       = 'Information';
 
 // Help
 $_['help_function']     = 'The Export / Import (CSV) Tool allows you to mass edit an individual database table by exporting it into a spreadsheet, using the standard CSV format.';
-$_['help_caution']      = '<b>Important!</b> Editing tables this way is quick and easy, but keep in mind that some columns values are common to more than one table in your database.<br />All changes must be consistent, otherwise the integrity of your database will be compromised, and in NO circumstances you should edit the ID numbers in tables!';
+$_['help_caution']      = '<b>Important!</b> Editing tables this way is simple, but keep in mind that some columns values are common to more than one table in your database.<br />All changes must be consistent, otherwise the integrity of your database will be compromised, and in NO circumstances you should edit the ID numbers in tables!';
 
 // Error
 $_['error_permission']  = 'Warning: You do not have permission to modify <b>Export / Import (CSV)</b>!';

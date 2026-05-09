@@ -20,7 +20,9 @@
       </div>
     </div>
     <div class="content-body">
-      <div class="tooltip" style="margin:5px 0 15px 0;"><?php echo $help_function; ?></div>
+      <div class="toggler" style="padding:0 0 10px 0;">
+        <fieldset><p><?php echo $help_function; ?></p></fieldset>
+      </div>
       <form action="<?php echo $csv_import; ?>" method="post" enctype="multipart/form-data" id="import-csv">
         <h2><?php echo $heading_import; ?></h2>
         <table class="tool">
@@ -81,6 +83,16 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$('.toggler').hide().before('<a id="<?php echo 'toggler'; ?>" class="button ripple" style="margin:10px auto;"><i class="fa fa-info-circle"></i> &nbsp; <?php echo $button_info; ?></a>');
+	$('#<?php echo 'toggler'; ?>').click(function() {
+		$('.toggler').slideToggle(600);
+		return false;
+	});
+});
+//--></script>
 
 <script type="text/javascript" src="view/javascript/jquery/sfi/js/jquery.simplefileinput.min.js"></script>
 

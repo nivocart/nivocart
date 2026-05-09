@@ -60,6 +60,7 @@ class ControllerToolExportImportCsv extends Controller {
 		$this->data['button_export'] = $this->language->get('button_export');
 		$this->data['button_refresh'] = $this->language->get('button_refresh');
 		$this->data['button_close'] = $this->language->get('button_close');
+		$this->data['button_info'] = $this->language->get('button_info');
 
 		$this->data['token'] = $this->session->data['token'];
 
