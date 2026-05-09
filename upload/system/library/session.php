@@ -51,11 +51,17 @@ class Session {
 	 */
 	public function start(string $key = 'default', string $value = ''): string {
 		if ($value) {
-			$this->session_id = $value;
+			$session_id = $value;
 		} elseif (isset($_COOKIE[$key])) {
-			$this->session_id = $_COOKIE[$key];
+			$session_id = $_COOKIE[$key];
 		} else {
-			$this->session_id = $this->createId();
+			$session_id = $this->createId();
+		}
+
+		if (preg_match('/^[a-zA-Z0-9,\-]{22,52}$/', $session_id)) {
+			$this->session_id = $session_id;
+		} else {
+			throw new \Exception('Error: Invalid session ID!');
 		}
 
 		if (!isset($_SESSION[$this->session_id])) {
