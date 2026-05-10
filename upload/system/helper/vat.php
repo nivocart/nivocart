@@ -2,7 +2,7 @@
 /**
  * Helper VAT
  */
-function vat_validation($prefix, $number) {
+function Vat_validation($prefix, $number): string {
 	$iso_code_2_data = [
 		'AT' => 'AT', //Austria
 		'BE' => 'BE', //Belgium
@@ -32,7 +32,7 @@ function vat_validation($prefix, $number) {
 		'PL' => 'PL', //Poland
 		'RO' => 'RO', //Romania
 		'SK' => 'SK', //Slovakia
-		'CZ' => 'CZ', //Czech Republic
+		'CZ' => 'CZ', //Czechia
 		'SI' => 'SI'  //Slovenia
 	];
 
