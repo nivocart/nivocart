@@ -2456,7 +2456,6 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			$objWriter->save('php://output');
 
 			$this->clearSpreadsheetCache();
-			exit();
 
 		} catch (Exception $e) {
 			$this->session->data['export_import_error'] = [
