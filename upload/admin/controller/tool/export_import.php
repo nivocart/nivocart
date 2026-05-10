@@ -12,7 +12,9 @@ class ControllerToolExportImport extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('tool/export_import');
+		$this->load->model('tool/export_import_base');
+		$this->load->model('tool/export_import_exp');
+		$this->load->model('tool/export_import_imp');
 
 		$this->getForm();
 	}
@@ -24,7 +26,8 @@ class ControllerToolExportImport extends Controller {
 
 		$this->document->addStyle('view/javascript/jquery/sfi/css/jquery.simplefileinput.min.css');
 
-		$this->load->model('tool/export_import');
+		$this->load->model('tool/export_import_base');
+		$this->load->model('tool/export_import_imp');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateUploadForm()) {
 			if ((isset($this->request->files['upload'])) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
@@ -80,7 +83,8 @@ class ControllerToolExportImport extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('tool/export_import');
+		$this->load->model('tool/export_import_base');
+		$this->load->model('tool/export_import_exp');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateDownloadForm()) {
 			$export_type = $this->request->post['export_type'];
@@ -96,11 +100,11 @@ class ControllerToolExportImport extends Controller {
 						$max = $this->request->post['max'];
 					}
 					if (($min === null) || ($max === null)) {
-						$this->model_tool_export_import->download($export_type, null, null, null, null);
+						$this->model_tool_export_import_exp->download($export_type, null, null, null, null);
 					} elseif ($this->request->post['range_type'] === 'id') {
-						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
+						$this->model_tool_export_import_exp->download($export_type, null, null, $min, $max);
 					} else {
-						$this->model_tool_export_import->download($export_type, $min * ($max - 1 - 1), $min, null, null);
+						$this->model_tool_export_import_exp->download($export_type, $min * ($max - 1 - 1), $min, null, null);
 					}
 					break;
 				case 'c':
@@ -113,11 +117,11 @@ class ControllerToolExportImport extends Controller {
 						$max = $this->request->post['max'];
 					}
 					if (($min == null) || ($max == null)) {
-						$this->model_tool_export_import->download($export_type, null, null, null, null);
+						$this->model_tool_export_import_exp->download($export_type, null, null, null, null);
 					} elseif ($this->request->post['range_type'] === 'id') {
-						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
+						$this->model_tool_export_import_exp->download($export_type, null, null, $min, $max);
 					} else {
-						$this->model_tool_export_import->download($export_type, $min * ($max - 1 - 1), $min, null, null);
+						$this->model_tool_export_import_exp->download($export_type, $min * ($max - 1 - 1), $min, null, null);
 					}
 					break;
 				case 'p':
@@ -130,33 +134,33 @@ class ControllerToolExportImport extends Controller {
 						$max = $this->request->post['max'];
 					}
 					if (($min === null) || ($max === null)) {
-						$this->model_tool_export_import->download($export_type, null, null, null, null);
+						$this->model_tool_export_import_exp->download($export_type, null, null, null, null);
 					} elseif ($this->request->post['range_type'] === 'id') {
-						$this->model_tool_export_import->download($export_type, null, null, $min, $max);
+						$this->model_tool_export_import_exp->download($export_type, null, null, $min, $max);
 					} else {
-						$this->model_tool_export_import->download($export_type, $min * ($max - 1 - 1), $min, null, null);
+						$this->model_tool_export_import_exp->download($export_type, $min * ($max - 1 - 1), $min, null, null);
 					}
 					break;
 				case 'o':
-					$this->model_tool_export_import->download('o', null, null, null, null);
+					$this->model_tool_export_import_exp->download('o', null, null, null, null);
 					break;
 				case 'a':
-					$this->model_tool_export_import->download('a', null, null, null, null);
+					$this->model_tool_export_import_exp->download('a', null, null, null, null);
 					break;
 				case 'f':
-					if ($this->model_tool_export_import->existFilter()) {
-						$this->model_tool_export_import->download('f', null, null, null, null);
+					if ($this->model_tool_export_import_base->existFilter()) {
+						$this->model_tool_export_import_exp->download('f', null, null, null, null);
 						break;
 					}
 					break;
 				case 'e':
-					if ($this->model_tool_export_import->existField()) {
-						$this->model_tool_export_import->download('e', null, null, null, null);
+					if ($this->model_tool_export_import_base->existField()) {
+						$this->model_tool_export_import_exp->download('e', null, null, null, null);
 						break;
 					}
 					break;
 				case 't':
-					$this->model_tool_export_import->download('t', null, null, null, null);
+					$this->model_tool_export_import_exp->download('t', null, null, null, null);
 					break;
 				default:
 					break;
@@ -173,7 +177,7 @@ class ControllerToolExportImport extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('tool/export_import');
+		$this->load->model('tool/export_import_base');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateSettingsForm()) {
 			if (!isset($this->request->post['export_import_settings_use_export_cache'])) {
@@ -201,10 +205,12 @@ class ControllerToolExportImport extends Controller {
 
 		$this->document->addStyle('view/javascript/jquery/sfi/css/jquery.simplefileinput.min.css');
 
-		$this->load->model('tool/export_import');
+		$this->load->model('tool/export_import_base');
+		$this->load->model('tool/export_import_exp');
+		$this->load->model('tool/export_import_imp');
 
-		$this->data['exist_filter'] = $this->model_tool_export_import->existFilter();
-		$this->data['exist_field'] = $this->model_tool_export_import->existField();
+		$this->data['exist_filter'] = $this->model_tool_export_import_base->existFilter();
+		$this->data['exist_field'] = $this->model_tool_export_import_base->existField();
 
 		$this->data['text_export_type_customer'] = $this->language->get('text_export_type_customer');
 		$this->data['text_export_type_category'] = ($this->data['exist_filter']) ? $this->language->get('text_export_type_category') : $this->language->get('text_export_type_category_old');
@@ -480,15 +486,15 @@ class ControllerToolExportImport extends Controller {
 			$this->data['settings_use_import_cache'] = '0';
 		}
 
-		$min_customer_id = $this->model_tool_export_import->getMinCustomerId();
-		$max_customer_id = $this->model_tool_export_import->getMaxCustomerId();
-		$count_customer = $this->model_tool_export_import->getCountCustomer();
-		$min_category_id = $this->model_tool_export_import->getMinCategoryId();
-		$max_category_id = $this->model_tool_export_import->getMaxCategoryId();
-		$count_category = $this->model_tool_export_import->getCountCategory();
-		$min_product_id = $this->model_tool_export_import->getMinProductId();
-		$max_product_id = $this->model_tool_export_import->getMaxProductId();
-		$count_product = $this->model_tool_export_import->getCountProduct();
+		$min_customer_id = $this->model_tool_export_import_base->getMinCustomerId();
+		$max_customer_id = $this->model_tool_export_import_base->getMaxCustomerId();
+		$count_customer = $this->model_tool_export_import_base->getCountCustomer();
+		$min_category_id = $this->model_tool_export_import_base->getMinCategoryId();
+		$max_category_id = $this->model_tool_export_import_base->getMaxCategoryId();
+		$count_category = $this->model_tool_export_import_base->getCountCategory();
+		$min_product_id = $this->model_tool_export_import_base->getMinProductId();
+		$max_product_id = $this->model_tool_export_import_base->getMaxProductId();
+		$count_product = $this->model_tool_export_import_base->getCountProduct();
 
 		$this->data['min_customer_id'] = $min_customer_id;
 		$this->data['max_customer_id'] = $max_customer_id;
@@ -512,7 +518,7 @@ class ControllerToolExportImport extends Controller {
 	protected function validateDownloadForm() {
 		if ($this->user->hasPermission('modify', 'tool/export_import')) {
 			if (!$this->config->get('export_import_settings_use_option_id')) {
-				$option_names = $this->model_tool_export_import->getOptionNameCounts();
+				$option_names = $this->model_tool_export_import_base->getOptionNameCounts();
 
 				foreach ($option_names as $option_name) {
 					if ($option_name['count'] > 1) {
@@ -522,7 +528,7 @@ class ControllerToolExportImport extends Controller {
 			}
 
 			if (!$this->config->get('export_import_settings_use_option_value_id')) {
-				$option_value_names = $this->model_tool_export_import->getOptionValueNameCounts();
+				$option_value_names = $this->model_tool_export_import_base->getOptionValueNameCounts();
 
 				foreach ($option_value_names as $option_value_name) {
 					if ($option_value_name['count'] > 1) {
@@ -532,7 +538,7 @@ class ControllerToolExportImport extends Controller {
 			}
 
 			if (!$this->config->get('export_import_settings_use_attribute_group_id')) {
-				$attribute_group_names = $this->model_tool_export_import->getAttributeGroupNameCounts();
+				$attribute_group_names = $this->model_tool_export_import_base->getAttributeGroupNameCounts();
 
 				foreach ($attribute_group_names as $attribute_group_name) {
 					if ($attribute_group_name['count'] > 1) {
@@ -542,7 +548,7 @@ class ControllerToolExportImport extends Controller {
 			}
 
 			if (!$this->config->get('export_import_settings_use_attribute_id')) {
-				$attribute_names = $this->model_tool_export_import->getAttributeNameCounts();
+				$attribute_names = $this->model_tool_export_import_base->getAttributeNameCounts();
 
 				foreach ($attribute_names as $attribute_name) {
 					if ($attribute_name['count'] > 1) {
@@ -551,9 +557,9 @@ class ControllerToolExportImport extends Controller {
 				}
 			}
 
-			if ($this->model_tool_export_import->existFilter()) {
+			if ($this->model_tool_export_import_base->existFilter()) {
 				if (!$this->config->get('export_import_settings_use_filter_group_id')) {
-					$filter_group_names = $this->model_tool_export_import->getFilterGroupNameCounts();
+					$filter_group_names = $this->model_tool_export_import_base->getFilterGroupNameCounts();
 
 					foreach ($filter_group_names as $filter_group_name) {
 						if ($filter_group_name['count'] > 1) {
@@ -563,7 +569,7 @@ class ControllerToolExportImport extends Controller {
 				}
 
 				if (!$this->config->get('export_import_settings_use_filter_id')) {
-					$filter_names = $this->model_tool_export_import->getFilterNameCounts();
+					$filter_names = $this->model_tool_export_import_base->getFilterNameCounts();
 
 					foreach ($filter_names as $filter_name) {
 						if ($filter_name['count'] > 1) {
@@ -619,7 +625,7 @@ class ControllerToolExportImport extends Controller {
 	protected function validateSettingsForm() {
 		if ($this->user->hasPermission('modify', 'tool/export_import')) {
 			if (empty($this->request->post['export_import_settings_use_option_id'])) {
-				$option_names = $this->model_tool_export_import->getOptionNameCounts();
+				$option_names = $this->model_tool_export_import_base->getOptionNameCounts();
 
 				foreach ($option_names as $option_name) {
 					if ($option_name['count'] > 1) {
@@ -629,7 +635,7 @@ class ControllerToolExportImport extends Controller {
 			}
 
 			if (empty($this->request->post['export_import_settings_use_option_value_id'])) {
-				$option_value_names = $this->model_tool_export_import->getOptionValueNameCounts();
+				$option_value_names = $this->model_tool_export_import_base->getOptionValueNameCounts();
 
 				foreach ($option_value_names as $option_value_name) {
 					if ($option_value_name['count'] > 1) {
@@ -639,7 +645,7 @@ class ControllerToolExportImport extends Controller {
 			}
 
 			if (empty($this->request->post['export_import_settings_use_attribute_group_id'])) {
-				$attribute_group_names = $this->model_tool_export_import->getAttributeGroupNameCounts();
+				$attribute_group_names = $this->model_tool_export_import_base->getAttributeGroupNameCounts();
 
 				foreach ($attribute_group_names as $attribute_group_name) {
 					if ($attribute_group_name['count'] > 1) {
@@ -649,7 +655,7 @@ class ControllerToolExportImport extends Controller {
 			}
 
 			if (empty($this->request->post['export_import_settings_use_attribute_id'])) {
-				$attribute_names = $this->model_tool_export_import->getAttributeNameCounts();
+				$attribute_names = $this->model_tool_export_import_base->getAttributeNameCounts();
 
 				foreach ($attribute_names as $attribute_name) {
 					if ($attribute_name['count'] > 1) {
@@ -658,9 +664,9 @@ class ControllerToolExportImport extends Controller {
 				}
 			}
 
-			if ($this->model_tool_export_import->existFilter()) {
+			if ($this->model_tool_export_import_base->existFilter()) {
 				if (empty($this->request->post['export_import_settings_use_filter_group_id'])) {
-					$filter_group_names = $this->model_tool_export_import->getFilterGroupNameCounts();
+					$filter_group_names = $this->model_tool_export_import_base->getFilterGroupNameCounts();
 
 					foreach ($filter_group_names as $filter_group_name) {
 						if ($filter_group_name['count'] > 1) {
@@ -670,7 +676,7 @@ class ControllerToolExportImport extends Controller {
 				}
 
 				if (empty($this->request->post['export_import_settings_use_filter_id'])) {
-					$filter_names = $this->model_tool_export_import->getFilterNameCounts();
+					$filter_names = $this->model_tool_export_import_base->getFilterNameCounts();
 
 					foreach ($filter_names as $filter_name) {
 						if ($filter_name['count'] > 1) {
