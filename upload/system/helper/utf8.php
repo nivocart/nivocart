@@ -9,7 +9,7 @@ mb_internal_encoding('UTF-8');
  *
  * @return int
  */
-function utf8_strlen(string $string): int {
+function Utf8_strlen(string $string): int {
 	return mb_strlen($string);
 }
 
@@ -20,7 +20,7 @@ function utf8_strlen(string $string): int {
  *
  * @return false|int
  */
-function utf8_strpos(string $string, string $needle, int $offset = 0) {
+function Utf8_strpos(string $string, string $needle, int $offset = 0) {
 	return mb_strpos($string, $needle, $offset);
 }
 
@@ -31,7 +31,7 @@ function utf8_strpos(string $string, string $needle, int $offset = 0) {
  *
  * @return false|int
  */
-function utf8_strrpos(string $string, string $needle, int $offset = 0) {
+function Utf8_strrpos(string $string, string $needle, int $offset = 0) {
 	return mb_strrpos($string, $needle, $offset);
 }
 
@@ -42,7 +42,7 @@ function utf8_strrpos(string $string, string $needle, int $offset = 0) {
  *
  * @return string
  */
-function utf8_substr(string $string, int $offset, ?int $length = null): string {
+function Utf8_substr(string $string, int $offset, ?int $length = null): string {
 	if ($length === null) {
 		return mb_substr($string, $offset, mb_strlen($string));
 	} else {
@@ -55,7 +55,7 @@ function utf8_substr(string $string, int $offset, ?int $length = null): string {
  *
  * @return string
  */
-function utf8_strtoupper(string $string): string {
+function Utf8_strtoupper(string $string): string {
 	return mb_strtoupper($string);
 }
 
@@ -64,6 +64,6 @@ function utf8_strtoupper(string $string): string {
  *
  * @return string
  */
-function utf8_strtolower(string $string): string {
+function Utf8_strtolower(string $string): string {
 	return mb_strtolower($string);
 }
