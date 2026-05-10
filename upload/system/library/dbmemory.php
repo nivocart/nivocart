@@ -4,7 +4,7 @@
  *
  * What it actually does:
  * ----------------------
- * - It wraps your real database object ($this->db).
+ * - It wraps the real database object ($this->db).
  * - Every SQL query is hashed with md5().
  * - If that exact query has been run before in the same request, it returns the stored result instead of hitting the database again.
  * - The results live in static arrays, meaning they persist for the lifetime of the PHP request/process only.
@@ -13,7 +13,7 @@
  * --------------------------
  * - The static keyword on $results and $escaped means all instances of Dbmemory share the same cache pool within a request, which is intentional and correct here.
  * - It's safe for SELECT queries, but countAffected() and getLastId() pass straight through, which suggests write queries aren't being memorized — good, because caching those would be dangerous.
- * - If the same SEO URL query fires multiple times per page load (e.g. in a loop or across multiple components), this will genuinely save you repeated DB round trips.
+ * - If the same SEO URL query fires multiple times per page load (e.g. in a loop or across multiple components), this will genuinely save repeated DB round trips.
  *
  * USAGE: Currently used in conjonction with SEO URL Rewrite to accelerate Catalog queries.
  */

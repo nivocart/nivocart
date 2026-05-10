@@ -20,7 +20,7 @@ class Session {
 			ini_set('session.cookie_httponly', 'On');
 
 			if (isset($_COOKIE[session_name()]) && !preg_match('/^[a-zA-Z0-9,\-]+$/', $_COOKIE[session_name()])) {
-				exit('Error: Invalid session ID!');
+				throw new \Exception('Error: Invalid session ID!');
 			}
 
 			session_set_cookie_params(0, '/');
@@ -50,6 +50,11 @@ class Session {
 	 * @return string returns the current session ID
 	 */
 	public function start(string $key = 'default', string $value = ''): string {
+		// Cookie name should not be arbitrary/user-driven
+		if (!preg_match('/^[A-Za-z0-9_]{1,32}$/', $key)) {
+			throw new \Exception('Error: Invalid session cookie name.');
+		}
+
 		if ($value) {
 			$session_id = $value;
 		} elseif (isset($_COOKIE[$key])) {
