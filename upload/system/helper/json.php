@@ -3,6 +3,9 @@
  * Helper json_encode
  */
 if (!function_exists('json_encode')) {
+	/**
+	 * @json_encode
+	 */
 	function json_encode($data) {
 		switch (gettype($data)) {
 			case 'boolean':
@@ -12,24 +15,24 @@ if (!function_exists('json_encode')) {
 				return $data;
 			case 'resource':
 			case 'string':
-				# Escape non-printable or Non-ASCII characters.
-				# I also put the \\ character first, as suggested in comments on the 'addclashes' page.
+				// Escape non-printable or Non-ASCII characters.
+				// I also put the \\ character first, as suggested in comments on the 'addclashes' page.
 				$json = '';
 
 				$string = '"' . addcslashes($data, "\\\"\n\r\t/" . chr(8) . chr(12)) . '"';
 
-				# Convert UTF-8 to Hexadecimal Codepoints.
+				// Convert UTF-8 to Hexadecimal Codepoints.
 				for ($i = 0; $i < strlen($string); $i++) {
 					$char = $string[$i];
 					$c1 = ord($char);
 
-					# Single byte;
+					// Single byte;
 					if ($c1 < 128) {
 						$json .= ($c1 > 31) ? $char : sprintf("\\u%04x", $c1);
 						continue;
 					}
 
-					# Double byte
+					// Double byte
 					$c2 = ord($string[++$i]);
 
 					if (($c1 & 32) === 0) {
@@ -37,7 +40,7 @@ if (!function_exists('json_encode')) {
 						continue;
 					}
 
-					# Triple
+					// Triple
 					$c3 = ord($string[++$i]);
 
 					if (($c1 & 16) === 0) {
@@ -45,7 +48,7 @@ if (!function_exists('json_encode')) {
 						continue;
 					}
 
-					# Quadruple
+					// Quadruple
 					$c4 = ord($string[++$i]);
 
 					if (($c1 & 8) === 0) {
@@ -87,13 +90,16 @@ if (!function_exists('json_encode')) {
  * Helper json_decode
  */
 if (!function_exists('json_decode')) {
+	/**
+	 * @json_decode
+	 */
 	function json_decode($json, $assoc = false) {
 		$match = '/".*?(?<!\\\\)"/';
 
 		$string = preg_replace($match, '', $json);
 		$string = preg_replace('/[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t]/', '', $string);
 
-		if ($string != '') {
+		if ($string !== '') {
 			return null;
 		}
 
@@ -114,10 +120,10 @@ if (!function_exists('json_decode')) {
 
 		$data = [
 			':' => '=>',
-			'[' => 'array(',
-			'{' => "{$a}array(",
-			']' => ')',
-			'}' => ')'
+			'[' => '[',
+			'{' => "{$a}[",
+			']' => ']',
+			'}' => ']'
 		];
 
 		$json = strtr($json, $data);
