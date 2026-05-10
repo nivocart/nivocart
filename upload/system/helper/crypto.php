@@ -1,10 +1,10 @@
 <?php
-/*
+/**
  * Based on Secure Random Bytes in PHP by George Argyros.
  * https://github.com/GeorgeArgyros/Secure-random-bytes-in-PHP
  */
 
-/*
+/**
  * Author:
  * George Argyros <argyros.george@gmail.com>
  *
@@ -40,24 +40,27 @@
  */
 
 /**
+ * Hash_rand
+ *
  * @param string $algo  Hash algorithm to return results in using PHP's hash() function. Must be available in hash_algos(). Default/fallback MD5.
  * @param integer $len  Number of bytes of randomness to generate.  Default 12.
+ *
  * @return string  Resulting hash of random bytes.
  */
-function hash_rand(string $algo, int $len = 12) {
+function Hash_rand(string $algo, int $len = 16) {
 	$hash_algos = ['md5','ripemd128','sha256'];
 
 	// Ensure that submitted values are valid to prevent errors
 	if (!in_array($algo, $hash_algos)) {
-		$algo = 'md5';
-		trigger_error('Error: Unregistered hashing algorithm!');
+		$algo = 'sha256';
+		throw new \Exception('Error: Unregistered hashing algorithm!');
 	}
 
 	if (!is_numeric($len)) {
-		$len = 12;
+		$len = 16;
 	}
 
-	/*
+	/**
 	 * Our primary choice for a cryptographic strong randomness function is
 	 * openssl_random_pseudo_bytes.
 	 */
@@ -71,7 +74,7 @@ function hash_rand(string $algo, int $len = 12) {
 		}
 	}
 
-	/*
+	/**
 	 * If mcrypt extension is available then we use it to gather entropy from
 	 * the operating system's PRNG. This is better than reading /dev/urandom
 	 * directly since it avoids reading larger blocks of data than needed.
@@ -87,7 +90,7 @@ function hash_rand(string $algo, int $len = 12) {
 		}
 	}
 
-	/*
+	/**
 	 * No build-in crypto randomness function found. We collect any entropy
 	 * available in the PHP core PRNGs along with some filesystem info and memory
 	 * stats. To make this data cryptographically strong we add data either from
