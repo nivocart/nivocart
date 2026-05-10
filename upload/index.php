@@ -14,16 +14,16 @@ if (!defined('DIR_APPLICATION')) {
 }
 
 // Startup
-require_once(DIR_SYSTEM . 'startup.php');
+require_once DIR_SYSTEM . 'startup.php';
 
 // Application Classes
-require_once(DIR_SYSTEM . 'library/customer.php');
-require_once(DIR_SYSTEM . 'library/affiliate.php');
-require_once(DIR_SYSTEM . 'library/currency.php');
-require_once(DIR_SYSTEM . 'library/tax.php');
-require_once(DIR_SYSTEM . 'library/weight.php');
-require_once(DIR_SYSTEM . 'library/length.php');
-require_once(DIR_SYSTEM . 'library/cart.php');
+require_once DIR_SYSTEM . 'library/customer.php';
+require_once DIR_SYSTEM . 'library/affiliate.php';
+require_once DIR_SYSTEM . 'library/currency.php';
+require_once DIR_SYSTEM . 'library/tax.php';
+require_once DIR_SYSTEM . 'library/weight.php';
+require_once DIR_SYSTEM . 'library/length.php';
+require_once DIR_SYSTEM . 'library/cart.php';
 
 // Registry
 $registry = new Registry();

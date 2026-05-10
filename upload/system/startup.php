@@ -37,48 +37,48 @@ if (!isset($_SERVER['HTTP_HOST'])) {
 }
 
 // Check if SSL
-if ((isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] === 'on') || ($_SERVER['HTTPS'] === '1'))) || (isset($_SERVER['HTTPS']) && (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === 443))) {
-	$_SERVER['HTTPS'] = true;
-} elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') {
+if ((isset($_SERVER['HTTPS']) && in_array($_SERVER['HTTPS'], ['on', '1'], true)) ||
+	(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === '443') ||
+	(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
 	$_SERVER['HTTPS'] = true;
 } else {
 	$_SERVER['HTTPS'] = false;
 }
 
 // Engine
-require_once(DIR_SYSTEM . 'engine/action.php');
-require_once(DIR_SYSTEM . 'engine/controller.php');
-require_once(DIR_SYSTEM . 'engine/front.php');
-require_once(DIR_SYSTEM . 'engine/loader.php');
-require_once(DIR_SYSTEM . 'engine/model.php');
-require_once(DIR_SYSTEM . 'engine/registry.php');
+require_once DIR_SYSTEM . 'engine/action.php';
+require_once DIR_SYSTEM . 'engine/controller.php';
+require_once DIR_SYSTEM . 'engine/front.php';
+require_once DIR_SYSTEM . 'engine/loader.php';
+require_once DIR_SYSTEM . 'engine/model.php';
+require_once DIR_SYSTEM . 'engine/registry.php';
 
 // Common
-require_once(DIR_SYSTEM . 'library/cache.php');
-require_once(DIR_SYSTEM . 'library/url.php');
-require_once(DIR_SYSTEM . 'library/config.php');
-require_once(DIR_SYSTEM . 'library/db.php');
-require_once(DIR_SYSTEM . 'library/dbmemory.php');
-require_once(DIR_SYSTEM . 'library/document.php');
-require_once(DIR_SYSTEM . 'library/encryption.php');
-require_once(DIR_SYSTEM . 'library/image.php');
-require_once(DIR_SYSTEM . 'library/language.php');
-require_once(DIR_SYSTEM . 'library/log.php');
-require_once(DIR_SYSTEM . 'library/mail.php');
-require_once(DIR_SYSTEM . 'library/offer.php');
-require_once(DIR_SYSTEM . 'library/pagination.php');
-require_once(DIR_SYSTEM . 'library/request.php');
-require_once(DIR_SYSTEM . 'library/response.php');
-require_once(DIR_SYSTEM . 'library/session.php');
-require_once(DIR_SYSTEM . 'library/template.php');
-require_once(DIR_SYSTEM . 'library/browser.php');
+require_once DIR_SYSTEM . 'library/cache.php';
+require_once DIR_SYSTEM . 'library/url.php';
+require_once DIR_SYSTEM . 'library/config.php';
+require_once DIR_SYSTEM . 'library/db.php';
+require_once DIR_SYSTEM . 'library/dbmemory.php';
+require_once DIR_SYSTEM . 'library/document.php';
+require_once DIR_SYSTEM . 'library/encryption.php';
+require_once DIR_SYSTEM . 'library/image.php';
+require_once DIR_SYSTEM . 'library/language.php';
+require_once DIR_SYSTEM . 'library/log.php';
+require_once DIR_SYSTEM . 'library/mail.php';
+require_once DIR_SYSTEM . 'library/offer.php';
+require_once DIR_SYSTEM . 'library/pagination.php';
+require_once DIR_SYSTEM . 'library/request.php';
+require_once DIR_SYSTEM . 'library/response.php';
+require_once DIR_SYSTEM . 'library/session.php';
+require_once DIR_SYSTEM . 'library/template.php';
+require_once DIR_SYSTEM . 'library/browser.php';
 
 // Helper
-require_once(DIR_SYSTEM . 'helper/agent.php');
-require_once(DIR_SYSTEM . 'helper/crypto.php');
-require_once(DIR_SYSTEM . 'helper/pdf.php');
-require_once(DIR_SYSTEM . 'helper/totals.php');
-require_once(DIR_SYSTEM . 'helper/utf8.php');
+require_once DIR_SYSTEM . 'helper/agent.php';
+require_once DIR_SYSTEM . 'helper/crypto.php';
+require_once DIR_SYSTEM . 'helper/pdf.php';
+require_once DIR_SYSTEM . 'helper/totals.php';
+require_once DIR_SYSTEM . 'helper/utf8.php';
 
 // Vendor
-require_once(DIR_SYSTEM . 'vendor/dompdf/autoload.inc.php');
+require_once DIR_SYSTEM . 'vendor/dompdf/autoload.inc.php';
