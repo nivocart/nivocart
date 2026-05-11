@@ -87,7 +87,6 @@ abstract class Controller {
 	 */
 	protected function redirect(string $url, int $status = 302) {
 		header('Location: ' . str_replace(['&amp;', "\n", "\r"], ['&', '', ''], $url), true, $status);
-		exit();
 	}
 
 	/**
@@ -100,7 +99,7 @@ abstract class Controller {
 		$action = new Action($child, $args);
 
 		if (file_exists($action->getFile())) {
-			require_once($action->getFile());
+			require_once $action->getFile();
 
 			$class = $action->getClass();
 			$controller = new $class($this->registry);
@@ -110,7 +109,6 @@ abstract class Controller {
 
 		} else {
 			trigger_error('Error: Could not load controller ' . $child . '!');
-			exit();
 		}
 	}
 
@@ -126,7 +124,7 @@ abstract class Controller {
 		$action = new Action($child, $args);
 
 		if (file_exists($action->getFile())) {
-			require_once($action->getFile());
+			require_once $action->getFile();
 
 			$class = $action->getClass();
 			$controller = new $class($this->registry);
@@ -157,7 +155,7 @@ abstract class Controller {
 
 			ob_start();
 
-			require(DIR_TEMPLATE . $this->template);
+			require DIR_TEMPLATE . $this->template;
 
 			$this->output = ob_get_contents();
 
@@ -167,7 +165,6 @@ abstract class Controller {
 
 		} else {
 			trigger_error('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
-			exit();
 		}
 	}
 }
