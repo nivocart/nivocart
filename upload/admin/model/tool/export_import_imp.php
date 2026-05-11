@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ModelToolExportImportImp
  *
@@ -8,9 +7,11 @@
  *
  * @package NivoCart
  */
+require_once DIR_APPLICATION . 'model/tool/export_import_base.php';
 
-require_once(DIR_APPLICATION . 'model/tool/export_import_base.php');
-
+/**
+ * Class ModelToolExportImportImp
+ */
 class ModelToolExportImportImp extends ModelToolExportImportBase {
 	//------------------------------------------
 	// Shared helpers for ID lookups
