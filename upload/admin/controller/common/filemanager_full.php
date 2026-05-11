@@ -545,6 +545,14 @@ class ControllerCommonFileManagerFull extends Controller {
 			$fileName_a = substr($fileName, 0, $ext);
 			$fileName_b = substr($fileName, $ext);
 
+			$allowed = ['jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
+
+			$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+			if (!in_array($ext, $allowed)) {
+				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+			}
+
 			$count = 1;
 
 			while (file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName_a . '_' . $count . $fileName_b)) {
