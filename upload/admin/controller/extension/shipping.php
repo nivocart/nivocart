@@ -160,7 +160,7 @@ class ControllerExtensionShipping extends Controller {
 			$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'shipping/' . $this->request->get['extension']);
 			$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'shipping/' . $this->request->get['extension']);
 
-			require_once(DIR_APPLICATION . 'controller/shipping/' . $this->request->get['extension'] . '.php');
+			require_once DIR_APPLICATION . 'controller/shipping/' . $this->request->get['extension'] . '.php';
 
 			$class = 'ControllerShipping' . str_replace('_', '', $this->request->get['extension']);
 
@@ -190,7 +190,7 @@ class ControllerExtensionShipping extends Controller {
 
 			$this->model_setting_setting->deleteSetting($this->request->get['extension']);
 
-			require_once(DIR_APPLICATION . 'controller/shipping/' . $this->request->get['extension'] . '.php');
+			require_once DIR_APPLICATION . 'controller/shipping/' . $this->request->get['extension'] . '.php';
 
 			$class = 'ControllerShipping' . str_replace('_', '', $this->request->get['extension']);
 

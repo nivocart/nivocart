@@ -61,7 +61,7 @@ $_['text_description']       = '<p>The Administration User Log allows you to rec
   <ul>
     <li>Warning messages will be highlighted in RED. These include: Cleaning log, Authorization process fails, Attempt to access a restricted page.</li>
     <li>A successful content Change/Modify action will be highlighted in YELLOW.</li>
-    <li>A successful page Access action will be highlighted in BLUE.</li> 
+    <li>A successful page Access action will be highlighted in BLUE.</li>
     <li>A successful Login will be highlighted in GREEN.</li>
     <li>A successful Logout will be highlighted in GRAY.</li>
   </ul>
