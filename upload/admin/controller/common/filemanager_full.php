@@ -550,7 +550,7 @@ class ControllerCommonFileManagerFull extends Controller {
 			$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
 			if (!in_array($ext, $allowed)) {
-				die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+				continue;
 			}
 
 			$count = 1;
