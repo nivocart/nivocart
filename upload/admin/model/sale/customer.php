@@ -51,8 +51,8 @@ class ModelSaleCustomer extends Model {
 		}
 	}
 
-	public function editToken(int $customer_id, $token): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = '" . $this->db->escape($token) . "' WHERE customer_id = '" . (int)$customer_id . "'");
+	public function editToken(int $customer_id, string $token): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = '" . $this->db->escape((string)$token) . "' WHERE customer_id = '" . (int)$customer_id . "'");
 	}
 
 	public function addDeletedCustomer(int $customer_id): void {
