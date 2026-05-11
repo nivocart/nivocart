@@ -84,7 +84,7 @@ class ModelPaymentPPExpress extends Model {
 			$option_count = 0;
 
 			foreach ($item['option'] as $option) {
-				if ($option['type'] != 'file') {
+				if ($option['type'] !== 'file') {
 					$value = $option['option_value'];
 				} else {
 					$filename = $this->encryption->decrypt($option['option_value']);
@@ -182,7 +182,7 @@ class ModelPaymentPPExpress extends Model {
 
 		foreach ($total_data as $total_row) {
 			if (!in_array($total_row['code'], ['total', 'sub_total'])) {
-				if ($total_row['value'] != 0) {
+				if ($total_row['value'] !== 0) {
 					$item_price = $this->currency->format($total_row['value'], false, false, false, $this->config->get('config_currency'));
 
 					$data['L_PAYMENTREQUEST_0_NUMBER' . $i] = $total_row['code'];
@@ -209,7 +209,7 @@ class ModelPaymentPPExpress extends Model {
 			foreach ($recurring_products as $item) {
 				$data['L_BILLINGTYPE' . $z] = 'RecurringPayments';
 
-				if ($item['recurring_trial'] == 1) {
+				if ($item['recurring_trial'] === 1) {
 					$trial_amt = $this->currency->format($this->tax->calculate($item['recurring_trial_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false, $this->config->get('config_currency')) * $item['quantity'] . ' ' . $this->currency->getCode();
 
 					$trial_text = sprintf($this->language->get('text_trial'), $trial_amt, $item['recurring_trial_cycle'], $item['recurring_trial_frequency'], $item['recurring_trial_duration']);
@@ -302,8 +302,8 @@ class ModelPaymentPPExpress extends Model {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_FORBID_REUSE   => true,
 			CURLOPT_TIMEOUT        => 0,
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_SSL_VERIFYHOST => false,
+			CURLOPT_SSL_VERIFYPEER => true,
+			CURLOPT_SSL_VERIFYHOST => true,
 			CURLOPT_POSTFIELDS     => http_build_query($call_parameters, '', '&')
 		];
 
@@ -313,7 +313,7 @@ class ModelPaymentPPExpress extends Model {
 
 		$response = curl_exec($ch);
 
-		if (curl_errno($ch) != CURLE_OK) {
+		if (curl_errno($ch) !== CURLE_OK) {
 			$log_data = [
 				'curl_error' => curl_error($ch),
 				'curl_errno' => curl_errno($ch)
