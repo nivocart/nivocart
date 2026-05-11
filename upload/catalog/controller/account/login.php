@@ -40,7 +40,7 @@ class ControllerAccountLogin extends Controller {
 
 			$customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
 
-			if ($customer_info && $this->customer->login($customer_info['email'], '', true)) {
+			if ($customer_info && $this->customer->loginByToken($customer_info['email'])) {
 				// Default Addresses
 				$this->load->model('account/address');
 

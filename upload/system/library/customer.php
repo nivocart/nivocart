@@ -117,95 +117,114 @@ class Customer {
 	 *
 	 * @param string $email
 	 * @param string $password
-	 * @param bool   $override
 	 *
 	 * @return bool
 	 *
 	 * @example
 	 *
-	 * $login = $this->customer->login($email, $password, $override);
+	 * $login = $this->customer->login($email, $password);
 	 */
-	public function login(string $email, string $password, bool $override = false): bool {
-		if ($override) {
-			$customer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "' AND status = '1'");
-		} else {
-			$customer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5((string)$password)) . "') AND status = '1' AND approved = '1'");
-		}
+	public function login(string $email, string $password): bool {
+		$customer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5((string)$password)) . "') AND status = '1' AND approved = '1'");
 
 		if ($customer_query->num_rows) {
-			// Create customer login cookie if HTTPS
-			if ($this->config->get('config_secure')) {
-				// Create a cookie and restrict it to HTTPS pages
-				if ($this->request->isSecure()) {
-					$this->session->data['customer_cookie'] = bin2hex(random_bytes(32));
-
-					setcookie('customer', $this->session->data['customer_cookie'], 0, '/', '', true, true);
-				} else {
-					return false;
-				}
-			}
-
-			// Token used to protect account functions against CSRF
-			$this->setToken();
-
-			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
-			$this->session->data['customer_login_time'] = time();
-
-			if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
-				$raw = $customer_query->row['cart'];
-
-				$cart = json_decode($raw, true);
-
-				if (!is_array($cart)) {
-					throw new \Exception('Error: Cart must be an array.');
-				}
-
-				foreach ($cart as $key => $value) {
-					if (!array_key_exists($key, $this->session->data['cart'])) {
-						$this->session->data['cart'][$key] = $value;
-					} else {
-						$this->session->data['cart'][$key] += $value;
-					}
-				}
-			}
-
-			if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])) {
-				if (!isset($this->session->data['wishlist'])) {
-					$this->session->data['wishlist'] = [];
-				}
-
-				$raw = $customer_query->row['wishlist'];
-
-				$wishlist = json_decode($raw, true);
-
-				if (!is_array($wishlist)) {
-					throw new \Exception('Error: Wishlist must be an array.');
-				}
-
-				foreach ($wishlist as $product_id) {
-					if (!in_array($product_id, $this->session->data['wishlist'])) {
-						$this->session->data['wishlist'][] = $product_id;
-					}
-				}
-			}
-
-			$this->customer_id = $customer_query->row['customer_id'];
-			$this->firstname = $customer_query->row['firstname'];
-			$this->lastname = $customer_query->row['lastname'];
-			$this->customer_group_id = $customer_query->row['customer_group_id'];
-			$this->email = $customer_query->row['email'];
-			$this->telephone = $customer_query->row['telephone'];
-			$this->gender = $customer_query->row['gender'];
-			$this->date_of_birth = $customer_query->row['date_of_birth'];
-			$this->newsletter = $customer_query->row['newsletter'];
-			$this->address_id = $customer_query->row['address_id'];
-
-			$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
-
-			return true;
-		} else {
-			return false;
+			return $this->completeLogin($customer_query);
 		}
+
+		return false;
+	}
+
+	/**
+	 * Login By Token
+	 *
+	 * @param string $email
+	 *
+	 * @return bool
+	 *
+	 * @example
+	 *
+	 * $login = $this->customer->loginByToken($email);
+	 */
+	public function loginByToken(string $email): bool {
+		$customer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
+
+		if ($customer_query->num_rows) {
+			return $this->completeLogin($customer_query);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Complete Login
+	 *
+	 * @param query $customer_query
+	 *
+	 * @return bool
+	 */
+	private function completeLogin($customer_query): bool {
+		if ($this->config->get('config_secure')) {
+			if ($this->request->isSecure()) {
+				$this->session->data['customer_cookie'] = bin2hex(random_bytes(32));
+				setcookie('customer', $this->session->data['customer_cookie'], 0, '/', '', true, true);
+			} else {
+				return false;
+			}
+		}
+
+		$this->setToken();
+
+		$this->session->data['customer_id'] = $customer_query->row['customer_id'];
+		$this->session->data['customer_login_time'] = time();
+
+		if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
+			$cart = json_decode($customer_query->row['cart'], true);
+
+			if (!is_array($cart)) {
+				throw new \Exception('Error: Cart must be an array.');
+			}
+
+			foreach ($cart as $key => $value) {
+				if (!array_key_exists($key, $this->session->data['cart'])) {
+					$this->session->data['cart'][$key] = $value;
+				} else {
+					$this->session->data['cart'][$key] += $value;
+				}
+			}
+		}
+
+		if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])) {
+			if (!isset($this->session->data['wishlist'])) {
+				$this->session->data['wishlist'] = [];
+			}
+
+			$wishlist = json_decode($customer_query->row['wishlist'], true);
+
+			if (!is_array($wishlist)) {
+				throw new \Exception('Error: Wishlist must be an array.');
+			}
+
+			foreach ($wishlist as $product_id) {
+				if (!in_array($product_id, $this->session->data['wishlist'])) {
+					$this->session->data['wishlist'][] = $product_id;
+				}
+			}
+		}
+
+		$this->customer_id = $customer_query->row['customer_id'];
+		$this->firstname = $customer_query->row['firstname'];
+		$this->lastname = $customer_query->row['lastname'];
+		$this->customer_group_id = $customer_query->row['customer_group_id'];
+		$this->email = $customer_query->row['email'];
+		$this->telephone = $customer_query->row['telephone'];
+		$this->gender = $customer_query->row['gender'];
+		$this->date_of_birth = $customer_query->row['date_of_birth'];
+		$this->newsletter = $customer_query->row['newsletter'];
+		$this->address_id = $customer_query->row['address_id'];
+
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+
+		return true;
 	}
 
 	/**

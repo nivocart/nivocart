@@ -201,6 +201,7 @@ class ModelAccountCustomer extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_ip` WHERE customer_id = '" . (int)$customer_id . "'");
 	}
 
+	// Edit
 	public function editCustomer(array $data = []): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : 0) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 	}
@@ -213,6 +214,7 @@ class ModelAccountCustomer extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET newsletter = '" . (int)$newsletter . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 	}
 
+	// Get
 	public function getCustomer(int $customer_id) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE customer_id = '" . (int)$customer_id . "'");
 
@@ -226,11 +228,33 @@ class ModelAccountCustomer extends Model {
 	}
 
 	public function getCustomerByToken(string $token) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE token = '" . $this->db->escape((string)$token) . "' AND token != ''");
+		// Token format: base64(unix_timestamp):hex_token  (15-min TTL)
+		// Legacy plain tokens (no colon) are rejected for safety.
+		if (strpos($token, ':') === false) {
+			return false;
+		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = ''");
+		[$expiry_b64, $raw_token] = explode(':', $token, 2);
 
-		return $query->row;
+		$expiry = (int)base64_decode($expiry_b64);
+
+		// Check if expired or malformed
+		if ($expiry === 0 || time() > $expiry) {
+			return false;
+		}
+
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE token = '" . $this->db->escape((string)$token) . "' AND token != '' LIMIT 1");
+
+		if (!$query->num_rows) {
+			return false;
+		}
+
+		$customer = $query->row;
+
+		// Invalidate — scoped to this customer only
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = '' WHERE customer_id = '" . (int)$customer['customer_id'] . "'");
+
+		return $customer;
 	}
 
 	public function getCustomerUserAgent(int $customer_id) {
@@ -292,7 +316,7 @@ class ModelAccountCustomer extends Model {
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];
 		} else {
-			$sql .= " ORDER BY name";
+			$sql .= " ORDER BY `name`";
 		}
 
 		if (isset($data['order']) && ($data['order'] === 'DESC')) {
@@ -316,16 +340,6 @@ class ModelAccountCustomer extends Model {
 		$query = $this->db->query($sql);
 
 		return $query->rows;
-	}
-
-	public function checkCustomerPassword(string $password, int $customer_id, string $email) {
-		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') THEN 0 ELSE 1 END AS `result` FROM `" . DB_PREFIX . "customer` WHERE customer_id = '" . (int)$customer_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
-
-		if ($query->row['result']) {
-			return $query->row['result'];
-		} else {
-			return false;
-		}
 	}
 
 	public function getDeletedByCustomerId(int $customer_id) {
@@ -364,6 +378,17 @@ class ModelAccountCustomer extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_ip` WHERE customer_id = '" . (int)$customer_id . "'");
 
 		return $query->rows;
+	}
+
+	// Checks
+	public function checkCustomerPassword(string $password, int $customer_id, string $email) {
+		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') THEN 0 ELSE 1 END AS `result` FROM `" . DB_PREFIX . "customer` WHERE customer_id = '" . (int)$customer_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
+
+		if ($query->row['result']) {
+			return $query->row['result'];
+		} else {
+			return false;
+		}
 	}
 
 	public function isBanIp($ip) {
