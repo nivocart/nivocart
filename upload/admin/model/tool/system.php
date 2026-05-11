@@ -107,19 +107,13 @@ class ModelToolSystem extends Model {
 	}
 
 	/**
-	 * token Generator
+	 * Token Generator
 	 *
-	 * Return string
+	 * @param int $length Number of random bytes (output will be 2× this as hex)
+	 *
+	 * @return string
 	 */
-	public function token($length = 32): string {
-		$string = str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._=');
-
-		$token = '';
-
-		for ($i = 0; $i < $length; $i++) {
-			$token .= $string[mt_rand(0, strlen($string) - 1)];
-		}
-
-		return $token;
+	public function token(int $length = 32): string {
+		return bin2hex(random_bytes($length));
 	}
 }
