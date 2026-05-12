@@ -43,6 +43,9 @@ class ModelToolImage extends Model {
 			}
 		}
 
+		// Sanitize the new image URL
+		$new_image = str_replace('\\', '/', $new_image);
+
 		// Build and return the full URL
 		$encoded_image = implode('/', array_map('rawurlencode', explode('/', $new_image)));
 

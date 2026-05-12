@@ -43,15 +43,18 @@ class ModelToolImage extends Model {
             }
         }
 
-        // Build and return the full URL
+		// Sanitize the new image URL
+		$new_image = str_replace('\\', '/', $new_image);
+
+		// Build and return the full URL
         $encoded_image = implode('/', array_map('rawurlencode', explode('/', $new_image)));
 
         $is_https = (!empty($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
             (isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
             (!empty($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https');
 
-        $base_url = $is_https ? HTTPS_CATALOG : HTTP_CATALOG;
+        $base_image_url = $is_https ? HTTPS_IMAGE : HTTP_IMAGE;
 
-        return $base_url . 'image/' . $encoded_image;
+        return $base_image_url . $encoded_image;
     }
 }
