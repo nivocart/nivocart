@@ -601,6 +601,23 @@ CREATE TABLE `nc_customer_deleted` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nc_customer_forgotten`
+--
+
+DROP TABLE IF EXISTS `nc_customer_forgotten`;
+CREATE TABLE `nc_customer_forgotten` (
+  `forgotten_id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `date_expires` datetime NOT NULL,
+  `date_added` datetime NOT NULL,
+  PRIMARY KEY (`forgotten_id`),
+  UNIQUE KEY `customer_id` (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nc_customer_group`
 --
 
