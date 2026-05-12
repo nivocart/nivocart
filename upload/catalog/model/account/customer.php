@@ -273,11 +273,11 @@ class ModelAccountCustomer extends Model {
 		$implode = [];
 
 		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-			$implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "%'";
+			$implode[] = "LOWER(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape(mb_strtolower($data['filter_name'], 'UTF-8')) . "%'";
 		}
 
 		if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
-			$implode[] = "LCASE(c.email) = '" . $this->db->escape(mb_strtolower($data['filter_email'], 'UTF-8')) . "'";
+			$implode[] = "LOWER(c.email) = '" . $this->db->escape(mb_strtolower($data['filter_email'], 'UTF-8')) . "'";
 		}
 
 		if (isset($data['filter_customer_group_id']) && !is_null($data['filter_customer_group_id'])) {
@@ -378,6 +378,53 @@ class ModelAccountCustomer extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_ip` WHERE customer_id = '" . (int)$customer_id . "'");
 
 		return $query->rows;
+	}
+
+	/**
+	 * Forgotten password
+	 *
+	 * Inserts or replaces the hashed reset token for the customer who owns $email.
+	 *
+	 * The UNIQUE KEY on `customer_id` combined with ON DUPLICATE KEY UPDATE
+	 * guarantees only one active token exists per customer at any time — a second
+	 * "forgot password" request silently supersedes the first.
+	 */
+	public function saveResetToken(string $email, string $hashed_token, string $expires_at): void {
+		// Resolve email → customer_id first so table only stores IDs.
+		$customer = $this->db->query("SELECT `customer_id` FROM `" . DB_PREFIX . "customer` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND `status` = '1' LIMIT 1");
+
+		// Unknown / inactive account — silently no-op (anti-enumeration).
+		if (!$customer->num_rows) {
+			return;
+		}
+
+		$customer_id = (int) $customer->row['customer_id'];
+
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_forgotten`(`customer_id`, `token`, `date_expires`, `date_added`) VALUES ('" . $customer_id . "', '" . $this->db->escape($hashed_token) . "', '" . $this->db->escape($expires_at)   . "', NOW()) ON DUPLICATE KEY UPDATE `token` = VALUES(`token`), `date_expires` = VALUES(`date_expires`), `date_added` = NOW()");
+	}
+
+	/**
+	 * Returns the stored token hash and expiry for the customer who owns $email,
+	 * or NULL if no pending reset exists for that account.
+	 *
+	 * @return array{token: string, date_expires: string}|null
+	 */
+	public function getResetToken(string $email): ?array {
+		$query = $this->db->query("SELECT cf.`token`, cf.`date_expires` FROM `" . DB_PREFIX . "customer_forgotten` cf JOIN `" . DB_PREFIX . "customer` c ON c.`customer_id` = cf.`customer_id` WHERE LOWER(c.email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND c.`status` = '1' LIMIT 1");
+
+		if ($query->num_rows) {
+			return $query->row;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Deletes the reset token row for the customer who owns $email.
+	 * Called immediately after a successful password change (one-time-use enforcement).
+	 */
+	public function clearResetToken(string $email): void {
+		$this->db->query("DELETE cf FROM `" . DB_PREFIX . "customer_forgotten` cf JOIN `" . DB_PREFIX . "customer` c ON c.`customer_id` = cf.`customer_id` WHERE LOWER(c.email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
 	}
 
 	// Checks
