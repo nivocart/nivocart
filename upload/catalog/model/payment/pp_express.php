@@ -286,7 +286,7 @@ class ModelPaymentPPExpress extends Model {
 			'PWD'          => $password,
 			'SIGNATURE'    => $signature,
 			'VERSION'      => '109.0',
-			'BUTTONSOURCE' => 'NIvoCart_Cart_EC'
+			'BUTTONSOURCE' => 'NivoCart_Cart_EC'
 		];
 
 		$call_parameters = array_merge($data, $default_parameters);
@@ -303,7 +303,7 @@ class ModelPaymentPPExpress extends Model {
 			CURLOPT_FORBID_REUSE   => true,
 			CURLOPT_TIMEOUT        => 0,
 			CURLOPT_SSL_VERIFYPEER => true,
-			CURLOPT_SSL_VERIFYHOST => true,
+			CURLOPT_SSL_VERIFYHOST => 2,
 			CURLOPT_POSTFIELDS     => http_build_query($call_parameters, '', '&')
 		];
 
