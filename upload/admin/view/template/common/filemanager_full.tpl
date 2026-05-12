@@ -47,7 +47,7 @@
           <button id="btnThumbView" class="btn"><?php echo $button_view_thumb; ?></button>
         </div>
         <span class="branding hide-phone">
-          <a onclick="window.open('https://nivocart.com');" title="NivoCart" style="text-decoration:none;">NivoCart</a>
+          <a onclick="window.open('https://nivocart.org');" title="NivoCart" style="text-decoration:none;">NivoCart</a>
         </span>
         <div id="information-dialog" style="display:none;"></div>
       </div>
@@ -516,7 +516,7 @@ $(document).ready(function() {
 		$('#dialog').remove();
 
 		html = '<div id="dialog">';
-		html += '<?php echo $entry_copy; ?> <input type="text" name="name" value="" /><br /><br />'; 
+		html += '<?php echo $entry_copy; ?> <input type="text" name="name" value="" /><br /><br />';
 		html += '<input type="button" value="<?php echo $button_submit; ?>" />';
 		html += '</div>';
 
