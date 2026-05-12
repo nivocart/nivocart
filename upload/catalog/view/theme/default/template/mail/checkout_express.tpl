@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title><?php echo $title; ?></title>
 </head>
-<body style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
+<body style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#000000;">
 <div style="width:680px;">
   <a href="<?php echo $store_url; ?>" title="<?php echo $store_name; ?>"><img src="<?php echo $logo; ?>" alt="<?php echo $store_name; ?>" style="margin-bottom:20px; border:none;" /></a>
   <h3 style="margin-top:0; margin-bottom:20px;"><?php echo $text_greeting; ?></h3>

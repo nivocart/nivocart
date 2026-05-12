@@ -10,7 +10,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 body, td, th, input, textarea, select, a {
-	font-size: 12px;
+	font-size: 16px;
 }
 p {
 	margin-top: 0px;
