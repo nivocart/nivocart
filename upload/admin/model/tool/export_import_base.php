@@ -10,7 +10,9 @@
  */
 static $registry = null;
 
-// Error Handler
+/**
+ * Error Handler
+ */
 function error_handler_for_export_import($errno, $errstr, $errfile, $errline) {
 	global $registry;
 
@@ -82,9 +84,9 @@ class ModelToolExportImportBase extends Model {
 	protected $posted_categories = '';
 	protected $null_array = [];
 
-	//------------------------------------------
-	// String Utilities
-	//------------------------------------------
+	/**
+	 * String Utilities
+	 */
 	protected function clean(&$str, $allowBlanks = false) {
 		$result = "";
 
@@ -152,9 +154,9 @@ class ModelToolExportImportBase extends Model {
 		return $clean_string_out;
 	}
 
-	//------------------------------------------
-	// Multi-query Helper
-	//------------------------------------------
+	/**
+	 * Multi-query Helper
+	 */
 	protected function multiquery($sql) {
 		if (empty($sql)) {
 			return;
@@ -169,9 +171,9 @@ class ModelToolExportImportBase extends Model {
 		}
 	}
 
-	//------------------------------------------
-	// Language & Locale
-	//------------------------------------------
+	/**
+	 * Language & Locale
+	 */
 	public function getDefaultLanguageId() {
 		$sql = "SELECT DISTINCT language_id FROM `" . DB_PREFIX . "language`";
 		$sql .= " WHERE code = '" . $this->config->get('config_admin_language') . "'";
@@ -253,9 +255,9 @@ class ModelToolExportImportBase extends Model {
 		return 'cm';
 	}
 
-	//------------------------------------------
-	// Shared Lookup Queries
-	//------------------------------------------
+	/**
+	 * Shared Lookup Queries
+	 */
 	protected function getLayoutIds(): array {
 		$layout_ids = [];
 
@@ -502,9 +504,9 @@ class ModelToolExportImportBase extends Model {
 		return $posted_categories;
 	}
 
-	//------------------------------------------
-	// PHPExcel Cell Helper
-	//------------------------------------------
+	/**
+	 * PHPExcel Cell Helper
+	 */
 	protected function getCell($worksheet, $row, $col, $default_val = '') {
 		$col -= 1; // We use 1-based, PHPExcel uses 0-based column index
 		$row += 1; // We use 0-based, PHPExcel uses 1-based row index
@@ -520,9 +522,9 @@ class ModelToolExportImportBase extends Model {
 		return $val;
 	}
 
-	//------------------------------------------
-	// PHPExcel Write Helpers
-	//------------------------------------------
+	/**
+	 * PHPExcel Write Helpers
+	 */
 	protected function setColumnStyles($worksheet, $styles, $min_row, $max_row) {
 		if ($max_row < $min_row) {
 			return;
@@ -558,9 +560,9 @@ class ModelToolExportImportBase extends Model {
 		}
 	}
 
-	//------------------------------------------
-	// Cache
-	//------------------------------------------
+	/**
+	 * Cache
+	 */
 	protected function clearCache(): void {
 		$this->cache->delete('*');
 	}
@@ -578,9 +580,9 @@ class ModelToolExportImportBase extends Model {
 		}
 	}
 
-	//------------------------------------------
-	// Feature Detection
-	//------------------------------------------
+	/**
+	 * Feature Detection
+	 */
 	public function existFilter(): bool {
 		$tables = ['filter', 'filter_group', 'product_filter', 'category_filter'];
 
@@ -609,9 +611,9 @@ class ModelToolExportImportBase extends Model {
 		return true;
 	}
 
-	//------------------------------------------
-	// Count / Min / Max Queries
-	//------------------------------------------
+	/**
+	 * Count / Min / Max Queries
+	 */
 	public function getMaxCustomerId(): int {
 		$query = $this->db->query("SELECT MAX(customer_id) AS max_customer_id FROM `" . DB_PREFIX . "customer`");
 
@@ -675,9 +677,9 @@ class ModelToolExportImportBase extends Model {
 		return isset($query->row['count_product']) ? (int)$query->row['count_product'] : 0;
 	}
 
-	//------------------------------------------
-	// Diagnostic Count Queries
-	//------------------------------------------
+	/**
+	 * Diagnostic Count Queries
+	 */
 	public function getOptionNameCounts(): array {
 		$default_language_id = $this->getDefaultLanguageId();
 

@@ -13,9 +13,9 @@ require_once DIR_APPLICATION . 'model/tool/export_import_base.php';
  * Class ModelToolExportImportImp
  */
 class ModelToolExportImportImp extends ModelToolExportImportBase {
-	//------------------------------------------
-	// Shared helpers for ID lookups
-	//------------------------------------------
+	/**
+	 * Shared helpers for ID lookups
+	 */
 	protected function getAvailableCustomerIds(): array {
 		$result = $this->db->query("SELECT `customer_id` FROM `" . DB_PREFIX . "customer`");
 		$customer_ids = [];
@@ -179,9 +179,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		return ctype_digit((string)$value);
 	}
 
-	//------------------------------------------
-	// Customers Import
-	//------------------------------------------
+	/**
+	 * Customers Import
+	 */
 	protected function storeCustomerIntoDatabase(&$customer, &$available_customer_ids, &$customer_group_ids): void {
 		$customer_id = $customer['customer_id'];
 		$customer_group_id = isset($customer_group_ids[$customer['customer_group']])
@@ -346,9 +346,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Addresses Import
-	//------------------------------------------
+	/**
+	 * Addresses Import
+	 */
 	protected function storeAddressIntoDatabase(&$address): void {
 		$customer_id = $address['customer_id'];
 		$default = ((strtoupper($address['default']) === "TRUE") || (strtoupper($address['default']) === "YES") || (strtoupper($address['default']) === "ENABLED")) ? 1 : 0;
@@ -508,9 +508,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Categories Import
-	//------------------------------------------
+	/**
+	 * Categories Import
+	 */
 	protected function storeCategoryIntoDatabase(&$category, $languages, &$layout_ids, &$available_store_ids, &$url_alias_ids): void {
 		$category_id = $category['category_id'];
 		$parent_id = $category['parent_id'];
@@ -772,9 +772,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Category Filters Import
-	//------------------------------------------
+	/**
+	 * Category Filters Import
+	 */
 	protected function storeCategoryFilterIntoDatabase(&$category_filter, $languages): void {
 		$sql = "INSERT INTO `" . DB_PREFIX . "category_filter`";
 		$sql .= " (`category_id`,`filter_id`) VALUES (" . (int)$category_filter['category_id'] . ", " . (int)$category_filter['filter_id'] . ")";
@@ -891,9 +891,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Products Import
-	//------------------------------------------
+	/**
+	 * Products Import
+	 */
 	protected function storeManufacturerIntoDatabase(&$manufacturers, &$manufacturer_name, &$manufacturer_description, &$store_ids, &$available_store_ids): void {
 		$language_ids = $this->getLanguages();
 
@@ -1402,9 +1402,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		return $view_counts;
 	}
 
-	//------------------------------------------
-	// Additional Images Import
-	//------------------------------------------
+	/**
+	 * Additional Images Import
+	 */
 	protected function storeAdditionalImageIntoDatabase(&$image, &$old_product_image_ids): void {
 		$product_id = $image['product_id'];
 		$image_name = $image['image_name'];
@@ -1519,9 +1519,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Specials Import
-	//------------------------------------------
+	/**
+	 * Specials Import
+	 */
 	protected function storeSpecialIntoDatabase(&$special, &$old_product_special_ids, &$customer_group_ids): void {
 		$product_id = $special['product_id'];
 		$customer_group_id = $customer_group_ids[$special['customer_group']] ?? $this->config->get('config_customer_group_id');
@@ -1648,9 +1648,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Discounts Import
-	//------------------------------------------
+	/**
+	 * Discounts Import
+	 */
 	protected function storeDiscountIntoDatabase(&$discount, &$old_product_discount_ids, &$customer_group_ids): void {
 		$product_id = $discount['product_id'];
 		$customer_group_id = $customer_group_ids[$discount['customer_group']] ?? $this->config->get('config_customer_group_id');
@@ -1782,10 +1782,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Rewards Import
-	//------------------------------------------
-
+	/**
+	 * Rewards Import
+	 */
 	protected function storeRewardIntoDatabase(&$reward, &$old_product_reward_ids, &$customer_group_ids): void {
 		$product_id = $reward['product_id'];
 		$customer_group_id = $customer_group_ids[$reward['customer_group']] ?? $this->config->get('config_customer_group_id');
@@ -1902,10 +1901,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Product Options Import
-	//------------------------------------------
-
+	/**
+	 * Product Options Import
+	 */
 	protected function storeProductOptionIntoDatabase(&$product_option, &$old_product_option_ids): void {
 		$product_id = $product_option['product_id'];
 		$option_id = $product_option['option_id'];
@@ -2034,9 +2032,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Product Option Values Import
-	//------------------------------------------
+	/**
+	 * Product Option Values Import
+	 */
 	protected function storeProductOptionValueIntoDatabase(&$product_option_value, &$old_product_option_value_ids): void {
 		$product_id = $product_option_value['product_id'];
 		$option_id = $product_option_value['option_id'];
@@ -2208,9 +2206,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Product Colors Import
-	//------------------------------------------
+	/**
+	 * Product Colors Import
+	 */
 	protected function storeProductColorIntoDatabase(&$product_color): void {
 		$sql = "INSERT INTO `" . DB_PREFIX . "product_color`";
 		$sql .= " (`product_color_id`,`product_id`,`palette_color_id`)";
@@ -2309,9 +2307,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Product Fields Import
-	//------------------------------------------
+	/**
+	 * Product Fields Import
+	 */
 	protected function storeProductFieldIntoDatabase(&$product_field, $languages): void {
 		$product_id = $product_field['product_id'];
 		$field_id = $product_field['field_id'];
@@ -2422,9 +2420,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Product Attributes Import
-	//------------------------------------------
+	/**
+	 * Product Attributes Import
+	 */
 	protected function storeProductAttributeIntoDatabase(&$product_attribute, $languages): void {
 		$product_id = $product_attribute['product_id'];
 		$attribute_id = $product_attribute['attribute_id'];
@@ -2560,9 +2558,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Product Filters Import
-	//------------------------------------------
+	/**
+	 * Product Filters Import
+	 */
 	protected function storeProductFilterIntoDatabase(&$product_filter, $languages): void {
 		$sql = "INSERT INTO `" . DB_PREFIX . "product_filter`";
 		$sql .= " (`product_id`,`filter_id`) VALUES (" . (int)$product_filter['product_id'] . ", " . (int)$product_filter['filter_id'] . ")";
@@ -2679,9 +2677,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Options Import
-	//------------------------------------------
+	/**
+	 * Options Import
+	 */
 	protected function storeOptionIntoDatabase(&$option, $languages): void {
 		$option_id = $option['option_id'];
 		$sort_order = $option['sort_order'];
@@ -2772,10 +2770,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Option Values Import
-	//------------------------------------------
-
+	/**
+	 * Option Values Import
+	 */
 	protected function storeOptionValueIntoDatabase(&$option_value, $languages, $exist_image = true): void {
 		$option_value_id = $option_value['option_value_id'];
 		$option_id = $option_value['option_id'];
@@ -2890,9 +2887,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Attribute Groups Import
-	//------------------------------------------
+	/**
+	 * Attribute Groups Import
+	 */
 	protected function storeAttributeGroupIntoDatabase(&$attribute_group, $languages): void {
 		$attribute_group_id = $attribute_group['attribute_group_id'];
 		$sort_order = $attribute_group['sort_order'];
@@ -2982,9 +2979,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Attributes Import
-	//------------------------------------------
+	/**
+	 * Attributes Import
+	 */
 	protected function storeAttributeIntoDatabase(&$attribute, $languages): void {
 		$attribute_id = $attribute['attribute_id'];
 		$attribute_group_id = $attribute['attribute_group_id'];
@@ -3082,9 +3079,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Filter Groups Import
-	//------------------------------------------
+	/**
+	 * Filter Groups Import
+	 */
 	protected function storeFilterGroupIntoDatabase(&$filter_group, $languages): void {
 		$filter_group_id = $filter_group['filter_group_id'];
 		$sort_order = $filter_group['sort_order'];
@@ -3174,9 +3171,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Filters Import
-	//------------------------------------------
+	/**
+	 * Filters Import
+	 */
 	protected function storeFilterIntoDatabase(&$filter, $languages): void {
 		$filter_id = $filter['filter_id'];
 		$filter_group_id = $filter['filter_group_id'];
@@ -3273,10 +3270,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Fields Import
-	//------------------------------------------
-
+	/**
+	 * Fields Import
+	 */
 	protected function storeFieldIntoDatabase(&$field, $languages): void {
 		$field_id = $field['field_id'];
 		$sort_order = $field['sort_order'];
@@ -3380,9 +3376,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Palettes Import
-	//------------------------------------------
+	/**
+	 * Palettes Import
+	 */
 	protected function storePaletteIntoDatabase(&$palette, $languages): void {
 		$palette_color_id = $palette['palette_color_id'];
 		$palette_id = $palette['palette_id'];
@@ -3537,9 +3533,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Validation
-	//------------------------------------------
+	/**
+	 * Validation
+	 */
 	protected function validateHeading(&$data, &$expected, &$multilingual): bool {
 		$heading = [];
 
@@ -4779,29 +4775,29 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$heading_checks = [
-			'validateCustomers'          => 'error_customers_header',
-			'validateAddresses'          => 'error_addresses_header',
-			'validateCategories'         => 'error_categories_header',
-			'validateCategoryFilters'    => 'error_category_filters_header',
-			'validateProducts'           => 'error_products_header',
-			'validateAdditionalImages'   => 'error_additional_images_header',
-			'validateSpecials'           => 'error_specials_header',
-			'validateDiscounts'          => 'error_discounts_header',
-			'validateRewards'            => 'error_rewards_header',
-			'validateProductOptions'     => 'error_product_options_header',
+			'validateCustomers'           => 'error_customers_header',
+			'validateAddresses'           => 'error_addresses_header',
+			'validateCategories'          => 'error_categories_header',
+			'validateCategoryFilters'     => 'error_category_filters_header',
+			'validateProducts'            => 'error_products_header',
+			'validateAdditionalImages'    => 'error_additional_images_header',
+			'validateSpecials'            => 'error_specials_header',
+			'validateDiscounts'           => 'error_discounts_header',
+			'validateRewards'             => 'error_rewards_header',
+			'validateProductOptions'      => 'error_product_options_header',
 			'validateProductOptionValues' => 'error_product_option_values_header',
-			'validateProductColors'      => 'error_product_colors_header',
-			'validateProductFields'      => 'error_product_fields_header',
-			'validateProductAttributes'  => 'error_product_attributes_header',
-			'validateProductFilters'     => 'error_product_filters_header',
-			'validateOptions'            => 'error_options_header',
-			'validateOptionValues'       => 'error_option_values_header',
-			'validateAttributeGroups'    => 'error_attribute_groups_header',
-			'validateAttributes'         => 'error_attributes_header',
-			'validateFilterGroups'       => 'error_filter_groups_header',
-			'validateFilters'            => 'error_filters_header',
-			'validateFields'             => 'error_fields_header',
-			'validatePalettes'           => 'error_palettes_header',
+			'validateProductColors'       => 'error_product_colors_header',
+			'validateProductFields'       => 'error_product_fields_header',
+			'validateProductAttributes'   => 'error_product_attributes_header',
+			'validateProductFilters'      => 'error_product_filters_header',
+			'validateOptions'             => 'error_options_header',
+			'validateOptionValues'        => 'error_option_values_header',
+			'validateAttributeGroups'     => 'error_attribute_groups_header',
+			'validateAttributes'          => 'error_attributes_header',
+			'validateFilterGroups'        => 'error_filter_groups_header',
+			'validateFilters'             => 'error_filters_header',
+			'validateFields'              => 'error_fields_header',
+			'validatePalettes'            => 'error_palettes_header',
 		];
 
 		foreach ($heading_checks as $method => $error_key) {
@@ -4830,21 +4826,21 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		];
 
 		$deps = [
-			'Addresses'          => ['customers',       'error_addresses'],
-			'CategoryFilters'    => ['categories',      'error_category_filters'],
-			'ProductOptions'     => ['products',        'error_product_options'],
+			'Addresses'           => ['customers', 'error_addresses'],
+			'CategoryFilters'     => ['categories', 'error_category_filters'],
+			'ProductOptions'      => ['products', 'error_product_options'],
 			'ProductOptionValues' => ['product_options', 'error_product_option_values_2'],
-			'AdditionalImages'   => ['products',        'error_additional_images'],
-			'Specials'           => ['products',        'error_specials'],
-			'Discounts'          => ['products',        'error_discounts'],
-			'Rewards'            => ['products',        'error_rewards'],
-			'ProductColors'      => ['products',        'error_product_colors'],
-			'ProductFields'      => ['products',        'error_product_fields'],
-			'ProductAttributes'  => ['products',        'error_product_attributes'],
-			'ProductFilters'     => ['products',        'error_product_filters'],
-			'OptionValues'       => ['options',         'error_option_values'],
-			'Attributes'         => ['attribute_groups', 'error_attributes'],
-			'Filters'            => ['filter_groups',   'error_filters'],
+			'AdditionalImages'    => ['products', 'error_additional_images'],
+			'Specials'            => ['products', 'error_specials'],
+			'Discounts'           => ['products', 'error_discounts'],
+			'Rewards'             => ['products', 'error_rewards'],
+			'ProductColors'       => ['products', 'error_product_colors'],
+			'ProductFields'       => ['products', 'error_product_fields'],
+			'ProductAttributes'   => ['products', 'error_product_attributes'],
+			'ProductFilters'      => ['products', 'error_product_filters'],
+			'OptionValues'        => ['options', 'error_option_values'],
+			'Attributes'          => ['attribute_groups', 'error_attributes'],
+			'Filters'             => ['filter_groups', 'error_filters'],
 		];
 
 		foreach ($names as $name) {
@@ -4866,11 +4862,11 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		// Post-ordering checks
 		$post_checks = [
-			['customers',       'addresses',          'error_addresses_2'],
+			['customers', 'addresses', 'error_addresses_2'],
 			['product_options', 'product_option_values', 'error_product_option_values_3'],
-			['attribute_groups','attributes',          'error_attributes_2'],
-			['filter_groups',   'filters',             'error_filters_2'],
-			['options',         'option_values',       'error_option_values_2'],
+			['attribute_groups', 'attributes', 'error_attributes_2'],
+			['filter_groups', 'filters', 'error_filters_2'],
+			['options', 'option_values', 'error_option_values_2'],
 		];
 
 		foreach ($post_checks as [$a, $b, $err]) {
@@ -4905,9 +4901,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		return $ok;
 	}
 
-	//------------------------------------------
-	// Upload Entry Point
-	//------------------------------------------
+	/**
+	 * Upload Entry Point
+	 */
 	public function upload($filename, $incremental = false) {
 		global $registry;
 		$registry = $this->registry;

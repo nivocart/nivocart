@@ -13,9 +13,9 @@ require_once DIR_APPLICATION . 'model/tool/export_import_base.php';
  * Class ModelToolExportImportExp
  */
 class ModelToolExportImportExp extends ModelToolExportImportBase {
-	//------------------------------------------
-	// Customers Export
-	//------------------------------------------
+	/**
+	 * Customers Export
+	 */
 	protected function getCustomers($offset = null, $rows = null, $min_id = null, $max_id = null): array {
 		$language_id = $this->getDefaultLanguageId();
 
@@ -143,9 +143,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Addresses Export
-	//------------------------------------------
+	/**
+	 * Addresses Export
+	 */
 	protected function getAddresses($min_id, $max_id): array {
 		$language_id = $this->getDefaultLanguageId();
 
@@ -229,9 +229,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Categories Export
-	//------------------------------------------
+	/**
+	 * Categories Export
+	 */
 	protected function getStoreIdsForCategories(): array {
 		$store_ids = [];
 
@@ -435,9 +435,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Category Filters Export
-	//------------------------------------------
+	/**
+	 * Category Filters Export
+	 */
 	protected function getFilterGroupNames($language_id): array {
 		$filter_group_names = [];
 
@@ -541,9 +541,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Products Export
-	//------------------------------------------
+	/**
+	 * Products Export
+	 */
 	protected function getStoreIdsForProducts(): array {
 		$store_ids = [];
 
@@ -902,9 +902,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Product sub-sheets Export (shared pattern)
-	//------------------------------------------
+	/**
+	 * Product sub-sheets Export (shared pattern)
+	 */
 	protected function getAdditionalImages($min_id = null, $max_id = null): array {
 		$sql = "SELECT p.product_id, pia.image, pia.palette_color_id, pia.sort_order";
 		$sql .= " FROM `" . DB_PREFIX . "product_image` pia";
@@ -1669,10 +1669,10 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Options / Attributes / Filters / Fields / Palettes Export
-	// (shared description-merge pattern)
-	//------------------------------------------
+	/**
+	 * Options / Attributes / Filters / Fields / Palettes Export
+	 * (shared description-merge pattern)
+	 */
 	private function mergeDescriptions($results, $descriptions, $languages, $keys): array {
 		foreach ($languages as $language) {
 			$language_code = $language['code'];
@@ -2173,9 +2173,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		}
 	}
 
-	//------------------------------------------
-	// Shared Style Builder
-	//------------------------------------------
+	/**
+	 * Shared Style Builder
+	 */
 	private function buildWorkbookStyles(): array {
 		return [
 			'box_format' => [
@@ -2206,9 +2206,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		];
 	}
 
-	//------------------------------------------
-	// Download Entry Point
-	//------------------------------------------
+	/**
+	 * Download Entry Point
+	 */
 	public function download($export_type, $offset = null, $rows = null, $min_id = null, $max_id = null) {
 		global $registry;
 		$registry = $this->registry;
