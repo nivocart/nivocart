@@ -129,19 +129,19 @@ class ControllerStep3 extends Controller {
 		}
 
 		if (isset($this->request->post['db_username'])) {
-			$this->data['db_username'] = html_entity_decode($this->request->post['db_username']);
+			$this->data['db_username'] = html_entity_decode($this->request->post['db_username'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$this->data['db_username'] = '';
 		}
 
 		if (isset($this->request->post['db_password'])) {
-			$this->data['db_password'] = html_entity_decode($this->request->post['db_password']);
+			$this->data['db_password'] = html_entity_decode($this->request->post['db_password'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$this->data['db_password'] = '';
 		}
 
 		if (isset($this->request->post['db_database'])) {
-			$this->data['db_database'] = html_entity_decode($this->request->post['db_database']);
+			$this->data['db_database'] = html_entity_decode($this->request->post['db_database'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$this->data['db_database'] = '';
 		}
@@ -153,7 +153,7 @@ class ControllerStep3 extends Controller {
 		}
 
 		if (isset($this->request->post['db_prefix'])) {
-			$this->data['db_prefix'] = html_entity_decode($this->request->post['db_prefix']);
+			$this->data['db_prefix'] = html_entity_decode($this->request->post['db_prefix'], ENT_QUOTES, 'UTF-8');
 		} else {
 			$this->data['db_prefix'] = 'nc_';
 		}
