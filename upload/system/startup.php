@@ -39,7 +39,8 @@ if (!isset($_SERVER['HTTP_HOST'])) {
 // Check if SSL
 if ((isset($_SERVER['HTTPS']) && in_array($_SERVER['HTTPS'], ['on', '1'], true)) ||
 	(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === '443') ||
-	(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+	(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+) {
 	$_SERVER['HTTPS'] = true;
 } else {
 	$_SERVER['HTTPS'] = false;
@@ -75,7 +76,6 @@ require_once DIR_SYSTEM . 'library/browser.php';
 
 // Helper
 require_once DIR_SYSTEM . 'helper/agent.php';
-require_once DIR_SYSTEM . 'helper/crypto.php';
 require_once DIR_SYSTEM . 'helper/pdf.php';
 require_once DIR_SYSTEM . 'helper/totals.php';
 require_once DIR_SYSTEM . 'helper/utf8.php';

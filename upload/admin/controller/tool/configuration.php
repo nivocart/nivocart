@@ -6,10 +6,10 @@
  */
 class ControllerToolConfiguration extends Controller {
 	private $error = [];
-	private $_name = 'configuration';
+	private $name = 'configuration';
 
 	public function index() {
-		$this->language->load('tool/' . $this->_name);
+		$this->language->load('tool/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -17,7 +17,7 @@ class ControllerToolConfiguration extends Controller {
 	}
 
 	public function getConfiguration() {
-		$this->language->load('tool/' . $this->_name);
+		$this->language->load('tool/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -31,7 +31,7 @@ class ControllerToolConfiguration extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('tool/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('tool/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
@@ -160,7 +160,7 @@ class ControllerToolConfiguration extends Controller {
 		if ($database_name === 'mysqli') {
 			$this->data['database_name'] = 'MySQLi / MariaDB';
 		} else {
-			$this->data['database_name'] = 'SQL';
+			$this->data['database_name'] = 'MySQL';
 		}
 
 		// Engines
@@ -291,8 +291,6 @@ class ControllerToolConfiguration extends Controller {
 
 		$this->data['helper_files'] = [
 			'agent'  => $ds(DIR_SYSTEM . 'helper/agent.php'),
-			'crypto' => $ds(DIR_SYSTEM . 'helper/crypto.php'),
-			'json'   => $ds(DIR_SYSTEM . 'helper/json.php'),
 			'pdf'    => $ds(DIR_SYSTEM . 'helper/pdf.php'),
 			'totals' => $ds(DIR_SYSTEM . 'helper/totals.php'),
 			'utf8'   => $ds(DIR_SYSTEM . 'helper/utf8.php'),
@@ -366,7 +364,7 @@ class ControllerToolConfiguration extends Controller {
 		}
 
 		// Render
-		$this->template = 'tool/' . $this->_name . '.tpl';
+		$this->template = 'tool/' . $this->name . '.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
