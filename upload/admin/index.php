@@ -6,13 +6,13 @@ define('RELEASED', '2026-04-18');
 
 // Configuration
 if (file_exists('config.php')) {
-	require_once('config.php');
+	require_once 'config.php';
 }
 
 // Install
 if (!defined('DIR_APPLICATION')) {
 	header('Location: ../install/index.php');
-	exit();
+	exit(1);
 }
 
 // Startup
