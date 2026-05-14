@@ -27,7 +27,7 @@ define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 define('NC_VERSION', '2.0.0 Beta');
 
 // Startup
-require_once(DIR_SYSTEM . 'startup.php');
+require_once DIR_SYSTEM . 'startup.php';
 
 // Registry
 $registry = new Registry();

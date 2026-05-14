@@ -137,7 +137,6 @@ $_['button_back']            = '&#10094; &nbsp; Back';
 
 // Prepare
 $_['text_prepare'] = '<h3>Welcome to NivoCart!</h3>
-    <h3>Preparing for Installation</h3>
     <p>This quick guide is designed to help you through the installation process. The installation process
 	 contains 4 steps: 1-Agree to the License, 2-Validate server settings, 3-Install the database,
 	 4-Confirm successful install. In order to perform a smooth installation it is recommended to prepare
@@ -146,10 +145,9 @@ $_['text_prepare'] = '<h3>Welcome to NivoCart!</h3>
 	<p>To create a new database, open <b>PhpMyAdmin</b> from your Hosting Provider\'s dashboard. In PhpMyAdmin,
 	 the first page should be the one with the option to create a new MySQL database. However, it is advised
 	 before creating your new database, to create a new database user with all the privileges,
-	 then create the database. NivoCart uses &ldquo;utf8mb4_general_ci&rdquo; collation by default,
-	 so it is recommended to select this collation when creating the database. <b>Make sure to write down
-	 your user and MySQL database details before leaving PhpMyAdmin</b>, as they will be required during
-	 the rest of the installation process.</p>
+	 then create the database. NivoCart uses &ldquo;utf8mb4_general_ci&rdquo; collation by default.
+	 <b>Make sure to write down your user and MySQL database details before leaving PhpMyAdmin</b>,
+	 as they will be required during the rest of the installation process.</p>
 	<h3>Renaming the config-dist files</h3>
 	<p>Rename both &ldquo;<b>config-dist.php</b>&rdquo; to &ldquo;<b>config.php</b>&rdquo; using
 	 your Hosting Provider\'s File manager. The first one is at the <b>root</b> of the NivoCart\'s package,

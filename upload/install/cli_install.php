@@ -34,7 +34,7 @@ define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 define('NC_VERSION', '2.0.0');
 
 // Startup
-require_once(DIR_SYSTEM . 'startup.php');
+require_once DIR_SYSTEM . 'startup.php';
 
 // Registry
 $registry = new Registry();
@@ -283,7 +283,7 @@ function setupDb($data): void {
 		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_url', `value` = '" . $db->escape(HTTP_NIVOCART) . "'");
 
 		$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_encryption'");
-		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(mb_substr(md5(uniqid(rand(), true)), 0, 16, 'UTF-8')) . "'");
+		$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_encryption', `value` = '" . $db->escape(bin2hex(random_bytes(16))) . "'");
 
 		$db->query("INSERT INTO `" . $data['db_prefix'] . "version` SET `version` = '" . $db->escape(NC_VERSION) . "', date_added = NOW()");
 	}

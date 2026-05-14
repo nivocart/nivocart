@@ -2394,7 +2394,7 @@ class ControllerSettingSetting extends Controller {
 			$this->model_tool_system->setupSeo();
 		}
 
-		if ((mb_strlen($this->request->post['config_encryption'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_encryption'], 'UTF-8') > 32)) {
+		if ((mb_strlen($this->request->post['config_encryption'], 'UTF-8') < 8) || (mb_strlen($this->request->post['config_encryption'], 'UTF-8') > 32)) {
 			$this->error['encryption'] = $this->language->get('error_encryption');
 		}
 
