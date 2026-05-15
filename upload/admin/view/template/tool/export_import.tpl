@@ -260,45 +260,6 @@
                 </label>
               </td>
             </tr>
-            <tr>
-              <td>
-                <label>
-                <?php if ($settings_use_export_pclzip) { ?>
-                  <input type="checkbox" name="export_import_settings_use_export_pclzip" value="1" id="use_export_pclzip" class="checkbox" checked />
-                  <label for="use_export_pclzip"><span></span> <?php echo $entry_settings_use_export_pclzip; ?></label>
-                <?php } else { ?>
-                  <input type="checkbox" name="export_import_settings_use_export_pclzip" value="1" id="use_export_pclzip" class="checkbox" />
-                  <label for="use_export_pclzip"><span></span> <?php echo $entry_settings_use_export_pclzip; ?></label>
-                <?php } ?>
-                </label>
-              </td>
-            </tr>
-            <tr class="highlighted">
-              <td>
-                <label>
-                <?php if ($settings_use_export_cache) { ?>
-                  <input type="checkbox" name="export_import_settings_use_export_cache" value="1" id="use_export_cache" class="checkbox" checked />
-                  <label for="use_export_cache"><span></span> <?php echo $entry_settings_use_export_cache; ?></label>
-                <?php } else { ?>
-                  <input type="checkbox" name="export_import_settings_use_export_cache" value="1" id="use_export_cache" class="checkbox" />
-                  <label for="use_export_cache"><span></span> <?php echo $entry_settings_use_export_cache; ?></label>
-                <?php } ?>
-                </label>
-              </td>
-            </tr>
-            <tr class="highlighted">
-              <td>
-                <label>
-                <?php if ($settings_use_import_cache) { ?>
-                  <input type="checkbox" name="export_import_settings_use_import_cache" value="1" id="use_import_cache" class="checkbox" checked />
-                  <label for="use_import_cache"><span></span> <?php echo $entry_settings_use_import_cache; ?></label>
-                <?php } else { ?>
-                  <input type="checkbox" name="export_import_settings_use_import_cache" value="1" id="use_import_cache" class="checkbox" />
-                  <label for="use_import_cache"><span></span> <?php echo $entry_settings_use_import_cache; ?></label>
-                <?php } ?>
-                </label>
-              </td>
-            </tr>
             <tr class="highlighted">
               <td class="buttons"><a onclick="updateSettings();" class="button-filter animated fadeIn ripple"><i class="fa fa-gears"></i> &nbsp;&nbsp; <?php echo $button_settings; ?></a></td>
             </tr>

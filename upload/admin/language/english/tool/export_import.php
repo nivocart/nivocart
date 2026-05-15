@@ -47,9 +47,6 @@ $_['entry_settings_use_attribute_id']                   = 'Use <b>attribute_id</
 $_['entry_settings_use_filter_group_id']                = 'Use <b>filter_group_id</b> instead of <b>filter_group name</b> in worksheets \'ProductFilters\' and \'CategoryFilters\'';
 $_['entry_settings_use_filter_id']                      = 'Use <b>filter_id</b> instead of <b>filter name</b> in worksheets \'ProductFilters\' and \'CategoryFilters\'';
 $_['entry_settings_use_export_tags']                    = 'Use <b>html tags</b> when exporting Html content (Recommended). Note: this may generate duplicates when Html can not be converted, but does preserve the formatting.';
-$_['entry_settings_use_export_pclzip']                  = 'Use Export and Import with <b>PclZip</b>. (Beta)';
-$_['entry_settings_use_export_cache']                   = 'Use phpTemp cache for large Exports (will be slightly slower)';
-$_['entry_settings_use_import_cache']                   = 'Use phpTemp cache for large Imports (will be slightly slower)';
 
 // Error
 $_['error_permission']                                  = 'Warning: You do not have permission to modify <b>Export / Import (XLSX)</b> !';

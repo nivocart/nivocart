@@ -180,12 +180,20 @@ class ControllerToolExportImport extends Controller {
 		$this->load->model('tool/export_import_base');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateSettingsForm()) {
-			if (!isset($this->request->post['export_import_settings_use_export_cache'])) {
-				$this->request->post['export_import_settings_use_export_cache'] = '0';
-			}
+			$checkboxes = [
+				'export_import_settings_use_option_id',
+				'export_import_settings_use_option_value_id',
+				'export_import_settings_use_attribute_group_id',
+				'export_import_settings_use_attribute_id',
+				'export_import_settings_use_filter_group_id',
+				'export_import_settings_use_filter_id',
+				'export_import_settings_use_export_tags'
+			];
 
-			if (!isset($this->request->post['export_import_settings_use_import_cache'])) {
-				$this->request->post['export_import_settings_use_import_cache'] = '0';
+			foreach ($checkboxes as $key) {
+				if (!isset($this->request->post[$key])) {
+					$this->request->post[$key] = '0';
+				}
 			}
 
 			$this->load->model('setting/setting');
@@ -245,9 +253,6 @@ class ControllerToolExportImport extends Controller {
 		$this->data['entry_settings_use_filter_group_id'] = $this->language->get('entry_settings_use_filter_group_id');
 		$this->data['entry_settings_use_filter_id'] = $this->language->get('entry_settings_use_filter_id');
 		$this->data['entry_settings_use_export_tags'] = $this->language->get('entry_settings_use_export_tags');
-		$this->data['entry_settings_use_export_pclzip'] = $this->language->get('entry_settings_use_export_pclzip');
-		$this->data['entry_settings_use_export_cache'] = $this->language->get('entry_settings_use_export_cache');
-		$this->data['entry_settings_use_import_cache'] = $this->language->get('entry_settings_use_import_cache');
 
 		$this->data['tab_export'] = $this->language->get('tab_export');
 		$this->data['tab_import'] = $this->language->get('tab_import');
@@ -457,33 +462,6 @@ class ControllerToolExportImport extends Controller {
 			$this->data['settings_use_export_tags'] = '1';
 		} else {
 			$this->data['settings_use_export_tags'] = '0';
-		}
-
-		// Use Pclzip function (default OFF)
-		if (isset($this->request->post['export_import_settings_use_export_pclzip'])) {
-			$this->data['settings_use_export_pclzip'] = $this->request->post['export_import_settings_use_export_pclzip'];
-		} elseif ($this->config->get('export_import_settings_use_export_pclzip')) {
-			$this->data['settings_use_export_pclzip'] = '1';
-		} else {
-			$this->data['settings_use_export_pclzip'] = '0';
-		}
-
-		// Use PHPTemp for Export (default OFF)
-		if (isset($this->request->post['export_import_settings_use_export_cache'])) {
-			$this->data['settings_use_export_cache'] = $this->request->post['export_import_settings_use_export_cache'];
-		} elseif ($this->config->get('export_import_settings_use_export_cache')) {
-			$this->data['settings_use_export_cache'] = '1';
-		} else {
-			$this->data['settings_use_export_cache'] = '0';
-		}
-
-		// Use PHPTemp for Import (default OFF)
-		if (isset($this->request->post['export_import_settings_use_import_cache'])) {
-			$this->data['settings_use_import_cache'] = $this->request->post['export_import_settings_use_import_cache'];
-		} elseif ($this->config->get('export_import_settings_use_import_cache')) {
-			$this->data['settings_use_import_cache'] = '1';
-		} else {
-			$this->data['settings_use_import_cache'] = '0';
 		}
 
 		$min_customer_id = $this->model_tool_export_import_base->getMinCustomerId();

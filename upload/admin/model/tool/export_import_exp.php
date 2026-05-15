@@ -110,6 +110,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		$customers = $this->getCustomers($offset, $rows, $min_id, $max_id);
+
 		$length = count($customers);
 		$min_id = ($length > 0) ? $customers[0]['customer_id'] : 0;
 		$max_id = ($length > 0) ? $customers[$length - 1]['customer_id'] : 0;
@@ -688,11 +689,11 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			$language_code = strtolower($language['code']);
 
 			foreach ($results->rows as $key => $row) {
-				$results->rows[$key]['name'][$language_code]             = $product_descriptions[$language_code][$key]['name'] ?? '';
-				$results->rows[$key]['description'][$language_code]      = $product_descriptions[$language_code][$key]['description'] ?? '';
+				$results->rows[$key]['name'][$language_code] = $product_descriptions[$language_code][$key]['name'] ?? '';
+				$results->rows[$key]['description'][$language_code] = $product_descriptions[$language_code][$key]['description'] ?? '';
 				$results->rows[$key]['meta_description'][$language_code] = $product_descriptions[$language_code][$key]['meta_description'] ?? '';
-				$results->rows[$key]['meta_keyword'][$language_code]     = $product_descriptions[$language_code][$key]['meta_keyword'] ?? '';
-				$results->rows[$key]['tag'][$language_code]              = $product_descriptions[$language_code][$key]['tag'] ?? '';
+				$results->rows[$key]['meta_keyword'][$language_code] = $product_descriptions[$language_code][$key]['meta_keyword'] ?? '';
+				$results->rows[$key]['tag'][$language_code] = $product_descriptions[$language_code][$key]['tag'] ?? '';
 			}
 		}
 
@@ -2213,27 +2214,18 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		global $registry;
 		$registry = $this->registry;
 
+		ob_start(); // Buffer any accidental output
+
 		set_error_handler('error_handler_for_export_import', E_ALL);
 		register_shutdown_function('fatal_error_shutdown_handler_for_export_import');
 
 		$cwd = getcwd();
 		chdir(DIR_SYSTEM . 'vendor');
-		require_once('phpexcel/PHPExcel.php');
+		require_once 'phpexcel/PHPExcel.php';
 		PHPExcel_Cell::setValueBinder(new PHPExcel_Cell_ExportImportValueBinder());
 		chdir($cwd);
 
 		$all = !isset($offset) && !isset($rows) && !isset($min_id) && !isset($max_id);
-
-		if ($this->config->get('export_import_settings_use_export_cache')) {
-			PHPExcel_Settings::setCacheStorageMethod(
-				PHPExcel_CachedObjectStorageFactory::CACHETOPHPTEMP,
-				['memoryCacheSize' => '16MB']
-			);
-		}
-
-		if ($this->config->get('export_import_settings_use_export_pclzip')) {
-			PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
-		}
 
 		$this->posted_categories = $this->getPostedCategories();
 
@@ -2242,7 +2234,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 
 			$workbook = new PHPExcel();
 			$workbook->getDefaultStyle()->getFont()->setName('Arial');
-			$workbook->getDefaultStyle()->getFont()->setSize(10);
+			$workbook->getDefaultStyle()->getFont()->setSize(12);
 			$workbook->getDefaultStyle()->getAlignment()->setWrapText(true);
 			$workbook->getDefaultStyle()->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 			$workbook->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
@@ -2448,6 +2440,8 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 
 			$filename = $filenames[$export_type] ?? $datetime . '.xlsx';
 
+			ob_end_clean(); // Discard any buffered output before sending file headers
+
 			header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 			header('Content-Disposition: attachment; filename="' . $filename . '"');
 			header('Cache-Control: max-age=0');
@@ -2455,6 +2449,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			$objWriter = PHPExcel_IOFactory::createWriter($workbook, 'Excel2007');
 			$objWriter->setPreCalculateFormulas(false);
 			$objWriter->save('php://output');
+			exit(0); // Required here
 
 			$this->clearSpreadsheetCache();
 

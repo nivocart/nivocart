@@ -61,7 +61,7 @@ function error_handler_for_export_import($errno, $errstr, $errfile, $errline) {
 
 		header('Status: ' . 302);
 		header('Location: ' . str_replace(['&amp;', "\n", "\r"], ['&', '', ''], $link));
-		exit();
+		exit(0);
 	}
 
 	return true;

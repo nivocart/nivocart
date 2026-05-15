@@ -4916,7 +4916,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 			$cwd = getcwd();
 			chdir(DIR_SYSTEM . 'vendor');
-			require_once('phpexcel/PHPExcel.php');
+			require_once 'phpexcel/PHPExcel.php' ;
 			chdir($cwd);
 
 			if ($this->config->get('export_import_settings_use_import_cache')) {
@@ -4927,6 +4927,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			}
 
 			$inputFileType = PHPExcel_IOFactory::identify($filename);
+
 			$objReader = PHPExcel_IOFactory::createReader($inputFileType);
 			$objReader->setReadDataOnly(true);
 
