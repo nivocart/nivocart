@@ -710,7 +710,6 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		$this->data['action'] = $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['token'] = $this->session->data['token'];
@@ -851,7 +850,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$layouts_array = [];
+
+		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		if (isset($this->request->post['config_layout_id'])) {
 			$this->data['config_layout_id'] = $this->request->post['config_layout_id'];
@@ -864,7 +865,9 @@ class ControllerSettingSetting extends Controller {
 		// Local
 		$this->load->model('localisation/country');
 
-		$this->data['countries'] = $this->model_localisation_country->getCountries();
+		$countries_array = [];
+
+		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
 
 		if (isset($this->request->post['config_country_id'])) {
 			$this->data['config_country_id'] = $this->request->post['config_country_id'];
@@ -880,7 +883,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$languages_array = [];
+
+		$this->data['languages'] = $this->model_localisation_language->getLanguages($languages_array);
 
 		if (isset($this->request->post['config_language'])) {
 			$this->data['config_language'] = $this->request->post['config_language'];
@@ -898,7 +903,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/length_class');
 
-		$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
+		$length_classes_array = [];
+
+		$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses($length_classes_array);
 
 		if (isset($this->request->post['config_length_class_id'])) {
 			$this->data['config_length_class_id'] = $this->request->post['config_length_class_id'];
@@ -910,7 +917,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/weight_class');
 
-		$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
+		$weight_classes_array = [];
+
+		$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses($weight_classes_array);
 
 		if (isset($this->request->post['config_weight_class_id'])) {
 			$this->data['config_weight_class_id'] = $this->request->post['config_weight_class_id'];
@@ -922,7 +931,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/currency');
 
-		$this->data['currencies'] = $this->model_localisation_currency->getCurrencies();
+		$currencies_array = [];
+
+		$this->data['currencies'] = $this->model_localisation_currency->getCurrencies($currencies_array);
 
 		if (isset($this->request->post['config_currency'])) {
 			$this->data['config_currency'] = $this->request->post['config_currency'];
@@ -1050,7 +1061,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$order_statuses_array = [];
+
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
 
 		if (isset($this->request->post['config_complete_status_id'])) {
 			$this->data['config_complete_status_id'] = $this->request->post['config_complete_status_id'];
@@ -1246,7 +1259,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/stock_status');
 
-		$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
+		$stock_statuses_array = [];
+
+		$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses($stock_statuses_array);
 
 		if (isset($this->request->post['config_stock_status_id'])) {
 			$this->data['config_stock_status_id'] = $this->request->post['config_stock_status_id'];
@@ -1256,7 +1271,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('sale/supplier_group');
 
-		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups();
+		$supplier_groups_array = [];
+
+		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups($supplier_groups_array);
 
 		if (isset($this->request->post['config_supplier_group_id'])) {
 			$this->data['config_supplier_group_id'] = $this->request->post['config_supplier_group_id'];
@@ -1272,7 +1289,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('sale/customer_group');
 
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+		$customer_groups_array = [];
+
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
 
 		if (isset($this->request->post['config_customer_group_id'])) {
 			$this->data['config_customer_group_id'] = $this->request->post['config_customer_group_id'];
@@ -1326,7 +1345,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('catalog/information');
 
-		$this->data['informations'] = $this->model_catalog_information->getInformations();
+		$informations_array = [];
+
+		$this->data['informations'] = $this->model_catalog_information->getInformations($informations_array);
 
 		if (isset($this->request->post['config_account_id'])) {
 			$this->data['config_account_id'] = $this->request->post['config_account_id'];
@@ -1402,7 +1423,9 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/return_status');
 
-		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses();
+		$return_statuses_array = [];
+
+		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses($return_statuses_array);
 
 		if (isset($this->request->post['config_return_status_id'])) {
 			$this->data['config_return_status_id'] = $this->request->post['config_return_status_id'];
