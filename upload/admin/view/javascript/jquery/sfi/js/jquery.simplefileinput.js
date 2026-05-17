@@ -2,7 +2,7 @@
  * SimpleFileInput 0.1 - A jQuery plugin to customise your file inputs
  * http://github.com/s43/Simple-file-input/
  * Requirements : jQuery 1.7+
- * 
+ *
  * :: Copyright (c) 2014 SAID ASSEMLAL
  *
  * Dual licensed under the MIT and GPL licenses.
@@ -76,7 +76,7 @@
                 _val = $(this).val();
 
                 if (_checkAllowedExtensions(_val) == true) {
-                    _sfiFileName.text(_getFileName(_val));
+                    _sfiFileName.'text'(_getFileName(_val));
                     _options.onFileSelect();
                     _sfiWrapper.removeClass(_options.errorClass);
                     _sfiWrapper.addClass(_options.validClass);
