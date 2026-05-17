@@ -462,14 +462,14 @@ function validateExportForm(id) {
 	var export_type = $('input[name=export_type]:checked').val();
 
 	if (export_type === 'm') {
-		var count_item = <?php echo $count_customer-1; ?>;
+		var count_item = <?php echo $count_customer - 1; ?>;
 	} else if (export_type === 'c') {
-		var count_item = <?php echo $count_category-1; ?>;
+		var count_item = <?php echo $count_category - 1; ?>;
 	} else {
-		var count_item = <?php echo $count_product-1; ?>;
+		var count_item = <?php echo $count_product - 1; ?>;
 	}
 
-	var batchNo = parseInt(count_item/parseInt(min))+1;
+	var batchNo = parseInt(count_item/parseInt(min)) + 1;
 
 	if (parseInt(export_type === 'm')) {
 		var minItemId = <?php echo $min_customer_id; ?>;
@@ -491,7 +491,7 @@ function validateExportForm(id) {
 			alert("<?php echo $error_page_no_data; ?>");
 			return false;
 		} else {
-			$("input[name=max]").val(parseInt(max)+1);
+			$("input[name=max]").val(parseInt(max) + 1);
 		}
 	} else {
 		if (minItemId <= 0) {

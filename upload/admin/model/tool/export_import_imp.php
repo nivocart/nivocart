@@ -768,7 +768,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$this->load->model('catalog/category');
 
 		if (method_exists($this->model_catalog_category, 'repairCategories')) {
-			$this->model_catalog_category->repairCategories(0);
+			$parent_id = 0;
+
+			$this->model_catalog_category->repairCategories($parent_id);
 		}
 	}
 
@@ -3560,7 +3562,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 				$bracket_end = strripos($entry, ')', $bracket_start);
 
-				if ($bracket_end <= $bracket_start || $bracket_end + 1 !== strlen($entry)) {
+				if ($bracket_end <= $bracket_start || ($bracket_end + 1) !== strlen($entry)) {
 					return false;
 				}
 
@@ -4069,7 +4071,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$product_ids[] = $product_id;
 		}
 
-		$worksheets = ['AdditionalImages', 'Specials', 'Discounts', 'Rewards', 'ProductOptions', 'ProductOptionValues', 'ProductColors', 'ProductFields', 'ProductAttributes'];
+		$worksheets = ['AdditionalImages', 'Specials', 'Discounts', 'Rewards', 'ProductOptions', 'ProductOptionValues', 'ProductColors', 'ProductFields', 'ProductAttributes', 'ProductFilters'];
 
 		foreach ($worksheets as $worksheet) {
 			$data = $reader->getSheetByName($worksheet);
@@ -4194,9 +4196,8 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				if (!in_array($customer_id, $customer_ids) && !in_array($customer_id, $unlisted)) {
 					$unlisted[] = $customer_id;
 					$this->log->write(str_replace(['%1', '%2'], [$worksheet, $customer_id], $this->language->get('error_unlisted_customer_id')));
+					$ok = false;
 				}
-
-				$ok = false;
 
 				if ($customer_id < $previous_customer_id) {
 					$this->log->write(str_replace(['%1', '%2'], [$worksheet, $customer_id], $this->language->get('error_wrong_order_customer_id')));
@@ -4365,13 +4366,13 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$options = [];
 
 		foreach ($this->db->query($sql)->rows as $row) {
-			$key = $use_option_id ? $row['option_id'] : htmlspecialchars_decode($row['option_name']);
+			$key = $use_option_id ? $row['option_id'] : htmlspecialchars_decode($row['option_name'] ?? '');
 
 			if (!isset($options[$key])) {
 				$options[$key] = [];
 			}
 
-			$val = $use_option_value_id ? $row['option_value_id'] : htmlspecialchars_decode($row['option_value_name']);
+			$val = $use_option_value_id ? $row['option_value_id'] : htmlspecialchars_decode($row['option_value_name'] ?? '');
 
 			if (!is_null($val)) {
 				$options[$key][$val] = true;
@@ -4502,13 +4503,13 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$attribute_groups = [];
 
 		foreach ($this->db->query($sql)->rows as $row) {
-			$group_key = $use_ag_id ? $row['attribute_group_id'] : htmlspecialchars_decode($row['attribute_group_name']);
+			$group_key = $use_ag_id ? $row['attribute_group_id'] : htmlspecialchars_decode($row['attribute_group_name'] ?? '');
 
 			if (!isset($attribute_groups[$group_key])) {
 				$attribute_groups[$group_key] = [];
 			}
 
-			$attr_key = $use_a_id ? $row['attribute_id'] : htmlspecialchars_decode($row['attribute_name']);
+			$attr_key = $use_a_id ? $row['attribute_id'] : htmlspecialchars_decode($row['attribute_name'] ?? '');
 
 			if (!is_null($attr_key)) {
 				$attribute_groups[$group_key][$attr_key] = true;
@@ -4587,13 +4588,13 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$filter_groups = [];
 
 		foreach ($this->db->query($sql)->rows as $row) {
-			$group_key = $use_fg_id ? $row['filter_group_id'] : htmlspecialchars_decode($row['filter_group_name']);
+			$group_key = $use_fg_id ? $row['filter_group_id'] : htmlspecialchars_decode($row['filter_group_name'] ?? '');
 
 			if (!isset($filter_groups[$group_key])) {
 				$filter_groups[$group_key] = [];
 			}
 
-			$filter_key = $use_f_id ? $row['filter_id'] : htmlspecialchars_decode($row['filter_name']);
+			$filter_key = $use_f_id ? $row['filter_id'] : htmlspecialchars_decode($row['filter_name'] ?? '');
 
 			if (!is_null($filter_key)) {
 				$filter_groups[$group_key][$filter_key] = true;
@@ -4862,7 +4863,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		// Post-ordering checks
 		$post_checks = [
-			['customers', 'addresses', 'error_addresses_2'],
+			// ['customers', 'addresses', 'error_addresses_2'],
 			['product_options', 'product_option_values', 'error_product_option_values_3'],
 			['attribute_groups', 'attributes', 'error_attributes_2'],
 			['filter_groups', 'filters', 'error_filters_2'],
@@ -4918,13 +4919,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			chdir(DIR_SYSTEM . 'vendor');
 			require_once 'phpexcel/PHPExcel.php' ;
 			chdir($cwd);
-
-			if ($this->config->get('export_import_settings_use_import_cache')) {
-				PHPExcel_Settings::setCacheStorageMethod(
-					PHPExcel_CachedObjectStorageFactory::CACHETOPHPTEMP,
-					['memoryCacheSize' => '16MB']
-				);
-			}
 
 			$inputFileType = PHPExcel_IOFactory::identify($filename);
 
