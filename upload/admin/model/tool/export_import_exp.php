@@ -741,7 +741,6 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description') + 4, 48) + 1); }
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_description') + 4, 32) + 1); }
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords') + 4, 24) + 1); }
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('stock_status_id'), 3) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'), 5) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('layout'), 16) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('related_ids'), 16) + 1);
@@ -751,6 +750,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('subtract'), 5) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('minimum'), 5) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('viewed'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('stock_status_id'), 3) + 1);
 
 		$styles = [];
 		$data = [];
@@ -796,7 +796,6 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		foreach ($languages as $language) { $styles[$j] = &$text_format; $data[$j++] = 'description(' . $language['code'] . ')'; }
 		foreach ($languages as $language) { $styles[$j] = &$text_format; $data[$j++] = 'meta_description(' . $language['code'] . ')'; }
 		foreach ($languages as $language) { $styles[$j] = &$text_format; $data[$j++] = 'meta_keywords(' . $language['code'] . ')'; }
-		$data[$j++] = 'stock_status_id';
 		$data[$j++] = 'store_ids';
 		$styles[$j] = &$text_format; $data[$j++] = 'layout';
 		$data[$j++] = 'related_ids';
@@ -806,6 +805,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$data[$j++] = 'subtract';
 		$data[$j++] = 'minimum';
 		$data[$j++] = 'viewed';
+		$data[$j++] = 'stock_status_id';
 
 		$worksheet->getRowDimension($i)->setRowHeight(30);
 		$this->setCellRow($worksheet, $i, $data, $box_format);
@@ -872,7 +872,6 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			}
 			foreach ($languages as $language) { $data[$j++] = html_entity_decode($row['meta_description'][$language['code']], ENT_QUOTES, 'UTF-8'); }
 			foreach ($languages as $language) { $data[$j++] = html_entity_decode($row['meta_keyword'][$language['code']], ENT_QUOTES, 'UTF-8'); }
-			$data[$j++] = $row['stock_status_id'];
 
 			$store_id_list = '';
 			if (isset($store_ids_map[$product_id])) {
@@ -896,6 +895,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			$data[$j++] = ($row['subtract'] === 0) ? 'false' : 'true';
 			$data[$j++] = $row['minimum'];
 			$data[$j++] = $row['viewed'];
+			$data[$j++] = $row['stock_status_id'];
 
 			$this->setCellRow($worksheet, $i, $data, $this->null_array, $styles);
 			$i += 1;

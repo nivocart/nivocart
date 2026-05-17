@@ -549,7 +549,7 @@ class ModelToolExportImportBase extends Model {
 			}
 		}
 
-		$worksheet->fromArray($data, null, 'A' . $row, true);
+		$worksheet->fromArray(array_values($data), null, 'A' . $row);
 	}
 
 	protected function setCell($worksheet, $row, $col, $val, $style = null) {

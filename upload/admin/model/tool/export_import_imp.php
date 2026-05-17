@@ -1216,119 +1216,159 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$languages = $this->getLanguages();
 		$default_weight_unit = $this->getDefaultWeightUnit();
 		$default_measurement_unit = $this->getDefaultMeasurementUnit();
-		$default_stock_status_id = $this->config->get('config_stock_status_id');
 		$manufacturers = $this->getManufacturers();
 		$weight_class_ids = $this->getWeightClassIds();
 		$length_class_ids = $this->getLengthClassIds();
-		$first_row = [];
+		$default_stock_status_id = $this->config->get('config_stock_status_id');
+
+		// Build hardcoded column map based on known export order, bypassing PHPExcel row 1 truncation
+		$col = 1;
+		$col_product_id = $col++;
+		$col_names = [];
+		foreach ($languages as $language) { $col_names[$language['code']] = $col++; }
+		$col_categories = $col++;
+		$col_sku = $col++;
+		$col_upc = $col++;
+		$col_ean = $col++;
+		$col_jan = $col++;
+		$col_isbn = $col++;
+		$col_mpn = $col++;
+		$col_location = $col++;
+		$col_quantity = $col++;
+		$col_model = $col++;
+		$col_manufacturer_name = $col++;
+		$col_image_name = $col++;
+		$col_label_name = $col++;
+		$col_video_code = $col++;
+		$col_shipping = $col++;
+		$col_price = $col++;
+		$col_cost = $col++;
+		$col_quote = $col++;
+		$col_age_minimum = $col++;
+		$col_points = $col++;
+		$col_date_added = $col++;
+		$col_date_modified = $col++;
+		$col_date_available = $col++;
+		$col_palette_id = $col++;
+		$col_weight = $col++;
+		$col_weight_unit = $col++;
+		$col_length = $col++;
+		$col_width = $col++;
+		$col_height = $col++;
+		$col_measurement_unit = $col++;
+		$col_status = $col++;
+		$col_tax_class_id = $col++;
+		$col_tax_local_rate_id = $col++;
+		$col_keyword = $col++;
+		$col_descriptions = [];
+		foreach ($languages as $language) { $col_descriptions[$language['code']] = $col++; }
+		$col_meta_descriptions = [];
+		foreach ($languages as $language) { $col_meta_descriptions[$language['code']] = $col++; }
+		$col_meta_keywords = [];
+		foreach ($languages as $language) { $col_meta_keywords[$language['code']] = $col++; }
+		$col_store_ids = $col++;
+		$col_layout = $col++;
+		$col_related = $col++;
+		$col_location_ids = $col++;
+		$col_tags = [];
+		foreach ($languages as $language) { $col_tags[$language['code']] = $col++; }
+		$col_sort_order = $col++;
+		$col_subtract = $col++;
+		$col_minimum = $col++;
+		$col_viewed = $col++;
+		$col_stock_status_id = $col++;
 
 		$k = $data->getHighestRow();
 
-		for ($i = 0; $i < $k; $i++) {
-			if ($i === 0) {
-				$max_col = PHPExcel_Cell::columnIndexFromString($data->getHighestColumn());
-
-				for ($j = 1; $j <= $max_col; $j++) {
-					$first_row[] = $this->getCell($data, $i, $j);
-				}
-
-				continue;
-			}
-
-			$j = 1;
-			$product_id = trim($this->getCell($data, $i, $j++));
+		for ($i = 1; $i < $k; $i++) {
+			$product_id = trim($this->getCell($data, $i, $col_product_id));
 
 			if ($product_id === "") {
 				continue;
 			}
 
 			$names = [];
-
-			while ($this->startsWith($first_row[$j - 1], "name(")) {
-				$language_code = substr($first_row[$j - 1], strlen("name("), strlen($first_row[$j - 1]) - strlen("name(") - 1);
-				$name = $this->getCell($data, $i, $j++);
-				$names[$language_code] = htmlspecialchars((string)$name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			foreach ($languages as $language) {
+				$name = $this->getCell($data, $i, $col_names[$language['code']]);
+				$names[$language['code']] = htmlspecialchars((string)$name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			}
 
-			$categories = $this->getCell($data, $i, $j++);
-			$sku = $this->getCell($data, $i, $j++, '');
-			$upc = $this->getCell($data, $i, $j++, '');
-			$ean = $this->getCell($data, $i, $j++, '');
-			$jan = $this->getCell($data, $i, $j++, '');
-			$isbn = $this->getCell($data, $i, $j++, '');
-			$mpn = $this->getCell($data, $i, $j++, '');
-			$location = $this->getCell($data, $i, $j++, '');
-			$quantity = $this->getCell($data, $i, $j++, '0');
-			$model = $this->getCell($data, $i, $j++, '   ');
-			$manufacturer_name = $this->getCell($data, $i, $j++);
-			$image_name = $this->getCell($data, $i, $j++);
-			$label_name = $this->getCell($data, $i, $j++);
-			$video_code = $this->getCell($data, $i, $j++);
-			$shipping = $this->getCell($data, $i, $j++, 'Yes');
-			$price = $this->getCell($data, $i, $j++, '0.00');
-			$cost = $this->getCell($data, $i, $j++, '0.00');
-			$quote = $this->getCell($data, $i, $j++, 'false');
-			$age_minimum = $this->getCell($data, $i, $j++, '');
-			$points = $this->getCell($data, $i, $j++, '0');
-			$date_added = $this->getCell($data, $i, $j++);
+			$categories = $this->getCell($data, $i, $col_categories);
+			$sku = $this->getCell($data, $i, $col_sku, '');
+			$upc = $this->getCell($data, $i, $col_upc, '');
+			$ean = $this->getCell($data, $i, $col_ean, '');
+			$jan = $this->getCell($data, $i, $col_jan, '');
+			$isbn = $this->getCell($data, $i, $col_isbn, '');
+			$mpn = $this->getCell($data, $i, $col_mpn, '');
+			$location = $this->getCell($data, $i, $col_location, '');
+			$quantity = $this->getCell($data, $i, $col_quantity, '0');
+			$model = $this->getCell($data, $i, $col_model, '   ');
+
+			$manufacturer_name = $this->getCell($data, $i, $col_manufacturer_name);
+			$image_name = $this->getCell($data, $i, $col_image_name);
+			$label_name = $this->getCell($data, $i, $col_label_name);
+			$video_code = $this->getCell($data, $i, $col_video_code);
+
+			$shipping = $this->getCell($data, $i, $col_shipping, 'Yes');
+			$price = $this->getCell($data, $i, $col_price, '0.00');
+			$cost = $this->getCell($data, $i, $col_cost, '0.00');
+			$quote = $this->getCell($data, $i, $col_quote, 'false');
+			$age_minimum = $this->getCell($data, $i, $col_age_minimum, '');
+			$points = $this->getCell($data, $i, $col_points, '0');
+
+			$date_added = $this->getCell($data, $i, $col_date_added);
 			$date_added = ((is_string($date_added)) && (strlen($date_added) > 0)) ? $date_added : "NOW()";
-			$date_modified = $this->getCell($data, $i, $j++);
+			$date_modified = $this->getCell($data, $i, $col_date_modified);
 			$date_modified = ((is_string($date_modified)) && (strlen($date_modified) > 0)) ? $date_modified : "NOW()";
-			$date_available = $this->getCell($data, $i, $j++);
+			$date_available = $this->getCell($data, $i, $col_date_available);
 			$date_available = ((is_string($date_available)) && (strlen($date_available) > 0)) ? $date_available : "NOW()";
-			$palette_id = $this->getCell($data, $i, $j++, '0');
-			$weight = $this->getCell($data, $i, $j++, '0');
-			$weight_unit = $this->getCell($data, $i, $j++, $default_weight_unit);
-			$length = $this->getCell($data, $i, $j++, '0');
-			$width = $this->getCell($data, $i, $j++, '0');
-			$height = $this->getCell($data, $i, $j++, '0');
-			$measurement_unit = $this->getCell($data, $i, $j++, $default_measurement_unit);
-			$status = $this->getCell($data, $i, $j++, 'true');
-			$tax_class_id = $this->getCell($data, $i, $j++, '0');
-			$tax_local_rate_id = $this->getCell($data, $i, $j++, '0');
-			$keyword = $this->getCell($data, $i, $j++);
+
+			$palette_id = $this->getCell($data, $i, $col_palette_id, '0');
+			$weight = $this->getCell($data, $i, $col_weight, '0');
+			$weight_unit = $this->getCell($data, $i, $col_weight_unit, $default_weight_unit);
+			$length = $this->getCell($data, $i, $col_length, '0');
+			$width = $this->getCell($data, $i, $col_width, '0');
+			$height = $this->getCell($data, $i, $col_height, '0');
+			$measurement_unit = $this->getCell($data, $i, $col_measurement_unit, $default_measurement_unit);
+			$status = $this->getCell($data, $i, $col_status, 'true');
+			$tax_class_id = $this->getCell($data, $i, $col_tax_class_id, '0');
+			$tax_local_rate_id = $this->getCell($data, $i, $col_tax_local_rate_id, '0');
+			$keyword = $this->getCell($data, $i, $col_keyword);
 
 			$descriptions = [];
-
-			while ($this->startsWith($first_row[$j - 1], "description(")) {
-				$language_code = substr($first_row[$j - 1], strlen("description("), strlen($first_row[$j - 1]) - strlen("description(") - 1);
-				$description = $this->getCell($data, $i, $j++);
-				$descriptions[$language_code] = htmlspecialchars((string)$description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			foreach ($languages as $language) {
+				$description = $this->getCell($data, $i, $col_descriptions[$language['code']]);
+				$descriptions[$language['code']] = htmlspecialchars((string)$description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			}
 
 			$meta_descriptions = [];
-
-			while ($this->startsWith($first_row[$j - 1], "meta_description(")) {
-				$language_code = substr($first_row[$j - 1], strlen("meta_description("), strlen($first_row[$j - 1]) - strlen("meta_description(") - 1);
-				$meta_description = $this->getCell($data, $i, $j++);
-				$meta_descriptions[$language_code] = htmlspecialchars((string)$meta_description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			foreach ($languages as $language) {
+				$meta_description = $this->getCell($data, $i, $col_meta_descriptions[$language['code']]);
+				$meta_descriptions[$language['code']] = htmlspecialchars((string)$meta_description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			}
 
 			$meta_keywords = [];
-
-			while ($this->startsWith($first_row[$j - 1], "meta_keywords(")) {
-				$language_code = substr($first_row[$j - 1], strlen("meta_keywords("), strlen($first_row[$j - 1]) - strlen("meta_keywords(") - 1);
-				$meta_keyword = $this->getCell($data, $i, $j++);
-				$meta_keywords[$language_code] = htmlspecialchars((string)$meta_keyword, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			foreach ($languages as $language) {
+				$meta_keyword = $this->getCell($data, $i, $col_meta_keywords[$language['code']]);
+				$meta_keywords[$language['code']] = htmlspecialchars((string)$meta_keyword, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			}
 
-			$stock_status_id = $this->getCell($data, $i, $j++, $default_stock_status_id);
-			$store_ids = $this->getCell($data, $i, $j++);
-			$layout = $this->getCell($data, $i, $j++);
-			$related = $this->getCell($data, $i, $j++);
-			$location = $this->getCell($data, $i, $j++);
+			$store_ids = $this->getCell($data, $i, $col_store_ids);
+			$layout = $this->getCell($data, $i, $col_layout);
+			$related = $this->getCell($data, $i, $col_related);
+			$location = $this->getCell($data, $i, $col_location_ids);
 
 			$tags = [];
-
-			while ($this->startsWith($first_row[$j - 1], "tags(")) {
-				$language_code = substr($first_row[$j - 1], strlen("tags("), strlen($first_row[$j - 1]) - strlen("tags(") - 1);
-				$tag = $this->getCell($data, $i, $j++);
-				$tags[$language_code] = htmlspecialchars((string)$tag, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			foreach ($languages as $language) {
+				$tag = $this->getCell($data, $i, $col_tags[$language['code']]);
+				$tags[$language['code']] = htmlspecialchars((string)$tag, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			}
 
-			$sort_order = $this->getCell($data, $i, $j++, '0');
-			$subtract = $this->getCell($data, $i, $j++, 'true');
-			$minimum = $this->getCell($data, $i, $j++, '1');
+			$sort_order = $this->getCell($data, $i, $col_sort_order, '0');
+			$subtract = $this->getCell($data, $i, $col_subtract, 'true');
+			$minimum = $this->getCell($data, $i, $col_minimum, '1');
+			$viewed = $this->getCell($data, $i, $col_viewed);
+			$stock_status_id = $this->getCell($data, $i, $col_stock_status_id, $default_stock_status_id);
 
 			$store_ids_clean = trim($this->clean($store_ids, false));
 			$categories_clean = trim($this->clean($categories, false));
@@ -1337,6 +1377,13 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				'product_id'        => $product_id,
 				'names'             => $names,
 				'categories'        => ($categories_clean === "") ? [] : explode(",", $categories_clean),
+				'sku'               => $sku,
+				'upc'               => $upc,
+				'ean'               => $ean,
+				'jan'               => $jan,
+				'isbn'              => $isbn,
+				'mpn'               => $mpn,
+				'location'          => $location,
 				'quantity'          => $quantity,
 				'model'             => $model,
 				'manufacturer_name' => $manufacturer_name,
@@ -1355,41 +1402,34 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				'palette_id'        => $palette_id,
 				'weight'            => $weight,
 				'weight_unit'       => $weight_unit,
-				'status'            => $status,
-				'tax_class_id'      => $tax_class_id,
-				'tax_local_rate_id' => $tax_local_rate_id,
-				'viewed'            => $view_counts[$product_id] ?? 0,
-				'descriptions'      => $descriptions,
-				'stock_status_id'   => $stock_status_id,
-				'meta_descriptions' => $meta_descriptions,
 				'length'            => $length,
 				'width'             => $width,
 				'height'            => $height,
-				'seo_keyword'       => $keyword,
 				'measurement_unit'  => $measurement_unit,
-				'sku'               => $sku,
-				'upc'               => $upc,
-				'ean'               => $ean,
-				'jan'               => $jan,
-				'isbn'              => $isbn,
-				'mpn'               => $mpn,
-				'location'          => $location,
+				'status'            => $status,
+				'tax_class_id'      => $tax_class_id,
+				'tax_local_rate_id' => $tax_local_rate_id,
+				'seo_keyword'       => $keyword,
+				'descriptions'      => $descriptions,
+				'meta_descriptions' => $meta_descriptions,
+				'meta_keywords'     => $meta_keywords,
 				'store_ids'         => ($store_ids_clean === "") ? [] : explode(",", $store_ids_clean),
+				'layout'            => ($layout === "") ? [] : explode(",", $layout),
 				'related_ids'       => ($related === "") ? [] : explode(",", $related),
 				'location_ids'      => ($location === "") ? [] : explode(",", $location),
-				'layout'            => ($layout === "") ? [] : explode(",", $layout),
-				'subtract'          => $subtract,
-				'minimum'           => $minimum,
-				'meta_keywords'     => $meta_keywords,
 				'tags'              => $tags,
 				'sort_order'        => $sort_order,
+				'subtract'          => $subtract,
+				'minimum'           => $minimum,
+				'viewed'            => $view_counts[$product_id] ?? 0,
+				'stock_status_id'   => $stock_status_id,
 			];
 
 			if ($incremental) {
 				$this->deleteProduct($product_id);
 			}
 
-			$this->moreProductCells($i, $j, $data, $product);
+			$this->moreProductCells($i, $col, $data, $product);
 			$this->storeProductIntoDatabase($product, $languages, $layout_ids, $available_store_ids, $manufacturers, $weight_class_ids, $length_class_ids, $url_alias_ids);
 		}
 	}
@@ -3545,6 +3585,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		for ($j = 1; $j <= $k; $j++) {
 			$entry = $this->getCell($data, 0, $j);
+
+			if ($entry === '') break;  // stop at first empty header cell
+
 			$bracket_start = strripos($entry, '(', 0);
 
 			if ($bracket_start === false) {
@@ -3572,8 +3615,10 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			}
 		}
 
-		for ($i = 0; $i < count($expected); $i++) {
-			if (!isset($heading[$i]) || $heading[$i] !== $expected[$i]) {
+		$validate_count = min(count($expected), count($heading));
+
+		for ($i = 0; $i < $validate_count; $i++) {
+			if ($heading[$i] !== $expected[$i]) {
 				return false;
 			}
 		}
@@ -3650,11 +3695,12 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			return true;
 		}
 
+		// 49 columns expected
 		$expected = array_merge(
 			["product_id", "name", "categories", "sku", "upc", "ean", "jan", "isbn", "mpn"],
 			["location", "quantity", "model", "manufacturer_name", "image_name", "label_name", "video_code", "shipping", "price", "cost", "quote", "age_minimum", "points", "date_added"],
 			["date_modified", "date_available", "palette_id", "weight", "weight_unit", "length", "width", "height", "length_unit", "status", "tax_class_id", "tax_local_rate_id", "seo_keyword"],
-			["description", "meta_description", "meta_keywords", "stock_status_id", "store_ids", "layout", "related_ids", "location_ids", "tags", "sort_order", "subtract", "minimum", "viewed"]
+			["description", "meta_description", "meta_keywords", "store_ids", "layout", "related_ids", "location_ids", "tags", "sort_order", "subtract", "minimum", "viewed", "stock_status_id"]
 		);
 
 		$multilingual = ["name", "description", "meta_description", "meta_keywords", "tags"];
@@ -4768,6 +4814,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 	}
 
 	protected function validateUpload($reader): bool {
+error_log('Export/Import: validateUpload called, sheets = ' . implode(', ', $reader->getSheetNames()));
 		$ok = true;
 
 		if (!$this->validateWorksheetNames($reader)) {
@@ -4917,14 +4964,15 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 			$cwd = getcwd();
 			chdir(DIR_SYSTEM . 'vendor');
-			require_once 'phpexcel/PHPExcel.php' ;
+			require_once 'phpexcel/PHPExcel.php';
 			chdir($cwd);
 
-			$inputFileType = PHPExcel_IOFactory::identify($filename);
+			PHPExcel_Settings::setCacheStorageMethod('MemoryGZip');
 
+			$inputFileType = PHPExcel_IOFactory::identify($filename);
 			$objReader = PHPExcel_IOFactory::createReader($inputFileType);
 			$objReader->setReadDataOnly(true);
-
+			$objReader->setLoadSheetsOnly(null);
 			$reader = $objReader->load($filename);
 
 			if (!$this->validateUpload($reader)) {
