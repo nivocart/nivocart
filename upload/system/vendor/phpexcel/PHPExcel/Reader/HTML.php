@@ -461,7 +461,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 			fclose($this->_fileHandle);
 			throw new PHPExcel_Reader_Exception($pFilename . " is an Invalid HTML file.");
 		}
-		//	Close after validating
+		// Close after validating
 		fclose($this->_fileHandle);
 
 		// Create new PHPExcel
@@ -470,16 +470,17 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 		}
 		$objPHPExcel->setActiveSheetIndex($this->_sheetIndex);
 
-		//	Create a new DOM object
+		// Create a new DOM object
 		$dom = new domDocument();
-		//	Reload the HTML file into the DOM object
-		$loaded = $dom->loadHTML(mb_convert_encoding($this->securityScanFile($pFilename), 'HTML-ENTITIES', 'UTF-8'));
+
+		// Reload the HTML file into the DOM object
+		$loaded = $dom->loadHTML(html_entity_decode($this->securityScanFile($pFilename), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
 		if ($loaded === false) {
 			throw new PHPExcel_Reader_Exception('Failed to load ', $pFilename, ' as a DOM Document');
 		}
 
-		//	Discard white space
+		// Discard white space
 		$dom->preserveWhiteSpace = false;
 
 		$row = 0;
