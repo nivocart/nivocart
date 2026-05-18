@@ -92,7 +92,7 @@ $_['entry_length']            = 'Length Class:';
 $_['entry_weight']            = 'Weight:';
 $_['entry_weight_class']      = 'Weight Class:';
 
-$_['entry_store']             = 'Stores:';
+$_['entry_store']             = 'Stores:<span class="help">At least one store should be selected, otherwise the product will not be displayed.</span>';
 $_['entry_category']          = 'Categories:';
 $_['entry_manufacturer']      = 'Manufacturer:';
 $_['entry_filter']            = 'Filters:';
