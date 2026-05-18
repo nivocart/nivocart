@@ -352,7 +352,7 @@ $(document).ready(function() {
 	$('.custom-input-class').simpleFileInput({
 		placeholder: '<?php echo $entry_upload; ?>',
 		buttonText: 'Select',
-		allowedExts: ['xls', 'xlsx', 'ods'],
+		allowedExts: ['xls', 'xlsx', 'ods', 'zip'],
 		width: 282
 	});
 });

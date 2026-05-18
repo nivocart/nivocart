@@ -459,34 +459,6 @@ class ModelToolExportImportBase extends Model {
 		return $filter_ids;
 	}
 
-	protected function getExistingVideoProductIds(): array {
-		$product_ids = [0];
-
-		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_youtube`");
-
-		foreach ($result->rows as $row) {
-			if (!in_array((int)$row['product_id'], $product_ids)) {
-				$product_ids[] = (int)$row['product_id'];
-			}
-		}
-
-		return $product_ids;
-	}
-
-	protected function getExistingProductTaxLocalRateIds(): array {
-		$product_ids = [0];
-
-		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_tax_local_rate`");
-
-		foreach ($result->rows as $row) {
-			if (!in_array((int)$row['product_id'], $product_ids)) {
-				$product_ids[] = (int)$row['product_id'];
-			}
-		}
-
-		return $product_ids;
-	}
-
 	protected function getPostedCategories(): string {
 		$posted_categories = '';
 

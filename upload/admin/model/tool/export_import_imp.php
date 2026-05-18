@@ -194,8 +194,8 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$telephone = $customer['telephone'];
 		$gender = $customer['gender'];
 		$date_of_birth = $customer['date_of_birth'];
-		$password = $customer['password'];
-		$salt = $customer['salt'];
+		$password = $this->db->escape($customer['password']);
+		$salt = $this->db->escape($customer['salt']);
 		$cart = $customer['cart'];
 		$wishlist = ((strtoupper($customer['wishlist']) === "TRUE") || (strtoupper($customer['wishlist']) === "YES") || (strtoupper($customer['wishlist']) === "ENABLED")) ? 1 : 0;
 		$newsletter = ((strtoupper($customer['newsletter']) === "TRUE") || (strtoupper($customer['newsletter']) === "YES") || (strtoupper($customer['newsletter']) === "ENABLED")) ? 1 : 0;
@@ -251,14 +251,19 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$customer_group_ids = $this->getCustomerGroupIds();
 		$available_customer_ids = [];
 
-		if ($incremental) {
-			$available_customer_ids = $this->getAvailableCustomerIds();
-		} else {
-			$this->deleteCustomers();
+		// Preserve existing password/salt before deleting
+		if ($incremental && $available_customer_ids && in_array((int)$customer_id, $available_customer_ids)) {
+			$existing = $this->db->query("SELECT `password`, `salt` FROM `" . DB_PREFIX . "customer` WHERE customer_id = '" . (int)$customer_id . "'");
+
+			if ($existing->num_rows) {
+				$customer['password'] = $existing->row['password'];
+				$customer['salt'] = $existing->row['salt'];
+			}
+
+			$this->deleteCustomer($customer_id);
 		}
 
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -412,7 +417,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		$previous_customer_id = 0;
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -451,7 +455,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 			$country_id = isset($available_country_ids[$country]) ? $available_country_ids[$country] : 0;
 
-			// Zone matching with fallback encoding attempts
 			if (!isset($available_zone_ids[$country][$zone])) {
 				$zone = html_entity_decode($zone, ENT_QUOTES, 'UTF-8');
 			}
@@ -629,9 +632,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$alias_query = $this->db->query("SELECT (MAX(url_alias_id)+1) AS next_url_alias_id FROM `" . DB_PREFIX . "url_alias`");
-
 		$next_url_alias_id = $alias_query->row['next_url_alias_id'];
-
 		$this->db->query("ALTER TABLE `" . DB_PREFIX . "url_alias` AUTO_INCREMENT = " . (int)$next_url_alias_id);
 
 		$remove = [];
@@ -671,7 +672,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$available_store_ids = $this->getAvailableStoreIds();
 		$languages = $this->getLanguages();
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -693,7 +693,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			}
 
 			$parent_id = $this->getCell($data, $i, $j++, '0');
-
 			$names = [];
 
 			while ($this->startsWith($first_row[$j - 1], "name(")) {
@@ -769,7 +768,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		if (method_exists($this->model_catalog_category, 'repairCategories')) {
 			$parent_id = 0;
-
 			$this->model_catalog_category->repairCategories($parent_id);
 		}
 	}
@@ -826,7 +824,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$languages = $this->getLanguages();
 		$previous_category_id = 0;
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -951,8 +948,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$model = $this->db->escape($product['model']);
 		$manufacturer_name = $this->db->escape($product['manufacturer_name']);
 		$image = $this->db->escape($product['image']);
-		$label = $this->db->escape($product['label']);
-		$video_code = $this->db->escape($product['video_code']);
 		$shipping = ((strtoupper($product['shipping']) === "YES") || (strtoupper($product['shipping']) === "Y") || (strtoupper($product['shipping']) === "TRUE")) ? 1 : 0;
 		$price = trim($product['price']);
 		$cost = trim($product['cost']);
@@ -968,8 +963,8 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$status = ((strtoupper($product['status']) === "TRUE") || (strtoupper($product['status']) === "YES") || (strtoupper($product['status']) === "ENABLED")) ? 1 : 0;
 		$tax_class_id = $product['tax_class_id'];
 		$descriptions = $product['descriptions'];
-		$stock_status_id = $product['stock_status_id'];
 		$meta_descriptions = $product['meta_descriptions'];
+		$meta_keywords = $product['meta_keywords'];
 		$length = $product['length'];
 		$width = $product['width'];
 		$height = $product['height'];
@@ -982,16 +977,19 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$isbn = $this->db->escape($product['isbn']);
 		$mpn = $this->db->escape($product['mpn']);
 		$location = $this->db->escape($product['location']);
-		$store_ids = $product['store_ids'];
-		$layout = $product['layout'];
 		$related_ids = $product['related_ids'];
-		$location_ids = $product['location_ids'];
-		$subtract = ((strtoupper($product['subtract']) === "TRUE") || (strtoupper($product['subtract']) === "YES") || (strtoupper($product['subtract']) === "ENABLED")) ? 1 : 0;
-		$minimum = $product['minimum'];
-		$meta_keywords = $product['meta_keywords'];
 		$tags = $product['tags'];
-		$sort_order = $product['sort_order'];
 		$viewed = $product['viewed'];
+
+		// Removed columns — apply defaults for all new products
+		$label = '';
+		$sort_order = 1;
+		$subtract = 1;
+		$minimum = 1;
+		$stock_status_id = $this->config->get('config_stock_status_id');
+
+		// store_ids default to store 0 (default store)
+		$store_ids = [0];
 
 		if ($manufacturer_name) {
 			$manufacturer_description = $manufacturers[$manufacturer_name]['description'] ?? '';
@@ -1007,7 +1005,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$sql .= " '$location', $stock_status_id, '$model', $manufacturer_id, '$image', '$label', $shipping, $price, $cost, '$quote', $age_minimum, $points,";
 		$sql .= " '$date_added', '$date_modified', '$date_available',";
 		$sql .= " $palette_id, $weight, $weight_class_id, $status,";
-		$sql .= " $tax_class_id, $length, $width, $height, '$length_class_id', '$sort_order', '$subtract', '$minimum', $viewed)";
+		$sql .= " $tax_class_id, $length, $width, $height, '$length_class_id', $sort_order, $subtract, $minimum, $viewed)";
 
 		$this->db->query($sql);
 
@@ -1045,30 +1043,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$this->db->query($sql);
 		}
 
-		if ($product['video_code']) {
-			$product_ids = $this->getExistingVideoProductIds();
-
-			if (!in_array((int)$product_id, $product_ids)) {
-				$sql = "INSERT INTO `" . DB_PREFIX . "product_youtube` (`product_id`,`video_code`) VALUES ($product_id, '" . $product['video_code'] . "')";
-			} else {
-				$sql = "UPDATE `" . DB_PREFIX . "product_youtube` SET video_code = '" . $this->db->escape($product['video_code']) . "' WHERE product_id = '" . (int)$product_id . "'";
-			}
-
-			$this->db->query($sql);
-		}
-
-		if ($product['tax_local_rate_id']) {
-			$product_ids = $this->getExistingProductTaxLocalRateIds();
-
-			if (!in_array((int)$product_id, $product_ids)) {
-				$sql = "INSERT INTO `" . DB_PREFIX . "product_tax_local_rate` (`product_id`,`tax_local_rate_id`) VALUES ($product_id, '" . $product['tax_local_rate_id'] . "')";
-			} else {
-				$sql = "UPDATE `" . DB_PREFIX . "product_tax_local_rate` SET tax_local_rate_id = '" . (int)$product['tax_local_rate_id'] . "' WHERE product_id = '" . (int)$product_id . "'";
-			}
-
-			$this->db->query($sql);
-		}
-
 		if ($keyword) {
 			if (isset($url_alias_ids[$product_id])) {
 				$url_alias_id = $url_alias_ids[$product_id];
@@ -1085,33 +1059,11 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$this->db->query($sql);
 		}
 
+		// Insert into default store (store_id=0)
 		foreach ($store_ids as $store_id) {
 			if (in_array((int)$store_id, $available_store_ids)) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_to_store` (`product_id`,`store_id`) VALUES ($product_id, $store_id)");
 			}
-		}
-
-		$layouts = [];
-
-		foreach ($layout as $layout_part) {
-			$next_layout = explode(':', $layout_part);
-
-			if ($next_layout === false || count($next_layout) === 1) {
-				$next_layout = [0, $layout_part];
-			}
-
-			if ((count($next_layout) === 2) && (in_array((int)$next_layout[0], $available_store_ids)) && (is_string($next_layout[1]))) {
-				$store_id = (int)$next_layout[0];
-				$layout_name = $next_layout[1];
-
-				if (isset($layout_ids[$layout_name]) && !isset($layouts[$store_id])) {
-					$layouts[$store_id] = (int)$layout_ids[$layout_name];
-				}
-			}
-		}
-
-		foreach ($layouts as $store_id => $layout_id) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "product_to_layout` (`product_id`,`store_id`,`layout_id`) VALUES ($product_id, $store_id, $layout_id)");
 		}
 
 		if (count($related_ids) > 0) {
@@ -1122,19 +1074,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				$sql .= ($first) ? "\n" : ",\n";
 				$first = false;
 				$sql .= " ($product_id, $related_id)";
-			}
-
-			$this->db->query($sql);
-		}
-
-		if (count($location_ids) > 0) {
-			$sql = "INSERT INTO `" . DB_PREFIX . "product_to_location` (`product_id`,`location_id`) VALUES";
-			$first = true;
-
-			foreach ($location_ids as $location_id) {
-				$sql .= ($first) ? "\n" : ",\n";
-				$first = false;
-				$sql .= " ($product_id, $location_id)";
 			}
 
 			$this->db->query($sql);
@@ -1157,9 +1096,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$this->multiquery($sql);
 
 		$alias_query = $this->db->query("SELECT (MAX(url_alias_id)+1) AS next_url_alias_id FROM `" . DB_PREFIX . "url_alias`");
-
 		$next_url_alias_id = $alias_query->row['next_url_alias_id'];
-
 		$this->db->query("ALTER TABLE `" . DB_PREFIX . "url_alias` AUTO_INCREMENT = " . (int)$next_url_alias_id);
 
 		$remove = [];
@@ -1220,9 +1157,8 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$manufacturers = $this->getManufacturers();
 		$weight_class_ids = $this->getWeightClassIds();
 		$length_class_ids = $this->getLengthClassIds();
-		$default_stock_status_id = $this->config->get('config_stock_status_id');
 
-		// Build hardcoded column map based on known export order, bypassing PHPExcel row 1 truncation
+		// Build hardcoded column map based on known export order
 		$col = 1;
 		$col_product_id = $col++;
 		$col_names = [];
@@ -1239,8 +1175,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$col_model = $col++;
 		$col_manufacturer_name = $col++;
 		$col_image_name = $col++;
-		$col_label_name = $col++;
-		$col_video_code = $col++;
 		$col_shipping = $col++;
 		$col_price = $col++;
 		$col_cost = $col++;
@@ -1259,7 +1193,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$col_measurement_unit = $col++;
 		$col_status = $col++;
 		$col_tax_class_id = $col++;
-		$col_tax_local_rate_id = $col++;
 		$col_keyword = $col++;
 		$col_descriptions = [];
 		foreach ($languages as $language) { $col_descriptions[$language['code']] = $col++; }
@@ -1267,17 +1200,10 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		foreach ($languages as $language) { $col_meta_descriptions[$language['code']] = $col++; }
 		$col_meta_keywords = [];
 		foreach ($languages as $language) { $col_meta_keywords[$language['code']] = $col++; }
-		$col_store_ids = $col++;
-		$col_layout = $col++;
 		$col_related = $col++;
-		$col_location_ids = $col++;
 		$col_tags = [];
 		foreach ($languages as $language) { $col_tags[$language['code']] = $col++; }
-		$col_sort_order = $col++;
-		$col_subtract = $col++;
-		$col_minimum = $col++;
 		$col_viewed = $col++;
-		$col_stock_status_id = $col++;
 
 		$k = $data->getHighestRow();
 
@@ -1303,12 +1229,10 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$mpn = $this->getCell($data, $i, $col_mpn, '');
 			$location = $this->getCell($data, $i, $col_location, '');
 			$quantity = $this->getCell($data, $i, $col_quantity, '0');
-			$model = $this->getCell($data, $i, $col_model, '   ');
+			$model = $this->getCell($data, $i, $col_model, ' ');
 
 			$manufacturer_name = $this->getCell($data, $i, $col_manufacturer_name);
 			$image_name = $this->getCell($data, $i, $col_image_name);
-			$label_name = $this->getCell($data, $i, $col_label_name);
-			$video_code = $this->getCell($data, $i, $col_video_code);
 
 			$shipping = $this->getCell($data, $i, $col_shipping, 'Yes');
 			$price = $this->getCell($data, $i, $col_price, '0.00');
@@ -1333,7 +1257,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$measurement_unit = $this->getCell($data, $i, $col_measurement_unit, $default_measurement_unit);
 			$status = $this->getCell($data, $i, $col_status, 'true');
 			$tax_class_id = $this->getCell($data, $i, $col_tax_class_id, '0');
-			$tax_local_rate_id = $this->getCell($data, $i, $col_tax_local_rate_id, '0');
 			$keyword = $this->getCell($data, $i, $col_keyword);
 
 			$descriptions = [];
@@ -1354,10 +1277,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				$meta_keywords[$language['code']] = htmlspecialchars((string)$meta_keyword, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			}
 
-			$store_ids = $this->getCell($data, $i, $col_store_ids);
-			$layout = $this->getCell($data, $i, $col_layout);
 			$related = $this->getCell($data, $i, $col_related);
-			$location = $this->getCell($data, $i, $col_location_ids);
 
 			$tags = [];
 			foreach ($languages as $language) {
@@ -1365,13 +1285,8 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				$tags[$language['code']] = htmlspecialchars((string)$tag, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			}
 
-			$sort_order = $this->getCell($data, $i, $col_sort_order, '0');
-			$subtract = $this->getCell($data, $i, $col_subtract, 'true');
-			$minimum = $this->getCell($data, $i, $col_minimum, '1');
 			$viewed = $this->getCell($data, $i, $col_viewed);
-			$stock_status_id = $this->getCell($data, $i, $col_stock_status_id, $default_stock_status_id);
 
-			$store_ids_clean = trim($this->clean($store_ids, false));
 			$categories_clean = trim($this->clean($categories, false));
 
 			$product = [
@@ -1389,8 +1304,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				'model'             => $model,
 				'manufacturer_name' => $manufacturer_name,
 				'image'             => $image_name,
-				'label'             => $label_name,
-				'video_code'        => $video_code,
 				'shipping'          => $shipping,
 				'price'             => $price,
 				'cost'              => $cost,
@@ -1409,21 +1322,13 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				'measurement_unit'  => $measurement_unit,
 				'status'            => $status,
 				'tax_class_id'      => $tax_class_id,
-				'tax_local_rate_id' => $tax_local_rate_id,
 				'seo_keyword'       => $keyword,
 				'descriptions'      => $descriptions,
 				'meta_descriptions' => $meta_descriptions,
 				'meta_keywords'     => $meta_keywords,
-				'store_ids'         => ($store_ids_clean === "") ? [] : explode(",", $store_ids_clean),
-				'layout'            => ($layout === "") ? [] : explode(",", $layout),
 				'related_ids'       => ($related === "") ? [] : explode(",", $related),
-				'location_ids'      => ($location === "") ? [] : explode(",", $location),
 				'tags'              => $tags,
-				'sort_order'        => $sort_order,
-				'subtract'          => $subtract,
-				'minimum'           => $minimum,
 				'viewed'            => $view_counts[$product_id] ?? 0,
-				'stock_status_id'   => $stock_status_id,
 			];
 
 			if ($incremental) {
@@ -1517,7 +1422,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		$old_product_image_ids = [];
 		$previous_product_id = 0;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -1637,7 +1541,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$customer_group_ids = $this->getCustomerGroupIds();
 		$old_product_special_ids = [];
 		$previous_product_id = 0;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -1769,7 +1672,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$customer_group_ids = $this->getCustomerGroupIds();
 		$old_product_discount_ids = [];
 		$previous_product_id = 0;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -1896,7 +1798,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$customer_group_ids = $this->getCustomerGroupIds();
 		$old_product_reward_ids = [];
 		$previous_product_id = 0;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -2020,7 +1921,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		$old_product_option_ids = [];
 		$previous_product_id = 0;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -2164,8 +2064,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$old_product_option_ids = [];
 		$old_product_option_value_ids = [];
 		$previous_product_id = 0;
-		$product_option_id = 0;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -2185,7 +2083,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				$option_id = $this->getCell($data, $i, $j++, '');
 			} else {
 				$option_name = $this->getCell($data, $i, $j++);
-				$option_id   = $option_ids[$option_name] ?? '';
+				$option_id = $option_ids[$option_name] ?? '';
 			}
 
 			if ($option_id === '') {
@@ -2196,7 +2094,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				$option_value_id = $this->getCell($data, $i, $j++, '');
 			} else {
 				$option_value_name = $this->getCell($data, $i, $j++);
-				$option_value_id   = $option_value_ids[$option_id][$option_value_name] ?? '';
+				$option_value_id = $option_value_ids[$option_id][$option_value_name] ?? '';
 			}
 
 			if ($option_value_id === '') {
@@ -2292,18 +2190,10 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$previous_product_id = 0;
-		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
 			if ($i === 0) {
-				$max_col = PHPExcel_Cell::columnIndexFromString($data->getHighestColumn());
-
-				for ($j = 1; $j <= $max_col; $j++) {
-					$first_row[] = $this->getCell($data, $i, $j);
-				}
-
 				continue;
 			}
 
@@ -2404,7 +2294,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$languages = $this->getLanguages();
 		$previous_product_id = 0;
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -2525,7 +2414,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$languages = $this->getLanguages();
 		$previous_product_id = 0;
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -2652,18 +2540,10 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		$languages = $this->getLanguages();
 		$previous_product_id = 0;
-		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
 			if ($i === 0) {
-				$max_col = PHPExcel_Cell::columnIndexFromString($data->getHighestColumn());
-
-				for ($j = 1; $j <= $max_col; $j++) {
-					$first_row[] = $this->getCell($data, $i, $j);
-				}
-
 				continue;
 			}
 
@@ -2870,7 +2750,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -2977,7 +2856,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -3070,7 +2948,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -3169,7 +3046,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -3363,7 +3239,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -3519,7 +3394,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$first_row = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 0; $i < $k; $i++) {
@@ -3549,7 +3423,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$name = $this->getCell($data, $i, $j++);
 			$color = $this->getCell($data, $i, $j++);
 			$skin = $this->getCell($data, $i, $j++);
-
 			$titles = [];
 
 			while (($j <= $max_col) && $this->startsWith($first_row[$j - 1], "title(")) {
@@ -3587,7 +3460,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		for ($j = 1; $j <= $k; $j++) {
 			$entry = $this->getCell($data, 0, $j);
 
-			if ($entry === '') break;  // stop at first empty header cell
+			if ($entry === '') break;
 
 			$bracket_start = strripos($entry, '(', 0);
 
@@ -3683,7 +3556,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$expected = ["category_id"];
 		$expected[] = $use_fg_id ? "filter_group_id" : "filter_group";
 		$expected[] = $use_f_id ? "filter_id" : "filter";
-
 		$multilingual = [];
 
 		return $this->validateHeading($data, $expected, $multilingual);
@@ -3696,12 +3568,12 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			return true;
 		}
 
-		// 49 columns expected
+		// 39 columns (+ multilingual expansions per language)
 		$expected = array_merge(
 			["product_id", "name", "categories", "sku", "upc", "ean", "jan", "isbn", "mpn"],
-			["location", "quantity", "model", "manufacturer_name", "image_name", "label_name", "video_code", "shipping", "price", "cost", "quote", "age_minimum", "points", "date_added"],
-			["date_modified", "date_available", "palette_id", "weight", "weight_unit", "length", "width", "height", "length_unit", "status", "tax_class_id", "tax_local_rate_id", "seo_keyword"],
-			["description", "meta_description", "meta_keywords", "store_ids", "layout", "related_ids", "location_ids", "tags", "sort_order", "subtract", "minimum", "viewed", "stock_status_id"]
+			["location", "quantity", "model", "manufacturer_name", "image_name", "shipping", "price", "cost", "quote", "age_minimum", "points", "date_added"],
+			["date_modified", "date_available", "palette_id", "weight", "weight_unit", "length", "width", "height", "length_unit", "status", "tax_class_id", "seo_keyword"],
+			["description", "meta_description", "meta_keywords", "related_ids", "tags", "viewed"]
 		);
 
 		$multilingual = ["name", "description", "meta_description", "meta_keywords", "tags"];
@@ -3993,7 +3865,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$previous_category_id = 0;
 		$has_missing = false;
 		$category_ids = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4039,7 +3910,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$previous_category_id = 0;
 			$has_missing = false;
 			$unlisted = [];
-
 			$k = $data->getHighestRow();
 
 			for ($i = 1; $i < $k; $i++) {
@@ -4088,7 +3958,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$ok = true;
 		$has_missing = false;
 		$product_ids = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4129,7 +3998,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 			$has_missing = false;
 			$unlisted = [];
-
 			$k = $data->getHighestRow();
 
 			for ($i = 1; $i < $k; $i++) {
@@ -4173,7 +4041,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$previous_customer_id = 0;
 		$has_missing = false;
 		$customer_ids = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4219,7 +4086,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$previous_customer_id = 0;
 			$has_missing = false;
 			$unlisted = [];
-
 			$k = $data->getHighestRow();
 
 			for ($i = 1; $i < $k; $i++) {
@@ -4268,7 +4134,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$ok = true;
 		$country_col = 0;
 		$zone_col = 0;
-
 		$k = PHPExcel_Cell::columnIndexFromString($data->getHighestColumn());
 
 		for ($j = 1; $j <= $k; $j++) {
@@ -4299,7 +4164,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$available_zone_ids = $this->getAvailableZoneIds();
 		$undefined_countries = [];
 		$undefined_zones = [];
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4369,7 +4233,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			}
 
 			$has_missing = false;
-
 			$k = $data->getHighestRow();
 
 			for ($i = 1; $i < $k; $i++) {
@@ -4434,7 +4297,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$has_missing = false;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4444,15 +4306,9 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 				continue;
 			}
 
-			if ($use_option_id) {
-				$option_key = trim($this->getCell($data, $i, 2));
-				$err_missing = 'error_missing_option_id';
-				$err_invalid = 'error_invalid_option_id';
-			} else {
-				$option_key = trim($this->getCell($data, $i, 2));
-				$err_missing = 'error_missing_option_name';
-				$err_invalid = 'error_invalid_option_name';
-			}
+			$option_key = trim($this->getCell($data, $i, 2));
+			$err_missing = $use_option_id ? 'error_missing_option_id' : 'error_missing_option_name';
+			$err_invalid = $use_option_id ? 'error_invalid_option_id' : 'error_invalid_option_name';
 
 			if ($option_key === "") {
 				if (!$has_missing) {
@@ -4480,7 +4336,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		$has_missing_o = false;
 		$has_missing_v = false;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4571,7 +4426,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		$has_missing_g = false;
 		$has_missing_a = false;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4657,7 +4511,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 			$has_missing_g = false;
 			$has_missing_f = false;
-
 			$k = $data->getHighestRow();
 
 			for ($i = 1; $i < $k; $i++) {
@@ -4727,7 +4580,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$has_missing = false;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4768,7 +4620,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		}
 
 		$has_missing = false;
-
 		$k = $data->getHighestRow();
 
 		for ($i = 1; $i < $k; $i++) {
@@ -4910,7 +4761,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 
 		// Post-ordering checks
 		$post_checks = [
-			['customers', 'addresses', 'error_addresses_2'],
 			['product_options', 'product_option_values', 'error_product_option_values_3'],
 			['attribute_groups', 'attributes', 'error_attributes_2'],
 			['filter_groups', 'filters', 'error_filters_2'],

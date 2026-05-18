@@ -12,6 +12,8 @@ class ControllerToolExportImport extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+		$this->document->addStyle('view/javascript/jquery/sfi/css/jquery.simplefileinput.min.css');
+
 		$this->load->model('tool/export_import_base');
 		$this->load->model('tool/export_import_exp');
 		$this->load->model('tool/export_import_imp');
