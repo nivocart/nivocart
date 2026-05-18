@@ -1,5 +1,5 @@
-﻿/**
- * Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+/**
+ * Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -52,7 +52,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	// (This requires the "stylescombo" plugin.)
 	/*
 	{ name: 'Strong', element: 'strong', overrides: 'b' },
-	{ name: 'Emphasis', element: 'em', overrides: 'i' },
+	{ name: 'Emphasis', element: 'em'	, overrides: 'i' },
 	{ name: 'Underline', element: 'u' },
 	{ name: 'Strikethrough', element: 'strike' },
 	{ name: 'Subscript', element: 'sub' },
@@ -74,7 +74,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: 'Inserted Text', element: 'ins' },
 
 	{ name: 'Cited Work', element: 'cite' },
-	{ name: 'Inline Quotation', element: 'q' },
+	{ name: 'Inline Quotation',	element: 'q' },
 
 	{ name: 'Language: RTL', element: 'span', attributes: { 'dir': 'rtl' } },
 	{ name: 'Language: LTR', element: 'span', attributes: { 'dir': 'ltr' } },
@@ -108,7 +108,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	},
 
 	{ name: 'Borderless Table', element: 'table', styles: { 'border-style': 'hidden', 'background-color': '#E6E6FA' } },
-	{ name: 'Square Bulleted List', element: 'ul', styles: { 'list-style-type': 'square' } },
+	{ name: 'Square Bulleted List',	element: 'ul', styles: { 'list-style-type': 'square' } },
 
 	/* Widget styles */
 
