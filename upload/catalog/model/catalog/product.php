@@ -84,7 +84,7 @@ class ModelCatalogProduct extends Model {
 			];
 
 		} else {
-			return false;
+			return [];
 		}
 	}
 
