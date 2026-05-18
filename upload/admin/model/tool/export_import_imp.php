@@ -952,6 +952,7 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 		$manufacturer_name = $this->db->escape($product['manufacturer_name']);
 		$image = $this->db->escape($product['image']);
 		$label = $this->db->escape($product['label']);
+		$video_code = $this->db->escape($product['video_code']);
 		$shipping = ((strtoupper($product['shipping']) === "YES") || (strtoupper($product['shipping']) === "Y") || (strtoupper($product['shipping']) === "TRUE")) ? 1 : 0;
 		$price = trim($product['price']);
 		$cost = trim($product['cost']);
@@ -4814,7 +4815,6 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 	}
 
 	protected function validateUpload($reader): bool {
-error_log('Export/Import: validateUpload called, sheets = ' . implode(', ', $reader->getSheetNames()));
 		$ok = true;
 
 		if (!$this->validateWorksheetNames($reader)) {
@@ -4910,7 +4910,7 @@ error_log('Export/Import: validateUpload called, sheets = ' . implode(', ', $rea
 
 		// Post-ordering checks
 		$post_checks = [
-			// ['customers', 'addresses', 'error_addresses_2'],
+			['customers', 'addresses', 'error_addresses_2'],
 			['product_options', 'product_option_values', 'error_product_option_values_3'],
 			['attribute_groups', 'attributes', 'error_attributes_2'],
 			['filter_groups', 'filters', 'error_filters_2'],

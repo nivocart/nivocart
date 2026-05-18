@@ -19,6 +19,9 @@ class ControllerToolExportImport extends Controller {
 		$this->getForm();
 	}
 
+	/**
+	 * Import from spreadsheet
+	 */
 	public function upload() {
 		$this->language->load('tool/export_import');
 
@@ -49,7 +52,9 @@ class ControllerToolExportImport extends Controller {
 		$this->getForm();
 	}
 
-	// Defines the 8 available Export types
+	/**
+	 * Defines the 8 available Export types
+	 */
 	protected function returnBytes($val) {
 		$val = trim($val);
 
@@ -78,6 +83,9 @@ class ControllerToolExportImport extends Controller {
 		return $val;
 	}
 
+	/**
+	 * Export to spreadsheet
+	 */
 	public function download() {
 		$this->language->load('tool/export_import');
 
@@ -172,6 +180,9 @@ class ControllerToolExportImport extends Controller {
 		$this->getForm();
 	}
 
+	/**
+	 * Settings
+	 */
 	public function settings() {
 		$this->language->load('tool/export_import');
 
@@ -335,6 +346,7 @@ class ControllerToolExportImport extends Controller {
 		unset($this->session->data['export_import_error']);
 		unset($this->session->data['export_import_nochange']);
 
+		// Success
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
 
@@ -343,6 +355,7 @@ class ControllerToolExportImport extends Controller {
 			$this->data['success'] = '';
 		}
 
+		// Breadcrumbs
 		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = [
@@ -367,6 +380,7 @@ class ControllerToolExportImport extends Controller {
 		$this->data['post_max_size'] = $this->returnBytes(ini_get('post_max_size'));
 		$this->data['upload_max_filesize'] = $this->returnBytes(ini_get('upload_max_filesize'));
 
+		// Options
 		if (isset($this->request->post['export_type'])) {
 			$this->data['export_type'] = $this->request->post['export_type'];
 		} else {
@@ -580,11 +594,10 @@ class ControllerToolExportImport extends Controller {
 				} else {
 					$this->error['warning'] = $this->language->get('error_upload_name');
 				}
-
 			} else {
 				$ext = strtolower(pathinfo($this->request->files['upload']['name'], PATHINFO_EXTENSION));
 
-				if (($ext !== 'xls') && ($ext !== 'xlsx') && ($ext !== 'ods') && ($ext !== 'zip')) {
+				if (($ext !== 'xls') && ($ext !== 'xlsx') && ($ext !== 'ods')) {
 					if (isset($this->error['warning'])) {
 						$this->error['warning'] .= "<br /\n" . $this->language->get('error_upload_ext');
 					} else {
