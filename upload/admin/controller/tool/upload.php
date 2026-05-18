@@ -38,31 +38,34 @@ class ControllerToolUpload extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = '';
-
 			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_name = null;
 			}
 
 			if (isset($this->request->get['filter_filename'])) {
-				$url .= '&filter_filename=' . html_entity_decode($this->request->get['filter_filename'], ENT_QUOTES, 'UTF-8');
+				$filter_filename = html_entity_decode($this->request->get['filter_filename'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_filename = null;
 			}
 
 			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+				$filter_date_added = $this->request->get['filter_date_added'];
+			} else {
+				$filter_date_added = null;
 			}
 
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
+			$page_url = array_filter([
+				'filter_name'       => $filter_name,
+				'filter_filename'   => $filter_filename,
+				'filter_date_added' => $filter_date_added,
+				'sort'              => $this->request->get['sort'] ?? null,
+				'order'             => $this->request->get['order'] ?? null,
+				'page'              => $this->request->get['page'] ?? null
+			]);
 
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('tool/upload', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
@@ -72,66 +75,33 @@ class ControllerToolUpload extends Controller {
 
 	public function getList() {
 		if (isset($this->request->get['filter_name'])) {
-			$filter_name = $this->request->get['filter_name'];
+			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		} else {
-			$filter_name = '';
+			$filter_name = null;
 		}
 
 		if (isset($this->request->get['filter_filename'])) {
-			$filter_filename = $this->request->get['filter_filename'];
+			$filter_filename = html_entity_decode($this->request->get['filter_filename'], ENT_QUOTES, 'UTF-8');
 		} else {
-			$filter_filename = '';
+			$filter_filename = null;
 		}
 
 		if (isset($this->request->get['filter_date_added'])) {
 			$filter_date_added = $this->request->get['filter_date_added'];
 		} else {
-			$filter_date_added = '';
+			$filter_date_added = null;
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'date_added';
-		}
+		$page_url = array_filter([
+			'filter_name'       => $filter_name,
+			'filter_filename'   => $filter_filename,
+			'filter_date_added' => $filter_date_added,
+			'sort'              => $this->request->get['sort'] ?? 'date_added',
+			'order'             => $this->request->get['order'] ?? 'DESC',
+			'page'              => $this->request->get['page'] ?? 1
+		]);
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'DESC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
-		}
-
-		if (isset($this->request->get['filter_filename'])) {
-			$url .= '&filter_filename=' . html_entity_decode($this->request->get['filter_filename'], ENT_QUOTES, 'UTF-8');
-		}
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 		$this->data['breadcrumbs'] = [];
 
@@ -155,6 +125,10 @@ class ControllerToolUpload extends Controller {
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
 		$this->data['uploads'] = [];
+
+		$sort = $this->request->get['sort'] ?? 'date_added';
+		$order = $this->request->get['order'] ?? 'DESC';
+		$page = $this->request->get['page'] ?? 1;
 
 		$data = [
 			'filter_name'       => $filter_name,
@@ -234,7 +208,7 @@ class ControllerToolUpload extends Controller {
 		$this->data['sort_filename'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'] . '&sort=filename' . $url, 'SSL');
 		$this->data['sort_date_added'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
 
-		// Pagination dat
+		// Pagination data
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
@@ -317,8 +291,7 @@ class ControllerToolUpload extends Controller {
 					header('Content-Length: ' . filesize($file));
 
 					readfile($file);
-					exit();
-
+					exit();		// Required here
 				} else {
 					exit('Error: Could not find file ' . $file . '!');
 				}
