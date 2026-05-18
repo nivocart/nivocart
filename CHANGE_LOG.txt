@@ -10,6 +10,7 @@ Release: summer 2026
 - All PHP pages updated to PHP 8.0+
 - PHPExcel v1.8.1 (opensource) updated for PHP 8+
 - Dompdf v1.1.1 updated for PHP 8+
+- Ckeditor v4.22.1 Standard (opensource)
 - License changed to GNU GPL v3.
 
 
