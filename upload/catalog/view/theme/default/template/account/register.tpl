@@ -291,7 +291,7 @@ $('select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#postcode-required').show();
 			} else {
 				$('#postcode-required').hide();
@@ -303,7 +303,7 @@ $('select[name=\'country_id\']').on('change', function() {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 	      				html += ' selected="selected"';
 					}
 
@@ -347,7 +347,7 @@ $(document).ready(function() {
 		if (strength < 2) {
 			$('#check').removeClass().addClass('weak');
 			return '<img src="catalog/view/theme/<?php echo $template; ?>/image/account/password-weak.png" alt="" />';
-		} else if (strength == 2) {
+		} else if (strength === 2) {
 			$('#check').removeClass().addClass('good');
 			return '<img src="catalog/view/theme/<?php echo $template; ?>/image/account/password-good.png" alt="" />';
 		} else {

@@ -17,7 +17,7 @@ $_['text_ignore']             = 'If you did not request this reset link, please 
 // Entry
 $_['entry_email']             = 'Email Address:';
 $_['entry_password']          = 'Enter New Password';
-$_['entry_confirm']           = 'Confirm New Password';
+$_['entry_confirm']           = 'Confirm Password';
 
 // Error
 $_['error_email']             = 'Email Address does not appear to be valid!';

@@ -439,7 +439,7 @@ class ControllerAffiliateRegister extends Controller {
 			$this->error['zone'] = $this->language->get('error_zone');
 		}
 
-		if (!isset($this->request->post['password']) || (mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
+		if (!isset($this->request->post['password']) || (mb_strlen($this->request->post['password'], 'UTF-8') < 8) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 			$this->error['password'] = $this->language->get('error_password');
 		}
 

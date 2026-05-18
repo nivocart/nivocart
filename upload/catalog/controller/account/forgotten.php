@@ -18,9 +18,9 @@
 class ControllerAccountForgotten extends Controller {
 	private $error = [];
 
-	// -------------------------------------------------------------------------
-	// Step 1 – request a reset link
-	// -------------------------------------------------------------------------
+	/**
+	 * Step 1 – request a reset link
+	 */
 	public function index() {
 		if ($this->customer->isLogged()) {
 			$this->redirect($this->url->link('account/account', '', 'SSL'));
@@ -108,9 +108,9 @@ class ControllerAccountForgotten extends Controller {
 		$this->renderTemplate('account/forgotten');
 	}
 
-	// -------------------------------------------------------------------------
-	// Step 2 – user arrives via the emailed link; show "enter new password"
-	// -------------------------------------------------------------------------
+	/**
+	 * Step 2 – user arrives via the emailed link; show "enter new password"
+	 */
 	public function reset() {
 		if ($this->customer->isLogged()) {
 			$this->redirect($this->url->link('account/account', '', 'SSL'));
@@ -151,9 +151,9 @@ class ControllerAccountForgotten extends Controller {
 		$this->renderTemplate('account/forgotten_reset');
 	}
 
-	// -------------------------------------------------------------------------
-	// Step 3 – save the user-chosen password, invalidate the token
-	// -------------------------------------------------------------------------
+	/**
+	 * Step 3 – save the user-chosen password, invalidate the token
+	 */
 	public function confirm() {
 		if ($this->customer->isLogged()) {
 			$this->redirect($this->url->link('account/account', '', 'SSL'));
@@ -197,9 +197,6 @@ class ControllerAccountForgotten extends Controller {
 		$this->redirect($this->url->link('account/login', '', 'SSL'));
 	}
 
-	// -------------------------------------------------------------------------
-	// Validation helpers
-	// -------------------------------------------------------------------------
 	/**
 	 * Validates the email field on the "request reset" form.
 	 *
@@ -279,7 +276,7 @@ class ControllerAccountForgotten extends Controller {
 		$password = $this->request->post['password'] ?? '';
 		$confirm = $this->request->post['confirm']  ?? '';
 
-		if (mb_strlen($password, 'UTF-8') < 8) {
+		if ((mb_strlen($password, 'UTF-8') < 8) || (mb_strlen($password, 'UTF-8') > 20)) {
 			$this->error['password'] = $this->language->get('error_password_length');
 		} elseif ($password !== $confirm) {
 			$this->error['password'] = $this->language->get('error_password_mismatch');
@@ -288,9 +285,9 @@ class ControllerAccountForgotten extends Controller {
 		return empty($this->error);
 	}
 
-	// -------------------------------------------------------------------------
-	// Private rendering helpers
-	// -------------------------------------------------------------------------
+	/**
+	 * Private rendering helpers
+	 */
 	private function buildBreadcrumbs() {
 		$this->data['breadcrumbs'] = [];
 
