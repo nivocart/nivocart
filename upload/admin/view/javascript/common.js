@@ -1,5 +1,5 @@
 /*
- Common v2.0.0 | @nivocart | NivoCart | OSL v3.0
+ Common v2.0.0 | @nivocart | NivoCart
  ---------------------------------------------------------------------------
  Common.js file for development. Use minified version for production.
  ---------------------------------------------------------------------------
