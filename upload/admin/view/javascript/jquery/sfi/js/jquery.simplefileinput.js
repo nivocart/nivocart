@@ -76,7 +76,7 @@
                 _val = $(this).val();
 
                 if (_checkAllowedExtensions(_val) == true) {
-                    _sfiFileName.'text'(_getFileName(_val));
+                    _sfiFileName.text(_getFileName(_val));
                     _options.onFileSelect();
                     _sfiWrapper.removeClass(_options.errorClass);
                     _sfiWrapper.addClass(_options.validClass);
@@ -123,5 +123,4 @@
             }
         });
     };
-
 })(jQuery);
