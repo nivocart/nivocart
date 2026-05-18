@@ -1,5 +1,5 @@
-﻿/**
- * Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+/**
+ * Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -52,7 +52,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	// (This requires the "stylescombo" plugin.)
 	/*
 	{ name: 'Strong', element: 'strong', overrides: 'b' },
-	{ name: 'Emphasis', element: 'em', overrides: 'i' },
+	{ name: 'Emphasis', element: 'em'	, overrides: 'i' },
 	{ name: 'Underline', element: 'u' },
 	{ name: 'Strikethrough', element: 'strike' },
 	{ name: 'Subscript', element: 'sub' },
@@ -74,13 +74,12 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: 'Inserted Text', element: 'ins' },
 
 	{ name: 'Cited Work', element: 'cite' },
-	{ name: 'Inline Quotation', element: 'q' },
+	{ name: 'Inline Quotation',	element: 'q' },
 
 	{ name: 'Language: RTL', element: 'span', attributes: { 'dir': 'rtl' } },
 	{ name: 'Language: LTR', element: 'span', attributes: { 'dir': 'ltr' } },
 
 	/* Object styles */
-
 	{
 		name: 'Styled Image (left)',
 		element: 'img',
@@ -108,15 +107,13 @@ CKEDITOR.stylesSet.add( 'default', [
 	},
 
 	{ name: 'Borderless Table', element: 'table', styles: { 'border-style': 'hidden', 'background-color': '#E6E6FA' } },
-	{ name: 'Square Bulleted List', element: 'ul', styles: { 'list-style-type': 'square' } },
+	{ name: 'Square Bulleted List',	element: 'ul', styles: { 'list-style-type': 'square' } },
 
 	/* Widget styles */
-
 	{ name: 'Clean Image', type: 'widget', widget: 'image', attributes: { 'class': 'image-clean' } },
 	{ name: 'Grayscale Image', type: 'widget', widget: 'image', attributes: { 'class': 'image-grayscale' } },
 
 	{ name: 'Featured Snippet', type: 'widget', widget: 'codeSnippet', attributes: { 'class': 'code-featured' } },
-
 	{ name: 'Featured Formula', type: 'widget', widget: 'mathjax', attributes: { 'class': 'math-featured' } },
 
 	{ name: '240p', type: 'widget', widget: 'embedSemantic', attributes: { 'class': 'embed-240p' }, group: 'size' },
@@ -125,12 +122,10 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: '720p', type: 'widget', widget: 'embedSemantic', attributes: { 'class': 'embed-720p' }, group: 'size' },
 	{ name: '1080p', type: 'widget', widget: 'embedSemantic', attributes: { 'class': 'embed-1080p' }, group: 'size' },
 
-	// Adding space after the style name is an intended workaround. For now, there
-	// is no option to create two styles with the same name for different widget types. See https://dev.ckeditor.com/ticket/16664.
+	// Adding space after the style name is an intended workaround. See https://dev.ckeditor.com/ticket/16664.
 	{ name: '240p ', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-240p' }, group: 'size' },
 	{ name: '360p ', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-360p' }, group: 'size' },
 	{ name: '480p ', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-480p' }, group: 'size' },
 	{ name: '720p ', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-720p' }, group: 'size' },
 	{ name: '1080p ', type: 'widget', widget: 'embed', attributes: { 'class': 'embed-1080p' }, group: 'size' }
-
 ] );
