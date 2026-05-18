@@ -16,5 +16,5 @@ $_['entry_confirm']           = 'Password Confirm:';
 // Error
 $_['error_old_password']      = 'Current Password does not match our records!';
 $_['error_password_required'] = 'Current Password is required!';
-$_['error_password']          = 'Password must be between 4 and 20 characters!';
+$_['error_password']          = 'Password must be between 8 and 20 characters!';
 $_['error_confirm']           = 'Password confirmation does not match password!';

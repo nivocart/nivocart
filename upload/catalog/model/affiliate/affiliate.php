@@ -227,6 +227,53 @@ class ModelAffiliateAffiliate extends Model {
 		return $query->row['total'];
 	}
 
+	/**
+	 * Forgotten password
+	 *
+	 * Inserts or replaces the hashed reset token for the affiliate who owns $email.
+	 *
+	 * The UNIQUE KEY on `affiliate_id` combined with ON DUPLICATE KEY UPDATE
+	 * guarantees only one active token exists per affiliate at any time — a second
+	 * "forgot password" request silently supersedes the first.
+	 */
+	public function saveResetToken(string $email, string $hashed_token, string $expires_at): void {
+		// Resolve email → affiliate_id first so table only stores IDs.
+		$affiliate = $this->db->query("SELECT `affiliate_id` FROM `" . DB_PREFIX . "affiliate` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND `status` = '1' LIMIT 1");
+
+		// Unknown / inactive account — silently no-op (anti-enumeration).
+		if (!$affiliate->num_rows) {
+			return;
+		}
+
+		$affiliate_id = (int) $affiliate->row['affiliate_id'];
+
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_forgotten`(`affiliate_id`, `token`, `date_expires`, `date_added`) VALUES ('" . $affiliate_id . "', '" . $this->db->escape($hashed_token) . "', '" . $this->db->escape($expires_at)   . "', NOW()) ON DUPLICATE KEY UPDATE `token` = VALUES(`token`), `date_expires` = VALUES(`date_expires`), `date_added` = NOW()");
+	}
+
+	/**
+	 * Returns the stored token hash and expiry for the affiliate who owns $email,
+	 * or NULL if no pending reset exists for that account.
+	 *
+	 * @return array{token: string, date_expires: string}|null
+	 */
+	public function getResetToken(string $email): ?array {
+		$query = $this->db->query("SELECT af.`token`, af.`date_expires` FROM `" . DB_PREFIX . "affiliate_forgotten` af JOIN `" . DB_PREFIX . "affiliate` a ON a.`affiliate_id` = af.`affiliate_id` WHERE LOWER(a.email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND a.`status` = '1' LIMIT 1");
+
+		if ($query->num_rows) {
+			return $query->row;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Deletes the reset token row for the affiliate who owns $email.
+	 * Called immediately after a successful password change (one-time-use enforcement).
+	 */
+	public function clearResetToken(string $email): void {
+		$this->db->query("DELETE af FROM `" . DB_PREFIX . "affiliate_forgotten` af JOIN `" . DB_PREFIX . "affiliate` a ON a.`affiliate_id` = af.`affiliate_id` WHERE LOWER(a.email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
+	}
+
 	// Login
 	public function getLoginAttempts(string $email) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate_login` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");

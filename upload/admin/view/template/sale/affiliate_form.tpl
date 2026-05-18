@@ -157,7 +157,7 @@
               <select name="country_id" class="input-error">
                 <option value="false"><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <?php if ($country['country_id'] == $country_id) { ?>
+                  <?php if ($country['country_id'] === $country_id) { ?>
                     <option value="<?php echo $country['country_id']; ?>" selected="selected"> <?php echo $country['name']; ?> </option>
                   <?php } else { ?>
                     <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -169,7 +169,7 @@
               <select name="country_id">
                 <option value="false"><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <?php if ($country['country_id'] == $country_id) { ?>
+                  <?php if ($country['country_id'] === $country_id) { ?>
                     <option value="<?php echo $country['country_id']; ?>" selected="selected"> <?php echo $country['name']; ?> </option>
                   <?php } else { ?>
                     <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -205,19 +205,19 @@
           </tr>
           <tr>
             <td><?php echo $entry_payment; ?></td>
-            <td><?php if ($payment == 'cheque') { ?>
+            <td><?php if ($payment === 'cheque') { ?>
               <input type="radio" name="payment" value="cheque" id="cheque" class="checkbox" checked />
             <?php } else { ?>
               <input type="radio" name="payment" value="cheque" id="cheque" class="checkbox" />
             <?php } ?>
             <label for="cheque"><span></span><?php echo $text_cheque; ?></label> &nbsp;&nbsp;
-            <?php if ($payment == 'paypal') { ?>
+            <?php if ($payment === 'paypal') { ?>
               <input type="radio" name="payment" value="paypal" id="paypal" class="checkbox" checked />
             <?php } else { ?>
               <input type="radio" name="payment" value="paypal" id="paypal" class="checkbox" />
             <?php } ?>
             <label for="paypal"><span></span><?php echo $text_paypal; ?></label> &nbsp;&nbsp;
-            <?php if ($payment == 'bank') { ?>
+            <?php if ($payment === 'bank') { ?>
               <input type="radio" name="payment" value="bank" id="bank" class="checkbox" checked />
             <?php } else { ?>
               <input type="radio" name="payment" value="bank" id="bank" class="checkbox" />
@@ -333,50 +333,50 @@
 </div>
 
 <script type="text/javascript"><!--
-function country(element, index, zone_id) {
-	if (element.value != '') {
-		$.ajax({
-			url: 'index.php?route=localisation/country/country&token=<?php echo $token; ?>&country_id=' + element.value,
-			dataType: 'json',
-			beforeSend: function() {
-				$('select[name=\'address[' + index + '][country_id]\']').after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
-			},
-			complete: function() {
-				$('.wait').remove();
-			},
-			success: function(json) {
-				if (json['postcode_required'] == '1') {
-					$('#postcode-required' + index).show();
-				} else {
-					$('#postcode-required' + index).hide();
-				}
+$('select[name=\'country_id\']').on('change', function() {
+    var zone_id = <?php echo (int)$zone_id; ?>;
 
-				html = '<option value=""><?php echo $text_select; ?></option>';
+    if (this.value != '') {
+        $.ajax({
+            url: 'index.php?route=localisation/country/country&token=<?php echo $token; ?>&country_id=' + this.value,
+            dataType: 'json',
+            beforeSend: function() {
+                $('select[name=\'country_id\']').after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
+            },
+            complete: function() {
+                $('.wait').remove();
+            },
+            success: function(json) {
+                if (json['postcode_required'] == '1') {
+                    $('#postcode-required').show();
+                } else {
+                    $('#postcode-required').hide();
+                }
 
-				if (json['zone'] && json['zone'] != '') {
-					for (i = 0; i < json['zone'].length; i++) {
-						html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+                var html = '<option value=""><?php echo $text_select; ?></option>';
 
-						if (json['zone'][i]['zone_id'] == zone_id) {
-							html += ' selected="selected"';
-						}
+                if (json['zone'] && json['zone'].length) {
+                    for (var i = 0; i < json['zone'].length; i++) {
+                        html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+                        if (json['zone'][i]['zone_id'] == zone_id) {
+                            html += ' selected="selected"';
+                        }
+                        html += '>' + json['zone'][i]['name'] + '</option>';
+                    }
+                } else {
+                    html += '<option value="0" selected="selected"><?php echo $text_none; ?></option>';
+                }
 
-						html += '>' + json['zone'][i]['name'] + '</option>';
-					}
-				} else {
-					html += '<option value="0" selected="selected"><?php echo $text_none; ?></option>';
-				}
+                $('select[name=\'zone_id\']').html(html);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    }
+});
 
-				$('select[name=\'address[' + index + '][zone_id]\']').html(html);
-			},
-			error: function(xhr, ajaxOptions, thrownError) {
-				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-			}
-		});
-	}
-}
-
-$('select[name$=\'[country_id]\']').trigger('change');
+$('select[name=\'country_id\']').trigger('change');
 //--></script>
 
 <script type="text/javascript"><!--

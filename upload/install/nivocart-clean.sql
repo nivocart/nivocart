@@ -116,6 +116,23 @@ CREATE TABLE `nc_affiliate_activity` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nc_affiliate_forgotten`
+--
+
+DROP TABLE IF EXISTS `nc_affiliate_forgotten`;
+CREATE TABLE `nc_affiliate_forgotten` (
+  `forgotten_id` int NOT NULL AUTO_INCREMENT,
+  `affiliate_id` int NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `date_expires` datetime NOT NULL,
+  `date_added` datetime NOT NULL,
+  PRIMARY KEY (`forgotten_id`),
+  UNIQUE KEY `affiliate_id` (`affiliate_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nc_affiliate_login`
 --
 

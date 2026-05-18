@@ -420,7 +420,7 @@ $('select[name=\'customer_group_id\']').trigger('change');
 
 <script type="text/javascript"><!--
 function country(element, index, zone_id) {
-  if (element.value != '') {
+	if (element.value != '') {
 		$.ajax({
 			url: 'index.php?route=localisation/country/country&token=<?php echo $token; ?>&country_id=' + element.value,
 			dataType: 'json',

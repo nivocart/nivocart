@@ -569,11 +569,11 @@ class ControllerSaleAffiliate extends Controller {
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_name=' . html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+			$url .= '&filter_email=' . html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8');
 		}
 
 		if (isset($this->request->get['filter_approved'])) {
@@ -1189,11 +1189,11 @@ class ControllerSaleAffiliate extends Controller {
 		}
 
 		if ($this->request->post['password'] || (!isset($this->request->get['affiliate_id']))) {
-			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
+			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 8) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 				$this->error['password'] = $this->language->get('error_password');
 			}
 
-			if ($this->request->post['password'] != $this->request->post['confirm']) {
+			if ($this->request->post['password'] !== $this->request->post['confirm']) {
 				$this->error['confirm'] = $this->language->get('error_confirm');
 			}
 		}

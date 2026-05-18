@@ -286,10 +286,14 @@ class ModelSaleAffiliate extends Model {
 		return $query->row['total'];
 	}
 
-	public function getTransactionTotal(int $affiliate_id): int {
+	public function getTransactionTotal(int $affiliate_id) {
 		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "affiliate_transaction` WHERE affiliate_id = '" . (int)$affiliate_id . "'");
 
-		return $query->row['total'];
+		if ($query->row['total']) {
+			return $query->row['total'];
+		} else {
+			return 0;
+		}
 	}
 
 	public function getTotalTransactionsByOrderId(int $order_id): int {
