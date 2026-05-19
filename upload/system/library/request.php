@@ -66,7 +66,8 @@ class Request {
 	public function isSecure(): bool {
 		if ((isset($this->server['HTTPS']) && in_array($this->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->server['SERVER_PORT']) && $this->server['SERVER_PORT'] === '443') ||
-			(isset($this->server['HTTP_X_FORWARDED_PROTO']) && $this->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			(isset($this->server['HTTP_X_FORWARDED_PROTO']) && $this->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+		) {
 			return true;
 		} else {
 			return false;
