@@ -533,7 +533,9 @@ class ControllerSaleOfferProductProduct extends Controller {
 		return empty($this->error);
 	}
 
-	// Autocomplete Products
+	/**
+	 * Autocomplete Products
+	 */
 	public function autocompletePro() {
 		$json = [];
 
