@@ -176,6 +176,8 @@ class ControllerToolExportImport extends Controller {
 					break;
 			}
 
+			$this->session->data['success'] = $this->language->get('text_success_export');
+
 			$this->redirect($this->url->link('tool/export_import', 'token=' . $this->request->get['token'], 'SSL'));
 		}
 

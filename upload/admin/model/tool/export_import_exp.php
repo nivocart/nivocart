@@ -42,26 +42,26 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 
 	protected function populateCustomersWorksheet($worksheet, $box_format, $text_format, $date_format, $datetime_format, $offset = null, $rows = null, $min_id = null, $max_id = null) {
 		$j = 0;
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_id') + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_group') + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('store_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('customer_id'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('customer_group'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_id'), 6) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname') + 4, 20) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname') + 4, 20) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('email') + 4, 25) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('email') + 4, 26) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('telephone') + 4, 16) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('gender'), 5) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_of_birth'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('gender'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_of_birth'), 16) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('password'), 24) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('salt'), 16) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('cart'), 10) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('wishlist'), 10) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('newsletter') + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('address_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('newsletter'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_id'), 6) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('ip'), 12) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('status') + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('approved') + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('token'), 5) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('approved'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('token'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 20) + 1);
 
 		$styles = [];
 		$data = [];
@@ -169,19 +169,19 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 
 	protected function populateAddressesWorksheet(&$worksheet, &$box_format, &$text_format, $min_id = null, $max_id = null) {
 		$j = 0;
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('customer_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('customer_id'), 6) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('firstname'), 20) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('lastname'), 20) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company'), 30) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('company_id'), 10) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_id'), 15) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_id'), 10) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_1'), 30) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('address_2'), 30) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('city'), 30) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('postcode'), 10) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('zone'), 20) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('country'), 20) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('default'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('default'), 6) + 1);
 
 		$styles = [];
 		$data = [];
@@ -209,7 +209,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getAddresses($min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['customer_id'];
 			$data[$j++] = $row['firstname'];
@@ -340,20 +340,20 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 
 	protected function populateCategoriesWorksheet($worksheet, $languages, $box_format, $text_format, $datetime_format, $offset = null, $rows = null, $min_id = null, $max_id = null) {
 		$j = 0;
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('category_id') + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('parent_id') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('category_id'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('parent_id'), 6) + 1);
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1); }
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description') + 4, 48) + 1); }
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_description') + 4, 32) + 1); }
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords') + 4, 24) + 1); }
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(strlen('sort_order') + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 6) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image_name'), 30) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 19) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 20) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('seo_keyword'), 16) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('store_ids'), 6) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('layout'), 16) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 6) + 1);
 
 		$styles = [];
 		$data = [];
@@ -531,7 +531,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getCategoryFilters($min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['category_id'];
 			$data[$j++] = $use_fg_id ? $row['filter_group_id'] : html_entity_decode($filter_group_names[$row['filter_group_id']], ENT_QUOTES, 'UTF-8');
@@ -657,43 +657,43 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('product_id'), 4) + 1);
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('name') + 4, 30) + 1); }
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('categories'), 12) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sku'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('categories'), 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sku'), 12) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('upc'), 12) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('ean'), 14) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('jan'), 13) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('isbn'), 13) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('mpn'), 15) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('location'), 10) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quantity'), 5) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('model'), 16) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('ean'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('jan'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('isbn'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('mpn'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('location'), 12) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quantity'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('model'), 18) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('manufacturer_name'), 16) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image_name') + 4, 36) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('shipping'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('shipping'), 6) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('price'), 10) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('cost'), 10) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quote'), 5) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('age_minimum'), 5) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points'), 5) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 19) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 19) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_available'), 10) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_id'), 3) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight'), 6) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight_unit'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('quote'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('age_minimum') + 2, 10) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('points'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_added'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_modified'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('date_available'), 20) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_id'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight'), 8) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('weight_unit'), 4) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('length'), 8) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('width'), 8) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('height'), 8) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('length_unit'), 3) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 5) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_class_id'), 3) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('length_unit'), 4) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('status'), 6) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tax_class_id'), 4) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('seo_keyword'), 16) + 1);
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('description') + 4, 48) + 1); }
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_description') + 4, 32) + 1); }
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('meta_keywords') + 4, 24) + 1); }
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('related_ids'), 16) + 1);
 		foreach ($languages as $language) { $worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('tags') + 4, 24) + 1); }
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('viewed'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('viewed'), 6) + 1);
 
 		// Header row
 		$styles = [];
@@ -719,7 +719,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$styles[$j] = &$price_format; $data[$j++] = 'price';
 		$styles[$j] = &$price_format; $data[$j++] = 'cost';
 		$data[$j++] = 'quote';
-		$data[$j++] = 'age_minimum';
+		$styles[$j] = &$text_format; $data[$j++] = 'age_minimum';
 		$data[$j++] = 'points';
 		$styles[$j] = &$datetime_format; $data[$j++] = 'date_added';
 		$styles[$j] = &$datetime_format; $data[$j++] = 'date_modified';
@@ -727,9 +727,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$data[$j++] = 'palette_id';
 		$styles[$j] = &$weight_format; $data[$j++] = 'weight';
 		$styles[$j] = &$text_format; $data[$j++] = 'weight_unit';
-		$data[$j++] = 'length';
-		$data[$j++] = 'width';
-		$data[$j++] = 'height';
+		$styles[$j] = &$weight_format; $data[$j++] = 'length';
+		$styles[$j] = &$weight_format; $data[$j++] = 'width';
+		$styles[$j] = &$weight_format; $data[$j++] = 'height';
 		$styles[$j] = &$text_format; $data[$j++] = 'length_unit';
 		$data[$j++] = 'status';
 		$data[$j++] = 'tax_class_id';
@@ -838,9 +838,9 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 	protected function populateAdditionalImagesWorksheet($worksheet, $box_format, $text_format, $min_id = null, $max_id = null) {
 		$j = 0;
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('product_id'), 4) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image') + 4, 36) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('image') + 4, 42) + 1);
 		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('palette_color_id'), 4) + 1);
-		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 5) + 1);
+		$worksheet->getColumnDimensionByColumn($j++)->setWidth(max(strlen('sort_order'), 4) + 1);
 
 		$styles = [];
 		$data = [];
@@ -860,7 +860,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 
 		foreach ($this->getAdditionalImages($min_id, $max_id) as $row) {
 			$data = [];
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $row['image'];
 			$data[$j++] = $row['palette_color_id'];
@@ -924,7 +924,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getSpecials($language_id, $min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $row['name'];
@@ -993,7 +993,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getDiscounts($language_id, $min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $row['name'];
@@ -1055,7 +1055,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getRewards($language_id, $min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $row['name'];
@@ -1130,7 +1130,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getProductOptions($min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $use_option_id ? $row['option_id'] : html_entity_decode($row['option'], ENT_QUOTES, 'UTF-8');
@@ -1216,7 +1216,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getProductOptionValues($min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $use_option_id ? $row['option_id'] : html_entity_decode($row['option'], ENT_QUOTES, 'UTF-8');
@@ -1291,7 +1291,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getProductColors($min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $row['product_color_id'];
@@ -1368,7 +1368,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getProductFields($languages, $min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $row['field_id'];
@@ -1489,7 +1489,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getProductAttributes($languages, $min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(26);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $use_ag_id ? $row['attribute_group_id'] : html_entity_decode($attribute_group_names[$row['attribute_group_id']], ENT_QUOTES, 'UTF-8');
@@ -1564,7 +1564,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getProductFilters($min_id, $max_id) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['product_id'];
 			$data[$j++] = $use_fg_id ? $row['filter_group_id'] : html_entity_decode($filter_group_names[$row['filter_group_id']], ENT_QUOTES, 'UTF-8');
@@ -1639,7 +1639,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getOptions($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['option_id'];
 			$data[$j++] = $row['type'];
@@ -1702,7 +1702,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getOptionValues($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['option_value_id'];
 			$data[$j++] = $row['option_id'];
@@ -1759,7 +1759,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getAttributeGroups($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['attribute_group_id'];
 			$data[$j++] = $row['sort_order'];
@@ -1816,7 +1816,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getAttributes($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['attribute_id'];
 			$data[$j++] = $row['attribute_group_id'];
@@ -1880,7 +1880,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getFilterGroups($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['filter_group_id'];
 			$data[$j++] = $row['sort_order'];
@@ -1937,7 +1937,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getFilters($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['filter_id'];
 			$data[$j++] = $row['filter_group_id'];
@@ -1997,7 +1997,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getFields($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['field_id'];
 			$data[$j++] = $row['sort_order'];
@@ -2065,7 +2065,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 		$j = 0;
 
 		foreach ($this->getPalettes($languages) as $row) {
-			$worksheet->getRowDimension($i)->setRowHeight(13);
+			$worksheet->getRowDimension($i)->setRowHeight(20);
 			$data = [];
 			$data[$j++] = $row['palette_color_id'];
 			$data[$j++] = $row['palette_id'];

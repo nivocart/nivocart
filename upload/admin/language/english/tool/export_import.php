@@ -6,13 +6,14 @@ $_['header_credits']                                    = 'Credits';
 $_['header_phpexcel']                                   = 'PHPExcel';
 
 // Text
-$_['text_success']                                      = 'Success: You have successfully imported your data!';
-$_['text_success_settings']                             = 'Success: You have successfully updated the <b>Export / Import (XLSX)</b> settings!';
+$_['text_success']                                      = 'Success: The spreadsheet has been successfully imported into the database!';
+$_['text_success_export']                               = 'Success: The spreadsheet has been successfully created!';
+$_['text_success_settings']                             = 'Success: <b>Export / Import (XLSX)</b> settings have been successfully updated!';
 $_['text_export_type_customer']                         = 'Customers (including addresses)';
 $_['text_export_type_category']                         = 'Categories (including category data and filters)';
 $_['text_export_type_category_old']                     = 'Categories';
-$_['text_export_type_product']                          = 'Products (including product data, specials, discounts, rewards, options, palettes, fields, attributes and filters)';
-$_['text_export_type_product_old']                      = 'Products (including product data, specials, discounts, rewards, options and attributes)';
+$_['text_export_type_product']                          = 'Products (including product data, images, specials, discounts, rewards, options, palettes, fields, attributes and filters)';
+$_['text_export_type_product_old']                      = 'Products (including product data, images, specials, discounts, rewards, options and attributes)';
 $_['text_export_type_option']                           = 'Products Options';
 $_['text_export_type_attribute']                        = 'Products Attributes';
 $_['text_export_type_filter']                           = 'Filter definitions';
@@ -38,7 +39,7 @@ $_['entry_start_id']                                    = 'Start ID:';
 $_['entry_start_index']                                 = 'Counts per batch:';
 $_['entry_end_id']                                      = 'End ID:';
 $_['entry_end_index']                                   = 'The batch number:';
-$_['entry_incremental']                                 = 'Use incremental Import ?';
+$_['entry_incremental']                                 = 'Use incremental Import?';
 $_['entry_upload']                                      = 'XLS, XLSX or ODS File';
 $_['entry_settings_use_option_id']                      = 'Use <b>option_id</b> instead of <b>option name</b> in worksheets \'ProductOptions\' and \'ProductOptionValues\'';
 $_['entry_settings_use_option_value_id']                = 'Use <b>option_value_id</b> instead of <b>option_value name</b> in worksheet \'ProductOptionValues\'';
@@ -46,10 +47,10 @@ $_['entry_settings_use_attribute_group_id']             = 'Use <b>attribute_grou
 $_['entry_settings_use_attribute_id']                   = 'Use <b>attribute_id</b> instead of <b>attribute name</b> in worksheet \'ProductAttributes\'';
 $_['entry_settings_use_filter_group_id']                = 'Use <b>filter_group_id</b> instead of <b>filter_group name</b> in worksheets \'ProductFilters\' and \'CategoryFilters\'';
 $_['entry_settings_use_filter_id']                      = 'Use <b>filter_id</b> instead of <b>filter name</b> in worksheets \'ProductFilters\' and \'CategoryFilters\'';
-$_['entry_settings_use_export_tags']                    = 'Use <b>html tags</b> when exporting Html content (Recommended). Note: this may generate duplicates when Html can not be converted, but does preserve the formatting.';
+$_['entry_settings_use_export_tags']                    = 'Use <b>html tags</b> when exporting Html content (Recommended).';
 
 // Error
-$_['error_permission']                                  = 'Warning: You do not have permission to modify <b>Export / Import (XLSX)</b> !';
+$_['error_permission']                                  = 'Warning: You do not have permission to modify <b>Export / Import (XLSX)</b>!';
 $_['error_upload']                                      = 'Uploaded spreadsheet file has validation errors!';
 $_['error_worksheets']                                  = 'Export/Import: Invalid worksheet names';
 $_['error_customers_header']                            = 'Export/Import: Invalid header in the Customers worksheet';
@@ -102,8 +103,8 @@ $_['error_page_no_data']                                = 'No more data.';
 $_['error_param_not_number']                            = 'Values for data range must be whole numbers.';
 $_['error_upload_name']                                 = 'Missing file name for upload';
 $_['error_upload_ext']                                  = 'Uploaded file has not one of the \'.xls\', \'.xlsx\' or \'.ods\' file name extensions, it might not be a spreadsheet file!';
-$_['error_batch_number']                                = 'Batch number must be greater than 0 !';
-$_['error_min_item_id']                                 = 'Start ID must be greater than 0 !';
+$_['error_batch_number']                                = 'Batch number must be greater than 0!';
+$_['error_min_item_id']                                 = 'Start ID must be greater than 0!';
 
 $_['error_option_name'] = 'Option \'%1\' is defined multiple times!<br />';
 $_['error_option_name'] .= 'In the Settings-tab please activate the following:<br />';
@@ -224,14 +225,14 @@ $_['text_phpexcel_website']                             = 'PHPExcel GitHub:';
 $_['text_phpexcel_license']                             = 'PHPExcel License:';
 
 // Version
-$_['export_import_description']                         = '<b>Export / Import</b> is a spreadsheet importer-exporter for NivoCart, based on the original <b>Export/Import Tool</b> by JNeuhoff, and integrating Opensource <b>PHPExcel</b> Core Files, updated to support PHP 8+!';
+$_['export_import_description']                         = '<b>Export / Import</b> is a spreadsheet importer-exporter tool for NivoCart, integrating Opensource <b>PHPExcel</b> Core Files.';
 $_['export_import_version']                             = '2.0.0 - NivoCart';
 $_['export_import_author']                              = 'Nivocart';
 $_['export_import_support']                             = 'contact@nivocart.org';
 $_['export_import_license']                             = 'GPLv3 (GNU General Public License)';
-$_['export_tool_version']                               = 'Based on v3.20';
+$_['export_tool_version']                               = 'Based on v3.20 for OpenCart';
 $_['export_tool_author']                                = 'J.Neuhoff t/a MHCCORP.COM';
 $_['export_tool_license']                               = 'GPLv3 (GNU General Public License)';
-$_['phpexcel_version']                                  = 'PHPExcel v1.8.1 (Opensource) - Adapted for NivoCart';
+$_['phpexcel_version']                                  = 'PHPExcel v1.8.2 (Opensource) - Adapted for NivoCart';
 $_['phpexcel_author']                                   = 'phpexcel.codeplex.com';
-$_['phpexcel_license']                                  = 'LGPL (GNU LESSER GENERAL PUBLIC LICENSE)';
+$_['phpexcel_license']                                  = 'LGPL (GNU LESSER General Public License)';
