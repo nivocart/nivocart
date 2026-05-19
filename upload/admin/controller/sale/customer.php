@@ -859,6 +859,9 @@ class ControllerSaleCustomer extends Controller {
 			$this->data['error_address_zone'] = '';
 		}
 
+		// Get affiliate_id
+		$customer_id = $this->request->get['customer_id'] ?? 0;
+
 		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
@@ -926,15 +929,15 @@ class ControllerSaleCustomer extends Controller {
 		];
 
 		if (isset($this->request->get['customer_id'])) {
-			$customer_name = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+			$customer_name = $this->model_sale_customer->getCustomer($customer_id);
 
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $customer_name['firstname'] . ' ' . $customer_name['lastname'],
-				'href'      => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL'),
+				'href'      => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_id . $url, 'SSL'),
 				'separator' => ' :: '
 			];
 
-			$total_customer_orders = $this->model_sale_customer->getTotalCustomersOrders($this->request->get['customer_id']);
+			$total_customer_orders = $this->model_sale_customer->getTotalCustomersOrders($customer_id);
 
 			$this->data['customer_title'] = $customer_name['firstname'] . ' ' . $customer_name['lastname'] . ' (' . $total_customer_orders . ')';
 
@@ -951,17 +954,17 @@ class ControllerSaleCustomer extends Controller {
 		if (!isset($this->request->get['customer_id'])) {
 			$this->data['action'] = $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		} else {
-			$this->data['action'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_id . $url, 'SSL');
 		}
 
 		$this->data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		if (isset($this->request->get['customer_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
-			$customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+			$customer_info = $this->model_sale_customer->getCustomer($customer_id);
 		}
 
-		if (isset($this->request->get['customer_id'])) {
-			$this->data['customer_id'] = $this->request->get['customer_id'];
+		if (isset($customer_id)) {
+			$this->data['customer_id'] = $customer_id;
 		} else {
 			$this->data['customer_id'] = 0;
 		}
@@ -1079,7 +1082,7 @@ class ControllerSaleCustomer extends Controller {
 		if (isset($this->request->post['address'])) {
 			$this->data['addresses'] = $this->request->post['address'];
 		} elseif (isset($this->request->get['customer_id'])) {
-			$this->data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
+			$this->data['addresses'] = $this->model_sale_customer->getAddresses($customer_id);
 		} else {
 			$this->data['addresses'] = [];
 		}
@@ -1095,7 +1098,7 @@ class ControllerSaleCustomer extends Controller {
 		$this->data['ips'] = [];
 
 		if (!empty($customer_info)) {
-			$results = $this->model_sale_customer->getIpsByCustomerId($this->request->get['customer_id']);
+			$results = $this->model_sale_customer->getIpsByCustomerId($customer_id);
 
 			foreach ($results as $result) {
 				$ban_ip_total = $this->model_sale_customer->getTotalBanIpsByIp($result['ip']);
@@ -1164,11 +1167,11 @@ class ControllerSaleCustomer extends Controller {
 		}
 
 		if (!empty($this->request->post['password']) || (!isset($this->request->get['customer_id']))) {
-			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 4) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
+			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 8) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 				$this->error['password'] = $this->language->get('error_password');
 			}
 
-			if ($this->request->post['password'] != $this->request->post['confirm']) {
+			if ($this->request->post['password'] !== $this->request->post['confirm']) {
 				$this->error['confirm'] = $this->language->get('error_confirm');
 			}
 		}

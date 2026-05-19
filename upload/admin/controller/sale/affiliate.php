@@ -802,6 +802,9 @@ class ControllerSaleAffiliate extends Controller {
 			$this->data['error_code'] = '';
 		}
 
+		// Get affiliate_id
+		$affiliate_id = $this->request->get['affiliate_id'] ?? 0;
+
 		// Breadcrumbs
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
@@ -855,11 +858,11 @@ class ControllerSaleAffiliate extends Controller {
 		];
 
 		if (isset($this->request->get['affiliate_id'])) {
-			$affiliate_name = $this->model_sale_affiliate->getAffiliate($this->request->get['affiliate_id']);
+			$affiliate_name = $this->model_sale_affiliate->getAffiliate($affiliate_id);
 
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title') . ' :: ' . $affiliate_name['firstname'] . ' ' . $affiliate_name['lastname'],
-				'href'      => $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $this->request->get['affiliate_id'] . $url, 'SSL'),
+				'href'      => $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $affiliate_id . $url, 'SSL'),
 				'separator' => ' :: '
 			];
 
@@ -879,17 +882,17 @@ class ControllerSaleAffiliate extends Controller {
 		if (!isset($this->request->get['affiliate_id'])) {
 			$this->data['action'] = $this->url->link('sale/affiliate/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		} else {
-			$this->data['action'] = $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $this->request->get['affiliate_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $affiliate_id . $url, 'SSL');
 		}
 
 		$this->data['cancel'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		if (isset($this->request->get['affiliate_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
-			$affiliate_info = $this->model_sale_affiliate->getAffiliate($this->request->get['affiliate_id']);
+			$affiliate_info = $this->model_sale_affiliate->getAffiliate($affiliate_id);
 		}
 
-		if (isset($this->request->get['affiliate_id'])) {
-			$this->data['affiliate_id'] = $this->request->get['affiliate_id'];
+		if (isset($affiliate_id)) {
+			$this->data['affiliate_id'] = $affiliate_id;
 		} else {
 			$this->data['affiliate_id'] = 0;
 		}
@@ -1092,6 +1095,8 @@ class ControllerSaleAffiliate extends Controller {
 			$this->data['status'] = true;
 		}
 
+		$this->data['is_required'] = isset($affiliate_id) ? 'advised' : 'required';
+
 		if (isset($this->request->post['password'])) {
 			$this->data['password'] = $this->request->post['password'];
 		} else {
@@ -1108,9 +1113,9 @@ class ControllerSaleAffiliate extends Controller {
 		$this->data['products'] = [];
 
 		if (isset($this->request->get['affiliate_id'])) {
-			$total_products = $this->model_sale_affiliate->getTotalAffiliateProducts($this->request->get['affiliate_id']);
+			$total_products = $this->model_sale_affiliate->getTotalAffiliateProducts($affiliate_id);
 
-			$results = $this->model_sale_affiliate->getAffiliateProducts($this->request->get['affiliate_id']);
+			$results = $this->model_sale_affiliate->getAffiliateProducts($affiliate_id);
 
 			foreach ($results as $result) {
 				$this->data['products'][] = [
@@ -1188,7 +1193,7 @@ class ControllerSaleAffiliate extends Controller {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
-		if ($this->request->post['password'] || (!isset($this->request->get['affiliate_id']))) {
+		if (!empty($this->request->post['password']) || (!isset($this->request->get['affiliate_id']))) {
 			if ((mb_strlen($this->request->post['password'], 'UTF-8') < 8) || (mb_strlen($this->request->post['password'], 'UTF-8') > 20)) {
 				$this->error['password'] = $this->language->get('error_password');
 			}
