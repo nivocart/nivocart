@@ -109,7 +109,6 @@ class Affiliate {
 				if ($this->request->isSecure()) {
 					// Create a cookie and restrict it to HTTPS pages
 					$this->session->data['affiliate_cookie'] = bin2hex(random_bytes(32));
-
 					setcookie('affiliate', $this->session->data['affiliate_cookie'], 0, '/', '', true, true);
 				} else {
 					return false;
@@ -289,7 +288,7 @@ class Affiliate {
 	 *
 	 * @return bool
 	 */
-	public function loginExpired($age = 1800): bool {
+	public function loginExpired($age = 3600): bool {
 		if (isset($this->session->data['affiliate_login_time']) && (time() - $this->session->data['affiliate_login_time'] < $age)) {
 			return false;
 		} else {

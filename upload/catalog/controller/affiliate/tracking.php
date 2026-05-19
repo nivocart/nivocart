@@ -14,6 +14,19 @@ class ControllerAffiliateTracking extends Controller {
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 		}
 
+		if (!$this->affiliate->isSecure()) {
+			$this->affiliate->logout();
+
+			$this->session->data['redirect'] = $this->url->link('affiliate/account', '', 'SSL');
+
+			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
+		}
+
+		// If this affiliate is also logged in as a customer, log out the customer session
+		if ($this->customer->isLogged()) {
+			$this->customer->logout();
+		}
+
 		$this->language->load('affiliate/tracking');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -52,7 +65,7 @@ class ControllerAffiliateTracking extends Controller {
 
 		$this->data['continue'] = $this->url->link('affiliate/account', '', 'SSL');
 
-		$this->data['token'] = $this->session->data['token'];
+		$this->data['token'] = $this->session->data['affiliate_token'];
 
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
@@ -77,19 +90,31 @@ class ControllerAffiliateTracking extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	/**
+	 * Autocomplete Product
+	 */
 	public function autocomplete() {
+		if (!$this->affiliate->isLogged() || !$this->affiliate->isSecure()) {
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode([]));
+			return;
+		}
+
 		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
+			$filter_name = trim($this->request->get['filter_name']);
+
 			$this->load->model('catalog/product');
 
-			$filter_data = [
-				'filter_name' => $this->request->get['filter_name'],
-				'start'       => 0,
-				'limit'       => 5
+			$data = [
+				'filter_name'  => $filter_name,
+				'autocomplete' => true,
+				'start'        => 0,
+				'limit'        => 20
 			];
 
-			$results = $this->model_catalog_product->getProducts($filter_data);
+			$results = $this->model_catalog_product->getProducts($data);
 
 			foreach ($results as $result) {
 				$json[] = [
@@ -97,6 +122,8 @@ class ControllerAffiliateTracking extends Controller {
 					'link' => $this->url->link('product/product', 'product_id=' . $result['product_id'] . '&tracking=' . $this->affiliate->getCode(), 'SSL')
 				];
 			}
+
+			usort($json, fn($a, $b) => strcmp($a['name'], $b['name']));
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

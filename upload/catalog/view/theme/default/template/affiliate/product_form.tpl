@@ -17,7 +17,7 @@
       <tr>
         <td><span class="required">*</span> <?php echo $entry_product; ?></td>
         <td>
-          <input type="text" name="name" value="<?php echo $name; ?>" />
+          <input type="text" name="name" value="<?php echo $name; ?>" size="30" />
           <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
           <?php if ($error_product) { ?>
             <span class="error"><?php echo $error_product; ?></span>
@@ -35,32 +35,37 @@
 </div>
 <?php echo $content_lower; ?>
 
-<script type="text/javascript"><!--
-$('input[name=\'name\']').autocomplete({
-	delay: 10,
-	source: function(request, response) {
-		$.ajax({
-			url: 'index.php?route=affiliate/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {
-				response($.map(json, function(item) {
-					return {
-						label: item.name,
-						value: item.product_id
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('input[name=\'name\']').val(ui.item.label);
-		$('input[name=\'product_id\']').val(ui.item.value);
-		return false;
-	},
-	focus: function(event, ui) {
-		return false;
-	}
+<script type="text/javascript">
+var productSelect = new TomSelect('input[name="name"]', {
+	dropdownParent: 'body',
+    valueField: 'product_id',
+    labelField: 'name',
+    searchField: ['name'],
+    placeholder: 'Search ...',
+    create: false,
+    maxOptions: 20,
+    closeAfterSelect: false,
+    shouldLoad: function(query) {
+        return query.length >= 2;
+    },
+    load: function(query, callback) {
+        var url = 'index.php?route=affiliate/product/autocomplete' + '&token=<?php echo $token; ?>' + '&filter_name=' + encodeURIComponent(query);
+        fetch(url)
+            .then(function(response) { return response.json(); })
+            .then(function(json) { callback(json); })
+            .catch(function() { callback(); });
+    },
+    onItemAdd: function(value, item) {
+        // Set the hidden product_id field
+        document.querySelector('input[name="product_id"]').value = value;
+        // Set the visible name field to the selected label
+        document.querySelector('input[name="name"]').value = item.textContent.trim();
+        // Clear Tom Select's own input and cached options so next search is fresh
+        productSelect.clear(true);
+        productSelect.clearOptions();
+        productSelect.setTextboxValue('');
+    }
 });
-//--></script>
+</script>
 
 <?php echo $footer; ?>

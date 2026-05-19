@@ -16,10 +16,14 @@ class ControllerAffiliateAccount extends Controller {
 
 		if (!$this->affiliate->isSecure()) {
 			$this->affiliate->logout();
-
 			$this->session->data['redirect'] = $this->url->link('affiliate/account', '', 'SSL');
 
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
+		}
+
+		// If this affiliate is also logged in as a customer, log out the customer session
+		if ($this->customer->isLogged()) {
+			$this->customer->logout();
 		}
 
 		$this->language->load('affiliate/account');

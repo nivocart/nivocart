@@ -28,6 +28,7 @@
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/stylesheet-modifiers.min.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/javascript/jquery/ui/themes/start/jquery-ui-1.12.1.min.css" />
+<link rel="stylesheet" type="text/css" href="catalog/view/javascript/tom-select/tom-select.default.min.css" />
 <?php foreach ($styles as $style) { ?>
 <link rel="<?php echo $style['rel']; ?>" type="text/css" href="<?php echo $style['href']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
@@ -35,6 +36,7 @@
 <script type="text/javascript" src="catalog/view/javascript/jquery/jquery-migrate-1.4.1.min.js"></script>
 <script type="text/javascript" src="catalog/view/javascript/jquery/ui/jquery-ui-1.12.1.min.js" async></script>
 <script type="text/javascript" src="catalog/view/javascript/jquery/ui/minified/jquery.ui.touch-punch.min.js" async></script>
+<script type="text/javascript" src="catalog/view/javascript/tom-select/tom-select-2.6.1-full.min.js"></script>
 <script type="text/javascript" src="catalog/view/javascript/livesearch.min.js" async></script>
 <script type="text/javascript" src="catalog/view/javascript/common.min.js" async></script>
 <?php if ($stores) { ?>

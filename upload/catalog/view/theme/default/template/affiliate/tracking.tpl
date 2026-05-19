@@ -15,7 +15,7 @@
     <textarea cols="40" rows="1"><?php echo $code; ?></textarea>
   </p>
   <p><?php echo $text_generator; ?><br />
-    <input type="text" name="product" value="" size="40" />
+    <input type="text" name="name" value="" size="40" />
   </p>
   <p><?php echo $text_link; ?><br />
     <textarea name="link" cols="40" rows="5"></textarea>
@@ -27,32 +27,36 @@
 </div>
 <?php echo $content_lower; ?>
 
-<script type="text/javascript"><!--
-$('input[name=\'product\']').autocomplete({
-	delay: 10,
-	source: function(request, response) {
-		$.ajax({
-			url: 'index.php?route=affiliate/tracking/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {
-				response($.map(json, function(item) {
-					return {
-						label: item.name,
-						value: item.link
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('input[name=\'product\']').val(ui.item.label);
-		$('textarea[name=\'link\']').val(ui.item.value);
-		return false;
-	},
-	focus: function(event, ui) {
-		return false;
-	}
+<script type="text/javascript">
+new TomSelect('input[name="name"]', {
+	dropdownParent: 'body',
+    valueField: 'link',
+    labelField: 'name',
+    searchField: ['name'],
+    placeholder: 'Search ...',
+    create: false,
+    maxOptions: 20,
+    shouldLoad: function(query) {
+        return query.length >= 2;
+    },
+    load: function(query, callback) {
+        var url = 'index.php?route=affiliate/tracking/autocomplete' + '&token=<?php echo $token; ?>' + '&filter_name=' + encodeURIComponent(query);
+        fetch(url)
+            .then(function(response) { return response.json(); })
+            .then(function(json) { callback(json); })
+            .catch(function() { callback(); });
+    },
+	onItemAdd: function(value, item) {
+        // Set the hidden product_id field
+        document.querySelector('textarea[name="link"]').value = value;
+        // Set the visible name field to the selected label
+        document.querySelector('input[name="name"]').value = item.textContent.trim();
+        // Clear Tom Select's own input and cached options so next search is fresh
+        productSelect.clear(true);
+        productSelect.clearOptions();
+        productSelect.setTextboxValue('');
+    }
 });
-//--></script>
+</script>
 
 <?php echo $footer; ?>

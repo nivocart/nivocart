@@ -22,6 +22,11 @@ class ControllerAffiliateProduct extends Controller {
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 		}
 
+		// If this affiliate is also logged in as a customer, log out the customer session
+		if ($this->customer->isLogged()) {
+			$this->customer->logout();
+		}
+
 		$this->language->load('affiliate/product');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -269,6 +274,8 @@ class ControllerAffiliateProduct extends Controller {
 		$this->data['button_continue'] = $this->language->get('button_continue');
 		$this->data['button_back'] = $this->language->get('button_back');
 
+		$this->data['token'] = $this->session->data['affiliate_token'];
+
 		if (isset($this->error['product'])) {
 			$this->data['error_product'] = $this->error['product'];
 		} else {
@@ -280,8 +287,6 @@ class ControllerAffiliateProduct extends Controller {
 		} else {
 			$this->data['action'] = $this->url->link('affiliate/product/update', 'affiliate_product_id=' . $this->request->get['affiliate_product_id'] . '&affiliate_token=' . $this->session->data['affiliate_token'], 'SSL');
 		}
-
-		$this->data['token'] = $this->session->data['token'];
 
 		if (isset($this->request->get['affiliate_product_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$product_info = $this->model_affiliate_affiliate->getAffiliateProduct($this->request->get['affiliate_product_id']);
@@ -336,19 +341,31 @@ class ControllerAffiliateProduct extends Controller {
 		return empty($this->error);
 	}
 
+	/**
+	 * Autocomplete Product
+	 */
 	public function autocomplete() {
+		if (!$this->affiliate->isLogged() || !$this->affiliate->isSecure()) {
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode([]));
+			return;
+		}
+
 		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
+			$filter_name = trim($this->request->get['filter_name']);
+
 			$this->load->model('catalog/product');
 
-			$filter_data = [
-				'filter_name' => $this->request->get['filter_name'],
-				'start'       => 0,
-				'limit'       => 5
+			$data = [
+				'filter_name'  => $filter_name,
+				'autocomplete' => true,
+				'start'        => 0,
+				'limit'        => 20
 			];
 
-			$results = $this->model_catalog_product->getProducts($filter_data);
+			$results = $this->model_catalog_product->getProducts($data);
 
 			foreach ($results as $result) {
 				$json[] = [
@@ -356,6 +373,8 @@ class ControllerAffiliateProduct extends Controller {
 					'product_id' => $result['product_id']
 				];
 			}
+
+			usort($json, fn($a, $b) => strcmp($a['name'], $b['name']));
 		}
 
 		$this->response->addHeader('Content-Type: application/json');

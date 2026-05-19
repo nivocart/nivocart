@@ -181,7 +181,7 @@ class Customer {
 			$cart = json_decode($customer_query->row['cart'], true);
 
 			if (!is_array($cart)) {
-				throw new \Exception('Error: Cart must be an array.');
+				throw new \Exception('Error: Cart must be an array!');
 			}
 
 			foreach ($cart as $key => $value) {
@@ -201,7 +201,7 @@ class Customer {
 			$wishlist = json_decode($customer_query->row['wishlist'], true);
 
 			if (!is_array($wishlist)) {
-				throw new \Exception('Error: Wishlist must be an array.');
+				throw new \Exception('Error: Wishlist must be an array!');
 			}
 
 			foreach ($wishlist as $product_id) {
@@ -457,7 +457,7 @@ class Customer {
 	 *
 	 * @return bool
 	 */
-	public function loginExpired($age = 1800): bool {
+	public function loginExpired($age = 3600): bool {
 		if (isset($this->session->data['customer_login_time']) && (time() - $this->session->data['customer_login_time'] < $age)) {
 			return false;
 		} else {
