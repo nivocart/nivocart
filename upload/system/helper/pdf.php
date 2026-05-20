@@ -1,9 +1,12 @@
 <?php
 /**
- * Helper PDF
+ * Helper Function PDF
+ *
+ * @package NivoCart
  */
 function pdf($data, $type, $number) {
     $doc_type = str_replace(" ", "", $type);
+
     $title = $doc_type . '-' . $number;
 
     $options = new Dompdf\Options();

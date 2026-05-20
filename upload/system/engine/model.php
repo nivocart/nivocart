@@ -1,4 +1,9 @@
 <?php
+/**
+ * Abstract Class Model
+ *
+ * @package NivoCart
+ */
 abstract class Model {
 	/**
 	 * @var Registry

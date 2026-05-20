@@ -1,4 +1,9 @@
 <?php
+/**
+ * Final Class Front
+ *
+ * @package NivoCart
+ */
 final class Front {
 	/**
 	 * @var Registry

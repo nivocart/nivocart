@@ -1,6 +1,8 @@
 <?php
 /**
- * @function mbstring helper
+ * Helper mbstring
+ *
+ * @package NivoCart
  */
 mb_internal_encoding('UTF-8');
 

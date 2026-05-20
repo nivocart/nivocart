@@ -1,8 +1,8 @@
 <?php
 /**
- * Class OrderTotalHelper
+ * Helper Class OrderTotalHelper
  *
- * Shared utilities for order total models.
+ * Shared utilities for order total models
  *
  * @package NivoCart
  */

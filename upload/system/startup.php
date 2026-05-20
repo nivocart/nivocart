@@ -1,10 +1,14 @@
 <?php
-// Error Reporting
+/**
+ * Startup
+ *
+ * @package NivoCart
+ */
 error_reporting(E_ALL);
 
-// Check Version
-if (version_compare(PHP_VERSION, '8.0', '<')) {
-	exit('PHP 8.0+ Required');
+// Check PHP Version
+if (version_compare(PHP_VERSION, '8.1', '<')) {
+	throw new \Exception('Error: PHP 8.1+ Required!');
 }
 
 if (!ini_get('date.timezone')) {

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Final Class Action
+ *
+ * @package NivoCart
+ */
 final class Action {
 	/**
 	 * @var string

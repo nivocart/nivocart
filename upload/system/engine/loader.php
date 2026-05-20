@@ -1,4 +1,9 @@
 <?php
+/**
+ * Final Class Loader
+ *
+ * @package NivoCart
+ */
 final class Loader {
 	/**
 	 * @var Registry

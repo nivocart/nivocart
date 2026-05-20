@@ -1,8 +1,10 @@
 <?php
 /**
- * Helper VAT
+ * Helper Vat
+ *
+ * @package NivoCart
  */
-function Vat_validation($prefix, $number): string {
+function vatValidation($prefix, $number): string {
 	$iso_code_2_data = [
 		'AT' => 'AT', //Austria
 		'BE' => 'BE', //Belgium

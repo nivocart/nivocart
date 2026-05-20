@@ -1,4 +1,9 @@
 <?php
+/**
+ * Abstract Class Controller
+ *
+ * @package NivoCart
+ */
 abstract class Controller {
 	/**
 	 * @var Registry
@@ -108,7 +113,7 @@ abstract class Controller {
 			return $controller->output;
 
 		} else {
-			trigger_error('Error: Could not load controller ' . $child . '!');
+			throw new \Exception('Error: Could not load controller ' . $child . '!');
 		}
 	}
 
@@ -164,7 +169,7 @@ abstract class Controller {
 			return $this->output;
 
 		} else {
-			trigger_error('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
+			throw new \Exception('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
 		}
 	}
 }

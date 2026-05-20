@@ -1,14 +1,18 @@
 <?php
-/*
-| -------------------------------------------------------------------
-| USER AGENT TYPES
-| -------------------------------------------------------------------
-| This file contains five arrays of user agent data. It is used by the
-| Browser Class to help identify browser, platform, robot, and
-| mobile device data. The array keys are used to identify the device
-| and the array values are used to set the actual name of the item.
-|
-*/
+/**
+ * Helper Functions Agents
+ *
+ * @package NivoCart
+ *
+ * -------------------------------------------------------------------
+ * USER AGENT TYPES
+ * -------------------------------------------------------------------
+ * This file contains five arrays of user agent data. It is used by the
+ * Browser Class to help identify browser, platform, robot, and
+ * mobile device data. The array keys are used to identify the device
+ * and the array values are used to set the actual name of the item.
+ * -------------------------------------------------------------------
+ */
 
 $platforms = [
 	'windows nt 10.0' => 'Windows 10/11',

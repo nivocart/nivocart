@@ -1,4 +1,9 @@
 <?php
+/**
+ * Final Class Registry
+ *
+ * @package NivoCart
+ */
 final class Registry {
 	/**
 	 * @var array<string, string>
