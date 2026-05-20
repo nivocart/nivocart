@@ -8,7 +8,7 @@ class ControllerAffiliateTracking extends Controller {
 	/** Error array Placeholder */
 
 	public function index() {
-		if (!$this->affiliate->isLogged()) {
+		if ((!$this->affiliate->isLogged()) || ($this->affiliate->loginExpired())) {
 			$this->session->data['redirect'] = $this->url->link('affiliate/tracking', '', 'SSL');
 
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
@@ -60,10 +60,12 @@ class ControllerAffiliateTracking extends Controller {
 		$this->data['text_link'] = $this->language->get('text_link');
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
+		$this->data['button_back'] = $this->language->get('button_back');
 
 		$this->data['code'] = $this->affiliate->getCode();
 
 		$this->data['continue'] = $this->url->link('affiliate/account', '', 'SSL');
+		$this->data['back'] = $this->url->link('affiliate/account', '', 'SSL');
 
 		$this->data['token'] = $this->session->data['affiliate_token'];
 

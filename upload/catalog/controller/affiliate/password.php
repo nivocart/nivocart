@@ -8,8 +8,16 @@ class ControllerAffiliatePassword extends Controller {
 	private $error = [];
 
 	public function index() {
-		if (!$this->affiliate->isLogged()) {
+		if ((!$this->affiliate->isLogged()) || ($this->affiliate->loginExpired())) {
 			$this->session->data['redirect'] = $this->url->link('affiliate/password', '', 'SSL');
+
+			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
+		}
+
+		if (!$this->affiliate->isSecure()) {
+			$this->affiliate->logout();
+
+			$this->session->data['redirect'] = $this->url->link('affiliate/account', '', 'SSL');
 
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 		}

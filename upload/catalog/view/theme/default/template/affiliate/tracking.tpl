@@ -11,23 +11,24 @@
 <div id="content"><?php echo $content_high; ?>
   <h1><?php echo $heading_title; ?></h1>
   <p><?php echo $text_description; ?></p>
-  <p><?php echo $text_code; ?><br />
+  <p><?php echo $text_code; ?><br /><br />
     <textarea cols="40" rows="1"><?php echo $code; ?></textarea>
   </p>
-  <p><?php echo $text_generator; ?><br />
+  <p><?php echo $text_generator; ?><br /><br />
     <input type="text" name="name" value="" size="40" />
   </p>
-  <p><?php echo $text_link; ?><br />
+  <p><?php echo $text_link; ?><br /><br />
     <textarea name="link" cols="40" rows="5"></textarea>
   </p>
   <div class="buttons">
+    <div class="left"><a href="<?php echo $back; ?>" class="button"><i class="fa fa-arrow-left"></i> &nbsp; <?php echo $button_back; ?></a></div>
     <div class="right"><a href="<?php echo $continue; ?>" class="button"><?php echo $button_continue; ?></a></div>
   </div>
   <?php echo $content_low; ?>
 </div>
 <?php echo $content_lower; ?>
 
-<script type="text/javascript">
+<script type="text/javascript"><!--
 new TomSelect('input[name="name"]', {
 	dropdownParent: 'body',
     valueField: 'link',
@@ -46,17 +47,10 @@ new TomSelect('input[name="name"]', {
             .then(function(json) { callback(json); })
             .catch(function() { callback(); });
     },
-	onItemAdd: function(value, item) {
-        // Set the hidden product_id field
+    onChange: function(value) {
         document.querySelector('textarea[name="link"]').value = value;
-        // Set the visible name field to the selected label
-        document.querySelector('input[name="name"]').value = item.textContent.trim();
-        // Clear Tom Select's own input and cached options so next search is fresh
-        productSelect.clear(true);
-        productSelect.clearOptions();
-        productSelect.setTextboxValue('');
     }
 });
-</script>
+//--></script>
 
 <?php echo $footer; ?>

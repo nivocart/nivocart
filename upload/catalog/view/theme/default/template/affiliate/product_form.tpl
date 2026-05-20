@@ -35,7 +35,7 @@
 </div>
 <?php echo $content_lower; ?>
 
-<script type="text/javascript">
+<script type="text/javascript"><!--
 var productSelect = new TomSelect('input[name="name"]', {
 	dropdownParent: 'body',
     valueField: 'product_id',
@@ -66,6 +66,6 @@ var productSelect = new TomSelect('input[name="name"]', {
         productSelect.setTextboxValue('');
     }
 });
-</script>
+//--></script>
 
 <?php echo $footer; ?>
