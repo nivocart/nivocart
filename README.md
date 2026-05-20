@@ -22,7 +22,7 @@ REQUIREMENTS:
 - Server: Apache Linux Server
 - Database: MySQLi / MariaDB
 - Extensions: OpenSSL Encrypt + cURL
-- PHP: PHP 8.0+
+- PHP: PHP 8.1+
 
 _____________________________________________________________________________________________
 

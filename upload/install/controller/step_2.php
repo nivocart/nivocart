@@ -114,7 +114,7 @@ class ControllerStep2 extends Controller {
 	private function validate() {
 		$php_version = phpversion();
 
-		if (version_compare($php_version, '8.0', '<')) {
+		if (version_compare($php_version, '8.1', '<')) {
 			$this->error['warning'] = $this->language->get('error_php_version');
 		}
 
@@ -146,14 +146,8 @@ class ControllerStep2 extends Controller {
 			$this->error['warning'] = $this->language->get('error_php_xml');
 		}
 
-		if ($php_version >= '7.1') {
-			if (!function_exists('openssl_encrypt')) {
-				$this->error['warning'] = $this->language->get('error_php_openssl');
-			}
-		} else {
-			if (!function_exists('mcrypt_encrypt')) {
-				$this->error['warning'] = $this->language->get('error_php_mcrypt');
-			}
+		if (!function_exists('openssl_encrypt')) {
+			$this->error['warning'] = $this->language->get('error_php_openssl');
 		}
 
 		if (!extension_loaded('zlib')) {
