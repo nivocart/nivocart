@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Cache
+ *
+ * @package NivoCart
+ */
 class Cache {
 	/**
 	 * @var int

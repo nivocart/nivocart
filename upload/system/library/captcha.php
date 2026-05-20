@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Captcha
+ *
+ * @package NivoCart
+ */
 class Captcha {
 	/**
 	 * @var string

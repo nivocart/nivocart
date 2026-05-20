@@ -1,5 +1,11 @@
 <?php
 /**
+ * Library Class Dbmemory
+ *
+ * @package NivoCart
+ *
+ * ----------------------
+ *
  * Dbmemory class is a query result memorization layer.
  *
  * What it actually does:
@@ -38,10 +44,12 @@ class Dbmemory {
 	/**
 	 * Query
 	 *
+	 * @comment: xxh32 / xxh64 are purpose-built non-cryptographic hash functions available from PHP 8.1+
+	 *
 	 * @param $sql
 	 */
 	public function query($sql) {
-		$hash = md5($sql);
+		$hash = hash('xxh32', $sql);
 
 		if (!isset(self::$results[$hash])) {
 			self::$results[$hash] = $this->db->query($sql);

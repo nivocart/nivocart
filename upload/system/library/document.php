@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Document
+ *
+ * @package NivoCart
+ */
 class Document {
 	/**
 	 * @var string
@@ -93,10 +98,12 @@ class Document {
 	 * @param string $href
 	 * @param string $rel
 	 *
+	 * @comment: xxh32 is a purpose-built non-cryptographic hash function available from PHP 8.1+
+	 *
 	 * @return void
 	 */
 	public function addLink(string $href, string $rel): void {
-		$this->links[md5($href)] = [
+		$this->links[hash('xxh32', $href)] = [
 			'href' => $href,
 			'rel'  => $rel
 		];
@@ -118,10 +125,12 @@ class Document {
 	 * @param string $rel
 	 * @param string $media
 	 *
+	 * @comment: xxh32 is a purpose-built non-cryptographic hash function available from PHP 8.1+
+	 *
 	 * @return void
 	 */
 	public function addStyle(string $href, string $rel = 'stylesheet', string $media = 'screen'): void {
-		$this->styles[md5($href)] = [
+		$this->styles[hash('xxh32', $href)] = [
 			'href'  => $href,
 			'rel'   => $rel,
 			'media' => $media
@@ -142,10 +151,12 @@ class Document {
 	 *
 	 * @param string script
 	 *
+	 * @comment: xxh32 is a purpose-built non-cryptographic hash function available from PHP 8.1+
+	 *
 	 * @return void
 	 */
 	public function addScript(string $script): void {
-		$this->scripts[md5($script)] = $script;
+		$this->scripts[hash('xxh32', $script)] = $script;
 	}
 
 	/**

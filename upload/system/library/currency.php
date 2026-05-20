@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Currency
+ *
+ * @package NivoCart
+ */
 class Currency {
 	/**
 	 * @var object>

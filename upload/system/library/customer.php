@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Customer
+ *
+ * @package NivoCart
+ */
 class Customer {
 	/**
 	 * @var object

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Tax
+ *
+ * @package NivoCart
+ */
 final class Tax {
 	/**
 	 * @var object
@@ -307,7 +312,7 @@ final class Tax {
 				if ($tax_rate['type'] === 'F') {
 					$amount += $tax_rate['rate'];
 				} elseif ($tax_rate['type'] === 'P') {
-					$amount += ($value / 100 * $tax_rate['rate']);
+					$amount += (($value / 100) * $tax_rate['rate']);
 				}
 
 				$tax_rate_data[$tax_rate['tax_rate_id']] = [

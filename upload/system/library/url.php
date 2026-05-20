@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Url
+ *
+ * @package NivoCart
+ */
 class Url {
 	/**
 	 * @var string

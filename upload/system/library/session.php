@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Session
+ *
+ * @package NivoCart
+ */
 class Session {
 	/**
 	 * @var string

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Mail
+ *
+ * @package NivoCart
+ */
 class Mail {
 	protected string $to = '';
 	protected string $from = '';
@@ -7,6 +12,7 @@ class Mail {
 	protected string $subject = '';
 	protected string $text = '';
 	protected string $html = '';
+
 	protected array $attachments = [];
 
 	public string $protocol = 'mail';
@@ -147,7 +153,7 @@ class Mail {
 			$to = $this->to;
 		}
 
-		$boundary = '----=_NextPart_' . md5((string)time());
+		$boundary = '----=_NextPart_' . bin2hex(random_bytes(16));
 
 		$header = 'MIME-Version: 1.0' . PHP_EOL;
 
@@ -252,7 +258,8 @@ class Mail {
 				while ($line = fgets($handle, 515)) {
 					$reply .= $line;
 
-					//some SMTP servers respond with 220 code before responding with 250. hence, we need to ignore 220 response string
+					// Some SMTP servers respond with 220 code before responding with 250.
+					// Hence, we need to ignore 220 response string.
 					if (substr($reply, 0, 3) === 220 && substr($line, 3, 1) === ' ') {
 						$reply = '';
 						continue;

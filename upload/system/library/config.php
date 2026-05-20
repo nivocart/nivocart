@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Config
+ *
+ * @package NivoCart
+ */
 class Config {
 	/**
 	 * @var array<string, string>

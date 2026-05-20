@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Log
+ *
+ * @package NivoCart
+ */
 class Log {
 	/**
 	 * @var string

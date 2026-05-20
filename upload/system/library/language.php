@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Language
+ *
+ * @package NivoCart
+ */
 class Language {
 	/**
 	 * @var string

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Request
+ *
+ * @package NivoCart
+ */
 class Request {
 	/**
 	 * @var array<string, mixed>

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Cart
+ *
+ * @package NivoCart
+ */
 class Cart {
 	/**
 	 * @var object
@@ -399,7 +404,7 @@ class Cart {
 	/**
 	 * Add
 	 *
-	 * @param int          $product_id           primary key of the product record
+	 * @param int          $product_id       primary key of the product record
 	 * @param int          $profile_id
 	 * @param int          $quantity
 	 * @param array<mixed> $option
@@ -435,7 +440,7 @@ class Cart {
 	/**
 	 * Update
 	 *
-	 * @param int $key  primary key of the cart record
+	 * @param int $key     primary key of the cart record
 	 * @param int $quantity
 	 *
 	 * @return void

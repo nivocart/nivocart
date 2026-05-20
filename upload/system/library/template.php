@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Template
+ *
+ * @package NivoCart
+ */
 class Template {
 	/**
 	 * @var array<mixed>
@@ -23,8 +28,7 @@ class Template {
 			return $content;
 
 		} else {
-			trigger_error('Error: Could not load template ' . $file . '!');
-			exit(1);
+			throw new \RuntimeException('Error: Could not load template ' . $file . '!');
 		}
 	}
 }

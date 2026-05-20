@@ -1,5 +1,11 @@
 <?php
 /**
+ * Library Class Offer
+ *
+ * @package NivoCart
+ *
+ * ------------------------
+ *
  * Pure offer matching — no registry, no cart, no session
  *
  * Offer Variation

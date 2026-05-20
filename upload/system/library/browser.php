@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Browser
+ *
+ * @package NivoCart
+ */
 class Browser {
 	/**
 	 * @var array <array<string, mixed>>

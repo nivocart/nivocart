@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Affiliate
+ *
+ * @package NivoCart
+ */
 class Affiliate {
 	/**
 	 * @var object

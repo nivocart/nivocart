@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Weight
+ *
+ * @package NivoCart
+ */
 class Weight {
 	/**
 	 * @var object
@@ -24,7 +29,11 @@ class Weight {
 		$this->db = $registry->get('db');
 		$this->config = $registry->get('config');
 
-		$weight_class_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "weight_class` wc LEFT JOIN `" . DB_PREFIX . "weight_class_description` wcd ON (wc.weight_class_id = wcd.weight_class_id) WHERE wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$sql = "SELECT * FROM `" . DB_PREFIX . "weight_class` wc LEFT JOIN `" . DB_PREFIX . "weight_class_description` wcd";
+		$sql .= " ON (wc.weight_class_id = wcd.weight_class_id)";
+		$sql .= " WHERE wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+		$weight_class_query = $this->db->query($sql);
 
 		foreach ($weight_class_query->rows as $result) {
 			$this->weights[$result['weight_class_id']] = [

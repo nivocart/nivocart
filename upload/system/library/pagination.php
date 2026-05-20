@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Pagination
+ *
+ * @package NivoCart
+ */
 class Pagination {
 	public int $total = 0;
 	public int $page = 1;
@@ -22,11 +27,9 @@ class Pagination {
 		$total = $this->total;
 
 		$page = ((int)$this->page < 1) ? 1 : $this->page;
-
 		$limit = (!(int)$this->limit) ? 10 : $this->limit;
 
 		$num_links = $this->num_links;
-
 		$num_pages = ceil($total / $limit);
 
 		$this->url = str_replace('%7Bpage%7D', '{page}', $this->url);

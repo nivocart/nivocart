@@ -1,4 +1,9 @@
 <?php
+/**
+ * Library Class Response
+ *
+ * @package NivoCart
+ */
 class Response {
 	/**
 	 * @var array<int, string>
