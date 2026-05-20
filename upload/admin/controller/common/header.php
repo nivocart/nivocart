@@ -252,7 +252,6 @@ class ControllerCommonHeader extends Controller {
 			$this->data['logged'] = false;
 
 			$this->data['home'] = $this->url->link('common/login', '', 'SSL');
-
 		} else {
 			$this->data['logged'] = true;
 
