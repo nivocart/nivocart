@@ -140,5 +140,188 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
+<?php if ($cookie_consent) { ?>
+<style>
+  :root {
+    --cc-popup-bg:   <?php echo $cookie_popup; ?>;
+    --cc-text:       <?php echo $cookie_text; ?>;
+    --cc-btn-bg:     <?php echo $cookie_button; ?>;
+    --cc-btn-text:   #ffffff;
+    --cc-radius:     6px;
+    --cc-shadow:     0 4px 24px rgba(0,0,0,0.18);
+    --cc-z:          99999;
+    --cc-transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #cc-banner {
+    position: fixed;
+    <?php if ($cookie_position === 'top'): ?>
+    top: 0;
+    <?php else: ?>
+    bottom: 0;
+    <?php endif; ?>
+    left: 0;
+    right: 0;
+    z-index: var(--cc-z);
+    background: var(--cc-popup-bg);
+    color: var(--cc-text);
+    box-shadow: var(--cc-shadow);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    /* Slide in from the relevant edge */
+    <?php if ($cookie_position === 'top'): ?>
+    transform: translateY(-100%);
+    <?php else: ?>
+    transform: translateY(100%);
+    <?php endif; ?>
+    transition: transform var(--cc-transition), opacity var(--cc-transition);
+    opacity: 0;
+  }
+
+  /* Visible state — toggled by JS */
+  #cc-banner.cc-visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* Push page content down when banner sits at the top */
+  <?php if ($cookie_position === 'top'): ?>
+  body.cc-top-offset {
+    transition: margin-top var(--cc-transition);
+  }
+  <?php endif; ?>
+
+  #cc-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  #cc-message {
+    flex: 1 1 280px;
+    margin: 0;
+    color: var(--cc-text);
+  }
+
+  #cc-message a {
+    color: var(--cc-btn-bg);
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  #cc-message a:hover {
+    opacity: 0.85;
+  }
+
+  #cc-accept {
+    flex-shrink: 0;
+    background: var(--cc-btn-bg);
+    color: var(--cc-btn-text);
+    border: none;
+    border-radius: var(--cc-radius);
+    padding: 9px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+
+  #cc-accept:hover {
+    opacity: 0.88;
+    transform: scale(1.03);
+  }
+
+  #cc-accept:focus-visible {
+    outline: 3px solid var(--cc-btn-bg);
+    outline-offset: 3px;
+  }
+</style>
+
+<div id="cc-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+  <div id="cc-inner">
+    <p id="cc-message">
+      <?php echo $text_message; ?>
+      <a href="<?php echo $cookie_privacy; ?>" target="_blank" rel="noopener noreferrer">
+        <?php echo $text_policy; ?>
+      </a>
+    </p>
+    <button id="cc-accept" type="button"><?php echo $text_accept; ?></button>
+  </div>
+</div>
+
+<script><!--
+(function () {
+  'use strict';
+
+  var COOKIE_NAME = 'cc_accepted';
+  var EXPIRY_DAYS = <?php echo (int)$cookie_age; ?>;
+  var POSITION = '<?php echo ($cookie_position === 'top') ? 'top' : 'bottom'; ?>';
+
+  /* ── Helpers ─────────────────────────────────────── */
+  function getCookie(name) {
+    var match = document.cookie.match(
+      new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)')
+    );
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function setCookie(name, value, days) {
+    var expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = name + '=' + encodeURIComponent(value) +
+      '; expires=' + expires +
+      '; path=/' +
+      '; SameSite=Lax';
+	  '<?php echo $cookie_secure; ?>';
+  }
+
+  /* ── Banner logic ─────────────────────────────────── */
+  var banner = document.getElementById('cc-banner');
+  var btnAccept = document.getElementById('cc-accept');
+
+  function showBanner() {
+    banner.classList.add('cc-visible');
+
+    if (POSITION === 'top') {
+      /* Wait for transition to finish then nudge the page */
+      banner.addEventListener('transitionend', function nudge() {
+        document.body.style.marginTop = banner.offsetHeight + 'px';
+        banner.removeEventListener('transitionend', nudge);
+      });
+    }
+  }
+
+  function hideBanner() {
+    banner.classList.remove('cc-visible');
+
+    if (POSITION === 'top') {
+      document.body.style.marginTop = '';
+    }
+  }
+
+  function acceptCookies() {
+    setCookie(COOKIE_NAME, '1', EXPIRY_DAYS);
+    hideBanner();
+  }
+
+  /* ── Init ─────────────────────────────────────────── */
+  if (!getCookie(COOKIE_NAME)) {
+    /* Small delay so the first paint is complete before sliding in */
+    window.addEventListener('load', function () {
+      setTimeout(showBanner, 200);
+    });
+  }
+
+  btnAccept.addEventListener('click', acceptCookies);
+
+})();
+//--></script>
+<?php } ?>
+
 </body>
 </html>

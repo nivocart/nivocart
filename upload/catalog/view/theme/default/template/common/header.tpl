@@ -48,34 +48,6 @@ $(document).ready(function() {
 });
 //--></script>
 <?php } ?>
-<?php if ($cookie_consent) { ?>
-<link rel="stylesheet" type="text/css" href="catalog/view/javascript/jquery/consent/css/cookieconsent.min.css" />
-<script type="text/javascript" src="catalog/view/javascript/jquery/consent/js/cookieconsent.min.js" async></script>
-<script type="text/javascript"><!--
-window.addEventListener("load", function() {
-window.cookieconsent.initialise({
-  "cookie.expiryDays": "<?php echo $cookie_age; ?>",
-  "palette": {
-    "popup": {
-      "background": "<?php echo $cookie_popup; ?>",
-      "text": "<?php echo $cookie_text; ?>"
-    },
-    "button": {
-      "background": "<?php echo $cookie_button; ?>"
-    }
-  },
-<?php if ($cookie_position == 'top') { ?>
-  "position": "top",
-  "static": true,
-<?php } ?>
-  "content": {
-    "message": "<?php echo $text_message; ?>",
-    "dismiss": "<?php echo $text_accept; ?>",
-    "href": "<?php echo $cookie_privacy; ?>"
-  }
-})});
-//--></script>
-<?php } ?>
 <?php echo ($google_analytics) ? $google_analytics : ''; ?>
 <?php if ($rss) { ?>
 <link rel="alternate" type="application/rss+xml" href="<?php echo $rss_href; ?>" />

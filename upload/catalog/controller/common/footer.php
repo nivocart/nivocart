@@ -151,6 +151,37 @@ class ControllerCommonFooter extends Controller {
 			}
 		}
 
+		// Cookie Consent
+		$this->data['text_message'] = $this->language->get('text_message');
+		$this->data['text_policy'] = $this->language->get('text_policy');
+		$this->data['text_accept'] = $this->language->get('text_accept');
+
+		$this->data['cookie_consent'] = $this->config->get('config_cookie_consent');
+
+		$cookie_theme = $this->config->get('config_cookie_theme');
+
+		if ($cookie_theme === "dark") {
+			$this->data['cookie_popup'] = "#323435";
+			$this->data['cookie_text'] = "#FCFCFC";
+			$this->data['cookie_button'] = "#14A7D0";
+		} else {
+			$this->data['cookie_popup'] = "#EDEDED";
+			$this->data['cookie_text'] = "#777777";
+			$this->data['cookie_button'] = "#14A7D0";
+		}
+
+		$this->data['cookie_position'] = $this->config->get('config_cookie_position');
+
+		$cookie_privacy = $this->config->get('config_cookie_privacy');
+
+		$this->data['cookie_privacy'] = $this->url->link('information/information', 'information_id=' . $cookie_privacy, 'SSL');
+
+		$cookie_age = (int)$this->config->get('config_cookie_age');
+
+		$this->data['cookie_age'] = (isset($cookie_age) && ($cookie_age > 0)) ? $cookie_age : 365;
+
+		$this->data['cookie_secure'] = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? '; Secure' : '';
+
 		// Theme
 		$this->data['template'] = $template;
 

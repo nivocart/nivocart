@@ -13,7 +13,8 @@ class ControllerCommonHeader extends Controller {
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
-			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+		) {
 			$server = $this->config->get('config_ssl');
 		} else {
 			$server = $this->config->get('config_url');
@@ -138,35 +139,6 @@ class ControllerCommonHeader extends Controller {
 		$rss_currency = $this->currency->getCode();
 
 		$this->data['rss_href'] = $this->url->link('feed/rss_feed', 'currency=' . $rss_currency, 'SSL');
-
-		// Cookie Consent
-		$this->data['text_message'] = $this->language->get('text_message');
-		$this->data['text_policy'] = $this->language->get('text_policy');
-		$this->data['text_accept'] = $this->language->get('text_accept');
-
-		$this->data['cookie_consent'] = $this->config->get('config_cookie_consent');
-
-		$cookie_theme = $this->config->get('config_cookie_theme');
-
-		if ($cookie_theme === "dark") {
-			$this->data['cookie_popup'] = "#323435";
-			$this->data['cookie_text'] = "#FCFCFC";
-			$this->data['cookie_button'] = "#14A7D0";
-		} else {
-			$this->data['cookie_popup'] = "#EDEDED";
-			$this->data['cookie_text'] = "#777777";
-			$this->data['cookie_button'] = "#14A7D0";
-		}
-
-		$this->data['cookie_position'] = $this->config->get('config_cookie_position');
-
-		$cookie_privacy = $this->config->get('config_cookie_privacy');
-
-		$this->data['cookie_privacy'] = $this->url->link('information/information', 'information_id=' . $cookie_privacy, 'SSL');
-
-		$cookie_age = $this->config->get('config_cookie_age');
-
-		$this->data['cookie_age'] = ($cookie_age) ? $cookie_age : 365;
 
 		// Theme
 		$template = $this->config->get('config_template');
