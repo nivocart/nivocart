@@ -1,8 +1,6 @@
 # NivoCart
 
  [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f03f3fae6e5e4788aadd87d48b443d99)](https://app.codacy.com/gh/nivocart/nivocart/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
- [![codecov](https://codecov.io/github/nivocart/nivocart/graph/badge.svg?token=U4RIQH7NTX)](https://codecov.io/github/nivocart/nivocart)
- [![Maintainability](https://qlty.sh/gh/nivocart/projects/nivocart/maintainability.svg)](https://qlty.sh/gh/nivocart/projects/nivocart)
  [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/nivocart/nivocart/issues)
  [![BuyMeACoffee](https://raw.githubusercontent.com/pachadotdev/buymeacoffee-badges/main/bmc-donate-yellow.svg)](https://www.buymeacoffee.com/nivocart)
 
@@ -20,7 +18,7 @@ ________________________________________________________________________________
 
 REQUIREMENTS:
 - Server: Apache Linux Server
-- Database: MySQL / MariaDB
+- Database: MySQLi / MariaDB
 - Extensions: OpenSSL Encrypt + cURL
 - PHP: PHP 8.0+
 
