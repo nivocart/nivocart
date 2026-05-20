@@ -8,13 +8,13 @@ class ControllerAffiliateTracking extends Controller {
 	/** Error array Placeholder */
 
 	public function index() {
-		if ((!$this->affiliate->isLogged()) || ($this->affiliate->loginExpired())) {
+		if (!$this->affiliate->isLogged()) {
 			$this->session->data['redirect'] = $this->url->link('affiliate/tracking', '', 'SSL');
 
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 		}
 
-		if (!$this->affiliate->isSecure()) {
+		if ((!$this->affiliate->isSecure()) || ($this->affiliate->loginExpired())) {
 			$this->affiliate->logout();
 
 			$this->session->data['redirect'] = $this->url->link('affiliate/account', '', 'SSL');
