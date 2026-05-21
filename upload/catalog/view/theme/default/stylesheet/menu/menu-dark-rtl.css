@@ -1,6 +1,6 @@
 /* -----------------------------------
 * NivoCart - Menu Dark RTL
-* Copyright © 2018
+* Copyright © 2026
 * ------------------------------------
 */
 
@@ -23,15 +23,7 @@
 .menu-dark #menu {
 	min-height: 45px;
 	background-color: #4D4F50;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#4D4F50), to(#323435));
-	background-image: -webkit-linear-gradient(top, #4D4F50, #323435);
-	background-image: -moz-linear-gradient(top, #4D4F50, #323435);
-	background-image: -ms-linear-gradient(top, #4D4F50, #323435);
-	background-image: -o-linear-gradient(top, #4D4F50, #323435);
 	background-image: linear-gradient(to bottom, #4D4F50, #323435);
-	-moz-border-radius: 3px 3px 0 0;
-	-webkit-border-radius: 3px 3px 0 0;
-	-khtml-border-radius: 3px 3px 0 0;
 	border-radius: 3px 3px 0 0;
 	padding: 0 5px 0 0;
 	margin: 0;
@@ -61,9 +53,6 @@
 	line-height: 45px;
 	text-decoration: none;
 	padding: 0 14px;
-	-webkit-transition: all 0.2s;
-	-moz-transition: all 0.2s;
-	-o-transition: all 0.2s;
 	transition: all 0.2s;
 	z-index: 516;
 	color: #FFF;
@@ -73,11 +62,6 @@
 }
 .menu-dark #menu > ul > li:hover > a, .menu-dark #menu > ul > li > a:hover {
 	background-color: #58595A;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#58595A), to(#393F41));
-	background-image: -webkit-linear-gradient(top, #58595A, #393F41);
-	background-image: -moz-linear-gradient(top, #58595A, #393F41);
-	background-image: -ms-linear-gradient(top, #58595A, #393F41);
-	background-image: -o-linear-gradient(top, #58595A, #393F41);
 	background-image: linear-gradient(to bottom, #58595A, #393F41);
 }
 .menu-dark #menu > ul > li > a > span {
@@ -100,22 +84,12 @@
 	z-index: 520;
 	padding: 0 0 10px 0;
 	background: #4F5152;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#58595A), to(#414344));
-	background-image: -webkit-linear-gradient(top, #58595A, #414344);
-	background-image: -moz-linear-gradient(top, #58595A, #414344);
-	background-image: -ms-linear-gradient(top, #58595A, #414344);
-	background-image: -o-linear-gradient(top, #58595A, #414344);
 	background-image: linear-gradient(to bottom, #58595A, #414344);
 	border: 1px solid #3B3D3E;
 	border-top: 1px solid #212223;
 	border-right: 1px solid transparent;
 	border-bottom: 1px solid transparent;
-	-moz-border-radius: 0 0 2px 2px;
-	-webkit-border-radius: 0 0 2px 2px;
-	-khtml-border-radius: 0 0 2px 2px;
 	border-radius: 0 0 2px 2px;
-	-webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
-	-moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
 }
 .menu-dark #menu > ul > li:hover > div {
@@ -140,18 +114,12 @@
 	font-size: 15px;
 	text-decoration: none;
 	white-space: nowrap;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
 	transition: all 0.3s;
 	outline: none;
 }
 .menu-dark #menu > ul > li ul > li > a > span {
 	background: url('../../image/menu/arrow_left_dark_rtl.png') 150% center no-repeat;
 	display: inline-block;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
 	transition: all 0.3s;
 }
 .menu-dark #menu > ul > li ul > li > a.last-submenu-item {
@@ -209,15 +177,7 @@
 		display: block;
 		position: relative;
 		background-color: #4D4F50;
-		background-image: -webkit-gradient(linear, left top, left bottom, from(#4D4F50), to(#323435));
-		background-image: -webkit-linear-gradient(top, #4D4F50, #323435);
-		background-image: -moz-linear-gradient(top, #4D4F50, #323435);
-		background-image: -ms-linear-gradient(top, #4D4F50, #323435);
-		background-image: -o-linear-gradient(top, #4D4F50, #323435);
 		background-image: linear-gradient(to bottom, #4D4F50, #323435);
-		-moz-border-radius: 2px;
-		-webkit-border-radius: 2px;
-		-khtml-border-radius: 2px;
 		border-radius: 2px;
 		height: 45px;
 		width: auto;
@@ -290,15 +250,7 @@
 		display: block;
 		position: relative;
 		background-color: #4D4F50;
-		background-image: -webkit-gradient(linear, left top, left bottom, from(#4D4F50), to(#323435));
-		background-image: -webkit-linear-gradient(top, #4D4F50, #323435);
-		background-image: -moz-linear-gradient(top, #4D4F50, #323435);
-		background-image: -ms-linear-gradient(top, #4D4F50, #323435);
-		background-image: -o-linear-gradient(top, #4D4F50, #323435);
 		background-image: linear-gradient(to bottom, #4D4F50, #323435);
-		-moz-border-radius: 2px;
-		-webkit-border-radius: 2px;
-		-khtml-border-radius: 2px;
 		border-radius: 2px;
 		height: 45px;
 		width: auto;

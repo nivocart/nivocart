@@ -3,31 +3,31 @@
 * Copyright © 2026
 * -------------------------------
 */
-.rounded-3{-webkit-border-radius:3px;-moz-border-radius:3px;-khtml-border-radius:3px;border-radius:3px}
-.rounded-3-top{-webkit-border-radius:3px 3px 0 0;-moz-border-radius:3px 3px 0 0;-khtml-border-radius:3px 3px 0 0;border-radius:3px 3px 0 0}
-.rounded-3-bottom{-webkit-border-radius:0 0 3px 3px;-moz-border-radius:0 0 3px 3px;-khtml-border-radius:0 0 3px 3px;border-radius:0 0 3px 3px}
-.rounded-3-left{-webkit-border-radius:3px 0 0 3px;-moz-border-radius:3px 0 0 3px;-khtml-border-radius:3px 0 0 3px;border-radius:3px 0 0 3px}
-.rounded-3-right{-webkit-border-radius:0 3px 3px 0;-moz-border-radius:0 3px 3px 0;-khtml-border-radius:0 3px 3px 0;border-radius:0 3px 3px 0}
-.rounded-5{-webkit-border-radius:5px;-moz-border-radius:5px;-khtml-border-radius:5px;border-radius:5px}
-.rounded-5-top{-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;-khtml-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0}
-.rounded-5-bottom{-webkit-border-radius:0 0 5px 5px;-moz-border-radius:0 0 5px 5px;-khtml-border-radius:0 0 5px 5px;border-radius:0 0 5px 5px}
-.rounded-5-left{-webkit-border-radius:5px 0 0 5px;-moz-border-radius:5px 0 0 5px;-khtml-border-radius:5px 0 0 5px;border-radius:5px 0 0 5px}
-.rounded-5-right{-webkit-border-radius:0 5px 5px 0;-moz-border-radius:0 5px 5px 0;-khtml-border-radius:0 5px 5px 0;border-radius:0 5px 5px 0}
-.rounded-7{-webkit-border-radius:7px;-moz-border-radius:7px;-khtml-border-radius:7px;border-radius:7px}
-.rounded-7-top{-webkit-border-radius:7px 7px 0 0;-moz-border-radius:7px 7px 0 0;-khtml-border-radius:7px 7px 0 0;border-radius:7px 7px 0 0}
-.rounded-7-bottom{-webkit-border-radius:0 0 7px 7px;-moz-border-radius:0 0 7px 7px;-khtml-border-radius:0 0 7px 7px;border-radius:0 0 7px 7px}
-.rounded-7-left{-webkit-border-radius:7px 0 0 7px;-moz-border-radius:7px 0 0 7px;-khtml-border-radius:7px 0 0 7px;border-radius:7px 0 0 7px}
-.rounded-7-right{-webkit-border-radius:0 7px 7px 0;-moz-border-radius:0 7px 7px 0;-khtml-border-radius:0 7px 7px 0;border-radius:0 7px 7px 0}
-.rounded-9{-webkit-border-radius:9px;-moz-border-radius:9px;-khtml-border-radius:9px;border-radius:9px}
-.rounded-9-top{-webkit-border-radius:9px 9px 0 0;-moz-border-radius:9px 9px 0 0;-khtml-border-radius:9px 9px 0 0;border-radius:9px 9px 0 0}
-.rounded-9-bottom{-webkit-border-radius:0 0 9px 9px;-moz-border-radius:0 0 9px 9px;-khtml-border-radius:0 0 9px 9px;border-radius:0 0 9px 9px}
-.rounded-9-left{-webkit-border-radius:9px 0 0 9px;-moz-border-radius:9px 0 0 9px;-khtml-border-radius:9px 0 0 9px;border-radius:9px 0 0 9px}
-.rounded-9-right{-webkit-border-radius:0 9px 9px 0;-moz-border-radius:0 9px 9px 0;-khtml-border-radius:0 9px 9px 0;border-radius:0 9px 9px 0}
-.rounded-11{-webkit-border-radius:11px;-moz-border-radius:11px;-khtml-border-radius:11px;border-radius:11px}
-.rounded-11-top{-webkit-border-radius:11px 11px 0 0;-moz-border-radius:11px 11px 0 0;-khtml-border-radius:11px 11px 0 0;border-radius:11px 11px 0 0}
-.rounded-11-bottom{-webkit-border-radius:0 0 11px 11px;-moz-border-radius:0 0 11px 11px;-khtml-border-radius:0 0 11px 11px;border-radius:0 0 11px 11px}
-.rounded-11-left{-webkit-border-radius:11px 0 0 11px;-moz-border-radius:11px 0 0 11px;-khtml-border-radius:11px 0 0 11px;border-radius:11px 0 0 11px}
-.rounded-11-right{-webkit-border-radius:0 11px 11px 0;-moz-border-radius:0 11px 11px 0;-khtml-border-radius:0 11px 11px 0;border-radius:0 11px 11px 0}
+.rounded-3{border-radius:3px}
+.rounded-3-top{border-radius:3px 3px 0 0}
+.rounded-3-bottom{border-radius:0 0 3px 3px}
+.rounded-3-left{border-radius:3px 0 0 3px}
+.rounded-3-right{border-radius:0 3px 3px 0}
+.rounded-5{border-radius:5px}
+.rounded-5-top{border-radius:5px 5px 0 0}
+.rounded-5-bottom{border-radius:0 0 5px 5px}
+.rounded-5-left{border-radius:5px 0 0 5px}
+.rounded-5-right{border-radius:0 5px 5px 0}
+.rounded-7{border-radius:7px}
+.rounded-7-top{border-radius:7px 7px 0 0}
+.rounded-7-bottom{border-radius:0 0 7px 7px}
+.rounded-7-left{border-radius:7px 0 0 7px}
+.rounded-7-right{border-radius:0 7px 7px 0}
+.rounded-9{border-radius:9px}
+.rounded-9-top{border-radius:9px 9px 0 0}
+.rounded-9-bottom{border-radius:0 0 9px 9px}
+.rounded-9-left{border-radius:9px 0 0 9px}
+.rounded-9-right{border-radius:0 9px 9px 0}
+.rounded-11{border-radius:11px}
+.rounded-11-top{border-radius:11px 11px 0 0}
+.rounded-11-bottom{border-radius:0 0 11px 11px}
+.rounded-11-left{border-radius:11px 0 0 11px}
+.rounded-11-right{border-radius:0 11px 11px 0}
 
 .white-skin{background:#FFF;color:#222}
 .beige-skin{background:#F5F5DC;color:#222}

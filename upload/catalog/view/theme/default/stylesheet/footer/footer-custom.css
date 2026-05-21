@@ -1,6 +1,6 @@
 /* ------------------------------
 * NivoCart - Footer Custom
-* Copyright © 2018
+* Copyright © 2026
 * -------------------------------
 */
 
@@ -155,9 +155,6 @@ p.icon-mail-footer-dark {
 	width: 23px;
 	height: 23px;
 	background: url('../../image/icon_facebook.png') center -23px no-repeat;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
 	transition: all 0.3s;
 	text-indent: -9999px;
 	margin-top: 8px;
@@ -171,9 +168,6 @@ a.icon-facebook:hover {
 	width: 23px;
 	height: 23px;
 	background: url('../../image/icon_twitter.png') center -23px no-repeat;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
 	transition: all 0.3s;
 	text-indent: -9999px;
 	margin-top: 8px;
@@ -187,9 +181,6 @@ a.icon-twitter:hover {
 	width: 23px;
 	height: 23px;
 	background: url('../image/icon_google.png') center -23px no-repeat;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
 	transition: all 0.3s;
 	text-indent: -9999px;
 	margin-top: 8px;
@@ -203,9 +194,6 @@ a.icon-google:hover {
 	width: 23px;
 	height: 23px;
 	background: url('../../image/icon_pinterest.png') center -23px no-repeat;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
 	transition: all 0.3s;
 	text-indent: -9999px;
 	margin-top: 8px;
@@ -219,9 +207,6 @@ a.icon-pinterest:hover {
 	width: 23px;
 	height: 23px;
 	background: url('../../image/icon_instagram.png') center -23px no-repeat;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
 	transition: all 0.3s;
 	text-indent: -9999px;
 	margin-top: 8px;
@@ -229,22 +214,6 @@ a.icon-pinterest:hover {
 }
 a.icon-instagram:hover {
 	background: url('../../image/icon_instagram.png') center top no-repeat;
-}
-.icon-skype {
-	float: right;
-	width: 23px;
-	height: 23px;
-	background: url('../../image/icon_skype.png') center -23px no-repeat;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-o-transition: all 0.3s;
-	transition: all 0.3s;
-	text-indent: -9999px;
-	margin-top: 8px;
-	margin-right: 12px;
-}
-a.icon-skype:hover {
-	background: url('../../image/icon_skype.png') top center no-repeat;
 }
 /* Tablets */
 @media only screen and (min-width: 481px) and (max-width: 801px) {
