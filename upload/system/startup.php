@@ -82,7 +82,7 @@ require_once DIR_SYSTEM . 'library/browser.php';
 require_once DIR_SYSTEM . 'helper/agent.php';
 require_once DIR_SYSTEM . 'helper/pdf.php';
 require_once DIR_SYSTEM . 'helper/totals.php';
-require_once DIR_SYSTEM . 'helper/utf8.php';
+require_once DIR_SYSTEM . 'helper/vat.php';
 
 // Vendor
 require_once DIR_SYSTEM . 'vendor/dompdf/autoload.inc.php';
