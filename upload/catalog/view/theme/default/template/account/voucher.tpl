@@ -47,7 +47,7 @@
       <tr>
         <td><span class="required">*</span> <?php echo $entry_theme; ?></td>
         <td><?php foreach ($voucher_themes as $voucher_theme) { ?>
-          <?php if ($voucher_theme['voucher_theme_id'] == $voucher_theme_id) { ?>
+          <?php if ($voucher_theme['voucher_theme_id'] === $voucher_theme_id) { ?>
             <input type="radio" name="voucher_theme_id" value="<?php echo $voucher_theme['voucher_theme_id']; ?>" id="voucher-<?php echo $voucher_theme['voucher_theme_id']; ?>" checked="checked" />
             <label for="voucher-<?php echo $voucher_theme['voucher_theme_id']; ?>"><?php echo $voucher_theme['name']; ?></label>
           <?php } else { ?>

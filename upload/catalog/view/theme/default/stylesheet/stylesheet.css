@@ -143,7 +143,7 @@ select {
 input.large-field, select.large-field {
 	width: 300px;
 }
-ol { 
+ol {
 	margin-left: 0;
 }
 label {
@@ -1476,7 +1476,7 @@ ul.box-filter > li ul {
 	margin-top: 10px;
 	margin-bottom: 30px;
 }
-.tier-page ul { 
+.tier-page ul {
 	list-style: url('../image/bullet-3.png');
 }
 .tier-page ul li {
@@ -1507,7 +1507,7 @@ ul.box-filter > li ul {
 .tier-page ul li.head a:hover, .tier-page div.head a:hover {
 	color: #22C0F0;
 }
-.tier-page ul li ul { 
+.tier-page ul li ul {
 	list-style: url('../image/arrow-right.png');
 	margin-bottom: 5px;
 	margin-left: -10px;
@@ -2452,6 +2452,10 @@ ul.box-filter > li ul {
 	font-size: 28px;
 	margin-left: auto;
 	margin-right: auto;
+}
+#captcha-wrap .captcha-box .captcha-view div {
+	font-size: 28px;
+	padding: 3px 0;
 }
 #captcha-wrap .captcha-text {
 	width: 180px;

@@ -90,7 +90,7 @@
         <td><select name="country_id">
           <option value="false"><?php echo $text_select; ?></option>
           <?php foreach ($countries as $country) { ?>
-            <?php if ($country['country_id'] == $country_id) { ?>
+            <?php if ($country['country_id'] === $country_id) { ?>
               <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -121,19 +121,19 @@
         </tr>
         <tr>
           <td><?php echo $entry_payment; ?></td>
-          <td><?php if ($payment == 'cheque') { ?>
+          <td><?php if ($payment === 'cheque') { ?>
             <input type="radio" name="payment" value="cheque" id="cheque" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="payment" value="cheque" id="cheque" />
           <?php } ?>
           <label for="cheque"><?php echo $text_cheque; ?></label>
-          <?php if ($payment == 'paypal') { ?>
+          <?php if ($payment === 'paypal') { ?>
             <input type="radio" name="payment" value="paypal" id="paypal" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="payment" value="paypal" id="paypal" />
           <?php } ?>
           <label for="paypal"><?php echo $text_paypal; ?></label>
-          <?php if ($payment == 'bank') { ?>
+          <?php if ($payment === 'bank') { ?>
             <input type="radio" name="payment" value="bank" id="bank" checked="checked" />
           <?php } else { ?>
             <input type="radio" name="payment" value="bank" id="bank" />
@@ -202,7 +202,7 @@
   <div id="captcha-wrap">
     <div class="captcha-box">
       <div class="captcha-view">
-        <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
+        <div><b><?php echo $captcha_image; ?></b></div>
       </div>
     </div>
     <div class="captcha-text">
@@ -250,7 +250,7 @@ $('select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#postcode-required').show();
 			} else {
 				$('#postcode-required').hide();
@@ -262,7 +262,7 @@ $('select[name=\'country_id\']').on('change', function() {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 						html += ' selected="selected"';
 					}
 
@@ -315,7 +315,7 @@ $(document).ready(function() {
 		if (strength < 2) {
 			$('#check').removeClass().addClass('weak');
 			return '<img src="catalog/view/theme/<?php echo $template; ?>/image/account/password-weak.png" alt="" />';
-		} else if (strength == 2) {
+		} else if (strength === 2) {
 			$('#check').removeClass().addClass('good');
 			return '<img src="catalog/view/theme/<?php echo $template; ?>/image/account/password-good.png" alt="" />';
 		} else {

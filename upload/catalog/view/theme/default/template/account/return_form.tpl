@@ -89,7 +89,7 @@
           <span class="required">*</span> <b><?php echo $entry_reason; ?></b><br />
           <table>
             <?php foreach ($return_reasons as $return_reason) { ?>
-              <?php if ($return_reason['return_reason_id'] == $return_reason_id) { ?>
+              <?php if ($return_reason['return_reason_id'] === $return_reason_id) { ?>
                 <tr>
                   <td width="1"><input type="radio" name="return_reason_id" value="<?php echo $return_reason['return_reason_id']; ?>" id="return-reason-id<?php echo $return_reason['return_reason_id']; ?>" checked="checked" /></td>
                   <td><label for="return-reason-id<?php echo $return_reason['return_reason_id']; ?>"><?php echo $return_reason['name']; ?></label></td>
@@ -130,7 +130,7 @@
         <div id="captcha-wrap">
           <div class="captcha-box">
             <div class="captcha-view">
-              <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
+              <div><b><?php echo $captcha_image; ?></b></div>
             </div>
           </div>
           <div class="captcha-text">

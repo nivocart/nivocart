@@ -34,7 +34,7 @@
           <select name="product">
             <option value="0"><?php echo $text_none; ?></option>
             <?php foreach ($products as $product) { ?>
-              <?php if ($product['name'] == $product) { ?>
+              <?php if ($product['name'] === $product) { ?>
                 <option value="<?php echo $product['name']; ?>" selected="selected"> <?php echo $product['name']; ?> </option>
               <?php } else { ?>
                 <option value="<?php echo $product['name']; ?>"> <?php echo $product['name']; ?> </option>
@@ -53,7 +53,7 @@
           <div id="captcha-wrap">
             <div class="captcha-box">
               <div class="captcha-view">
-                <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
+                <div><b><?php echo $captcha_image; ?></b></div>
               </div>
             </div>
             <div class="captcha-text">

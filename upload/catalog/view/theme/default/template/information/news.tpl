@@ -15,16 +15,16 @@
       <div class="info">
       <?php if ($thumb) { ?>
         <div class="image">
-        <?php if ($lightbox == 'colorbox') { ?>
+        <?php if ($lightbox === 'colorbox') { ?>
           <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="colorbox"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
         <?php } ?>
-        <?php if ($lightbox == 'fancybox') { ?>
+        <?php if ($lightbox === 'fancybox') { ?>
           <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="fancybox" rel="gallery"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
         <?php } ?>
-        <?php if ($lightbox == 'magnific') { ?>
+        <?php if ($lightbox === 'magnific') { ?>
           <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="magnific"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
         <?php } ?>
-        <?php if ($lightbox == 'viewbox') { ?>
+        <?php if ($lightbox === 'viewbox') { ?>
           <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="viewbox"><img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
         <?php } ?>
         </div>
@@ -46,7 +46,7 @@
           <?php if ($sharethis) { ?>
             <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop' async='async'></script>
           <?php } else { ?>
-            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script> 
+            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script>
           <?php } ?>
         </div>
       <?php } ?>
@@ -145,7 +145,7 @@
 </div>
 <?php echo $content_lower; ?>
 
-<?php if ($lightbox == 'colorbox') { ?>
+<?php if ($lightbox === 'colorbox') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.colorbox').colorbox({
@@ -157,7 +157,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
-<?php if ($lightbox == 'fancybox') { ?>
+<?php if ($lightbox === 'fancybox') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('a.fancybox').attr('rel', 'gallery').fancyboxPlus({
@@ -175,7 +175,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
-<?php if ($lightbox == 'magnific') { ?>
+<?php if ($lightbox === 'magnific') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.magnific').magnificPopup({
@@ -186,7 +186,7 @@ $(document).ready(function() {
 //--></script>
 <?php } ?>
 
-<?php if ($lightbox == 'viewbox') { ?>
+<?php if ($lightbox === 'viewbox') { ?>
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$('.viewbox').viewbox({

@@ -79,7 +79,7 @@
       <tr style="display: <?php echo (count($customer_groups) > 1 ? 'table-row' : 'none'); ?>;">
         <td><?php echo $entry_customer_group; ?></td>
         <td><?php foreach ($customer_groups as $customer_group) { ?>
-          <?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
+          <?php if ($customer_group['customer_group_id'] ==== $customer_group_id) { ?>
             <input type="radio" name="customer_group_id" value="<?php echo $customer_group['customer_group_id']; ?>" id="customer_group_id<?php echo $customer_group['customer_group_id']; ?>" checked="checked" />
             <label for="customer_group_id<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></label>
             <br />
@@ -89,7 +89,7 @@
             <br />
           <?php } ?>
         <?php } ?></td>
-      </tr>      
+      </tr>
       <tr id="company-id-display">
         <td><span id="company-id-required" class="required">*</span> <?php echo $entry_company_id; ?></td>
         <td><input type="text" name="company_id" value="<?php echo $company_id; ?>" />
@@ -134,7 +134,7 @@
         <td><select name="country_id">
           <option value=""><?php echo $text_select; ?></option>
           <?php foreach ($countries as $country) { ?>
-            <?php if ($country['country_id'] == $country_id) { ?>
+            <?php if ($country['country_id'] === $country_id) { ?>
               <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -200,7 +200,7 @@
     <div id="captcha-wrap">
       <div class="captcha-box">
         <div class="captcha-view">
-          <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
+          <div><b><?php echo $captcha_image; ?></b></div>
         </div>
       </div>
       <div class="captcha-text">
