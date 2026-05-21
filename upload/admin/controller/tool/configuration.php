@@ -293,7 +293,6 @@ class ControllerToolConfiguration extends Controller {
 			'agent'  => $ds(DIR_SYSTEM . 'helper/agent.php'),
 			'pdf'    => $ds(DIR_SYSTEM . 'helper/pdf.php'),
 			'totals' => $ds(DIR_SYSTEM . 'helper/totals.php'),
-			'utf8'   => $ds(DIR_SYSTEM . 'helper/utf8.php'),
 			'vat'    => $ds(DIR_SYSTEM . 'helper/vat.php')
 		];
 
