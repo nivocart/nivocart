@@ -21,13 +21,9 @@ html {
 	overflow-y: scroll;
 	margin: 0;
 	padding: 0;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 *, *:before, *:after {
-	-webkit-box-sizing: inherit;
-	-moz-box-sizing: inherit;
 	box-sizing: inherit;
 }
 body {
@@ -85,9 +81,6 @@ a img {
 a:hover, a img:hover {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 }
 form {
@@ -104,9 +97,6 @@ input[type='text'], input[type='password'], textarea {
 	border-left: 1px solid #B6B6B6;
 	border-bottom: 1px solid #E1E1E1;
 	border-right: 1px solid #E1E1E1;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	background-color: #FFF;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#F2F5F7), to(#FFF));
@@ -115,8 +105,6 @@ input[type='text'], input[type='password'], textarea {
 	background-image: -ms-linear-gradient(top, #F2F5F7, #FFF);
 	background-image: -o-linear-gradient(top, #F2F5F7, #FFF);
 	background-image: linear-gradient(to bottom, #F2F5F7, #FFF);
-	-webkit-box-shadow: inset 0 2px 0 -1px #EDEDED;
-	-moz-box-shadow: inset 0 2px 0 -1px #EDEDED;
 	box-shadow: inset 0 2px 0 -1px #EDEDED;
 }
 select {
@@ -125,9 +113,6 @@ select {
 	border-left: 1px solid #B6B6B6;
 	border-bottom: 1px solid #E1E1E1;
 	border-right: 1px solid #E1E1E1;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	background-color: #FFF;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#F2F5F7), to(#FFF));
@@ -136,8 +121,6 @@ select {
 	background-image: -ms-linear-gradient(top, #F2F5F7, #FFF);
 	background-image: -o-linear-gradient(top, #F2F5F7, #FFF);
 	background-image: linear-gradient(to bottom, #F2F5F7, #FFF);
-	-webkit-box-shadow: inset 0 2px 0 -1px #EDEDED;
-	-moz-box-shadow: inset 0 2px 0 -1px #EDEDED;
 	box-shadow: inset 0 2px 0 -1px #EDEDED;
 }
 input.large-field, select.large-field {
@@ -194,16 +177,9 @@ span.from {
 #language img {
 	cursor: pointer;
 	margin-left: 10px;
-	-webkit-transition: all 200ms ease-in-out;
-	-moz-transition: all 200ms ease-in-out;
-	-o-transition: all 200ms ease-in-out;
 	transition: all 200ms ease-in-out;
 }
 #language img:hover {
-	-webkit-transform: scale(1.2);
-	-moz-transform: scale(1.2);
-	-ms-transform: scale(1.2);
-	-o-transform: scale(1.2);
 	transform: scale(1.2);
 }
 #language img:first-child {
@@ -313,14 +289,9 @@ a.top-link:hover {
 	background-image: -ms-linear-gradient(top, #31B0D5, #239DD1);
 	background-image: -o-linear-gradient(top, #31B0D5, #239DD1);
 	background-image: linear-gradient(to bottom, #31B0D5, #239DD1);
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	border: 1px solid transparent;
 	border-bottom: none;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	cursor: pointer;
 	z-index: 1;
@@ -344,12 +315,7 @@ a.top-link:hover {
 	right: 10px;
 	background: #FFF;
 	border: 1px solid #DDD;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	padding: 8px;
 }
@@ -426,12 +392,7 @@ a.top-link:hover {
 	margin-right: 10px;
 	background: #FFF;
 	border: 1px solid #DDD;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	z-index: 15;
 }
@@ -446,19 +407,12 @@ a.top-link:hover {
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	line-height: 15px;
 	color: #888;
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	padding: 6px 0 6px 9px;
 	width: 200px;
 	height: 15px;
 	border: none;
-	-webkit-transition: all .3s ease-in-out;
-	-moz-transition: all .3s ease-in-out;
-	-o-transition: all .3s ease-in-out;
 	transition: all .3s ease-in-out;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 	box-shadow: none;
 }
 #header #search .search-inside input:focus {
@@ -480,9 +434,6 @@ a.top-link:hover {
 	right: 1px;
 	background-color: rgba(255, 255, 255, 1);
 	border: 1px solid #DDD;
-	-webkit-border-radius: 1px;
-	-khtml-border-radius: 1px;
-	-moz-border-radius: 1px;
 	border-radius: 1px;
 	list-style-type: none;
 	z-index: 530;
@@ -518,15 +469,7 @@ a.top-link:hover {
 }
 #livesearch li:hover, #livesearch .highlighted {
 	background-color: #239DD1;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#31B0D5), to(#239DD1));
-	background-image: -webkit-linear-gradient(top, #31B0D5, #239DD1);
-	background-image: -moz-linear-gradient(top, #31B0D5, #239DD1);
-	background-image: -ms-linear-gradient(top, #31B0D5, #239DD1);
-	background-image: -o-linear-gradient(top, #31B0D5, #239DD1);
 	background-image: linear-gradient(to bottom, #31B0D5, #239DD1);
-	-moz-border-radius: 1px;
-	-webkit-border-radius: 1px;
-	-khtml-border-radius: 1px;
 	border-radius: 1px;
 	border: none;
 }
@@ -554,9 +497,6 @@ a.top-link:hover {
 	color: #555;
 	font-size: 15px;
 	line-height: 25px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	padding: 5px 10px 5px 35px;
 	margin: 10px 0;
@@ -695,9 +635,6 @@ table.radio tr.highlight:hover td {
 	line-height: 14px;
 	text-decoration: none;
 	text-shadow: 0 1px 0 #FCFCFC;
-	-webkit-border-radius: 1px;
-	-moz-border-radius: 1px;
-	-khtml-border-radius: 1px;
 	border-radius: 1px;
 	padding: 7px 12px;
 }
@@ -725,18 +662,8 @@ a.button, input.button, button.button, input.button-cart, input.button-wrap-add,
 	color: #FFF;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	background-color: #239DD1;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#31B0D5), to(#239DD1));
-	background-image: -webkit-linear-gradient(top, #31B0D5, #239DD1);
-	background-image: -moz-linear-gradient(top, #31B0D5, #239DD1);
-	background-image: -ms-linear-gradient(top, #31B0D5, #239DD1);
-	background-image: -o-linear-gradient(top, #31B0D5, #239DD1);
 	background-image: linear-gradient(to bottom, #31B0D5, #239DD1);
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	outline: none;
 	cursor: pointer;
@@ -745,12 +672,7 @@ a.button-danger, input.button-danger {
 	color: #FFF;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	background: #DE5954;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	outline: none;
 	cursor: pointer;
@@ -807,11 +729,6 @@ input.button-wrap-add:hover, input.button-wrap-remove:hover {
 }
 a.button:hover, input.button:hover, button.button:hover, input.button-cart:hover {
 	background-color: #3782BF;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#3782BF), to(#0D6D98));
-	background-image: -webkit-linear-gradient(top, #3782BF, #0D6D98);
-	background-image: -moz-linear-gradient(top, #3782BF, #0D6D98);
-	background-image: -ms-linear-gradient(top, #3782BF, #0D6D98);
-	background-image: -o-linear-gradient(top, #3782BF, #0D6D98);
 	background-image: linear-gradient(to bottom, #3782BF, #0D6D98);
 }
 a.button-danger:hover, input.button-danger:hover {
@@ -830,29 +747,14 @@ input.button-buy-now {
 	border: 0;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	background-color: #F9CB37;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#F9CB37), to(#F08625));
-	background-image: -webkit-linear-gradient(top, #F9CB37, #F08625);
-	background-image: -moz-linear-gradient(top, #F9CB37, #F08625);
-	background-image: -ms-linear-gradient(top, #F9CB37, #F08625);
-	background-image: -o-linear-gradient(top, #F9CB37, #F08625);
 	background-image: linear-gradient(to bottom, #F9CB37, #F08625);
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	outline: none;
 	cursor: pointer;
 }
 input.button-buy-now:hover {
 	background-color: #F08625;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#F08625), to(#E5661D));
-	background-image: -webkit-linear-gradient(top, #F08625, #E5661D);
-	background-image: -moz-linear-gradient(top, #F08625, #E5661D);
-	background-image: -ms-linear-gradient(top, #F08625, #E5661D);
-	background-image: -o-linear-gradient(top, #F08625, #E5661D);
 	background-image: linear-gradient(to bottom, #F08625, #E5661D);
 }
 /* Button Add */
@@ -919,9 +821,6 @@ a.button-add:hover {
 	border-left: 1px solid #CCC;
 	border-right: 1px solid #CCC;
 	border-bottom: 1px solid #888;
-	-moz-border-radius: 2px 2px 0 0;
-	-webkit-border-radius: 2px 2px 0 0;
-	-khtml-border-radius: 2px 2px 0 0;
 	border-radius: 2px 2px 0 0;
 	background-color: #FAFAFA;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#EAEAEA));
@@ -1067,8 +966,6 @@ a.button-add:hover {
 	margin-top: 8px;
 	border-top: 1px solid #CCC;
 	background: #EDEDED;
-	-webkit-box-shadow: 0 3px 0 0 #EDEDED;
-	-moz-box-shadow: 0 3px 0 0 #EDEDED;
 	box-shadow: 0 3px 0 0 #EDEDED;
 	z-index: 10;
 }
@@ -1101,9 +998,6 @@ a.button-add:hover {
 	width: 290px;
 	display: inline-block;
 	border: 1px solid #EDEDED;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	overflow: hidden;
 	cursor: pointer;
@@ -1120,9 +1014,6 @@ a.button-add:hover {
 }
 .box-product-list li:hover {
 	border: 1px solid #36AAD8;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 }
 .box-product-list a {
@@ -1324,9 +1215,6 @@ ul.box-filter > li ul {
 .box-news {
 	background: #FFF;
 	border: 1px solid #DDD;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	margin-bottom: 10px;
 	padding: 5px;
@@ -1355,9 +1243,6 @@ ul.box-filter > li ul {
 .content-info {
 	background: #FFF;
 	border: 1px dotted #DDD;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	padding: 10px;
 	margin-bottom: 10px;
@@ -1399,14 +1284,9 @@ ul.box-filter > li ul {
 	width: 100%;
 	background: #FAFAFA;
 	border: 1px solid #DBDEE1;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	margin: 0 0 10px 0;
 	padding: 0 0 5px 0;
-	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .panel h3, .panel-collapsed h3 {
@@ -1639,9 +1519,6 @@ ul.box-filter > li ul {
 	padding: 10px;
 	margin: 15px 0;
 	border: 1px solid #DDD;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 }
 .product-list > div + div {
@@ -1758,9 +1635,6 @@ ul.box-filter > li ul {
 	padding: 0 0 5px 0;
 	text-align: center;
 	border: 1px solid #DDD;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 }
 .product-grid .product-label {
@@ -1929,12 +1803,7 @@ ul.box-filter > li ul {
 	height: 20px;
 	width: 20px;
 	border: 0;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
-	-webkit-box-shadow: 0 1px 2px #DDD;
-	-moz-box-shadow: 0 1px 2px #DDD;
 	box-shadow: 0 1px 2px #DDD;
 	line-height: 20px;
 	text-align: center;
@@ -2029,8 +1898,6 @@ ul.box-filter > li ul {
 	float: left;
 	width: 32px;
 	background: rgba(255, 255, 255, 1);
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	border-top: 1px solid #E5E5E5;
 	border-bottom: 1px solid #E5E5E5;
@@ -2070,9 +1937,6 @@ ul.box-filter > li ul {
 	height: 32px;
 	width: 24px;
 	background: #E5E5E5 url('../image/plus.png') center center no-repeat;
-	-moz-border-radius: 0 2px 2px 0;
-	-webkit-border-radius: 0 2px 2px 0;
-	-khtml-border-radius: 0 2px 2px 0;
 	border-radius: 0 3px 3px 0;
 	cursor: pointer;
 }
@@ -2084,9 +1948,6 @@ ul.box-filter > li ul {
 	height: 32px;
 	width: 24px;
 	background: #E5E5E5 url('../image/minus.png') center center no-repeat;
-	-moz-border-radius: 2px 0 0 2px;
-	-webkit-border-radius:  2px 0 0 2px;
-	-khtml-border-radius: 2px 0 0 2px;
 	border-radius: 2px 0 0 2px;
 	cursor: pointer;
 }
@@ -2118,9 +1979,6 @@ ul.box-filter > li ul {
 #add-review textarea {
 	width: 270px;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 	resize: vertical;
 }
@@ -2145,9 +2003,6 @@ ul.box-filter > li ul {
 #review .content {
 	background: #FFF;
 	border: 1px solid #E3E3E3;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	margin-bottom: 15px;
 	padding: 10px 5px;
@@ -2428,18 +2283,12 @@ ul.box-filter > li ul {
 	height: 108px;
 	background: #820500;
 	border: 1px solid #820500;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-khtml-border-radius: 4px;
 	border-radius: 4px;
 	text-align: left;
 }
 #captcha-wrap .captcha-box {
 	background: #FAFAFA;
 	border: 4px solid #820500;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	text-align: center;
 	padding: 0;
@@ -2462,9 +2311,6 @@ ul.box-filter > li ul {
 	height: 48px;
 	float: left;
 	background: #F2CD71;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	text-align: center;
 	margin: 3px 4px 4px 4px;
@@ -2592,16 +2438,8 @@ ul.box-filter > li ul {
 	padding: 9px 8px;
 	margin-bottom: 15px;
 	border: 1px solid #CCC;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	background-color: #FCFCFC;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#FCFCFC), to(#EEE));
-	background-image: -webkit-linear-gradient(top, #FCFCFC, #EEE);
-	background-image: -moz-linear-gradient(top, #FCFCFC, #EEE);
-	background-image: -ms-linear-gradient(top, #FCFCFC, #EEE);
-	background-image: -o-linear-gradient(top, #FCFCFC, #EEE);
 	background-image: linear-gradient(to bottom, #FCFCFC, #EEE);
 	font-weight: bold;
 	font-size: 13px;
@@ -2692,9 +2530,6 @@ table.address-options, table.order-options {
 	width: 100%;
 	background: #FEFEFE;
 	border: 1px solid #EEE;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	-khtml-border-radius: 4px;
 	border-radius: 4px;
 	padding: 4px;
 }
@@ -2752,9 +2587,6 @@ table.order-options tr td #payment-method h2 {
 .search-bar {
 	background-color: #EDEDED;
 	border: 1px solid #CCC;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	margin-bottom: 15px;
 }
@@ -3094,7 +2926,6 @@ table.order-options tr td #payment-method h2 {
 @media only screen and (min-width: 481px) and (max-width: 641px) {
 	html {
 		-webkit-text-size-adjust: none;
-		-ms-text-size-adjust: none;
 	}
 	body {
 		padding: 0;
@@ -3279,7 +3110,6 @@ table.order-options tr td #payment-method h2 {
 @media only screen and (min-width: 320px) and (max-width: 481px) {
 	html {
 		-webkit-text-size-adjust: none;
-		-ms-text-size-adjust: none;
 	}
 	body {
 		padding: 0;
@@ -3494,7 +3324,6 @@ table.order-options tr td #payment-method h2 {
 @media only screen and (max-width: 320px) {
 	html {
 		-webkit-text-size-adjust: none;
-		-ms-text-size-adjust: none;
 	}
 	body {
 		padding: 0;
