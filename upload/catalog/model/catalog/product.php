@@ -656,6 +656,12 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
+	public function getProductsByOrderId(int $order_id): array {
+		$query = $this->db->query("SELECT product_id, `name`, model, quantity FROM `" . DB_PREFIX . "order_product` WHERE order_id = '" . (int)$order_id . "' ORDER BY `name` ASC");
+
+		return $query->rows;
+	}
+
 	/**
 	 * Total Functions
 	 */

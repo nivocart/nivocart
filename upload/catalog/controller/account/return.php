@@ -138,7 +138,7 @@ class ControllerAccountReturn extends Controller {
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
-		if (!$this->customer->isSecure()) {
+		if (!$this->customer->isSecure() || $this->customer->loginExpired()) {
 			$this->customer->logout();
 
 			$this->session->data['redirect'] = $this->url->link('account/return/info', 'return_id=' . $return_id, 'SSL');
@@ -332,6 +332,81 @@ class ControllerAccountReturn extends Controller {
 		}
 	}
 
+	/**
+	 * AJAX endpoint — called when the customer submits their Order ID.
+	 *
+	 * Expects POST: order_id
+	 * Returns JSON:
+	 *   success  => bool
+	 *   error    => string   (on failure)
+	 *   data     => {
+	 *     date_ordered : string  (Y-m-d)
+	 *     products     : [{ product_id, name, model, quantity }]
+	 *   }
+	 */
+	public function ajaxorder() {
+		$this->language->load('account/return');
+
+		// Only accept POST XHR
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
+			$this->response->addHeader('HTTP/1.1 405 Method Not Allowed');
+			$this->response->setOutput(json_encode(['success' => false, 'error' => 'Method not allowed']));
+			return;
+		}
+
+		if (!$this->customer->isLogged()) {
+			$this->response->addHeader('HTTP/1.1 403 Forbidden');
+			$this->response->setOutput(json_encode(['success' => false, 'error' => $this->language->get('error_login')]));
+			return;
+		}
+
+		$order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
+
+		if (!$order_id) {
+			$this->response->setOutput(json_encode([
+				'success' => false,
+				'error'   => $this->language->get('error_order_id')
+			]));
+			return;
+		}
+
+		// Validate order belongs to this customer — direct db query avoids
+		// any model registry conflict with the currently-executing controller.
+		$order_query = $this->db->query("SELECT order_id, date_added FROM `" . DB_PREFIX . "order`" . " WHERE order_id = '" . (int)$order_id . "'" . " AND customer_id = '" . (int)$this->customer->getId() . "'");
+
+		if (!$order_query->num_rows) {
+			$this->response->setOutput(json_encode([
+				'success' => false,
+				'error'   => $this->language->get('error_order_not_found')
+			]));
+			return;
+		}
+
+		$order_info = $order_query->row;
+
+		// Fetch products straight from order_product — no model load needed
+		$products_query = $this->db->query("SELECT product_id, `name`, model, quantity FROM `" . DB_PREFIX . "order_product`" . " WHERE order_id = '" . (int)$order_id . "'" . " ORDER BY `name` ASC");
+
+		$products = $products_query->rows;
+
+		if (empty($products)) {
+			$this->response->setOutput(json_encode([
+				'success' => false,
+				'error'   => $this->language->get('error_order_no_products')
+			]));
+			return;
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode([
+			'success' => true,
+			'data'    => [
+				'date_ordered' => date('Y-m-d', strtotime($order_info['date_added'])),
+				'products'     => $products,
+			]
+		]));
+	}
+
 	public function insert() {
 		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
 			$this->redirect($this->url->link('account/return/insert', '', 'SSL'), 301);
@@ -398,180 +473,38 @@ class ControllerAccountReturn extends Controller {
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
 		$this->data['button_back'] = $this->language->get('button_back');
+		$this->data['button_lookup_order'] = $this->language->get('button_lookup_order');
 
-		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
+		// Errors
+		foreach (['warning', 'order_id', 'firstname', 'lastname', 'email', 'telephone', 'product', 'model', 'reason', 'captcha'] as $key) {
+			$this->data['error_' . $key] = isset($this->error[$key]) ? $this->error[$key] : '';
 		}
 
-		if (isset($this->error['order_id'])) {
-			$this->data['error_order_id'] = $this->error['order_id'];
-		} else {
-			$this->data['error_order_id'] = '';
-		}
-
-		if (isset($this->error['firstname'])) {
-			$this->data['error_firstname'] = $this->error['firstname'];
-		} else {
-			$this->data['error_firstname'] = '';
-		}
-
-		if (isset($this->error['lastname'])) {
-			$this->data['error_lastname'] = $this->error['lastname'];
-		} else {
-			$this->data['error_lastname'] = '';
-		}
-
-		if (isset($this->error['email'])) {
-			$this->data['error_email'] = $this->error['email'];
-		} else {
-			$this->data['error_email'] = '';
-		}
-
-		if (isset($this->error['telephone'])) {
-			$this->data['error_telephone'] = $this->error['telephone'];
-		} else {
-			$this->data['error_telephone'] = '';
-		}
-
-		if (isset($this->error['product'])) {
-			$this->data['error_product'] = $this->error['product'];
-		} else {
-			$this->data['error_product'] = '';
-		}
-
-		if (isset($this->error['model'])) {
-			$this->data['error_model'] = $this->error['model'];
-		} else {
-			$this->data['error_model'] = '';
-		}
-
-		if (isset($this->error['reason'])) {
-			$this->data['error_reason'] = $this->error['reason'];
-		} else {
-			$this->data['error_reason'] = '';
-		}
-
-		if (isset($this->error['captcha'])) {
-			$this->data['error_captcha'] = $this->error['captcha'];
-		} else {
-			$this->data['error_captcha'] = '';
-		}
+		// AJAX endpoint URL passed to JS
+		$this->data['ajax_order_url'] = $this->url->link('account/return/ajaxorder', '', 'SSL');
 
 		$this->data['action'] = $this->url->link('account/return/insert', '', 'SSL');
 
-		$this->load->model('account/order');
+		// Pre-fill customer details from logged-in account
+		$this->data['firstname'] = isset($this->request->post['firstname']) ? $this->request->post['firstname'] : $this->customer->getFirstName();
+		$this->data['lastname'] = isset($this->request->post['lastname']) ? $this->request->post['lastname'] : $this->customer->getLastName();
+		$this->data['email'] = isset($this->request->post['email']) ? $this->request->post['email'] : $this->customer->getEmail();
+		$this->data['telephone'] = isset($this->request->post['telephone']) ? $this->request->post['telephone'] : $this->customer->getTelephone();
 
-		if (isset($this->request->get['order_id'])) {
-			$order_info = $this->model_account_order->getOrder($this->request->get['order_id']);
-		}
-
-		$this->load->model('catalog/product');
-
-		if (isset($this->request->get['product_id'])) {
-			$product_info = $this->model_catalog_product->getProduct($this->request->get['product_id']);
-		}
-
-		if (isset($this->request->post['order_id'])) {
-			$this->data['order_id'] = $this->request->post['order_id'];
-		} elseif (!empty($order_info)) {
-			$this->data['order_id'] = $order_info['order_id'];
-		} else {
-			$this->data['order_id'] = '';
-		}
-
-		if (isset($this->request->post['date_ordered'])) {
-			$this->data['date_ordered'] = $this->request->post['date_ordered'];
-		} elseif (!empty($order_info)) {
-			$this->data['date_ordered'] = date('Y-m-d', strtotime($order_info['date_added']));
-		} else {
-			$this->data['date_ordered'] = '';
-		}
-
-		if (isset($this->request->post['firstname'])) {
-			$this->data['firstname'] = $this->request->post['firstname'];
-		} elseif (!empty($order_info)) {
-			$this->data['firstname'] = $order_info['firstname'];
-		} else {
-			$this->data['firstname'] = $this->customer->getFirstName();
-		}
-
-		if (isset($this->request->post['lastname'])) {
-			$this->data['lastname'] = $this->request->post['lastname'];
-		} elseif (!empty($order_info)) {
-			$this->data['lastname'] = $order_info['lastname'];
-		} else {
-			$this->data['lastname'] = $this->customer->getLastName();
-		}
-
-		if (isset($this->request->post['email'])) {
-			$this->data['email'] = $this->request->post['email'];
-		} elseif (!empty($order_info)) {
-			$this->data['email'] = $order_info['email'];
-		} else {
-			$this->data['email'] = $this->customer->getEmail();
-		}
-
-		if (isset($this->request->post['telephone'])) {
-			$this->data['telephone'] = $this->request->post['telephone'];
-		} elseif (!empty($order_info)) {
-			$this->data['telephone'] = $order_info['telephone'];
-		} else {
-			$this->data['telephone'] = $this->customer->getTelephone();
-		}
-
-		if (isset($this->request->post['product'])) {
-			$this->data['product'] = $this->request->post['product'];
-		} elseif (!empty($product_info)) {
-			$this->data['product'] = $product_info['name'];
-		} else {
-			$this->data['product'] = '';
-		}
-
-		if (isset($this->request->post['model'])) {
-			$this->data['model'] = $this->request->post['model'];
-		} elseif (!empty($product_info)) {
-			$this->data['model'] = $product_info['model'];
-		} else {
-			$this->data['model'] = '';
-		}
-
-		if (isset($this->request->post['quantity'])) {
-			$this->data['quantity'] = $this->request->post['quantity'];
-		} else {
-			$this->data['quantity'] = 1;
-		}
-
-		if (isset($this->request->post['opened'])) {
-			$this->data['opened'] = $this->request->post['opened'];
-		} else {
-			$this->data['opened'] = false;
-		}
-
-		if (isset($this->request->post['return_reason_id'])) {
-			$this->data['return_reason_id'] = $this->request->post['return_reason_id'];
-		} else {
-			$this->data['return_reason_id'] = '';
-		}
+		// Order / product fields — restored from POST on validation failure
+		$this->data['order_id'] = isset($this->request->post['order_id']) ? $this->request->post['order_id'] : '';
+		$this->data['date_ordered'] = isset($this->request->post['date_ordered']) ? $this->request->post['date_ordered'] : '';
+		$this->data['product'] = isset($this->request->post['product']) ? $this->request->post['product'] : '';
+		$this->data['model'] = isset($this->request->post['model']) ? $this->request->post['model'] : '';
+		$this->data['quantity'] = isset($this->request->post['quantity']) ? $this->request->post['quantity'] : 1;
+		$this->data['opened'] = isset($this->request->post['opened']) ? $this->request->post['opened'] : false;
+		$this->data['return_reason_id'] = isset($this->request->post['return_reason_id']) ? $this->request->post['return_reason_id'] : '';
+		$this->data['comment'] = isset($this->request->post['comment']) ? $this->request->post['comment'] : '';
+		$this->data['captcha'] = isset($this->request->post['captcha']) ? $this->request->post['captcha'] : '';
 
 		$this->load->model('localisation/return_reason');
 
-		$return_reasons_array = [];
-
-		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons($return_reasons_array);
-
-		if (isset($this->request->post['comment'])) {
-			$this->data['comment'] = $this->request->post['comment'];
-		} else {
-			$this->data['comment'] = '';
-		}
-
-		if (isset($this->request->post['captcha'])) {
-			$this->data['captcha'] = $this->request->post['captcha'];
-		} else {
-			$this->data['captcha'] = '';
-		}
+		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons([]);
 
 		// Create session Captcha
 		$this->load->library('captcha');
@@ -588,20 +521,20 @@ class ControllerAccountReturn extends Controller {
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_return_id'));
 
 			if ($information_info) {
-				$this->data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
+				$this->data['text_agree'] = sprintf(
+					$this->language->get('text_agree'),
+					$this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'),
+					$information_info['title'],
+					$information_info['title']
+				);
 			} else {
 				$this->data['text_agree'] = '';
 			}
-
 		} else {
 			$this->data['text_agree'] = '';
 		}
 
-		if (isset($this->request->post['agree'])) {
-			$this->data['agree'] = $this->request->post['agree'];
-		} else {
-			$this->data['agree'] = false;
-		}
+		$this->data['agree'] = isset($this->request->post['agree']) ? $this->request->post['agree'] : false;
 
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 
@@ -652,12 +585,10 @@ class ControllerAccountReturn extends Controller {
 		];
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
-
 		$this->data['text_message'] = $this->language->get('text_message');
-
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
-		$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
+		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
