@@ -3,6 +3,8 @@
  * @version 0.2.3
  * @author Pavel Khoroshkov aka pgood
  * @link https://github.com/pgooood/viewbox
+ *
+ * NivoCart © 2026
  */
 (function($) {$.fn.viewbox = function(options) {
 	if (typeof(options) === 'undefined') {
