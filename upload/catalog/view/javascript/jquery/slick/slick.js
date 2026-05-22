@@ -1,4 +1,4 @@
-/*
+/**
      _ _      _       _
  ___| (_) ___| | __  (_)___
 / __| | |/ __| |/ /  | / __|
@@ -15,7 +15,7 @@
 
  */
 
-/* global window, document, define, jQuery, setInterval, clearInterval */
+/** global window, document, define, jQuery, setInterval, clearInterval */
 (function(factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
