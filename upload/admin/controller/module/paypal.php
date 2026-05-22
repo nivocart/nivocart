@@ -6,10 +6,10 @@
  */
 class ControllerModulePaypal extends Controller {
 	private $error = [];
-	private $_name = 'paypal';
+	private $name = 'paypal';
 
 	public function index() {
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -17,12 +17,12 @@ class ControllerModulePaypal extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			// POST uses json_encode
-			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
+			$this->model_setting_setting->editSetting($this->name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->post['apply'])) {
-				$this->redirect($this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
+				$this->redirect($this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
 			} else {
 				$this->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
 			}
@@ -79,11 +79,11 @@ class ControllerModulePaypal extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
-		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -105,18 +105,18 @@ class ControllerModulePaypal extends Controller {
 		}
 
 		// Module
-		if (isset($this->request->post[$this->_name . '_force_display'])) {
-			$this->data[$this->_name . '_force_display'] = $this->request->post[$this->_name . '_force_display'];
+		if (isset($this->request->post[$this->name . '_force_display'])) {
+			$this->data[$this->name . '_force_display'] = $this->request->post[$this->name . '_force_display'];
 		} else {
-			$this->data[$this->_name . '_force_display'] = $this->config->get($this->_name . '_force_display');
+			$this->data[$this->name . '_force_display'] = $this->config->get($this->name . '_force_display');
 		}
 
 		$this->data['modules'] = [];
 
-		if (isset($this->request->post[$this->_name . '_module'])) {
-			$this->data['modules'] = $this->request->post[$this->_name . '_module'];
-		} elseif ($this->config->get($this->_name . '_module')) {
-			$this->data['modules'] = $this->config->get($this->_name . '_module');
+		if (isset($this->request->post[$this->name . '_module'])) {
+			$this->data['modules'] = $this->request->post[$this->name . '_module'];
+		} elseif ($this->config->get($this->name . '_module')) {
+			$this->data['modules'] = $this->config->get($this->name . '_module');
 		}
 
 		$this->load->model('design/layout');
@@ -125,7 +125,7 @@ class ControllerModulePaypal extends Controller {
 
 		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
-		$this->template = 'module/' . $this->_name . '.tpl';
+		$this->template = 'module/' . $this->name . '.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
@@ -135,7 +135,7 @@ class ControllerModulePaypal extends Controller {
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'module/' . $this->_name)) {
+		if (!$this->user->hasPermission('modify', 'module/' . $this->name)) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 

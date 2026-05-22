@@ -6,10 +6,10 @@
  */
 class ControllerModulefilter extends Controller {
 	private $error = [];
-	private $_name = 'filter';
+	private $name = 'filter';
 
 	public function index() {
-		$this->language->load('module/' . $this->_name);
+		$this->language->load('module/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -17,12 +17,12 @@ class ControllerModulefilter extends Controller {
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			// POST uses json_encode
-			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
+			$this->model_setting_setting->editSetting($this->name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->post['apply'])) {
-				$this->redirect($this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
+				$this->redirect($this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
 			} else {
 				$this->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
 			}
@@ -78,19 +78,19 @@ class ControllerModulefilter extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
-		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Module
-		if (isset($this->request->post[$this->_name . '_theme'])) {
-			$this->data[$this->_name . '_theme'] = $this->request->post[$this->_name . '_theme'];
+		if (isset($this->request->post[$this->name . '_theme'])) {
+			$this->data[$this->name . '_theme'] = $this->request->post[$this->name . '_theme'];
 		} else {
-			$this->data[$this->_name . '_theme'] = $this->config->get($this->_name . '_theme');
+			$this->data[$this->name . '_theme'] = $this->config->get($this->name . '_theme');
 		}
 
 		$this->load->model('localisation/language');
@@ -100,27 +100,27 @@ class ControllerModulefilter extends Controller {
 		$languages = $this->model_localisation_language->getLanguages($languages_array);
 
 		foreach ($languages as $language) {
-			if (isset($this->request->post[$this->_name . '_title' . $language['language_id']])) {
-				$this->data[$this->_name . '_title' . $language['language_id']] = $this->request->post[$this->_name . '_title' . $language['language_id']];
+			if (isset($this->request->post[$this->name . '_title' . $language['language_id']])) {
+				$this->data[$this->name . '_title' . $language['language_id']] = $this->request->post[$this->name . '_title' . $language['language_id']];
 			} else {
-				$this->data[$this->_name . '_title' . $language['language_id']] = $this->config->get($this->_name . '_title' . $language['language_id']);
+				$this->data[$this->name . '_title' . $language['language_id']] = $this->config->get($this->name . '_title' . $language['language_id']);
 			}
 		}
 
 		$this->data['languages'] = $languages;
 
-		if (isset($this->request->post[$this->_name . '_title'])) {
-			$this->data[$this->_name . '_title'] = $this->request->post[$this->_name . '_title'];
+		if (isset($this->request->post[$this->name . '_title'])) {
+			$this->data[$this->name . '_title'] = $this->request->post[$this->name . '_title'];
 		} else {
-			$this->data[$this->_name . '_title'] = $this->config->get($this->_name . '_title');
+			$this->data[$this->name . '_title'] = $this->config->get($this->name . '_title');
 		}
 
 		$this->data['modules'] = [];
 
-		if (isset($this->request->post[$this->_name . '_module'])) {
-			$this->data['modules'] = $this->request->post[$this->_name . '_module'];
-		} elseif ($this->config->get($this->_name . '_module')) {
-			$this->data['modules'] = $this->config->get($this->_name . '_module');
+		if (isset($this->request->post[$this->name . '_module'])) {
+			$this->data['modules'] = $this->request->post[$this->name . '_module'];
+		} elseif ($this->config->get($this->name . '_module')) {
+			$this->data['modules'] = $this->config->get($this->name . '_module');
 		}
 
 		$this->load->model('design/layout');
@@ -129,7 +129,7 @@ class ControllerModulefilter extends Controller {
 
 		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
-		$this->template = 'module/' . $this->_name . '.tpl';
+		$this->template = 'module/' . $this->name . '.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
@@ -139,7 +139,7 @@ class ControllerModulefilter extends Controller {
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'module/' . $this->_name)) {
+		if (!$this->user->hasPermission('modify', 'module/' . $this->name)) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
