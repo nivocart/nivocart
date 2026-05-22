@@ -1,4 +1,4 @@
-/*
+/**
  * FancyBox-Plus - jQuery Plugin
  * Simple and fancy lightbox alternative
  *
@@ -37,8 +37,6 @@
 	left: 0;
 	width: 100%;
 	z-index: 1100;
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	display: none;
 }
@@ -55,8 +53,6 @@
 	left: 0;
 	padding: 20px;
 	z-index: 1101;
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	outline: none;
 	display: none;
@@ -281,74 +277,4 @@
 #fbplus-title-float-right {
 	padding: 0 0 0 15px;
 	background: url('../images/fbplus.png') -55px -90px no-repeat;
-}
-/* IE6 */
-.fbplus-ie6 #fbplus-close {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus/fbplus_close.png', sizingMethod='scale');
-}
-.fbplus-ie6 #fbplus-left-ico {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_nav_left.png', sizingMethod='scale');
-}
-.fbplus-ie6 #fbplus-right-ico {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_nav_right.png', sizingMethod='scale');
-}
-.fbplus-ie6 #fbplus-title-over {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_title_over.png', sizingMethod='scale');
-	zoom: 1;
-}
-.fbplus-ie6 #fbplus-title-float-left {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_title_left.png', sizingMethod='scale');
-}
-.fbplus-ie6 #fbplus-title-float-main {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_title_main.png', sizingMethod='scale');
-}
-.fbplus-ie6 #fbplus-title-float-right {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_title_right.png', sizingMethod='scale');
-}
-.fbplus-ie6 #fbplus-bg-w, .fbplus-ie6 #fbplus-bg-e, .fbplus-ie6 #fbplus-left, .fbplus-ie6 #fbplus-right, #fbplus-hide-sel-frame {
-	height: expression(this.parentNode.clientHeight + 'px');
-}
-#fbplus-loading.fbplus-ie6 {
-	position: absolute;
-	margin-top: 0;
-	top: expression( (-20 + (document.documentElement.clientHeight ? document.documentElement.clientHeight/2 : document.body.clientHeight/2 ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop )) + 'px');
-}
-#fbplus-loading.fbplus-ie6 div {
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_loading.png', sizingMethod='scale');
-}
-/* IE6, IE7, IE8 */
-.fbplus-ie .fbplus-bg {
-	background: transparent;
-}
-.fbplus-ie #fbplus-bg-n {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_n.png', sizingMethod='scale');
-}
-.fbplus-ie #fbplus-bg-ne {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_ne.png', sizingMethod='scale');
-}
-.fbplus-ie #fbplus-bg-e {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_e.png', sizingMethod='scale');
-}
-.fbplus-ie #fbplus-bg-se {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_se.png', sizingMethod='scale');
-}
-.fbplus-ie #fbplus-bg-s {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_s.png', sizingMethod='scale');
-}
-.fbplus-ie #fbplus-bg-sw {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_sw.png', sizingMethod='scale');
-}
-.fbplus-ie #fbplus-bg-w {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_w.png', sizingMethod='scale');
-}
-.fbplus-ie #fbplus-bg-nw {
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/fbplus_shadow_nw.png', sizingMethod='scale');
 }
