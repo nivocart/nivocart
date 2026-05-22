@@ -1,4 +1,4 @@
-/*!
+/**
  * jQuery Simple Lens Plugin
  * Copyright (c) 2014 Pietro Simone Di Chiara
  * Version: 1.0.1 (05-APR-2013)
@@ -39,8 +39,7 @@
 	left: 0;
 	background-color: #3BB2D6;
 	filter: alpha(opacity=20);
-	-khtml-opacity: .2;
-	-moz-opacity: .2;
+
 	opacity: .2;
 	zoom: 1;
 	cursor: none;

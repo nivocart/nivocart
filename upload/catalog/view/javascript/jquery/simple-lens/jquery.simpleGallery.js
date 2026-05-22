@@ -1,4 +1,4 @@
-/*!
+/**
  * jQuery Lens Simple Plugin
  * Copyright (c) 2014 Pietro Simone Di Chiara
  * Version: 1.0.1 (05-APR-2013)
