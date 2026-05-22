@@ -1,12 +1,12 @@
-/*
+/**
  * cssCharts v0.3.0
  * jquery plugin to create donut and bar charts with css
  * https://github.com/sultantarimo
  *
  * Sultan Tarimo © 2015 - sultantarimo@me.com
  * Released under the MIT license
- * 
- * NivoCart © 2019
+ *
+ * NivoCart © 2026
  */
 !(function($) {
 	$.fn.extend({

@@ -1,17 +1,15 @@
-/*
+/**
  * cssCharts v0.3.0
  * jquery plugin to create donut and bar charts with css
  * https://github.com/sultantarimo
  *
  * (c)2015 Sultan Tarimo - sultantarimo@me.com
  * Released under the MIT license
- * 
- * NivoCart © 2019
+ *
+ * NivoCart © 2026
  */
 
 .chart *, .chart {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
@@ -56,12 +54,7 @@
 	background: rgb(98,167,224);
 	width: 34px;
 	position: relative;
-	-webkit-animation: drawBar 0.3s ease-in-out;
-	-moz-animation: drawBar 0.3s ease-in-out;
 	animation: drawBar 0.3s ease-in-out;
-	-webkit-transition: all 100ms ease-in-out;
-	-moz-transition: all 100ms ease-in-out;
-	-o-transition: all 100ms ease-in-out;
 	transition: all 100ms ease-in-out;
 }
 .bar-chart li:hover span {
@@ -89,16 +82,9 @@
 	font-size: 12px;
 	width: auto;
 	left: 50%;
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	-ms-transform: translateX(-50%);
-	-o-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
 .bar-chart li span:before {
-	-webkit-transition: all 100ms ease-in-out;
-	-moz-transition: all 100ms ease-in-out;
-	-o-transition: all 100ms ease-in-out;
 	transition: all 100ms ease-in-out;
 }
 
@@ -115,9 +101,6 @@
 	width: 100%;
 	height: 100%;
 	position: relative;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-khtml-border-radius: 50%;
 	border-radius: 50%;
 }
 .donut-chart.fill {
@@ -134,14 +117,7 @@
 	z-index: 400;
 	margin: 0 auto;
 	pointer-events: none;
-	-webkit-border-radius: 100%;
-	-moz-border-radius: 100%;
-	-khtml-border-radius: 100%;
 	border-radius: 100%;
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-ms-transform: translateX(-50%) translateY(-50%);
-	-o-transform: translateX(-50%) translateY(-50%);
 	transform: translateX(-50%) translateY(-50%);
 }
 .donut-chart h6, .donut-chart.fill h6 {
@@ -167,35 +143,21 @@
 .donut-chart .spinner {
 	z-index: 200;
 	border-right: none;
-	-webkit-border-radius: 100% 0 0 100% / 50% 0 0 50%;
-	-moz-border-radius: 100% 0 0 100% / 50% 0 0 50%;
-	-khtml-border-radius: 100% 0 0 100% / 50% 0 0 50%;
 	border-radius: 100% 0 0 100% / 50% 0 0 50%;
-	-webkit-transform: rotate(0deg);
-	-moz-transform: rotate(0deg);
-	-ms-transform: rotate(0deg);
-	-o-transform: rotate(0deg);
 	transform: rotate(0deg);
-	-webkit-animation: rotateDonut 0.3s ease-in-out;
-	-moz-animation: rotateDonut 0.3s ease-in-out;
 	animation: rotateDonut 0.3s ease-in-out;
-	-webkit-transition: all 160ms ease-in-out;
-	-moz-transition: all 160ms ease-in-out;
-	-o-transition: all 160ms ease-in-out;
 	transition: all 160ms ease-in-out;
 }
 .spinner ~ .pie {
 	pointer-events: none;
 }
 .donut-chart .fill .pie, .pie-chart .pie {
-	-webkit-box-shadow: 0 0 0 4px #0072C4;
-	-moz-box-shadow: 0 0 0 4px #0072C4;
 	box-shadow: 0 0 0 4px #0072C4;
 }
 
-@-webkit-keyframes rotateDonut {0% {-webkit-transform: rotate(0deg);-moz-transform: rotate(0deg);-ms-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);}}
-@-moz-keyframes rotateDonut {0% {-webkit-transform: rotate(0deg);-moz-transform: rotate(0deg);-ms-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);}}
-@keyframes rotateDonut {0% {-webkit-transform: rotate(0deg);-moz-transform: rotate(0deg);-ms-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);}}
+@-webkit-keyframes rotateDonut {0% {transform: rotate(0deg);}}
+@-moz-keyframes rotateDonut {0% {transform: rotate(0deg);}}
+@keyframes rotateDonut {0% {transform: rotate(0deg);}}
 
 .donut-chart .spinner.temp {
 	display: none;
@@ -205,10 +167,6 @@
 	height: 100%;
 	position: absolute;
 	background: #0072C4;
-	-webkit-transform-origin: 100% 50%;
-	-moz-transform-origin: 100% 50%;
-	-ms-transform-origin: 100% 50%;
-	-o-transform-origin: 100% 50%;
 	transform-origin: 100% 50%;
 }
 .donut-chart .mask {
@@ -235,10 +193,6 @@
 	text-anchor: middle;
 	fill: #FFF;
 	stroke-width: 0;
-	-webkit-transform: translate(120,-80);
-	-moz-transform: translate(120,-80);
-	-ms-transform: translate(120,-80);
-	-o-transform: translate(120,-80);
 	transform: translate(120,-80);
 }
 .chart.pie svg path:hover {
@@ -255,9 +209,6 @@
 	padding: 6px 12px;
 	z-index: 100;
 	width: auto;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	-khtml-border-radius: 4px;
 	border-radius: 4px;
 }
 .chart.pie .pie-legend {
@@ -265,10 +216,6 @@
 	top: 50%;
 	right: 0;
 	margin-right: -30px;
-	-webkit-transform: translateX(100%) translateY(-50%);
-	-moz-transform: translateX(100%) translateY(-50%);
-	-ms-transform: translateX(100%) translateY(-50%);
-	-o-transform: translateX(100%) translateY(-50%);
 	transform: translateX(100%) translateY(-50%);
 }
 .chart.pie .pie-legend li {
@@ -285,8 +232,6 @@
 	height: 14px;
 	background: #DDD;
 	margin-right: 10px;
-	-moz-box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
-	-webkit-box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
 	box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
 }
 .chart.pie .pie-legend li p {
@@ -348,10 +293,6 @@
 	font-size: 12px;
 	content: attr(data-y);
 	text-align: right;
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-ms-transform: translateX(-50%) translateY(-50%);
-	-o-transform: translateX(-50%) translateY(-50%);
 	transform: translateX(-50%) translateY(-50%);
 }
 /* Line chart line */
@@ -382,14 +323,7 @@
 	background: rgba(0,0,0,0.8);
 	padding: 8px;
 	z-index: 40;
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	-ms-transform: translateX(-50%);
-	-o-transform: translateX(-50%);
 	transform: translateX(-50%);
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-khtml-border-radius: 3px;
 	border-radius: 3px;
 }
 .line-chart li a:after {
@@ -404,10 +338,6 @@
 	margin-bottom: -16px;
 	border: 6px solid rgba(0,0,0,0);
 	border-top: 6px solid rgba(0,0,0,0.8);
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	-ms-transform: translateX(-50%);
-	-o-transform: translateX(-50%);
 	transform: translateX(-50%);
 }
 .line-chart li a {
@@ -419,10 +349,6 @@
 	left: 0;
 	top: 0;
 	z-index: 30;
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-ms-transform: translateX(-50%) translateY(-50%);
-	-o-transform: translateX(-50%) translateY(-50%);
 	transform: translateX(-50%) translateY(-50%);
 }
 /* Line chart points */
@@ -444,27 +370,15 @@
 	width: 6px;
 	height: 6px;
 	display: block;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-khtml-border-radius: 50%;
 	border-radius: 50%;
 }
 .line-chart li:hover span:before {
-	-webkit-transform: scale(1.3);
-	-moz-transform: scale(1.3);
-	-ms-transform: scale(1.3);
-	-o-transform: scale(1.3);
 	transform: scale(1.3);
-	-webkit-transition: all 200ms ease-in-out;
-	-moz-transition: all 200ms ease-in-out;
-	-o-transition: all 200ms ease-in-out;
 	transition: all 200ms ease-in-out;
 }
 .line-chart li span:before, .line-chart li span:after {
 	background: rgb(98,167,224);
 	border: 2px solid #0072C4;
-	-webkit-box-shadow: 0 0 0 4px #FFF;
-	-moz-box-shadow: 0 0 0 4px #FFF;
 	box-shadow: 0 0 0 4px #FFF;
 }
 /* Line chart line */
@@ -475,8 +389,6 @@
 	bottom: 0;
 	left: 0;
 	opacity: 1;
-	-webkit-animation: drawLine .3s ease-in-out;
-	-moz-animation: drawLine .3s ease-in-out;
 	animation: drawLine .3s ease-in-out;
 }
 .chart.line svg path {
