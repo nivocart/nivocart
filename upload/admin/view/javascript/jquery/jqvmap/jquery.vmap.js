@@ -6,7 +6,7 @@
  * @license https://github.com/manifestinteractive/jqvmap/blob/master/LICENSE
  * @builddate 2016/05/18
  *
- * NivoCart © 2019
+ * NivoCart © 2026
  */
 
 var VectorCanvas = function(width, height, params) {

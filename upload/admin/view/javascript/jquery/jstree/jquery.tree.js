@@ -8,7 +8,7 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * NivoCart © 2019
+ * NivoCart © 2026
  */
 
 ;(function($) {
@@ -22,15 +22,15 @@
 				type : "html",				// One of included datastores
 				opts : { method: "GET", url: false } // Options passed to datastore
 			},
-			selected	: false,				// FALSE or STRING or ARRAY
+			selected	: false,			// FALSE or STRING or ARRAY
 			opened : [],					// ARRAY OF INITIALLY OPENED NODES
-			languages : [],				// ARRAY of string values (which will be used as CSS classes - so they must be valid)
+			languages : [],					// ARRAY of string values (which will be used as CSS classes - so they must be valid)
 			ui : {
 				dots : true,				// BOOL - dots or no dots
 				animation : 0,				// INT - duration of open/close animations in miliseconds
 				scroll_spd : 4,
 				theme_path : false,			// Path to the theme CSS file - if set to false and theme_name is not false - will lookup jstree-path-here/themes/theme-name-here/style.css
-				theme_name : "default",	// if set to false no theme will be loaded
+				theme_name : "default",		// if set to false no theme will be loaded
 				selected_parent_close : "select_parent",	// false, "deselect", "select_parent"
 				selected_delete : "select_previous" 		// false, "select_previous"
 			},
@@ -40,8 +40,8 @@
 					renameable	: true, 	// can be function
 					deletable : true, 		// can be function
 					creatable : true,		// can be function
-					draggable : true, 	// can be function
-					max_children : -1,	// -1 - not set, 0 - no children, 1 - one child, etc // can be function
+					draggable : true, 		// can be function
+					max_children : -1,		// -1 - not set, 0 - no children, 1 - one child, etc // can be function
 					max_depth : -1, 		// -1 - not set, 0 - no children, 1 - one level of children, etc // can be function
 					valid_children : "all",	// all, none, array of values // can be function
 					icon : {
@@ -52,10 +52,10 @@
 			},
 			rules : {
 				multiple : false,			// FALSE | CTRL | ON - multiple selection off/ with or without holding Ctrl
-				multitree : "none",		// all, none, array of tree IDs to accept from
+				multitree : "none",			// all, none, array of tree IDs to accept from
 				type_attr : "rel",			// STRING attribute name (where is the type stored as string)
 				createat : "bottom",		// STRING (top or bottom) new nodes get inserted at top or bottom
-				drag_copy : "ctrl",		// FALSE | CTRL | ON - drag to copy off/ with or without holding Ctrl
+				drag_copy : "ctrl",			// FALSE | CTRL | ON - drag to copy off/ with or without holding Ctrl
 				drag_button : "left",		// left, right or both
 				use_max_children : true,
 				use_max_depth : true,
@@ -76,22 +76,22 @@
 				beforerename : function(NODE,LANG,TREE_OBJ) { return true },
 				beforedelete : function(NODE,TREE_OBJ) { return true },
 				beforedata : function(NODE,TREE_OBJ) { return { id : $(NODE).attr("id") || 0 } }, // PARAMETERS PASSED TO SERVER
-				ondata : function(DATA,TREE_OBJ) { return DATA; },	// modify data before parsing it
+				ondata : function(DATA,TREE_OBJ) { return DATA; },		// modify data before parsing it
 				onparse : function(STR,TREE_OBJ) { return STR; },		// modify string before visualizing it
-				onhover : function(NODE,TREE_OBJ) { },						// node hovered
+				onhover : function(NODE,TREE_OBJ) { },					// node hovered
 				onselect : function(NODE,TREE_OBJ) { },					// node selected
-				ondeselect : function(NODE,TREE_OBJ) { },					// node deselected
+				ondeselect : function(NODE,TREE_OBJ) { },				// node deselected
 				onchange : function(NODE,TREE_OBJ) { },					// focus changed
 				onrename : function(NODE,TREE_OBJ,RB) { },				// node renamed
 				onmove : function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { },	// move completed
 				oncopy : function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { },	// copy completed
 				oncreate : function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { },	// node created
-				ondelete : function(NODE,TREE_OBJ,RB) { },				// node deleted
+				ondelete : function(NODE,TREE_OBJ,RB) { },					// node deleted
 				onopen : function(NODE,TREE_OBJ) { },						// node opened
-				onopen_all : function(TREE_OBJ) { },							// all nodes opened
-				onclose_all : function(TREE_OBJ) { },							// all nodes closed
+				onopen_all : function(TREE_OBJ) { },						// all nodes opened
+				onclose_all : function(TREE_OBJ) { },						// all nodes closed
 				onclose : function(NODE,TREE_OBJ) { },						// node closed
-				error : function(TEXT,TREE_OBJ) { },							// error occured
+				error : function(TEXT,TREE_OBJ) { },						// error occured
 				ondblclk : function(NODE,TREE_OBJ) { TREE_OBJ.toggle_branch.call(TREE_OBJ, NODE); TREE_OBJ.select_branch.call(TREE_OBJ, NODE); },
 				onrgtclk : function(NODE,TREE_OBJ,EV) { },				// right click - to prevent use: EV.preventDefault(); EV.stopPropagation(); return false
 				onload : function(TREE_OBJ) { },
@@ -2539,7 +2539,7 @@
 									if (j == "style" || j == "class") {
 										attr[j] += " " + data.data[tree.settings.languages[i]].attributes[j];
 									} else {
-										attr[j]  = data.data[tree.settings.languages[i]].attributes[j];
+										attr[j] = data.data[tree.settings.languages[i]].attributes[j];
 									}
 								}
 							}
@@ -2571,7 +2571,7 @@
 								if (i == "style" || i == "class")	{
 									attr[i] += " " + data.data.attributes[i];
 								} else {
-									attr[i]  = data.data.attributes[i];
+									attr[i] = data.data.attributes[i];
 								}
 							}
 						}

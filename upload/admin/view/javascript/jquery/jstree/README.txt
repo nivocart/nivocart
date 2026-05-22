@@ -11,13 +11,13 @@ Date: 2009-09-24
 
 
 
-In the root directory you will find jquery.tree.js and jquery.tree.min.js (minified version of jquery.tree.js). 
+In the root directory you will find jquery.tree.js and jquery.tree.min.js (minified version of jquery.tree.js).
 To be able to use the jsTree jquery tree plugin all you need to do is include jquery (http://jquery.com) and one of the above files in your page.
 For more - check the documentation.html and examples.html files.
 
 In the plugins/ dir you will find all of the official plugins, along with a documentation.html file - it contains the docs for all the plugins.
 
-In the lib/ dir you will find a copy of jquery.js, along with all other dependencies of the plugins. 
+In the lib/ dir you will find a copy of jquery.js, along with all other dependencies of the plugins.
 If you use a plugin - it will alert you about a missing dependency.
 
 All themes are located in the themes/ dir. Make sure to keep it relative to the jquery.tree.js file, so that your chosen theme will be included.
@@ -34,7 +34,6 @@ For users upgrading from a previous version to 0.9.9:
 8) If you used the cookie option - switch to the cookie plugin - check the plugin docs for info.
 9) onJSONdata became ondata callback - you get what the server returned before jsTree displays it
 10) async_data becomes beforedata callback
-11) Drag, clickable, deletable rules are out of the picture. Enter type definitions - all types inherit from the "default" type. 
+11) Drag, clickable, deletable rules are out of the picture. Enter type definitions - all types inherit from the "default" type.
 You can now set valid children, max_depth, max_children, clickable, deletable, etc - any of those can also be functions, so you can dinamically check.
 It is all in the docs - check the "types" section. For global tree rules - check the "rules" config section.
-

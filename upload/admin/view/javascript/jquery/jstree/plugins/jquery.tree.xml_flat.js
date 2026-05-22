@@ -19,7 +19,7 @@
 						var _this = this;
 						var str = '<root>';
 
-						obj.each(function() { 
+						obj.each(function() {
 							opts.callback = true;
 							str += _this.get(this, t, opts);
 						});
@@ -152,8 +152,8 @@
 					} else {
 						$.ajax({
 							'type': opts.method,
-							'url': opts.url, 
-							'data': data, 
+							'url': opts.url,
+							'data': data,
 							'dataType': "xml",
 							'success': function(d, textStatus) {
 								callback.call(null, d);
