@@ -1,4 +1,5 @@
-/* Flot plugin for drawing all elements of a plot on the canvas.
+/**
+Flot plugin for drawing all elements of a plot on the canvas.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -24,7 +25,6 @@ The plugin supports these options:
 The "canvas" option controls whether full canvas drawing is enabled, making it
 possible to toggle on and off. This is useful when a plot uses HTML text in the
 browser, but needs to redraw with canvas text when exporting as an image.
-
 */
 
 (function($) {

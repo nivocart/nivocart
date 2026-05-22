@@ -1,4 +1,5 @@
-/* Plugin for jQuery for working with colors.
+/**
+ * Plugin for jQuery for working with colors.
  *
  * Version 1.1.
  *

@@ -1,4 +1,5 @@
-/* Flot plugin for plotting textual data or categories.
+/**
+Flot plugin for plotting textual data or categories.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -40,7 +41,6 @@ categories as ticks instead of the values.
 
 If you need to map a value back to its label, the mapping is always accessible
 as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
-
 */
 
 (function ($) {

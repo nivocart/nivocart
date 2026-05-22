@@ -1,4 +1,5 @@
-/* Flot plugin for thresholding data.
+/**
+Flot plugin for thresholding data.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -39,7 +40,6 @@ Internally, the plugin works by splitting the data into two series, above and
 below the threshold. The extra series below the threshold will have its label
 cleared and the special "originSeries" attribute set to the original series.
 You may need to check for this in hover events.
-
 */
 
 (function($) {

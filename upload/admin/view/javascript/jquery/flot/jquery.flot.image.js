@@ -1,4 +1,5 @@
-/* Flot plugin for plotting images.
+/**
+Flot plugin for plotting images.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -49,7 +50,6 @@ half a pixel stick out to each side in the plot.
 
 A possible future direction could be support for tiling for large images (like
 Google Maps).
-
 */
 
 (function($) {

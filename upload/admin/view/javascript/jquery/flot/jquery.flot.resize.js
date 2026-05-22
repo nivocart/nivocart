@@ -1,4 +1,5 @@
-/* Flot plugin for automatically redrawing plots as the placeholder resizes.
+/**
+Flot plugin for automatically redrawing plots as the placeholder resizes.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -8,10 +9,10 @@ resize event plugin) - if the size changes, it will redraw the plot.
 
 There are no options. If you need to disable the plugin for some plots, you
 can just fix the size of their placeholders.
-
 */
 
-/* Inline dependency:
+/**
+ * Inline dependency:
  * jQuery resize event - v1.1 - 3/14/2010
  * http://benalman.com/projects/jquery-resize-plugin/
  *

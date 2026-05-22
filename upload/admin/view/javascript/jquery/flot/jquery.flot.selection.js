@@ -1,4 +1,5 @@
-/* Flot plugin for selecting regions of a plot.
+/**
+Flot plugin for selecting regions of a plot.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -75,7 +76,6 @@ The plugin allso adds the following methods to the plot object:
 
   Returns the current selection in the same format as the "plotselected"
   event. If there's currently no selection, the function returns null.
-
 */
 
 (function($) {

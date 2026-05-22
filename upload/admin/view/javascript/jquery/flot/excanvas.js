@@ -1402,4 +1402,4 @@ if (!document.createElement('canvas').getContext) {
   DOMException = DOMException_;
 })();
 
-} // if
+}

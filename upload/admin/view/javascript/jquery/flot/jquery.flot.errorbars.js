@@ -1,4 +1,5 @@
-/* Flot plugin for plotting error bars.
+/**
+Flot plugin for plotting error bars.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -59,7 +60,6 @@ set. The independent radius parameter on xerr/yerr is useful for the case when
 we may want to add error-bars to a line, without showing the interconnecting
 points (with radius: 0), and still showing end caps on the error-bars.
 shadowSize and lineWidth are derived as well from the points series.
-
 */
 
 (function($) {
