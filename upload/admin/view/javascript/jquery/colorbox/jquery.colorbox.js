@@ -1,10 +1,10 @@
-/*!
+/**
  * Colorbox 1.6.4
  * license: MIT
  * http://www.jacklmoore.com/colorbox
- * NivoCart © 2019 - CSS
-*/
-
+ *
+ * NivoCart © 2026 - CSS. Use minified version for production.
+ */
 (function($, document, window) {
 	var defaults = {
 		// data sources
