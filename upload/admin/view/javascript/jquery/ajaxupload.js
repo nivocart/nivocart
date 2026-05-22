@@ -1,10 +1,10 @@
 /**
- * AJAX Upload ( http://valums.com/ajax-upload/ ) 
+ * AJAX Upload ( http://valums.com/ajax-upload/ )
  * Copyright (c) Andris Valums
  * Licensed under the MIT license ( http://valums.com/mit-license/ )
- * Thanks to Gary Haran, David Mark, Corey Burns and others for contributions 
+ * Thanks to Gary Haran, David Mark, Corey Burns and others for contributions
  *
- * ajaxupload.js | NivoCart © 2019
+ * ajaxupload.js | NivoCart © 2026
  */
 
 (function() {
@@ -162,7 +162,7 @@
 
 	/**
 	* Function generates unique id
-	* @return unique id 
+	* @return unique id
 	*/
 	var getUID = (function() {
 		var id = 0;
@@ -213,7 +213,7 @@
 	/**
 	* Easy styling and uploading
 	* @constructor
-	* @param button An element you want convert to 
+	* @param button An element you want convert to
 	* upload button. Tested dimensions up to 500x500px
 	* @param {Object} options See defaults below.
 	*/
@@ -370,7 +370,7 @@
 
 			this._input = null;
 			this._createInput();
-	
+
 			removeClass(this._button, this._settings.hoverClass);
 		},
 		/**
