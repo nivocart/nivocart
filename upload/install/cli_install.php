@@ -150,8 +150,8 @@ function install(array $options = []): void {
 function checkRequirements(): array {
 	$error = null;
 
-	if (phpversion() < '8.0') {
-		$error = 'Warning: You need to use PHP 8.0 or above for NivoCart to work!';
+	if (phpversion() < '8.1') {
+		$error = 'Warning: You need to use PHP 8.1 or above for NivoCart to work!';
 	}
 
 	if (!ini_get('file_uploads')) {
