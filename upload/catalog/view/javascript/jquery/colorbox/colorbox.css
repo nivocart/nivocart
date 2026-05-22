@@ -1,14 +1,15 @@
-/*
+/**
  * Colorbox 1.6.4
  * license: MIT
  * http://www.jacklmoore.com/colorbox
- * NivoCart © 2019 - CSS. Use minified version for production.
-*/
-/*
-	Colorbox Core Style:
-	The following CSS is consistent between example themes and should not be altered.
-*/
-#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden; -webkit-transform: translate3d(0,0,0); -moz-transform: translate3d(0,0,0); -ms-transform: translate3d(0,0,0); -o-transform: translate3d(0,0,0); transform: translate3d(0,0,0);}
+ * 
+ * NivoCart © 2026 - CSS. Use minified version for production.
+ */
+/**
+ * Colorbox Core Style:
+ * The following CSS is consistent between example themes and should not be altered.
+ */
+#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden; transform: translate3d(0,0,0);}
 #cboxWrapper {max-width:none;}
 #cboxOverlay{position:fixed; width:100%; height:100%;}
 #cboxMiddleLeft, #cboxBottomLeft{clear:left;}
@@ -19,14 +20,14 @@
 #cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{cursor:pointer;}
 .cboxPhoto{float:left; margin:auto; border:0; display:block; max-width:none; -ms-interpolation-mode:bicubic;}
 .cboxIframe{width:100%; height:100%; display:block; border:0; padding:0; margin:0;}
-#colorbox, #cboxContent, #cboxLoadedContent{box-sizing:content-box; -moz-box-sizing:content-box; -webkit-box-sizing:content-box;}
+#colorbox, #cboxContent, #cboxLoadedContent{box-sizing:content-box;}
 
-/*
-	User Style: 
-	Change the following styles to modify the appearance of Colorbox. They are
-	ordered & tabbed in a way that represents the nesting of the generated HTML.
-*/
-#cboxOverlay{background:#FCFCFC; filter: alpha(opacity=40); -khtml-opacity: .4; -moz-opacity: .4; opacity: .4;}
+/**
+ * User Style:
+ * Change the following styles to modify the appearance of Colorbox. They are
+ * ordered & tabbed in a way that represents the nesting of the generated HTML.
+ */
+#cboxOverlay{background:#FCFCFC; filter: alpha(opacity=40); opacity: .4;}
 #colorbox{outline:0;}
 
 #cboxTopLeft{width:25px; height:25px; background:url(images/border1.png) no-repeat 0 0;}
@@ -46,10 +47,14 @@
 #cboxCurrent{position:absolute; bottom:0; left:100px; color:#999;}
 #cboxLoadingOverlay{background:#FCFCFC url(images/loading.gif) no-repeat 5px 5px;}
 
-/* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
-#cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {border:0; padding:0; margin:0; overflow:visible;  position:absolute; bottom:-29px; background:url(images/controls.png) no-repeat 0 0; width:23px; height:23px; text-indent:-9999px;}
+/**
+ * these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles
+ */
+#cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {border:0; padding:0; margin:0; overflow:visible; position:absolute; bottom:-29px; background:url(images/controls.png) no-repeat 0 0; width:23px; height:23px; text-indent:-9999px;}
 
-/* avoid outlines on :active (mouseclick), but preserve outlines on :focus (tabbed navigating) */
+/**
+ * avoid outlines on :active (mouseclick), but preserve outlines on :focus (tabbed navigating)
+ */
 #cboxPrevious:active, #cboxNext:active, #cboxSlideshow:active, #cboxClose:active {outline:0;}
 
 #cboxSlideshow{position:absolute; bottom:0; right:42px; color:#444;}
