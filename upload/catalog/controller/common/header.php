@@ -20,6 +20,17 @@ class ControllerCommonHeader extends Controller {
 			$server = $this->config->get('config_url');
 		}
 
+		// Check if the Customer session is secure
+		if (!$this->customer->isSecure() || $this->customer->loginExpired()) {
+			$this->customer->logout();
+		}
+
+		// Check if the Affiliate session is secure
+		if ((!$this->affiliate->isSecure()) || ($this->affiliate->loginExpired())) {
+			$this->affiliate->logout();
+		}
+
+		// Get header set parameters
 		if ($this->config->get('config_meta_google')) {
 			$this->document->addMeta(html_entity_decode($this->config->get('config_meta_google'), ENT_QUOTES, 'UTF-8'));
 		}
