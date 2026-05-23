@@ -12,9 +12,7 @@ namespace Dompdf;
  *
  * @package dompdf
  */
-class PhpEvaluator
-{
-
+class PhpEvaluator {
     /**
      * @var Canvas
      */
@@ -24,8 +22,7 @@ class PhpEvaluator
      * PhpEvaluator constructor.
      * @param Canvas $canvas
      */
-    public function __construct(Canvas $canvas)
-    {
+    public function __construct(Canvas $canvas) {
         $this->_canvas = $canvas;
     }
 
@@ -33,8 +30,7 @@ class PhpEvaluator
      * @param $code
      * @param array $vars
      */
-    public function evaluate($code, $vars = [])
-    {
+    public function evaluate($code, $vars = []) {
         if (!$this->_canvas->get_dompdf()->getOptions()->getIsPhpEnabled()) {
             return;
         }
@@ -50,14 +46,14 @@ class PhpEvaluator
             $$k = $v;
         }
 
+		// The eval() function is required here for lack of true alternative
         eval($code);
     }
 
     /**
      * @param Frame $frame
      */
-    public function render(Frame $frame)
-    {
+    public function render(Frame $frame) {
         $this->evaluate($frame->get_node()->nodeValue);
     }
 }

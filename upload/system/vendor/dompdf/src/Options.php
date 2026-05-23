@@ -280,7 +280,7 @@ class Options {
     public function __construct(array $attributes = null) {
         $rootDir = realpath(__DIR__ . "/../");
 
-        $this->setChroot(array($rootDir));
+        $this->setChroot([$rootDir]);
         $this->setRootDir($rootDir);
         $this->setTempDir(sys_get_temp_dir());
         $this->setFontDir($rootDir . "/lib/fonts");

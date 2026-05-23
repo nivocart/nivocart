@@ -20,9 +20,7 @@ use Dompdf\Positioner\Inline as InlinePositioner;
  *
  * @package dompdf
  */
-class LineBox
-{
-
+class LineBox {
     /**
      * @var Block
      */
@@ -91,8 +89,7 @@ class LineBox
      * @param Block $frame the Block containing this line
      * @param int $y
      */
-    public function __construct(Block $frame, $y = 0)
-    {
+    public function __construct(Block $frame, $y = 0) {
         $this->_block_frame = $frame;
         $this->_frames = [];
         $this->y = $y;
@@ -107,8 +104,7 @@ class LineBox
      *
      * @return Frame[]
      */
-    public function get_floats_inside(Page $root)
-    {
+    public function get_floats_inside(Page $root) {
         $floating_frames = $root->get_floating_frames();
 
         if (count($floating_frames) == 0) {
@@ -148,8 +144,7 @@ class LineBox
         return $childs;
     }
 
-    public function get_float_offsets()
-    {
+    public function get_float_offsets() {
         static $anti_infinite_loop = 10000; // FIXME smelly hack
 
         $reflower = $this->_block_frame->get_reflower();
@@ -235,32 +230,28 @@ class LineBox
     /**
      * @return float
      */
-    public function get_width()
-    {
+    public function get_width() {
         return $this->left + $this->w + $this->right;
     }
 
     /**
      * @return Block
      */
-    public function get_block_frame()
-    {
+    public function get_block_frame() {
         return $this->_block_frame;
     }
 
     /**
      * @return AbstractFrameDecorator[]
      */
-    function &get_frames()
-    {
+    function &get_frames() {
         return $this->_frames;
     }
 
     /**
      * @param AbstractFrameDecorator $frame
      */
-    public function add_frame(Frame $frame)
-    {
+    public function add_frame(Frame $frame) {
         $this->_frames[] = $frame;
 
         if ($frame->get_positioner() instanceof InlinePositioner) {
@@ -274,8 +265,7 @@ class LineBox
      *
      * @param int $index
      */
-    public function remove_frames(int $index): void
-    {
+    public function remove_frames(int $index): void {
         $lastIndex = count($this->_frames) - 1;
 
         if ($index < 0 || $index > $lastIndex) {
@@ -311,8 +301,7 @@ class LineBox
      *
      * @return float
      */
-    public function recalculate_width()
-    {
+    public function recalculate_width() {
         $width = 0;
 
         foreach ($this->_frames as $frame) {
@@ -325,8 +314,7 @@ class LineBox
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         $props = ["wc", "y", "w", "h", "left", "right", "br"];
         $s = "";
         foreach ($props as $prop) {

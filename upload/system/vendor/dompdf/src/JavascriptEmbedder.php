@@ -12,8 +12,7 @@ namespace Dompdf;
  *
  * @package dompdf
  */
-class JavascriptEmbedder
-{
+class JavascriptEmbedder {
 
     /**
      * @var Dompdf
@@ -25,24 +24,21 @@ class JavascriptEmbedder
      *
      * @param Dompdf $dompdf
      */
-    public function __construct(Dompdf $dompdf)
-    {
+    public function __construct(Dompdf $dompdf) {
         $this->_dompdf = $dompdf;
     }
 
     /**
      * @param $script
      */
-    public function insert($script)
-    {
+    public function insert($script) {
         $this->_dompdf->getCanvas()->javascript($script);
     }
 
     /**
      * @param Frame $frame
      */
-    public function render(Frame $frame)
-    {
+    public function render(Frame $frame) {
         if (!$this->_dompdf->getOptions()->getIsJavascriptEnabled()) {
             return;
         }

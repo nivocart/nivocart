@@ -22,8 +22,7 @@ use Dompdf\Renderer\Text;
  *
  * @package dompdf
  */
-class Renderer extends AbstractRenderer
-{
+class Renderer extends AbstractRenderer {
 
     /**
      * Array of renderers for specific frame types
@@ -42,8 +41,7 @@ class Renderer extends AbstractRenderer
     /**
      * Advance the canvas to the next page
      */
-    function new_page()
-    {
+    function new_page() {
         $this->_canvas->new_page();
     }
 
@@ -52,8 +50,7 @@ class Renderer extends AbstractRenderer
      *
      * @param Frame $frame the frame to render
      */
-    public function render(Frame $frame)
-    {
+    public function render(Frame $frame) {
         global $_dompdf_debug;
 
         $this->_check_callbacks("begin_frame", $frame);
@@ -92,7 +89,6 @@ class Renderer extends AbstractRenderer
         }
 
         switch ($display) {
-
             case "block":
             case "list-item":
             case "inline-block":
@@ -149,7 +145,6 @@ class Renderer extends AbstractRenderer
 
             default:
                 break;
-
         }
 
         // Starts the overflow: hidden box
@@ -215,8 +210,7 @@ class Renderer extends AbstractRenderer
      * @param string $event the type of event
      * @param Frame $frame  the frame that event is triggered on
      */
-    protected function _check_callbacks($event, $frame)
-    {
+    protected function _check_callbacks($event, $frame) {
         if (!isset($this->_callbacks)) {
             $this->_callbacks = $this->_dompdf->getCallbacks();
         }
@@ -225,6 +219,7 @@ class Renderer extends AbstractRenderer
             $info = [0 => $this->_canvas, "canvas" => $this->_canvas,
                 1 => $frame, "frame" => $frame];
             $fs = $this->_callbacks[$event];
+
             foreach ($fs as $f) {
                 if (is_callable($f)) {
                     if (is_array($f)) {
@@ -245,11 +240,8 @@ class Renderer extends AbstractRenderer
      * @param string $type type of renderer to use
      * @param Frame $frame the frame to render
      */
-    protected function _render_frame($type, $frame)
-    {
-
+    protected function _render_frame($type, $frame) {
         if (!isset($this->_renderers[$type])) {
-
             switch ($type) {
                 case "block":
                     $this->_renderers[$type] = new Block($this->_dompdf);
@@ -286,7 +278,6 @@ class Renderer extends AbstractRenderer
                 case "javascript":
                     $this->_renderers[$type] = new JavascriptEmbedder($this->_dompdf);
                     break;
-
             }
         }
 
