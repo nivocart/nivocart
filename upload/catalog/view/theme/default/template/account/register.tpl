@@ -79,7 +79,7 @@
       <tr style="display: <?php echo (count($customer_groups) > 1 ? 'table-row' : 'none'); ?>;">
         <td><?php echo $entry_customer_group; ?></td>
         <td><?php foreach ($customer_groups as $customer_group) { ?>
-          <?php if ($customer_group['customer_group_id'] ==== $customer_group_id) { ?>
+          <?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
             <input type="radio" name="customer_group_id" value="<?php echo $customer_group['customer_group_id']; ?>" id="customer_group_id<?php echo $customer_group['customer_group_id']; ?>" checked="checked" />
             <label for="customer_group_id<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></label>
             <br />
