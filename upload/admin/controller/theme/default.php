@@ -6,22 +6,22 @@
  */
 class ControllerThemeDefault extends Controller {
 	private $error = [];
-	private $_name = 'default';
+	private $name = 'default';
 
 	public function index() {
-		$this->language->load('theme/' . $this->_name);
+		$this->language->load('theme/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
-			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
+			$this->model_setting_setting->editSetting($this->name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->post['apply'])) {
-				$this->redirect($this->url->link('theme/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
+				$this->redirect($this->url->link('theme/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
 			} else {
 				$this->redirect($this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL'));
 			}
@@ -119,12 +119,12 @@ class ControllerThemeDefault extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('theme/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('theme/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
 		$this->data['settings'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action'] = $this->url->link('theme/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('theme/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['stylesheet_mode'] = $this->config->get('config_stylesheet');
@@ -132,19 +132,20 @@ class ControllerThemeDefault extends Controller {
 		// Check active template
 		$template = $this->config->get('config_template');
 
-		$this->data['active'] = ($template === $this->_name) ? true : false;
+		$this->data['active'] = ($template === $this->name) ? true : false;
 
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
-			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+		) {
 			$server = HTTPS_CATALOG;
 		} else {
 			$server = HTTP_CATALOG;
 		}
 
-		if (file_exists(DIR_IMAGE . 'templates/' . $this->_name . '.png')) {
-			$image = $server . 'image/templates/' . $this->_name . '.png';
+		if (file_exists(DIR_IMAGE . 'templates/' . $this->name . '.png')) {
+			$image = $server . 'image/templates/' . $this->name . '.png';
 		} else {
 			$image = $server . 'image/no_image.png';
 		}
@@ -158,168 +159,168 @@ class ControllerThemeDefault extends Controller {
 		$this->data['display_sizes'][] = ['format' => 'wide', 'title' => 'Wide (Full HD)'];
 		$this->data['display_sizes'][] = ['format' => 'full', 'title' => 'Unlimited'];
 
-		if (isset($this->request->post[$this->_name . '_widescreen'])) {
-			$this->data[$this->_name . '_widescreen'] = $this->request->post[$this->_name . '_widescreen'];
-		} elseif ($this->config->get($this->_name . '_widescreen')) {
-			$this->data[$this->_name . '_widescreen'] = $this->config->get($this->_name . '_widescreen');
+		if (isset($this->request->post[$this->name . '_widescreen'])) {
+			$this->data[$this->name . '_widescreen'] = $this->request->post[$this->name . '_widescreen'];
+		} elseif ($this->config->get($this->name . '_widescreen')) {
+			$this->data[$this->name . '_widescreen'] = $this->config->get($this->name . '_widescreen');
 		} else {
-			$this->data[$this->_name . '_widescreen'] = 'normal';
+			$this->data[$this->name . '_widescreen'] = 'normal';
 		}
 
-		if (isset($this->request->post[$this->_name . '_breadcrumbs'])) {
-			$this->data[$this->_name . '_breadcrumbs'] = $this->request->post[$this->_name . '_breadcrumbs'];
+		if (isset($this->request->post[$this->name . '_breadcrumbs'])) {
+			$this->data[$this->name . '_breadcrumbs'] = $this->request->post[$this->name . '_breadcrumbs'];
 		} else {
-			$this->data[$this->_name . '_breadcrumbs'] = $this->config->get($this->_name . '_breadcrumbs');
+			$this->data[$this->name . '_breadcrumbs'] = $this->config->get($this->name . '_breadcrumbs');
 		}
 
-		if (isset($this->request->post[$this->_name . '_back_to_top'])) {
-			$this->data[$this->_name . '_back_to_top'] = $this->request->post[$this->_name . '_back_to_top'];
+		if (isset($this->request->post[$this->name . '_back_to_top'])) {
+			$this->data[$this->name . '_back_to_top'] = $this->request->post[$this->name . '_back_to_top'];
 		} else {
-			$this->data[$this->_name . '_back_to_top'] = $this->config->get($this->_name . '_back_to_top');
+			$this->data[$this->name . '_back_to_top'] = $this->config->get($this->name . '_back_to_top');
 		}
 
-		if (isset($this->request->post[$this->_name . '_right_click'])) {
-			$this->data[$this->_name . '_right_click'] = $this->request->post[$this->_name . '_right_click'];
+		if (isset($this->request->post[$this->name . '_right_click'])) {
+			$this->data[$this->name . '_right_click'] = $this->request->post[$this->name . '_right_click'];
 		} else {
-			$this->data[$this->_name . '_right_click'] = $this->config->get($this->_name . '_right_click');
+			$this->data[$this->name . '_right_click'] = $this->config->get($this->name . '_right_click');
 		}
 
-		if (isset($this->request->post[$this->_name . '_web_design'])) {
-			$this->data[$this->_name . '_web_design'] = $this->request->post[$this->_name . '_web_design'];
+		if (isset($this->request->post[$this->name . '_web_design'])) {
+			$this->data[$this->name . '_web_design'] = $this->request->post[$this->name . '_web_design'];
 		} else {
-			$this->data[$this->_name . '_web_design'] = $this->config->get($this->_name . '_web_design');
+			$this->data[$this->name . '_web_design'] = $this->config->get($this->name . '_web_design');
 		}
 
-		if (isset($this->request->post[$this->_name . '_powered_by'])) {
-			$this->data[$this->_name . '_powered_by'] = $this->request->post[$this->_name . '_powered_by'];
+		if (isset($this->request->post[$this->name . '_powered_by'])) {
+			$this->data[$this->name . '_powered_by'] = $this->request->post[$this->name . '_powered_by'];
 		} else {
-			$this->data[$this->_name . '_powered_by'] = $this->config->get($this->_name . '_powered_by');
+			$this->data[$this->name . '_powered_by'] = $this->config->get($this->name . '_powered_by');
 		}
 
 		// Footer
-		if (isset($this->request->post[$this->_name . '_footer_theme'])) {
-			$this->data[$this->_name . '_footer_theme'] = $this->request->post[$this->_name . '_footer_theme'];
+		if (isset($this->request->post[$this->name . '_footer_theme'])) {
+			$this->data[$this->name . '_footer_theme'] = $this->request->post[$this->name . '_footer_theme'];
 		} else {
-			$this->data[$this->_name . '_footer_theme'] = $this->config->get($this->_name . '_footer_theme');
+			$this->data[$this->name . '_footer_theme'] = $this->config->get($this->name . '_footer_theme');
 		}
 
 		$this->data['skins'] = $this->model_setting_setting->getColors();
 
-		if (isset($this->request->post[$this->_name . '_footer_color'])) {
-			$this->data[$this->_name . '_footer_color'] = $this->request->post[$this->_name . '_footer_color'];
+		if (isset($this->request->post[$this->name . '_footer_color'])) {
+			$this->data[$this->name . '_footer_color'] = $this->request->post[$this->name . '_footer_color'];
 		} else {
-			$this->data[$this->_name . '_footer_color'] = $this->config->get($this->_name . '_footer_color');
+			$this->data[$this->name . '_footer_color'] = $this->config->get($this->name . '_footer_color');
 		}
 
 		$this->data['shapes'] = $this->model_setting_setting->getShapes();
 
-		if (isset($this->request->post[$this->_name . '_footer_shape'])) {
-			$this->data[$this->_name . '_footer_shape'] = $this->request->post[$this->_name . '_footer_shape'];
+		if (isset($this->request->post[$this->name . '_footer_shape'])) {
+			$this->data[$this->name . '_footer_shape'] = $this->request->post[$this->name . '_footer_shape'];
 		} else {
-			$this->data[$this->_name . '_footer_shape'] = $this->config->get($this->_name . '_footer_shape');
+			$this->data[$this->name . '_footer_shape'] = $this->config->get($this->name . '_footer_shape');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_big_column'])) {
-			$this->data[$this->_name . '_footer_big_column'] = $this->request->post[$this->_name . '_footer_big_column'];
+		if (isset($this->request->post[$this->name . '_footer_big_column'])) {
+			$this->data[$this->name . '_footer_big_column'] = $this->request->post[$this->name . '_footer_big_column'];
 		} else {
-			$this->data[$this->_name . '_footer_big_column'] = $this->config->get($this->_name . '_footer_big_column');
+			$this->data[$this->name . '_footer_big_column'] = $this->config->get($this->name . '_footer_big_column');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_location'])) {
-			$this->data[$this->_name . '_footer_location'] = $this->request->post[$this->_name . '_footer_location'];
+		if (isset($this->request->post[$this->name . '_footer_location'])) {
+			$this->data[$this->name . '_footer_location'] = $this->request->post[$this->name . '_footer_location'];
 		} else {
-			$this->data[$this->_name . '_footer_location'] = $this->config->get($this->_name . '_footer_location');
+			$this->data[$this->name . '_footer_location'] = $this->config->get($this->name . '_footer_location');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_phone'])) {
-			$this->data[$this->_name . '_footer_phone'] = $this->request->post[$this->_name . '_footer_phone'];
+		if (isset($this->request->post[$this->name . '_footer_phone'])) {
+			$this->data[$this->name . '_footer_phone'] = $this->request->post[$this->name . '_footer_phone'];
 		} else {
-			$this->data[$this->_name . '_footer_phone'] = $this->config->get($this->_name . '_footer_phone');
+			$this->data[$this->name . '_footer_phone'] = $this->config->get($this->name . '_footer_phone');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_email'])) {
-			$this->data[$this->_name . '_footer_email'] = $this->request->post[$this->_name . '_footer_email'];
+		if (isset($this->request->post[$this->name . '_footer_email'])) {
+			$this->data[$this->name . '_footer_email'] = $this->request->post[$this->name . '_footer_email'];
 		} else {
-			$this->data[$this->_name . '_footer_email'] = $this->config->get($this->_name . '_footer_email');
+			$this->data[$this->name . '_footer_email'] = $this->config->get($this->name . '_footer_email');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_facebook'])) {
-			$this->data[$this->_name . '_footer_facebook'] = $this->request->post[$this->_name . '_footer_facebook'];
+		if (isset($this->request->post[$this->name . '_footer_facebook'])) {
+			$this->data[$this->name . '_footer_facebook'] = $this->request->post[$this->name . '_footer_facebook'];
 		} else {
-			$this->data[$this->_name . '_footer_facebook'] = $this->config->get($this->_name . '_footer_facebook');
+			$this->data[$this->name . '_footer_facebook'] = $this->config->get($this->name . '_footer_facebook');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_twitter'])) {
-			$this->data[$this->_name . '_footer_twitter'] = $this->request->post[$this->_name . '_footer_twitter'];
+		if (isset($this->request->post[$this->name . '_footer_twitter'])) {
+			$this->data[$this->name . '_footer_twitter'] = $this->request->post[$this->name . '_footer_twitter'];
 		} else {
-			$this->data[$this->_name . '_footer_twitter'] = $this->config->get($this->_name . '_footer_twitter');
+			$this->data[$this->name . '_footer_twitter'] = $this->config->get($this->name . '_footer_twitter');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_google'])) {
-			$this->data[$this->_name . '_footer_google'] = $this->request->post[$this->_name . '_footer_google'];
+		if (isset($this->request->post[$this->name . '_footer_google'])) {
+			$this->data[$this->name . '_footer_google'] = $this->request->post[$this->name . '_footer_google'];
 		} else {
-			$this->data[$this->_name . '_footer_google'] = $this->config->get($this->_name . '_footer_google');
+			$this->data[$this->name . '_footer_google'] = $this->config->get($this->name . '_footer_google');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_pinterest'])) {
-			$this->data[$this->_name . '_footer_pinterest'] = $this->request->post[$this->_name . '_footer_pinterest'];
+		if (isset($this->request->post[$this->name . '_footer_pinterest'])) {
+			$this->data[$this->name . '_footer_pinterest'] = $this->request->post[$this->name . '_footer_pinterest'];
 		} else {
-			$this->data[$this->_name . '_footer_pinterest'] = $this->config->get($this->_name . '_footer_pinterest');
+			$this->data[$this->name . '_footer_pinterest'] = $this->config->get($this->name . '_footer_pinterest');
 		}
 
-		if (isset($this->request->post[$this->_name . '_footer_instagram'])) {
-			$this->data[$this->_name . '_footer_instagram'] = $this->request->post[$this->_name . '_footer_instagram'];
+		if (isset($this->request->post[$this->name . '_footer_instagram'])) {
+			$this->data[$this->name . '_footer_instagram'] = $this->request->post[$this->name . '_footer_instagram'];
 		} else {
-			$this->data[$this->_name . '_footer_instagram'] = $this->config->get($this->_name . '_footer_instagram');
+			$this->data[$this->name . '_footer_instagram'] = $this->config->get($this->name . '_footer_instagram');
 		}
 
 		// Options
-		if (isset($this->request->post[$this->_name . '_livesearch'])) {
-			$this->data[$this->_name . '_livesearch'] = $this->request->post[$this->_name . '_livesearch'];
+		if (isset($this->request->post[$this->name . '_livesearch'])) {
+			$this->data[$this->name . '_livesearch'] = $this->request->post[$this->name . '_livesearch'];
 		} else {
-			$this->data[$this->_name . '_livesearch'] = $this->config->get($this->_name . '_livesearch');
+			$this->data[$this->name . '_livesearch'] = $this->config->get($this->name . '_livesearch');
 		}
 
-		if (isset($this->request->post[$this->_name . '_livesearch_limit'])) {
-			$this->data[$this->_name . '_livesearch_limit'] = $this->request->post[$this->_name . '_livesearch_limit'];
+		if (isset($this->request->post[$this->name . '_livesearch_limit'])) {
+			$this->data[$this->name . '_livesearch_limit'] = $this->request->post[$this->name . '_livesearch_limit'];
 		} else {
-			$this->data[$this->_name . '_livesearch_limit'] = $this->config->get($this->_name . '_livesearch_limit');
+			$this->data[$this->name . '_livesearch_limit'] = $this->config->get($this->name . '_livesearch_limit');
 		}
 
-		if (isset($this->request->post[$this->_name . '_product_stock_low'])) {
-			$this->data[$this->_name . '_product_stock_low'] = $this->request->post[$this->_name . '_product_stock_low'];
+		if (isset($this->request->post[$this->name . '_product_stock_low'])) {
+			$this->data[$this->name . '_product_stock_low'] = $this->request->post[$this->name . '_product_stock_low'];
 		} else {
-			$this->data[$this->_name . '_product_stock_low'] = $this->config->get($this->_name . '_product_stock_low');
+			$this->data[$this->name . '_product_stock_low'] = $this->config->get($this->name . '_product_stock_low');
 		}
 
 		$this->data['stock_limits'] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12', '15', '20', '50', '100'];
 
-		if (isset($this->request->post[$this->_name . '_product_stock_limit'])) {
-			$this->data[$this->_name . '_product_stock_limit'] = $this->request->post[$this->_name . '_product_stock_limit'];
+		if (isset($this->request->post[$this->name . '_product_stock_limit'])) {
+			$this->data[$this->name . '_product_stock_limit'] = $this->request->post[$this->name . '_product_stock_limit'];
 		} else {
-			$this->data[$this->_name . '_product_stock_limit'] = $this->config->get($this->_name . '_product_stock_limit');
+			$this->data[$this->name . '_product_stock_limit'] = $this->config->get($this->name . '_product_stock_limit');
 		}
 
-		if (isset($this->request->post[$this->_name . '_manufacturer_name'])) {
-			$this->data[$this->_name . '_manufacturer_name'] = $this->request->post[$this->_name . '_manufacturer_name'];
+		if (isset($this->request->post[$this->name . '_manufacturer_name'])) {
+			$this->data[$this->name . '_manufacturer_name'] = $this->request->post[$this->name . '_manufacturer_name'];
 		} else {
-			$this->data[$this->_name . '_manufacturer_name'] = $this->config->get($this->_name . '_manufacturer_name');
+			$this->data[$this->name . '_manufacturer_name'] = $this->config->get($this->name . '_manufacturer_name');
 		}
 
-		if (isset($this->request->post[$this->_name . '_manufacturer_image'])) {
-			$this->data[$this->_name . '_manufacturer_image'] = $this->request->post[$this->_name . '_manufacturer_image'];
+		if (isset($this->request->post[$this->name . '_manufacturer_image'])) {
+			$this->data[$this->name . '_manufacturer_image'] = $this->request->post[$this->name . '_manufacturer_image'];
 		} else {
-			$this->data[$this->_name . '_manufacturer_image'] = $this->config->get($this->_name . '_manufacturer_image');
+			$this->data[$this->name . '_manufacturer_image'] = $this->config->get($this->name . '_manufacturer_image');
 		}
 
 		// Stylesheet override (required by modules): theme CSS only = 1, theme CSS with CSS Modifiers = 0 (default)
-		if (isset($this->request->post[$this->_name . '_stylesheet'])) {
-			$this->data[$this->_name . '_stylesheet'] = $this->request->post[$this->_name . '_stylesheet'];
+		if (isset($this->request->post[$this->name . '_stylesheet'])) {
+			$this->data[$this->name . '_stylesheet'] = $this->request->post[$this->name . '_stylesheet'];
 		} else {
-			$this->data[$this->_name . '_stylesheet'] = 0;
+			$this->data[$this->name . '_stylesheet'] = 0;
 		}
 
-		$this->template = 'theme/' . $this->_name . '.tpl';
+		$this->template = 'theme/' . $this->name . '.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
@@ -329,7 +330,7 @@ class ControllerThemeDefault extends Controller {
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'theme/' . $this->_name)) {
+		if (!$this->user->hasPermission('modify', 'theme/' . $this->name)) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 

@@ -32,7 +32,7 @@ $_['entry_footer_location']     = 'Display Address:';
 $_['entry_footer_phone']        = 'Display Telephone:';
 $_['entry_footer_email']        = 'Display Email:';
 $_['entry_footer_facebook']     = 'Display Facebook:<span class="help">Link must be defined in store Settings.</span>';
-$_['entry_footer_twitter']      = 'Display Twitter:<span class="help">Link must be defined in store Settings.</span>';
+$_['entry_footer_twitter']      = 'Display X:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_google']       = 'Display Google+:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_pinterest']    = 'Display Pinterest:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_instagram']    = 'Display Instagram:<span class="help">Link must be defined in store Settings.</span>';
