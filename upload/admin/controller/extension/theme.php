@@ -111,11 +111,14 @@ class ControllerExtensionTheme extends Controller {
 						'href' => $this->url->link('theme/' . $extension, 'token=' . $this->session->data['token'], 'SSL')
 					];
 
-					$action[] = [
-						'text' => $this->language->get('text_uninstall'),
-						'type' => 'uninstall',
-						'href' => $this->url->link('extension/theme/uninstall', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
-					];
+					// Prevent 'default' template from being uninstalled by mistake
+					if ($extension !== 'default') {
+						$action[] = [
+							'text' => $this->language->get('text_uninstall'),
+							'type' => 'uninstall',
+							'href' => $this->url->link('extension/theme/uninstall', 'token=' . $this->session->data['token'] . '&extension=' . $extension, 'SSL')
+						];
+					}
 				}
 
 				$this->data['extensions'][] = [

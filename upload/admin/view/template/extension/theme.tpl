@@ -33,7 +33,7 @@
           <tr>
             <td class="left"><?php echo $extension['name']; ?> <?php echo $extension['active']; ?></td>
             <td class="right"><?php foreach ($extension['action'] as $action) { ?>
-              <?php if ($action['type'] == 'uninstall') { ?>
+              <?php if ($action['type'] === 'uninstall') { ?>
                 <a class="button-form-<?php echo $action['type']; ?> ripple" data-title="<?php echo $action['text']; ?>" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
               <?php } else { ?>
                 <a class="button-form-<?php echo $action['type']; ?> ripple" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
