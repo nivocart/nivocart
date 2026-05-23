@@ -13,8 +13,7 @@ namespace Dompdf;
  *
  * @package dompdf
  */
-class Exception extends \Exception
-{
+class Exception extends \Exception {
 
     /**
      * Class constructor
@@ -22,8 +21,7 @@ class Exception extends \Exception
      * @param string $message Error message
      * @param int $code       Error code
      */
-    public function __construct($message = null, $code = 0)
-    {
+    public function __construct($message = null, $code = 0) {
         parent::__construct($message, $code);
     }
 }

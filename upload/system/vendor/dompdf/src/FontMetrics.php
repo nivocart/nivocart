@@ -22,8 +22,7 @@ use FontLib\Font;
  * @static
  * @package dompdf
  */
-class FontMetrics
-{
+class FontMetrics {
     /**
      * Name of the font cache file
      *
@@ -65,8 +64,7 @@ class FontMetrics
     /**
      * Class initialization
      */
-    public function __construct(Canvas $canvas, Options $options)
-    {
+    public function __construct(Canvas $canvas, Options $options) {
         $this->setCanvas($canvas);
         $this->setOptions($options);
         $this->loadFontFamilies();
@@ -75,8 +73,7 @@ class FontMetrics
     /**
      * @deprecated
      */
-    public function save_font_families()
-    {
+    public function save_font_families() {
         $this->saveFontFamilies();
     }
 
@@ -89,21 +86,24 @@ class FontMetrics
      *
      * @see FontMetrics::loadFontFamilies()
      */
-    public function saveFontFamilies()
-    {
+    public function saveFontFamilies() {
         // replace the path to the DOMPDF font directories with the corresponding constants (allows for more portability)
         $cacheData = sprintf("<?php return function (%s, %s) {%s", '$fontDir', '$rootDir', PHP_EOL);
         $cacheData .= sprintf("return array (%s", PHP_EOL);
+
         foreach ($this->fontLookup as $family => $variants) {
             $cacheData .= sprintf("  '%s' => array(%s", addslashes($family), PHP_EOL);
+
             foreach ($variants as $variant => $path) {
                 $path = sprintf("'%s'", $path);
                 $path = str_replace('\'' . $this->options->getFontDir(), '$fontDir . \'', $path);
                 $path = str_replace('\'' . $this->options->getRootDir(), '$rootDir . \'', $path);
                 $cacheData .= sprintf("    '%s' => %s,%s", $variant, $path, PHP_EOL);
             }
+
             $cacheData .= sprintf("  ),%s", PHP_EOL);
         }
+
         $cacheData .= ");" . PHP_EOL;
         $cacheData .= "}; ?>";
         file_put_contents($this->getCacheFile(), $cacheData);
@@ -112,8 +112,7 @@ class FontMetrics
     /**
      * @deprecated
      */
-    public function load_font_families()
-    {
+    public function load_font_families() {
         $this->loadFontFamilies();
     }
 
@@ -122,8 +121,7 @@ class FontMetrics
      *
      * @see FontMetrics::saveFontFamilies()
      */
-    public function loadFontFamilies()
-    {
+    public function loadFontFamilies() {
         $fontDir = $this->options->getFontDir();
         $rootDir = $this->options->getRootDir();
 
@@ -160,8 +158,7 @@ class FontMetrics
      * @return bool
      * @deprecated
      */
-    public function register_font($style, $remote_file, $context = null)
-    {
+    public function register_font($style, $remote_file, $context = null) {
         return $this->registerFont($style, $remote_file);
     }
 
@@ -171,8 +168,7 @@ class FontMetrics
      * @param resource $context
      * @return bool
      */
-    public function registerFont($style, $remoteFile, $context = null)
-    {
+    public function registerFont($style, $remoteFile, $context = null) {
         $fontname = mb_strtolower($style["family"]);
         $families = $this->getFontFamilies();
 
@@ -291,8 +287,7 @@ class FontMetrics
      * @return float
      * @deprecated
      */
-    public function get_text_width($text, $font, $size, $word_spacing = 0.0, $char_spacing = 0.0)
-    {
+    public function get_text_width($text, $font, $size, $word_spacing = 0.0, $char_spacing = 0.0) {
         //return self::$_pdf->get_text_width($text, $font, $size, $word_spacing, $char_spacing);
         return $this->getTextWidth($text, $font, $size, $word_spacing, $char_spacing);
     }
@@ -309,8 +304,7 @@ class FontMetrics
      * @internal param float $spacing word spacing, if any
      * @return float
      */
-    public function getTextWidth($text, $font, $size, $wordSpacing = 0.0, $charSpacing = 0.0)
-    {
+    public function getTextWidth($text, $font, $size, $wordSpacing = 0.0, $charSpacing = 0.0) {
         // @todo Make sure this cache is efficient before enabling it
         static $cache = [];
 
@@ -345,8 +339,7 @@ class FontMetrics
      * @return float
      * @deprecated
      */
-    public function get_font_height($font, $size)
-    {
+    public function get_font_height($font, $size) {
         return $this->getFontHeight($font, $size);
     }
 
@@ -358,8 +351,7 @@ class FontMetrics
      *
      * @return float
      */
-    public function getFontHeight($font, $size)
-    {
+    public function getFontHeight($font, $size) {
         return $this->canvas->get_font_height($font, $size);
     }
 
@@ -369,8 +361,7 @@ class FontMetrics
      * @return string
      * @deprecated
      */
-    public function get_font($family_raw, $subtype_raw = "normal")
-    {
+    public function get_font($family_raw, $subtype_raw = "normal") {
         return $this->getFont($family_raw, $subtype_raw);
     }
 
@@ -386,8 +377,7 @@ class FontMetrics
      *
      * @return string
      */
-    public function getFont($familyRaw, $subtypeRaw = "normal")
-    {
+    public function getFont($familyRaw, $subtypeRaw = "normal") {
         static $cache = [];
 
         if (isset($cache[$familyRaw][$subtypeRaw])) {
@@ -454,8 +444,7 @@ class FontMetrics
      * @return null|string
      * @deprecated
      */
-    public function get_family($family)
-    {
+    public function get_family($family) {
         return $this->getFamily($family);
     }
 
@@ -463,8 +452,7 @@ class FontMetrics
      * @param string $family
      * @return null|string
      */
-    public function getFamily($family)
-    {
+    public function getFamily($family) {
         $family = str_replace(["'", '"'], "", mb_strtolower($family));
 
         if (isset($this->fontLookup[$family])) {
@@ -479,8 +467,7 @@ class FontMetrics
      * @return string
      * @deprecated
      */
-    public function get_type($type)
-    {
+    public function get_type($type) {
         return $this->getType($type);
     }
 
@@ -488,8 +475,7 @@ class FontMetrics
      * @param string $type
      * @return string
      */
-    public function getType($type)
-    {
+    public function getType($type) {
         if (preg_match('/bold/i', $type)) {
             $weight = 700;
         } elseif (preg_match('/([1-9]00)/', $type, $match)) {
@@ -515,8 +501,7 @@ class FontMetrics
      * @return array
      * @deprecated
      */
-    public function get_font_families()
-    {
+    public function get_font_families() {
         return $this->getFontFamilies();
     }
 
@@ -525,8 +510,7 @@ class FontMetrics
      *
      * @return array
      */
-    public function getFontFamilies()
-    {
+    public function getFontFamilies() {
         return $this->fontLookup;
     }
 
@@ -535,8 +519,7 @@ class FontMetrics
      * @param mixed $entry
      * @deprecated
      */
-    public function set_font_family($fontname, $entry)
-    {
+    public function set_font_family($fontname, $entry) {
         $this->setFontFamily($fontname, $entry);
     }
 
@@ -544,16 +527,14 @@ class FontMetrics
      * @param string $fontname
      * @param mixed $entry
      */
-    public function setFontFamily($fontname, $entry)
-    {
+    public function setFontFamily($fontname, $entry) {
         $this->fontLookup[mb_strtolower($fontname)] = $entry;
     }
 
     /**
      * @return string
      */
-    public function getCacheFile()
-    {
+    public function getCacheFile() {
         return $this->options->getFontDir() . '/' . self::CACHE_FILE;
     }
 
@@ -561,8 +542,7 @@ class FontMetrics
      * @param Options $options
      * @return $this
      */
-    public function setOptions(Options $options)
-    {
+    public function setOptions(Options $options) {
         $this->options = $options;
         return $this;
     }
@@ -570,8 +550,7 @@ class FontMetrics
     /**
      * @return Options
      */
-    public function getOptions()
-    {
+    public function getOptions() {
         return $this->options;
     }
 
@@ -579,8 +558,7 @@ class FontMetrics
      * @param Canvas $canvas
      * @return $this
      */
-    public function setCanvas(Canvas $canvas)
-    {
+    public function setCanvas(Canvas $canvas) {
         $this->canvas = $canvas;
         // Still write deprecated pdf for now. It might be used by a parent class.
         $this->pdf = $canvas;
@@ -590,8 +568,7 @@ class FontMetrics
     /**
      * @return Canvas
      */
-    public function getCanvas()
-    {
+    public function getCanvas() {
         return $this->canvas;
     }
 }

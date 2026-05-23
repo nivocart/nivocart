@@ -67,8 +67,7 @@ use Dompdf\Helpers;
  *
  * @package dompdf
  */
-class Dompdf
-{
+class Dompdf {
     /**
      * Version string for dompdf
      *
@@ -276,8 +275,7 @@ class Dompdf
      *
      * @param array|Options $options
      */
-    public function __construct($options = null)
-    {
+    public function __construct($options = null) {
         if (isset($options) && $options instanceof Options) {
             $this->setOptions($options);
         } elseif (is_array($options)) {
@@ -307,8 +305,7 @@ class Dompdf
      * Save the system's existing locale, PCRE JIT, and MBString encoding
      * configuration and configure the system for Dompdf processing
      */
-    private function setPhpConfig()
-    {
+    private function setPhpConfig() {
         if (sprintf('%.1f', 1.0) !== '1.0') {
             $this->systemLocale = setlocale(LC_NUMERIC, "0");
             setlocale(LC_NUMERIC, "C");
@@ -326,8 +323,7 @@ class Dompdf
     /**
      * Restore the system's locale configuration
      */
-    private function restorePhpConfig()
-    {
+    private function restorePhpConfig() {
         if (!empty($this->systemLocale)) {
             setlocale(LC_NUMERIC, $this->systemLocale);
             $this->systemLocale = null;
@@ -348,8 +344,7 @@ class Dompdf
      * @param $file
      * @deprecated
      */
-    public function load_html_file($file)
-    {
+    public function load_html_file($file) {
         $this->loadHtmlFile($file);
     }
 
@@ -362,15 +357,14 @@ class Dompdf
      *
      * @throws Exception
      */
-    public function loadHtmlFile($file, $encoding = null)
-    {
+    public function loadHtmlFile($file, $encoding = null) {
         $this->setPhpConfig();
 
         if (!$this->protocol && !$this->baseHost && !$this->basePath) {
             [$this->protocol, $this->baseHost, $this->basePath] = Helpers::explode_url($file);
         }
         $protocol = strtolower($this->protocol);
-        
+
         $uri = Helpers::build_url($this->protocol, $this->baseHost, $this->basePath, $file);
 
         if ( !in_array($protocol, $this->allowedProtocols) ) {
@@ -434,8 +428,7 @@ class Dompdf
      * @param string $encoding
      * @deprecated
      */
-    public function load_html($str, $encoding = null)
-    {
+    public function load_html($str, $encoding = null) {
         $this->loadHtml($str, $encoding);
     }
 
@@ -462,8 +455,7 @@ class Dompdf
      * @param string $str HTML text to load
      * @param string $encoding Encoding of $str
      */
-    public function loadHtml($str, $encoding = null)
-    {
+    public function loadHtml($str, $encoding = null) {
         $this->setPhpConfig();
 
         // Determine character encoding when $encoding parameter not used
@@ -488,6 +480,7 @@ class Dompdf
             '@<meta\s+content="(?:[\w/]+)(?:;\s*?charset=([^\s"]+))"?\s+http-equiv="Content-Type"@i',
             '@<meta [^>]*charset\s*=\s*["\']?\s*([^"\' ]+)@i',
         ];
+
         foreach ($metatags as $metatag) {
             if (preg_match($metatag, $str, $matches)) {
                 if (isset($matches[1]) && in_array($matches[1], mb_list_encodings())) {
@@ -496,6 +489,7 @@ class Dompdf
                 }
             }
         }
+
         if (isset($document_encoding) && in_array(strtoupper($document_encoding), ['UTF-8','UTF8']) === false) {
             $str = preg_replace('/charset=([^\s"]+)/i', 'charset=UTF-8', $str);
         } elseif (isset($document_encoding) === false && strpos($str, '<head>') !== false) {
@@ -564,16 +558,14 @@ class Dompdf
      * @param DOMNode $node
      * @deprecated
      */
-    public static function remove_text_nodes(DOMNode $node)
-    {
+    public static function remove_text_nodes(DOMNode $node) {
         self::removeTextNodes($node);
     }
 
     /**
      * @param DOMNode $node
      */
-    public static function removeTextNodes(DOMNode $node)
-    {
+    public static function removeTextNodes(DOMNode $node) {
         $children = [];
         for ($i = 0; $i < $node->childNodes->length; $i++) {
             $child = $node->childNodes->item($i);
@@ -591,8 +583,7 @@ class Dompdf
      * Builds the {@link FrameTree}, loads any CSS and applies the styles to
      * the {@link FrameTree}
      */
-    private function processHtml()
-    {
+    private function processHtml() {
         $this->tree->build_tree();
 
         $this->css->load_css_file($this->css->getDefaultStylesheet(), Stylesheet::ORIG_UA);
@@ -693,8 +684,7 @@ class Dompdf
      * @param string $cacheId
      * @deprecated
      */
-    public function enable_caching($cacheId)
-    {
+    public function enable_caching($cacheId) {
         $this->enableCaching($cacheId);
     }
 
@@ -703,8 +693,7 @@ class Dompdf
      *
      * @param string $cacheId
      */
-    public function enableCaching($cacheId)
-    {
+    public function enableCaching($cacheId) {
         $this->cacheId = $cacheId;
     }
 
@@ -713,8 +702,7 @@ class Dompdf
      * @return bool
      * @deprecated
      */
-    public function parse_default_view($value)
-    {
+    public function parse_default_view($value) {
         return $this->parseDefaultView($value);
     }
 
@@ -722,8 +710,7 @@ class Dompdf
      * @param string $value
      * @return bool
      */
-    public function parseDefaultView($value)
-    {
+    public function parseDefaultView($value) {
         $valid = ["XYZ", "Fit", "FitH", "FitV", "FitR", "FitB", "FitBH", "FitBV"];
 
         $options = preg_split("/\s*,\s*/", trim($value));
@@ -740,8 +727,7 @@ class Dompdf
     /**
      * Renders the HTML to PDF
      */
-    public function render()
-    {
+    public function render() {
         $this->setPhpConfig();
         $options = $this->options;
 
@@ -864,8 +850,7 @@ class Dompdf
     /**
      * Add meta information to the PDF after rendering
      */
-    public function add_info($label, $value)
-    {
+    public function add_info($label, $value) {
         $canvas = $this->getCanvas();
         if (!is_null($canvas)) {
             $canvas->add_info($label, $value);
@@ -877,8 +862,7 @@ class Dompdf
      *
      * @return void
      */
-    private function write_log()
-    {
+    private function write_log() {
         $log_output_file = $this->getOptions()->getLogOutputFile();
         if (!$log_output_file || !is_writable($log_output_file)) {
             return;
@@ -918,8 +902,7 @@ class Dompdf
      * @param string $filename the name of the streamed file
      * @param array $options header options (see above)
      */
-    public function stream($filename = "document.pdf", $options = [])
-    {
+    public function stream($filename = "document.pdf", $options = []) {
         $this->setPhpConfig();
 
         $canvas = $this->getCanvas();
@@ -942,8 +925,7 @@ class Dompdf
      *
      * @return string|null
      */
-    public function output($options = [])
-    {
+    public function output($options = []) {
         $this->setPhpConfig();
 
         $canvas = $this->getCanvas();
@@ -962,8 +944,7 @@ class Dompdf
      * @return string
      * @deprecated
      */
-    public function output_html()
-    {
+    public function output_html() {
         return $this->outputHtml();
     }
 
@@ -972,8 +953,7 @@ class Dompdf
      *
      * @return string
      */
-    public function outputHtml()
-    {
+    public function outputHtml() {
         return $this->dom->saveHTML();
     }
 
@@ -984,8 +964,7 @@ class Dompdf
      * @return mixed
      * @deprecated
      */
-    public function get_option($key)
-    {
+    public function get_option($key) {
         return $this->options->get($key);
     }
 
@@ -995,8 +974,7 @@ class Dompdf
      * @return $this
      * @deprecated
      */
-    public function set_option($key, $value)
-    {
+    public function set_option($key, $value) {
         $this->options->set($key, $value);
         return $this;
     }
@@ -1006,8 +984,7 @@ class Dompdf
      * @return $this
      * @deprecated
      */
-    public function set_options(array $options)
-    {
+    public function set_options(array $options) {
         $this->options->set($options);
         return $this;
     }
@@ -1017,8 +994,7 @@ class Dompdf
      * @param string $orientation
      * @deprecated
      */
-    public function set_paper($size, $orientation = "portrait")
-    {
+    public function set_paper($size, $orientation = "portrait") {
         $this->setPaper($size, $orientation);
     }
 
@@ -1029,8 +1005,7 @@ class Dompdf
      * @param string $orientation 'portrait' or 'landscape'
      * @return $this
      */
-    public function setPaper($size, $orientation = "portrait")
-    {
+    public function setPaper($size, $orientation = "portrait") {
         $this->paperSize = $size;
         $this->paperOrientation = $orientation;
         return $this;
@@ -1042,8 +1017,7 @@ class Dompdf
      * @param null|string|array $paperSize
      * @return int[] A four-element integer array
      */
-    public function getPaperSize($paperSize = null)
-    {
+    public function getPaperSize($paperSize = null) {
         $size = $paperSize !== null ? $paperSize : $this->paperSize;
         if (is_array($size)) {
             return $size;
@@ -1059,8 +1033,7 @@ class Dompdf
      *
      * @return string Either "portrait" or "landscape"
      */
-    public function getPaperOrientation()
-    {
+    public function getPaperOrientation() {
         return $this->paperOrientation;
     }
 
@@ -1068,8 +1041,7 @@ class Dompdf
      * @param FrameTree $tree
      * @return $this
      */
-    public function setTree(FrameTree $tree)
-    {
+    public function setTree(FrameTree $tree) {
         $this->tree = $tree;
         return $this;
     }
@@ -1078,8 +1050,7 @@ class Dompdf
      * @return FrameTree
      * @deprecated
      */
-    public function get_tree()
-    {
+    public function get_tree() {
         return $this->getTree();
     }
 
@@ -1088,8 +1059,7 @@ class Dompdf
      *
      * @return FrameTree
      */
-    public function getTree()
-    {
+    public function getTree() {
         return $this->tree;
     }
 
@@ -1098,8 +1068,7 @@ class Dompdf
      * @return $this
      * @deprecated
      */
-    public function set_protocol($protocol)
-    {
+    public function set_protocol($protocol) {
         return $this->setProtocol($protocol);
     }
 
@@ -1110,8 +1079,7 @@ class Dompdf
      * @param string $protocol
      * @return $this
      */
-    public function setProtocol($protocol)
-    {
+    public function setProtocol($protocol) {
         $this->protocol = $protocol;
         return $this;
     }
@@ -1120,8 +1088,7 @@ class Dompdf
      * @return string
      * @deprecated
      */
-    public function get_protocol()
-    {
+    public function get_protocol() {
         return $this->getProtocol();
     }
 
@@ -1130,8 +1097,7 @@ class Dompdf
      *
      * @return string
      */
-    public function getProtocol()
-    {
+    public function getProtocol() {
         return $this->protocol;
     }
 
@@ -1139,8 +1105,7 @@ class Dompdf
      * @param string $host
      * @deprecated
      */
-    public function set_host($host)
-    {
+    public function set_host($host) {
         $this->setBaseHost($host);
     }
 
@@ -1150,8 +1115,7 @@ class Dompdf
      * @param string $baseHost
      * @return $this
      */
-    public function setBaseHost($baseHost)
-    {
+    public function setBaseHost($baseHost) {
         $this->baseHost = $baseHost;
         return $this;
     }
@@ -1160,8 +1124,7 @@ class Dompdf
      * @return string
      * @deprecated
      */
-    public function get_host()
-    {
+    public function get_host() {
         return $this->getBaseHost();
     }
 
@@ -1170,8 +1133,7 @@ class Dompdf
      *
      * @return string
      */
-    public function getBaseHost()
-    {
+    public function getBaseHost() {
         return $this->baseHost;
     }
 
@@ -1181,8 +1143,7 @@ class Dompdf
      * @param string $path
      * @deprecated
      */
-    public function set_base_path($path)
-    {
+    public function set_base_path($path) {
         $this->setBasePath($path);
     }
 
@@ -1192,8 +1153,7 @@ class Dompdf
      * @param string $basePath
      * @return $this
      */
-    public function setBasePath($basePath)
-    {
+    public function setBasePath($basePath) {
         $this->basePath = $basePath;
         return $this;
     }
@@ -1202,8 +1162,7 @@ class Dompdf
      * @return string
      * @deprecated
      */
-    public function get_base_path()
-    {
+    public function get_base_path() {
         return $this->getBasePath();
     }
 
@@ -1212,8 +1171,7 @@ class Dompdf
      *
      * @return string
      */
-    public function getBasePath()
-    {
+    public function getBasePath() {
         return $this->basePath;
     }
 
@@ -1223,8 +1181,7 @@ class Dompdf
      * @return $this
      * @deprecated
      */
-    public function set_default_view($default_view, $options)
-    {
+    public function set_default_view($default_view, $options) {
         return $this->setDefaultView($default_view, $options);
     }
 
@@ -1235,8 +1192,7 @@ class Dompdf
      * @param array $options The view's options
      * @return $this
      */
-    public function setDefaultView($defaultView, $options)
-    {
+    public function setDefaultView($defaultView, $options) {
         $this->defaultView = $defaultView;
         $this->defaultViewOptions = $options;
         return $this;
@@ -1247,8 +1203,7 @@ class Dompdf
      * @return $this
      * @deprecated
      */
-    public function set_http_context($http_context)
-    {
+    public function set_http_context($http_context) {
         return $this->setHttpContext($http_context);
     }
 
@@ -1258,8 +1213,7 @@ class Dompdf
      * @param resource $httpContext
      * @return $this
      */
-    public function setHttpContext($httpContext)
-    {
+    public function setHttpContext($httpContext) {
         $this->httpContext = $httpContext;
         return $this;
     }
@@ -1268,8 +1222,7 @@ class Dompdf
      * @return resource
      * @deprecated
      */
-    public function get_http_context()
-    {
+    public function get_http_context() {
         return $this->getHttpContext();
     }
 
@@ -1278,8 +1231,7 @@ class Dompdf
      *
      * @return resource
      */
-    public function getHttpContext()
-    {
+    public function getHttpContext() {
         return $this->httpContext;
     }
 
@@ -1287,8 +1239,7 @@ class Dompdf
      * @param Canvas $canvas
      * @return $this
      */
-    public function setCanvas(Canvas $canvas)
-    {
+    public function setCanvas(Canvas $canvas) {
         $this->canvas = $canvas;
         return $this;
     }
@@ -1297,8 +1248,7 @@ class Dompdf
      * @return Canvas
      * @deprecated
      */
-    public function get_canvas()
-    {
+    public function get_canvas() {
         return $this->getCanvas();
     }
 
@@ -1307,8 +1257,7 @@ class Dompdf
      *
      * @return Canvas
      */
-    public function getCanvas()
-    {
+    public function getCanvas() {
         return $this->canvas;
     }
 
@@ -1316,8 +1265,7 @@ class Dompdf
      * @param Stylesheet $css
      * @return $this
      */
-    public function setCss(Stylesheet $css)
-    {
+    public function setCss(Stylesheet $css) {
         $this->css = $css;
         return $this;
     }
@@ -1326,8 +1274,7 @@ class Dompdf
      * @return Stylesheet
      * @deprecated
      */
-    public function get_css()
-    {
+    public function get_css() {
         return $this->getCss();
     }
 
@@ -1336,8 +1283,7 @@ class Dompdf
      *
      * @return Stylesheet
      */
-    public function getCss()
-    {
+    public function getCss() {
         return $this->css;
     }
 
@@ -1345,8 +1291,7 @@ class Dompdf
      * @param DOMDocument $dom
      * @return $this
      */
-    public function setDom(DOMDocument $dom)
-    {
+    public function setDom(DOMDocument $dom) {
         $this->dom = $dom;
         return $this;
     }
@@ -1355,16 +1300,14 @@ class Dompdf
      * @return DOMDocument
      * @deprecated
      */
-    public function get_dom()
-    {
+    public function get_dom() {
         return $this->getDom();
     }
 
     /**
      * @return DOMDocument
      */
-    public function getDom()
-    {
+    public function getDom() {
         return $this->dom;
     }
 
@@ -1372,8 +1315,7 @@ class Dompdf
      * @param Options $options
      * @return $this
      */
-    public function setOptions(Options $options)
-    {
+    public function setOptions(Options $options) {
         $this->options = $options;
         $fontMetrics = $this->getFontMetrics();
         if (isset($fontMetrics)) {
@@ -1385,8 +1327,7 @@ class Dompdf
     /**
      * @return Options
      */
-    public function getOptions()
-    {
+    public function getOptions() {
         return $this->options;
     }
 
@@ -1394,8 +1335,7 @@ class Dompdf
      * @return array
      * @deprecated
      */
-    public function get_callbacks()
-    {
+    public function get_callbacks() {
         return $this->getCallbacks();
     }
 
@@ -1404,8 +1344,7 @@ class Dompdf
      *
      * @return array
      */
-    public function getCallbacks()
-    {
+    public function getCallbacks() {
         return $this->callbacks;
     }
 
@@ -1413,8 +1352,7 @@ class Dompdf
      * @param array $callbacks the set of callbacks to set
      * @deprecated
      */
-    public function set_callbacks($callbacks)
-    {
+    public function set_callbacks($callbacks) {
         $this->setCallbacks($callbacks);
     }
 
@@ -1437,8 +1375,7 @@ class Dompdf
      *
      * @param array $callbacks the set of callbacks to set
      */
-    public function setCallbacks($callbacks)
-    {
+    public function setCallbacks($callbacks) {
         if (is_array($callbacks)) {
             $this->callbacks = [];
             foreach ($callbacks as $c) {
@@ -1457,8 +1394,7 @@ class Dompdf
      * @return boolean
      * @deprecated
      */
-    public function get_quirksmode()
-    {
+    public function get_quirksmode() {
         return $this->getQuirksmode();
     }
 
@@ -1467,8 +1403,7 @@ class Dompdf
      *
      * @return boolean true if quirks mode is active
      */
-    public function getQuirksmode()
-    {
+    public function getQuirksmode() {
         return $this->quirksmode;
     }
 
@@ -1476,8 +1411,7 @@ class Dompdf
      * @param FontMetrics $fontMetrics
      * @return $this
      */
-    public function setFontMetrics(FontMetrics $fontMetrics)
-    {
+    public function setFontMetrics(FontMetrics $fontMetrics) {
         $this->fontMetrics = $fontMetrics;
         return $this;
     }
@@ -1485,8 +1419,7 @@ class Dompdf
     /**
      * @return FontMetrics
      */
-    public function getFontMetrics()
-    {
+    public function getFontMetrics() {
         return $this->fontMetrics;
     }
 
@@ -1501,8 +1434,7 @@ class Dompdf
      * @throws Exception
      * @return mixed
      */
-    function __get($prop)
-    {
+    function __get($prop) {
         switch ($prop) {
             case 'version':
                 return $this->version;

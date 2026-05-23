@@ -15,13 +15,12 @@ namespace Dompdf;
  *
  * @package dompdf
  */
-class CanvasFactory
-{
+class CanvasFactory {
     /**
      * Constructor is private: this is a static class
      */
-    private function __construct()
-    {
+    private function __construct() {
+		//
     }
 
     /**
@@ -32,8 +31,7 @@ class CanvasFactory
      *
      * @return Canvas
      */
-    static function get_instance(Dompdf $dompdf, $paper = null, $orientation = null, $class = null)
-    {
+    static function get_instance(Dompdf $dompdf, $paper = null, $orientation = null, $class = null) {
         $backend = strtolower($dompdf->getOptions()->getPdfBackend());
 
         if (isset($class) && class_exists($class, false)) {

@@ -22,8 +22,7 @@ namespace Dompdf;
  *
  * @package dompdf
  */
-interface Canvas
-{
+interface Canvas {
     function __construct($paper = "letter", $orientation = "portrait", Dompdf $dompdf = null);
 
     /**
