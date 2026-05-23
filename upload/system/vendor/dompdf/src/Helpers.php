@@ -212,7 +212,7 @@ class Helpers {
      * @return bool
      */
     public static function is_percent($value) {
-        return false !== mb_strpos($value, "%", 'UTF-8');
+        return false !== strpos($value, "%");
     }
 
     /**
