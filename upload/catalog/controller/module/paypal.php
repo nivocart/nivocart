@@ -20,7 +20,8 @@ class ControllerModulePaypal extends Controller {
 
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) ||
 			(!$this->cart->hasStock() && !$this->config->get('config_stock_checkout')) ||
-			(!$this->customer->isLogged() && ($this->cart->hasRecurringProducts() || $this->cart->hasDownload()))) {
+			(!$this->customer->isLogged() && ($this->cart->hasRecurringProducts() || $this->cart->hasDownload()))
+		) {
 			$cart_status = false;
 		}
 
