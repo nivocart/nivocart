@@ -286,7 +286,8 @@ class ControllerAccountEdit extends Controller {
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
-			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+		) {
 			$image_base = HTTPS_IMAGE;
 			$catalog_base = HTTPS_SERVER . '/catalog/';
 		} else {
@@ -332,14 +333,17 @@ class ControllerAccountEdit extends Controller {
 		$pdf = (isset($this->request->get['pdf'])) ? true : false;
 
 		// Get Store Logo
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			if ($pdf) {
-				$this->data['logo'] = DIR_IMAGE . $this->config->get('config_logo');
-			} else {
-				$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
-			}
+		$config_logo = $this->config->get('config_logo');
+
+		$logo = ($config_logo && file_exists(DIR_IMAGE . $config_logo)) ? $config_logo : 'data/logo.png';
+
+		$this->data['logo_name'] = pathinfo($logo, PATHINFO_FILENAME);
+		$this->data['logo_ext'] = pathinfo($logo, PATHINFO_EXTENSION);
+
+		if ($pdf) {
+			$this->data['logo'] = DIR_IMAGE . $logo;
 		} else {
-			$this->data['logo'] = '';
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $logo : HTTP_IMAGE . $logo;
 		}
 
 		// Build Customer's data
