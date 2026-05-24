@@ -145,7 +145,7 @@ table.bank {
 <div class="documents">
   <div style="width:420px; border:1px dotted #CCC; padding:18px 0 0 18px;">
   <?php if ($logo) { ?>
-    <img src="<?php echo $image_base; ?>data/logo.png" alt="" style="padding-top:5px;" />
+    <img src="<?php echo $image_base; ?>data/<?php echo $logo_name; ?>.<?php echo $logo_ext; ?>" alt="" style="padding:15px 0 0 5px;" />
   <?php } ?>
   <table class="store" style="width:400px;">
     <tr>

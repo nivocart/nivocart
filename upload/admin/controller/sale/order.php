@@ -3284,10 +3284,18 @@ class ControllerSaleOrder extends Controller {
 			$pdf = (isset($this->request->get['pdf'])) ? true : false;
 		}
 
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
+		// Get Store Logo
+		$config_logo = $this->config->get('config_logo');
+
+		$logo = ($config_logo && file_exists(DIR_IMAGE . $config_logo)) ? $config_logo : 'data/logo.png';
+
+		$this->data['logo_name'] = pathinfo($logo, PATHINFO_FILENAME);
+		$this->data['logo_ext'] = pathinfo($logo, PATHINFO_EXTENSION);
+
+		if ($pdf) {
+			$this->data['logo'] = DIR_IMAGE . $logo;
 		} else {
-			$this->data['logo'] = '';
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $logo : HTTP_IMAGE . $logo;
 		}
 
 		foreach ($orders as $order_id) {
@@ -3438,10 +3446,18 @@ class ControllerSaleOrder extends Controller {
 			$pdf = (isset($this->request->get['pdf'])) ? true : false;
 		}
 
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
+		// Get Store Logo
+		$config_logo = $this->config->get('config_logo');
+
+		$logo = ($config_logo && file_exists(DIR_IMAGE . $config_logo)) ? $config_logo : 'data/logo.png';
+
+		$this->data['logo_name'] = pathinfo($logo, PATHINFO_FILENAME);
+		$this->data['logo_ext'] = pathinfo($logo, PATHINFO_EXTENSION);
+
+		if ($pdf) {
+			$this->data['logo'] = DIR_IMAGE . $logo;
 		} else {
-			$this->data['logo'] = '';
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $logo : HTTP_IMAGE . $logo;
 		}
 
 		foreach ($orders as $order_id) {
@@ -3707,10 +3723,18 @@ class ControllerSaleOrder extends Controller {
 			$pdf = (isset($this->request->get['pdf'])) ? true : false;
 		}
 
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
+		// Get Store Logo
+		$config_logo = $this->config->get('config_logo');
+
+		$logo = ($config_logo && file_exists(DIR_IMAGE . $config_logo)) ? $config_logo : 'data/logo.png';
+
+		$this->data['logo_name'] = pathinfo($logo, PATHINFO_FILENAME);
+		$this->data['logo_ext'] = pathinfo($logo, PATHINFO_EXTENSION);
+
+		if ($pdf) {
+			$this->data['logo'] = DIR_IMAGE . $logo;
 		} else {
-			$this->data['logo'] = '';
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $logo : HTTP_IMAGE . $logo;
 		}
 
 		$this->data['bank_name'] = $this->config->get('config_bank_name') ? $this->config->get('config_bank_name') : '';
@@ -3961,10 +3985,18 @@ class ControllerSaleOrder extends Controller {
 			$pdf = (isset($this->request->get['pdf'])) ? true : false;
 		}
 
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
+		// Get Store Logo
+		$config_logo = $this->config->get('config_logo');
+
+		$logo = ($config_logo && file_exists(DIR_IMAGE . $config_logo)) ? $config_logo : 'data/logo.png';
+
+		$this->data['logo_name'] = pathinfo($logo, PATHINFO_FILENAME);
+		$this->data['logo_ext'] = pathinfo($logo, PATHINFO_EXTENSION);
+
+		if ($pdf) {
+			$this->data['logo'] = DIR_IMAGE . $logo;
 		} else {
-			$this->data['logo'] = '';
+			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $logo : HTTP_IMAGE . $logo;
 		}
 
 		$this->data['bank_name'] = $this->config->get('config_bank_name') ? $this->config->get('config_bank_name') : '';
