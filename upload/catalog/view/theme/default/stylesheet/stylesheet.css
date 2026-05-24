@@ -151,10 +151,10 @@ span.from {
 	width: 100%;
 	margin: 0 10px;
 }
-#container-top .container-top-inner-normal form,
-#container-top .container-top-inner-wide form,
-#container-top .container-top-inner-full form {
-	float: left;
+#container-top .container-top-inner-normal a, #container-top .container-top-inner-normal form,
+#container-top .container-top-inner-wide a, #container-top .container-top-inner-wide form,
+#container-top .container-top-inner-full a, #container-top .container-top-inner-full form {
+	float: right;
 	display: inline;
 }
 /* Language */

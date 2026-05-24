@@ -56,22 +56,22 @@ $(document).ready(function() {
 <body>
 <div id="container-top">
   <div class="container-top-inner-<?php echo $display_size; ?>">
-    <?php echo $language; ?>
-    <?php if ($logged) { ?>
-      <a class="top-link" onclick="location='<?php echo $account; ?>';" title=""><i class="fa fa-user"></i><span class="hide-phone"> &nbsp;<?php echo $text_account; ?></span></a>
-    <?php } else { ?>
-      <a class="top-link" onclick="location='<?php echo $account; ?>';" title=""><i class="fa fa-user"></i><span class="hide-phone"> &nbsp;<?php echo $text_signin; ?></span></a>
-    <?php } ?>
-    <a class="top-link" onclick="location='<?php echo $shopping_cart; ?>';" title=""><i class="fa fa-shopping-cart"></i><span class="hide-phone"> &nbsp;<?php echo $text_shopping_cart; ?></span></a>
-    <a class="top-link" onclick="location='<?php echo $checkout; ?>';" title=""><i class="fa fa-play"></i><span class="hide-phone"> &nbsp;<?php echo $text_checkout; ?></span></a>
+  <a class="top-link" onclick="location='<?php echo $checkout; ?>';" title=""><i class="fa fa-play"></i><span class="hide-phone"> &nbsp;<?php echo $text_checkout; ?></span></a>
+  <a class="top-link" onclick="location='<?php echo $shopping_cart; ?>';" title=""><i class="fa fa-shopping-cart"></i><span class="hide-phone"> &nbsp;<?php echo $text_shopping_cart; ?></span></a>
+<?php if ($logged) { ?>
+  <a class="top-link" onclick="location='<?php echo $account; ?>';" title=""><i class="fa fa-user"></i><span class="hide-phone"> &nbsp;<?php echo $text_account; ?></span></a>
+<?php } else { ?>
+  <a class="top-link" onclick="location='<?php echo $account; ?>';" title=""><i class="fa fa-user"></i><span class="hide-phone"> &nbsp;<?php echo $text_signin; ?></span></a>
+<?php } ?>
+  <?php echo $language; ?>
   </div>
 </div>
 <div id="container">
 <div class="container-<?php echo $display_size; ?>">
 <div id="header">
-  <?php if ($logo) { ?>
-    <div id="logo"><a href="<?php echo $home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" /></a></div>
-  <?php } ?>
+<?php if ($logo) { ?>
+  <div id="logo"><a href="<?php echo $home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" /></a></div>
+<?php } ?>
   <?php echo $cart; ?>
   <div id="header-bottom">
     <div id="search">
