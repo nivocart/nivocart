@@ -1841,7 +1841,7 @@
       <div id="tab-image">
         <table class="form">
           <tr>
-            <td><?php echo $entry_logo; ?></td>
+            <td><?php echo $entry_logo; ?><span class="help"><?php echo $help_logo; ?></span></td>
             <td><div class="image"><img src="<?php echo $logo; ?>" alt="" id="thumb-logo" /><br />
               <input type="hidden" name="config_logo" value="<?php echo $config_logo; ?>" id="logo" />
               <a onclick="image_upload('logo', 'thumb-logo');" class="button-browse"></a><a onclick="$('#thumb-logo').attr('src', '<?php echo $no_image; ?>'); $('#logo').attr('value', '');" class="button-recycle"></a>

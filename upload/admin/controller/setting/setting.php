@@ -408,6 +408,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_notification_review'] = $this->language->get('help_notification_review');
 		$this->data['help_notification_affiliate'] = $this->language->get('help_notification_affiliate');
 		$this->data['help_notification_comment'] = $this->language->get('help_notification_comment');
+		$this->data['help_logo'] = $this->language->get('help_logo');
 		$this->data['help_icon'] = $this->language->get('help_icon');
 		$this->data['help_image_category'] = $this->language->get('help_image_category');
 		$this->data['help_image_thumb'] = $this->language->get('help_image_thumb');

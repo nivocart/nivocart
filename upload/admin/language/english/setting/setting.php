@@ -352,6 +352,7 @@ $_['help_notification_online']      = 'Customer Tracking should also be enabled.
 $_['help_notification_review']      = 'Product Reviews should also be enabled.';
 $_['help_notification_affiliate']   = 'Affiliate Approval should also be enabled';
 $_['help_notification_comment']     = 'Blog System must be installed and article comments auto-approval turned off.';
+$_['help_logo']                     = 'The logo should be a PNG with dimensions similar to the default logo at 280 x 52px.';
 $_['help_icon']                     = 'The icon should be a PNG that is 16 x 16px.';
 $_['help_image_category']           = 'Category image on Category pages.';
 $_['help_image_thumb']              = 'Product Main image on Product pages.';
