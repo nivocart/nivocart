@@ -245,8 +245,8 @@ a.top-link:hover {
 }
 #header #logo {
 	position: absolute;
-	top: 25px;
-	left: 25px;
+	top: 5px;
+	left: 15px;
 }
 #header-bottom {
 	position: absolute;
