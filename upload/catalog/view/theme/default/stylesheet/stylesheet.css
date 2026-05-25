@@ -471,6 +471,30 @@ a.top-link:hover {
 	display: none;
 }
 /* ------------------------------
+ * CONTENT - Content Class
+ * ----------------------------*/
+#content .content {
+	padding: 10px;
+	overflow: auto;
+	margin-bottom: 15px;
+	border: 1px solid #E3E3E3;
+}
+#content .content .left {
+	float: left;
+	width: 49%;
+}
+#content .content .right {
+	float: right;
+	width: 49%;
+}
+#content .heading-description {
+	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+	color: #444;
+	font-size: 13px;
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+/* ------------------------------
  * BREADCRUMBS
  * ----------------------------*/
 .breadcrumb {
@@ -1338,30 +1362,6 @@ ul.box-filter > li ul {
 }
 .panel-collapsed .panel-content {
 	display: none;
-}
-/* ------------------------------
- * CONTENT - Main Blocks
- * ----------------------------*/
-#content .content {
-	padding: 10px;
-	overflow: auto;
-	margin-bottom: 15px;
-	border: 1px solid #E3E3E3;
-}
-#content .content .left {
-	float: left;
-	width: 49%;
-}
-#content .content .right {
-	float: right;
-	width: 49%;
-}
-#content .heading-description {
-	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	color: #444;
-	font-size: 13px;
-	margin-top: 0;
-	margin-bottom: 20px;
 }
 /* ------------------------------
  * TIER PAGES - Categories
@@ -2745,7 +2745,9 @@ table.order-options tr td #payment-method h2 {
 	line-height: 18px;
 	padding: 3px 10px 3px 4px;
 }
-/* Back to top */
+/* ------------------------------
+ * JQUERY Back to top
+ * ----------------------------*/
 #backtotop {
 	position: fixed;
 	bottom: 30px;
