@@ -772,10 +772,10 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			$data[$j++] = $row['model'];
 			$data[$j++] = ($row['manufacturer_name']) ? $row['manufacturer_name'] : '';
 			$data[$j++] = $row['image_name'];
-			$data[$j++] = ($row['shipping'] === 0) ? 'no' : 'yes';
+			$data[$j++] = ($row['shipping'] === 0) ? "NO" : "YES";
 			$data[$j++] = $row['price'];
 			$data[$j++] = $row['cost'];
-			$data[$j++] = ($row['quote'] === 0) ? 'false' : 'true';
+			$data[$j++] = ($row['quote'] === 1) ? "TRUE" : "FALSE";
 			$data[$j++] = $row['age_minimum'];
 			$data[$j++] = $row['points'];
 			$data[$j++] = $row['date_added'];
@@ -788,7 +788,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			$data[$j++] = $row['width'];
 			$data[$j++] = $row['height'];
 			$data[$j++] = $row['length_unit'];
-			$data[$j++] = ($row['status'] === 0) ? 'false' : 'true';
+			$data[$j++] = ($row['status'] === 0) ? "FALSE" : "TRUE";
 			$data[$j++] = $row['tax_class_id'];
 			$data[$j++] = ($row['keyword']) ? $row['keyword'] : '';
 			foreach ($languages as $language) {
