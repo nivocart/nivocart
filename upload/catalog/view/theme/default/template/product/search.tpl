@@ -22,19 +22,19 @@
       <select name="category_id">
         <option value="0"><?php echo $text_category; ?></option>
         <?php foreach ($categories as $category_1) { ?>
-          <?php if ($category_1['category_id'] == $category_id) { ?>
+          <?php if ($category_1['category_id'] === $category_id) { ?>
             <option value="<?php echo $category_1['category_id']; ?>" selected="selected"><?php echo $category_1['name']; ?></option>
           <?php } else { ?>
             <option value="<?php echo $category_1['category_id']; ?>"><?php echo $category_1['name']; ?></option>
           <?php } ?>
           <?php foreach ($category_1['children'] as $category_2) { ?>
-            <?php if ($category_2['category_id'] == $category_id) { ?>
+            <?php if ($category_2['category_id'] === $category_id) { ?>
               <option value="<?php echo $category_2['category_id']; ?>" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category_2['name']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $category_2['category_id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category_2['name']; ?></option>
             <?php } ?>
             <?php foreach ($category_2['children'] as $category_3) { ?>
-              <?php if ($category_3['category_id'] == $category_id) { ?>
+              <?php if ($category_3['category_id'] === $category_id) { ?>
                 <option value="<?php echo $category_3['category_id']; ?>" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category_3['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $category_3['category_id']; ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $category_3['name']; ?></option>
@@ -56,7 +56,7 @@
         <div class="limit"><span class="hide-phone"><?php echo $text_limit; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($limits as $limits) { ?>
-            <?php if ($limits['value'] == $limit) { ?>
+            <?php if ($limits['value'] === $limit) { ?>
               <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
@@ -67,7 +67,7 @@
         <div class="sort"><span class="hide-phone"><?php echo $text_sort; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($sorts as $sorts) { ?>
-            <?php if ($sorts['value'] == $sort . '-' . $order) { ?>
+            <?php if ($sorts['value'] === $sort . '-' . $order) { ?>
               <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
@@ -179,13 +179,13 @@ $('body').on('click', '#button-search', function() {
 });
 
 $('#content input[name=\'search\']').keydown(function(e) {
-	if (e.keyCode == 13) {
+	if (e.keyCode === 13) {
 		$('#button-search').trigger('click');
 	}
 });
 
 function display(view) {
-	if (view == 'list') {
+	if (view === 'list') {
 		$('.product-grid').attr('class', 'product-list');
 
 		$('.product-list > div').each(function(index, element) {
