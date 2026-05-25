@@ -1,8 +1,10 @@
-/* -------------------------
-* NivoCart - Default Styles
-* Copyright © 2026
-* --------------------------
-*/
+/* ------------------------------
+ * NivoCart - Default Stylesheet
+ * Copyright © 2026
+ * ------------------------------
+ * Development Stylesheet
+ * ------------------------------
+ */
 
 @font-face {
   font-family: 'Roboto';
@@ -17,6 +19,9 @@
     url('fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
 }
 
+/* ------------------------------
+ * HTML -> Parameters
+ * ----------------------------*/
 html {
 	overflow-y: scroll;
 	margin: 0;
@@ -131,7 +136,9 @@ samp, small {
 span.from {
 	font-size: 14px;
 }
-/* Container Top */
+/* ------------------------------
+ * HEADER -> Top
+ * ----------------------------*/
 #container-top {
 	width: 100%;
 	height: 40px;
@@ -157,7 +164,7 @@ span.from {
 	float: right;
 	display: inline;
 }
-/* Language */
+/* Language Selector */
 #language {
 	line-height: 40px;
 	margin-right: 22px;
@@ -193,7 +200,9 @@ a.top-link, a.top-link:visited {
 a.top-link:hover {
 	color: #36AAD8;
 }
-/* Container */
+/* ------------------------------
+ * CONTAINER -> Header + Content
+ * ----------------------------*/
 #container {
 	width: 100%;
 	background-color: #FFF;
@@ -461,7 +470,9 @@ a.top-link:hover {
 #menu-phone {
 	display: none;
 }
-/* Breadcrumbs */
+/* ------------------------------
+ * BREADCRUMBS
+ * ----------------------------*/
 .breadcrumb {
 	padding: 0 3px;
 	margin-bottom: 10px;
@@ -476,7 +487,9 @@ a.top-link:hover {
 .breadcrumb a:hover {
 	color: #0D6D98;
 }
-/* Notifications */
+/* ------------------------------
+ * NOTIFICATIONS Classes
+ * ----------------------------*/
 .success, .warning, .attention, .tooltip {
 	color: #555;
 	font-size: 15px;
@@ -506,7 +519,9 @@ a.top-link:hover {
 	padding: 4px 4px 0 0;
 	cursor: pointer;
 }
-/* Common */
+/* ------------------------------
+ * COMMON Classes
+ * ----------------------------*/
 .required {
 	color: #CC2626;
 	font-size: 13px;
@@ -523,7 +538,9 @@ a.top-link:hover {
 .hidden {
 	display: none;
 }
-/* Table */
+/* ------------------------------
+ * TABLE Classes
+ * ----------------------------*/
 table.form {
 	width: 100%;
 	border-collapse: collapse;
@@ -600,7 +617,9 @@ table.radio tr.highlight:hover td {
 	background: #EAFBFF;
 	cursor: pointer;
 }
-/* Pagination */
+/* ------------------------------
+ * Pagination Links
+ * ----------------------------*/
 .pagination {
 	width: 100%;
 	display: inline-block;
@@ -641,7 +660,9 @@ table.radio tr.highlight:hover td {
 	float: right;
 	margin-top: 10px;
 }
-/* Button */
+/* ------------------------------
+ * BUTTON Types
+ * ----------------------------*/
 a.button, input.button, button.button, input.button-cart, input.button-wrap-add, input.button-wrap-remove {
 	color: #FFF;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
@@ -757,7 +778,9 @@ a.button-add {
 a.button-add:hover {
 	color: #3782BF;
 }
-/* Buttons */
+/* ------------------------------
+ * BUTTONS - Box
+ * ----------------------------*/
 .buttons {
 	width: 100%;
 	background: #FCFCFC;
@@ -788,7 +811,9 @@ a.button-add:hover {
 	margin-left: auto;
 	margin-right: auto;
 }
-/* Htabs */
+/* ------------------------------
+ * TABS - Horizontal
+ * ----------------------------*/
 .htabs {
 	height: 32px;
 	line-height: 16px;
@@ -830,7 +855,9 @@ a.button-add:hover {
 	overflow: auto;
 	z-index: 2;
 }
-/* Box */
+/* ------------------------------
+ * BOXES -> Heading + Content
+ * ----------------------------*/
 .box {
 	margin-bottom: 15px;
 }
@@ -1220,7 +1247,9 @@ ul.box-filter > li ul {
 	font-size: 10px;
 	margin-bottom: 3px;
 }
-/* News Content Info */
+/* ------------------------------
+ * NEWS Content
+ * ----------------------------*/
 .content-info {
 	background: #FFF;
 	border: 1px dotted #DDD;
@@ -1260,7 +1289,9 @@ ul.box-filter > li ul {
 .news-download li {
 	margin: 10px 0;
 }
-/* Collapsible Panel */
+/* ------------------------------
+ * COLLAPSIBLE PANELS
+ * ----------------------------*/
 .panel, .panel-collapsed {
 	width: 100%;
 	background: #FAFAFA;
@@ -1308,7 +1339,9 @@ ul.box-filter > li ul {
 .panel-collapsed .panel-content {
 	display: none;
 }
-/* Content */
+/* ------------------------------
+ * CONTENT - Main Blocks
+ * ----------------------------*/
 #content .content {
 	padding: 10px;
 	overflow: auto;
@@ -1330,7 +1363,9 @@ ul.box-filter > li ul {
 	margin-top: 0;
 	margin-bottom: 20px;
 }
-/* List Pages */
+/* ------------------------------
+ * TIER PAGES - Categories
+ * ----------------------------*/
 .tier-page {
 	width: 100%;
 	overflow: auto;
@@ -1418,7 +1453,9 @@ ul.box-filter > li ul {
 .category-list > ul.refine > li a:hover {
 	color: #0D6D98;
 }
-/* Manufacturer */
+/* ------------------------------
+ * MANUFACTURER List
+ * ----------------------------*/
 .manufacturer-list {
 	border: 1px solid #DBDEE1;
 	padding: 5px;
@@ -1449,7 +1486,9 @@ ul.box-filter > li ul {
 	padding: 0 25px 0 5px;
 	list-style: none;
 }
-/* Product filter */
+/* ------------------------------
+ * PRODUCT - All Classes
+ * ----------------------------*/
 .product-filter {
 	border-bottom: 1px solid #E3E3E3;
 	padding: 0 0 5px 0;
@@ -2145,7 +2184,9 @@ ul.box-filter > li ul {
 .wishlist-info tbody .action img {
 	cursor: pointer;
 }
-/* Login */
+/* ------------------------------
+ * LOGIN - Customer/Affiliate
+ * ----------------------------*/
 .login-content {
 	margin-bottom: 20px;
 	overflow: auto;
@@ -2163,7 +2204,9 @@ ul.box-filter > li ul {
 .login-content .left .content, .login-content .right .content {
 	min-height: 230px;
 }
-/* Orders */
+/* ------------------------------
+ * ORDERS
+ * ----------------------------*/
 .order-list {
 	margin-bottom: 10px;
 }
@@ -2197,7 +2240,9 @@ ul.box-filter > li ul {
 	background: #EFEFEF;
 	font-weight: bold;
 }
-/* Returns */
+/* ------------------------------
+ * RETURNS
+ * ----------------------------*/
 .return-list {
 	margin-bottom: 10px;
 }
@@ -2263,7 +2308,9 @@ ul.box-filter > li ul {
 	float: left;
 	display: block;
 }
-/* Captcha */
+/* ------------------------------
+ * SESSION CAPTCHA
+ * ----------------------------*/
 #captcha-wrap {
 	width: 270px;
 	height: 108px;
@@ -2321,7 +2368,9 @@ ul.box-filter > li ul {
 	margin-top: 6px;
 	margin-right: 1px;
 }
-/* Downloads */
+/* ------------------------------
+ * DOWNLOADS - Digital Products
+ * ----------------------------*/
 .download-list {
 	margin-bottom: 10px;
 }
@@ -2351,7 +2400,9 @@ ul.box-filter > li ul {
 .download-list .download-info {
 	text-align: right;
 }
-/* Cart */
+/* ------------------------------
+ * CART Table
+ * ----------------------------*/
 .cart-info table {
 	width: 100%;
 	margin-bottom: 15px;
@@ -2419,7 +2470,9 @@ ul.box-filter > li ul {
 	padding: 3px;
 	text-align: right;
 }
-/* Checkout */
+/* ------------------------------
+ * CHECKOUT Classes
+ * ----------------------------*/
 .checkout-heading {
 	padding: 9px 8px;
 	margin-bottom: 15px;
@@ -2551,7 +2604,9 @@ table.order-options tr td #payment-method h2 {
 .spacer {
 	width: 3%;
 }
-/* Contact */
+/* ------------------------------
+ * CONTACT Page
+ * ----------------------------*/
 .contact-info {
 	width: 100%;
 	overflow: auto;
@@ -2569,7 +2624,9 @@ table.order-options tr td #payment-method h2 {
 	min-width: 170px;
 	margin-left: 20px;
 }
-/* Search */
+/* ------------------------------
+ * SEARCH Page
+ * ----------------------------*/
 .search-bar {
 	background-color: #EDEDED;
 	border: 1px solid #CCC;
@@ -2580,7 +2637,9 @@ table.order-options tr td #payment-method h2 {
 	padding: 12px;
 	overflow: hidden;
 }
-/* Sitemap */
+/* ------------------------------
+ * SITEMAP Page
+ * ----------------------------*/
 .sitemap-info {
 	overflow: auto;
 	margin-bottom: 30px;
@@ -2625,7 +2684,9 @@ table.order-options tr td #payment-method h2 {
 .sitemap-info .left > ul > li ul > li ul > li, .sitemap-info .right > ul > li ul > li ul > li {
 	margin: 2px 0;
 }
-/* Labels */
+/* ------------------------------
+ * OFFER LABELS
+ * ----------------------------*/
 .stock-large, .offer-large, .special-large {
 	position: relative;
 	top: 0;
@@ -2670,7 +2731,9 @@ table.order-options tr td #payment-method h2 {
 	border: 0;
 	overflow: hidden;
 }
-/* Autocomplete */
+/* ------------------------------
+ * JQUERY Autocomplete
+ * ----------------------------*/
 .ui-autocomplete {
 	max-height: 300px;
 	overflow-y: scroll;
@@ -2713,6 +2776,9 @@ table.order-options tr td #payment-method h2 {
 	text-align: right;
 	margin-top: 8px;
 }
+/* ------------------------------
+ * RESPONSIVE Pages
+ * ----------------------------*/
 /* Laptops - Small */
 @media only screen and (min-width: 961px) and (max-width: 1281px) {
 	#container-top .container-top-inner-normal,
