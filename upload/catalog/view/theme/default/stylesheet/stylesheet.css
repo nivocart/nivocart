@@ -677,6 +677,7 @@ input.button, input.button-danger, button.button {
 	font-weight: bold;
 	line-height: 16px;
 }
+/* Button Cart */
 input.button-cart {
 	position: relative;
 	top: 0;
@@ -688,6 +689,7 @@ input.button-cart {
 	line-height: 16px;
 	border: 0;
 }
+/* Button Wrap */
 input.button-wrap-add, input.button-wrap-remove, input.button-wrap-add:hover, input.button-wrap-remove:hover {
 	border: 0;
 	height: 24px;
@@ -1340,10 +1342,11 @@ ul.box-filter > li ul {
 }
 .tier-page ul li {
 	text-decoration: none;
+	padding: 2px 0;
 }
 .tier-page ul li a {
 	text-decoration: none;
-	font-size: 13px;
+	font-size: 15px;
 	color: #333;
 }
 .tier-page ul li a:hover {
@@ -1358,7 +1361,7 @@ ul.box-filter > li ul {
 }
 .tier-page ul li.head a, .tier-page div.head a {
 	text-decoration: none;
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: normal;
 	text-shadow: 0 1px 0 #FCFCFC;
 	color: #333;
@@ -1401,12 +1404,16 @@ ul.box-filter > li ul {
 	width: 22%;
 	list-style: none;
 	padding-left: 20px;
-	margin: 0;
+	margin: 10px 0;
+}
+.category-list > ul.refine > li {
+	padding: 5px 10px;
 }
 .category-list > ul.refine > li a {
 	text-decoration: none;
-	line-height: 17px;
-	font-size: 15px;
+	line-height: 18px;
+	font-size: 16px;
+	color: #222;
 }
 .category-list > ul.refine > li a:hover {
 	color: #0D6D98;
