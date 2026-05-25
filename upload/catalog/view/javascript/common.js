@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 	// Ajax Cart
 	$('#cart').on('click', '.heading', function() {
-		$('#cart').load('index.php?route=module/cart');
+		$('#cart').load('index.php?route=node/cart');
 		$('#cart').addClass("active");
 		$('#cart').find('.content').stop(false, true).slideDown('slow');
 		$('#cart').mouseleave(function() {

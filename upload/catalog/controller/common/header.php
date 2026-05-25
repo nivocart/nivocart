@@ -20,11 +20,6 @@ class ControllerCommonHeader extends Controller {
 			$server = $this->config->get('config_url');
 		}
 
-		// Check if the Customer session is secure
-		if (!$this->customer->isSecure() || $this->customer->loginExpired()) {
-			$this->customer->logout();
-		}
-
 		// Check if the Affiliate session is secure
 		if ((!$this->affiliate->isSecure()) || ($this->affiliate->loginExpired())) {
 			$this->affiliate->logout();

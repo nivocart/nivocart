@@ -10,11 +10,6 @@ class ControllerNodeCart extends Controller {
 	public function index() {
 		$this->language->load('node/cart');
 
-		// Check if the Customer session is secure
-		if (!$this->customer->isSecure() || $this->customer->loginExpired()) {
-			$this->customer->logout();
-		}
-
 		if (isset($this->request->get['remove'])) {
 			$this->cart->remove($this->request->get['remove']);
 
