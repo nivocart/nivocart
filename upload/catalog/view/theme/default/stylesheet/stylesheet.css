@@ -39,7 +39,7 @@ body {
 body, td, th, input, textarea, select, a {
 	color: #111;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	font-size: 14px;
+	font-size: 15px;
 }
 h1, .welcome {
 	color: #636E75;
@@ -65,7 +65,7 @@ h3 {
 p {
 	color: #111;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
-	font-size: 14px;
+	font-size: 15px;
 	word-wrap: normal;
 	margin: 0 0 20px 0;
 }
