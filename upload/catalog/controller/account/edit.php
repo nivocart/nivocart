@@ -323,8 +323,6 @@ class ControllerAccountEdit extends Controller {
 		$this->data['text_zone_code'] = $this->language->get('text_zone_code');
 		$this->data['text_country'] = $this->language->get('text_country');
 
-		$this->data['token'] = $this->session->data['token'];
-
 		$this->load->model('account/customer');
 		$this->load->model('account/address');
 		$this->load->model('setting/setting');
