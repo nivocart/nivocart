@@ -8,7 +8,7 @@
  */
 
 (function($) {
-$.fn.printPage = function(options) {
+	$.fn.printPage = function(options) {
 	var pluginOptions = {
 		url: false,
 		attr: "href",
@@ -32,7 +32,7 @@ $.fn.printPage = function(options) {
 		$("#printMessageBox").animate({opacity:1}, 300, function() { addIframeToPage(el, pluginOptions); });
 	}
 	/**
-	* Inject iframe into document and attempt to hide, it, can't use display:none
+	* Inject iframe into document and attempt to hide, it can't use display:none
 	* You can't print if the element is not displayed
 	* param {jQuery} el - The button calling the plugin
 	* param {Object} pluginOptions - options for this print button
@@ -50,10 +50,9 @@ $.fn.printPage = function(options) {
 		}
 	}
 	/*
-	* Call the print browser functionality, focus is needed for IE
+	* Call the print browser functionality
 	*/
 	function printIt() {
-		frames["printPage"].focus();
 		frames["printPage"].print();
 		unloadMessage();
 	}
@@ -73,8 +72,8 @@ $.fn.printPage = function(options) {
 			return '<iframe id="printPage" name="printPage" src=' + url + ' style="position:absolute; top:0; left:0; width:0; height:0; border:0; overflow:none; z-index:-1;"></iframe>';
 		},
 		messageBox: function(message) {
-			return "<div id='printMessageBox' style='position:fixed; top:50%; left:50%; text-align:center; line-height:90px; margin:-50px 0 0 -155px; width:310px; height:100px; font-size:16px; padding:10px; color:#333; font-family:Arial, Helvetica, sans-serif; opacity:0; background:#FFF; border:2px solid #777; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px; -khtml-border-radius:5px; box-shadow:0 0 5px #999; -webkit-box-shadow:0 0 5px #999; -moz-box-shadow:0 0 5px #999;'>" + message + "</div>";
+			return "<div id='printMessageBox' style='position:fixed; top:50%; left:50%; text-align:center; line-height:90px; margin:-50px 0 0 -155px; width:310px; height:100px; font-size:16px; padding:10px; color:#333; font-family:Arial, Helvetica, sans-serif; opacity:0; background:#FFF; border:2px solid #777; border-radius:5px; box-shadow:0 0 5px #999;'>" + message + "</div>";
 		}
 	}
-};
+	};
 })(jQuery);
