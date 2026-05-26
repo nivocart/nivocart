@@ -122,69 +122,106 @@ class ModelLocalisationCurrency extends Model {
 		}
 	}
 
-	//----------------------------------------------------------------------------------
-	// FloatRates follows 148 currencies using 19 data sources.
-	//
-	// Example USD: http://www.floatrates.com/daily/usd.xml
-	//
-	// Example XML Response:
-	// ---------------------
-	// <item>
-	//	<title>1 USD = 0.81253219 EUR</title>
-	//	<link>http://www.floatrates.com/usd/eur/</link>
-	//	<description>1 U.S. Dollar = 0.81253219 Euro</description>
-	//	<pubDate>Mon, 12 Mar 2018 12:00:01 GMT</pubDate>
-	//	<baseCurrency>USD</baseCurrency>
-	//	<baseName>U.S. Dollar</baseName>
-	//	<targetCurrency>EUR</targetCurrency>
-	//	<targetName>Euro</targetName>
-	//	<exchangeRate>0.81253219</exchangeRate>
-	// </item>
-	//----------------------------------------------------------------------------------
-
+	/** --------------------------------------------------------------------------------
+	 * FloatRates follows 148 currencies using 19 data sources.
+	 *
+	 * Example USD: http://www.floatrates.com/daily/usd.xml
+	 *
+	 * Example XML Response:
+	 * <item>
+	 *	<title>1 USD = 0.81253219 EUR</title>
+	 *	<link>https://www.floatrates.com/usd/eur/</link>
+	 *	<description>1 U.S. Dollar = 0.81253219 Euro</description>
+	 *	<pubDate>Mon, 12 Mar 2018 12:00:01 GMT</pubDate>
+	 *	<baseCurrency>USD</baseCurrency>
+	 *	<baseName>U.S. Dollar</baseName>
+	 *	<targetCurrency>EUR</targetCurrency>
+	 *	<targetName>Euro</targetName>
+	 *	<exchangeRate>0.81253219</exchangeRate>
+	 * </item>
+	 * ----------------------------------------------------------------------------------
+	 */
 	public function updateCurrencies($default = '') {
 		$default = $this->config->get('config_currency');
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . trim($default) . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` WHERE code != '" . trim($default) . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
 
-		if ($query->rows) {
-			$currencies = [];
-
-			$file_url = 'http://www.floatrates.com/daily/' . mb_strtolower($default, 'UTF-8') . '.xml';
-
-			$file_exists = $this->checkFileExists($file_url);
-
-			$data = [
-				'sort'  => 'code',
-				'order' => 'ASC'
-			];
-
-			$results = $this->getCurrencies($data);
-
-			if ($results && $file_exists) {
-				foreach ($results as $result) {
-					if ($result['code'] !== mb_strtoupper($default, 'UTF-8')) {
-						$currencies[] = $result['code'];
-					}
-				}
-
-				if (!empty($currencies)) {
-					$xml = simplexml_load_file($file_url);
-
-					foreach ($xml->children() as $response) {
-						if (in_array($response->targetCurrency, $currencies)) {
-							$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . $response->exchangeRate . "', date_modified = NOW() WHERE `code` = '" . mb_strtoupper($response->targetCurrency, 'UTF-8') . "'");
-						}
-					}
-				}
-
-				$this->cache->delete('currency');
-			}
-
-			$this->editValueByCode($default, '1.000000');
-		} else {
+		if (!$query->rows) {
 			return;
 		}
+
+		$file_url = 'https://www.floatrates.com/daily/' . strtolower($default) . '.xml';
+
+		// --- CONNECTIVITY CHECK ---
+		// Use cURL with a short timeout to verify the remote host is reachable
+		// before attempting any XML load. This prevents fatal errors on login
+		// when the internet is down or floatrates.com is unavailable.
+		$ch = curl_init($file_url);
+
+		curl_setopt_array($ch, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_NOBODY         => true,   // HEAD request — don't download the body
+			CURLOPT_TIMEOUT        => 5,      // Max 5 seconds to wait
+			CURLOPT_CONNECTTIMEOUT => 5,      // Max 5 seconds to connect
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_SSL_VERIFYPEER => true,
+		]);
+
+		curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$curl_error = curl_errno($ch);
+		curl_close($ch);
+
+		// If cURL failed (no network) or HTTP status is not 200, abort silently
+		if ($curl_error || $http_code !== 200) {
+			return;
+		}
+		// --- END CONNECTIVITY CHECK ---
+
+		$data = [
+			'sort'  => 'code',
+			'order' => 'ASC'
+		];
+
+		$results = $this->getCurrencies($data);
+
+		if (!$results) {
+			return;
+		}
+
+		$currencies = [];
+
+		foreach ($results as $result) {
+			if ($result['code'] != strtoupper($default)) {
+				$currencies[] = $result['code'];
+			}
+		}
+
+		if (empty($currencies)) {
+			return;
+		}
+
+		// Suppress warnings and catch any XML parse failure gracefully
+		libxml_use_internal_errors(true);
+
+		$xml = simplexml_load_file($file_url);
+
+		if ($xml === false) {
+			libxml_clear_errors();
+			return;
+		}
+
+		foreach ($xml->children() as $response) {
+			if (in_array($response->targetCurrency, $currencies)) {
+				$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . $response->exchangeRate . "', date_modified = NOW() WHERE code = '" . strtoupper($response->targetCurrency) . "'");
+			}
+		}
+
+		libxml_use_internal_errors(false);
+
+		$this->cache->delete('currency');
+
+		$this->editValueByCode($default, '1.000000');
 	}
 
 	//----------------------------------------------------------------------------------
