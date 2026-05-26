@@ -1,4 +1,7 @@
 <?php
+/*
+ CrossDomain v2.0.0 | @nivocart | NivoCart | GPL v3.0
+*/
 header('P3P: CP="CAO COR CURa ADMa DEVa OUR IND ONL COM DEM PRE"');
 
 if (isset($_GET['session_id'])) {
