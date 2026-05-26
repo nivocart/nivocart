@@ -490,9 +490,10 @@ a.top-link:hover {
 #content .heading-description {
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	color: #444;
-	font-size: 13px;
+	font-size: 15px;
 	margin-top: 0;
 	margin-bottom: 20px;
+	padding-left: 8px;
 }
 /* ------------------------------
  * BREADCRUMBS
