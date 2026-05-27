@@ -1,4 +1,4 @@
-/* -----------------------------------
+/** ----------------------------------
 * NivoCart - Menu RTL
 * Copyright © 2026
 * ------------------------------------
@@ -17,7 +17,7 @@
     url('../fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
 }
 
-#menu-holder, #menu-holder .menu-rtl { }
+#menu-holder, #menu-holder .menu-rtl {}
 .menu-rtl #menu {
 	min-height: 45px;
 	padding: 0 5px 0 0;
