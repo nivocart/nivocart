@@ -139,7 +139,7 @@ class ControllerPaymentPPExpress extends Controller {
 			$this->session->data['comment'] = $response['PAYMENTREQUEST_0_NOTETEXT'];
 		}
 
-		if ($this->session->data['paypal']['guest'] == true) {
+		if ($this->session->data['paypal']['guest'] === true) {
 
 			$this->session->data['guest']['customer_group_id'] = $this->config->get('config_customer_group_id');
 			$this->session->data['guest']['firstname'] = trim($response['FIRSTNAME']);
@@ -293,7 +293,7 @@ class ControllerPaymentPPExpress extends Controller {
 				$match = false;
 
 				foreach ($addresses as $address) {
-					if (trim(strtolower($address['address_1'])) == trim(strtolower($response['PAYMENTREQUEST_0_SHIPTOSTREET'])) && trim(strtolower($address['postcode'])) == trim(strtolower($response['PAYMENTREQUEST_0_SHIPTOZIP']))) {
+					if (trim(strtolower($address['address_1'])) === trim(strtolower($response['PAYMENTREQUEST_0_SHIPTOSTREET'])) && trim(strtolower($address['postcode'])) === trim(strtolower($response['PAYMENTREQUEST_0_SHIPTOZIP']))) {
 						$match = true;
 
 						$this->session->data['payment_address_id'] = $address['address_id'];
@@ -366,7 +366,6 @@ class ControllerPaymentPPExpress extends Controller {
 		// Coupon
 		if (isset($this->request->post['coupon']) && $this->validateCoupon()) {
 			$this->session->data['coupon'] = $this->request->post['coupon'];
-
 			$this->session->data['success'] = $this->language->get('text_coupon');
 
 			$this->redirect($this->url->link('payment/pp_express/expressConfirm', '', 'SSL'));
@@ -375,7 +374,6 @@ class ControllerPaymentPPExpress extends Controller {
 		// Voucher
 		if (isset($this->request->post['voucher']) && $this->validateVoucher()) {
 			$this->session->data['voucher'] = $this->request->post['voucher'];
-
 			$this->session->data['success'] = $this->language->get('text_voucher');
 
 			$this->redirect($this->url->link('payment/pp_express/expressConfirm', '', 'SSL'));
@@ -384,7 +382,6 @@ class ControllerPaymentPPExpress extends Controller {
 		// Reward
 		if (isset($this->request->post['reward']) && $this->validateReward()) {
 			$this->session->data['reward'] = abs($this->request->post['reward']);
-
 			$this->session->data['success'] = $this->language->get('text_reward');
 
 			$this->redirect($this->url->link('payment/pp_express/expressConfirm', '', 'SSL'));
@@ -487,7 +484,7 @@ class ControllerPaymentPPExpress extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -1038,7 +1035,7 @@ class ControllerPaymentPPExpress extends Controller {
 				foreach ($this->session->data['vouchers'] as $voucher) {
 					$voucher_data[] = [
 						'description'      => $voucher['description'],
-						'code'             => substr(md5(mt_rand()), 0, 10),
+						'code'             => substr(bin2hex(random_bytes(16)), 0, 10),
 						'to_name'          => $voucher['to_name'],
 						'to_email'         => $voucher['to_email'],
 						'from_name'        => $voucher['from_name'],
@@ -1733,10 +1730,9 @@ class ControllerPaymentPPExpress extends Controller {
 				$this->model_payment_pp_express->log('Transaction exists', 'IPN data');
 
 				// If the transaction is pending but the new status is completed
-				if ($transaction['payment_status'] != $this->request->post['payment_status']) {
+				if ($transaction['payment_status'] !== $this->request->post['payment_status']) {
 					$this->model_payment_pp_express->updateTransactionStatus($transaction['transaction_id'], $this->request->post['payment_status']);
-
-				} elseif ($transaction['payment_status'] == 'Pending' && ($transaction['pending_reason'] != $this->request->post['pending_reason'])) {
+				} elseif ($transaction['payment_status'] === 'Pending' && ($transaction['pending_reason'] !== $this->request->post['pending_reason'])) {
 					// Payment is still pending but the pending reason has changed, update it
 					$this->model_payment_pp_express->updateTransactionPendingReason($transaction['transaction_id'], $this->request->post['pending_reason']);
 				}
@@ -1779,10 +1775,12 @@ class ControllerPaymentPPExpress extends Controller {
 					if (isset($this->request->post['auth_status']) && $this->request->post['auth_status'] == 'Completed' && $parent_transaction['payment_status'] == 'Pending') {
 						$captured = $this->model_payment_pp_express->getTotalCaptured($parent_transaction['paypal_order_id']);
 						$refunded = $this->model_payment_pp_express->getTotalRefunded($parent_transaction['paypal_order_id']);
+
 						$remaining = $parent_transaction['amount'] - $captured + $refunded;
 
 						$captured_formated = $this->currency->format($captured, false, false, false);
 						$refunded_formated = $this->currency->format($refunded, false, false, false);
+
 						$remaining_formated = $this->currency->format($remaining, false, false, false);
 
 						$this->model_payment_pp_express->log('Captured: ' . $captured_formated, 'IPN data');
@@ -1823,117 +1821,117 @@ class ControllerPaymentPPExpress extends Controller {
 				$this->model_payment_pp_express->log($this->request->post['txn_type'], 'IPN data');
 
 				// Payment
-				if ($this->request->post['txn_type'] == 'recurring_payment') {
+				if ($this->request->post['txn_type'] === 'recurring_payment') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
 					$this->model_payment_pp_express->log($profile, 'IPN data');
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 1, $this->request->post['amount']);
 
 						// As there was a payment the profile is active, ensure it is set to active (may be been suspended before)
-						if ($profile['status'] != 1) {
+						if ($profile['status'] !== 1) {
 							$this->model_account_recurring->updateOrderRecurringStatus($profile['order_recurring_id'], 2);
 						}
 					}
 				}
 
 				// Suspend
-				if ($this->request->post['txn_type'] == 'recurring_payment_suspended') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_suspended') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 6);
 						$this->model_account_recurring->updateOrderRecurringStatus($profile['order_recurring_id'], 3);
 					}
 				}
 
 				// Suspend due to max failed
-				if ($this->request->post['txn_type'] == 'recurring_payment_suspended_due_to_max_failed_payment') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_suspended_due_to_max_failed_payment') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 7);
 						$this->model_account_recurring->updateOrderRecurringStatus($profile['order_recurring_id'], 3);
 					}
 				}
 
 				// Payment failed
-				if ($this->request->post['txn_type'] == 'recurring_payment_failed') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_failed') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 4);
 					}
 				}
 
 				// Outstanding payment failed
-				if ($this->request->post['txn_type'] == 'recurring_payment_outstanding_payment_failed') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_outstanding_payment_failed') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 8);
 					}
 				}
 
 				// Outstanding payment
-				if ($this->request->post['txn_type'] == 'recurring_payment_outstanding_payment') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_outstanding_payment') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 2, $this->request->post['amount']);
 
 						// As there was a payment the profile is active, ensure it is set to active (may be been suspended before)
-						if ($profile['status'] != 1) {
+						if ($profile['status'] !== 1) {
 							$this->model_account_recurring->updateOrderRecurringStatus($profile['order_recurring_id'], 2);
 						}
 					}
 				}
 
 				// Created
-				if ($this->request->post['txn_type'] == 'recurring_payment_profile_created') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_profile_created') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 0);
 
-						if ($profile['status'] != 1) {
+						if ($profile['status'] !== 1) {
 							$this->model_account_recurring->updateOrderRecurringStatus($profile['order_recurring_id'], 2);
 						}
 					}
 				}
 
 				// Cancelled
-				if ($this->request->post['txn_type'] == 'recurring_payment_profile_cancel') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_profile_cancel') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false && $profile['status'] != 3) {
+					if ($profile !== false && $profile['status'] !== 3) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 5);
 						$this->model_account_recurring->updateOrderRecurringStatus($profile['order_recurring_id'], 4);
 					}
 				}
 
 				// Skipped
-				if ($this->request->post['txn_type'] == 'recurring_payment_skipped') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_skipped') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 3);
 					}
 				}
 
 				// Expired
-				if ($this->request->post['txn_type'] == 'recurring_payment_expired') {
+				if ($this->request->post['txn_type'] === 'recurring_payment_expired') {
 					$profile = $this->model_account_recurring->getProfileByRef($this->request->post['recurring_payment_id']);
 
-					if ($profile != false) {
+					if ($profile !== false) {
 						$this->model_account_recurring->addOrderRecurringTransaction($profile['order_recurring_id'], 9);
 						$this->model_account_recurring->updateOrderRecurringStatus($profile['order_recurring_id'], 5);
 					}
 				}
 			}
 
-		} elseif ((string)$response == "INVALID") {
+		} elseif ((string)$response === "INVALID") {
 			$this->model_payment_pp_express->log(['IPN was invalid'], 'IPN fail');
 
 		} else {

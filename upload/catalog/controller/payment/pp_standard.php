@@ -53,8 +53,8 @@ class ControllerPaymentPPStandard extends Controller {
 					}
 
 					$option_data[] = [
-						'name'  => (utf8_strlen($option['name']) > 64 ? utf8_substr($option['name'], 0, 62) . '..' : $option['name']),
-						'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
+						'name'  => (mb_strlen($option['name'], 'UTF-8') > 64 ? substr($option['name'], 0, 62) . '..' : $option['name']),
+						'value' => (mb_strlen($value, 'UTF-8') > 20 ? substr($value, 0, 20) . '..' : $value)
 					];
 				}
 

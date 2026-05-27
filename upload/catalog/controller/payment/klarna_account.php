@@ -90,13 +90,7 @@ class ControllerPaymentKlarnaAccount extends Controller {
 
 					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
 
-					$amount = 0;
-
-					foreach ($taxes as $tax_id => $value) {
-						$amount += $value;
-					}
-
-					$klarna_tax[$result['code']] = $amount;
+					$klarna_tax[$result['code']] = array_sum($taxes);
 				}
 			}
 
@@ -118,7 +112,19 @@ class ControllerPaymentKlarnaAccount extends Controller {
 			$this->session->data['klarna'][$this->session->data['order_id']] = $total_data;
 
 			// Order must have identical shipping and billing address or have no shipping address at all
-			if ($this->cart->hasShipping() && !($order_info['payment_firstname'] === $order_info['shipping_firstname'] && $order_info['payment_lastname'] === $order_info['shipping_lastname'] && $order_info['payment_address_1'] === $order_info['shipping_address_1'] && $order_info['payment_address_2'] === $order_info['shipping_address_2'] && $order_info['payment_postcode'] === $order_info['shipping_postcode'] && $order_info['payment_city'] === $order_info['shipping_city'] && $order_info['payment_zone_id'] === $order_info['shipping_zone_id'] && $order_info['payment_zone_code'] === $order_info['shipping_zone_code'] && $order_info['payment_country_id'] === $order_info['shipping_country_id'] && $order_info['payment_country'] === $order_info['shipping_country'] && $order_info['payment_iso_code_3'] === $order_info['shipping_iso_code_3'])) {
+			if ($this->cart->hasShipping()
+				&& !($order_info['payment_firstname'] === $order_info['shipping_firstname']
+				&& $order_info['payment_lastname'] === $order_info['shipping_lastname']
+				&& $order_info['payment_address_1'] === $order_info['shipping_address_1']
+				&& $order_info['payment_address_2'] === $order_info['shipping_address_2']
+				&& $order_info['payment_postcode'] === $order_info['shipping_postcode']
+				&& $order_info['payment_city'] === $order_info['shipping_city']
+				&& $order_info['payment_zone_id'] === $order_info['shipping_zone_id']
+				&& $order_info['payment_zone_code'] === $order_info['shipping_zone_code']
+				&& $order_info['payment_country_id'] === $order_info['shipping_country_id']
+				&& $order_info['payment_country'] === $order_info['shipping_country']
+				&& $order_info['payment_iso_code_3'] === $order_info['shipping_iso_code_3'])
+			) {
 				$this->data['error_warning'] = $this->language->get('error_address_match');
 			} else {
 				$this->data['error_warning'] = '';
