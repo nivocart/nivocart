@@ -153,7 +153,7 @@ class ModelSaleSupplierProduct extends Model {
 
 		foreach ($query->rows as $result) {
 			if ($selected) {
-				foreach ($products as $product_id) {
+				foreach ($products as $supplier_product_id) {
 					$this->db->query("UPDATE `" . DB_PREFIX . "supplier_product` SET price = '" . $this->db->escape((float)$price) . "', date_modified = NOW() WHERE supplier_product_id = '" . (int)$supplier_product_id . "'");
 				}
 			} else {
