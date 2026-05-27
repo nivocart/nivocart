@@ -35,7 +35,7 @@
 	padding-left: 27px;
 	margin-right: 12px;
 }
-/* Workspace */
+/** Workspace */
 .workspace {
 	width: 100%;
 	background: rgba(119, 119, 119, 0.2);
@@ -44,7 +44,7 @@
 	border: none;
 	border-radius: 0 0 2px 2px;
 }
-/* Columns */
+/** Columns */
 #column-left {
 	background: #FAFAFA;
 	border: 1px solid #CCC;
@@ -95,7 +95,7 @@
 #dialog {
 	display: none;
 }
-/* Buttons */
+/** Buttons */
 .filemanager-button {
 	display: block;
 	float: left;
@@ -112,7 +112,7 @@
 	border-radius: 2px;
 	text-decoration: none;
 }
-/* Images */
+/** Images */
 .thumb {
 	padding: 5px;
 	width: 105px;
@@ -142,7 +142,7 @@
 	background-position: 0 0;
 	background-color: #EFEFEF;
 }
-/* Filter */
+/** Filter */
 .filter {
 	position: relative;
 	clear: left;
@@ -172,7 +172,7 @@
 	line-height: 20px;
 	margin-right: 2px;
 }
-/* Tools */
+/** Tools */
 #toolset {
 	clear: both;
 }
@@ -204,9 +204,13 @@ span.branding a {
 	color: #269BC6;
 }
 
-/* Tablets */
+/** Tablets */
 @media only screen and (min-width: 640px) and (max-width: 790px) {
+	#column-left {
+		height: 367px;
+	}
 	#column-right {
+		height: 400px;
 		width: 73%;
 		margin-right: 3px;
 	}
@@ -214,9 +218,13 @@ span.branding a {
 		padding: 7px 4px 7px 24px;
 	}
 }
-/* Phones */
+/** Phones */
 @media only screen and (max-width: 640px) {
+	#column-left {
+		height: 367px;
+	}
 	#column-right {
+		height: 400px;
 		width: 73%;
 		margin-right: 1px;
 	}

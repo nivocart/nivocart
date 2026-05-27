@@ -79,7 +79,7 @@ img {
 #dialog {
 	display: none;
 }
-/* Buttons */
+/** Buttons */
 .filemanager-button {
 	display: block;
 	float: left;
@@ -91,7 +91,7 @@ img {
 	text-decoration: none;
 	cursor: pointer;
 }
-/* Images */
+/** Images */
 .thumb {
 	padding: 5px;
 	width: 90px;
@@ -121,7 +121,7 @@ img {
 	background-position: 0 0;
 	background-color: #EFEFEF;
 }
-/* Filter */
+/** Filter */
 .filter {
 	position: relative;
 	clear: left;
@@ -150,7 +150,7 @@ img {
 	line-height: 20px;
 	margin-right: 2px;
 }
-/* Tools */
+/** Tools */
 #toolset {
 	clear: both;
 }
@@ -181,13 +181,13 @@ span.branding a {
 	color: #269BC6;
 }
 
-/* Tablets */
+/** Tablets */
 @media only screen and (min-width: 640px) and (max-width: 790px) {
 	.filemanager-button {
 		padding: 7px 4px 7px 24px;
 	}
 }
-/* Phones */
+/** Phones */
 @media only screen and (max-width: 640px) {
 	.filemanager-button {
 		padding: 7px 2px 7px 22px;
