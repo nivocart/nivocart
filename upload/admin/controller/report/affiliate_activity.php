@@ -133,11 +133,13 @@ class ControllerReportAffiliateActivity extends Controller {
 
 			$comment = sprintf($this->language->get('text_' . $result['key']), $result['affiliate_id'], $result['name']);
 
+			$raw_date = $result['activity_date'] ?? null;
+
 			$this->data['activities'][] = [
 				'activity_id' => $result['affiliate_activity_id'],
 				'activity'    => str_replace('affiliate_id=', $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=', 'SSL'), $comment),
 				'ip'          => $result['ip'],
-				'date_added'  => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
+				'date_added'  => $raw_date ? date($this->language->get('date_format_time'), strtotime($raw_date)) : $this->language->get('text_none'),
 				'selected'    => isset($this->request->post['selected']) && in_array($result['affiliate_activity_id'], $this->request->post['selected']),
 				'action'      => $action
 			];

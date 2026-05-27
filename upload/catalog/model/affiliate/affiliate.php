@@ -84,8 +84,8 @@ class ModelAffiliateAffiliate extends Model {
 		}
 	}
 
-	public function addActivity(int $affiliate_id, $key, $affiliate_name): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_activity` SET affiliate_id = '" . (int)$affiliate_id . "', `key` = '" . $this->db->escape($key) . "', `name` = '" . $this->db->escape($affiliate_name) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
+	public function addActivity(int $affiliate_id, string $key, string $affiliate_name): void {
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_activity` SET affiliate_id = '" . (int)$affiliate_id . "', `key` = '" . $this->db->escape((string)$key) . "', `name` = '" . $this->db->escape((string)$affiliate_name) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
 	}
 
 	public function editAffiliate(array $data = []): void {
