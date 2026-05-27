@@ -106,7 +106,7 @@ class ControllerModuleWelcome extends Controller {
 
 		$languages_array = [];
 
-		$languages = $this->model_localisation_language->getLanguages($languages_array);
+		$this->data['languages'] = $this->model_localisation_language->getLanguages($languages_array);
 
 		$this->load->model('design/layout');
 
