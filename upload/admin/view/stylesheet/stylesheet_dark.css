@@ -1,4 +1,4 @@
-/* --------------------------------
+/** -------------------------------
  * NivoCart - Administration Dark
  * Copyright © 2026
  * --------------------------------
@@ -19,7 +19,7 @@
     url('fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
 }
 
-/* ------------------------------
+/** -----------------------------
  * HTML -> Parameters
  * ----------------------------*/
 html {
@@ -178,7 +178,7 @@ em {
 samp, small {
 	font-size: 10px;
 }
-/* ------------------------------
+/** -----------------------------
  * CONTAINER
  * ----------------------------*/
 #container-normal {
@@ -195,7 +195,7 @@ body > #container-normal, body > #container-limited {
 	min-height: 100%;
 	background-color: #191919;
 }
-/* ------------------------------
+/** -----------------------------
  * HEADER
  * ----------------------------*/
 #header {
@@ -407,7 +407,7 @@ body > #container-normal, body > #container-limited {
 	background: #E4EEF7;
 	color: #547C96;
 }
-/* ------------------------------
+/** -----------------------------
  * MENU HORIZONTAL
  * ----------------------------*/
 .menu {
@@ -542,7 +542,7 @@ ul.menu ul {
 .menu li a > .fa {
 	width: 24px;
 }
-/* ------------------------------
+/** -----------------------------
  * CONTENT - Content Login
  * ----------------------------*/
 #content {
@@ -558,7 +558,7 @@ ul.menu ul {
 	padding: 3% 10px 0 10px;
 	min-width: 300px;
 }
-/* ------------------------------
+/** -----------------------------
  * BREADCRUMBS
  * ----------------------------*/
 .breadcrumb {
@@ -578,7 +578,7 @@ ul.menu ul {
 .breadcrumb a:hover {
 	color: #36AAD8;
 }
-/* ------------------------------
+/** -----------------------------
  * NOTIFICATIONS Classes
  * ----------------------------*/
 .success, .warning, .attention, .tooltip {
@@ -614,7 +614,7 @@ ul.menu ul {
 	padding-right: 4px;
 	cursor: pointer;
 }
-/* ------------------------------
+/** -----------------------------
  * COMMON Classes
  * ----------------------------*/
 .required {
@@ -663,7 +663,7 @@ ul.menu ul {
 .hidden {
 	display: none;
 }
-/* ------------------------------
+/** -----------------------------
  * BOX Classes
  * ----------------------------*/
 .box {
@@ -793,7 +793,7 @@ ul.menu ul {
 	top: -7px;
 	margin: auto 0;
 }
-/* ------------------------------
+/** -----------------------------
  * BOX Login
  * ----------------------------*/
 #world-map {
@@ -845,7 +845,7 @@ ul.menu ul {
 	float: right;
 	margin: 15px 30px 10px 0;
 }
-/* ------------------------------
+/** -----------------------------
  * BUTTON Classes
  * ----------------------------*/
 a.button, .list a.button, a.button-save, .list a.button-save, a.button-delete, .list a.button-delete, a.button-repair, .list a.button-repair, a.button-cancel, .list a.button-cancel {
@@ -1105,7 +1105,7 @@ a.button-print:hover {
 	opacity: 0.2;
 	transition: 0s;
 }
-/* ------------------------------
+/** -----------------------------
  * TABLE List
  * ----------------------------*/
 .list {
@@ -1269,7 +1269,7 @@ a.button-print:hover {
 .list tbody.log td a:hover {
 	color: #FFF;
 }
-/* ------------------------------
+/** -----------------------------
  * TABLE Form
  * ----------------------------*/
 table.form {
@@ -1323,7 +1323,7 @@ table.form > tbody > tr > td span.form-icon {
 table.form tr td div.image, .list tbody tr td div.image {
 	text-align: center;
 }
-/* ------------------------------
+/** -----------------------------
  * TABLE Tool
  * ----------------------------*/
 table.tool {
@@ -1357,7 +1357,7 @@ table.tool tr td {
 	margin-bottom: 15px;
 	padding: 10px;
 }
-/* ------------------------------
+/** -----------------------------
  * TABS Horizontal
  * ----------------------------*/
 .htabs {
@@ -1400,7 +1400,7 @@ table.tool tr td {
 	border-bottom: 1px solid #5A6468;
 	outline: 0;
 }
-/* ------------------------------
+/** -----------------------------
  * TABS Vertical
  * ----------------------------*/
 .vtabs {
@@ -1450,7 +1450,7 @@ table.tool tr td {
 .vtabs-content {
 	margin-left: 195px;
 }
-/* ------------------------------
+/** -----------------------------
  * SCROLLBOX
  * ----------------------------*/
 .scrollbox {
@@ -1501,7 +1501,7 @@ table.tool tr td {
 .scrollbox div.odd, .scrollbox-store div.odd {
 	background: #A3B8CC;
 }
-/* ------------------------------
+/** -----------------------------
  * PROGRESS BAR
  * ----------------------------*/
 .progress-bar-blue {
@@ -1518,7 +1518,7 @@ table.tool tr td {
 	background-image: linear-gradient(to bottom, #E3726E, #DE5954);
 	height: 14px;
 }
-/* ------------------------------
+/** -----------------------------
  * PAGINATION
  * ----------------------------*/
 .pagination {
@@ -1564,7 +1564,7 @@ table.tool tr td {
 	font-size: 12px;
 	padding: 6px 3px 0 0;
 }
-/* ------------------------------
+/** -----------------------------
  * DASHBOARD
  * ----------------------------*/
 .dashboard-heading, .dashboard-heading-left, .dashboard-heading-middle, .dashboard-heading-right {
@@ -1738,7 +1738,7 @@ table.tool tr td {
 	background: #4B515A;
 	background: rgba(75, 81, 90, 1);
 }
-/* ------------------------------
+/** -----------------------------
  * HTML/PDF Documents
  * ----------------------------*/
 .documents {
@@ -1750,7 +1750,7 @@ table.tool tr td {
     overflow: hidden;
     box-sizing: border-box;
 }
-/* ------------------------------
+/** -----------------------------
  * JQUERY Autocomplete
  * ----------------------------*/
 .ui-autocomplete {
@@ -1764,7 +1764,7 @@ table.tool tr td {
 	line-height: 18px;
 	padding: 3px 10px 3px 4px;
 }
-/* ------------------------------
+/** -----------------------------
  * FOOTER
  * ----------------------------*/
 #footer-normal {
@@ -1801,7 +1801,7 @@ table.tool tr td {
 	text-shadow: 0 0 1px rgba(153, 153, 153, 0.05);
 	text-decoration: underline;
 }
-/* ------------------------------
+/** -----------------------------
  * RESPONSIVE Pages
  * ----------------------------*/
 /* Desktops */

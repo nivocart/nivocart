@@ -1,4 +1,4 @@
-/* ------------------------------
+/** -----------------------------
  * NivoCart - Default Stylesheet
  * Copyright © 2026
  * ------------------------------
@@ -19,7 +19,7 @@
     url('fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
 }
 
-/* ------------------------------
+/** -----------------------------
  * HTML -> Parameters
  * ----------------------------*/
 html {
@@ -136,7 +136,7 @@ samp, small {
 span.from {
 	font-size: 14px;
 }
-/* ------------------------------
+/** -----------------------------
  * HEADER -> Top
  * ----------------------------*/
 #container-top {
@@ -200,7 +200,7 @@ a.top-link, a.top-link:visited {
 a.top-link:hover {
 	color: #36AAD8;
 }
-/* ------------------------------
+/** -----------------------------
  * CONTAINER -> Header + Content
  * ----------------------------*/
 #container {
@@ -470,7 +470,7 @@ a.top-link:hover {
 #menu-phone {
 	display: none;
 }
-/* ------------------------------
+/** -----------------------------
  * CONTENT - Content Class
  * ----------------------------*/
 #content .content {
@@ -495,7 +495,7 @@ a.top-link:hover {
 	margin-bottom: 20px;
 	padding-left: 8px;
 }
-/* ------------------------------
+/** -----------------------------
  * BREADCRUMBS
  * ----------------------------*/
 .breadcrumb {
@@ -512,7 +512,7 @@ a.top-link:hover {
 .breadcrumb a:hover {
 	color: #0D6D98;
 }
-/* ------------------------------
+/** -----------------------------
  * NOTIFICATIONS Classes
  * ----------------------------*/
 .success, .warning, .attention, .tooltip {
@@ -544,7 +544,7 @@ a.top-link:hover {
 	padding: 7px 4px 0 0;
 	cursor: pointer;
 }
-/* ------------------------------
+/** -----------------------------
  * COMMON Classes
  * ----------------------------*/
 .required {
@@ -563,7 +563,7 @@ a.top-link:hover {
 .hidden {
 	display: none;
 }
-/* ------------------------------
+/** -----------------------------
  * TABLE Classes
  * ----------------------------*/
 table.form {
@@ -643,7 +643,7 @@ table.radio tr.highlight:hover td {
 	background: #EAFBFF;
 	cursor: pointer;
 }
-/* ------------------------------
+/** -----------------------------
  * Pagination Links
  * ----------------------------*/
 .pagination {
@@ -686,7 +686,7 @@ table.radio tr.highlight:hover td {
 	float: right;
 	margin-top: 10px;
 }
-/* ------------------------------
+/** -----------------------------
  * BUTTON Types
  * ----------------------------*/
 a.button, input.button, button.button, input.button-cart, input.button-wrap-add, input.button-wrap-remove {
@@ -805,7 +805,7 @@ a.button-add {
 a.button-add:hover {
 	color: #3782BF;
 }
-/* ------------------------------
+/** -----------------------------
  * BUTTONS - Box
  * ----------------------------*/
 .buttons {
@@ -838,7 +838,7 @@ a.button-add:hover {
 	margin-left: auto;
 	margin-right: auto;
 }
-/* ------------------------------
+/** -----------------------------
  * TABS - Horizontal
  * ----------------------------*/
 .htabs {
@@ -882,7 +882,7 @@ a.button-add:hover {
 	overflow: auto;
 	z-index: 2;
 }
-/* ------------------------------
+/** -----------------------------
  * BOXES -> Heading + Content
  * ----------------------------*/
 .box {
@@ -1274,7 +1274,7 @@ ul.box-filter > li ul {
 	font-size: 10px;
 	margin-bottom: 3px;
 }
-/* ------------------------------
+/** -----------------------------
  * NEWS Content
  * ----------------------------*/
 .content-info {
@@ -1316,7 +1316,7 @@ ul.box-filter > li ul {
 .news-download li {
 	margin: 10px 0;
 }
-/* ------------------------------
+/** -----------------------------
  * COLLAPSIBLE PANELS
  * ----------------------------*/
 .panel, .panel-collapsed {
@@ -1366,7 +1366,7 @@ ul.box-filter > li ul {
 .panel-collapsed .panel-content {
 	display: none;
 }
-/* ------------------------------
+/** -----------------------------
  * TIER PAGES - Categories
  * ----------------------------*/
 .tier-page {
@@ -1456,7 +1456,7 @@ ul.box-filter > li ul {
 .category-list > ul.refine > li a:hover {
 	color: #0D6D98;
 }
-/* ------------------------------
+/** -----------------------------
  * MANUFACTURER List
  * ----------------------------*/
 .manufacturer-list {
@@ -1489,7 +1489,7 @@ ul.box-filter > li ul {
 	padding: 0 25px 0 5px;
 	list-style: none;
 }
-/* ------------------------------
+/** -----------------------------
  * PRODUCT - All Classes
  * ----------------------------*/
 .product-filter {
@@ -2187,7 +2187,7 @@ ul.box-filter > li ul {
 .wishlist-info tbody .action img {
 	cursor: pointer;
 }
-/* ------------------------------
+/** -----------------------------
  * LOGIN - Customer/Affiliate
  * ----------------------------*/
 .login-content {
@@ -2207,7 +2207,7 @@ ul.box-filter > li ul {
 .login-content .left .content, .login-content .right .content {
 	min-height: 230px;
 }
-/* ------------------------------
+/** -----------------------------
  * ORDERS
  * ----------------------------*/
 .order-list {
@@ -2243,7 +2243,7 @@ ul.box-filter > li ul {
 	background: #EFEFEF;
 	font-weight: bold;
 }
-/* ------------------------------
+/** -----------------------------
  * RETURNS
  * ----------------------------*/
 .return-list {
@@ -2311,7 +2311,7 @@ ul.box-filter > li ul {
 	float: left;
 	display: block;
 }
-/* ------------------------------
+/** -----------------------------
  * SESSION CAPTCHA
  * ----------------------------*/
 #captcha-wrap {
@@ -2371,7 +2371,7 @@ ul.box-filter > li ul {
 	margin-top: 6px;
 	margin-right: 1px;
 }
-/* ------------------------------
+/** -----------------------------
  * DOWNLOADS - Digital Products
  * ----------------------------*/
 .download-list {
@@ -2403,7 +2403,7 @@ ul.box-filter > li ul {
 .download-list .download-info {
 	text-align: right;
 }
-/* ------------------------------
+/** -----------------------------
  * CART Table
  * ----------------------------*/
 .cart-info table {
@@ -2473,7 +2473,7 @@ ul.box-filter > li ul {
 	padding: 3px;
 	text-align: right;
 }
-/* ------------------------------
+/** -----------------------------
  * CHECKOUT Classes
  * ----------------------------*/
 .checkout-heading {
@@ -2607,7 +2607,7 @@ table.order-options tr td #payment-method h2 {
 .spacer {
 	width: 3%;
 }
-/* ------------------------------
+/** -----------------------------
  * CONTACT Page
  * ----------------------------*/
 .contact-info {
@@ -2627,7 +2627,7 @@ table.order-options tr td #payment-method h2 {
 	min-width: 170px;
 	margin-left: 20px;
 }
-/* ------------------------------
+/** -----------------------------
  * SEARCH Page
  * ----------------------------*/
 .search-bar {
@@ -2640,7 +2640,7 @@ table.order-options tr td #payment-method h2 {
 	padding: 12px;
 	overflow: hidden;
 }
-/* ------------------------------
+/** -----------------------------
  * SITEMAP Page
  * ----------------------------*/
 .sitemap-info {
@@ -2687,7 +2687,7 @@ table.order-options tr td #payment-method h2 {
 .sitemap-info .left > ul > li ul > li ul > li, .sitemap-info .right > ul > li ul > li ul > li {
 	margin: 2px 0;
 }
-/* ------------------------------
+/** -----------------------------
  * OFFER LABELS
  * ----------------------------*/
 .stock-large, .offer-large, .special-large {
@@ -2734,7 +2734,7 @@ table.order-options tr td #payment-method h2 {
 	border: 0;
 	overflow: hidden;
 }
-/* ------------------------------
+/** -----------------------------
  * JQUERY Autocomplete
  * ----------------------------*/
 .ui-autocomplete {
@@ -2748,7 +2748,7 @@ table.order-options tr td #payment-method h2 {
 	line-height: 18px;
 	padding: 3px 10px 3px 4px;
 }
-/* ------------------------------
+/** -----------------------------
  * JQUERY Back to top
  * ----------------------------*/
 #backtotop {
@@ -2781,7 +2781,7 @@ table.order-options tr td #payment-method h2 {
 	text-align: right;
 	margin-top: 8px;
 }
-/* ------------------------------
+/** -----------------------------
  * RESPONSIVE Pages
  * ----------------------------*/
 /* Laptops - Small */
