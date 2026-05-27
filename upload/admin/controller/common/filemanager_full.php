@@ -128,6 +128,11 @@ class ControllerCommonFileManagerFull extends Controller {
 		$filename = str_replace('//', '/', $filename);
 		$filename = str_replace('data/data', 'data', $filename);
 
+		// Fall back to 'no_image.jpg' if filename is '' or just 'data/'
+		if (empty($filename) || $filename === 'data/') {
+			$filename = DIR_IMAGE . 'no_image.jpg';
+		}
+
 		$ext = substr(strrchr($filename, '.'), 1);
 
 		$file_images = ['mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
