@@ -782,19 +782,15 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->load->model('catalog/category');
 
-		if (isset($this->request->post['category_filter'])) {
-			$categories = $this->request->post['category_filter'];
-		} else {
-			$categories = [];
-		}
+		$categories = $this->request->post['category_filter'] ?? [];
 
 		foreach ($categories as $category_id) {
-			$category_info = $this->model_catalog_product->getProduct($product_id);
+			$category_info = $this->model_catalog_category->getCategory($category_id);
 
 			if ($category_info) {
 				$json[] = [
 					'category_id' => $category_info['category_id'],
-					'name'        => $category_info['name']
+					'name'        => strip_tags(html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'))
 				];
 			}
 		}
