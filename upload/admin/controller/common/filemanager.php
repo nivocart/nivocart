@@ -121,7 +121,8 @@ class ControllerCommonFileManager extends Controller {
 			$filename = mb_strtolower($ext, 'UTF-8') . '.png';
 		}
 
-		if ($return) {
+		// Do not return if filename is null
+		if ($return && !empty($filename)) {
 			return htmlspecialchars($this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 100, 100), ENT_QUOTES, 'UTF-8');
 		} else {
 			$this->response->setOutput(htmlspecialchars($this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 100, 100), ENT_QUOTES, 'UTF-8'));
