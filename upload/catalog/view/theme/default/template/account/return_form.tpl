@@ -70,6 +70,11 @@
           <strong id="date-ordered-text"><?php echo $date_ordered; ?></strong>
         </div>
       </div>
+      <div class="buttons">
+        <div class="left">
+          <a href="<?php echo $back; ?>" class="button"><i class="fa fa-arrow-left"></i> &nbsp; <?php echo $button_back; ?></a>
+        </div>
+      </div>
     </div>
     <!-- PART 2 — Product details (hidden until Order ID verified) -->
     <div id="return-product-section" style="display:<?php echo $order_id ? 'block' : 'none'; ?>;">
