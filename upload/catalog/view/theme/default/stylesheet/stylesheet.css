@@ -519,7 +519,7 @@ a.top-link:hover {
 	color: #555;
 	font-size: 15px;
 	line-height: 25px;
-	border-radius: 2px;
+	border-radius: 7px;
 	padding: 5px 10px 5px 35px;
 	margin: 10px 0;
 }
@@ -541,7 +541,7 @@ a.top-link:hover {
 }
 .close, .success .close, .warning .close, .attention .close, .tooltip .close {
 	float: right;
-	padding: 4px 4px 0 0;
+	padding: 7px 4px 0 0;
 	cursor: pointer;
 }
 /* ------------------------------

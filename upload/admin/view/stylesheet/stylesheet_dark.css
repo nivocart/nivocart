@@ -1,8 +1,10 @@
-/* -----------------------------------
-* NivoCart - Administration Dark
-* Copyright © 2026
-* ------------------------------------
-*/
+/* --------------------------------
+ * NivoCart - Administration Dark
+ * Copyright © 2026
+ * --------------------------------
+ * Development Stylesheet
+ * --------------------------------
+ */
 
 @font-face {
   font-family: 'Roboto';
@@ -17,14 +19,17 @@
     url('fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
 }
 
+/* ------------------------------
+ * HTML -> Parameters
+ * ----------------------------*/
 html {
 	height: 100%;
 	margin: 0;
 	padding: 0;
 }
 body {
-	background: #191919;
 	height: 100%;
+	background: #191919;
 	margin: 0;
 	padding: 0;
 }
@@ -173,7 +178,9 @@ em {
 samp, small {
 	font-size: 10px;
 }
-/* Container */
+/* ------------------------------
+ * CONTAINER
+ * ----------------------------*/
 #container-normal {
 	margin: 0;
 	height: 100%;
@@ -188,7 +195,9 @@ body > #container-normal, body > #container-limited {
 	min-height: 100%;
 	background-color: #191919;
 }
-/* Header */
+/* ------------------------------
+ * HEADER
+ * ----------------------------*/
 #header {
 	min-width: 640px;
 }
@@ -398,7 +407,9 @@ body > #container-normal, body > #container-limited {
 	background: #E4EEF7;
 	color: #547C96;
 }
-/* Menu */
+/* ------------------------------
+ * MENU HORIZONTAL
+ * ----------------------------*/
 .menu {
 	position: relative;
 	float: none;
@@ -531,7 +542,9 @@ ul.menu ul {
 .menu li a > .fa {
 	width: 24px;
 }
-/* Content */
+/* ------------------------------
+ * CONTENT - Content Login
+ * ----------------------------*/
 #content {
 	background-image: url('../image/theme-dark/background.png');
 	background-repeat: repeat-x;
@@ -545,7 +558,9 @@ ul.menu ul {
 	padding: 3% 10px 0 10px;
 	min-width: 300px;
 }
-/* Breadcrumbs */
+/* ------------------------------
+ * BREADCRUMBS
+ * ----------------------------*/
 .breadcrumb {
 	display: inline-block;
 	width: 100%;
@@ -563,11 +578,15 @@ ul.menu ul {
 .breadcrumb a:hover {
 	color: #36AAD8;
 }
-/* Notifications */
+/* ------------------------------
+ * NOTIFICATIONS Classes
+ * ----------------------------*/
 .success, .warning, .attention, .tooltip {
 	padding: 10px 10px 10px 33px;
 	margin: 0 0 15px 0;
-	border-radius: 2px;
+	font-size: 15px;
+	line-height: 19px;
+	border-radius: 7px;
 }
 .success {
 	background: rgba(186, 209, 156, 0.9) url('../image/success.png') 10px center no-repeat;
@@ -591,11 +610,13 @@ ul.menu ul {
 }
 .close, .success .close, .warning .close, .attention .close, .tooltip .close {
 	float: right;
-	padding-top: 4px;
+	padding-top: 7px;
 	padding-right: 4px;
 	cursor: pointer;
 }
-/* Common */
+/* ------------------------------
+ * COMMON Classes
+ * ----------------------------*/
 .required {
 	color: #D80000;
 	font-weight: bold;
@@ -632,7 +653,19 @@ ul.menu ul {
 .image img {
 	margin-bottom: 5px;
 }
-/* Box */
+/* Refresh */
+.refresh {
+	position: relative;
+	top: 3px;
+	cursor: pointer;
+}
+/* Hidden */
+.hidden {
+	display: none;
+}
+/* ------------------------------
+ * BOX Classes
+ * ----------------------------*/
 .box {
 	margin-bottom: 15px;
 }
@@ -760,7 +793,9 @@ ul.menu ul {
 	top: -7px;
 	margin: auto 0;
 }
-/* Box Login */
+/* ------------------------------
+ * BOX Login
+ * ----------------------------*/
 #world-map {
 	position: absolute;
 	width: auto;
@@ -810,7 +845,9 @@ ul.menu ul {
 	float: right;
 	margin: 15px 30px 10px 0;
 }
-/* Button */
+/* ------------------------------
+ * BUTTON Classes
+ * ----------------------------*/
 a.button, .list a.button, a.button-save, .list a.button-save, a.button-delete, .list a.button-delete, a.button-repair, .list a.button-repair, a.button-cancel, .list a.button-cancel {
 	display: inline-block;
 	line-height: 16px;
@@ -1068,7 +1105,9 @@ a.button-print:hover {
 	opacity: 0.2;
 	transition: 0s;
 }
-/* List */
+/* ------------------------------
+ * TABLE List
+ * ----------------------------*/
 .list {
 	width: 100%;
 	background: #4B515A;
@@ -1230,7 +1269,9 @@ a.button-print:hover {
 .list tbody.log td a:hover {
 	color: #FFF;
 }
-/* Table Form */
+/* ------------------------------
+ * TABLE Form
+ * ----------------------------*/
 table.form {
 	background: #30353A;
 }
@@ -1282,7 +1323,9 @@ table.form > tbody > tr > td span.form-icon {
 table.form tr td div.image, .list tbody tr td div.image {
 	text-align: center;
 }
-/* Table Tool */
+/* ------------------------------
+ * TABLE Tool
+ * ----------------------------*/
 table.tool {
 	width: 100%;
 	cellpadding: 5px;
@@ -1314,7 +1357,9 @@ table.tool tr td {
 	margin-bottom: 15px;
 	padding: 10px;
 }
-/* Htabs */
+/* ------------------------------
+ * TABS Horizontal
+ * ----------------------------*/
 .htabs {
 	height: 30px;
 	line-height: 15px;
@@ -1355,7 +1400,9 @@ table.tool tr td {
 	border-bottom: 1px solid #5A6468;
 	outline: 0;
 }
-/* Vtabs */
+/* ------------------------------
+ * TABS Vertical
+ * ----------------------------*/
 .vtabs {
 	float: left;
 	display: block;
@@ -1403,7 +1450,9 @@ table.tool tr td {
 .vtabs-content {
 	margin-left: 195px;
 }
-/* Scrollbox */
+/* ------------------------------
+ * SCROLLBOX
+ * ----------------------------*/
 .scrollbox {
 	width: 350px;
 	min-height: 118px;
@@ -1452,7 +1501,9 @@ table.tool tr td {
 .scrollbox div.odd, .scrollbox-store div.odd {
 	background: #A3B8CC;
 }
-/* Progress Bar */
+/* ------------------------------
+ * PROGRESS BAR
+ * ----------------------------*/
 .progress-bar-blue {
 	border: 1px solid #46719F;
 	border-radius: 2px;
@@ -1467,7 +1518,9 @@ table.tool tr td {
 	background-image: linear-gradient(to bottom, #E3726E, #DE5954);
 	height: 14px;
 }
-/* Pagination */
+/* ------------------------------
+ * PAGINATION
+ * ----------------------------*/
 .pagination {
 	display: inline-block;
 	width: 100%;
@@ -1511,7 +1564,9 @@ table.tool tr td {
 	font-size: 12px;
 	padding: 6px 3px 0 0;
 }
-/* Dashboard */
+/* ------------------------------
+ * DASHBOARD
+ * ----------------------------*/
 .dashboard-heading, .dashboard-heading-left, .dashboard-heading-middle, .dashboard-heading-right {
 	font-size: 14px;
 	font-weight: bold;
@@ -1683,26 +1738,21 @@ table.tool tr td {
 	background: #4B515A;
 	background: rgba(75, 81, 90, 1);
 }
-/* Refresh */
-.refresh {
-	position: relative;
-	top: 3px;
-	cursor: pointer;
-}
-/* Hidden */
-.hidden {
-	display: none;
-}
-/* HTML/PDF Documents */
+/* ------------------------------
+ * HTML/PDF Documents
+ * ----------------------------*/
 .documents {
-	width: 99%;
-	height: 99%;
-	margin: 0 auto;
-	padding: 0;
-	page-break-after: always;
-	overflow: hidden;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 10mm;
+    page-break-after: always;
+    overflow: hidden;
+    box-sizing: border-box;
 }
-/* Autocomplete */
+/* ------------------------------
+ * JQUERY Autocomplete
+ * ----------------------------*/
 .ui-autocomplete {
 	max-height: 300px;
 	overflow-y: scroll;
@@ -1714,7 +1764,9 @@ table.tool tr td {
 	line-height: 18px;
 	padding: 3px 10px 3px 4px;
 }
-/* Footer */
+/* ------------------------------
+ * FOOTER
+ * ----------------------------*/
 #footer-normal {
 	position: relative;
 	min-width: 640px;
@@ -1749,6 +1801,9 @@ table.tool tr td {
 	text-shadow: 0 0 1px rgba(153, 153, 153, 0.05);
 	text-decoration: underline;
 }
+/* ------------------------------
+ * RESPONSIVE Pages
+ * ----------------------------*/
 /* Desktops */
 @media only screen and (min-width: 960px) and (max-width: 1280px) {
 	#header .image {
