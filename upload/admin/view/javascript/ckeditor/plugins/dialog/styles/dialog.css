@@ -1,7 +1,11 @@
+/** -------------------------------
+ * NivoCart - Dialog
+ * Copyright © 2026
+ * --------------------------------
+ */
 .cke_dialog_open {
 	overflow: hidden;
 }
-
 .cke_dialog_container {
 	position: fixed;
 	overflow-y: auto;
@@ -12,7 +16,6 @@
 	left: 0;
 	z-index: 10010;
 }
-
 .cke_dialog_body {
 	position: relative;
 }

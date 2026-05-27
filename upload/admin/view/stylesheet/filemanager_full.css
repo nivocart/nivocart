@@ -1,10 +1,10 @@
-/* -----------------------------------
-* NivoCart - File Manager
-* Copyright © 2026
-* ------------------------------------
-* Page Styles
-* ------------------------------------
-*/
+/** ----------------------------------
+ * NivoCart - File Manager
+ * Copyright © 2026
+ * ------------------------------------
+ * Page Styles
+ * ------------------------------------
+ */
 
 @font-face {
   font-family: 'Roboto';
@@ -52,7 +52,7 @@
 	border-radius: 0 0 0 2px;
 	float: left;
 	width: 24%;
-	height: 367px;
+	height: 610px;
 	margin-left: 5px;
 	margin-bottom: 9px;
 	padding-top: 5px;
@@ -65,7 +65,7 @@
 	border-radius: 0 0 2px 0;
 	float: right;
 	width: 74%;
-	height: 400px;
+	height: 643px;
 	margin-right: 5px;
 	margin-bottom: 15px;
 	padding-bottom: 5px;

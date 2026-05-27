@@ -1,9 +1,9 @@
-/*
- Common v2.0.0 | @nivocart | NivoCart
- ---------------------------------------------------------------------------
- Common.js file for development. Use minified version for production.
- ---------------------------------------------------------------------------
-*/
+/**
+ * Common v2.0.0 | @nivocart | NivoCart
+ *---------------------------------------------------------------------------
+ * Common.js file for development. Use minified version for production.
+ *---------------------------------------------------------------------------
+ */
 function getURLVar(key) {
 	var value = [];
 	var query = String(document.location).split('?');

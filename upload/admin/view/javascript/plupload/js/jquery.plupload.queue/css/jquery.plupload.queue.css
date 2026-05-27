@@ -1,27 +1,22 @@
-/* 
+/**
  * Plupload Queue v2.3.6
  *
- * NivoCart © 2018
+ * NivoCart © 2026
  */
 
 .plupload_wrapper * {
 	box-sizing: content-box;
 }
 .plupload_button {
-	display: -moz-inline-box; /* FF < 3*/
 	display: inline-block;
 	font: normal 12px sans-serif;
 	text-decoration: none;
-    color: #42454a;
-    border: 1px solid #bababa;
+    color: #42454A;
+    border: 1px solid #BABABA;
     padding: 2px 8px 3px 20px;
 	margin-right: 4px;
-    background: #f3f3f3 url('../img/buttons.png') no-repeat 0 center;
+    background: #F3F3F3 url('../img/buttons.png') no-repeat 0 center;
 	outline: 0;
-    /* Optional rounded corners for browsers that support it */
-    -moz-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
 }
 .plupload_button:hover {
@@ -30,7 +25,7 @@
 }
 .plupload_disabled, a.plupload_disabled:hover {
     color: #737373;
-    border-color: #c5c5c5;
+    border-color: #C5C5C5;
     background: #ededed url('../img/buttons-disabled.png') no-repeat 0 center;
 	cursor: default;
 }
@@ -44,14 +39,15 @@
 .plupload_container {
 	padding: 8px;
 	background: url('../img/transp50.png');
-	/*-moz-border-radius: 5px;*/
 }
 .plupload_container input {
 	border: 1px solid #DDD;
 	font: normal 11px Verdana,sans-serif;
 	width: 98%;
 }
-.plupload_header {background: #2A2C2E url('../img/backgrounds.gif') repeat-x;}
+.plupload_header {
+	background: #2A2C2E url('../img/backgrounds.gif') repeat-x;
+}
 .plupload_header_content {
 	background: url('../img/backgrounds.gif') no-repeat 0 -317px;
 	min-height: 56px;
@@ -85,7 +81,7 @@
 	padding: 8px 8px;
 	color: #42454A;
 }
-.plupload_filelist_header {	
+.plupload_filelist_header {
 	border-top: 1px solid #EEE;
 	border-bottom: 1px solid #CDCDCD;
 }
@@ -144,13 +140,12 @@ li.plupload_done a {
 .plupload_scroll .plupload_filelist_header .plupload_file_action, .plupload_scroll .plupload_filelist_footer .plupload_file_action {
 	margin-right: 17px;
 }
-
 /* Floats */
 .plupload_clear,.plupload_clearer {clear: both;}
 .plupload_clearer, .plupload_progress_bar {
 	display: block;
 	font-size: 0;
-	line-height: 0;	
+	line-height: 0;
 }
 li.plupload_droptext {
 	background: transparent;
