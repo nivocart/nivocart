@@ -6,22 +6,22 @@
  */
 class ControllerFeedRSSFeed extends Controller {
 	private $error = [];
-	private $_name = 'rss_feed';
+	private $name = 'rss_feed';
 
 	public function index() {
-		$this->language->load('feed/' . $this->_name);
+		$this->language->load('feed/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validate())) {
-			$this->model_setting_setting->editSetting($this->_name, $this->request->post);
+			$this->model_setting_setting->editSetting($this->name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->post['apply'])) {
-				$this->redirect($this->url->link('feed/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
+				$this->redirect($this->url->link('feed/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
 			} else {
 				$this->redirect($this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'));
 			}
@@ -77,59 +77,59 @@ class ControllerFeedRSSFeed extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('feed/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('feed/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
-		$this->data['action'] = $this->url->link('feed/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('feed/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['cancel'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
 
-		if (isset($this->request->post[$this->_name . '_status'])) {
-			$this->data[$this->_name . '_status'] = $this->request->post[$this->_name . '_status'];
+		if (isset($this->request->post[$this->name . '_status'])) {
+			$this->data[$this->name . '_status'] = $this->request->post[$this->name . '_status'];
 		} else {
-			$this->data[$this->_name . '_status'] = $this->config->get($this->_name . '_status');
+			$this->data[$this->name . '_status'] = $this->config->get($this->name . '_status');
 		}
 
-		if (isset($this->request->post[$this->_name . '_limit'])) {
-			$this->data[$this->_name . '_limit'] = $this->request->post[$this->_name . '_limit'];
+		if (isset($this->request->post[$this->name . '_limit'])) {
+			$this->data[$this->name . '_limit'] = $this->request->post[$this->name . '_limit'];
 		} else {
-			$this->data[$this->_name . '_limit'] = $this->config->get($this->_name . '_limit');
+			$this->data[$this->name . '_limit'] = $this->config->get($this->name . '_limit');
 		}
 
-		if (isset($this->request->post[$this->_name . '_show_price'])) {
-			$this->data[$this->_name . '_show_price'] = $this->request->post[$this->_name . '_show_price'];
+		if (isset($this->request->post[$this->name . '_show_price'])) {
+			$this->data[$this->name . '_show_price'] = $this->request->post[$this->name . '_show_price'];
 		} else {
-			$this->data[$this->_name . '_show_price'] = $this->config->get($this->_name . '_show_price');
+			$this->data[$this->name . '_show_price'] = $this->config->get($this->name . '_show_price');
 		}
 
-		if (isset($this->request->post[$this->_name . '_include_tax'])) {
-			$this->data[$this->_name . '_include_tax'] = $this->request->post[$this->_name . '_include_tax'];
+		if (isset($this->request->post[$this->name . '_include_tax'])) {
+			$this->data[$this->name . '_include_tax'] = $this->request->post[$this->name . '_include_tax'];
 		} else {
-			$this->data[$this->_name . '_include_tax'] = $this->config->get($this->_name . '_include_tax');
+			$this->data[$this->name . '_include_tax'] = $this->config->get($this->name . '_include_tax');
 		}
 
-		if (isset($this->request->post[$this->_name . '_show_image'])) {
-			$this->data[$this->_name . '_show_image'] = $this->request->post[$this->_name . '_show_image'];
+		if (isset($this->request->post[$this->name . '_show_image'])) {
+			$this->data[$this->name . '_show_image'] = $this->request->post[$this->name . '_show_image'];
 		} else {
-			$this->data[$this->_name . '_show_image'] = $this->config->get($this->_name . '_show_image');
+			$this->data[$this->name . '_show_image'] = $this->config->get($this->name . '_show_image');
 		}
 
-		if (isset($this->request->post[$this->_name . '_image_width'])) {
-			$this->data[$this->_name . '_image_width'] = $this->request->post[$this->_name . '_image_width'];
+		if (isset($this->request->post[$this->name . '_image_width'])) {
+			$this->data[$this->name . '_image_width'] = $this->request->post[$this->name . '_image_width'];
 		} else {
-			$this->data[$this->_name . '_image_width'] = $this->config->get($this->_name . '_image_width') ? $this->config->get($this->_name . '_image_width') : 100;
+			$this->data[$this->name . '_image_width'] = $this->config->get($this->name . '_image_width') ? $this->config->get($this->name . '_image_width') : 100;
 		}
 
-		if (isset($this->request->post[$this->_name . '_image_height'])) {
-			$this->data[$this->_name . '_image_height'] = $this->request->post[$this->_name . '_image_height'];
+		if (isset($this->request->post[$this->name . '_image_height'])) {
+			$this->data[$this->name . '_image_height'] = $this->request->post[$this->name . '_image_height'];
 		} else {
-			$this->data[$this->_name . '_image_height'] = $this->config->get($this->_name . '_image_height') ? $this->config->get($this->_name . '_image_height') : 100;
+			$this->data[$this->name . '_image_height'] = $this->config->get($this->name . '_image_height') ? $this->config->get($this->name . '_image_height') : 100;
 		}
 
 		$this->data['data_feed'] = ($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=feed/rss_feed';
 
-		$this->template = 'feed/' . $this->_name . '.tpl';
+		$this->template = 'feed/' . $this->name . '.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
@@ -139,11 +139,11 @@ class ControllerFeedRSSFeed extends Controller {
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'feed/' . $this->_name)) {
+		if (!$this->user->hasPermission('modify', 'feed/' . $this->name)) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((!$this->request->post[$this->_name . '_limit']) || (!is_numeric($this->request->post[$this->_name . '_limit']))) {
+		if ((!$this->request->post[$this->name . '_limit']) || (!is_numeric($this->request->post[$this->name . '_limit']))) {
 			$this->error['limit'] = $this->language->get('error_integer');
 		}
 

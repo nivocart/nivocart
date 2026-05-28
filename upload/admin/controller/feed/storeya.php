@@ -6,10 +6,10 @@
  */
 class ControllerFeedStoreya extends Controller {
 	private $error = [];
-	private $_name = 'storeya';
+	private $name = 'storeya';
 
 	public function index() {
-		$this->language->load('feed/' . $this->_name);
+		$this->language->load('feed/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -21,7 +21,7 @@ class ControllerFeedStoreya extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->post['apply'])) {
-				$this->redirect($this->url->link('feed/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
+				$this->redirect($this->url->link('feed/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
 			} else {
 				$this->redirect($this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'));
 			}
@@ -69,7 +69,7 @@ class ControllerFeedStoreya extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('feed/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('feed/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
