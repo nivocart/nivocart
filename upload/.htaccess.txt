@@ -61,7 +61,7 @@ AddType video/webm .webm
 
 ## X-Frame-Options
 <IfModule mod_headers.c>
-	Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-Frame-Options "SAMEORIGIN"
 </IfModule>
 
 ## Set Cache Control header
