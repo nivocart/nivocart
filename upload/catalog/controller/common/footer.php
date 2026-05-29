@@ -182,6 +182,9 @@ class ControllerCommonFooter extends Controller {
 
 		$this->data['cookie_secure'] = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? '; Secure' : '';
 
+		// Back to top
+		$this->data['back_to_top'] = $this->config->get('config_back_to_top');
+
 		// Theme
 		$this->data['template'] = $template;
 
