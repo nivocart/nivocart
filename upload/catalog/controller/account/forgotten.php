@@ -274,7 +274,7 @@ class ControllerAccountForgotten extends Controller {
 	 */
 	protected function validatePassword() {
 		$password = $this->request->post['password'] ?? '';
-		$confirm = $this->request->post['confirm']  ?? '';
+		$confirm = $this->request->post['confirm'] ?? '';
 
 		if ((mb_strlen($password, 'UTF-8') < 8) || (mb_strlen($password, 'UTF-8') > 20)) {
 			$this->error['password'] = $this->language->get('error_password_length');
