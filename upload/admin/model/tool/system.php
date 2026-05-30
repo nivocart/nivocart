@@ -59,24 +59,17 @@ class ModelToolSystem extends Model {
 		if ($mod_rewrite && file_exists('../.htaccess.txt')) {
 			$document = file_get_contents('../.htaccess.txt');
 
-			// Correctly extract the RewriteBase path
-			$root = rtrim(HTTP_SERVER, '/');
-			$folder = substr(strrchr($root, '/'), 1);
-			$script_dir = dirname($_SERVER['SCRIPT_NAME']);
-			$path = str_replace('/' . $folder, '', $script_dir);
-			$path = rtrim($path, '/') . '/';
+			// Derive RewriteBase by climbing up from admin/index.php
+			// dirname once = admin folder, dirname twice = web root or subfolder
+			$base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 
-			if (!$path) {
-				$path = '/';
-			}
+			$path = $base ? $base . '/' : '/';
 
 			$document = str_replace('RewriteBase /', 'RewriteBase ' . $path, $document);
 
-			// Write to file first, then rename
 			file_put_contents('../.htaccess.txt', $document);
 
 			rename('../.htaccess.txt', '../.htaccess');
-
 			chmod('../.htaccess', 0644);
 		}
 
@@ -87,23 +80,11 @@ class ModelToolSystem extends Model {
 	 * getRewriteBase (Admin)
 	 *
 	 * Returns .htaccess RewriteBase string
-	 *
-	 * Required by ModelToolSeoUrl controller
 	 */
 	public function getRewriteBase(): string {
-		// get path
-		$path_info = pathinfo($_SERVER['PHP_SELF']);
+		$base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 
-		// trim url to the root folders
-		$path = $path_info['dirname'];
-
-		// trim folder on the right of first /
-		$removed = strrchr($path, '/');
-
-		// trim string with empty (result: /nivocart)
-		$base_path = str_replace($removed, '', $path);
-
-		return $base_path;
+		return $base ? $base . '/' : '/';
 	}
 
 	/**
