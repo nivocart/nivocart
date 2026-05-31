@@ -819,8 +819,8 @@ ul.menu ul {
 	background-image: linear-gradient(to bottom, #30353A, #191919);
 	border: 1px solid #2C2F32;
 	border-radius: 2px;
-	filter: alpha(opacity=85);
-	opacity: 0.85;
+	filter: alpha(opacity=9);
+	opacity: 0.9;
 	overflow: hidden;
 }
 .box-login > .content-login > form {

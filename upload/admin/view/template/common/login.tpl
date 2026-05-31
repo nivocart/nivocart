@@ -1,8 +1,8 @@
 <?php echo $header_login; ?>
 <svg viewBox="0 0 960 480" id="world-map" xmlns="http://www.w3.org/2000/svg" version="1.1">
 <defs><style type="text/css">
-.land{fill:#909090;fill-opacity:0.55;stroke:#999;stroke-opacity:0.55;stroke-width:0.1;}
-.sea{fill:#2099C6;fill-opacity:0.55;}
+.land{fill:#36AAD8;fill-opacity:0.65;stroke:#999;stroke-opacity:0.55;stroke-width:0.1;}
+.sea{fill:#303030;fill-opacity:1;}
 </style></defs>
 <rect class="sea" x="0" y="0" width="960" height="480"/>
   <g>
