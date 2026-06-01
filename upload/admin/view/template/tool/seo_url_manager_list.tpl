@@ -35,9 +35,6 @@
     <?php if ($error_url_status) { ?>
       <div class="attention" style="margin:10px 0;"><?php echo $error_url_status; ?></div>
     <?php } ?>
-    <?php if ($success_url_status) { ?>
-      <div class="tooltip" style="margin:10px 0;"><?php echo $success_url_status; ?></div>
-    <?php } ?>
     <?php if ($navigation_hi) { ?>
       <div class="pagination" style="margin:0 0 10px 0;"><?php echo $pagination; ?></div>
     <?php } ?>

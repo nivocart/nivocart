@@ -242,12 +242,6 @@ class ControllerToolSeoUrlManager extends Controller {
 			$this->data['error_url_status'] = '';
 		}
 
-		if ($seo_url_status) {
-			$this->data['success_url_status'] = $this->language->get('success_url_status');
-		} else {
-			$this->data['success_url_status'] = '';
-		}
-
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {

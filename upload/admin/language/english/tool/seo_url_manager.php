@@ -23,9 +23,6 @@ $_['link_seo_manufacturer'] = 'Manufacturers';
 $_['link_seo_information']  = 'Information';
 $_['link_seo_news']         = 'News';
 
-// Success
-$_['success_url_status']    = 'SEO URL\'s are activated in the Store Settings.';
-
 // Error
 $_['error_url_status']      = 'Attention: SEO URL\'s are Not activated in the Store Settings!';
 $_['error_permission']      = 'Warning: You do not have permission to modify <b>SEO URL Manager</b> !';
