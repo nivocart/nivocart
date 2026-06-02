@@ -39,6 +39,21 @@ class ControllerCommonSeoUrl extends Controller {
 				if ($query->num_rows) {
 					$url = explode('=', $query->row['query']);
 
+					// Get custom seo url links (static pages only)
+					if ($this->config->get('config_seo_url')) {
+						if (($query->row['query'] && $url[0] !== 'product_id') ||
+							($query->row['query'] && $url[0] !== 'category_id') ||
+							($query->row['query'] && $url[0] !== 'manufacturer_id') ||
+							($query->row['query'] && $url[0] !== 'information_id') ||
+							($query->row['query'] && $url[0] !== 'news_id') ||
+							($query->row['query'] && $url[0] !== 'blog_article_id') ||
+							($query->row['query'] && $url[0] !== 'blog_author_id') ||
+							($query->row['query'] && $url[0] !== 'blog_category_id')
+						) {
+							$this->request->get['route'] = $query->row['query'];
+						}
+					}
+
 					if ($url[0] === 'product_id') {
 						$this->request->get['product_id'] = $url[1];
 					}
@@ -91,7 +106,7 @@ class ControllerCommonSeoUrl extends Controller {
 
 					if ($requested !== $canonical->row['keyword']) {
 						header('Location:' . $RewriteBase . '/' . $canonical->row['keyword'], true, 301);
-						exit;
+						exit;	// Exit required here
 					}
 				}
 
@@ -138,9 +153,11 @@ class ControllerCommonSeoUrl extends Controller {
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {
 				if (($data['route'] === 'product/product' && $key === 'product_id') ||
-				(($data['route'] === 'product/manufacturer/info' || $data['route'] === 'product/product') && $key === 'manufacturer_id') ||
-				($data['route'] === 'information/information' && $key === 'information_id') || ($data['route'] === 'information/news' && $key === 'news_id') ||
-				($data['route'] === 'blog/article_info' && $key === 'blog_article_id') || ($data['route'] === 'blog/article_author' && $key === 'blog_author_id')) {
+					($data['route'] === 'product/product' && $key === 'manufacturer_id' && $key === 'product_id') ||
+					(($data['route'] === 'product/manufacturer/info' || $data['route'] === 'product/product') && $key === 'manufacturer_id') ||
+					($data['route'] === 'information/information' && $key === 'information_id') || ($data['route'] === 'information/news' && $key === 'news_id') ||
+					($data['route'] === 'blog/article_info' && $key === 'blog_article_id') || ($data['route'] === 'blog/article_author' && $key === 'blog_author_id')
+				) {
 					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
 
 					if ($query->num_rows && $query->row['keyword']) {
