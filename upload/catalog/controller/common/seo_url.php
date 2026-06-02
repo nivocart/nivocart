@@ -78,24 +78,6 @@ class ControllerCommonSeoUrl extends Controller {
 							$this->request->get['blog_category_id'] .= '_' . $url[1];
 						}
 					}
-
-					// Get custom seo url links
-					if ($this->config->get('config_seo_url')) {
-						if (($query->row['query'] && $url[0] !== 'product_id') ||
-							($query->row['query'] && $url[0] !== 'category_id') ||
-							($query->row['query'] && $url[0] !== 'manufacturer_id') ||
-							($query->row['query'] && $url[0] !== 'information_id') ||
-							($query->row['query'] && $url[0] !== 'news_id') ||
-							($query->row['query'] && $url[0] !== 'blog_article_id') ||
-							($query->row['query'] && $url[0] !== 'blog_author_id') ||
-							($query->row['query'] && $url[0] !== 'blog_category_id')
-						) {
-							$this->request->get['route'] = $query->row['query'];
-						} else {
-							$this->request->get['route'] = 'error/not_found';
-							break;
-						}
-					}
 				}
 			}
 
