@@ -1,6 +1,7 @@
 # NivoCart
 
  [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f03f3fae6e5e4788aadd87d48b443d99)](https://app.codacy.com/gh/nivocart/nivocart/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+ [![Maintainability](https://qlty.sh/gh/nivocart/projects/nivocart/maintainability.svg)](https://qlty.sh/gh/nivocart/projects/nivocart)
  [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/nivocart/nivocart/issues)
  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
  [![BuyMeACoffee](https://raw.githubusercontent.com/pachadotdev/buymeacoffee-badges/main/bmc-donate-yellow.svg)](https://www.buymeacoffee.com/nivocart)
