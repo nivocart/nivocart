@@ -557,7 +557,7 @@ class ControllerCommonFileManagerFull extends Controller {
 			$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
 			if (!in_array($ext, $allowed)) {
-				exit(1);
+				exit();
 			}
 
 			$count = 1;
