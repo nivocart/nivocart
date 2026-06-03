@@ -15,7 +15,7 @@
         <?php foreach ($shipping_method['quote'] as $quote) { ?>
           <tr class="highlight">
             <td style="vertical-align:middle; padding:0;">
-              <?php if ($quote['code'] == $code || !$code) { ?>
+              <?php if ($quote['code'] === $code || !$code) { ?>
                 <?php $good++; $code = $quote['code']; ?>
                 <input type="radio" name="shipping_method" value="<?php echo $quote['code']; ?>" id="<?php echo $quote['code']; ?>" checked="checked" />
               <?php } else { ?>
@@ -44,7 +44,7 @@
 </div>
 <div class="buttons">
   <div class="left">
-    <input type="button" value="<?php echo $button_express_go; ?>" id="button-shipping-method" class="button" />
+    <input type="button" value="<?php echo $continue; ?>" id="button-shipping-method" class="button" />
     &nbsp;&nbsp;&nbsp;&nbsp;
     <a id="modify-address" onclick="$('#shipping-method .checkout-content').fadeOut(100); $('#shipping-address .checkout-content').fadeIn(500);" style="text-decoration:none;"><?php echo $text_your_address; ?></a>
   </div>
@@ -52,7 +52,7 @@
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	if ($('#shipping-method :radio').size() == 1) {
+	if ($('#shipping-method :radio').size() === 1) {
 		$('#shipping-method :radio').click();
 	}
 });

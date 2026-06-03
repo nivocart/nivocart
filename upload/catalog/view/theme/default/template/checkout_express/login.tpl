@@ -21,10 +21,10 @@
   <br />
   <div class="buttons">
     <div id="check-email" class="left">
-      <input type="submit" value="<?php echo $button_express_go; ?>" id="button-express" class="button" />
+      <input type="submit" value="<?php echo $continue; ?>" id="button-express" class="button" />
     </div>
     <div id="check-login" class="left" style="display:none;">
-      <input type="submit" value="<?php echo $button_express_go; ?>" id="button-login" class="button" />
+      <input type="submit" value="<?php echo $continue; ?>" id="button-login" class="button" />
     </div>
   </div>
 </div>

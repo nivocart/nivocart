@@ -106,7 +106,6 @@ $_['entry_reward']                            = 'Enter the number of points to u
 // Button
 $_['button_wrapping_add']                     = 'Add';
 $_['button_wrapping_remove']                  = 'Remove';
-$_['button_express_go']                       = '&nbsp;&nbsp;&nbsp;&nbsp; OK &nbsp;&nbsp;&nbsp;&nbsp;';
 
 // Email
 $_['text_express_subject']                    = '%s\'s Login and Password';

@@ -7,7 +7,7 @@
   <div id="shipping-existing">
     <select name="address_id" style="width:100%; margin-bottom:15px;" size="5">
     <?php foreach ($addresses as $address) { ?>
-      <?php if ($address['address_id'] == $address_id) { ?>
+      <?php if ($address['address_id'] === $address_id) { ?>
         <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
       <?php } else { ?>
         <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['city']; ?>, <?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
@@ -46,7 +46,7 @@
       <td><select name="country_id" class="large-field">
         <option value=""><?php echo $text_select; ?></option>
         <?php foreach ($countries as $country) { ?>
-          <?php if ($country['country_id'] == $country_id) { ?>
+          <?php if ($country['country_id'] === $country_id) { ?>
             <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
           <?php } else { ?>
             <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -74,13 +74,13 @@
 </div>
 <div class="buttons">
   <div class="left">
-    <input type="button" value="<?php echo $button_express_go; ?>" id="button-shipping-address" class="button" />
+    <input type="button" value="<?php echo $continue; ?>" id="button-shipping-address" class="button" />
   </div>
 </div>
 
 <script type="text/javascript"><!--
 $('#shipping-address input[name=\'shipping_address\']').on('change', function() {
-	if (this.value == 'new') {
+	if (this.value === 'new') {
 		$('#shipping-existing').hide();
 		$('#shipping-new').show(500);
 	} else {
@@ -109,7 +109,7 @@ $('#shipping-address select[name=\'country_id\']').on('change', function() {
 				for (var i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 						html += ' selected="selected"';
 					}
 
@@ -123,7 +123,7 @@ $('#shipping-address select[name=\'country_id\']').on('change', function() {
 
 			document.getElementById('express-city').value='';
 
-			postcode_required = json['postcode_required'] == '1';
+			postcode_required = json['postcode_required'] === '1';
 
 			<?php if ($this->config->get('config_express_postcode')) { ?>
 				postcode_required = 1;
@@ -131,7 +131,7 @@ $('#shipping-address select[name=\'country_id\']').on('change', function() {
 
 			$('#express-zone').trigger('change');
 
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#shipping-postcode-required').show(500);
 			} else {
 				$('#shipping-postcode-required').hide(100);

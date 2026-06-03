@@ -17,7 +17,7 @@ class ControllerCheckoutExpressLogin extends Controller {
 		$this->data['entry_express_email'] = $this->language->get('entry_express_email');
 		$this->data['entry_express_password'] = $this->language->get('entry_express_password');
 
-		$this->data['button_express_go'] = $this->language->get('button_express_go');
+		$this->data['continue'] = $this->language->get('continue');
 
 		if (isset($this->session->data['account'])) {
 			$this->data['account'] = $this->session->data['account'];

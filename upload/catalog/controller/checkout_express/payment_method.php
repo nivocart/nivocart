@@ -171,7 +171,7 @@ class ControllerCheckoutExpressPaymentMethod extends Controller {
 		$this->data['text_payment_method'] = $this->language->get('text_payment_method');
 		$this->data['text_comments'] = $this->language->get('text_comments');
 
-		$this->data['button_express_go'] = $this->language->get('button_express_go');
+		$this->data['continue'] = $this->language->get('continue');
 
 		$this->data['express_comment'] = $this->config->get('config_express_comment');
 

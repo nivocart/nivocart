@@ -53,7 +53,7 @@ class ControllerCheckoutExpressRegister extends Controller {
 		$this->data['text_express_generated'] = $this->language->get('text_express_generated');
 		$this->data['text_express_company_info'] = $this->language->get('text_express_company_info');
 
-		$this->data['button_express_go'] = $this->language->get('button_express_go');
+		$this->data['continue'] = $this->language->get('continue');
 
 		if (isset($this->session->data['firstname'])) {
 			$this->data['firstname'] = $this->session->data['firstname'];
@@ -201,7 +201,7 @@ class ControllerCheckoutExpressRegister extends Controller {
 
 		$this->request->post['address_2'] = '';
 
-		if ($this->config->get('config_express_newsletter') != 2) {
+		if ($this->config->get('config_express_newsletter') !== 2) {
 			$this->request->post['newsletter'] = $this->config->get('config_express_newsletter');
 		}
 

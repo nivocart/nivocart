@@ -19,15 +19,15 @@
     <br />
     <br />
   </span>
-  <span <?php echo ($this->config->get('config_express_password') == 2) ? 'style="display:none;"' : ''; ?>>
+  <span <?php echo ($this->config->get('config_express_password') === 2) ? 'style="display:none;"' : ''; ?>>
     <span class="required">* </span><?php echo $entry_password; ?>
     <span id="express_password" style="color:#AAA; <?php echo (!$this->config->get('config_express_password')) ? "display:none;" : ""; ?>"><?php echo $text_express_generated; ?></span><br />
     <input type="text" name="password" oninput="$('#express_password').hide();" value="<?php echo $password; ?>" class="large-field" />
     <br/>
     <br/>
   </span>
-  <span <?php echo ($this->config->get('config_express_phone') == 0) ? 'style="display:none;"' : ''; ?>>
-    <?php echo ($this->config->get('config_express_phone') == 2) ? '<span class="required">* </span>' : ''; ?>
+  <span <?php echo ($this->config->get('config_express_phone') === 0) ? 'style="display:none;"' : ''; ?>>
+    <?php echo ($this->config->get('config_express_phone') === 2) ? '<span class="required">* </span>' : ''; ?>
     <?php echo $entry_telephone; ?><br />
     <input type="text" name="telephone" value="<?php echo $telephone; ?>" class="large-field" />
     <br />
@@ -45,13 +45,13 @@
   <br />
   <br />
   </span>
-  <span <?php echo ($this->config->get('config_customer_dob') == 0) ? 'style="display:none;"' : ''; ?>>
+  <span <?php echo ($this->config->get('config_customer_dob') === 0) ? 'style="display:none;"' : ''; ?>>
   <span class="required">*</span> <?php echo $entry_date_of_birth; ?><br />
   <input type="text" name="date_of_birth" value="<?php echo $date_of_birth; ?>" id="date-of-birth" size="12" />
   <br />
   <br />
   </span>
-<?php if ($this->config->get('config_express_newsletter') == 2) { ?>
+<?php if ($this->config->get('config_express_newsletter') === 2) { ?>
   <input type="checkbox" name="newsletter" value="1" id="newsletter" checked="checked" />
   <label for="newsletter"><?php echo $entry_express_newsletter; ?></label>
 <?php } ?>
@@ -63,7 +63,7 @@
   <div style="display:<?php echo (count($customer_groups) > 1) ? 'table-row' : 'none'; ?>;">
     <?php echo $entry_customer_group; ?><br />
     <?php foreach ($customer_groups as $customer_group) { ?>
-      <?php if ($customer_group['customer_group_id'] == $customer_group_id) { ?>
+      <?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
         <input type="radio" name="customer_group_id" value="<?php echo $customer_group['customer_group_id']; ?>" id="customer_group_id<?php echo $customer_group['customer_group_id']; ?>" checked="checked" />
         <label for="customer_group_id<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></label>
         <br />
@@ -145,14 +145,14 @@
   <div class="buttons">
     <div class="left"><?php echo $text_agree; ?>
       <input type="checkbox" name="agree" value="1" />
-      <input type="button" value="<?php echo $button_express_go; ?>" id="button-register" class="button" />
+      <input type="button" value="<?php echo $continue; ?>" id="button-register" class="button" />
     </div>
   </div>
 <?php } else { ?>
   <div class="buttons">
     <div class="left">
       <input type="hidden" name="agree" value="1" />
-      <input type="button" value="<?php echo $button_express_go; ?>" id="button-register" class="button" />
+      <input type="button" value="<?php echo $continue; ?>" id="button-register" class="button" />
     </div>
   </div>
 <?php } ?>
@@ -170,13 +170,13 @@ $('#payment-address input[name=\'customer_group_id\']:checked').on('change', fun
 <?php } ?>
 
 	if (customer_group[this.value]) {
-		if (customer_group[this.value]['company_id_display'] == '1') {
+		if (customer_group[this.value]['company_id_display'] === '1') {
 			$('#company-id-display').show(500);
 		} else {
 			$('#company-id-display').hide(100);
 		}
 
-		if (customer_group[this.value]['company_id_required'] == '1') {
+		if (customer_group[this.value]['company_id_required'] === '1') {
 			$('#company-id-required').show(500);
 			$('#company-row').show(500);
 			$('#company-link').hide(100);
@@ -184,13 +184,13 @@ $('#payment-address input[name=\'customer_group_id\']:checked').on('change', fun
 			$('#company-id-required').hide(100);
 		}
 
-		if (customer_group[this.value]['tax_id_display'] == '1') {
+		if (customer_group[this.value]['tax_id_display'] === '1') {
 			$('#tax-id-display').show(500);
 		} else {
 			$('#tax-id-display').hide(100);
 		}
 
-		if (customer_group[this.value]['tax_id_required'] == '1') {
+		if (customer_group[this.value]['tax_id_required'] === '1') {
 			$('#tax-id-required').show(500);
 		} else {
 			$('#tax-id-required').hide(100);
@@ -213,7 +213,7 @@ $('#payment-address select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#payment-postcode-required').show(500);
 			} else {
 				$('#payment-postcode-required').hide(100);
@@ -225,7 +225,7 @@ $('#payment-address select[name=\'country_id\']').on('change', function() {
 				for (var i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 						html += ' selected="selected"';
 					}
 

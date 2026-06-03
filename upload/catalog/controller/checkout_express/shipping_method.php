@@ -60,7 +60,7 @@ class ControllerCheckoutExpressShippingMethod extends Controller {
 		$this->data['text_comments'] = $this->language->get('text_comments');
 		$this->data['text_your_address'] = $this->language->get('text_your_address');
 
-		$this->data['button_express_go'] = $this->language->get('button_express_go');
+		$this->data['continue'] = $this->language->get('continue');
 
 		if (empty($this->session->data['shipping_methods'])) {
 			$this->data['error_warning'] = sprintf($this->language->get('error_no_shipping'), $this->url->link('information/contact', '', 'SSL'));
