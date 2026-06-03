@@ -1,4 +1,4 @@
-<?php $nodata = (!$this->config->get('config_express_phone') && ($this->config->get('config_express_password') == 2)); ?>
+<?php $nodata = (!$this->config->get('config_express_phone') && ($this->config->get('config_express_password') === 2)); ?>
 <div class="left" <?php echo ($nodata) ? 'style="display:none;"' : ''; ?>>
   <h2><?php echo $text_your_details; ?></h2>
   <span>

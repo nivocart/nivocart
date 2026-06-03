@@ -10,7 +10,7 @@
   </div>
   <table class="radio">
     <?php foreach ($payment_methods as $payment_method) { ?>
-      <?php $paypal_fee = ((substr($payment_method['code'], 0, 3) === "pp_") || ($payment_method['code'] === "paypal_email")) ? "$paypal_fee_fee" : ""; ?>
+      <?php $paypal_fee = ((substr($payment_method['code'], 0, 3) === "pp_") || ($payment_method['code'] === "paypal_email")) ? '$paypal_fee_fee' : ''; ?>
       <tr class="highlight">
         <td>
           <?php if ($payment_method['code'] === $code || !$code) { ?>
@@ -61,7 +61,7 @@
 <?php if ($text_agree) { ?>
   <div class="buttons">
     <div class="right"><?php echo $text_agree; ?>
-      <?php if ($agree || (!$this->config->get('config_express_comment') && (count($payment_methods) == 1))) { ?>
+      <?php if ($agree || (!$this->config->get('config_express_comment') && (count($payment_methods) === 1))) { ?>
         <input type="checkbox" name="agree" value="1" checked="checked" />
       <?php } else { ?>
         <input type="checkbox" name="agree" value="1" />
