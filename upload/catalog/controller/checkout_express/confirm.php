@@ -389,9 +389,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 					$ship_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
 				} else {
 					$customer_id = $this->customer->getId();
-
 					$address_id = $this->model_account_address->getDefaultAddressId($customer_id);
-
 					$ship_address = $this->model_account_address->getAddress($address_id);
 				}
 
@@ -538,6 +536,7 @@ class ControllerCheckoutExpressConfirm extends Controller {
 			$this->data['totals'] = $total_data;
 
 			$this->data['payment'] = $this->getChild('payment/' . $this->session->data['payment_method']['code']);
+
 		} else {
 			$this->data['redirect'] = $redirect;
 		}
