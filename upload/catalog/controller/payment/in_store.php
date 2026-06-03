@@ -30,7 +30,12 @@ class ControllerPaymentInStore extends Controller {
 	}
 
 	public function confirm() {
-		if ($this->session->data['payment_method']['code'] == 'in_store') {
+		// Prevent in store direct access exploits
+		if (strtolower($this->session->data['payment_method']['code']) !== 'in_store') {
+			return;
+		}
+
+		if ($this->session->data['payment_method']['code'] === 'in_store') {
 			$this->language->load('payment/in_store');
 
 			$this->load->model('checkout/order');
@@ -39,5 +44,9 @@ class ControllerPaymentInStore extends Controller {
 
 			$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('in_store_order_status_id'), $comment, true);
 		}
+
+	    // Return redirect URL to the AJAX caller
+		$json['redirect'] = $this->url->link('checkout/success', '', 'SSL');
+		$this->response->setOutput(json_encode($json));
 	}
 }

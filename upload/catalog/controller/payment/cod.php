@@ -30,12 +30,12 @@ class ControllerPaymentCod extends Controller {
 	}
 
 	public function confirm() {
-		// Helps prevent cod direct access exploit.
-		if (strtolower($this->session->data['payment_method']['code']) != 'cod') {
+		// Prevent cod direct access exploits
+		if (strtolower($this->session->data['payment_method']['code']) !== 'cod') {
 			return;
 		}
 
-		if ($this->session->data['payment_method']['code'] == 'cod') {
+		if ($this->session->data['payment_method']['code'] === 'cod') {
 			$this->language->load('payment/cod');
 
 			$this->load->model('checkout/order');
@@ -44,5 +44,9 @@ class ControllerPaymentCod extends Controller {
 
 			$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('cod_order_status_id'), $comment, true);
 		}
+
+	    // Return redirect URL to the AJAX caller
+		$json['redirect'] = $this->url->link('checkout/success', '', 'SSL');
+		$this->response->setOutput(json_encode($json));
 	}
 }

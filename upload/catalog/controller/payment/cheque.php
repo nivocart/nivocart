@@ -36,7 +36,12 @@ class ControllerPaymentCheque extends Controller {
 	}
 
 	public function confirm() {
-		if ($this->session->data['payment_method']['code'] == 'cheque') {
+		// Prevent cheque direct access exploits
+		if (strtolower($this->session->data['payment_method']['code']) !== 'cheque') {
+			return;
+		}
+
+		if ($this->session->data['payment_method']['code'] === 'cheque') {
 			$this->language->load('payment/cheque');
 
 			$this->load->model('checkout/order');
@@ -49,5 +54,9 @@ class ControllerPaymentCheque extends Controller {
 
 			$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('cheque_order_status_id'), $comment, true);
 		}
+
+	    // Return redirect URL to the AJAX caller
+		$json['redirect'] = $this->url->link('checkout/success', '', 'SSL');
+		$this->response->setOutput(json_encode($json));
 	}
 }

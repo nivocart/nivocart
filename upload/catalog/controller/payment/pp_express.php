@@ -1573,7 +1573,7 @@ class ControllerPaymentPPExpress extends Controller {
 					}
 				}
 
-				if (isset($response['REDIRECTREQUIRED']) && $response['REDIRECTREQUIRED'] == true) {
+				if (isset($response['REDIRECTREQUIRED']) && $response['REDIRECTREQUIRED'] === true) {
 					//- handle german redirect here
 					if ($this->config->get('pp_express_test') == 1) {
 						$this->redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_complete-express-checkout&token=' . $this->session->data['paypal']['token']);

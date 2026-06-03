@@ -30,7 +30,7 @@ class ControllerPaymentFreeCheckout extends Controller {
 	}
 
 	public function confirm() {
-		// Helps prevent free checkout direct access exploit.
+		// Prevent free checkout direct access exploits
 		if (strtolower($this->session->data['payment_method']['code']) !== 'free_checkout') {
 			return;
 		}
@@ -44,5 +44,9 @@ class ControllerPaymentFreeCheckout extends Controller {
 
 			$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('free_checkout_order_status_id'), $comment, true);
 		}
+	
+	    // Return redirect URL to the AJAX caller
+		$json['redirect'] = $this->url->link('checkout/success', '', 'SSL');
+		$this->response->setOutput(json_encode($json));
 	}
 }
