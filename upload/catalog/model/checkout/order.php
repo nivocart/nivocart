@@ -183,7 +183,7 @@ class ModelCheckoutOrder extends Model {
 		}
 	}
 
-	public function confirm(int $order_id, int $order_status_id, $comment = '', $notify = false) {
+	public function confirm(int $order_id, int $order_status_id, $comment = '', $notify = false): void {
 		$order_info = $this->getOrder($order_id);
 
 		unset($this->session->data['wrapping']);
