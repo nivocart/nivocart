@@ -590,10 +590,6 @@
   </div>
 </div>
 
-<!--[if IE]>
-<script type="text/javascript" src="view/javascript/jquery/flot/excanvas.min.js"></script>
-<![endif]-->
-
 <script type="text/javascript"><!--
 function getSalesChart(range) {
 	$.ajax({

@@ -11,7 +11,7 @@
 <meta name="keywords" content="<?php echo $keywords; ?>" />
 <?php } ?>
 <title><?php echo $title; ?></title>
-<base href="<?php echo $base; ?>" />
+<base href="<?php echo $base; ?>">
 <link rel="icon" type="image/png" href="favicon.png" />
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
