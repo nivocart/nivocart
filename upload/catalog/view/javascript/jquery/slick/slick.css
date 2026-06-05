@@ -6,22 +6,23 @@
  * Development file. Use minified version for production.
  * ---------------------------------------------------
  */
- @font-face {
+
+@font-face {
   font-family: 'flexslider-icon';
-  src: url('fonts/flexslider-icon.eot');
-  src: url('fonts/flexslider-icon.eot?#iefix') format('embedded-opentype'), url('fonts/flexslider-icon.woff') format('woff'), url('fonts/flexslider-icon.ttf') format('truetype'), url('fonts/flexslider-icon.svg#flexslider-icon') format('svg');
+  src: local('Flexslider'), local('flexslider-icon'),
+	url('fonts/flexslider-icon.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
+
 .slick-slider {
 	position: relative;
 	display: block;
 	box-sizing: border-box;
+	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	user-select: none;
-	-webkit-touch-callout: none;
 	touch-action: pan-y;
-	-webkit-tap-highlight-color: transparent;
 }
 .slick-list {
 	position: relative;
@@ -97,7 +98,6 @@
 	visibility: hidden;
 	display: none;
 }
-
 /* --- Theme NivoCart --- */
 .slick-loading .slick-list {
 	background: #FFF url('ajax-loader.gif') center center no-repeat;
@@ -127,18 +127,15 @@
 	outline: none;
 }
 .slick-prev:hover:before, .slick-prev:focus:before, .slick-next:hover:before, .slick-next:focus:before {
-	filter: alpha(opacity=100);
 	opacity: 1;
 }
 .slick-prev.slick-disabled:before, .slick-next.slick-disabled:before {
-	filter: alpha(opacity=25);
 	opacity: 0.25;
 }
 .slick-prev:before, .slick-next:before {
 	font-family: "flexslider-icon";
 	font-size: 24px;
 	line-height: 1;
-	filter: alpha(opacity=75);
 	opacity: 0.75;
 	color: rgba(0, 0, 0, 0.8);
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
@@ -225,12 +222,10 @@
 	height: 24px;
 	content: '•';
 	text-align: center;
-	filter: alpha(opacity=25);
 	opacity: 0.25;
 	color: #111;
 }
 .slick-dots li.slick-active button:before {
-	filter: alpha(opacity=75);
 	opacity: 0.75;
 	color: #111;
 }
