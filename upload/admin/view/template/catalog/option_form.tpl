@@ -124,7 +124,8 @@
           <?php } ?></td>
           <td class="center"><div class="image"><img src="<?php echo $option_value['thumb']; ?>" alt="" id="thumb<?php echo $option_value_row; ?>" /><br />
             <input type="hidden" name="option_value[<?php echo $option_value_row; ?>][image]" value="<?php echo $option_value['image']; ?>" id="image<?php echo $option_value_row; ?>" />
-            <a onclick="image_upload('image<?php echo $option_value_row; ?>', 'thumb<?php echo $option_value_row; ?>');" class="button-browse"></a><a onclick="$('#thumb<?php echo $option_value_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image<?php echo $option_value_row; ?>').attr('value', '');" class="button-recycle"></a>
+            <a onclick="image_upload('image<?php echo $option_value_row; ?>', 'thumb<?php echo $option_value_row; ?>');" class="button-browse"></a>
+            <a onclick="$('#thumb<?php echo $option_value_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image<?php echo $option_value_row; ?>').attr('value', '');" class="button-recycle"></a>
           </div></td>
           <td class="center"><input type="text" name="option_value[<?php echo $option_value_row; ?>][sort_order]" value="<?php echo $option_value['sort_order']; ?>" size="1" /></td>
           <td class="center"><a onclick="$('#option-value-row<?php echo $option_value_row; ?>').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>
@@ -167,8 +168,9 @@ function addOptionValue() {
 	<?php } ?>
 	html += '    </td>';
 	html += '    <td class="center"><div class="image"><img src="<?php echo $no_image; ?>" alt="" id="thumb' + option_value_row + '" /><br />';
-    html += '      <input type="hidden" name="option_value[' + option_value_row + '][image]" value="" id="image' + option_value_row + '" />';
-	html += '      <a onclick="image_upload(\'image' + option_value_row + '\', \'thumb' + option_value_row + '\');" class="button-browse"></a><a onclick="$(\'#thumb' + option_value_row + '\').attr(\'src\', \'<?php echo $no_image; ?>\'); $(\'#image' + option_value_row + '\').attr(\'value\', \'\');" class="button-recycle"></a>';
+	html += '      <input type="hidden" name="option_value[' + option_value_row + '][image]" value="" id="image' + option_value_row + '" data-no-image="1" />';
+	html += '      <a onclick="image_upload(\'image' + option_value_row + '\', \'thumb' + option_value_row + '\');" class="button-browse"></a>';
+	html += '      <a onclick="$(\'#thumb' + option_value_row + '\').attr(\'src\', \'<?php echo $no_image; ?>\'); $(\'#image' + option_value_row + '\').attr(\'value\', \'\');" class="button-recycle"></a>';
 	html += '    </div></td>';
 	html += '    <td class="center"><input type="text" name="option_value[' + option_value_row + '][sort_order]" value="" size="1" /></td>';
 	html += '    <td class="center"><a onclick="$(\'#option-value-row' + option_value_row + '\').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>';
@@ -194,10 +196,13 @@ function image_upload(field, thumb) {
 				$.ajax({
 					url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>&image=' + encodeURIComponent($('#' + field).attr('value')),
 					dataType: 'text',
-					success: function(data) {
-						$('#' + thumb).replaceWith('<img src="' + data + '" alt="" id="' + thumb + '" />');
+					success: function(text) {
+						$('#' + thumb).replaceWith('<img src="' + text + '" alt="" id="' + thumb + '" />');
 					}
 				});
+			} else {
+				$('#' + field).attr('data-no-image', '1');
+				$('#' + thumb).replaceWith('<img src="<?php echo $no_image; ?>" alt="" id="' + thumb + '" />');
 			}
 		},
 		bgiframe: false,
