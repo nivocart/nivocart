@@ -37,58 +37,58 @@
           <td><?php echo $entry_type; ?></td>
           <td><select name="type">
             <optgroup label="<?php echo $text_choose; ?>">
-            <?php if ($type == 'select') { ?>
+            <?php if ($type === 'select') { ?>
               <option value="select" selected><?php echo $text_select; ?></option>
             <?php } else { ?>
               <option value="select"><?php echo $text_select; ?></option>
             <?php } ?>
-            <?php if ($type == 'radio') { ?>
+            <?php if ($type === 'radio') { ?>
               <option value="radio" selected><?php echo $text_radio; ?></option>
             <?php } else { ?>
               <option value="radio"><?php echo $text_radio; ?></option>
             <?php } ?>
-            <?php if ($type == 'checkbox') { ?>
+            <?php if ($type === 'checkbox') { ?>
               <option value="checkbox" selected><?php echo $text_checkbox; ?></option>
             <?php } else { ?>
               <option value="checkbox"><?php echo $text_checkbox; ?></option>
             <?php } ?>
-            <?php if ($type == 'image') { ?>
+            <?php if ($type === 'image') { ?>
               <option value="image" selected><?php echo $text_image; ?></option>
             <?php } else { ?>
               <option value="image"><?php echo $text_image; ?></option>
             <?php } ?>
             </optgroup>
             <optgroup label="<?php echo $text_input; ?>">
-            <?php if ($type == 'text') { ?>
+            <?php if ($type === 'text') { ?>
               <option value="text" selected><?php echo $text_text; ?></option>
             <?php } else { ?>
               <option value="text"><?php echo $text_text; ?></option>
             <?php } ?>
-            <?php if ($type == 'textarea') { ?>
+            <?php if ($type === 'textarea') { ?>
               <option value="textarea" selected><?php echo $text_textarea; ?></option>
             <?php } else { ?>
               <option value="textarea"><?php echo $text_textarea; ?></option>
             <?php } ?>
             </optgroup>
             <optgroup label="<?php echo $text_file; ?>">
-            <?php if ($type == 'file') { ?>
+            <?php if ($type === 'file') { ?>
               <option value="file" selected><?php echo $text_file; ?></option>
             <?php } else { ?>
               <option value="file"><?php echo $text_file; ?></option>
             <?php } ?>
             </optgroup>
             <optgroup label="<?php echo $text_date; ?>">
-            <?php if ($type == 'date') { ?>
+            <?php if ($type === 'date') { ?>
               <option value="date" selected><?php echo $text_date; ?></option>
             <?php } else { ?>
               <option value="date"><?php echo $text_date; ?></option>
             <?php } ?>
-            <?php if ($type == 'time') { ?>
+            <?php if ($type === 'time') { ?>
               <option value="time" selected><?php echo $text_time; ?></option>
             <?php } else { ?>
               <option value="time"><?php echo $text_time; ?></option>
             <?php } ?>
-            <?php if ($type == 'datetime') { ?>
+            <?php if ($type === 'datetime') { ?>
               <option value="datetime" selected><?php echo $text_datetime; ?></option>
             <?php } else { ?>
               <option value="datetime"><?php echo $text_datetime; ?></option>
@@ -146,7 +146,7 @@
 
 <script type="text/javascript"><!--
 $('select[name=\'type\']').on('change', function() {
-	if (this.value == 'select' || this.value == 'radio' || this.value == 'checkbox' || this.value == 'image') {
+	if (this.value === 'select' || this.value === 'radio' || this.value === 'checkbox' || this.value === 'image') {
 		$('#option-value').show();
 	} else {
 		$('#option-value').hide();

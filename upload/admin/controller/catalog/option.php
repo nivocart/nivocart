@@ -345,7 +345,9 @@ class ControllerCatalogOption extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$languages_array = [];
+
+		$this->data['languages'] = $this->model_localisation_language->getLanguages($languages_array);
 
 		if (isset($this->request->post['option_description'])) {
 			$this->data['option_description'] = $this->request->post['option_description'];
