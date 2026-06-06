@@ -1971,6 +1971,8 @@ function image_upload(field, thumb) {
 						$('#' + thumb).replaceWith('<img src="' + text + '" alt="" id="' + thumb + '" />');
 					}
 				});
+			} else {
+				$('#' + thumb).replaceWith('<img src="<?php echo $no_image; ?>" alt="" id="' + thumb + '" />');
 			}
 		},
 		bgiframe: false,
