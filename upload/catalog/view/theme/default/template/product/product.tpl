@@ -371,7 +371,7 @@
                 <span class="required">* </span>
               <?php } ?>
               <b><?php echo $option['name']; ?>:</b><br />
-              <input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="date" />
+              <input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="date" /> <img src="catalog/view/theme/default/image/calendar.png" alt="" />
               </div>
               <br />
             <?php } ?>
@@ -805,6 +805,16 @@ $('#button-buy-it-now').on('click', function() {
 				window.location = '<?php echo $buy_it_now; ?>';
 			}
 		}
+	});
+});
+//--></script>
+
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	var date = $('.date');
+	
+	$(date).mouseover(function() {
+		$('.date').datepicker({'dateFormat': 'yy-mm-dd'});
 	});
 });
 //--></script>
