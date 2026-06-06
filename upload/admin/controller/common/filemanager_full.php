@@ -128,9 +128,9 @@ class ControllerCommonFileManagerFull extends Controller {
 		$filename = str_replace('//', '/', $filename);
 		$filename = str_replace('data/data', 'data', $filename);
 
-		// Fall back to 'no_image.jpg' if filename is '' or just 'data/'
+		// Fallback: use relative no_image.jpg if filename is empty or unresolvable
 		if (empty($filename) || $filename === 'data/') {
-			$filename = DIR_IMAGE . 'no_image.jpg';
+			$filename = 'no_image.jpg';
 		}
 
 		$ext = substr(strrchr($filename, '.'), 1);
@@ -141,11 +141,17 @@ class ControllerCommonFileManagerFull extends Controller {
 			$filename = mb_strtolower($ext, 'UTF-8') . '.png';
 		}
 
-		// Do not return if filename is null
-		if ($return && !empty($filename)) {
-			return htmlspecialchars($this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 100, 100), ENT_QUOTES, 'UTF-8');
+		$resized = $this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 100, 100);
+
+		// Final safety net in case resize() still returns null
+		if (empty($resized)) {
+			$resized = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+		}
+
+		if ($return) {
+			return htmlspecialchars($resized, ENT_QUOTES, 'UTF-8');
 		} else {
-			$this->response->setOutput(htmlspecialchars($this->model_tool_image->resize(html_entity_decode($filename, ENT_QUOTES, 'UTF-8'), 100, 100), ENT_QUOTES, 'UTF-8'));
+			$this->response->setOutput(htmlspecialchars($resized, ENT_QUOTES, 'UTF-8'));
 		}
 	}
 
