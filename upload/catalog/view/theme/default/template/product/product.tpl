@@ -809,24 +809,6 @@ $('#button-buy-it-now').on('click', function() {
 });
 //--></script>
 
-<script type="text/javascript" src="catalog/view/javascript/jquery/ui/jquery-ui-timepicker-addon.min.js"></script>
-<script type="text/javascript" src="catalog/view/javascript/jquery/ui/jquery-ui-slider-access.min.js"></script> 
-
-<script type="text/javascript"><!--
-$('.date').datepicker({dateFormat: 'yy-mm-dd'});
-$('.time').timepicker({
-	timeFormat: 'HH:mm',
-	addSliderAccess: true,
-	sliderAccessArgs: { touchonly: false }
-});
-$('.datetime').datetimepicker({
-	dateFormat: 'yy-mm-dd',
-	timeFormat: 'HH:mm',
-	addSliderAccess: true,
-	sliderAccessArgs: { touchonly: false }
-});
-//--></script>
-
 <!-- Product Option Scripts //-->
 <?php if ($options) { ?>
 <script type="text/javascript" src="catalog/view/javascript/jquery/ajaxupload.min.js"></script>
