@@ -14,8 +14,9 @@
  */
 
 @font-face {
-  font-family: 'Flexslider';
-  src: local('Flexslider'), local('flexslider-icon'),
+  font-family: 'flexslider-icon';
+  src: local('flexslider-icon'),
+    url('fonts/flexslider-icon.woff2') format('woff2'),
 	url('fonts/flexslider-icon.woff') format('woff');
   font-weight: normal;
   font-style: normal;
