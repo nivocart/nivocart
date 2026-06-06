@@ -137,7 +137,9 @@ class ControllerReportSaleProfit extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$order_statuses_array = [];
+
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
 
 		// Pagination data
 		$url = '';

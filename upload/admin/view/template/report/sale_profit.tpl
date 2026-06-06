@@ -23,7 +23,7 @@
         <div class="left"><em><?php echo $entry_status; ?></em> <select name="filter_order_status_id">
           <option value="0"><?php echo $text_all_status; ?></option>
           <?php foreach ($order_statuses as $order_status) { ?>
-            <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
+            <?php if ($order_status['order_status_id'] === $filter_order_status_id) { ?>
               <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
