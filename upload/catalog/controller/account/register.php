@@ -246,7 +246,7 @@ class ControllerAccountRegister extends Controller {
 		if (isset($this->request->post['date_of_birth'])) {
 			$this->data['date_of_birth'] = $this->request->post['date_of_birth'];
 		} else {
-			$this->data['date_of_birth'] = '0000-00-00';
+			$this->data['date_of_birth'] = '';
 		}
 
 		if (isset($this->request->post['company'])) {

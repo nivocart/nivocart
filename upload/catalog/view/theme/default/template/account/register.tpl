@@ -61,7 +61,7 @@
       <?php if ($show_dob) { ?>
       <tr>
         <td><span class="required">*</span> <?php echo $entry_date_of_birth; ?></td>
-        <td><input type="text" name="date_of_birth" value="<?php echo $date_of_birth; ?>" id="date-of-birth" size="12" />
+        <td><input type="text" name="date_of_birth" value="<?php echo $date_of_birth; ?>" id="date-of-birth" size="12" /> <img src="catalog/view/theme/default/image/calendar.png" alt="" />
         <?php if ($error_date_of_birth) { ?>
           <span class="error"><?php echo $error_date_of_birth; ?></span>
         <?php } ?></td>
@@ -375,7 +375,16 @@ $(document).ready(function() {
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('#date-of-birth').datepicker({dateFormat: 'yy-mm-dd'});
+	var date_of_birth = $('#date-of-birth');
+	
+	$(date_of_birth).mouseover(function() {
+		$('#date-of-birth').datepicker({
+			dateFormat: 'yy-mm-dd',
+			changeYear: true,
+			changeMonth: true,
+			yearRange: '1925:2025'
+		});
+	});
 });
 //--></script>
 
