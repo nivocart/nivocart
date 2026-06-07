@@ -381,7 +381,15 @@
                 <span class="required">* </span>
               <?php } ?>
               <b><?php echo $option['name']; ?>:</b><br />
-              <input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="time" />
+              <select name="option[<?php echo $option['product_option_id']; ?>]">
+                <option value=""><?php echo $text_select; ?></option>
+                <?php for ($h = 0; $h < 24; $h++) { ?>
+                <?php $value = sprintf('%02d:00', $h); ?>
+                <option value="<?php echo $value; ?>" <?php echo ($option['option_value'] === $value) ? 'selected' : ''; ?>>
+                  <?php echo $value; ?>
+                </option>
+                <?php } ?>
+              </select>
               </div>
               <br />
             <?php } ?>
