@@ -1,7 +1,7 @@
 /**
-Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
-For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
-*/
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license/
+ */
 
 body {
 	/* Emoji fonts are added to visualise them nicely in Internet Explorer. */
@@ -69,7 +69,7 @@ pre {
 	tab-size: 4;
 }
 .marker {
-	background-color: Yellow;
+	background-color: yellow;
 }
 span[lang] {
 	font-style: italic;
@@ -102,6 +102,7 @@ a > img {
 	background-color: rgba(255, 0, 0, 0.05);
 	margin: 10px;
 }
+/* Image */
 .image-clean {
 	border: 0;
 	background: none;
@@ -118,6 +119,7 @@ a > img {
 .image-grayscale img, img.image-grayscale {
 	filter: grayscale(100%);
 }
+/* Embed */
 .embed-240p {
 	max-width: 426px;
 	max-height: 240px;

@@ -1,5 +1,5 @@
-/**
- * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
+﻿/**
+ * Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -79,6 +79,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: 'Language: LTR', element: 'span', attributes: { 'dir': 'ltr' } },
 
 	/* Object styles */
+
 	{ name: 'Styled Image (left)',
 		element: 'img',
 		attributes: { 'class': 'left' }

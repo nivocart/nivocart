@@ -57,7 +57,6 @@ CKEditor 4 LTS ("Long Term Support") is available under the terms of the Extende
 	border-radius: 3px;
 	text-align: center;
 	opacity: 0.95;
-	filter: alpha(opacity = 95);
 	box-shadow: 2px 2px 3px 0px rgba(50, 50, 50, 0.3);
 	animation: fadeIn 0.7s;
 }
