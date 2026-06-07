@@ -18,7 +18,7 @@
 /* LOCKED */
 .tree-apple .locked li a { color:#DDD; }
 /* DOTS */
-.tree-apple ul { background-position:6px 1px; background-repeat:repeat-y; background-image:url('dot_for_ie.gif'); *background-image:url('dot_for_ie.gif'); }
+.tree-apple ul { background-position:6px 1px; background-repeat:repeat-y; background-image:url('dot_for_ie.gif'); }
 .tree-apple li { line-height:14px; background-position:-64px -16px; background-repeat:no-repeat; background-image:url('icons.png'); }
 /* NO DOTS */
 .tree-apple .no_dots, .tree-apple .no_dots ul { background:transparent; }
@@ -28,7 +28,7 @@
 .tree-apple li.closed, #jstree-dragged.tree-apple li li.open { background:url('icons.png') -48px -32px no-repeat; }
 #jstree-marker { background-image:url('icons.png'); }
 /* DEFAULT, HOVER, CLICKED, LOADING STATES */
-.tree-apple li a, .tree-apple li span { font-size:14px; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px; }
+.tree-apple li a, .tree-apple li span { font-size:14px; border-radius:3px; }
 .tree-apple li a:hover, .tree-apple li a.hover, .tree-apple li span { background:#D0DEF4; border:1px solid #EEE; padding:0 3px 0 3px; }
 .tree-apple li a.clicked, .tree-apple li a.clicked:hover, .tree-apple li span.clicked { background:#D0DEF4; border:1px solid #EEE; padding:0 3px 0 3px; }
 /* ICONS */

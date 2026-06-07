@@ -87,15 +87,6 @@
 	box-shadow: 0 0 0 3px #0072C4;
 }
 
-@-webkit-keyframes rotateDonut {
-	0% {transform: rotate(0turn)}
-}
-@-moz-keyframes rotateDonut {
-	0% {transform: rotate(0turn)}
-}
-@-o-keyframes rotateDonut {
-	0% {transform: rotate(0turn)}
-}
 @keyframes rotateDonut {
 	0% {transform: rotate(0turn)}
 }
@@ -124,26 +115,26 @@
 
 /* Desktops */
 @media only screen and (min-width: 961px) and (max-width: 1281px) {
-	.chart.donut{width:200px; height:200px}
-	.donut-chart h6,.donut-chart.fill h6{font-size:28px}
+	.chart.donut{width: 200px; height: 200px}
+	.donut-chart h6,.donut-chart.fill h6{font-size: 28px}
 }
 /* Laptops */
 @media only screen and (min-width: 801px) and (max-width: 961px) {
-	.chart.donut{width:180px; height:180px}
-	.donut-chart h6,.donut-chart.fill h6{font-size:26px}
+	.chart.donut{width: 180px; height: 180px}
+	.donut-chart h6,.donut-chart.fill h6{font-size: 26px}
 }
 /* Tablets */
 @media only screen and (min-width: 641px) and (max-width: 801px) {
-	.chart.donut{width:160px; height:160px}
-	.donut-chart h6,.donut-chart.fill h6{font-size:24px}
+	.chart.donut{width: 160px; height: 160px}
+	.donut-chart h6,.donut-chart.fill h6{font-size: 24px}
 }
 /* Phones Landscape*/
 @media only screen and (min-width: 320px) and (max-width: 641px) {
-	.chart.donut{width:135px; height:135px}
-	.donut-chart h6,.donut-chart.fill h6{font-size:22px}
+	.chart.donut{width: 135px; height: 135px}
+	.donut-chart h6,.donut-chart.fill h6{font-size: 22px}
 }
 /* Phones Portrait*/
 @media only screen and (max-width: 320px) {
-	.chart.donut{width:70px; height:70px}
-	.donut-chart h6,.donut-chart.fill h6{font-size:16px}
+	.chart.donut{width: 70px; height: 70px}
+	.donut-chart h6,.donut-chart.fill h6{font-size: 16px}
 }

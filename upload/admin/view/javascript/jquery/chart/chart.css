@@ -88,8 +88,6 @@
 	transition: all 100ms ease-in-out;
 }
 
-@-webkit-keyframes drawBar {0% {height: 0;}}
-@-moz-keyframes drawBar {0% {height: 0;}}
 @keyframes drawBar {0% {height: 0;}}
 
 /* Donut chart */
@@ -155,8 +153,6 @@
 	box-shadow: 0 0 0 4px #0072C4;
 }
 
-@-webkit-keyframes rotateDonut {0% {transform: rotate(0deg);}}
-@-moz-keyframes rotateDonut {0% {transform: rotate(0deg);}}
 @keyframes rotateDonut {0% {transform: rotate(0deg);}}
 
 .donut-chart .spinner.temp {
@@ -407,10 +403,6 @@
 }
 
 /* Line chart animation */
-@-webkit-keyframes drawLine {0% {opacity: 0;}}
-@-moz-keyframes drawLine {0% {opacity: 0;}}
 @keyframes drawLine {0% {opacity: 0;}}
 
-@-webkit-keyframes drawChart {0% {width: 0;}}
-@-moz-keyframes drawChart {0% {width: 0;}}
 @keyframes drawChart {0% {width: 0;}}
