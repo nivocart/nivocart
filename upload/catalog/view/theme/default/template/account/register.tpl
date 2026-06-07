@@ -382,7 +382,7 @@ $(document).ready(function() {
 			dateFormat: 'yy-mm-dd',
 			changeYear: true,
 			changeMonth: true,
-			yearRange: '1925:2025'
+			yearRange: '-100:+0'
 		});
 	});
 });
