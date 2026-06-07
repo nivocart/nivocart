@@ -704,6 +704,14 @@
         </table>
       </div>
       <div id="tab-option">
+        <div class="tooltip"><?php echo $help_options; ?>
+        <?php $seen_types = [];
+          foreach ($available_options as $available_option) {
+            if (in_array($available_option['type'], $seen_types)) continue;
+          $seen_types[] = $available_option['type']; ?>
+          <?php echo $available_option['type']; ?>&nbsp;
+        <?php } ?>
+        </div>
         <div id="vtab-option" class="vtabs">
           <?php $option_row = 0; ?>
           <?php foreach ($product_options as $product_option) { ?>
@@ -764,13 +772,6 @@
               <tr>
                 <td><?php echo $entry_option_value; ?></td>
                 <td><input type="text" name="product_option[<?php echo $option_row; ?>][option_value]" value="<?php echo $product_option['option_value']; ?>" class="time" size="12" />
-                <span class="form-icon"><img src="view/image/calendar.png" alt="" /></span></td>
-              </tr>
-              <?php } ?>
-              <?php if ($product_option['type'] === 'datetime') { ?>
-              <tr>
-                <td><?php echo $entry_option_value; ?></td>
-                <td><input type="text" name="product_option[<?php echo $option_row; ?>][option_value]" value="<?php echo $product_option['option_value']; ?>" class="datetime" />
                 <span class="form-icon"><img src="view/image/calendar.png" alt="" /></span></td>
               </tr>
               <?php } ?>
@@ -1674,12 +1675,6 @@ $('.time').timepicker({
 	addSliderAccess: true,
 	sliderAccessArgs: { touchonly: false }
 });
-$('.datetime').datetimepicker({
-	dateFormat: 'yy-mm-dd',
-	timeFormat: 'HH:mm',
-	addSliderAccess: true,
-	sliderAccessArgs: { touchonly: false }
-});
 //--></script>
 
 <script type="text/javascript"><!--
@@ -1756,14 +1751,6 @@ $('input[name=\'option\']').catcomplete({
 			html += '    </tr>';
 		}
 
-		if (ui.item.type === 'datetime') {
-			html += '    <tr>';
-			html += '      <td><?php echo $entry_option_value; ?></td>';
-			html += '      <td><input type="text" name="product_option[' + option_row + '][option_value]" value="" class="datetime" />';
-			html += '      <span class="form-icon"><img src="view/image/calendar.png" alt="" /></span></td></td>';
-			html += '    </tr>';
-		}
-
 		html += '  </table>';
 
 		if (ui.item.type === 'select' || ui.item.type === 'radio' || ui.item.type === 'checkbox' || ui.item.type === 'image') {
@@ -1806,12 +1793,6 @@ $('input[name=\'option\']').catcomplete({
 
 		$('.date').datepicker({dateFormat: 'yy-mm-dd'});
 		$('.time').timepicker({
-			timeFormat: 'HH:mm',
-			addSliderAccess: true,
-			sliderAccessArgs: { touchonly: false }
-		});
-		$('.datetime').datetimepicker({
-			dateFormat: 'yy-mm-dd',
 			timeFormat: 'HH:mm',
 			addSliderAccess: true,
 			sliderAccessArgs: { touchonly: false }

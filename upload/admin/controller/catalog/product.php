@@ -832,6 +832,8 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['entry_required'] = $this->language->get('entry_required');
 		$this->data['entry_palette'] = $this->language->get('entry_palette');
 
+		$this->data['help_options'] = $this->language->get('help_options');
+
 		// Recurring
 		$this->data['text_recurring_help'] = $this->language->get('text_recurring_help');
 		$this->data['text_recurring_title'] = $this->language->get('text_recurring_title');
@@ -1038,7 +1040,9 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$languages_array = [];
+
+		$this->data['languages'] = $this->model_localisation_language->getLanguages($languages_array);
 
 		if (isset($this->request->post['product_description'])) {
 			$this->data['product_description'] = $this->request->post['product_description'];
@@ -1178,7 +1182,9 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+		$tax_classes_array = [];
+
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
 
 		if (isset($this->request->post['tax_class_id'])) {
 			$this->data['tax_class_id'] = $this->request->post['tax_class_id'];
@@ -1256,7 +1262,9 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('localisation/stock_status');
 
-		$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
+		$stock_statuses_array = [];
+
+		$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses($stock_statuses_array);
 
 		if (isset($this->request->post['stock_status_id'])) {
 			$this->data['stock_status_id'] = $this->request->post['stock_status_id'];
@@ -1277,7 +1285,9 @@ class ControllerCatalogProduct extends Controller {
 		// Locations
 		$this->load->model('localisation/location');
 
-		$this->data['store_locations'] = $this->model_localisation_location->getLocations();
+		$store_locations_array = [];
+
+		$this->data['store_locations'] = $this->model_localisation_location->getLocations($store_locations_array);
 
 		if (isset($this->request->post['product_location'])) {
 			$this->data['product_location'] = $this->request->post['product_location'];
@@ -1369,7 +1379,9 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('localisation/length_class');
 
-		$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
+		$length_classes_array = [];
+
+		$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses($length_classes_array);
 
 		if (isset($this->request->post['length_class_id'])) {
 			$this->data['length_class_id'] = $this->request->post['length_class_id'];
@@ -1391,7 +1403,9 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('localisation/weight_class');
 
-		$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
+		$weight_classes_array = [];
+
+		$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses($weight_classes_array);
 
 		if (isset($this->request->post['weight_class_id'])) {
 			$this->data['weight_class_id'] = $this->request->post['weight_class_id'];
@@ -1406,7 +1420,9 @@ class ControllerCatalogProduct extends Controller {
 		// Manufacturer
 		$this->load->model('catalog/manufacturer');
 
-		$this->data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
+		$manufacturers_array = [];
+
+		$this->data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturers_array);
 
 		if (isset($this->request->post['manufacturer_id'])) {
 			$this->data['manufacturer_id'] = $this->request->post['manufacturer_id'];
@@ -1436,7 +1452,9 @@ class ControllerCatalogProduct extends Controller {
 		// Stores
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$stores_array = [];
+
+		$this->data['stores'] = $this->model_setting_store->getStores($stores_array);
 
 		if (isset($this->request->post['product_store'])) {
 			$this->data['product_store'] = $this->request->post['product_store'];
@@ -1720,13 +1738,25 @@ class ControllerCatalogProduct extends Controller {
 			}
 		}
 
+		// Available Options
+		$this->load->model('catalog/option');
+
+		$options_array = [];
+
+		$this->data['available_options'] = $this->model_catalog_option->getOptions($options_array);
+
+		// Profiles
 		$this->load->model('sale/customer_group');
 
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+		$customer_groups_array = [];
+
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
 
 		$this->load->model('catalog/profile');
 
-		$this->data['profiles'] = $this->model_catalog_profile->getProfiles();
+		$profiles_array = [];
+
+		$this->data['profiles'] = $this->model_catalog_profile->getProfiles($profiles_array);
 
 		if (isset($this->request->post['product_profiles'])) {
 			$this->data['product_profiles'] = $this->request->post['product_profiles'];
@@ -1826,7 +1856,9 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$layouts_array = [];
+
+		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
 
 		$this->template = 'catalog/product_form.tpl';
 		$this->children = [
@@ -2072,7 +2104,9 @@ class ControllerCatalogProduct extends Controller {
 
 			$this->data['periods'] = $periods;
 
-			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+			$customer_groups_array = [];
+
+			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
 
 			$this->data['default_customer_group'] = $this->config->get('config_customer_group_id');
 
@@ -2191,7 +2225,9 @@ class ControllerCatalogProduct extends Controller {
 
 			$this->data['periods'] = $periods;
 
-			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+			$customer_groups_array = [];
+
+			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
 
 			$this->data['default_customer_group'] = $this->config->get('config_customer_group_id');
 

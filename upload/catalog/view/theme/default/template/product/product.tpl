@@ -385,16 +385,6 @@
               </div>
               <br />
             <?php } ?>
-            <?php if ($option['type'] === 'datetime') { ?>
-              <div id="option-<?php echo $option['product_option_id']; ?>" class="option">
-              <?php if ($option['required']) { ?>
-                <span class="required">* </span>
-              <?php } ?>
-              <b><?php echo $option['name']; ?>:</b><br />
-              <input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="datetime" />
-              </div>
-              <br />
-            <?php } ?>
           <?php } ?>
         </div>
       <?php } ?>

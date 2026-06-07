@@ -14,7 +14,6 @@ $_['text_text']          = 'Text';
 $_['text_textarea']      = 'Textarea';
 $_['text_file']          = 'File';
 $_['text_date']          = 'Date';
-$_['text_datetime']      = 'Date &amp; Time';
 $_['text_time']          = 'Time';
 $_['text_image_manager'] = 'File Manager';
 $_['text_browse']        = 'Browse';

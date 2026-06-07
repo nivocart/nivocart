@@ -16,7 +16,6 @@
       <h1><img src="view/image/product-add.png" alt="" /> <?php echo $heading_title; ?></h1>
       <div class="buttons">
         <a href="<?php echo $insert; ?>" class="button ripple"><?php echo $button_insert; ?></a>
-        <a id="delete" class="button-delete ripple"><?php echo $button_delete; ?></a>
       </div>
     </div>
     <div class="content-body">
@@ -29,12 +28,12 @@
         <tr>
           <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
           <label for="check-all"><span></span></label></td>
-          <td class="left"><?php if ($sort == 'od.name') { ?>
+          <td class="left"><?php if ($sort === 'od.name') { ?>
             <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'o.sort_order') { ?>
+          <td class="left"><?php if ($sort === 'o.sort_order') { ?>
             <a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_sort_order; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_sort_order; ?>"><?php echo $column_sort_order; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -74,27 +73,4 @@
     </div>
   </div>
 </div>
-
-<script type="text/javascript"><!--
-$('#delete').on('click', function() {
-	$.confirm({
-		title: '<?php echo $text_confirm_delete; ?>',
-		content: '<?php echo $text_confirm; ?>',
-		icon: 'fa fa-question-circle',
-		theme: 'light',
-		useBootstrap: false,
-		boxWidth: 580,
-		animation: 'zoom',
-		closeAnimation: 'scale',
-		opacity: 0.1,
-		buttons: {
-			confirm: function() {
-				$('form').submit();
-			},
-			cancel: function() { }
-		}
-	});
-});
-//--></script>
-
 <?php echo $footer; ?>

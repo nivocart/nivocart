@@ -636,7 +636,7 @@ class ControllerProductProduct extends Controller {
 						'required'          => $option['required']
 					];
 
-				} elseif ($option['type'] === 'text' || $option['type'] === 'textarea' || $option['type'] === 'file' || $option['type'] === 'date' || $option['type'] === 'time' || $option['type'] === 'datetime') {
+				} elseif ($option['type'] === 'text' || $option['type'] === 'textarea' || $option['type'] === 'file' || $option['type'] === 'date' || $option['type'] === 'time') {
 					$this->data['options'][] = [
 						'product_option_id' => $option['product_option_id'],
 						'option_id'         => $option['option_id'],

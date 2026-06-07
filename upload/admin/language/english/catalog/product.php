@@ -28,7 +28,7 @@ $_['column_text']             = 'Text';
 $_['column_option_value']     = 'Option Value';
 $_['column_option_points']    = 'Points';
 $_['column_total_quantity']   = 'Total Quantity in Stock';
-$_['column_substract']        = 'Substract Stock';
+$_['column_substract']        = 'Subtract Stock';
 $_['column_weight']           = 'Weight';
 $_['column_profile']          = 'Profile';
 $_['column_customer_group']   = 'Customer Group';
@@ -103,6 +103,8 @@ $_['entry_option']            = 'Option';
 $_['entry_option_value']      = 'Option Value';
 $_['entry_required']          = 'Required';
 $_['entry_palette']           = 'Color Palette:<span class="help">Select a specific palette for this product.<br />Click "Apply" to activate.</span>';
+
+$_['help_options']            = 'Available option types:';
 
 // Mass Update
 $_['text_selected_yes']       = 'Selected only';

@@ -88,11 +88,6 @@
             <?php } else { ?>
               <option value="time"><?php echo $text_time; ?></option>
             <?php } ?>
-            <?php if ($type === 'datetime') { ?>
-              <option value="datetime" selected><?php echo $text_datetime; ?></option>
-            <?php } else { ?>
-              <option value="datetime"><?php echo $text_datetime; ?></option>
-            <?php } ?>
             </optgroup>
           </select></td>
         </tr>

@@ -2428,7 +2428,6 @@ INSERT INTO `nc_option` (`option_id`, `type`, `sort_order`) VALUES
 (7, 'file', 6),
 (8, 'date', 7),
 (9, 'time', 8),
-(10, 'datetime', 9),
 (11, 'select', 1),
 (12, 'date', 1);
 
@@ -2459,9 +2458,8 @@ INSERT INTO `nc_option_description` (`option_id`, `language_id`, `name`) VALUES
 (7, 1, 'File'),
 (5, 1, 'Select'),
 (9, 1, 'Time'),
-(10, 1, 'Date &amp; Time'),
-(12, 1, 'Delivery Date'),
-(11, 1, 'Size');
+(11, 1, 'Size'),
+(12, 1, 'Delivery Date');
 
 -- --------------------------------------------------------
 
