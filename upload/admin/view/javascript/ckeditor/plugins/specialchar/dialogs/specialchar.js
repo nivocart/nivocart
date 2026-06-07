@@ -1,7 +1,7 @@
 ﻿/*
- Copyright (c) 2003-2025, CKSource Holding sp. z o.o. All rights reserved.
- CKEditor 4 LTS ("Long Term Support") is available under the terms of the Extended Support Model.
-*/
+ *  Copyright (c) 2003-2025, CKSource Holding sp. z o.o. All rights reserved.
+ * CKEditor 4 LTS ("Long Term Support") is available under the terms of the Extended Support Model.
+ */
 CKEDITOR.dialog.add("specialchar",function(h){var f,n=h.lang.specialchar,k,l,p,d,e,q;l=function(c){var b;c=c.data?c.data.getTarget():new CKEDITOR.dom.element(c);"a"==c.getName()&&(b=c.getChild(0).getHtml())&&(c.removeClass("cke_light_background"),f.hide(),c=h.document.createElement("span"),c.setHtml(b),h.insertText(c.getText()))};p=CKEDITOR.tools.addFunction(l);e=function(c,b){var a;b=b||c.data.getTarget();"span"==b.getName()&&(b=b.getParent());if("a"==b.getName()&&(a=b.getChild(0).getHtml())){k&&
 d(null,k);var e=f.getContentElement("info","htmlPreview").getElement();f.getContentElement("info","charPreview").getElement().setHtml(a);e.setHtml(CKEDITOR.tools.htmlEncode(a));b.getParent().addClass("cke_light_background");k=b}};d=function(c,b){b=b||c.data.getTarget();"span"==b.getName()&&(b=b.getParent());"a"==b.getName()&&(f.getContentElement("info","charPreview").getElement().setHtml("\x26nbsp;"),f.getContentElement("info","htmlPreview").getElement().setHtml("\x26nbsp;"),b.getParent().removeClass("cke_light_background"),
 k=void 0)};q=CKEDITOR.tools.addFunction(function(c){c=new CKEDITOR.dom.event(c);var b=c.getTarget(),a;a=c.getKeystroke();var r="rtl"==h.lang.dir;switch(a){case 38:if(a=b.getParent().getParent().getPrevious())a=a.getChild([b.getParent().getIndex(),0]),a.focus(),d(null,b),e(null,a);c.preventDefault();break;case 40:(a=b.getParent().getParent().getNext())&&(a=a.getChild([b.getParent().getIndex(),0]))&&1==a.type&&(a.focus(),d(null,b),e(null,a));c.preventDefault();break;case 32:l({data:c});c.preventDefault();

@@ -1,3 +1,8 @@
+/**
+ * @license Copyright (c) 2003-2025, CKSource Holding sp. z o.o. All rights reserved.
+ * CKEditor 4 LTS ("Long Term Support") is available under the terms of the Extended Support Model.
+ */
+
 .cke_table-faked-selection-editor *::selection, table[data-cke-table-faked-selection-table] *::selection {
 	background: transparent;
 }
@@ -17,9 +22,6 @@
 }
 .cke_editable:focus .cke_table-faked-selection a {
 	color: white;
-}
-.cke_table-faked-selection::-moz-selection, .cke_table-faked-selection ::-moz-selection {
-	background: transparent;
 }
 .cke_table-faked-selection::selection, .cke_table-faked-selection ::selection {
 	background: transparent;
