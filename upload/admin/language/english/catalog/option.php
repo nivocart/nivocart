@@ -18,6 +18,7 @@ $_['text_time']          = 'Time';
 $_['text_image_manager'] = 'File Manager';
 $_['text_browse']        = 'Browse';
 $_['text_clear']         = 'Clear';
+$_['text_option_types']  = '<b>Option types:</b> checkbox, date, file, image, radio, select, text, textarea, time.';
 
 // Column
 $_['column_name']        = 'Option Name';
@@ -30,6 +31,9 @@ $_['entry_type']         = 'Type:';
 $_['entry_option_value'] = 'Option Value Name:';
 $_['entry_image']        = 'Image:';
 $_['entry_sort_order']   = 'Sort Order:';
+
+// Button
+$_['button_info']        = 'Information';
 
 // Error
 $_['error_permission']   = 'Warning: You do not have permission to modify <b>Options</b> !';
