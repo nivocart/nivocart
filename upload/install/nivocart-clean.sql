@@ -2427,9 +2427,7 @@ INSERT INTO `nc_option` (`option_id`, `type`, `sort_order`) VALUES
 (6, 'textarea', 5),
 (7, 'file', 6),
 (8, 'date', 7),
-(9, 'time', 8),
-(11, 'select', 1),
-(12, 'date', 1);
+(9, 'time', 8);
 
 -- --------------------------------------------------------
 
@@ -2453,13 +2451,11 @@ INSERT INTO `nc_option_description` (`option_id`, `language_id`, `name`) VALUES
 (1, 1, 'Radio'),
 (2, 1, 'Checkbox'),
 (4, 1, 'Text'),
-(6, 1, 'Textarea'),
-(8, 1, 'Date'),
-(7, 1, 'File'),
 (5, 1, 'Select'),
-(9, 1, 'Time'),
-(11, 1, 'Size'),
-(12, 1, 'Delivery Date');
+(6, 1, 'Textarea'),
+(7, 1, 'File'),
+(8, 1, 'Date'),
+(9, 1, 'Time');
 
 -- --------------------------------------------------------
 
