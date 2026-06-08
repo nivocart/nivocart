@@ -16,6 +16,7 @@
       <h1><img src="view/image/product-add.png" alt="" /> <?php echo $heading_title; ?></h1>
       <div class="buttons">
         <a href="<?php echo $insert; ?>" class="button ripple"><?php echo $button_insert; ?></a>
+        <a id="delete" class="button-delete ripple"><?php echo $button_delete; ?></a>
       </div>
     </div>
     <div class="content-body">
@@ -73,4 +74,27 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript"><!--
+$('#delete').on('click', function() {
+	$.confirm({
+		title: '<?php echo $text_confirm_delete; ?>',
+		content: '<?php echo $text_confirm; ?>',
+		icon: 'fa fa-question-circle',
+		theme: 'light',
+		useBootstrap: false,
+		boxWidth: 580,
+		animation: 'zoom',
+		closeAnimation: 'scale',
+		opacity: 0.1,
+		buttons: {
+			confirm: function() {
+				$('form').submit();
+			},
+			cancel: function() { }
+		}
+	});
+});
+//--></script>
+
 <?php echo $footer; ?>

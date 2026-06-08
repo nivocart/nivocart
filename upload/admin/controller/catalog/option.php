@@ -89,6 +89,34 @@ class ControllerCatalogOption extends Controller {
 		$this->getForm();
 	}
 
+	public function delete() {
+		$this->language->load('catalog/option');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('catalog/option');
+
+		if (isset($this->request->post['selected']) && $this->validateDelete()) {
+			foreach ($this->request->post['selected'] as $option_id) {
+				$this->model_catalog_option->deleteOption($option_id);
+			}
+
+			$this->session->data['success'] = $this->language->get('text_success');
+
+			$page_url = array_filter([
+				'sort'  => $this->request->get['sort'] ?? null,
+				'order' => $this->request->get['order'] ?? null,
+				'page'  => $this->request->get['page'] ?? null
+			]);
+
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
+
+			$this->redirect($this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+		}
+
+		$this->getList();
+	}
+
 	protected function getList() {
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'od.name',
@@ -157,6 +185,7 @@ class ControllerCatalogOption extends Controller {
 
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
+		$this->data['text_confirm_delete'] = $this->language->get('text_confirm_delete');
 
 		$this->data['column_name'] = $this->language->get('column_name');
 		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
@@ -327,6 +356,7 @@ class ControllerCatalogOption extends Controller {
 			$this->data['option_description'] = [];
 		}
 
+		// 9 option types: 'checkbox','date','file','image','radio','select','text','textarea','time'.
 		if (isset($this->request->post['type'])) {
 			$this->data['type'] = $this->request->post['type'];
 		} elseif (!empty($option_info)) {
@@ -404,6 +434,24 @@ class ControllerCatalogOption extends Controller {
 						$this->error['option_value'][$option_value_id][$language_id] = $this->language->get('error_option_value');
 					}
 				}
+			}
+		}
+
+		return empty($this->error);
+	}
+
+	protected function validateDelete() {
+		if (!$this->user->hasPermission('modify', 'catalog/option')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		$this->load->model('catalog/product');
+
+		foreach ($this->request->post['selected'] as $option_id) {
+			$product_total = $this->model_catalog_product->getTotalProductsByOptionId($option_id);
+
+			if ($product_total) {
+				$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
 			}
 		}
 
