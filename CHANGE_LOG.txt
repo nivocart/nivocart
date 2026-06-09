@@ -7,10 +7,18 @@ NivoCart v2.0.0
 ---------------
 Release: summer 2026
 
-- All PHP pages updated to PHP 8.0+
-- PHPExcel v1.8.1 (opensource) updated for PHP 8+
-- Dompdf v1.1.1 updated for PHP 8+
-- Ckeditor v4.22.1 Standard (opensource)
+- All PHP pages updated to PHP 8.1+
+- PHPExcel v1.8.1 (opensource) updated for PHP 8.1+
+- Dompdf v1.1.1 updated for PHP 8.1+
+- Ckeditor v4.22.1 Full (opensource).
+- Removed support for older browsers (IE).
+- Removed obsolete files and payment gateways.
+- Replaced/Removed deprecated PHP functions.
+- Replaced all "unsafe" PHP functions throughout.
+- Better Cache management for files and images.
+- Better and more reliable Cookie Consent script.
+- Safer Session and Token management.
+- Safer "Password Forgotten" flow.
 - License changed to GNU GPL v3.
 
 
@@ -33,8 +41,8 @@ Released: 16/09/2019
 - jQuery UI timepicker addon update to v1.6.3. Fix issue #20
 - Admin order history/order status update. Bug. Fix issue #19
 - DomPDF updates to fix broken downloaded files. Fix issue #18
-- Re-instated mCrypt function for Php 7.0.x support. Fix issue #16
-- Improved support for latest Php versions up to 7.3.8.
+- Re-instated mCrypt function for PHP 7.0.x support. Fix issue #16
+- Improved support for latest PHP versions up to 7.3.8.
 - Minor language definitions changes.
 
 
