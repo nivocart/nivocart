@@ -205,7 +205,9 @@ class ControllerPaymentPPStandard extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$order_statuses_array = [];
+
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
 
 		if (isset($this->request->post['pp_standard_geo_zone_id'])) {
 			$this->data['pp_standard_geo_zone_id'] = $this->request->post['pp_standard_geo_zone_id'];
