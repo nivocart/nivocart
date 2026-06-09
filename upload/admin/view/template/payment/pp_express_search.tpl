@@ -94,7 +94,7 @@
               <input type="text" name="amount" id="input-amount" value="" size="6" />&nbsp;
               <select name="currency_code">
                 <?php foreach ($currency_codes as $code) { ?>
-                  <option <?php if ($code == $default_currency) { echo 'selected'; } ?>><?php echo $code; ?></option>
+                  <option <?php if ($code === $default_currency) { echo 'selected'; } ?>><?php echo $code; ?></option>
                 <?php } ?>
               </select>
             </td>
@@ -125,8 +125,6 @@
     </div>
   </div>
 </div>
-
-<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.min.js"></script>
 
 <script type="text/javascript"><!--
 $('.date').datepicker({dateFormat: 'yy-mm-dd'});

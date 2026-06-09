@@ -33,10 +33,10 @@
             <td><label for="input-refund-full"><?php echo $entry_full_refund; ?></label></td>
             <td>
               <input type="hidden" name="refund_full" value="0" />
-              <input type="checkbox" name="refund_full" id="input-refund-full" value="1" <?php echo ($refund_available == '') ? 'checked="checked"' : ''; ?> onchange="refundAmount();" />
+              <input type="checkbox" name="refund_full" id="input-refund-full" value="1" <?php echo ($refund_available === '') ? 'checked="checked"' : ''; ?> onchange="refundAmount();" />
             </td>
           </tr>
-          <tr <?php echo ($refund_available == '') ? 'style="display:none;"' : ''; ?> id="partial-amount-row">
+          <tr <?php echo ($refund_available === '') ? 'style="display:none;"' : ''; ?> id="partial-amount-row">
             <td><label for="input-refund-amount"><?php echo $entry_amount; ?></label></td>
             <td><input type="text" name="amount" id="input-refund-amount" value="<?php echo ($refund_available != '') ? $refund_available : ''; ?>" />&nbsp;<?php echo $currency_code; ?></td>
           </tr>
@@ -53,7 +53,7 @@
 
 <script type="text/javascript"><!--
 function refundAmount() {
-	if ($('#input-refund-full').prop('checked') == true) {
+	if ($('#input-refund-full').prop('checked') === true) {
 		$('#partial-amount-row').hide();
 	} else {
 		$('#partial-amount-row').show();
@@ -61,11 +61,11 @@ function refundAmount() {
 }
 
 $('#form').on('submit', function(e) {
-	var full = ($('#input-refund-full').prop('checked') == true ? 1 : 0);
+	var full = ($('#input-refund-full').prop('checked') === true ? 1 : 0);
 	var amt = $('#input-refund-amount').val();
 	e.preventDefault();
 
-	if ($('#input-transaction-id').val() == '') {
+	if ($('#input-transaction-id').val() === '') {
 		alert('<?php echo addslashes($error_transaction_id); ?>');
 	} else {
 		$.ajax({

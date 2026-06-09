@@ -9,7 +9,7 @@
     <td><?php echo $text_amount_authorised; ?></td>
     <td>
       <?php echo $paypal_order['total']; ?>
-      <?php if ($paypal_order['capture_status'] != 'Complete') { ?>
+      <?php if ($paypal_order['capture_status'] !== 'Complete') { ?>
         &nbsp;&nbsp;&nbsp;<a class="button-delete" id="button-void"><?php echo $button_void; ?></a>
       <?php } ?>
     </td>
@@ -22,7 +22,7 @@
     <td><?php echo $text_amount_refunded; ?></td>
     <td id="paypal-refunded"><?php echo $paypal_order['refunded']; ?></td>
   </tr>
-  <?php if ($paypal_order['capture_status'] != 'Complete') { ?>
+  <?php if ($paypal_order['capture_status'] !== 'Complete') { ?>
   <tr class="paypal-capture">
     <td><?php echo $entry_capture_amount; ?></td>
     <td>
@@ -42,7 +42,7 @@ $('#paypal-transaction').load('index.php?route=payment/pp_express/transaction&to
 $('#button-capture').on('click', function() {
 	var amt = $('#paypal-capture-amount').val();
 
-	if (amt == '' || amt <= 0) {
+	if (amt === '' || amt <= 0) {
 		alert('<?php echo addslashes($error_capture_amt); ?>');
 	} else {
 		var captureComplete;
@@ -60,7 +60,7 @@ $('#button-capture').on('click', function() {
 			dataType: 'json',
 			data: {
 				'order_id': <?php echo $order_id; ?>,
-				'complete': ($('#paypal-capture-complete').prop('checked') == true ? 1 : 0),
+				'complete': ($('#paypal-capture-complete').prop('checked') === true ? 1 : 0),
 				'amount': amt
 			},
 			beforeSend: function() {

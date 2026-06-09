@@ -21,17 +21,17 @@
     <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
       <table class="form">
         <tr>
-          <td><span class="required">*</span> <?php echo $entry_secret_key; ?></td>
-          <td><input type="text" name="stripe_payments_secret_key" value="<?php echo $stripe_payments_secret_key; ?>" size="42" />
-          <?php if ($error_secret_key) { ?>
-            <span class="error"><?php echo $error_secret_key; ?></span>
-          <?php } ?></td>
-        </tr>
-        <tr>
           <td><span class="required">*</span> <?php echo $entry_publishable_key; ?></td>
           <td><input type="text" name="stripe_payments_publishable_key" value="<?php echo $stripe_payments_publishable_key; ?>" size="42" />
           <?php if ($error_publishable_key) { ?>
             <span class="error"><?php echo $error_publishable_key; ?></span>
+          <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $entry_secret_key; ?></td>
+          <td><input type="text" name="stripe_payments_secret_key" value="<?php echo $stripe_payments_secret_key; ?>" size="42" />
+          <?php if ($error_secret_key) { ?>
+            <span class="error"><?php echo $error_secret_key; ?></span>
           <?php } ?></td>
         </tr>
         <tr>
@@ -112,6 +112,14 @@
           </select></td>
         </tr>
         <tr>
+          <td><?php echo $entry_total; ?></td>
+          <td><input type="text" name="stripe_payments_total" value="<?php echo $stripe_payments_total; ?>" /></td>
+        </tr>
+        <tr>
+          <td><?php echo $entry_sort_order; ?></td>
+          <td><input type="text" name="stripe_payments_sort_order" value="<?php echo $stripe_payments_sort_order; ?>" size="1" /></td>
+        </tr>
+        <tr class="highlighted">
           <td><?php echo $entry_status; ?></td>
           <td><select name="stripe_payments_status">
             <?php if ($stripe_payments_status) { ?>
@@ -122,14 +130,6 @@
               <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
             <?php } ?>
           </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_total; ?></td>
-          <td><input type="text" name="stripe_payments_total" value="<?php echo $stripe_payments_total; ?>" /></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_sort_order; ?></td>
-          <td><input type="text" name="stripe_payments_sort_order" value="<?php echo $stripe_payments_sort_order; ?>" size="1" /></td>
         </tr>
       </table>
     </form>

@@ -54,6 +54,10 @@
             </select></td>
           </tr>
           <tr>
+            <td><label for="input-sort-order"><?php echo $entry_sort_order; ?></label></td>
+            <td><input type="text" name="cod_sort_order" id="input-sort-order" value="<?php echo $cod_sort_order; ?>" size="1" /></td>
+          </tr>
+          <tr class="highlighted">
             <td><label for="input-status"><?php echo $entry_status; ?></label></td>
             <td><select name="cod_status" id="input-status">
               <?php if ($cod_status) { ?>
@@ -64,10 +68,6 @@
                 <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
               <?php } ?>
             </select></td>
-          </tr>
-          <tr>
-            <td><label for="input-sort-order"><?php echo $entry_sort_order; ?></label></td>
-            <td><input type="text" name="cod_sort_order" id="input-sort-order" value="<?php echo $cod_sort_order; ?>" size="1" /></td>
           </tr>
         </table>
       </form>

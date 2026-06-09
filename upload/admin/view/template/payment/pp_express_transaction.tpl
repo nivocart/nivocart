@@ -23,7 +23,7 @@
       <td class="left">
       <?php if ($transaction['transaction_id']) { ?>
         <a href="<?php echo $transaction['view']; ?>" class="button"><?php echo $button_view; ?></a>
-        <?php if ($transaction['payment_type'] == 'instant' && ($transaction['payment_status'] == 'Completed' || $transaction['payment_status'] == 'Partially-Refunded')) { ?>
+        <?php if ($transaction['payment_type'] === 'instant' && ($transaction['payment_status'] === 'Completed' || $transaction['payment_status'] === 'Partially-Refunded')) { ?>
         &nbsp;<a href="<?php echo $transaction['refund']; ?>" class="button-delete"><?php echo $button_refund; ?></a>
         <?php } ?>
       <?php } else { ?>
