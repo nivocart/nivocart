@@ -89,7 +89,7 @@ class ControllerExtensionPayment extends Controller {
 		}
 
 		// Payments accepting recurring transactions
-		$is_recurring = ['pp_express', 'sagepay_direct', 'sagepay_server'];
+		$is_recurring = ['pp_express'];
 
 		$this->data['extensions'] = [];
 
