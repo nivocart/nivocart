@@ -1,3 +1,3 @@
 <?php
 // Text
-$_['text_footer'] = '<a href="https://nivocart.com">NivoCart</a> &copy; ' . date('Y') . ' All Rights Reserved.<br />Version %s';
+$_['text_footer'] = '<a href="https://nivocart.org">NivoCart</a> &copy; ' . date('Y') . ' All Rights Reserved.<br /><br />Version %s';
