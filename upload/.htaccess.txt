@@ -99,7 +99,7 @@ RewriteBase /
 RewriteRule ^index\.php - [L]
 
 ## Protect admin and system directories from SEO rewrite
-RewriteRule ^(admin|install|system|image|download|security)(/.*)?$ - [L]
+RewriteRule ^(admin|install|system|image|download|security|webhooks)(/.*)?$ - [L]
 
 ## Sitemap
 RewriteRule ^sitemap.xml$ index.php?route=feed/google_sitemap [L]
