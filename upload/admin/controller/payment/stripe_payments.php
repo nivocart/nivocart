@@ -36,8 +36,8 @@ class ControllerPaymentStripePayments extends Controller {
 		$this->data['text_authorization'] = $this->language->get('text_authorization');
 		$this->data['text_charge'] = $this->language->get('text_charge');
 
-		$this->data['entry_secret_key'] = $this->language->get('entry_secret_key');
 		$this->data['entry_publishable_key'] = $this->language->get('entry_publishable_key');
+		$this->data['entry_secret_key'] = $this->language->get('entry_secret_key');
 		$this->data['entry_webhook_secret'] = $this->language->get('entry_webhook_secret');
 		$this->data['entry_mode'] = $this->language->get('entry_mode');
 		$this->data['entry_method'] = $this->language->get('entry_method');
@@ -53,6 +53,8 @@ class ControllerPaymentStripePayments extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['token'] = $this->session->data['token'];
+
 		// Errors
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -60,16 +62,16 @@ class ControllerPaymentStripePayments extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		if (isset($this->error['secret_key'])) {
-			$this->data['error_secret_key'] = $this->error['secret_key'];
-		} else {
-			$this->data['error_secret_key'] = '';
-		}
-
 		if (isset($this->error['publishable_key'])) {
 			$this->data['error_publishable_key'] = $this->error['publishable_key'];
 		} else {
 			$this->data['error_publishable_key'] = '';
+		}
+
+		if (isset($this->error['secret_key'])) {
+			$this->data['error_secret_key'] = $this->error['secret_key'];
+		} else {
+			$this->data['error_secret_key'] = '';
 		}
 
 		if (isset($this->error['webhook_secret'])) {
@@ -99,19 +101,19 @@ class ControllerPaymentStripePayments extends Controller {
 			'separator' => ' :: '
 		];
 
-		$this->data['action'] = HTTPS_SERVER . 'index.php?route=payment/stripe_payments&token=' . $this->session->data['token'];
-		$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
-
-		if (isset($this->request->post['stripe_payments_secret_key'])) {
-			$this->data['stripe_payments_secret_key'] = $this->request->post['stripe_payments_secret_key'];
-		} else {
-			$this->data['stripe_payments_secret_key'] = $this->config->get('stripe_payments_secret_key');
-		}
+		$this->data['action'] = $this->url->link('payment/stripe_payments', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['stripe_payments_publishable_key'])) {
 			$this->data['stripe_payments_publishable_key'] = $this->request->post['stripe_payments_publishable_key'];
 		} else {
 			$this->data['stripe_payments_publishable_key'] = $this->config->get('stripe_payments_publishable_key');
+		}
+
+		if (isset($this->request->post['stripe_payments_secret_key'])) {
+			$this->data['stripe_payments_secret_key'] = $this->request->post['stripe_payments_secret_key'];
+		} else {
+			$this->data['stripe_payments_secret_key'] = $this->config->get('stripe_payments_secret_key');
 		}
 
 		if (isset($this->request->post['stripe_payments_webhook_secret'])) {
@@ -132,12 +134,6 @@ class ControllerPaymentStripePayments extends Controller {
 			$this->data['stripe_payments_method'] = $this->config->get('stripe_payments_method');
 		}
 
-		$this->load->model('localisation/order_status');
-
-		$order_statuses_array = [];
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
-
 		if (isset($this->request->post['stripe_payments_order_status_id'])) {
 			$this->data['stripe_payments_order_status_id'] = $this->request->post['stripe_payments_order_status_id'];
 		} else {
@@ -156,17 +152,23 @@ class ControllerPaymentStripePayments extends Controller {
 			$this->data['stripe_payments_order_disputed_id'] = $this->config->get('stripe_payments_order_disputed_id');
 		}
 
-		$this->load->model('localisation/geo_zone');
+		$this->load->model('localisation/order_status');
 
-		$geo_zones_array = [];
+		$order_statuses_array = [];
 
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geo_zones_array);
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
 
 		if (isset($this->request->post['stripe_payments_geo_zone_id'])) {
 			$this->data['stripe_payments_geo_zone_id'] = $this->request->post['stripe_payments_geo_zone_id'];
 		} else {
 			$this->data['stripe_payments_geo_zone_id'] = $this->config->get('stripe_payments_geo_zone_id');
 		}
+
+		$this->load->model('localisation/geo_zone');
+
+		$geo_zones_array = [];
+
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geo_zones_array);
 
 		if (isset($this->request->post['stripe_payments_status'])) {
 			$this->data['stripe_payments_status'] = $this->request->post['stripe_payments_status'];
@@ -200,12 +202,12 @@ class ControllerPaymentStripePayments extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (!$this->request->post['stripe_payments_secret_key']) {
-			$this->error['secret_key'] = $this->language->get('error_secret_key');
-		}
-
 		if (!$this->request->post['stripe_payments_publishable_key']) {
 			$this->error['publishable_key'] = $this->language->get('error_publishable_key');
+		}
+
+		if (!$this->request->post['stripe_payments_secret_key']) {
+			$this->error['secret_key'] = $this->language->get('error_secret_key');
 		}
 
 		if (!$this->request->post['stripe_payments_webhook_secret']) {

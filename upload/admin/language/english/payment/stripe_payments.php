@@ -14,8 +14,8 @@ $_['text_authorization']    = 'Authorization';
 $_['text_charge']           = 'Charge';
 
 // Entry
-$_['entry_secret_key']      = 'Secret Key:';
 $_['entry_publishable_key'] = 'Publishable Key:';
+$_['entry_secret_key']      = 'Secret Key:';
 $_['entry_webhook_secret']  = 'Webhook Secret:<span class="help">Webhook Secret code must start with <b>whsec_</b>.</span>';
 $_['entry_mode']            = 'Transaction Mode:';
 $_['entry_method']          = 'Transaction Method:';

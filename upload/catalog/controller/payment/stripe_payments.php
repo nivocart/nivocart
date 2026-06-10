@@ -4,17 +4,21 @@
  *
  * @package NivoCart
  *
- * Refactored for Stripe PaymentIntents API (replaces deprecated Stripe_Charge / Stripe_Customer).
- * No raw card data ever touches this server — Stripe.js handles card collection in the browser.
+ * Handles three distinct calling contexts:
  *
- * Flow:
- *   index()  → renders the payment form, creates a PaymentIntent, injects client_secret into template
- *   send()   → called by JS after Stripe.js confirms the card; verifies with Stripe, confirms order
+ *   index()        → Standard checkout: renders card widget (getChild from confirm.tpl)
+ *   confirm()      → One page checkout: silent no-op (getChild from checkout_one_page_confirm)
+ *                    Payment is collected browser-side before confirm controller runs.
+ *   intentCreate() → AJAX: creates PaymentIntent, returns { client_secret, publishable_key }
+ *                    Called by one page checkout JS before form submission.
+ *   send()         → AJAX: verifies PaymentIntent server-side, confirms order.
+ *                    Called by JS after Stripe.js confirmCardPayment() succeeds.
  */
 class ControllerPaymentStripePayments extends Controller {
     // -------------------------------------------------------------------------
-    // index() — render payment form
-    // Called by the checkout confirm step to embed the Stripe card widget.
+    // index() — Standard checkout card widget
+    // Called via getChild('payment/stripe_payments') from checkout/confirm.tpl
+    // Creates PaymentIntent server-side, injects client_secret into template.
     // -------------------------------------------------------------------------
     protected function index() {
         $this->language->load('payment/stripe_payments');
@@ -28,28 +32,17 @@ class ControllerPaymentStripePayments extends Controller {
         $this->data['button_confirm'] = $this->language->get('button_confirm');
         $this->data['button_back'] = $this->language->get('button_back');
 
-        // Load order info to build the PaymentIntent
         $this->load->model('checkout/order');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-        // Amount in smallest currency unit (pence, cents, etc.) — same logic as original
         $amount = (int)($this->currency->format($order_info['total'], $order_info['currency_code'], 1.00000, false) * 100);
 
-        // Load our gateway library
-        require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
+        $stripe = $this->_loadStripe();
 
-        $stripe = new Stripe(
-            $this->config->get('stripe_payments_secret_key'),
-            $this->config->get('stripe_payments_publishable_key'),
-            $this->config->get('stripe_payments_webhook_secret')
-        );
-
-        // Create the PaymentIntent server-side and pass only the client_secret to the template
         try {
             $intent = $stripe->createPaymentIntent($amount, $order_info['currency_code'], (string)$this->session->data['order_id'], $order_info['email']);
 
-            // Store intent ID in session so send() can verify it server-side
             $this->session->data['stripe_payment_intent_id'] = $intent['payment_intent_id'];
 
             $this->data['stripe_client_secret'] = $intent['client_secret'];
@@ -57,15 +50,12 @@ class ControllerPaymentStripePayments extends Controller {
             $this->data['stripe_error'] = '';
 
         } catch (RuntimeException $e) {
-            // Failed to create intent — surface a safe error, log the real one
             $this->log->write('Stripe createPaymentIntent error: ' . $e->getMessage());
-
             $this->data['stripe_client_secret'] = '';
             $this->data['stripe_publishable_key'] = $stripe->getPublishableKey();
             $this->data['stripe_error'] = $this->language->get('error_payment_init');
         }
 
-        // Template
         $this->data['template'] = $this->config->get('config_template');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/stripe_payments.tpl')) {
@@ -78,63 +68,141 @@ class ControllerPaymentStripePayments extends Controller {
     }
 
     // -------------------------------------------------------------------------
-    // send() — verify payment and confirm order
-    // Called via fetch() POST from Stripe.js after confirmCardPayment() succeeds.
+    // confirm() — One page checkout silent hook
+    // Called via getChild('payment/stripe_payments/confirm') from
+    // checkout_one_page_confirm. Payment is already confirmed browser-side
+    // by this point — this method intentionally does nothing.
+    // checkout_one_page_confirm handles verification itself via the session.
+    // -------------------------------------------------------------------------
+    public function confirm() {
+        // Intentional no-op for one page checkout flow.
+        // See: ControllerCheckoutCheckoutOnePageConfirm::index()
+    }
+
+    // -------------------------------------------------------------------------
+    // intentCreate() — AJAX: create PaymentIntent for one page checkout
+    // Called by JS before the order form is submitted, so the client_secret
+    // is available for Stripe.js to confirm the card in the browser.
+    // Returns JSON: { client_secret, publishable_key } or { error }
+    // -------------------------------------------------------------------------
+    public function intentCreate() {
+        $this->language->load('payment/stripe_payments');
+
+        $json = [];
+
+        // Rebuild total from cart (order not written to DB yet at this point)
+        $total_data = [];
+
+        $total = 0.0;
+        $taxes = $this->cart->getTaxes();
+
+        $this->load->model('setting/extension');
+
+        $results = $this->model_setting_extension->getExtensions('total');
+
+        usort($results, fn($a, $b) =>
+            $this->config->get($a['code'] . '_sort_order') <=>
+            $this->config->get($b['code'] . '_sort_order')
+        );
+
+        foreach ($results as $result) {
+            if ($this->config->get($result['code'] . '_status')) {
+                $this->load->model('total/' . $result['code']);
+
+                $model = $this->{'model_total_' . $result['code']};
+
+                $contribution = $model->getTotal($taxes, $total);
+
+                $total_data = array_merge($total_data, $contribution['total_data']);
+
+                $total += $contribution['total'];
+                $taxes += $contribution['taxes'];
+            }
+        }
+
+        // Currency from session/config
+        $this->load->model('localisation/currency');
+
+        $currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
+
+        $currency_code = $currency_info ? $currency_info['code'] : $this->config->get('config_currency');
+
+        $amount = (int)($this->currency->format($total, $currency_code, 1.00000, false) * 100);
+
+        // Use a temporary reference — real order_id set after addOrder() in confirm
+        // We store the intent in session; order_id is updated in send() after addOrder()
+        $temp_ref = 'pending_' . $this->customer->getId() . '_' . time();
+
+        $stripe = $this->_loadStripe();
+
+        try {
+            $intent = $stripe->createPaymentIntent($amount, $currency_code, $temp_ref, $this->customer->getEmail());
+
+            // Store in session — send() will verify against this
+            $this->session->data['stripe_payment_intent_id'] = $intent['payment_intent_id'];
+
+            $json['client_secret'] = $intent['client_secret'];
+            $json['publishable_key'] = $stripe->getPublishableKey();
+
+        } catch (RuntimeException $e) {
+            $this->log->write('Stripe intentCreate error: ' . $e->getMessage());
+
+            $json['error'] = $this->language->get('error_payment_init');
+        }
+
+        $this->_sendJson($json);
+    }
+
+    // -------------------------------------------------------------------------
+    // send() — AJAX: verify PaymentIntent and confirm order
+    // Called by JS after Stripe.js confirmCardPayment() succeeds.
+    // Works for BOTH standard and one page checkout flows.
     // Returns JSON: { success: url } or { error: message }
     // -------------------------------------------------------------------------
     public function send() {
+        $this->language->load('payment/stripe_payments');
+
         $json = [];
 
-        // --- Input validation ---
         $posted_intent_id = isset($this->request->post['payment_intent_id']) ? trim($this->request->post['payment_intent_id']) : '';
+
         $session_intent_id = isset($this->session->data['stripe_payment_intent_id']) ? $this->session->data['stripe_payment_intent_id'] : '';
 
-        // Reject if IDs don't match — prevents substitution attacks
         if ($posted_intent_id === '' || $posted_intent_id !== $session_intent_id) {
-            $this->log->write('Stripe send(): payment_intent_id mismatch or missing. ' . 'Posted: ' . $posted_intent_id . ' Session: ' . $session_intent_id);
+            $this->log->write('Stripe send(): intent mismatch. Posted: ' . $posted_intent_id . ' Session: ' . $session_intent_id);
 
             $json['error'] = $this->language->get('error_payment_mismatch');
-
             $this->_sendJson($json);
             return;
         }
 
-        // --- Load order ---
         $this->load->model('checkout/order');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
         if (!$order_info) {
             $json['error'] = $this->language->get('error_order_not_found');
-
             $this->_sendJson($json);
             return;
         }
 
-        // --- Verify with Stripe (never trust the browser alone) ---
-        require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
-
-        $stripe = new Stripe(
-            $this->config->get('stripe_payments_secret_key'),
-            $this->config->get('stripe_payments_publish_key'),
-            $this->config->get('stripe_payments_webhook_secret')
-        );
+        $stripe = $this->_loadStripe();
 
         try {
-            $payment = $stripe->verifyPayment($posted_intent_id);
+            $stripe->verifyPayment($posted_intent_id);
         } catch (RuntimeException $e) {
             $this->log->write('Stripe verifyPayment error: ' . $e->getMessage());
 
             $json['error'] = $this->language->get('error_payment_failed');
-
             $this->_sendJson($json);
             return;
         }
 
-        // --- Confirm the order (same call as original) ---
-        $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('stripe_payments_order_status_id'));
+        $this->model_checkout_order->confirm(
+            $this->session->data['order_id'],
+            $this->config->get('stripe_payments_order_status_id')
+        );
 
-        // Clean up session
         unset($this->session->data['stripe_payment_intent_id']);
 
         $json['success'] = $this->url->link('checkout/success', '', 'SSL');
@@ -143,8 +211,18 @@ class ControllerPaymentStripePayments extends Controller {
     }
 
     // -------------------------------------------------------------------------
-    // Private helper
+    // Private helpers
     // -------------------------------------------------------------------------
+    private function _loadStripe(): Stripe {
+        require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
+
+        return new Stripe(
+            $this->config->get('stripe_payments_secret_key'),
+            $this->config->get('stripe_payments_publish_key'),
+            $this->config->get('stripe_payments_webhook_secret')
+        );
+    }
+
     private function _sendJson(array $data): void {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
