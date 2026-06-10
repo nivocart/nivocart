@@ -22,7 +22,7 @@ class ControllerCheckoutCheckoutOnePageConfirm extends Controller {
      * Gateways that collect and confirm payment in the browser before this
      * controller runs. Add new interactive gateways here as they are built.
      */
-    private array $interactive_gateways = [
+    private $interactive_gateways = [
         'stripe_payments',
         // 'klarna',
         // 'sage_pay',
@@ -251,9 +251,7 @@ class ControllerCheckoutCheckoutOnePageConfirm extends Controller {
         // Save the order — cart is cleared inside addOrder()
         $this->load->model('checkout/order');
 
-        $this->model_checkout_order->addOrder($data);
-
-        $this->session->data['order_id'] = $this->db->getLastId();
+		$this->session->data['order_id'] = $this->model_checkout_order->addOrder($data);
 
         // --- Payment confirmation ---
         if (in_array($payment_code, $this->interactive_gateways)) {
@@ -277,51 +275,33 @@ class ControllerCheckoutCheckoutOnePageConfirm extends Controller {
     // Loads the gateway controller and calls send() internally to verify the
     // PaymentIntent and confirm the order, then discards the JSON output.
     // -------------------------------------------------------------------------
-    private function _confirmInteractivePayment(string $payment_code): void {
-        switch ($payment_code) {
+	private function _confirmInteractivePayment(string $payment_code): void {
+		switch ($payment_code) {
+			case 'stripe_payments':
+				require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
 
-            case 'stripe_payments':
-                require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
+				$stripe = new Stripe(
+					$this->config->get('stripe_payments_secret_key'),
+					$this->config->get('stripe_payments_publishable_key'),
+					$this->config->get('stripe_payments_webhook_secret')
+				);
 
-                $stripe = new Stripe(
-                    $this->config->get('stripe_payments_secret_key'),
-                    $this->config->get('stripe_payments_publish_key'),
-                    $this->config->get('stripe_payments_webhook_secret')
-                );
+				$intent_id = $this->session->data['stripe_payment_intent_id'] ?? '';
+				try {
+					$stripe->verifyPayment($intent_id);
 
-                $intent_id = $this->session->data['stripe_payment_intent_id'] ?? '';
+				} catch (RuntimeException $e) {
+					$this->session->data['error'] = 'Payment could not be verified. Please try again.';
+					$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+				}
 
-                try {
-                    $stripe->verifyPayment($intent_id);
-                } catch (RuntimeException $e) {
-                    $this->log->write('Stripe one page verifyPayment error: ' . $e->getMessage());
-                    // Redirect back to checkout with error rather than silently failing
-                    $this->session->data['error'] = 'Payment could not be verified. Please try again.';
-                    $this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
-                }
+				$this->model_checkout_order->confirm(
+					$this->session->data['order_id'],
+					$this->config->get('stripe_payments_order_status_id')
+				);
 
-                $this->model_checkout_order->confirm(
-                    $this->session->data['order_id'],
-                    $this->config->get('stripe_payments_order_status_id')
-                );
-
-                unset($this->session->data['stripe_payment_intent_id']);
-                break;
-
-            // Future interactive gateways follow the same pattern:
-            //
-            // case 'klarna':
-            //     // Verify Klarna session, confirm order
-            //     break;
-            //
-            // case 'sage_pay':
-            //     // Verify SagePay transaction, confirm order
-            //     break;
-
-            default:
-                $this->log->write('checkout_one_page_confirm: unhandled interactive gateway: ' . $payment_code);
-                $this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
-                break;
-        }
-    }
+				unset($this->session->data['stripe_payment_intent_id']);
+				break;
+		}
+	}
 }

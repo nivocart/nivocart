@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']             = 'Pay Securely with Stripe';
+$_['text_title']             = 'Stripe Payments';
 $_['text_credit_card']       = 'Card Details';
 $_['text_wait']              = 'Please wait!';
 

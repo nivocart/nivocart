@@ -480,6 +480,10 @@ function fetchStripeIntent() {
     $.ajax({
         url: STRIPE_INTENT_URL,
         type: 'post',
+        data:     {
+            cart_total: '<?php echo $stripe_cart_total; ?>',
+            currency_code: '<?php echo $stripe_currency_code; ?>'
+        },
         dataType: 'json',
         success: function(json) {
             if (json['error']) {
@@ -492,8 +496,7 @@ function fetchStripeIntent() {
             $('#button-order').attr('disabled', false);
         },
         error: function() {
-            document.getElementById('stripe-card-errors').textContent =
-                'Payment system unavailable. Please refresh and try again.';
+            document.getElementById('stripe-card-errors').textContent = 'Payment system unavailable. Please refresh and try again.';
             $('#button-order').attr('disabled', true);
         }
     });
@@ -596,7 +599,7 @@ function handleStripePayment(onSuccess) {
         if (result.paymentIntent.status === 'succeeded') {
             // Store intent ID for the confirm controller to verify
             $.ajax({
-                url: STRIPE_SEND_URL,
+                url: 'index.php?route=payment/stripe_payments/storeIntent',
                 type: 'post',
                 data: { payment_intent_id: result.paymentIntent.id },
                 dataType: 'json',

@@ -854,6 +854,15 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->data['quickconfirm'] = $this->request->get['quickconfirm'];
 		}
 
+		// Stripe specific: Resolve currency code
+		$this->load->model('localisation/currency');
+
+		$currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
+		$stripe_currency_code = $currency_info ? $currency_info['code'] : $this->config->get('config_currency');
+
+		$this->data['stripe_cart_total'] = $total;
+		$this->data['stripe_currency_code'] = $stripe_currency_code;
+
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 

@@ -60,7 +60,7 @@ $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
 // -------------------------------------------------------------------------
 // Pull Stripe keys from NivoCart's settings table
 // -------------------------------------------------------------------------
-$result = $db->query("SELECT key, value FROM `" . DB_PREFIX . "setting` WHERE `group` = 'stripe_payments' AND `key` IN ('stripe_payments_secret_key', 'stripe_payments_publish_key', 'stripe_payments_webhook_secret')");
+$result = $db->query("SELECT key, value FROM `" . DB_PREFIX . "setting` WHERE `group` = 'stripe_payments' AND `key` IN ('stripe_payments_secret_key', 'stripe_payments_publishable_key', 'stripe_payments_webhook_secret')");
 
 $settings = [];
 
@@ -69,7 +69,7 @@ foreach ($result->rows as $row) {
 }
 
 $secret_key = $settings['stripe_payments_secret_key'] ?? '';
-$publishable_key = $settings['stripe_payments_publish_key'] ?? '';
+$publishable_key = $settings['stripe_payments_publishable_key'] ?? '';
 $webhook_secret = $settings['stripe_payments_webhook_secret'] ?? '';
 
 if ($secret_key === '' || $webhook_secret === '') {

@@ -8,7 +8,7 @@ class ModelCheckoutOrder extends Model {
 	/**
 	 * Functions Get
 	 */
-	public function addOrder(array $data = []): void {
+	public function addOrder(array $data = []): int {
 		// Order Status Id
 		$order_status_id = $this->config->get('config_order_status_id') ? $this->config->get('config_order_status_id') : 1;
 
@@ -55,6 +55,8 @@ class ModelCheckoutOrder extends Model {
 
 		// Clear Cart
 		$this->cart->clear();
+
+		return $order_id;
 	}
 
 	public function getOrder(int $order_id): array {

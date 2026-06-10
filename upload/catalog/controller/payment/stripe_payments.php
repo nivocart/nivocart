@@ -51,6 +51,7 @@ class ControllerPaymentStripePayments extends Controller {
 
         } catch (RuntimeException $e) {
             $this->log->write('Stripe createPaymentIntent error: ' . $e->getMessage());
+
             $this->data['stripe_client_secret'] = '';
             $this->data['stripe_publishable_key'] = $stripe->getPublishableKey();
             $this->data['stripe_error'] = $this->language->get('error_payment_init');
@@ -90,48 +91,14 @@ class ControllerPaymentStripePayments extends Controller {
 
         $json = [];
 
-        // Rebuild total from cart (order not written to DB yet at this point)
-        $total_data = [];
-
-        $total = 0.0;
-        $taxes = $this->cart->getTaxes();
-
-        $this->load->model('setting/extension');
-
-        $results = $this->model_setting_extension->getExtensions('total');
-
-        usort($results, fn($a, $b) =>
-            $this->config->get($a['code'] . '_sort_order') <=>
-            $this->config->get($b['code'] . '_sort_order')
-        );
-
-        foreach ($results as $result) {
-            if ($this->config->get($result['code'] . '_status')) {
-                $this->load->model('total/' . $result['code']);
-
-                $model = $this->{'model_total_' . $result['code']};
-
-                $contribution = $model->getTotal($taxes, $total);
-
-                $total_data = array_merge($total_data, $contribution['total_data']);
-
-                $total += $contribution['total'];
-                $taxes += $contribution['taxes'];
-            }
-        }
-
-        // Currency from session/config
-        $this->load->model('localisation/currency');
-
-        $currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
-
-        $currency_code = $currency_info ? $currency_info['code'] : $this->config->get('config_currency');
-
-        $amount = (int)($this->currency->format($total, $currency_code, 1.00000, false) * 100);
+		$amount = (int)round((float)($this->request->post['cart_total'] ?? 0) * 100);
+		$currency_code = $this->request->post['currency_code'] ?? $this->config->get('config_currency');
 
         // Use a temporary reference — real order_id set after addOrder() in confirm
         // We store the intent in session; order_id is updated in send() after addOrder()
         $temp_ref = 'pending_' . $this->customer->getId() . '_' . time();
+
+		require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
 
         $stripe = $this->_loadStripe();
 
@@ -210,17 +177,31 @@ class ControllerPaymentStripePayments extends Controller {
         $this->_sendJson($json);
     }
 
+	public function storeIntent() {
+		$intent_id = isset($this->request->post['payment_intent_id']) ? trim($this->request->post['payment_intent_id']) : '';
+
+		if ($intent_id === '') {
+			$this->_sendJson(['error' => 'Missing intent ID']);
+			return;
+		}
+
+		$this->session->data['stripe_payment_intent_id'] = $intent_id;
+		$this->_sendJson(['success' => true]);
+	}
+
     // -------------------------------------------------------------------------
     // Private helpers
     // -------------------------------------------------------------------------
     private function _loadStripe(): Stripe {
         require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
 
-        return new Stripe(
-            $this->config->get('stripe_payments_secret_key'),
-            $this->config->get('stripe_payments_publish_key'),
-            $this->config->get('stripe_payments_webhook_secret')
-        );
+		$secret_key = $this->config->get('stripe_payments_secret_key');
+		$publishable_key = $this->config->get('stripe_payments_publishable_key');
+		$webhook_secret = $this->config->get('stripe_payments_webhook_secret');
+
+		$stripe = new Stripe($secret_key, $publishable_key, $webhook_secret);
+
+        return $stripe;
     }
 
     private function _sendJson(array $data): void {

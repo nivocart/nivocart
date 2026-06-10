@@ -87,9 +87,9 @@
             if (result.paymentIntent.status === 'succeeded') {
                 // POST intent ID to server for verification — never trust browser status alone
                 $.ajax({
-                    url: sendUrl,
-                    type: 'post',
-                    data: { payment_intent_id: result.paymentIntent.id },
+					url: STRIPE_SEND_URL,
+					type: 'post',
+					data: { payment_intent_id: result.paymentIntent.id },
                     dataType: 'json',
                     success: function (json) {
                         if (json['error']) {
@@ -98,7 +98,7 @@
                             btn.value = '<?php echo $button_confirm; ?>';
                         }
                         if (json['success']) {
-                            location = json['success'];
+                            onSuccess(); // proceeds to submitForm()
                         }
                     },
                     error: function () {
