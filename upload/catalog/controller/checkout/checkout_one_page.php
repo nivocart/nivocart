@@ -735,9 +735,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		$this->data['shipping_methods'] = $quote_data;
 		$this->session->data['shipping_methods'] = $this->data['shipping_methods'];
 
-		$this->data['shipping_method_code'] = (isset($this->session->data['shipping_method']) && $this->session->data['shipping_method'])
-			? $this->session->data['shipping_method']['code']
-			: '';
+		$this->data['shipping_method_code'] = (isset($this->session->data['shipping_method']) && $this->session->data['shipping_method']) ? $this->session->data['shipping_method']['code'] : '';
 
 		// Payment methods
 		if (!empty($payment_address)) {
@@ -763,6 +761,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			}
 
 			$method_data = [];
+
 			$results = $this->model_setting_extension->getExtensions('payment');
 			$cart_has_recurring = $this->cart->hasRecurringProducts();
 

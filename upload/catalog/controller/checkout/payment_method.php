@@ -26,29 +26,27 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
 			$this->load->model('setting/extension');
 
-			$sort_order = [];
-
 			$total_results = $this->model_setting_extension->getExtensions('total');
 
-			foreach ($total_results as $key => $value) {
-				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-			}
-
-			array_multisort($sort_order, SORT_ASC, $total_results);
+			usort($total_results, fn($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
 
 			foreach ($total_results as $result) {
 				if ($this->config->get($result['code'] . '_status')) {
 					$this->load->model('total/' . $result['code']);
 
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+					$model = $this->{'model_total_' . $result['code']};
+
+					$contribution = $model->getTotal($taxes, $total);
+
+					$total_data = array_merge($total_data, $contribution['total_data']);
+					$total += $contribution['total'];
+					$taxes += $contribution['taxes'];
 				}
 			}
 
-			// Payment Methods
 			$method_data = [];
 
 			$payment_results = $this->model_setting_extension->getExtensions('payment');
-
 			$cart_has_recurring = $this->cart->hasRecurringProducts();
 
 			foreach ($payment_results as $result) {

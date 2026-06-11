@@ -84,30 +84,30 @@
                 return;
             }
 
-            if (result.paymentIntent.status === 'succeeded') {
-                // POST intent ID to server for verification — never trust browser status alone
-                $.ajax({
-					url: STRIPE_SEND_URL,
-					type: 'post',
-					data: { payment_intent_id: result.paymentIntent.id },
-                    dataType: 'json',
-                    success: function (json) {
-                        if (json['error']) {
-                            errorDiv.textContent = json['error'];
-                            btn.disabled = false;
-                            btn.value = '<?php echo $button_confirm; ?>';
-                        }
-                        if (json['success']) {
-                            onSuccess(); // proceeds to submitForm()
-                        }
-                    },
-                    error: function () {
-                        errorDiv.textContent = 'Network error — please contact support.';
-                        btn.disabled = false;
-                        btn.value = '<?php echo $button_confirm; ?>';
-                    }
-                });
-            }
+			if (result.paymentIntent.status === 'succeeded') {
+				fetch('index.php?route=payment/stripe_payments/send', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: 'payment_intent_id=' + encodeURIComponent(result.paymentIntent.id)
+				})
+				.then(function(r) { return r.json(); })
+				.then(function(json) {
+					if (json['error']) {
+						errorDiv.textContent = json['error'];
+						btn.disabled = false;
+						btn.value = '<?php echo $button_confirm; ?>';
+						return;
+					}
+					if (json['success']) {
+						location = json['success'];
+					}
+				})
+				.catch(function() {
+					errorDiv.textContent = 'Network error — please contact support.';
+					btn.disabled = false;
+					btn.value = '<?php echo $button_confirm; ?>';
+				});
+			}
         });
     });
 })();

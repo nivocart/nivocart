@@ -5,10 +5,10 @@
   <p><?php echo $text_payment_method; ?></p>
   <table class="radio">
   <?php foreach ($payment_methods as $payment_method) { ?>
-    <?php $apply_paypal_fee = ((substr($payment_method['code'], 0, 3) == "pp_") || ($payment_method['code'] == "paypal_email")) ? true : false; ?>
+    <?php $apply_paypal_fee = ((substr($payment_method['code'], 0, 3) === "pp_") || ($payment_method['code'] === "paypal_email")) ? true : false; ?>
     <tr class="highlight">
       <td>
-      <?php if ($payment_method['code'] == $code || !$code) { ?>
+      <?php if ($payment_method['code'] === $code || !$code) { ?>
         <?php $code = $payment_method['code']; ?>
         <input type="radio" name="payment_method" value="<?php echo $payment_method['code']; ?>" id="<?php echo $payment_method['code']; ?>" checked="checked" />
       <?php } else { ?>
@@ -18,7 +18,7 @@
       <td>
       <?php if ($payment_images) { ?>
         <?php foreach ($payment_images as $payment_image) { ?>
-          <?php if ($payment_image['payment'] == strtolower($payment_method['code'])) { ?>
+          <?php if ($payment_image['payment'] === strtolower($payment_method['code'])) { ?>
             <?php if ($payment_image['status']) { ?>
               <label for="<?php echo $payment_method['code']; ?>"><img src="<?php echo $payment_image['image']; ?>" title="<?php echo $payment_method['title']; ?>" alt="<?php echo $payment_method['title']; ?>" />
               <?php if ($paypal_fee && $apply_paypal_fee) { ?>
@@ -74,5 +74,44 @@
 $('.colorbox').colorbox({
 	width: 640,
 	height: 480
+});
+//--></script>
+
+<script type="text/javascript"><!--
+$('#button-payment-method').on('click', function() {
+    $.ajax({
+        url: 'index.php?route=checkout/payment_method/validate',
+        type: 'post',
+        data: $('input[name="payment_method"]:checked').serialize()
+			+ '&comment=' + encodeURIComponent($('textarea[name="comment"]').val())
+			+ ($('input[name="agree"]').is(':checked') ? '&agree=1' : ''),
+        dataType: 'json',
+        beforeSend: function() {
+            $('#button-payment-method').attr('disabled', true);
+        },
+        complete: function() {
+            $('#button-payment-method').attr('disabled', false);
+        },
+        success: function(json) {
+            $('.warning').remove();
+
+            if (json['error']) {
+                if (json['error']['warning']) {
+                    $('#button-payment-method').before('<div class="warning">' + json['error']['warning'] + '</div>');
+                }
+            }
+
+            if (json['redirect']) {
+                location = json['redirect'];
+            }
+
+            if (!json['error'] && !json['redirect']) {
+                location = '<?php echo $this->url->link('checkout/confirm', '', 'SSL'); ?>';
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
 });
 //--></script>

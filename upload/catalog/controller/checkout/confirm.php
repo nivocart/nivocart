@@ -372,6 +372,8 @@ class ControllerCheckoutConfirm extends Controller {
             }
 
 			// Pass gateway order status into addOrder()
+			$payment_code = $data['payment_code'];
+
 			if (in_array($payment_code, $this->interactive_gateways)) {
 				$data['order_status_id'] = (int)$this->config->get($payment_code . '_order_status_id');
 			}
