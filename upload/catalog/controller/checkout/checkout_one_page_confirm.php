@@ -248,6 +248,11 @@ class ControllerCheckoutCheckoutOnePageConfirm extends Controller {
         $data['user_agent'] = isset($this->request->server['HTTP_USER_AGENT']) ? $this->request->server['HTTP_USER_AGENT'] : '';
         $data['accept_language'] = isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) ? $this->request->server['HTTP_ACCEPT_LANGUAGE'] : '';
 
+		// Pass gateway order status into addOrder()
+		if (in_array($payment_code, $this->interactive_gateways)) {
+			$data['order_status_id'] = (int)$this->config->get($payment_code . '_order_status_id');
+		}
+
         // Save the order — cart is cleared inside addOrder()
         $this->load->model('checkout/order');
 

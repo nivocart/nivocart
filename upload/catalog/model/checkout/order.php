@@ -9,8 +9,8 @@ class ModelCheckoutOrder extends Model {
 	 * Functions Get
 	 */
 	public function addOrder(array $data = []): int {
-		// Order Status Id
-		$order_status_id = $this->config->get('config_order_status_id') ? $this->config->get('config_order_status_id') : 1;
+		// Order Status Id — use gateway-provided status if available, otherwise store default
+		$order_status_id = !empty($data['order_status_id']) ? (int)$data['order_status_id'] : ((int)$this->config->get('config_order_status_id') ?: 1);
 
 		// Add order
 		$sql = "INSERT INTO `" . DB_PREFIX . "order` SET invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int)$data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "',";

@@ -371,7 +371,12 @@ class ControllerCheckoutConfirm extends Controller {
                 $data['accept_language'] = '';
             }
 
-            // Add order
+			// Pass gateway order status into addOrder()
+			if (in_array($payment_code, $this->interactive_gateways)) {
+				$data['order_status_id'] = (int)$this->config->get($payment_code . '_order_status_id');
+			}
+
+            // Save the order — cart is cleared inside addOrder()
             $this->load->model('checkout/order');
 
             $this->session->data['order_id'] = $this->model_checkout_order->addOrder($data);
