@@ -467,7 +467,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 					'shipping_country'    => $shipping['country'],
 					'shipping_country_id' => $shipping['country_id'],
 					'shipping_method'     => isset($this->session->data['shipping_method']['title']) ? $this->session->data['shipping_method']['title'] : '',
-					'shipping_code'       => isset($this->session->data['shipping_method']['code'])  ? $this->session->data['shipping_method']['code']  : '',
+					'shipping_code'       => isset($this->session->data['shipping_method']['code']) ? $this->session->data['shipping_method']['code'] : '',
 					'comment'             => isset($customer_info['comment']) ? $customer_info['comment'] : ''
 				];
 
