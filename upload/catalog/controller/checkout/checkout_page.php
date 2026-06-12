@@ -1,21 +1,16 @@
 <?php
 /**
- * Class ControllerCheckoutCheckoutOnePage
+ * Class ControllerCheckoutCheckoutPage
  *
  * @package NivoCart
  */
-class ControllerCheckoutCheckoutOnePage extends Controller {
+class ControllerCheckoutCheckoutPage extends Controller {
 	private $error = [];
 
 	public function index() {
-		// Express checkout redirect
-		if ($this->config->get('config_express_checkout')) {
-			$this->redirect($this->url->link('checkout_express/checkout', '', 'SSL'));
-		}
-
 		// Secure redirect
 		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
 		}
 
 		// Customer Login redirect
@@ -64,7 +59,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->data['check_shipping_address'] = 1;
 		}
 
-		$this->language->load('checkout/checkout_one_page');
+		$this->language->load('checkout/checkout_page');
 		$this->language->load('total/gift_wrapping');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -80,7 +75,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->session->data['coupon'] = $this->request->post['coupon'];
 			$this->session->data['success'] = $this->language->get('text_coupon');
 
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
 		}
 
 		// Voucher session
@@ -95,7 +90,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->session->data['voucher'] = $this->request->post['voucher'];
 			$this->session->data['success'] = $this->language->get('text_voucher');
 
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
 		}
 
 		// Reward session
@@ -106,7 +101,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->session->data['reward'] = abs($this->request->post['reward']);
 			$this->session->data['success'] = $this->language->get('text_reward');
 
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
 		}
 
 		// Add Wrapping
@@ -115,7 +110,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->session->data['wrapping'] = $this->request->post['add_wrapping'];
 			$this->session->data['success'] = $this->language->get('text_add_wrapping');
 
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
 		}
 
 		// Remove Wrapping
@@ -125,7 +120,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->session->data['check_shipping_address'] = isset($this->session->data['check_shipping_address']) ? 1 : 0;
 			$this->session->data['success'] = $this->language->get('text_remove_wrapping');
 
-			$this->redirect($this->url->link('checkout/checkout_one_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
 		}
 
 		// Breadcrumbs
@@ -145,7 +140,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('checkout/checkout_one_page', '', 'SSL'),
+			'href'      => $this->url->link('checkout/checkout_page', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
 		];
 
@@ -164,7 +159,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('checkout/checkout_one_page', '', 'SSL');
+		$this->data['action'] = $this->url->link('checkout/checkout_page', '', 'SSL');
 
 		// Coupon
 		$this->data['coupon_status'] = $this->config->get('coupon_status');
@@ -186,7 +181,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 					'key'         => $key,
 					'description' => $voucher['description'],
 					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
-					'remove'      => $this->url->link('checkout/checkout_one_page', 'remove=' . $key, 'SSL')
+					'remove'      => $this->url->link('checkout/checkout_page', 'remove=' . $key, 'SSL')
 				];
 			}
 		}
@@ -223,13 +218,13 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			$this->data['reward_point'] = false;
 		}
 
-		if ($this->config->get('config_one_page_point') === 2) {
+		if ($this->config->get('config_checkout_point') === 2) {
 			$this->data['show_point'] = false;
 
 			if ($points && $this->config->get('reward_status')) {
 				$this->session->data['reward'] = $reward_points;
 			}
-		} elseif ($this->config->get('config_one_page_point') === 1) {
+		} elseif ($this->config->get('config_checkout_point') === 1) {
 			$this->data['show_point'] = true;
 		} else {
 			$this->data['show_point'] = false;
@@ -310,7 +305,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 					$this->load->model('account/customer');
 					$this->load->model('checkout/checkout_tools');
 
-					$newsletter = ($this->config->get('config_one_page_newsletter') === 1) ? 1 : 0;
+					$newsletter = ($this->config->get('config_checkout_newsletter') === 1) ? 1 : 0;
 
 					$customer_data = [
 						'customer_group_id' => $customer_info['customer_group_id'],
@@ -390,7 +385,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 					'country'        => $country_name,
 					'country_id'     => $customer_info['country_id'],
 					'payment_method' => isset($this->session->data['payment_method']['title']) ? $this->session->data['payment_method']['title'] : (isset($customer_info['payment_method']) ? $customer_info['payment_method'] : ''),
-					'payment_code'   => isset($this->session->data['payment_method']['code'])  ? $this->session->data['payment_method']['code']  : (isset($customer_info['code']) ? $customer_info['code'] : '')
+					'payment_code'   => isset($this->session->data['payment_method']['code']) ? $this->session->data['payment_method']['code'] : (isset($customer_info['code']) ? $customer_info['code'] : '')
 				];
 
 				// Shipping address
@@ -476,7 +471,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 				];
 
 				// Return JSON redirect to confirm controller
-				$json = ['redirect' => $this->url->link('checkout/checkout_one_page_confirm', '', 'SSL')];
+				$json = ['redirect' => $this->url->link('checkout/checkout_page_confirm', '', 'SSL')];
 
 				$this->response->addHeader('Content-Type: application/json');
 				$this->response->setOutput(json_encode($json));
@@ -535,9 +530,9 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		}
 
 		// Customer fields
-		$this->data['one_page_phone']   = $this->config->get('config_one_page_phone');
-		$this->data['one_page_gender']  = $this->config->get('config_customer_gender');
-		$this->data['one_page_dob']     = $this->config->get('config_customer_dob');
+		$this->data['one_page_phone'] = $this->config->get('config_checkout_phone');
+		$this->data['one_page_gender'] = $this->config->get('config_customer_gender');
+		$this->data['one_page_dob'] = $this->config->get('config_customer_dob');
 
 		$customer_fields = [
 			'firstname'     => ['post', 'customer', ''],
@@ -671,16 +666,16 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		// Shipping address data for quote calculation
 		$shipping_address = [
 			'firstname'      => $this->data['shipping_firstname'] ?: $this->data['firstname'],
-			'lastname'       => $this->data['shipping_lastname']  ?: $this->data['lastname'],
+			'lastname'       => $this->data['shipping_lastname'] ?: $this->data['lastname'],
 			'company'        => $this->data['shipping_company'],
 			'address_1'      => $this->data['shipping_address_1'] ?: $this->data['address_1'],
 			'address_2'      => $this->data['shipping_address_2'] ?: $this->data['address_2'],
-			'city'           => $this->data['shipping_city']      ?: $this->data['city'],
-			'postcode'       => $this->data['shipping_postcode']  ?: $this->data['postcode'],
+			'city'           => $this->data['shipping_city'] ?: $this->data['city'],
+			'postcode'       => $this->data['shipping_postcode'] ?: $this->data['postcode'],
 			'zone'           => $this->data['shipping_zone_name'] ?: $this->data['zone_name'],
-			'zone_id'        => $this->data['shipping_zone_id']   ?: $this->data['zone_id'],
+			'zone_id'        => $this->data['shipping_zone_id'] ?: $this->data['zone_id'],
 			'country'        => $this->data['shipping_country_name'] ?: $this->data['country_name'],
-			'country_id'     => $this->data['shipping_country_id']   ?: $this->data['country_id'],
+			'country_id'     => $this->data['shipping_country_id'] ?: $this->data['country_id'],
 			'address_format' => ''
 		];
 
@@ -865,10 +860,10 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout_one_page.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/checkout_one_page.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout_page.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/checkout/checkout_page.tpl';
 		} else {
-			$this->template = 'default/template/checkout/checkout_one_page.tpl';
+			$this->template = 'default/template/checkout/checkout_page.tpl';
 		}
 
 		$this->children = [
@@ -890,7 +885,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			return;
 		}
 
-		$this->language->load('checkout/checkout_one_page');
+		$this->language->load('checkout/checkout_page');
 
 		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
@@ -920,7 +915,7 @@ class ControllerCheckoutCheckoutOnePage extends Controller {
 			}
 		}
 
-		if ($this->config->get('config_one_page_phone')) {
+		if ($this->config->get('config_checkout_phone')) {
 			if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
 				$this->error['telephone'] = $this->language->get('error_telephone');
 			}

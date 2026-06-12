@@ -1,14 +1,14 @@
 <?php
 /**
- * Class ControllerCheckoutCheckoutOneCart
+ * Class ControllerCheckoutCheckoutCart
  *
  * @package NivoCart
  */
-class ControllerCheckoutCheckoutOneCart extends Controller {
+class ControllerCheckoutCheckoutCart extends Controller {
 	/** Error array Placeholder */
 
 	public function index() {
-		$this->language->load('checkout/checkout_one_page');
+		$this->language->load('checkout/checkout_page');
 
 		// Validate minimum quantity requirements
 		$products = $this->cart->getProducts();
@@ -385,10 +385,10 @@ class ControllerCheckoutCheckoutOneCart extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout_one_cart.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/checkout_one_cart.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout_cart.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/checkout/checkout_cart.tpl';
 		} else {
-			$this->template = 'default/template/checkout/checkout_one_cart.tpl';
+			$this->template = 'default/template/checkout/checkout_cart.tpl';
 		}
 
 		$this->response->setOutput($this->render());

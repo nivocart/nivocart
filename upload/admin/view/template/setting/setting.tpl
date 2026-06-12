@@ -457,7 +457,7 @@
             <td><input type="text" name="config_abandoned_cart" value="<?php echo $config_abandoned_cart; ?>" size="3" /></td>
           </tr>
         </table>
-        <h2><?php echo $text_standard; ?></h2>
+        <h2><?php echo $text_checkout; ?></h2>
         <table class="form">
           <tr>
             <td><?php echo $entry_guest_checkout; ?><span class="help"><?php echo $help_guest_checkout; ?></span></td>
@@ -473,184 +473,12 @@
               <label for="guest-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
-        </table>
-        <h2><?php echo $text_express; ?></h2>
-        <table class="form">
-          <tr>
-            <td colspan="2"><img src="view/image/tooltip.png" alt="" /> &nbsp; <?php echo $info_express; ?></td>
-          </tr>
-          <tr class="highlighted">
-            <td><?php echo $entry_express_checkout; ?><span class="help"><?php echo $help_express_checkout; ?></span></td>
-            <td><?php if ($config_express_checkout) { ?>
-              <input type="radio" name="config_express_checkout" value="1" id="express-checkout-on" class="radio" checked />
-              <label for="express-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_checkout" value="0" id="express-checkout-off" class="radio" />
-              <label for="express-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_express_checkout" value="1" id="express-checkout-on" class="radio" />
-              <label for="express-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_checkout" value="0" id="express-checkout-off" class="radio" checked />
-              <label for="express-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?>
-            <?php if ($error_multiple_checkout) { ?>
-              <span class="error"><?php echo $error_multiple_checkout; ?></span>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_autofill; ?><span class="help"><?php echo $help_express_autofill; ?></span></td>
-            <td><?php if ($config_express_autofill) { ?>
-              <input type="radio" name="config_express_autofill" value="1" id="express-autofill-on" class="radio" checked />
-              <label for="express-autofill-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_autofill" value="0" id="express-autofill-off" class="radio" />
-              <label for="express-autofill-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_express_autofill" value="1" id="express-autofill-on" class="radio" />
-              <label for="express-autofill-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_autofill" value="0" id="express-autofill-off" class="radio" checked />
-              <label for="express-autofill-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_password; ?><span class="help"><?php echo $help_express_password; ?></span></td>
-            <td><select name="config_express_password">
-              <?php if (isset($config_express_password)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_password === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_password === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_password === '2') { echo $selected; } ?>><?php echo $text_hide; ?></option>
-              <?php } else { ?>
-                <option value="0"><?php echo $text_no; ?></option>
-                <option value="1"><?php echo $text_yes; ?></option>
-                <option value="2"><?php echo $text_hide; ?></option>
-              <?php } ?>
-            </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_phone; ?></td>
-            <td><select name="config_express_phone">
-              <?php if (isset($config_express_phone)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_phone === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_phone === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_phone === '2') { echo $selected; } ?>><?php echo $text_required; ?></option>
-              <?php } else { ?>
-                <option value="0"><?php echo $text_no; ?></option>
-                <option value="1"><?php echo $text_yes; ?></option>
-                <option value="2"><?php echo $text_required; ?></option>
-              <?php } ?>
-            </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_billing; ?><span class="help"><?php echo $help_express_billing; ?></span></td>
-            <td><?php if ($config_express_billing) { ?>
-              <input type="radio" name="config_express_billing" value="1" id="express-billing-on" class="radio" checked />
-              <label for="express-billing-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_billing" value="0" id="express-billing-off" class="radio" />
-              <label for="express-billing-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_express_billing" value="1" id="express-billing-on" class="radio" />
-              <label for="express-billing-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_billing" value="0" id="express-billing-off" class="radio" checked />
-              <label for="express-billing-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_comment; ?><span class="help"><?php echo $help_express_comment; ?></span></td>
-            <td><?php if ($config_express_comment) { ?>
-              <input type="radio" name="config_express_comment" value="1" id="express-comment-on" class="radio" checked />
-              <label for="express-comment-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_comment" value="0" id="express-comment-off" class="radio" />
-              <label for="express-comment-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_express_comment" value="1" id="express-comment-on" class="radio" />
-              <label for="express-comment-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_comment" value="0" id="express-comment-off" class="radio" checked />
-              <label for="express-comment-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_newsletter; ?></td>
-            <td><select name="config_express_newsletter">
-              <?php if (isset($config_express_newsletter)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_newsletter === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_newsletter === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_newsletter === '2') { echo $selected; } ?>><?php echo $text_choice; ?></option>
-              <?php } else { ?>
-                <option value="0"><?php echo $text_no; ?></option>
-                <option value="1"><?php echo $text_yes; ?></option>
-                <option value="2"><?php echo $text_choice; ?></option>
-              <?php } ?>
-            </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_coupon; ?></td>
-            <td><?php if ($config_express_coupon) { ?>
-              <input type="radio" name="config_express_coupon" value="1" id="express-coupon-on" class="radio" checked />
-              <label for="express-coupon-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_coupon" value="0" id="express-coupon-off" class="radio" />
-              <label for="express-coupon-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_express_coupon" value="1" id="express-coupon-on" class="radio" />
-              <label for="express-coupon-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_coupon" value="0" id="express-coupon-off" class="radio" checked />
-              <label for="express-coupon-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_voucher; ?></td>
-            <td><?php if ($config_express_voucher) { ?>
-              <input type="radio" name="config_express_voucher" value="1" id="express-voucher-on" class="radio" checked />
-              <label for="express-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_voucher" value="0" id="express-voucher-off" class="radio" />
-              <label for="express-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_express_voucher" value="1" id="express-voucher-on" class="radio" />
-              <label for="express-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_express_voucher" value="0" id="express-voucher-off" class="radio" checked />
-              <label for="express-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_express_point; ?></td>
-            <td><select name="config_express_point">
-              <?php if (isset($config_express_point)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_express_point === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_express_point === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_express_point === '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
-              <?php } else { ?>
-                <option value="0"><?php echo $text_no; ?></option>
-                <option value="1"><?php echo $text_yes; ?></option>
-                <option value="2"><?php echo $text_automatic; ?></option>
-              <?php } ?>
-            </select></td>
-          </tr>
-        </table>
-        <h2><?php echo $text_one_page; ?></h2>
-        <table class="form">
-          <tr>
-            <td colspan="2"><img src="view/image/tooltip.png" alt="" /> &nbsp; <?php echo $info_one_page; ?></td>
-          </tr>
-          <tr class="highlighted">
-            <td><?php echo $entry_one_page_checkout; ?><span class="help"><?php echo $help_one_page_checkout; ?></span></td>
-            <td><?php if ($config_one_page_checkout) { ?>
-              <input type="radio" name="config_one_page_checkout" value="1" id="one-page-checkout-on" class="radio" checked />
-              <label for="one-page-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_checkout" value="0" id="one-page-checkout-off" class="radio" />
-              <label for="one-page-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_one_page_checkout" value="1" id="one-page-checkout-on" class="radio" />
-              <label for="one-page-checkout-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_checkout" value="0" id="one-page-checkout-off" class="radio" checked />
-              <label for="one-page-checkout-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?>
-            <?php if ($error_multiple_checkout) { ?>
-              <span class="error"><?php echo $error_multiple_checkout; ?></span>
-            <?php } ?></td>
-          </tr>
           <tr>
             <td><?php echo $entry_one_page_phone; ?></td>
-            <td><select name="config_one_page_phone">
-              <?php if (isset($config_one_page_phone)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_one_page_phone === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_one_page_phone === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+            <td><select name="config_checkout_phone">
+              <?php if (isset($config_checkout_phone)) { $selected = "selected"; ?>
+                <option value="0" <?php if ($config_checkout_phone === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_checkout_phone === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -659,10 +487,10 @@
           </tr>
           <tr>
             <td><?php echo $entry_one_page_newsletter; ?></td>
-            <td><select name="config_one_page_newsletter">
-              <?php if (isset($config_one_page_newsletter)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_one_page_newsletter === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_one_page_newsletter === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+            <td><select name="config_checkout_newsletter">
+              <?php if (isset($config_checkout_newsletter)) { $selected = "selected"; ?>
+                <option value="0" <?php if ($config_checkout_newsletter === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_checkout_newsletter === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -671,39 +499,39 @@
           </tr>
           <tr>
             <td><?php echo $entry_one_page_coupon; ?></td>
-            <td><?php if ($config_one_page_coupon) { ?>
-              <input type="radio" name="config_one_page_coupon" value="1" id="one-page-coupon-on" class="radio" checked />
+            <td><?php if ($config_checkout_coupon) { ?>
+              <input type="radio" name="config_checkout_coupon" value="1" id="one-page-coupon-on" class="radio" checked />
               <label for="one-page-coupon-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_coupon" value="0" id="one-page-coupon-off" class="radio" />
+              <input type="radio" name="config_checkout_coupon" value="0" id="one-page-coupon-off" class="radio" />
               <label for="one-page-coupon-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } else { ?>
-              <input type="radio" name="config_one_page_coupon" value="1" id="one-page-coupon-on" class="radio" />
+              <input type="radio" name="config_checkout_coupon" value="1" id="one-page-coupon-on" class="radio" />
               <label for="one-page-coupon-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_coupon" value="0" id="one-page-coupon-off" class="radio" checked />
+              <input type="radio" name="config_checkout_coupon" value="0" id="one-page-coupon-off" class="radio" checked />
               <label for="one-page-coupon-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_one_page_voucher; ?></td>
-            <td><?php if ($config_one_page_voucher) { ?>
-              <input type="radio" name="config_one_page_voucher" value="1" id="one-page-voucher-on" class="radio" checked />
+            <td><?php if ($config_checkout_voucher) { ?>
+              <input type="radio" name="config_checkout_voucher" value="1" id="one-page-voucher-on" class="radio" checked />
               <label for="one-page-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_voucher" value="0" id="one-page-voucher-off" class="radio" />
+              <input type="radio" name="config_checkout_voucher" value="0" id="one-page-voucher-off" class="radio" />
               <label for="one-page-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } else { ?>
-              <input type="radio" name="config_one_page_voucher" value="1" id="one-page-voucher-on" class="radio" />
+              <input type="radio" name="config_checkout_voucher" value="1" id="one-page-voucher-on" class="radio" />
               <label for="one-page-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_one_page_voucher" value="0" id="one-page-voucher-off" class="radio" checked />
+              <input type="radio" name="config_checkout_voucher" value="0" id="one-page-voucher-off" class="radio" checked />
               <label for="one-page-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_one_page_point; ?></td>
-            <td><select name="config_one_page_point">
-              <?php if (isset($config_one_page_point)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_one_page_point === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_one_page_point === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_one_page_point === '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
+            <td><select name="config_checkout_point">
+              <?php if (isset($config_checkout_point)) { $selected = "selected"; ?>
+                <option value="0" <?php if ($config_checkout_point === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
+                <option value="1" <?php if ($config_checkout_point === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
+                <option value="2" <?php if ($config_checkout_point === '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_no; ?></option>
                 <option value="1"><?php echo $text_yes; ?></option>
@@ -2084,6 +1912,26 @@
             <td><input type="text" name="config_ftp_root" value="<?php echo $config_ftp_root; ?>" /></td>
           </tr>
         </table>
+        <h2><?php echo $text_upload; ?></h2>
+        <table class="form">
+          <tr>
+            <td><span class="required">*</span> <?php echo $entry_file_max_size; ?><span class="help"><?php echo $help_file_max_size; ?></span></td>
+            <td><?php if ($error_file_max_size) { ?>
+              <input type="text" name="config_file_max_size" value="<?php echo $config_file_max_size; ?>" class="input-error" /> bytes
+              <span class="error"><?php echo $error_file_max_size; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_file_max_size" value="<?php echo $config_file_max_size; ?>" /> bytes
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_file_extension_allowed; ?><span class="help"><?php echo $help_file_extension_allowed; ?></span></td>
+            <td><textarea name="config_file_extension_allowed" cols="40" rows="8"><?php echo $config_file_extension_allowed; ?></textarea></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_file_mime_allowed; ?><span class="help"><?php echo $help_file_mime_allowed; ?></span></td>
+            <td><textarea name="config_file_mime_allowed" cols="50" rows="8"><?php echo $config_file_mime_allowed; ?></textarea></td>
+          </tr>
+        </table>
       </div>
       <div id="tab-mail">
         <table class="form">
@@ -2401,26 +2249,6 @@
               <input type="radio" name="config_sitemap_links" value="0" id="sitemap-links-off" class="radio" checked />
               <label for="sitemap-links-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
-          </tr>
-        </table>
-        <h2><?php echo $text_upload; ?></h2>
-        <table class="form">
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_file_max_size; ?><span class="help"><?php echo $help_file_max_size; ?></span></td>
-            <td><?php if ($error_file_max_size) { ?>
-              <input type="text" name="config_file_max_size" value="<?php echo $config_file_max_size; ?>" class="input-error" /> bytes
-              <span class="error"><?php echo $error_file_max_size; ?></span>
-            <?php } else { ?>
-              <input type="text" name="config_file_max_size" value="<?php echo $config_file_max_size; ?>" /> bytes
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_file_extension_allowed; ?><span class="help"><?php echo $help_file_extension_allowed; ?></span></td>
-            <td><textarea name="config_file_extension_allowed" cols="40" rows="8"><?php echo $config_file_extension_allowed; ?></textarea></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_file_mime_allowed; ?><span class="help"><?php echo $help_file_mime_allowed; ?></span></td>
-            <td><textarea name="config_file_mime_allowed" cols="50" rows="8"><?php echo $config_file_mime_allowed; ?></textarea></td>
           </tr>
         </table>
       </div>

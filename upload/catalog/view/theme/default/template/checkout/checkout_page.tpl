@@ -13,7 +13,7 @@
     <a href="<?php echo $one_page_cart; ?>" title="<?php echo $text_cart; ?>" style="margin-left:25px;"><img src="catalog/view/theme/<?php echo $template; ?>/image/cart.png" alt="<?php echo $text_cart; ?>" /></a>
   </div>
   <h1><?php echo $heading_title; ?></h1>
-  <?php if ($wrapping_status || $this->config->get('config_one_page_coupon') || $this->config->get('config_one_page_voucher') || $reward_point) { ?>
+  <?php if ($wrapping_status || $this->config->get('config_checkout_coupon') || $this->config->get('config_checkout_voucher') || $reward_point) { ?>
     <div style="margin-bottom:15px;">
       <?php if ($wrapping_status) { ?>
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
@@ -24,10 +24,10 @@
           <?php } ?>
         </form>
       <?php } ?>
-      <?php if ($this->config->get('config_one_page_coupon')) { ?>
+      <?php if ($this->config->get('config_checkout_coupon')) { ?>
         <a onclick="$('#coupon').toggle(500);$('#voucher').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_one_page_coupon; ?></a>
       <?php } ?>
-      <?php if ($this->config->get('config_one_page_voucher')) { ?>
+      <?php if ($this->config->get('config_checkout_voucher')) { ?>
         <a onclick="$('#voucher').toggle(500);$('#coupon').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_one_page_voucher; ?></a>
       <?php } ?>
       <?php if ($show_point && $reward_point) { ?>
@@ -118,7 +118,7 @@
           <?php if ($one_page_gender) { ?>
             <tr>
               <td colspan="2">
-                <?php if ($gender == 0) { ?>
+                <?php if ($gender === 0) { ?>
                   <input type="radio" name="gender" value="0" checked="checked" /><?php echo $text_male; ?>&nbsp;&nbsp;
                   <input type="radio" name="gender" value="1" /><?php echo $text_female; ?>
                 <?php } else { ?>
@@ -204,7 +204,9 @@
               <select name="country_id">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <option value="<?php echo $country['country_id']; ?>"<?php echo ($country['country_id'] == $country_id) ? ' selected="selected"' : ''; ?>><?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?></option>
+                  <option value="<?php echo $country['country_id']; ?>"<?php echo ($country['country_id'] === $country_id) ? ' selected="selected"' : ''; ?>>
+				  <?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?>
+				  </option>
                 <?php } ?>
               </select>
             </td>
@@ -220,7 +222,7 @@
           <?php } ?>
         </table>
         <div class="address-checkbox">
-          <input type="checkbox" name="check_shipping_address" value="1"<?php echo ($check_shipping_address == 1) ? ' checked="checked"' : ''; ?> /> <?php echo $entry_shipping; ?>
+          <input type="checkbox" name="check_shipping_address" value="1"<?php echo ($check_shipping_address === 1) ? ' checked="checked"' : ''; ?> /> <?php echo $entry_shipping; ?>
         </div>
         <table class="address-options" id="shipping-address-display">
           <tr>
@@ -281,7 +283,9 @@
               <select name="shipping_country_id">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
-                  <option value="<?php echo $country['country_id']; ?>"<?php echo ($country['country_id'] == $shipping_country_id) ? ' selected="selected"' : ''; ?>><?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?></option>
+                  <option value="<?php echo $country['country_id']; ?>"<?php echo ($country['country_id'] === $shipping_country_id) ? ' selected="selected"' : ''; ?>>
+				  <?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?>
+				  </option>
                 <?php } ?>
               </select>
             </td>
@@ -338,13 +342,13 @@
                 <?php } ?>
                 <table id="payment-lock" class="radio" style="margin-bottom:2px;">
                 <?php foreach ($payment_methods as $payment_method) { ?>
-                  <?php $apply_paypal_fee = ((substr($payment_method['code'], 0, 3) == 'pp_') || ($payment_method['code'] == 'paypal_email')) ? true : false; ?>
+                  <?php $apply_paypal_fee = ((substr($payment_method['code'], 0, 3) === 'pp_') || ($payment_method['code'] === 'paypal_email')) ? true : false; ?>
                   <tr class="highlight">
-                    <td><input type="radio" name="payment_method" value="<?php echo $payment_method['code']; ?>" id="<?php echo $payment_method['code']; ?>"<?php echo ($payment_method['code'] == $payment_method_code) ? ' checked="checked"' : ''; ?> /></td>
+                    <td><input type="radio" name="payment_method" value="<?php echo $payment_method['code']; ?>" id="<?php echo $payment_method['code']; ?>"<?php echo ($payment_method['code'] === $payment_method_code) ? ' checked="checked"' : ''; ?> /></td>
                     <td>
                       <?php if ($payment_images) { ?>
                         <?php foreach ($payment_images as $payment_image) { ?>
-                          <?php if ($payment_image['payment'] == strtolower($payment_method['code'])) { ?>
+                          <?php if ($payment_image['payment'] === strtolower($payment_method['code'])) { ?>
                             <?php if ($payment_image['status']) { ?>
                               <label for="<?php echo $payment_method['code']; ?>"><img src="<?php echo $payment_image['image']; ?>" title="<?php echo $payment_method['title']; ?>" alt="<?php echo $payment_method['title']; ?>" />
                                 <?php if ($paypal_fee && $apply_paypal_fee) { ?><span> + <?php echo $paypal_fee; ?></span><?php } ?>
@@ -507,7 +511,7 @@ function fetchStripeIntent() {
 // ============================================================================
 function submitForm() {
     $.ajax({
-        url: 'index.php?route=checkout/checkout_one_page',
+        url: 'index.php?route=checkout/checkout_page',
         type: 'post',
         data: $('#form').serialize(),
         dataType: 'json',
@@ -671,10 +675,10 @@ $('input[name=\'customer_group_id\']:checked').trigger('change');
 <script type="text/javascript"><!--
 // Payment country zone loader
 $('select[name=\'country_id\']').on('change', function() {
-  if (this.value == '') return;
+  if (this.value === '') return;
 
   $.ajax({
-    url: 'index.php?route=checkout/checkout_one_page/country&country_id=' + this.value,
+    url: 'index.php?route=checkout/checkout_page/country&country_id=' + this.value,
     dataType: 'json',
     beforeSend: function() {
       $('.attention, .warning, .error').remove();
@@ -682,7 +686,7 @@ $('select[name=\'country_id\']').on('change', function() {
     },
     complete: function() { $('.wait').remove(); },
     success: function(json) {
-      if (json['postcode_required'] == '1') {
+      if (json['postcode_required'] === '1') {
         $('#payment-postcode-required').show();
       } else {
         $('#payment-postcode-required').hide();
@@ -690,10 +694,10 @@ $('select[name=\'country_id\']').on('change', function() {
 
       var html = '<option value=""><?php echo $text_select; ?></option>';
 
-      if (json['zone'] != '') {
+      if (json['zone'] !== '') {
         for (var i = 0; i < json['zone'].length; i++) {
           html += '<option value="' + json['zone'][i]['zone_id'] + '"';
-          if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') html += ' selected="selected"';
+          if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') html += ' selected="selected"';
           html += '>' + json['zone'][i]['name'] + '</option>';
         }
       } else {
@@ -706,7 +710,7 @@ $('select[name=\'country_id\']').on('change', function() {
 });
 
 $('select[name=\'country_id\']').on('change', function() {
-  if ($(this).val() != <?php echo $country_id; ?>) {
+  if ($(this).val() !== <?php echo $country_id; ?>) {
     $('#shipping-refresh').fadeIn(500); $('#shipping-lock').hide(); $('#payment-lock').hide();
   } else {
     $('#shipping-refresh').hide(); $('#shipping-lock').show(); $('#payment-lock').show();
@@ -717,12 +721,12 @@ $('select[name=\'country_id\']').trigger('change');
 //--></script>
 
 <script type="text/javascript"><!--
-// Shipping country zone loader — unchanged
+// Shipping country zone loader
 $('select[name=\'shipping_country_id\']').on('change', function() {
-  if (this.value == '') return;
+  if (this.value === '') return;
 
   $.ajax({
-    url: 'index.php?route=checkout/checkout_one_page/country&country_id=' + this.value,
+    url: 'index.php?route=checkout/checkout_page/country&country_id=' + this.value,
     dataType: 'json',
     beforeSend: function() {
       $('.attention, .warning, .error').remove();
@@ -732,10 +736,10 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
     success: function(json) {
       var html = '<option value=""><?php echo $text_select; ?></option>';
 
-      if (json['zone'] != '') {
+      if (json['zone'] !== '') {
         for (var i = 0; i < json['zone'].length; i++) {
           html += '<option value="' + json['zone'][i]['zone_id'] + '"';
-          if (json['zone'][i]['zone_id'] == '<?php echo $shipping_zone_id; ?>') html += ' selected="selected"';
+          if (json['zone'][i]['zone_id'] === '<?php echo $shipping_zone_id; ?>') html += ' selected="selected"';
           html += '>' + json['zone'][i]['name'] + '</option>';
         }
       } else {
@@ -748,7 +752,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
 });
 
 $('select[name=\'shipping_country_id\']').on('change', function() {
-  if ($(this).val() != <?php echo $shipping_country_id; ?>) {
+  if ($(this).val() !== <?php echo $shipping_country_id; ?>) {
     $('#shipping-refresh').fadeIn(500); $('#shipping-lock').hide(); $('#payment-lock').hide();
   } else {
     $('#shipping-refresh').hide(); $('#shipping-lock').show(); $('#payment-lock').show();
@@ -766,16 +770,16 @@ function refresh() {
   $('#form').submit();
 }
 
-$('#checkout-one-cart').load('index.php?route=checkout/checkout_one_cart');
+$('#checkout-one-cart').load('index.php?route=checkout/checkout_cart');
 
 $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
   $.ajax({
-    url: 'index.php?route=checkout/checkout_one_page/shippingMethod',
+    url: 'index.php?route=checkout/checkout_page/shippingMethod',
     type: 'post',
     data: 'shipping_method=' + $('input[name=\'shipping_method\']:checked').attr('value'),
     dataType: 'json',
     success: function(json) {
-      if (json['code']) { $('#checkout-one-cart').load('index.php?route=checkout/checkout_one_cart'); }
+      if (json['code']) { $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart'); }
     },
     error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
   });
@@ -783,12 +787,12 @@ $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
 
 $('body').on('change', 'input[name=\'payment_method\']:checked', function() {
   $.ajax({
-    url: 'index.php?route=checkout/checkout_one_page/paymentMethod',
+    url: 'index.php?route=checkout/checkout_page/paymentMethod',
     type: 'post',
     data: 'payment_method=' + $('input[name=\'payment_method\']:checked').attr('value'),
     dataType: 'json',
     success: function(json) {
-      if (json['code']) { $('#checkout-one-cart').load('index.php?route=checkout/checkout_one_cart'); }
+      if (json['code']) { $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart'); }
     },
     error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
   });

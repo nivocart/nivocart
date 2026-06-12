@@ -59,9 +59,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['text_preview'] = $this->language->get('text_preview');
 		$this->data['text_tax'] = $this->language->get('text_tax');
 		$this->data['text_account'] = $this->language->get('text_account');
-		$this->data['text_standard'] = $this->language->get('text_standard');
-		$this->data['text_one_page'] = $this->language->get('text_one_page');
-		$this->data['text_express'] = $this->language->get('text_express');
+		$this->data['text_checkout'] = $this->language->get('text_checkout');
 		$this->data['text_stock'] = $this->language->get('text_stock');
 		$this->data['text_supplier'] = $this->language->get('text_supplier');
 		$this->data['text_affiliate'] = $this->language->get('text_affiliate');
@@ -92,8 +90,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['text_block_page'] = $this->language->get('text_block_page');
 		$this->data['text_upload'] = $this->language->get('text_upload');
 
-		$this->data['info_one_page'] = $this->language->get('info_one_page');
-		$this->data['info_express'] = $this->language->get('info_express');
 		$this->data['info_meta_name'] = $this->language->get('info_meta_name');
 
 		$this->data['tab_general'] = $this->language->get('tab_general');
@@ -157,16 +153,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_one_page_coupon'] = $this->language->get('entry_one_page_coupon');
 		$this->data['entry_one_page_voucher'] = $this->language->get('entry_one_page_voucher');
 		$this->data['entry_one_page_point'] = $this->language->get('entry_one_page_point');
-		$this->data['entry_express_checkout'] = $this->language->get('entry_express_checkout');
-		$this->data['entry_express_password'] = $this->language->get('entry_express_password');
-		$this->data['entry_express_phone'] = $this->language->get('entry_express_phone');
-		$this->data['entry_express_autofill'] = $this->language->get('entry_express_autofill');
-		$this->data['entry_express_billing'] = $this->language->get('entry_express_billing');
-		$this->data['entry_express_comment'] = $this->language->get('entry_express_comment');
-		$this->data['entry_express_newsletter'] = $this->language->get('entry_express_newsletter');
-		$this->data['entry_express_coupon'] = $this->language->get('entry_express_coupon');
-		$this->data['entry_express_voucher'] = $this->language->get('entry_express_voucher');
-		$this->data['entry_express_point'] = $this->language->get('entry_express_point');
 		$this->data['entry_empty_category'] = $this->language->get('entry_empty_category');
 		$this->data['entry_product_count'] = $this->language->get('entry_product_count');
 		$this->data['entry_download'] = $this->language->get('entry_download');
@@ -337,13 +323,6 @@ class ControllerSettingSetting extends Controller {
 		$this->data['help_order_status'] = $this->language->get('help_order_status');
 		$this->data['help_complete_status'] = $this->language->get('help_complete_status');
 		$this->data['help_abandoned_cart'] = $this->language->get('help_abandoned_cart');
-		$this->data['help_one_page_checkout'] = $this->language->get('help_one_page_checkout');
-		$this->data['help_express_checkout'] = $this->language->get('help_express_checkout');
-		$this->data['help_express_autofill'] = $this->language->get('help_express_autofill');
-		$this->data['help_express_password'] = $this->language->get('help_express_password');
-		$this->data['help_express_billing'] = $this->language->get('help_express_billing');
-		$this->data['help_express_postcode'] = $this->language->get('help_express_postcode');
-		$this->data['help_express_comment'] = $this->language->get('help_express_comment');
 		$this->data['help_empty_category'] = $this->language->get('help_empty_category');
 		$this->data['help_product_count'] = $this->language->get('help_product_count');
 		$this->data['help_review'] = $this->language->get('help_review');
@@ -507,12 +486,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['error_title'] = '';
 		}
 
-		if (isset($this->error['multiple_checkout'])) {
-			$this->data['error_multiple_checkout'] = $this->error['multiple_checkout'];
-		} else {
-			$this->data['error_multiple_checkout'] = '';
-		}
-
 		if (isset($this->error['customer_group_display'])) {
 			$this->data['error_customer_group_display'] = $this->error['customer_group_display'];
 		} else {
@@ -663,6 +636,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['error_error_filename'] = '';
 		}
 
+		if (isset($this->error['file_max_size'])) {
+			$this->data['error_file_max_size'] = $this->error['file_max_size'];
+		} else {
+			$this->data['error_file_max_size'] = '';
+		}
+
 		if (isset($this->error['mail_filename'])) {
 			$this->data['error_mail_filename'] = $this->error['mail_filename'];
 		} else {
@@ -673,12 +652,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['error_quote_filename'] = $this->error['quote_filename'];
 		} else {
 			$this->data['error_quote_filename'] = '';
-		}
-
-		if (isset($this->error['file_max_size'])) {
-			$this->data['error_file_max_size'] = $this->error['file_max_size'];
-		} else {
-			$this->data['error_file_max_size'] = '';
 		}
 
 		if (isset($this->error['encryption'])) {
@@ -1081,109 +1054,41 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_abandoned_cart'] = 7;
 		}
 
-		// Standard Checkout
+		// Checkout
 		if (isset($this->request->post['config_guest_checkout'])) {
 			$this->data['config_guest_checkout'] = $this->request->post['config_guest_checkout'];
 		} else {
 			$this->data['config_guest_checkout'] = $this->config->get('config_guest_checkout');
 		}
 
-		// Express Checkout
-		if (isset($this->request->post['config_express_checkout'])) {
-			$this->data['config_express_checkout'] = $this->request->post['config_express_checkout'];
+		if (isset($this->request->post['config_checkout_phone'])) {
+			$this->data['config_checkout_phone'] = $this->request->post['config_checkout_phone'];
 		} else {
-			$this->data['config_express_checkout'] = $this->config->get('config_express_checkout');
+			$this->data['config_checkout_phone'] = $this->config->get('config_checkout_phone');
 		}
 
-		if (isset($this->request->post['config_express_autofill'])) {
-			$this->data['config_express_autofill'] = $this->request->post['config_express_autofill'];
+		if (isset($this->request->post['config_checkout_newsletter'])) {
+			$this->data['config_checkout_newsletter'] = $this->request->post['config_checkout_newsletter'];
 		} else {
-			$this->data['config_express_autofill'] = $this->config->get('config_express_autofill');
+			$this->data['config_checkout_newsletter'] = $this->config->get('config_checkout_newsletter');
 		}
 
-		if (isset($this->request->post['config_express_password'])) {
-			$this->data['config_express_password'] = $this->request->post['config_express_password'];
+		if (isset($this->request->post['config_checkout_coupon'])) {
+			$this->data['config_checkout_coupon'] = $this->request->post['config_checkout_coupon'];
 		} else {
-			$this->data['config_express_password'] = $this->config->get('config_express_password');
+			$this->data['config_checkout_coupon'] = $this->config->get('config_checkout_coupon');
 		}
 
-		if (isset($this->request->post['config_express_phone'])) {
-			$this->data['config_express_phone'] = $this->request->post['config_express_phone'];
+		if (isset($this->request->post['config_checkout_voucher'])) {
+			$this->data['config_checkout_voucher'] = $this->request->post['config_checkout_voucher'];
 		} else {
-			$this->data['config_express_phone'] = $this->config->get('config_express_phone');
+			$this->data['config_checkout_voucher'] = $this->config->get('config_checkout_voucher');
 		}
 
-		if (isset($this->request->post['config_express_billing'])) {
-			$this->data['config_express_billing'] = $this->request->post['config_express_billing'];
+		if (isset($this->request->post['config_checkout_point'])) {
+			$this->data['config_checkout_point'] = $this->request->post['config_checkout_point'];
 		} else {
-			$this->data['config_express_billing'] = $this->config->get('config_express_billing');
-		}
-
-		if (isset($this->request->post['config_express_comment'])) {
-			$this->data['config_express_comment'] = $this->request->post['config_express_comment'];
-		} else {
-			$this->data['config_express_comment'] = $this->config->get('config_express_comment');
-		}
-
-		if (isset($this->request->post['config_express_newsletter'])) {
-			$this->data['config_express_newsletter'] = $this->request->post['config_express_newsletter'];
-		} else {
-			$this->data['config_express_newsletter'] = $this->config->get('config_express_newsletter');
-		}
-
-		if (isset($this->request->post['config_express_coupon'])) {
-			$this->data['config_express_coupon'] = $this->request->post['config_express_coupon'];
-		} else {
-			$this->data['config_express_coupon'] = $this->config->get('config_express_coupon');
-		}
-
-		if (isset($this->request->post['config_express_voucher'])) {
-			$this->data['config_express_voucher'] = $this->request->post['config_express_voucher'];
-		} else {
-			$this->data['config_express_voucher'] = $this->config->get('config_express_voucher');
-		}
-
-		if (isset($this->request->post['config_express_point'])) {
-			$this->data['config_express_point'] = $this->request->post['config_express_point'];
-		} else {
-			$this->data['config_express_point'] = $this->config->get('config_express_point');
-		}
-
-		// One Page Checkout
-		if (isset($this->request->post['config_one_page_checkout'])) {
-			$this->data['config_one_page_checkout'] = $this->request->post['config_one_page_checkout'];
-		} else {
-			$this->data['config_one_page_checkout'] = $this->config->get('config_one_page_checkout');
-		}
-
-		if (isset($this->request->post['config_one_page_phone'])) {
-			$this->data['config_one_page_phone'] = $this->request->post['config_one_page_phone'];
-		} else {
-			$this->data['config_one_page_phone'] = $this->config->get('config_one_page_phone');
-		}
-
-		if (isset($this->request->post['config_one_page_newsletter'])) {
-			$this->data['config_one_page_newsletter'] = $this->request->post['config_one_page_newsletter'];
-		} else {
-			$this->data['config_one_page_newsletter'] = $this->config->get('config_one_page_newsletter');
-		}
-
-		if (isset($this->request->post['config_one_page_coupon'])) {
-			$this->data['config_one_page_coupon'] = $this->request->post['config_one_page_coupon'];
-		} else {
-			$this->data['config_one_page_coupon'] = $this->config->get('config_one_page_coupon');
-		}
-
-		if (isset($this->request->post['config_one_page_voucher'])) {
-			$this->data['config_one_page_voucher'] = $this->request->post['config_one_page_voucher'];
-		} else {
-			$this->data['config_one_page_voucher'] = $this->config->get('config_one_page_voucher');
-		}
-
-		if (isset($this->request->post['config_one_page_point'])) {
-			$this->data['config_one_page_point'] = $this->request->post['config_one_page_point'];
-		} else {
-			$this->data['config_one_page_point'] = $this->config->get('config_one_page_point');
+			$this->data['config_checkout_point'] = $this->config->get('config_checkout_point');
 		}
 
 		// Options
@@ -2010,6 +1915,27 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_ftp_root'] = $this->config->get('config_ftp_root');
 		}
 
+		// Upload
+		if (isset($this->request->post['config_file_max_size'])) {
+			$this->data['config_file_max_size'] = $this->request->post['config_file_max_size'];
+		} elseif ($this->config->get('config_file_max_size')) {
+			$this->data['config_file_max_size'] = $this->config->get('config_file_max_size');
+		} else {
+			$this->data['config_file_max_size'] = 2048000;
+		}
+
+		if (isset($this->request->post['config_file_extension_allowed'])) {
+			$this->data['config_file_extension_allowed'] = $this->request->post['config_file_extension_allowed'];
+		} else {
+			$this->data['config_file_extension_allowed'] = $this->config->get('config_file_extension_allowed');
+		}
+
+		if (isset($this->request->post['config_file_mime_allowed'])) {
+			$this->data['config_file_mime_allowed'] = $this->request->post['config_file_mime_allowed'];
+		} else {
+			$this->data['config_file_mime_allowed'] = $this->config->get('config_file_mime_allowed');
+		}
+
 		// Mail
 		if (isset($this->request->post['config_mail_parameter'])) {
 			$this->data['config_mail_parameter'] = $this->request->post['config_mail_parameter'];
@@ -2232,27 +2158,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_sitemap_links'] = $this->config->get('config_sitemap_links');
 		}
 
-		// Upload
-		if (isset($this->request->post['config_file_max_size'])) {
-			$this->data['config_file_max_size'] = $this->request->post['config_file_max_size'];
-		} elseif ($this->config->get('config_file_max_size')) {
-			$this->data['config_file_max_size'] = $this->config->get('config_file_max_size');
-		} else {
-			$this->data['config_file_max_size'] = 2048000;
-		}
-
-		if (isset($this->request->post['config_file_extension_allowed'])) {
-			$this->data['config_file_extension_allowed'] = $this->request->post['config_file_extension_allowed'];
-		} else {
-			$this->data['config_file_extension_allowed'] = $this->config->get('config_file_extension_allowed');
-		}
-
-		if (isset($this->request->post['config_file_mime_allowed'])) {
-			$this->data['config_file_mime_allowed'] = $this->request->post['config_file_mime_allowed'];
-		} else {
-			$this->data['config_file_mime_allowed'] = $this->config->get('config_file_mime_allowed');
-		}
-
 		$this->template = 'setting/setting.tpl';
 		$this->children = [
 			'common/header',
@@ -2293,10 +2198,6 @@ class ControllerSettingSetting extends Controller {
 
 		if (!$this->request->post['config_title'] || (mb_strlen($this->request->post['config_title'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_title'], 'UTF-8') > 32)) {
 			$this->error['title'] = $this->language->get('error_title');
-		}
-
-		if (($this->request->post['config_one_page_checkout'] === 1) && ($this->request->post['config_express_checkout'] === 1)) {
-			$this->error['multiple_checkout'] = $this->language->get('error_multiple_checkout');
 		}
 
 		if (!empty($this->request->post['config_customer_group_display']) && !in_array($this->request->post['config_customer_group_id'], $this->request->post['config_customer_group_display'])) {
@@ -2401,16 +2302,16 @@ class ControllerSettingSetting extends Controller {
 			$this->error['error_filename'] = $this->language->get('error_error_filename');
 		}
 
+		if ($this->request->post['config_file_max_size'] < 100000) {
+			$this->error['file_max_size'] = $this->language->get('error_file_max_size');
+		}
+
 		if (!$this->request->post['config_mail_filename'] || !preg_match('/\.txt$/i', $this->request->post['config_mail_filename'])) {
 			$this->error['mail_filename'] = $this->language->get('error_mail_filename');
 		}
 
 		if (!$this->request->post['config_quote_filename'] || !preg_match('/\.txt$/i', $this->request->post['config_quote_filename'])) {
 			$this->error['quote_filename'] = $this->language->get('error_quote_filename');
-		}
-
-		if ($this->request->post['config_file_max_size'] < 100000) {
-			$this->error['file_max_size'] = $this->language->get('error_file_max_size');
 		}
 
 		if ($this->request->post['config_seo_url'] && !file_exists('../.htaccess')) {
