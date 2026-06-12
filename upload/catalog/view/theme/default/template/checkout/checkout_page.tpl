@@ -322,7 +322,7 @@
                   <?php if (!$shipping_method['error']) { ?>
                     <?php foreach ($shipping_method['quote'] as $quote) { ?>
                       <tr class="highlight">
-                        <td><input type="radio" name="shipping_method" value="<?php echo $quote['code']; ?>" id="<?php echo $quote['code']; ?>"<?php echo ($quote['code'] == $shipping_method_code) ? ' checked="checked"' : ''; ?> /></td>
+                        <td><input type="radio" name="shipping_method" value="<?php echo $quote['code']; ?>" id="<?php echo $quote['code']; ?>"<?php echo ($quote['code'] === $shipping_method_code) ? ' checked="checked"' : ''; ?> /></td>
                         <td><label for="<?php echo $quote['code']; ?>"><?php echo $quote['title']; ?></label></td>
                         <td style="text-align:right;"><label for="<?php echo $quote['code']; ?>"><?php echo $quote['text']; ?></label></td>
                       </tr>
@@ -801,8 +801,27 @@ $('body').on('change', 'input[name=\'payment_method\']:checked', function() {
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-  $('#date-of-birth').datepicker({dateFormat: 'yy-mm-dd'});
-  $('.colorbox').colorbox({ overlayClose: true, opacity: 0.3, width: 600, height: 480 });
+	var date_of_birth = $('#date-of-birth');
+	
+	$(date_of_birth).mouseover(function() {
+		$('#date-of-birth').datepicker({
+			dateFormat: 'yy-mm-dd',
+			changeYear: true,
+			changeMonth: true,
+			yearRange: '-100:+0'
+		});
+	});
+});
+//--></script>
+
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$('.colorbox').colorbox({
+		overlayClose: true,
+		opacity: 0.3,
+		width: 600,
+		height: 480
+	});
 });
 
 function dismiss1(coupon) { document.getElementById('coupon').style.display = 'none'; }

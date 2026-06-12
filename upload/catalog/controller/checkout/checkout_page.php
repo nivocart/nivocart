@@ -242,6 +242,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 
 		// Language strings
 		$this->data['heading_title'] = $this->language->get('heading_title');
+
 		$this->data['text_cart'] = $this->language->get('text_cart');
 		$this->data['text_checkout_payment_address'] = $this->language->get('text_checkout_payment_address');
 		$this->data['text_checkout_shipping_address'] = $this->language->get('text_checkout_shipping_address');
@@ -471,7 +472,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 				];
 
 				// Return JSON redirect to confirm controller
-				$json = ['redirect' => $this->url->link('checkout/checkout_page_confirm', '', 'SSL')];
+				$json = ['redirect' => $this->url->link('checkout/checkout_confirm', '', 'SSL')];
 
 				$this->response->addHeader('Content-Type: application/json');
 				$this->response->setOutput(json_encode($json));

@@ -174,7 +174,7 @@ class ControllerNodeCart extends Controller {
 		}
 
 		$this->data['cart'] = $this->url->link('checkout/cart', '', 'SSL');
-		$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+		$this->data['checkout'] = $this->url->link('checkout/checkout_page', '', 'SSL');
 
 		// Template
 		$this->data['template'] = $this->config->get('config_template');

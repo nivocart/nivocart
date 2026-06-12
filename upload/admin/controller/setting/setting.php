@@ -988,12 +988,6 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		// Checkout
-		if (isset($this->request->post['config_checkout_id'])) {
-			$this->data['config_checkout_id'] = $this->request->post['config_checkout_id'];
-		} else {
-			$this->data['config_checkout_id'] = $this->config->get('config_checkout_id');
-		}
-
 		if (isset($this->request->post['config_invoice_prefix'])) {
 			$this->data['config_invoice_prefix'] = $this->request->post['config_invoice_prefix'];
 		} elseif ($this->config->get('config_invoice_prefix')) {
@@ -1036,14 +1030,18 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$order_statuses_array = [];
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['config_complete_status_id'])) {
 			$this->data['config_complete_status_id'] = $this->request->post['config_complete_status_id'];
 		} else {
 			$this->data['config_complete_status_id'] = $this->config->get('config_complete_status_id');
+		}
+
+		if (isset($this->request->post['config_checkout_id'])) {
+			$this->data['config_checkout_id'] = $this->request->post['config_checkout_id'];
+		} else {
+			$this->data['config_checkout_id'] = $this->config->get('config_checkout_id');
 		}
 
 		if (isset($this->request->post['config_abandoned_cart'])) {

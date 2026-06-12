@@ -443,7 +443,7 @@ class ControllerCheckoutCart extends Controller {
 					'cost'                => $product['cost'],
 					'tax_value'           => $this->currency->format($product_tax_value, $this->config->get('config_currency')),
 					'tax_percent'         => number_format((($product_tax_value * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-					'age_minimum'         => ($age_checked) ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
+					'age_minimum'         => $age_checked ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
 					'recurring'           => $product['recurring'],
 					'profile_name'        => $product['profile_name'],
 					'profile_description' => $profile_description,
@@ -455,7 +455,7 @@ class ControllerCheckoutCart extends Controller {
 
 			$this->data['products_recurring'] = [];
 
-			$this->data['age_minimum'] = ($age_minimum) ? (int)$age_minimum : 0;
+			$this->data['age_minimum'] = $age_minimum ? (int)$age_minimum : 0;
 			$this->data['age_logged'] = $age_logged;
 			$this->data['age_checked'] = $age_checked;
 
@@ -599,7 +599,7 @@ class ControllerCheckoutCart extends Controller {
 
 			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
 
-			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+			$this->data['checkout'] = $this->url->link('checkout/checkout_page', '', 'SSL');
 
 			$this->data['checkout_buttons'] = [];
 

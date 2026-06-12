@@ -366,19 +366,6 @@
       <div id="tab-checkout">
         <table class="form">
           <tr>
-            <td><?php echo $entry_checkout; ?><span class="help"><?php echo $help_checkout; ?></span></td>
-            <td><select name="config_checkout_id">
-              <option value="0"><?php echo $text_none; ?></option>
-              <?php foreach ($informations as $information) { ?>
-                <?php if ($information['information_id'] === $config_checkout_id) { ?>
-                  <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
-                <?php } ?>
-              <?php } ?>
-            </select></td>
-          </tr>
-          <tr>
             <td><?php echo $entry_invoice_prefix; ?><span class="help"><?php echo $help_invoice_prefix; ?></span></td>
             <td><input type="text" name="config_invoice_prefix" value="<?php echo $config_invoice_prefix; ?>" /></td>
           </tr>
@@ -448,6 +435,19 @@
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              <?php } ?>
+            </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_checkout; ?><span class="help"><?php echo $help_checkout; ?></span></td>
+            <td><select name="config_checkout_id">
+              <option value="0"><?php echo $text_none; ?></option>
+              <?php foreach ($informations as $information) { ?>
+                <?php if ($information['information_id'] === $config_checkout_id) { ?>
+                  <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
                 <?php } ?>
               <?php } ?>
             </select></td>
