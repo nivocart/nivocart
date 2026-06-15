@@ -82,6 +82,12 @@ class ControllerAccountLogin extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			unset($this->session->data['guest']);
 
+			// Clear stale shipping/payment method data from any previous session
+			unset($this->session->data['shipping_method']);
+			unset($this->session->data['shipping_methods']);
+			unset($this->session->data['payment_method']);
+			unset($this->session->data['payment_methods']);
+
 			// Default Shipping Address
 			$this->load->model('account/address');
 

@@ -287,6 +287,7 @@ class ControllerCheckoutCheckout extends Controller {
 
 		$this->data['logged'] = $this->customer->isLogged();
 		$this->data['shipping_required'] = $this->cart->hasShipping();
+
 		$this->data['one_page_cart'] = $this->url->link('checkout/cart', '', 'SSL');
 
 		$this->load->model('checkout/order');
@@ -1065,10 +1066,10 @@ class ControllerCheckoutCheckout extends Controller {
 
 			$this->session->data['shipping_method'] = $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
 		} else {
-			$this->session->data['shipping_method'] = '';
+			unset($this->session->data['shipping_method']);
 		}
 
-		$json['code'] = $this->session->data['shipping_method']['title'];
+		$json['code'] = $this->session->data['shipping_method']['title'] ?? '';
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
@@ -1080,7 +1081,7 @@ class ControllerCheckoutCheckout extends Controller {
 		if (isset($this->request->post['payment_method'])) {
 			$this->session->data['payment_method'] = $this->session->data['payment_methods'][$this->request->post['payment_method']];
 		} else {
-			$this->session->data['payment_method'] = '';
+			unset($this->session->data['payment_method']);
 		}
 
 		$json['code'] = $this->session->data['payment_method']['title'];

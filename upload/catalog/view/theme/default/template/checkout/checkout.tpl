@@ -630,55 +630,33 @@ function handleStripePayment(onSuccess) {
 //--></script>
 
 <script type="text/javascript"><!--
-// Shipping address toggle
-var check_shipping_address = $('input[name=\'check_shipping_address\']').is(':checked');
-
-if (check_shipping_address) {
-  $('#shipping-address-display').hide();
-} else {
-  $('#shipping-address-display').show();
-}
-
-$('input[name=\'check_shipping_address\']').on('click', function() {
-  if ($(this).is(':checked')) {
+$(document).ready(function() {
+  // Hide shipping address block on page load if checkbox is checked
+  if ($('input[name=\'check_shipping_address\']').is(':checked')) {
     $('#shipping-address-display').hide();
   } else {
     $('#shipping-address-display').show();
   }
+
+  // Toggle on click
+  $('input[name=\'check_shipping_address\']').on('click', function() {
+    if ($(this).is(':checked')) {
+      $('#shipping-address-display').hide();
+    } else {
+      $('#shipping-address-display').show();
+    }
+  });
 });
 //--></script>
 
 <script type="text/javascript"><!--
-// Customer group display logic
-$('input[name=\'customer_group_id\']').on('change', function() {
-  var customer_group = [];
-
-  <?php foreach ($customer_groups as $customer_group) { ?>
-  customer_group[<?php echo $customer_group['customer_group_id']; ?>] = {
-    company_id_display: '<?php echo $customer_group['company_id_display']; ?>',
-    company_id_required: '<?php echo $customer_group['company_id_required']; ?>',
-    tax_id_display: '<?php echo $customer_group['tax_id_display']; ?>',
-    tax_id_required: '<?php echo $customer_group['tax_id_required']; ?>'
-  };
-  <?php } ?>
-
-  if (customer_group[this.value]) {
-    $('#company-id-display').toggle(customer_group[this.value]['company_id_display'] === '1');
-    $('#company-id-required').toggle(customer_group[this.value]['company_id_required'] === '1');
-    $('#tax-id-display').toggle(customer_group[this.value]['tax_id_display'] === '1');
-    $('#tax-id-required').toggle(customer_group[this.value]['tax_id_required'] === '1');
-  }
-});
-$('input[name=\'customer_group_id\']:checked').trigger('change');
-//--></script>
-
-<script type="text/javascript"><!--
-// Payment country zone loader
-$('select[name=\'country_id\']').on('change', function() {
-  if (this.value === '') return;
-
+// ============================================================================
+// Zone loaders — called directly on page load (no trigger('change'))
+// ============================================================================
+function loadPaymentZones(country_id) {
+  if (!country_id) return;
   $.ajax({
-    url: 'index.php?route=checkout/checkout/country&country_id=' + this.value,
+    url: 'index.php?route=checkout/checkout/country&country_id=' + country_id,
     dataType: 'json',
     beforeSend: function() {
       $('.attention, .warning, .error').remove();
@@ -691,10 +669,8 @@ $('select[name=\'country_id\']').on('change', function() {
       } else {
         $('#payment-postcode-required').hide();
       }
-
       var html = '<option value=""><?php echo $text_select; ?></option>';
-
-      if (json['zone'] !== '') {
+      if (json['zone'] && json['zone'].length > 0) {
         for (var i = 0; i < json['zone'].length; i++) {
           html += '<option value="' + json['zone'][i]['zone_id'] + '"';
           if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') html += ' selected="selected"';
@@ -707,26 +683,12 @@ $('select[name=\'country_id\']').on('change', function() {
     },
     error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
   });
-});
+}
 
-$('select[name=\'country_id\']').on('change', function() {
-  if ($(this).val() !== <?php echo $country_id; ?>) {
-    $('#shipping-refresh').fadeIn(500); $('#shipping-lock').hide(); $('#payment-lock').hide();
-  } else {
-    $('#shipping-refresh').hide(); $('#shipping-lock').show(); $('#payment-lock').show();
-  }
-});
-
-$('select[name=\'country_id\']').trigger('change');
-//--></script>
-
-<script type="text/javascript"><!--
-// Shipping country zone loader
-$('select[name=\'shipping_country_id\']').on('change', function() {
-  if (this.value === '') return;
-
+function loadShippingZones(country_id) {
+  if (!country_id) return;
   $.ajax({
-    url: 'index.php?route=checkout/checkout/country&country_id=' + this.value,
+    url: 'index.php?route=checkout/checkout/country&country_id=' + country_id,
     dataType: 'json',
     beforeSend: function() {
       $('.attention, .warning, .error').remove();
@@ -735,8 +697,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
     complete: function() { $('.wait').remove(); },
     success: function(json) {
       var html = '<option value=""><?php echo $text_select; ?></option>';
-
-      if (json['zone'] !== '') {
+      if (json['zone'] && json['zone'].length > 0) {
         for (var i = 0; i < json['zone'].length; i++) {
           html += '<option value="' + json['zone'][i]['zone_id'] + '"';
           if (json['zone'][i]['zone_id'] === '<?php echo $shipping_zone_id; ?>') html += ' selected="selected"';
@@ -749,21 +710,38 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
     },
     error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
   });
-});
+}
 
-$('select[name=\'shipping_country_id\']').on('change', function() {
-  if ($(this).val() !== <?php echo $shipping_country_id; ?>) {
+// ============================================================================
+// Country change handlers — zone load + shipping/payment lock toggle
+// ============================================================================
+$('select[name=\'country_id\']').on('change', function() {
+  if (this.value === '') return;
+  loadPaymentZones(this.value);
+  if ($(this).val() != <?php echo $country_id; ?>) {
     $('#shipping-refresh').fadeIn(500); $('#shipping-lock').hide(); $('#payment-lock').hide();
   } else {
     $('#shipping-refresh').hide(); $('#shipping-lock').show(); $('#payment-lock').show();
   }
 });
 
-$('select[name=\'shipping_country_id\']').trigger('change');
-//--></script>
+$('select[name=\'shipping_country_id\']').on('change', function() {
+  if (this.value === '') return;
+  loadShippingZones(this.value);
+  if ($(this).val() != <?php echo $shipping_country_id; ?>) {
+    $('#shipping-refresh').fadeIn(500); $('#shipping-lock').hide(); $('#payment-lock').hide();
+  } else {
+    $('#shipping-refresh').hide(); $('#shipping-lock').show(); $('#payment-lock').show();
+  }
+});
 
-<script type="text/javascript"><!--
+// Populate zones on page load without triggering hide/show logic
+loadPaymentZones(<?php echo (int)$country_id; ?>);
+loadShippingZones(<?php echo (int)$shipping_country_id; ?>);
+
+// ============================================================================
 // Shipping and payment method change handlers
+// ============================================================================
 function refresh() {
   $('.attention, .warning, .error, .wait').remove();
   $('#form').append('<input type="hidden" id="refresh" name="refresh" value="1" />');
@@ -802,7 +780,7 @@ $('body').on('change', 'input[name=\'payment_method\']:checked', function() {
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	var date_of_birth = $('#date-of-birth');
-	
+
 	$(date_of_birth).mouseover(function() {
 		$('#date-of-birth').datepicker({
 			dateFormat: 'yy-mm-dd',

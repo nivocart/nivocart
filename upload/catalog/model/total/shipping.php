@@ -9,7 +9,7 @@ class ModelTotalShipping extends Model {
 	 * Functions Get
 	 */
 	public function getTotal(array $taxes, float $total): array {
-		if (!$this->cart->hasShipping() || !isset($this->session->data['shipping_method'])) {
+		if (!$this->cart->hasShipping() || empty($this->session->data['shipping_method'])) {
 			return $this->emptyResult();
 		}
 

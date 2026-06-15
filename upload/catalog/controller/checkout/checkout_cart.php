@@ -101,7 +101,7 @@ class ControllerCheckoutCheckoutCart extends Controller {
 			$option_data = [];
 
 			foreach ($product['option'] as $option) {
-				if ($option['type'] != 'file') {
+				if ($option['type'] !== 'file') {
 					$value = $option['option_value'];
 				} else {
 					$value = $this->encryption->decrypt($option['option_value']);
@@ -242,7 +242,7 @@ class ControllerCheckoutCheckoutCart extends Controller {
 			$product_total = 0;
 
 			foreach ($products as $product_2) {
-				if ($product_2['product_id'] == $product['product_id']) {
+				if ($product_2['product_id'] === $product['product_id']) {
 					$product_total += $product_2['quantity'];
 				}
 			}
@@ -353,7 +353,7 @@ class ControllerCheckoutCheckoutCart extends Controller {
 				'cost'                => $product['cost'],
 				'tax_value'           => $this->currency->format($product_tax_value, $this->config->get('config_currency')),
 				'tax_percent'         => number_format((($product_tax_value * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
-				'age_minimum'         => ($age_checked) ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
+				'age_minimum'         => $age_checked ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
 				'recurring'           => $product['recurring'],
 				'profile_name'        => $product['profile_name'],
 				'profile_description' => $profile_description,
@@ -364,7 +364,7 @@ class ControllerCheckoutCheckoutCart extends Controller {
 
 		$this->data['products_recurring'] = [];
 
-		$this->data['age_minimum'] = ($age_minimum) ? (int)$age_minimum : 0;
+		$this->data['age_minimum'] = $age_minimum ? (int)$age_minimum : 0;
 		$this->data['age_logged'] = $age_logged;
 		$this->data['age_checked'] = $age_checked;
 
