@@ -1120,7 +1120,7 @@ CREATE TABLE `nc_customer` (
   `lastname` varchar(32) NOT NULL,
   `email` varchar(96) NOT NULL,
   `telephone` varchar(32) NOT NULL,
-  `gender` varchar(32) NOT NULL,
+  `gender` int NOT NULL,
   `date_of_birth` date NOT NULL,
   `password` varchar(40) NOT NULL,
   `salt` varchar(9) NOT NULL,
