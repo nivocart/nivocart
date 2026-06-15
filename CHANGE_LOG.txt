@@ -12,9 +12,11 @@ Release: summer 2026
 - Dompdf v1.1.1 updated for PHP 8.1+
 - Ckeditor v4.22.1 Full (opensource).
 - Removed support for older browsers (IE).
+- Removed obsolete CSS tags for older browsers.
 - Removed obsolete files and payment gateways.
 - Replaced/Removed deprecated PHP functions.
 - Replaced all "unsafe" PHP functions throughout.
+- One page checkout is now the only checkout.
 - Better Cache management for files and images.
 - Better and more reliable Cookie Consent script.
 - Safer Session and Token management.
