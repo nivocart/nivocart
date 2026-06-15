@@ -159,7 +159,7 @@ class ControllerAccountEdit extends Controller {
 
 		if (isset($this->request->post['firstname'])) {
 			$this->data['firstname'] = $this->request->post['firstname'];
-		} elseif (isset($customer_info)) {
+		} elseif (isset($customer_info['firstname'])) {
 			$this->data['firstname'] = $customer_info['firstname'];
 		} else {
 			$this->data['firstname'] = '';
@@ -167,7 +167,7 @@ class ControllerAccountEdit extends Controller {
 
 		if (isset($this->request->post['lastname'])) {
 			$this->data['lastname'] = $this->request->post['lastname'];
-		} elseif (isset($customer_info)) {
+		} elseif (isset($customer_info['lastname'])) {
 			$this->data['lastname'] = $customer_info['lastname'];
 		} else {
 			$this->data['lastname'] = '';
@@ -175,7 +175,7 @@ class ControllerAccountEdit extends Controller {
 
 		if (isset($this->request->post['email'])) {
 			$this->data['email'] = $this->request->post['email'];
-		} elseif (isset($customer_info)) {
+		} elseif (isset($customer_info['email'])) {
 			$this->data['email'] = $customer_info['email'];
 		} else {
 			$this->data['email'] = '';
@@ -183,7 +183,7 @@ class ControllerAccountEdit extends Controller {
 
 		if (isset($this->request->post['telephone'])) {
 			$this->data['telephone'] = $this->request->post['telephone'];
-		} elseif (isset($customer_info)) {
+		} elseif (isset($customer_info['telephone'])) {
 			$this->data['telephone'] = $customer_info['telephone'];
 		} else {
 			$this->data['telephone'] = '';
@@ -193,20 +193,20 @@ class ControllerAccountEdit extends Controller {
 
 		if (isset($this->request->post['gender'])) {
 			$this->data['gender'] = $this->request->post['gender'];
-		} elseif (isset($customer_info)) {
+		} elseif (isset($customer_info['gender'])) {
 			$this->data['gender'] = $customer_info['gender'];
 		} else {
-			$this->data['gender'] = '';
+			$this->data['gender'] = 0;
 		}
 
 		$this->data['show_dob'] = $this->config->get('config_customer_dob');
 
 		if (isset($this->request->post['date_of_birth'])) {
 			$this->data['date_of_birth'] = $this->request->post['date_of_birth'];
-		} elseif (isset($customer_info)) {
+		} elseif (isset($customer_info['date_of_birth'])) {
 			$this->data['date_of_birth'] = date('Y-m-d', strtotime($customer_info['date_of_birth']));
 		} else {
-			$this->data['date_of_birth'] = '0000-00-00';
+			$this->data['date_of_birth'] = '1970-01-01';
 		}
 
 		$this->data['track_online'] = $this->config->get('config_customer_online');
@@ -249,7 +249,7 @@ class ControllerAccountEdit extends Controller {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
-		if (($this->customer->getEmail() != $this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+		if (($this->customer->getEmail() !== $this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
 			$this->error['warning'] = $this->language->get('error_exists');
 		}
 
@@ -259,7 +259,7 @@ class ControllerAccountEdit extends Controller {
 
 		if ($this->config->get('config_customer_dob')) {
 			if (isset($this->request->post['date_of_birth']) && (mb_strlen($this->request->post['date_of_birth'], 'UTF-8') === 10)) {
-				if ($this->request->post['date_of_birth'] != date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
+				if ($this->request->post['date_of_birth'] !== date('Y-m-d', strtotime($this->request->post['date_of_birth']))) {
 					$this->error['date_of_birth'] = $this->language->get('error_date_of_birth');
 				}
 			} else {
@@ -374,7 +374,7 @@ class ControllerAccountEdit extends Controller {
 				$show_gender = $this->config->get('config_customer_gender');
 
 				if ($show_gender && isset($customer_info['gender'])) {
-					$customer_gender = ($customer_info['gender']) ? $this->language->get('text_female') : $this->language->get('text_male');
+					$customer_gender = $customer_info['gender'] ? $this->language->get('text_female') : $this->language->get('text_male');
 				} else {
 					$customer_gender = '';
 				}
