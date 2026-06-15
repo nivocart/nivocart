@@ -10,7 +10,7 @@ if (file_exists('config.php')) {
 // Install
 if (!defined('DIR_APPLICATION')) {
 	header('Location: install/index.php');
-	exit(1);
+	exit();
 }
 
 // Startup
