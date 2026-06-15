@@ -67,7 +67,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['text_reward'] = $this->language->get('text_reward');
 		$this->data['text_coupon'] = $this->language->get('text_coupon');
 		$this->data['text_voucher'] = $this->language->get('text_voucher');
-		$this->data['text_forms'] = $this->language->get('text_forms');
+		$this->data['text_administration'] = $this->language->get('text_administration');
 		$this->data['text_cookies'] = $this->language->get('text_cookies');
 		$this->data['text_black'] = $this->language->get('text_black');
 		$this->data['text_white'] = $this->language->get('text_white');
@@ -825,9 +825,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('design/layout');
 
-		$layouts_array = [];
-
-		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
+		$this->data['layouts'] = $this->model_design_layout->getLayouts([]);
 
 		if (isset($this->request->post['config_layout_id'])) {
 			$this->data['config_layout_id'] = $this->request->post['config_layout_id'];
@@ -837,12 +835,46 @@ class ControllerSettingSetting extends Controller {
 
 		$this->data['configure_layout'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'], 'SSL');
 
+		$this->load->model('design/administration');
+
+		$this->data['admin_stylesheets'] = $this->model_design_administration->getAdministrations([]);
+
+		if (isset($this->request->post['config_admin_stylesheet'])) {
+			$this->data['config_admin_stylesheet'] = $this->request->post['config_admin_stylesheet'];
+		} elseif ($this->config->get('config_admin_stylesheet')) {
+			$this->data['config_admin_stylesheet'] = $this->config->get('config_admin_stylesheet');
+		} else {
+			$this->data['config_admin_stylesheet'] = 'dark';
+		}
+
+		if (isset($this->request->post['config_admin_width_limit'])) {
+			$this->data['config_admin_width_limit'] = $this->request->post['config_admin_width_limit'];
+		} else {
+			$this->data['config_admin_width_limit'] = $this->config->get('config_admin_width_limit');
+		}
+
+		if (isset($this->request->post['config_admin_menu_icons'])) {
+			$this->data['config_admin_menu_icons'] = $this->request->post['config_admin_menu_icons'];
+		} else {
+			$this->data['config_admin_menu_icons'] = $this->config->get('config_admin_menu_icons');
+		}
+
+		if (isset($this->request->post['config_admin_limit'])) {
+			$this->data['config_admin_limit'] = $this->request->post['config_admin_limit'];
+		} else {
+			$this->data['config_admin_limit'] = $this->config->get('config_admin_limit');
+		}
+
+		if (isset($this->request->post['config_catalog_limit'])) {
+			$this->data['config_catalog_limit'] = $this->request->post['config_catalog_limit'];
+		} else {
+			$this->data['config_catalog_limit'] = $this->config->get('config_catalog_limit');
+		}
+
 		// Local
 		$this->load->model('localisation/country');
 
-		$countries_array = [];
-
-		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
+		$this->data['countries'] = $this->model_localisation_country->getCountries([]);
 
 		if (isset($this->request->post['config_country_id'])) {
 			$this->data['config_country_id'] = $this->request->post['config_country_id'];
@@ -858,9 +890,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$languages_array = [];
-
-		$this->data['languages'] = $this->model_localisation_language->getLanguages($languages_array);
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['config_language'])) {
 			$this->data['config_language'] = $this->request->post['config_language'];
@@ -878,9 +908,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/length_class');
 
-		$length_classes_array = [];
-
-		$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses($length_classes_array);
+		$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses([]);
 
 		if (isset($this->request->post['config_length_class_id'])) {
 			$this->data['config_length_class_id'] = $this->request->post['config_length_class_id'];
@@ -892,9 +920,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/weight_class');
 
-		$weight_classes_array = [];
-
-		$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses($weight_classes_array);
+		$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses([]);
 
 		if (isset($this->request->post['config_weight_class_id'])) {
 			$this->data['config_weight_class_id'] = $this->request->post['config_weight_class_id'];
@@ -906,9 +932,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/currency');
 
-		$currencies_array = [];
-
-		$this->data['currencies'] = $this->model_localisation_currency->getCurrencies($currencies_array);
+		$this->data['currencies'] = $this->model_localisation_currency->getCurrencies([]);
 
 		if (isset($this->request->post['config_currency'])) {
 			$this->data['config_currency'] = $this->request->post['config_currency'];
@@ -1164,9 +1188,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/stock_status');
 
-		$stock_statuses_array = [];
-
-		$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses($stock_statuses_array);
+		$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses([]);
 
 		if (isset($this->request->post['config_stock_status_id'])) {
 			$this->data['config_stock_status_id'] = $this->request->post['config_stock_status_id'];
@@ -1176,9 +1198,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('sale/supplier_group');
 
-		$supplier_groups_array = [];
-
-		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups($supplier_groups_array);
+		$this->data['supplier_groups'] = $this->model_sale_supplier_group->getSupplierGroups([]);
 
 		if (isset($this->request->post['config_supplier_group_id'])) {
 			$this->data['config_supplier_group_id'] = $this->request->post['config_supplier_group_id'];
@@ -1194,9 +1214,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('sale/customer_group');
 
-		$customer_groups_array = [];
-
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 		if (isset($this->request->post['config_customer_group_id'])) {
 			$this->data['config_customer_group_id'] = $this->request->post['config_customer_group_id'];
@@ -1250,9 +1268,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('catalog/information');
 
-		$informations_array = [];
-
-		$this->data['informations'] = $this->model_catalog_information->getInformations($informations_array);
+		$this->data['informations'] = $this->model_catalog_information->getInformations([]);
 
 		if (isset($this->request->post['config_account_id'])) {
 			$this->data['config_account_id'] = $this->request->post['config_account_id'];
@@ -1328,9 +1344,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('localisation/return_status');
 
-		$return_statuses_array = [];
-
-		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses($return_statuses_array);
+		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses([]);
 
 		if (isset($this->request->post['config_return_status_id'])) {
 			$this->data['config_return_status_id'] = $this->request->post['config_return_status_id'];
@@ -1377,44 +1391,6 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		// Preference
-		$this->load->model('design/administration');
-
-		$admin_data = [];
-
-		$this->data['admin_stylesheets'] = $this->model_design_administration->getAdministrations($admin_data);
-
-		if (isset($this->request->post['config_admin_stylesheet'])) {
-			$this->data['config_admin_stylesheet'] = $this->request->post['config_admin_stylesheet'];
-		} elseif ($this->config->get('config_admin_stylesheet')) {
-			$this->data['config_admin_stylesheet'] = $this->config->get('config_admin_stylesheet');
-		} else {
-			$this->data['config_admin_stylesheet'] = 'dark';
-		}
-
-		if (isset($this->request->post['config_admin_width_limit'])) {
-			$this->data['config_admin_width_limit'] = $this->request->post['config_admin_width_limit'];
-		} else {
-			$this->data['config_admin_width_limit'] = $this->config->get('config_admin_width_limit');
-		}
-
-		if (isset($this->request->post['config_admin_menu_icons'])) {
-			$this->data['config_admin_menu_icons'] = $this->request->post['config_admin_menu_icons'];
-		} else {
-			$this->data['config_admin_menu_icons'] = $this->config->get('config_admin_menu_icons');
-		}
-
-		if (isset($this->request->post['config_admin_limit'])) {
-			$this->data['config_admin_limit'] = $this->request->post['config_admin_limit'];
-		} else {
-			$this->data['config_admin_limit'] = $this->config->get('config_admin_limit');
-		}
-
-		if (isset($this->request->post['config_catalog_limit'])) {
-			$this->data['config_catalog_limit'] = $this->request->post['config_catalog_limit'];
-		} else {
-			$this->data['config_catalog_limit'] = $this->config->get('config_catalog_limit');
-		}
-
 		if (isset($this->request->post['config_pagination_hi'])) {
 			$this->data['config_pagination_hi'] = $this->request->post['config_pagination_hi'];
 		} else {
@@ -1457,9 +1433,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('user/user_group');
 
-		$user_groups = [];
-
-		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups($user_groups);
+		$this->data['user_groups'] = $this->model_user_user_group->getUserGroups([]);
 
 		if (isset($this->request->post['config_user_group_display'])) {
 			$this->data['config_user_group_display'] = $this->request->post['config_user_group_display'];

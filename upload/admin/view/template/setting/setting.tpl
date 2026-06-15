@@ -165,6 +165,67 @@
             </select> &nbsp; <a href="<?php echo $configure_layout; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
           </tr>
         </table>
+        <h2><?php echo $text_administration; ?></h2>
+        <table class="form">
+          <tr>
+            <td><?php echo $entry_admin_stylesheet; ?></td>
+            <td><select name="config_admin_stylesheet">
+              <?php foreach ($admin_stylesheets as $admin_stylesheet) { ?>
+                <?php if ($config_admin_stylesheet === $admin_stylesheet['name']) { ?>
+                  <option value="<?php echo $admin_stylesheet['name']; ?>" selected="selected"><?php echo ucfirst($admin_stylesheet['name']); ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $admin_stylesheet['name']; ?>"><?php echo ucfirst($admin_stylesheet['name']); ?></option>
+                <?php } ?>
+              <?php } ?>
+            </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_admin_width_limit; ?><span class="help"><?php echo $help_admin_width_limit; ?></span></td>
+            <td><?php if ($config_admin_width_limit) { ?>
+              <input type="radio" name="config_admin_width_limit" value="1" id="width-limit-on" class="radio" checked />
+              <label for="width-limit-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_admin_width_limit" value="0" id="width-limit-off" class="radio" />
+              <label for="width-limit-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_admin_width_limit" value="1" id="width-limit-on" class="radio" />
+              <label for="width-limit-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_admin_width_limit" value="0" id="width-limit-off" class="radio" checked />
+              <label for="width-limit-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_admin_menu_icons; ?></td>
+            <td><?php if ($config_admin_menu_icons) { ?>
+              <input type="radio" name="config_admin_menu_icons" value="1" id="menu-icons-on" class="radio" checked />
+              <label for="menu-icons-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_admin_menu_icons" value="0" id="menu-icons-off" class="radio" />
+              <label for="menu-icons-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_admin_menu_icons" value="1" id="menu-icons-on" class="radio" />
+              <label for="menu-icons-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_admin_menu_icons" value="0" id="menu-icons-off" class="radio" checked />
+              <label for="menu-icons-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><span class="required">*</span> <?php echo $entry_admin_limit; ?><span class="help"><?php echo $help_admin_limit; ?></span></td>
+            <td><?php if ($error_admin_limit) { ?>
+              <input type="text" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" class="input-error" />
+              <span class="error"><?php echo $error_admin_limit; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" />
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><span class="required">*</span> <?php echo $entry_catalog_limit; ?><span class="help"><?php echo $help_catalog_limit; ?></span></td>
+            <td><?php if ($error_catalog_limit) { ?>
+              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" class="input-error" />
+              <span class="error"><?php echo $error_catalog_limit; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" />
+            <?php } ?></td>
+          </tr>
+        </table>
       </div>
       <div id="tab-local">
         <table class="form">
@@ -1119,67 +1180,6 @@
         </table>
       </div>
       <div id="tab-preference">
-        <table class="form">
-          <tr class="highlighted">
-            <td><?php echo $entry_admin_stylesheet; ?></td>
-            <td><select name="config_admin_stylesheet">
-              <?php foreach ($admin_stylesheets as $admin_stylesheet) { ?>
-                <?php if ($config_admin_stylesheet === $admin_stylesheet['name']) { ?>
-                  <option value="<?php echo $admin_stylesheet['name']; ?>" selected="selected"><?php echo ucfirst($admin_stylesheet['name']); ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $admin_stylesheet['name']; ?>"><?php echo ucfirst($admin_stylesheet['name']); ?></option>
-                <?php } ?>
-              <?php } ?>
-            </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_admin_width_limit; ?><span class="help"><?php echo $help_admin_width_limit; ?></span></td>
-            <td><?php if ($config_admin_width_limit) { ?>
-              <input type="radio" name="config_admin_width_limit" value="1" id="width-limit-on" class="radio" checked />
-              <label for="width-limit-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_admin_width_limit" value="0" id="width-limit-off" class="radio" />
-              <label for="width-limit-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_admin_width_limit" value="1" id="width-limit-on" class="radio" />
-              <label for="width-limit-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_admin_width_limit" value="0" id="width-limit-off" class="radio" checked />
-              <label for="width-limit-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_admin_menu_icons; ?></td>
-            <td><?php if ($config_admin_menu_icons) { ?>
-              <input type="radio" name="config_admin_menu_icons" value="1" id="menu-icons-on" class="radio" checked />
-              <label for="menu-icons-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_admin_menu_icons" value="0" id="menu-icons-off" class="radio" />
-              <label for="menu-icons-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_admin_menu_icons" value="1" id="menu-icons-on" class="radio" />
-              <label for="menu-icons-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_admin_menu_icons" value="0" id="menu-icons-off" class="radio" checked />
-              <label for="menu-icons-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_admin_limit; ?><span class="help"><?php echo $help_admin_limit; ?></span></td>
-            <td><?php if ($error_admin_limit) { ?>
-              <input type="text" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" class="input-error" />
-              <span class="error"><?php echo $error_admin_limit; ?></span>
-            <?php } else { ?>
-              <input type="text" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" />
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_catalog_limit; ?><span class="help"><?php echo $help_catalog_limit; ?></span></td>
-            <td><?php if ($error_catalog_limit) { ?>
-              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" class="input-error" />
-              <span class="error"><?php echo $error_catalog_limit; ?></span>
-            <?php } else { ?>
-              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" />
-            <?php } ?></td>
-          </tr>
-        </table>
-        <h2><?php echo $text_forms; ?></h2>
         <table class="form">
           <tr>
             <td><?php echo $entry_pagination_hi; ?><span class="help"><?php echo $help_pagination_hi; ?></span></td>
