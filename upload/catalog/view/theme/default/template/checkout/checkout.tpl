@@ -511,7 +511,7 @@ function fetchStripeIntent() {
 // ============================================================================
 function submitForm() {
     $.ajax({
-        url: 'index.php?route=checkout/checkout_page',
+        url: 'index.php?route=checkout/checkout',
         type: 'post',
         data: $('#form').serialize(),
         dataType: 'json',
@@ -678,7 +678,7 @@ $('select[name=\'country_id\']').on('change', function() {
   if (this.value === '') return;
 
   $.ajax({
-    url: 'index.php?route=checkout/checkout_page/country&country_id=' + this.value,
+    url: 'index.php?route=checkout/checkout/country&country_id=' + this.value,
     dataType: 'json',
     beforeSend: function() {
       $('.attention, .warning, .error').remove();
@@ -726,7 +726,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
   if (this.value === '') return;
 
   $.ajax({
-    url: 'index.php?route=checkout/checkout_page/country&country_id=' + this.value,
+    url: 'index.php?route=checkout/checkout/country&country_id=' + this.value,
     dataType: 'json',
     beforeSend: function() {
       $('.attention, .warning, .error').remove();
@@ -774,7 +774,7 @@ $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart');
 
 $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
   $.ajax({
-    url: 'index.php?route=checkout/checkout_page/shippingMethod',
+    url: 'index.php?route=checkout/checkout/shippingMethod',
     type: 'post',
     data: 'shipping_method=' + $('input[name=\'shipping_method\']:checked').attr('value'),
     dataType: 'json',
@@ -787,7 +787,7 @@ $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
 
 $('body').on('change', 'input[name=\'payment_method\']:checked', function() {
   $.ajax({
-    url: 'index.php?route=checkout/checkout_page/paymentMethod',
+    url: 'index.php?route=checkout/checkout/paymentMethod',
     type: 'post',
     data: 'payment_method=' + $('input[name=\'payment_method\']:checked').attr('value'),
     dataType: 'json',

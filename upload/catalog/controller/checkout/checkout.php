@@ -1,16 +1,16 @@
 <?php
 /**
- * Class ControllerCheckoutCheckoutPage
+ * Class ControllerCheckoutCheckout
  *
  * @package NivoCart
  */
-class ControllerCheckoutCheckoutPage extends Controller {
+class ControllerCheckoutCheckout extends Controller {
 	private $error = [];
 
 	public function index() {
 		// Secure redirect
 		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
-			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 		}
 
 		// Customer Login redirect
@@ -59,7 +59,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			$this->data['check_shipping_address'] = 1;
 		}
 
-		$this->language->load('checkout/checkout_page');
+		$this->language->load('checkout/checkout');
 		$this->language->load('total/gift_wrapping');
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -75,7 +75,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			$this->session->data['coupon'] = $this->request->post['coupon'];
 			$this->session->data['success'] = $this->language->get('text_coupon');
 
-			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 		}
 
 		// Voucher session
@@ -90,7 +90,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			$this->session->data['voucher'] = $this->request->post['voucher'];
 			$this->session->data['success'] = $this->language->get('text_voucher');
 
-			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 		}
 
 		// Reward session
@@ -101,7 +101,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			$this->session->data['reward'] = abs($this->request->post['reward']);
 			$this->session->data['success'] = $this->language->get('text_reward');
 
-			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 		}
 
 		// Add Wrapping
@@ -110,7 +110,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			$this->session->data['wrapping'] = $this->request->post['add_wrapping'];
 			$this->session->data['success'] = $this->language->get('text_add_wrapping');
 
-			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 		}
 
 		// Remove Wrapping
@@ -120,7 +120,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			$this->session->data['check_shipping_address'] = isset($this->session->data['check_shipping_address']) ? 1 : 0;
 			$this->session->data['success'] = $this->language->get('text_remove_wrapping');
 
-			$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 		}
 
 		// Breadcrumbs
@@ -140,7 +140,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('checkout/checkout_page', '', 'SSL'),
+			'href'      => $this->url->link('checkout/checkout', '', 'SSL'),
 			'separator' => $this->language->get('text_separator')
 		];
 
@@ -159,7 +159,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('checkout/checkout_page', '', 'SSL');
+		$this->data['action'] = $this->url->link('checkout/checkout', '', 'SSL');
 
 		// Coupon
 		$this->data['coupon_status'] = $this->config->get('coupon_status');
@@ -181,7 +181,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 					'key'         => $key,
 					'description' => $voucher['description'],
 					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
-					'remove'      => $this->url->link('checkout/checkout_page', 'remove=' . $key, 'SSL')
+					'remove'      => $this->url->link('checkout/checkout', 'remove=' . $key, 'SSL')
 				];
 			}
 		}
@@ -861,10 +861,10 @@ class ControllerCheckoutCheckoutPage extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout_page.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/checkout_page.tpl';
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/checkout/checkout.tpl';
 		} else {
-			$this->template = 'default/template/checkout/checkout_page.tpl';
+			$this->template = 'default/template/checkout/checkout.tpl';
 		}
 
 		$this->children = [
@@ -886,7 +886,7 @@ class ControllerCheckoutCheckoutPage extends Controller {
 			return;
 		}
 
-		$this->language->load('checkout/checkout_page');
+		$this->language->load('checkout/checkout');
 
 		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');

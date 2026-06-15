@@ -8,7 +8,7 @@ class ControllerCheckoutCheckoutCart extends Controller {
 	/** Error array Placeholder */
 
 	public function index() {
-		$this->language->load('checkout/checkout_page');
+		$this->language->load('checkout/checkout');
 
 		// Validate minimum quantity requirements
 		$products = $this->cart->getProducts();

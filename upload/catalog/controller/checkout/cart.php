@@ -599,7 +599,7 @@ class ControllerCheckoutCart extends Controller {
 
 			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
 
-			$this->data['checkout'] = $this->url->link('checkout/checkout_page', '', 'SSL');
+			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
 			$this->data['checkout_buttons'] = [];
 

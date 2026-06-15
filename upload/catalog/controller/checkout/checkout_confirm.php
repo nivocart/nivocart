@@ -5,7 +5,7 @@
  * @package NivoCart
  *
  * Silent confirm controller for the One Page checkout.
- * Called after checkout_page validates and stores order data in session.
+ * Called after checkout validates and stores order data in session.
  * Builds totals, calls addOrder(), then handles payment confirmation.
  *
  * Two paths depending on gateway type:
@@ -29,9 +29,9 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
     ];
 
     public function index() {
-        // Guard — must have session data from checkout_page
+        // Guard — must have session data from checkout
         if (empty($this->session->data['one_page_order']) || !isset($this->session->data['payment_method'])) {
-            $this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+            $this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
         }
 
         // Guard — cart must still be usable (not cleared yet)
@@ -41,7 +41,7 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 
         // Guard — shipping method must be set
         if ($this->cart->hasShipping() && empty($this->session->data['shipping_method'])) {
-            $this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+            $this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
         }
 
         // Guard — interactive gateway requires a verified intent in session
@@ -50,7 +50,7 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
         if (in_array($payment_code, $this->interactive_gateways)) {
             if (empty($this->session->data['stripe_payment_intent_id'])) {
                 // Intent missing — browser didn't complete payment before redirecting
-                $this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+                $this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
             }
         }
 
@@ -297,7 +297,7 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 
 				} catch (RuntimeException $e) {
 					$this->session->data['error'] = 'Payment could not be verified. Please try again.';
-					$this->redirect($this->url->link('checkout/checkout_page', '', 'SSL'));
+					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 				}
 
 				$this->model_checkout_order->confirm(
