@@ -1256,6 +1256,7 @@ class ControllerSaleCustomer extends Controller {
 		return empty($this->error);
 	}
 
+	// ------------ NEEDS REWORK !!! ------------------
 	public function login() {
 		if (isset($this->request->get['customer_id'])) {
 			$customer_id = $this->request->get['customer_id'];
@@ -1272,20 +1273,18 @@ class ControllerSaleCustomer extends Controller {
 
 			$this->model_sale_customer->editToken($customer_id, $token);
 
-			if (isset($this->request->get['store_id'])) {
-				$store_id = $this->request->get['store_id'];
-			} else {
-				$store_id = 0;
-			}
+			$status = $customer_info['status'];
+
+			$store_id = $this->request->get['store_id'] ? $this->request->get['store_id'] : 0;
 
 			$this->load->model('setting/store');
 
 			$store_info = $this->model_setting_store->getStore($store_id);
 
 			if ($store_info) {
-				$this->redirect(($this->config->get('config_secure') ? $store_info['ssl'] : $store_info['url']) . 'index.php?route=account/login&token=' . $token, 'SSL');
+				$this->redirect(($this->config->get('config_secure') ? $store_info['ssl'] : $store_info['url']) . 'index.php?route=account/login&token=' . $token, $status, 'SSL');
 			} else {
-				$this->redirect(($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=account/login&token=' . $token, 'SSL');
+				$this->redirect(($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=account/login&token=' . $token, $status, 'SSL');
 			}
 
 		} else {

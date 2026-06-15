@@ -387,6 +387,37 @@ class ModelSaleCustomer extends Model {
 		}
 	}
 
+	// Used to login in the customer's account
+	public function getCustomerByToken(string $token) {
+		// Token format: base64(unix_timestamp):hex_token  (15-min TTL)
+		// Legacy plain tokens (no colon) are rejected for safety.
+		if (strpos($token, ':') === false) {
+			return false;
+		}
+
+		[$expiry_b64, $raw_token] = explode(':', $token, 2);
+
+		$expiry = (int)base64_decode($expiry_b64);
+
+		// Check if expired or malformed
+		if ($expiry === 0 || time() > $expiry) {
+			return false;
+		}
+
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE token = '" . $this->db->escape((string)$token) . "' AND token != '' LIMIT 1");
+
+		if (!$query->num_rows) {
+			return false;
+		}
+
+		$customer = $query->row;
+
+		// Invalidate — scoped to this customer only
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = '' WHERE customer_id = '" . (int)$customer['customer_id'] . "'");
+
+		return $customer;
+	}
+
 	// Search Filter $data
 	public function getTotalCustomers(array $data = []): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "customer`";
