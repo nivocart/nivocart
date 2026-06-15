@@ -1256,37 +1256,32 @@ class ControllerSaleCustomer extends Controller {
 		return empty($this->error);
 	}
 
-	// ------------ NEEDS REWORK !!! ------------------
 	public function login() {
-		if (isset($this->request->get['customer_id'])) {
-			$customer_id = $this->request->get['customer_id'];
-		} else {
-			$customer_id = 0;
-		}
+		$customer_id = isset($this->request->get['customer_id']) ? (int)$this->request->get['customer_id'] : 0;
 
 		$this->load->model('sale/customer');
 
 		$customer_info = $this->model_sale_customer->getCustomer($customer_id);
 
 		if ($customer_info) {
+			// Generate a one-time login token and persist it
 			$token = bin2hex(random_bytes(32));
 
 			$this->model_sale_customer->editToken($customer_id, $token);
 
-			$status = $customer_info['status'];
-
-			$store_id = $this->request->get['store_id'] ? $this->request->get['store_id'] : 0;
+			$store_id = isset($this->request->get['store_id']) ? (int)$this->request->get['store_id'] : 0;
 
 			$this->load->model('setting/store');
 
 			$store_info = $this->model_setting_store->getStore($store_id);
 
 			if ($store_info) {
-				$this->redirect(($this->config->get('config_secure') ? $store_info['ssl'] : $store_info['url']) . 'index.php?route=account/login&token=' . $token, $status, 'SSL');
+				$base_url = $this->config->get('config_secure') ? $store_info['ssl'] : $store_info['url'];
 			} else {
-				$this->redirect(($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=account/login&token=' . $token, $status, 'SSL');
+				$base_url = $this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG;
 			}
 
+			$this->redirect($base_url . 'index.php?route=account/token_login&token=' . $token);
 		} else {
 			$this->language->load('error/not_found');
 

@@ -257,6 +257,15 @@ class ModelAccountCustomer extends Model {
 		return $customer;
 	}
 
+	/**
+	 * Edit Token
+	 *
+	 * Used for Admin access.
+	 */
+	public function editToken(int $customer_id, string $token): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = '" . $this->db->escape($token) . "' WHERE customer_id = '" . $customer_id . "'");
+	}
+
 	public function getCustomerUserAgent(int $customer_id) {
 		$query = $this->db->query("SELECT DISTINCT co.user_agent AS `user_agent` FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN `" . DB_PREFIX . "customer` c ON (co.ip = c.ip) WHERE c.customer_id = '" . (int)$customer_id . "' LIMIT 0,1");
 

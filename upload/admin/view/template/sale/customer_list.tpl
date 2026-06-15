@@ -138,13 +138,15 @@
             <td class="center"><?php echo $customer['approved'] ? '<img src="view/image/success.png" alt="' . $text_yes . '" />' : '<img src="view/image/warning.png" alt="' . $text_no . '" />'; ?></td>
             <td class="center"><?php echo $customer['ip']; ?>&nbsp;<?php echo $customer['blocked_ip']; ?></td>
             <td class="center"><?php echo $customer['date_added']; ?></td>
-            <td class="left"><select onchange="((this.value !== '') ? window.open('index.php?route=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=' + this.value) : null); this.value = '';">
-              <option value=""><?php echo $text_select; ?></option>
-              <option value="0"><?php echo $text_default; ?></option>
-              <?php foreach ($stores as $store) { ?>
-                <option value="<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></option>
-              <?php } ?>
-            </select></td>
+            <td class="left">
+              <select onchange="if(this.value !== '') { window.location = 'index.php?route=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=' + this.value; this.value = ''; }">
+                <option value=""><?php echo $text_select; ?></option>
+                <option value="0"><?php echo $text_default; ?></option>
+                <?php foreach ($stores as $store) { ?>
+                  <option value="<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></option>
+                <?php } ?>
+              </select>
+            </td>
             <td class="right"><?php foreach ($customer['action'] as $action) { ?>
               <a href="<?php echo $action['href']; ?>" class="button-form animated fadeIn ripple"><?php echo $action['text']; ?></a>
             <?php } ?></td>
