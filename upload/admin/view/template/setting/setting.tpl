@@ -92,6 +92,9 @@
               <input type="text" name="config_telephone" value="<?php echo $config_telephone; ?>" />
             <?php } ?></td>
           </tr>
+        </table>
+        <h2><?php echo $text_company; ?></h2>
+        <table class="form">
           <tr>
             <td><?php echo $entry_company_id; ?></td>
             <td><input type="text" name="config_company_id" value="<?php echo $config_company_id; ?>" size="40" /></td>

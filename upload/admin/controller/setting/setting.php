@@ -52,6 +52,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['text_automatic'] = $this->language->get('text_automatic');
 		$this->data['text_hide'] = $this->language->get('text_hide');
 		$this->data['text_characters'] = $this->language->get('text_characters');
+		$this->data['text_company'] = $this->language->get('text_company');
 		$this->data['text_currencies'] = $this->language->get('text_currencies');
 		$this->data['text_datetime'] = $this->language->get('text_datetime');
 		$this->data['text_product'] = $this->language->get('text_product');

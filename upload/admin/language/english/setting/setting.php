@@ -8,6 +8,7 @@ $_['text_required']                 = 'Required';
 $_['text_choice']                   = 'Customer\'s choice';
 $_['text_automatic']                = 'Automatic';
 $_['text_hide']                     = 'Hide';
+$_['text_company']                  = 'Company Details';
 $_['text_currencies']               = 'Currencies';
 $_['text_datetime']                 = 'Date &amp; Time';
 $_['text_location']                 = 'Map &amp; Location';
