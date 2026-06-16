@@ -51,10 +51,6 @@ class ModelSaleCustomer extends Model {
 		}
 	}
 
-	public function editToken(int $customer_id, string $token): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = '" . $this->db->escape((string)$token) . "' WHERE customer_id = '" . (int)$customer_id . "'");
-	}
-
 	public function addDeletedCustomer(int $customer_id): void {
 		$customer_info = $this->getCustomer($customer_id);
 
@@ -85,6 +81,13 @@ class ModelSaleCustomer extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', gender = '0', date_of_birth = '0', newsletter = '0' WHERE customer_id = '" . (int)$customer_id . "'");
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_ip` WHERE customer_id = '" . (int)$customer_id . "'");
+	}
+
+	/**
+	 * Edit Token: used for Admin support access to customer accounts
+	 */
+	public function editToken(int $customer_id, string $token): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET token = '" . $this->db->escape((string)$token) . "' WHERE customer_id = '" . (int)$customer_id . "'");
 	}
 
 	public function getCustomer(int $customer_id) {

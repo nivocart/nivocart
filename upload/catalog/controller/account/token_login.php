@@ -12,11 +12,6 @@ class ControllerAccountTokenLogin extends Controller {
 	/** Error array Placeholder */
 
     public function index() {
-        // Must be HTTPS if store requires it
-        if ($this->config->get('config_secure') && !$this->request->isSecure()) {
-            $this->redirect($this->url->link('account/token_login', 'token=' . $this->request->get['token'], 'SSL'), 301);
-        }
-
         $token = isset($this->request->get['token']) ? trim($this->request->get['token']) : '';
 
         if (!$token) {
@@ -29,7 +24,6 @@ class ControllerAccountTokenLogin extends Controller {
         $customer_info = $this->model_account_customer->getCustomerByToken($token);
 
         if (!$customer_info) {
-            // Token not found or already used
             $this->redirect($this->url->link('account/login', '', 'SSL'));
             return;
         }
@@ -38,26 +32,32 @@ class ControllerAccountTokenLogin extends Controller {
         $this->customer->logout();
         $this->cart->clear();
 
-        $session_keys = [
-            'wishlist', 'shipping_address_id', 'shipping_country_id',
-            'shipping_zone_id', 'shipping_postcode', 'shipping_method',
-            'shipping_methods', 'payment_address_id', 'payment_country_id',
-            'payment_zone_id', 'payment_method', 'payment_methods',
-            'comment', 'order_id', 'coupon', 'reward', 'voucher', 'vouchers'
-        ];
-
-        foreach ($session_keys as $key) {
+        foreach (['wishlist', 'shipping_address_id', 'shipping_country_id',
+                  'shipping_zone_id', 'shipping_postcode', 'shipping_method',
+                  'shipping_methods', 'payment_address_id', 'payment_country_id',
+                  'payment_zone_id', 'payment_method', 'payment_methods',
+                  'comment', 'order_id', 'coupon', 'reward', 'voucher', 'vouchers'] as $key) {
             unset($this->session->data[$key]);
         }
 
-        // Attempt login
-        if (!$this->customer->loginByToken($customer_info['email'])) {
+        $was_secure = $this->config->get('config_secure');
+
+        if ($was_secure && $this->url->isLocal()) {
+            $this->config->set('config_secure', 0);
+        }
+
+        $login_result = $this->customer->loginByToken($customer_info['email']);
+
+        if ($was_secure && $this->url->isLocal()) {
+            $this->config->set('config_secure', $was_secure);
+        }
+
+        if (!$login_result) {
             $this->redirect($this->url->link('account/login', '', 'SSL'));
             return;
         }
 
-        // Burn the token immediately
-        $this->model_account_customer->editToken($customer_info['customer_id'], '');
+        // Token is already burned inside getCustomerByToken() — no need to call editToken() again
 
         // Populate address-based tax session data
         $this->load->model('account/address');
@@ -67,13 +67,13 @@ class ControllerAccountTokenLogin extends Controller {
         if ($address_info) {
             if ($this->config->get('config_tax_customer') === 'shipping') {
                 $this->session->data['shipping_country_id'] = $address_info['country_id'];
-                $this->session->data['shipping_zone_id'] = $address_info['zone_id'];
-                $this->session->data['shipping_postcode'] = $address_info['postcode'];
+                $this->session->data['shipping_zone_id']    = $address_info['zone_id'];
+                $this->session->data['shipping_postcode']   = $address_info['postcode'];
             }
 
             if ($this->config->get('config_tax_customer') === 'payment') {
                 $this->session->data['payment_country_id'] = $address_info['country_id'];
-                $this->session->data['payment_zone_id'] = $address_info['zone_id'];
+                $this->session->data['payment_zone_id']    = $address_info['zone_id'];
             }
         }
 

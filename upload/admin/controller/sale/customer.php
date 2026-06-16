@@ -1264,8 +1264,10 @@ class ControllerSaleCustomer extends Controller {
 		$customer_info = $this->model_sale_customer->getCustomer($customer_id);
 
 		if ($customer_info) {
+			// Token expiry: 15 minutes from now
+			$expiry = base64_encode((string)(time() + 900));
 			// Generate a one-time login token and persist it
-			$token = bin2hex(random_bytes(32));
+			$token = $expiry . ':' . bin2hex(random_bytes(32));
 
 			$this->model_sale_customer->editToken($customer_id, $token);
 
