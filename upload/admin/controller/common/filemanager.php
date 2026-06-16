@@ -158,7 +158,10 @@ class ControllerCommonFileManager extends Controller {
 
 				$json[$i]['data'] = htmlspecialchars($entry->getFilename(), ENT_QUOTES, 'UTF-8');
 
-				$json[$i]['attributes']['directory'] = htmlspecialchars(substr($entry->getPathname(), mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
+				$base = str_replace('\\', '/', DIR_IMAGE . 'data/');
+				$pathname = str_replace('\\', '/', $entry->getPathname());
+
+				$json[$i]['attributes']['directory'] = htmlspecialchars(substr($pathname, mb_strlen($base, 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
 				// Check if this subdirectory itself has any child directories
 				$childIterator = new FilesystemIterator($entry->getPathname(), FilesystemIterator::SKIP_DOTS);
@@ -220,7 +223,10 @@ class ControllerCommonFileManager extends Controller {
 				$i++;
 			}
 
-			$filename_path_data = htmlspecialchars(substr($entry->getPathname(), mb_strlen(DIR_IMAGE . 'data/', 'UTF-8')), ENT_QUOTES, 'UTF-8');
+			$base = str_replace('\\', '/', DIR_IMAGE . 'data/');
+			$pathname = str_replace('\\', '/', $entry->getPathname());
+
+			$filename_path_data = htmlspecialchars(substr($pathname, mb_strlen($base, 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
 			$json[] = [
 				'filename' => htmlspecialchars($entry->getFilename(), ENT_QUOTES, 'UTF-8'),

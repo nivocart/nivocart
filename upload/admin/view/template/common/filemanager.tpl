@@ -157,7 +157,7 @@ $(document).ready(function() {
 
 	$('#column-right').delegate('a', 'dblclick', function() {
  	<?php if ($fckeditor !== false) { ?>
-		window.opener.CKEDITOR.tools.callFunction(<?php echo $fckeditor; ?>, '<?php echo $directory; ?>' + encodeURIComponent($(this).find('input[name=\'image\']').attr('value')).replace('%2F', '/'));
+		window.opener.CKEDITOR.tools.callFunction(<?php echo $fckeditor; ?>, '<?php echo $directory; ?>' + $(this).find('input[name=\'image\']').attr('value'));
 		self.close();
 	<?php } else { ?>
 		parent.$('#<?php echo $field; ?>').attr('value', 'data/' + $(this).find('input[name=\'image\']').attr('value'));
