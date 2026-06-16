@@ -50,9 +50,7 @@
 	left: 0;
 	position: absolute;
 	opacity: 0;
-	filter:Alpha(Opacity=0); /* support: IE8 */
 }
-
 .ui-front {
 	z-index: 100;
 }
@@ -75,7 +73,6 @@
 	overflow: hidden;
 	background-repeat: no-repeat;
 }
-
 .ui-widget-icon-block {
 	left: 50%;
 	margin-left: -8px;
@@ -84,7 +81,6 @@
 
 /* Misc visuals
 ----------------------------------*/
-
 /* Overlays */
 .ui-widget-overlay {
 	position: fixed;
@@ -125,8 +121,6 @@
 .ui-menu .ui-menu-item {
 	margin: 0;
 	cursor: pointer;
-	/* support: IE10, see #8844 */
-	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
 }
 .ui-menu .ui-menu-item-wrapper {
 	position: relative;
@@ -151,7 +145,6 @@
 .ui-menu-icons .ui-menu-item-wrapper {
 	padding-left: 2em;
 }
-
 /* left-aligned */
 .ui-menu .ui-icon {
 	position: absolute;
@@ -160,7 +153,6 @@
 	left: .2em;
 	margin: auto 0;
 }
-
 /* right-aligned */
 .ui-menu .ui-menu-icon {
 	left: auto;
@@ -176,14 +168,10 @@
 	vertical-align: middle;
 	text-align: center;
 	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
-
 	/* Support: IE <= 11 */
 	overflow: visible;
 }
-
 .ui-button,
 .ui-button:link,
 .ui-button:visited,
@@ -213,7 +201,6 @@ input.ui-button.ui-button-icon-only {
 	margin-top: -8px;
 	margin-left: -8px;
 }
-
 .ui-button.ui-icon-notext .ui-icon {
 	padding: 0;
 	width: 2.1em;
@@ -221,7 +208,6 @@ input.ui-button.ui-button-icon-only {
 	text-indent: -9999px;
 	white-space: nowrap;
 }
-
 input.ui-button.ui-icon-notext .ui-icon {
 	width: auto;
 	height: auto;
@@ -230,13 +216,6 @@ input.ui-button.ui-icon-notext .ui-icon {
 	padding: .4em 1em;
 }
 
-/* workarounds */
-/* Support: Firefox 5 - 40 */
-input.ui-button::-moz-focus-inner,
-button.ui-button::-moz-focus-inner {
-	border: 0;
-	padding: 0;
-}
 .ui-controlgroup {
 	vertical-align: middle;
 	display: inline-block;
@@ -282,7 +261,6 @@ button.ui-button::-moz-focus-inner {
 
 /* Spinner specific style fixes */
 .ui-controlgroup-vertical .ui-spinner-input {
-
 	/* Support: IE8 only, Android < 4.4 only */
 	width: 75%;
 	width: calc( 100% - 2.4em );
@@ -290,7 +268,6 @@ button.ui-button::-moz-focus-inner {
 .ui-controlgroup-vertical .ui-spinner .ui-spinner-up {
 	border-top-style: solid;
 }
-
 .ui-checkboxradio-label .ui-icon-background {
 	box-shadow: inset 1px 1px 1px #ccc;
 	border-radius: .12em;
@@ -581,7 +558,6 @@ button.ui-button::-moz-focus-inner {
 	cursor: move;
 }
 .ui-draggable-handle {
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-resizable {
@@ -591,7 +567,6 @@ button.ui-button::-moz-focus-inner {
 	position: absolute;
 	font-size: 0.1px;
 	display: block;
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-resizable-disabled .ui-resizable-handle,
@@ -666,14 +641,12 @@ button.ui-button::-moz-focus-inner {
 .ui-progressbar .ui-progressbar-overlay {
 	background: #999;
 	height: 100%;
-	filter: alpha(opacity=25); /* support: IE8 */
 	opacity: 0.25;
 }
 .ui-progressbar-indeterminate .ui-progressbar-value {
 	background-image: none;
 }
 .ui-selectable {
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-selectable-helper {
@@ -731,7 +704,6 @@ button.ui-button::-moz-focus-inner {
 	width: 1.2em;
 	height: 1.2em;
 	cursor: default;
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-slider .ui-slider-range {

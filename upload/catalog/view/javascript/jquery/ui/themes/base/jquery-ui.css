@@ -45,19 +45,16 @@
 	left: 0;
 	position: absolute;
 	opacity: 0;
-	filter:Alpha(Opacity=0); /* support: IE8 */
 }
 .ui-front {
 	z-index: 100;
 }
-
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-disabled {
 	cursor: default;
 	pointer-events: none;
 }
-
 /* Icons
 ----------------------------------*/
 .ui-icon {
@@ -74,7 +71,6 @@
 	margin-left: -8px;
 	display: block;
 }
-
 /* Misc visuals
 ----------------------------------*/
 /* Overlays */
@@ -117,8 +113,6 @@
 .ui-menu .ui-menu-item {
 	margin: 0;
 	cursor: pointer;
-	/* support: IE10, see #8844 */
-	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
 }
 .ui-menu .ui-menu-item-wrapper {
 	position: relative;
@@ -165,8 +159,6 @@
 	vertical-align: middle;
 	text-align: center;
 	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 	/* Support: IE <= 11 */
 	overflow: visible;
@@ -210,13 +202,6 @@ input.ui-button.ui-icon-notext .ui-icon {
 	text-indent: 0;
 	white-space: normal;
 	padding: .4em 1em;
-}
-/* workarounds */
-/* Support: Firefox 5 - 40 */
-input.ui-button::-moz-focus-inner,
-button.ui-button::-moz-focus-inner {
-	border: 0;
-	padding: 0;
 }
 .ui-controlgroup {
 	vertical-align: middle;
@@ -556,7 +541,6 @@ button.ui-button::-moz-focus-inner {
 	cursor: move;
 }
 .ui-draggable-handle {
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-resizable {
@@ -566,7 +550,6 @@ button.ui-button::-moz-focus-inner {
 	position: absolute;
 	font-size: 0.1px;
 	display: block;
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-resizable-disabled .ui-resizable-handle,
@@ -641,7 +624,6 @@ button.ui-button::-moz-focus-inner {
 .ui-progressbar .ui-progressbar-overlay {
 	background: #999;
 	height: 100%;
-	filter: alpha(opacity=25); /* support: IE8 */
 	opacity: 0.25;
 }
 .ui-progressbar-indeterminate .ui-progressbar-value {
@@ -706,7 +688,6 @@ button.ui-button::-moz-focus-inner {
 	width: 1.2em;
 	height: 1.2em;
 	cursor: default;
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-slider .ui-slider-range {
@@ -759,7 +740,6 @@ button.ui-button::-moz-focus-inner {
 	top: 0;
 }
 .ui-sortable-handle {
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-spinner {
@@ -1015,23 +995,18 @@ a.ui-button:active,
 .ui-widget-content .ui-priority-secondary,
 .ui-widget-header .ui-priority-secondary {
 	opacity: .7;
-	filter:Alpha(Opacity=70); /* support: IE8 */
 	font-weight: normal;
 }
 .ui-state-disabled,
 .ui-widget-content .ui-state-disabled,
 .ui-widget-header .ui-state-disabled {
 	opacity: .35;
-	filter:Alpha(Opacity=35); /* support: IE8 */
 	background-image: none;
 }
-.ui-state-disabled .ui-icon {
-	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
-}
+.ui-state-disabled .ui-icon {}
 
 /* Icons
 ----------------------------------*/
-
 /* states and images */
 .ui-icon {
 	width: 16px;
@@ -1039,31 +1014,31 @@ a.ui-button:active,
 }
 .ui-icon,
 .ui-widget-content .ui-icon {
-	background-image: url("images/ui-icons_444444_256x240.png");
+	background-image: url('images/ui-icons_444444_256x240.png');
 }
 .ui-widget-header .ui-icon {
-	background-image: url("images/ui-icons_444444_256x240.png");
+	background-image: url('images/ui-icons_444444_256x240.png');
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-button:hover .ui-icon,
 .ui-button:focus .ui-icon {
-	background-image: url("images/ui-icons_555555_256x240.png");
+	background-image: url('images/ui-icons_555555_256x240.png');
 }
 .ui-state-active .ui-icon,
 .ui-button:active .ui-icon {
-	background-image: url("images/ui-icons_ffffff_256x240.png");
+	background-image: url('images/ui-icons_ffffff_256x240.png');
 }
 .ui-state-highlight .ui-icon,
 .ui-button .ui-state-highlight.ui-icon {
-	background-image: url("images/ui-icons_777620_256x240.png");
+	background-image: url('images/ui-icons_777620_256x240.png');
 }
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
-	background-image: url("images/ui-icons_cc0000_256x240.png");
+	background-image: url('images/ui-icons_cc0000_256x240.png');
 }
 .ui-button .ui-icon {
-	background-image: url("images/ui-icons_777777_256x240.png");
+	background-image: url('images/ui-icons_777777_256x240.png');
 }
 
 /* positioning */
@@ -1244,10 +1219,8 @@ a.ui-button:active,
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
 .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
 
-
 /* Misc visuals
 ----------------------------------*/
-
 /* Corner radius */
 .ui-corner-all,
 .ui-corner-top,
@@ -1278,10 +1251,7 @@ a.ui-button:active,
 .ui-widget-overlay {
 	background: #aaa;
 	opacity: .003;
-	filter: Alpha(Opacity=.3); /* support: IE8 */
 }
 .ui-widget-shadow {
-	-webkit-box-shadow: 0 0 5px #666;
-	-moz-box-shadow: 0 0 5px #666;
 	box-shadow: 0 0 5px #666;
 }

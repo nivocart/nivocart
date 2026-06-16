@@ -10,7 +10,6 @@
  */
 
 .ui-draggable-handle {
-	-ms-touch-action: none;
 	touch-action: none;
 }
 
@@ -54,9 +53,6 @@
 	top: 0;
 	left: 0;
 	position: absolute;
-	filter: Alpha(Opacity=0); /* support: IE8 */
-	-khtml-opacity: 0;
-	-moz-opacity: 0;
 	opacity: 0;
 }
 .ui-front {
@@ -105,7 +101,6 @@
 	position: absolute;
 	font-size: 0.1px;
 	display: block;
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-resizable-disabled .ui-resizable-handle,
@@ -169,7 +164,6 @@
 	top: -5px;
 }
 .ui-selectable {
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-selectable-helper {
@@ -178,7 +172,6 @@
 	border: 1px dotted black;
 }
 .ui-sortable-handle {
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-accordion .ui-accordion-header {
@@ -213,8 +206,6 @@
 .ui-menu .ui-menu-item {
 	margin: 0;
 	cursor: pointer;
-	/* support: IE10, see #8844 */
-	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
 }
 .ui-menu .ui-menu-item-wrapper {
 	position: relative;
@@ -261,8 +252,6 @@
 	vertical-align: middle;
 	text-align: center;
 	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 	/* Support: IE <= 11 */
 	overflow: visible;
@@ -668,9 +657,6 @@ button.ui-button::-moz-focus-inner {
 .ui-progressbar .ui-progressbar-overlay {
 	background: #2191C0 url("images/ui-bg_gloss-wave_75_2191c0_500x100.png") 50% 50% repeat-x;
 	height: 100%;
-	filter: alpha(opacity=25); /* support: IE8 */
-	-khtml-opacity: 0.25;
-	-moz-opacity: 0.25;
 	opacity: 0.25;
 }
 .ui-progressbar-indeterminate .ui-progressbar-value {
@@ -726,7 +712,6 @@ button.ui-button::-moz-focus-inner {
 	width: 1.2em;
 	height: 1.2em;
 	cursor: default;
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-slider .ui-slider-range {
