@@ -14,7 +14,13 @@ class ControllerCheckoutCheckout extends Controller {
 		}
 
 		// Customer Login redirect
-		if (!$this->customer->isLogged() || !$this->customer->isSecure()) {
+		// If guest checkout is enabled, unlogged users may proceed.
+		// If guest checkout is disabled, all unlogged users must log in first.
+		if (!$this->customer->isLogged()) {
+			if (!$this->config->get('config_guest_checkout')) {
+				$this->redirect($this->url->link('account/login', '', 'SSL'));
+			}
+		} elseif (!$this->customer->isSecure()) {
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
@@ -39,7 +45,7 @@ class ControllerCheckoutCheckout extends Controller {
 				$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
 			}
 
-			// Validate minimum age
+			// Validate minimum age — requires a logged-in account
 			if ($this->config->get('config_customer_dob') && ($product['age_minimum'] > 0)) {
 				if (!$this->customer->isLogged() || !$this->customer->isSecure()) {
 					$this->redirect($this->url->link('account/login', '', 'SSL'));
@@ -196,41 +202,49 @@ class ControllerCheckoutCheckout extends Controller {
 			$this->data['voucher'] = '';
 		}
 
-		// Reward points
-		$points_rate = $this->config->get('config_reward_rate') ? $this->config->get('config_reward_rate') : 1;
-		$points = $this->customer->getRewardPoints();
-		$points_total = 0;
+		// Reward points — guests have no points; skip calculation entirely
+		if ($this->customer->isLogged()) {
+			$points_rate = $this->config->get('config_reward_rate') ? $this->config->get('config_reward_rate') : 1;
+			$points = $this->customer->getRewardPoints();
 
-		foreach ($this->cart->getProducts() as $product) {
-			if ($product['points']) {
-				$points_total += $product['points'];
+			$points_total = 0;
+
+			foreach ($this->cart->getProducts() as $product) {
+				if ($product['points']) {
+					$points_total += $product['points'];
+				}
 			}
-		}
 
-		$max_points = min($points / $points_rate, $points_total);
-		$sub_total = $this->cart->getSubTotal();
+			$max_points = min($points / $points_rate, $points_total);
+			$sub_total = $this->cart->getSubTotal();
+			$reward_points = ($points && $max_points > $sub_total) ? $sub_total : $max_points;
 
-		$reward_points = ($points && $max_points > $sub_total) ? $sub_total : $max_points;
+			$available_points = ($points && isset($this->session->data['reward'])) ? ($reward_points * $points_rate) - $this->session->data['reward'] : ($reward_points * $points_rate);
 
-		if ($points && $points_total && $this->config->get('reward_status')) {
-			$this->data['reward_point'] = true;
+			if ($points && $points_total && $this->config->get('reward_status')) {
+				$this->data['reward_point'] = true;
+			} else {
+				$this->data['reward_point'] = false;
+			}
+
+			if ($this->config->get('config_checkout_point') === 2) {
+				$this->data['show_point'] = false;
+
+				if ($points && $this->config->get('reward_status')) {
+					$this->session->data['reward'] = $reward_points;
+				}
+			} elseif ($this->config->get('config_checkout_point') === 1) {
+				$this->data['show_point'] = true;
+			} else {
+				$this->data['show_point'] = false;
+			}
 		} else {
+			// Guest — no reward points available
+			$available_points = 0;
+
 			$this->data['reward_point'] = false;
-		}
-
-		if ($this->config->get('config_checkout_point') === 2) {
-			$this->data['show_point'] = false;
-
-			if ($points && $this->config->get('reward_status')) {
-				$this->session->data['reward'] = $reward_points;
-			}
-		} elseif ($this->config->get('config_checkout_point') === 1) {
-			$this->data['show_point'] = true;
-		} else {
 			$this->data['show_point'] = false;
 		}
-
-		$available_points = ($points && isset($this->session->data['reward'])) ? ($reward_points * $points_rate) - $this->session->data['reward'] : ($reward_points * $points_rate);
 
 		if (isset($this->request->post['reward'])) {
 			$this->data['reward'] = $this->request->post['reward'];
@@ -249,6 +263,7 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->data['text_one_page_coupon'] = $this->language->get('text_one_page_coupon');
 		$this->data['text_one_page_voucher'] = $this->language->get('text_one_page_voucher');
 		$this->data['text_one_page_reward'] = sprintf($this->language->get('text_one_page_reward'), $available_points);
+		$this->data['text_guest_login'] = sprintf($this->language->get('text_guest_login'), $this->url->link('account/login', '', 'SSL'));
 		$this->data['text_select'] = $this->language->get('text_select');
 		$this->data['text_none'] = $this->language->get('text_none');
 		$this->data['text_female'] = $this->language->get('text_female');
@@ -286,9 +301,11 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
 		$this->data['logged'] = $this->customer->isLogged();
+		$this->data['guest_checkout'] = (bool)$this->config->get('config_guest_checkout');
 		$this->data['shipping_required'] = $this->cart->hasShipping();
 
 		$this->data['one_page_cart'] = $this->url->link('checkout/cart', '', 'SSL');
+		$this->data['login_url'] = $this->url->link('account/login', '', 'SSL');
 
 		$this->load->model('checkout/order');
 		$this->load->model('account/address');
@@ -302,46 +319,61 @@ class ControllerCheckoutCheckout extends Controller {
 			if ($this->validate()) {
 				$customer_info = $this->request->post;
 
-				// Auto-register guest customers
 				if (!$this->customer->isLogged()) {
-					$this->load->model('account/customer');
-					$this->load->model('checkout/checkout_tools');
-
-					$newsletter = ($this->config->get('config_checkout_newsletter') === 1) ? 1 : 0;
-
-					$customer_data = [
-						'customer_group_id' => $customer_info['customer_group_id'],
-						'firstname'         => $customer_info['firstname'],
-						'lastname'          => $customer_info['lastname'],
-						'email'             => $customer_info['email'],
-						'telephone'         => isset($customer_info['telephone']) ? $customer_info['telephone'] : '000',
-						'gender'            => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
-						'date_of_birth'     => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
-						'password'          => $this->model_checkout_checkout_tools->generatePassword(),
-						'newsletter'        => $newsletter,
-						'company'           => $customer_info['company'],
-						'company_id'        => $customer_info['company_id'],
-						'tax_id'            => $customer_info['tax_id'],
-						'address_1'         => $customer_info['address_1'],
-						'address_2'         => $customer_info['address_2'],
-						'postcode'          => $customer_info['postcode'],
-						'city'              => $customer_info['city'],
-						'zone_id'           => $customer_info['zone_id'],
-						'country_id'        => $customer_info['country_id']
-					];
-
-					$this->model_account_customer->addCustomer($customer_data);
-
-					$customer_status = $this->model_account_customer->getCustomerByEmail($customer_info['email']);
-
-					if ($customer_status && !$customer_status['approved']) {
-						$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
+					if ($this->config->get('config_guest_checkout')) {
+						// ---------------------------------------------------------
+						// Guest path — store identity in session only, no account
+						// ---------------------------------------------------------
+						$this->session->data['guest'] = [
+							'firstname' => $customer_info['firstname'],
+							'lastname'  => $customer_info['lastname'],
+							'email'     => $customer_info['email'],
+							'telephone' => isset($customer_info['telephone']) ? $customer_info['telephone'] : '',
+						];
 					} else {
-						$this->customer->login($customer_data['email'], $customer_data['password']);
+						// ---------------------------------------------------------
+						// Auto-register path — guest checkout is OFF
+						// Create an account and log the customer in automatically
+						// ---------------------------------------------------------
+						$this->load->model('account/customer');
+						$this->load->model('checkout/checkout_tools');
+
+						$newsletter = ($this->config->get('config_checkout_newsletter') === 1) ? 1 : 0;
+
+						$customer_data = [
+							'customer_group_id' => $customer_info['customer_group_id'],
+							'firstname'         => $customer_info['firstname'],
+							'lastname'          => $customer_info['lastname'],
+							'email'             => $customer_info['email'],
+							'telephone'         => isset($customer_info['telephone']) ? $customer_info['telephone'] : '000',
+							'gender'            => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
+							'date_of_birth'     => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
+							'password'          => $this->model_checkout_checkout_tools->generatePassword(),
+							'newsletter'        => $newsletter,
+							'company'           => $customer_info['company'],
+							'company_id'        => $customer_info['company_id'],
+							'tax_id'            => $customer_info['tax_id'],
+							'address_1'         => $customer_info['address_1'],
+							'address_2'         => $customer_info['address_2'],
+							'postcode'          => $customer_info['postcode'],
+							'city'              => $customer_info['city'],
+							'zone_id'           => $customer_info['zone_id'],
+							'country_id'        => $customer_info['country_id']
+						];
+
+						$this->model_account_customer->addCustomer($customer_data);
+
+						$customer_status = $this->model_account_customer->getCustomerByEmail($customer_info['email']);
+
+						if ($customer_status && !$customer_status['approved']) {
+							$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
+						} else {
+							$this->customer->login($customer_data['email'], $customer_data['password']);
+						}
 					}
 				}
 
-				// Ensure logged-in customer has a default address
+				// Ensure logged-in customer has a default address (registered only)
 				if ($this->customer->isLogged()) {
 					$default_address_id = $this->model_account_address->getDefaultAddressId($this->customer->getId());
 
@@ -511,7 +543,7 @@ class ControllerCheckoutCheckout extends Controller {
 			$this->data['error_email'] = $this->error['exists'];
 		}
 
-		// Customer address (logged-in)
+		// Customer address (logged-in registered customers only)
 		$customer_address = [];
 
 		if ($this->customer->isLogged() && $this->customer->isSecure()) {
@@ -903,10 +935,15 @@ class ControllerCheckoutCheckout extends Controller {
 			}
 
 			if (!$this->customer->isLogged()) {
-				$this->load->model('account/customer');
+				// Only block on existing email when guest checkout is OFF (auto-register mode).
+				// When guest checkout is ON, any email is permitted — including one already
+				// registered — because no account is being created.
+				if (!$this->config->get('config_guest_checkout')) {
+					$this->load->model('account/customer');
 
-				if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
-					$this->error['exists'] = $this->language->get('error_exists');
+					if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+						$this->error['exists'] = $this->language->get('error_exists');
+					}
 				}
 			}
 
@@ -1111,8 +1148,17 @@ class ControllerCheckoutCheckout extends Controller {
 	}
 
 	protected function validateReward() {
+		// Guests cannot use reward points — this method should not be reached
+		// by guests since the reward UI is hidden, but guard defensively.
+		if (!$this->customer->isLogged()) {
+			$this->error['warning'] = $this->language->get('error_reward');
+			return false;
+		}
+
 		$points_rate = $this->config->get('config_reward_rate');
+
 		$points = $this->customer->getRewardPoints();
+
 		$points_total = 0;
 
 		foreach ($this->cart->getProducts() as $product) {

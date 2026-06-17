@@ -9,6 +9,7 @@ $_['text_checkout_shipping_address']          = 'Delivery Details';
 $_['text_female']                             = 'Female';
 $_['text_male']                               = 'Male';
 $_['text_agree']                              = 'I have read and agree to the <a class="colorbox" href="%s" title="%s"><b>%s</b></a>';
+$_['text_guest_login']                        = 'Already have an account? <a href="%s">Log in</a> to check out faster.';
 $_['text_shipping_method']                    = 'Shipping method';
 $_['text_payment_method']                     = 'Payment method';
 $_['text_comments']                           = 'Delivery Instructions';

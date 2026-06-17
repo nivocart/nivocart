@@ -491,6 +491,14 @@ a.top-link:hover {
 	margin-bottom: 20px;
 	padding-left: 8px;
 }
+#content .guest-notice {
+	margin-bottom: 15px;
+	padding: 10px 14px;
+	background: #F0F7FF;
+	border: 1px solid #C0D8EF;
+	border-radius: 3px;
+	font-size: 13px;
+}
 /** -----------------------------
  * BREADCRUMBS
  * ----------------------------*/

@@ -13,6 +13,9 @@
     <a href="<?php echo $one_page_cart; ?>" title="<?php echo $text_cart; ?>" style="margin-left:25px;"><img src="catalog/view/theme/<?php echo $template; ?>/image/cart.png" alt="<?php echo $text_cart; ?>" /></a>
   </div>
   <h1><?php echo $heading_title; ?></h1>
+  <?php if (!$logged && $guest_checkout) { ?>
+    <div class="guest-notice"><?php echo $text_guest_login; ?></div>
+  <?php } ?>
   <?php if ($wrapping_status || $this->config->get('config_checkout_coupon') || $this->config->get('config_checkout_voucher') || $reward_point) { ?>
     <div style="margin-bottom:15px;">
       <?php if ($wrapping_status) { ?>
@@ -205,8 +208,8 @@
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
                   <option value="<?php echo $country['country_id']; ?>"<?php echo ($country['country_id'] === $country_id) ? ' selected="selected"' : ''; ?>>
-				  <?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?>
-				  </option>
+                  <?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?>
+                  </option>
                 <?php } ?>
               </select>
             </td>
@@ -284,8 +287,8 @@
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($countries as $country) { ?>
                   <option value="<?php echo $country['country_id']; ?>"<?php echo ($country['country_id'] === $shipping_country_id) ? ' selected="selected"' : ''; ?>>
-				  <?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?>
-				  </option>
+                  <?php echo (strlen($country['name']) > 24) ? substr(strip_tags(html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8')), 0, 22) . '..' : html_entity_decode($country['name'], ENT_QUOTES, 'UTF-8'); ?>
+                  </option>
                 <?php } ?>
               </select>
             </td>
@@ -424,14 +427,13 @@
 <script type="text/javascript"><!--
 // ============================================================================
 // Stripe Elements setup
-// Initialised once; widget shown/hidden based on payment method selection.
 // ============================================================================
 var stripeInstance = null;
 var stripeCard = null;
 var stripeInitialised = false;
 
-var STRIPE_PUBLISHABLE_KEY = '';  // filled by intentCreate() response
-var STRIPE_CLIENT_SECRET = '';  // filled by intentCreate() response
+var STRIPE_PUBLISHABLE_KEY = '';
+var STRIPE_CLIENT_SECRET = '';
 var STRIPE_INTENT_URL = 'index.php?route=payment/stripe_payments/intentCreate';
 var STRIPE_SEND_URL = 'index.php?route=payment/stripe_payments/send';
 
@@ -461,18 +463,15 @@ function initStripeElements(publishableKey) {
     stripeInitialised = true;
 }
 
-// Show/hide Stripe widget when payment method changes
 $('body').on('change', 'input[name="payment_method"]', function() {
     if ($(this).val() === 'stripe_payments') {
         $('#stripe-widget').slideDown(300);
-        // Fetch a fresh PaymentIntent when Stripe is selected
         fetchStripeIntent();
     } else {
         $('#stripe-widget').slideUp(300);
     }
 });
 
-// Also check on page load in case stripe_payments is pre-selected
 $(document).ready(function() {
     if ($('input[name="payment_method"]:checked').val() === 'stripe_payments') {
         $('#stripe-widget').show();
@@ -484,7 +483,7 @@ function fetchStripeIntent() {
     $.ajax({
         url: STRIPE_INTENT_URL,
         type: 'post',
-        data:     {
+        data: {
             cart_total: '<?php echo $stripe_cart_total; ?>',
             currency_code: '<?php echo $stripe_currency_code; ?>'
         },
@@ -507,7 +506,7 @@ function fetchStripeIntent() {
 }
 
 // ============================================================================
-// Form submission — extracted into submitForm() so all paths can call it
+// Form submission
 // ============================================================================
 function submitForm() {
     $.ajax({
@@ -546,30 +545,22 @@ function submitForm() {
 }
 
 // ============================================================================
-// Place Order button — routes to Stripe or silent flow
+// Place Order button
 // ============================================================================
 $('#button-order').on('click', function() {
     var selectedPayment = $('input[name="payment_method"]:checked').val();
 
     if (selectedPayment === 'stripe_payments') {
         handleStripePayment(function() {
-            // Card confirmed — now submit the form as normal
             submitForm();
         });
-
-    // Future interactive gateways: add else if branches here
-    // } else if (selectedPayment === 'klarna') {
-    //     handleKlarnaPayment(function() { submitForm(); });
-
     } else {
-        // Silent gateway — original behaviour unchanged
         submitForm();
     }
 });
 
 // ============================================================================
 // Stripe payment handler
-// Confirms the card with Stripe.js, then calls the callback on success.
 // ============================================================================
 function handleStripePayment(onSuccess) {
     var btn = document.getElementById('button-order');
@@ -601,7 +592,6 @@ function handleStripePayment(onSuccess) {
         }
 
         if (result.paymentIntent.status === 'succeeded') {
-            // Store intent ID for the confirm controller to verify
             $.ajax({
                 url: 'index.php?route=payment/stripe_payments/storeIntent',
                 type: 'post',
@@ -614,7 +604,6 @@ function handleStripePayment(onSuccess) {
                         btn.value = '<?php echo isset($button_continue) ? $button_continue : "Place Order"; ?>';
                         return;
                     }
-                    // Payment verified — proceed to submit the form
                     onSuccess();
                 },
                 error: function() {
@@ -631,14 +620,12 @@ function handleStripePayment(onSuccess) {
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-  // Hide shipping address block on page load if checkbox is checked
   if ($('input[name=\'check_shipping_address\']').is(':checked')) {
     $('#shipping-address-display').hide();
   } else {
     $('#shipping-address-display').show();
   }
 
-  // Toggle on click
   $('input[name=\'check_shipping_address\']').on('click', function() {
     if ($(this).is(':checked')) {
       $('#shipping-address-display').hide();
@@ -650,9 +637,6 @@ $(document).ready(function() {
 //--></script>
 
 <script type="text/javascript"><!--
-// ============================================================================
-// Zone loaders — called directly on page load (no trigger('change'))
-// ============================================================================
 function loadPaymentZones(country_id) {
   if (!country_id) return;
   $.ajax({
@@ -712,9 +696,6 @@ function loadShippingZones(country_id) {
   });
 }
 
-// ============================================================================
-// Country change handlers — zone load + shipping/payment lock toggle
-// ============================================================================
 $('select[name=\'country_id\']').on('change', function() {
   if (this.value === '') return;
   loadPaymentZones(this.value);
@@ -735,13 +716,9 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
   }
 });
 
-// Populate zones on page load without triggering hide/show logic
 loadPaymentZones(<?php echo (int)$country_id; ?>);
 loadShippingZones(<?php echo (int)$shipping_country_id; ?>);
 
-// ============================================================================
-// Shipping and payment method change handlers
-// ============================================================================
 function refresh() {
   $('.attention, .warning, .error, .wait').remove();
   $('#form').append('<input type="hidden" id="refresh" name="refresh" value="1" />');
