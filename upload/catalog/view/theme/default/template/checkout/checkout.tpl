@@ -315,7 +315,6 @@
           </tr>
           <tr>
             <td id="shipping-method">
-              <a onclick="refresh();" id="shipping-refresh" class="button" style="margin:0 5px 5px 5px;"><i class="fa fa-refresh"></i></a>
               <?php if ($shipping_methods) { ?>
                 <?php if ($error_shipping_method) { ?>
                   <div class="attention" style="margin:5px 0;"><?php echo $error_shipping_method; ?></div>
@@ -378,15 +377,37 @@
         </table>
 
         <!-- ================================================================
-             Stripe card widget — shown only when stripe_payments is selected
+             Payment gateway widgets
+             One div per gateway: id="widget-{code}" class="payment-gateway-widget"
+             gateway_loader.js handles show/hide and delegates to each module.
+             To add a new gateway widget: copy the pattern below.
              ================================================================ -->
-        <div id="stripe-widget" style="display:none; margin: 15px 0; padding: 12px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa;">
-          <h3 style="margin: 0 0 10px 0; font-size: 14px;"><?php echo isset($text_credit_card) ? $text_credit_card : 'Card Details'; ?></h3>
+
+        <!-- Stripe — mounted by stripe_payments.js -->
+        <div id="widget-stripe_payments" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <h3 style="margin:0 0 10px 0; font-size:14px;"><?php echo isset($text_credit_card) ? $text_credit_card : 'Card Details'; ?></h3>
           <label for="stripe-cc-owner" style="display:block; font-size:13px; margin-bottom:4px;"><?php echo isset($entry_cc_owner) ? $entry_cc_owner : 'Cardholder Name'; ?></label>
           <input type="text" id="stripe-cc-owner" placeholder="Name on card" size="30" style="margin-bottom:8px; width:100%; box-sizing:border-box;" />
           <div id="stripe-card-element" style="padding:8px; border:1px solid #ccc; border-radius:3px; background:#fff;"></div>
           <div id="stripe-card-errors" role="alert" style="color:#c0392b; font-size:13px; margin-top:6px; min-height:16px;"></div>
         </div>
+
+        <!-- PayPal Standard — mounted by pp_standard.js -->
+        <div id="widget-pp_standard" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <div class="pp-testmode-warning payment-pp-testmode-warning" style="display:none; margin-bottom:10px;">
+            <span class="pp-warning-icon">&#9888;</span> PayPal Sandbox mode active — no real payments will be taken.
+          </div>
+          <p style="font-size:13px; color:#555; margin:0;">
+            You will be redirected to PayPal to complete your payment securely after placing your order.
+          </p>
+          <img src="catalog/view/theme/<?php echo $template; ?>/image/payment/paypal-logo.png" alt="PayPal" style="height:24px; margin-top:10px; vertical-align:middle;" />
+        </div>
+
+        <!-- Add future gateway widget divs here:
+             <div id="widget-{code}" class="payment-gateway-widget" style="display:none; ...">
+               ...
+             </div>
+        -->
 
         <div class="division"></div>
         <div id="checkout-one-cart"></div>
@@ -417,206 +438,33 @@
 </div>
 <?php echo $content_lower; ?>
 
-<!-- Stripe.js — only loaded when stripe_payments is available as a method -->
-<?php foreach ($payment_methods as $pm) { ?>
-  <?php if ($pm['code'] === 'stripe_payments') { ?>
-    <script src="https://js.stripe.com/v3/"></script>
-  <?php } ?>
+<!-- ============================================================
+     Payment gateway data blob + script loader
+     All gateway JS is driven from here — no inline gateway code.
+     ============================================================ -->
+
+<!-- Gateway payment data — read by gateway_loader.js and individual modules -->
+<script type="text/javascript">
+  window.NIVOCART_PAYMENT_DATA = <?php echo $payment_widget_data; ?>;
+  window.NIVOCART_TEMPLATE = '<?php echo $template; ?>';
+</script>
+
+<!-- External gateway scripts (only loaded when that gateway is active) -->
+<?php foreach ($payment_gateway_scripts as $ext_script) { ?>
+  <script type="text/javascript" src="<?php echo $ext_script; ?>"></script>
 <?php } ?>
 
-<script type="text/javascript"><!--
-// ============================================================================
-// Stripe Elements setup
-// ============================================================================
-var stripeInstance = null;
-var stripeCard = null;
-var stripeInitialised = false;
+<!-- Gateway loader — coordinates widget show/hide + button submission -->
+<script type="text/javascript" src="catalog/view/javascript/payment/gateway_loader.js"></script>
 
-var STRIPE_PUBLISHABLE_KEY = '';
-var STRIPE_CLIENT_SECRET = '';
-var STRIPE_INTENT_URL = 'index.php?route=payment/stripe_payments/intentCreate';
-var STRIPE_SEND_URL = 'index.php?route=payment/stripe_payments/send';
+<!-- Individual gateway modules (only loaded when that gateway is active) -->
+<?php foreach ($local_gateway_scripts as $gw_script) { ?>
+  <script type="text/javascript" src="<?php echo $gw_script; ?>"></script>
+<?php } ?>
 
-function initStripeElements(publishableKey) {
-    if (stripeInitialised) return;
-
-    stripeInstance = Stripe(publishableKey);
-    var elements = stripeInstance.elements();
-
-    stripeCard = elements.create('card', {
-        style: {
-            base: {
-                fontSize: '14px',
-                color: '#333',
-                '::placeholder': { color: '#aaa' }
-            },
-            invalid: { color: '#c0392b' }
-        }
-    });
-
-    stripeCard.mount('#stripe-card-element');
-
-    stripeCard.on('change', function(event) {
-        document.getElementById('stripe-card-errors').textContent = event.error ? event.error.message : '';
-    });
-
-    stripeInitialised = true;
-}
-
-$('body').on('change', 'input[name="payment_method"]', function() {
-    if ($(this).val() === 'stripe_payments') {
-        $('#stripe-widget').slideDown(300);
-        fetchStripeIntent();
-    } else {
-        $('#stripe-widget').slideUp(300);
-    }
-});
-
-$(document).ready(function() {
-    if ($('input[name="payment_method"]:checked').val() === 'stripe_payments') {
-        $('#stripe-widget').show();
-        fetchStripeIntent();
-    }
-});
-
-function fetchStripeIntent() {
-    $.ajax({
-        url: STRIPE_INTENT_URL,
-        type: 'post',
-        data: {
-            cart_total: '<?php echo $stripe_cart_total; ?>',
-            currency_code: '<?php echo $stripe_currency_code; ?>'
-        },
-        dataType: 'json',
-        success: function(json) {
-            if (json['error']) {
-                document.getElementById('stripe-card-errors').textContent = json['error'];
-                $('#button-order').attr('disabled', true);
-                return;
-            }
-            STRIPE_CLIENT_SECRET = json['client_secret'];
-            initStripeElements(json['publishable_key']);
-            $('#button-order').attr('disabled', false);
-        },
-        error: function() {
-            document.getElementById('stripe-card-errors').textContent = 'Payment system unavailable. Please refresh and try again.';
-            $('#button-order').attr('disabled', true);
-        }
-    });
-}
-
-// ============================================================================
-// Form submission
-// ============================================================================
-function submitForm() {
-    $.ajax({
-        url: 'index.php?route=checkout/checkout',
-        type: 'post',
-        data: $('#form').serialize(),
-        dataType: 'json',
-        beforeSend: function() {
-            $('#button-order').attr('disabled', true);
-            $('#button-order').after('<span class="wait">&nbsp;<img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /></span>');
-            $('#order-errors').hide().empty();
-        },
-        complete: function() {
-            $('#button-order').attr('disabled', false);
-            $('.wait').remove();
-        },
-        success: function(json) {
-            $('.warning, .error, .attention').remove();
-
-            if (json['redirect']) {
-                location = json['redirect'];
-            } else if (json['error']) {
-                var errorHtml = '<div class="warning">';
-                $.each(json['error'], function(field, message) {
-                    errorHtml += message + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /><br />';
-                });
-                errorHtml += '</div>';
-                $('#order-errors').html(errorHtml).show();
-                $('html, body').animate({ scrollTop: $('#order-errors').offset().top - 20 }, 500);
-            }
-        },
-        error: function(xhr, ajaxOptions, thrownError) {
-            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-        }
-    });
-}
-
-// ============================================================================
-// Place Order button
-// ============================================================================
-$('#button-order').on('click', function() {
-    var selectedPayment = $('input[name="payment_method"]:checked').val();
-
-    if (selectedPayment === 'stripe_payments') {
-        handleStripePayment(function() {
-            submitForm();
-        });
-    } else {
-        submitForm();
-    }
-});
-
-// ============================================================================
-// Stripe payment handler
-// ============================================================================
-function handleStripePayment(onSuccess) {
-    var btn = document.getElementById('button-order');
-    var errorDiv = document.getElementById('stripe-card-errors');
-    var owner = document.getElementById('stripe-cc-owner').value;
-
-    btn.disabled = true;
-    errorDiv.textContent = '';
-    btn.value = '<?php echo isset($text_wait) ? $text_wait : "Please wait..."; ?>';
-
-    if (!STRIPE_CLIENT_SECRET) {
-        errorDiv.textContent = 'Payment not ready. Please wait a moment and try again.';
-        btn.disabled = false;
-        btn.value = '<?php echo isset($button_continue) ? $button_continue : "Place Order"; ?>';
-        return;
-    }
-
-    stripeInstance.confirmCardPayment(STRIPE_CLIENT_SECRET, {
-        payment_method: {
-            card: stripeCard,
-            billing_details: { name: owner }
-        }
-    }).then(function(result) {
-        if (result.error) {
-            errorDiv.textContent = result.error.message;
-            btn.disabled = false;
-            btn.value = '<?php echo isset($button_continue) ? $button_continue : "Place Order"; ?>';
-            return;
-        }
-
-        if (result.paymentIntent.status === 'succeeded') {
-            $.ajax({
-                url: 'index.php?route=payment/stripe_payments/storeIntent',
-                type: 'post',
-                data: { payment_intent_id: result.paymentIntent.id },
-                dataType: 'json',
-                success: function(json) {
-                    if (json['error']) {
-                        errorDiv.textContent = json['error'];
-                        btn.disabled = false;
-                        btn.value = '<?php echo isset($button_continue) ? $button_continue : "Place Order"; ?>';
-                        return;
-                    }
-                    onSuccess();
-                },
-                error: function() {
-                    errorDiv.textContent = 'Network error verifying payment. Please contact support.';
-                    btn.disabled = false;
-                    btn.value = '<?php echo isset($button_continue) ? $button_continue : "Place Order"; ?>';
-                }
-            });
-        }
-    });
-}
-
-//--></script>
+<!-- ============================================================
+     Non-payment JS — unchanged
+     ============================================================ -->
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
@@ -665,7 +513,7 @@ function loadPaymentZones(country_id) {
       }
       $('select[name=\'zone_id\']').html(html);
     },
-    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText); }
   });
 }
 
@@ -692,7 +540,7 @@ function loadShippingZones(country_id) {
       }
       $('select[name=\'shipping_zone_id\']').html(html);
     },
-    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText); }
   });
 }
 
@@ -719,12 +567,6 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
 loadPaymentZones(<?php echo (int)$country_id; ?>);
 loadShippingZones(<?php echo (int)$shipping_country_id; ?>);
 
-function refresh() {
-  $('.attention, .warning, .error, .wait').remove();
-  $('#form').append('<input type="hidden" id="refresh" name="refresh" value="1" />');
-  $('#form').submit();
-}
-
 $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart');
 
 $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
@@ -736,7 +578,7 @@ $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
     success: function(json) {
       if (json['code']) { $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart'); }
     },
-    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText); }
   });
 });
 
@@ -749,39 +591,38 @@ $('body').on('change', 'input[name=\'payment_method\']:checked', function() {
     success: function(json) {
       if (json['code']) { $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart'); }
     },
-    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); }
+    error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText); }
   });
 });
 //--></script>
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	var date_of_birth = $('#date-of-birth');
-
-	$(date_of_birth).mouseover(function() {
-		$('#date-of-birth').datepicker({
-			dateFormat: 'yy-mm-dd',
-			changeYear: true,
-			changeMonth: true,
-			yearRange: '-100:+0'
-		});
-	});
+  var date_of_birth = $('#date-of-birth');
+  $(date_of_birth).mouseover(function() {
+    $('#date-of-birth').datepicker({
+      dateFormat: 'yy-mm-dd',
+      changeYear: true,
+      changeMonth: true,
+      yearRange: '-100:+0'
+    });
+  });
 });
 //--></script>
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('.colorbox').colorbox({
-		overlayClose: true,
-		opacity: 0.3,
-		width: 600,
-		height: 480
-	});
+  $('.colorbox').colorbox({
+    overlayClose: true,
+    opacity: 0.3,
+    width: 600,
+    height: 480
+  });
 });
 
-function dismiss1(coupon) { document.getElementById('coupon').style.display = 'none'; }
+function dismiss1(coupon) { document.getElementById('coupon').style.display  = 'none'; }
 function dismiss2(voucher) { document.getElementById('voucher').style.display = 'none'; }
-function dismiss3(reward) { document.getElementById('reward').style.display = 'none'; }
+function dismiss3(reward) { document.getElementById('reward').style.display  = 'none'; }
 //--></script>
 
 <?php echo $footer; ?>

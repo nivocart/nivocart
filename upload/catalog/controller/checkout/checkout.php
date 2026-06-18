@@ -882,18 +882,57 @@ class ControllerCheckoutCheckout extends Controller {
 			$this->data['quickconfirm'] = $this->request->get['quickconfirm'];
 		}
 
-		// Stripe specific: Resolve currency code
+		// ----------------------------------------------------------------
+		// Payment widget data — generic, gateway-agnostic
+		// ----------------------------------------------------------------
+
+		// Resolve currency (shared by all gateways)
 		$this->load->model('localisation/currency');
 
 		$currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
-		$stripe_currency_code = $currency_info ? $currency_info['code'] : $this->config->get('config_currency');
+		$currency_code = $currency_info ? $currency_info['code'] : $this->config->get('config_currency');
 
-		$this->data['stripe_cart_total'] = $total;
-		$this->data['stripe_currency_code'] = $stripe_currency_code;
+		// Load the payment widget model and get per-gateway data blobs
+		$this->load->model('checkout/payment_widget');
 
-		// Theme
+		$payment_widget_data = $this->model_checkout_payment_widget->getWidgetData($method_data, $total, $currency_code);
+
+		// Pass as JSON blob for gateway_loader.js + individual gateway JS files
+		$this->data['payment_widget_data'] = json_encode($payment_widget_data);
+
+		// Pass template name so gateway_loader.js can build image/loading paths
 		$this->data['template'] = $this->config->get('config_template');
 
+		// ----------------------------------------------------------------
+		// Gateway-specific assets — loaded only when that gateway is active
+		// ----------------------------------------------------------------
+		// Each gateway that needs external JS adds it here.
+		// gateway_loader.js and the individual gateway JS files are added
+		// unconditionally below in the template via $payment_gateway_scripts.
+
+		$payment_gateway_scripts = [];
+
+		if (isset($method_data['stripe_payments'])) {
+			$payment_gateway_scripts[] = 'https://js.stripe.com/v3/';
+		}
+
+		// Add future external scripts here:
+		// if (isset($method_data['klarna'])) {
+		//     $payment_gateway_scripts[] = 'https://x.klarnacdn.net/kp/lib/v1/api.js';
+		// }
+
+		$this->data['payment_gateway_scripts'] = $payment_gateway_scripts;
+
+		// Which local gateway JS files to load (one per active gateway that has a widget)
+		$local_gateway_scripts = [];
+
+		foreach (array_keys($payment_widget_data) as $gw_code) {
+			$local_gateway_scripts[] = 'catalog/view/javascript/payment/' . $gw_code . '.js';
+		}
+
+		$this->data['local_gateway_scripts'] = $local_gateway_scripts;
+
+		// Theme
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/checkout/checkout.tpl';
 		} else {

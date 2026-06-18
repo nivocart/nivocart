@@ -1,236 +1,274 @@
 <?php
 /**
- * Class ControllerPaymentPPStandard
+ * Class ControllerPaymentPpStandard
+ *
+ * Two responsibilities:
+ *
+ *   index()    — Standalone redirect page. Called by checkout_confirm after
+ *                the order has been created. Renders a full page (using
+ *                header_payment / footer_payment) with the PayPal button.
+ *                The customer clicks the button; JS builds the PayPal form
+ *                and submits it, redirecting the browser to PayPal.
+ *
+ *   callback() — IPN handler. Called asynchronously by PayPal after payment.
+ *                Validates the IPN, maps payment_status to an order status,
+ *                and calls confirm() or update() on the order model.
  *
  * @package NivoCart
  */
-class ControllerPaymentPPStandard extends Controller {
+class ControllerPaymentPpStandard extends Controller {
 	/** Error array Placeholder */
 
-	protected function index() {
+	public function index() {
+		// Order must exist in session — checkout_confirm sets this before redirect
+		if (empty($this->session->data['order_id'])) {
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+		}
+
 		$this->language->load('payment/pp_standard');
 
-		$this->data['text_testmode'] = $this->language->get('text_testmode');
-
-		$this->data['button_confirm'] = $this->language->get('button_confirm');
-
-		$this->data['testmode'] = $this->config->get('pp_standard_test');
-
-		if (!$this->config->get('pp_standard_test')) {
-			$this->data['action'] = 'https://www.paypal.com/cgi-bin/webscr';
-		} else {
-			$this->data['action'] = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-		}
+		$this->document->setTitle($this->language->get('text_title'));
+		$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/stylesheet-paypal.css');
 
 		$this->load->model('checkout/order');
 
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-		if ($order_info) {
-			$this->data['business'] = $this->config->get('pp_standard_email');
-			$this->data['item_name'] = html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
+		if (!$order_info) {
+			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+		}
 
-			$this->data['products'] = [];
+		$action = $this->config->get('pp_standard_test') ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
 
-			$subtotal = 0;
+		// Build product line items
+		$this->load->model('checkout/payment_widget');
 
-			foreach ($this->cart->getProducts() as $product) {
-				$option_data = [];
+		$currency_code = $order_info['currency_code'];
+		$products = [];
+		$pp_subtotal = 0;
 
-				foreach ($product['option'] as $option) {
-					if ($option['type'] != 'file') {
-						$value = $option['option_value'];
-					} else {
-						$this->load->model('tool/upload');
+		foreach ($this->cart->getProducts() as $product) {
+			$price = (float)$this->currency->format($product['price'], $currency_code, false, false);
+			$pp_subtotal += $price * $product['quantity'];
 
-						$upload_info = $this->model_tool_upload->getUploadByCode($option['option_value']);
+			$option_data = [];
 
-						if ($upload_info) {
-							$value = $upload_info['name'];
-						} else {
-							$value = '';
-						}
-					}
-
-					$option_data[] = [
-						'name'  => (mb_strlen($option['name'], 'UTF-8') > 64 ? substr($option['name'], 0, 62) . '..' : $option['name']),
-						'value' => (mb_strlen($value, 'UTF-8') > 20 ? substr($value, 0, 20) . '..' : $value)
-					];
+			foreach ($product['option'] as $option) {
+				if ($option['type'] !== 'file') {
+					$value = $option['option_value'];
+				} else {
+					$this->load->model('tool/upload');
+					$upload_info = $this->model_tool_upload->getUploadByCode($option['option_value']);
+					$value = $upload_info ? $upload_info['name'] : '';
 				}
 
-				$price = $this->currency->format($product['price'], $order_info['currency_code'], false, false);
-
-				$subtotal += $price * $product['quantity'];
-
-				$this->data['products'][] = [
-					'name'     => htmlspecialchars($product['name']),
-					'model'    => htmlspecialchars($product['model']),
-					'price'    => $price,
-					'quantity' => $product['quantity'],
-					'option'   => $option_data,
-					'weight'   => $product['weight']
+				$option_data[] = [
+					'name'  => mb_strlen($option['name'], 'UTF-8') > 64 ? mb_substr($option['name'], 0, 62, 'UTF-8') . '..' : $option['name'],
+					'value' => mb_strlen($value, 'UTF-8') > 20 ? mb_substr($value, 0, 18, 'UTF-8') . '..' : $value
 				];
 			}
 
-			$this->data['discount_amount_cart'] = 0;
-
-			$total = $this->currency->format($order_info['total'] - $subtotal, $order_info['currency_code'], false, false);
-
-			if ($total > 0) {
-				$this->data['products'][] = [
-					'name'     => $this->language->get('text_total'),
-					'model'    => '',
-					'price'    => $total,
-					'quantity' => 1,
-					'option'   => [],
-					'weight'   => 0
-				];
-
-			} else {
-				$this->data['discount_amount_cart'] -= $total;
-			}
-
-			$this->data['currency_code'] = $order_info['currency_code'];
-
-			$this->data['first_name'] = html_entity_decode($order_info['payment_firstname'], ENT_QUOTES, 'UTF-8');
-			$this->data['last_name'] = html_entity_decode($order_info['payment_lastname'], ENT_QUOTES, 'UTF-8');
-			$this->data['address1'] = html_entity_decode($order_info['payment_address_1'], ENT_QUOTES, 'UTF-8');
-			$this->data['address2'] = html_entity_decode($order_info['payment_address_2'], ENT_QUOTES, 'UTF-8');
-			$this->data['city'] = html_entity_decode($order_info['payment_city'], ENT_QUOTES, 'UTF-8');
-			$this->data['zip'] = html_entity_decode($order_info['payment_postcode'], ENT_QUOTES, 'UTF-8');
-			$this->data['country'] = $order_info['payment_iso_code_2'];
-			$this->data['email'] = $order_info['email'];
-			$this->data['invoice'] = $this->session->data['order_id'] . ' - ' . html_entity_decode($order_info['payment_firstname'], ENT_QUOTES, 'UTF-8') . ' ' . html_entity_decode($order_info['payment_lastname'], ENT_QUOTES, 'UTF-8');
-			$this->data['lc'] = $this->session->data['language'];
-			$this->data['return'] = $this->url->link('checkout/success', '', 'SSL');
-			$this->data['notify_url'] = $this->url->link('payment/pp_standard/callback', '', 'SSL');
-			$this->data['cancel_return'] = $this->url->link('checkout/checkout', '', 'SSL');
-
-			if (!$this->config->get('pp_standard_transaction')) {
-				$this->data['paymentaction'] = 'authorization';
-			} else {
-				$this->data['paymentaction'] = 'sale';
-			}
-
-			$this->data['custom'] = $this->session->data['order_id'];
-
-			// Theme
-			$this->data['template'] = $this->config->get('config_template');
-
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_standard.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/payment/pp_standard.tpl';
-			} else {
-				$this->template = 'default/template/payment/pp_standard.tpl';
-			}
-
-			$this->render();
+			$products[] = [
+				'name'     => htmlspecialchars($product['name'],  ENT_QUOTES, 'UTF-8'),
+				'model'    => htmlspecialchars($product['model'], ENT_QUOTES, 'UTF-8'),
+				'price'    => $price,
+				'quantity' => (int)$product['quantity'],
+				'weight'   => (float)$product['weight'],
+				'option'   => $option_data
+			];
 		}
+
+		$remainder = (float)$this->currency->format(
+			$order_info['total'] - $pp_subtotal, $currency_code, false, false
+		);
+
+		$discount = 0.0;
+
+		if ($remainder > 0) {
+			$products[] = [
+				'name' => 'Shipping & charges', 'model' => '',
+				'price' => $remainder, 'quantity' => 1, 'weight' => 0, 'option' => []
+			];
+		} elseif ($remainder < 0) {
+			$discount = abs($remainder);
+		}
+
+		// Pass all data as data-* attributes — JS reads them and builds the form
+		$this->data['pp_data'] = [
+			'action'        => $action,
+			'business'      => $this->config->get('pp_standard_email'),
+			'currency'      => $currency_code,
+			'paymentaction' => $this->config->get('pp_standard_transaction') ? 'sale' : 'authorization',
+			'lc'            => $this->session->data['language'] ?? 'en',
+			'invoice'       => $this->session->data['order_id'] . ' - ' . html_entity_decode($order_info['payment_firstname'], ENT_QUOTES, 'UTF-8') . ' ' . html_entity_decode($order_info['payment_lastname'], ENT_QUOTES, 'UTF-8'),
+			'custom'        => (int)$this->session->data['order_id'],
+			'first_name'    => html_entity_decode($order_info['payment_firstname'], ENT_QUOTES, 'UTF-8'),
+			'last_name'     => html_entity_decode($order_info['payment_lastname'], ENT_QUOTES, 'UTF-8'),
+			'address1'      => html_entity_decode($order_info['payment_address_1'], ENT_QUOTES, 'UTF-8'),
+			'address2'      => html_entity_decode($order_info['payment_address_2'], ENT_QUOTES, 'UTF-8'),
+			'city'          => html_entity_decode($order_info['payment_city'], ENT_QUOTES, 'UTF-8'),
+			'zip'           => html_entity_decode($order_info['payment_postcode'], ENT_QUOTES, 'UTF-8'),
+			'country'       => $order_info['payment_iso_code_2'],
+			'email'         => $order_info['email'],
+			'return_url'    => $this->url->link('checkout/success', '', 'SSL'),
+			'notify_url'    => $this->url->link('payment/pp_standard/callback', '', 'SSL'),
+			'cancel_url'    => $this->url->link('checkout/checkout', '', 'SSL'),
+			'products'      => $products,
+			'discount'      => $discount,
+		];
+
+		$this->data['testmode'] = (bool)$this->config->get('pp_standard_test');
+
+		$this->data['text_title'] = $this->language->get('text_title');
+		$this->data['text_testmode'] = $this->language->get('text_testmode');
+
+		$this->data['button_confirm'] = $this->language->get('button_confirm');
+
+		$this->data['header'] = $this->getChild('common/header_payment');
+		$this->data['footer'] = $this->getChild('common/footer_payment');
+
+		// Theme
+		$this->data['template'] = $this->config->get('config_template');
+
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_standard.tpl')) {
+			$this->template = $this->config->get('config_template') . '/template/payment/pp_standard.tpl';
+		} else {
+			$this->template = 'default/template/payment/pp_standard.tpl';
+		}
+
+		$this->render();
 	}
+
+	// -------------------------------------------------------------------------
 
 	public function callback() {
 		if (isset($this->request->post['custom'])) {
-			$order_id = $this->request->post['custom'];
+			$order_id = (int)$this->request->post['custom'];
 		} else {
 			$order_id = 0;
+		}
+
+		if (!$order_id) {
+			$this->log->write('PP_STANDARD :: callback() called with no order ID');
+			return;
 		}
 
 		$this->load->model('checkout/order');
 
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 
-		if ($order_info) {
-			$request = 'cmd=_notify-validate';
+		if (!$order_info) {
+			$this->log->write('PP_STANDARD :: callback() — order not found: ' . $order_id);
+			return;
+		}
 
-			foreach ($this->request->post as $key => $value) {
-				$request .= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
-			}
+		// Build IPN validation request
+		$request = 'cmd=_notify-validate';
 
-			if (!$this->config->get('pp_standard_test')) {
-				$curl = curl_init('https://www.paypal.com/cgi-bin/webscr');
-			} else {
-				$curl = curl_init('https://www.sandbox.paypal.com/cgi-bin/webscr');
-			}
+		foreach ($this->request->post as $key => $value) {
+			$request .= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
+		}
 
-			curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-			curl_setopt($curl, CURLOPT_HEADER, false);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_POST, 1);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+		$endpoint = $this->config->get('pp_standard_test') ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
 
-			$response = curl_exec($curl);
+		$curl = curl_init($endpoint);
+		curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 
-			if (!$response) {
-				$this->log->write('PP_STANDARD :: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
-			}
+		$response = curl_exec($curl);
 
-			if ($this->config->get('pp_standard_debug')) {
-				$this->log->write('PP_STANDARD :: IPN REQUEST: ' . $request);
-				$this->log->write('PP_STANDARD :: IPN RESPONSE: ' . $response);
-			}
-
-			if ((strcmp($response, 'VERIFIED') === 0 || strcmp($response, 'UNVERIFIED') === 0) && isset($this->request->post['payment_status'])) {
-				$order_status_id = $this->config->get('config_order_status_id');
-
-				switch ($this->request->post['payment_status']) {
-					case 'Canceled_Reversal':
-						$order_status_id = $this->config->get('pp_standard_canceled_reversal_status_id');
-						break;
-					case 'Completed':
-						$receiver_match = (strtolower($this->request->post['receiver_email']) === strtolower($this->config->get('pp_standard_email')));
-
-						$total_paid_match = ((float)$this->request->post['mc_gross'] === $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false));
-
-						if ($receiver_match && $total_paid_match) {
-							$order_status_id = $this->config->get('pp_standard_completed_status_id');
-						}
-
-						if (!$receiver_match) {
-							$this->log->write('PP_STANDARD :: RECEIVER EMAIL MISMATCH! ' . strtolower($this->request->post['receiver_email']));
-						}
-
-						if (!$total_paid_match) {
-							$this->log->write('PP_STANDARD :: TOTAL PAID MISMATCH! ' . $this->request->post['mc_gross']);
-						}
-						break;
-					case 'Denied':
-						$order_status_id = $this->config->get('pp_standard_denied_status_id');
-						break;
-					case 'Expired':
-						$order_status_id = $this->config->get('pp_standard_expired_status_id');
-						break;
-					case 'Failed':
-						$order_status_id = $this->config->get('pp_standard_failed_status_id');
-						break;
-					case 'Pending':
-						$order_status_id = $this->config->get('pp_standard_pending_status_id');
-						break;
-					case 'Processed':
-						$order_status_id = $this->config->get('pp_standard_processed_status_id');
-						break;
-					case 'Refunded':
-						$order_status_id = $this->config->get('pp_standard_refunded_status_id');
-						break;
-					case 'Reversed':
-						$order_status_id = $this->config->get('pp_standard_reversed_status_id');
-						break;
-					case 'Voided':
-						$order_status_id = $this->config->get('pp_standard_voided_status_id');
-						break;
-				}
-
-				if (!$order_info['order_status_id']) {
-					$this->model_checkout_order->confirm($order_id, $order_status_id);
-				} else {
-					$this->model_checkout_order->update($order_id, $order_status_id);
-				}
-
-			} else {
-				$this->model_checkout_order->confirm($order_id, $this->config->get('config_order_status_id'));
-			}
-
+		if ($response === false) {
+			$this->log->write('PP_STANDARD :: cURL failed: ' . curl_error($curl) . ' (' . curl_errno($curl) . ')');
 			curl_close($curl);
+			return;
+		}
+
+		curl_close($curl);
+
+		if ($this->config->get('pp_standard_debug')) {
+			$this->log->write('PP_STANDARD :: IPN REQUEST: ' . $request);
+			$this->log->write('PP_STANDARD :: IPN RESPONSE: ' . $response);
+		}
+
+		// Only proceed on VERIFIED
+		if (strcmp($response, 'VERIFIED') !== 0) {
+			$this->log->write('PP_STANDARD :: IPN not VERIFIED for order ' . $order_id . ' — response: ' . $response);
+			return;
+		}
+
+		if (!isset($this->request->post['payment_status'])) {
+			$this->log->write('PP_STANDARD :: IPN VERIFIED but no payment_status for order ' . $order_id);
+			return;
+		}
+
+		$order_status_id = $this->config->get('config_order_status_id');
+
+		switch ($this->request->post['payment_status']) {
+
+			case 'Completed':
+				$receiver_email = strtolower($this->request->post['receiver_email'] ?? '');
+				$config_email = strtolower($this->config->get('pp_standard_email'));
+				$receiver_match = ($receiver_email === $config_email);
+
+				$mc_gross = (float)($this->request->post['mc_gross'] ?? 0);
+				$order_total = (float)$this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+				$total_match = ($mc_gross === $order_total);
+
+				if ($receiver_match && $total_match) {
+					$order_status_id = $this->config->get('pp_standard_completed_status_id');
+				} else {
+					if (!$receiver_match) {
+						$this->log->write('PP_STANDARD :: Receiver mismatch — got: ' . $receiver_email . ', expected: ' . $config_email);
+					}
+					if (!$total_match) {
+						$this->log->write('PP_STANDARD :: Total mismatch — got: ' . $mc_gross . ', expected: ' . $order_total);
+					}
+					return;
+				}
+				break;
+
+			case 'Canceled_Reversal':
+				$order_status_id = $this->config->get('pp_standard_canceled_reversal_status_id');
+				break;
+			case 'Denied':
+				$order_status_id = $this->config->get('pp_standard_denied_status_id');
+				break;
+			case 'Expired':
+				$order_status_id = $this->config->get('pp_standard_expired_status_id');
+				break;
+			case 'Failed':
+				$order_status_id = $this->config->get('pp_standard_failed_status_id');
+				break;
+			case 'Pending':
+				$order_status_id = $this->config->get('pp_standard_pending_status_id');
+				break;
+			case 'Processed':
+				$order_status_id = $this->config->get('pp_standard_processed_status_id');
+				break;
+			case 'Refunded':
+				$order_status_id = $this->config->get('pp_standard_refunded_status_id');
+				break;
+			case 'Reversed':
+				$order_status_id = $this->config->get('pp_standard_reversed_status_id');
+				break;
+			case 'Voided':
+				$order_status_id = $this->config->get('pp_standard_voided_status_id');
+				break;
+
+			default:
+				$this->log->write('PP_STANDARD :: Unknown payment_status: ' . $this->request->post['payment_status'] . ' for order ' . $order_id);
+				return;
+		}
+
+		if (!$order_info['order_status_id']) {
+			$this->model_checkout_order->confirm($order_id, $order_status_id);
+		} else {
+			$this->model_checkout_order->update($order_id, $order_status_id);
 		}
 	}
 }

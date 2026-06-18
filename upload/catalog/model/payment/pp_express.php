@@ -4,7 +4,7 @@
  *
  * @package NivoCart
  */
-class ModelPaymentPPExpress extends Model {
+class ModelPaymentPpExpress extends Model {
 	/**
 	 * Functions Get, Add
 	 */

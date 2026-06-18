@@ -1,0 +1,77 @@
+/** -----------------------------
+ * NivoCart - PayPal Stylesheet
+ * Copyright © 2026
+ * ------------------------------
+ * PayPal Standard Widget
+ * ------------------------------
+ */
+
+/* Test mode banner */
+.payment-pp-testmode-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background-color: #fff8e1;
+  border: 1px solid #f9a825;
+  border-radius: 4px;
+  color: #795600;
+  font-size: 13px;
+  font-weight: 500;
+}
+.pp-warning-icon {
+  font-size: 16px;
+  color: #f9a825;
+}
+
+/* PayPal button */
+.btn-paypal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 28px;
+  background-color: #FFC439;
+  border: none;
+  border-radius: 25px;          /* PayPal's pill shape */
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: #003087;               /* PayPal dark blue for text */
+  text-decoration: none;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  min-width: 200px;
+}
+.btn-paypal:hover {
+  background-color: #f0b429;
+}
+.btn-paypal:active {
+  background-color: #e0a820;
+}
+.btn-paypal:disabled,
+.btn-paypal--loading {
+  opacity: 0.65;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* PayPal logo inside the button */
+.btn-paypal-logo {
+  height: 20px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn-paypal-text {
+  vertical-align: middle;
+}
+
+/* Widget wrapper — centres the button in the payment step */
+#pp-standard-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+}

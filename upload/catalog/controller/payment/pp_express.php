@@ -4,7 +4,7 @@
  *
  * @package NivoCart
  */
-class ControllerPaymentPPExpress extends Controller {
+class ControllerPaymentPpExpress extends Controller {
 	/** Error array Placeholder */
 
 	protected function index() {

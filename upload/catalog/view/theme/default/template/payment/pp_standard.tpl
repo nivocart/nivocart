@@ -1,53 +1,49 @@
-<?php if ($testmode) { ?>
-  <div class="warning"><?php echo $text_testmode; ?></div>
-<?php } ?>
-<form action="<?php echo $action; ?>" method="post">
-  <input type="hidden" name="cmd" value="_cart" />
-  <input type="hidden" name="upload" value="1" />
-  <input type="hidden" name="business" value="<?php echo $business; ?>" />
-  <?php $i = 1; ?>
-  <?php foreach ($products as $product) { ?>
-    <input type="hidden" name="item_name_<?php echo $i; ?>" value="<?php echo $product['name']; ?>" />
-    <input type="hidden" name="item_number_<?php echo $i; ?>" value="<?php echo $product['model']; ?>" />
-    <input type="hidden" name="amount_<?php echo $i; ?>" value="<?php echo $product['price']; ?>" />
-    <input type="hidden" name="quantity_<?php echo $i; ?>" value="<?php echo $product['quantity']; ?>" />
-    <input type="hidden" name="weight_<?php echo $i; ?>" value="<?php echo $product['weight']; ?>" />
-    <?php $j = 0; ?>
-    <?php foreach ($product['option'] as $option) { ?>
-      <input type="hidden" name="on<?php echo $j; ?>_<?php echo $i; ?>" value="<?php echo $option['name']; ?>" />
-      <input type="hidden" name="os<?php echo $j; ?>_<?php echo $i; ?>" value="<?php echo $option['value']; ?>" />
-      <?php $j++; ?>
-    <?php } ?>
-    <?php $i++; ?>
-  <?php } ?>
-  <?php if ($discount_amount_cart) { ?>
-    <input type="hidden" name="discount_amount_cart" value="<?php echo $discount_amount_cart; ?>" />
-  <?php } ?>
-  <input type="hidden" name="currency_code" value="<?php echo $currency_code; ?>" />
-  <input type="hidden" name="first_name" value="<?php echo $first_name; ?>" />
-  <input type="hidden" name="last_name" value="<?php echo $last_name; ?>" />
-  <input type="hidden" name="address1" value="<?php echo $address1; ?>" />
-  <input type="hidden" name="address2" value="<?php echo $address2; ?>" />
-  <input type="hidden" name="city" value="<?php echo $city; ?>" />
-  <input type="hidden" name="zip" value="<?php echo $zip; ?>" />
-  <input type="hidden" name="country" value="<?php echo $country; ?>" />
-  <input type="hidden" name="address_override" value="0" />
-  <input type="hidden" name="email" value="<?php echo $email; ?>" />
-  <input type="hidden" name="invoice" value="<?php echo $invoice; ?>" />
-  <input type="hidden" name="lc" value="<?php echo $lc; ?>" />
-  <input type="hidden" name="rm" value="2" />
-  <input type="hidden" name="no_note" value="1" />
-  <input type="hidden" name="no_shipping" value="1" />
-  <input type="hidden" name="charset" value="utf-8" />
-  <input type="hidden" name="return" value="<?php echo $return; ?>" />
-  <input type="hidden" name="notify_url" value="<?php echo $notify_url; ?>" />
-  <input type="hidden" name="cancel_return" value="<?php echo $cancel_return; ?>" />
-  <input type="hidden" name="paymentaction" value="<?php echo $paymentaction; ?>" />
-  <input type="hidden" name="custom" value="<?php echo $custom; ?>" />
-  <input type="hidden" name="bn" value="OpenCart_Cart_WPS" />
-  <div class="buttons">
-    <div class="right">
-      <input type="submit" value="<?php echo $button_confirm; ?>" class="button" />
-    </div>
+<?php echo $header; ?>
+<div id="content" style="max-width: 480px; margin: 40px auto; padding: 0 20px;">
+  <h1 style="font-size: 20px; margin-bottom: 20px;"><?php echo $text_title; ?></h1>
+  <?php if ($testmode) { ?>
+  <div class="payment-pp-testmode-warning">
+    <span class="pp-warning-icon">&#9888;</span> <?php echo $text_testmode; ?>
   </div>
-</form> 
+  <?php } ?>
+  <p style="margin-bottom: 24px; color: #555; font-size: 14px;">
+    Your order has been placed. Click the button below to complete your payment securely on PayPal.
+  </p>
+
+  <!-- All PayPal field data stored as data-* attributes.
+       pp_standard_redirect.js reads these and builds the form on button click. -->
+  <div id="pp-paypal-data"
+    data-action="<?php echo htmlspecialchars($pp_data['action'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-business="<?php echo htmlspecialchars($pp_data['business'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-currency="<?php echo htmlspecialchars($pp_data['currency'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-paymentaction="<?php echo htmlspecialchars($pp_data['paymentaction'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-lc="<?php echo htmlspecialchars($pp_data['lc'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-invoice="<?php echo htmlspecialchars($pp_data['invoice'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-custom="<?php echo (int)$pp_data['custom']; ?>"
+    data-first-name="<?php echo htmlspecialchars($pp_data['first_name'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-last-name="<?php echo htmlspecialchars($pp_data['last_name'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-address1="<?php echo htmlspecialchars($pp_data['address1'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-address2="<?php echo htmlspecialchars($pp_data['address2'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-city="<?php echo htmlspecialchars($pp_data['city'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-zip="<?php echo htmlspecialchars($pp_data['zip'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-country="<?php echo htmlspecialchars($pp_data['country'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-email="<?php echo htmlspecialchars($pp_data['email'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-return-url="<?php echo htmlspecialchars($pp_data['return_url'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-notify-url="<?php echo htmlspecialchars($pp_data['notify_url'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-cancel-url="<?php echo htmlspecialchars($pp_data['cancel_url'], ENT_QUOTES, 'UTF-8'); ?>"
+    data-discount="<?php echo (float)$pp_data['discount']; ?>"
+    data-products="<?php echo htmlspecialchars(json_encode($pp_data['products']), ENT_QUOTES, 'UTF-8'); ?>">
+
+    <button type="button" id="pp-redirect-btn" class="btn-paypal">
+      <img src="catalog/view/theme/<?php echo $template; ?>/image/payment/paypal-logo.png" alt="PayPal" class="btn-paypal-logo" />
+      <span class="btn-paypal-text"><?php echo $button_confirm; ?></span>
+    </button>
+  </div>
+  <p style="margin-top: 20px; font-size: 12px; color: #999;">
+    <a href="<?php echo htmlspecialchars($pp_data['cancel_url'], ENT_QUOTES, 'UTF-8'); ?>" style="color: #999;">&#8592; Return to checkout</a>
+  </p>
+</div>
+
+<script type="text/javascript" src="catalog/view/javascript/payment/pp_standard_redirect.js"></script>
+
+<?php echo $footer; ?>
