@@ -202,6 +202,7 @@ class ControllerPaymentSagepay extends Controller {
 
 		$data = $this->getToken($output);
 
+		// Note: $data['Status'] with capital 'S' is correct and matches SagePay's API contract
 		if (!$data || !is_array($data) || empty($data['Status'])) {
 			$this->log->write('SAGEPAY :: success() — could not parse response for order ' . $order_id);
 
