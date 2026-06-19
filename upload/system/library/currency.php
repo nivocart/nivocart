@@ -11,6 +11,11 @@ class Currency {
 	public object $db;
 
 	/**
+ 	 * @var object>
+ 	 */
+	public object $config;
+
+	/**
 	 * @var object>
 	 */
 	public object $language;
@@ -42,7 +47,10 @@ class Currency {
 	 */
 	public function __construct($registry) {
 		$this->db = $registry->get('db');
+		$this->config = $registry->get('config');
 		$this->language = $registry->get('language');
+		$this->session = $registry->get('session');
+		$this->request = $registry->get('request');
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency`");
 
@@ -58,6 +66,16 @@ class Currency {
 				'status'        => $result['status']
 			];
 		}
+
+		if (isset($this->request->get['currency']) && $this->has($this->request->get['currency'])) {
+			$this->set($this->request->get['currency']);
+		} elseif (isset($this->session->data['currency']) && $this->has($this->session->data['currency'])) {
+			$this->set($this->session->data['currency']);
+		} elseif (isset($this->request->cookie['currency']) && $this->has($this->request->cookie['currency'])) {
+			$this->set($this->request->cookie['currency']);
+		} else {
+			$this->set($this->config->get('config_currency'));
+		}
 	}
 
 	/**
@@ -72,17 +90,11 @@ class Currency {
 	 * $currency = $this->currency->set($currency);
 	 */
 	public function set(string $currency): void {
-		if (!isset($this->currencies[$currency]) || ($this->currencies[$currency]['status'] !== 1)) {
-			return;
+		if (!isset($this->currencies[$currency]) || !(int)$this->currencies[$currency]['status']) {
+ 			return;
 		}
 
-		$currency = $this->currencies[$currency];
-
-		if (isset($currency) && is_string($currency)) {
-			$this->code = $currency;
-		} else {
-			return;
-		}
+		$this->code = $currency;
 
 		// Update currency session
 		if (!isset($this->session->data['currency']) || ($this->session->data['currency'] !== $currency)) {
@@ -90,7 +102,7 @@ class Currency {
 		}
 
 		if (!isset($this->request->cookie['currency']) || ($this->request->cookie['currency'] !== $currency)) {
-			setcookie('currency', $currency, time() + 60 * 60 * 24 * 30, '/', $this->request->server['HTTP_HOST']);
+			setcookie('currency', $currency, time() + 60 * 60 * 24 * 30, '/', $this->request->server['HTTP_HOST'] ?? '');
 		}
 	}
 
