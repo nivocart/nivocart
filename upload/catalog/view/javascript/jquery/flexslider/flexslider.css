@@ -55,7 +55,7 @@
 	display: block;
 }
 .flexslider .slides:after {
-	content: "\0020";
+	content: '\0020';
 	display: block;
 	clear: both;
 	visibility: hidden;
@@ -81,7 +81,7 @@ html[xmlns] .flexslider .slides {
 	position: relative;
 	zoom: 1;
 	border-radius: 3px;
-	box-shadow: '' 0 1px 4px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 .flexslider .slides {
 	zoom: 1;
@@ -107,7 +107,7 @@ html[xmlns] .flexslider .slides {
 	margin-right: 5px;
 }
 .flex-direction-nav {
-	*height: 0;
+	height: 0px;
 }
 .flex-direction-nav a {
 	display: block;
@@ -126,7 +126,7 @@ html[xmlns] .flexslider .slides {
 	cursor: pointer;
 }
 .flex-direction-nav a:before {
-	font-family: "flexslider-icon";
+	font-family: 'flexslider-icon';
 	font-size: 36px;
 	display: inline-block;
 	content: '\f001';
