@@ -133,7 +133,7 @@ class ControllerPaymentSagepay extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['sagepay_geo_zone_id'])) {
 			$this->data['sagepay_geo_zone_id'] = $this->request->post['sagepay_geo_zone_id'];
@@ -143,9 +143,7 @@ class ControllerPaymentSagepay extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$geozones_array = [];
-
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones([]);
 
 		if (isset($this->request->post['sagepay_status'])) {
 			$this->data['sagepay_status'] = $this->request->post['sagepay_status'];

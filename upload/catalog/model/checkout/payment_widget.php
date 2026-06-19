@@ -112,6 +112,16 @@ class ModelCheckoutPaymentWidget extends Model {
 	}
 
 	// =========================================================================
+	// Sagepay Payments
+	// =========================================================================
+
+	private function getWidgetData_sagepay(float $total, string $currency_code): array {
+		return [
+			'testmode' => $this->config->get('sagepay_test') !== 'live',
+		];
+	}
+
+	// =========================================================================
 	// Stripe Payments
 	// =========================================================================
 

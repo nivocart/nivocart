@@ -1,13 +1,20 @@
 <?php
 /**
- * Class ModelPaymentSagePay
+ * Class ModelPaymentSagepay
+ *
+ * NOTE: Class name changed from ModelPaymentSagePay to ModelPaymentSagepay
+ * to match the dynamic property naming pattern used by checkout.php:
+ *
+ *     $this->{'model_payment_' . $result['code']}
+ *
+ * For code 'sagepay' this resolves to property 'model_payment_sagepay',
+ * which the framework's class-name builder maps to 'ModelPaymentSagepay'.
  *
  * @package NivoCart
  */
-class ModelPaymentSagePay extends Model {
-	/**
-	 * Functions Get
-	 */
+class ModelPaymentSagepay extends Model {
+	/** Error array Placeholder */
+
 	public function getMethod($address, $total) {
 		$this->language->load('payment/sagepay');
 
