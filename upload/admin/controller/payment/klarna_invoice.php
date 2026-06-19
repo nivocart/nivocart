@@ -155,13 +155,11 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$geozones_array = [];
-
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones([]);
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		$file = DIR_LOGS . 'klarna_invoice.log';
 

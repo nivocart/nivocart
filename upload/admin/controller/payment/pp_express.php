@@ -242,9 +242,7 @@ class ControllerPaymentPPExpress extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$geozones_array = [];
-
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones([]);
 
 		if (isset($this->request->post['pp_express_status'])) {
 			$this->data['pp_express_status'] = $this->request->post['pp_express_status'];
@@ -320,7 +318,7 @@ class ControllerPaymentPPExpress extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		// Customization
 		if (isset($this->request->post['pp_express_allow_note'])) {
@@ -812,7 +810,7 @@ class ControllerPaymentPPExpress extends Controller {
 
 							$json['error'] = $this->language->get('error_connection');
 
-						} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] != 'Failure') && ($response['ACK'] != 'FailureWithWarning')) {
+						} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] !== 'Failure') && ($response['ACK'] !== 'FailureWithWarning')) {
 							$transaction['transaction_id'] = $response['REFUNDTRANSACTIONID'];
 							$transaction['payment_type'] = $response['REFUNDSTATUS'];
 							$transaction['pending_reason'] = $response['PENDINGREASON'];
@@ -873,7 +871,7 @@ class ControllerPaymentPPExpress extends Controller {
 				if ($response === false) {
 					$json['error'] = $this->language->get('error_connection');
 
-				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] != 'Failure') && ($response['ACK'] != 'FailureWithWarning')) {
+				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] !== 'Failure') && ($response['ACK'] !== 'FailureWithWarning')) {
 					$transaction = [
 						'paypal_order_id'       => $paypal_order['paypal_order_id'],
 						'transaction_id'        => '',
@@ -970,7 +968,7 @@ class ControllerPaymentPPExpress extends Controller {
 				if ($response === false) {
 					$json['error'] = $this->language->get('error_connection');
 
-				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] != 'Failure') && ($response['ACK'] != 'FailureWithWarning')) {
+				} elseif (is_array($response) && isset($response['ACK']) && ($response['ACK'] !== 'Failure') && ($response['ACK'] !== 'FailureWithWarning')) {
 					$parent_transaction = $this->model_payment_pp_express->getLocalTransaction($transaction['parent_transaction_id']);
 
 					if ($parent_transaction === false) {

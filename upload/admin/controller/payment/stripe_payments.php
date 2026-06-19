@@ -154,9 +154,7 @@ class ControllerPaymentStripePayments extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$order_statuses_array = [];
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['stripe_payments_geo_zone_id'])) {
 			$this->data['stripe_payments_geo_zone_id'] = $this->request->post['stripe_payments_geo_zone_id'];
@@ -166,9 +164,7 @@ class ControllerPaymentStripePayments extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$geo_zones_array = [];
-
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geo_zones_array);
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones([]);
 
 		if (isset($this->request->post['stripe_payments_status'])) {
 			$this->data['stripe_payments_status'] = $this->request->post['stripe_payments_status'];

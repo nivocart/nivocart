@@ -95,7 +95,7 @@ class ControllerPaymentFreeCheckout extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['free_checkout_geo_zone_id'])) {
 			$this->data['free_checkout_geo_zone_id'] = $this->request->post['free_checkout_geo_zone_id'];
@@ -105,7 +105,7 @@ class ControllerPaymentFreeCheckout extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones([]);
 
 		if (isset($this->request->post['free_checkout_status'])) {
 			$this->data['free_checkout_status'] = $this->request->post['free_checkout_status'];

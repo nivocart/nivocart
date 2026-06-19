@@ -205,9 +205,7 @@ class ControllerPaymentPPStandard extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$order_statuses_array = [];
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['pp_standard_geo_zone_id'])) {
 			$this->data['pp_standard_geo_zone_id'] = $this->request->post['pp_standard_geo_zone_id'];
@@ -217,9 +215,7 @@ class ControllerPaymentPPStandard extends Controller {
 
 		$this->load->model('localisation/geo_zone');
 
-		$geozones_array = [];
-
-		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
+		$this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones([]);
 
 		if (isset($this->request->post['pp_standard_status'])) {
 			$this->data['pp_standard_status'] = $this->request->post['pp_standard_status'];

@@ -31,11 +31,11 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 	private $interactive_gateways = [
 		'stripe_payments',
 		// 'klarna',
-		// 'sage_pay',
 	];
 
 	private $redirect_gateways = [
 		'pp_standard',
+		'sagepay',
 		// 'pp_express',
 	];
 
