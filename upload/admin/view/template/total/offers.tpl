@@ -21,18 +21,6 @@
     <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
       <table class="form">
         <tr>
-          <td><?php echo $entry_status; ?></td>
-          <td><select name="offers_status">
-            <?php if ($offers_status) { ?>
-              <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-              <option value="0"><?php echo $text_disabled; ?></option>
-            <?php } else { ?>
-              <option value="1"><?php echo $text_enabled; ?></option>
-              <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-            <?php } ?>
-          </select></td>
-        </tr>
-        <tr>
           <td><?php echo $entry_taxes; ?><span class="help"><?php echo $help_taxes; ?></span></td>
           <td><?php if ($offers_taxes) { ?>
             <input type="radio" name="offers_taxes" value="1" id="offer-tax-on" class="radio" checked />
@@ -49,6 +37,18 @@
         <tr>
           <td><?php echo $entry_sort_order; ?></td>
           <td><input type="text" name="offers_sort_order" value="<?php echo $offers_sort_order; ?>" size="1" /></td>
+        </tr>
+        <tr class="highlighted">
+          <td><?php echo $entry_status; ?></td>
+          <td><select name="offers_status">
+            <?php if ($offers_status) { ?>
+              <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+              <option value="0"><?php echo $text_disabled; ?></option>
+            <?php } else { ?>
+              <option value="1"><?php echo $text_enabled; ?></option>
+              <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+            <?php } ?>
+          </select></td>
         </tr>
       </table>
     </form>

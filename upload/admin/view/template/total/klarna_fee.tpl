@@ -40,7 +40,7 @@
             <td><select name="klarna_fee[<?php echo $country['code']; ?>][tax_class_id]">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($tax_classes as $tax_class) { ?>
-                <?php if (isset($klarna_fee[$country['code']]) && $klarna_fee[$country['code']]['tax_class_id'] == $tax_class['tax_class_id']) { ?>
+                <?php if (isset($klarna_fee[$country['code']]) && $klarna_fee[$country['code']]['tax_class_id'] === $tax_class['tax_class_id']) { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
@@ -49,6 +49,10 @@
             </select></td>
           </tr>
           <tr>
+            <td><?php echo $entry_sort_order; ?></td>
+            <td><input type="text" name="klarna_fee[<?php echo $country['code']; ?>][sort_order]" value="<?php echo isset($klarna_fee[$country['code']]) ? $klarna_fee[$country['code']]['sort_order'] : ''; ?>" /></td>
+          </tr>
+          <tr class="highlighted">
             <td><?php echo $entry_status; ?></td>
             <td><select name="klarna_fee[<?php echo $country['code']; ?>][status]">
               <?php if (isset($klarna_fee[$country['code']]) && $klarna_fee[$country['code']]['status']) { ?>
@@ -59,10 +63,6 @@
                 <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
               <?php } ?>
             </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_sort_order; ?></td>
-            <td><input type="text" name="klarna_fee[<?php echo $country['code']; ?>][sort_order]" value="<?php echo isset($klarna_fee[$country['code']]) ? $klarna_fee[$country['code']]['sort_order'] : ''; ?>" /></td>
           </tr>
         </table>
       </div>

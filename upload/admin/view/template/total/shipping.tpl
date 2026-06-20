@@ -33,6 +33,10 @@
           </select></td>
         </tr>
         <tr>
+          <td><?php echo $entry_sort_order; ?></td>
+          <td><input type="text" name="shipping_sort_order" value="<?php echo $shipping_sort_order; ?>" size="1" /></td>
+        </tr>
+        <tr class="highlighted">
           <td><?php echo $entry_status; ?></td>
           <td><select name="shipping_status">
             <?php if ($shipping_status) { ?>
@@ -43,10 +47,6 @@
               <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
             <?php } ?>
           </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_sort_order; ?></td>
-          <td><input type="text" name="shipping_sort_order" value="<?php echo $shipping_sort_order; ?>" size="1" /></td>
         </tr>
       </table>
     </form>

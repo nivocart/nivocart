@@ -120,9 +120,7 @@ class ControllerTotalKlarnaFee extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$tax_classes_array = [];
-
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
 
 		$this->template = 'total/klarna_fee.tpl';
 		$this->children = [

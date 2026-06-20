@@ -30,6 +30,10 @@
           <?php } ?></td>
         </tr>
         <tr>
+          <td><?php echo $entry_sort_order; ?></td>
+          <td><input type="text" name="gift_wrapping_sort_order" value="<?php echo $gift_wrapping_sort_order; ?>" size="1" /></td>
+        </tr>
+        <tr class="highlighted">
           <td><?php echo $entry_status; ?></td>
           <td><select name="gift_wrapping_status">
             <?php if ($gift_wrapping_status) { ?>
@@ -41,13 +45,9 @@
             <?php } ?>
           </select></td>
         </tr>
-        <tr>
-          <td><?php echo $entry_sort_order; ?></td>
-          <td><input type="text" name="gift_wrapping_sort_order" value="<?php echo $gift_wrapping_sort_order; ?>" size="1" /></td>
-        </tr>
       </table>
     </form>
     </div>
   </div>
 </div>
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

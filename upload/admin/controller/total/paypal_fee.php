@@ -114,9 +114,7 @@ class ControllerTotalPayPalFee extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$tax_classes_array = [];
-
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
 
 		if (isset($this->request->post['paypal_fee_tax_class_id'])) {
 			$this->data['paypal_fee_tax_class_id'] = $this->request->post['paypal_fee_tax_class_id'];

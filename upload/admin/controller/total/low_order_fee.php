@@ -91,9 +91,7 @@ class ControllerTotalLowOrderFee extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$tax_classes_array = [];
-
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
 
 		if (isset($this->request->post['low_order_fee_status'])) {
 			$this->data['low_order_fee_status'] = $this->request->post['low_order_fee_status'];

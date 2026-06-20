@@ -32,12 +32,12 @@
         <tr>
           <td><?php echo $entry_fee_type; ?></td>
           <td><select name="paypal_fee_fee_type">
-            <?php if ($paypal_fee_fee_type == 'P') { ?>
+            <?php if ($paypal_fee_fee_type === 'P') { ?>
               <option value="P" selected="selected"><?php echo $text_percent; ?></option>
             <?php } else { ?>
               <option value="P"><?php echo $text_percent; ?></option>
             <?php } ?>
-            <?php if ($paypal_fee_fee_type == 'F') { ?>
+            <?php if ($paypal_fee_fee_type === 'F') { ?>
               <option value="F" selected="selected"><?php echo $text_fixed; ?></option>
             <?php } else { ?>
               <option value="F"><?php echo $text_fixed; ?></option>
@@ -61,7 +61,7 @@
           <td><select name="paypal_fee_tax_class_id">
             <option value="0"><?php echo $text_none; ?></option>
             <?php foreach ($tax_classes as $tax_class) { ?>
-              <?php if ($tax_class['tax_class_id'] == $paypal_fee_tax_class_id) { ?>
+              <?php if ($tax_class['tax_class_id'] === $paypal_fee_tax_class_id) { ?>
                 <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
@@ -70,6 +70,10 @@
           </select></td>
         </tr>
         <tr>
+          <td><?php echo $entry_sort_order; ?></td>
+          <td><input type="text" name="paypal_fee_sort_order" value="<?php echo $paypal_fee_sort_order; ?>" size="1" /></td>
+        </tr>
+        <tr class="highlighted">
           <td><?php echo $entry_status; ?></td>
           <td><select name="paypal_fee_status">
             <?php if ($paypal_fee_status) { ?>
@@ -81,13 +85,9 @@
             <?php } ?>
           </select></td>
         </tr>
-        <tr>
-          <td><?php echo $entry_sort_order; ?></td>
-          <td><input type="text" name="paypal_fee_sort_order" value="<?php echo $paypal_fee_sort_order; ?>" size="1" /></td>
-        </tr>
       </table>
     </form>
     </div>
   </div>
 </div>
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

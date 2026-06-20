@@ -91,9 +91,7 @@ class ControllerTotalHandling extends Controller {
 
 		$this->load->model('localisation/tax_class');
 
-		$tax_classes_array = [];
-
-		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses($tax_classes_array);
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
 
 		if (isset($this->request->post['handling_status'])) {
 			$this->data['handling_status'] = $this->request->post['handling_status'];
