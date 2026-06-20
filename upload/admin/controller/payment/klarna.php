@@ -1,15 +1,15 @@
 <?php
 /**
- * Class ControllerPaymentKlarnaAccount
+ * Class ControllerPaymentKlarna
  *
  * @package NivoCart
  */
-class ControllerPaymentKlarnaAccount extends Controller {
+class ControllerPaymentKlarna extends Controller {
 	private $error = [];
 	private $pclasses = [];
 
 	public function index() {
-		$this->language->load('payment/klarna_account');
+		$this->language->load('payment/klarna');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -18,30 +18,32 @@ class ControllerPaymentKlarnaAccount extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$status = false;
 
-			foreach ($this->request->post['klarna_account'] as $klarna_account) {
-				if ($klarna_account['status']) {
+			foreach ($this->request->post['klarna'] as $klarna) {
+				if ($klarna['status']) {
 					$status = true;
 					break;
 				}
 			}
 
 			$klarna_data = [
-				'klarna_account_pclasses' => $this->pclasses,
-				'klarna_account_status'   => $status
+				'klarna_pclasses' => $this->pclasses,
+				'klarna_status'   => $status
 			];
 
-			$this->model_setting_setting->editSetting('klarna_account', array_merge($this->request->post, $klarna_data));
+			$this->model_setting_setting->editSetting('klarna', array_merge($this->request->post, $klarna_data));
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			if (isset($this->request->post['apply'])) {
-				$this->redirect($this->url->link('payment/klarna_account', 'token=' . $this->session->data['token'], 'SSL'));
+				$this->redirect($this->url->link('payment/klarna', 'token=' . $this->session->data['token'], 'SSL'));
 			} else {
 				$this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
 			}
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_klarna'] = $this->language->get('text_klarna');
 
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
@@ -63,8 +65,8 @@ class ControllerPaymentKlarnaAccount extends Controller {
 		$this->data['entry_pending_status'] = $this->language->get('entry_pending_status');
 		$this->data['entry_accepted_status'] = $this->language->get('entry_accepted_status');
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
-		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		$this->data['entry_status'] = $this->language->get('entry_status');
 
 		$this->data['help_merchant'] = $this->language->get('help_merchant');
 		$this->data['help_secret'] = $this->language->get('help_secret');
@@ -109,11 +111,11 @@ class ControllerPaymentKlarnaAccount extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('payment/klarna_account', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('payment/klarna', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
-		$this->data['action'] = $this->url->link('payment/klarna_account', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('payment/klarna', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['countries'] = [];
@@ -148,10 +150,10 @@ class ControllerPaymentKlarnaAccount extends Controller {
 			'code' => 'FIN'
 		];
 
-		if (isset($this->request->post['klarna_account'])) {
-			$this->data['klarna_account'] = $this->request->post['klarna_account'];
+		if (isset($this->request->post['klarna'])) {
+			$this->data['klarna'] = $this->request->post['klarna'];
 		} else {
-			$this->data['klarna_account'] = $this->config->get('klarna_account');
+			$this->data['klarna'] = $this->config->get('klarna');
 		}
 
 		$this->load->model('localisation/geo_zone');
@@ -162,7 +164,7 @@ class ControllerPaymentKlarnaAccount extends Controller {
 
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
-		$file = DIR_LOGS . 'klarna_account.log';
+		$file = DIR_LOGS . 'klarna.log';
 
 		if (file_exists($file)) {
 			$this->data['log'] = file_get_contents($file, FILE_USE_INCLUDE_PATH, null);
@@ -170,9 +172,9 @@ class ControllerPaymentKlarnaAccount extends Controller {
 			$this->data['log'] = '';
 		}
 
-		$this->data['clear'] = $this->url->link('payment/klarna_account/clear', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['clear'] = $this->url->link('payment/klarna/clear', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->template = 'payment/klarna_account.tpl';
+		$this->template = 'payment/klarna.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
@@ -182,11 +184,11 @@ class ControllerPaymentKlarnaAccount extends Controller {
 	}
 
 	private function validate() {
-		if (!$this->user->hasPermission('modify', 'payment/klarna_account')) {
+		if (!$this->user->hasPermission('modify', 'payment/klarna')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		$log = new Log('klarna_account.log');
+		$log = new Log('klarna.log');
 
 		$country = [
 			'NOR' => [
@@ -221,16 +223,16 @@ class ControllerPaymentKlarnaAccount extends Controller {
 			]
 		];
 
-		foreach ($this->request->post['klarna_account'] as $key => $klarna_account) {
-			if ($klarna_account['status']) {
-				$digest = base64_encode(pack("H*", hash('sha256', $klarna_account['merchant']  . ':' . $country[$key]['currency'] . ':' . $klarna_account['secret'])));
+		foreach ($this->request->post['klarna'] as $key => $klarna) {
+			if ($klarna['status']) {
+				$digest = base64_encode(pack("H*", hash('sha256', $klarna['merchant']  . ':' . $country[$key]['currency'] . ':' . $klarna['secret'])));
 
 				$xml = '<methodCall>';
 				$xml .= '  <methodName>get_pclasses</methodName>';
 				$xml .= '  <params>';
 				$xml .= '    <param><value><string>4.1</string></value></param>';
 				$xml .= '    <param><value><string>API:NIVOCART:' . VERSION . '</string></value></param>';
-				$xml .= '    <param><value><int>' . (int)$klarna_account['merchant'] . '</int></value></param>';
+				$xml .= '    <param><value><int>' . (int)$klarna['merchant'] . '</int></value></param>';
 				$xml .= '    <param><value><int>' . $country[$key]['currency'] . '</int></value></param>';
 				$xml .= '    <param><value><string>' . $digest . '</string></value></param>';
 				$xml .= '    <param><value><int>' . $country[$key]['country'] . '</int></value></param>';
@@ -238,7 +240,7 @@ class ControllerPaymentKlarnaAccount extends Controller {
 				$xml .= '  </params>';
 				$xml .= '</methodCall>';
 
-				if ($klarna_account['server'] === 'live') {
+				if ($klarna['server'] === 'live') {
 					$url = 'https://payment.klarna.com';
 				} else {
 					$url = 'https://payment.testdrive.klarna.com';
@@ -291,7 +293,7 @@ class ControllerPaymentKlarnaAccount extends Controller {
 						$pclass[6] /= 100;
 						$pclass[9] = ($pclass[9] !== '-') ? strtotime($pclass[9]) : $pclass[9];
 
-						array_unshift($pclass, $klarna_account['merchant']);
+						array_unshift($pclass, $klarna['merchant']);
 
 						$this->pclasses[$key][] = [
 							'eid'          => intval($pclass[0]),
@@ -359,9 +361,9 @@ class ControllerPaymentKlarnaAccount extends Controller {
 	}
 
 	public function clear() {
-		$this->language->load('payment/klarna_account');
+		$this->language->load('payment/klarna');
 
-		$file = DIR_LOGS . 'klarna_account.log';
+		$file = DIR_LOGS . 'klarna.log';
 
 		$handle = fopen($file, 'w+');
 
@@ -369,6 +371,6 @@ class ControllerPaymentKlarnaAccount extends Controller {
 
 		$this->session->data['success'] = $this->language->get('text_success');
 
-		$this->redirect($this->url->link('payment/klarna_account', 'token=' . $this->session->data['token'], 'SSL'));
+		$this->redirect($this->url->link('payment/klarna', 'token=' . $this->session->data['token'], 'SSL'));
 	}
 }

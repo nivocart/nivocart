@@ -2,14 +2,33 @@
   <div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
 <div style="margin-bottom:10px;">
-  <img src="https://cdn.klarna.com/public/images/<?php echo $iso_code_2; ?>/badges/v1/invoice/<?php echo $iso_code_2; ?>_invoice_badge_std_blue.png?width=150&eid=<?php echo $merchant; ?>" alt="" />
+  <img src="https://cdn.klarna.com/public/images/<?php echo $iso_code_2; ?>/badges/v1/account/<?php echo $iso_code_2; ?>_account_badge_std_blue.png?width=150&eid=<?php echo $merchant; ?>" alt="" />
 </div>
 <div id="payment">
-  <div style="margin-bottom:3px;"><b><?php echo $text_additional; ?></b></div>
+  <div style="margin-bottom: 3px;"><b><?php echo $text_payment_option; ?></b></div>
+  <div class="content">
+    <table class="radio">
+      <?php foreach ($payment_options as $payment_option) { ?>
+        <tr class="highlight">
+          <td><?php if (!isset($code)) { ?>
+            <?php $code = $payment_option['code']; ?>
+            <input type="radio" name="code" value="<?php echo $payment_option['code']; ?>" id="plan-id<?php echo $payment_option['code']; ?>" checked="checked" />
+          <?php } else { ?>
+            <input type="radio" name="code" value="<?php echo $payment_option['code']; ?>" id="plan-id<?php echo $payment_option['code']; ?>" />
+          <?php } ?></td>
+          <td><label for="plan-id<?php echo $payment_option['code']; ?>"><?php echo $payment_option['title']; ?></label></td>
+          <td style="width:1%;"><?php if ($iso_code_3 === 'NLD') { ?>
+            <img src="catalog/view/theme/<?php echo $template; ?>/image/payment/klarna_nld_banner.png" alt="" />
+          <?php } ?></td>
+        </tr>
+      <?php } ?>
+    </table>
+  </div>
+  <div style="margin-bottom: 3px;"><b><?php echo $text_additional; ?></b></div>
   <div class="content">
     <table class="form">
       <?php if (!$company) { ?>
-        <?php if ($iso_code_3 == 'DEU' || $iso_code_3 == 'NLD') { ?>
+        <?php if ($iso_code_3 === 'DEU' || $iso_code_3 === 'NLD') { ?>
           <tr>
             <td><span class="required">*</span>&nbsp;<label for="input-dob"><?php echo $entry_dob; ?></label></td>
             <td>
@@ -45,7 +64,7 @@
           <td><input type="text" name="pno" id="input-company" value="" /></td>
         </tr>
       <?php } ?>
-      <?php if ($iso_code_3 == 'DEU' || $iso_code_3 == 'NLD') { ?>
+      <?php if ($iso_code_3 === 'DEU' || $iso_code_3 === 'NLD') { ?>
         <tr>
           <td><span class="required">*</span>&nbsp;<?php echo $entry_gender; ?></td>
           <td>
@@ -64,7 +83,7 @@
           <td><input type="text" name="house_no" id="input-house-no" value="<?php echo $street_number; ?>" /></td>
         </tr>
       <?php } ?>
-      <?php if ($iso_code_3 == 'NLD') { ?>
+      <?php if ($iso_code_3 === 'NLD') { ?>
         <tr>
           <td><label for="input-house-ext"><?php echo $entry_house_ext; ?></label></td>
           <td><input type="text" name="house_ext" id="input-house-ext" value="<?php echo $street_extension; ?>" /></td>
@@ -74,7 +93,7 @@
         <td><span class="required">*</span>&nbsp;<label for="input-phone-no"><?php echo $entry_phone_no; ?></label></td>
         <td><input type="text" name="phone_no" id="input-phone-no" value="<?php echo $phone_number; ?>" /></td>
       </tr>
-      <?php if ($iso_code_3 == 'DEU') { ?>
+      <?php if ($iso_code_3 === 'DEU') { ?>
         <tr>
           <td colspan="2"><input type="checkbox" name="deu_terms" value="1" />
             Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts - und Bonitätsprüfung erforderlichen
@@ -94,7 +113,7 @@
 <script type="text/javascript"><!--
 $('#button-confirm').on('click', function() {
 	$.ajax({
-		url: 'index.php?route=payment/klarna_invoice/send',
+		url: 'index.php?route=payment/klarna/send',
 		type: 'post',
 		data: $('#payment input[type=\'text\'], #payment input[type=\'checkbox\']:checked, #payment input[type=\'radio\']:checked, #payment select'),
 		dataType: 'json',

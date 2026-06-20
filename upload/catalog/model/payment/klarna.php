@@ -1,34 +1,34 @@
 <?php
 /**
- * Class ModelPaymentKlarnaAccount
+ * Class ModelPaymentKlarna
  *
  * @package NivoCart
  */
-class ModelPaymentKlarnaAccount extends Model {
+class ModelPaymentKlarna extends Model {
 	/**
 	 * Functions Get
 	 */
 	public function getMethod($address, $total) {
-		$this->language->load('payment/klarna_account');
+		$this->language->load('payment/klarna');
 
 		$status = true;
 
-		$klarna_account = $this->config->get('klarna_account');
+		$klarna = $this->config->get('klarna');
 
-		if (!isset($klarna_account[$address['iso_code_3']])) {
+		if (!isset($klarna[$address['iso_code_3']])) {
 			$status = false;
-		} elseif (!$klarna_account[$address['iso_code_3']]['status']) {
+		} elseif (!$klarna[$address['iso_code_3']]['status']) {
 			$status = false;
 		}
 
 		if ($status) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$klarna_account[$address['iso_code_3']]['geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$klarna[$address['iso_code_3']]['geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
-			if ($klarna_account[$address['iso_code_3']]['total'] > 0 && $klarna_account[$address['iso_code_3']]['total'] > $total) {
+			if ($klarna[$address['iso_code_3']]['total'] > 0 && $klarna[$address['iso_code_3']]['total'] > $total) {
 				$status = false;
-			} elseif (isset($klarna_account[$address['iso_code_3']]['total_max']) && $klarna_account[$address['iso_code_3']]['total_max'] > 0 && $total > $klarna_account[$address['iso_code_3']]['total_max']) {
+			} elseif (isset($klarna[$address['iso_code_3']]['total_max']) && $klarna[$address['iso_code_3']]['total_max'] > 0 && $total > $klarna[$address['iso_code_3']]['total_max']) {
 				$status = false;
-			} elseif (!$klarna_account[$address['iso_code_3']]['geo_zone_id']) {
+			} elseif (!$klarna[$address['iso_code_3']]['geo_zone_id']) {
 				$status = true;
 			} elseif ($query->num_rows) {
 				$status = true;
@@ -50,7 +50,7 @@ class ModelPaymentKlarnaAccount extends Model {
 				$status = false;
 			}
 
-			if ($address['iso_code_3'] == 'NLD' && $this->currency->has('EUR') && $this->currency->format($total, 'EUR', '', false) > 250.00) {
+			if ($address['iso_code_3'] === 'NLD' && $this->currency->has('EUR') && $this->currency->format($total, 'EUR', '', false) > 250.00) {
 				$status = false;
 			}
 		}
@@ -60,7 +60,7 @@ class ModelPaymentKlarnaAccount extends Model {
 		if ($status) {
 			$total = $this->currency->format($total, $country_to_currency[$address['iso_code_3']], '', false);
 
-			$pclasses = $this->config->get('klarna_account_pclasses');
+			$pclasses = $this->config->get('klarna_pclasses');
 
 			if (isset($pclasses[$address['iso_code_3']])) {
 				$pclasses = $pclasses[$address['iso_code_3']];
@@ -84,7 +84,7 @@ class ModelPaymentKlarnaAccount extends Model {
 						continue;
 					}
 
-					if ($pclass['type'] == 3) {
+					if ($pclass['type'] === 3) {
 						continue;
 					} else {
 						$sum = $total;
@@ -93,12 +93,12 @@ class ModelPaymentKlarnaAccount extends Model {
 						$monthly_fee = $pclass['invoicefee'];
 						$start_fee = $pclass['startfee'];
 						$sum += $start_fee;
-						$base = ($pclass['type'] == 1);
+						$base = ($pclass['type'] === 1);
 						$minimum_payment = ($pclass['type'] === 1) ? $this->getLowestPaymentAccount($address['iso_code_3']) : 0;
 
-						if ($pclass['months'] == 0) {
+						if ($pclass['months'] === 0) {
 							$payment = $sum;
-						} elseif ($pclass['interestrate'] == 0) {
+						} elseif ($pclass['interestrate'] === 0) {
 							$payment = $sum / $pclass['months'];
 						} else {
 							$interest_rate = $pclass['interestrate'] / (100.0 * 12);
@@ -112,7 +112,7 @@ class ModelPaymentKlarnaAccount extends Model {
 
 						$months = $pclass['months'];
 
-						while (($months != 0) && ($balance > 0.01)) {
+						while (($months !== 0) && ($balance > 0.01)) {
 							$interest = $balance * $pclass['interestrate'] / (100.0 * 12);
 
 							$new_balance = $balance + $interest + $monthly_fee;
@@ -141,11 +141,11 @@ class ModelPaymentKlarnaAccount extends Model {
 							continue;
 						}
 
-						if ($pclass['type'] == 1 && $monthly_cost < $lowest_payment) {
+						if ($pclass['type'] === 1 && $monthly_cost < $lowest_payment) {
 							$monthly_cost = $lowest_payment;
 						}
 
-						if ($pclass['type'] == 0 && $monthly_cost < $lowest_payment) {
+						if ($pclass['type'] === 0 && $monthly_cost < $lowest_payment) {
 							continue;
 						}
 					}
@@ -177,10 +177,10 @@ class ModelPaymentKlarnaAccount extends Model {
 
 		if ($status) {
 			$method = [
-				'code'       => 'klarna_account',
+				'code'       => 'klarna',
 				'title'      => sprintf($this->language->get('text_title'), $this->currency->format($this->currency->convert($payment_option[0]['monthly_cost'], $country_to_currency[$address['iso_code_3']], $this->currency->getCode()), 1, 1, $this->config->get('config_currency'))),
-				'terms'      => sprintf($this->language->get('text_terms'), $klarna_account[$address['iso_code_3']]['merchant'], strtolower($address['iso_code_2'])),
-				'sort_order' => $klarna_account[$address['iso_code_3']]['sort_order']
+				'terms'      => sprintf($this->language->get('text_terms'), $klarna[$address['iso_code_3']]['merchant'], strtolower($address['iso_code_2'])),
+				'sort_order' => $klarna[$address['iso_code_3']]['sort_order']
 			];
 		}
 
@@ -206,7 +206,7 @@ class ModelPaymentKlarnaAccount extends Model {
 				$amount = 6.95;
 				break;
 			default:
-				$log = new Log('klarna_account.log');
+				$log = new Log('klarna.log');
 				$log->write('Unknown country ' . $country);
 				$amount = null;
 				break;

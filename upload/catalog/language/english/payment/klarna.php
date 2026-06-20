@@ -1,9 +1,9 @@
 <?php
 // Text
-$_['text_title']           = 'Klarna Account - Pay from %s/month';
+$_['text_title']           = 'Klarna - Pay from %s/month';
 $_['text_terms']           = '<span id="klarna_account_toc"></span><script type="text/javascript">var terms = new Klarna.Terms.Account({el: \'klarna_account_toc\', eid: \'%s\', country: \'%s\'});</script>';
-$_['text_information']     = 'Klarna Account Information';
-$_['text_additional']      = 'Klarna Account requires some additional information before they can proccess your order.';
+$_['text_information']     = 'Klarna Information';
+$_['text_additional']      = 'Klarna requires some additional information before they can proccess your order.';
 $_['text_wait']            = 'Please wait!';
 $_['text_male']            = 'Male';
 $_['text_female']          = 'Female';
@@ -35,5 +35,5 @@ $_['help_company']         = 'Please enter your Company\'s registration number';
 
 // Error
 $_['error_deu_terms']      = 'You must agree to Klarna\'s privacy policy (Datenschutz)';
-$_['error_address_match']  = 'Billing and Shipping addresses must match if you want to use Klarna Account';
+$_['error_address_match']  = 'Billing and Shipping addresses must match if you want to use Klarna';
 $_['error_network']        = 'Error occurred while connecting to Klarna. Please try again later.';

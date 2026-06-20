@@ -1,10 +1,10 @@
 <?php
 /**
- * Class ControllerPaymentKlarnaInvoice
+ * Class ControllerPaymentKlarna
  *
  * @package NivoCart
  */
-class ControllerPaymentKlarnaInvoice extends Controller {
+class ControllerPaymentKlarna extends Controller {
 	/** Error array Placeholder */
 
 	public function index() {
@@ -13,8 +13,9 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
 		if ($order_info) {
-			$this->language->load('payment/klarna_invoice');
+			$this->language->load('payment/klarna');
 
+			$this->data['text_information'] = $this->language->get('text_information');
 			$this->data['text_additional'] = $this->language->get('text_additional');
 			$this->data['text_payment_option'] = $this->language->get('text_payment_option');
 			$this->data['text_wait'] = $this->language->get('text_wait');
@@ -65,6 +66,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			// Store Taxes to send to Klarna
 			$total_data = [];
 			$total = 0;
+			$taxes = $this->cart->getTaxes();
 
 			$this->load->model('setting/extension');
 
@@ -129,12 +131,21 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			}
 
 			// The title stored in the DB gets truncated which causes order_info.tpl to not be displayed properly
-			$this->db->query("UPDATE `" . DB_PREFIX . "order` SET payment_method = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE order_id = " . (int)$this->session->data['order_id']);
+			$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `payment_method` = '" . $this->db->escape($this->language->get('text_title')) . "' WHERE `order_id` = " . (int)$this->session->data['order_id']);
 
-			$klarna_invoice = $this->config->get('klarna_invoice');
+			$klarna = $this->config->get('klarna');
 
-			$this->data['merchant'] = $klarna_invoice[$order_info['payment_iso_code_3']]['merchant'];
+			$this->data['merchant'] = $klarna[$order_info['payment_iso_code_3']]['merchant'];
 			$this->data['phone_number'] = $order_info['telephone'];
+
+			$country_to_currency = [
+				'NOR' => 'NOK',
+				'SWE' => 'SEK',
+				'FIN' => 'EUR',
+				'DNK' => 'DKK',
+				'DEU' => 'EUR',
+				'NLD' => 'EUR'
+			];
 
 			if ($order_info['payment_iso_code_3'] === 'DEU' || $order_info['payment_iso_code_3'] === 'NLD') {
 				$address = $this->splitAddress($order_info['payment_address_1']);
@@ -157,22 +168,135 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			$this->data['iso_code_2'] = $order_info['payment_iso_code_2'];
 			$this->data['iso_code_3'] = $order_info['payment_iso_code_3'];
 
-			// Get the invoice fee
-			$query = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "order_total WHERE order_id = " . (int)$order_info['order_id'] . " AND `code` = 'klarna_fee'");
+			$payment_option = [];
 
-			if ($query->num_rows && !$query->row['value']) {
-				$this->data['klarna_fee'] = $query->row['value'];
+			$total = $this->currency->format($order_info['total'], $country_to_currency[$order_info['payment_iso_code_3']], '', false);
+
+			$pclasses = $this->config->get('klarna_pclasses');
+
+			if (isset($pclasses[$order_info['payment_iso_code_3']])) {
+				$pclasses = $pclasses[$order_info['payment_iso_code_3']];
 			} else {
-				$this->data['klarna_fee'] = '';
+				$pclasses = [];
+			}
+
+			foreach ($pclasses as $pclass) {
+				// 0 - Campaign
+				// 1 - Account
+				// 2 - Special
+				// 3 - Fixed
+				if (!in_array($pclass['type'], [0, 1, 3])) {
+					continue;
+				}
+
+				if ($pclass['type'] === 2) {
+					$monthly_cost = -1;
+				} else {
+					if ($total < $pclass['minamount']) {
+						continue;
+					}
+
+					if ($pclass['type'] === 3) {
+						continue;
+					} else {
+						$sum = $total;
+
+						$lowest_payment = $this->getLowestPaymentAccount($order_info['payment_iso_code_3']);
+						$monthly_cost = 0;
+
+						$monthly_fee = $pclass['invoicefee'];
+						$start_fee = $pclass['startfee'];
+
+						$sum += $start_fee;
+
+						$base = ($pclass['type'] === 1);
+
+						$minimum_payment = ($pclass['type'] === 1) ? $this->getLowestPaymentAccount($order_info['payment_iso_code_3']) : 0;
+
+						if ($pclass['months'] === 0) {
+							$payment = $sum;
+						} elseif ($pclass['interestrate'] === 0) {
+							$payment = $sum / $pclass['months'];
+						} else {
+							$interest = $pclass['interestrate'] / (100.0 * 12);
+							$payment = $sum * $interest / (1 - pow((1 + $interest), -$pclass['months']));
+						}
+
+						$payment += $monthly_fee;
+
+						$balance = $sum;
+						$pay_data = [];
+
+						$months = $pclass['months'];
+
+						while (($months != 0) && ($balance > 0.01)) {
+							$interest = $balance * $pclass['interestrate'] / (100.0 * 12);
+							$new_balance = $balance + $interest + $monthly_fee;
+
+							if ($minimum_payment >= $new_balance || $payment >= $new_balance) {
+								$pay_data[] = $new_balance;
+								break;
+							}
+
+							$new_payment = max($payment, $minimum_payment);
+
+							if ($base) {
+								$new_payment = max($new_payment, $balance / 24.0 + $monthly_fee + $interest);
+							}
+
+							$balance = $new_balance - $new_payment;
+
+							$pay_data[] = $new_payment;
+
+							$months -= 1;
+						}
+
+						$monthly_cost = round(isset($pay_data[0]) ? ($pay_data[0]) : 0, 2);
+
+						if ($monthly_cost < 0.01) {
+							continue;
+						}
+
+						if ($pclass['type'] === 1 && $monthly_cost < $lowest_payment) {
+							$monthly_cost = $lowest_payment;
+						}
+
+						if ($pclass['type'] === 0 && $monthly_cost < $lowest_payment) {
+							continue;
+						}
+					}
+				}
+
+				$payment_option[$pclass['id']]['pclass_id'] = $pclass['id'];
+				$payment_option[$pclass['id']]['title'] = $pclass['description'];
+				$payment_option[$pclass['id']]['months'] = $pclass['months'];
+				$payment_option[$pclass['id']]['monthly_cost'] = $monthly_cost;
+			}
+
+			$sort_order = [];
+
+			foreach ($payment_option as $key => $value) {
+				$sort_order[$key] = $value['pclass_id'];
+			}
+
+			array_multisort($sort_order, SORT_ASC, $payment_option);
+
+			$this->data['payment_options'] = [];
+
+			foreach ($payment_option as $payment_option) {
+				$this->data['payment_options'][] = [
+					'code'  => $payment_option['pclass_id'],
+					'title' => sprintf($this->language->get('text_monthly_payment'), $payment_option['title'], $this->currency->format($this->currency->convert($payment_option['monthly_cost'], $country_to_currency[$order_info['payment_iso_code_3']], $this->currency->getCode()), 1, 1))
+				];
 			}
 
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/klarna_invoice.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/payment/klarna_invoice.tpl';
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/klarna.tpl')) {
+				$this->template = $this->config->get('config_template') . '/template/payment/klarna.tpl';
 			} else {
-				$this->template = 'default/template/payment/klarna_invoice.tpl';
+				$this->template = 'default/template/payment/klarna.tpl';
 			}
 
 			$this->render();
@@ -180,7 +304,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 	}
 
 	public function send() {
-		$this->language->load('payment/klarna_invoice');
+		$this->language->load('payment/klarna');
 
 		$json = [];
 
@@ -199,9 +323,9 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 			}
 
 			if (!$json) {
-				$klarna_invoice = $this->config->get('klarna_invoice');
+				$klarna = $this->config->get('klarna');
 
-				if ($klarna_invoice[$order_info['payment_iso_code_3']]['server'] === 'live') {
+				if ($klarna[$order_info['payment_iso_code_3']]['server'] === 'live') {
 					$url = 'https://payment.klarna.com/';
 				} else {
 					$url = 'https://payment.testdrive.klarna.com/';
@@ -339,7 +463,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					$digest .= htmlspecialchars(html_entity_decode($goods['goods']['title'], ENT_QUOTES, "UTF-8")) . ':';
 				}
 
-				$digest = base64_encode(pack('H*', hash('sha256', $digest . $klarna_invoice[$order_info['payment_iso_code_3']]['secret'])));
+				$digest = base64_encode(pack('H*', hash('sha256', $digest . $klarna[$order_info['payment_iso_code_3']]['secret'])));
 
 				if (isset($this->request->post['pno'])) {
 					$pno = $this->request->post['pno'];
@@ -347,7 +471,11 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					$pno = sprintf('%02d', (int)$this->request->post['pno_day']) . sprintf('%02d', (int)$this->request->post['pno_month']) . (int)$this->request->post['pno_year'];
 				}
 
-				$pclass = -1;
+				if (isset($this->request->post['code'])) {
+					$pclass = (int)$this->request->post['code'];
+				} else {
+					$pclass = '';
+				}
 
 				if (isset($this->request->post['gender']) && ($order_info['payment_iso_code_3'] === 'DEU' || $order_info['payment_iso_code_3'] === 'NLD')) {
 					$gender = (int)$this->request->post['gender'];
@@ -357,7 +485,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 				$transaction = [
 					'4.1',
-					'API:OPENCART:' . VERSION,
+					'API:NIVOCART:' . VERSION,
 					$pno,
 					$gender,
 					'',
@@ -371,7 +499,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					$currency,
 					$country,
 					$language,
-					(int)$klarna_invoice[$order_info['payment_iso_code_3']]['merchant'],
+					(int)$klarna[$order_info['payment_iso_code_3']]['merchant'],
 					$digest,
 					$encoding,
 					$pclass,
@@ -414,7 +542,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				$response = curl_exec($curl);
 
 				if (curl_errno($curl)) {
-					$log = new Log('klarna_invoice.log');
+					$log = new Log('klarna.log');
 					$log->write('HTTP Error for order #' . $order_info['order_id'] . '. Code: ' . curl_errno($curl) . ' message: ' . curl_error($curl));
 
 					$json['error'] = $this->language->get('error_network');
@@ -425,7 +553,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					if (isset($match[1])) {
 						preg_match('/<member><name>faultCode<\/name><value><int>([0-9]+)<\/int><\/value><\/member>/', $response, $match2);
 
-						$log = new Log('klarna_invoice.log');
+						$log = new Log('klarna.log');
 
 						$message = $match[1] ?? '';
 
@@ -447,9 +575,9 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 						$klarna_order_status = $xml->getElementsByTagName('int')->item(0)->nodeValue;
 
 						if ($klarna_order_status === '1') {
-							$order_status = $klarna_invoice[$order_info['payment_iso_code_3']]['accepted_status_id'];
+							$order_status = $klarna[$order_info['payment_iso_code_3']]['accepted_status_id'];
 						} elseif ($klarna_order_status === '2') {
-							$order_status = $klarna_invoice[$order_info['payment_iso_code_3']]['pending_status_id'];
+							$order_status = $klarna[$order_info['payment_iso_code_3']]['pending_status_id'];
 						} else {
 							$order_status = $this->config->get('config_order_status_id');
 						}
@@ -480,7 +608,6 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				} else {
 					$value = false;
 				}
-
 				$xml = '<boolean>' . $value . '</boolean>';
 				break;
 			case 'integer':
@@ -493,7 +620,6 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 				$xml = '<string>' . htmlspecialchars($data) . '</string>';
 				break;
 			case 'array':
-				// is numeric ?
 				if ($data === array_values($data)) {
 					$xml = '<array><data>';
 
@@ -502,9 +628,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 					}
 
 					$xml .= '</data></array>';
-
 				} else {
-					// array is associative
 					$xml = '<struct>';
 
 					foreach ($data as $key => $value) {
@@ -516,7 +640,6 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 					$xml .= '</struct>';
 				}
-
 				break;
 			default:
 				$xml = '<nil/>';
@@ -524,6 +647,35 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 		}
 
 		return $xml;
+	}
+
+	private function getLowestPaymentAccount($country) {
+		switch ($country) {
+			case 'SWE':
+				$amount = 50.0;
+				break;
+			case 'NOR':
+				$amount = 95.0;
+				break;
+			case 'FIN':
+				$amount = 8.95;
+				break;
+			case 'DNK':
+				$amount = 89.0;
+				break;
+			case 'DEU':
+			case 'NLD':
+				$amount = 5.00;
+				break;
+			default:
+				$log = new Log('klarna.log');
+				$log->write('Unknown country ' . $country);
+
+				$amount = null;
+				break;
+		}
+
+		return $amount;
 	}
 
 	private function splitAddress($address) {
@@ -548,7 +700,7 @@ class ControllerPaymentKlarnaInvoice extends Controller {
 
 		$ext_pos = $this->strposArr($number_part, $characters, 0);
 
-		if ($ext_pos != '') {
+		if ($ext_pos !== '') {
 			$house_number = substr($number_part, 0, $ext_pos);
 			$house_extension = substr($number_part, $ext_pos);
 			$house_extension = str_replace($specialchars, '', $house_extension);
