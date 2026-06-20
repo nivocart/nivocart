@@ -31,23 +31,11 @@
               <td><select name="geozone_tax_class_id">
                 <option value="0"><?php echo $text_none; ?></option>
                 <?php foreach ($tax_classes as $tax_class) { ?>
-                  <?php if ($tax_class['tax_class_id'] == $geozone_tax_class_id) { ?>
+                  <?php if ($tax_class['tax_class_id'] === $geozone_tax_class_id) { ?>
                     <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
                   <?php } ?>
-                <?php } ?>
-              </select></td>
-            </tr>
-            <tr>
-              <td><?php echo $entry_status; ?></td>
-              <td><select name="geozone_status">
-                <?php if ($geozone_status) { ?>
-                  <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                  <option value="0"><?php echo $text_disabled; ?></option>
-                <?php } else { ?>
-                  <option value="1"><?php echo $text_enabled; ?></option>
-                  <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
                 <?php } ?>
               </select></td>
             </tr>
@@ -70,6 +58,18 @@
             <tr>
               <td><?php echo $entry_sort_order; ?></td>
               <td><input type="text" name="geozone_sort_order" value="<?php echo $geozone_sort_order; ?>" size="2" /></td>
+            </tr>
+            <tr class="highlighted">
+              <td><?php echo $entry_status; ?></td>
+              <td><select name="geozone_status">
+                <?php if ($geozone_status) { ?>
+                  <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                  <option value="0"><?php echo $text_disabled; ?></option>
+                <?php } else { ?>
+                  <option value="1"><?php echo $text_enabled; ?></option>
+                  <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                <?php } ?>
+              </select></td>
             </tr>
           </table>
         </div>

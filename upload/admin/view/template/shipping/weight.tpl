@@ -32,7 +32,7 @@
             <td><select name="weight_tax_class_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($tax_classes as $tax_class) { ?>
-                <?php if ($tax_class['tax_class_id'] == $weight_tax_class_id) { ?>
+                <?php if ($tax_class['tax_class_id'] === $weight_tax_class_id) { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
@@ -41,6 +41,10 @@
             </select></td>
           </tr>
           <tr>
+            <td><?php echo $entry_sort_order; ?></td>
+            <td><input type="text" name="weight_sort_order" value="<?php echo $weight_sort_order; ?>" size="1" /></td>
+          </tr>
+          <tr class="highlighted">
             <td><?php echo $entry_status; ?></td>
             <td><select name="weight_status">
               <?php if ($weight_status) { ?>
@@ -51,10 +55,6 @@
                 <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
               <?php } ?>
             </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_sort_order; ?></td>
-            <td><input type="text" name="weight_sort_order" value="<?php echo $weight_sort_order; ?>" size="1" /></td>
           </tr>
         </table>
       </div>

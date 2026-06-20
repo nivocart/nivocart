@@ -29,7 +29,7 @@
             <td><select name="flat_1_tax_class_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($tax_classes as $tax_class) { ?>
-                <?php if ($tax_class['tax_class_id'] == $flat_1_tax_class_id) { ?>
+                <?php if ($tax_class['tax_class_id'] === $flat_1_tax_class_id) { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
@@ -42,7 +42,7 @@
             <td><select name="flat_1_geo_zone_id">
               <option value="0"><?php echo $text_all_zones; ?></option>
               <?php foreach ($geo_zones as $geo_zone) { ?>
-                <?php if ($geo_zone['geo_zone_id'] == $flat_1_geo_zone_id) { ?>
+                <?php if ($geo_zone['geo_zone_id'] === $flat_1_geo_zone_id) { ?>
                   <option value="<?php echo $geo_zone['geo_zone_id']; ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $geo_zone['geo_zone_id']; ?>"><?php echo $geo_zone['name']; ?></option>
@@ -51,6 +51,10 @@
             </select></td>
           </tr>
           <tr>
+            <td><?php echo $entry_sort_order; ?></td>
+            <td><input type="text" name="flat_1_sort_order" value="<?php echo $flat_1_sort_order; ?>" size="1" /></td>
+          </tr>
+          <tr class="highlighted">
             <td><?php echo $entry_status; ?></td>
             <td><select name="flat_1_status">
               <?php if ($flat_1_status) { ?>
@@ -61,10 +65,6 @@
                 <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
               <?php } ?>
             </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_sort_order; ?></td>
-            <td><input type="text" name="flat_1_sort_order" value="<?php echo $flat_1_sort_order; ?>" size="1" /></td>
           </tr>
         </table>
       </form>

@@ -29,7 +29,7 @@
             <td><select name="digital_geo_zone_id">
               <option value="0"><?php echo $text_all_zones; ?></option>
               <?php foreach ($geo_zones as $geo_zone) { ?>
-                <?php if ($geo_zone['geo_zone_id'] == $digital_geo_zone_id) { ?>
+                <?php if ($geo_zone['geo_zone_id'] === $digital_geo_zone_id) { ?>
                   <option value="<?php echo $geo_zone['geo_zone_id']; ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $geo_zone['geo_zone_id']; ?>"><?php echo $geo_zone['name']; ?></option>
@@ -38,6 +38,10 @@
             </select></td>
           </tr>
           <tr>
+            <td><?php echo $entry_sort_order; ?></td>
+            <td><input type="text" name="digital_sort_order" value="<?php echo $digital_sort_order; ?>" size="1" /></td>
+          </tr>
+          <tr class="highlighted">
             <td><?php echo $entry_status; ?></td>
             <td><select name="digital_status">
               <?php if ($digital_status) { ?>
@@ -49,13 +53,9 @@
               <?php } ?>
             </select></td>
           </tr>
-          <tr>
-            <td><?php echo $entry_sort_order; ?></td>
-            <td><input type="text" name="digital_sort_order" value="<?php echo $digital_sort_order; ?>" size="1" /></td>
-          </tr>
         </table>
       </form>
     </div>
   </div>
 </div>
-<?php echo $footer; ?> 
+<?php echo $footer; ?>
