@@ -71,7 +71,7 @@
           <td><?php echo $entry_frequency; ?></td>
           <td><select name="frequency">
             <?php foreach ($frequencies as $key => $title) { ?>
-              <?php if ($frequency == $key) { ?>
+              <?php if ($frequency === $key) { ?>
                 <option value="<?php echo $key; ?>" selected="selected"><?php echo $title; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $key; ?>"><?php echo $title; ?></option>
@@ -91,23 +91,23 @@
             <?php } ?>
           </select></td>
         </tr>
-        <tr class="highlighted">
+        <tr>
           <td><?php echo $entry_trial_price; ?></td>
           <td><input name="trial_price" value="<?php echo $trial_price; ?>" /></td>
         </tr>
-        <tr class="highlighted">
+        <tr>
           <td><?php echo $entry_trial_duration; ?></td>
           <td><input name="trial_duration" value="<?php echo $trial_duration; ?>" /></td>
         </tr>
-        <tr class="highlighted">
+        <tr>
           <td><?php echo $entry_trial_cycle; ?></td>
           <td><input name="trial_cycle" value="<?php echo $trial_cycle; ?>" /></td>
         </tr>
-        <tr class="highlighted">
+        <tr>
           <td><?php echo $entry_trial_frequency; ?></td>
           <td><select name="trial_frequency">
             <?php foreach ($frequencies as $key => $title) { ?>
-              <?php if ($trial_frequency == $key) { ?>
+              <?php if ($trial_frequency === $key) { ?>
                 <option value="<?php echo $key; ?>" selected="selected"><?php echo $title; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $key; ?>"><?php echo $title; ?></option>
