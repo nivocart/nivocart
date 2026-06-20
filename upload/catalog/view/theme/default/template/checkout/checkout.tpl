@@ -121,7 +121,7 @@
           <?php if ($one_page_gender) { ?>
             <tr>
               <td colspan="2">
-                <?php if ($gender === 0) { ?>
+                <?php if ($gender == 0) { ?> <!-- Loose check required here -->
                   <input type="radio" name="gender" value="0" checked="checked" /><?php echo $text_male; ?>&nbsp;&nbsp;
                   <input type="radio" name="gender" value="1" /><?php echo $text_female; ?>
                 <?php } else { ?>
@@ -401,6 +401,16 @@
             You will be redirected to PayPal to complete your payment securely after placing your order.
           </p>
           <img src="catalog/view/theme/<?php echo $template; ?>/image/payment/paypal-logo.png" alt="PayPal" style="height:24px; margin-top:10px; vertical-align:middle;" />
+        </div>
+
+        <!-- Sage Pay — mounted by sagepay.js -->
+        <div id="widget-sagepay" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <div class="sagepay-testmode-warning payment-pp-testmode-warning" style="display:none; margin-bottom:10px;">
+            <span class="pp-warning-icon">&#9888;</span> Sage Pay test mode active — no real payments will be taken.
+          </div>
+          <p style="font-size:13px; color:#555; margin:0;">
+            You will be redirected to Sage Pay to complete your payment securely after placing your order.
+          </p>
         </div>
 
         <!-- Add future gateway widget divs here:

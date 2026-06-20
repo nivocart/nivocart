@@ -346,8 +346,8 @@ class ControllerCheckoutCheckout extends Controller {
 							'lastname'          => $customer_info['lastname'],
 							'email'             => $customer_info['email'],
 							'telephone'         => isset($customer_info['telephone']) ? $customer_info['telephone'] : '000',
-							'gender'            => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
-							'date_of_birth'     => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
+							'gender'            => isset($customer_info['gender']) ? $customer_info['gender'] : 0,
+							'date_of_birth'     => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '1970-01-01',
 							'password'          => $this->model_checkout_checkout_tools->generatePassword(),
 							'newsletter'        => $newsletter,
 							'company'           => $customer_info['company'],
@@ -471,8 +471,8 @@ class ControllerCheckoutCheckout extends Controller {
 					'lastname'            => $payment['lastname'],
 					'email'               => isset($customer_info['email']) ? $customer_info['email'] : '',
 					'telephone'           => isset($customer_info['telephone']) ? $customer_info['telephone'] : '',
-					'gender'              => isset($customer_info['gender']) ? $customer_info['gender'] : 1,
-					'date_of_birth'       => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '0000-00-00',
+					'gender'              => isset($customer_info['gender']) ? $customer_info['gender'] : 0,
+					'date_of_birth'       => isset($customer_info['date_of_birth']) ? $customer_info['date_of_birth'] : '1970-01-01',
 					'payment_firstname'   => $payment['firstname'],
 					'payment_lastname'    => $payment['lastname'],
 					'payment_company'     => $payment['company'],
@@ -851,7 +851,7 @@ class ControllerCheckoutCheckout extends Controller {
 		$paypal_fee_total = $this->config->get('paypal_fee_total');
 
 		if (empty($paypal_fee_total) || ($this->cart->getTotal() < $paypal_fee_total)) {
-			if ($this->config->get('paypal_fee_fee_type') == 'F') {
+			if ($this->config->get('paypal_fee_fee_type') === 'F') {
 				$paypal_fee = $this->config->get('paypal_fee_fee');
 			} else {
 				$paypal_fee = ($this->cart->getTotal() * $this->config->get('paypal_fee_fee')) / 100;
