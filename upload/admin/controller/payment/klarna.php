@@ -77,6 +77,9 @@ class ControllerPaymentKlarna extends Controller {
 
 		$this->data['help_username'] = $this->language->get('help_username');
 		$this->data['help_password'] = $this->language->get('help_password');
+		$this->data['help_server'] = $this->language->get('help_server');
+		$this->data['help_pending_status'] = $this->language->get('help_pending_status');
+		$this->data['help_accepted_status'] = $this->language->get('help_accepted_status');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_apply'] = $this->language->get('button_apply');

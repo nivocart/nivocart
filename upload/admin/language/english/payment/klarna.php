@@ -51,8 +51,11 @@ $_['entry_country']             = 'Country';
 // Help
 $_['help_username']             = 'Please enter your Klarna Username.';
 $_['help_password']             = 'Please enter your Klarna Password.';
+$_['help_server'] 				= 'Select "Live" for production.';
+$_['help_pending_status']       = 'Default status is "Pending".';
+$_['help_accepted_status']      = 'Default status is "Processed".';
 
 // Error
 $_['error_permission']          = 'Warning: You do not have permission to modify payment <b>Klarna</b> !';
-$_['error_credentials_missing'] = 'Some credentials are missing for region %s !';
-$_['error_credentials_invalid'] = 'Invalid credentials for region %s : Username: %s, Password: %s, Server: %s !';
+$_['error_credentials_missing'] = 'Warning: Some credentials are missing for region %s !';
+$_['error_credentials_invalid'] = 'Warning: Invalid credentials for region %s : Username: %s, Password: %s, Server: %s !';
