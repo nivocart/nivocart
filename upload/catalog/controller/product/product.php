@@ -313,7 +313,7 @@ class ControllerProductProduct extends Controller {
 				$this->document->addScript('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.js');
 
 				if ($product_info['image']) {
-					$this->data['zoom'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width * 2, $this->image_popup_height * 2);
+					$this->data['zoom'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width * 3, $this->image_popup_height * 3);
 					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 232, 232);
 					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], 58, 58);
 					$this->data['label_style'] = 176;
