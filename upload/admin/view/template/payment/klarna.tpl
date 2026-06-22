@@ -22,103 +22,118 @@
     </div>
     <div class="content">
       <div id="htabs" class="htabs">
-        <a href="#tab-general"><?php echo $tab_general ?></a>
-        <a href="#tab-log"><?php echo $tab_log ?></a>
+        <a href="#tab-general"><?php echo $tab_general; ?></a>
+        <a href="#tab-log"><?php echo $tab_log; ?></a>
       </div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-      <div id="tab-general"><a onclick="window.open(\'https://klarna.com/sell-with-klarna\');" style="float:right;"><img src="view/image/payment/klarna.png" alt="" /></a>
+      <div id="tab-general">
+        <a onclick="window.open('https://klarna.com/sell-with-klarna');" style="float:right;"><img src="view/image/payment/klarna.png" alt="" /></a>
         <div id="vtabs" class="vtabs">
-          <?php foreach ($countries as $country) { ?>
-            <a href="#tab-<?php echo $country['code']; ?>"><?php echo $country['name']; ?></a>
+          <?php foreach ($regions as $region) { ?>
+            <a href="#tab-region-<?php echo $region['code']; ?>"><?php echo $region['label']; ?></a>
           <?php } ?>
         </div>
-        <?php foreach ($countries as $country) { ?>
-          <div id="tab-<?php echo $country['code']; ?>" class="vtabs-content">
+        <?php foreach ($regions as $region) { ?>
+          <?php
+            $region_code = $region['code'];
+            $region_data = isset($klarna[$region_code]) ? $klarna[$region_code] : [];
+          ?>
+          <div id="tab-region-<?php echo $region_code; ?>" class="vtabs-content">
+            <!-- ============================================================
+                 Region credentials
+                 ============================================================ -->
             <table class="form">
               <tr>
-                <td><label for="input-merchant"><?php echo $entry_merchant; ?><br /><span class="help"><?php echo $help_merchant; ?></span></label></td>
-                <td><input type="text" name="klarna[<?php echo $country['code']; ?>][merchant]" id="input-merchant" value="<?php echo isset($klarna[$country['code']]) ? $klarna[$country['code']]['merchant'] : ''; ?>" size="40" /></td>
+                <td><label for="input-<?php echo $region_code; ?>-username"><?php echo $entry_username; ?><br /><span class="help"><?php echo $help_username; ?></span></label></td>
+                <td><input type="text" name="klarna[<?php echo $region_code; ?>][username]" id="input-<?php echo $region_code; ?>-username" value="<?php echo isset($region_data['username']) ? $region_data['username'] : ''; ?>" size="40" autocomplete="off" /></td>
               </tr>
               <tr>
-                <td><label for="input-secret"><?php echo $entry_secret; ?><br /><span class="help"><?php echo $help_secret; ?></span></label></td>
-                <td><input type="text" name="klarna[<?php echo $country['code']; ?>][secret]" id="input-secret" value="<?php echo isset($klarna[$country['code']]) ? $klarna[$country['code']]['secret'] : ''; ?>" size="40" /></td>
+                <td><label for="input-<?php echo $region_code; ?>-password"><?php echo $entry_password; ?><br /><span class="help"><?php echo $help_password; ?></span></label></td>
+                <td><input type="password" name="klarna[<?php echo $region_code; ?>][password]" id="input-<?php echo $region_code; ?>-password" value="<?php echo isset($region_data['password']) ? $region_data['password'] : ''; ?>" size="40" autocomplete="off" /></td>
               </tr>
               <tr>
-                <td><label for="input-server"><?php echo $entry_server; ?></label></td>
-                <td><select name="klarna[<?php echo $country['code']; ?>][server]" id="input-server">
-                  <?php if (isset($klarna[$country['code']]) && $klarna[$country['code']]['server'] === 'live') { ?>
-                    <option value="live" selected="selected"><?php echo $text_live; ?></option>
-                  <?php } else { ?>
-                    <option value="live"><?php echo $text_live; ?></option>
-                  <?php } ?>
-                  <?php if (isset($klarna[$country['code']]) && $klarna[$country['code']]['server'] === 'beta') { ?>
-                    <option value="beta" selected="selected"><?php echo $text_beta; ?></option>
-                  <?php } else { ?>
-                    <option value="beta"><?php echo $text_beta; ?></option>
-                  <?php } ?>
-                </select></td>
+                <td><label for="input-<?php echo $region_code; ?>-server"><?php echo $entry_server; ?></label></td>
+                <td>
+                  <select name="klarna[<?php echo $region_code; ?>][server]" id="input-<?php echo $region_code; ?>-server">
+                    <?php $current_server = isset($region_data['server']) ? $region_data['server'] : 'playground'; ?>
+                    <option value="live"<?php echo ($current_server === 'live') ? ' selected="selected"' : ''; ?>><?php echo $text_live; ?></option>
+                    <option value="playground"<?php echo ($current_server === 'playground') ? ' selected="selected"' : ''; ?>><?php echo $text_playground; ?></option>
+                  </select>
+                </td>
               </tr>
               <tr>
-                <td><label for="input-total"><?php echo $entry_total; ?><br /><span class="help"><?php echo $help_total; ?></span></label></td>
-                <td><input type="text" name="klarna[<?php echo $country['code']; ?>][total]" id="input-total" value="<?php echo isset($klarna[$country['code']]) ? $klarna[$country['code']]['total'] : ''; ?>" /></td>
-              </tr>
-            <tr>
-              <td><label for="input-total-max"><?php echo $entry_total_max; ?><br /><span class="help"><?php echo $help_total_max; ?></span></label></td>
-              <td><input type="text" name="klarna[<?php echo $country['code']; ?>][total_max]" id="input-total-max" value="<?php echo isset($klarna[$country['code']]) ? $klarna[$country['code']]['total_max'] : ''; ?>" /></td>
-            </tr>
-              <tr>
-                <td><label for="input-pending-status"><?php echo $entry_pending_status; ?></label></td>
-                <td><select name="klarna[<?php echo $country['code']; ?>][pending_status_id]" id="input-pending-status">
-                  <?php foreach ($order_statuses as $order_status) { ?>
-                    <?php if (isset($klarna[$country['code']]) && $order_status['order_status_id'] === $klarna[$country['code']]['pending_status_id']) { ?>
-                      <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                    <?php } else { ?>
-                      <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                <td><label for="input-<?php echo $region_code; ?>-pending-status"><?php echo $entry_pending_status; ?></label></td>
+                <td>
+                  <select name="klarna[<?php echo $region_code; ?>][pending_status_id]" id="input-<?php echo $region_code; ?>-pending-status">
+                    <?php foreach ($order_statuses as $order_status) { ?>
+                      <option value="<?php echo $order_status['order_status_id']; ?>"<?php echo (isset($region_data['pending_status_id']) && $order_status['order_status_id'] == $region_data['pending_status_id']) ? ' selected="selected"' : ''; ?>><?php echo $order_status['name']; ?></option>
                     <?php } ?>
-                  <?php } ?>
-                </select></td>
+                  </select>
+                </td>
               </tr>
               <tr>
-                <td><label for="input-accepted-status"><?php echo $entry_accepted_status; ?></label></td>
-                <td><select name="klarna[<?php echo $country['code']; ?>][accepted_status_id]" id="input-accepted-status">
-                  <?php foreach ($order_statuses as $order_status) { ?>
-                    <?php if (isset($klarna[$country['code']]) && $order_status['order_status_id'] === $klarna[$country['code']]['accepted_status_id']) { ?>
-                      <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                    <?php } else { ?>
-                      <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                <td><label for="input-<?php echo $region_code; ?>-accepted-status"><?php echo $entry_accepted_status; ?></label></td>
+                <td>
+                  <select name="klarna[<?php echo $region_code; ?>][accepted_status_id]" id="input-<?php echo $region_code; ?>-accepted-status">
+                    <?php foreach ($order_statuses as $order_status) { ?>
+                      <option value="<?php echo $order_status['order_status_id']; ?>"<?php echo (isset($region_data['accepted_status_id']) && $order_status['order_status_id'] == $region_data['accepted_status_id']) ? ' selected="selected"' : ''; ?>><?php echo $order_status['name']; ?></option>
                     <?php } ?>
-                  <?php } ?>
-                </select></td>
-              </tr>
-              <tr>
-                <td><label for="input-geo-zone"><?php echo $entry_geo_zone; ?></label></td>
-                <td><select name="klarna[<?php echo $country['code']; ?>][geo_zone_id]" id="input-geo-zone">
-                  <option value="0"><?php echo $text_all_zones; ?></option>
-                  <?php foreach ($geo_zones as $geo_zone) { ?>
-                    <?php if (isset($klarna[$country['code']]) && $geo_zone['geo_zone_id'] === $klarna[$country['code']]['geo_zone_id']) {  ?>
-                      <option value="<?php echo $geo_zone['geo_zone_id'] ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
-                    <?php } else { ?>
-                      <option value="<?php echo $geo_zone['geo_zone_id'] ?>"><?php echo $geo_zone['name']; ?></option>
-                    <?php } ?>
-                  <?php } ?>
-                </select></td>
-              </tr>
-              <tr>
-                <td><label for="input-sort-order"><?php echo $entry_sort_order ?></label></td>
-                <td><input type="text" name="klarna[<?php echo $country['code']; ?>][sort_order]" id="input-sort-order" value="<?php echo isset($klarna[$country['code']]) ? $klarna[$country['code']]['sort_order'] : ''; ?>" size="3" /></td>
+                  </select>
+                </td>
               </tr>
               <tr class="highlighted">
-                <td><label for="input-status"><?php echo $entry_status; ?></label></td>
-                <td><select name="klarna[<?php echo $country['code']; ?>][status]" id="input-status">
-                  <?php if (isset($klarna[$country['code']]) && $klarna[$country['code']]['status']) { ?>
-                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                    <option value="0"><?php echo $text_disabled; ?></option>
-                  <?php } else { ?>
-                    <option value="1"><?php echo $text_enabled; ?></option>
-                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                  <?php } ?>
-                </select></td>
+                <td><label for="input-<?php echo $region_code; ?>-status"><?php echo $entry_status; ?></label></td>
+                <td>
+                  <select name="klarna[<?php echo $region_code; ?>][status]" id="input-<?php echo $region_code; ?>-status">
+                    <?php $region_enabled = !empty($region_data['status']); ?>
+                    <option value="1"<?php echo $region_enabled ? ' selected="selected"' : ''; ?>><?php echo $text_enabled; ?></option>
+                    <option value="0"<?php echo !$region_enabled ? ' selected="selected"' : ''; ?>><?php echo $text_disabled; ?></option>
+                  </select>
+                </td>
               </tr>
+            </table>
+            <!-- ============================================================
+                 Countries within this region
+                 ============================================================ -->
+            <h3><?php echo $entry_country; ?></h3>
+            <table class="list" style="width:100%;">
+              <thead>
+                <tr>
+                  <td><?php echo $entry_country; ?></td>
+                  <td><?php echo $entry_geo_zone; ?></td>
+                  <td><?php echo $entry_sort_order; ?></td>
+                  <td><?php echo $entry_status; ?></td>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($region['countries'] as $country_code) { ?>
+                  <?php
+                    $country_data = isset($region_data['countries'][$country_code]) ? $region_data['countries'][$country_code] : [];
+                    $country_label = isset($country_names[$country_code]) ? $country_names[$country_code] : $country_code;
+                    $country_enabled = !empty($country_data['status']);
+                    $country_geo_zone = isset($country_data['geo_zone_id']) ? $country_data['geo_zone_id'] : '0';
+                    $country_sort_order = isset($country_data['sort_order']) ? $country_data['sort_order'] : '';
+                  ?>
+                  <tr>
+                    <td><?php echo $country_label; ?> <span class="help">(<?php echo $country_code; ?>)</span></td>
+                    <td>
+                      <select name="klarna[<?php echo $region_code; ?>][countries][<?php echo $country_code; ?>][geo_zone_id]">
+                        <option value="0"<?php echo ($country_geo_zone == '0') ? ' selected="selected"' : ''; ?>><?php echo $text_all_zones; ?></option>
+                        <?php foreach ($geo_zones as $geo_zone) { ?>
+                          <option value="<?php echo $geo_zone['geo_zone_id']; ?>"<?php echo ($country_geo_zone == $geo_zone['geo_zone_id']) ? ' selected="selected"' : ''; ?>><?php echo $geo_zone['name']; ?></option>
+                        <?php } ?>
+                      </select>
+                    </td>
+                    <td><input type="text" name="klarna[<?php echo $region_code; ?>][countries][<?php echo $country_code; ?>][sort_order]" value="<?php echo $country_sort_order; ?>" size="3" /></td>
+                    <td>
+                      <select name="klarna[<?php echo $region_code; ?>][countries][<?php echo $country_code; ?>][status]">
+                        <option value="1"<?php echo $country_enabled ? ' selected="selected"' : ''; ?>><?php echo $text_enabled; ?></option>
+                        <option value="0"<?php echo !$country_enabled ? ' selected="selected"' : ''; ?>><?php echo $text_disabled; ?></option>
+                      </select>
+                    </td>
+                  </tr>
+                <?php } ?>
+              </tbody>
             </table>
           </div>
         <?php } ?>

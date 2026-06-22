@@ -392,6 +392,12 @@
           <div id="stripe-card-errors" role="alert" style="color:#c0392b; font-size:13px; margin-top:6px; min-height:16px;"></div>
         </div>
 
+		<!-- Klarna Payments — mounted by klarna.js -->
+		<div id="widget-klarna" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+		  <div id="klarna-payments-container"></div>
+		  <div id="klarna-payments-errors" role="alert" style="color:#c0392b; font-size:13px; margin-top:6px; min-height:16px;"></div>
+		</div>
+
         <!-- PayPal Standard — mounted by pp_standard.js -->
         <div id="widget-pp_standard" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
           <div class="pp-testmode-warning payment-pp-testmode-warning" style="display:none; margin-bottom:10px;">
@@ -585,9 +591,18 @@ $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
     type: 'post',
     data: 'shipping_method=' + $('input[name=\'shipping_method\']:checked').attr('value'),
     dataType: 'json',
-    success: function(json) {
-      if (json['code']) { $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart'); }
-    },
+	success: function(json) {
+		if (json['code']) {
+			$('#checkout-one-cart').load('index.php?route=checkout/checkout_cart');
+			// Re-sync any active gateway session if the total has changed.
+			// Only Klarna uses this currently — other gateways ignore it.
+			var active = $('input[name="payment_method"]:checked').val();
+
+			if (active && window.GatewayModules[active] && typeof window.GatewayModules[active].sessionUpdate === 'function') {
+				window.GatewayModules[active].sessionUpdate();
+			}
+		}
+	},
     error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText); }
   });
 });

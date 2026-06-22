@@ -1,42 +1,58 @@
 <?php
 // Heading
-$_['heading_title']         = 'Klarna';
+$_['heading_title']             = 'Klarna';
 
 // Link
-$_['text_klarna']           = '<a onclick="window.open(\'https://klarna.com/sell-with-klarna\');"><img src="view/image/payment/klarna.png" alt="Klarna" title="Klarna" style="border:1px solid #EEEEEE;" /></a>';
+$_['text_klarna']               = '<a onclick="window.open(\'https://klarna.com/sell-with-klarna\');"><img src="view/image/payment/klarna.png" alt="Klarna" title="Klarna" style="border:1px solid #EEEEEE;" /></a>';
 
 // Text
-$_['text_payment']          = 'Payment';
-$_['text_success']          = 'Success: You have modified <b>Klarna</b> account details !';
-$_['text_live']             = 'Live';
-$_['text_beta']             = 'Beta';
-$_['text_sweden']           = 'Sweden';
-$_['text_norway']           = 'Norway';
-$_['text_finland']          = 'Finland';
-$_['text_denmark']          = 'Denmark';
-$_['text_germany']          = 'Germany';
-$_['text_netherlands']      = 'The Netherlands';
+$_['text_payment']              = 'Payment';
+$_['text_success']              = 'Success: You have modified <b>Klarna</b> account details !';
+$_['text_live']                 = 'Live';
+$_['text_playground']           = 'Playground';
+$_['text_region_eu']            = 'Europe / UK';
+$_['text_region_na']            = 'Canada / USA';
+$_['text_region_oc']            = 'Australia / NZL';
+
+// Text Countries
+$_['text_country_at']           = 'Austria';
+$_['text_country_be']           = 'Belgium';
+$_['text_country_de']           = 'Germany';
+$_['text_country_dk']           = 'Denmark';
+$_['text_country_fi']           = 'Finland';
+$_['text_country_fr']           = 'France';
+$_['text_country_gr']           = 'Greece';
+$_['text_country_ie']           = 'Ireland';
+$_['text_country_it']           = 'Italy';
+$_['text_country_nl']           = 'The Netherland';
+$_['text_country_no']           = 'Norway';
+$_['text_country_pl']           = 'Poland';
+$_['text_country_pt']           = 'Portugal';
+$_['text_country_es']           = 'Spain';
+$_['text_country_se']           = 'Sweden';
+$_['text_country_ch']           = 'Switzerland';
+$_['text_country_gb']           = 'Great Britain';
+$_['text_country_us']           = 'USA';
+$_['text_country_ca']           = 'Canada';
+$_['text_country_au']           = 'Australia';
+$_['text_country_nz']           = 'New Zealand';
 
 // Entry
-$_['entry_merchant']        = 'Klarna Merchant ID';
-$_['entry_secret']          = 'Klarna Secret';
-$_['entry_server']          = 'Server';
-$_['entry_total']           = 'Total';
-$_['entry_total_max']       = 'Total Maximum';
-$_['entry_pending_status']  = 'Pending Status';
-$_['entry_accepted_status'] = 'Accepted Status';
-$_['entry_geo_zone']        = 'Geo Zone';
-$_['entry_sort_order']      = 'Sort Order';
-$_['entry_status']          = 'Status';
+$_['entry_username']            = 'Username';
+$_['entry_password']            = 'Password';
+$_['entry_server']              = 'Server';
+$_['entry_pending_status']      = 'Pending Status';
+$_['entry_accepted_status']     = 'Accepted Status';
+$_['entry_geo_zone']            = 'Geo Zone';
+$_['entry_sort_order']          = 'Sort Order';
+$_['entry_status']              = 'Status';
+$_['entry_country']             = 'Country';
 
 // Help
-$_['help_merchant']         = '(e-store id) to use for the Klarna service (provided by Klarna).';
-$_['help_secret']           = 'Shared secret to use with the Klarna service (provided by Klarna).';
-$_['help_total']            = 'The checkout total the order must reach before this payment method becomes <b>active</b>.';
-$_['help_total_max']        = 'The maximum checkout total the order must reach before this payment method becomes <b>inactive</b>.<br />Leave empty for no maximum.';
+$_['help_username']             = 'Please enter your Klarna Username.';
+$_['help_password']             = 'Please enter your Klarna Password.';
 
 // Error
-$_['error_permission']      = 'Warning: You do not have permission to modify payment <b>Klarna</b> !';
-$_['error_pclass']          = 'Could not retrieve pClass for %s. Error Code: %s; Error Message: %s';
-$_['error_curl']            = 'Curl Error - Code: %d; Message: %s';
-$_['error_log']             = 'There were errors updating the payment method. Please check the log file.';
+$_['error_permission']          = 'Warning: You do not have permission to modify payment <b>Klarna</b> !';
+$_['error_credentials_missing'] = 'Some credentials are missing for region %s !';
+$_['error_credentials_invalid'] = 'Invalid credentials for region %s : Username: %s, Password: %s, Server: %s !';

@@ -30,7 +30,7 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 
 	private $interactive_gateways = [
 		'stripe_payments',
-		// 'klarna',
+		'klarna',
 	];
 
 	private $redirect_gateways = [
@@ -60,7 +60,11 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 
 		// Guard — interactive gateway must have a verified intent in session
 		if (in_array($payment_code, $this->interactive_gateways)) {
-			if (empty($this->session->data['stripe_payment_intent_id'])) {
+			if ($payment_code === 'stripe_payments' && empty($this->session->data['stripe_payment_intent_id'])) {
+				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+			}
+
+			if ($payment_code === 'klarna' && empty($this->session->data['klarna_authorization_token'])) {
 				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 			}
 		}
@@ -265,9 +269,15 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 		$data['accept_language'] = $this->request->server['HTTP_ACCEPT_LANGUAGE'] ?? '';
 
 		// Gateway-type-specific order status before addOrder()
-		if (in_array($payment_code, $this->interactive_gateways)) {
-			// Interactive: gateway sets its own confirmed status
-			$data['order_status_id'] = (int)$this->config->get($payment_code . '_order_status_id');
+		if ($payment_code === 'stripe_payments') {
+			// Stripe sets its own confirmed status before addOrder()
+			$data['order_status_id'] = (int)$this->config->get('stripe_payments_order_status_id');
+		} elseif ($payment_code === 'klarna') {
+			// Klarna: order starts at Pending — _confirmInteractivePayment()
+			// upgrades to the region's accepted_status_id after createOrder() succeeds.
+			// Using 1 (Pending) directly rather than a flat config key since
+			// Klarna's accepted status is per-region, not a top-level setting.
+			$data['order_status_id'] = 1; // Pending
 		} elseif (in_array($payment_code, $this->redirect_gateways)) {
 			// Redirect: order waits at Pending until IPN fires
 			$data['order_status_id'] = 1; // Pending
@@ -333,6 +343,66 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 				);
 
 				unset($this->session->data['stripe_payment_intent_id']);
+				break;
+
+			case 'klarna':
+				$this->load->model('payment/klarna');
+				$this->load->model('checkout/order');
+
+				$authorization_token = $this->session->data['klarna_authorization_token'] ?? '';
+				$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+
+				if (!$order_info) {
+					$this->session->data['error'] = 'Order could not be found. Please try again.';
+					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+				}
+
+				$country_code = $order_info['payment_iso_code_2'];
+				$currency_code = $order_info['currency_code'];
+
+				$total = (float)$order_info['total'];
+
+				$result = $this->model_payment_klarna->createOrder($authorization_token, $country_code, $currency_code, $total);
+
+				if (isset($result['error'])) {
+					$log = new Log('klarna.log');
+					$log->write('createOrder failed for NivoCart order #' . $order_info['order_id'] . ': ' . $result['error']);
+
+					$this->session->data['error'] = 'Payment could not be completed with Klarna. Please try again.';
+					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+				}
+
+				$klarna_order_id = $result['klarna_order_id'];
+
+				// Store Klarna's order ID against the NivoCart order for webhook
+				// lookups, refunds, and Klarna dashboard cross-referencing.
+				$this->model_checkout_order->updatePaymentReference($this->session->data['order_id'], $klarna_order_id);
+
+				// Best-effort: attach NivoCart order_id as merchant_reference1
+				// in Klarna's own dashboard. Non-blocking — a failure here doesn't
+				// affect the order outcome, klarna_order_id is already stored above.
+				$ref_result = $this->model_payment_klarna->updateOrderReference($klarna_order_id, $country_code, (int)$this->session->data['order_id']);
+
+				if (isset($ref_result['error'])) {
+					$log = new Log('klarna.log');
+					$log->write('updateOrderReference non-fatal failure for order #' . $this->session->data['order_id'] . ': ' . $ref_result['error']);
+				}
+
+				// Klarna's fraud_status: ACCEPTED = clear, PENDING = under review.
+				// PENDING maps to the region's pending_status_id (manual review
+				// hold) rather than accepted — the push notification webhook will
+				// upgrade it once Klarna clears it.
+				if ($result['fraud_status'] === 'PENDING') {
+					$confirm_status_id = $result['pending_status_id'];
+				} else {
+					$confirm_status_id = $result['accepted_status_id'];
+				}
+
+				$this->model_checkout_order->confirm($this->session->data['order_id'], $confirm_status_id);
+
+				unset($this->session->data['klarna_authorization_token']);
+				unset($this->session->data['klarna_session_id']);
+				unset($this->session->data['klarna_region']);
 				break;
 		}
 	}

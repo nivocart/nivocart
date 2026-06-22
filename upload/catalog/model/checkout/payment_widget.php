@@ -136,6 +136,49 @@ class ModelCheckoutPaymentWidget extends Model {
 	}
 
 	// =========================================================================
+	// Klarna Payments
+	// =========================================================================
+
+	private function getWidgetData_klarna(float $total, string $currency_code): array {
+		// Resolve the payment country from session — same approach as
+		// ControllerPaymentKlarna::_resolvePaymentCountry(). We need the
+		// country at widget-data-build time (checkout page load) to verify
+		// Klarna is actually available before handing any data to the JS.
+		$order_session = $this->session->data['one_page_order'] ?? [];
+
+		// Prefer iso_code_2 if already in session, otherwise resolve from
+		// country_id via DB — consistent with how the catalog controller
+		// and ModelCheckoutOrder::getOrder() both derive it.
+		if (!empty($order_session['payment_iso_code_2'])) {
+			$country_code_2 = strtoupper($order_session['payment_iso_code_2']);
+		} elseif (!empty($order_session['payment_country_id'])) {
+			$result = $this->db->query("SELECT iso_code_2 FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$order_session['payment_country_id'] . "' LIMIT 1");
+			$country_code_2 = $result->num_rows ? strtoupper($result->row['iso_code_2']) : '';
+		} else {
+			$country_code_2 = '';
+		}
+
+		// If we can't determine the country, or Klarna isn't configured/
+		// enabled for it, return empty — gateway_loader.js will receive no
+		// data for 'klarna' and won't show the widget div.
+		if ($country_code_2 === '') {
+			return [];
+		}
+
+		$this->load->model('payment/klarna');
+
+		if (!$this->model_payment_klarna->isAvailable($country_code_2)) {
+			return [];
+		}
+
+		return [
+			'session_url' => 'index.php?route=payment/klarna/sessionCreate',
+			'update_url'  => 'index.php?route=payment/klarna/sessionUpdate',
+			'store_url'   => 'index.php?route=payment/klarna/storeAuthorization',
+		];
+	}
+
+	// =========================================================================
 	// Add future gateways below following the same pattern:
 	//
 	// private function getWidgetData_pp_express(float $total, string $currency_code): array {

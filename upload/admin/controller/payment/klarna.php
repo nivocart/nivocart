@@ -2,11 +2,35 @@
 /**
  * Class ControllerPaymentKlarna
  *
+ * Admin settings screen for Klarna Payments (modern REST API).
+ *
+ * Credentials are issued per-region by Klarna (EU / NA / OC), not per
+ * country, so settings are grouped by region. Each region contains a
+ * sub-list of countries that can individually be enabled/disabled and
+ * given a geo zone + sort order for the checkout payment method list.
+ *
  * @package NivoCart
  */
 class ControllerPaymentKlarna extends Controller {
 	private $error = [];
-	private $pclasses = [];
+
+	/**
+	 * Region definitions — the countries listed under each region are
+	 * the ones currently offered in the admin screen. Extending coverage
+	 * later is just adding entries to these arrays.
+	 */
+	private $regions = [
+		'eu' => [
+			'AT', 'BE', 'DE', 'DK', 'FI', 'FR', 'GR', 'IE', 'IT',
+			'NL', 'NO', 'PL', 'PT', 'ES', 'SE', 'CH', 'GB'
+		],
+		'na' => [
+			'US', 'CA'
+		],
+		'oc' => [
+			'AU', 'NZ'
+		]
+	];
 
 	public function index() {
 		$this->language->load('payment/klarna');
@@ -16,21 +40,7 @@ class ControllerPaymentKlarna extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
-			$status = false;
-
-			foreach ($this->request->post['klarna'] as $klarna) {
-				if ($klarna['status']) {
-					$status = true;
-					break;
-				}
-			}
-
-			$klarna_data = [
-				'klarna_pclasses' => $this->pclasses,
-				'klarna_status'   => $status
-			];
-
-			$this->model_setting_setting->editSetting('klarna', array_merge($this->request->post, $klarna_data));
+			$this->model_setting_setting->editSetting('klarna', $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -49,29 +59,24 @@ class ControllerPaymentKlarna extends Controller {
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_all_zones'] = $this->language->get('text_all_zones');
 		$this->data['text_live'] = $this->language->get('text_live');
-		$this->data['text_beta'] = $this->language->get('text_beta');
-		$this->data['text_sweden'] = $this->language->get('text_sweden');
-		$this->data['text_norway'] = $this->language->get('text_norway');
-		$this->data['text_finland'] = $this->language->get('text_finland');
-		$this->data['text_denmark'] = $this->language->get('text_denmark');
-		$this->data['text_germany'] = $this->language->get('text_germany');
-		$this->data['text_netherlands'] = $this->language->get('text_netherlands');
+		$this->data['text_playground'] = $this->language->get('text_playground');
 
-		$this->data['entry_merchant'] = $this->language->get('entry_merchant');
-		$this->data['entry_secret'] = $this->language->get('entry_secret');
+		$this->data['text_region_eu'] = $this->language->get('text_region_eu');
+		$this->data['text_region_na'] = $this->language->get('text_region_na');
+		$this->data['text_region_oc'] = $this->language->get('text_region_oc');
+
+		$this->data['entry_username'] = $this->language->get('entry_username');
+		$this->data['entry_password'] = $this->language->get('entry_password');
 		$this->data['entry_server'] = $this->language->get('entry_server');
-		$this->data['entry_total'] = $this->language->get('entry_total');
-		$this->data['entry_total_max'] = $this->language->get('entry_total_max');
 		$this->data['entry_pending_status'] = $this->language->get('entry_pending_status');
 		$this->data['entry_accepted_status'] = $this->language->get('entry_accepted_status');
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_country'] = $this->language->get('entry_country');
 
-		$this->data['help_merchant'] = $this->language->get('help_merchant');
-		$this->data['help_secret'] = $this->language->get('help_secret');
-		$this->data['help_total'] = $this->language->get('help_total');
-		$this->data['help_total_max'] = $this->language->get('help_total_max');
+		$this->data['help_username'] = $this->language->get('help_username');
+		$this->data['help_password'] = $this->language->get('help_password');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_apply'] = $this->language->get('button_apply');
@@ -118,37 +123,27 @@ class ControllerPaymentKlarna extends Controller {
 		$this->data['action'] = $this->url->link('payment/klarna', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
-		$this->data['countries'] = [];
+		// Region metadata for the template loop — code, label key, country list
+		$this->data['regions'] = [];
 
-		$this->data['countries'][] = [
-			'name' => $this->language->get('text_germany'),
-			'code' => 'DEU'
-		];
+		foreach ($this->regions as $region_code => $countries) {
+			$this->data['regions'][] = [
+				'code'      => $region_code,
+				'label'     => $this->language->get('text_region_' . $region_code),
+				'countries' => $countries
+			];
+		}
 
-		$this->data['countries'][] = [
-			'name' => $this->language->get('text_netherlands'),
-			'code' => 'NLD'
-		];
+		// Country display names come from the language file so Phil can
+		// translate/relabel without touching this controller.
+		$this->data['country_names'] = [];
 
-		$this->data['countries'][] = [
-			'name' => $this->language->get('text_denmark'),
-			'code' => 'DNK'
-		];
-
-		$this->data['countries'][] = [
-			'name' => $this->language->get('text_sweden'),
-			'code' => 'SWE'
-		];
-
-		$this->data['countries'][] = [
-			'name' => $this->language->get('text_norway'),
-			'code' => 'NOR'
-		];
-
-		$this->data['countries'][] = [
-			'name' => $this->language->get('text_finland'),
-			'code' => 'FIN'
-		];
+		foreach ($this->regions as $countries) {
+			foreach ($countries as $country_code) {
+				$key = 'text_country_' . strtolower($country_code);
+				$this->data['country_names'][$country_code] = $this->language->get($key) ?: $country_code;
+			}
+		}
 
 		if (isset($this->request->post['klarna'])) {
 			$this->data['klarna'] = $this->request->post['klarna'];
@@ -183,181 +178,74 @@ class ControllerPaymentKlarna extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	/**
+	 * Validates the form and, for each enabled region with at least one
+	 * enabled country, performs a lightweight credentials check against
+	 * the live Klarna Payments API. Failures are logged but do not block
+	 * saving — they're surfaced as a warning so a typo doesn't lock the
+	 * admin out of fixing it.
+	 */
 	private function validate() {
 		if (!$this->user->hasPermission('modify', 'payment/klarna')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
+		if (!empty($this->error)) {
+			return false;
+		}
+
+		$this->load->model('payment/klarna');
+
 		$log = new Log('klarna.log');
+		$credential_errors = [];
 
-		$country = [
-			'NOR' => [
-				'currency' => 1,
-				'country'  => 164,
-				'language' => 97
-			],
-			'SWE' => [
-				'currency' => 0,
-				'country'  => 209,
-				'language' => 138
-			],
-			'FIN' => [
-				'currency' => 2,
-				'country'  => 73,
-				'language' => 101
-			],
-			'DNK' => [
-				'currency' => 3,
-				'country'  => 59,
-				'language' => 27
-			],
-			'DEU' => [
-				'currency' => 2,
-				'country'  => 81,
-				'language' => 28
-			],
-			'NLD' => [
-				'currency' => 2,
-				'country'  => 154,
-				'language' => 101
-			]
-		];
+		$post = $this->request->post['klarna'] ?? [];
 
-		foreach ($this->request->post['klarna'] as $key => $klarna) {
-			if ($klarna['status']) {
-				$digest = base64_encode(pack("H*", hash('sha256', $klarna['merchant']  . ':' . $country[$key]['currency'] . ':' . $klarna['secret'])));
+		foreach (array_keys($this->regions) as $region_code) {
+			$region = $post[$region_code] ?? null;
 
-				$xml = '<methodCall>';
-				$xml .= '  <methodName>get_pclasses</methodName>';
-				$xml .= '  <params>';
-				$xml .= '    <param><value><string>4.1</string></value></param>';
-				$xml .= '    <param><value><string>API:NIVOCART:' . VERSION . '</string></value></param>';
-				$xml .= '    <param><value><int>' . (int)$klarna['merchant'] . '</int></value></param>';
-				$xml .= '    <param><value><int>' . $country[$key]['currency'] . '</int></value></param>';
-				$xml .= '    <param><value><string>' . $digest . '</string></value></param>';
-				$xml .= '    <param><value><int>' . $country[$key]['country'] . '</int></value></param>';
-				$xml .= '    <param><value><int>' . $country[$key]['language'] . '</int></value></param>';
-				$xml .= '  </params>';
-				$xml .= '</methodCall>';
+			if (empty($region['status'])) {
+				continue;
+			}
 
-				if ($klarna['server'] === 'live') {
-					$url = 'https://payment.klarna.com';
-				} else {
-					$url = 'https://payment.testdrive.klarna.com';
-				}
+			$has_active_country = false;
 
-				$curl = curl_init();
-
-				$header = [];
-
-				$header[] = 'Content-Type: text/xml';
-				$header[] = 'Content-Length: ' . strlen($xml);
-
-				curl_setopt($curl, CURLOPT_URL, $url);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-				curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
-
-				$response = curl_exec($curl);
-
-				if ($response !== false) {
-					$xml = new DOMDocument();
-					$xml->loadXML($response);
-
-					$xpath = new DOMXPath($xml);
-
-					$nodes = $xpath->query('//methodResponse/params/param/value');
-
-					if ($nodes->length === 0) {
-						$this->error['warning'] = $this->language->get('error_log');
-
-						$error_code = $xpath->query('//methodResponse/fault/value/struct/member/value/int')->item(0)->nodeValue;
-						$error_message = $xpath->query('//methodResponse/fault/value/struct/member/value/string')->item(0)->nodeValue;
-
-						$log->write(sprintf($this->language->get('error_pclass'), $key, $error_code, $error_message));
-						continue;
+			if (!empty($region['countries']) && is_array($region['countries'])) {
+				foreach ($region['countries'] as $country) {
+					if (!empty($country['status'])) {
+						$has_active_country = true;
+						break;
 					}
-
-					$pclasses = $this->parseResponse($nodes->item(0)->firstChild, $xml);
-
-					while ($pclasses) {
-						$pclass = array_slice($pclasses, 0, 10);
-						$pclasses = array_slice($pclasses, 10);
-
-						$pclass[3] /= 100;
-						$pclass[4] /= 100;
-						$pclass[5] /= 100;
-						$pclass[6] /= 100;
-						$pclass[9] = ($pclass[9] !== '-') ? strtotime($pclass[9]) : $pclass[9];
-
-						array_unshift($pclass, $klarna['merchant']);
-
-						$this->pclasses[$key][] = [
-							'eid'          => intval($pclass[0]),
-							'id'           => intval($pclass[1]),
-							'description'  => $pclass[2],
-							'months'       => intval($pclass[3]),
-							'startfee'     => floatval($pclass[4]),
-							'invoicefee'   => floatval($pclass[5]),
-							'interestrate' => floatval($pclass[6]),
-							'minamount'    => floatval($pclass[7]),
-							'country'      => intval($pclass[8]),
-							'type'         => intval($pclass[9])
-						];
-					}
-
-				} else {
-					$this->error['warning'] = $this->language->get('error_log');
-
-					$log->write(sprintf($this->language->get('error_curl'), curl_errno($curl), curl_error($curl)));
 				}
+			}
 
-				curl_close($curl);
+			if (!$has_active_country) {
+				continue;
+			}
+
+			if (empty($region['username']) || empty($region['password'])) {
+				$credential_errors[] = sprintf($this->language->get('error_credentials_missing'), strtoupper($region_code));
+				continue;
+			}
+
+			$result = $this->model_payment_klarna->testCredentials(
+				$region_code,
+				$region['username'],
+				$region['password'],
+				$region['server'] ?? 'playground'
+			);
+
+			if ($result !== true) {
+				$credential_errors[] = sprintf($this->language->get('error_credentials_invalid'), strtoupper($region_code), $result);
+				$log->write('Credential check failed for region ' . strtoupper($region_code) . ': ' . $result);
 			}
 		}
 
-		return empty($this->error);
-	}
-
-	private function parseResponse($node, $document) {
-		$child = $node;
-
-		switch ($child->nodeName) {
-			case 'string':
-				$value = $child->nodeValue;
-				break;
-			case 'boolean':
-				$value = (string)$child->nodeValue;
-				if ($value === '0') {
-					$value = false;
-				} elseif ($value === '1') {
-					$value = true;
-				} else {
-					$value = null;
-				}
-				break;
-			case 'integer':
-			case 'int':
-			case 'i4':
-			case 'i8':
-				$value = (int)$child->nodeValue;
-				break;
-			case 'array':
-				$value = [];
-				$xpath = new DOMXPath($document);
-				$entries = $xpath->query('.//array/data/value', $child);
-				for ($i = 0; $i < $entries->length; $i++) {
-					$value[] = $this->parseResponse($entries->item($i)->firstChild, $document);
-				}
-				break;
-			default:
-				$value = null;
+		if ($credential_errors) {
+			$this->error['warning'] = implode('<br />', $credential_errors);
 		}
 
-		return $value;
+		return empty($this->error);
 	}
 
 	public function clear() {
