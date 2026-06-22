@@ -310,7 +310,7 @@ class ControllerLocalisationOrderStatus extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['order_status'])) {
 			$this->data['order_status'] = $this->request->post['order_status'];
@@ -348,16 +348,36 @@ class ControllerLocalisationOrderStatus extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
+		$protected_statuses = [
+			'pending',
+			'processing',
+			'shipped',
+			'complete',
+			'canceled',
+			'denied',
+			'canceled reversal',
+			'failed',
+			'refunded',
+			'reversed',
+			'chargeback',
+			'expired',
+			'processed',
+			'voided'
+		];
+
+		$this->load->model('localisation/order_status');
 		$this->load->model('setting/store');
 		$this->load->model('sale/order');
 
 		foreach ($this->request->post['selected'] as $order_status_id) {
-			if ($this->config->get('config_order_status_id') === $order_status_id) {
-				$this->error['warning'] = $this->language->get('error_default');
-			}
+			$order_statuses = [];
 
-			if ($this->config->get('config_download_status_id') === $order_status_id) {
-				$this->error['warning'] = $this->language->get('error_download');
+			$order_statuses = $this->model_localisation_order_status->getOrderStatuses([]);
+
+			foreach ($order_statuses as $order_status) {
+				if (in_array(strtolower($order_status['name']), $protected_statuses)) {
+					$this->error['warning'] = $this->language->get('error_protected');
+				}
 			}
 
 			$store_total = $this->model_setting_store->getTotalStoresByOrderStatusId($order_status_id);
@@ -370,6 +390,14 @@ class ControllerLocalisationOrderStatus extends Controller {
 
 			if ($order_total) {
 				$this->error['warning'] = sprintf($this->language->get('error_order'), $order_total);
+			}
+
+			if ($this->config->get('config_order_status_id') === $order_status_id) {
+				$this->error['warning'] = $this->language->get('error_default');
+			}
+
+			if ($this->config->get('config_download_status_id') === $order_status_id) {
+				$this->error['warning'] = $this->language->get('error_download');
 			}
 		}
 

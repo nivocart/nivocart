@@ -328,7 +328,7 @@ class ControllerLocalisationLengthClass extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['length_class_description'])) {
 			$this->data['length_class_description'] = $this->request->post['length_class_description'];

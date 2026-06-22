@@ -311,7 +311,7 @@ class ControllerLocalisationStockStatus extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['stock_status'])) {
 			$this->data['stock_status'] = $this->request->post['stock_status'];

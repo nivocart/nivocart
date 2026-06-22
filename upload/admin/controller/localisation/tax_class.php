@@ -347,7 +347,7 @@ class ControllerLocalisationTaxClass extends Controller {
 
 		$this->load->model('localisation/tax_rate');
 
-		$this->data['tax_rates'] = $this->model_localisation_tax_rate->getTaxRates();
+		$this->data['tax_rates'] = $this->model_localisation_tax_rate->getTaxRates([]);
 
 		if (isset($this->request->post['tax_rule'])) {
 			$this->data['tax_rules'] = $this->request->post['tax_rule'];

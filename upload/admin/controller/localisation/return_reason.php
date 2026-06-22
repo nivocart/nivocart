@@ -308,7 +308,7 @@ class ControllerLocalisationReturnReason extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['return_reason'])) {
 			$this->data['return_reason'] = $this->request->post['return_reason'];

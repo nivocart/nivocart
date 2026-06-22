@@ -310,7 +310,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['return_status'])) {
 			$this->data['return_status'] = $this->request->post['return_status'];

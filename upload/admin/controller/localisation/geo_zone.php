@@ -344,9 +344,7 @@ class ControllerLocalisationGeoZone extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$countries_array = [];
-
-		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
+		$this->data['countries'] = $this->model_localisation_country->getCountries([]);
 
 		if (isset($this->request->post['zone_to_geo_zone'])) {
 			$this->data['zone_to_geo_zones'] = $this->request->post['zone_to_geo_zone'];

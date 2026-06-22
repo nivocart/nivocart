@@ -414,7 +414,7 @@ class ControllerLocalisationZone extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$this->data['countries'] = $this->model_localisation_country->getCountries();
+		$this->data['countries'] = $this->model_localisation_country->getCountries([]);
 
 		$this->template = 'localisation/zone_form.tpl';
 		$this->children = [
