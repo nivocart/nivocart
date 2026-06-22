@@ -318,18 +318,14 @@ class ControllerCommonHome extends Controller {
 		// Overview Sales
 		$this->load->model('sale/order');
 
-		$sales_total = [];
-
-		$this->data['total_sale'] = $this->currency->format($this->model_sale_order->getTotalSales($sales_total), $this->config->get('config_currency'));
+		$this->data['total_sale'] = $this->currency->format($this->model_sale_order->getTotalSales([]), $this->config->get('config_currency'));
 		$this->data['total_sale_year'] = $this->currency->format($this->model_sale_order->getTotalSalesByYear(date('Y')), $this->config->get('config_currency'));
 		$this->data['total_sale_month'] = $this->currency->format($this->model_sale_order->getTotalSalesByMonth(date('m')), $this->config->get('config_currency'));
 
 		// Overview Customers
 		$this->load->model('sale/customer');
 
-		$customers_total = [];
-
-		$this->data['total_customer'] = $this->model_sale_customer->getTotalCustomers($customers_total);
+		$this->data['total_customer'] = $this->model_sale_customer->getTotalCustomers([]);
 		$this->data['total_customer_approval'] = $this->model_sale_customer->getTotalCustomersAwaitingApproval();
 
 		// Overview Reviews
@@ -341,26 +337,20 @@ class ControllerCommonHome extends Controller {
 		// Overview Affiliates
 		$this->load->model('sale/affiliate');
 
-		$affiliates_total = [];
-
-		$this->data['total_affiliate'] = $this->model_sale_affiliate->getTotalAffiliates($affiliates_total);
+		$this->data['total_affiliate'] = $this->model_sale_affiliate->getTotalAffiliates([]);
 		$this->data['total_affiliate_approval'] = $this->model_sale_affiliate->getTotalAffiliatesAwaitingApproval();
 		$this->data['allow_affiliate'] = $this->config->get('config_affiliate_disable') ? false : true;
 
 		// Overview Returns
 		$this->load->model('sale/return');
 
-		$returns_total = [];
-
-		$this->data['total_return'] = $this->model_sale_return->getTotalReturns($returns_total);
+		$this->data['total_return'] = $this->model_sale_return->getTotalReturns([]);
 		$this->data['allow_return'] = $this->config->get('config_return_disable') ? false : true;
 
 		// Overview Uploads
 		$this->load->model('tool/upload');
 
-		$uploads_total = [];
-
-		$this->data['total_upload'] = $this->model_tool_upload->getTotalUploads($uploads_total);
+		$this->data['total_upload'] = $this->model_tool_upload->getTotalUploads([]);
 
 		// Overview Links
 		$config_order_status_id = $this->config->get('config_order_status_id');
@@ -376,9 +366,7 @@ class ControllerCommonHome extends Controller {
 		$this->data['view_affiliates'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Today - New Orders
-		$orders_total = [];
-
-		$this->data['total_order'] = $this->model_sale_order->getTotalOrders($orders_total);
+		$this->data['total_order'] = $this->model_sale_order->getTotalOrders([]);
 
 		$order_today = $this->model_sale_order->getTotalOrders(['filter_date_added' => date('Y-m-d')]);
 
@@ -405,9 +393,7 @@ class ControllerCommonHome extends Controller {
 		// Today - Visitors Online
 		$this->load->model('report/online');
 
-		$customers_online_total = [];
-
-		$this->data['total_online'] = $this->model_report_online->getTotalCustomersOnline($customers_online_total);
+		$this->data['total_online'] = $this->model_report_online->getTotalCustomersOnline([]);
 
 		$this->data['view_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -416,7 +402,7 @@ class ControllerCommonHome extends Controller {
 		// Tab Map
 		$this->load->model('report/sale');
 
-		$total_sales = $this->model_report_sale->getTotalSales($sales_total);
+		$total_sales = $this->model_report_sale->getTotalSales([]);
 
 		$this->data['top_countries'] = [];
 

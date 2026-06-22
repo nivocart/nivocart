@@ -317,7 +317,7 @@ class ControllerDesignMenu extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['menu_store'])) {
 			$this->data['menu_store'] = $this->request->post['menu_store'];

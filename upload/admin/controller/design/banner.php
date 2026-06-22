@@ -373,7 +373,7 @@ class ControllerDesignBanner extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['banner_image'])) {
 			$banner_images = $this->request->post['banner_image'];
@@ -472,9 +472,7 @@ class ControllerDesignBanner extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes_banners = [];
-
-		$routes = $this->model_tool_route->getRoutes($routes_banners);
+		$routes = $this->model_tool_route->getRoutes([]);
 
 		if ($routes) {
 			$output = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";

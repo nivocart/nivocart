@@ -378,7 +378,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['footer_description'])) {
 			$this->data['footer_description'] = $this->request->post['footer_description'];
@@ -398,7 +398,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['footer_store'])) {
 			$this->data['footer_store'] = $this->request->post['footer_store'];
@@ -486,9 +486,7 @@ class ControllerDesignFooter extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes_footer = [];
-
-		$routes = $this->model_tool_route->getRoutes($routes_footer);
+		$routes = $this->model_tool_route->getRoutes([]);
 
 		if ($routes) {
 			$output = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";

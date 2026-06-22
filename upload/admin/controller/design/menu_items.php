@@ -512,7 +512,7 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['menu_item_description'])) {
 			$this->data['menu_item_description'] = $this->request->post['menu_item_description'];
@@ -632,9 +632,7 @@ class ControllerDesignMenuItems extends Controller {
 
 		$this->load->model('tool/route');
 
-		$routes_menu = [];
-
-		$routes = $this->model_tool_route->getRoutes($routes_menu);
+		$routes = $this->model_tool_route->getRoutes([]);
 
 		if ($routes) {
 			$output = '<html dir="' . $direction . '" lang="' . $language . '">' . "\n";

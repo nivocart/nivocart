@@ -424,9 +424,7 @@ class ControllerCommonHeader extends Controller {
 				$this->data['connections_ul'] = [];
 				$this->data['connections_li'] = [];
 
-				$connections_array = [];
-
-				$connections = $this->model_design_connection->getConnections($connections_array);
+				$connections = $this->model_design_connection->getConnections([]);
 
 				foreach ($connections as $connection) {
 					if ($connection['backend']) {

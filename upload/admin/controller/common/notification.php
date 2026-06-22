@@ -129,9 +129,7 @@ class ControllerCommonNotification extends Controller {
 
 		$this->load->model('report/customer');
 
-		$customers_online = [];
-
-		$online_total = $notification_online ? $this->model_report_customer->getTotalCustomersOnline($customers_online) : 0;
+		$online_total = $notification_online ? $this->model_report_customer->getTotalCustomersOnline([]) : 0;
 
 		$this->data['online_total'] = (int)$online_total;
 
@@ -139,9 +137,7 @@ class ControllerCommonNotification extends Controller {
 
 		$this->load->model('sale/customer');
 
-		$customers_deleted = [];
-
-		$deleted_total = $notification_deleted ? $this->model_sale_customer->getTotalCustomersDeleted($customers_deleted) : 0;
+		$deleted_total = $notification_deleted ? $this->model_sale_customer->getTotalCustomersDeleted([]) : 0;
 
 		$this->data['deleted_total'] = (int)$deleted_total;
 
