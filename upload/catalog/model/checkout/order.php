@@ -17,7 +17,7 @@ class ModelCheckoutOrder extends Model {
 		$sql .= " customer_id = '" . (int)$data['customer_id'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "',";
 		$sql .= " payment_firstname = '" . $this->db->escape((string)$data['payment_firstname']) . "', payment_lastname = '" . $this->db->escape((string)$data['payment_lastname']) . "', payment_company = '" . $this->db->escape((string)$data['payment_company']) . "', payment_company_id = '" . $this->db->escape($data['payment_company_id']) . "', payment_tax_id = '" . $this->db->escape($data['payment_tax_id']) . "',";
 		$sql .= " payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', payment_city = '" . $this->db->escape($data['payment_city']) . "', payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', payment_country = '" . $this->db->escape($data['payment_country']) . "', payment_country_id = '" . (int)$data['payment_country_id'] . "', payment_zone = '" . $this->db->escape($data['payment_zone']) . "', payment_zone_id = '" . (int)$data['payment_zone_id'] . "', payment_address_format = '" . $this->db->escape($data['payment_address_format']) . "',";
-		$sql .= " payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',";
+		$sql .= " payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "', payment_reference = '" . $this->db->escape((string)($data['payment_reference'] ?? '')) . "',";
 		$sql .= " shipping_firstname = '" . $this->db->escape((string)$data['shipping_firstname']) . "', shipping_lastname = '" . $this->db->escape((string)$data['shipping_lastname']) . "', shipping_company = '" . $this->db->escape((string)$data['shipping_company']) . "',";
 		$sql .= " shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "', shipping_city = '" . $this->db->escape($data['shipping_city']) . "', shipping_postcode = '" . $this->db->escape($data['shipping_postcode']) . "', shipping_country = '" . $this->db->escape($data['shipping_country']) . "', shipping_country_id = '" . (int)$data['shipping_country_id'] . "', shipping_zone = '" . $this->db->escape($data['shipping_zone']) . "', shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', shipping_address_format = '" . $this->db->escape($data['shipping_address_format']) . "',";
 		$sql .= " shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "',";
@@ -57,6 +57,19 @@ class ModelCheckoutOrder extends Model {
 		$this->cart->clear();
 
 		return $order_id;
+	}
+
+	/**
+	 * Stores (or overwrites) the payment gateway's own transaction/order
+	 * reference against an existing order — e.g. a Klarna order_id, a
+	 * PayPal transaction ID, etc. Deliberately minimal: no status change,
+	 * no order_history entry, no emails. Safe to call any time after
+	 * addOrder() has allocated the order_id, including before confirm()
+	 * runs (interactive gateways resolve their own reference after the
+	 * order row already exists).
+	 */
+	public function updatePaymentReference(int $order_id, string $reference): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET payment_reference = '" . $this->db->escape($reference) . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 	}
 
 	public function getOrder(int $order_id): array {
@@ -144,6 +157,7 @@ class ModelCheckoutOrder extends Model {
 				'payment_address_format'  => $order_query->row['payment_address_format'],
 				'payment_method'          => $order_query->row['payment_method'],
 				'payment_code'            => $order_query->row['payment_code'],
+				'payment_reference'       => $order_query->row['payment_reference'],
 				'shipping_firstname'      => $order_query->row['shipping_firstname'],
 				'shipping_lastname'       => $order_query->row['shipping_lastname'],
 				'shipping_company'        => $order_query->row['shipping_company'],

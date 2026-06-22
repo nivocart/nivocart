@@ -73,6 +73,8 @@ class ModelSaleOrder extends Model {
 			$payment_zone = '';
 		}
 
+		$payment_reference = '';
+
 		// Currency info
 		$this->load->model('localisation/currency');
 
@@ -101,7 +103,7 @@ class ModelSaleOrder extends Model {
 		$sql .= " customer_id = '" . (int)$data['customer_id'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "',";
 		$sql .= " payment_firstname = '" . $this->db->escape((string)$data['payment_firstname']) . "', payment_lastname = '" . $this->db->escape((string)$data['payment_lastname']) . "', payment_company = '" . $this->db->escape((string)$data['payment_company']) . "', payment_company_id = '" . $this->db->escape($data['payment_company_id']) . "', payment_tax_id = '" . $this->db->escape($data['payment_tax_id']) . "',";
 		$sql .= " payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', payment_city = '" . $this->db->escape($data['payment_city']) . "', payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', payment_country = '" . $this->db->escape($payment_country) . "', payment_country_id = '" . (int)$data['payment_country_id'] . "', payment_zone = '" . $this->db->escape($payment_zone) . "', payment_zone_id = '" . (int)$data['payment_zone_id'] . "', payment_address_format = '" . $this->db->escape($payment_address_format) . "',";
-		$sql .= " payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',";
+		$sql .= " payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "', payment_reference = '" . $this->db->escape($payment_reference) . "',";
 		$sql .= " shipping_firstname = '" . $this->db->escape((string)$data['shipping_firstname']) . "', shipping_lastname = '" . $this->db->escape((string)$data['shipping_lastname']) . "', shipping_company = '" . $this->db->escape((string)$data['shipping_company']) . "',";
 		$sql .= " shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "', shipping_city = '" . $this->db->escape($data['shipping_city']) . "', shipping_postcode = '" . $this->db->escape($data['shipping_postcode']) . "', shipping_country = '" . $this->db->escape($shipping_country) . "', shipping_country_id = '" . (int)$data['shipping_country_id'] . "', shipping_zone = '" . $this->db->escape($shipping_zone) . "', shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', shipping_address_format = '" . $this->db->escape($shipping_address_format) . "',";
 		$sql .= " shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "',";
@@ -259,6 +261,8 @@ class ModelSaleOrder extends Model {
 			$payment_zone = '';
 		}
 
+		$payment_reference = '';
+
 		// Restock products before substracting the stock later on
 		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND order_id = '" . (int)$order_id . "'");
 
@@ -282,7 +286,7 @@ class ModelSaleOrder extends Model {
 		$sql = "UPDATE `" . DB_PREFIX . "order` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "',";
 		$sql .= " payment_firstname = '" . $this->db->escape((string)$data['payment_firstname']) . "', payment_lastname = '" . $this->db->escape((string)$data['payment_lastname']) . "', payment_company = '" . $this->db->escape((string)$data['payment_company']) . "', payment_company_id = '" . $this->db->escape($data['payment_company_id']) . "', payment_tax_id = '" . $this->db->escape($data['payment_tax_id']) . "',";
 		$sql .= " payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', payment_city = '" . $this->db->escape($data['payment_city']) . "', payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', payment_country = '" . $this->db->escape($payment_country) . "', payment_country_id = '" . (int)$data['payment_country_id'] . "', payment_zone = '" . $this->db->escape($payment_zone) . "', payment_zone_id = '" . (int)$data['payment_zone_id'] . "', payment_address_format = '" . $this->db->escape($payment_address_format) . "',";
-		$sql .= " payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',";
+		$sql .= " payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "', payment_reference = '" . $this->db->escape($payment_reference) . "',";
 		$sql .= " shipping_firstname = '" . $this->db->escape((string)$data['shipping_firstname']) . "', shipping_lastname = '" . $this->db->escape((string)$data['shipping_lastname']) . "', shipping_company = '" . $this->db->escape((string)$data['shipping_company']) . "',";
 		$sql .= " shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "', shipping_city = '" . $this->db->escape($data['shipping_city']) . "', shipping_postcode = '" . $this->db->escape($data['shipping_postcode']) . "', shipping_country = '" . $this->db->escape($shipping_country) . "', shipping_country_id = '" . (int)$data['shipping_country_id'] . "', shipping_zone = '" . $this->db->escape($shipping_zone) . "', shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', shipping_address_format = '" . $this->db->escape($shipping_address_format) . "',";
 		$sql .= " shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "',";
@@ -446,6 +450,7 @@ class ModelSaleOrder extends Model {
 		$this->cache->delete('product.bestseller');
 	}
 
+	// Get Orders
 	public function getOrder(int $order_id): array {
 		$order_query = $this->db->query("SELECT *, (SELECT CONCAT(c.firstname, ' ', c.lastname) FROM `" . DB_PREFIX . "customer` c WHERE c.customer_id = o.customer_id) AS `customer` FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'");
 
@@ -559,6 +564,7 @@ class ModelSaleOrder extends Model {
 				'payment_address_format'  => $order_query->row['payment_address_format'],
 				'payment_method'          => $order_query->row['payment_method'],
 				'payment_code'            => $order_query->row['payment_code'],
+				'payment_reference'       => $order_query->row['payment_reference'],
 				'shipping_firstname'      => $order_query->row['shipping_firstname'],
 				'shipping_lastname'       => $order_query->row['shipping_lastname'],
 				'shipping_company'        => $order_query->row['shipping_company'],
@@ -714,6 +720,13 @@ class ModelSaleOrder extends Model {
 		return $query->row;
 	}
 
+	public function getOrderProductLocation(int $product_id) {
+		$query = $this->db->query("SELECT location FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "' LIMIT 0,1");
+
+		return ($query->row) ? $query->row : false;
+	}
+
+	// Get Totals
 	public function getOrderTotals(int $order_id): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
 
@@ -778,6 +791,7 @@ class ModelSaleOrder extends Model {
 		return $query->row['total'];
 	}
 
+	// Get Sales
 	public function getTotalSales() {
 		$query = $this->db->query("SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0'");
 
@@ -826,12 +840,6 @@ class ModelSaleOrder extends Model {
 		} else {
 			return 0;
 		}
-	}
-
-	public function getOrderProductLocation(int $product_id) {
-		$query = $this->db->query("SELECT location FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "' LIMIT 0,1");
-
-		return ($query->row) ? $query->row : false;
 	}
 
 	// Order processing statuses
@@ -958,6 +966,7 @@ class ModelSaleOrder extends Model {
 		return $query->row['total'];
 	}
 
+	// Get Emails
 	public function getEmailsByProductsOrdered(int $start, int $end, array $products = []): array {
 		$implode = [];
 

@@ -1613,6 +1613,7 @@ CREATE TABLE `nc_order` (
   `payment_address_format` text CHARACTER SET utf8mb4 NOT NULL,
   `payment_method` varchar(128) NOT NULL,
   `payment_code` varchar(128) NOT NULL,
+  `payment_reference` varchar(128) NULL DEFAULT NULL,
   `shipping_firstname` varchar(32) NOT NULL,
   `shipping_lastname` varchar(32) NOT NULL,
   `shipping_company` varchar(32) NOT NULL,
@@ -1643,7 +1644,8 @@ CREATE TABLE `nc_order` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   `abandoned` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`order_id`)
+  PRIMARY KEY (`order_id`),
+  KEY `idx_payment_reference` (`payment_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
