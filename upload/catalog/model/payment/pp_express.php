@@ -1,21 +1,43 @@
 <?php
 /**
- * Class ModelPaymentPPExpress
+ * Class ModelPaymentPpExpress
+ *
+ * Catalog model for PayPal Express — Orders v2 REST API.
+ * API calls are delegated to the shared PayPalClient library.
  *
  * @package NivoCart
  */
 class ModelPaymentPpExpress extends Model {
-	/**
-	 * Functions Get, Add
-	 */
-	public function getMethod($address, $total) {
+	private ?PayPalClient $client = null;
+
+	// -------------------------------------------------------------------------
+	// PayPalClient accessor
+	// -------------------------------------------------------------------------
+
+	private function client(): PayPalClient {
+		if ($this->client === null) {
+			require_once(DIR_SYSTEM . 'vendor/paypal/paypal.php');
+			$this->client = new PayPalClient($this->config);
+		}
+
+		return $this->client;
+	}
+
+	// -------------------------------------------------------------------------
+	// Payment method availability
+	// -------------------------------------------------------------------------
+
+	public function getMethod(array $address, float $total): array {
 		$this->language->load('payment/pp_express');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('pp_express_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone_to_geo_zone` WHERE `geo_zone_id` = " . (int)$this->config->get('pp_express_geo_zone_id') . " AND `country_id` = " . (int)$address['country_id'] . " AND (`zone_id` = " . (int)$address['zone_id'] . " OR `zone_id` = 0)");
 
-		if ($this->config->get('pp_express_total') > 0 && $this->config->get('pp_express_total') > $total) {
+		$min = (float)$this->config->get('pp_express_total');
+		$max = (float)$this->config->get('pp_express_total_max');
+
+		if ($min > 0 && $total < $min) {
 			$status = false;
-		} elseif ($this->config->has('pp_express_total_max') && $this->config->get('pp_express_total_max') > 0 && $total > $this->config->get('pp_express_total_max')) {
+		} elseif ($max > 0 && $total > $max) {
 			$status = false;
 		} elseif (!$this->config->get('pp_express_geo_zone_id')) {
 			$status = true;
@@ -25,369 +47,289 @@ class ModelPaymentPpExpress extends Model {
 			$status = false;
 		}
 
-		$method_data = [];
-
-		if ($status) {
-			$method_data = [
-				'code'       => 'pp_express',
-				'title'      => $this->language->get('text_title'),
-				'terms'      => '',
-				'sort_order' => $this->config->get('pp_express_sort_order')
-			];
+		if (!$status) {
+			return [];
 		}
 
-		return $method_data;
+		return [
+			'code'       => 'pp_express',
+			'title'      => $this->language->get('text_title'),
+			'terms'      => '',
+			'sort_order' => $this->config->get('pp_express_sort_order'),
+		];
 	}
 
-	public function addOrder($order_data) {
-		// 1 to 1 relationship with order table (extends order info)
-		$this->db->query("INSERT INTO " . DB_PREFIX . "paypal_order SET "
-		. "order_id = " . (isset($order_data['order_id']) ? (int)$order_data['order_id'] : 0) . ", "
-		. "created = NOW(), "
-		. "modified = NOW(), "
-		. "capture_status = '" . (isset($order_data['capture_status']) ? $this->db->escape($order_data['capture_status']) : null) . "', "
-		. "currency_code = '" . (isset($order_data['currency_code']) ? $this->db->escape($order_data['currency_code']) : null) . "', "
-		. "total = " . (isset($order_data['total']) ? (float)$order_data['total'] : 0.0) . ", "
-		. "authorization_id = '" . (isset($order_data['authorization_id']) ? $this->db->escape($order_data['authorization_id']) : null) . "'");
+	// -------------------------------------------------------------------------
+	// PayPal REST API — delegated to System/vendor/paypal/paypal_client
+	// -------------------------------------------------------------------------
+
+	public function createPayPalOrder(array $payload): array|false {
+		$response = $this->client()->createOrder($payload);
+		$this->log($response, 'createPayPalOrder');
+		return $response;
+	}
+
+	public function capturePayPalOrder(string $pp_order_id): array|false {
+		$response = $this->client()->captureOrder($pp_order_id);
+		$this->log($response, 'capturePayPalOrder');
+		return $response;
+	}
+
+	public function authorizePayPalOrder(string $pp_order_id): array|false {
+		$response = $this->client()->authorizeOrder($pp_order_id);
+		$this->log($response, 'authorizePayPalOrder');
+		return $response;
+	}
+
+	public function getPayPalOrderDetails(string $pp_order_id): array|false {
+		$response = $this->client()->getOrderDetails($pp_order_id);
+		$this->log($response, 'getPayPalOrderDetails');
+		return $response;
+	}
+
+	public function verifyWebhookSignature(array $headers, string $raw_body, string $webhook_id): bool {
+		return $this->client()->verifyWebhookSignature($headers, $raw_body, $webhook_id);
+	}
+
+	// -------------------------------------------------------------------------
+	// DB reads
+	// -------------------------------------------------------------------------
+
+	public function getPaypalOrderByOrderId(int $order_id): array|false {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `order_id` = " . (int)$order_id . " LIMIT 1");
+
+		return $query->num_rows ? $query->row : false;
+	}
+
+	public function getPaypalOrderByPPOrderId(string $pp_order_id): array|false {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `pp_order_id` = '" . $this->db->escape($pp_order_id) . "' LIMIT 1");
+
+		return $query->num_rows ? $query->row : false;
+	}
+
+	public function getTotalCaptured(int $paypal_order_id): float {
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM `" . DB_PREFIX . "paypal_order_transaction` WHERE `paypal_order_id` = " . (int)$paypal_order_id . " AND `transaction_type` = 'CAPTURE' AND `status` IN ('COMPLETED', 'PENDING')");
+
+		return (float)($query->row['total'] ?? 0.00);
+	}
+
+	public function getTotalRefunded(int $paypal_order_id): float {
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total` FROM `" . DB_PREFIX . "paypal_order_transaction` WHERE `paypal_order_id` = " . (int)$paypal_order_id . " AND `transaction_type` = 'REFUND' AND `status` = 'COMPLETED'");
+
+		return (float)($query->row['total'] ?? 0.00);
+	}
+
+	// -------------------------------------------------------------------------
+	// DB writes
+	// -------------------------------------------------------------------------
+
+	public function saveOrder(array $data): int {
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "paypal_order` SET
+			`order_id` = " . (int)$data['order_id'] . ",
+			`pp_order_id` = '" . $this->db->escape($data['pp_order_id']) . "',
+			`intent` = '" . $this->db->escape($data['intent']) . "',
+			`status` = '" . $this->db->escape($data['status']) . "',
+			`capture_id` = '" . $this->db->escape($data['capture_id'] ?? '') . "',
+			`currency_code` = '" . $this->db->escape($data['currency_code']) . "',
+			`total` = " . (float)$data['total'] . ",
+			`created` = NOW(),
+			`modified` = NOW()
+		");
 
 		return $this->db->getLastId();
 	}
 
-	public function addTransaction($transaction_data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "paypal_order_transaction SET "
-		. "paypal_order_id = " . (isset($transaction_data['paypal_order_id']) ? (int)$transaction_data['paypal_order_id'] : 0) . ", "
-		. "transaction_id = '" . (isset($transaction_data['transaction_id']) ? $this->db->escape($transaction_data['transaction_id']) : null) . "', "
-		. "parent_transaction_id = '" . (isset($transaction_data['parent_transaction_id']) ? $this->db->escape($transaction_data['parent_transaction_id']) : null) . "', "
-		. "created = NOW(), "
-		. "note = '" . (isset($transaction_data['note']) ? $this->db->escape($transaction_data['note']) : null) . "', "
-		. "msgsubid = '" . (isset($transaction_data['msgsubid']) ? $this->db->escape($transaction_data['msgsubid']) : null) . "', "
-		. "receipt_id = '" . (isset($transaction_data['receipt_id']) ? $this->db->escape($transaction_data['receipt_id']) : null) . "', "
-		. "payment_type = '" . (isset($transaction_data['payment_type']) ? $this->db->escape($transaction_data['payment_type']) : null) . "', "
-		. "payment_status = '" . (isset($transaction_data['payment_status']) ? $this->db->escape($transaction_data['payment_status']) : null) . "', "
-		. "pending_reason = '" . (isset($transaction_data['pending_reason']) ? $this->db->escape($transaction_data['pending_reason']) : null) . "', "
-		. "transaction_entity = '" . (isset($transaction_data['transaction_entity']) ? $this->db->escape($transaction_data['transaction_entity']) : null) . "', "
-		. "amount = " . (isset($transaction_data['amount']) ? (float)$transaction_data['amount'] : 0.0) . ", "
-		. "debug_data = '" . (isset($transaction_data['debug_data']) ? $this->db->escape($transaction_data['debug_data']) : null) . "'");
+	public function saveTransaction(array $data): int {
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "paypal_order_transaction` SET
+			`paypal_order_id` = " . (int)$data['paypal_order_id'] . ",
+			`pp_order_id` = '" . $this->db->escape($data['pp_order_id'] ?? '') . "',
+			`capture_id` = '" . $this->db->escape($data['capture_id'] ?? '') . "',
+			`transaction_type` = '" . $this->db->escape($data['transaction_type']) . "',
+			`status` = '" . $this->db->escape($data['status'] ?? '') . "',
+			`amount` = " . (float)($data['amount'] ?? 0.00) . ",
+			`currency_code` = '" . $this->db->escape($data['currency_code'] ?? '') . "',
+			`note` = '" . $this->db->escape($data['note'] ?? '') . "',
+			`raw_response` = '" . $this->db->escape($data['raw_response'] ?? '') . "',
+			`created` = NOW()
+		");
+
+		return $this->db->getLastId();
 	}
 
-	public function paymentRequestInfo() {
-		$data['PAYMENTREQUEST_0_SHIPPINGAMT'] = '';
-		$data['PAYMENTREQUEST_0_CURRENCYCODE'] = $this->currency->getCode();
-		$data['PAYMENTREQUEST_0_PAYMENTACTION'] = $this->config->get('pp_express_transaction_method');
+	public function updatePaypalOrderStatus(int $order_id, string $status, string $capture_id = ''): void {
+		$set = "`status` = '" . $this->db->escape($status) . "', `modified` = NOW()";
 
-		$i = 0;
-		$item_total = 0;
-
-		foreach ($this->cart->getProducts() as $item) {
-			$data['L_PAYMENTREQUEST_0_DESC' . $i] = '';
-
-			$option_count = 0;
-
-			foreach ($item['option'] as $option) {
-				if ($option['type'] !== 'file') {
-					$value = $option['option_value'];
-				} else {
-					$filename = $this->encryption->decrypt($option['option_value']);
-					$value = substr($filename, 0, strrpos($filename, '.'));
-				}
-
-				$data['L_PAYMENTREQUEST_0_DESC' . $i] .= ($option_count > 0 ? ', ' : '') . $option['name'] . ':' . (mb_strlen($value, 'UTF-8') > 20 ? substr($value, 0, 20) . '..' : $value);
-
-				$option_count++;
-			}
-
-			$data['L_PAYMENTREQUEST_0_DESC' . $i] = substr($data['L_PAYMENTREQUEST_0_DESC' . $i], 0, 126);
-
-			$item_price = $this->currency->format($item['price'], false, false, false);
-
-			$data['L_PAYMENTREQUEST_0_NAME' . $i] = $item['name'];
-			$data['L_PAYMENTREQUEST_0_NUMBER' . $i] = $item['model'];
-			$data['L_PAYMENTREQUEST_0_AMT' . $i] = $item_price;
-
-			$item_total += number_format($item_price * $item['quantity'], 2, '.', '');
-
-			$data['L_PAYMENTREQUEST_0_QTY' . $i] = $item['quantity'];
-			$data['L_PAYMENTREQUEST_0_ITEMURL' . $i] = $this->url->link('product/product', 'product_id=' . $item['product_id'], 'SSL');
-
-			if ($this->config->get('config_cart_weight')) {
-				$weight = $this->weight->convert($item['weight'], $item['weight_class_id'], $this->config->get('config_weight_class_id'));
-
-				$data['L_PAYMENTREQUEST_0_ITEMWEIGHTVALUE' . $i] = number_format($weight / $item['quantity'], 2, '.', '');
-				$data['L_PAYMENTREQUEST_0_ITEMWEIGHTUNIT' . $i] = $this->weight->getUnit($this->config->get('config_weight_class_id'));
-			}
-
-			if ($item['length'] > 0 || $item['width'] > 0 || $item['height'] > 0) {
-				$unit = $this->length->getUnit($item['length_class_id']);
-
-				$data['L_PAYMENTREQUEST_0_ITEMLENGTHVALUE' . $i] = $item['length'];
-				$data['L_PAYMENTREQUEST_0_ITEMLENGTHUNIT' . $i] = $unit;
-				$data['L_PAYMENTREQUEST_0_ITEMWIDTHVALUE' . $i] = $item['width'];
-				$data['L_PAYMENTREQUEST_0_ITEMWIDTHUNIT' . $i] = $unit;
-				$data['L_PAYMENTREQUEST_0_ITEMHEIGHTVALUE' . $i] = $item['height'];
-				$data['L_PAYMENTREQUEST_0_ITEMHEIGHTUNIT' . $i] = $unit;
-			}
-
-			$i++;
+		if ($capture_id !== '') {
+			$set .= ", `capture_id` = '" . $this->db->escape($capture_id) . "'";
 		}
 
-		if (!empty($this->session->data['vouchers'])) {
-			foreach ($this->session->data['vouchers'] as $voucher) {
-				$item_total += $this->currency->format($voucher['amount'], false, false, false);
-
-				$data['L_PAYMENTREQUEST_0_DESC' . $i] = '';
-				$data['L_PAYMENTREQUEST_0_NAME' . $i] = $voucher['description'];
-				$data['L_PAYMENTREQUEST_0_NUMBER' . $i] = 'VOUCHER';
-				$data['L_PAYMENTREQUEST_0_QTY' . $i] = 1;
-				$data['L_PAYMENTREQUEST_0_AMT' . $i] = $this->currency->format($voucher['amount'], false, false, false);
-
-				$i++;
-			}
-		}
-
-		// Totals
-		$this->load->model('setting/extension');
-
-		$total_data = [];
-		$taxes = $this->cart->getTaxes();
-		$total = 0;
-
-		// Display prices
-		if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-			$sort_order = [];
-
-			$results = $this->model_setting_extension->getExtensions('total');
-
-			foreach ($results as $key => $value) {
-				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-			}
-
-			array_multisort($sort_order, SORT_ASC, $results);
-
-			foreach ($results as $result) {
-				if ($this->config->get($result['code'] . '_status')) {
-					$this->load->model('total/' . $result['code']);
-
-					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-				}
-
-				$sort_order = [];
-
-				foreach ($total_data as $key => $value) {
-					$sort_order[$key] = $value['sort_order'];
-				}
-
-				array_multisort($sort_order, SORT_ASC, $total_data);
-			}
-		}
-
-		foreach ($total_data as $total_row) {
-			if (!in_array($total_row['code'], ['total', 'sub_total'])) {
-				if ($total_row['value'] !== 0) {
-					$item_price = $this->currency->format($total_row['value'], false, false, false);
-
-					$data['L_PAYMENTREQUEST_0_NUMBER' . $i] = $total_row['code'];
-					$data['L_PAYMENTREQUEST_0_NAME' . $i] = $total_row['title'];
-					$data['L_PAYMENTREQUEST_0_AMT' . $i] = $this->currency->format($total_row['value'], false, false, false);
-					$data['L_PAYMENTREQUEST_0_QTY' . $i] = 1;
-
-					$item_total = $item_total + $item_price;
-					$i++;
-				}
-			}
-		}
-
-		$data['PAYMENTREQUEST_0_ITEMAMT'] = number_format($item_total, 2, '.', '');
-		$data['PAYMENTREQUEST_0_AMT'] = number_format($item_total, 2, '.', '');
-
-		$z = 0;
-
-		$recurring_products = $this->cart->getRecurringProducts();
-
-		if (!empty($recurring_products)) {
-			$this->language->load('payment/pp_express');
-
-			foreach ($recurring_products as $item) {
-				$data['L_BILLINGTYPE' . $z] = 'RecurringPayments';
-
-				if ($item['recurring_trial'] === 1) {
-					$trial_amt = $this->currency->format($this->tax->calculate($item['recurring_trial_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false) * $item['quantity'] . ' ' . $this->currency->getCode();
-
-					$trial_text = sprintf($this->language->get('text_trial'), $trial_amt, $item['recurring_trial_cycle'], $item['recurring_trial_frequency'], $item['recurring_trial_duration']);
-				} else {
-					$trial_text = '';
-				}
-
-				$recurring_amt = $this->currency->format($this->tax->calculate($item['recurring_price'], $item['tax_class_id'], $this->config->get('config_tax')), false, false, false) * $item['quantity'] . ' ' . $this->currency->getCode();
-
-				$recurring_description = $trial_text . sprintf($this->language->get('text_recurring'), $recurring_amt, $item['recurring_cycle'], $item['recurring_frequency']);
-
-				if ($item['recurring_duration'] > 0) {
-					$recurring_description .= sprintf($this->language->get('text_length'), $item['recurring_duration']);
-				}
-
-				$data['L_BILLINGAGREEMENTDESCRIPTION' . $z] = $recurring_description;
-
-				$z++;
-			}
-		}
-
-		return $data;
+		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order` SET " . $set . " WHERE `order_id` = " . (int)$order_id);
 	}
 
-	public function getTotalCaptured(int $paypal_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "paypal_order_transaction WHERE paypal_order_id = '" . (int)$paypal_order_id . "' AND pending_reason != 'authorization' AND pending_reason != 'paymentreview' AND (payment_status = 'Partially-Refunded' OR payment_status = 'Completed' OR payment_status = 'Pending') AND transaction_entity = 'payment'");
+	// -------------------------------------------------------------------------
+	// Webhook event processing
+	// -------------------------------------------------------------------------
 
-		return $query->row['total'];
-	}
+	/**
+	 * Process a verified webhook event payload.
+	 * Updates the paypal_order and paypal_order_transaction tables,
+	 * then updates the NivoCart order status accordingly.
+	 *
+	 * Returns the NivoCart order_id on success, false if unhandled or unknown.
+	 */
+	public function processWebhookEvent(array $event): int|false {
+		$event_type = $event['event_type'] ?? '';
+		$resource = $event['resource'] ?? [];
 
-	public function getTotalRefunded(int $paypal_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM " . DB_PREFIX . "paypal_order_transaction WHERE paypal_order_id = '" . (int)$paypal_order_id . "' AND payment_status = 'Refunded'");
+		$this->log($event, 'webhook: ' . $event_type);
 
-		return $query->row['total'];
-	}
+		// Resolve pp_order_id and order from resource
+		$pp_order_id = $resource['supplementary_data']['related_ids']['order_id'] ?? $resource['id'] ?? '';
 
-	public function getTransactionRow(int $transaction_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order_transaction pt LEFT JOIN " . DB_PREFIX . "paypal_order po ON (pt.paypal_order_id = po.paypal_order_id) WHERE pt.transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
-
-		if ($query->num_rows > 0) {
-			return $query->row;
-		} else {
-			return false;
-		}
-	}
-
-	public function updateTransactionStatus(int $transaction_id, $transaction_status): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
-	}
-
-	public function updateTransactionPendingReason(int $transaction_id, $pending_reason): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET pending_reason = '" . $this->db->escape($pending_reason) . "' WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
-	}
-
-	public function updateOrder($capture_status, int $order_id): void {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order SET modified = NOW(), capture_status = '" . $this->db->escape($capture_status) . "' WHERE order_id = '" . (int)$order_id . "'");
-	}
-
-	public function call($data) {
-		if ($this->config->get('pp_express_test') == 1) {
-			$api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
-			$user = $this->config->get('pp_express_sandbox_username');
-			$password = $this->config->get('pp_express_sandbox_password');
-			$signature = $this->config->get('pp_express_sandbox_signature');
-		} else {
-			$api_endpoint = 'https://api-3t.paypal.com/nvp';
-			$user = $this->config->get('pp_express_username');
-			$password = $this->config->get('pp_express_password');
-			$signature = $this->config->get('pp_express_signature');
-		}
-
-		$default_parameters = [
-			'USER'         => $user,
-			'PWD'          => $password,
-			'SIGNATURE'    => $signature,
-			'VERSION'      => '109.0',
-			'BUTTONSOURCE' => 'NivoCart_Cart_EC'
-		];
-
-		$call_parameters = array_merge($data, $default_parameters);
-
-		$this->log($call_parameters, 'Call data');
-
-		$options = [
-			CURLOPT_POST           => true,
-			CURLOPT_HEADER         => false,
-			CURLOPT_URL            => $api_endpoint,
-			CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1",
-			CURLOPT_FRESH_CONNECT  => true,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_FORBID_REUSE   => true,
-			CURLOPT_TIMEOUT        => 0,
-			CURLOPT_SSL_VERIFYPEER => true,
-			CURLOPT_SSL_VERIFYHOST => 2,
-			CURLOPT_POSTFIELDS     => http_build_query($call_parameters, '', '&')
-		];
-
-		$ch = curl_init();
-
-		curl_setopt_array($ch, $options);
-
-		$response = curl_exec($ch);
-
-		if (curl_errno($ch) !== CURLE_OK) {
-			$log_data = [
-				'curl_error' => curl_error($ch),
-				'curl_errno' => curl_errno($ch)
-			];
-
-			$this->log($log_data, 'cURL failed');
+		if (!$pp_order_id) {
 			return false;
 		}
 
-		curl_close($ch);
+		$paypal_order = $this->getPaypalOrderByPPOrderId($pp_order_id);
 
-		$response = $this->cleanReturn($response);
+		// Some events (e.g. PAYMENT.CAPTURE.*) use the capture/auth id, not the order id
+		if (!$paypal_order && !empty($resource['id'])) {
+			// Try resolving via capture_id stored in paypal_order
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `capture_id` = '" . $this->db->escape($resource['id']) . "' LIMIT 1");
 
-		$this->log($response, 'Response');
-
-		return $response;
-	}
-
-	public function recurringPayments() {
-		/*
-		 * Used by the checkout to state the module
-		 * supports recurring recurrings.
-		 */
-		return true;
-	}
-
-	public function createToken($len = 32) {
-		$base = 'ABCDEFGHKLMNOPQRSTWXYZabcdefghjkmnpqrstwxyz123456789';
-		$max = strlen($base) - 1;
-		$activate_code = '';
-		mt_srand((float)microtime() * 1000000);
-
-		while (strlen($activate_code) < $len + 1) {
-			$activate_code .= $base{mt_rand(0, $max)};
+			$paypal_order = $query->num_rows ? $query->row : false;
 		}
 
-		return $activate_code;
+		if (!$paypal_order) {
+			return false;
+		}
+
+		$order_id = (int)$paypal_order['order_id'];
+		$paypal_order_id = (int)$paypal_order['paypal_order_id'];
+		$currency = $resource['amount']['currency_code'] ?? $paypal_order['currency_code'];
+		$amount = (float)($resource['amount']['value'] ?? 0);
+		$capture_id = $resource['id'] ?? '';
+		$status = $resource['status'] ?? '';
+
+		switch ($event_type) {
+
+			case 'PAYMENT.CAPTURE.COMPLETED':
+				$this->saveTransaction([
+					'paypal_order_id'  => $paypal_order_id,
+					'pp_order_id'      => $pp_order_id,
+					'capture_id'       => $capture_id,
+					'transaction_type' => 'CAPTURE',
+					'status'           => 'COMPLETED',
+					'amount'           => $amount,
+					'currency_code'    => $currency,
+					'note'             => 'Webhook: capture completed',
+					'raw_response'     => json_encode($resource),
+				]);
+				$this->updatePaypalOrderStatus($order_id, 'COMPLETED', $capture_id);
+				$this->updateNivoCartOrderStatus($order_id, 'pp_express_completed_status_id', $resource);
+				break;
+
+			case 'PAYMENT.CAPTURE.PENDING':
+				$this->saveTransaction([
+					'paypal_order_id'  => $paypal_order_id,
+					'pp_order_id'      => $pp_order_id,
+					'capture_id'       => $capture_id,
+					'transaction_type' => 'CAPTURE',
+					'status'           => 'PENDING',
+					'amount'           => $amount,
+					'currency_code'    => $currency,
+					'note'             => 'Webhook: capture pending',
+					'raw_response'     => json_encode($resource),
+				]);
+				$this->updatePaypalOrderStatus($order_id, 'PENDING', $capture_id);
+				$this->updateNivoCartOrderStatus($order_id, 'pp_express_pending_status_id', $resource);
+				break;
+
+			case 'PAYMENT.CAPTURE.DENIED':
+				$this->saveTransaction([
+					'paypal_order_id'  => $paypal_order_id,
+					'pp_order_id'      => $pp_order_id,
+					'capture_id'       => $capture_id,
+					'transaction_type' => 'CAPTURE',
+					'status'           => 'DENIED',
+					'amount'           => $amount,
+					'currency_code'    => $currency,
+					'note'             => 'Webhook: capture denied',
+					'raw_response'     => json_encode($resource),
+				]);
+				$this->updatePaypalOrderStatus($order_id, 'DENIED');
+				$this->updateNivoCartOrderStatus($order_id, 'pp_express_denied_status_id', $resource);
+				break;
+
+			case 'PAYMENT.CAPTURE.REFUNDED':
+				$this->saveTransaction([
+					'paypal_order_id'  => $paypal_order_id,
+					'pp_order_id'      => $pp_order_id,
+					'capture_id'       => $capture_id,
+					'transaction_type' => 'REFUND',
+					'status'           => 'COMPLETED',
+					'amount'           => $amount,
+					'currency_code'    => $currency,
+					'note'             => 'Webhook: refund',
+					'raw_response'     => json_encode($resource),
+				]);
+				$this->updateNivoCartOrderStatus($order_id, 'pp_express_refunded_status_id', $resource);
+				break;
+
+			case 'PAYMENT.AUTHORIZATION.VOIDED':
+				$this->saveTransaction([
+					'paypal_order_id'  => $paypal_order_id,
+					'pp_order_id'      => $pp_order_id,
+					'capture_id'       => $capture_id,
+					'transaction_type' => 'VOID',
+					'status'           => 'VOIDED',
+					'amount'           => 0,
+					'currency_code'    => $currency,
+					'note'             => 'Webhook: authorization voided',
+					'raw_response'     => json_encode($resource),
+				]);
+				$this->updatePaypalOrderStatus($order_id, 'VOIDED');
+				$this->updateNivoCartOrderStatus($order_id, 'pp_express_voided_status_id', $resource);
+				break;
+
+			default:
+				// Unhandled event type — logged above, no DB action needed
+				return false;
+		}
+
+		return $order_id;
 	}
 
-	public function log($data, $title = null, $force = false) {
+	// -------------------------------------------------------------------------
+	// Utility
+	// -------------------------------------------------------------------------
+
+	public function log(mixed $data, string $title = '', bool $force = false): void {
 		if ($this->config->get('pp_express_debug') || $force) {
-			$this->log->write('PayPal Express debug (' . $title . '): ' . json_encode($data));
+			$log = new Log('pp_express.log');
+			$log->write('PayPal Express (' . $title . '): ' . json_encode($data));
 		}
 	}
 
-	public function cleanReturn($data) {
-		$data = explode('&', $data);
+	// -------------------------------------------------------------------------
+	// Private helpers
+	// -------------------------------------------------------------------------
 
-		$arr = [];
+	/**
+	 * Update the NivoCart oc_order status using a config-mapped status ID.
+	 * Adds an order history entry with the PayPal event type as the comment.
+	 */
+	private function updateNivoCartOrderStatus(int $order_id, string $status_config_key, array $resource): void {
+		$status_id = (int)$this->config->get($status_config_key);
 
-		foreach ($data as $k => $v) {
-			$tmp = explode('=', $v);
-			$arr[$tmp[0]] = isset($tmp[1]) ? urldecode($tmp[1]) : '';
+		if (!$status_id) {
+			return;
 		}
 
-		return $arr;
-	}
+		$this->load->model('checkout/order');
 
-	public function recurringCancel($reference) {
-		$data = [
-			'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
-			'PROFILEID' => $reference,
-			'ACTION'    => 'Cancel'
-		];
+		$comment = 'PayPal: ' . ($resource['status'] ?? '') . ($resource['id'] ? ' (' . $resource['id'] . ')' : '');
 
-		return $this->call($data);
-	}
-
-	public function isMobile() {
-		// This will check the user agent and "try" to match if it is a mobile device
-		if (preg_match("/Mobile|Android|BlackBerry|iPhone|Windows Phone/", $this->request->server['HTTP_USER_AGENT'])) {
-			return true;
-		} else {
-			return false;
-		}
+		$this->model_checkout_order->confirm($order_id, $status_id, $comment, false);
 	}
 }

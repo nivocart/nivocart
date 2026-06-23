@@ -30,13 +30,13 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 
 	private $interactive_gateways = [
 		'stripe_payments',
+		'pp_express',
 		'klarna',
 	];
 
 	private $redirect_gateways = [
 		'pp_standard',
 		'sagepay',
-		// 'pp_express',
 	];
 
 	public function index() {
@@ -61,6 +61,10 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 		// Guard — interactive gateway must have a verified intent in session
 		if (in_array($payment_code, $this->interactive_gateways)) {
 			if ($payment_code === 'stripe_payments' && empty($this->session->data['stripe_payment_intent_id'])) {
+				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+			}
+
+			if ($payment_code === 'pp_express' && empty($this->session->data['pp_express_order_id'])) {
 				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 			}
 
@@ -337,12 +341,41 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 				}
 
-				$this->model_checkout_order->confirm(
-					$this->session->data['order_id'],
-					$this->config->get('stripe_payments_order_status_id')
-				);
+				$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('stripe_payments_order_status_id'));
 
 				unset($this->session->data['stripe_payment_intent_id']);
+				break;
+
+			case 'pp_express':
+				$this->load->model('payment/pp_express');
+				$this->load->model('checkout/order');
+
+				$pp_order_id = $this->session->data['pp_express_order_id'] ?? '';
+
+				if (!$pp_order_id) {
+					$this->session->data['error'] = 'PayPal order reference missing. Please try again.';
+					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+				}
+
+				// Verify the PayPal order is in a captured/authorized state
+				$pp_order = $this->model_payment_pp_express->getPaypalOrderByOrderId($this->session->data['order_id']);
+
+				if (!$pp_order || !in_array($pp_order['status'], ['COMPLETED', 'APPROVED'])) {
+					$this->session->data['error'] = 'Payment could not be verified. Please try again.';
+					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+				}
+
+				$status_map = [
+					'COMPLETED' => 'pp_express_completed_status_id',
+					'APPROVED'  => 'pp_express_pending_status_id',  // AUTHORIZE mode
+				];
+
+				$status_config_key = $status_map[$pp_order['status']] ?? 'pp_express_pending_status_id';
+				$order_status_id = (int)$this->config->get($status_config_key);
+
+				$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status_id);
+
+				unset($this->session->data['pp_express_order_id']);
 				break;
 
 			case 'klarna':

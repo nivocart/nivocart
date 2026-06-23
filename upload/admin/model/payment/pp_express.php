@@ -3,10 +3,26 @@
  * Class ModelPaymentPPExpress
  *
  * Admin model for PayPal Express — Orders v2 REST API.
+ * API calls are delegated to the shared PayPalClient library.
  *
  * @package NivoCart
  */
 class ModelPaymentPPExpress extends Model {
+	private ?PayPalClient $client = null;
+
+	// -------------------------------------------------------------------------
+	// PayPalClient accessor
+	// -------------------------------------------------------------------------
+
+	private function client(): PayPalClient {
+		if ($this->client === null) {
+			require_once(DIR_SYSTEM . 'vendor/paypal/paypal.php');
+			$this->client = new PayPalClient($this->config);
+		}
+
+		return $this->client;
+	}
+
 	// -------------------------------------------------------------------------
 	// Install / Uninstall
 	// -------------------------------------------------------------------------
@@ -226,215 +242,59 @@ class ModelPaymentPPExpress extends Model {
 	}
 
 	// -------------------------------------------------------------------------
-	// PayPal REST API — authentication
+	// PayPal REST API — delegated to PayPalClient
 	// -------------------------------------------------------------------------
 
-	/**
-	 * Exchange client credentials for an OAuth2 access token.
-	 * Returns the token string, or false on failure.
-	 */
-	public function getAccessToken(): string|false {
-		$sandbox = (bool)$this->config->get('pp_express_sandbox');
-		$client_id = $sandbox ? $this->config->get('pp_express_sandbox_client_id') : $this->config->get('pp_express_client_id');
-		$secret = $sandbox ? $this->config->get('pp_express_sandbox_client_secret') : $this->config->get('pp_express_client_secret');
-
-		$endpoint = $sandbox ? 'https://api-m.sandbox.paypal.com/v1/oauth2/token' : 'https://api-m.paypal.com/v1/oauth2/token';
-
-		$response = $this->curlPost($endpoint, 'grant_type=client_credentials', [
-			CURLOPT_USERPWD    => $client_id . ':' . $secret,
-			CURLOPT_HTTPHEADER => ['Accept: application/json', 'Accept-Language: en_US'],
-		]);
-
-		if (isset($response['access_token'])) {
-			return $response['access_token'];
-		}
-
-		$this->log($response, 'getAccessToken failed');
-
-		return false;
-	}
-
-	// -------------------------------------------------------------------------
-	// PayPal REST API — Orders v2
-	// -------------------------------------------------------------------------
-
-	/**
-	 * Create an order via POST /v2/checkout/orders.
-	 * $payload is the full PHP array; it will be JSON-encoded before sending.
-	 * Returns the decoded response array, or false on failure.
-	 */
 	public function createPayPalOrder(array $payload): array|false {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$response = $this->curlPost($this->endpoint('v2/checkout/orders'), json_encode($payload), $this->authHeaders($token));
-
+		$response = $this->client()->createOrder($payload);
 		$this->log($response, 'createPayPalOrder');
-
-		return $response ?: false;
+		return $response;
 	}
 
-	/**
-	 * Retrieve an order via GET /v2/checkout/orders/{id}.
-	 */
 	public function getPayPalOrderDetails(string $pp_order_id): array|false {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$response = $this->curlGet($this->endpoint('v2/checkout/orders/' . $pp_order_id), $this->authHeaders($token));
-
+		$response = $this->client()->getOrderDetails($pp_order_id);
 		$this->log($response, 'getPayPalOrderDetails');
-
-		return $response ?: false;
+		return $response;
 	}
 
-	/**
-	 * Capture payment for an approved order via POST /v2/checkout/orders/{id}/capture.
-	 */
 	public function capturePayPalOrder(string $pp_order_id): array|false {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$response = $this->curlPost($this->endpoint('v2/checkout/orders/' . $pp_order_id . '/capture'), '{}', $this->authHeaders($token));
-
+		$response = $this->client()->captureOrder($pp_order_id);
 		$this->log($response, 'capturePayPalOrder');
-
-		return $response ?: false;
+		return $response;
 	}
 
-	/**
-	 * Authorize payment for an approved order via POST /v2/checkout/orders/{id}/authorize.
-	 */
 	public function authorizePayPalOrder(string $pp_order_id): array|false {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$response = $this->curlPost($this->endpoint('v2/checkout/orders/' . $pp_order_id . '/authorize'), '{}', $this->authHeaders($token));
-
+		$response = $this->client()->authorizeOrder($pp_order_id);
 		$this->log($response, 'authorizePayPalOrder');
-
-		return $response ?: false;
+		return $response;
 	}
 
-	// -------------------------------------------------------------------------
-	// PayPal REST API — Payments v2 (post-capture actions)
-	// -------------------------------------------------------------------------
-
-	/**
-	 * Refund a captured payment via POST /v2/payments/captures/{id}/refund.
-	 * Pass amount in $data to do a partial refund, or empty array for full refund.
-	 *
-	 * Example $data for partial refund:
-	 *   ['amount' => ['value' => '10.00', 'currency_code' => 'GBP'], 'note_to_payer' => '...']
-	 */
-	public function refundCapture(string $capture_id, array $data = []): array|false {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$body = empty($data) ? '{}' : json_encode($data);
-
-		$response = $this->curlPost($this->endpoint('v2/payments/captures/' . $capture_id . '/refund'), $body, $this->authHeaders($token));
-
-		$this->log($response, 'refundCapture');
-
-		return $response ?: false;
-	}
-
-	/**
-	 * Capture a previously authorized payment via POST /v2/payments/authorizations/{id}/capture.
-	 * $data can include a partial amount; pass empty array to capture the full authorized amount.
-	 */
 	public function captureAuthorization(string $authorization_id, array $data = []): array|false {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$body = empty($data) ? '{}' : json_encode($data);
-
-		$response = $this->curlPost($this->endpoint('v2/payments/authorizations/' . $authorization_id . '/capture'), $body, $this->authHeaders($token));
-
+		$response = $this->client()->captureAuthorization($authorization_id, $data);
 		$this->log($response, 'captureAuthorization');
-
-		return $response ?: false;
+		return $response;
 	}
 
-	/**
-	 * Void an authorization via POST /v2/payments/authorizations/{id}/void.
-	 */
 	public function voidAuthorization(string $authorization_id): array|false {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$response = $this->curlPost($this->endpoint('v2/payments/authorizations/' . $authorization_id . '/void'), '{}', $this->authHeaders($token));
-
+		$response = $this->client()->voidAuthorization($authorization_id);
 		$this->log($response, 'voidAuthorization');
-
-		return $response ?: false;
+		return $response;
 	}
 
-	// -------------------------------------------------------------------------
-	// PayPal REST API — Webhooks v2
-	// -------------------------------------------------------------------------
+	public function refundCapture(string $capture_id, array $data = []): array|false {
+		$response = $this->client()->refundCapture($capture_id, $data);
+		$this->log($response, 'refundCapture');
+		return $response;
+	}
 
-	/**
-	 * Verify a webhook notification signature via POST /v2/notifications/verify-webhook-signature.
-	 * Returns true if PayPal confirms the signature is valid.
-	 *
-	 * $headers must include: PAYPAL-AUTH-ALGO, PAYPAL-CERT-URL,
-	 *                         PAYPAL-TRANSMISSION-ID, PAYPAL-TRANSMISSION-SIG,
-	 *                         PAYPAL-TRANSMISSION-TIME
-	 */
 	public function verifyWebhookSignature(array $headers, string $raw_body, string $webhook_id): bool {
-		$token = $this->getAccessToken();
-
-		if (!$token) {
-			return false;
-		}
-
-		$payload = [
-			'auth_algo'         => $headers['PAYPAL-AUTH-ALGO'] ?? '',
-			'cert_url'          => $headers['PAYPAL-CERT-URL'] ?? '',
-			'transmission_id'   => $headers['PAYPAL-TRANSMISSION-ID'] ?? '',
-			'transmission_sig'  => $headers['PAYPAL-TRANSMISSION-SIG'] ?? '',
-			'transmission_time' => $headers['PAYPAL-TRANSMISSION-TIME'] ?? '',
-			'webhook_id'        => $webhook_id,
-			'webhook_event'     => json_decode($raw_body, true),
-		];
-
-		$response = $this->curlPost($this->endpoint('v2/notifications/verify-webhook-signature'), json_encode($payload), $this->authHeaders($token));
-
-		$this->log($response, 'verifyWebhookSignature');
-
-		return isset($response['verification_status']) && $response['verification_status'] === 'SUCCESS';
+		return $this->client()->verifyWebhookSignature($headers, $raw_body, $webhook_id);
 	}
 
 	// -------------------------------------------------------------------------
 	// Utility
 	// -------------------------------------------------------------------------
 
-	/**
-	 * List of currencies supported by PayPal Orders v2.
-	 */
 	public function getCurrencies(): array {
 		return [
 			'AUD', 'BRL', 'CAD', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS',
@@ -443,113 +303,10 @@ class ModelPaymentPPExpress extends Model {
 		];
 	}
 
-	/**
-	 * Write a debug log entry (respects the pp_express_debug config flag).
-	 */
 	public function log(mixed $data, string $title = '', bool $force = false): void {
 		if ($this->config->get('pp_express_debug') || $force) {
 			$log = new Log('pp_express.log');
 			$log->write('PayPal Express (' . $title . '): ' . json_encode($data));
 		}
-	}
-
-	// -------------------------------------------------------------------------
-	// Private helpers
-	// -------------------------------------------------------------------------
-
-	/**
-	 * Build a fully-qualified PayPal REST API endpoint URL.
-	 */
-	private function endpoint(string $path): string {
-		$base = $this->config->get('pp_express_sandbox') ? 'https://api-m.sandbox.paypal.com/' : 'https://api-m.paypal.com/';
-
-		return $base . ltrim($path, '/');
-	}
-
-	/**
-	 * Standard JSON + Bearer auth headers for REST calls.
-	 */
-	private function authHeaders(string $token): array {
-		return [
-			CURLOPT_HTTPHEADER => [
-				'Content-Type: application/json',
-				'Authorization: Bearer ' . $token,
-			],
-		];
-	}
-
-	/**
-	 * cURL POST helper. Returns decoded JSON response as array, or false.
-	 */
-	private function curlPost(string $url, string $body, array $extra_opts = []): array|false {
-		$opts = [
-			CURLOPT_URL            => $url,
-			CURLOPT_POST           => true,
-			CURLOPT_POSTFIELDS     => $body,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_HEADER         => false,
-			CURLOPT_FRESH_CONNECT  => true,
-			CURLOPT_FORBID_REUSE   => true,
-			CURLOPT_TIMEOUT        => 30,
-			CURLOPT_SSL_VERIFYPEER => true,
-			CURLOPT_SSL_VERIFYHOST => 2,
-		];
-
-		foreach ($extra_opts as $key => $value) {
-			$opts[$key] = $value;
-		}
-
-		$ch = curl_init();
-		curl_setopt_array($ch, $opts);
-		$response = curl_exec($ch);
-
-		if (curl_errno($ch) !== CURLE_OK) {
-			$this->log(['curl_error' => curl_error($ch), 'url' => $url], 'curlPost failed', true);
-			curl_close($ch);
-			return false;
-		}
-
-		curl_close($ch);
-
-		$decoded = json_decode($response, true);
-
-		return is_array($decoded) ? $decoded : false;
-	}
-
-	/**
-	 * cURL GET helper. Returns decoded JSON response as array, or false.
-	 */
-	private function curlGet(string $url, array $extra_opts = []): array|false {
-		$opts = [
-			CURLOPT_URL            => $url,
-			CURLOPT_HTTPGET        => true,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_HEADER         => false,
-			CURLOPT_FRESH_CONNECT  => true,
-			CURLOPT_FORBID_REUSE   => true,
-			CURLOPT_TIMEOUT        => 30,
-			CURLOPT_SSL_VERIFYPEER => true,
-			CURLOPT_SSL_VERIFYHOST => 2,
-		];
-
-		foreach ($extra_opts as $key => $value) {
-			$opts[$key] = $value;
-		}
-
-		$ch = curl_init();
-		curl_setopt_array($ch, $opts);
-		$response = curl_exec($ch);
-
-		if (curl_errno($ch) !== CURLE_OK) {
-			$this->log(['curl_error' => curl_error($ch), 'url' => $url], 'curlGet failed', true);
-			curl_close($ch);
-			return false;
-		}
-
-		curl_close($ch);
-
-		$decoded = json_decode($response, true);
-
-		return is_array($decoded) ? $decoded : false;
 	}
 }
