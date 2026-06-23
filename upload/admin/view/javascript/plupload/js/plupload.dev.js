@@ -16,7 +16,7 @@
 		factory.apply(ctx, arguments);
 		return ctx.plupload;
 	};
-	
+
 	if (typeof define === "function" && define.amd) {
 		define("plupload", ['./moxie'], extract);
 	} else if (typeof module === "object" && module.exports) {
@@ -73,12 +73,10 @@ function normalizeCaps(settings) {
 		plupload.each(features.split(/\s*,\s*/), function(feature) {
 			resolve(feature, true);
 		});
-
 	} else if (typeof(features) === 'object') {
 		plupload.each(features, function(value, feature) {
 			resolve(feature, value);
 		});
-
 	} else if (features === true) {
 		// check settings for required features
 		if (settings.chunk_size && settings.chunk_size > 0) {
@@ -114,7 +112,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	VERSION : '2.3.6',
+	VERSION: '2.3.6',
 
 	/**
 	 * The state of the queue before it has started and after it has finished
@@ -123,7 +121,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	STOPPED : 1,
+	STOPPED: 1,
 
 	/**
 	 * Upload process is running
@@ -132,7 +130,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	STARTED : 2,
+	STARTED: 2,
 
 	/**
 	 * File is queued for upload
@@ -141,7 +139,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	QUEUED : 1,
+	QUEUED: 1,
 
 	/**
 	 * File is being uploaded
@@ -150,7 +148,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	UPLOADING : 2,
+	UPLOADING: 2,
 
 	/**
 	 * File has failed to be uploaded
@@ -159,7 +157,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	FAILED : 4,
+	FAILED: 4,
 
 	/**
 	 * File has been uploaded successfully
@@ -168,7 +166,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	DONE : 5,
+	DONE: 5,
 
 	// Error constants used by the Error event
 
@@ -179,7 +177,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	GENERIC_ERROR : -100,
+	GENERIC_ERROR: -100,
 
 	/**
 	 * HTTP transport error. For example if the server produces a HTTP status other than 200.
@@ -188,7 +186,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	HTTP_ERROR : -200,
+	HTTP_ERROR: -200,
 
 	/**
 	 * Generic I/O error. For example if it wasn't possible to open the file stream on local machine.
@@ -197,14 +195,14 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	IO_ERROR : -300,
+	IO_ERROR: -300,
 
 	/**
 	 * @property SECURITY_ERROR
 	 * @static
 	 * @final
 	 */
-	SECURITY_ERROR : -400,
+	SECURITY_ERROR: -400,
 
 	/**
 	 * Initialization error. Will be triggered if no runtime was initialized.
@@ -213,7 +211,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	INIT_ERROR : -500,
+	INIT_ERROR: -500,
 
 	/**
 	 * File size error. If the user selects a file that is too large or is empty it will be blocked and
@@ -223,7 +221,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	FILE_SIZE_ERROR : -600,
+	FILE_SIZE_ERROR: -600,
 
 	/**
 	 * File extension error. If the user selects a file that isn't valid according to the filters setting.
@@ -232,7 +230,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	FILE_EXTENSION_ERROR : -601,
+	FILE_EXTENSION_ERROR: -601,
 
 	/**
 	 * Duplicate file error. If prevent_duplicates is set to true and user selects the same file again.
@@ -241,7 +239,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	FILE_DUPLICATE_ERROR : -602,
+	FILE_DUPLICATE_ERROR: -602,
 
 	/**
 	 * Runtime will try to detect if image is proper one. Otherwise will throw this error.
@@ -250,7 +248,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	IMAGE_FORMAT_ERROR : -700,
+	IMAGE_FORMAT_ERROR: -700,
 
 	/**
 	 * While working on files runtime may run out of memory and will throw this error.
@@ -260,7 +258,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	MEMORY_ERROR : -701,
+	MEMORY_ERROR: -701,
 
 	/**
 	 * Each runtime has an upper limit on a dimension of the image it can handle. If bigger, will throw this error.
@@ -269,7 +267,7 @@ var plupload = {
 	 * @static
 	 * @final
 	 */
-	IMAGE_DIMENSIONS_ERROR : -702,
+	IMAGE_DIMENSIONS_ERROR: -702,
 
 	/**
 	 * Expose whole moxie (#1469).
@@ -287,7 +285,7 @@ var plupload = {
 	 * @type Object
 	 * @final
 	 */
-	mimeTypes : u.Mime.mimes,
+	mimeTypes: u.Mime.mimes,
 
 	/**
 	 * In some cases sniffing is the only way around :(
@@ -314,7 +312,7 @@ var plupload = {
 	 * @param {Object..} obj Multiple objects to extend with.
 	 * @return {Object} Same as target, the extended object.
 	 */
-	extend : u.Basic.extend,
+	extend: u.Basic.extend,
 
 	/**
 	 * Generates an unique ID. This is 99.99% unique since it takes the current time and 5 random numbers.
@@ -327,7 +325,7 @@ var plupload = {
 	 * @static
 	 * @return {String} Virtually unique id.
 	 */
-	guid : u.Basic.guid,
+	guid: u.Basic.guid,
 
 	/**
 	 * Get array of DOM Elements by their ids.
@@ -336,7 +334,7 @@ var plupload = {
 	 * @param {String} id Identifier of the DOM Element
 	 * @return {Array}
 	*/
-	getAll : function get(ids) {
+	getAll: function get(ids) {
 		var els = [], el;
 
 		if (plupload.typeOf(ids) !== 'array') {
@@ -372,7 +370,7 @@ var plupload = {
 	 * @param {Object} obj Object to iterate.
 	 * @param {function} callback Callback function to execute for each item.
 	 */
-	each : u.Basic.each,
+	each: u.Basic.each,
 
 	/**
 	 * Returns the absolute x, y position of an Element. The position will be returned in a object with x, y fields.
@@ -383,7 +381,7 @@ var plupload = {
 	 * @param {Element} root Optional root element to stop calculations at.
 	 * @return {object} Absolute position of the specified element object with x, y fields.
 	 */
-	getPos : u.Dom.getPos,
+	getPos: u.Dom.getPos,
 
 	/**
 	 * Returns the size of the specified node in pixels.
@@ -393,7 +391,7 @@ var plupload = {
 	 * @param {Node} node Node to get the size of.
 	 * @return {Object} Object with a w and h property.
 	 */
-	getSize : u.Dom.getSize,
+	getSize: u.Dom.getSize,
 
 	/**
 	 * Encodes the specified string.
@@ -403,7 +401,7 @@ var plupload = {
 	 * @param {String} s String to encode.
 	 * @return {String} Encoded string.
 	 */
-	xmlEncode : function(str) {
+	xmlEncode: function(str) {
 		var xmlEncodeChars = {'<' : 'lt', '>' : 'gt', '&' : 'amp', '"' : 'quot', '\'' : '#39'}, xmlEncodeRegExp = /[<>&\"\']/g;
 
 		return str ? ('' + str).replace(xmlEncodeRegExp, function(chr) {
@@ -419,7 +417,7 @@ var plupload = {
 	 * @param {Object} obj Object with length field.
 	 * @return {Array} Array object containing all items.
 	 */
-	toArray : u.Basic.toArray,
+	toArray: u.Basic.toArray,
 
 	/**
 	 * Find an element in array and return its index if present, otherwise return -1.
@@ -430,7 +428,7 @@ var plupload = {
 	 * @param {Array} array
 	 * @return {Int} Index of the element, or -1 if not found
 	 */
-	inArray : u.Basic.inArray,
+	inArray: u.Basic.inArray,
 
 	/**
 	Recieve an array of functions (usually async) to call in sequence, each  function
@@ -454,7 +452,7 @@ var plupload = {
 	 * @param {Object} pack Language pack items to add.
 	 * @return {Object} Extended language pack object.
 	 */
-	addI18n : o.core.I18n.addI18n,
+	addI18n: o.core.I18n.addI18n,
 
 	/**
 	 * Translates the specified string by checking for the english string in the language pack lookup.
@@ -464,7 +462,7 @@ var plupload = {
 	 * @param {String} str String to look for.
 	 * @return {String} Translated string or the input string if it wasn't found.
 	 */
-	translate : o.core.I18n.translate,
+	translate: o.core.I18n.translate,
 
 	/**
 	 * Pseudo sprintf implementation - simple way to replace tokens with specified values.
@@ -472,7 +470,7 @@ var plupload = {
 	 * @param {String} str String with tokens
 	 * @return {String} String with replaced tokens
 	 */
-	sprintf : u.Basic.sprintf,
+	sprintf: u.Basic.sprintf,
 
 	/**
 	 * Checks if object is empty.
@@ -482,7 +480,7 @@ var plupload = {
 	 * @param {Object} obj Object to check.
 	 * @return {Boolean}
 	 */
-	isEmptyObj : u.Basic.isEmptyObj,
+	isEmptyObj: u.Basic.isEmptyObj,
 
 	/**
 	 * Checks if specified DOM element has specified class.
@@ -492,7 +490,7 @@ var plupload = {
 	 * @param {Object} obj DOM element like object to add handler to.
 	 * @param {String} name Class name
 	 */
-	hasClass : u.Dom.hasClass,
+	hasClass: u.Dom.hasClass,
 
 	/**
 	 * Adds specified className to specified DOM element.
@@ -502,7 +500,7 @@ var plupload = {
 	 * @param {Object} obj DOM element like object to add handler to.
 	 * @param {String} name Class name
 	 */
-	addClass : u.Dom.addClass,
+	addClass: u.Dom.addClass,
 
 	/**
 	 * Removes specified className from specified DOM element.
@@ -512,7 +510,7 @@ var plupload = {
 	 * @param {Object} obj DOM element like object to add handler to.
 	 * @param {String} name Class name
 	 */
-	removeClass : u.Dom.removeClass,
+	removeClass: u.Dom.removeClass,
 
 	/**
 	 * Returns a given computed style of a DOM element.
@@ -522,7 +520,7 @@ var plupload = {
 	 * @param {Object} obj DOM element like object.
 	 * @param {String} name Style you want to get from the DOM element
 	 */
-	getStyle : u.Dom.getStyle,
+	getStyle: u.Dom.getStyle,
 
 	/**
 	 * Adds an event handler to the specified object and store reference to the handler
@@ -535,7 +533,7 @@ var plupload = {
 	 * @param {Function} callback Function to call when event occurs.
 	 * @param {String} (optional) key that might be used to add specifity to the event record.
 	 */
-	addEvent : u.Events.addEvent,
+	addEvent: u.Events.addEvent,
 
 	/**
 	 * Remove event handler from the specified object. If third argument (callback)
@@ -567,7 +565,7 @@ var plupload = {
 	 * @param {String} s String to clean up.
 	 * @return {String} Cleaned string.
 	 */
-	cleanName : function(name) {
+	cleanName: function(name) {
 		var i, lookup;
 
 		// Replace diacritics
@@ -625,7 +623,7 @@ var plupload = {
 	 * @param {Number} size Size to format as string.
 	 * @return {String} Formatted size string.
 	 */
-	formatSize : function(size) {
+	formatSize: function(size) {
 		if (size === undef || /\D/.test(size)) {
 			return plupload.translate('N/A');
 		}
@@ -667,7 +665,7 @@ var plupload = {
 	 * @param {String|Number} size String to parse or number to just pass through.
 	 * @return {Number} Size in bytes.
 	 */
-	parseSize : u.Basic.parseSizeStr,
+	parseSize: u.Basic.parseSizeStr,
 
 	/**
 	 * A way to predict what runtime will be choosen in the current environment with the
@@ -679,7 +677,7 @@ var plupload = {
 	 * @param {String} [runtimes] Comma-separated list of runtimes to check against
 	 * @return {String} Type of compatible runtime
 	 */
-	predictRuntime : function(config, runtimes) {
+	predictRuntime: function(config, runtimes) {
 		var up, runtime;
 
 		up = new plupload.Uploader(config);
@@ -1739,8 +1737,8 @@ plupload.Uploader = function(options) {
 		 * @property id
 		 * @type String
 		 */
-		id : uid,
-		uid : uid, // mOxie uses this to differentiate between event targets
+		id: uid,
+		uid: uid, // mOxie uses this to differentiate between event targets
 
 		/**
 		 * Current state of the total uploading progress. This one can either be plupload.STARTED or plupload.STOPPED.
@@ -1749,7 +1747,7 @@ plupload.Uploader = function(options) {
 		 * @property state
 		 * @type Number
 		 */
-		state : plupload.STOPPED,
+		state: plupload.STOPPED,
 
 		/**
 		 * Map of features that are available for the uploader runtime. Features will be filled
@@ -1759,7 +1757,7 @@ plupload.Uploader = function(options) {
 		 * @property features
 		 * @type Object
 		 */
-		features : {},
+		features: {},
 
 		/**
 		 * Current runtime name.
@@ -1767,7 +1765,7 @@ plupload.Uploader = function(options) {
 		 * @property runtime
 		 * @type String
 		 */
-		runtime : null,
+		runtime: null,
 
 		/**
 		 * Current upload queue, an array of File instances.
@@ -1776,7 +1774,7 @@ plupload.Uploader = function(options) {
 		 * @type Array
 		 * @see plupload.File
 		 */
-		files : files,
+		files: files,
 
 		/**
 		 * Object with name/value settings.
@@ -1784,7 +1782,7 @@ plupload.Uploader = function(options) {
 		 * @property settings
 		 * @type Object
 		 */
-		settings : settings,
+		settings: settings,
 
 		/**
 		 * Total progess information. How many files has been uploaded, total percent etc.
@@ -1792,14 +1790,14 @@ plupload.Uploader = function(options) {
 		 * @property total
 		 * @type plupload.QueueProgress
 		 */
-		total : total,
+		total: total,
 
 		/**
 		 * Initializes the Uploader instance and adds internal event listeners.
 		 *
 		 * @method init
 		 */
-		init : function() {
+		init: function() {
 			var self = this, opt, preinitOpt, err;
 
 			preinitOpt = self.getOption('preinit');
@@ -1892,7 +1890,7 @@ plupload.Uploader = function(options) {
 		 *
 		 * @method refresh
 		 */
-		refresh : function() {
+		refresh: function() {
 			if (fileInputs.length) {
 				plupload.each(fileInputs, function(fileInput) {
 					fileInput.trigger('Refresh');
@@ -1906,7 +1904,7 @@ plupload.Uploader = function(options) {
 		 *
 		 * @method start
 		 */
-		start : function() {
+		start: function() {
 			if (this.state != plupload.STARTED) {
 				this.state = plupload.STARTED;
 				this.trigger('StateChanged');
@@ -1920,7 +1918,7 @@ plupload.Uploader = function(options) {
 		 *
 		 * @method stop
 		 */
-		stop : function() {
+		stop: function() {
 			if (this.state != plupload.STOPPED) {
 				this.state = plupload.STOPPED;
 				this.trigger('StateChanged');
@@ -1934,7 +1932,7 @@ plupload.Uploader = function(options) {
 		 * @method disableBrowse
 		 * @param {Boolean} disable Whether to disable or enable (default: true)
 		 */
-		disableBrowse : function() {
+		disableBrowse: function() {
 			disabled = arguments[0] !== undef ? arguments[0] : true;
 
 			if (fileInputs.length) {
@@ -1953,7 +1951,7 @@ plupload.Uploader = function(options) {
 		 * @param {String} id File id to look for.
 		 * @return {plupload.File} File object or undefined if it wasn't found;
 		 */
-		getFile : function(id) {
+		getFile: function(id) {
 			var i;
 			for (i = files.length - 1; i >= 0; i--) {
 				if (files[i].id === id) {
@@ -1972,7 +1970,7 @@ plupload.Uploader = function(options) {
 		 * @param {plupload.File|mOxie.File|File|Node|Array} file File or files to add to the queue.
 		 * @param {String} [fileName] If specified, will be used as a name for the file
 		 */
-		addFile : function(file, fileName) {
+		addFile: function(file, fileName) {
 			var self = this, queue = [], filesAdded = [], ruid;
 
 			function filterFile(file, cb) {
@@ -2066,7 +2064,7 @@ plupload.Uploader = function(options) {
 		 * @method removeFile
 		 * @param {plupload.File|String} file File to remove from queue.
 		 */
-		removeFile : function(file) {
+		removeFile: function(file) {
 			var id = typeof(file) === 'string' ? file : file.id;
 
 			for (var i = files.length - 1; i >= 0; i--) {
@@ -2085,7 +2083,7 @@ plupload.Uploader = function(options) {
 		 * @param {Number} [length] Number of files to remove (defaults to number of files in the queue).
 		 * @return {Array} Array of files that was removed.
 		 */
-		splice : function(start, length) {
+		splice: function(start, length) {
 			// Splice and trigger events
 			var removed = files.splice(start === undef ? 0 : start, length === undef ? files.length : length);
 
@@ -2194,7 +2192,7 @@ plupload.Uploader = function(options) {
 		 *
 		 * @method destroy
 		 */
-		destroy : function() {
+		destroy: function() {
 			this.trigger('Destroy');
 			settings = total = null; // purge these exclusively
 			this.unbindAll();
@@ -2359,7 +2357,7 @@ plupload.File = (function() {
  * @class QueueProgress
  * @constructor
  */
- plupload.QueueProgress = function() {
+plupload.QueueProgress = function() {
 	var self = this; // Setup alias for self to reduce code size when it's compressed
 
 	/**
