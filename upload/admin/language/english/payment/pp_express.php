@@ -1,104 +1,116 @@
 <?php
 // Heading
-$_['heading_title']                    = 'PayPal Express';
+$_['heading_title']               = 'PayPal Express';
+$_['heading_order']               = 'Order';
 
 // Link
-$_['text_pp_express']                  = '<a onclick="window.open(\'https://www.paypal.com/\');"><img src="view/image/payment/paypal.png" alt="PayPal" title="PayPal" style="border:1px solid #EEEEEE;" /></a>';
+$_['text_pp_express']             = '<a onclick="window.open(\'https://www.paypal.com/\');"><img src="view/image/payment/paypal.png" alt="PayPal" title="PayPal" style="border:1px solid #EEEEEE;" /></a>';
 
 // Text
-$_['text_payment']                     = 'Payment';
-$_['text_success']                     = 'Success: You have modified payment <b>PayPal Express</b> account details !';
-$_['text_authorization']               = 'Authorization';
-$_['text_sale']                        = 'Sale';
-$_['text_signup']                      = 'Sign up for PayPal - save your settings first as this page will be refreshed.';
-$_['text_sandbox']                     = 'Sign up for PayPal Sandbox - save your settings first as this page will be refreshed.';
-$_['text_debug_clear_success']         = 'Success: You have successfully cleared your <b>Debug Log</b> !';
-$_['text_info']                        = '<b>PayPal Express security protocol now uses TLS1.2.</b><br /><br />In order to use PayPal Express, your server should meet the following requirements:<br /> - PHP version: 5.5.19+<br /> - Curl version: 7.29+<br /> - SSL Certificate is recommended';
-$_['text_clear']                       = 'Clear';
-$_['text_browse']                      = 'Browse';
-$_['text_image_manager']               = 'Image manager';
+$_['text_payment']                = 'Payment';
+$_['text_success']                = 'Success: PayPal Express settings have been saved!';
+$_['text_debug_clear_success']    = 'Success: Debug log has been cleared!';
+$_['text_capture']                = 'Capture';
+$_['text_authorize']              = 'Authorize';
 
-// Tab
-$_['tab_api']                          = 'API Details';
-$_['tab_order_status']                 = 'Order Status';
-$_['tab_checkout_customisation']       = 'Checkout Customization';
-$_['tab_debug_log']                    = 'Debug Log';
+// Tabs (settings page)
+$_['tab_api']                     = 'API Credentials';
+$_['tab_general']                 = 'General';
+$_['tab_order_status']            = 'Order Status';
+$_['tab_debug_log']               = 'Debug Log';
 
-// Entry
-$_['entry_username']                   = 'API Username';
-$_['entry_password']                   = 'API Password';
-$_['entry_signature']                  = 'API Signature';
-$_['entry_sandbox_username']           = 'API Sandbox Username';
-$_['entry_sandbox_password']           = 'API Sandbox Password';
-$_['entry_sandbox_signature']          = 'API Sandbox Signature';
-$_['entry_ipn_url']                    = 'IPN URL';
-$_['entry_test']                       = 'Test (Sandbox) Mode';
-$_['entry_debug']                      = 'Debug logging';
-$_['entry_currency']                   = 'Default currency';
-$_['entry_recurring_cancel']           = 'Recurring cancellation';
-$_['entry_transaction_method']         = 'Transaction method';
-$_['entry_total']                      = 'Total';
-$_['entry_total_max']                  = 'Total Maximum';
-$_['entry_geo_zone']                   = 'Geo Zone';
-$_['entry_status']                     = 'Status';
-$_['entry_sort_order']                 = 'Sort Order';
+// Entry labels (settings page)
+$_['entry_client_id']             = 'Live Client ID';
+$_['entry_client_secret']         = 'Live Client Secret';
+$_['entry_sandbox_client_id']     = 'Sandbox Client ID';
+$_['entry_sandbox_client_secret'] = 'Sandbox Client Secret';
+$_['entry_webhook_id']            = 'Live Webhook ID';
+$_['entry_sandbox_webhook_id']    = 'Sandbox Webhook ID';
+$_['entry_sandbox']               = 'Sandbox Mode';
+$_['entry_transaction_mode']      = 'Transaction Mode';
+$_['entry_pay_later']             = 'Pay Later Button';
+$_['entry_currency']              = 'Default Currency';
+$_['entry_debug']                 = 'Debug Logging';
+$_['entry_total']                 = 'Minimum Order Total';
+$_['entry_total_max']             = 'Maximum Order Total';
+$_['entry_geo_zone']              = 'Geo Zone';
+$_['entry_status']                = 'Status';
+$_['entry_sort_order']            = 'Sort Order';
 
-$_['entry_canceled_reversal_status']   = 'Canceled Reversal Status';
-$_['entry_completed_status']           = 'Completed Status';
-$_['entry_denied_status']              = 'Denied Status';
-$_['entry_expired_status']             = 'Expired Status';
-$_['entry_failed_status']              = 'Failed Status';
-$_['entry_pending_status']             = 'Pending Status';
-$_['entry_processed_status']           = 'Processed Status';
-$_['entry_refunded_status']            = 'Refunded Status';
-$_['entry_reversed_status']            = 'Reversed Status';
-$_['entry_voided_status']              = 'Voided Status';
+// Entry labels (order status mappings)
+$_['entry_completed_status']      = 'Completed Status';
+$_['entry_pending_status']        = 'Pending Status';
+$_['entry_failed_status']         = 'Failed Status';
+$_['entry_refunded_status']       = 'Refunded Status';
+$_['entry_voided_status']         = 'Voided Status';
+$_['entry_denied_status']         = 'Denied Status';
+$_['entry_expired_status']        = 'Expired Status';
+$_['entry_webhook_url']           = 'Webhook URL';
 
-// Customise area
-$_['entry_allow_note']                 = 'Allow note';
-$_['entry_border_colour']              = 'Header border colour';
-$_['entry_header_colour']              = 'Header background colour';
-$_['entry_page_colour']                = 'Page background colour';
-$_['entry_logo']                       = 'Logo';
+// Help text (settings page)
+$_['help_sandbox']                = 'Enable to use the PayPal sandbox environment for testing.';
+$_['help_transaction_mode']       = 'Capture charges the customer immediately. Authorize places funds on hold for manual capture later.';
+$_['help_pay_later']              = 'Show a separate Pay Later button alongside the standard PayPal button.';
+$_['help_currency']               = 'The currency sent to PayPal. Must be supported by PayPal.';
+$_['help_debug']                  = 'Logs API requests and responses to pp_express.log.';
+$_['help_total']                  = 'Minimum order total required for this payment method to be available.';
+$_['help_total_max']              = 'Maximum order total. Leave empty for no maximum.';
+$_['help_webhook_id']             = 'The Webhook ID from your PayPal app dashboard. Required for server-side event verification.';
 
-// Help
-$_['help_ipn_url']                     = 'Required for all subscriptions.';
-$_['help_test']                        = 'Use the live or testing (sandbox) gateway server to process transactions?';
-$_['help_debug']                       = 'Logs additional information to the system log.';
-$_['help_currency']                    = 'Used for transaction searches.';
-$_['help_recurring_cancel']            = 'Allow customers to cancel recurring payments.';
-$_['help_transaction_method']          = 'Sale will charge customer immediately. Authorization will put funds on hold for future capture.';
-$_['help_total']                       = 'The checkout total the order must reach before this payment method becomes <b>active</b>.';
-$_['help_total_max']                   = 'The maximum checkout total the order must reach before this payment method becomes <b>inactive</b>.<br />Leave empty for no maximum.';
-$_['help_allow_note']                  = 'If the buyer may enter some text in the flow to be returned by the responses.';
-$_['help_border_colour']               = '6 characters HTML hexadecimal color code.';
-$_['help_header_colour']               = '6 characters HTML hexadecimal color code.';
-$_['help_page_colour']                 = '6 characters HTML hexadecimal color code.';
-$_['help_logo']                        = 'Maximum size: 750 x 90 px (W x H)<br />You should only use a logo if you have SSL set up.';
+// Order action panel
+$_['text_payment_info']           = 'PayPal Payment Information';
+$_['text_intent']                 = 'Intent';
+$_['text_pp_order_id']            = 'PayPal Order ID';
+$_['text_status']                 = 'Status';
+$_['text_capture_id']             = 'Capture / Auth ID';
+$_['text_amount_authorised']      = 'Authorised';
+$_['text_amount_captured']        = 'Captured';
+$_['text_amount_refunded']        = 'Refunded';
+$_['text_amount_remaining']       = 'Remaining';
+$_['text_transactions']           = 'Transactions';
+$_['text_confirm_void']           = 'Are you sure you want to void this authorization? This cannot be undone.';
+$_['text_loading']                = 'Loading...';
+$_['text_no_results']             = 'No transactions found.';
+$_['text_already_refunded']       = 'already refunded';
 
-// Button
-$_['button_search']                    = 'Search';
-$_['button_info']                      = 'Information';
+// Order action panel — table columns
+$_['column_type']                 = 'Type';
+$_['column_capture_id']           = 'Capture / Auth ID';
+$_['column_amount']               = 'Amount';
+$_['column_currency']             = 'Currency';
+$_['column_status']               = 'Status';
+$_['column_note']                 = 'Note';
+$_['column_created']              = 'Date';
+$_['column_actions']              = 'Actions';
 
-// Error
-$_['error_permission']                 = 'Warning: You do not have permission to modify payment <b>PayPal Express</b> !';
-$_['error_username']                   = 'API Username Required!';
-$_['error_password']                   = 'API Password Required!';
-$_['error_signature']                  = 'API Signature Required!';
-$_['error_sandbox_username']           = 'API Sandbox Username Required!';
-$_['error_sandbox_password']           = 'API Sandbox Password Required!';
-$_['error_sandbox_signature']          = 'API Sandbox Signature Required!';
-$_['error_connection']                 = 'Could not connect to PayPal!';
-$_['error_api']                        = 'Paypal Authorization Error';
-$_['error_api_sandbox']                = 'Paypal Sandbox Authorization Error';
-$_['error_timeout']                    = 'Request timed out!';
-$_['error_missing_transaction']        = 'Could not find the transaction!';
-$_['error_missing_parent_transaction'] = 'Could not find the parent transaction!';
-$_['error_missing_data']               = 'Missing data!';
-$_['error_missing_order']              = 'Could not find the order!';
-$_['error_missing_profile']            = 'Could not find the payment profile!';
-$_['error_general']                    = 'There was an error!';
-$_['error_search_truncated']           = 'Search truncated: more than 100 results! Try to narrow your search criteria.';
-$_['error_date_start']                 = 'Enter a start date!';
-$_['error_not_cancelled']              = 'Not canceled! Error: %s';
-$_['success_cancelled']                = 'Recurring payment has been cancelled!';
+// Order action panel — capture form
+$_['entry_capture_amount']        = 'Capture Amount';
+$_['entry_capture_note']          = 'Note to Payer';
+
+// Refund page
+$_['entry_capture_id']            = 'Capture ID';
+$_['entry_refund_full']           = 'Full Refund';
+$_['entry_amount']                = 'Refund Amount';
+$_['entry_note']                  = 'Note to Payer';
+
+// Buttons
+$_['button_capture']              = 'Capture';
+$_['button_capture_full']         = 'Capture Full Amount';
+$_['button_void']                 = 'Void Authorization';
+$_['button_refund']               = 'Issue Refund';
+
+// Errors
+$_['error_permission']            = 'Warning: You do not have permission to modify <b>PayPal Express</b>!';
+$_['error_client_id']             = 'Live Client ID is required!';
+$_['error_client_secret']         = 'Live Client Secret is required!';
+$_['error_sandbox_client_id']     = 'Sandbox Client ID is required!';
+$_['error_sandbox_client_secret'] = 'Sandbox Client Secret is required!';
+$_['error_connection']            = 'Could not connect to PayPal!';
+$_['error_general']               = 'An error occurred. Please try again.';
+$_['error_missing_data']          = 'Required data is missing!';
+$_['error_missing_order']         = 'PayPal order record not found!';
+$_['error_missing_transaction']   = 'Transaction not found!';
+$_['error_capture_amt']           = 'Please enter a valid capture amount.';
+$_['error_partial_amt']           = 'Please enter a refund amount for a partial refund.';
+$_['error_positive_amt']          = 'Refund amount must be greater than zero.';
+$_['error_timeout']               = 'The request timed out. Please try again.';

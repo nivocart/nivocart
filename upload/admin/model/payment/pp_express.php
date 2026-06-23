@@ -2,45 +2,48 @@
 /**
  * Class ModelPaymentPPExpress
  *
+ * Admin model for PayPal Express — Orders v2 REST API.
+ *
  * @package NivoCart
  */
 class ModelPaymentPPExpress extends Model {
-	/**
-	 * Functions Install, Uninstall, Get
-	 */
+	// -------------------------------------------------------------------------
+	// Install / Uninstall
+	// -------------------------------------------------------------------------
+
 	public function install(): void {
-		$this->db->query("
-			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_order` (
-			`paypal_order_id` int NOT NULL AUTO_INCREMENT,
-			`order_id` int NOT NULL,
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_order` (
+			`paypal_order_id` INT NOT NULL AUTO_INCREMENT,
+			`order_id` INT NOT NULL,
+			`pp_order_id` VARCHAR(20) NOT NULL DEFAULT '',
+			`intent` ENUM('CAPTURE','AUTHORIZE') NOT NULL DEFAULT 'CAPTURE',
+			`status` VARCHAR(30) NOT NULL DEFAULT '',
+			`capture_id` VARCHAR(20) NOT NULL DEFAULT '',
+			`currency_code` CHAR(3) NOT NULL DEFAULT '',
+			`total` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
 			`created` DATETIME NOT NULL,
 			`modified` DATETIME NOT NULL,
-			`capture_status` ENUM('Complete', 'NotComplete') DEFAULT NULL,
-			`currency_code` CHAR(3) NOT NULL,
-			`authorization_id` VARCHAR(30) NOT NULL,
-			`total` DECIMAL(10, 2) NOT NULL,
-			PRIMARY KEY (`paypal_order_id`)
+			PRIMARY KEY (`paypal_order_id`),
+			KEY `order_id` (`order_id`),
+			KEY `pp_order_id` (`pp_order_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 
-		$this->db->query("
-			CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_order_transaction` (
-			`paypal_order_transaction_id` int NOT NULL AUTO_INCREMENT,
-			`paypal_order_id` int NOT NULL,
-			`transaction_id` CHAR(20) NOT NULL,
-			`parent_transaction_id` CHAR(20) NOT NULL,
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "paypal_order_transaction` (
+			`paypal_order_transaction_id` INT NOT NULL AUTO_INCREMENT,
+			`paypal_order_id` INT NOT NULL,
+			`pp_order_id` VARCHAR(20) NOT NULL DEFAULT '',
+			`capture_id` VARCHAR(20) NOT NULL DEFAULT '',
+			`transaction_type` ENUM('CAPTURE','AUTHORIZE','REFUND','VOID') NOT NULL,
+			`status` VARCHAR(30) NOT NULL DEFAULT '',
+			`amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+			`currency_code` CHAR(3) NOT NULL DEFAULT '',
+			`note` VARCHAR(255) NOT NULL DEFAULT '',
+			`raw_response` TEXT NOT NULL,
 			`created` DATETIME NOT NULL,
-			`note` VARCHAR(255) NOT NULL,
-			`msgsubid` CHAR(38) NOT NULL,
-			`receipt_id` CHAR(20) NOT NULL,
-			`payment_type` ENUM('none', 'echeck', 'instant', 'refund', 'void') DEFAULT NULL,
-			`payment_status` CHAR(20) NOT NULL,
-			`pending_reason` CHAR(50) NOT NULL,
-			`transaction_entity` CHAR(50) NOT NULL,
-			`amount` DECIMAL(10, 2) NOT NULL,
-			`debug_data` TEXT NOT NULL,
-			`call_data` TEXT NOT NULL,
-			PRIMARY KEY (`paypal_order_transaction_id`)
+			PRIMARY KEY (`paypal_order_transaction_id`),
+			KEY `paypal_order_id` (`paypal_order_id`),
+			KEY `capture_id` (`capture_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		");
 	}
@@ -50,372 +53,503 @@ class ModelPaymentPPExpress extends Model {
 		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "paypal_order`;");
 	}
 
-	public function getPaypalOrder(int $paypal_order_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `paypal_order_id` = " . (int)$paypal_order_id);
+	// -------------------------------------------------------------------------
+	// DB reads — paypal_order
+	// -------------------------------------------------------------------------
 
-		return (($query instanceof stdClass) && isset($query->row) && is_array($query->row)) ? $query->row : false;
+	/**
+	 * Fetch a paypal_order row by its own PK.
+	 */
+	public function getPaypalOrder(int $paypal_order_id): array|false {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `paypal_order_id` = " . (int)$paypal_order_id . " LIMIT 1");
+
+		return $query->num_rows ? $query->row : false;
 	}
 
-	public function getPaypalOrderByOrderId(int $order_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `order_id` = " . (int)$order_id);
+	/**
+	 * Fetch a paypal_order row by the NivoCart order_id.
+	 */
+	public function getPaypalOrderByOrderId(int $order_id): array|false {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `order_id` = " . (int)$order_id . " LIMIT 1");
 
-		return (($query instanceof stdClass) && isset($query->row) && is_array($query->row)) ? $query->row : false;
+		return $query->num_rows ? $query->row : false;
 	}
 
-	public function updatePaypalOrderStatus(int $order_id, $capture_status) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order` SET `capture_status` = '" . $this->db->escape($capture_status) . "', `modified` = NOW() WHERE `order_id` = " . (int)$order_id);
+	/**
+	 * Fetch a paypal_order row by the PayPal Orders v2 order ID (pp_order_id).
+	 */
+	public function getPaypalOrderByPPOrderId(string $pp_order_id): array|false {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `pp_order_id` = '" . $this->db->escape($pp_order_id) . "' LIMIT 1");
+
+		return $query->num_rows ? $query->row : false;
 	}
 
-	public function addTransaction($transaction_data, array $request_data = []) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "paypal_order_transaction SET "
-		. "paypal_order_id = " . (isset($transaction_data['paypal_order_id']) ? (int)$transaction_data['paypal_order_id'] : 0) . ", "
-		. "transaction_id = '" . (isset($transaction_data['transaction_id']) ? $this->db->escape($transaction_data['transaction_id']) : null) . "', "
-		. "parent_transaction_id = '" . (isset($transaction_data['parent_transaction_id']) ? $this->db->escape($transaction_data['parent_transaction_id']) : null) . "', "
-		. "created = NOW(), "
-		. "note = '" . (isset($transaction_data['note']) ? $this->db->escape($transaction_data['note']) : null) . "', "
-		. "msgsubid = '" . (isset($transaction_data['msgsubid']) ? $this->db->escape($transaction_data['msgsubid']) : null) . "', "
-		. "receipt_id = '" . (isset($transaction_data['receipt_id']) ? $this->db->escape($transaction_data['receipt_id']) : null) . "', "
-		. "payment_type = '" . (isset($transaction_data['payment_type']) ? $this->db->escape($transaction_data['payment_type']) : null) . "', "
-		. "payment_status = '" . (isset($transaction_data['payment_status']) ? $this->db->escape($transaction_data['payment_status']) : null) . "', "
-		. "pending_reason = '" . (isset($transaction_data['pending_reason']) ? $this->db->escape($transaction_data['pending_reason']) : null) . "', "
-		. "transaction_entity = '" . (isset($transaction_data['transaction_entity']) ? $this->db->escape($transaction_data['transaction_entity']) : null) . "', "
-		. "amount = " . (isset($transaction_data['amount']) ? (float)$transaction_data['amount'] : 0.0) . ", "
-		. "debug_data = '" . (isset($transaction_data['debug_data']) ? $this->db->escape($transaction_data['debug_data']) : null) . "'"
-		. (!empty($request_data) ? ", call_data = '" . $this->db->escape(json_encode($request_data)) . "'" : null));
+	/**
+	 * Full order record including transactions and running totals.
+	 * Used by the admin order-view page.
+	 */
+	public function getOrder(int $order_id): array|false {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE `order_id` = " . (int)$order_id . " LIMIT 1");
 
-		$paypal_order_transaction_id = $this->db->getLastId();
-
-		return $paypal_order_transaction_id;
-	}
-
-	public function editTransaction($transaction) {
-		$this->db->query("UPDATE " . DB_PREFIX . "paypal_order_transaction SET "
-		. "paypal_order_id = " . (isset($transaction['paypal_order_id']) ? (int)$transaction['paypal_order_id'] : 0) . ", "
-		. "transaction_id = '" . (isset($transaction['transaction_id']) ? $this->db->escape($transaction['transaction_id']) : null) . "', "
-		. "parent_transaction_id = '" . (isset($transaction['parent_transaction_id']) ? $this->db->escape($transaction['parent_transaction_id']) : null) . "', "
-		. "created = '" . (isset($transaction['created']) ? $this->db->escape($transaction['created']) : null) . "', "
-		. "note = '" . (isset($transaction['note']) ? $this->db->escape($transaction['note']) : null) . "', "
-		. "msgsubid = '" . (isset($transaction['msgsubid']) ? $this->db->escape($transaction['msgsubid']) : null) . "', "
-		. "receipt_id = '" . (isset($transaction['receipt_id']) ? $this->db->escape($transaction['receipt_id']) : null) . "', "
-		. "payment_type = '" . (isset($transaction['payment_type']) ? $this->db->escape($transaction['payment_type']) : null) . "', "
-		. "payment_status = '" . (isset($transaction['payment_status']) ? $this->db->escape($transaction['payment_status']) : null) . "', "
-		. "pending_reason = '" . (isset($transaction['pending_reason']) ? $this->db->escape($transaction['pending_reason']) : null) . "', "
-		. "transaction_entity = '" . (isset($transaction['transaction_entity']) ? $this->db->escape($transaction['transaction_entity']) : null) . "', "
-		. "amount = " . (isset($transaction['amount']) ? (float)$transaction['amount'] : 0.0) . ", "
-		. "debug_data = '" . (isset($transaction['debug_data']) ? $this->db->escape($transaction['debug_data']) : null) . "', "
-		. "call_data = '" . (isset($transaction['call_data']) ? $this->db->escape($transaction['call_data']) : null) . "' "
-		. "WHERE paypal_order_transaction_id = " . (int)$transaction['paypal_order_transaction_id']);
-	}
-
-	public function getPaypalOrderByTransactionId(int $transaction_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order_transaction WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "'");
-
-		return $query->rows;
-	}
-
-	public function getFailedTransaction(int $paypal_order_transaction_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order_transaction WHERE paypal_order_transaction_id = " . (int)$paypal_order_transaction_id . " AND payment_status = 'Failed'");
-
-		if ($query->num_rows) {
-			return $query->row;
-		} else {
+		if (!$query->num_rows) {
 			return false;
 		}
+
+		$order = $query->row;
+
+		$order['transactions'] = $this->getTransactions($order['paypal_order_id']);
+		$order['captured'] = $this->getTotalCaptured($order['paypal_order_id']);
+		$order['refunded'] = $this->getTotalRefunded($order['paypal_order_id']);
+
+		return $order;
 	}
 
-	public function getLocalTransaction(int $transaction_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "paypal_order_transaction WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "'");
+	// -------------------------------------------------------------------------
+	// DB writes — paypal_order
+	// -------------------------------------------------------------------------
 
-		if ($query->num_rows) {
-			return $query->row;
-		} else {
+	/**
+	 * Insert a new paypal_order row when an order is first created.
+	 * Returns the new paypal_order_id.
+	 */
+	public function saveOrder(array $data): int {
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "paypal_order` SET
+			`order_id` = " . (int)$data['order_id'] . ",
+			`pp_order_id` = '" . $this->db->escape($data['pp_order_id']) . "',
+			`intent` = '" . $this->db->escape($data['intent']) . "',
+			`status` = '" . $this->db->escape($data['status']) . "',
+			`capture_id` = '" . $this->db->escape($data['capture_id'] ?? '') . "',
+			`currency_code` = '" . $this->db->escape($data['currency_code']) . "',
+			`total` = " . (float)$data['total'] . ",
+			`created` = NOW(),
+			`modified` = NOW()
+		");
+
+		return $this->db->getLastId();
+	}
+
+	/**
+	 * Update status (and optionally capture_id) after a capture or authorize call.
+	 */
+	public function updatePaypalOrderStatus(int $order_id, string $status, string $capture_id = ''): void {
+		$set = "`status` = '" . $this->db->escape($status) . "', `modified` = NOW()";
+
+		if ($capture_id !== '') {
+			$set .= ", `capture_id` = '" . $this->db->escape($capture_id) . "'";
+		}
+
+		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order` SET " . $set . " WHERE `order_id` = " . (int)$order_id);
+	}
+
+	// -------------------------------------------------------------------------
+	// DB reads — paypal_order_transaction
+	// -------------------------------------------------------------------------
+
+	/**
+	 * All transactions for a given paypal_order_id, oldest first.
+	 */
+	public function getTransactions(int $paypal_order_id): array {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order_transaction`
+			WHERE `paypal_order_id` = " . (int)$paypal_order_id . "
+			ORDER BY `paypal_order_transaction_id` ASC
+		");
+
+		return $query->num_rows ? $query->rows : [];
+	}
+
+	/**
+	 * Sum of all successful capture amounts for a paypal_order_id.
+	 */
+	public function getTotalCaptured(int $paypal_order_id): float {
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total`
+			FROM `" . DB_PREFIX . "paypal_order_transaction`
+			WHERE `paypal_order_id` = " . (int)$paypal_order_id . "
+			AND `transaction_type` = 'CAPTURE'
+			AND `status` IN ('COMPLETED', 'PENDING')
+		");
+
+		return (float)($query->row['total'] ?? 0.00);
+	}
+
+	/**
+	 * Sum of all refund amounts for a paypal_order_id.
+	 */
+	public function getTotalRefunded(int $paypal_order_id): float {
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total`
+			FROM `" . DB_PREFIX . "paypal_order_transaction`
+			WHERE `paypal_order_id` = " . (int)$paypal_order_id . "
+			AND `transaction_type` = 'REFUND'
+			AND `status` = 'COMPLETED'
+		");
+
+		return (float)($query->row['total'] ?? 0.00);
+	}
+
+	/**
+	 * Sum of refunds against a specific capture_id.
+	 * Used by the admin refund panel to know how much has already been refunded.
+	 */
+	public function getTotalRefundedByCaptureId(string $capture_id): float {
+		$query = $this->db->query("SELECT SUM(`amount`) AS `total`
+			FROM `" . DB_PREFIX . "paypal_order_transaction`
+			WHERE `capture_id` = '" . $this->db->escape($capture_id) . "'
+			AND `transaction_type` = 'REFUND'
+			AND `status` = 'COMPLETED'
+		");
+
+		return (float)($query->row['total'] ?? 0.00);
+	}
+
+	// -------------------------------------------------------------------------
+	// DB writes — paypal_order_transaction
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Insert a transaction row.
+	 * Returns the new paypal_order_transaction_id.
+	 */
+	public function saveTransaction(array $data): int {
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "paypal_order_transaction` SET
+			`paypal_order_id` = " . (int)$data['paypal_order_id'] . ",
+			`pp_order_id` = '" . $this->db->escape($data['pp_order_id'] ?? '') . "',
+			`capture_id` = '" . $this->db->escape($data['capture_id'] ?? '') . "',
+			`transaction_type` = '" . $this->db->escape($data['transaction_type']) . "',
+			`status` = '" . $this->db->escape($data['status'] ?? '') . "',
+			`amount` = " . (float)($data['amount'] ?? 0.00) . ",
+			`currency_code` = '" . $this->db->escape($data['currency_code'] ?? '') . "',
+			`note` = '" . $this->db->escape($data['note'] ?? '') . "',
+			`raw_response` = '" . $this->db->escape($data['raw_response'] ?? '') . "',
+			`created` = NOW()
+		");
+
+		return $this->db->getLastId();
+	}
+
+	// -------------------------------------------------------------------------
+	// PayPal REST API — authentication
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Exchange client credentials for an OAuth2 access token.
+	 * Returns the token string, or false on failure.
+	 */
+	public function getAccessToken(): string|false {
+		$sandbox = (bool)$this->config->get('pp_express_sandbox');
+		$client_id = $sandbox ? $this->config->get('pp_express_sandbox_client_id') : $this->config->get('pp_express_client_id');
+		$secret = $sandbox ? $this->config->get('pp_express_sandbox_client_secret') : $this->config->get('pp_express_client_secret');
+
+		$endpoint = $sandbox ? 'https://api-m.sandbox.paypal.com/v1/oauth2/token' : 'https://api-m.paypal.com/v1/oauth2/token';
+
+		$response = $this->curlPost($endpoint, 'grant_type=client_credentials', [
+			CURLOPT_USERPWD    => $client_id . ':' . $secret,
+			CURLOPT_HTTPHEADER => ['Accept: application/json', 'Accept-Language: en_US'],
+		]);
+
+		if (isset($response['access_token'])) {
+			return $response['access_token'];
+		}
+
+		$this->log($response, 'getAccessToken failed');
+
+		return false;
+	}
+
+	// -------------------------------------------------------------------------
+	// PayPal REST API — Orders v2
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Create an order via POST /v2/checkout/orders.
+	 * $payload is the full PHP array; it will be JSON-encoded before sending.
+	 * Returns the decoded response array, or false on failure.
+	 */
+	public function createPayPalOrder(array $payload): array|false {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
 			return false;
 		}
+
+		$response = $this->curlPost($this->endpoint('v2/checkout/orders'), json_encode($payload), $this->authHeaders($token));
+
+		$this->log($response, 'createPayPalOrder');
+
+		return $response ?: false;
 	}
 
-	public function requestTransactionDetails(int $transaction_id) {
-		$call_data = [
-			'METHOD'        => 'GetTransactionDetails',
-			'TRANSACTIONID' => $transaction_id
+	/**
+	 * Retrieve an order via GET /v2/checkout/orders/{id}.
+	 */
+	public function getPayPalOrderDetails(string $pp_order_id): array|false {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return false;
+		}
+
+		$response = $this->curlGet($this->endpoint('v2/checkout/orders/' . $pp_order_id), $this->authHeaders($token));
+
+		$this->log($response, 'getPayPalOrderDetails');
+
+		return $response ?: false;
+	}
+
+	/**
+	 * Capture payment for an approved order via POST /v2/checkout/orders/{id}/capture.
+	 */
+	public function capturePayPalOrder(string $pp_order_id): array|false {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return false;
+		}
+
+		$response = $this->curlPost($this->endpoint('v2/checkout/orders/' . $pp_order_id . '/capture'), '{}', $this->authHeaders($token));
+
+		$this->log($response, 'capturePayPalOrder');
+
+		return $response ?: false;
+	}
+
+	/**
+	 * Authorize payment for an approved order via POST /v2/checkout/orders/{id}/authorize.
+	 */
+	public function authorizePayPalOrder(string $pp_order_id): array|false {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return false;
+		}
+
+		$response = $this->curlPost($this->endpoint('v2/checkout/orders/' . $pp_order_id . '/authorize'), '{}', $this->authHeaders($token));
+
+		$this->log($response, 'authorizePayPalOrder');
+
+		return $response ?: false;
+	}
+
+	// -------------------------------------------------------------------------
+	// PayPal REST API — Payments v2 (post-capture actions)
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Refund a captured payment via POST /v2/payments/captures/{id}/refund.
+	 * Pass amount in $data to do a partial refund, or empty array for full refund.
+	 *
+	 * Example $data for partial refund:
+	 *   ['amount' => ['value' => '10.00', 'currency_code' => 'GBP'], 'note_to_payer' => '...']
+	 */
+	public function refundCapture(string $capture_id, array $data = []): array|false {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return false;
+		}
+
+		$body = empty($data) ? '{}' : json_encode($data);
+
+		$response = $this->curlPost($this->endpoint('v2/payments/captures/' . $capture_id . '/refund'), $body, $this->authHeaders($token));
+
+		$this->log($response, 'refundCapture');
+
+		return $response ?: false;
+	}
+
+	/**
+	 * Capture a previously authorized payment via POST /v2/payments/authorizations/{id}/capture.
+	 * $data can include a partial amount; pass empty array to capture the full authorized amount.
+	 */
+	public function captureAuthorization(string $authorization_id, array $data = []): array|false {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return false;
+		}
+
+		$body = empty($data) ? '{}' : json_encode($data);
+
+		$response = $this->curlPost($this->endpoint('v2/payments/authorizations/' . $authorization_id . '/capture'), $body, $this->authHeaders($token));
+
+		$this->log($response, 'captureAuthorization');
+
+		return $response ?: false;
+	}
+
+	/**
+	 * Void an authorization via POST /v2/payments/authorizations/{id}/void.
+	 */
+	public function voidAuthorization(string $authorization_id): array|false {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return false;
+		}
+
+		$response = $this->curlPost($this->endpoint('v2/payments/authorizations/' . $authorization_id . '/void'), '{}', $this->authHeaders($token));
+
+		$this->log($response, 'voidAuthorization');
+
+		return $response ?: false;
+	}
+
+	// -------------------------------------------------------------------------
+	// PayPal REST API — Webhooks v2
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Verify a webhook notification signature via POST /v2/notifications/verify-webhook-signature.
+	 * Returns true if PayPal confirms the signature is valid.
+	 *
+	 * $headers must include: PAYPAL-AUTH-ALGO, PAYPAL-CERT-URL,
+	 *                         PAYPAL-TRANSMISSION-ID, PAYPAL-TRANSMISSION-SIG,
+	 *                         PAYPAL-TRANSMISSION-TIME
+	 */
+	public function verifyWebhookSignature(array $headers, string $raw_body, string $webhook_id): bool {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return false;
+		}
+
+		$payload = [
+			'auth_algo'         => $headers['PAYPAL-AUTH-ALGO'] ?? '',
+			'cert_url'          => $headers['PAYPAL-CERT-URL'] ?? '',
+			'transmission_id'   => $headers['PAYPAL-TRANSMISSION-ID'] ?? '',
+			'transmission_sig'  => $headers['PAYPAL-TRANSMISSION-SIG'] ?? '',
+			'transmission_time' => $headers['PAYPAL-TRANSMISSION-TIME'] ?? '',
+			'webhook_id'        => $webhook_id,
+			'webhook_event'     => json_decode($raw_body, true),
 		];
 
-		return $this->call($call_data);
+		$response = $this->curlPost($this->endpoint('v2/notifications/verify-webhook-signature'), json_encode($payload), $this->authHeaders($token));
+
+		$this->log($response, 'verifyWebhookSignature');
+
+		return isset($response['verification_status']) && $response['verification_status'] === 'SUCCESS';
 	}
 
-	public function updateTransactionStatus(int $transaction_id, $transaction_status) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "paypal_order_transaction` SET payment_status = '" . $this->db->escape($transaction_status) . "' WHERE transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
-	}
+	// -------------------------------------------------------------------------
+	// Utility
+	// -------------------------------------------------------------------------
 
-	public function getCurrencies() {
+	/**
+	 * List of currencies supported by PayPal Orders v2.
+	 */
+	public function getCurrencies(): array {
 		return [
-			'AUD',
-			'BRL',
-			'CAD',
-			'CZK',
-			'DKK',
-			'EUR',
-			'HKD',
-			'HUF',
-			'ILS',
-			'JPY',
-			'MYR',
-			'MXN',
-			'NOK',
-			'NZD',
-			'PHP',
-			'PLN',
-			'GBP',
-			'SGD',
-			'SEK',
-			'CHF',
-			'TWD',
-			'THB',
-			'TRY',
-			'USD',
-			'INR'
+			'AUD', 'BRL', 'CAD', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS',
+			'JPY', 'MYR', 'MXN', 'NOK', 'NZD', 'PHP', 'PLN', 'GBP', 'SGD',
+			'SEK', 'CHF', 'TWD', 'THB', 'TRY', 'USD', 'INR',
 		];
 	}
 
-	public function getTotalCaptured(int $paypal_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "paypal_order_transaction` WHERE paypal_order_id = " . (int)$paypal_order_id . " AND pending_reason != 'authorization' AND (payment_status = 'Partially-Refunded' OR payment_status = 'Completed' OR payment_status = 'Pending') AND transaction_entity = 'payment'");
-
-		return $query->row['total'];
-	}
-
-	public function getTotalRefunded(int $paypal_order_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "paypal_order_transaction` WHERE paypal_order_id = " . (int)$paypal_order_id . " AND payment_status = 'Refunded'");
-
-		return $query->row['total'];
-	}
-
-	public function getTotalRefundedByParentId(int $parent_transaction_id) {
-		$query = $this->db->query("SELECT SUM(amount) AS `total` FROM `" . DB_PREFIX . "paypal_order_transaction` WHERE parent_transaction_id = '" . $this->db->escape((int)$parent_transaction_id) . "' AND payment_type = 'refund'");
-
-		return $query->row['total'];
-	}
-
-	protected function cleanReturn(array $data = []) {
-		$data = explode('&', $data);
-
-		$arr = [];
-
-		foreach ($data as $k => $v) {
-			$tmp = explode('=', $v);
-			$arr[$tmp[0]] = (isset($tmp[1]) ? urldecode($tmp[1]) : '');
-		}
-
-		return $arr;
-	}
-
-	public function log($data, $title = null, $force = false) {
+	/**
+	 * Write a debug log entry (respects the pp_express_debug config flag).
+	 */
+	public function log(mixed $data, string $title = '', bool $force = false): void {
 		if ($this->config->get('pp_express_debug') || $force) {
 			$log = new Log('pp_express.log');
-			$log->write('PayPal Express debug (' . $title . '): ' . json_encode($data));
+			$log->write('PayPal Express (' . $title . '): ' . json_encode($data));
 		}
 	}
 
-	public function getOrder(int $order_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "paypal_order` WHERE order_id = '" . (int)$order_id . "' LIMIT 0,1");
+	// -------------------------------------------------------------------------
+	// Private helpers
+	// -------------------------------------------------------------------------
 
-		if ($query->num_rows) {
-			$order = $query->row;
+	/**
+	 * Build a fully-qualified PayPal REST API endpoint URL.
+	 */
+	private function endpoint(string $path): string {
+		$base = $this->config->get('pp_express_sandbox') ? 'https://api-m.sandbox.paypal.com/' : 'https://api-m.paypal.com/';
 
-			$order['transactions'] = $this->getTransactions($order['paypal_order_id']);
-			$order['captured'] = $this->getTotalCaptured($order['paypal_order_id']);
-
-			return $order;
-		} else {
-			return false;
-		}
+		return $base . ltrim($path, '/');
 	}
 
-	public function getOrderId(int $transaction_id) {
-		$query = $this->db->query("SELECT o.order_id FROM `" . DB_PREFIX . "paypal_order_transaction` ot LEFT JOIN `" . DB_PREFIX . "paypal_order` o ON (o.paypal_order_id = ot.paypal_order_id) WHERE ot.transaction_id = '" . $this->db->escape((int)$transaction_id) . "' LIMIT 0,1");
-
-		if ($query->num_rows) {
-			return $query->row['order_id'];
-		} else {
-			return false;
-		}
-	}
-
-	public function getTransactions(int $paypal_order_id) {
-		$transactions = [];
-		// children unused
-		$query = $this->db->query("SELECT ot.*, (SELECT COUNT(ot2.paypal_order_id) FROM `" . DB_PREFIX . "paypal_order_transaction` ot2 WHERE ot2.parent_transaction_id = ot.transaction_id) AS children FROM `" . DB_PREFIX . "paypal_order_transaction` ot WHERE paypal_order_id = '" . (int)$paypal_order_id . "' ORDER BY paypal_order_transaction_id ASC");
-
-		if ($query->num_rows) {
-			foreach ($query->rows as $result) {
-				$transactions[] = $result;
-			}
-		}
-
-		return $transactions;
-	}
-
-	public function call(array $data = []) {
-		if ($this->config->get('pp_express_test') === 1) {
-			$api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
-			$user = $this->config->get('pp_express_sandbox_username');
-			$password = $this->config->get('pp_express_sandbox_password');
-			$signature = $this->config->get('pp_express_sandbox_signature');
-		} else {
-			$api_endpoint = 'https://api-3t.paypal.com/nvp';
-			$user = $this->config->get('pp_express_username');
-			$password = $this->config->get('pp_express_password');
-			$signature = $this->config->get('pp_express_signature');
-		}
-
-		$default_parameters = [
-			'USER'         => $user,
-			'PWD'          => $password,
-			'SIGNATURE'    => $signature,
-			'VERSION'      => '109.0',
-			'BUTTONSOURCE' => 'NivoCart_Cart_EC'
+	/**
+	 * Standard JSON + Bearer auth headers for REST calls.
+	 */
+	private function authHeaders(string $token): array {
+		return [
+			CURLOPT_HTTPHEADER => [
+				'Content-Type: application/json',
+				'Authorization: Bearer ' . $token,
+			],
 		];
+	}
 
-		$call_parameters = array_merge($data, $default_parameters);
-
-		$this->log($call_parameters, 'Call data');
-
-		$options = [
+	/**
+	 * cURL POST helper. Returns decoded JSON response as array, or false.
+	 */
+	private function curlPost(string $url, string $body, array $extra_opts = []): array|false {
+		$opts = [
+			CURLOPT_URL            => $url,
 			CURLOPT_POST           => true,
-			CURLOPT_HEADER         => false,
-			CURLOPT_URL            => $api_endpoint,
-			CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1",
-			CURLOPT_FRESH_CONNECT  => true,
+			CURLOPT_POSTFIELDS     => $body,
 			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_HEADER         => false,
+			CURLOPT_FRESH_CONNECT  => true,
 			CURLOPT_FORBID_REUSE   => true,
-			CURLOPT_TIMEOUT        => 0,
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_SSL_VERIFYHOST => false,
-			CURLOPT_POSTFIELDS     => http_build_query($call_parameters, '', '&')
+			CURLOPT_TIMEOUT        => 30,
+			CURLOPT_SSL_VERIFYPEER => true,
+			CURLOPT_SSL_VERIFYHOST => 2,
 		];
+
+		foreach ($extra_opts as $key => $value) {
+			$opts[$key] = $value;
+		}
 
 		$ch = curl_init();
-
-		curl_setopt_array($ch, $options);
-
+		curl_setopt_array($ch, $opts);
 		$response = curl_exec($ch);
 
 		if (curl_errno($ch) !== CURLE_OK) {
-			$log_data = [
-				'curl_error' => curl_error($ch),
-				'curl_errno' => curl_errno($ch)
-			];
-
-			$this->log($log_data, 'cURL failed');
-
+			$this->log(['curl_error' => curl_error($ch), 'url' => $url], 'curlPost failed', true);
+			curl_close($ch);
 			return false;
 		}
 
 		curl_close($ch);
 
-		$response = $this->cleanReturn($response);
+		$decoded = json_decode($response, true);
 
-		$this->log($response, 'Response');
-
-		return $response;
+		return is_array($decoded) ? $decoded : false;
 	}
 
-	private function curl($endpoint, array $additional_opts = []) {
-		$default_opts = [
-			CURLOPT_PORT           => 443,
-			CURLOPT_HEADER         => false,
-			CURLOPT_SSL_VERIFYPEER => false,
+	/**
+	 * cURL GET helper. Returns decoded JSON response as array, or false.
+	 */
+	private function curlGet(string $url, array $extra_opts = []): array|false {
+		$opts = [
+			CURLOPT_URL            => $url,
+			CURLOPT_HTTPGET        => true,
 			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_FORBID_REUSE   => true,
+			CURLOPT_HEADER         => false,
 			CURLOPT_FRESH_CONNECT  => true,
-			CURLOPT_URL            => $endpoint
+			CURLOPT_FORBID_REUSE   => true,
+			CURLOPT_TIMEOUT        => 30,
+			CURLOPT_SSL_VERIFYPEER => true,
+			CURLOPT_SSL_VERIFYHOST => 2,
 		];
 
-		$ch = curl_init($endpoint);
+		foreach ($extra_opts as $key => $value) {
+			$opts[$key] = $value;
+		}
 
-		$opts = $default_opts + $additional_opts;
-
+		$ch = curl_init();
 		curl_setopt_array($ch, $opts);
+		$response = curl_exec($ch);
 
-		// ??? json_decode
-		$response = json_decode(curl_exec($ch));
+		if (curl_errno($ch) !== CURLE_OK) {
+			$this->log(['curl_error' => curl_error($ch), 'url' => $url], 'curlGet failed', true);
+			curl_close($ch);
+			return false;
+		}
 
 		curl_close($ch);
 
-		return $response;
-	}
+		$decoded = json_decode($response, true);
 
-	public function getTokens($test) {
-		if ($test === 'sandbox') {
-			$endpoint = 'https://api.sandbox.paypal.com/v1/oauth2/token';
-			$client_id = 'Ad3QTBAHwhuNI_blejO4_RqvES74yWRUC61c5QVNDbxkq9csbLpDZogWp_0n';
-			$client_secret = 'EGqgGxCqjs1GIa5l1Ex_Flq0Mb2oMT3rJu2kwz6FuF9QKyxCg6qNqyddxCCW';
-		} else {
-			$endpoint = 'https://api.paypal.com/v1/oauth2/token';
-			$client_id = 'AWyAiBCUYsE156N8YpiiISQpSpep2HPoXXPrf33VBeYleE0SQJg40pgEqZvq';
-			$client_secret = 'EEkc6xB30fDkgUO_YldWWHxKDquY7LBRId6FJ-parAR1CsVpK35zB6U0SIh4';
-		}
-
-		$call_parameters = [
-			'client_id'     => $client_id,
-			'client_secret' => $client_secret,
-			'grant_type'    => 'client_credentials',
-		];
-
-		$additional_opts = [
-			CURLOPT_USERPWD    => $client_id . ':' . $client_secret,
-			CURLOPT_POST       => true,
-			CURLOPT_POSTFIELDS => http_build_query($call_parameters, '', '&')
-		];
-
-		$curl = $this->curl($endpoint, $additional_opts);
-
-		$this->log($curl, 'cURL Response 1');
-
-		return $curl;
-	}
-
-	public function getUserInfo($merchant_id, $test, $access_token) {
-		if ($test === 'sandbox') {
-			$endpoint = 'https://api.sandbox.paypal.com/v1/customer/partners/T4E8WSXT43QPJ/merchant-integrations';
-		} else {
-			$endpoint = 'https://api.paypal.com/v1/customer/partners/9PDNYE4RZBVFJ/merchant-integrations';
-		}
-
-		$endpoint1 = $endpoint . '?tracking_id=' . $merchant_id;
-
-		$header = [];
-		$header[] = 'Content-Type: application/json';
-		$header[] = 'Authorization: Bearer ' . $access_token;
-		$header[] = 'PAYPAL_SERVICE_VERSION:1.2.0';
-
-		$additional_opts = [CURLOPT_HTTPHEADER => $header];
-
-		$curl = $this->curl($endpoint1, $additional_opts);
-
-		$this->log($curl, 'cURL Response 2');
-
-		if (isset($curl->merchant_id)) {
-			$endpoint2 = $endpoint . '/' . $curl->merchant_id;
-			$curl2 = $this->curl($endpoint2, $additional_opts);
-
-			$this->log($curl2, 'cURL Response 3');
-
-			if (isset($curl2->api_credentials->signature)) {
-				return $curl2->api_credentials->signature;
-			} else {
-				return;
-			}
-		} else {
-			return;
-		}
-	}
-
-	public function recurringCancel($reference) {
-		$data = [
-			'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
-			'PROFILEID' => $reference,
-			'ACTION'    => 'Cancel'
-		];
-
-		return $this->call($data);
+		return is_array($decoded) ? $decoded : false;
 	}
 }

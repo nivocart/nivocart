@@ -1,142 +1,196 @@
 <h2><?php echo $text_payment_info; ?></h2>
-<div id="paypal-transaction"></div>
+<div id="pp-feedback"></div>
+<!-- ── Order summary ──────────────────────────────────────────────────────── -->
 <table class="form" id="table-payment-info">
   <tr>
-    <td><?php echo $text_capture_status; ?></td>
-    <td id="capture-status"><?php echo $paypal_order['capture_status']; ?></td>
+    <td><?php echo $text_pp_order_id; ?></td>
+    <td><?php echo $paypal_order['pp_order_id']; ?></td>
+  </tr>
+  <tr>
+    <td><?php echo $text_intent; ?></td>
+    <td><?php echo $paypal_order['intent']; ?></td>
+  </tr>
+  <tr>
+    <td><?php echo $text_status; ?></td>
+    <td id="pp-status"><?php echo $paypal_order['status']; ?></td>
+  </tr>
+  <tr>
+    <td><?php echo $text_capture_id; ?></td>
+    <td><?php echo $paypal_order['capture_id'] ?: '—'; ?></td>
   </tr>
   <tr>
     <td><?php echo $text_amount_authorised; ?></td>
-    <td>
-      <?php echo $paypal_order['total']; ?>
-      <?php if ($paypal_order['capture_status'] !== 'Complete') { ?>
-        &nbsp;&nbsp;&nbsp;<a class="button-delete" id="button-void"><?php echo $button_void; ?></a>
-      <?php } ?>
-    </td>
+    <td><?php echo $paypal_order['currency_code']; ?> <?php echo $paypal_order['total']; ?></td>
   </tr>
   <tr>
     <td><?php echo $text_amount_captured; ?></td>
-    <td id="paypal-captured"><?php echo $paypal_order['captured']; ?></td>
+    <td id="pp-captured"><?php echo $paypal_order['currency_code']; ?> <?php echo $paypal_order['captured']; ?></td>
   </tr>
   <tr>
     <td><?php echo $text_amount_refunded; ?></td>
-    <td id="paypal-refunded"><?php echo $paypal_order['refunded']; ?></td>
+    <td id="pp-refunded"><?php echo $paypal_order['currency_code']; ?> <?php echo $paypal_order['refunded']; ?></td>
   </tr>
-  <?php if ($paypal_order['capture_status'] !== 'Complete') { ?>
-  <tr class="paypal-capture">
-    <td><?php echo $entry_capture_amount; ?></td>
+  <tr>
+    <td><?php echo $text_amount_remaining; ?></td>
+    <td id="pp-remaining"><?php echo $paypal_order['currency_code']; ?> <span id="pp-remaining-value"><?php echo $paypal_order['remaining']; ?></span></td>
+  </tr>
+  <?php if ($paypal_order['intent'] === 'AUTHORIZE' && $paypal_order['status'] !== 'COMPLETED' && $paypal_order['status'] !== 'VOIDED') { ?>
+  <!-- ── Partial capture row ─────────────────────────────────────────────── -->
+  <tr id="row-capture">
+    <td><label for="pp-capture-amount"><?php echo $entry_capture_amount; ?></label></td>
     <td>
-      <p><input type="checkbox" name="paypal_capture_complete" id="paypal-capture-complete" value="1" />&nbsp;<label for="paypal-capture-complete"><?php echo $entry_capture_complete; ?></label></p>
-      <p>
-        <input type="text" size="10" name="paypal_capture_amount" id="paypal-capture-amount" value="<?php echo $paypal_order['remaining']; ?>" />
-        <a class="button-save" id="button-capture"><?php echo $button_capture; ?></a>
-      </p>
+      <input type="text" size="10" id="pp-capture-amount" value="<?php echo $paypal_order['remaining']; ?>" />
+      <input type="text" size="30" id="pp-capture-note" placeholder="<?php echo $entry_capture_note; ?>" />
+      &nbsp;
+      <a class="button-save" id="button-capture"><?php echo $button_capture; ?></a>
+      <a class="button-save" id="button-capture-full"><?php echo $button_capture_full; ?></a>
+      &nbsp;
+      <a class="button-delete" id="button-void"><?php echo $button_void; ?></a>
     </td>
   </tr>
   <?php } ?>
 </table>
+<!-- ── Transaction table ─────────────────────────────────────────────────── -->
+<h3><?php echo $text_transactions; ?></h3>
+<?php if (!empty($transactions)) { ?>
+<table class="list">
+  <thead>
+    <tr>
+      <td><?php echo $column_type; ?></td>
+      <td><?php echo $column_capture_id; ?></td>
+      <td><?php echo $column_amount; ?></td>
+      <td><?php echo $column_currency; ?></td>
+      <td><?php echo $column_status; ?></td>
+      <td><?php echo $column_note; ?></td>
+      <td><?php echo $column_created; ?></td>
+      <td><?php echo $column_actions; ?></td>
+    </tr>
+  </thead>
+  <tbody id="pp-transactions">
+  <?php foreach ($transactions as $t) { ?>
+    <tr>
+      <td><?php echo $t['transaction_type']; ?></td>
+      <td><?php echo $t['capture_id'] ?: '—'; ?></td>
+      <td><?php echo $t['amount']; ?></td>
+      <td><?php echo $t['currency_code']; ?></td>
+      <td><?php echo $t['status']; ?></td>
+      <td><?php echo $t['note'] ?: '—'; ?></td>
+      <td><?php echo $t['created']; ?></td>
+      <td>
+        <?php if (!empty($t['refund'])) { ?>
+          <a href="<?php echo $t['refund']; ?>" class="button"><?php echo $button_refund; ?></a>
+        <?php } ?>
+      </td>
+    </tr>
+  <?php } ?>
+  </tbody>
+</table>
+<?php } else { ?>
+  <p><?php echo $text_no_results; ?></p>
+<?php } ?>
 
+<!-- ── JS ────────────────────────────────────────────────────────────────── -->
 <script type="text/javascript"><!--
-$('#paypal-transaction').load('index.php?route=payment/pp_express/transaction&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
 
+function ppFeedback(type, message) {
+  $('#pp-feedback').html('<div class="' + type + '">' + message + '</div>').find('div').hide().fadeIn('slow');
+}
+
+// ── Partial capture ───────────────────────────────────────────────────────────
 $('#button-capture').on('click', function() {
-	var amt = $('#paypal-capture-amount').val();
+  var amt = parseFloat($('#pp-capture-amount').val());
 
-	if (amt === '' || amt <= 0) {
-		alert('<?php echo addslashes($error_capture_amt); ?>');
-	} else {
-		var captureComplete;
-		var voidTransaction = false;
+  if (!amt || amt <= 0) {
+    alert('<?php echo addslashes($error_capture_amt); ?>');
+    return;
+  }
 
-		if ($('#paypal-capture-complete').prop('checked') == true) {
-			captureComplete = 1;
-		} else {
-			captureComplete = 0;
-		}
+  var $btn = $(this);
 
-		$.ajax({
-			url: 'index.php?route=payment/pp_express/doCapture&token=<?php echo $token; ?>',
-			type: 'POST',
-			dataType: 'json',
-			data: {
-				'order_id': <?php echo $order_id; ?>,
-				'complete': ($('#paypal-capture-complete').prop('checked') === true ? 1 : 0),
-				'amount': amt
-			},
-			beforeSend: function() {
-				$('.success, .warning, .attention').remove();
-				$('#button-capture').hide();
-				$('#button-capture').after('<img src="view/image/loading.gif" alt="Loading..." class="loading" id="img-loading-capture" />');
-			},
-		})
-		.fail(function(jqXHR, textStatus, errorThrown) {
-			alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
-		})
-		.done(function(json) {
-			if ('error' in json) {
-				$('#paypal-transaction').before('<div class="warning" style="display:none;">' + json['error'] + '</div>');
-				$('.warning').fadeIn('slow');
-			}
-
-			if ('success' in json) {
-				$('#paypal-transaction').before('<div class="success" style="display:none;">' + json['success'] + '</div>');
-				$('.success').fadeIn('slow');
-
-				$('#paypal-captured').text(json['captured']);
-				$('#paypal-capture-amount').val(json['remaining']);
-
-				if ('capture_status' in json) {
-					$('#capture-status').text(json['capture_status']);
-					$('#button-void').remove();
-					$('.paypal-capture').remove();
-				}
-			}
-
-			$('#paypal-transaction').load('index.php?route=payment/pp_express/transaction&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
-		})
-		.always(function() {
-			$('.loading').remove();
-			$('#button-capture').show();
-		});
-	}
+  $.ajax({
+    url: '<?php echo $url_capture; ?>',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      order_id: <?php echo $order_id; ?>,
+      amount: amt,
+      note: $('#pp-capture-note').val()
+    },
+    beforeSend: function() {
+      $('#pp-feedback').empty();
+      $btn.prop('disabled', true).after('<img src="view/image/loading.gif" class="loading" />');
+    }
+  })
+  .done(function(json) {
+    if (json.error) { ppFeedback('warning', json.error); }
+    if (json.success) {
+      ppFeedback('success', json.success);
+      $('#pp-captured').text('<?php echo $paypal_order['currency_code']; ?> ' + json.captured);
+      $('#pp-refunded').text('<?php echo $paypal_order['currency_code']; ?> ' + json.refunded);
+      $('#pp-remaining-value').text(json.remaining);
+      $('#pp-capture-amount').val(json.remaining);
+      $('#pp-status').text(json.status);
+      if (parseFloat(json.remaining) <= 0) { $('#row-capture').remove(); }
+    }
+  })
+  .fail(function() { ppFeedback('warning', '<?php echo addslashes($error_timeout); ?>'); })
+  .always(function() { $('.loading').remove(); $btn.prop('disabled', false); });
 });
 
+// ── Full capture ──────────────────────────────────────────────────────────────
+$('#button-capture-full').on('click', function() {
+  var $btn = $(this);
+
+  $.ajax({
+    url: '<?php echo $url_capture_full; ?>',
+    type: 'POST',
+    dataType: 'json',
+    data: { order_id: <?php echo $order_id; ?> },
+    beforeSend: function() {
+      $('#pp-feedback').empty();
+      $btn.prop('disabled', true).after('<img src="view/image/loading.gif" class="loading" />');
+    }
+  })
+  .done(function(json) {
+    if (json.error) { ppFeedback('warning', json.error); }
+    if (json.success) {
+      ppFeedback('success', json.success);
+      $('#pp-captured').text('<?php echo $paypal_order['currency_code']; ?> ' + json.captured);
+      $('#pp-remaining-value').text('0.00');
+      $('#pp-status').text(json.status);
+      $('#row-capture').remove();
+    }
+  })
+  .fail(function() { ppFeedback('warning', '<?php echo addslashes($error_timeout); ?>'); })
+  .always(function() { $('.loading').remove(); $btn.prop('disabled', false); });
+});
+
+// ── Void ──────────────────────────────────────────────────────────────────────
 $('#button-void').on('click', function() {
-	if (confirm('<?php echo addslashes($text_confirm_void); ?>')) {
-		$.ajax({
-			url: 'index.php?route=payment/pp_express/doVoid&token=<?php echo $token; ?>',
-			type: 'POST',
-			dataType: 'json',
-			data: {'order_id':<?php echo $order_id; ?> },
-			beforeSend: function() {
-				$('.success, .warning, .attention').remove();
-				$('#button-void').hide();
-				$('#button-void').after('<img src="view/image/loading.gif" alt="Loading..." class="loading" id="img-loading-void" />');
-			},
-		})
-		.fail(function(jqXHR, textStatus, errorThrown) {
-			alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
-		})
-		.done(function(json) {
-			if ('error' in json) {
-				$('#paypal-transaction').before('<div class="warning" style="display:none;">' + json['error'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
-				$('.warning').fadeIn('slow');
-			}
+  if (!confirm('<?php echo addslashes($text_confirm_void); ?>')) { return; }
 
-			if ('success' in json) {
-				$('#paypal-transaction').before('<div class="success" style="display:none;">' + json['success'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
-				$('.success').fadeIn('slow');
-				$('#capture-status').text(json['capture_status']);
-				$('#button-void').remove();
-				$('.paypal-capture').remove();
-			}
+  var $btn = $(this);
 
-			$('#paypal-transaction').load('index.php?route=payment/pp_express/transaction&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
-		})
-		.always(function() {
-			$('.loading').remove();
-			$('#button-void').show();
-		});
-	}
+  $.ajax({
+    url: '<?php echo $url_void; ?>',
+    type: 'POST',
+    dataType: 'json',
+    data: { order_id: <?php echo $order_id; ?> },
+    beforeSend: function() {
+      $('#pp-feedback').empty();
+      $btn.prop('disabled', true).after('<img src="view/image/loading.gif" class="loading" />');
+    }
+  })
+  .done(function(json) {
+    if (json.error) { ppFeedback('warning', json.error); }
+    if (json.success) {
+      ppFeedback('success', json.success);
+      $('#pp-status').text(json.status);
+      $('#row-capture').remove();
+    }
+  })
+  .fail(function() { ppFeedback('warning', '<?php echo addslashes($error_timeout); ?>'); })
+  .always(function() { $('.loading').remove(); $btn.prop('disabled', false); });
 });
+
 //--></script>

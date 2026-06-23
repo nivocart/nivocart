@@ -1,113 +1,111 @@
 <?php echo $header; ?>
 <div id="content">
   <div class="breadcrumb">
-  <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
-  <?php } ?>
+    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+      <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?>
   </div>
   <?php if (!empty($error)) { ?>
     <div class="warning"><?php echo $error; ?></div>
   <?php } ?>
-  <?php if (!empty($attention)) { ?>
-    <div class="attention"><?php echo $attention; ?></div>
-  <?php } ?>
+  <div id="pp-feedback"></div>
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/payment.png" alt="" /> <?php echo $heading_title; ?></h1>
       <div class="buttons">
-        <?php if ($cancel) { ?>
-          <a href="<?php echo $cancel; ?>" class="button-cancel ripple"><?php echo $button_cancel; ?></a>
-        <?php } ?>
+        <a href="<?php echo $cancel; ?>" class="button-cancel ripple"><?php echo $button_cancel; ?></a>
       </div>
     </div>
     <div class="content">
-      <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-        <table class="form">
-          <input type="hidden" name="amount_original" value="<?php echo $amount_original; ?>" />
-          <input type="hidden" name="currency_code" value="<?php echo $currency_code; ?>" />
-          <tr>
-            <td><label for="input-transaction-id"><?php echo $entry_transaction_id; ?></label></td>
-            <td><input type="text" name="transaction_id" id="input-transaction-id" value="<?php echo $transaction_id; ?>" /></td>
-          </tr>
-          <tr>
-            <td><label for="input-refund-full"><?php echo $entry_full_refund; ?></label></td>
-            <td>
-              <input type="hidden" name="refund_full" value="0" />
-              <input type="checkbox" name="refund_full" id="input-refund-full" value="1" <?php echo ($refund_available === '') ? 'checked="checked"' : ''; ?> onchange="refundAmount();" />
-            </td>
-          </tr>
-          <tr <?php echo ($refund_available === '') ? 'style="display:none;"' : ''; ?> id="partial-amount-row">
-            <td><label for="input-refund-amount"><?php echo $entry_amount; ?></label></td>
-            <td><input type="text" name="amount" id="input-refund-amount" value="<?php echo ($refund_available != '') ? $refund_available : ''; ?>" />&nbsp;<?php echo $currency_code; ?></td>
-          </tr>
-          <tr>
-            <td><label for="input-refund-message"><?php echo $entry_message; ?></label></td>
-            <td><textarea name="refund_message" id="input-refund-message" cols="40" rows="5"></textarea></td>
-          </tr>
-        </table>
-        <a onclick="$('#form').submit();" class="button ripple" id="button-refund" style="float:right;"><?php echo $button_refund; ?></a>
-      </form>
+      <table class="form">
+        <input type="hidden" id="pp-order-id" value="<?php echo $order_id; ?>" />
+        <input type="hidden" id="pp-capture-id" value="<?php echo $capture_id; ?>" />
+        <input type="hidden" id="pp-currency" value="<?php echo $currency_code; ?>" />
+        <tr>
+          <td><?php echo $entry_capture_id; ?></td>
+          <td><code><?php echo $capture_id; ?></code></td>
+        </tr>
+        <tr>
+          <td><?php echo $entry_amount; ?></td>
+          <td><?php echo $currency_code; ?> <?php echo $amount_original; ?></td>
+        </tr>
+        <?php if ((float)$already_refunded > 0) { ?>
+        <tr>
+          <td><?php echo $entry_refund_full; ?> (<?php echo $currency_code; ?> <?php echo $already_refunded; ?> <?php echo $this->language->get('text_already_refunded') ?? 'already refunded'; ?>)</td>
+          <td><?php echo $currency_code; ?> <?php echo $refund_available; ?></td>
+        </tr>
+        <?php } ?>
+        <tr>
+          <td><label for="input-refund-full"><?php echo $entry_refund_full; ?></label></td>
+          <td><input type="checkbox" id="input-refund-full" value="1" checked="checked" /></td>
+        </tr>
+        <tr id="row-partial" style="display:none;">
+          <td><label for="input-refund-amount"><?php echo $entry_amount; ?></label></td>
+          <td>
+            <input type="text" id="input-refund-amount" value="<?php echo $refund_available; ?>" size="10" />
+            &nbsp;<?php echo $currency_code; ?>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="input-refund-note"><?php echo $entry_note; ?></label></td>
+          <td><textarea id="input-refund-note" cols="40" rows="4"></textarea></td>
+        </tr>
+      </table>
+      <a class="button-save ripple" id="button-refund" style="float:right;"><?php echo $button_refund; ?></a>
     </div>
   </div>
 </div>
 
 <script type="text/javascript"><!--
-function refundAmount() {
-	if ($('#input-refund-full').prop('checked') === true) {
-		$('#partial-amount-row').hide();
-	} else {
-		$('#partial-amount-row').show();
-	}
-}
 
-$('#form').on('submit', function(e) {
-	var full = ($('#input-refund-full').prop('checked') === true ? 1 : 0);
-	var amt = $('#input-refund-amount').val();
-	e.preventDefault();
-
-	if ($('#input-transaction-id').val() === '') {
-		alert('<?php echo addslashes($error_transaction_id); ?>');
-	} else {
-		$.ajax({
-			url: $(this).attr('action'),
-			type: $(this).attr('method'),
-			dataType: 'json',
-			data: {
-				'transaction_id': $('#input-transaction-id').val(),
-				'refund_full': full,
-				'amount': amt,
-				'amount_original': '<?php echo $amount_original; ?>',
-				'currency_code': '<?php echo addslashes($currency_code); ?>',
-				'refund_message': $('#input-refund-message').val(),
-			},
-			beforeSend: function() {
-				$('.success, .warning, .attention').remove();
-				$('#button-refund').hide();
-				$('#button-refund').after('<img src="view/image/loading.gif" alt="Loading..." class="loading" id="img-loading-refund" style="float:right;" />');
-			},
-		})
-		.fail(function(jqXHR, textStatus, errorThrown) {
-			alert('Status: ' + textStatus + '\r\nError: ' + errorThrown);
-		})
-		.done(function(json) {
-			if ('error' in json) {
-				$('.box').before('<div class="warning" style="display:none;">' + json['error'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
-				$('.warning').fadeIn('slow');
-			}
-
-			if ('success' in json) {
-				$('.box').before('<div class="warning" style="display:none;">' + json['success'] + '<img src="view/image/close.png" alt="Close" class="close" /></div>');
-				$('.success').fadeIn('slow').sleep(250);
-
-				window.location = '<?php echo addslashes($cancel); ?>';
-			}
-		})
-		.always(function() {
-			$('.loading').remove();
-			$('#button-refund').show();
-		});
-	}
+$('#input-refund-full').on('change', function() {
+  $('#row-partial').toggle(!this.checked);
 });
+
+$('#button-refund').on('click', function() {
+  var full = $('#input-refund-full').prop('checked') ? 1 : 0;
+  var amt = parseFloat($('#input-refund-amount').val());
+  var $btn = $(this);
+
+  if (!full && (!amt || amt <= 0)) {
+    alert('<?php echo addslashes($error_partial_amt); ?>');
+    return;
+  }
+
+  $.ajax({
+    url: '<?php echo $action; ?>',
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      order_id: $('#pp-order-id').val(),
+      capture_id: $('#pp-capture-id').val(),
+      refund_full: full,
+      amount: amt,
+      note: $('#input-refund-note').val()
+    },
+    beforeSend: function() {
+      $('#pp-feedback').empty();
+      $btn.prop('disabled', true).after('<img src="view/image/loading.gif" class="loading" style="float:right;" />');
+    }
+  })
+  .done(function(json) {
+    if (json.error) {
+      $('#pp-feedback').html('<div class="warning">' + json.error + '</div>').find('div').hide().fadeIn('slow');
+    }
+    if (json.success) {
+      $('#pp-feedback').html('<div class="success">' + json.success + '</div>').find('div').hide().fadeIn('slow');
+      setTimeout(function() { window.location = '<?php echo addslashes($cancel); ?>'; }, 1500);
+    }
+  })
+  .fail(function() {
+    $('#pp-feedback').html('<div class="warning"><?php echo addslashes($error_partial_amt); ?></div>');
+  })
+  .always(function() {
+    $('.loading').remove();
+    $btn.prop('disabled', false);
+  });
+});
+
 //--></script>
 
 <?php echo $footer; ?>
