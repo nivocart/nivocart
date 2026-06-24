@@ -30,9 +30,6 @@
       <?php } ?>
       <a href="#tab-attribute"><?php echo $tab_attribute; ?></a>
       <a href="#tab-option"><?php echo $tab_option; ?></a>
-      <?php if ($profiles) { ?>
-      <a href="#tab-profile"><?php echo $tab_profile; ?></a>
-      <?php } ?>
       <a href="#tab-discount"><?php echo $tab_discount; ?></a>
       <a href="#tab-special"><?php echo $tab_special; ?></a>
       <a href="#tab-reward"><?php echo $tab_reward; ?></a>
@@ -142,7 +139,7 @@
               <input type="text" name="incvat" class="incvat" value="<?php echo number_format(($price * $vat_rate), 2, '.', ''); ?>" /> &nbsp; <?php echo $text_inc_vat; ?> (<?php echo round($base_rate, 2); ?>%)
             </td>
           </tr>
-          <tr class="highlighted">
+          <tr>
             <td><?php echo $entry_cost; ?></td>
             <td><input type="text" name="cost" value="<?php echo $cost; ?>" /></td>
           </tr>
@@ -308,8 +305,8 @@
           <tr>
             <td><?php echo $entry_dimension; ?></td>
             <td>
-              <input type="text" name="length" value="<?php echo $length; ?>" size="10" /> x 
-              <input type="text" name="width" value="<?php echo $width; ?>" size="10" /> x 
+              <input type="text" name="length" value="<?php echo $length; ?>" size="10" /> x
+              <input type="text" name="width" value="<?php echo $width; ?>" size="10" /> x
               <input type="text" name="height" value="<?php echo $height; ?>" size="10" />
             </td>
           </tr>
@@ -886,57 +883,6 @@
         <?php $option_row++; ?>
         <?php } ?>
       </div>
-      <?php if ($profiles) { ?>
-      <div id="tab-profile">
-        <table id="profile" class="list">
-        <thead>
-          <tr>
-            <td class="left"><?php echo $column_profile; ?></td>
-            <td class="left"><?php echo $column_customer_group; ?></td>
-            <td></td>
-          </tr>
-        </thead>
-        <?php $profile_row = 0; ?>
-        <?php foreach ($product_profiles as $product_profile) { ?>
-        <tbody id="profile-row<?php echo $profile_row; ?>">
-          <tr>
-            <td class="left">
-              <select name="product_profiles[<?php echo $profile_row; ?>][profile_id]">
-              <option value=""><?php echo $text_none; ?></option>
-              <?php foreach ($profiles as $profile) { ?>
-                <?php if ($profile['profile_id'] === $product_profile['profile_id']) { ?>
-                  <option value="<?php echo $profile['profile_id']; ?>" selected="selected"><?php echo $profile['name']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $profile['profile_id']; ?>"><?php echo $profile['name']; ?></option>
-                <?php } ?>
-              <?php } ?>
-              </select>
-            </td>
-            <td class="left">
-              <select name="product_profiles[<?php echo $profile_row; ?>][customer_group_id]">
-              <?php foreach ($customer_groups as $customer_group) { ?>
-                <?php if ($customer_group['customer_group_id'] === $product_profile['customer_group_id']) { ?>
-                  <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>
-                <?php } ?>
-              <?php } ?>
-              </select>
-            </td>
-            <td class="center"><a onclick="$('#profile-row<?php echo $profile_row; ?>').remove();" class="button-delete ripple"><?php echo $button_remove; ?></a></td>
-          </tr>
-        </tbody>
-        <?php $profile_row++; ?>
-        <?php } ?>
-        <tfoot>
-          <tr>
-            <td colspan="2"></td>
-            <td class="center"><a onclick="addProfile()" class="button ripple"><?php echo $button_add_profile; ?></a></td>
-          </tr>
-        </tfoot>
-        </table>
-      </div>
-      <?php } ?>
       <div id="tab-discount">
         <table id="discount" class="list">
         <thead>
@@ -1666,7 +1612,7 @@ $('#attribute tbody').each(function(index, element) {
 //--></script>
 
 <script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-slider-access.min.js"></script> 
+<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-slider-access.min.js"></script>
 
 <script type="text/javascript"><!--
 $('.date').datepicker({dateFormat: 'yy-mm-dd'});
@@ -1846,35 +1792,6 @@ function addOptionValue(option_row) {
 	option_value_row++;
 };
 //--></script>
-
-<?php if ($profiles) { ?>
-<script type="text/javascript"><!--
-var profile_row = <?php echo $profile_row; ?>;
-
-function addProfile() {
-	html = '<tbody id="profile-row' + profile_row + '">';
-	html += '  <tr>';
-	html += '    <td class="left"><select name="product_profiles[' + profile_row + '][profile_id]">';
-	html += '      <option value=""><?php echo $text_none; ?></option>';
-	<?php foreach ($profiles as $profile) { ?>
-	html += '      <option value="<?php echo $profile['profile_id']; ?>"><?php echo $profile['name']; ?></option>';
-	<?php } ?>
-	html += '    </select></td>';
-	html += '    <td class="left"><select name="product_profiles[' + profile_row + '][customer_group_id]">';
-	<?php foreach ($customer_groups as $customer_group) { ?>
-	html += '      <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo addslashes($customer_group['name']); ?></option>';
-	<?php } ?>
-	html += '    </select></td>';
-	html += '    <td class="center"><a onclick="$(\'#profile-row' + profile_row + '\').remove()" class="button-delete ripple"><?php echo $button_remove; ?></a></td>';
-	html += '  </tr>';
-	html += '</tbody>';
-
-	$('#profile tfoot').before(html);
-
-	profile_row++;
-};
-//--></script>
-<?php } ?>
 
 <script type="text/javascript"><!--
 var discount_row = <?php echo $discount_row; ?>;

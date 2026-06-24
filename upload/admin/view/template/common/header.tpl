@@ -94,7 +94,6 @@
           </li>
           <li><a href="<?php echo $option; ?>"><?php echo ($icons) ? '<i class="fa fa-clone"></i>' : ''; ?><?php echo $text_option; ?></a></li>
           <li><a href="<?php echo $filter; ?>"><?php echo ($icons) ? '<i class="fa fa-filter"></i>' : ''; ?><?php echo $text_filter; ?></a></li>
-          <li><a href="<?php echo $profile; ?>"><?php echo ($icons) ? '<i class="fa fa-exchange"></i>' : ''; ?><?php echo $text_profile; ?></a></li>
           <li><a href="<?php echo $palette; ?>"><?php echo ($icons) ? '<i class="fa fa-paint-brush"></i>' : ''; ?><?php echo $text_palette; ?></a></li>
         <?php if ($blog_ready) { ?>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-pencil"></i>' : ''; ?><?php echo $text_blog; ?></a>
@@ -123,9 +122,6 @@
               <li><a href="<?php echo $customer_ban_ip; ?>"><?php echo ($icons) ? '<i class="fa fa-ban"></i>' : ''; ?><?php echo $text_customer_ban_ip; ?></a></li>
             </ul>
           </li>
-          <?php if ($profile_exist) { ?>
-          <li><a href="<?php echo $recurring_profile; ?>"><?php echo ($icons) ? '<i class="fa fa-refresh"></i>' : ''; ?><?php echo $text_recurring_profile; ?></a></li>
-          <?php } ?>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-gear"></i>' : ''; ?><?php echo $text_supplier; ?></a>
             <ul>
               <li><a href="<?php echo $supplier; ?>"><?php echo ($icons) ? '<i class="fa fa-gear"></i>' : ''; ?><?php echo $text_supplier; ?></a></li>
@@ -324,7 +320,7 @@
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-arrow-right"></i>' : ''; ?><?php echo $connection_ul['name']; ?></a>
             <ul>
             <?php foreach ($connections_li as $connection_li) { ?>
-              <?php if ($connection_li['parent_id'] == $connection_ul['connection_id']) { ?>
+              <?php if ($connection_li['parent_id'] === $connection_ul['connection_id']) { ?>
                 <?php if ($connection_li['route']) { ?>
                   <?php if ($icons && isset($connection_li['icon'])) { ?>
                     <li><a onclick="window.open('<?php echo $connection_li['route']; ?>');" title=""><i class="fa <?php echo $connection_li['icon']; ?>"></i><?php echo $connection_li['title']; ?></a></li>
@@ -400,7 +396,7 @@ $(document).ready(function() {
 		var offset = <?php echo $time_offset; ?>;
 
 		var outHour = now.getHours()+offset;
-		if (outHour < 10) { 
+		if (outHour < 10) {
 			document.getElementById('hour').innerHTML = "0"+outHour;
 		} else {
 			document.getElementById('hour').innerHTML = outHour;

@@ -181,9 +181,7 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_payment'] = $this->language->get('text_payment');
 		$this->data['text_payment_image'] = $this->language->get('text_payment_image');
 		$this->data['text_product'] = $this->language->get('text_product');
-		$this->data['text_profile'] = $this->language->get('text_profile');
 		$this->data['text_quote_log'] = $this->language->get('text_quote_log');
-		$this->data['text_recurring_profile'] = $this->language->get('text_recurring_profile');
 		$this->data['text_reports'] = $this->language->get('text_reports');
 		$this->data['text_report_sale_order'] = $this->language->get('text_report_sale_order');
 		$this->data['text_report_sale_tax'] = $this->language->get('text_report_sale_tax');
@@ -344,9 +342,7 @@ class ControllerCommonHeader extends Controller {
 			$this->data['payment'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['payment_image'] = $this->url->link('design/payment', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['profile'] = $this->url->link('catalog/profile', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['quote_log'] = $this->url->link('tool/quote_log', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['recurring_profile'] = $this->url->link('sale/recurring', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['report_sale_order'] = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'], 'SSL');
@@ -398,19 +394,6 @@ class ControllerCommonHeader extends Controller {
 			$this->data['voucher_theme'] = $this->url->link('sale/voucher_theme', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['weight_class'] = $this->url->link('localisation/weight_class', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['zone'] = $this->url->link('localisation/zone', 'token=' . $this->session->data['token'], 'SSL');
-
-			// Paypal Express
-			$this->data['pp_express_status'] = $this->config->get('pp_express_status');
-
-			$this->data['paypal_express'] = $this->url->link('payment/pp_express', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['paypal_express_search'] = $this->url->link('payment/pp_express/search', 'token=' . $this->session->data['token'], 'SSL');
-
-			// Profiles
-			$this->load->model('catalog/profile');
-
-			$profile_total = $this->model_catalog_profile->getTotalProfiles();
-
-			$this->data['profile_exist'] = ($profile_total > 0) ? true : false;
 
 			// Menu Icons
 			$this->data['icons'] = $this->config->get('config_admin_menu_icons');
