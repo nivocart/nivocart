@@ -55,13 +55,11 @@ class ControllerSaleContact extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		$this->load->model('sale/customer_group');
 
-		$group_customers = [];
-
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($group_customers);
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 		$this->template = 'sale/contact.tpl';
 		$this->children = [

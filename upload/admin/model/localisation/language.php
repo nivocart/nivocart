@@ -259,15 +259,6 @@ class ModelLocalisationLanguage extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "product_tag` SET product_id = '" . (int)$product_tag['product_id'] . "', language_id = '" . (int)$language_id . "', tag = '" . $this->db->escape($product_tag['tag']) . "'");
 		}
 
-		// Profile
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "profile_description` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
-
-		foreach ($query->rows as $profile) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "profile_description` SET profile_id = '" . (int)$profile['profile_id'] . "', language_id = '" . (int)$language_id . "', `name` = '" . $this->db->escape($profile['name']) . "'");
-		}
-
-		$this->cache->delete('profile');
-
 		// Return Action
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "return_action` WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
@@ -431,9 +422,6 @@ class ModelLocalisationLanguage extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_description` WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_tag` WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('product');
-
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "profile_description` WHERE language_id = '" . (int)$language_id . "'");
-		$this->cache->delete('profile');
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "return_action` WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('return_action');
