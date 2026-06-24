@@ -282,6 +282,10 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 			// Using 1 (Pending) directly rather than a flat config key since
 			// Klarna's accepted status is per-region, not a top-level setting.
 			$data['order_status_id'] = 1; // Pending
+		} elseif ($payment_code === 'pp_express') {
+			// PP Express: order starts at Pending — _confirmInteractivePayment()
+			// upgrades to completed_status_id or pending_status_id after capture succeeds.
+			$data['order_status_id'] = 1; // Pending
 		} elseif (in_array($payment_code, $this->redirect_gateways)) {
 			// Redirect: order waits at Pending until IPN fires
 			$data['order_status_id'] = 1; // Pending
