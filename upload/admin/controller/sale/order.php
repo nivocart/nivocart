@@ -545,9 +545,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$order_statuses_array = [];
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -872,9 +870,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('setting/store');
 
-		$stores_array = [];
-
-		$this->data['stores'] = $this->model_setting_store->getStores($stores_array);
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
@@ -912,9 +908,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/customer_group');
 
-		$customer_groups_array = [];
-
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 		if (isset($this->request->post['firstname'])) {
 			$this->data['firstname'] = $this->request->post['firstname'];
@@ -966,9 +960,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$order_statuses_array = [];
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['order_status_id'])) {
 			$this->data['order_status_id'] = $this->request->post['order_status_id'];
@@ -1039,9 +1031,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$countries_array = [];
-
-		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
+		$this->data['countries'] = $this->model_localisation_country->getCountries([]);
 
 		if (isset($this->request->post['payment_address_1'])) {
 			$this->data['payment_address_1'] = $this->request->post['payment_address_1'];
@@ -1252,9 +1242,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/voucher_theme');
 
-		$voucher_themes_array = [];
-
-		$this->data['voucher_themes'] = $this->model_sale_voucher_theme->getVoucherThemes($voucher_themes_array);
+		$this->data['voucher_themes'] = $this->model_sale_voucher_theme->getVoucherThemes([]);
 
 		if (isset($this->request->post['order_total'])) {
 			$this->data['order_totals'] = $this->request->post['order_total'];
@@ -1647,9 +1635,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('setting/store');
 
-		$stores_array = [];
-
-		$this->data['stores'] = $this->model_setting_store->getStores($stores_array);
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
@@ -1687,9 +1673,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/customer_group');
 
-		$customer_groups_array = [];
-
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 		if (isset($this->request->post['firstname'])) {
 			$this->data['firstname'] = $this->request->post['firstname'];
@@ -1741,9 +1725,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$order_statuses_array = [];
-
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['order_status_id'])) {
 			$this->data['order_status_id'] = $this->request->post['order_status_id'];
@@ -1814,9 +1796,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$countries_array = [];
-
-		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
+		$this->data['countries'] = $this->model_localisation_country->getCountries([]);
 
 		if (isset($this->request->post['payment_address_1'])) {
 			$this->data['payment_address_1'] = $this->request->post['payment_address_1'];
@@ -2023,9 +2003,7 @@ class ControllerSaleOrder extends Controller {
 
 		$this->load->model('sale/voucher_theme');
 
-		$voucher_themes_array = [];
-
-		$this->data['voucher_themes'] = $this->model_sale_voucher_theme->getVoucherThemes($voucher_themes_array);
+		$this->data['voucher_themes'] = $this->model_sale_voucher_theme->getVoucherThemes([]);
 
 		if (isset($this->request->post['order_total'])) {
 			$this->data['order_totals'] = $this->request->post['order_total'];
@@ -2640,9 +2618,7 @@ class ControllerSaleOrder extends Controller {
 				}
 			}
 
-			$order_statuses_array = [];
-
-			$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses($order_statuses_array);
+			$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 			$this->data['order_status_id'] = $order_info['order_status_id'];
 
