@@ -173,17 +173,32 @@ class ModelCheckoutPaymentWidget extends Model {
 
 		return [
 			'session_url' => 'index.php?route=payment/klarna/sessionCreate',
-			'update_url'  => 'index.php?route=payment/klarna/sessionUpdate',
-			'store_url'   => 'index.php?route=payment/klarna/storeAuthorization',
+			'update_url' => 'index.php?route=payment/klarna/sessionUpdate',
+			'store_url' => 'index.php?route=payment/klarna/storeAuthorization',
+		];
+	}
+
+	// =========================================================================
+	// PP Express
+	// =========================================================================
+
+	public function getWidgetData_pp_express(array $cart, float $total): array {
+		$sandbox = (bool)$this->config->get('pp_express_sandbox');
+
+		return [
+			'client_id'         => $sandbox ? $this->config->get('pp_express_sandbox_client_id') : $this->config->get('pp_express_client_id'),
+			'currency'          => $this->config->get('pp_express_currency') ?: $this->config->get('config_currency'),
+			'intent'            => strtolower($this->config->get('pp_express_transaction_mode') ?: 'capture'),
+			'pay_later'         => (bool)$this->config->get('pp_express_pay_later'),
+			'sandbox'           => $sandbox,
+			'url_create_order'  => $this->url->link('payment/pp_express/createOrder', '', 'SSL'),
+			'url_capture_order' => $this->url->link('payment/pp_express/captureOrder', '', 'SSL'),
+			'url_cancel_order'  => $this->url->link('payment/pp_express/cancelOrder', '', 'SSL'),
 		];
 	}
 
 	// =========================================================================
 	// Add future gateways below following the same pattern:
-	//
-	// private function getWidgetData_pp_express(float $total, string $currency_code): array {
-	//     return [ ... ];
-	// }
 	//
 	// private function getWidgetData_klarna(float $total, string $currency_code): array {
 	//     return [ ... ];
