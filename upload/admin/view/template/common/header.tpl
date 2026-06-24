@@ -148,13 +148,6 @@
               <li><a href="<?php echo $voucher_theme; ?>"><?php echo ($icons) ? '<i class="fa fa-image"></i>' : ''; ?><?php echo $text_voucher_theme; ?></a></li>
             </ul>
           </li>
-          <?php if ($pp_express_status) { ?>
-          <li><a class="arrow" href="<?php echo $paypal_express; ?>"><?php echo ($icons) ? '<i class="fa fa-paypal"></i>' : ''; ?><?php echo $text_paypal_express; ?></a>
-            <ul>
-              <li><a href="<?php echo $paypal_express_search; ?>"><?php echo ($icons) ? '<i class="fa fa-search"></i>' : ''; ?><?php echo $text_paypal_express_search; ?></a></li>
-            </ul>
-          </li>
-          <?php } ?>
           <li><a href="<?php echo $upload; ?>"><?php echo ($icons) ? '<i class="fa fa-upload"></i>' : ''; ?><?php echo $text_upload; ?></a></li>
         </ul>
       </li>
