@@ -10,8 +10,8 @@
 (function () {
 	'use strict';
 
-	var WIDGET_ID = 'payment-widget';
-	var PAYLATER_ID = 'payment-widget-paylater';
+	var WIDGET_ID = 'payment-widget-pp_express';
+	var PAYLATER_ID = 'payment-widget-paylater-pp_express';
 	var SDK_ID = 'paypal-js-sdk';
 
 	// ── Retrieve widget data passed from PHP ──────────────────────────────────

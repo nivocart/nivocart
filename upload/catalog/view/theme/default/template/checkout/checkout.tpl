@@ -392,6 +392,12 @@
           <div id="stripe-card-errors" role="alert" style="color:#c0392b; font-size:13px; margin-top:6px; min-height:16px;"></div>
         </div>
 
+		<!-- PayPal Express — mounted by pp_express.js -->
+		<div id="widget-pp_express" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+		  <div id="payment-widget-pp_express"></div>
+		  <div id="payment-widget-paylater-pp_express"></div>
+		</div>
+
 		<!-- Klarna Payments — mounted by klarna.js -->
 		<div id="widget-klarna" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
 		  <div id="klarna-payments-container"></div>
@@ -645,9 +651,9 @@ $(document).ready(function() {
   });
 });
 
-function dismiss1(coupon) { document.getElementById('coupon').style.display  = 'none'; }
+function dismiss1(coupon) { document.getElementById('coupon').style.display = 'none'; }
 function dismiss2(voucher) { document.getElementById('voucher').style.display = 'none'; }
-function dismiss3(reward) { document.getElementById('reward').style.display  = 'none'; }
+function dismiss3(reward) { document.getElementById('reward').style.display = 'none'; }
 //--></script>
 
 <?php echo $footer; ?>
