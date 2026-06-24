@@ -50,7 +50,7 @@ class ControllerCommonHeader extends Controller {
 
 		$this->data['base'] = $server;
 		$this->data['description'] = $this->document->getDescription();
-		$this->data['keywords'] = ($page_keywords) ? $page_keywords : $default_keywords;
+		$this->data['keywords'] = $page_keywords ? $page_keywords : $default_keywords;
 		$this->data['metas'] = $this->document->getMeta();
 		$this->data['links'] = $this->document->getLinks();
 		$this->data['styles'] = $this->document->getStyles();
@@ -123,9 +123,7 @@ class ControllerCommonHeader extends Controller {
 		if ($this->config->get('config_shared') && $status) {
 			$this->data['stores'][] = $server . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();
 
-			$stores_array = [];
-
-			$stores = $this->model_setting_store->getStores($stores_array);
+			$stores = $this->model_setting_store->getStores([]);
 
 			foreach ($stores as $store) {
 				$this->data['stores'][] = $store['url'] . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();

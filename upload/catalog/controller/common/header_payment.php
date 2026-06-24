@@ -35,11 +35,25 @@ class ControllerCommonHeaderPayment extends Controller {
 		$this->data['metas'] = $this->document->getMeta();
 		$this->data['styles'] = $this->document->getStyles();
 
-		$this->data['display_size'] = $this->config->get('config_display_size') ?: 'wide';
 		$this->data['google_analytics'] = $this->config->get('config_google_analytics') ?? '';
 
 		// Theme
-		$this->data['template'] = $this->config->get('config_template');
+		$template = $this->config->get('config_template');
+
+		$display_size = $this->config->get($template . '_widescreen');
+
+		if ($display_size === 'full') {
+			$this->data['display_size'] = 'full';
+		} elseif ($display_size === 'wide') {
+			$this->data['display_size'] = 'wide';
+		} elseif ($display_size === 'normal') {
+			$this->data['display_size'] = 'normal';
+		} else {
+			$this->data['display_size'] = 'normal';
+		}
+
+		// Template
+		$this->data['template'] = $template;
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header_payment.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/common/header_payment.tpl';
