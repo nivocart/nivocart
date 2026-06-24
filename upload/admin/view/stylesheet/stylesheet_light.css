@@ -1300,7 +1300,7 @@ table.form tr td div.image, .list tbody tr td div.image {
  * ----------------------------*/
 table.tool {
 	width: 100%;
-	cellpadding: 5px;
+	padding: 5px;
 	border-collapse: collapse;
 	margin-bottom: 20px;
 }
