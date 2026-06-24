@@ -1785,6 +1785,10 @@ class ControllerCatalogProduct extends Controller {
 			];
 		}
 
+		$this->load->model('sale/customer_group');
+
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
+
 		if (isset($this->request->post['product_layout'])) {
 			$this->data['product_layout'] = $this->request->post['product_layout'];
 		} elseif (isset($this->request->get['product_id'])) {
@@ -2044,9 +2048,7 @@ class ControllerCatalogProduct extends Controller {
 
 			$this->data['periods'] = $periods;
 
-			$customer_groups_array = [];
-
-			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
+			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 			$this->data['default_customer_group'] = $this->config->get('config_customer_group_id');
 
@@ -2165,9 +2167,7 @@ class ControllerCatalogProduct extends Controller {
 
 			$this->data['periods'] = $periods;
 
-			$customer_groups_array = [];
-
-			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
+			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 			$this->data['default_customer_group'] = $this->config->get('config_customer_group_id');
 
