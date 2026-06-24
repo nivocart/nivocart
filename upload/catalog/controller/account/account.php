@@ -65,7 +65,6 @@ class ControllerAccountAccount extends Controller {
 		$this->data['text_transaction'] = $this->language->get('text_transaction');
 		$this->data['text_return'] = $this->language->get('text_return');
 		$this->data['text_addreturn'] = $this->language->get('text_addreturn');
-		$this->data['text_recurring'] = $this->language->get('text_recurring');
 		$this->data['text_newsletter'] = $this->language->get('text_newsletter');
 
 		$this->data['edit'] = $this->url->link('account/edit', '', 'SSL');
@@ -77,7 +76,6 @@ class ControllerAccountAccount extends Controller {
 		$this->data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
 		$this->data['return'] = $this->url->link('account/return', '', 'SSL');
 		$this->data['addreturn'] = $this->url->link('account/return/insert', '', 'SSL');
-		$this->data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
 		$this->data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
 
 		$this->data['button_my_cart'] = $this->language->get('button_my_cart');
@@ -99,13 +97,6 @@ class ControllerAccountAccount extends Controller {
 
 		// Returns
 		$this->data['allow_return'] = $this->config->get('config_return_disable') ? false : true;
-
-		// Profiles
-		$this->load->model('account/recurring');
-
-		$recurring_total = $this->model_account_recurring->getTotalRecurring();
-
-		$this->data['profile_exist'] = ($recurring_total > 0) ? true : false;
 
 		// Account Header
 		if ($this->customer->isLogged()) {

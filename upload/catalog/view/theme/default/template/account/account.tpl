@@ -55,9 +55,6 @@
           <li><a href="<?php echo $return; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/return.png" alt="" /><?php echo $text_return; ?></a></li>
           <li><a href="<?php echo $addreturn; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/addreturn.png" alt="" /><?php echo $text_addreturn; ?></a></li>
         <?php } ?>
-        <?php if ($profile_exist) { ?>
-          <li><a href="<?php echo $recurring; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/recurring.png" alt="" /><?php echo $text_recurring; ?></a></li>
-        <?php } ?>
       </ul>
     </div>
   </div>
