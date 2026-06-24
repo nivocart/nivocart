@@ -22,22 +22,6 @@ $_['text_shipping_detail']                    = 'Enter your destination to get a
 $_['text_shipping_method']                    = 'Please select the preferred shipping method to use on this order.';
 $_['text_empty']                              = 'Your shopping cart is empty!';
 
-// Text Recurring
-$_['text_until_cancelled']                    = 'until cancelled';
-$_['text_recurring_item']                     = 'Recurring item';
-$_['text_payment_profile']                    = 'Payment Profile';
-$_['text_trial_description']                  = '%s every %d %s(s) for %d payment(s) then';
-$_['text_payment_description']                = '%s every %d %s(s) for %d payment(s)';
-$_['text_payment_until_canceled_description'] = '%s every %d %s(s) until canceled';
-$_['text_day']                                = 'day';
-$_['text_week']                               = 'week';
-$_['text_semi_month']                         = 'half-month';
-$_['text_month']                              = 'month';
-$_['text_year']                               = 'year';
-$_['text_trial']                              = '%s every %s %s for %s payments then ';
-$_['text_recurring']                          = '%s every %s %s';
-$_['text_length']                             = ' for %s payments';
-
 // Text Minimum Age
 $_['text_age_minimum']                        = 'One or more products have a minimum age restriction. Please remove them to continue.';
 $_['text_age_restriction']                    = 'One or more products have a minimum age restriction. Please <a href="%s">Login</a> or <a href="%s">Register</a>.';
@@ -76,4 +60,3 @@ $_['error_country']                           = 'Please select a country!';
 $_['error_zone']                              = 'Please select a region / state!';
 $_['error_shipping']                          = 'Warning: Shipping method required!';
 $_['error_no_shipping']                       = 'Warning: No Shipping options are available. Please <a href="%s">contact us</a> for assistance!';
-$_['error_profile_required']                  = 'Please select a payment profile!';

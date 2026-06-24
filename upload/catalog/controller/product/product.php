@@ -758,6 +758,7 @@ class ControllerProductProduct extends Controller {
 			$this->data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']);
 			$this->data['rating'] = (int)$product_info['rating'];
 			$this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+
 			// Captcha required
 			$this->data['captcha'] = '';
 			// Generate session captcha
@@ -866,14 +867,6 @@ class ControllerProductProduct extends Controller {
 						'href' => $this->url->link('product/search', 'search=' . $tag . '&tag=' . $tag, 'SSL')
 					];
 				}
-			}
-
-			if ($this->customer->isLogged()) {
-				$this->data['text_payment_profile'] = $this->language->get('text_payment_profile');
-
-				$this->data['profiles'] = $this->model_catalog_product->getProfiles($product_id);
-			} else {
-				$this->data['profiles'] = false;
 			}
 
 			// Update viewed

@@ -48,15 +48,6 @@
         <tbody>
           <?php $tax_colspan_plus = $tax_colspan + 1; ?>
           <?php foreach ($products as $product) { ?>
-            <?php if ($product['recurring']) { ?>
-              <tr>
-                <td colspan="<?php echo $tax_colspan_plus; ?>" style="border:none; line-height:18px; margin-left:10px;"> 
-                  <image src="catalog/view/theme/<?php echo $template; ?>/image/reorder.png" alt="" title="" style="float:left; margin-right:8px;" /> 
-                  <strong><?php echo $text_recurring_item; ?></strong>
-                  <?php echo $product['profile_description']; ?>
-                </td>
-              </tr>
-            <?php } ?>
             <tr>
               <td class="image hide-phone">
                 <?php if ($product['thumb']) { ?>
@@ -84,9 +75,6 @@
                 <div>
                   <?php foreach ($product['option'] as $option) { ?>
                     - <small><?php echo $option['name']; ?>: <?php echo $option['value']; ?></small><br />
-                  <?php } ?>
-                  <?php if ($product['recurring']) { ?>
-                    - <small><?php echo $text_payment_profile; ?>: <?php echo $product['profile_name']; ?></small>
                   <?php } ?>
                 </div>
                 <?php if ($product['reward']) { ?>

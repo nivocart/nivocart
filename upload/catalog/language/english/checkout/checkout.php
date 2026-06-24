@@ -16,16 +16,6 @@ $_['text_comments']                           = 'Delivery Instructions';
 $_['text_one_page_coupon']                    = 'Coupon Code';
 $_['text_one_page_voucher']                   = 'Gift Voucher';
 $_['text_one_page_reward']                    = 'Reward Points (%s)';
-$_['text_recurring_item']                     = 'Recurring item';
-$_['text_payment_profile']                    = 'Payment Profile';
-$_['text_trial_description']                  = '%s every %d %s(s) for %d payment(s) then';
-$_['text_payment_description']                = '%s every %d %s(s) for %d payment(s)';
-$_['text_payment_until_canceled_description'] = '%s every %d %s(s) until canceled';
-$_['text_day']                                = 'day';
-$_['text_week']                               = 'week';
-$_['text_semi_month']                         = 'half-month';
-$_['text_month']                              = 'month';
-$_['text_year']                               = 'year';
 
 // Column
 $_['column_name']                             = 'Product';
@@ -96,7 +86,3 @@ $_['error_points']                            = 'Warning: You don\'t have %s rew
 $_['error_maximum']                           = 'Warning: The maximum number of points that can be applied is %s!';
 $_['error_minimum']                           = 'Minimum order amount for %s is %s!';
 $_['error_required']                          = '%s required!';
-
-$_['text_trial']                              = '%s every %s %s for %s payments then ';
-$_['text_recurring']                          = '%s every %s %s';
-$_['text_length']                             = ' for %s payments';

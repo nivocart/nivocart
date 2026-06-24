@@ -626,30 +626,6 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-	public function getProfiles(int $product_id): array {
-		if ($this->customer->isLogged()) {
-			$customer_group_id = $this->customer->getCustomerGroupId();
-		} else {
-			$customer_group_id = $this->config->get('config_customer_group_id');
-		}
-
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_profile pp LEFT JOIN `" . DB_PREFIX . "profile_description` pd ON pd.language_id = " . (int)$this->config->get('config_language_id') . " AND pd.profile_id = pp.profile_id LEFT JOIN " . DB_PREFIX . "profile p ON (p.profile_id = pp.profile_id) WHERE pp.product_id = " . (int)$product_id . " AND pp.customer_group_id = " . (int)$customer_group_id . " ORDER BY p.sort_order ASC");
-
-		return $query->rows;
-	}
-
-	public function getProfile(int $product_id, int $profile_id): array {
-		if ($this->customer->isLogged()) {
-			$customer_group_id = $this->customer->getCustomerGroupId();
-		} else {
-			$customer_group_id = $this->config->get('config_customer_group_id');
-		}
-
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "profile` p LEFT JOIN `" . DB_PREFIX . "product_profile` pp ON (pp.profile_id = p.profile_id) AND pp.product_id = " . (int)$product_id . " WHERE pp.profile_id = " . (int)$profile_id . " AND pp.customer_group_id = " . (int)$customer_group_id);
-
-		return $query->rows;
-	}
-
 	public function getProductTags(int $product_id): array {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_tag` WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 

@@ -27,9 +27,6 @@
           <?php foreach ($product['option'] as $option) { ?>
             - <small><?php echo $option['name']; ?> <?php echo $option['value']; ?></small><br />
           <?php } ?>
-          <?php if ($product['recurring']) { ?>
-            - <small><?php echo $text_payment_profile; ?> <?php echo $product['profile']; ?></small><br />
-          <?php } ?>
         </div>
         </td>
         <td class="quantity">x&nbsp;<?php echo $product['quantity']; ?></td>

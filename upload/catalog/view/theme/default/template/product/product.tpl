@@ -228,23 +228,6 @@
         <?php } ?>
         </div>
       <?php } ?>
-      <?php if ($profiles) { ?>
-        <div class="option">
-          <h2><span class="required">*</span> <?php echo $text_payment_profile; ?></h2>
-          <br />
-          <select name="profile_id">
-            <option value=""><?php echo $text_select; ?></option>
-            <?php foreach ($profiles as $profile) { ?>
-              <option value="<?php echo $profile['profile_id']; ?>"><?php echo $profile['name']; ?></option>
-            <?php } ?>
-          </select>
-          <br />
-          <br />
-          <span id="profile-description"></span>
-          <br />
-          <br />
-        </div>
-      <?php } ?>
       <?php if ($product_colors) { ?>
         <div class="color-range">
         <?php foreach ($product_colors as $product_color) { ?>
@@ -455,7 +438,7 @@
           <?php if ($sharethis) { ?>
             <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop' async='async'></script>
           <?php } else { ?>
-            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script> 
+            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script>
           <?php } ?>
         </div>
         <?php } ?>
@@ -712,25 +695,6 @@ $(document).ready(function() {
 
 <!-- Shopping Cart Scripts //-->
 <script type="text/javascript"><!--
-$('select[name="profile_id"], input[name="quantity"]').change(function() {
-	$.ajax({
-		url: 'index.php?route=product/product/getRecurringDescription',
-		type: 'post',
-		data: $('input[name="product_id"], input[name="quantity"], select[name="profile_id"]'),
-		dataType: 'json',
-		beforeSend: function() {
-			$('#profile-description').html('');
-		},
-		success: function(json) {
-			$('.success, .warning, .attention, .tooltip, .error').remove();
-
-			if (json['success']) {
-				$('#profile-description').html(json['success']);
-			}
-		}
-	});
-});
-
 $('#button-cart').on('click', function() {
 	$.ajax({
 		url: 'index.php?route=checkout/cart/add',
@@ -810,7 +774,7 @@ $('#button-buy-it-now').on('click', function() {
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	var date = $('.date');
-	
+
 	$(date).mouseover(function() {
 		$('.date').datepicker({'dateFormat': 'yy-mm-dd'});
 	});

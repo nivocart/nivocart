@@ -379,24 +379,6 @@ class ControllerCheckoutCart extends Controller {
 					$total = false;
 				}
 
-				// Display profile
-				$profile_description = '';
-
-				if ($product['recurring']) {
-					if ($product['recurring_trial']) {
-						$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-						$profile_description = sprintf($this->language->get('text_trial_description'), $recurring_price, $product['recurring_trial_cycle'], $frequencies[$product['recurring_trial_frequency']], $product['recurring_trial_duration']) . ' ';
-					}
-
-					$recurring_price = $this->currency->format($this->tax->calculate($product['recurring_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-
-					if ($product['recurring_duration']) {
-						$profile_description .= sprintf($this->language->get('text_payment_description'), $recurring_price, $product['recurring_cycle'], $frequencies[$product['recurring_frequency']], $product['recurring_duration']);
-					} else {
-						$profile_description .= sprintf($this->language->get('text_payment_until_canceled_description'), $recurring_price, $product['recurring_cycle'], $frequencies[$product['recurring_frequency']], $product['recurring_duration']);
-					}
-				}
-
 				// Check minimum age
 				$age_minimum = $product['age_minimum'];
 				$age_logged = false;
@@ -444,16 +426,11 @@ class ControllerCheckoutCart extends Controller {
 					'tax_value'           => $this->currency->format($product_tax_value, $this->config->get('config_currency')),
 					'tax_percent'         => number_format((($product_tax_value * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
 					'age_minimum'         => $age_checked ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
-					'recurring'           => $product['recurring'],
-					'profile_name'        => $product['profile_name'],
-					'profile_description' => $profile_description,
 					'total'               => $total,
 					'href'                => $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL'),
 					'remove'              => $this->url->link('checkout/cart', 'remove=' . $product['key'], 'SSL')
 				];
 			}
-
-			$this->data['products_recurring'] = [];
 
 			$this->data['age_minimum'] = $age_minimum ? (int)$age_minimum : 0;
 			$this->data['age_logged'] = $age_logged;
@@ -772,12 +749,6 @@ class ControllerCheckoutCart extends Controller {
 				$option = [];
 			}
 
-			if (isset($this->request->post['profile_id'])) {
-				$profile_id = $this->request->post['profile_id'];
-			} else {
-				$profile_id = 0;
-			}
-
 			$product_options = $this->model_catalog_product->getProductOptions($this->request->post['product_id']);
 
 			foreach ($product_options as $product_option) {
@@ -786,22 +757,8 @@ class ControllerCheckoutCart extends Controller {
 				}
 			}
 
-			$profiles = $this->model_catalog_product->getProfiles($product_info['product_id']);
-
-			if ($profiles) {
-				$profile_ids = [];
-
-				foreach ($profiles as $profile) {
-					$profile_ids[] = $profile['profile_id'];
-				}
-
-				if (!in_array($profile_id, $profile_ids)) {
-					$json['error']['profile'] = $this->language->get('error_profile_required');
-				}
-			}
-
 			if (!$json) {
-				$this->cart->add($this->request->post['product_id'], $profile_id, $quantity, $option);
+				$this->cart->add($this->request->post['product_id'], $quantity, $option);
 
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id'], 'SSL'), $product_info['name'], $this->url->link('checkout/cart', '', 'SSL'));
 
@@ -821,8 +778,7 @@ class ControllerCheckoutCart extends Controller {
 					$results = $this->model_setting_extension->getExtensions('total');
 
 					// Sort extensions by their configured sort_order
-					usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order')
-					);
+					usort($results, fn ($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
 
 					foreach ($results as $result) {
 						if ($this->config->get($result['code'] . '_status')) {

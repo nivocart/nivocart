@@ -1,9 +1,4 @@
 <?php
-/**
- * Library Class Cart
- *
- * @package NivoCart
- */
 class Cart {
 	/**
 	 * @var object
@@ -84,13 +79,6 @@ class Cart {
 					}
 				} else {
 					$options = [];
-				}
-
-				// Profile
-				if (!empty($product[2])) {
-					$profile_id = $product[2];
-				} else {
-					$profile_id = 0;
 				}
 
 				$product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() AND p.status = '1'");
@@ -206,7 +194,7 @@ class Cart {
 									}
 								}
 
-							} elseif ($option_query->row['type'] === 'text' || $option_query->row['type'] === 'textarea' || $option_query->row['type'] === 'file' || $option_query->row['type'] === 'date' || $option_query->row['type'] === 'datetime' || $option_query->row['type'] === 'time') {
+							} elseif ($option_query->row['type'] === 'text' || $option_query->row['type'] === 'textarea' || $option_query->row['type'] === 'file' || $option_query->row['type'] === 'date' || $option_query->row['type'] === 'time') {
 								$option_data[] = [
 									'product_option_id'       => $product_option_id,
 									'product_option_value_id' => '',
@@ -296,38 +284,6 @@ class Cart {
 						$stock = false;
 					}
 
-					$recurring = false;
-					$recurring_frequency = 0;
-					$recurring_price = 0;
-					$recurring_cycle = 0;
-					$recurring_duration = 0;
-					$recurring_trial_status = 0;
-					$recurring_trial_price = 0;
-					$recurring_trial_cycle = 0;
-					$recurring_trial_duration = 0;
-					$recurring_trial_frequency = 0;
-
-					$profile_name = '';
-
-					if ($profile_id) {
-						$profile_info = $this->db->query("SELECT * FROM `" . DB_PREFIX . "profile` p JOIN `" . DB_PREFIX . "product_profile` pp ON (pp.profile_id = p.profile_id) AND pp.product_id = " . (int)$product_query->row['product_id'] . " JOIN `" . DB_PREFIX . "profile_description` pd ON (pd.profile_id = p.profile_id) AND pd.language_id = " . (int)$this->config->get('config_language_id') . " WHERE pp.profile_id = " . (int)$profile_id . " AND status = 1 AND pp.customer_group_id = " . (int)$customer_group_id)->row;
-
-						if ($profile_info) {
-							$profile_name = $profile_info['name'];
-
-							$recurring = true;
-							$recurring_frequency = $profile_info['frequency'];
-							$recurring_price = $profile_info['price'];
-							$recurring_cycle = $profile_info['cycle'];
-							$recurring_duration = $profile_info['duration'];
-							$recurring_trial_frequency = $profile_info['trial_frequency'];
-							$recurring_trial_status = $profile_info['trial_status'];
-							$recurring_trial_price = $profile_info['trial_price'];
-							$recurring_trial_cycle = $profile_info['trial_cycle'];
-							$recurring_trial_duration = $profile_info['trial_duration'];
-						}
-					}
-
 					$this->data[$key] = [
 						'key'                       => $key,
 						'product_id'                => $product_query->row['product_id'],
@@ -356,19 +312,7 @@ class Cart {
 						'length'                    => $product_query->row['length'],
 						'width'                     => $product_query->row['width'],
 						'height'                    => $product_query->row['height'],
-						'length_class_id'           => $product_query->row['length_class_id'],
-						'profile_id'                => $profile_id,
-						'profile_name'              => $profile_name,
-						'recurring'                 => $recurring,
-						'recurring_frequency'       => $recurring_frequency,
-						'recurring_price'           => $recurring_price,
-						'recurring_cycle'           => $recurring_cycle,
-						'recurring_duration'        => $recurring_duration,
-						'recurring_trial'           => $recurring_trial_status,
-						'recurring_trial_frequency' => $recurring_trial_frequency,
-						'recurring_trial_price'     => $recurring_trial_price,
-						'recurring_trial_cycle'     => $recurring_trial_cycle,
-						'recurring_trial_duration'  => $recurring_trial_duration
+						'length_class_id'           => $product_query->row['length_class_id']
 					];
 
 				} else {
@@ -381,31 +325,9 @@ class Cart {
 	}
 
 	/**
-	 * Get Recurring Products
-	 *
-	 * @return array
-	 *
-	 * @example
-	 *
-	 * $this->cart->getRecurringProducts();
-	 */
-	public function getRecurringProducts(): array {
-		$recurring_products = [];
-
-		foreach ($this->getProducts() as $key => $value) {
-			if ($value['recurring']) {
-				$recurring_products[$key] = $value;
-			}
-		}
-
-		return $recurring_products;
-	}
-
-	/**
 	 * Add
 	 *
-	 * @param int          $product_id       primary key of the product record
-	 * @param int          $profile_id
+	 * @param int          $product_id           primary key of the product record
 	 * @param int          $quantity
 	 * @param array<mixed> $option
 	 *
@@ -415,17 +337,13 @@ class Cart {
 	 *
 	 * $this->cart->add($product_id, $profile_id, $quantity, $option);
 	 */
-	public function add(int $product_id, int $profile_id, int $quantity = 1, array $option = []): void {
+	public function add(int $product_id, int $quantity = 1, array $option = []): void {
 		$key = (int)$product_id . ':';
 
 		if ($option && is_array($option)) {
 			$key .= base64_encode(json_encode($option, JSON_THROW_ON_ERROR)) . ':';
 		} else {
 			$key .= ':';
-		}
-
-		if ($profile_id) {
-			$key .= (int)$profile_id;
 		}
 
 		if ((int)$quantity && ((int)$quantity > 0)) {
@@ -440,7 +358,7 @@ class Cart {
 	/**
 	 * Update
 	 *
-	 * @param int $key     primary key of the cart record
+	 * @param int $key  primary key of the cart record
 	 * @param int $quantity
 	 *
 	 * @return void
@@ -640,19 +558,6 @@ class Cart {
 	 */
 	public function hasProducts(): bool {
 		return count($this->session->data['cart']);
-	}
-
-	/**
-	 * Has Recurring Products
-	 *
-	 * @return bool
-	 *
-	 * @example
-	 *
-	 * $cart = $this->cart->hasRecurringProducts();
-	 */
-	public function hasRecurringProducts(): bool {
-		return count($this->getRecurringProducts());
 	}
 
 	/**

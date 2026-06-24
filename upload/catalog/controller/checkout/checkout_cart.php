@@ -233,9 +233,6 @@ class ControllerCheckoutCheckoutCart extends Controller {
 		$this->data['column_tax_percent'] = $this->language->get('column_tax_percent');
 		$this->data['column_total'] = $this->language->get('column_total');
 
-		$this->data['text_recurring_item'] = $this->language->get('text_recurring_item');
-		$this->data['text_payment_profile'] = $this->language->get('text_payment_profile');
-
 		$this->data['products'] = [];
 
 		foreach ($this->cart->getProducts() as $product) {
@@ -287,33 +284,6 @@ class ControllerCheckoutCheckoutCart extends Controller {
 				$total = false;
 			}
 
-			// Display profile
-			$profile_description = '';
-
-			if ($product['recurring']) {
-				$frequencies = [
-					'day'        => $this->language->get('text_day'),
-					'week'       => $this->language->get('text_week'),
-					'semi_month' => $this->language->get('text_semi_month'),
-					'month'      => $this->language->get('text_month'),
-					'year'       => $this->language->get('text_year')
-				];
-
-				if ($product['recurring_trial']) {
-					$recurring_price = $this->currency->format($this->tax->calculate(($product['recurring_trial_price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-
-					$profile_description = sprintf($this->language->get('text_trial_description'), $recurring_price, $product['recurring_trial_cycle'], $frequencies[$product['recurring_trial_frequency']], $product['recurring_trial_duration']) . ' ';
-				}
-
-				$recurring_price = $this->currency->format($this->tax->calculate(($product['recurring_price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-
-				if ($product['recurring_duration']) {
-					$profile_description .= sprintf($this->language->get('text_payment_description'), $recurring_price, $product['recurring_cycle'], $frequencies[$product['recurring_frequency']], $product['recurring_duration']);
-				} else {
-					$profile_description .= sprintf($this->language->get('text_payment_until_canceled_description'), $recurring_price, $product['recurring_cycle'], $frequencies[$product['recurring_frequency']], $product['recurring_duration']);
-				}
-			}
-
 			// Check minimum age
 			$age_minimum = $product['age_minimum'];
 			$age_logged = false;
@@ -354,9 +324,6 @@ class ControllerCheckoutCheckoutCart extends Controller {
 				'tax_value'           => $this->currency->format($product_tax_value, $this->config->get('config_currency')),
 				'tax_percent'         => number_format((($product_tax_value * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
 				'age_minimum'         => $age_checked ? '<span style="color:#007200;"> (' . $product['age_minimum'] . '+)</span>' : '',
-				'recurring'           => $product['recurring'],
-				'profile_name'        => $product['profile_name'],
-				'profile_description' => $profile_description,
 				'total'               => $total,
 				'href'                => $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL')
 			];
