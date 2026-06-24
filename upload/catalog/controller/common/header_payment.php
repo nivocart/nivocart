@@ -13,7 +13,17 @@ class ControllerCommonHeaderPayment extends Controller {
 	public function index() {
 		$this->data['title'] = $this->document->getTitle();
 
-		$this->data['base'] = HTTP_SERVER;
+		// Resolve server base URL
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+		) {
+			$server = $this->config->get('config_ssl');
+		} else {
+			$server = $this->config->get('config_url');
+		}
+
+		$this->data['base'] = $server;
 		$this->data['lang'] = $this->language->get('code');
 		$this->data['direction'] = $this->language->get('direction');
 
