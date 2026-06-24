@@ -148,7 +148,7 @@
               <li><a href="<?php echo $voucher_theme; ?>"><?php echo ($icons) ? '<i class="fa fa-image"></i>' : ''; ?><?php echo $text_voucher_theme; ?></a></li>
             </ul>
           </li>
-          <li><a href="<?php echo $upload; ?>"><?php echo ($icons) ? '<i class="fa fa-upload"></i>' : ''; ?><?php echo $text_upload; ?></a></li>
+          <li><a href="<?php echo $contact; ?>"><?php echo ($icons) ? '<i class="fa fa-mail-forward"></i>' : ''; ?><?php echo $text_contact; ?></a></li>
         </ul>
       </li>
       <li id="reports"><a class="top"><?php echo $text_reports; ?></a>
@@ -216,7 +216,7 @@
           <li><a href="<?php echo $seo_url_manager; ?>"><?php echo ($icons) ? '<i class="fa fa-tint"></i>' : ''; ?><?php echo $text_seo_url_manager; ?></a></li>
           <li><a href="<?php echo $api_key_manager; ?>"><?php echo ($icons) ? '<i class="fa fa-key"></i>' : ''; ?><?php echo $text_api_key_manager; ?></a></li>
           <li><a href="<?php echo $file_manager; ?>"><?php echo ($icons) ? '<i class="fa fa-image"></i>' : ''; ?><?php echo $text_file_manager; ?></a></li>
-          <li><a href="<?php echo $contact; ?>"><?php echo ($icons) ? '<i class="fa fa-mail-forward"></i>' : ''; ?><?php echo $text_contact; ?></a></li>
+          <li><a href="<?php echo $upload; ?>"><?php echo ($icons) ? '<i class="fa fa-upload"></i>' : ''; ?><?php echo $text_upload; ?></a></li>
         </ul>
       </li>
       <li id="extension"><a class="top"><?php echo $text_extension; ?></a>
