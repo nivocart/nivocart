@@ -651,15 +651,11 @@ class ControllerSaleCustomer extends Controller {
 
 		$this->load->model('sale/customer_group');
 
-		$customer_groups_array = [];
-
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 		$this->load->model('setting/store');
 
-		$stores_array = [];
-
-		$this->data['stores'] = $this->model_setting_store->getStores($stores_array);
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -859,7 +855,7 @@ class ControllerSaleCustomer extends Controller {
 			$this->data['error_address_zone'] = '';
 		}
 
-		// Get affiliate_id
+		// Get customer_id
 		$customer_id = $this->request->get['customer_id'] ?? 0;
 
 		// Breadcrumbs
@@ -1031,9 +1027,7 @@ class ControllerSaleCustomer extends Controller {
 
 		$this->load->model('sale/customer_group');
 
-		$customer_groups_array = [];
-
-		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups($customer_groups_array);
+		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
 		if (isset($this->request->post['customer_group_id'])) {
 			$this->data['customer_group_id'] = $this->request->post['customer_group_id'];
@@ -1075,9 +1069,7 @@ class ControllerSaleCustomer extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$countries_array = [];
-
-		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
+		$this->data['countries'] = $this->model_localisation_country->getCountries([]);
 
 		if (isset($this->request->post['address'])) {
 			$this->data['addresses'] = $this->request->post['address'];
