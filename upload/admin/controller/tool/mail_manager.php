@@ -407,6 +407,7 @@ class ControllerToolMailManager extends Controller {
 		// Placeholder sidebar
 		$this->data['text_placeholders'] = $this->language->get('text_placeholders');
 		$this->data['text_placeholder_hint'] = $this->language->get('text_placeholder_hint');
+		$this->data['text_placeholder_token'] = $this->language->get('text_placeholder_token');
 
 		$this->data['token'] = $this->session->data['token'];
 

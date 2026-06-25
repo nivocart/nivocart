@@ -20,6 +20,7 @@ $_['text_type_affiliate']         = 'Affiliate';
 // Placeholder sidebar
 $_['text_placeholders']           = 'Available Placeholders';
 $_['text_placeholder_hint']       = 'Click a placeholder to insert it at the cursor position in the editor.';
+$_['text_placeholder_token']      = 'Tokens are replaced at send time.<br />They are not being validated here.';
 
 // Placeholder labels — General
 $_['placeholder_store_name']      = 'Store name';

@@ -133,7 +133,7 @@
           </div>
           <?php } ?>
           <hr />
-          <p>Tokens are replaced at send time.<br />They are not validated here.</p>
+          <p><?php echo $text_placeholder_token; ?></p>
         </div>
       </div><!-- /flex wrapper -->
     </div>
