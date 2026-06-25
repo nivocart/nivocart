@@ -12,7 +12,7 @@ ADVANCED SHOPPING CART SYSTEM
 NivoCart is a powerful all-in-one shopping cart application for small and medium businesses.<br />
 It uses the MVC+L (Model-View-Controller + Language) architecture and is written in pure PHP, Html5, CSS3, jQuery.<br />
 NivoCart has been designed to be fast, completely self-contained, and without any remote dependencies.<br />
-it doesn't use a framework or a template engine, and can be easily customised to better promote online presence.<br />
+it doesn't use a framework or a template engine, and can be easily customised.<br />
 
 _____________________________________________________________________________________________
 
