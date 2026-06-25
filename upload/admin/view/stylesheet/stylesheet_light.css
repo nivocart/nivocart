@@ -1681,6 +1681,62 @@ table.tool tr td {
 	background: rgba(255, 255, 255, 1);
 }
 /** -----------------------------
+ * Placeholder (Email Manager)
+ * ----------------------------*/
+#placeholder-sidebar {
+	width: 220px;
+	flex-shrink: 0;
+	background: #F7F7F7;
+	border: 1px solid #DDD;
+	border-radius: 4px;
+	padding: 12px;
+	font-size: 12px;
+}
+#placeholder-sidebar h3 {
+	margin: 0 0 6px 0;
+	font-size: 13px;
+	color: #444;
+}
+#placeholder-sidebar hr {
+	border: none;
+	border-top: 1px solid #DDD;
+	margin: 8px 0;
+}
+#placeholder-sidebar p {
+	margin: 3px 0;
+	color: #777;
+	font-size: 11px;
+	line-height: 1.4;
+}
+#placeholder-sidebar div.placeholder-group {
+	margin-bottom: 10px;
+}
+#placeholder-sidebar div.placeholder-group strong {
+	display: block;
+	margin-bottom: 4px;
+	text-transform: capitalize;
+	color: #555;
+}
+#placeholder-sidebar div.placeholder-group a {
+	display: block;
+	padding: 3px 6px;
+	margin-bottom: 2px;
+	background: #FFF;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+	color: #333;
+	text-decoration: none;
+	font-family: monospace;
+	font-size: 11px;
+	word-break: break-all;
+}
+#placeholder-sidebar div.placeholder-group a span{
+	display: block;
+	font-family: sans-serif;
+	font-size: 10px;
+	color: #888;
+}
+/** -----------------------------
  * HTML/PDF Documents
  * ----------------------------*/
 .documents {

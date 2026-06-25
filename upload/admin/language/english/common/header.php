@@ -38,6 +38,7 @@ $_['text_database']                    = 'Database';
 $_['text_design']                      = 'Design';
 $_['text_download']                    = 'Downloads';
 $_['text_email_log']                   = 'Email Logs';
+$_['text_email_manager']               = 'Email Manager';
 $_['text_error_log']                   = 'Error Logs';
 $_['text_export_import']               = 'Export / Import';
 $_['text_export_import_csv']           = 'Export / Import (CSV)';

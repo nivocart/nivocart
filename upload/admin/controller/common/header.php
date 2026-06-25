@@ -138,6 +138,7 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_design'] = $this->language->get('text_design');
 		$this->data['text_download'] = $this->language->get('text_download');
 		$this->data['text_email_log'] = $this->language->get('text_email_log');
+		$this->data['text_email_manager'] = $this->language->get('text_email_manager');
 		$this->data['text_error_log'] = $this->language->get('text_error_log');
 		$this->data['text_export_import'] = $this->language->get('text_export_import');
 		$this->data['text_export_import_csv'] = $this->language->get('text_export_import_csv');
@@ -306,6 +307,7 @@ class ControllerCommonHeader extends Controller {
 			$this->data['database'] = $this->url->link('tool/database', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['download'] = $this->url->link('catalog/download', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['email_log'] = $this->url->link('tool/mail_log', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['email_manager'] = $this->url->link('tool/mail_manager', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['error_log'] = $this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['export_import_csv'] = $this->url->link('tool/export_import_csv', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['export_import_tool'] = $this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL');

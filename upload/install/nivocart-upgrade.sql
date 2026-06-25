@@ -814,7 +814,6 @@ CREATE TABLE `nc_download_description` (
 DROP TABLE IF EXISTS `nc_email_template`;
 CREATE TABLE IF NOT EXISTS `nc_email_template` (
   `template_id` int NOT NULL AUTO_INCREMENT,
-  `store_id` int NOT NULL DEFAULT 0,
   `language_id` int NOT NULL DEFAULT 1,
   `type` varchar(32) NOT NULL DEFAULT '',
   `code` varchar(64) NOT NULL DEFAULT '',
@@ -826,9 +825,23 @@ CREATE TABLE IF NOT EXISTS `nc_email_template` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`template_id`),
-  KEY `idx_store_language` (`store_id`, `language_id`),
+  KEY `idx_store_language` (`language_id`),
   KEY `idx_code` (`code`),
   KEY `idx_type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nc_email_template_store`
+--
+
+DROP TABLE IF EXISTS `nc_email_template_store`;
+CREATE TABLE IF NOT EXISTS `nc_email_template_store` (
+  `template_id` int NOT NULL,
+  `store_id` int NOT NULL,
+  PRIMARY KEY (`template_id`, `store_id`),
+  KEY `idx_store_id` (`store_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
