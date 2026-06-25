@@ -388,7 +388,7 @@ class ControllerCatalogPalette extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['name'])) {
 			$this->data['name'] = $this->request->post['name'];

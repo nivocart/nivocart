@@ -430,11 +430,11 @@ class ControllerBlogArticle extends Controller {
 
 		$this->data['authors'] = [];
 
-		$this->data['authors'] = $this->model_blog_author->getAuthors();
+		$this->data['authors'] = $this->model_blog_author->getAuthors([]);
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['article_description'])) {
 			$this->data['article_description'] = $this->request->post['article_description'];
@@ -507,7 +507,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['article_store'])) {
 			$this->data['article_store'] = $this->request->post['article_store'];
@@ -539,9 +539,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('catalog/manufacturer');
 
-		$manufacturer_array = [];
-
-		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_array);
+		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers([]);
 
 		$this->load->model('catalog/product');
 
@@ -628,7 +626,7 @@ class ControllerBlogArticle extends Controller {
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$this->data['layouts'] = $this->model_design_layout->getLayouts([]);
 
 		$this->template = 'blog/article_form.tpl';
 		$this->children = [

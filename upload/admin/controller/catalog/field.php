@@ -417,7 +417,7 @@ class ControllerCatalogField extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['field_description'])) {
 			$this->data['field_description'] = $this->request->post['field_description'];

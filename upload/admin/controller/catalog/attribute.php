@@ -322,7 +322,7 @@ class ControllerCatalogAttribute extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['attribute_description'])) {
 			$this->data['attribute_description'] = $this->request->post['attribute_description'];
@@ -342,7 +342,7 @@ class ControllerCatalogAttribute extends Controller {
 
 		$this->load->model('catalog/attribute_group');
 
-		$this->data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();
+		$this->data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups([]);
 
 		if (isset($this->request->post['sort_order'])) {
 			$this->data['sort_order'] = $this->request->post['sort_order'];

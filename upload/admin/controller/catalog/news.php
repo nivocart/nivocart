@@ -478,7 +478,7 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['news_description'])) {
 			$this->data['news_description'] = $this->request->post['news_description'];
@@ -518,7 +518,7 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('catalog/news_download');
 
-		$this->data['downloads'] = $this->model_catalog_news_download->getDownloads();
+		$this->data['downloads'] = $this->model_catalog_news_download->getDownloads([]);
 
 		if (isset($this->request->post['news_download'])) {
 			$this->data['news_download'] = $this->request->post['news_download'];
@@ -530,7 +530,7 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['news_store'])) {
 			$this->data['news_store'] = $this->request->post['news_store'];
@@ -625,15 +625,11 @@ class ControllerCatalogNews extends Controller {
 
 		$this->load->model('catalog/category');
 
-		$category_data = [];
-
-		$this->data['default_categories'] = $this->model_catalog_category->getCategories($category_data);
+		$this->data['default_categories'] = $this->model_catalog_category->getCategories([]);
 
 		$this->load->model('catalog/manufacturer');
 
-		$manufacturer_data = [];
-
-		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers($manufacturer_data);
+		$this->data['default_manufacturers'] = $this->model_catalog_manufacturer->getManufacturers([]);
 
 		$this->template = 'catalog/news_form.tpl';
 		$this->children = [

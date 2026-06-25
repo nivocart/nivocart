@@ -443,7 +443,7 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['information_description'])) {
 			$this->data['information_description'] = $this->request->post['information_description'];
@@ -455,7 +455,7 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['information_store'])) {
 			$this->data['information_store'] = $this->request->post['information_store'];
@@ -507,7 +507,7 @@ class ControllerCatalogInformation extends Controller {
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$this->data['layouts'] = $this->model_design_layout->getLayouts([]);
 
 		$this->template = 'catalog/information_form.tpl';
 		$this->children = [

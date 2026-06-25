@@ -327,7 +327,7 @@ class ControllerCatalogFilter extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['filter_group_description'])) {
 			$this->data['filter_group_description'] = $this->request->post['filter_group_description'];

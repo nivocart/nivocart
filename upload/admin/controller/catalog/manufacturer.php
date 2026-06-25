@@ -434,7 +434,7 @@ class ControllerCatalogManufacturer extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['manufacturer_description'])) {
 			$this->data['manufacturer_description'] = $this->request->post['manufacturer_description'];
@@ -446,7 +446,7 @@ class ControllerCatalogManufacturer extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['manufacturer_store'])) {
 			$this->data['manufacturer_store'] = $this->request->post['manufacturer_store'];

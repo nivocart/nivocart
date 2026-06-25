@@ -571,7 +571,7 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['category_description'])) {
 			$this->data['category_description'] = $this->request->post['category_description'];
@@ -641,7 +641,7 @@ class ControllerCatalogCategory extends Controller {
 		// Store
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['category_store'])) {
 			$this->data['category_store'] = $this->request->post['category_store'];
@@ -721,7 +721,7 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->load->model('design/layout');
 
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();
+		$this->data['layouts'] = $this->model_design_layout->getLayouts([]);
 
 		$this->template = 'catalog/category_form.tpl';
 		$this->children = [

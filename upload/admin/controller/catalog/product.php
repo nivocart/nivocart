@@ -1420,9 +1420,7 @@ class ControllerCatalogProduct extends Controller {
 		// Stores
 		$this->load->model('setting/store');
 
-		$stores_array = [];
-
-		$this->data['stores'] = $this->model_setting_store->getStores($stores_array);
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['product_store'])) {
 			$this->data['product_store'] = $this->request->post['product_store'];
@@ -1435,9 +1433,7 @@ class ControllerCatalogProduct extends Controller {
 		// Categories
 		$this->load->model('catalog/category');
 
-		$categories_array = [];
-
-		$this->data['categories'] = $this->model_catalog_category->getCategories($categories_array);
+		$this->data['categories'] = $this->model_catalog_category->getCategories([]);
 
 		if (isset($this->request->post['product_category'])) {
 			$categories = $this->request->post['product_category'];
