@@ -1378,6 +1378,39 @@ CREATE TABLE `nc_download_description` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nc_email_template`
+--
+
+DROP TABLE IF EXISTS `nc_email_template`;
+CREATE TABLE IF NOT EXISTS `nc_email_template` (
+  `template_id` int NOT NULL AUTO_INCREMENT,
+  `store_id` int NOT NULL DEFAULT 0,
+  `language_id` int NOT NULL DEFAULT 1,
+  `type` varchar(32) NOT NULL DEFAULT '',
+  `code` varchar(64) NOT NULL DEFAULT '',
+  `name` varchar(128) NOT NULL DEFAULT '',
+  `subject` varchar(255) NOT NULL DEFAULT '',
+  `body` mediumtext NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `sort_order` int NOT NULL DEFAULT 0,
+  `date_added` datetime NOT NULL,
+  `date_modified` datetime NOT NULL,
+  PRIMARY KEY (`template_id`),
+  KEY `idx_store_language` (`store_id`, `language_id`),
+  KEY `idx_code` (`code`),
+  KEY `idx_type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `nc_email_template`
+--
+
+INSERT INTO `nc_email_template` (`template_id`, `store_id`, `language_id`, `type`, `code`, `name`, `subject`, `body`, `status`, `sort_order`, `date_added`, `date_modified`) VALUES
+(1, 0, 1, 'newsletter', 'newsletter', 'Newsletter (default)', 'News from {store_name}', '<p>Dear customer,</p>\n<p>Welcome to our latest newsletter.</p>\n<p>Kind regards,<br>{store_name}</p>', 1, 1, '2026-01-01 00:00:01', '2026-01-10 01:01:01');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nc_eucountry`
 --
 
