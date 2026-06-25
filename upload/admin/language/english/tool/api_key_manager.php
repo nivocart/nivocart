@@ -21,7 +21,7 @@ $_['entry_status']     = 'Status:';
 // Links
 $_['link_google']      = 'Google APIs';
 $_['link_facebook']    = 'Facebook APIs';
-$_['link_twitter']     = 'Twitter APIs';
+$_['link_twitter']     = 'X APIs';
 
 // Button
 $_['button_info']      = 'Information';
