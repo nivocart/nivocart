@@ -52,11 +52,18 @@ class ControllerCommonHeaderPayment extends Controller {
 			$this->data['display_size'] = 'normal';
 		}
 
+		// Minify main stylesheet
+		$web_root = rtrim(dirname(DIR_APPLICATION), '/\\') . '/';
+		$css_source = DIR_TEMPLATE . $template . '/stylesheet/stylesheet.css';
+		$css_cached = minifyCss($css_source);
+
+		$this->data['stylesheet_main'] = $css_cached ? str_replace($web_root, $server, $css_cached) : $server . 'catalog/view/theme/' . $template . '/stylesheet/stylesheet.css';
+
 		// Template
 		$this->data['template'] = $template;
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header_payment.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/header_payment.tpl';
+		if (file_exists(DIR_TEMPLATE . $template . '/template/common/header_payment.tpl')) {
+			$this->template = $template . '/template/common/header_payment.tpl';
 		} else {
 			$this->template = 'default/template/common/header_payment.tpl';
 		}

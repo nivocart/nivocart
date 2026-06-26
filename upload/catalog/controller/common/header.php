@@ -159,6 +159,13 @@ class ControllerCommonHeader extends Controller {
 			$this->data['display_size'] = 'normal';
 		}
 
+		// Minify main stylesheet
+		$web_root = rtrim(dirname(DIR_APPLICATION), '/\\') . '/';
+		$css_source = DIR_TEMPLATE . $template . '/stylesheet/stylesheet.css';
+		$css_cached = minifyCss($css_source);
+
+		$this->data['stylesheet_main'] = $css_cached ? str_replace($web_root, $server, $css_cached) : $server . 'catalog/view/theme/' . $template . '/stylesheet/stylesheet.css';
+
 		// Template
 		$this->data['template'] = $template;
 
@@ -167,8 +174,8 @@ class ControllerCommonHeader extends Controller {
 			'node/cart'
 		];
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/header.tpl';
+		if (file_exists(DIR_TEMPLATE . $template . '/template/common/header.tpl')) {
+			$this->template = $template . '/template/common/header.tpl';
 		} else {
 			$this->template = 'default/template/common/header.tpl';
 		}

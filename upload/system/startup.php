@@ -80,6 +80,7 @@ require_once DIR_SYSTEM . 'library/browser.php';
 
 // Helper
 require_once DIR_SYSTEM . 'helper/agent.php';
+require_once DIR_SYSTEM . 'helper/minify.php';
 require_once DIR_SYSTEM . 'helper/pdf.php';
 require_once DIR_SYSTEM . 'helper/totals.php';
 require_once DIR_SYSTEM . 'helper/vat.php';
