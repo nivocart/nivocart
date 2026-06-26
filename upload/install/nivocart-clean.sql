@@ -1409,6 +1409,8 @@ INSERT INTO `nc_email_template` (`template_id`, `language_id`, `type`, `code`, `
 (2, 1, 'customer', 'customer_register', 'Customer — Welcome / Register', 'Welcome to {store_name}', '<p>Dear {firstname},</p>\r\n<p>Thank you for creating an account at <a href=\"{store_url}\">{store_name}</a>.</p>\r\n<p>You can now log in and manage your orders and account details:</p>\r\n<p><a href=\"{login_url}\">{login_url}</a></p>\r\n<p>If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 1, '2026-06-26 07:40:54', '2026-06-26 07:40:54'),
 (3, 1, 'customer', 'customer_delete', 'Customer — Account Deleted', 'Your account at {store_name} has been closed', '<p>Dear {firstname},</p>\r\n<p>We are sorry to see you go. Your account at <a href=\"{store_url}\">{store_name}</a> has been successfully deleted.</p>\r\n<p>We hope to welcome you back in the future. If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 2, '2026-06-26 07:41:41', '2026-06-26 07:41:41'),
 (4, 1, 'affiliate', 'affiliate_register', 'Affiliate — Welcome / Register', 'Welcome to the {store_name} Affiliate Programme', '<p>Dear {firstname},</p>\r\n<p>Thank you for joining the <a href=\"{store_url}\">{store_name}</a> affiliate programme.</p>\r\n<p>You can log in to your affiliate account here:</p>\r\n<p><a href=\"{login_url}\">{login_url}</a></p>\r\n<p>If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 3, '2026-06-26 07:42:10', '2026-06-26 07:42:10');
+(5, 1, 'order', 'order_confirm', 'Order — Confirmation', 'Order Confirmation #{order_id} — {store_name}', '<p>Dear {firstname},</p>\r\n<p>Thank you for your order at <a href=\"{store_url}\">{store_name}</a>.</p>\r\n<p><strong>Order #:</strong> {order_id}<br />\r\n<strong>Date:</strong> {order_date}<br />\r\n<strong>Status:</strong> {order_status}<br />\r\n<strong>Total:</strong> {order_total}<br />\r\n<strong>Payment:</strong> {payment_method}<br />\r\n<strong>Shipping:</strong> {shipping_method}</p>\r\n<p>You can view your order details here:<br />\r\n<a href=\"{order_link}\">{order_link}</a></p>\r\n<p>If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 4, '2026-06-26 12:14:31', '2026-06-26 12:14:31'),
+(6, 1, 'order', 'order_update', 'Order — Status Update', 'Update on your order #{order_id} — {store_name}', '<p>Dear {firstname},</p>\r\n<p>Your order <strong>#{order_id}</strong> at <a href=\"{store_url}\">{store_name}</a> has been updated.</p>\r\n<p><strong>New Status:</strong> {order_status}</p>\r\n<p>{comment}</p>\r\n<p>You can view your order here:<br />\r\n<a href=\"{order_link}\">{order_link}</a></p>\r\n<p>If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 5, '2026-06-26 12:15:04', '2026-06-26 12:15:04');
 
 -- --------------------------------------------------------
 
@@ -1433,6 +1435,8 @@ INSERT INTO `nc_email_template_store` (`template_id`, `store_id`) VALUES
 (2, 0);
 (3, 0);
 (4, 0);
+(5, 0);
+(6, 0);
 
 -- --------------------------------------------------------
 
