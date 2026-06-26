@@ -21,7 +21,7 @@ $_['tab_credits']               = 'Credits';
 $_['entry_widescreen']          = 'Widescreen Mode:<span class="help">Normal at 1280px, Wide at 1920px, or Unlimited. Default is Normal.</span>';
 $_['entry_breadcrumbs']         = 'Show Breadcrumbs:<span class="help">If "No" is selected, the breadcrumb trail will not show on catalog pages.</span>';
 $_['entry_back_to_top']         = 'Enable Scroll Back to Top:';
-$_['entry_right_click']         = 'Block Mouse Right Click:';
+$_['entry_right_click']         = 'Block Mouse Right Click:<span class="help">Protects copyright content like images from being copied without explicit permission.</span>';
 $_['entry_web_design']          = 'Display Web Design Credits:<span class="help">Html and links are accepted.</span>';
 $_['entry_powered_by']          = 'Display Powered by:<span class="help">Show "Powered by NivoCart".</span>';
 $_['entry_footer_theme']        = 'Footer Theme:<span class="help">Choose between a Light, Dark or Custom theme.</span>';
