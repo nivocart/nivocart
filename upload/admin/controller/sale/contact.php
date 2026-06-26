@@ -32,6 +32,12 @@ class ControllerSaleContact extends Controller {
 		$this->data['entry_subject'] = $this->language->get('entry_subject');
 		$this->data['entry_message'] = $this->language->get('entry_message');
 
+		// Mail Manager template picker
+		$this->data['entry_template'] = $this->language->get('entry_template');
+		$this->data['text_template_select'] = $this->language->get('text_template_select');
+		$this->data['text_template_load'] = $this->language->get('text_template_load');
+		$this->data['text_template_none'] = $this->language->get('text_template_none');
+
 		$this->data['button_send'] = $this->language->get('button_send');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
@@ -60,6 +66,12 @@ class ControllerSaleContact extends Controller {
 		$this->load->model('sale/customer_group');
 
 		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
+
+		// Load active templates for the picker dropdown
+		$this->load->model('tool/mail_manager');
+		$this->data['mail_templates'] = $this->model_tool_mail_manager->getEmailTemplates([
+			'filter_status' => 1
+		]);
 
 		$this->template = 'sale/contact.tpl';
 		$this->children = [
@@ -177,7 +189,10 @@ class ControllerSaleContact extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	// Email Send helper functions
+	// ----------------------------------------------------------------
+	// Email send helper functions
+	// ----------------------------------------------------------------
+
 	private function getCustomerEmails(array $filters, int $page): array {
 		$data = array_merge($filters, [
 			'start' => ($page - 1) * 10,

@@ -13,6 +13,9 @@ $_['text_customer']        = 'Customers';
 $_['text_affiliate_all']   = 'All Affiliates';
 $_['text_affiliate']       = 'Affiliates';
 $_['text_product']         = 'Products';
+$_['text_template_select'] = '-- Select a template --';
+$_['text_template_load']   = 'Load Template';
+$_['text_template_none']   = 'No active templates found. <a href="index.php?route=tool/mail_manager">Create one in Mail Manager</a>.';
 
 // Entry
 $_['entry_store']          = 'From:';
@@ -23,6 +26,7 @@ $_['entry_affiliate']      = 'Affiliate:<span class="help">Autocomplete</span>';
 $_['entry_product']        = 'Products:<span class="help">Send only to customers who have ordered products in the list. (Autocomplete)</span>';
 $_['entry_subject']        = 'Subject:';
 $_['entry_message']        = 'Message:';
+$_['entry_template']       = 'Template:';
 
 // Error
 $_['error_permission']     = 'Warning: You do not have permission to send Emails!';

@@ -76,13 +76,37 @@
           <td><div id="product" class="scrollbox"></div></td>
         </tr>
         </tbody>
+        <!-- ── Mail Manager template picker ── -->
+        <?php if ($mail_templates) { ?>
+        <tr>
+          <td><?php echo $entry_template; ?></td>
+          <td>
+            <select id="mail-template-picker">
+              <option value=""><?php echo $text_template_select; ?></option>
+              <?php foreach ($mail_templates as $tpl) { ?>
+              <option value="<?php echo $tpl['code']; ?>" data-template-id="<?php echo $tpl['template_id']; ?>">
+                <?php echo $tpl['name']; ?>
+              </option>
+              <?php } ?>
+            </select>
+            &nbsp;
+            <a id="btn-load-template" class="button-save"><?php echo $text_template_load; ?></a>
+            <span id="template-status" style="margin-left:8px; font-size:12px; color:#888;"></span>
+          </td>
+        </tr>
+        <?php } else { ?>
+        <tr>
+          <td><?php echo $entry_template; ?></td>
+          <td><span style="color:#aaa; font-size:12px;"><?php echo $text_template_none; ?></span></td>
+        </tr>
+        <?php } ?>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_subject; ?></td>
-          <td><input type="text" name="subject" value="" size="60" /></td>
+          <td><input type="text" name="subject" id="mail-subject" value="" size="60" /></td>
         </tr>
         <tr>
           <td><span class="required">*</span> <?php echo $entry_message; ?></td>
-          <td><textarea name="message"></textarea></td>
+          <td><textarea name="message" id="mail-body"></textarea></td>
         </tr>
       </table>
     </div>
@@ -92,17 +116,76 @@
 <script type="text/javascript" src="view/javascript/ckeditor/ckeditor.js"></script>
 
 <script type="text/javascript"><!--
-CKEDITOR.replace('message', {
-	filebrowserBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
-	filebrowserImageBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
-	filebrowserFlashBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>'
+CKEDITOR.replace('mail-body', {
+  filebrowserBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+  filebrowserImageBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+  filebrowserFlashBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>'
+});
+//--></script>
+
+<script type="text/javascript"><!--
+// ── Template picker — load subject + body from Mail Manager ────────
+$('#btn-load-template').on('click', function() {
+  var code = $('#mail-template-picker').val();
+
+  if (!code) {
+    $('#template-status').css('color', '#c00').text('<?php echo $text_template_select; ?>');
+    return;
+  }
+
+  var store_id = $('select[name="store_id"]').val() || 0;
+  var language_id = <?php echo (int)$this->config->get('config_language_id'); ?>;
+
+  $('#template-status').css('color', '#888').text('Loading\u2026');
+  $('#btn-load-template').attr('disabled', true);
+
+  $.ajax({
+    url: 'index.php?route=tool/mail_manager/getTemplate&token=<?php echo $token; ?>',
+    type: 'get',
+    dataType: 'json',
+    data: {
+      code: code,
+      store_id: store_id,
+      language_id: language_id
+    },
+    success: function(json) {
+      if (json['error']) {
+        $('#template-status').css('color', '#c00').text(json['error']);
+      } else {
+        // Populate subject
+        $('#mail-subject').val(json['subject']);
+
+        // Populate CKEditor body
+        if (CKEDITOR.instances['mail-body']) {
+          CKEDITOR.instances['mail-body'].setData(json['body']);
+        } else {
+          $('#mail-body').val(json['body']);
+        }
+
+        $('#template-status').css('color', '#4a4').text('Template loaded.');
+
+        // Fade status message out after 3 seconds
+        setTimeout(function() {
+          $('#template-status').fadeOut(600, function() {
+            $(this).text('').show();
+          });
+        }, 3000);
+      }
+    },
+    error: function() {
+      $('#template-status').css('color', '#c00').text('Request failed.');
+    },
+    complete: function() {
+      $('#btn-load-template').attr('disabled', false);
+    }
+  });
 });
 //--></script>
 
 <script type="text/javascript"><!--
 $('select[name=\'to\']').on('change', function() {
-	$('#mail .to').hide();
-	$('#mail #to-' + $(this).attr('value').replace('_', '-')).show();
+  $('#mail .to').hide();
+  $('#mail #to-' + $(this).attr('value').replace('_', '-')).show();
 });
 
 $('select[name=\'to\']').trigger('change');
@@ -110,188 +193,153 @@ $('select[name=\'to\']').trigger('change');
 
 <script type="text/javascript"><!--
 $.widget('custom.catcomplete', $.ui.autocomplete, {
-	_renderMenu: function(ul, items) {
-		var self = this, currentCategory = '';
+  _renderMenu: function(ul, items) {
+    var self = this, currentCategory = '';
 
-		$.each(items, function(index, item) {
-			if (item.category != currentCategory) {
-				ul.append('<li class="ui-autocomplete-category">' + item.category + '</li>');
-
-				currentCategory = item.category;
-			}
-
-			self._renderItemData(ul, item);
-		});
-	}
+    $.each(items, function(index, item) {
+      if (item.category != currentCategory) {
+        ul.append('<li class="ui-autocomplete-category">' + item.category + '</li>');
+        currentCategory = item.category;
+      }
+      self._renderItemData(ul, item);
+    });
+  }
 });
 
 $('input[name=\'customers\']').catcomplete({
-	delay: 10,
-	source: function(request, response) {
-		$.ajax({
-			url: 'index.php?route=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {
-				response($.map(json, function(item) {
-					return [{
-						category: item.customer_group,
-						label: item.name,
-						value: item.customer_id
-					}]
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('#customer' + ui.item.value).remove();
-
-		$('#customer').append('<div id="customer' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="customer[]" value="' + ui.item.value + '" /></div>');
-
-		$('#customer div:odd').attr('class', 'odd');
-		$('#customer div:even').attr('class', 'even');
-
-		return false;
-	},
-	focus: function(event, ui) {
-		return false;
-	}
+  delay: 10,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return [{ category: item.customer_group, label: item.name, value: item.customer_id }];
+        }));
+      }
+    });
+  },
+  select: function(event, ui) {
+    $('#customer' + ui.item.value).remove();
+    $('#customer').append('<div id="customer' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="customer[]" value="' + ui.item.value + '" /></div>');
+    $('#customer div:odd').attr('class', 'odd');
+    $('#customer div:even').attr('class', 'even');
+    return false;
+  },
+  focus: function(event, ui) { return false; }
 });
 
 $('body').on('click', '#customer div img', function() {
-	$(this).parent().remove();
-
-	$('#customer div:odd').attr('class', 'odd');
-	$('#customer div:even').attr('class', 'even');
+  $(this).parent().remove();
+  $('#customer div:odd').attr('class', 'odd');
+  $('#customer div:even').attr('class', 'even');
 });
 //--></script>
 
 <script type="text/javascript"><!--
 $('input[name=\'affiliates\']').autocomplete({
-	delay: 10,
-	source: function(request, response) {
-		$.ajax({
-			url: 'index.php?route=sale/affiliate/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {
-				response($.map(json, function(item) {
-					return {
-						label: item.name,
-						value: item.affiliate_id
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('#affiliate' + ui.item.value).remove();
-
-		$('#affiliate').append('<div id="affiliate' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="affiliate[]" value="' + ui.item.value + '" /></div>');
-
-		$('#affiliate div:odd').attr('class', 'odd');
-		$('#affiliate div:even').attr('class', 'even');
-
-		return false;
-	},
-	focus: function(event, ui) {
-		return false;
-	}
+  delay: 10,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=sale/affiliate/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return { label: item.name, value: item.affiliate_id };
+        }));
+      }
+    });
+  },
+  select: function(event, ui) {
+    $('#affiliate' + ui.item.value).remove();
+    $('#affiliate').append('<div id="affiliate' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="affiliate[]" value="' + ui.item.value + '" /></div>');
+    $('#affiliate div:odd').attr('class', 'odd');
+    $('#affiliate div:even').attr('class', 'even');
+    return false;
+  },
+  focus: function(event, ui) { return false; }
 });
 
 $('body').on('click', '#affiliate div img', function() {
-	$(this).parent().remove();
-
-	$('#affiliate div:odd').attr('class', 'odd');
-	$('#affiliate div:even').attr('class', 'even');
+  $(this).parent().remove();
+  $('#affiliate div:odd').attr('class', 'odd');
+  $('#affiliate div:even').attr('class', 'even');
 });
 
 $('input[name=\'products\']').autocomplete({
-	delay: 10,
-	source: function(request, response) {
-		$.ajax({
-			url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
-			dataType: 'json',
-			success: function(json) {
-				response($.map(json, function(item) {
-					return {
-						label: item.name,
-						value: item.product_id
-					}
-				}));
-			}
-		});
-	},
-	select: function(event, ui) {
-		$('#product' + ui.item.value).remove();
-
-		$('#product').append('<div id="product' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product[]" value="' + ui.item.value + '" /></div>');
-
-		$('#product div:odd').attr('class', 'odd');
-		$('#product div:even').attr('class', 'even');
-
-		return false;
-	},
-	focus: function(event, ui) {
-		return false;
-	}
+  delay: 10,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return { label: item.name, value: item.product_id };
+        }));
+      }
+    });
+  },
+  select: function(event, ui) {
+    $('#product' + ui.item.value).remove();
+    $('#product').append('<div id="product' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product[]" value="' + ui.item.value + '" /></div>');
+    $('#product div:odd').attr('class', 'odd');
+    $('#product div:even').attr('class', 'even');
+    return false;
+  },
+  focus: function(event, ui) { return false; }
 });
 
 $('body').on('click', '#product div img', function() {
-	$(this).parent().remove();
-
-	$('#product div:odd').attr('class', 'odd');
-	$('#product div:even').attr('class', 'even');
+  $(this).parent().remove();
+  $('#product div:odd').attr('class', 'odd');
+  $('#product div:even').attr('class', 'even');
 });
 
 function send(url) {
-	$('textarea[name=\'message\']').val(CKEDITOR.instances.message.getData());
+  $('textarea[name=\'message\']').val(CKEDITOR.instances['mail-body'].getData());
 
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: $('select, input, textarea'),
-		dataType: 'json',
-		beforeSend: function() {
-			$('#button-send').attr('disabled', true);
-			$('#button-send').before('<span class="wait"><img src="view/image/loading.gif" alt="" />&nbsp;</span>');
-		},
-		complete: function() {
-			$('#button-send').attr('disabled', false);
-			$('.wait').remove();
-		},
-		success: function(json) {
-			$('.success, .warning, .error').remove();
+  $.ajax({
+    url: url,
+    type: 'post',
+    data: $('select, input, textarea'),
+    dataType: 'json',
+    beforeSend: function() {
+      $('#button-send').attr('disabled', true);
+      $('#button-send').before('<span class="wait"><img src="view/image/loading.gif" alt="" />&nbsp;</span>');
+    },
+    complete: function() {
+      $('#button-send').attr('disabled', false);
+      $('.wait').remove();
+    },
+    success: function(json) {
+      $('.success, .warning, .error').remove();
 
-			if (json['error']) {
-				if (json['error']['warning']) {
-					$('.box').before('<div class="warning" style="display:none;">' + json['error']['warning'] + '</div>');
+      if (json['error']) {
+        if (json['error']['warning']) {
+          $('.box').before('<div class="warning" style="display:none;">' + json['error']['warning'] + '</div>');
+          $('.warning').fadeIn('slow');
+        }
+        if (json['error']['subject']) {
+          $('input[name=\'subject\']').after('<span class="error">' + json['error']['subject'] + '</span>');
+        }
+        if (json['error']['message']) {
+          $('textarea[name=\'message\']').parent().append('<span class="error">' + json['error']['message'] + '</span>');
+        }
+      }
 
-					$('.warning').fadeIn('slow');
-				}
-
-				if (json['error']['subject']) {
-					$('input[name=\'subject\']').after('<span class="error">' + json['error']['subject'] + '</span>');
-				}
-
-				if (json['error']['message']) {
-					$('textarea[name=\'message\']').parent().append('<span class="error">' + json['error']['message'] + '</span>');
-				}
-			}
-
-			if (json['next']) {
-				if (json['success']) {
-					$('.box').before('<div class="success">' + json['success'] + '</div>');
-
-					send(json['next']);
-				}
-			} else {
-				if (json['success']) {
-					$('.box').before('<div class="success" style="display:none;">' + json['success'] + '</div>');
-
-					$('.success').fadeIn('slow');
-				}
-			}
-		}
-	});
+      if (json['next']) {
+        if (json['success']) {
+          $('.box').before('<div class="success">' + json['success'] + '</div>');
+          send(json['next']);
+        }
+      } else {
+        if (json['success']) {
+          $('.box').before('<div class="success" style="display:none;">' + json['success'] + '</div>');
+          $('.success').fadeIn('slow');
+        }
+      }
+    }
+  });
 }
 //--></script>
 
