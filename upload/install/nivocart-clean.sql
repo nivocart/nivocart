@@ -1406,6 +1406,9 @@ CREATE TABLE IF NOT EXISTS `nc_email_template` (
 
 INSERT INTO `nc_email_template` (`template_id`, `language_id`, `type`, `code`, `name`, `subject`, `body`, `status`, `sort_order`, `date_added`, `date_modified`) VALUES
 (1, 1, 'newsletter', 'newsletter', 'Newsletter (default)', 'News from {store_name}', '<p>Dear customer,</p>\n<p>Welcome to our latest newsletter.</p>\n<p>Kind regards,<br>{store_name}</p>', 1, 1, '2026-01-01 00:00:01', '2026-01-10 01:01:01');
+(2, 1, 'customer', 'customer_register', 'Customer — Welcome / Register', 'Welcome to {store_name}', '<p>Dear {firstname},</p>\r\n<p>Thank you for creating an account at <a href=\"{store_url}\">{store_name}</a>.</p>\r\n<p>You can now log in and manage your orders and account details:</p>\r\n<p><a href=\"{login_url}\">{login_url}</a></p>\r\n<p>If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 1, '2026-06-26 07:40:54', '2026-06-26 07:40:54'),
+(3, 1, 'customer', 'customer_delete', 'Customer — Account Deleted', 'Your account at {store_name} has been closed', '<p>Dear {firstname},</p>\r\n<p>We are sorry to see you go. Your account at <a href=\"{store_url}\">{store_name}</a> has been successfully deleted.</p>\r\n<p>We hope to welcome you back in the future. If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 2, '2026-06-26 07:41:41', '2026-06-26 07:41:41'),
+(4, 1, 'affiliate', 'affiliate_register', 'Affiliate — Welcome / Register', 'Welcome to the {store_name} Affiliate Programme', '<p>Dear {firstname},</p>\r\n<p>Thank you for joining the <a href=\"{store_url}\">{store_name}</a> affiliate programme.</p>\r\n<p>You can log in to your affiliate account here:</p>\r\n<p><a href=\"{login_url}\">{login_url}</a></p>\r\n<p>If you have any questions, please contact us at <a href=\"mailto:{store_email}\">{store_email}</a>.</p>\r\n<p>Kind regards,<br />{store_name}</p>', 0, 3, '2026-06-26 07:42:10', '2026-06-26 07:42:10');
 
 -- --------------------------------------------------------
 
@@ -1427,6 +1430,9 @@ CREATE TABLE IF NOT EXISTS `nc_email_template_store` (
 
 INSERT INTO `nc_email_template_store` (`template_id`, `store_id`) VALUES
 (1, 0);
+(2, 0);
+(3, 0);
+(4, 0);
 
 -- --------------------------------------------------------
 

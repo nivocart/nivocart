@@ -29,7 +29,7 @@ class ModelAccountCustomer extends Model {
 
 		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$customer_id . "'");
 
-		// Send new customer email
+		// ── Send new customer email ────────────────────────────────────
 		$this->language->load('mail/customer');
 
 		$subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
@@ -47,19 +47,40 @@ class ModelAccountCustomer extends Model {
 		$message .= $this->language->get('text_thanks') . "\n";
 		$message .= $this->config->get('config_name');
 
-		// HTML Mail
-		$template = new Template();
+		// Token map for Mail Manager template substitution
+		$tokens = [
+			'{store_name}'  => $this->config->get('config_name'),
+			'{store_url}'   => $this->config->get('config_url'),
+			'{store_email}' => $this->config->get('config_email'),
+			'{store_phone}' => $this->config->get('config_telephone'),
+			'{firstname}'   => $data['firstname'],
+			'{lastname}'    => $data['lastname'],
+			'{email}'       => $data['email'],
+			'{login_url}'   => $this->url->link('account/login', '', 'SSL')
+		];
 
-		$template->data['title'] = html_entity_decode($subject, ENT_QUOTES, 'UTF-8');
-		$template->data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('config_logo');
-		$template->data['store_name'] = $this->config->get('config_name');
-		$template->data['store_url'] = $this->config->get('config_url');
-		$template->data['message'] = nl2br($message);
+		// Mail Manager override — falls back to default if no active template found
+		$this->load->model('tool/email');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/mail/register.tpl')) {
-			$html = $template->fetch($this->config->get('config_template') . '/template/mail/register.tpl');
+		$tpl = $this->model_tool_email->getTemplateByCode('customer_register');
+
+		if ($tpl) {
+			$subject = $this->model_tool_email->replaceTokens($tpl['subject'], $tokens);
+			$html = $this->model_tool_email->replaceTokens($tpl['body'], $tokens);
 		} else {
-			$html = $template->fetch('default/template/mail/register.tpl');
+			$template = new Template();
+
+			$template->data['title'] = html_entity_decode($subject, ENT_QUOTES, 'UTF-8');
+			$template->data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('config_logo');
+			$template->data['store_name'] = $this->config->get('config_name');
+			$template->data['store_url'] = $this->config->get('config_url');
+			$template->data['message'] = nl2br($message);
+
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/mail/register.tpl')) {
+				$html = $template->fetch($this->config->get('config_template') . '/template/mail/register.tpl');
+			} else {
+				$html = $template->fetch('default/template/mail/register.tpl');
+			}
 		}
 
 		$mail = new Mail();
@@ -113,7 +134,7 @@ class ModelAccountCustomer extends Model {
 
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_deleted` SET customer_id = '" . (int)$customer_id . "', store_id = '" . (int)$customer_info['store_id'] . "', firstname = '" . $this->db->escape((string)$customer_info['firstname']) . "', lastname = '" . $this->db->escape((string)$customer_info['lastname']) . "', email = '" . $this->db->escape((string)$customer_info['email']) . "', orders = '" . (int)$orders . "', date_added = NOW()");
 
-			// Send deleted customer email
+			// ── Send deleted customer email ────────────────────────────
 			$this->language->load('mail/delete');
 
 			$subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
@@ -123,19 +144,39 @@ class ModelAccountCustomer extends Model {
 			$message .= $this->language->get('text_thanks') . "\n";
 			$message .= $this->config->get('config_name');
 
-			// HTML Mail
-			$template = new Template();
+			// Token map for Mail Manager template substitution
+			$tokens = [
+				'{store_name}'  => $this->config->get('config_name'),
+				'{store_url}'   => $this->config->get('config_url'),
+				'{store_email}' => $this->config->get('config_email'),
+				'{store_phone}' => $this->config->get('config_telephone'),
+				'{firstname}'   => $customer_info['firstname'],
+				'{lastname}'    => $customer_info['lastname'],
+				'{email}'       => $customer_info['email']
+			];
 
-			$template->data['title'] = html_entity_decode($subject, ENT_QUOTES, 'UTF-8');
-			$template->data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('config_logo');
-			$template->data['store_name'] = $this->config->get('config_name');
-			$template->data['store_url'] = $this->config->get('config_url');
-			$template->data['message'] = nl2br($message);
+			// Mail Manager override — falls back to .tpl if no active template found
+			$this->load->model('tool/email');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/mail/delete.tpl')) {
-				$html = $template->fetch($this->config->get('config_template') . '/template/mail/delete.tpl');
+			$tpl = $this->model_tool_email->getTemplateByCode('customer_delete');
+
+			if ($tpl) {
+				$subject = $this->model_tool_email->replaceTokens($tpl['subject'], $tokens);
+				$html = $this->model_tool_email->replaceTokens($tpl['body'], $tokens);
 			} else {
-				$html = $template->fetch('default/template/mail/delete.tpl');
+				$template = new Template();
+
+				$template->data['title'] = html_entity_decode($subject, ENT_QUOTES, 'UTF-8');
+				$template->data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('config_logo');
+				$template->data['store_name'] = $this->config->get('config_name');
+				$template->data['store_url'] = $this->config->get('config_url');
+				$template->data['message'] = nl2br($message);
+
+				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/mail/delete.tpl')) {
+					$html = $template->fetch($this->config->get('config_template') . '/template/mail/delete.tpl');
+				} else {
+					$html = $template->fetch('default/template/mail/delete.tpl');
+				}
 			}
 
 			$mail = new Mail();

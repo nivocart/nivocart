@@ -23,7 +23,7 @@ class ModelAffiliateAffiliate extends Model {
 			$this->addActivity($affiliate_id, 'register', $affiliate_name);
 		}
 
-		// Send new affiliate email
+		// ── Send new affiliate email ───────────────────────────────────
 		$this->language->load('mail/affiliate');
 
 		$subject = sprintf($this->language->get('text_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
@@ -41,12 +41,37 @@ class ModelAffiliateAffiliate extends Model {
 		$message .= $this->language->get('text_thanks') . "\n";
 		$message .= html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
 
+		// Token map for Mail Manager template substitution
+		$tokens = [
+			'{store_name}'     => html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'),
+			'{store_url}'      => $this->config->get('config_url'),
+			'{store_email}'    => $this->config->get('config_email'),
+			'{store_phone}'    => $this->config->get('config_telephone'),
+			'{firstname}'      => $data['firstname'],
+			'{lastname}'       => $data['lastname'],
+			'{email}'          => $data['email'],
+			'{affiliate_name}' => $data['firstname'] . ' ' . $data['lastname'],
+			'{login_url}'      => $this->url->link('affiliate/login', '', 'SSL')
+		];
+
+		// Mail Manager override — falls back to default plain text if no active template found
+		$this->load->model('tool/email');
+
+		$tpl = $this->model_tool_email->getTemplateByCode('affiliate_register');
+
 		$mail = new Mail();
 		$mail->setTo($this->request->post['email']);
 		$mail->setFrom($this->config->get('config_email'));
 		$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-		$mail->setSubject($subject);
-		$mail->setText($message);
+
+		if ($tpl) {
+			$mail->setSubject($this->model_tool_email->replaceTokens($tpl['subject'], $tokens));
+			$mail->setHtml($this->model_tool_email->replaceTokens($tpl['body'], $tokens));
+		} else {
+			$mail->setSubject($subject);
+			$mail->setText($message);
+		}
+
 		$mail->send();
 
 		// Send to main admin email if new affiliate email is enabled
@@ -61,10 +86,10 @@ class ModelAffiliateAffiliate extends Model {
 			}
 
 			if ($data['company']) {
-				$message .= $this->language->get('text_company') . ' '  . $data['company'] . "\n";
+				$message .= $this->language->get('text_company') . ' ' . $data['company'] . "\n";
 			}
 
-			$message .= $this->language->get('text_email') . ' '  .  $data['email'] . "\n";
+			$message .= $this->language->get('text_email') . ' ' . $data['email'] . "\n";
 			$message .= $this->language->get('text_telephone') . ' ' . $data['telephone'] . "\n";
 
 			$mail->setTo($this->config->get('config_email'));
