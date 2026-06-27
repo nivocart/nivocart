@@ -52,7 +52,7 @@ class ControllerCommonHeaderPayment extends Controller {
 			$this->data['display_size'] = 'normal';
 		}
 
-		// Minify main stylesheet
+		// Minify + Cache main stylesheet
 		$web_root = rtrim(dirname(DIR_APPLICATION), '/\\') . '/';
 		$css_source = DIR_TEMPLATE . $template . '/stylesheet/stylesheet.css';
 		$css_cached = minifyCss($css_source);
