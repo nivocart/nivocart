@@ -19,6 +19,9 @@ ________________________________________________________________________________
 DEMONSTRATION: Click <a href="https://nivocart.org/index.php?route=demonstration/demonstration" title="Demos">HERE</a> to test the current version of NivoCart.
 _____________________________________________________________________________________________
 
+COMMUNITY: The NivoCart community proudly lives on Fluxer! Find it <a href="https://web.fluxer.app/channels/1488046840332602753/" title="NivoCart Fluxer">HERE</a> to get involved!
+_____________________________________________________________________________________________
+
 
 REQUIREMENTS:
 - Server: Apache Linux Server
