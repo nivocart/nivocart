@@ -140,7 +140,6 @@ class ControllerModificationBlogSystem extends Controller {
 		];
 
 		$this->data['action'] = $this->url->link('modification/blog_system', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Header

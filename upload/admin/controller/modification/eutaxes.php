@@ -182,9 +182,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['geo_zones'] = [];
 
-		$geozones_array = [];
-
-		$geo_zone_results = $this->model_localisation_geo_zone->getGeoZones($geozones_array);
+		$geo_zone_results = $this->model_localisation_geo_zone->getGeoZones([]);
 
 		foreach ($geo_zone_results as $geo_zone_result) {
 			$this->data['geo_zones'][] = [
@@ -200,9 +198,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['tax_rates'] = [];
 
-		$taxrates_array = [];
-
-		$tax_rates_results = $this->model_localisation_tax_rate->getTaxRates($taxrates_array);
+		$tax_rates_results = $this->model_localisation_tax_rate->getTaxRates([]);
 
 		foreach ($tax_rates_results as $tax_rates_result) {
 			$this->data['tax_rates'][] = [
@@ -219,9 +215,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['tax_classes'] = [];
 
-		$taxclasses_array = [];
-
-		$tax_classes_results = $this->model_localisation_tax_class->getTaxClasses($taxclasses_array);
+		$tax_classes_results = $this->model_localisation_tax_class->getTaxClasses([]);
 
 		foreach ($tax_classes_results as $tax_classes_result) {
 			if ($tax_classes_result['tax_class_id'] && $tax_classes_result['title'] === 'EU E-medias') {
@@ -516,7 +510,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] = $this->model_localisation_language->getLanguages([]);
 
 		if (isset($this->request->post['eucountry_description'])) {
 			$this->data['eucountry_description'] = $this->request->post['eucountry_description'];
@@ -528,7 +522,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->load->model('setting/store');
 
-		$this->data['stores'] = $this->model_setting_store->getStores();
+		$this->data['stores'] = $this->model_setting_store->getStores([]);
 
 		if (isset($this->request->post['eucountry_store'])) {
 			$this->data['eucountry_store'] = $this->request->post['eucountry_store'];

@@ -141,7 +141,6 @@ class ControllerToolApiKeyManager extends Controller {
 		];
 
 		$this->data['insert'] = $this->url->link('tool/api_key_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-
 		$this->data['delete'] = $this->url->link('tool/api_key_manager/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		// Pagination
