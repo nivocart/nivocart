@@ -14,7 +14,6 @@ It uses the MVC+L (Model-View-Controller + Language) architecture and is written
 NivoCart has been designed to be fast, completely self-contained, and without any remote dependencies.<br />
 it doesn't use a framework or a template engine, and can be easily customised.<br />
 
-
 _____________________________________________________________________________________________
 
 DEMONSTRATION: Click <a href="https://nivocart.org/index.php?route=demonstration/demonstration" title="Demos">HERE</a> to test the current version of NivoCart.
@@ -30,7 +29,6 @@ REQUIREMENTS:
 - Database: MySQLi / MariaDB
 - Extensions: OpenSSL Encrypt + cURL
 - PHP: PHP 8.1+
-
 
 _____________________________________________________________________________________________
 
@@ -59,7 +57,6 @@ Then, when running step 7, you will be presented with the Upgrade page instead.
 
 Just click "Upgrade". Done!
 
-
 _____________________________________________________________________________________________
 
 
@@ -79,7 +76,6 @@ So I went back to my NivoCart code and started refreshing it to the new standard
 Many years had passed, so there was a lot to do. I will spare you all the details here but as of today,
 I can confidently say that all known bugs have been fixed and the code is as strong as it has ever been.
 NivoCart v2.0.0 will be a very solid base for the future and I hope it will be useful to some of you.
-
 
 _____________________________________________________________________________________________
 
@@ -102,7 +98,6 @@ there are some unavoidable exceptions to be aware of, such as:
   By design, it will create a remote connection to Share This, if you choose to use it.
 
 - YouTube (optional): Product pages and some modules can display YouTube video codes.
-
 
 _____________________________________________________________________________________________
 
