@@ -14,6 +14,7 @@ It uses the MVC+L (Model-View-Controller + Language) architecture and is written
 NivoCart has been designed to be fast, completely self-contained, and without any remote dependencies.<br />
 it doesn't use a framework or a template engine, and can be easily customised.<br />
 
+
 _____________________________________________________________________________________________
 
 DEMONSTRATION: Click <a href="https://nivocart.org/index.php?route=demonstration/demonstration" title="Demos">HERE</a> to test the current version of NivoCart.
@@ -29,6 +30,7 @@ REQUIREMENTS:
 - Database: MySQLi / MariaDB
 - Extensions: OpenSSL Encrypt + cURL
 - PHP: PHP 8.1+
+
 
 _____________________________________________________________________________________________
 
@@ -57,12 +59,13 @@ Then, when running step 7, you will be presented with the Upgrade page instead.
 
 Just click "Upgrade". Done!
 
+
 _____________________________________________________________________________________________
 
 
 A LITTLE BIT OF HISTORY:
 
-The NivoCart project started back in 2018 as an improved clone of OpenCart&trade; shopping cart.
+The NivoCart project started back in 2017 as an improved clone of OpenCart&trade; shopping cart.
 It was originally based on OpenCart&trade; v1.5.6.4 because of its logical folder structure and simple Html.
 Later versions of OpenCart&trade; added the Bootstrap framework and the Twig template engine,
 which I guess was the right thing to do at the time, but made the code over-complicated in my view.
@@ -76,6 +79,7 @@ So I went back to my NivoCart code and started refreshing it to the new standard
 Many years had passed, so there was a lot to do. I will spare you all the details here but as of today,
 I can confidently say that all known bugs have been fixed and the code is as strong as it has ever been.
 NivoCart v2.0.0 will be a very solid base for the future and I hope it will be useful to some of you.
+
 
 _____________________________________________________________________________________________
 
