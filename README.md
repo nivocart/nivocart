@@ -71,7 +71,7 @@ The initial v1.0.x versions of NivoCart added many new features and "quality of 
 over the reference code, it also used stricter coding standards and updated jQuery scripts.
 However, as the project grew stronger, I started to be aware of some underlying bugs I couldn't fix.
 Then the Covid years came along and the NivoCart project was on pause for a few years.
-Comes 2026 and a new AI Agents era! Suddenly I realised that I could fix those bugs with AI help.
+Comes 2026 and a new AI era! Suddenly I realised that I could fix those bugs with some help from AI Agents!
 So I went back to my NivoCart code and started refreshing it to the new standards of today.
 Many years had passed, so there was a lot to do. I will spare you all the details here but as of today,
 I can confidently say that all known bugs have been fixed and the code is as strong as it has ever been.
