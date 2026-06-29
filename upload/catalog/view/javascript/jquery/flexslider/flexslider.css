@@ -13,14 +13,6 @@
  * ---------------------------------------------------
  */
 
-@font-face {
-  font-family: 'flexslider-icon';
-  src: local('flexslider-icon'),
-	url('fonts/flexslider-icon.woff') format('woff'),
-	url('fonts/flexslider-icon.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
 /** =======================================
  * RESETS
  * ======================================*/
@@ -110,7 +102,9 @@ html[xmlns] .flexslider .slides {
 	height: 0px;
 }
 .flex-direction-nav a {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 40px;
 	height: 40px;
 	margin: -20px 0 0;
@@ -120,28 +114,32 @@ html[xmlns] .flexslider .slides {
 	overflow: hidden;
 	color: rgba(0, 0, 0, 0.8);
 	text-decoration: none;
-	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
 	opacity: 0;
 	transition: all 0.3s ease-in-out;
 	cursor: pointer;
 }
 .flex-direction-nav a:before {
-	font-family: 'flexslider-icon';
-	font-size: 36px;
 	display: inline-block;
-	content: '\f001';
-	color: rgba(0, 0, 0, 0.8);
-	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+	content: '';
+	width: 14px;
+	height: 14px;
+	border-top: 3px solid rgba(0, 0, 0, 0.8);
+	border-left: 3px solid rgba(0, 0, 0, 0.8);
+	transform: rotate(-45deg);
+	margin-left: 6px;
+	flex-shrink: 0;
 }
 .flex-direction-nav a.flex-next:before {
-	content: '\f002';
+	content: '';
+	transform: rotate(135deg);
+	margin-left: 0;
+	margin-right: 6px;
 }
 .flex-direction-nav .flex-prev {
 	left: -50px;
 }
 .flex-direction-nav .flex-next {
 	right: -50px;
-	text-align: right;
 }
 .flexslider:hover .flex-direction-nav .flex-prev {
 	opacity: 0.7;
@@ -176,16 +174,19 @@ html[xmlns] .flexslider .slides {
 	color: #000;
 }
 .flex-pauseplay a:before {
-	font-family: "flexslider-icon";
-	font-size: 20px;
+	content: '❙❙';
+	font-size: 14px;
+	line-height: 20px;
 	display: inline-block;
-	content: '\f004';
+	color: #000;
+	font-family: sans-serif;
 }
 .flex-pauseplay a:hover {
 	opacity: 1;
 }
 .flex-pauseplay a.flex-play:before {
-	content: '\f003';
+	content: '▶';
+	font-size: 13px;
 }
 .flex-control-nav {
 	width: 100%;
