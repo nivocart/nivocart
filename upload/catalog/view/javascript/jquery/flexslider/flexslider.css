@@ -12,7 +12,6 @@
  * Development file. Use minified version for production.
  * ---------------------------------------------------
  */
-
 /** =======================================
  * RESETS
  * ======================================*/
@@ -122,8 +121,8 @@ html[xmlns] .flexslider .slides {
 .flex-direction-nav a:before {
 	display: inline-block;
 	content: '';
-	width: 14px;
-	height: 14px;
+	width: 15px;
+	height: 15px;
 	border-top: 3px solid rgba(0, 0, 0, 0.8);
 	border-left: 3px solid rgba(0, 0, 0, 0.8);
 	transform: rotate(-45deg);
