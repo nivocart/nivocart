@@ -20,7 +20,11 @@
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
-<link rel="stylesheet" type="text/css" href="<?php echo $stylesheet_main; ?>" />
+<?php if ($stylesheet_main) { ?>
+<style><?php echo $stylesheet_main; ?></style>
+<?php } else { ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $stylesheet_main_fallback; ?>" />
+<?php } ?>
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/<?php echo $template; ?>/stylesheet/stylesheet-modifiers.min.css" />
 <?php foreach ($styles as $style) { ?>

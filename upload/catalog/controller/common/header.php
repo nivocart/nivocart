@@ -159,12 +159,12 @@ class ControllerCommonHeader extends Controller {
 			$this->data['display_size'] = 'normal';
 		}
 
-		// Minify + Cache main stylesheet
+		// Minify main stylesheet
 		$web_root = rtrim(dirname(DIR_APPLICATION), '/\\') . '/';
 		$css_source = DIR_TEMPLATE . $template . '/stylesheet/stylesheet.css';
-		$css_cached = minifyCss($css_source);
 
-		$this->data['stylesheet_main'] = $css_cached ? str_replace($web_root, $server, $css_cached) : $server . 'catalog/view/theme/' . $template . '/stylesheet/stylesheet.css';
+		$this->data['stylesheet_main'] = minifyCss($css_source);
+		$this->data['stylesheet_main_fallback'] = $server . 'catalog/view/theme/' . $template . '/stylesheet/stylesheet.css';
 
 		// Template
 		$this->data['template'] = $template;
