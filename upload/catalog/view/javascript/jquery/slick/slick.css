@@ -6,7 +6,6 @@
  * Development file. Use minified version for production.
  * ---------------------------------------------------
  */
-
 .slick-slider {
 	position: relative;
 	display: block;
@@ -52,11 +51,13 @@
 	visibility: hidden;
 	display: none;
 }
+/* slide */
 .slick-slide {
 	display: none;
 	float: left;
 	height: 100%;
 	min-height: 1px;
+	margin-left: 10px;
 }
 [dir='rtl'] .slick-slide {
 	float: right;
@@ -67,7 +68,7 @@
 	outline: 0;
 }
 .slick-slide img:first-child {
-	margin-left: 40px;
+	margin-left: 75px;
 }
 .slick-slide .slick-loading img {
 	display: none;
@@ -101,7 +102,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 30px;
+	width: 20px;
 	height: 30px;
 	padding: 0;
 	line-height: 0;
@@ -126,8 +127,8 @@
 .slick-prev:before, .slick-next:before {
 	display: inline-block;
 	content: '';
-	width: 12px;
-	height: 12px;
+	width: 15px;
+	height: 15px;
 	border-top: 3px solid rgba(0, 0, 0, 0.8);
 	border-left: 3px solid rgba(0, 0, 0, 0.8);
 	opacity: 0.75;
@@ -135,10 +136,10 @@
 }
 /* Previous */
 .slick-prev {
-	left: -30px;
+	left: 10px;
 }
 [dir='rtl'] .slick-prev {
-	right: -30px;
+	right: 10px;
 	left: auto;
 }
 .slick-prev:before {
@@ -152,11 +153,11 @@
 }
 /* Next */
 .slick-next {
-	right: -30px;
+	right: 10px;
 }
 [dir='rtl'] .slick-next {
 	right: auto;
-	left: -30px;
+	left: 10px;
 }
 .slick-next:before {
 	transform: rotate(135deg);
