@@ -117,6 +117,7 @@ html[xmlns] .flexslider .slides {
 	opacity: 0;
 	transition: all 0.3s ease-in-out;
 	cursor: pointer;
+	text-indent: -9999px;
 }
 .flex-direction-nav a:before {
 	display: inline-block;
@@ -128,6 +129,7 @@ html[xmlns] .flexslider .slides {
 	transform: rotate(-45deg);
 	margin-left: 6px;
 	flex-shrink: 0;
+	text-indent: 0;
 }
 .flex-direction-nav a.flex-next:before {
 	content: '';
