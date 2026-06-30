@@ -2670,7 +2670,7 @@ table.order-options tr td #payment-method h2 {
 	color: #36AAD8;
 }
 .sitemap-info .left > ul, .sitemap-info .right > ul {
-	list-style: url('../image/bullet-3.png');
+	list-style-image: url('../image/bullet-3.png');
 	margin-bottom: 5px;
 }
 .sitemap-info .left > ul > li, .sitemap-info .right > ul > li {
@@ -2680,14 +2680,14 @@ table.order-options tr td #payment-method h2 {
 	margin-bottom: 10px;
 }
 .sitemap-info .left > ul > li ul, .sitemap-info .right > ul > li ul {
-	list-style: url('../image/arrow-right.png');
+	list-style-image: url('../image/arrow-right.png');
 	margin-bottom: 5px;
 }
 .sitemap-info .left > ul > li ul > li, .sitemap-info .right > ul > li ul > li {
 	margin: 2px 0;
 }
 .sitemap-info .left > ul > li ul > li ul {
-	list-style: url('../image/arrow-right.png');
+	list-style-image: url('../image/arrow-right.png');
 	margin-bottom: 5px;
 }
 .sitemap-info .left > ul > li ul > li ul > li, .sitemap-info .right > ul > li ul > li ul > li {
