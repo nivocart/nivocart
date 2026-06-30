@@ -589,9 +589,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['path'] = '';
 		}
 
-		$categories_array = [];
-
-		$categories = $this->model_catalog_category->getCategories($categories_array);
+		$categories = $this->model_catalog_category->getCategories([]);
 
 		// Remove own id from list
 		if (!empty($category_info)) {

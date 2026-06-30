@@ -144,11 +144,11 @@ function image_upload(field, thumb) {
 					url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>&image=' + encodeURIComponent($('#' + field).attr('value')),
 					dataType: 'text',
 					success: function(text) {
-						$('#' + thumb).replaceWith('<img src="' + text + '" alt="" id="' + thumb + '" />');
+						$('#' + thumb).replaceWith('<img src="' + text + '" alt="" id="' + thumb + '" width="120" height="120" />');
 					}
 				});
 			} else {
-				$('#' + thumb).replaceWith('<img src="<?php echo $no_image; ?>" alt="" id="' + thumb + '" />');
+				$('#' + thumb).replaceWith('<img src="<?php echo $no_image; ?>" alt="" id="' + thumb + '" width="120" height="120" />');
 			}
 		},
 		bgiframe: false,

@@ -82,7 +82,7 @@
               <div id="download-ids" class="scrollbox" style="width:350px;">
                 <?php $class = 'odd'; ?>
                 <?php foreach ($downloads as $download) { ?>
-                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                  <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                   <div class="<?php echo $class; ?>">
                     <?php if (in_array($download['news_download_id'], $news_download)) { ?>
                       <input type="checkbox" name="news_download[]" value="<?php echo $download['news_download_id']; ?>" checked="checked" />
@@ -135,10 +135,10 @@
             <td><?php echo $entry_lightbox; ?><span class="help"><?php echo $help_lightbox; ?></span></td>
             <td><select name="lightbox">
               <?php if (isset($lightbox)) { $selected = "selected"; ?>
-                <option value="magnific" <?php if ($lightbox == 'magnific') { echo $selected; } ?>>Magnific (<?php echo $text_default; ?>)</option>
-                <option value="fancybox" <?php if ($lightbox == 'fancybox') { echo $selected; } ?>>FancyBox</option>
-                <option value="colorbox" <?php if ($lightbox == 'colorbox') { echo $selected; } ?>>ColorBox</option>
-                <option value="viewbox" <?php if ($lightbox == 'viewbox') { echo $selected; } ?>>Viewbox</option>
+                <option value="magnific" <?php if ($lightbox === 'magnific') { echo $selected; } ?>>Magnific (<?php echo $text_default; ?>)</option>
+                <option value="fancybox" <?php if ($lightbox === 'fancybox') { echo $selected; } ?>>FancyBox</option>
+                <option value="colorbox" <?php if ($lightbox === 'colorbox') { echo $selected; } ?>>ColorBox</option>
+                <option value="viewbox" <?php if ($lightbox === 'viewbox') { echo $selected; } ?>>Viewbox</option>
               <?php } else { ?>
                 <option value="magnific">Magnific (<?php echo $text_default; ?>)</option>
                 <option value="fancybox">FancyBox</option>
@@ -170,9 +170,9 @@
           <tr>
             <td><?php echo $entry_related_method; ?><span class="help"><?php echo $help_related_method; ?></span></td>
             <td><select name="related" onchange="getRelatedMethod(this.value);">
-              <option value="product_wise" <?php if ($related == 'product_wise') { echo "selected='selected'"; } ?>><?php echo $entry_product_wise; ?></option>
-              <option value="category_wise" <?php if ($related == 'category_wise') { echo "selected='selected'"; } ?>><?php echo $entry_category_wise; ?></option>
-              <option value="manufacturer_wise" <?php if ($related == 'manufacturer_wise') { echo "selected='selected'"; } ?>><?php echo $entry_manufacturer_wise; ?></option>
+              <option value="product_wise" <?php if ($related === 'product_wise') { echo "selected='selected'"; } ?>><?php echo $entry_product_wise; ?></option>
+              <option value="category_wise" <?php if ($related === 'category_wise') { echo "selected='selected'"; } ?>><?php echo $entry_category_wise; ?></option>
+              <option value="manufacturer_wise" <?php if ($related === 'manufacturer_wise') { echo "selected='selected'"; } ?>><?php echo $entry_manufacturer_wise; ?></option>
             </select></td>
           </tr>
           <tr id="product-wise" style="display:none;">
@@ -187,7 +187,7 @@
                     <?php $class = 'odd'; ?>
                     <?php if (isset($products)) { ?>
                       <?php foreach ($products as $product) { ?>
-                        <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                        <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                         <div id="product-wise-list<?php echo $product['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product['name']; ?><img src="view/image/delete.png" alt="" />
                           <input type="hidden" name="product_wise[]" value="<?php echo $product['product_id']; ?>" />
                         </div>
@@ -205,7 +205,7 @@
               <div id="category-ids" class="scrollbox" style="width:500px;">
                 <?php $class = 'odd'; ?>
                 <?php foreach ($default_categories as $category) { ?>
-                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                  <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                   <div class="<?php echo $class; ?>">
                     <input type="checkbox" name="category_wise[]" value="<?php echo $category['category_id']; ?>" <?php if (isset($category_ids)) { for ($i = 0; $i < count($category_ids); $i++) { if ($category_ids[$i] == $category['category_id']) { echo "checked='checked'"; } } } ?> />                    
                     <?php echo $category['name']; ?> 
@@ -221,7 +221,7 @@
               <div id="manufacturer-ids" class="scrollbox" style="width:350px;">
                 <?php $class = 'odd'; ?>
                 <?php foreach ($default_manufacturers as $manufacturer) { ?>
-                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                  <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                   <div class="<?php echo $class; ?>">
                     <input type="checkbox" name="manufacturer_wise[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" <?php if (isset($manufacturer_ids)) { for ($i = 0; $i < count($manufacturer_ids); $i++) { if ($manufacturer_ids[$i] == $manufacturer['manufacturer_id']) { echo "checked='checked'"; } } } ?> />                    
                     <?php echo $manufacturer['name']; ?>
@@ -277,11 +277,11 @@ function image_upload(field, thumb) {
 					url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>&image=' + encodeURIComponent($('#' + field).attr('value')),
 					dataType: 'text',
 					success: function(text) {
-						$('#' + thumb).replaceWith('<img src="' + text + '" alt="" id="' + thumb + '" />');
+						$('#' + thumb).replaceWith('<img src="' + text + '" alt="" id="' + thumb + '" width="120" height="120" />');
 					}
 				});
 			} else {
-				$('#' + thumb).replaceWith('<img src="<?php echo $no_image; ?>" alt="" id="' + thumb + '" />');
+				$('#' + thumb).replaceWith('<img src="<?php echo $no_image; ?>" alt="" id="' + thumb + '" width="120" height="120" />');
 			}
 		},
 		bgiframe: false,
