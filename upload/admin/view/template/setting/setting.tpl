@@ -2335,7 +2335,7 @@ function image_upload(field, thumb) {
 					url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>&image=' + encodeURIComponent($('#' + field).attr('value')),
 					dataType: 'text',
 					success: function(data) {
-						$('#' + thumb).replaceWith('<img src="' + data + '" alt="" id="' + thumb + '" />');
+						$('#' + thumb).replaceWith('<img src="' + data + '" alt="" id="' + thumb + '" width="120" height="120" />');
 					}
 				});
 			}
