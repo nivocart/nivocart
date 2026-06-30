@@ -5,23 +5,28 @@
 
 NivoCart v2.0.0
 ---------------
-Release: summer 2026
+Release: 01/07/2026
 
 - All PHP pages updated to PHP 8.1+
-- PHPExcel v1.8.1 (opensource) updated for PHP 8.1+
 - Dompdf v1.1.1 updated for PHP 8.1+
-- Ckeditor v4.22.1 Full (opensource).
-- New Email Manager for better Marketing.
+- Full support for key documents PDF exports.
+- PHPExcel v1.8.1 (opensource) updated for PHP 8.1+
+- Full support for database XLSX exports and Imports.
+- Ckeditor v4.22.1 Full (opensource) with Moono Skin.
+- New Email Manager for better email marketing.
+- New Auto-minify helper for front-end Stylesheet.
 - Removed support for older browsers (IE).
 - Removed obsolete CSS tags for older browsers.
 - Removed obsolete files and payment gateways.
 - Replaced/Removed deprecated PHP functions.
 - Replaced all "unsafe" PHP functions throughout.
 - One page checkout is now the only checkout.
+- Complete refactor of the One Page Checkout flow.
 - Better Cache management for files and images.
 - Better and more reliable Cookie Consent script.
-- Safer Session and Token management.
-- Safer "Password Forgotten" flow.
+- Better and more reliable Image/File Managers.
+- Safer and stronger Session and Token management.
+- Safer and stronger "Password Forgotten" flow.
 - License changed to GNU GPL v3.
 
 
