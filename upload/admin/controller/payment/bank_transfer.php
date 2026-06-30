@@ -55,7 +55,7 @@ class ControllerPaymentBankTransfer extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$languages = $this->model_localisation_language->getLanguages();
+		$languages = $this->model_localisation_language->getLanguages([]);
 
 		foreach ($languages as $language) {
 			if (isset($this->error['bank_' . $language['language_id']])) {
@@ -87,8 +87,6 @@ class ControllerPaymentBankTransfer extends Controller {
 
 		$this->data['action'] = $this->url->link('payment/bank_transfer', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
-
-		$this->load->model('localisation/language');
 
 		foreach ($languages as $language) {
 			if (isset($this->request->post['bank_transfer_bank_' . $language['language_id']])) {
@@ -160,7 +158,7 @@ class ControllerPaymentBankTransfer extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$languages = $this->model_localisation_language->getLanguages();
+		$languages = $this->model_localisation_language->getLanguages([]);
 
 		foreach ($languages as $language) {
 			if (empty($this->request->post['bank_transfer_bank_' . $language['language_id']])) {

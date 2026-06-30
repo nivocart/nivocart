@@ -9,12 +9,12 @@
  * Three gateway types:
  *
  *   $interactive_gateways  — Payment confirmed browser-side BEFORE this runs.
- *                            (Stripe, Klarna, SagePay…)
+ *                            (Stripe, Klarna, PayPal Express …)
  *                            → verify server-side → redirect to success
  *
  *   $redirect_gateways     — Order created first, then customer sent to
  *                            external payment page. IPN handles status async.
- *                            (PayPal Standard, PayPal Express…)
+ *                            (PayPal Standard, SagePay…)
  *                            → redirect to payment/{code}
  *
  *   direct/silent          — All payment logic is server-side, no browser step.

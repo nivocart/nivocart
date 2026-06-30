@@ -425,6 +425,22 @@
           </p>
         </div>
 
+        <!-- Bank Transfer — mounted by bank_transfer.js -->
+        <div id="widget-bank_transfer" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <h3 id="bank-transfer-heading" style="margin:0 0 10px 0; font-size:14px;"></h3>
+          <p id="bank-transfer-description" style="font-size:13px; color:#555; margin:0 0 8px 0;"></p>
+          <div id="bank-transfer-details" style="font-size:13px; color:#333; white-space:pre-line; margin-bottom:8px;"></div>
+          <p id="bank-transfer-payment-note" style="font-size:12px; color:#888; margin:0;"></p>
+        </div>
+
+        <!-- Cheque / Money Order — mounted by cheque.js -->
+        <div id="widget-cheque" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <h3 id="cheque-heading" style="margin:0 0 10px 0; font-size:14px;"></h3>
+          <p style="font-size:13px; color:#333; margin:0 0 4px 0;"><span id="cheque-payable-label"></span><strong id="cheque-payable-to"></strong></p>
+          <p style="font-size:13px; color:#333; white-space:pre-line; margin:0 0 8px 0;"><span id="cheque-address-label"></span><span id="cheque-address"></span></p>
+          <p id="cheque-payment-note" style="font-size:12px; color:#888; margin:0;"></p>
+        </div>
+
         <!-- Add future gateway widget divs here:
              <div id="widget-{code}" class="payment-gateway-widget" style="display:none; ...">
                ...

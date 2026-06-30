@@ -198,6 +198,38 @@ class ModelCheckoutPaymentWidget extends Model {
 	}
 
 	// =========================================================================
+	// Bank Transfer
+	// =========================================================================
+
+	private function getWidgetData_bank_transfer(float $total, string $currency_code): array {
+		$this->language->load('payment/bank_transfer');
+
+		return [
+			'heading'      => $this->language->get('text_instruction'),
+			'description'  => $this->language->get('text_description'),
+			'bank_details' => nl2br($this->config->get('bank_transfer_bank_' . $this->config->get('config_language_id'))),
+			'payment_note' => $this->language->get('text_payment'),
+		];
+	}
+
+	// =========================================================================
+	// Cheque / Money Order
+	// =========================================================================
+
+	private function getWidgetData_cheque(float $total, string $currency_code): array {
+		$this->language->load('payment/cheque');
+
+		return [
+			'heading'       => $this->language->get('text_instruction'),
+			'payable_label' => $this->language->get('text_payable'),
+			'payable_to'    => (string)$this->config->get('cheque_payable'),
+			'address_label' => $this->language->get('text_address'),
+			'address'       => nl2br($this->config->get('config_address')),
+			'payment_note'  => $this->language->get('text_payment'),
+		];
+	}
+
+	// =========================================================================
 	// Add future gateways below following the same pattern:
 	//
 	// private function getWidgetData_klarna(float $total, string $currency_code): array {
