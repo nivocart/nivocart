@@ -167,6 +167,15 @@
             <?php } ?>
             </select> &nbsp; <a href="<?php echo $configure_layout; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
           </tr>
+          <tr>
+            <td><span class="required">*</span> <?php echo $entry_catalog_limit; ?><span class="help"><?php echo $help_catalog_limit; ?></span></td>
+            <td><?php if ($error_catalog_limit) { ?>
+              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" class="input-error" />
+              <span class="error"><?php echo $error_catalog_limit; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" />
+            <?php } ?></td>
+          </tr>
         </table>
         <h2><?php echo $text_administration; ?></h2>
         <table class="form">
@@ -217,15 +226,6 @@
               <span class="error"><?php echo $error_admin_limit; ?></span>
             <?php } else { ?>
               <input type="text" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" />
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_catalog_limit; ?><span class="help"><?php echo $help_catalog_limit; ?></span></td>
-            <td><?php if ($error_catalog_limit) { ?>
-              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" class="input-error" />
-              <span class="error"><?php echo $error_catalog_limit; ?></span>
-            <?php } else { ?>
-              <input type="text" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" />
             <?php } ?></td>
           </tr>
         </table>
@@ -377,14 +377,6 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_store_latitude; ?><span class="help"><?php echo $help_store_latitude; ?></span></td>
-            <td><input id="location_store_latitude" name="config_store_latitude" value="<?php echo isset($config_store_latitude) ? $config_store_latitude : ''; ?>" size="30" /> &deg; N</td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_store_longitude; ?><span class="help"><?php echo $help_store_longitude; ?></span></td>
-            <td><input id="location_store_longitude" name="config_store_longitude" value="<?php echo isset($config_store_longitude) ? $config_store_longitude : ''; ?>" size="30" /> &deg; E</td>
-          </tr>
-          <tr>
             <td><?php echo $entry_store_location; ?><span class="help"><?php echo $help_store_location; ?></span></td>
             <td><?php if ($config_store_location) { ?>
               <input type="radio" name="config_store_location" value="1" id="store-location-on" class="radio" checked />
@@ -397,6 +389,14 @@
               <input type="radio" name="config_store_location" value="0" id="store-location-off" class="radio" checked />
               <label for="store-location-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_store_latitude; ?><span class="help"><?php echo $help_store_latitude; ?></span></td>
+            <td><input id="location_store_latitude" name="config_store_latitude" value="<?php echo isset($config_store_latitude) ? $config_store_latitude : ''; ?>" size="30" /> &deg; N</td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_store_longitude; ?><span class="help"><?php echo $help_store_longitude; ?></span></td>
+            <td><input id="location_store_longitude" name="config_store_longitude" value="<?php echo isset($config_store_longitude) ? $config_store_longitude : ''; ?>" size="30" /> &deg; E</td>
           </tr>
           <tr>
             <td><?php echo $entry_map_code; ?><span class="help"><?php echo $help_map_code; ?></span></td>
@@ -1031,20 +1031,6 @@
             </select></td>
           </tr>
           <tr>
-            <td><?php echo $entry_affiliate_mail; ?><span class="help"><?php echo $help_affiliate_mail; ?></span></td>
-            <td><?php if ($config_affiliate_mail) { ?>
-              <input type="radio" name="config_affiliate_mail" value="1" id="affiliate-mail-on" class="radio" checked />
-              <label for="affiliate-mail-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_affiliate_mail" value="0" id="affiliate-mail-off" class="radio" />
-              <label for="affiliate-mail-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_affiliate_mail" value="1" id="affiliate-mail-on" class="radio" />
-              <label for="affiliate-mail-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_affiliate_mail" value="0" id="affiliate-mail-off" class="radio" checked />
-              <label for="affiliate-mail-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
             <td><?php echo $entry_affiliate_activity; ?><span class="help"><?php echo $help_affiliate_activity; ?></span></td>
             <td><?php if ($config_affiliate_activity) { ?>
               <input type="radio" name="config_affiliate_activity" value="1" id="affiliate-activity-on" class="radio" checked />
@@ -1479,6 +1465,10 @@
         <h2><?php echo $text_news; ?></h2>
         <table class="form">
           <tr>
+            <td><?php echo $entry_news_chars; ?><span class="help"><?php echo $help_news_chars; ?></span></td>
+            <td><input type="text" name="config_news_chars" value="<?php echo $config_news_chars; ?>" size="5" /> <?php echo $text_characters; ?></td>
+          </tr>
+          <tr>
             <td><?php echo $entry_news_sharethis; ?><span class="help"><?php echo $help_news_sharethis; ?></span></td>
             <td><?php if ($config_news_sharethis) { ?>
               <input type="radio" name="config_news_sharethis" value="1" id="news-sharethis-on" class="radio" checked />
@@ -1491,10 +1481,6 @@
               <input type="radio" name="config_news_sharethis" value="0" id="news-sharethis-off" class="radio" checked />
               <label for="news-sharethis-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_news_chars; ?><span class="help"><?php echo $help_news_chars; ?></span></td>
-            <td><input type="text" name="config_news_chars" value="<?php echo $config_news_chars; ?>" size="5" /> <?php echo $text_characters; ?></td>
           </tr>
         </table>
         <h2><?php echo $text_notifications; ?></h2>
@@ -1968,6 +1954,20 @@
               <label for="account-mail-on"><span><span></span></span><?php echo $text_yes; ?></label>
               <input type="radio" name="config_account_mail" value="0" id="account-mail-off" class="radio" checked />
               <label for="account-mail-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_affiliate_mail; ?><span class="help"><?php echo $help_affiliate_mail; ?></span></td>
+            <td><?php if ($config_affiliate_mail) { ?>
+              <input type="radio" name="config_affiliate_mail" value="1" id="affiliate-mail-on" class="radio" checked />
+              <label for="affiliate-mail-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_affiliate_mail" value="0" id="affiliate-mail-off" class="radio" />
+              <label for="affiliate-mail-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_affiliate_mail" value="1" id="affiliate-mail-on" class="radio" />
+              <label for="affiliate-mail-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_affiliate_mail" value="0" id="affiliate-mail-off" class="radio" checked />
+              <label for="affiliate-mail-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>
