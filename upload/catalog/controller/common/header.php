@@ -51,7 +51,7 @@ class ControllerCommonHeader extends Controller {
 		$this->data['base'] = $server;
 		$this->data['description'] = $this->document->getDescription();
 		$this->data['keywords'] = $page_keywords ? $page_keywords : $default_keywords;
-		$this->data['metas'] = $this->document->getMeta();
+		$this->data['metas'] = $this->document->getMetas();
 		$this->data['links'] = $this->document->getLinks();
 		$this->data['styles'] = $this->document->getStyles();
 		$this->data['lang'] = $this->language->get('code');

@@ -32,7 +32,7 @@ class Document {
 	/**
 	 * @var array<string, string>
 	 */
-	private array $meta = [];
+	private array $metas = [];
 
 	/**
 	 * Set Title
@@ -176,7 +176,7 @@ class Document {
 	 * @return void
 	 */
 	public function addMeta(string $meta): void {
-		$this->meta[$meta] = $meta;
+		$this->metas[$meta] = $meta;
 	}
 
 	/**
@@ -184,7 +184,7 @@ class Document {
 	 *
 	 * @return array<string, string>
 	 */
-	public function getMeta(): array {
-		return $this->meta;
+	public function getMetas(): array {
+		return $this->metas;
 	}
 }

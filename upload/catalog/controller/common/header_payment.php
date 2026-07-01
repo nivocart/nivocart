@@ -32,7 +32,7 @@ class ControllerCommonHeaderPayment extends Controller {
 
 		$this->data['icon'] = $this->config->get('config_icon');
 		$this->data['links'] = $this->document->getLinks();
-		$this->data['metas'] = $this->document->getMeta();
+		$this->data['metas'] = $this->document->getMetas();
 		$this->data['styles'] = $this->document->getStyles();
 
 		$this->data['google_analytics'] = $this->config->get('config_google_analytics') ?? '';
