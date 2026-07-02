@@ -3,6 +3,13 @@
   CHANGE LOG
 ---------------
 
+NivoCart v2.x.x
+---------------
+Release: TBA
+
+- Fixed Documents Metas for Search Engines.
+
+
 NivoCart v2.0.0
 ---------------
 Release: 01/07/2026
@@ -29,6 +36,10 @@ Release: 01/07/2026
 - Safer and stronger "Password Forgotten" flow.
 - License changed to GNU GPL v3.
 
+
+---------------
+  END OF LIFE
+---------------
 
 NivoCart v1.0.6
 ---------------
