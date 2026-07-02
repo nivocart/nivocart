@@ -8,6 +8,7 @@ NivoCart v2.x.x
 Release: TBA
 
 - Fixed Documents Metas for Search Engines.
+- Updated "robots.txt" file for the main crawlers.
 
 
 NivoCart v2.0.0
