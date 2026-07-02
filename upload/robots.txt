@@ -1,10 +1,21 @@
-User-agent: *
+# NivoCart robots.txt
+# This file controls crawler access to prevent indexing of admin,
+# account, checkout, and system areas, and to manage crawl rate
+# for bots that respect Crawl-delay (Google does not).
+
+# ---------------------------------------------------------------
+# Googlebot: no Crawl-delay (Google ignores it; use Search Console
+# "Crawl rate" / Crawl Stats settings instead if needed)
+# ---------------------------------------------------------------
+User-agent: Googlebot
 
 # Directories
 Disallow: /admin/
 Disallow: /download/
 Disallow: /security/
 Disallow: /system/
+Disallow: /vendor/
+Disallow: /install/
 
 # Files
 Disallow: /php.ini
@@ -38,12 +49,98 @@ Disallow: /not_found.php
 Disallow: /permission.php
 Disallow: /maintenance.php
 
-# Sitemap
+# ---------------------------------------------------------------
+# Bing, Yandex, Baidu: these respect Crawl-delay, so throttling
+# is needed here to reduce server load.
+# Grouped together since they share the same rule set.
+# ---------------------------------------------------------------
+User-agent: Bingbot
+User-agent: Yandex
+User-agent: Baiduspider
+Crawl-delay: 10
 
-# This file is to prevent the crawling and indexing of certain parts
-# of your site by web crawlers and spiders run by sites like Yahoo!
-# and Google. By telling these "robots" where not to go on your site,
-# you save bandwidth and server resources.
+Disallow: /admin/
+Disallow: /download/
+Disallow: /security/
+Disallow: /system/
+Disallow: /vendor/
 
-# For more information about the robots.txt standard, see:
-# http://www.robotstxt.org/robotstxt.html
+Disallow: /php.ini
+Disallow: /config.php
+Disallow: /user.php
+Disallow: /user_permission.php
+Disallow: /address.php
+Disallow: /account.php
+Disallow: /cart.php
+Disallow: /checkout.php
+Disallow: /confirm.php
+Disallow: /history.php
+Disallow: /manual.php
+Disallow: /payment_address.php
+Disallow: /shipping_address.php
+Disallow: /order.php
+Disallow: /transaction.php
+Disallow: /wishlist.php
+Disallow: /reward.php
+Disallow: /voucher.php
+Disallow: /success.php
+Disallow: /pagination.php
+Disallow: /password.php
+Disallow: /search.php
+Disallow: /upload.php
+Disallow: /error_log.php
+Disallow: /mail_log.php
+Disallow: /quote_log.php
+Disallow: /edit.php
+Disallow: /not_found.php
+Disallow: /permission.php
+Disallow: /maintenance.php
+
+# ---------------------------------------------------------------
+# Catch-all for everything else (unknown/other bots): keep a
+# conservative delay as a safety net.
+# ---------------------------------------------------------------
+User-agent: *
+Crawl-delay: 10
+
+Disallow: /admin/
+Disallow: /download/
+Disallow: /security/
+Disallow: /system/
+Disallow: /vendor/
+
+Disallow: /php.ini
+Disallow: /config.php
+Disallow: /user.php
+Disallow: /user_permission.php
+Disallow: /address.php
+Disallow: /account.php
+Disallow: /cart.php
+Disallow: /checkout.php
+Disallow: /confirm.php
+Disallow: /history.php
+Disallow: /manual.php
+Disallow: /payment_address.php
+Disallow: /shipping_address.php
+Disallow: /order.php
+Disallow: /transaction.php
+Disallow: /wishlist.php
+Disallow: /reward.php
+Disallow: /voucher.php
+Disallow: /success.php
+Disallow: /pagination.php
+Disallow: /password.php
+Disallow: /search.php
+Disallow: /upload.php
+Disallow: /error_log.php
+Disallow: /mail_log.php
+Disallow: /quote_log.php
+Disallow: /edit.php
+Disallow: /not_found.php
+Disallow: /permission.php
+Disallow: /maintenance.php
+
+# ---------------------------------------------------------------
+# Sitemap (dynamic — generated under Admin, kept in sync automatically)
+# ---------------------------------------------------------------
+Sitemap: https://www.yourdomain.com/sitemap.xml
