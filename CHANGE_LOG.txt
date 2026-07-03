@@ -9,6 +9,7 @@ Release: TBA
 
 - Fixed Documents Metas for Search Engines.
 - Updated "robots.txt" file for the main crawlers.
+- Updated Model Sitemap to prevent url duplicates.
 
 
 NivoCart v2.0.0
