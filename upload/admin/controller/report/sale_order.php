@@ -138,7 +138,7 @@ class ControllerReportSaleOrder extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		$this->data['groups'] = [];
 
