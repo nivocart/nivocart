@@ -535,7 +535,7 @@ class ControllerCommonFileManager extends Controller {
 
 		$chunk = isset($_POST['chunk']) ? (int)$_POST['chunk'] : 0;
 		$chunks = isset($_POST['chunks']) ? (int)$_POST['chunks'] : 0;
-		$filename = isset($_POST['name']) ? $_POST['name'] : '';
+		$filename = $_POST['name'] ?? '';
 
 		$fileName = htmlspecialchars(basename(html_entity_decode($filename, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
