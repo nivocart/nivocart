@@ -11,6 +11,7 @@ Release: TBA
 - Updated "robots.txt" file for the main crawlers.
 - Updated Model Sitemap to prevent url duplicates.
 - Fix bug where a Field could be deleted when still linked to a product.
+- Fix bug where a Filter could be deleted when still linked to a product.
 - Fix bug where a Palette could be deleted when still linked to a product.
 
 
