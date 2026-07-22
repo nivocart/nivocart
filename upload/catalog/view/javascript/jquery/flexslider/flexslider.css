@@ -72,7 +72,7 @@ html[xmlns] .flexslider .slides {
 	position: relative;
 	zoom: 1;
 	border-radius: 3px;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	/*box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);*/
 }
 .flexslider .slides {
 	zoom: 1;
@@ -88,11 +88,6 @@ html[xmlns] .flexslider .slides {
 }
 .loading .flex-viewport {
 	max-height: 300px;
-}
-@-moz-document url-prefix() {
-	.loading .flex-viewport {
-		max-height: none;
-	}
 }
 .carousel li {
 	margin-right: 5px;

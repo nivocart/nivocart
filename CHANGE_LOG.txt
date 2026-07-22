@@ -13,6 +13,7 @@ Release: TBA
 - Fix bug where a Field could be deleted when still linked to a product.
 - Fix bug where a Filter could be deleted when still linked to a product.
 - Fix bug where a Palette could be deleted when still linked to a product.
+- FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 
 
 NivoCart v2.0.0
