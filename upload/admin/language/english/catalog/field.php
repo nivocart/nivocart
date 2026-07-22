@@ -25,5 +25,6 @@ $_['button_info']            = 'Information';
 // Error
 $_['error_permission']       = 'Warning: You do not have permission to modify <b>Fields</b> !';
 $_['error_warning']          = 'Warning: Please check the form carefully for errors!';
+$_['error_product']          = 'Warning: This field cannot be deleted as it is currently assigned to %s products!';
 $_['error_title']            = 'Information Title must be between 3 and 64 characters!';
 $_['error_description']      = 'Description must be more than 3 characters!';
