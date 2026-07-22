@@ -17,5 +17,6 @@ $_['entry_sort_order']  = 'Sort Order:';
 
 // Error
 $_['error_permission']  = 'Warning: You do not have permission to modify <b>Filters</b> !';
+$_['error_product']     = 'Warning: This filter cannot be deleted as it is currently assigned to %s products!';
 $_['error_group']       = 'Filter Group Name must be between 1 and 64 characters!';
 $_['error_name']        = 'Filter Name must be between 1 and 64 characters!';
