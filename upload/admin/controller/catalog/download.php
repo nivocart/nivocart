@@ -522,7 +522,7 @@ class ControllerCatalogDownload extends Controller {
 		foreach ($this->request->post['selected'] as $download_id) {
 			$product_total = $this->model_catalog_product->getTotalProductsByDownloadId($download_id);
 
-			if ($product_total) {
+			if (!empty($product_total)) {
 				$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
 			}
 		}

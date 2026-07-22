@@ -450,7 +450,7 @@ class ControllerCatalogOption extends Controller {
 		foreach ($this->request->post['selected'] as $option_id) {
 			$product_total = $this->model_catalog_product->getTotalProductsByOptionId($option_id);
 
-			if ($product_total) {
+			if (!empty($product_total)) {
 				$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
 			}
 		}
