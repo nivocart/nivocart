@@ -23,6 +23,7 @@ $_['button_info']      = 'Information';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify <b>Palettes</b> !';
+$_['error_product']    = 'Warning: This palette cannot be deleted as it is currently assigned to %s products!';
 $_['error_name']       = 'Palette Name must be between 3 and 64 characters!';
 $_['error_title']      = 'Color Title must be between 3 and 64 characters!';
 $_['error_color']      = 'Color must be a valid hexadecimal value and contain no less than 6 characters!';

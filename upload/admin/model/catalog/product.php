@@ -1092,6 +1092,12 @@ class ModelCatalogProduct extends Model {
 		return (int)$query->row['total'];
 	}
 
+	public function getTotalProductsByPaletteId(int $palette_id): int {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product` WHERE palette_id = '" . (int)$palette_id . "'");
+
+		return (int)$query->row['total'];
+	}
+
 	public function getTotalProductsByDownloadId(int $download_id): int {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product_to_download` WHERE download_id = '" . (int)$download_id . "'");
 
