@@ -455,7 +455,7 @@ class ControllerCatalogPalette extends Controller {
 		foreach ($this->request->post['selected'] as $palette_id) {
 			$product_total = $this->model_catalog_product->getTotalProductsByPaletteId($palette_id);
 
-			if (!empty($product_total)) {
+			if ($product_total !== null) {
 				$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
 			}
 		}

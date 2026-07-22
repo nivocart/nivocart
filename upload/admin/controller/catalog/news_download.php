@@ -414,7 +414,7 @@ class ControllerCatalogNewsDownload extends Controller {
 		foreach ($this->request->post['selected'] as $news_download_id) {
 			$news_downloads = $this->model_catalog_news_download->getNewsDownloads($news_download_id);
 
-			if (!empty($news_downloads)) {
+			if ($news_downloads !== null) {
 				$this->error['warning'] = sprintf($this->language->get('error_news'), $news_downloads);
 			}
 		}

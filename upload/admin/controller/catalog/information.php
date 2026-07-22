@@ -562,7 +562,7 @@ class ControllerCatalogInformation extends Controller {
 
 			$store_total = $this->model_setting_store->getTotalStoresByInformationId($information_id);
 
-			if (!empty($store_total)) {
+			if ($store_total !== null) {
 				$this->error['warning'] = sprintf($this->language->get('error_store'), $store_total);
 			}
 		}

@@ -369,7 +369,7 @@ class ControllerCatalogAttributeGroup extends Controller {
 		foreach ($this->request->post['selected'] as $attribute_group_id) {
 			$attribute_total = $this->model_catalog_attribute->getTotalAttributesByAttributeGroupId($attribute_group_id);
 
-			if (!empty($attribute_total)) {
+			if ($attribute_total !== null) {
 				$this->error['warning'] = sprintf($this->language->get('error_attribute'), $attribute_total);
 			}
 		}
