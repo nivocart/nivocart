@@ -248,6 +248,8 @@ $_['entry_sitemap_links']           = 'Display Account Links in Sitemap:';
 $_['button_themes']                 = 'Themes';
 
 // Help
+$_['help_title']                    = 'Title should be at least 15 characters long for better SEO indexing.';
+$_['help_meta_description']         = 'Meta Tag Description should be between 150 and 160 characters long for better SEO indexing.';
 $_['help_meta_keyword']             = 'Default SEO Keywords for the store. Not language dependent, they will be used globally unless page specific keywords are available.';
 $_['help_currency']                 = 'Change the default currency. Clear your browser cache to see the change and reset your existing cookie.';
 $_['help_currency_auto']            = 'Set to automatically update currencies daily.';

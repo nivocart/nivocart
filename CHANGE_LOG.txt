@@ -15,6 +15,7 @@ Release: TBA
 - Fix bug where a Palette could be deleted when still linked to a product.
 - Fix bugs with wrong use of superglobals in both File Managers.
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
+- Added text helpers in Settings to facilitate Search Engines indexing.
 
 
 NivoCart v2.0.0

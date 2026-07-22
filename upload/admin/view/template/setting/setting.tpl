@@ -120,7 +120,7 @@
       <div id="tab-store">
         <table class="form">
           <tr>
-            <td><span class="required">*</span> <?php echo $entry_title; ?></td>
+            <td><span class="required">*</span> <?php echo $entry_title; ?><span class="help"><?php echo $help_title; ?></span></td>
             <td><?php if ($error_title) { ?>
               <input type="text" name="config_title" value="<?php echo $config_title; ?>" size="40" class="input-error" />
               <span class="error"><?php echo $error_title; ?></span>
@@ -129,7 +129,7 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_meta_description; ?></td>
+            <td><?php echo $entry_meta_description; ?><span class="help"><?php echo $help_meta_description; ?></span></td>
             <td><textarea name="config_meta_description" id="meta-description" data-limit="156" cols="40" rows="5"><?php echo isset($config_meta_description) ? $config_meta_description : ''; ?></textarea>
             <span id="remaining"></span></td>
           </tr>

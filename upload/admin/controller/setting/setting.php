@@ -302,6 +302,8 @@ class ControllerSettingSetting extends Controller {
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
+		$this->data['help_title'] = $this->language->get('help_title');
+		$this->data['help_meta_description'] = $this->language->get('help_meta_description');
 		$this->data['help_meta_keyword'] = $this->language->get('help_meta_keyword');
 		$this->data['help_currency'] = $this->language->get('help_currency');
 		$this->data['help_currency_auto'] = $this->language->get('help_currency_auto');
