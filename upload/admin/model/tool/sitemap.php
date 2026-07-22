@@ -309,12 +309,18 @@ class ModelToolSitemap extends Model {
 		if ($stores_inf) {
 			foreach ($stores_inf as $store_inf) {
 				if ((int)$store_inf['store_id'] !== 0) {
-					$store_info_ids = [];
-
 					$results = $this->model_catalog_sitemap->getAllInformations();
 
 					foreach ($results as $result) {
 						$store_info_ids = $this->model_catalog_sitemap->getInformationStores($result['information_id']);
+
+						foreach ($store_info_ids as $store_info_id) {
+							if ((int)$store_info_id !== 0) {
+								$store_url = $this->model_catalog_sitemap->getStoreUrl($store_info_id);
+
+								$output .= $this->generateLinkNode($store_url . 'index.php?route=information/information&information_id=' . $result['information_id'], "monthly", "1.0");
+							}
+						}
 					}
 				}
 			}
@@ -392,7 +398,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_pag) {
 			foreach ($stores_pag as $store_pag) {
-				if ($store_pag['store_id'] !== 0) {
+				if ((int)$store_pag['store_id'] !== 0) {
 					$store_url = $store_pag['url'];
 
 					$output .= mb_convert_encoding($store_url . 'index.php', 'UTF-8') . "\r";
@@ -431,7 +437,7 @@ class ModelToolSitemap extends Model {
 
 		if ($stores_pro) {
 			foreach ($stores_pro as $store_pro) {
-				if ($store_pro['store_id'] !== 0) {
+				if ((int)$store_pro['store_id'] !== 0) {
 					$products = $this->model_catalog_sitemap->getAllProducts($store_pro['store_id']);
 
 					foreach ($products as $product) {
