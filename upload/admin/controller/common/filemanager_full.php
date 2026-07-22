@@ -553,9 +553,9 @@ class ControllerCommonFileManagerFull extends Controller {
 
 		$targetDir = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->get['directory'], ENT_QUOTES, 'UTF-8')), '/');
 
-		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
-		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
-		$filename = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
+		$chunk = isset($_POST['chunk']) ? (int)$_POST['chunk'] : 0;
+		$chunks = isset($_POST['chunks']) ? (int)$_POST['chunks'] : 0;
+		$filename = isset($_POST['name']) ? $_POST['name'] : '';
 
 		$fileName = htmlspecialchars(basename(html_entity_decode($filename, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
@@ -585,17 +585,17 @@ class ControllerCommonFileManagerFull extends Controller {
 			@mkdir($targetDir);
 		}
 
-		if (isset($_SERVER["HTTP_CONTENT_TYPE"])) {
-			$contentType = $_SERVER["HTTP_CONTENT_TYPE"];
+		if (isset($_SERVER['HTTP_CONTENT_TYPE'])) {
+			$contentType = $_SERVER['HTTP_CONTENT_TYPE'];
 		}
 
-		if (isset($_SERVER["CONTENT_TYPE"])) {
-			$contentType = $_SERVER["CONTENT_TYPE"];
+		if (isset($_SERVER['CONTENT_TYPE'])) {
+			$contentType = $_SERVER['CONTENT_TYPE'];
 		}
 
 		$file_max_size = 98304; // 96Mb
 
-		if (strpos($contentType, "multipart") !== false) {
+		if (strpos($contentType, 'multipart') !== false) {
 			if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
 				$out = fopen($targetDir . DIRECTORY_SEPARATOR . $fileName, $chunk === 0 ? "wb" : "ab");
 
