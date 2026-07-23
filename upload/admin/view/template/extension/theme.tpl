@@ -78,7 +78,7 @@ $('a.button-form-uninstall').on('click', function() {
 			confirm: function() {
 				location.href = this.$target.attr('href');
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

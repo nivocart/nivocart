@@ -35,13 +35,13 @@
           <tr<?php echo ($extension['set']) ? '' : ' class="not-set"'; ?>>
             <td class="left"><?php echo $extension['name']; ?></td>
             <td class="center"><?php echo $extension['sort_order']; ?></td>
-            <?php if ($extension['status'] == 1) { ?>
+            <?php if ($extension['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
             <?php } ?>
             <td class="right"><?php foreach ($extension['action'] as $action) { ?>
-              <?php if ($action['type'] == 'uninstall') { ?>
+              <?php if ($action['type'] === 'uninstall') { ?>
                 <a class="button-form-<?php echo $action['type']; ?> ripple" data-title="<?php echo $action['text']; ?>" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
               <?php } else { ?>
                 <a class="button-form-<?php echo $action['type']; ?> ripple" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
@@ -94,7 +94,7 @@ $('a.button-form-uninstall').on('click', function() {
 			confirm: function() {
 				location.href = this.$target.attr('href');
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

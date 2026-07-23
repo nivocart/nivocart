@@ -33,7 +33,7 @@
           <tr<?php echo ($extension['set']) ? '' : ' class="not-set"'; ?>>
             <td class="left"><?php echo $extension['name']; ?></td>
             <td class="right"><?php foreach ($extension['action'] as $action) { ?>
-              <?php if ($extension['set'] && ($action['type'] == 'uninstall')) { ?>
+              <?php if ($extension['set'] && ($action['type'] === 'uninstall')) { ?>
                 <a class="button-form-<?php echo $action['type']; ?> ripple" data-title="<?php echo $action['text']; ?>" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
               <?php } else { ?>
                 <a class="button-form-<?php echo $action['type']; ?> ripple" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
@@ -86,7 +86,7 @@ $('a.button-form-uninstall').on('click', function() {
 			confirm: function() {
 				location.href = this.$target.attr('href');
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });
