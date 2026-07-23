@@ -84,7 +84,7 @@ class ControllerCheckoutManual extends Controller {
 								$option_data[$option['product_option_id']] = $option['product_option_value_id'];
 							} elseif ($option['type'] === 'checkbox') {
 								$option_data[$option['product_option_id']][] = $option['product_option_value_id'];
-							} elseif ($option['type'] === 'text' || $option['type'] === 'textarea' || $option['type'] === 'file' || $option['type'] === 'date' || $option['type'] === 'datetime' || $option['type'] === 'time') {
+							} elseif ($option['type'] === 'text' || $option['type'] === 'textarea' || $option['type'] === 'file' || $option['type'] === 'date' || $option['type'] === 'time') {
 								$option_data[$option['product_option_id']] = $option['value'];
 							}
 						}
@@ -98,13 +98,6 @@ class ControllerCheckoutManual extends Controller {
 				$product_info = $this->model_catalog_product->getProduct((int)$this->request->post['product_id']);
 
 				if ($product_info) {
-					// Recurring Profile needs implementing properly
-					if (isset($this->request->post['profile_id'])) {
-						$profile_id = $this->request->post['profile_id'];
-					} else {
-						$profile_id = 0;
-					}
-
 					if (isset($this->request->post['quantity'])) {
 						$quantity = $this->request->post['quantity'];
 					} else {
