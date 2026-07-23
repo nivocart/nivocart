@@ -46,7 +46,7 @@
           <td class="left"><select name="layout_route[<?php echo $route_row; ?>][store_id]">
             <option value="0"><?php echo $text_default; ?></option>
             <?php foreach ($stores as $store) { ?>
-              <?php if ($store['store_id'] == $layout_route['store_id']) { ?>
+              <?php if ($store['store_id'] === $layout_route['store_id']) { ?>
                 <option value="<?php echo $store['store_id']; ?>" selected="selected"><?php echo $store['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></option>

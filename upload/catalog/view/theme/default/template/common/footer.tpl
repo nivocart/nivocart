@@ -8,7 +8,7 @@
   <?php if ($footer_blocks) { ?>
   <div class="column-one" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 0) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
-  <?php if (($footer_block['position'] == 1) && $footer_block['status']) { ?>
+  <?php if (($footer_block['position'] === '1') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
@@ -22,7 +22,7 @@
   </div>
   <div class="column-two" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 1) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
-  <?php if (($footer_block['position'] == 2) && $footer_block['status']) { ?>
+  <?php if (($footer_block['position'] === '2') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
@@ -36,7 +36,7 @@
   </div>
   <div class="column-three" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 2) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
-  <?php if (($footer_block['position'] == 3) && $footer_block['status']) { ?>
+  <?php if (($footer_block['position'] === '3') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
@@ -50,7 +50,7 @@
   </div>
   <div class="column-four" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 3) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
-  <?php if (($footer_block['position'] == 4) && $footer_block['status']) { ?>
+  <?php if (($footer_block['position'] === '4') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
   <ul>
   <?php foreach ($footer_routes as $footer_route) { ?>
@@ -155,11 +155,11 @@ $(document).ready(function() {
 
   #cc-banner {
     position: fixed;
-    <?php if ($cookie_position === 'top'): ?>
+    <?php if ($cookie_position === 'top') { ?>
     top: 0;
-    <?php else: ?>
+    <?php } else { ?>
     bottom: 0;
-    <?php endif; ?>
+    <?php } ?>
     left: 0;
     right: 0;
     z-index: var(--cc-z);
@@ -170,11 +170,11 @@ $(document).ready(function() {
     font-size: 14px;
     line-height: 1.5;
     /* Slide in from the relevant edge */
-    <?php if ($cookie_position === 'top'): ?>
+    <?php if ($cookie_position === 'top') { ?>
     transform: translateY(-100%);
-    <?php else: ?>
+    <?php } else { ?>
     transform: translateY(100%);
-    <?php endif; ?>
+    <?php } ?>
     transition: transform var(--cc-transition), opacity var(--cc-transition);
     opacity: 0;
   }
@@ -186,11 +186,11 @@ $(document).ready(function() {
   }
 
   /* Push page content down when banner sits at the top */
-  <?php if ($cookie_position === 'top'): ?>
+  <?php if ($cookie_position === 'top') { ?>
   body.cc-top-offset {
     transition: margin-top var(--cc-transition);
   }
-  <?php endif; ?>
+  <?php } ?>
 
   #cc-inner {
     max-width: 1200px;

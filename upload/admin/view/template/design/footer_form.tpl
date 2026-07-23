@@ -98,10 +98,10 @@
             <td><?php echo $entry_position; ?></td>
             <td><select name="position">
             <?php if (isset($position)) { $selected = "selected"; ?>
-              <option value="1" <?php if ($position == 1) { echo $selected; } ?>><?php echo $text_position; ?> 1 </option>
-              <option value="2" <?php if ($position == 2) { echo $selected; } ?>><?php echo $text_position; ?> 2 </option>
-              <option value="3" <?php if ($position == 3) { echo $selected; } ?>><?php echo $text_position; ?> 3 </option>
-              <option value="4" <?php if ($position == 4) { echo $selected; } ?>><?php echo $text_position; ?> 4 </option>
+              <option value="1" <?php if ($position === '1') { echo $selected; } ?>><?php echo $text_position; ?> 1 </option>
+              <option value="2" <?php if ($position === '2') { echo $selected; } ?>><?php echo $text_position; ?> 2 </option>
+              <option value="3" <?php if ($position === '3') { echo $selected; } ?>><?php echo $text_position; ?> 3 </option>
+              <option value="4" <?php if ($position === '4') { echo $selected; } ?>><?php echo $text_position; ?> 4 </option>
             <?php } else { ?>
               <option selected="selected"></option>
               <option value="1" selected><?php echo $text_position; ?> 1 </option>
@@ -125,7 +125,7 @@
                 <?php } ?>
               </div>
               <?php foreach ($stores as $store) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                 <?php if (in_array($store['store_id'], $footer_store)) { ?>
                   <input type="checkbox" name="footer_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" />
@@ -168,7 +168,7 @@ function addRoute() {
 	html += '    <td class="left">';
 	<?php foreach ($languages as $language) { ?>
 	html += '      <input type="text" name="footer_route[' + route_row + '][footer_route_description][<?php echo $language['language_id']; ?>][title]" size="30" value="" />';
-	html += '      <img src="view/image/flags/<?php echo $language['image']; ?>" alt="" title="<?php echo $language['name']; ?>" /><br />'; 
+	html += '      <img src="view/image/flags/<?php echo $language['image']; ?>" alt="" title="<?php echo $language['name']; ?>" /><br />';
 	<?php } ?>
 	html += '    </td>';
 	html += '    <td class="left"><input type="text" name="footer_route[' + route_row + '][route]" value="" size="50" /></td>';

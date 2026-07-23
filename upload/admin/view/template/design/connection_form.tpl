@@ -74,7 +74,7 @@
         <tr>
           <td class="left"><select name="connection_route[<?php echo $route_row; ?>][icon]">
           <?php foreach ($fonts as $font) { ?>
-            <?php if ($font['class'] == $connection_route['icon']) { ?>
+            <?php if ($font['class'] === $connection_route['icon']) { ?>
               <option value="<?php echo $font['class']; ?>" selected="selected"><?php echo $font['title']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $font['class']; ?>"><?php echo $font['title']; ?></option>

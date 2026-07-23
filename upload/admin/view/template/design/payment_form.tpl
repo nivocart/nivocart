@@ -35,7 +35,7 @@
             <select name="payment" class="input-error">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($payment_methods as $payment_method) { ?>
-                <?php if ($payment_method['filename'] == $payment) { ?>
+                <?php if ($payment_method['filename'] === $payment) { ?>
                   <option value="<?php echo $payment_method['filename']; ?>" selected="selected"><?php echo $payment_method['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $payment_method['filename']; ?>"><?php echo $payment_method['name']; ?></option>
@@ -47,7 +47,7 @@
             <select name="payment">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($payment_methods as $payment_method) { ?>
-                <?php if ($payment_method['filename'] == $payment) { ?>
+                <?php if ($payment_method['filename'] === $payment) { ?>
                   <option value="<?php echo $payment_method['filename']; ?>" selected="selected"><?php echo $payment_method['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $payment_method['filename']; ?>"><?php echo $payment_method['name']; ?></option>

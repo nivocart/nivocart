@@ -80,7 +80,7 @@ function image_upload(field, thumb) {
 					}
 				});
 			} else {
-				$('#' + thumb).replaceWith('<img src="<?php echo $no_image; ?>" alt="" id="' + thumb + '" />');
+				$('#' + thumb).replaceWith('<img src="<?php echo $no_file; ?>" alt="" id="' + thumb + '" />');
 			}
 		},
 		bgiframe: false,

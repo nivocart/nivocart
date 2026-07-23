@@ -30,7 +30,7 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'name') { ?>
+            <td class="left"><?php if ($sort === 'name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -38,7 +38,7 @@
             <td class="left"><?php echo $column_media; ?></td>
             <td class="left"><?php echo $column_size; ?></td>
             <td class="left"><?php echo $column_type; ?></td>
-            <td class="left"><?php if ($sort == 'status') { ?>
+            <td class="left"><?php if ($sort === 'status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -70,7 +70,7 @@
             <td class="left"><?php echo $media['media']; ?></td>
             <td class="center"><?php echo $media['size']; ?></td>
             <td class="center"><img src="<?php echo $media['type']; ?>" alt="<?php echo $media['name']; ?>" /></td>
-            <?php if ($media['status'] == 1) { ?>
+            <?php if ($media['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>

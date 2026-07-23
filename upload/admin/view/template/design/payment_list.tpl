@@ -31,7 +31,7 @@
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
             <td class="left"><?php echo $column_image; ?></td>
-            <td class="left"><?php if ($sort == 'name') { ?>
+            <td class="left"><?php if ($sort === 'name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -55,7 +55,7 @@
               <td class="center"><img src="<?php echo $payment_image['image']; ?>" alt="<?php echo $payment_image['name']; ?>" style="padding:1px; border:1px solid #DDD;" /></td>
               <td class="left"><?php echo $payment_image['name']; ?></td>
               <td class="center"><?php echo ($payment_image['method']) ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
-              <?php if ($payment_image['status'] == 1) { ?>
+              <?php if ($payment_image['status'] === '1') { ?>
                 <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
               <?php } else { ?>
                 <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -96,7 +96,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

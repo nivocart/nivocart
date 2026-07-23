@@ -61,7 +61,7 @@
             <td><select name="parent_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($menu_items as $menu_item) { ?>
-                <?php if ($menu_item['menu_item_id'] == $parent_id) { ?>
+                <?php if ($menu_item['menu_item_id'] === $parent_id) { ?>
                   <option value="<?php echo $menu_item['menu_item_id']; ?>" selected="selected"><?php echo $menu_item['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $menu_item['menu_item_id']; ?>"><?php echo $menu_item['name']; ?></option>
