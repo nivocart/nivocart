@@ -38,7 +38,7 @@
       <div id="captcha-wrap">
         <div class="captcha-box">
           <div class="captcha-view">
-            <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
+            <div><b><?php echo $captcha_image; ?></b></div>
           </div>
         </div>
         <div class="captcha-text">

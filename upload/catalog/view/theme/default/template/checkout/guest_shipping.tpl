@@ -32,7 +32,7 @@
     <td><select name="country_id" class="large-field">
       <option value=""><?php echo $text_select; ?></option>
       <?php foreach ($countries as $country) { ?>
-        <?php if ($country['country_id'] == $country_id) { ?>
+        <?php if ($country['country_id'] === $country_id) { ?>
           <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
         <?php } else { ?>
           <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -55,10 +55,7 @@
 
 <script type="text/javascript"><!--
 $('#shipping-address select[name=\'country_id\']').on('change', function() {
-	if (this.value == '') {
-		return;
-	}
-
+    if (this.value === '') return;
 	$.ajax({
 		url: 'index.php?route=checkout/checkout/country&country_id=' + this.value,
 		dataType: 'json',
@@ -69,7 +66,7 @@ $('#shipping-address select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#shipping-postcode-required').show();
 			} else {
 				$('#shipping-postcode-required').hide();
@@ -77,11 +74,11 @@ $('#shipping-address select[name=\'country_id\']').on('change', function() {
 
 			html = '<option value=""><?php echo $text_select; ?></option>';
 
-			if (json['zone'] != '') {
+			if (json['zone'] !== '') {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 	      				html += ' selected="selected"';
 					}
 

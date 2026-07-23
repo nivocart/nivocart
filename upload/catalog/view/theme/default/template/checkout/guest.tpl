@@ -47,7 +47,7 @@
   <br />
   <div style="display: <?php echo (count($customer_groups) > 1 ? 'table-row' : 'none'); ?>;"> <?php echo $entry_customer_group; ?><br />
     <?php foreach ($customer_groups as $customer_group) { ?>
-      <?php if ($customer_group['customer_group_id'] == $customer_group_id) { ?>
+      <?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
         <input type="radio" name="customer_group_id" value="<?php echo $customer_group['customer_group_id']; ?>" id="customer_group_id<?php echo $customer_group['customer_group_id']; ?>" checked="checked" />
         <label for="customer_group_id<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></label>
         <br />
@@ -89,7 +89,7 @@
   <select name="country_id" class="large-field">
     <option value=""><?php echo $text_select; ?></option>
     <?php foreach ($countries as $country) { ?>
-      <?php if ($country['country_id'] == $country_id) { ?>
+      <?php if ($country['country_id'] === $country_id) { ?>
         <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
       <?php } else { ?>
         <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -137,25 +137,25 @@ $('#payment-address input[name=\'customer_group_id\']:checked').on('change', fun
 <?php } ?>
 
 	if (customer_group[this.value]) {
-		if (customer_group[this.value]['company_id_display'] == '1') {
+		if (customer_group[this.value]['company_id_display'] === '1') {
 			$('#company-id-display').show();
 		} else {
 			$('#company-id-display').hide();
 		}
 
-		if (customer_group[this.value]['company_id_required'] == '1') {
+		if (customer_group[this.value]['company_id_required'] === '1') {
 			$('#company-id-required').show();
 		} else {
 			$('#company-id-required').hide();
 		}
 
-		if (customer_group[this.value]['tax_id_display'] == '1') {
+		if (customer_group[this.value]['tax_id_display'] === '1') {
 			$('#tax-id-display').show();
 		} else {
 			$('#tax-id-display').hide();
 		}
 
-		if (customer_group[this.value]['tax_id_required'] == '1') {
+		if (customer_group[this.value]['tax_id_required'] === '1') {
 			$('#tax-id-required').show();
 		} else {
 			$('#tax-id-required').hide();
@@ -164,11 +164,11 @@ $('#payment-address input[name=\'customer_group_id\']:checked').on('change', fun
 });
 
 $('#payment-address input[name=\'customer_group_id\']:checked').trigger('change');
-//--></script> 
+//--></script>
 
 <script type="text/javascript"><!--
 $('#payment-address select[name=\'country_id\']').on('change', function() {
-	if (this.value == '') return;
+	if (this.value === '') return;
 	$.ajax({
 		url: 'index.php?route=checkout/checkout/country&country_id=' + this.value,
 		dataType: 'json',
@@ -179,7 +179,7 @@ $('#payment-address select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#payment-postcode-required').show();
 			} else {
 				$('#payment-postcode-required').hide();
@@ -187,11 +187,11 @@ $('#payment-address select[name=\'country_id\']').on('change', function() {
 
 			html = '<option value=""><?php echo $text_select; ?></option>';
 
-			if (json['zone'] != '') {
+			if (json['zone'] !== '') {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 	      				html += ' selected="selected"';
 					}
 

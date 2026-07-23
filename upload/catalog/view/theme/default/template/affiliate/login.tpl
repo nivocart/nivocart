@@ -21,7 +21,7 @@
     <div class="left">
       <h2><?php echo $text_new_affiliate; ?></h2>
       <div class="content">
-        <?php echo $text_register_account; ?> 
+        <?php echo $text_register_account; ?>
         <a href="<?php echo $register; ?>" class="button"><?php echo $button_continue; ?></a>
       </div>
     </div>

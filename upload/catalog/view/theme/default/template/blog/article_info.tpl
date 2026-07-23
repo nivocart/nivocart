@@ -36,7 +36,7 @@
           <?php if ($sharethis) { ?>
             <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop' async='async'></script>
           <?php } else { ?>
-            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script> 
+            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script>
           <?php } ?>
         </div>
         </span>
@@ -198,7 +198,7 @@
                 <div id="captcha-wrap">
                   <div class="captcha-box">
                     <div class="captcha-view">
-                      <div style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
+                      <div><b><?php echo $captcha_image; ?></b></div>
                     </div>
                   </div>
                   <div class="captcha-text">

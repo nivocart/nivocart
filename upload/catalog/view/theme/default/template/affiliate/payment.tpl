@@ -21,19 +21,19 @@
           </tr>
           <tr>
             <td><?php echo $entry_payment; ?></td>
-            <td><?php if ($payment == 'cheque') { ?>
+            <td><?php if ($payment === 'cheque') { ?>
               <input type="radio" name="payment" value="cheque" id="cheque" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="payment" value="cheque" id="cheque" />
             <?php } ?>
             <label for="cheque"><?php echo $text_cheque; ?></label>
-            <?php if ($payment == 'paypal') { ?>
+            <?php if ($payment === 'paypal') { ?>
               <input type="radio" name="payment" value="paypal" id="paypal" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="payment" value="paypal" id="paypal" />
             <?php } ?>
             <label for="paypal"><?php echo $text_paypal; ?></label>
-            <?php if ($payment == 'bank') { ?>
+            <?php if ($payment === 'bank') { ?>
               <input type="radio" name="payment" value="bank" id="bank" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="payment" value="bank" id="bank" />

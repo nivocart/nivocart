@@ -79,7 +79,7 @@ $(document).ready(function() {
 		if (strength < 2) {
 			$('#check').removeClass().addClass('weak');
 			return '<img src="catalog/view/theme/<?php echo $template; ?>/image/account/password-weak.png" alt="" />';
-		} else if (strength == 2) {
+		} else if (strength === 2) {
 			$('#check').removeClass().addClass('good');
 			return '<img src="catalog/view/theme/<?php echo $template; ?>/image/account/password-good.png" alt="" />';
 		} else {

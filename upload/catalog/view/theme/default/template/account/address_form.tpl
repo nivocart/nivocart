@@ -80,7 +80,7 @@
         <td><select name="country_id">
           <option value=""><?php echo $text_select; ?></option>
           <?php foreach ($countries as $country) { ?>
-            <?php if ($country['country_id'] == $country_id) { ?>
+            <?php if ($country['country_id'] === $country_id) { ?>
               <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -136,7 +136,7 @@ $('select[name=\'country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] == '1') {
+			if (json['postcode_required'] === '1') {
 				$('#postcode-required').show();
 			} else {
 				$('#postcode-required').hide();
@@ -144,11 +144,11 @@ $('select[name=\'country_id\']').on('change', function() {
 
 			html = '<option value=""><?php echo $text_select; ?></option>';
 
-			if (json['zone'] != '') {
+			if (json['zone'] !== '') {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-					if (json['zone'][i]['zone_id'] == '<?php echo $zone_id; ?>') {
+					if (json['zone'][i]['zone_id'] === '<?php echo $zone_id; ?>') {
 	      				html += ' selected="selected"';
 					}
 
