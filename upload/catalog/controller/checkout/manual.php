@@ -3,6 +3,8 @@
  * Class ControllerCheckoutManual
  *
  * @package NivoCart
+ *
+ * Used from Admin to Insert new Orders
  */
 class ControllerCheckoutManual extends Controller {
 	/** Error array Placeholder */
@@ -68,13 +70,6 @@ class ControllerCheckoutManual extends Controller {
 			$this->load->model('catalog/product');
 
 			if (isset($this->request->post['order_product'])) {
-				// Recurring Profile needs implementing properly
-				if (isset($this->request->post['profile_id'])) {
-					$profile_id = $this->request->post['profile_id'];
-				} else {
-					$profile_id = 0;
-				}
-
 				foreach ($this->request->post['order_product'] as $order_product) {
 					$option_data = [];
 
@@ -90,7 +85,7 @@ class ControllerCheckoutManual extends Controller {
 						}
 					}
 
-					$this->cart->add($order_product['product_id'], $profile_id, $order_product['quantity'], $option_data);
+					$this->cart->add($order_product['product_id'], $order_product['quantity'], $option_data);
 				}
 			}
 
@@ -119,7 +114,7 @@ class ControllerCheckoutManual extends Controller {
 					}
 
 					if (!isset($json['error']['product']['option'])) {
-						$this->cart->add($this->request->post['product_id'], $profile_id, $quantity, $option);
+						$this->cart->add($this->request->post['product_id'], $quantity, $option);
 					}
 				}
 			}

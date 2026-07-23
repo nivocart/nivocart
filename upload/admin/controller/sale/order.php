@@ -846,10 +846,8 @@ class ControllerSaleOrder extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
-		$order_id = $this->request->get['order_id'] ? (int)$this->request->get['order_id'] : 0;
-
 		if (isset($this->request->get['order_id'])) {
-			$this->data['order_id'] = $order_id;
+			$this->data['order_id'] = $this->request->get['order_id'];
 		} else {
 			$this->data['order_id'] = 0;
 		}

@@ -388,7 +388,7 @@
           <tr>
             <td class="left"><?php echo $entry_product; ?><span class="help"><?php echo $help_autocomplete; ?></span></td>
             <td class="left"><input type="text" name="product" value="" />
-            <input type="hidden" name="product_id" value="" /> &nbsp; <span style="color:#E53030; font-weight:bold;"><?php echo ($abandoned) ? $help_do_not_edit : ''; ?></span></td>
+            <input type="hidden" name="product_id" value="" /> &nbsp; <span style="color:#E53030; font-weight:bold;"><?php echo $abandoned ? $help_do_not_edit : ''; ?></span></td>
           </tr>
           <tr id="option"></tr>
           <tr>
@@ -899,7 +899,7 @@ $('select[name=\'shipping_country_id\']').on('change', function() {
 
 			html = '<option value=""><?php echo $text_select; ?></option>';
 
-			if (json != '' && json['zone'] != '') {
+			if (json !== '' && json['zone'] !== '') {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
@@ -948,17 +948,11 @@ $('body').on('change', 'select[name=\'shipping_address\']', function() {
 //--></script>
 
 <script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.min.js"></script>
-<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-slider-access.min.js"></script> 
+<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-slider-access.min.js"></script>
 
 <script type="text/javascript"><!--
 $('.date').datepicker({dateFormat: 'yy-mm-dd'});
 $('.time').timepicker({
-	timeFormat: 'HH:mm',
-	addSliderAccess: true,
-	sliderAccessArgs: { touchonly: false }
-});
-$('.datetime').datetimepicker({
-	dateFormat: 'yy-mm-dd',
 	timeFormat: 'HH:mm',
 	addSliderAccess: true,
 	sliderAccessArgs: { touchonly: false }
@@ -989,7 +983,7 @@ $('input[name=\'product\']').autocomplete({
 		$('input[name=\'product\']').attr('value', ui.item['label']);
 		$('input[name=\'product_id\']').attr('value', ui.item['value']);
 
-		if (ui.item['option'] != '') {
+		if (ui.item['option'] !== '') {
 			html = '';
 
 			for (i = 0; i < ui.item['option'].length; i++) {
@@ -1159,19 +1153,6 @@ $('input[name=\'product\']').autocomplete({
 					html += '<br />';
 				}
 
-				if (option['type'] === 'datetime') {
-					html += '<div id="option-' + option['product_option_id'] + '">';
-
-					if (option['required']) {
-						html += '<span class="required">*</span> ';
-					}
-
-					html += option['name'] + '<br />';
-					html += '<input type="text" name="option[' + option['product_option_id'] + ']" value="' + option['option_value'] + '" class="datetime" />';
-					html += '</div>';
-					html += '<br />';
-				}
-
 				if (option['type'] === 'time') {
 					html += '<div id="option-' + option['product_option_id'] + '">';
 
@@ -1222,12 +1203,6 @@ $('input[name=\'product\']').autocomplete({
 
 			$('.date').datepicker({dateFormat: 'yy-mm-dd'});
 			$('.time').timepicker({
-				timeFormat: 'HH:mm',
-				addSliderAccess: true,
-				sliderAccessArgs: { touchonly: false }
-			});
-			$('.datetime').datetimepicker({
-				dateFormat: 'yy-mm-dd',
 				timeFormat: 'HH:mm',
 				addSliderAccess: true,
 				sliderAccessArgs: { touchonly: false }
@@ -1547,7 +1522,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 				$('#product').html(html);
 
 			} else {
-				html  = '<tr>';
+				html = '<tr>';
 				html += '  <td colspan="6" class="center"><?php echo $text_no_results; ?></td>';
 				html += '</tr>';
 
@@ -1590,7 +1565,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 				$('#voucher').html(html);
 
 			} else {
-				html  = '<tr>';
+				html = '<tr>';
 				html += '  <td colspan="6" class="center"><?php echo $text_no_results; ?></td>';
 				html += '</tr>';
 
@@ -1598,10 +1573,10 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 			}
 
 			// Totals
-			if (json['order_product'] != '' || json['order_voucher'] != '' || json['order_total'] != '') {
+			if (json['order_product'] !== '' || json['order_voucher'] !== '' || json['order_total'] !== '') {
 				html = '';
 
-				if (json['order_product'] != '') {
+				if (json['order_product'] !== '') {
 					for (i = 0; i < json['order_product'].length; i++) {
 						product = json['order_product'][i];
 
@@ -1662,7 +1637,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 				$('#total').html(html);
 
 			} else {
-				html  = '<tr>';
+				html = '<tr>';
 				html += '  <td colspan="5" class="center"><?php echo $text_no_results; ?></td>';
 				html += '</tr>';
 
