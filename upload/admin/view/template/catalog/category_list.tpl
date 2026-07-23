@@ -34,17 +34,17 @@
             <label for="check-all"><span></span></label></td>
             <td class="left"><?php echo $column_id; ?></td>
             <td class="left"><?php echo $column_image; ?></td>
-            <td class="left"><?php if ($sort == 'cd1.name') { ?>
+            <td class="left"><?php if ($sort === 'cd1.name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.sort_order') { ?>
+            <td class="left"><?php if ($sort === 'c.sort_order') { ?>
               <a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_sort_order; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_sort_order; ?>"><?php echo $column_sort_order; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.status') { ?>
+            <td class="left"><?php if ($sort === 'c.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -76,7 +76,7 @@
             <td class="center"><img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" style="padding:1px; border:1px solid #DDD;" /></td>
             <td class="left"><?php echo $category['name']; ?></td>
             <td class="center"><?php echo $category['sort_order']; ?></td>
-            <?php if ($category['status'] == 1) { ?>
+            <?php if ($category['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>

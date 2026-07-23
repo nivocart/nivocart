@@ -65,7 +65,7 @@
                 <?php } ?>
               </div>
               <?php foreach ($stores as $store) { ?>
-                <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                 <div class="<?php echo $class; ?>">
                   <?php if (in_array($store['store_id'], $manufacturer_store)) { ?>
                     <input type="checkbox" name="manufacturer_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" />

@@ -17,7 +17,7 @@
   </tr>
 </table>
 <div style="margin:20px; text-align:right;">
-  <img src="view/image/loading.gif" alt="" id="img-price-update" style="display:none;" /> 
+  <img src="view/image/loading.gif" alt="" id="img-price-update" style="display:none;" />
   <a id="button-price-update" class="button ripple" style="font-size:12px; color:#FFF;"><?php echo $button_submit; ?></a>
 </div>
 

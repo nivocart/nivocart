@@ -37,7 +37,7 @@
         <td><?php echo $entry_attribute_group; ?></td>
         <td><select name="attribute_group_id">
           <?php foreach ($attribute_groups as $attribute_group) { ?>
-          <?php if ($attribute_group['attribute_group_id'] == $attribute_group_id) { ?>
+          <?php if ($attribute_group['attribute_group_id'] === $attribute_group_id) { ?>
             <option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
           <?php } else { ?>
             <option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>

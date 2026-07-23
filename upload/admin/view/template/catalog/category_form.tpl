@@ -67,7 +67,7 @@
           <td><select name="parent_id">
             <option value="0"><?php echo $text_none; ?></option>
             <?php foreach ($categories as $category) { ?>
-              <?php if ($category['category_id'] == $parent_id) { ?>
+              <?php if ($category['category_id'] === $parent_id) { ?>
                 <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
@@ -89,7 +89,7 @@
           <td><div class="scrollbox" style="height:153px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
             <?php foreach ($filters as $filter) { ?>
-              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+              <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
               <div class="<?php echo $class; ?>">
                 <?php $category_filter_id = array(); ?>
                 <?php foreach ($category_filters as $category_filter) { $category_filter_id[] = $category_filter['filter_id']; } ?>
@@ -116,7 +116,7 @@
           <td><div id="category-filter" class="scrollbox">
             <?php $class = 'odd'; ?>
             <?php foreach ($category_filters as $category_filter) { ?>
-              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+              <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
               <div id="category-filter<?php echo $category_filter['filter_id']; ?>" class="<?php echo $class; ?>"><?php echo $category_filter['name']; ?><img src="view/image/delete.png" alt="" />
                 <input type="hidden" name="category_filter[]" value="<?php echo $category_filter['filter_id']; ?>" />
               </div>
@@ -138,7 +138,7 @@
               <?php } ?>
             </div>
             <?php foreach ($stores as $store) { ?>
-              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+              <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
               <div class="<?php echo $class; ?>">
                 <?php if (in_array($store['store_id'], $category_store)) { ?>
                   <input type="checkbox" name="category_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" />
@@ -212,7 +212,7 @@
           <td class="left"><select name="category_layout[0][layout_id]">
             <option value=""><?php echo $text_none; ?></option>
             <?php foreach ($layouts as $layout) { ?>
-              <?php if (isset($category_layout[0]) && $category_layout[0] == $layout['layout_id']) { ?>
+              <?php if (isset($category_layout[0]) && $category_layout[0] === $layout['layout_id']) { ?>
                 <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
               <?php } else { ?>
                 <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -282,7 +282,6 @@ $('input[name=\'path\']').autocomplete({
 					'category_id': 0,
 					'name': '<?php echo $text_none; ?>'
 				});
-
 				response($.map(json, function(item) {
 					return {
 						label: item.name,
@@ -323,9 +322,7 @@ $('input[name=\'filter\']').autocomplete({
 	},
 	select: function(event, ui) {
 		$('#category-filter' + ui.item.value).remove();
-
 		$('#category-filter').append('<div id="category-filter' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="category_filter[]" value="' + ui.item.value + '" /></div>');
-
 		$('#category-filter div:odd').attr('class', 'odd');
 		$('#category-filter div:even').attr('class', 'even');
 

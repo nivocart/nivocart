@@ -136,12 +136,12 @@
             <td>
               <input type="text" name="price" class="excvat" value="<?php echo number_format($price, 2, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?> &nbsp; <a onclick="apply();" id="price-apply" class="button-save"><i class="fa fa-refresh"></i></a>
               <br /><br />
-              <input type="text" name="incvat" class="incvat" value="<?php echo number_format(($price * $vat_rate), 2, '.', ''); ?>" /> &nbsp; <?php echo $text_inc_vat; ?> (<?php echo round($base_rate, 2); ?>%)
+              <input type="text" name="incvat" class="incvat" value="<?php echo number_format(($price * $vat_rate), 2, '.', ''); ?>" /> &nbsp; <?php echo $text_inc_vat; ?> (<?php echo round($base_rate, 2, PHP_ROUND_HALF_UP); ?>%)
             </td>
           </tr>
           <tr>
             <td><?php echo $entry_cost; ?></td>
-            <td><input type="text" name="cost" value="<?php echo $cost; ?>" /></td>
+            <td><input type="text" name="cost" value="<?php echo number_format($cost, 2, '.', ''); ?>" /></td>
           </tr>
           <tr class="highlighted">
             <td><?php echo $entry_tax_class; ?></td>
@@ -1441,7 +1441,7 @@ $('.excvat').on('change keydown keyup', function() {
 
 <script type="text/javascript"><!--
 $('select[name=\'palette_id\']').on('change', function() {
-	if ($(this).val() != <?php echo $palette_id; ?>) {
+	if ($(this).val() !== <?php echo $palette_id; ?>) {
 		$('#color-apply').fadeIn(500);
 	} else {
 		$('#color-apply').hide();

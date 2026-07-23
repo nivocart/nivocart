@@ -62,7 +62,7 @@
           <?php } ?></td>
           <td class="left"><select name="palette_color[<?php echo $color_row; ?>][skin]">
           <?php foreach ($skins as $skin) { ?>
-            <?php if ($skin['skin'] == $palette_color['skin']) { ?>
+            <?php if ($skin['skin'] === $palette_color['skin']) { ?>
               <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;" selected="selected"><?php echo $skin['title']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;"><?php echo $skin['title']; ?></option>

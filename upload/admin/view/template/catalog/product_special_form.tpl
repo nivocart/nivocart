@@ -18,7 +18,7 @@
     <td><?php echo $entry_sp_customer_group; ?></td>
     <td><select name="sp_customer_group">
       <?php foreach ($customer_groups as $customer_group) { ?>
-        <?php if ($customer_group['customer_group_id'] == $default_customer_group) { ?>
+        <?php if ($customer_group['customer_group_id'] === $default_customer_group) { ?>
           <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
         <?php } else { ?>
           <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>
@@ -44,7 +44,7 @@
   </tr>
 </table>
 <div style="margin:20px; text-align:right;">
-  <img src="view/image/loading.gif" alt="" id="img-special-update" style="display:none;" /> 
+  <img src="view/image/loading.gif" alt="" id="img-special-update" style="display:none;" />
   <a id="button-special-update" class="button ripple" style="font-size:12px; color:#FFF;"><?php echo $button_submit; ?></a>
 </div>
 

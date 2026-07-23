@@ -116,7 +116,7 @@
                   <?php } ?>
                 </div>
                 <?php foreach ($stores as $store) { ?>
-                  <?php $class=($class=='even' ? 'odd' : 'even'); ?>
+                  <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                   <div class="<?php echo $class; ?>">
                     <?php if (in_array($store['store_id'], $news_store)) { ?>
                       <input type="checkbox" name="news_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" />
@@ -182,7 +182,7 @@
                 <tr>
                   <td><?php echo $entry_product_search; ?><br /><input type="text" name="product" value="" /></td>
                   <td>&nbsp;&nbsp;</td>
-                  <td> 
+                  <td>
                     <div id="product-wise-list" class="scrollbox" style="width:350px;">
                     <?php $class = 'odd'; ?>
                     <?php if (isset($products)) { ?>
@@ -192,7 +192,7 @@
                           <input type="hidden" name="product_wise[]" value="<?php echo $product['product_id']; ?>" />
                         </div>
                       <?php } ?>
-                    <?php } ?>	
+                    <?php } ?>
                     </div>
                   </td>
                 </tr>
@@ -207,8 +207,8 @@
                 <?php foreach ($default_categories as $category) { ?>
                   <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                   <div class="<?php echo $class; ?>">
-                    <input type="checkbox" name="category_wise[]" value="<?php echo $category['category_id']; ?>" <?php if (isset($category_ids)) { for ($i = 0; $i < count($category_ids); $i++) { if ($category_ids[$i] == $category['category_id']) { echo "checked='checked'"; } } } ?> />                    
-                    <?php echo $category['name']; ?> 
+                    <input type="checkbox" name="category_wise[]" value="<?php echo $category['category_id']; ?>" <?php if (isset($category_ids)) { for ($i = 0; $i < count($category_ids); $i++) { if ($category_ids[$i] == $category['category_id']) { echo "checked='checked'"; } } } ?> />
+                    <?php echo $category['name']; ?>
                   </div>
                 <?php } ?>
               </div><br />
@@ -223,7 +223,7 @@
                 <?php foreach ($default_manufacturers as $manufacturer) { ?>
                   <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                   <div class="<?php echo $class; ?>">
-                    <input type="checkbox" name="manufacturer_wise[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" <?php if (isset($manufacturer_ids)) { for ($i = 0; $i < count($manufacturer_ids); $i++) { if ($manufacturer_ids[$i] == $manufacturer['manufacturer_id']) { echo "checked='checked'"; } } } ?> />                    
+                    <input type="checkbox" name="manufacturer_wise[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" <?php if (isset($manufacturer_ids)) { for ($i = 0; $i < count($manufacturer_ids); $i++) { if ($manufacturer_ids[$i] == $manufacturer['manufacturer_id']) { echo "checked='checked'"; } } } ?> />
                     <?php echo $manufacturer['name']; ?>
                   </div>
                 <?php } ?>
@@ -232,7 +232,7 @@
             </td>
           </tr>
         </table>
-      </div> 
+      </div>
       </form>
     </div>
   </div>
@@ -309,7 +309,7 @@ $('input[name=\'product\']').autocomplete({
 				}));
 			}
 		});
-	}, 
+	},
 	select: function(event, ui) {
 		$('#product-wise-list' + ui.item.value).remove();
 		$('#product-wise-list').append('<div id="product-wise-list' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_wise[]" value="' + ui.item.value + '" /></div>');
@@ -331,15 +331,15 @@ $('#product-wise-list').delegate('img', 'click', function() {
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-<?php if ($related == 'product_wise') { ?>
+<?php if ($related === 'product_wise') { ?>
 	$("#product-wise").css({display: "table-row"});
 	$("#category-wise").css({display: "none"});
 	$("#manufacturer-wise").css({display: "none"});
-<?php } elseif ($related == 'category_wise') { ?>
+<?php } elseif ($related === 'category_wise') { ?>
 	$("#product-wise").css({display: "none"});
 	$("#category-wise").css({display: "table-row"});
 	$("#manufacturer-wise").css({display: "none"});
-<?php } elseif ($related == 'manufacturer_wise') { ?>
+<?php } elseif ($related === 'manufacturer_wise') { ?>
 	$("#product-wise").css({display: "none"});
 	$("#category-wise").css({display: "none"});
 	$("#manufacturer-wise").css({display: "table-row"});
@@ -349,15 +349,15 @@ $(document).ready(function() {
 
 <script type="text/javascript"><!--
 function getRelatedMethod(value) {
-	if (value == 'product_wise') {
+	if (value === 'product_wise') {
 		$("#product-wise").css({display: "table-row"});
 		$("#category-wise").css({display: "none"});
 		$("#manufacturer-wise").css({display: "none"});
-	} else if (value == 'category_wise') {
+	} else if (value === 'category_wise') {
 		$("#product-wise").css({display: "none"});
 		$("#category-wise").css({display: "table-row"});
 		$("#manufacturer-wise").css({display: "none"});
-	} else if (value == 'manufacturer_wise') {
+	} else if (value === 'manufacturer_wise') {
 		$("#product-wise").css({display: "none"});
 		$("#category-wise").css({display: "none"});
 		$("#manufacturer-wise").css({display: "table-row"});

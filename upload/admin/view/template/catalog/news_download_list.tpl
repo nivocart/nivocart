@@ -30,7 +30,7 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'pdd.name') { ?>
+            <td class="left"><?php if ($sort === 'pdd.name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -42,7 +42,7 @@
         <?php if ($downloads) { ?>
           <?php $class = 'odd'; ?>
           <?php foreach ($downloads as $download) { ?>
-            <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+            <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
             <tr class="<?php echo $class; ?>">
               <td style="text-align:center;"><?php if ($download['selected']) { ?>
                 <input type="checkbox" name="selected[]" value="<?php echo $download['news_download_id']; ?>" id="<?php echo $download['news_download_id']; ?>" class="checkbox" checked />

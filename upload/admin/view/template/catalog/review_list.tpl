@@ -31,27 +31,27 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'pd.name') { ?>
+            <td class="left"><?php if ($sort === 'pd.name') { ?>
               <a href="<?php echo $sort_product; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_product; ?>"><?php echo $column_product; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'r.author') { ?>
+            <td class="left"><?php if ($sort === 'r.author') { ?>
               <a href="<?php echo $sort_author; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_author; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_author; ?>"><?php echo $column_author; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'r.date_added') { ?>
+            <td class="left"><?php if ($sort === 'r.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'r.rating') { ?>
+            <td class="left"><?php if ($sort === 'r.rating') { ?>
               <a href="<?php echo $sort_rating; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_rating; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_rating; ?>"><?php echo $column_rating; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'r.status') { ?>
+            <td class="left"><?php if ($sort === 'r.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -83,7 +83,7 @@
             <td class="left"><?php echo $review['author']; ?></td>
             <td class="left"><?php echo $review['date_added']; ?></td>
             <td class="center"><img src="view/image/rating/stars-<?php echo $review['rating'] . '.png'; ?>" alt="<?php echo $review['rating']; ?>" style="margin-top:2px;" /></td>
-            <?php if ($review['status'] == 1) { ?>
+            <?php if ($review['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>

@@ -33,27 +33,27 @@
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
             <td class="center"><?php echo $column_image; ?></td>
-            <td class="left"><?php if ($sort == 'nd.title') { ?>
+            <td class="left"><?php if ($sort === 'nd.title') { ?>
               <a href="<?php echo $sort_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_title; ?> (<?php echo $total_news; ?>)</a>
             <?php } else { ?>
               <a href="<?php echo $sort_title; ?>"><?php echo $column_title; ?> (<?php echo $total_news; ?>)&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'n.date_added') { ?>
+            <td class="left"><?php if ($sort === 'n.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'n.sort_order') { ?>
+            <td class="left"><?php if ($sort === 'n.sort_order') { ?>
               <a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_sort_order; ?>
             <?php } else { ?>
               <a href="<?php echo $sort_sort_order; ?>"><?php echo $column_sort_order; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'n.status') { ?>
+            <td class="left"><?php if ($sort === 'n.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'n.viewed') { ?>
+            <td class="left"><?php if ($sort === 'n.viewed') { ?>
               <a href="<?php echo $sort_viewed; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_viewed; ?>
             <?php } else { ?>
               <a href="<?php echo $sort_viewed; ?>"><?php echo $column_viewed; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -65,7 +65,7 @@
         <?php if ($news) { ?>
           <?php $class = 'odd'; ?>
           <?php foreach ($news as $news_story) { ?>
-            <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+            <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
             <tr class="<?php echo $class; ?>">
               <td class="center"><?php if ($news_story['selected']) { ?>
                 <input type="checkbox" name="selected[]" value="<?php echo $news_story['news_id']; ?>" id="<?php echo $news_story['news_id']; ?>" class="checkbox" checked />
@@ -78,7 +78,7 @@
               <td class="left"><?php echo $news_story['title']; ?></td>
               <td class="left"><?php echo $news_story['date_added']; ?></td>
               <td class="center"><?php echo $news_story['sort_order']; ?></td>
-              <?php if ($news_story['status'] == 1) { ?>
+              <?php if ($news_story['status'] === '1') { ?>
                 <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
               <?php } else { ?>
                 <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
