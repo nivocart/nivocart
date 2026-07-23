@@ -17,6 +17,7 @@ Release: TBA
 - Fix bugs in Manual Order Form when inserting a new order under Admin.
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
+- Templates code quality updates.
 
 
 NivoCart v2.0.0
