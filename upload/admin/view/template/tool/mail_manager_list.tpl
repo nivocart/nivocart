@@ -92,7 +92,7 @@
             <td class="left"><code><?php echo $template['code']; ?></code></td>
             <td class="left"><?php echo isset($types[$template['type']]) ? $types[$template['type']] : $template['type']; ?></td>
             <td class="left"><?php echo $template['subject']; ?></td>
-            <?php if ($template['status'] == 1) { ?>
+            <?php if ($template['status'] === '1') { ?>
             <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
             <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -170,7 +170,7 @@ $('#delete').on('click', function() {
       confirm: function() {
         $('form').submit();
       },
-      cancel: function() { }
+      cancel: function() {}
     }
   });
 });

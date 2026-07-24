@@ -112,10 +112,10 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });
 //--></script>
 
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

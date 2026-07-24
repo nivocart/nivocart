@@ -47,8 +47,8 @@
               <td><?php echo $text_sizetext; ?></td>
               <td><?php echo $text_datetext; ?></td>
               <td>
-                <a onclick="GenText();" class="button-save ripple"><?php echo $generate; ?></a> &nbsp; 
-                <a onclick="LoadText();" class="button-form ripple"><?php echo $download; ?></a> &nbsp; 
+                <a onclick="GenText();" class="button-save ripple"><?php echo $generate; ?></a> &nbsp;
+                <a onclick="LoadText();" class="button-form ripple"><?php echo $download; ?></a> &nbsp;
               </td>
             </tr>
           <?php } else { ?>
@@ -65,7 +65,7 @@
               <td><?php echo $text_sizexml; ?></td>
               <td><?php echo $text_datexml; ?></td>
               <td>
-                <a onclick="GenXml();" class="button-save ripple"><?php echo $generate; ?></a> &nbsp; 
+                <a onclick="GenXml();" class="button-save ripple"><?php echo $generate; ?></a> &nbsp;
                 <a onclick="LoadXml();" class="button-form ripple"><?php echo $download; ?></a>
               </td>
             </tr>
@@ -84,7 +84,7 @@
                 <td><?php echo $text_sizegzip; ?></td>
                 <td><?php echo $text_dategzip; ?></td>
                 <td>
-                  <a onclick="GenGzip();" class="button-save ripple"><?php echo $generate; ?></a> &nbsp; 
+                  <a onclick="GenGzip();" class="button-save ripple"><?php echo $generate; ?></a> &nbsp;
                   <a onclick="LoadGzip();" class="button-form ripple"><?php echo $download; ?></a>
                 </td>
               </tr>

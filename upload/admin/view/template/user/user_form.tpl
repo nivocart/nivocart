@@ -70,7 +70,7 @@
           <td><?php echo $entry_user_group; ?></td>
           <td><select name="user_group_id">
           <?php foreach ($user_groups as $user_group) { ?>
-            <?php if ($user_group['user_group_id'] == $user_group_id) { ?>
+            <?php if ($user_group['user_group_id'] === $user_group_id) { ?>
               <option value="<?php echo $user_group['user_group_id']; ?>" selected="selected"><?php echo $user_group['name']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $user_group['user_group_id']; ?>"><?php echo $user_group['name']; ?></option>
@@ -153,4 +153,4 @@ function image_upload(field, thumb) {
 };
 //--></script>
 
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

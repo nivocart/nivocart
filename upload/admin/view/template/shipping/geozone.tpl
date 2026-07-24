@@ -41,11 +41,11 @@
             </tr>
             <tr>
               <td><?php echo $entry_method; ?></td>
-              <td><?php if ($geozone_method == 'item') { ?>
+              <td><?php if ($geozone_method === 'item') { ?>
                 <input type="radio" name="geozone_method" value="item" checked="checked" /><?php echo $text_item; ?>
                 <input type="radio" name="geozone_method" value="weight" /><?php echo $text_weight; ?>
                 <input type="radio" name="geozone_method" value="price" /><?php echo $text_price; ?>
-              <?php } elseif ($geozone_method == 'weight') { ?>
+              <?php } elseif ($geozone_method === 'weight') { ?>
                 <input type="radio" name="geozone_method" value="item" /><?php echo $text_item; ?>
                 <input type="radio" name="geozone_method" value="weight" checked="checked" /><?php echo $text_weight; ?>
                 <input type="radio" name="geozone_method" value="price" /><?php echo $text_price; ?>

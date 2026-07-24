@@ -440,7 +440,7 @@ function uploadData() {
 	}
 }
 
-function isNumber(txt) { 
+function isNumber(txt) {
 	var regExp=/^[\d]{1,}$/;
 	return regExp.test(txt);
 }

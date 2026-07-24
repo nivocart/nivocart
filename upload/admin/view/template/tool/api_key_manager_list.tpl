@@ -59,7 +59,7 @@
             <?php } ?></td>
             <td class="left"><?php echo $api_key['name']; ?></td>
             <td class="left"><?php echo $api_key['code']; ?></td>
-          <?php if ($api_key['status'] == 1) { ?>
+          <?php if ($api_key['status'] === '1') { ?>
             <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
           <?php } else { ?>
             <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -110,10 +110,10 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });
 //--></script>
 
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

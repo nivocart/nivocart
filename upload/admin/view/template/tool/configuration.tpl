@@ -43,7 +43,7 @@
             <td><?php echo $text_theme; ?></td>
             <td><?php foreach ($templates as $template) { ?>
               <?php if ($template === $config_template) { ?>
-                <span style="color:#36AAD8;"><b><?php echo $template; ?></b></span> 
+                <span style="color:#36AAD8;"><b><?php echo $template; ?></b></span>
               <?php } ?>
             <?php } ?></td>
           </tr>
@@ -132,8 +132,8 @@
             </tr>
             <tr>
               <td><?php echo $text_mysql; ?></td>
-              <td><?php echo (phpversion() < '8.0') ? $text_on : $text_off; ?></td>
-              <?php if (phpversion() < '8.0') { ?>
+              <td><?php echo (phpversion() < '8.1') ? $text_on : $text_off; ?></td>
+              <?php if (phpversion() < '8.1') { ?>
                 <td><?php echo extension_loaded('mysqli') ? 'On' : 'Off'; ?></td>
                 <td><?php echo extension_loaded('mysqli') ? '<img src="view/image/success.png" alt="" />' : '<img src="view/image/warning.png" alt="" />'; ?></td>
               <?php } else { ?>

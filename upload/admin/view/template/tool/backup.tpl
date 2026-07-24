@@ -38,9 +38,9 @@
           <tr>
             <td width="20%"><?php echo $entry_backup; ?></td>
             <td><div class="scrollbox" style="height:220px; margin-bottom:5px;">
-              <?php $class='odd'; ?>
+              <?php $class = 'odd'; ?>
               <?php foreach ($tables as $table) { ?>
-                <?php $class=($class == 'even') ? 'odd' : 'even'; ?>
+                <?php $class = ($class === 'even') ? 'odd' : 'even'; ?>
                 <div class="<?php echo $class; ?>">
                   <input type="checkbox" name="backup[]" value="<?php echo $table; ?>" checked="checked" />
                 <?php echo $table; ?></div>

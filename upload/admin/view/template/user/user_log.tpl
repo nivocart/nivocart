@@ -47,7 +47,7 @@
           <tbody class="log">
           <?php if ($entries) { ?>
             <?php foreach ($entries as $entry) { ?>
-              <tr class="<?php echo (!$entry['allowed'] || ($entry['allowed'] == 0)) ? 'denied' : $entry['action']; ?>">
+              <tr class="<?php echo (!$entry['allowed'] || ($entry['allowed'] === '0')) ? 'denied' : $entry['action']; ?>">
                 <td style="text-align:center;"><?php if ($entry['selected']) { ?>
                   <input type="checkbox" name="selected[]" value="<?php echo $entry['log_id']; ?>" id="<?php echo $entry['log_id']; ?>" class="checkbox" checked />
                   <label for="<?php echo $entry['log_id']; ?>"><span></span></label>
@@ -154,11 +154,11 @@
             <tr>
               <td><?php echo $entry_user_log_allowed; ?></td>
               <td><select name="user_log_allowed">
-                <?php if ($user_log_allowed == 1) { ?>
+                <?php if ($user_log_allowed === '1') { ?>
                   <option value="0"><?php echo $text_denied; ?></option>
                   <option value="1" selected="selected"><?php echo $text_allowed; ?></option>
                   <option value="2"><?php echo $text_all; ?></option>
-                <?php } elseif ($user_log_allowed == 2) { ?>
+                <?php } elseif ($user_log_allowed === '2') { ?>
                   <option value="0"><?php echo $text_denied; ?></option>
                   <option value="1"><?php echo $text_allowed; ?></option>
                   <option value="2" selected="selected"><?php echo $text_all; ?></option>
@@ -209,4 +209,5 @@ function updateSettings() {
 	$('#settings').submit();
 }
 //--></script>
+
 <?php echo $footer; ?>

@@ -37,7 +37,7 @@
           <td><div class="scrollbox" style="height:230px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
             <?php foreach ($permissions as $permission) { ?>
-              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+              <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
               <div class="<?php echo $class; ?>">
                 <?php if (in_array($permission, $access)) { ?>
                   <input type="checkbox" name="permission[access][]" value="<?php echo $permission; ?>" checked="checked" />
@@ -57,7 +57,7 @@
           <td><div class="scrollbox" style="height:230px; margin-bottom:5px;">
             <?php $class = 'odd'; ?>
             <?php foreach ($permissions as $permission) { ?>
-              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+              <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
               <div class="<?php echo $class; ?>">
                 <?php if (in_array($permission, $modify)) { ?>
                   <input type="checkbox" name="permission[modify][]" value="<?php echo $permission; ?>" checked="checked" />
@@ -97,4 +97,4 @@ $("input[type=checkbox]").on("change", function() {
 });
 //--></script>
 
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

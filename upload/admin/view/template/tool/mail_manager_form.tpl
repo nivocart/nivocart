@@ -71,7 +71,7 @@
                       <?php echo $text_default; ?>
                     </div>
                     <?php foreach ($stores as $store) { ?>
-                    <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                    <?php $class = ($class === 'even' ? 'odd' : 'even'); ?>
                     <div class="<?php echo $class; ?>">
                       <input type="checkbox" name="mail_store[]" value="<?php echo $store['store_id']; ?>"<?php if (in_array($store['store_id'], $mail_store)) { ?> checked="checked"<?php } ?> />
                       <?php echo $store['name']; ?>
@@ -101,8 +101,8 @@
                 <td><?php echo $entry_status; ?></td>
                 <td>
                   <select name="status">
-                    <option value="1"<?php if ((int)$status === 1) { ?> selected<?php } ?>><?php echo $text_enabled; ?></option>
-                    <option value="0"<?php if ((int)$status === 0) { ?> selected<?php } ?>><?php echo $text_disabled; ?></option>
+                    <option value="1"<?php if ((int)$status === '1') { ?> selected<?php } ?>><?php echo $text_enabled; ?></option>
+                    <option value="0"<?php if ((int)$status === '0') { ?> selected<?php } ?>><?php echo $text_disabled; ?></option>
                   </select>
                 </td>
               </tr>
