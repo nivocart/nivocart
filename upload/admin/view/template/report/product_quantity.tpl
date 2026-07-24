@@ -20,32 +20,32 @@
         <thead>
         <tr>
           <td class="left"><?php echo $column_id; ?></td>
-          <td class="left"><?php if ($sort == 'pd.name') { ?>
+          <td class="left"><?php if ($sort === 'pd.name') { ?>
             <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'p.model') { ?>
+          <td class="left"><?php if ($sort === 'p.model') { ?>
             <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'p.price') { ?>
+          <td class="left"><?php if ($sort === 'p.price') { ?>
             <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_price; ?>"><?php echo $column_price; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'p.cost') { ?>
+          <td class="left"><?php if ($sort === 'p.cost') { ?>
             <a href="<?php echo $sort_cost; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_cost; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_cost; ?>"><?php echo $column_cost; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'p.status') { ?>
+          <td class="left"><?php if ($sort === 'p.status') { ?>
             <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'p.quantity') { ?>
+          <td class="left"><?php if ($sort === 'p.quantity') { ?>
             <a href="<?php echo $sort_quantity; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_quantity; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -84,7 +84,7 @@
               <td class="left"><?php echo $product['model']; ?></td>
               <td class="right"><?php echo $product['price']; ?></td>
               <td class="right"><?php echo $product['cost']; ?></td>
-              <?php if ($product['status'] == 1) { ?>
+              <?php if ($product['status'] === '1') { ?>
                 <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
               <?php } else { ?>
                 <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -125,7 +125,7 @@ function filter() {
 		url += '&filter_name=' + encodeURIComponent(filter_name);
 	}
 
-	var filter_model = $('input[name=\'filter_model\']').prop('value'); 
+	var filter_model = $('input[name=\'filter_model\']').prop('value');
 
 	if (filter_model) {
 		url += '&filter_model=' + encodeURIComponent(filter_model);

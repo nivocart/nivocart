@@ -21,17 +21,17 @@
           <tr>
             <td class="left"><?php echo $column_product_id; ?></td>
             <td class="left"><?php echo $column_image; ?></td>
-            <td class="left"><?php if ($sort == 'pd.name') { ?>
+            <td class="left"><?php if ($sort === 'pd.name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'p.price') { ?>
+            <td class="left"><?php if ($sort === 'p.price') { ?>
               <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_price; ?>"><?php echo $column_price; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'p.cost') { ?>
+            <td class="left"><?php if ($sort === 'p.cost') { ?>
               <a href="<?php echo $sort_cost; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_cost; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_cost; ?>"><?php echo $column_cost; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>

@@ -22,7 +22,7 @@
         <div class="left"><em><?php echo $entry_date_end; ?></em> <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="date-end" size="12" /> <img src="view/image/calendar.png" alt="" /></div>
         <div class="left"><em><?php echo $entry_group; ?></em> <select name="filter_group">
           <?php foreach ($groups as $groups) { ?>
-            <?php if ($groups['value'] == $filter_group) { ?>
+            <?php if ($groups['value'] === $filter_group) { ?>
               <option value="<?php echo $groups['value']; ?>" selected="selected"><?php echo $groups['text']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $groups['value']; ?>"><?php echo $groups['text']; ?></option>
@@ -32,7 +32,7 @@
         <div class="left"><em><?php echo $entry_status; ?></em> <select name="filter_return_status_id">
           <option value="0"><?php echo $text_all_status; ?></option>
           <?php foreach ($return_statuses as $return_status) { ?>
-            <?php if ($return_status['return_status_id'] == $filter_return_status_id) { ?>
+            <?php if ($return_status['return_status_id'] === $filter_return_status_id) { ?>
               <option value="<?php echo $return_status['return_status_id']; ?>" selected="selected"><?php echo $return_status['name']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $return_status['return_status_id']; ?>"><?php echo $return_status['name']; ?></option>
@@ -96,7 +96,7 @@ function filter() {
 
 	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').prop('value');
 
-	if (filter_order_status_id != 0) {
+	if (filter_order_status_id !== '0') {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
 	}
 

@@ -20,7 +20,7 @@
         <thead>
           <tr>
             <td class="left"><?php echo $column_country_id; ?></td>
-            <td class="left"><?php if ($sort == 'cd.name') { ?>
+            <td class="left"><?php if ($sort === 'cd.name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>

@@ -96,7 +96,7 @@ function filter() {
 
 	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').prop('value');
 
-	if (filter_order_status_id != 0) {
+	if (filter_order_status_id !== '0') {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
 	}
 

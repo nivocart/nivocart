@@ -30,32 +30,32 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="center"><?php if ($sort == 'o.order_id') { ?>
+            <td class="center"><?php if ($sort === 'o.order_id') { ?>
               <a href="<?php echo $sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_order_id; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_order; ?>"><?php echo $column_order_id; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'name') { ?>
+            <td class="left"><?php if ($sort === 'name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'o.total') { ?>
+            <td class="left"><?php if ($sort === 'o.total') { ?>
               <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'o.date_added') { ?>
+            <td class="left"><?php if ($sort === 'o.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'o.ip') { ?>
+            <td class="left"><?php if ($sort === 'o.ip') { ?>
               <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_ip; ?>"><?php echo $column_ip; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'o.abandoned') { ?>
+            <td class="left"><?php if ($sort === 'o.abandoned') { ?>
               <a href="<?php echo $sort_abandoned; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_abandoned; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_abandoned; ?>"><?php echo $column_abandoned; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>

@@ -52,9 +52,9 @@
             <td class="left"><?php echo $customer['customer']; ?></td>
             <td class="left"><?php echo $customer['email']; ?></td>
             <td class="left"><?php echo $customer['customer_group']; ?></td>
-          <?php if ($customer['status'] == 2) { ?>
+          <?php if ($customer['status'] === '2') { ?>
             <td class="center"><span class="deleted"><?php echo $text_deleted; ?></span></td>
-          <?php } elseif ($customer['status'] == 1) { ?>
+          <?php } elseif ($customer['status'] === '1') { ?>
             <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
           <?php } else { ?>
             <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -99,7 +99,7 @@ function filter() {
 
 	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').prop('value');
 
-	if (filter_order_status_id != 0) {
+	if (filter_order_status_id !== '0') {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
 	}
 
