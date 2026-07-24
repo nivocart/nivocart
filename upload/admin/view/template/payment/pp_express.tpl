@@ -133,7 +133,7 @@
               <td><select name="pp_express_geo_zone_id" id="input-geo-zone">
                 <option value="0"><?php echo $text_all_zones; ?></option>
                 <?php foreach ($geo_zones as $geo_zone) { ?>
-                  <option value="<?php echo $geo_zone['geo_zone_id']; ?>"<?php if ($geo_zone['geo_zone_id'] == $pp_express_geo_zone_id) { ?> selected="selected"<?php } ?>><?php echo $geo_zone['name']; ?></option>
+                  <option value="<?php echo $geo_zone['geo_zone_id']; ?>"<?php if ($geo_zone['geo_zone_id'] === $pp_express_geo_zone_id) { ?> selected="selected"<?php } ?>><?php echo $geo_zone['name']; ?></option>
                 <?php } ?>
               </select></td>
             </tr>
@@ -172,7 +172,7 @@
                 <td><label for="input-<?php echo $key; ?>-status"><?php echo $label; ?></label></td>
                 <td><select name="<?php echo $field; ?>" id="input-<?php echo $key; ?>-status">
                   <?php foreach ($order_statuses as $order_status) { ?>
-                    <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $$field) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                    <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] === $field) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
                   <?php } ?>
                 </select></td>
               </tr>

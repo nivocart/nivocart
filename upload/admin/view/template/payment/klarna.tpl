@@ -118,9 +118,9 @@
                     <td class="left"><?php echo $country_label; ?> <span class="help">(<?php echo $country_code; ?>)</span></td>
                     <td class="left">
                       <select name="klarna[<?php echo $region_code; ?>][countries][<?php echo $country_code; ?>][geo_zone_id]">
-                        <option value="0"<?php echo ($country_geo_zone == '0') ? ' selected="selected"' : ''; ?>><?php echo $text_all_zones; ?></option>
+                        <option value="0"<?php echo ($country_geo_zone === '0') ? ' selected="selected"' : ''; ?>><?php echo $text_all_zones; ?></option>
                         <?php foreach ($geo_zones as $geo_zone) { ?>
-                          <option value="<?php echo $geo_zone['geo_zone_id']; ?>"<?php echo ($country_geo_zone == $geo_zone['geo_zone_id']) ? ' selected="selected"' : ''; ?>><?php echo $geo_zone['name']; ?></option>
+                          <option value="<?php echo $geo_zone['geo_zone_id']; ?>"<?php echo ($country_geo_zone === $geo_zone['geo_zone_id']) ? ' selected="selected"' : ''; ?>><?php echo $geo_zone['name']; ?></option>
                         <?php } ?>
                       </select>
                     </td>
