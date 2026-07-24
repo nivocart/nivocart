@@ -39,27 +39,27 @@
           <label for="check-all"><span></span></label></td>
           <td class="left"><?php echo $column_id; ?></td>
           <td class="left"><?php echo $column_image; ?></td>
-          <td class="left"><?php if ($sort == 'sp.name') { ?>
+          <td class="left"><?php if ($sort === 'sp.name') { ?>
             <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'sp.model') { ?>
+          <td class="left"><?php if ($sort === 'sp.model') { ?>
             <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'supplier') { ?>
+          <td class="left"><?php if ($sort === 'supplier') { ?>
             <a href="<?php echo $sort_supplier; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_supplier; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_supplier; ?>"><?php echo $column_supplier; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'sp.price') { ?>
+          <td class="left"><?php if ($sort === 'sp.price') { ?>
             <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_price; ?>"><?php echo $column_price; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'sp.status') { ?>
+          <td class="left"><?php if ($sort === 'sp.status') { ?>
             <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -107,7 +107,7 @@
               <td class="left"><?php echo $supplier_product['barcode']; ?><?php echo $supplier_product['model']; ?></td>
               <td class="left"><?php echo $supplier_product['supplier']; ?></td>
               <td class="right"><?php echo $supplier_product['price']; ?></td>
-              <?php if ($supplier_product['status'] == 1) { ?>
+              <?php if ($supplier_product['status'] === '1') { ?>
                 <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
               <?php } else { ?>
                 <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -143,7 +143,7 @@ function filter() {
 		url += '&filter_name=' + encodeURIComponent(filter_name);
 	}
 
-	var filter_model = $('input[name=\'filter_model\']').prop('value'); 
+	var filter_model = $('input[name=\'filter_model\']').prop('value');
 
 	if (filter_model) {
 		url += '&filter_model=' + encodeURIComponent(filter_model);
@@ -163,7 +163,7 @@ function filter() {
 
 	var filter_status = $('select[name=\'filter_status\']').prop('value');
 
-	if (filter_status != '*') {
+	if (filter_status !== '*') {
 		url += '&filter_status=' + encodeURIComponent(filter_status);
 	}
 
@@ -310,7 +310,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

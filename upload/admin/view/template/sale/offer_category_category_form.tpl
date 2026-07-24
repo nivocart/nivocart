@@ -32,12 +32,12 @@
           <tr>
             <td><span class="required">*</span> <?php echo $entry_type; ?></td>
             <td><select name="type">
-              <?php if ($type == 'P') { ?>
+              <?php if ($type === 'P') { ?>
                 <option value="P" selected="selected"><?php echo $text_percent; ?></option>
               <?php } else { ?>
                 <option value="P"><?php echo $text_percent; ?></option>
               <?php } ?>
-              <?php if ($type == 'F') { ?>
+              <?php if ($type === 'F') { ?>
                 <option value="F" selected="selected"><?php echo $text_fixed; ?></option>
               <?php } else { ?>
                 <option value="F"><?php echo $text_fixed; ?></option>
@@ -76,7 +76,7 @@
               <select name="category_one" class="input-error">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($categories as $category) { ?>
-                  <?php if ($category['category_id'] == $category_one) { ?>
+                  <?php if ($category['category_id'] === $category_one) { ?>
                     <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
@@ -88,7 +88,7 @@
               <select name="category_one">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($categories as $category) { ?>
-                  <?php if ($category['category_id'] == $category_one) { ?>
+                  <?php if ($category['category_id'] === $category_one) { ?>
                     <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
@@ -118,7 +118,7 @@
               <select name="category_two" class="input-error">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($categories as $category) { ?>
-                  <?php if ($category['category_id'] == $category_two) { ?>
+                  <?php if ($category['category_id'] === $category_two) { ?>
                     <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
@@ -130,7 +130,7 @@
               <select name="category_two">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($categories as $category) { ?>
-                  <?php if ($category['category_id'] == $category_two) { ?>
+                  <?php if ($category['category_id'] === $category_two) { ?>
                     <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
@@ -186,7 +186,7 @@ $.widget('custom.catcomplete', $.ui.autocomplete, {
 		var self = this, currentCategory = '';
 
 		$.each(items, function(index, item) {
-			if (item['category'] != currentCategory) {
+			if (item['category'] !== currentCategory) {
 				ul.append('<li class="ui-autocomplete-category">' + item['category'] + '</li>');
 				currentCategory = item['category'];
 			}

@@ -13,7 +13,7 @@
   </tr>
 </table>
 <div style="margin:20px; text-align:right;">
-  <img src="view/image/loading.gif" alt="" id="img-price-update" style="display:none;" /> 
+  <img src="view/image/loading.gif" alt="" id="img-price-update" style="display:none;" />
   <a id="button-price-update" class="button ripple" style="font-size:12px; color:#FFF;"><?php echo $button_submit; ?></a>
 </div>
 
@@ -24,8 +24,8 @@ $('body').on('click', '#button-price-update', function() {
 	$('div.success').remove();
 
 	$.ajax({
-		url:'index.php?route=sale/supplier_product/updatePrice&token=<?php echo $token; ?>',
-		type:'post',
+		url: 'index.php?route=sale/supplier_product/updatePrice&token=<?php echo $token; ?>',
+		type: 'post',
 		dataType: 'json',
 		data: $.param($('#update-price-dialog').find('input[type="text"], input[type="hidden"], select')) + '&' + $('#form').serialize(),
 		success: function(json) {

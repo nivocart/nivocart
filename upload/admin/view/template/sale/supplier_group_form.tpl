@@ -45,7 +45,7 @@
             <td><select name="order_method">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($order_options as $order_option) { ?>
-                <?php if ($order_option['method'] == $order_method) { ?>
+                <?php if ($order_option['method'] === $order_method) { ?>
                   <option value="<?php echo $order_option['method']; ?>" selected="selected"><?php echo $order_option['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_option['method']; ?>"><?php echo $order_option['title']; ?></option>
@@ -58,7 +58,7 @@
             <td><select name="payment_method">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($payment_options as $payment_option) { ?>
-                <?php if ($payment_option['method'] == $payment_method) { ?>
+                <?php if ($payment_option['method'] === $payment_method) { ?>
                   <option value="<?php echo $payment_option['method']; ?>" selected="selected"><?php echo $payment_option['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $payment_option['method']; ?>"><?php echo $payment_option['title']; ?></option>

@@ -101,7 +101,7 @@
             <td><select name="return_action_id">
               <option value="0"></option>
               <?php foreach ($return_actions as $return_action) { ?>
-                <?php if ($return_action['return_action_id'] == $return_action_id) { ?>
+                <?php if ($return_action['return_action_id'] === $return_action_id) { ?>
                   <option value="<?php echo $return_action['return_action_id']; ?>" selected="selected"><?php echo $return_action['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $return_action['return_action_id']; ?>"><?php echo $return_action['name']; ?></option>
@@ -124,7 +124,7 @@
             <td><?php echo $entry_return_status; ?></td>
             <td><select name="return_status_id">
               <?php foreach ($return_statuses as $return_status) { ?>
-                <?php if ($return_status['return_status_id'] == $return_status_id) { ?>
+                <?php if ($return_status['return_status_id'] === $return_status_id) { ?>
                   <option value="<?php echo $return_status['return_status_id']; ?>" selected="selected"><?php echo $return_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $return_status['return_status_id']; ?>"><?php echo $return_status['name']; ?></option>

@@ -29,42 +29,42 @@
             <tr>
               <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
               <label for="check-all"><span></span></label></td>
-              <td class="left"><?php if ($sort == 'r.return_id') { ?>
+              <td class="left"><?php if ($sort === 'r.return_id') { ?>
                 <a href="<?php echo $sort_return_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_return_id; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_return_id; ?>"><?php echo $column_return_id; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'r.order_id') { ?>
+              <td class="left"><?php if ($sort === 'r.order_id') { ?>
                 <a href="<?php echo $sort_order_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_order_id; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_order_id; ?>"><?php echo $column_order_id; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'customer') { ?>
+              <td class="left"><?php if ($sort === 'customer') { ?>
                 <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_customer; ?>"><?php echo $column_customer; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'r.product') { ?>
+              <td class="left"><?php if ($sort === 'r.product') { ?>
                 <a href="<?php echo $sort_product; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_product; ?>"><?php echo $column_product; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'r.model') { ?>
+              <td class="left"><?php if ($sort === 'r.model') { ?>
                 <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'status') { ?>
+              <td class="left"><?php if ($sort === 'status') { ?>
                 <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'r.date_added') { ?>
+              <td class="left"><?php if ($sort === 'r.date_added') { ?>
                 <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'r.date_modified') { ?>
+              <td class="left"><?php if ($sort === 'r.date_modified') { ?>
                 <a href="<?php echo $sort_date_modified; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_modified; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -83,7 +83,7 @@
               <td class="left"><select name="filter_return_status_id">
                 <option value="*"></option>
                 <?php foreach ($return_statuses as $return_status) { ?>
-                  <?php if ($return_status['return_status_id'] == $filter_return_status_id) { ?>
+                  <?php if ($return_status['return_status_id'] === $filter_return_status_id) { ?>
                     <option value="<?php echo $return_status['return_status_id']; ?>" selected="selected"><?php echo $return_status['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $return_status['return_status_id']; ?>"><?php echo $return_status['name']; ?></option>
@@ -168,7 +168,7 @@ function filter() {
 
 	var filter_return_status_id = $('select[name=\'filter_return_status_id\']').prop('value');
 
-	if (filter_return_status_id != '*') {
+	if (filter_return_status_id !== '*') {
 		url += '&filter_return_status_id=' + encodeURIComponent(filter_return_status_id);
 	}
 
@@ -211,7 +211,7 @@ $.widget('custom.catcomplete', $.ui.autocomplete, {
 		var self = this, currentCategory = '';
 
 		$.each(items, function(index, item) {
-			if (item.category != currentCategory) {
+			if (item.category !== currentCategory) {
 				ul.append('<li class="ui-autocomplete-category">' + item.category + '</li>');
 
 				currentCategory = item.category;
@@ -271,7 +271,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

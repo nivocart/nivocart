@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="content">
-  <?php if (!$abandoned && $order_status_id === 0) { ?>
+  <?php if (!$abandoned && $order_status_id === '0') { ?>
     <div class="warning"><?php echo $text_missed; ?></div>
   <?php } ?>
   <?php if ($abandoned) { ?>
@@ -337,7 +337,7 @@
             <td class="left"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
             <?php foreach ($product['option'] as $option) { ?>
               <br />
-              <?php if ($option['type'] != 'file') { ?>
+              <?php if ($option['type'] !== 'file') { ?>
                 &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
               <?php } else { ?>
                 &nbsp;<small> - <?php echo $option['name']; ?>: <a href="<?php echo $option['href']; ?>"><?php echo $option['value']; ?></a></small>
@@ -413,7 +413,7 @@
               <td class="left">
                 <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
                 <?php foreach ($product['option'] as $option) { ?><br />
-                  <?php if ($option['type'] != 'file') { ?>
+                  <?php if ($option['type'] !== 'file') { ?>
                     &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
                   <?php } else { ?>
                     &nbsp;<small> - <?php echo $option['name']; ?>: <a href="<?php echo $option['href']; ?>" title=""><?php echo $option['value']; ?></a></small>

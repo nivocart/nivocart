@@ -29,32 +29,32 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 's.reference') { ?>
+            <td class="left"><?php if ($sort === 's.reference') { ?>
               <a href="<?php echo $sort_reference; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_reference; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_reference; ?>"><?php echo $column_reference; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 's.company') { ?>
+            <td class="left"><?php if ($sort === 's.company') { ?>
               <a href="<?php echo $sort_company; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_company; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_company; ?>"><?php echo $column_company; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 's.email') { ?>
+            <td class="left"><?php if ($sort === 's.email') { ?>
               <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 's.supplier_group') { ?>
+            <td class="left"><?php if ($sort === 's.supplier_group') { ?>
               <a href="<?php echo $sort_supplier_group; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_supplier_group; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_supplier_group; ?>"><?php echo $column_supplier_group; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 's.status') { ?>
+            <td class="left"><?php if ($sort === 's.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 's.date_added') { ?>
+            <td class="left"><?php if ($sort === 's.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -72,7 +72,7 @@
             <td><select name="filter_supplier_group_id">
               <option value="*"></option>
               <?php foreach ($supplier_groups as $supplier_group) { ?>
-                <?php if ($supplier_group['supplier_group_id'] == $filter_supplier_group_id) { ?>
+                <?php if ($supplier_group['supplier_group_id'] === $filter_supplier_group_id) { ?>
                   <option value="<?php echo $supplier_group['supplier_group_id']; ?>" selected="selected"><?php echo $supplier_group['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $supplier_group['supplier_group_id']; ?>"><?php echo $supplier_group['name']; ?></option>
@@ -110,7 +110,7 @@
             <td class="left"><?php echo $supplier['company']; ?></td>
             <td class="left"><?php echo $supplier['email']; ?></td>
             <td class="left"><?php echo $supplier['supplier_group']; ?></td>
-            <?php if ($supplier['status'] == 1) { ?>
+            <?php if ($supplier['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -161,13 +161,13 @@ function filter() {
 
 	var filter_supplier_group_id = $('select[name=\'filter_supplier_group_id\']').prop('value');
 
-	if (filter_supplier_group_id != '*') {
+	if (filter_supplier_group_id !== '*') {
 		url += '&filter_supplier_group_id=' + encodeURIComponent(filter_supplier_group_id);
 	}
 
 	var filter_status = $('select[name=\'filter_status\']').prop('value');
 
-	if (filter_status != '*') {
+	if (filter_status !== '*') {
 		url += '&filter_status=' + encodeURIComponent(filter_status);
 	}
 
@@ -220,10 +220,10 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });
 //--></script>
 
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

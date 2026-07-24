@@ -30,37 +30,37 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'name') { ?>
+            <td class="left"><?php if ($sort === 'name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.email') { ?>
+            <td class="left"><?php if ($sort === 'c.email') { ?>
               <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'customer_group') { ?>
+            <td class="left"><?php if ($sort === 'customer_group') { ?>
               <a href="<?php echo $sort_customer_group; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer_group; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_customer_group; ?>"><?php echo $column_customer_group; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.status') { ?>
+            <td class="left"><?php if ($sort === 'c.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.approved') { ?>
+            <td class="left"><?php if ($sort === 'c.approved') { ?>
               <a href="<?php echo $sort_approved; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_approved; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_approved; ?>"><?php echo $column_approved; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.ip') { ?>
+            <td class="left"><?php if ($sort === 'c.ip') { ?>
               <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_ip; ?>"><?php echo $column_ip; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.date_added') { ?>
+            <td class="left"><?php if ($sort === 'c.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -77,7 +77,7 @@
             <td><select name="filter_customer_group_id">
               <option value="*"></option>
               <?php foreach ($customer_groups as $customer_group) { ?>
-                <?php if ($customer_group['customer_group_id'] == $filter_customer_group_id) { ?>
+                <?php if ($customer_group['customer_group_id'] === $filter_customer_group_id) { ?>
                   <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>
@@ -128,9 +128,9 @@
             <td class="left"><?php echo $customer['name']; ?><?php if ($show_dob) { echo '(' . $customer['age'] . ')'; } ?></td>
             <td class="left"><?php echo $customer['email']; ?></td>
             <td class="left"><?php echo $customer['customer_group']; ?></td>
-            <?php if ($customer['status'] == 2) { ?>
+            <?php if ($customer['status'] === '2') { ?>
               <td class="center"><span class="deleted"><?php echo $text_deleted; ?></span></td>
-            <?php } elseif ($customer['status'] == 1) { ?>
+            <?php } elseif ($customer['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -185,19 +185,19 @@ function filter() {
 
 	var filter_customer_group_id = $('select[name=\'filter_customer_group_id\']').prop('value');
 
-	if (filter_customer_group_id != '*') {
+	if (filter_customer_group_id !== '*') {
 		url += '&filter_customer_group_id=' + encodeURIComponent(filter_customer_group_id);
 	}
 
 	var filter_status = $('select[name=\'filter_status\']').prop('value');
 
-	if (filter_status != '*') {
+	if (filter_status !== '*') {
 		url += '&filter_status=' + encodeURIComponent(filter_status);
 	}
 
 	var filter_approved = $('select[name=\'filter_approved\']').prop('value');
 
-	if (filter_approved != '*') {
+	if (filter_approved !== '*') {
 		url += '&filter_approved=' + encodeURIComponent(filter_approved);
 	}
 
@@ -256,10 +256,10 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });
 //--></script>
 
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

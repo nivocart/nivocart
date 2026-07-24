@@ -144,7 +144,7 @@
               <td><?php echo $entry_customer_group; ?></td>
               <td><select name="customer_group_id">
                 <?php foreach ($customer_groups as $customer_group) { ?>
-                  <?php if ($customer_group['customer_group_id'] == $customer_group_id) { ?>
+                  <?php if ($customer_group['customer_group_id'] === $customer_group_id) { ?>
                     <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>
@@ -255,7 +255,7 @@
                 <select name="address[<?php echo $address_row; ?>][country_id]" onchange="country(this, '<?php echo $address_row; ?>', '<?php echo $address['zone_id']; ?>');" class="input-error">
                   <option value=""><?php echo $text_select; ?></option>
                   <?php foreach ($countries as $country) { ?>
-                    <?php if ($country['country_id'] == $address['country_id']) { ?>
+                    <?php if ($country['country_id'] === $address['country_id']) { ?>
                       <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                     <?php } else { ?>
                       <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -267,7 +267,7 @@
                 <select name="address[<?php echo $address_row; ?>][country_id]" onchange="country(this, '<?php echo $address_row; ?>', '<?php echo $address['zone_id']; ?>');">
                   <option value=""><?php echo $text_select; ?></option>
                   <?php foreach ($countries as $country) { ?>
-                    <?php if ($country['country_id'] == $address['country_id']) { ?>
+                    <?php if ($country['country_id'] === $address['country_id']) { ?>
                       <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                     <?php } else { ?>
                       <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -289,7 +289,7 @@
             </tr>
             <tr>
               <td><?php echo $entry_default; ?></td>
-              <td><?php if (($address['address_id'] == $address_id) || !$addresses) { ?>
+              <td><?php if (($address['address_id'] === $address_id) || !$addresses) { ?>
                 <input type="radio" name="address[<?php echo $address_row; ?>][default]" value="<?php echo $address_row; ?>" id="default-address<?php echo $address_row; ?>" class="radio" checked />
                 <label for="default-address<?php echo $address_row; ?>"><span><span></span></span></label>
               <?php } else { ?>
@@ -420,7 +420,7 @@ $('select[name=\'customer_group_id\']').trigger('change');
 
 <script type="text/javascript"><!--
 function country(element, index, zone_id) {
-	if (element.value != '') {
+	if (element.value !== '') {
 		$.ajax({
 			url: 'index.php?route=localisation/country/country&token=<?php echo $token; ?>&country_id=' + element.value,
 			dataType: 'json',
@@ -431,7 +431,7 @@ function country(element, index, zone_id) {
 				$('.wait').remove();
 			},
 			success: function(json) {
-				if (json['postcode_required'] == '1') {
+				if (json['postcode_required'] === '1') {
 					$('#postcode-required' + index).show();
 				} else {
 					$('#postcode-required' + index).hide();
@@ -439,11 +439,11 @@ function country(element, index, zone_id) {
 
 				html = '<option value=""><?php echo $text_select; ?></option>';
 
-				if (json['zone'] && json['zone'] != '') {
+				if (json['zone'] && json['zone'] !== '') {
 					for (i = 0; i < json['zone'].length; i++) {
 						html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
-						if (json['zone'][i]['zone_id'] == zone_id) {
+						if (json['zone'][i]['zone_id'] === zone_id) {
 							html += ' selected="selected"';
 						}
 

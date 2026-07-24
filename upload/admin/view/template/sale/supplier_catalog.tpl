@@ -25,7 +25,7 @@
           <td class="left"><?php echo $catalog_product['name']; ?></td>
           <td class="left"><?php echo $catalog_product['barcode']; ?><?php echo $catalog_product['model']; ?></td>
           <td class="right"><?php echo $catalog_product['price']; ?></td>
-          <?php if ($catalog_product['status'] == 1) { ?>
+          <?php if ($catalog_product['status'] === '1') { ?>
             <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
           <?php } else { ?>
             <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>

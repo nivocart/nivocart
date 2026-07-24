@@ -32,12 +32,12 @@
           <tr>
             <td><span class="required">*</span> <?php echo $entry_type; ?></td>
             <td><select name="type">
-              <?php if ($type == 'P') { ?>
+              <?php if ($type === 'P') { ?>
                 <option value="P" selected="selected"><?php echo $text_percent; ?></option>
               <?php } else { ?>
                 <option value="P"><?php echo $text_percent; ?></option>
               <?php } ?>
-              <?php if ($type == 'F') { ?>
+              <?php if ($type === 'F') { ?>
                 <option value="F" selected="selected"><?php echo $text_fixed; ?></option>
               <?php } else { ?>
                 <option value="F"><?php echo $text_fixed; ?></option>
@@ -76,7 +76,7 @@
               <select name="product_one" class="input-error">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($products as $product) { ?>
-                  <?php if ($product['product_id'] == $product_one) { ?>
+                  <?php if ($product['product_id'] === $product_one) { ?>
                     <option value="<?php echo $product['product_id']; ?>" selected="selected"><?php echo $product['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></option>
@@ -88,7 +88,7 @@
               <select name="product_one">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($products as $product) { ?>
-                  <?php if ($product['product_id'] == $product_one) { ?>
+                  <?php if ($product['product_id'] === $product_one) { ?>
                     <option value="<?php echo $product['product_id']; ?>" selected="selected"><?php echo $product['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></option>
@@ -117,7 +117,7 @@
               <select name="product_two" class="input-error">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($products as $product) { ?>
-                  <?php if ($product['product_id'] == $product_two) { ?>
+                  <?php if ($product['product_id'] === $product_two) { ?>
                     <option value="<?php echo $product['product_id']; ?>" selected="selected"><?php echo $product['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></option>
@@ -129,7 +129,7 @@
               <select name="product_two">
                 <option value=""><?php echo $text_select; ?></option>
                 <?php foreach ($products as $product) { ?>
-                  <?php if ($product['product_id'] == $product_two) { ?>
+                  <?php if ($product['product_id'] === $product_two) { ?>
                     <option value="<?php echo $product['product_id']; ?>" selected="selected"><?php echo $product['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></option>

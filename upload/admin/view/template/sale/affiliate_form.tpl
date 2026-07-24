@@ -336,7 +336,7 @@
 $('select[name=\'country_id\']').on('change', function() {
     var zone_id = <?php echo (int)$zone_id; ?>;
 
-    if (this.value != '') {
+    if (this.value !== '') {
         $.ajax({
             url: 'index.php?route=localisation/country/country&token=<?php echo $token; ?>&country_id=' + this.value,
             dataType: 'json',
@@ -347,7 +347,7 @@ $('select[name=\'country_id\']').on('change', function() {
                 $('.wait').remove();
             },
             success: function(json) {
-                if (json['postcode_required'] == '1') {
+                if (json['postcode_required'] === '1') {
                     $('#postcode-required').show();
                 } else {
                     $('#postcode-required').hide();
@@ -358,7 +358,7 @@ $('select[name=\'country_id\']').on('change', function() {
                 if (json['zone'] && json['zone'].length) {
                     for (var i = 0; i < json['zone'].length; i++) {
                         html += '<option value="' + json['zone'][i]['zone_id'] + '"';
-                        if (json['zone'][i]['zone_id'] == zone_id) {
+                        if (json['zone'][i]['zone_id'] === zone_id) {
                             html += ' selected="selected"';
                         }
                         html += '>' + json['zone'][i]['name'] + '</option>';

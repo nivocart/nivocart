@@ -25,7 +25,7 @@
             <td><select name="supplier_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($suppliers as $supplier) { ?>
-                <?php if ($supplier['supplier_id'] == $supplier_id) { ?>
+                <?php if ($supplier['supplier_id'] === $supplier_id) { ?>
                   <option value="<?php echo $supplier['supplier_id']; ?>" selected="selected"><?php echo $supplier['company']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $supplier['supplier_id']; ?>"><?php echo $supplier['company']; ?></option>
@@ -81,7 +81,7 @@
             <td><select name="tax_class_id">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($tax_classes as $tax_class) { ?>
-                <?php if ($tax_class['tax_class_id'] == $tax_class_id) { ?>
+                <?php if ($tax_class['tax_class_id'] === $tax_class_id) { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
@@ -111,8 +111,8 @@
           <tr>
             <td><?php echo $entry_dimension; ?></td>
             <td>
-              <input type="text" name="length" value="<?php echo $length; ?>" size="12" /> x 
-              <input type="text" name="width" value="<?php echo $width; ?>" size="12" /> x 
+              <input type="text" name="length" value="<?php echo $length; ?>" size="12" /> x
+              <input type="text" name="width" value="<?php echo $width; ?>" size="12" /> x
               <input type="text" name="height" value="<?php echo $height; ?>" size="12" />
             </td>
           </tr>
@@ -120,7 +120,7 @@
             <td><?php echo $entry_length; ?></td>
             <td><select name="length_class_id">
               <?php foreach ($length_classes as $length_class) { ?>
-                <?php if ($length_class['length_class_id'] == $length_class_id) { ?>
+                <?php if ($length_class['length_class_id'] === $length_class_id) { ?>
                   <option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
@@ -136,7 +136,7 @@
             <td><?php echo $entry_weight_class; ?></td>
             <td><select name="weight_class_id">
               <?php foreach ($weight_classes as $weight_class) { ?>
-                <?php if ($weight_class['weight_class_id'] == $weight_class_id) { ?>
+                <?php if ($weight_class['weight_class_id'] === $weight_class_id) { ?>
                   <option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>

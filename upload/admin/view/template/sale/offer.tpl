@@ -110,7 +110,7 @@
                   <td class="center"><?php echo $offer['logged']; ?></td>
                   <td class="center"><?php echo $offer['date_end']; ?></td>
                   <td class="center"><?php echo $offer['validity']; ?></td>
-                  <?php if ($offer['status'] == 1) { ?>
+                  <?php if ($offer['status'] === '1') { ?>
                     <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
                   <?php } else { ?>
                     <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -129,7 +129,7 @@
                   <td class="center"><?php echo $offer['logged']; ?></td>
                   <td class="center"><?php echo $offer['date_end']; ?></td>
                   <td class="center"><?php echo $offer['validity']; ?></td>
-                  <?php if ($offer['status'] == 1) { ?>
+                  <?php if ($offer['status'] === '1') { ?>
                     <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
                   <?php } else { ?>
                     <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -148,7 +148,7 @@
                   <td class="center"><?php echo $offer['logged']; ?></td>
                   <td class="center"><?php echo $offer['date_end']; ?></td>
                   <td class="center"><?php echo $offer['validity']; ?></td>
-                  <?php if ($offer['status'] == 1) { ?>
+                  <?php if ($offer['status'] === '1') { ?>
                     <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
                   <?php } else { ?>
                     <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -167,7 +167,7 @@
                   <td class="center"><?php echo $offer['logged']; ?></td>
                   <td class="center"><?php echo $offer['date_end']; ?></td>
                   <td class="center"><?php echo $offer['validity']; ?></td>
-                  <?php if ($offer['status'] == 1) { ?>
+                  <?php if ($offer['status'] === '1') { ?>
                     <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
                   <?php } else { ?>
                     <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>

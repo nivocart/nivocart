@@ -29,32 +29,32 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'o.order_id') { ?>
+            <td class="left"><?php if ($sort === 'o.order_id') { ?>
               <a href="<?php echo $sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_order_id; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_order; ?>"><?php echo $column_order_id; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'customer') { ?>
+            <td class="left"><?php if ($sort === 'customer') { ?>
               <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_customer; ?>"><?php echo $column_customer; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'status') { ?>
+            <td class="left"><?php if ($sort === 'status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'o.date_added') { ?>
+            <td class="left"><?php if ($sort === 'o.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'o.date_modified') { ?>
+            <td class="left"><?php if ($sort === 'o.date_modified') { ?>
               <a href="<?php echo $sort_date_modified; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_modified; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'o.total') { ?>
+            <td class="left"><?php if ($sort === 'o.total') { ?>
               <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -69,13 +69,13 @@
             <td class="left"><input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" /></td>
             <td class="left"><select name="filter_order_status_id">
               <option value="*"></option>
-              <?php if ($filter_order_status_id == '0') { ?>
+              <?php if ($filter_order_status_id === '0') { ?>
                 <option value="0" selected="selected"><?php echo $text_missing; ?></option>
               <?php } else { ?>
                 <option value="0"><?php echo $text_missing; ?></option>
               <?php } ?>
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $filter_order_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -141,7 +141,7 @@ function filter() {
 
 	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').prop('value');
 
-	if (filter_order_status_id != '*') {
+	if (filter_order_status_id !== '*') {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
 	}
 
@@ -196,7 +196,7 @@ $.widget('custom.catcomplete', $.ui.autocomplete, {
 		var self = this, currentCategory = '';
 
 		$.each(items, function(index, item) {
-			if (item.category != currentCategory) {
+			if (item.category !== currentCategory) {
 				ul.append('<li class="ui-autocomplete-category">' + item.category + '</li>');
 				currentCategory = item.category;
 			}
@@ -249,7 +249,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

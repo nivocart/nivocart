@@ -674,7 +674,7 @@ $.widget('custom.catcomplete', $.ui.autocomplete, {
 		var self = this, currentCategory = '';
 
 		$.each(items, function(index, item) {
-			if (item['category'] != currentCategory) {
+			if (item['category'] !== currentCategory) {
 				ul.append('<li class="ui-autocomplete-category">' + item['category'] + '</li>');
 				currentCategory = item['category'];
 			}
@@ -827,7 +827,7 @@ $('select[name=\'payment_country_id\']').on('change', function() {
 
 			html = '<option value=""><?php echo $text_select; ?></option>';
 
-			if (json['zone'] && json['zone'] != '') {
+			if (json['zone'] && json['zone'] !== '') {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
@@ -857,7 +857,7 @@ $('body').on('change', 'select[name=\'payment_address\']', function() {
 		url: 'index.php?route=sale/customer/address&token=<?php echo $token; ?>&address_id=' + this.value,
 		dataType: 'json',
 		success: function(json) {
-			if (json != '') {
+			if (json !== '') {
 				$('input[name=\'payment_firstname\']').attr('value', json['firstname']);
 				$('input[name=\'payment_lastname\']').attr('value', json['lastname']);
 				$('input[name=\'payment_company\']').attr('value', json['company']);
@@ -928,7 +928,7 @@ $('body').on('change', 'select[name=\'shipping_address\']', function() {
 		url: 'index.php?route=sale/customer/address&token=<?php echo $token; ?>&address_id=' + this.value,
 		dataType: 'json',
 		success: function(json) {
-			if (json != '') {
+			if (json !== '') {
 				$('input[name=\'shipping_firstname\']').attr('value', json['firstname']);
 				$('input[name=\'shipping_lastname\']').attr('value', json['lastname']);
 				$('input[name=\'shipping_company\']').attr('value', json['company']);
@@ -1465,7 +1465,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 				$('.success').fadeIn('slow');
 			}
 
-			if (json['order_product'] != '') {
+			if (json['order_product'] !== '') {
 				var product_row = 0;
 				var option_row = 0;
 				var download_row = 0;
@@ -1530,7 +1530,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 			}
 
 			// Vouchers
-			if (json['order_voucher'] != '') {
+			if (json['order_voucher'] !== '') {
 				var voucher_row = 0;
 
 				html = '';
@@ -1600,7 +1600,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 					}
 				}
 
-				if (json['order_voucher'] != '') {
+				if (json['order_voucher'] !== '') {
 					for (i in json['order_voucher']) {
 						voucher = json['order_voucher'][i];
 

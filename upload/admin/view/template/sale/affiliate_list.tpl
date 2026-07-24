@@ -31,28 +31,28 @@
         <tr>
           <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
           <label for="check-all"><span></span></label></td>
-          <td class="left"><?php if ($sort == 'name') { ?>
+          <td class="left"><?php if ($sort === 'name') { ?>
             <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'a.email') { ?>
+          <td class="left"><?php if ($sort === 'a.email') { ?>
             <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
           <td class="left"><?php echo $column_balance; ?></td>
-          <td class="left"><?php if ($sort == 'a.approved') { ?>
+          <td class="left"><?php if ($sort === 'a.approved') { ?>
             <a href="<?php echo $sort_approved; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_approved; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_approved; ?>"><?php echo $column_approved; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'a.date_added') { ?>
+          <td class="left"><?php if ($sort === 'a.date_added') { ?>
             <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
-          <td class="left"><?php if ($sort == 'a.status') { ?>
+          <td class="left"><?php if ($sort === 'a.status') { ?>
             <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
           <?php } else { ?>
             <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -114,7 +114,7 @@
             <td class="center"><?php echo $affiliate['balance']; ?></td>
             <td class="center"><?php echo $affiliate['approved'] ? '<img src="view/image/success.png" alt="' . $text_yes . '" />' : '<img src="view/image/warning.png" alt="' . $text_no . '" />'; ?></td>
             <td class="center"><?php echo $affiliate['date_added']; ?></td>
-            <?php if ($affiliate['status'] === 1) { ?>
+            <?php if ($affiliate['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -268,7 +268,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

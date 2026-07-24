@@ -29,37 +29,37 @@
             <tr>
               <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
               <label for="check-all"><span></span></label></td>
-              <td class="left"><?php if ($sort == 'v.code') { ?>
+              <td class="left"><?php if ($sort === 'v.code') { ?>
                 <a href="<?php echo $sort_code; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_code; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_code; ?>"><?php echo $column_code; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'v.from_name') { ?>
+              <td class="left"><?php if ($sort === 'v.from_name') { ?>
                 <a href="<?php echo $sort_from; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_from; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_from; ?>"><?php echo $column_from; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'v.to_name') { ?>
+              <td class="left"><?php if ($sort === 'v.to_name') { ?>
                 <a href="<?php echo $sort_to; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_to; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_to; ?>"><?php echo $column_to; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'v.amount') { ?>
+              <td class="left"><?php if ($sort === 'v.amount') { ?>
                 <a href="<?php echo $sort_amount; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_amount; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_amount; ?>"><?php echo $column_amount; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'theme') { ?>
+              <td class="left"><?php if ($sort === 'theme') { ?>
                 <a href="<?php echo $sort_theme; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_theme; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_theme; ?>"><?php echo $column_theme; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'v.date_added') { ?>
+              <td class="left"><?php if ($sort === 'v.date_added') { ?>
                 <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
               <?php } ?></td>
-              <td class="left"><?php if ($sort == 'v.status') { ?>
+              <td class="left"><?php if ($sort === 'v.status') { ?>
                 <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
               <?php } else { ?>
                 <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -84,7 +84,7 @@
                 <td class="center"><?php echo $voucher['amount']; ?></td>
                 <td class="center"><?php echo $voucher['theme']; ?></td>
                 <td class="center"><?php echo $voucher['date_added']; ?></td>
-                <?php if ($voucher['status'] == 1) { ?>
+                <?php if ($voucher['status'] === '1') { ?>
                   <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
                 <?php } else { ?>
                   <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -152,7 +152,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });
