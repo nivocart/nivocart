@@ -4,73 +4,66 @@
  *
  * @package NivoCart
  */
+declare(strict_types = 1);
+
 class ModelCatalogTagCloud extends Model {
 	/**
-	 * Functions Get, Generate
+	 * Returns a rendered tag cloud HTML string, or null if no tags are found.
 	 */
-	public function getRandomTags(int $limit, $min_font_size, $max_font_size, $font_weight, $random) {
-		$names = [];
-		$totals = [];
+	public function getRandomTags(int $limit, int|float $min_font_size, int|float $max_font_size, int|string $font_weight, bool $random): ?string {
+		$language_id = (int)$this->config->get('config_language_id');
+		$store_id = (int)$this->config->get('config_store_id');
+
+		$query = $this->db->query("SELECT ptg.tag AS `tag`, COUNT(ptg.tag) AS `total`
+			FROM `" . DB_PREFIX . "product_tag` ptg
+			LEFT JOIN `" . DB_PREFIX . "product` p ON (ptg.product_id = p.product_id)
+			LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (ptg.product_id = p2s.product_id)
+			WHERE ptg.language_id = " . $language_id . " AND p2s.store_id = " . $store_id . " AND p.status = '1'
+			GROUP BY ptg.tag LIMIT 0, " . $limit
+		);
+
+		if (empty($query->rows)) {
+			return null;
+		}
+
 		$tags = [];
 
-		$tagcloud = false;
-
-		$query = $this->db->query("SELECT DISTINCT ptg.tag AS `tag` FROM `" . DB_PREFIX . "product_tag` ptg LEFT JOIN `" . DB_PREFIX . "product` p ON (ptg.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (ptg.product_id = p2s.product_id) WHERE ptg.language_id=" . (int)$this->config->get('config_language_id') . " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p.status = '1' LIMIT 0," . (int)$limit);
-
-		if (count($query->rows) > 0) {
-			foreach ($query->rows as $row) {
-				$tagcount = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_tag` WHERE tag = '" . $row['tag'] . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
-
-				$names[] = trim(str_replace(',', ' ', (string)$row['tag']));
-				$totals[] = $tagcount->num_rows;
-			}
-
-			$tags = array_combine($names, $totals);
-
-			$tagcloud = $this->generateTagCloud($tags, $random, $min_font_size, $max_font_size, $font_weight, true);
+		foreach ($query->rows as $row) {
+			$name = trim(str_replace(',', ' ', (string)$row['tag']));
+			$tags[$name] = (int)$row['total'];
 		}
 
-		return $tagcloud;
+		return $this->generateTagCloud($tags, $random, (int)$min_font_size, (int)$max_font_size, $font_weight);
 	}
 
-	protected function generateTagCloud($tags, $random, $min_font_size, $max_font_size, $font_weight, $resize = true) {
-		if ($resize === true) {
-			arsort($tags);
+	/**
+	 * Builds and returns the tag cloud HTML string.
+	 *
+	 * @param array<string, int> $tags
+	 */
+	protected function generateTagCloud(array $tags, bool $random, int $min_font_size, int $max_font_size, int|string $font_weight): string {
+		arsort($tags);
 
-			$max_qty = max(array_values($tags));
-			$min_qty = min(array_values($tags));
+		$values = array_values($tags);
+		$max_qty = max($values);
+		$min_qty = min($values);
+		$spread = max(1, $max_qty - $min_qty);
+		$step = ($max_font_size - $min_font_size) / $spread;
 
-			$spread = $max_qty - $min_qty;
+		$cloud = [];
 
-			if ($spread === 0) {
-				$spread = 1;
-			}
+		foreach ($tags as $tag => $count) {
+			$size = $random ? mt_rand($min_font_size, $max_font_size) : (int)round($min_font_size + (($count - $min_qty) * $step), 0, PHP_ROUND_HALF_UP);
 
-			$step = ((int)$max_font_size - (int)$min_font_size) / ($spread);
+			$tag = trim(str_replace('&', '&amp;', (string)$tag));
+			$url = $this->url->link('product/search', 'search=' . $tag . '&tag=' . $tag, 'SSL');
+			$style = 'text-decoration:none; font-size:' . $size . 'px; font-weight:' . $font_weight . ';';
 
-			$cloud = [];
-
-			foreach ($tags as $key => $value) {
-				if ($random) {
-					$size = mt_rand((int)$min_font_size, (int)$max_font_size);
-				} else {
-					$size = round((int)$min_font_size + (($value - $min_qty) * $step), 0, PHP_ROUND_HALF_UP);
-				}
-
-				$key = trim(str_replace('&', '&amp;', (string)$key));
-
-				$cloud[] = '<a href="' . $this->url->link('product/search', 'search=' . $key . '&tag=' . $key, 'SSL') . '" style="text-decoration:none; font-size:' . $size . 'px; font-weight:' . $font_weight . ';" title="">' . $key . '</a> ';
-			}
+			$cloud[] = '<a href="' . $url . '" style="' . $style . '" title="">' . $tag . '</a>';
 		}
-
-		$tagcloud = '';
 
 		shuffle($cloud);
 
-		for ($x = 0; $x < count($cloud); $x++) {
-			$tagcloud .= $cloud[$x];
-		}
-
-		return $tagcloud;
+		return implode(' ', $cloud);
 	}
 }
