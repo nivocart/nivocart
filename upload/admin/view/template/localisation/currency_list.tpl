@@ -30,27 +30,27 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'title') { ?>
+            <td class="left"><?php if ($sort === 'title') { ?>
               <a href="<?php echo $sort_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_title; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_title; ?>"><?php echo $column_title; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'code') { ?>
+            <td class="left"><?php if ($sort === 'code') { ?>
               <a href="<?php echo $sort_code; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_code; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_code; ?>"><?php echo $column_code; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'status') { ?>
+            <td class="left"><?php if ($sort === 'status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="right"><?php if ($sort == 'value') { ?>
+            <td class="right"><?php if ($sort === 'value') { ?>
               <a href="<?php echo $sort_value; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_value; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_value; ?>"><?php echo $column_value; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="right"><?php if ($sort == 'date_modified') { ?>
+            <td class="right"><?php if ($sort === 'date_modified') { ?>
               <a href="<?php echo $sort_date_modified; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_modified; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -71,7 +71,7 @@
             <?php } ?></td>
             <td class="left"><?php echo $currency['title']; ?></td>
             <td class="left"><?php echo $currency['code']; ?></td>
-            <?php if ($currency['status'] == 1) { ?>
+            <?php if ($currency['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -114,7 +114,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

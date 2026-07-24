@@ -55,7 +55,7 @@
             <tr>
               <td class="left"><select name="tax_rule[<?php echo $tax_rule_row; ?>][tax_rate_id]">
                 <?php foreach ($tax_rates as $tax_rate) { ?>
-                  <?php if ($tax_rate['tax_rate_id'] == $tax_rule['tax_rate_id']) { ?>
+                  <?php if ($tax_rate['tax_rate_id'] === $tax_rule['tax_rate_id']) { ?>
                     <option value="<?php echo $tax_rate['tax_rate_id']; ?>" selected="selected"><?php echo $tax_rate['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $tax_rate['tax_rate_id']; ?>"><?php echo $tax_rate['name']; ?></option>
@@ -63,17 +63,17 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="tax_rule[<?php echo $tax_rule_row; ?>][based]">
-                <?php if ($tax_rule['based'] == 'shipping') { ?>
+                <?php if ($tax_rule['based'] === 'shipping') { ?>
                   <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
                 <?php } else { ?>
                   <option value="shipping"><?php echo $text_shipping; ?></option>
                 <?php } ?>
-                <?php if ($tax_rule['based'] == 'payment') { ?>
+                <?php if ($tax_rule['based'] === 'payment') { ?>
                   <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
                 <?php } else { ?>
                   <option value="payment"><?php echo $text_payment; ?></option>
                 <?php } ?>
-                <?php if ($tax_rule['based'] == 'store') { ?>
+                <?php if ($tax_rule['based'] === 'store') { ?>
                   <option value="store" selected="selected"><?php echo $text_store; ?></option>
                 <?php } else { ?>
                   <option value="store"><?php echo $text_store; ?></option>

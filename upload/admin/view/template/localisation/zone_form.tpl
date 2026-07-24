@@ -24,7 +24,7 @@
             <td><?php echo $entry_country; ?></td>
             <td><select name="country_id">
               <?php foreach ($countries as $country) { ?>
-                <?php if ($country['country_id'] == $country_id) { ?>
+                <?php if ($country['country_id'] === $country_id) { ?>
                   <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>

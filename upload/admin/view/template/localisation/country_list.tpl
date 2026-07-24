@@ -31,22 +31,22 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'cd.name') { ?>
+            <td class="left"><?php if ($sort === 'cd.name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.iso_code_2') { ?>
+            <td class="left"><?php if ($sort === 'c.iso_code_2') { ?>
               <a href="<?php echo $sort_iso_code_2; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_iso_code_2; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_iso_code_2; ?>"><?php echo $column_iso_code_2; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.iso_code_3') { ?>
+            <td class="left"><?php if ($sort === 'c.iso_code_3') { ?>
               <a href="<?php echo $sort_iso_code_3; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_iso_code_3; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_iso_code_3; ?>"><?php echo $column_iso_code_3; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'c.status') { ?>
+            <td class="left"><?php if ($sort === 'c.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -76,7 +76,7 @@
             <td class="left"><?php echo $country['name']; ?></td>
             <td class="left"><?php echo $country['iso_code_2']; ?></td>
             <td class="left"><?php echo $country['iso_code_3']; ?></td>
-            <?php if ($country['status'] == 1) { ?>
+            <?php if ($country['status'] === '1') { ?>
               <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
             <?php } else { ?>
               <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
@@ -148,7 +148,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

@@ -30,32 +30,32 @@
           <tr>
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
-            <td class="left"><?php if ($sort == 'tr.name') { ?>
+            <td class="left"><?php if ($sort === 'tr.name') { ?>
               <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'tr.rate') { ?>
+            <td class="left"><?php if ($sort === 'tr.rate') { ?>
               <a href="<?php echo $sort_rate; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_rate; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_rate; ?>"><?php echo $column_rate; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'tr.type') { ?>
+            <td class="left"><?php if ($sort === 'tr.type') { ?>
               <a href="<?php echo $sort_type; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_type; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_type; ?>"><?php echo $column_type; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
-            <?php } ?></td> 
-            <td class="left"><?php if ($sort == 'gz.name') { ?>
+            <?php } ?></td>
+            <td class="left"><?php if ($sort === 'gz.name') { ?>
               <a href="<?php echo $sort_geo_zone; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_geo_zone; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_geo_zone; ?>"><?php echo $column_geo_zone; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
-            <?php } ?></td> 
-            <td class="left"><?php if ($sort == 'tr.date_added') { ?>
+            <?php } ?></td>
+            <td class="left"><?php if ($sort === 'tr.date_added') { ?>
               <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'tr.date_modified') { ?>
+            <td class="left"><?php if ($sort === 'tr.date_modified') { ?>
               <a href="<?php echo $sort_date_modified; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_modified; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -116,7 +116,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });

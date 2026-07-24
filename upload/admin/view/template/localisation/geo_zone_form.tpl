@@ -54,7 +54,7 @@
           <tr>
             <td class="left"><select name="zone_to_geo_zone[<?php echo $zone_to_geo_zone_row; ?>][country_id]" id="country<?php echo $zone_to_geo_zone_row; ?>" onchange="$('#zone<?php echo $zone_to_geo_zone_row; ?>').load('index.php?route=localisation/geo_zone/zone&token=<?php echo $token; ?>&country_id=' + this.value + '&zone_id=0');">
               <?php foreach ($countries as $country) { ?>
-                <?php if ($country['country_id'] == $zone_to_geo_zone['country_id']) { ?>
+                <?php if ($country['country_id'] === $zone_to_geo_zone['country_id']) { ?>
                   <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
@@ -87,7 +87,7 @@ $('#zone-id').load('index.php?route=localisation/geo_zone/zone&token=<?php echo 
 <?php $zone_to_geo_zone_row = 0; ?>
 <?php foreach ($zone_to_geo_zones as $zone_to_geo_zone) { ?>
 <script type="text/javascript"><!--
-$('#zone<?php echo $zone_to_geo_zone_row; ?>').load('index.php?route=localisation/geo_zone/zone&token=<?php echo $token; ?>&country_id=<?php echo $zone_to_geo_zone['country_id']; ?>&zone_id=<?php echo $zone_to_geo_zone['zone_id']; ?>');
+  $('#zone<?php echo $zone_to_geo_zone_row; ?>').load('index.php?route=localisation/geo_zone/zone&token=<?php echo $token; ?>&country_id=<?php echo $zone_to_geo_zone['country_id']; ?>&zone_id=<?php echo $zone_to_geo_zone['zone_id']; ?>');
 //--></script>
 <?php $zone_to_geo_zone_row++; ?>
 <?php } ?>
@@ -96,7 +96,7 @@ $('#zone<?php echo $zone_to_geo_zone_row; ?>').load('index.php?route=localisatio
 var zone_to_geo_zone_row = <?php echo $zone_to_geo_zone_row; ?>;
 
 function addGeoZone() {
-	html  = '<tbody id="zone-to-geo-zone-row' + zone_to_geo_zone_row + '">';
+	html = '<tbody id="zone-to-geo-zone-row' + zone_to_geo_zone_row + '">';
 	html += '<tr>';
 	html += '<td class="left"><select name="zone_to_geo_zone[' + zone_to_geo_zone_row + '][country_id]" id="country' + zone_to_geo_zone_row + '" onchange="$(\'#zone' + zone_to_geo_zone_row + '\').load(\'index.php?route=localisation/geo_zone/zone&token=<?php echo $token; ?>&country_id=\' + this.value + \'&zone_id=0\');">';
 	<?php foreach ($countries as $country) { ?>
