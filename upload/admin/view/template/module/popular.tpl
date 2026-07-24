@@ -90,12 +90,12 @@
           <tbody id="module-row<?php echo $module_row; ?>">
             <tr>
               <td class="left"><select name="popular_module[<?php echo $module_row; ?>][style]">
-                <?php if ($module['style'] == 'box') { ?>
+                <?php if ($module['style'] === 'box') { ?>
                   <option value="box" selected="selected"><?php echo $text_box; ?></option>
                 <?php } else { ?>
                   <option value="box"><?php echo $text_box; ?></option>
                 <?php } ?>
-                <?php if ($module['style'] == 'list') { ?>
+                <?php if ($module['style'] === 'list') { ?>
                   <option value="list" selected="selected"><?php echo $text_list; ?></option>
                 <?php } else { ?>
                   <option value="list"><?php echo $text_list; ?></option>
@@ -105,7 +105,7 @@
                 <input type="text" name="popular_module[<?php echo $module_row; ?>][limit]" value="<?php echo $module['limit']; ?>" size="1" />
               </td>
               <td class="left">
-                <input type="text" name="popular_module[<?php echo $module_row; ?>][image_width]" value="<?php echo $module['image_width']; ?>" size="3" /> x 
+                <input type="text" name="popular_module[<?php echo $module_row; ?>][image_width]" value="<?php echo $module['image_width']; ?>" size="3" /> x
                 <input type="text" name="popular_module[<?php echo $module_row; ?>][image_height]" value="<?php echo $module['image_height']; ?>" size="3" /> px
                 <?php if (isset($error_image[$module_row])) { ?>
                   <span class="error"><?php echo $error_image[$module_row]; ?></span>
@@ -113,7 +113,7 @@
               </td>
               <td class="left"><select name="popular_module[<?php echo $module_row; ?>][layout_id]">
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+                  <?php if ($layout['layout_id'] === $module['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -121,32 +121,32 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="popular_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'content_higher') { ?>
+                <?php if ($module['position'] === 'content_higher') { ?>
                   <option value="content_higher" selected="selected"><?php echo $text_content_higher; ?></option>
                 <?php } else { ?>
                   <option value="content_higher"><?php echo $text_content_higher; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_high') { ?>
+                <?php if ($module['position'] === 'content_high') { ?>
                   <option value="content_high" selected="selected"><?php echo $text_content_high; ?></option>
                 <?php } else { ?>
                   <option value="content_high"><?php echo $text_content_high; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_left') { ?>
+                <?php if ($module['position'] === 'content_left') { ?>
                   <option value="content_left" selected="selected"><?php echo $text_content_left; ?></option>
                 <?php } else { ?>
                   <option value="content_left"><?php echo $text_content_left; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_right') { ?>
+                <?php if ($module['position'] === 'content_right') { ?>
                   <option value="content_right" selected="selected"><?php echo $text_content_right; ?></option>
                 <?php } else { ?>
                   <option value="content_right"><?php echo $text_content_right; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_low') { ?>
+                <?php if ($module['position'] === 'content_low') { ?>
                   <option value="content_low" selected="selected"><?php echo $text_content_low; ?></option>
                 <?php } else { ?>
                   <option value="content_low"><?php echo $text_content_low; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_lower') { ?>
+                <?php if ($module['position'] === 'content_lower') { ?>
                   <option value="content_lower" selected="selected"><?php echo $text_content_lower; ?></option>
                 <?php } else { ?>
                   <option value="content_lower"><?php echo $text_content_lower; ?></option>

@@ -70,7 +70,7 @@
               </td>
               <td class="left"><select name="blog_module[<?php echo $module_row; ?>][layout_id]">
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+                  <?php if ($layout['layout_id'] === $module['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -78,32 +78,32 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="blog_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'content_higher') { ?>
+                <?php if ($module['position'] === 'content_higher') { ?>
                   <option value="content_higher" selected="selected"><?php echo $text_content_higher; ?></option>
                 <?php } else { ?>
                   <option value="content_higher"><?php echo $text_content_higher; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_high') { ?>
+                <?php if ($module['position'] === 'content_high') { ?>
                   <option value="content_high" selected="selected"><?php echo $text_content_high; ?></option>
                 <?php } else { ?>
                   <option value="content_high"><?php echo $text_content_high; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_left') { ?>
+                <?php if ($module['position'] === 'content_left') { ?>
                   <option value="content_left" selected="selected"><?php echo $text_content_left; ?></option>
                 <?php } else { ?>
                   <option value="content_left"><?php echo $text_content_left; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_right') { ?>
+                <?php if ($module['position'] === 'content_right') { ?>
                   <option value="content_right" selected="selected"><?php echo $text_content_right; ?></option>
                 <?php } else { ?>
                   <option value="content_right"><?php echo $text_content_right; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_low') { ?>
+                <?php if ($module['position'] === 'content_low') { ?>
                   <option value="content_low" selected="selected"><?php echo $text_content_low; ?></option>
                 <?php } else { ?>
                   <option value="content_low"><?php echo $text_content_low; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_lower') { ?>
+                <?php if ($module['position'] === 'content_lower') { ?>
                   <option value="content_lower" selected="selected"><?php echo $text_content_lower; ?></option>
                 <?php } else { ?>
                   <option value="content_lower"><?php echo $text_content_lower; ?></option>

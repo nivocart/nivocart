@@ -69,7 +69,7 @@
               <?php if ($menus) { ?>
               <select name="menu_vertical_module[<?php echo $module_row; ?>][menu_id]">
                 <?php foreach ($menus as $menu) { ?>
-                  <?php if ($menu['menu_id'] == $module['menu_id']) { ?>
+                  <?php if ($menu['menu_id'] === $module['menu_id']) { ?>
                     <option value="<?php echo $menu['menu_id']; ?>" selected="selected"><?php echo $menu['title']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $menu['menu_id']; ?>"><?php echo $menu['title']; ?></option>
@@ -85,7 +85,7 @@
               </td>
               <td class="left"><select name="menu_vertical_module[<?php echo $module_row; ?>][layout_id]">
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+                  <?php if ($layout['layout_id'] === $module['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -93,24 +93,24 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="menu_vertical_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'content_left') { ?>
+                <?php if ($module['position'] === 'content_left') { ?>
                   <option value="content_left" selected="selected"><?php echo $text_content_left; ?></option>
                 <?php } else { ?>
                   <option value="content_left"><?php echo $text_content_left; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_right') { ?>
+                <?php if ($module['position'] === 'content_right') { ?>
                   <option value="content_right" selected="selected"><?php echo $text_content_right; ?></option>
                 <?php } else { ?>
                   <option value="content_right"><?php echo $text_content_right; ?></option>
                 <?php } ?>
               </select></td>
               <td class="left"><select name="menu_vertical_module[<?php echo $module_row; ?>][direction]">
-                <?php if ($module['direction'] == 'ltr') { ?>
+                <?php if ($module['direction'] === 'ltr') { ?>
                   <option value="ltr" selected="selected"><?php echo $text_ltr; ?></option>
                 <?php } else { ?>
                   <option value="ltr"><?php echo $text_ltr; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'rtl') { ?>
+                <?php if ($module['position'] === 'rtl') { ?>
                   <option value="rtl" selected="selected"><?php echo $text_rtl; ?></option>
                 <?php } else { ?>
                   <option value="rtl"><?php echo $text_rtl; ?></option>

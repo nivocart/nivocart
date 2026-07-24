@@ -27,19 +27,19 @@
           </tr>
           <tr>
             <td><?php echo $entry_theme; ?></td>
-            <td><?php if ($menu_horizontal_theme == 'light') { ?>
+            <td><?php if ($menu_horizontal_theme === 'light') { ?>
               <input type="radio" name="menu_horizontal_theme" value="light" id="light" class="checkbox" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="menu_horizontal_theme" value="light" id="light" class="checkbox" />
             <?php } ?>
             <label for="light"><?php echo $text_light; ?>&nbsp;&nbsp;<span></span></label>
-            <?php if ($menu_horizontal_theme == 'dark') { ?>
+            <?php if ($menu_horizontal_theme === 'dark') { ?>
               <input type="radio" name="menu_horizontal_theme" value="dark" id="dark" class="checkbox" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="menu_horizontal_theme" value="dark" id="dark" class="checkbox" />
             <?php } ?>
             <label for="dark"><?php echo $text_dark; ?>&nbsp;&nbsp;<span></span></label>
-            <?php if ($menu_horizontal_theme == 'custom') { ?>
+            <?php if ($menu_horizontal_theme === 'custom') { ?>
               <input type="radio" name="menu_horizontal_theme" value="custom" id="custom" class="checkbox" checked="checked" />
             <?php } else { ?>
               <input type="radio" name="menu_horizontal_theme" value="custom" id="custom" class="checkbox" />
@@ -53,7 +53,7 @@
             <td><?php echo $entry_header_color; ?></td>
             <td><select name="menu_horizontal_header_color">
               <?php foreach ($skins as $skin) { ?>
-                <?php if ($skin['skin'] == $menu_horizontal_header_color) { ?>
+                <?php if ($skin['skin'] === $menu_horizontal_header_color) { ?>
                   <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;" selected="selected"><?php echo $skin['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;"><?php echo $skin['title']; ?></option>
@@ -65,7 +65,7 @@
             <td><?php echo $entry_header_shape; ?></td>
             <td><select name="menu_horizontal_header_shape">
               <?php foreach ($shapes as $shape) { ?>
-                <?php if ($shape['shape'] == $menu_horizontal_header_shape) { ?>
+                <?php if ($shape['shape'] === $menu_horizontal_header_shape) { ?>
                   <option value="<?php echo $shape['shape']; ?>" selected="selected"><?php echo $shape['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $shape['shape']; ?>"><?php echo $shape['title']; ?></option>
@@ -107,7 +107,7 @@
               <?php if ($menus) { ?>
               <select name="menu_horizontal_module[<?php echo $module_row; ?>][menu_id]">
                 <?php foreach ($menus as $menu) { ?>
-                  <?php if ($menu['menu_id'] == $module['menu_id']) { ?>
+                  <?php if ($menu['menu_id'] === $module['menu_id']) { ?>
                     <option value="<?php echo $menu['menu_id']; ?>" selected="selected"><?php echo $menu['title']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $menu['menu_id']; ?>"><?php echo $menu['title']; ?></option>
@@ -126,7 +126,7 @@
               </td>
               <td class="left"><select name="menu_horizontal_module[<?php echo $module_row; ?>][layout_id]">
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+                  <?php if ($layout['layout_id'] === $module['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -134,22 +134,22 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="menu_horizontal_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'content_higher') { ?>
+                <?php if ($module['position'] === 'content_higher') { ?>
                   <option value="content_higher" selected="selected"><?php echo $text_content_higher; ?></option>
                 <?php } else { ?>
                   <option value="content_higher"><?php echo $text_content_higher; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_high') { ?>
+                <?php if ($module['position'] === 'content_high') { ?>
                   <option value="content_high" selected="selected"><?php echo $text_content_high; ?></option>
                 <?php } else { ?>
                   <option value="content_high"><?php echo $text_content_high; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_low') { ?>
+                <?php if ($module['position'] === 'content_low') { ?>
                   <option value="content_low" selected="selected"><?php echo $text_content_low; ?></option>
                 <?php } else { ?>
                   <option value="content_low"><?php echo $text_content_low; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_lower') { ?>
+                <?php if ($module['position'] === 'content_lower') { ?>
                   <option value="content_lower" selected="selected"><?php echo $text_content_lower; ?></option>
                 <?php } else { ?>
                   <option value="content_lower"><?php echo $text_content_lower; ?></option>

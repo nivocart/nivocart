@@ -25,7 +25,7 @@
             <a href="#tab-module-<?php echo $module_row; ?>" id="module-<?php echo $module_row; ?>"><?php echo $tab_module . ' ' . $module_row; ?>&nbsp;<img src="view/image/delete.png" alt="" onclick="$('.vtabs a:first').trigger('click'); $('#module-<?php echo $module_row; ?>').remove(); $('#tab-module-<?php echo $module_row; ?>').remove(); return false;" /></a>
           <?php $module_row++; ?>
           <?php } ?>
-          <span id="module-add"><?php echo $button_add_module; ?>&nbsp;<img src="view/image/add.png" alt="" onclick="addModule();" /></span> 
+          <span id="module-add"><?php echo $button_add_module; ?>&nbsp;<img src="view/image/add.png" alt="" onclick="addModule();" /></span>
         </div>
       <?php $module_row = 1; ?>
       <?php foreach ($modules as $module) { ?>
@@ -39,7 +39,7 @@
           <div id="tab-language-<?php echo $module_row; ?>-<?php echo $language['language_id']; ?>">
             <table class="form">
               <tr>
-                <td><?php echo $entry_theme; ?></td> 
+                <td><?php echo $entry_theme; ?></td>
                 <td><select name="welcome_module[<?php echo $module_row; ?>][theme]">
                   <?php if ($module['theme']) { ?>
                     <option value="1" selected="selected"><?php echo $text_yes; ?></option>
@@ -51,7 +51,7 @@
                 </select></td>
               </tr>
               <tr>
-                <td><?php echo $entry_title; ?></td> 
+                <td><?php echo $entry_title; ?></td>
                 <td><input type="text" name="welcome_module[<?php echo $module_row; ?>][title][<?php echo $language['language_id']; ?>]" value="<?php echo isset($module['title'][$language['language_id']]) ? $module['title'][$language['language_id']] : ''; ?>" size="30" /></td>
               </tr>
               <tr>
@@ -65,7 +65,7 @@
               <td><?php echo $entry_layout; ?></td>
               <td><select name="welcome_module[<?php echo $module_row; ?>][layout_id]">
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+                  <?php if ($layout['layout_id'] === $module['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -76,32 +76,32 @@
             <tr class="highlighted">
               <td><?php echo $entry_position; ?></td>
               <td><select name="welcome_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'content_higher') { ?>
+                <?php if ($module['position'] === 'content_higher') { ?>
                   <option value="content_higher" selected="selected"><?php echo $text_content_higher; ?></option>
                 <?php } else { ?>
                   <option value="content_higher"><?php echo $text_content_higher; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_high') { ?>
+                <?php if ($module['position'] === 'content_high') { ?>
                   <option value="content_high" selected="selected"><?php echo $text_content_high; ?></option>
                 <?php } else { ?>
                   <option value="content_high"><?php echo $text_content_high; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_left') { ?>
+                <?php if ($module['position'] === 'content_left') { ?>
                   <option value="content_left" selected="selected"><?php echo $text_content_left; ?></option>
                 <?php } else { ?>
                   <option value="content_left"><?php echo $text_content_left; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_right') { ?>
+                <?php if ($module['position'] === 'content_right') { ?>
                   <option value="content_right" selected="selected"><?php echo $text_content_right; ?></option>
                 <?php } else { ?>
                   <option value="content_right"><?php echo $text_content_right; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_low') { ?>
+                <?php if ($module['position'] === 'content_low') { ?>
                   <option value="content_low" selected="selected"><?php echo $text_content_low; ?></option>
                 <?php } else { ?>
                   <option value="content_low"><?php echo $text_content_low; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_lower') { ?>
+                <?php if ($module['position'] === 'content_lower') { ?>
                   <option value="content_lower" selected="selected"><?php echo $text_content_lower; ?></option>
                 <?php } else { ?>
                   <option value="content_lower"><?php echo $text_content_lower; ?></option>

@@ -47,9 +47,9 @@
             <td><?php echo $entry_transition; ?></td>
             <td><select name="banner_transition">
               <?php if (isset($banner_transition)) { $selected = "selected"; ?>
-                <option value="horizontal" <?php if ($banner_transition == 'horizontal') { echo $selected; } ?>>Horizontal</option>
-                <option value="vertical" <?php if ($banner_transition == 'vertical') { echo $selected; } ?>>Vertical</option>
-                <option value="fade" <?php if ($banner_transition == 'fade') { echo $selected; } ?>>Fade</option>
+                <option value="horizontal" <?php if ($banner_transition === 'horizontal') { echo $selected; } ?>>Horizontal</option>
+                <option value="vertical" <?php if ($banner_transition === 'vertical') { echo $selected; } ?>>Vertical</option>
+                <option value="fade" <?php if ($banner_transition === 'fade') { echo $selected; } ?>>Fade</option>
               <?php } else { ?>
                 <option value="horizontal">Horizontal</option>
                 <option value="vertical">Vertical</option>
@@ -61,15 +61,15 @@
             <td><?php echo $entry_duration; ?></td>
             <td><select name="banner_duration">
               <?php if (isset($banner_duration)) { $selected = "selected"; ?>
-                <option value="1000" <?php if ($banner_duration == 1000) { echo $selected; } ?>>1000</option>
-                <option value="2000" <?php if ($banner_duration == 2000) { echo $selected; } ?>>2000</option>
-                <option value="3000" <?php if ($banner_duration == 3000) { echo $selected; } ?>>3000</option>
-                <option value="4000" <?php if ($banner_duration == 4000) { echo $selected; } ?>>4000</option>
-                <option value="5000" <?php if ($banner_duration == 5000) { echo $selected; } ?>>5000</option>
-                <option value="6000" <?php if ($banner_duration == 6000) { echo $selected; } ?>>6000</option>
-                <option value="7000" <?php if ($banner_duration == 7000) { echo $selected; } ?>>7000</option>
-                <option value="8000" <?php if ($banner_duration == 8000) { echo $selected; } ?>>8000</option>
-                <option value="9000" <?php if ($banner_duration == 9000) { echo $selected; } ?>>9000</option>
+                <option value="1000" <?php if ($banner_duration === '1000') { echo $selected; } ?>>1000</option>
+                <option value="2000" <?php if ($banner_duration === '2000') { echo $selected; } ?>>2000</option>
+                <option value="3000" <?php if ($banner_duration === '3000') { echo $selected; } ?>>3000</option>
+                <option value="4000" <?php if ($banner_duration === '4000') { echo $selected; } ?>>4000</option>
+                <option value="5000" <?php if ($banner_duration === '5000') { echo $selected; } ?>>5000</option>
+                <option value="6000" <?php if ($banner_duration === '6000') { echo $selected; } ?>>6000</option>
+                <option value="7000" <?php if ($banner_duration === '7000') { echo $selected; } ?>>7000</option>
+                <option value="8000" <?php if ($banner_duration === '8000') { echo $selected; } ?>>8000</option>
+                <option value="9000" <?php if ($banner_duration === '9000') { echo $selected; } ?>>9000</option>
               <?php } else { ?>
                 <option value="1000">1000</option>
                 <option value="2000">2000</option>
@@ -87,15 +87,15 @@
             <td><?php echo $entry_speed; ?></td>
             <td><select name="banner_speed">
               <?php if (isset($banner_speed)) { $selected = "selected"; ?>
-                <option value="100" <?php if ($banner_speed == 100) { echo $selected; } ?>>100</option>
-                <option value="200" <?php if ($banner_speed == 200) { echo $selected; } ?>>200</option>
-                <option value="300" <?php if ($banner_speed == 300) { echo $selected; } ?>>300</option>
-                <option value="400" <?php if ($banner_speed == 400) { echo $selected; } ?>>400</option>
-                <option value="500" <?php if ($banner_speed == 500) { echo $selected; } ?>>500</option>
-                <option value="600" <?php if ($banner_speed == 600) { echo $selected; } ?>>600</option>
-                <option value="700" <?php if ($banner_speed == 700) { echo $selected; } ?>>700</option>
-                <option value="800" <?php if ($banner_speed == 800) { echo $selected; } ?>>800</option>
-                <option value="900" <?php if ($banner_speed == 900) { echo $selected; } ?>>900</option>
+                <option value="100" <?php if ($banner_speed === '100') { echo $selected; } ?>>100</option>
+                <option value="200" <?php if ($banner_speed === '200') { echo $selected; } ?>>200</option>
+                <option value="300" <?php if ($banner_speed === '300') { echo $selected; } ?>>300</option>
+                <option value="400" <?php if ($banner_speed === '400') { echo $selected; } ?>>400</option>
+                <option value="500" <?php if ($banner_speed === '500') { echo $selected; } ?>>500</option>
+                <option value="600" <?php if ($banner_speed === '600') { echo $selected; } ?>>600</option>
+                <option value="700" <?php if ($banner_speed === '700') { echo $selected; } ?>>700</option>
+                <option value="800" <?php if ($banner_speed === '800') { echo $selected; } ?>>800</option>
+                <option value="900" <?php if ($banner_speed === '900') { echo $selected; } ?>>900</option>
               <?php } else { ?>
                 <option value="100">100</option>
                 <option value="200">200</option>
@@ -143,7 +143,7 @@
             <tr>
               <td class="left"><select name="banner_module[<?php echo $module_row; ?>][banner_id]">
                 <?php foreach ($banners as $banner) { ?>
-                  <?php if ($banner['banner_id'] == $module['banner_id']) { ?>
+                  <?php if ($banner['banner_id'] === $module['banner_id']) { ?>
                     <option value="<?php echo $banner['banner_id']; ?>" selected="selected"><?php echo $banner['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $banner['banner_id']; ?>"><?php echo $banner['name']; ?></option>
@@ -151,7 +151,7 @@
                 <?php } ?>
               </select></td>
               <td class="left">
-                <input type="text" name="banner_module[<?php echo $module_row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" /> x 
+                <input type="text" name="banner_module[<?php echo $module_row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" /> x
                 <input type="text" name="banner_module[<?php echo $module_row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" /> px
                 <?php if (isset($error_dimension[$module_row])) { ?>
                   <span class="error"><?php echo $error_dimension[$module_row]; ?></span>
@@ -159,7 +159,7 @@
               </td>
               <td class="left"><select name="banner_module[<?php echo $module_row; ?>][layout_id]">
                 <?php foreach ($layouts as $layout) { ?>
-                  <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
+                  <?php if ($layout['layout_id'] === $module['layout_id']) { ?>
                     <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
                   <?php } else { ?>
                     <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
@@ -167,32 +167,32 @@
                 <?php } ?>
               </select></td>
               <td class="left"><select name="banner_module[<?php echo $module_row; ?>][position]">
-                <?php if ($module['position'] == 'content_higher') { ?>
+                <?php if ($module['position'] === 'content_higher') { ?>
                   <option value="content_higher" selected="selected"><?php echo $text_content_higher; ?></option>
                 <?php } else { ?>
                   <option value="content_higher"><?php echo $text_content_higher; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_high') { ?>
+                <?php if ($module['position'] === 'content_high') { ?>
                   <option value="content_high" selected="selected"><?php echo $text_content_high; ?></option>
                 <?php } else { ?>
                   <option value="content_high"><?php echo $text_content_high; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_left') { ?>
+                <?php if ($module['position'] === 'content_left') { ?>
                   <option value="content_left" selected="selected"><?php echo $text_content_left; ?></option>
                 <?php } else { ?>
                   <option value="content_left"><?php echo $text_content_left; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_right') { ?>
+                <?php if ($module['position'] === 'content_right') { ?>
                   <option value="content_right" selected="selected"><?php echo $text_content_right; ?></option>
                 <?php } else { ?>
                   <option value="content_right"><?php echo $text_content_right; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_low') { ?>
+                <?php if ($module['position'] === 'content_low') { ?>
                   <option value="content_low" selected="selected"><?php echo $text_content_low; ?></option>
                 <?php } else { ?>
                   <option value="content_low"><?php echo $text_content_low; ?></option>
                 <?php } ?>
-                <?php if ($module['position'] == 'content_lower') { ?>
+                <?php if ($module['position'] === 'content_lower') { ?>
                   <option value="content_lower" selected="selected"><?php echo $text_content_lower; ?></option>
                 <?php } else { ?>
                   <option value="content_lower"><?php echo $text_content_lower; ?></option>
@@ -232,7 +232,7 @@
 <script type="text/javascript"><!--
 var module_row = <?php echo $module_row; ?>;
 
-function addModule() { 
+function addModule() {
 	html  = '<tbody id="module-row' + module_row + '">';
 	html += '  <tr>';
 	html += '    <td class="left"><select name="banner_module[' + module_row + '][banner_id]">';
