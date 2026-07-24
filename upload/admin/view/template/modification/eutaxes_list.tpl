@@ -31,22 +31,22 @@
             <td width="1" style="text-align:center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" id="check-all" class="checkbox" />
             <label for="check-all"><span></span></label></td>
             <td class="left"><?php echo $column_flag; ?></td>
-            <td class="left"><?php if ($sort == 'ecd.eucountry') { ?>
+            <td class="left"><?php if ($sort === 'ecd.eucountry') { ?>
               <a href="<?php echo $sort_eucountry; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_eucountry; ?> (<?php echo $totaleucountries; ?>)</a>
             <?php } else { ?>
               <a href="<?php echo $sort_eucountry; ?>"><?php echo $column_eucountry; ?> (<?php echo $totaleucountries; ?>)&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'ec.code') { ?>
+            <td class="left"><?php if ($sort === 'ec.code') { ?>
               <a href="<?php echo $sort_code; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_code; ?></a>
             <?php } else { ?>
               <a href="<?php echo $sort_code; ?>"><?php echo $column_code; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'ec.rate') { ?>
+            <td class="left"><?php if ($sort === 'ec.rate') { ?>
               <a href="<?php echo $sort_rate; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_rate; ?>
             <?php } else { ?>
               <a href="<?php echo $sort_rate; ?>"><?php echo $column_rate; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
             <?php } ?></td>
-            <td class="left"><?php if ($sort == 'ec.status') { ?>
+            <td class="left"><?php if ($sort === 'ec.status') { ?>
               <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?>
             <?php } else { ?>
               <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
@@ -108,7 +108,7 @@ $('#delete').on('click', function() {
 			confirm: function() {
 				$('form').submit();
 			},
-			cancel: function() { }
+			cancel: function() {}
 		}
 	});
 });
