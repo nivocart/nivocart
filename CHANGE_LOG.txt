@@ -13,11 +13,12 @@ Release: TBA
 - Fix bug where a Field could be deleted when still linked to a product.
 - Fix bug where a Filter could be deleted when still linked to a product.
 - Fix bug where a Palette could be deleted when still linked to a product.
+- Fix bug in TagCloud module model file to prevent it from crashing.
 - Fix bugs with wrong use of superglobals in both File Managers.
 - Fix bugs in Manual Order Form when inserting a new order under Admin.
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
-- Templates code quality updates.
+- Extensive Admin/Catalog Templates code quality updates.
 
 
 NivoCart v2.0.0
