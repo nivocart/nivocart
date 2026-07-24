@@ -48,7 +48,7 @@ class ModelCatalogField extends Model {
 		$this->cache->delete('field');
 	}
 
-	public function getField(int $field_id): int {
+	public function getField(int $field_id): array {
 		$query = $this->db->query("SELECT DISTINCT *, fd.title AS title FROM `" . DB_PREFIX . "field` f LEFT JOIN `" . DB_PREFIX . "field_description` fd ON (f.field_id = fd.field_id) WHERE f.field_id = '" . (int)$field_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
