@@ -3,7 +3,7 @@
   CHANGE LOG
 ---------------
 
-NivoCart v2.x.x
+NivoCart v2.1.0
 ---------------
 Release: TBA
 
@@ -15,7 +15,7 @@ Release: TBA
 - Fix bug where a Palette could be deleted when still linked to a product.
 - Fix bugs with wrong use of superglobals in both File Managers.
 - Fix bugs in Manual Order Form when inserting a new order under Admin.
-- Fix bugs in TagCloud module model file to prevent it from crashing.
+- Fix bugs/refactor tagcloud module model file under Catalog.
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
 - Extensive Admin/Catalog Templates code quality updates.
