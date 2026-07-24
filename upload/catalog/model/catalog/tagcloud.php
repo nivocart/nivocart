@@ -27,13 +27,13 @@ class ModelCatalogTagCloud extends Model {
 
 			$tags = array_combine($names, $totals);
 
-			$tagcloud = $this->generateTagCloud($tags, true, $min_font_size, $max_font_size, $font_weight, $random);
+			$tagcloud = $this->generateTagCloud($tags, $random, $min_font_size, $max_font_size, $font_weight, true);
 		}
 
 		return $tagcloud;
 	}
 
-	protected function generateTagCloud($tags, $resize = true, $min_font_size, $max_font_size, $font_weight, $random) {
+	protected function generateTagCloud($tags, $random, $min_font_size, $max_font_size, $font_weight, $resize = true) {
 		if ($resize === true) {
 			arsort($tags);
 
@@ -54,7 +54,7 @@ class ModelCatalogTagCloud extends Model {
 				if ($random) {
 					$size = mt_rand((int)$min_font_size, (int)$max_font_size);
 				} else {
-					$size = round((int)$min_font_size + (($value - $min_qty) * $step));
+					$size = round((int)$min_font_size + (($value - $min_qty) * $step), 0, PHP_ROUND_HALF_UP);
 				}
 
 				$key = trim(str_replace('&', '&amp;', (string)$key));
