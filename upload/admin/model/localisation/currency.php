@@ -170,7 +170,8 @@ class ModelLocalisationCurrency extends Model {
 		curl_exec($ch);
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		$curl_error = curl_errno($ch);
-		curl_close($ch);
+
+		unset($ch);
 
 		// If cURL failed (no network) or HTTP status is not 200, abort silently
 		if ($curl_error || $http_code !== 200) {
@@ -266,7 +267,7 @@ class ModelLocalisationCurrency extends Model {
 
 				$response = curl_exec($curl);
 
-				curl_close($curl);
+				unset($curl);
 
 				$response_info = json_decode($response, true);
 
@@ -297,7 +298,7 @@ class ModelLocalisationCurrency extends Model {
 
 		$response = curl_exec($curl);
 
-		curl_close($curl);
+		unset($curl);
 
 		if ($response !== false) {
 			return true;

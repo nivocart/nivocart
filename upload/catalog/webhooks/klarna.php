@@ -284,7 +284,7 @@ function fetchKlarnaOrder(string $klarna_order_id, array $context, object $log):
     $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     $curl_error = curl_error($curl);
 
-    curl_close($curl);
+	unset($curl);
 
     if ($response === false) {
         $log->write('fetchKlarnaOrder: cURL error for ' . $klarna_order_id . ': ' . $curl_error);
