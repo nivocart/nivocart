@@ -69,8 +69,8 @@ function usage() {
 		'--password', 'admin',
 		'--email', 'email@example.com',
 		'--agree_tnc', 'yes',
-		'--http_server', 'http://localhost/nivocart')
-	];
+		'--http_server', 'http://localhost/nivocart']
+	);
 	echo 'php cli_install.php install ' . $options . "\n\n";
 }
 
