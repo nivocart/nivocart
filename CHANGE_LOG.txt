@@ -17,6 +17,7 @@ Release: TBA
 - Fix bugs in Manual Order Form when inserting a new order under Admin.
 - Fix bugs/refactor Tagcloud module model file under Catalog.
 - Fix bugs in Account (login) module files under Catalog.
+- Fix all deprecated "curl_close" instances (PHP 8.5+).
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
 - Extensive Admin/Catalog Templates code quality updates.

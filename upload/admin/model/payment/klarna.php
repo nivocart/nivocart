@@ -77,7 +77,7 @@ class ModelPaymentKlarna extends Model {
 		$curl_error = curl_error($curl);
 		$curl_errno = curl_errno($curl);
 
-		curl_close($curl);
+		unset($curl);
 
 		if ($response === false) {
 			return 'Network error (' . $curl_errno . '): ' . $curl_error;

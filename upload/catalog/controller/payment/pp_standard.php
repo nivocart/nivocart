@@ -69,7 +69,7 @@ class ControllerPaymentPpStandard extends Controller {
 			}
 
 			$products[] = [
-				'name'     => htmlspecialchars($product['name'],  ENT_QUOTES, 'UTF-8'),
+				'name'     => htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'),
 				'model'    => htmlspecialchars($product['model'], ENT_QUOTES, 'UTF-8'),
 				'price'    => $price,
 				'quantity' => (int)$product['quantity'],
@@ -184,11 +184,11 @@ class ControllerPaymentPpStandard extends Controller {
 
 		if ($response === false) {
 			$this->log->write('PP_STANDARD :: cURL failed: ' . curl_error($curl) . ' (' . curl_errno($curl) . ')');
-			curl_close($curl);
+			unset($curl);
 			return;
 		}
 
-		curl_close($curl);
+		unset($curl);
 
 		if ($this->config->get('pp_standard_debug')) {
 			$this->log->write('PP_STANDARD :: IPN REQUEST: ' . $request);
