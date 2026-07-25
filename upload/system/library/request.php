@@ -16,10 +16,6 @@ class Request {
 	/**
 	 * @var array<string, mixed>
 	 */
-	public array $request = [];
-	/**
-	 * @var array<string, mixed>
-	 */
 	public array $cookie = [];
 	/**
 	 * @var array<string, mixed>
@@ -36,7 +32,6 @@ class Request {
 	public function __construct() {
 		$this->get = $this->clean($_GET);
 		$this->post = $this->clean($_POST);
-		$this->request = $this->clean($_REQUEST);
 		$this->cookie = $this->clean($_COOKIE);
 		$this->server = $this->clean($_SERVER);
 		$this->files = $_FILES;  // Do not clean files!
