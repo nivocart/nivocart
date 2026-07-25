@@ -48,12 +48,12 @@
 </div>
 <?php } ?>
 <?php } ?>
-<?php if ($logged && $mode != 0) { ?>
+<?php if ($logged && $mode !== '0') { ?>
 <?php if ($theme) { ?>
 <div class="box">
   <div class="box-heading"><?php echo $title; ?></div>
   <div class="box-content">
-    <?php if ($mode == 2) { ?>
+    <?php if ($mode === '2') { ?>
       <div class="box-information">
         <ul>
           <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
@@ -69,7 +69,7 @@
         <a href="<?php echo $logout; ?>" class="button"><i class="fa fa-sign-out"></i> &nbsp; <?php echo $button_logout; ?></a>
       </div>
     <?php } ?>
-    <?php if ($mode == 1) { ?>
+    <?php if ($mode === '1') { ?>
       <div style="text-align:center; padding:10px 0;">
         <a href="<?php echo $logout; ?>" class="button"><i class="fa fa-sign-out"></i> &nbsp; <?php echo $button_logout; ?></a>
       </div>
@@ -79,7 +79,7 @@
 <?php } else { ?>
 <div style="margin-bottom:20px;">
   <div>
-    <?php if ($mode == 2) { ?>
+    <?php if ($mode === '2') { ?>
       <div class="box-information">
         <ul>
           <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
@@ -95,7 +95,7 @@
         <a href="<?php echo $logout; ?>" class="button"><i class="fa fa-sign-out"></i> &nbsp; <?php echo $button_logout; ?></a>
       </div>
     <?php } ?>
-    <?php if ($mode == 1) { ?>
+    <?php if ($mode === '1') { ?>
       <div style="text-align:center; padding:10px 0;">
         <a href="<?php echo $logout; ?>" class="button"><i class="fa fa-sign-out"></i> &nbsp; <?php echo $button_logout; ?></a>
       </div>

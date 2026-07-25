@@ -3,35 +3,35 @@
 <div class="box">
   <div class="box-heading"><?php echo $title; ?></div>
   <div class="box-content" style="padding-top:3px; text-align:center;">
-  <?php if ($type == 'video') { ?>
+  <?php if ($type === 'video') { ?>
     <video id="player-<?php echo $module; ?>" poster="<?php echo $poster; ?>" width="<?php echo $width; ?>" controls>
       <source src="<?php echo $media; ?>" type="<?php echo $mime_type; ?>" />
       <a href="<?php echo $media; ?>" download><?php echo $text_download; ?></a>
     </video>
-    <samp><?php echo ($credit) ? '<br />' . $credit : ''; ?></samp>
+    <samp><?php echo $credit ? '<br />' . $credit : ''; ?></samp>
   <?php } else { ?>
     <audio id="player-<?php echo $module; ?>" controls>
       <source src="<?php echo $media; ?>" type="<?php echo $mime_type; ?>" />
       <a href="<?php echo $media; ?>" download><?php echo $text_download; ?></a>
     </audio>
-    <samp><?php echo ($credit) ? '<br />' . $credit : ''; ?></samp>
+    <samp><?php echo $credit ? '<br />' . $credit : ''; ?></samp>
   <?php } ?>
   </div>
 </div>
 <?php } else { ?>
   <div style="margin-bottom:20px; padding-top:5px; text-align:center;">
-  <?php if ($type == 'video') { ?>
+  <?php if ($type === 'video') { ?>
     <video id="player-<?php echo $module; ?>" poster="<?php echo $poster; ?>" width="<?php echo $width; ?>" controls>
       <source src="<?php echo $media; ?>" type="<?php echo $mime_type; ?>" />
       <a href="<?php echo $media; ?>" download><?php echo $text_download; ?></a>
     </video>
-    <samp><?php echo ($credit) ? '<br />' . $credit : ''; ?></samp>
+    <samp><?php echo $credit ? '<br />' . $credit : ''; ?></samp>
   <?php } else { ?>
     <audio id="player-<?php echo $module; ?>" controls>
       <source src="<?php echo $media; ?>" type="<?php echo $mime_type; ?>" />
       <a href="<?php echo $media; ?>" download><?php echo $text_download; ?></a>
     </audio>
-    <samp><?php echo ($credit) ? '<br />' . $credit : ''; ?></samp>
+    <samp><?php echo $credit ? '<br />' . $credit : ''; ?></samp>
   <?php } ?>
   </div>
 <?php } ?>

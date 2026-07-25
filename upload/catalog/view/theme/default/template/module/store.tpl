@@ -5,7 +5,7 @@
     <div style="padding-bottom:5px;"><?php echo $text_selector; ?></div>
     <select name="store" onchange="location=this.value">
       <?php foreach ($stores as $store) { ?>
-        <?php if ($store['store_id'] == $store_id) { ?>
+        <?php if ($store['store_id'] === $store_id) { ?>
           <option value="<?php echo $store['url']; ?>" selected="selected"><?php echo $store['name']; ?></option>
         <?php } else { ?>
           <option value="<?php echo $store['url']; ?>"><?php echo $store['name']; ?></option>
@@ -22,7 +22,7 @@
     <div style="padding:5px;"><?php echo $text_selector; ?></div>
     <select name="store" onchange="location=this.value">
       <?php foreach ($stores as $store) { ?>
-        <?php if ($store['store_id'] == $store_id) { ?>
+        <?php if ($store['store_id'] === $store_id) { ?>
           <option value="<?php echo $store['url']; ?>" selected="selected"><?php echo $store['name']; ?></option>
         <?php } else { ?>
           <option value="<?php echo $store['url']; ?>"><?php echo $store['name']; ?></option>

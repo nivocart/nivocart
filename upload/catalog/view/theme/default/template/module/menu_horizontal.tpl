@@ -22,9 +22,9 @@
   <?php for (; $i < $j; $i++) { ?>
   <?php if (isset($category['children'][$i])) { ?>
   <?php if ($category['children'][$i]['href']) { ?>
-  <li><a <?php echo $i == (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>" title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>" title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } else { ?>
-  <li><a <?php echo $i == (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } ?>
   <?php } ?>
   <?php } ?>
@@ -37,9 +37,9 @@
   <?php for (; $i < $j; $i++) { ?>
   <?php if (isset($category['children'][$i])) { ?>
   <?php if ($category['children'][$i]['href']) { ?>
-  <li><a <?php echo $i == (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>" title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>" title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } else { ?>
-  <li><a <?php echo $i == (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } ?>
   <?php } ?>
   <?php } ?>
