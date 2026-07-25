@@ -242,7 +242,6 @@ class Mail {
 				throw new \Exception('Error: ' . $errstr . ' (' . $errno . ')');
 			} else {
 				if (substr(PHP_OS, 0, 3) !== 'WIN') {
-					socket_set_timeout($handle, $this->smtp_timeout, 0);
 					stream_set_timeout($handle, $this->smtp_timeout, 0);
 				}
 
