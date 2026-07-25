@@ -250,8 +250,6 @@ class Image {
 		imagealphablending($this->image, true);
 		imagesavealpha($this->image, true);
 		imagecopy($this->image, $watermark->getImage(), $watermark_pos_x, $watermark_pos_y, 0, 0, $watermark->getWidth(), $watermark->getHeight());
-
-		unset($watermark->getImage());
 	}
 
 	/**
