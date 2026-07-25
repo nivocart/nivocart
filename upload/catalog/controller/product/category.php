@@ -275,7 +275,7 @@ class ControllerProductCategory extends Controller {
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					if (($result['price'] == '0.0000') && $this->config->get('config_price_free')) {
+					if (($result['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
 						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
@@ -327,7 +327,7 @@ class ControllerProductCategory extends Controller {
 
 						$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-						if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+						if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 							$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 							if ($customer_age >= $result['age_minimum']) {
