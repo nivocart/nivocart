@@ -66,6 +66,6 @@ class Captcha {
 
 		imagepng($this->image, null, 9);
 
-		imagedestroy($this->image);
+		unset($this->image);
 	}
 }
