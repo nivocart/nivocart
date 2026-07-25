@@ -41,7 +41,6 @@ class ControllerModuleAccount extends Controller {
 		$this->data['text_return'] = $this->language->get('text_return');
 		$this->data['text_addreturn'] = $this->language->get('text_addreturn');
 		$this->data['text_transaction'] = $this->language->get('text_transaction');
-		$this->data['text_recurring'] = $this->language->get('text_recurring');
 		$this->data['text_newsletter'] = $this->language->get('text_newsletter');
 		$this->data['text_code'] = $this->language->get('text_code');
 		$this->data['text_credit'] = $this->language->get('text_credit');
@@ -50,6 +49,7 @@ class ControllerModuleAccount extends Controller {
 		$this->data['entry_password'] = $this->language->get('entry_password');
 
 		$this->data['logged'] = $this->customer->isLogged();
+
 		$this->data['register'] = $this->url->link($this->name . '/register', '', 'SSL');
 		$this->data['login'] = $this->url->link($this->name . '/login', '', 'SSL');
 		$this->data['logout'] = $this->url->link($this->name . '/logout', '', 'SSL');
@@ -64,7 +64,6 @@ class ControllerModuleAccount extends Controller {
 		$this->data['return'] = $this->url->link($this->name . '/return', '', 'SSL');
 		$this->data['addreturn'] = $this->url->link($this->name . '/return/insert', '', 'SSL');
 		$this->data['transaction'] = $this->url->link($this->name . '/transaction', '', 'SSL');
-		$this->data['recurring'] = $this->url->link($this->name . '/recurring', '', 'SSL');
 		$this->data['newsletter'] = $this->url->link($this->name . '/newsletter', '', 'SSL');
 
 		$this->data['button_login'] = $this->language->get('button_login');
@@ -78,13 +77,6 @@ class ControllerModuleAccount extends Controller {
 
 		// Returns
 		$this->data['allow_return'] = $this->config->get('config_return_disable') ? false : true;
-
-		// Profiles
-		$this->load->model('account/recurring');
-
-		$recurring_total = $this->model_account_recurring->getTotalRecurring();
-
-		$this->data['profile_exist'] = ($recurring_total > 0) ? true : false;
 
 		$this->data['module'] = $module++;
 

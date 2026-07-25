@@ -19,7 +19,6 @@ $_['text_reward']         = 'View Reward Points';
 $_['text_return']         = 'View Return Requests';
 $_['text_addreturn']      = 'Add a Return Request';
 $_['text_transaction']    = 'View Transactions';
-$_['text_recurring']      = 'Recurring payments';
 $_['text_newsletter']     = 'Modify Newsletter';
 
 // Entry

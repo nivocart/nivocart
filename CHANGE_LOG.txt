@@ -15,7 +15,8 @@ Release: TBA
 - Fix bug where a Palette could be deleted when still linked to a product.
 - Fix bugs with wrong use of superglobals in both File Managers.
 - Fix bugs in Manual Order Form when inserting a new order under Admin.
-- Fix bugs/refactor tagcloud module model file under Catalog.
+- Fix bugs/refactor Tagcloud module model file under Catalog.
+- Fix bugs in Account (login) module files under Catalog.
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
 - Extensive Admin/Catalog Templates code quality updates.
