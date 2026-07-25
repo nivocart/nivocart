@@ -130,11 +130,11 @@ class ControllerUpgrade extends Controller {
 				exit();
 			}
 
-			if (!mysqli_ping($connection)) {
+			if (!mysqli_query($connection, 'DO 1')) {
 				$this->error['warning'] = 'Error database server: "' . mysqli_error($connection) . '"';
 			}
 
-			mysqli_close($connection);
+			unset($connection);
 		}
 
 		return empty($this->error);
