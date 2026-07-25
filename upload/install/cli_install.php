@@ -96,7 +96,7 @@ function getOptions($argv): array {
 			throw new Exception($argv[$i] . ' found in command line args instead of a valid option name starting with \'--\'');
 		}
 
-		$options[$match[1]] = $argv[$i+1];
+		$options[$match[1]] = $argv[$i + 1];
 	}
 
 	return array_merge($defaults, $options);
@@ -129,7 +129,7 @@ function valid(array $options = []): array {
 		$options['http_server'] = $options['http_server'] . '/';
 	}
 
-	$valid = count($missing) === 0;
+	$valid = count($missing) === '0';
 
 	return [$valid, $missing];
 }
@@ -143,7 +143,7 @@ function install(array $options = []): void {
 		dirPermissions();
 	} else {
 		echo 'FAILED! Pre-installation check failed: ' . $check[1] . "\n\n";
-		exit(1);
+		exit();
 	}
 }
 
@@ -194,10 +194,8 @@ function checkRequirements(): array {
 		$error = 'Warning: ZIP extension needs to be loaded for NivoCart to work!';
 	}
 
-	if (!function_exists('iconv')) {
-		if (!extension_loaded('mbstring')) {
-			$error = 'Warning: mbstring extension needs to be loaded for NivoCart to work!';
-		}
+	if (!extension_loaded('mbstring')) {
+		$error = 'Warning: mbstring extension needs to be loaded for NivoCart to work!';
 	}
 
 	if (!is_writable(DIR_NIVOCART . 'config.php')) {

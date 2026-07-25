@@ -483,9 +483,7 @@ class ModelToolExportImportBase extends Model {
 		$col -= 1; // We use 1-based, PHPExcel uses 0-based column index
 		$row += 1; // We use 0-based, PHPExcel uses 1-based row index
 
-		$val = ($worksheet->cellExistsByColumnAndRow($col, $row))
-			? $worksheet->getCellByColumnAndRow($col, $row)->getValue()
-			: $default_val;
+		$val = ($worksheet->cellExistsByColumnAndRow($col, $row)) ? $worksheet->getCellByColumnAndRow($col, $row)->getValue() : $default_val;
 
 		if ($val === null) {
 			$val = $default_val;

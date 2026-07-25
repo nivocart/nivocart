@@ -292,16 +292,14 @@ class ControllerPaymentPPExpress extends Controller {
 		foreach ($transactions as $t) {
 			$this->data['transactions'][] = [
 				'paypal_order_transaction_id' => $t['paypal_order_transaction_id'],
-				'transaction_type'            => $t['transaction_type'],
-				'capture_id'                  => $t['capture_id'],
-				'amount'                      => number_format((float)$t['amount'], 2),
-				'currency_code'               => $t['currency_code'],
-				'status'                      => $t['status'],
-				'note'                        => $t['note'],
-				'created'                     => date($this->language->get('date_format_time'), strtotime($t['created'])),
-				'refund'                      => ($t['transaction_type'] === 'CAPTURE' && $t['status'] === 'COMPLETED')
-					? $this->url->link('payment/pp_express/refund', 'token=' . $this->session->data['token'] . '&capture_id=' . urlencode($t['capture_id']) . '&order_id=' . $order_id, 'SSL')
-					: '',
+				'transaction_type' => $t['transaction_type'],
+				'capture_id'       => $t['capture_id'],
+				'amount'           => number_format((float)$t['amount'], 2),
+				'currency_code'    => $t['currency_code'],
+				'status'           => $t['status'],
+				'note'             => $t['note'],
+				'created'          => date($this->language->get('date_format_time'), strtotime($t['created'])),
+				'refund'           => ($t['transaction_type'] === 'CAPTURE' && $t['status'] === 'COMPLETED') ? $this->url->link('payment/pp_express/refund', 'token=' . $this->session->data['token'] . '&capture_id=' . urlencode($t['capture_id']) . '&order_id=' . $order_id, 'SSL') : '',
 			];
 		}
 

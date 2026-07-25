@@ -399,9 +399,7 @@ class ModelToolExportImportExp extends ModelToolExportImportBase {
 			$data[$j++] = $row['parent_id'];
 			foreach ($languages as $language) { $data[$j++] = html_entity_decode($row['name'][$language['code']], ENT_QUOTES, 'UTF-8'); }
 			foreach ($languages as $language) {
-				$data[$j++] = (isset($keep_tags))
-					? html_entity_decode($row['description'][$language['code']], ENT_QUOTES, 'UTF-8')
-					: $this->removeEntities($row['description'][$language['code']]);
+				$data[$j++] = (isset($keep_tags)) ? html_entity_decode($row['description'][$language['code']], ENT_QUOTES, 'UTF-8') : $this->removeEntities($row['description'][$language['code']]);
 			}
 			foreach ($languages as $language) { $data[$j++] = html_entity_decode($row['meta_description'][$language['code']], ENT_QUOTES, 'UTF-8'); }
 			foreach ($languages as $language) { $data[$j++] = html_entity_decode($row['meta_keyword'][$language['code']], ENT_QUOTES, 'UTF-8'); }
