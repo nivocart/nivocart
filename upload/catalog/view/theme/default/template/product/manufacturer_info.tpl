@@ -19,7 +19,7 @@
         <div class="limit"><span class="hide-phone"><?php echo $text_limit; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($limits as $limits) { ?>
-            <?php if ($limits['value'] == $limit) { ?>
+            <?php if ($limits['value'] === $limit) { ?>
               <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
@@ -30,7 +30,7 @@
         <div class="sort"><span class="hide-phone"><?php echo $text_sort; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($sorts as $sorts) { ?>
-            <?php if ($sorts['value'] == $sort . '-' . $order) { ?>
+            <?php if ($sorts['value'] === $sort . '-' . $order) { ?>
               <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
@@ -125,7 +125,7 @@
 
 <script type="text/javascript"><!--
 function display(view) {
-	if (view == 'list') {
+	if (view === 'list') {
 		$('.product-grid').attr('class', 'product-list');
 
 		$('.product-list > div').each(function(index, element) {

@@ -909,7 +909,7 @@ $('a.button-resource').confirm({
 	closeAnimation: 'scale',
 	opacity: 0.1,
 	buttons: {
-		ok: function() { }
+		ok: function() {}
 	}
 });
 //--></script>

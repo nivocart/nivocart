@@ -18,7 +18,7 @@
         <div class="limit"><span class="hide-phone"><?php echo $text_limit; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($limits as $limits) { ?>
-            <?php if ($limits['value'] == $limit) { ?>
+            <?php if ($limits['value'] === $limit) { ?>
               <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
@@ -29,7 +29,7 @@
         <div class="sort"><span class="hide-phone"><?php echo $text_sort; ?></span>
           <select onchange="location = this.value;">
           <?php foreach ($sorts as $sorts) { ?>
-            <?php if ($sorts['value'] == $sort . '-' . $order) { ?>
+            <?php if ($sorts['value'] === $sort . '-' . $order) { ?>
               <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
             <?php } else { ?>
               <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="product-list">	
+    <div class="product-list">
     <?php foreach ($reviews as $review) { ?>
       <div>
         <?php if ($review['thumb']) { ?>
@@ -131,7 +131,7 @@
 
 <script type="text/javascript"><!--
 function display(view) {
-	if (view == 'list') {
+	if (view === 'list') {
 		$('.product-grid').attr('class', 'product-list');
 
 		$('.product-list > div').each(function(index, element) {
@@ -175,7 +175,7 @@ function display(view) {
 
 			html += '<div class="addons">' + $(element).find('.addons').html() + '</div>';
 			html += '<div class="cart">' + $(element).find('.cart').html() + '</div>';
-			
+
 			html += '<div class="name">' + $(element).find('.name').html() + '</div>';
 
 			var text = $(element).find('.description').html();
@@ -308,6 +308,6 @@ if (view) {
 } else {
 	display('list');
 }
-//--></script> 
+//--></script>
 
 <?php echo $footer; ?>

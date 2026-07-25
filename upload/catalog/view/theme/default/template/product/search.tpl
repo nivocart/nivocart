@@ -189,7 +189,7 @@ function display(view) {
 		$('.product-grid').attr('class', 'product-list');
 
 		$('.product-list > div').each(function(index, element) {
-			html  = '<div>';
+			html = '<div>';
 
 			html += '<div class="left">';
 
