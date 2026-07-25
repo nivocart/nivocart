@@ -56,7 +56,7 @@ class ModelBlogAuthor extends Model {
 		return $query->row;
 	}
 
-	public function getTotalAuthors(array $data = []) int {
+	public function getTotalAuthors(array $data = []): int {
 		$query = $this->db->query("SELECT COUNT(DISTINCT(ba.blog_author_id)) AS `total` FROM `" . DB_PREFIX . "blog_author` ba LEFT JOIN `" . DB_PREFIX . "blog_author_description` bad ON (ba.blog_author_id = bad.blog_author_id) WHERE bad.language_id='" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row['total'];
