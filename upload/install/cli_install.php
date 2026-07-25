@@ -45,7 +45,7 @@ $loader = new Loader($registry);
 $registry->set('load', $loader);
 
 function errorHandler($errno, $errstr, $errfile, $errline) {
-	if (0 === error_reporting()) {
+	if (error_reporting() === '0') {
 		return false;
 	}
 
