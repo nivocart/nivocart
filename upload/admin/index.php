@@ -1,8 +1,8 @@
 <?php
 // Version
-define('VERSION', '2.0.0');
-define('REVISION', 20260522);
-define('RELEASED', '2026-05-22');
+define('VERSION', '2.1.0');
+define('REVISION', 20260726);
+define('RELEASED', '2026-07-26');
 
 // Configuration
 if (file_exists('config.php')) {
@@ -12,7 +12,7 @@ if (file_exists('config.php')) {
 // Install
 if (!defined('DIR_APPLICATION')) {
 	header('Location: ../install/index.php');
-	exit(1);
+	exit();
 }
 
 // Startup

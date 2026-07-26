@@ -54,7 +54,7 @@ class ControllerCommonHeader extends Controller {
 		// Display Limit
 		$display_limit = $this->config->get('config_admin_width_limit');
 
-		$this->data['resolution'] = ($display_limit) ? 'limited' : 'normal';
+		$this->data['resolution'] = $display_limit ? 'limited' : 'normal';
 
 		// User Agent
 		$agent_platform = $this->browser->getPlatform();
@@ -78,9 +78,9 @@ class ControllerCommonHeader extends Controller {
 		// Date & Time
 		$date = $this->config->get('config_date_format');
 
-		if ($date && $date === "long") {
+		if ($date && $date === 'long') {
 			$this->data['date_format'] = date($this->language->get('date_format_long')) . "\n";
-		} elseif ($date && $date === "short") {
+		} elseif ($date && $date === 'short') {
 			$this->data['date_format'] = date($this->language->get('date_format_short')) . "\n";
 		} else {
 			$this->data['date_format'] = date('d-m-Y') . "\n";
@@ -88,7 +88,7 @@ class ControllerCommonHeader extends Controller {
 
 		$time = $this->config->get('config_time_offset');
 
-		$this->data['time_offset'] = ($time) ? $time : '0';
+		$this->data['time_offset'] = $time ? $time : '0';
 
 		// Blog
 		$this->load->model('blog/status');

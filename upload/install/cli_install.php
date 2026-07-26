@@ -31,7 +31,7 @@ define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 
 // Version
-define('NC_VERSION', '2.0.0');
+define('NC_VERSION', '2.1.0');
 
 // Startup
 require_once DIR_SYSTEM . 'startup.php';
@@ -194,8 +194,10 @@ function checkRequirements(): array {
 		$error = 'Warning: ZIP extension needs to be loaded for NivoCart to work!';
 	}
 
-	if (!extension_loaded('mbstring')) {
-		$error = 'Warning: mbstring extension needs to be loaded for NivoCart to work!';
+	if (!function_exists('iconv')) {
+		if (!extension_loaded('mbstring')) {
+			$error = 'Warning: mbstring extension needs to be loaded for NivoCart to work!';
+		}
 	}
 
 	if (!is_writable(DIR_NIVOCART . 'config.php')) {
@@ -426,7 +428,7 @@ match($subcommand) {
             echo "Admin link: " . $options['http_server'] . "admin/\n\n";
         } catch (ErrorException $e) {
             echo 'FAILED!: ' . $e->getMessage() . "\n";
-            exit(1);
+            exit();
         }
     })(),
     default => (function() {
