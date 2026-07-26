@@ -225,7 +225,7 @@ class ModelUpgrade extends Model {
 							$sql .= " " . $field['notnull'];
 						}
 
-						if ($field['default'] != '') {
+						if ($field['default'] !== '') {
 							$sql .= " DEFAULT '" . $field['default'] . "'";
 						}
 
@@ -257,7 +257,7 @@ class ModelUpgrade extends Model {
 							$sql .= " " . $field['notnull'];
 						}
 
-						if ($field['default'] != '') {
+						if ($field['default'] !== '') {
 							$sql .= " DEFAULT '" . $field['default'] . "'";
 						}
 
@@ -394,7 +394,7 @@ class ModelUpgrade extends Model {
 	// ------------------------------------------------------------------------------------
 	// Function to repair any erroneous categories that are not in the category path table
 	// ------------------------------------------------------------------------------------
-	public function repairCategories($parent_id = 0, $step3) {
+	public function repairCategories($step3, $parent_id = 0) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category` WHERE parent_id = '" . (int)$parent_id . "'");
 
 		foreach ($query->rows as $category) {
