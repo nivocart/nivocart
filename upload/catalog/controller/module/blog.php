@@ -81,18 +81,10 @@ class ControllerModuleBlog extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if ($setting['position'] == 'content_left' || $setting['position'] == 'content_right') {
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/blog_side.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/blog_side.tpl';
-			} else {
-				$this->template = 'default/template/module/blog_side.tpl';
-			}
+		if ($setting['position'] === 'content_left' || $setting['position'] === 'content_right') {
+			$this->resolveTemplate('module/blog_side');
 		} else {
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/blog.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/blog.tpl';
-			} else {
-				$this->template = 'default/template/module/blog.tpl';
-			}
+			$this->resolveTemplate('module/blog');
 		}
 
 		$this->render();

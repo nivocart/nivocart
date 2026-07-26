@@ -15,7 +15,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$this->load->model('catalog/product');
 			$this->load->model('tool/image');
 
-			$products = $this->model_catalog_product->getProducts();
+			$products = $this->model_catalog_product->getProducts([]);
 
 			foreach ($products as $product) {
 				$date_modified = ($product['date_modified'] !== '0000-00-00 00:00:00') ? $product['date_modified'] : $product['date_added'];
@@ -45,7 +45,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 
 			$this->load->model('catalog/manufacturer');
 
-			$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
+			$manufacturers = $this->model_catalog_manufacturer->getManufacturers([]);
 
 			foreach ($manufacturers as $manufacturer) {
 				$output .= '<url>';

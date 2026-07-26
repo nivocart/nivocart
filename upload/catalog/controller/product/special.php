@@ -385,11 +385,7 @@ class ControllerProductSpecial extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/special.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/special.tpl';
-			} else {
-				$this->template = 'default/template/product/special.tpl';
-			}
+			$this->resolveTemplate('product/special');
 
 			$this->children = [
 				'common/content_higher',
@@ -431,11 +427,7 @@ class ControllerProductSpecial extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',

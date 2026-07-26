@@ -151,11 +151,7 @@ class ControllerAccountOrder extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_list.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/order_list.tpl';
-		} else {
-			$this->template = 'default/template/account/order_list.tpl';
-		}
+		$this->resolveTemplate('account/order_list');
 
 		$this->children = [
 			'common/content_higher',
@@ -279,11 +275,7 @@ class ControllerAccountOrder extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_picklist.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/account/order_picklist.tpl';
-			} else {
-				$this->template = 'default/template/account/order_picklist.tpl';
-			}
+			$this->resolveTemplate('account/order_picklist');
 
 			$this->children = [
 				'common/content_higher',
@@ -338,11 +330,7 @@ class ControllerAccountOrder extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',
@@ -615,11 +603,7 @@ class ControllerAccountOrder extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_info.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/account/order_info.tpl';
-			} else {
-				$this->template = 'default/template/account/order_info.tpl';
-			}
+			$this->resolveTemplate('account/order_info');
 
 			$this->children = [
 				'common/content_higher',
@@ -674,11 +658,7 @@ class ControllerAccountOrder extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',
@@ -701,7 +681,7 @@ class ControllerAccountOrder extends Controller {
 	 *
 	 * Standalone page to View, Download(pdf) and Pick data.
 	 * Uses Dompdf. Strict urls and inline CSS are required.
-	 * 
+	 *
 	 * Calls -> order_download.tpl
 	 */
 	public function download() {
@@ -712,7 +692,8 @@ class ControllerAccountOrder extends Controller {
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
-			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https'))
+		{
 			$image_base = HTTPS_IMAGE;
 			$catalog_base = HTTPS_SERVER . '/catalog/';
 		} else {
@@ -907,7 +888,7 @@ class ControllerAccountOrder extends Controller {
 				$options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
 
 				foreach ($options as $option) {
-					if ($option['type'] != 'file') {
+					if ($option['type'] !== 'file') {
 						$value = $option['value'];
 					} else {
 						$value = substr($option['value'], 0, strrpos($option['value'], '.'));
@@ -950,11 +931,7 @@ class ControllerAccountOrder extends Controller {
 		// Get Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_download.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/order_download.tpl';
-		} else {
-			$this->template = 'default/template/account/order_download.tpl';
-		}
+		$this->resolveTemplate('account/order_download');
 
 		// Dompdf or View/Print output
 		if ($pdf) {

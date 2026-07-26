@@ -38,7 +38,8 @@ class ControllerErrorNotFound extends Controller {
 			// Resolve server base URL
 			if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 				(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
-				(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+				(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+			) {
 				$connection = 'SSL';
 			} else {
 				$connection = 'NONSSL';
@@ -62,11 +63,7 @@ class ControllerErrorNotFound extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-		} else {
-			$this->template = 'default/template/error/not_found.tpl';
-		}
+		$this->resolveTemplate('error/not_found');
 
 		$this->children = [
 			'common/content_higher',

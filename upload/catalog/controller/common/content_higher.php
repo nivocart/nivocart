@@ -100,12 +100,7 @@ class ControllerCommonContentHigher extends Controller {
 			$this->data['error'] = '';
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/content_higher.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/content_higher.tpl';
-		} else {
-			$this->template = 'default/template/common/content_higher.tpl';
-		}
-
+		$this->resolveTemplate('common/content_higher');
 		$this->render();
 	}
 }

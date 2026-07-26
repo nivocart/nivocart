@@ -57,11 +57,7 @@ class ControllerModuleBlogCategory extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/blog_category.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/blog_category.tpl';
-		} else {
-			$this->template = 'default/template/module/blog_category.tpl';
-		}
+		$this->resolveTemplate('module/' . $this->name);
 
 		$this->render();
 	}

@@ -73,11 +73,7 @@ class ControllerNodeLanguage extends Controller {
 			$this->data['redirect'] = $this->url->link($route, $url, $connection);
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/node/language.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/node/language.tpl';
-		} else {
-			$this->template = 'default/template/node/language.tpl';
-		}
+		$this->resolveTemplate('node/language');
 
 		$this->render();
 	}

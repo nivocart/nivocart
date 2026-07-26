@@ -16,11 +16,7 @@ class ControllerCommonHome extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/home.tpl';
-		} else {
-			$this->template = 'default/template/common/home.tpl';
-		}
+		$this->resolveTemplate('common/home');
 
 		$this->children = [
 			'common/content_higher',

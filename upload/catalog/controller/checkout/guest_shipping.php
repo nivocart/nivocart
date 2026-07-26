@@ -92,11 +92,7 @@ class ControllerCheckoutGuestShipping extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/guest_shipping.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/guest_shipping.tpl';
-		} else {
-			$this->template = 'default/template/checkout/guest_shipping.tpl';
-		}
+		$this->resolveTemplate('checkout/guest_shipping');
 
 		$this->response->setOutput($this->render());
 	}

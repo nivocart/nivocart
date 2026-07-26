@@ -20,11 +20,7 @@ class ControllerPaymentFreeCheckout extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/free_checkout.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/free_checkout.tpl';
-		} else {
-			$this->template = 'default/template/payment/free_checkout.tpl';
-		}
+		$this->resolveTemplate('payment/free_checkout');
 
 		$this->render();
 	}

@@ -43,11 +43,7 @@ class ControllerCheckoutLogin extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/login.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/login.tpl';
-		} else {
-			$this->template = 'default/template/checkout/login.tpl';
-		}
+		$this->resolveTemplate('checkout/login');
 
 		$this->response->setOutput($this->render());
 	}

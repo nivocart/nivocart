@@ -59,11 +59,7 @@ class ControllerPaymentStripePayments extends Controller {
 
         $this->data['template'] = $this->config->get('config_template');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/stripe_payments.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/payment/stripe_payments.tpl';
-        } else {
-            $this->template = 'default/template/payment/stripe_payments.tpl';
-        }
+		$this->resolveTemplate('payment/stripe_payments');
 
         $this->render();
     }

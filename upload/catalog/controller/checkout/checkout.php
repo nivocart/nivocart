@@ -924,11 +924,7 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->data['local_gateway_scripts'] = $local_gateway_scripts;
 
 		// Theme
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/checkout.tpl';
-		} else {
-			$this->template = 'default/template/checkout/checkout.tpl';
-		}
+		$this->resolveTemplate('checkout/checkout');
 
 		$this->children = [
 			'common/content_higher',

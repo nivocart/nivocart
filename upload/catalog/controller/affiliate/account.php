@@ -90,11 +90,7 @@ class ControllerAffiliateAccount extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/account.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/affiliate/account.tpl';
-		} else {
-			$this->template = 'default/template/affiliate/account.tpl';
-		}
+		$this->resolveTemplate('affiliate/account');
 
 		$this->children = [
 			'common/content_higher',

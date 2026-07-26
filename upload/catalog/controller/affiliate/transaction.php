@@ -102,11 +102,7 @@ class ControllerAffiliateTransaction extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/transaction.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/affiliate/transaction.tpl';
-		} else {
-			$this->template = 'default/template/affiliate/transaction.tpl';
-		}
+		$this->resolveTemplate('affiliate/transaction');
 
 		$this->children = [
 			'common/content_higher',

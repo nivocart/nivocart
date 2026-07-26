@@ -14,12 +14,7 @@ class ControllerCommonFooterPayment extends Controller {
 
 		$this->data['scripts'] = $this->document->getScripts();
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/footer_payment.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/footer_payment.tpl';
-		} else {
-			$this->template = 'default/template/common/footer_payment.tpl';
-		}
-
+		$this->resolveTemplate('common/footer_payment');
 		$this->render();
 	}
 }

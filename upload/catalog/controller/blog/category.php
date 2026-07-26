@@ -203,11 +203,7 @@ class ControllerBlogCategory extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/blog/article_category.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/blog/article_category.tpl';
-			} else {
-				$this->template = 'default/template/blog/article_category.tpl';
-			}
+			$this->resolveTemplate('blog/article_category');
 
 			$this->children = [
 				'common/content_higher',
@@ -258,11 +254,7 @@ class ControllerBlogCategory extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',

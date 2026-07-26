@@ -176,11 +176,7 @@ class ControllerAccountWishList extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/wishlist.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/wishlist.tpl';
-		} else {
-			$this->template = 'default/template/account/wishlist.tpl';
-		}
+		$this->resolveTemplate('account/wishlist');
 
 		$this->children = [
 			'common/content_higher',

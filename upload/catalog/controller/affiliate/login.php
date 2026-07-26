@@ -117,11 +117,7 @@ class ControllerAffiliateLogin extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/login.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/affiliate/login.tpl';
-		} else {
-			$this->template = 'default/template/affiliate/login.tpl';
-		}
+		$this->resolveTemplate('affiliate/login');
 
 		$this->children = [
 			'common/content_higher',

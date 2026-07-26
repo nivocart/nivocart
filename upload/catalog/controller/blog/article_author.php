@@ -154,11 +154,7 @@ class ControllerBlogArticleAuthor extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/blog/article_author.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/blog/article_author.tpl';
-			} else {
-				$this->template = 'default/template/blog/article_author.tpl';
-			}
+			$this->resolveTemplate('blog/article_author');
 
 			$this->children = [
 				'common/content_higher',
@@ -221,11 +217,7 @@ class ControllerBlogArticleAuthor extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',

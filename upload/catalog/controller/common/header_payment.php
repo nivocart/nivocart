@@ -62,12 +62,7 @@ class ControllerCommonHeaderPayment extends Controller {
 		// Template
 		$this->data['template'] = $template;
 
-		if (file_exists(DIR_TEMPLATE . $template . '/template/common/header_payment.tpl')) {
-			$this->template = $template . '/template/common/header_payment.tpl';
-		} else {
-			$this->template = 'default/template/common/header_payment.tpl';
-		}
-
+		$this->resolveTemplate('common/header_payment');
 		$this->render();
 	}
 }

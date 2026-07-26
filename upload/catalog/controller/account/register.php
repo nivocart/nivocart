@@ -392,11 +392,7 @@ class ControllerAccountRegister extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/register.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/register.tpl';
-		} else {
-			$this->template = 'default/template/account/register.tpl';
-		}
+		$this->resolveTemplate('account/register');
 
 		$this->children = [
 			'common/content_higher',

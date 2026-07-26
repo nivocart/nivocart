@@ -127,11 +127,7 @@ class ControllerAffiliatePassword extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/password.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/affiliate/password.tpl';
-		} else {
-			$this->template = 'default/template/affiliate/password.tpl';
-		}
+		$this->resolveTemplate('affiliate/password');
 
 		$this->children = [
 			'common/content_higher',

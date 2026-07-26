@@ -54,7 +54,7 @@ class ControllerModuleStore extends Controller {
 
 			$this->load->model('setting/store');
 
-			$results = $this->model_setting_store->getStores();
+			$results = $this->model_setting_store->getStores([]);
 
 			foreach ($results as $result) {
 				$this->data['stores'][] = [
@@ -73,11 +73,7 @@ class ControllerModuleStore extends Controller {
 			// Template
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
-			} else {
-				$this->template = 'default/template/module/' . $this->name . '.tpl';
-			}
+			$this->resolveTemplate('module/' . $this->name);
 
 			$this->render();
 		}

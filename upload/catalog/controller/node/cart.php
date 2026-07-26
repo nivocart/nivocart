@@ -176,11 +176,7 @@ class ControllerNodeCart extends Controller {
 		// Template
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/node/cart.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/node/cart.tpl';
-		} else {
-			$this->template = 'default/template/node/cart.tpl';
-		}
+		$this->resolveTemplate('node/cart');
 
 		$this->response->setOutput($this->render());
 	}

@@ -104,11 +104,7 @@ class ControllerProductCategoryList extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/' . $this->_name . '.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/' . $this->_name . '.tpl';
-			} else {
-				$this->template = 'default/template/product/' . $this->_name . '.tpl';
-			}
+			$this->resolveTemplate('product/' . $this->_name);
 
 			$this->children = [
 				'common/content_higher',
@@ -141,11 +137,7 @@ class ControllerProductCategoryList extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',

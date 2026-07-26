@@ -173,11 +173,7 @@ class ControllerAccountVoucher extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/voucher.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/voucher.tpl';
-		} else {
-			$this->template = 'default/template/account/voucher.tpl';
-		}
+		$this->resolveTemplate('account/voucher');
 
 		$this->children = [
 			'common/content_higher',
@@ -223,11 +219,7 @@ class ControllerAccountVoucher extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/success.tpl';
-		} else {
-			$this->template = 'default/template/common/success.tpl';
-		}
+		$this->resolveTemplate('common/success');
 
 		$this->children = [
 			'common/content_higher',

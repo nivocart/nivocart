@@ -91,12 +91,7 @@ class ControllerCommonContentRight extends Controller {
 			}
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/content_right.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/content_right.tpl';
-		} else {
-			$this->template = 'default/template/common/content_right.tpl';
-		}
-
+		$this->resolveTemplate('common/content_right');
 		$this->render();
 	}
 }

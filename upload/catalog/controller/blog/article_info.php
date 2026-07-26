@@ -271,11 +271,7 @@ class ControllerBlogArticleInfo extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/blog/article_info.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/blog/article_info.tpl';
-			} else {
-				$this->template = 'default/template/blog/article_info.tpl';
-			}
+			$this->resolveTemplate('blog/article_info');
 
 			$this->children = [
 				'common/content_higher',
@@ -326,11 +322,7 @@ class ControllerBlogArticleInfo extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',
@@ -406,11 +398,7 @@ class ControllerBlogArticleInfo extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/blog/article_comment.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/blog/article_comment.tpl';
-		} else {
-			$this->template = 'default/template/blog/article_comment.tpl';
-		}
+		$this->resolveTemplate('blog/article_comment');
 
 		$this->response->setOutput($this->render());
 	}

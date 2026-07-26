@@ -216,11 +216,7 @@ class ControllerAccountEdit extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/edit.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/edit.tpl';
-		} else {
-			$this->template = 'default/template/account/edit.tpl';
-		}
+		$this->resolveTemplate('account/edit');
 
 		$this->children = [
 			'common/content_higher',
@@ -462,11 +458,7 @@ class ControllerAccountEdit extends Controller {
 		// Get Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/account_data.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/account_data.tpl';
-		} else {
-			$this->template = 'default/template/account/account_data.tpl';
-		}
+		$this->resolveTemplate('account/account_data');
 
 		// Dompdf or View/Print output
 		if ($pdf) {

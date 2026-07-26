@@ -130,11 +130,7 @@ class ControllerPaymentPpStandard extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_standard.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/pp_standard.tpl';
-		} else {
-			$this->template = 'default/template/payment/pp_standard.tpl';
-		}
+		$this->resolveTemplate('payment/pp_standard');
 
 		$this->render();
 	}

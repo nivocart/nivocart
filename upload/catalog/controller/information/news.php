@@ -269,7 +269,7 @@ class ControllerInformationNews extends Controller {
 					'age_checked'     => $age_checked,
 					'stock_status'    => $product_info['stock_status'],
 					'stock_quantity'  => $product_info['quantity'],
-					'stock_remaining' => ($product_info['subtract']) ? sprintf($this->language->get('text_remaining'), $product_info['quantity']) : '',
+					'stock_remaining' => $product_info['subtract'] ? sprintf($this->language->get('text_remaining'), $product_info['quantity']) : '',
 					'quote'           => $quote,
 					'price'           => $price,
 					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($product_info['product_id']),
@@ -284,11 +284,7 @@ class ControllerInformationNews extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/information/news.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/information/news.tpl';
-			} else {
-				$this->template = 'default/template/information/news.tpl';
-			}
+			$this->resolveTemplate('information/news');
 
 			$this->children = [
 				'common/content_higher',
@@ -323,11 +319,7 @@ class ControllerInformationNews extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',

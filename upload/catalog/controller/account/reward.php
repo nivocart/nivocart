@@ -107,11 +107,7 @@ class ControllerAccountReward extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/reward.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/reward.tpl';
-		} else {
-			$this->template = 'default/template/account/reward.tpl';
-		}
+		$this->resolveTemplate('account/reward');
 
 		$this->children = [
 			'common/content_higher',

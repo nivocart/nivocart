@@ -209,11 +209,7 @@ class ControllerAffiliateProduct extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/product_list.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/affiliate/product_list.tpl';
-		} else {
-			$this->template = 'default/template/affiliate/product_list.tpl';
-		}
+		$this->resolveTemplate('affiliate/product_list');
 
 		$this->children = [
 			'common/content_higher',
@@ -313,11 +309,7 @@ class ControllerAffiliateProduct extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/product_form.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/affiliate/product_form.tpl';
-		} else {
-			$this->template = 'default/template/affiliate/product_form.tpl';
-		}
+		$this->resolveTemplate('affiliate/product_form');
 
 		$this->children = [
 			'common/content_higher',

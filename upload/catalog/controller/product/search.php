@@ -262,11 +262,7 @@ class ControllerProductSearch extends Controller {
 
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/search.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/product/search.tpl';
-		} else {
-			$this->template = 'default/template/product/search.tpl';
-		}
+		$this->resolveTemplate('product/search');
 
 		$this->children = [
 			'common/content_higher', 'common/content_high',

@@ -74,11 +74,7 @@ class ControllerProductManufacturer extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer_list.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/product/manufacturer_list.tpl';
-		} else {
-			$this->template = 'default/template/product/manufacturer_list.tpl';
-		}
+		$this->resolveTemplate('product/manufacturer_list');
 
 		$this->children = [
 			'common/content_higher',
@@ -296,7 +292,7 @@ class ControllerProductManufacturer extends Controller {
 
 						$date_of_birth = $this->model_account_customer->getCustomerDateOfBirth($this->customer->getId());
 
-						if ($date_of_birth && ($date_of_birth != '0000-00-00')) {
+						if ($date_of_birth && ($date_of_birth !== '0000-00-00')) {
 							$customer_age = date_diff(date_create($date_of_birth), date_create('today'))->y;
 
 							if ($customer_age >= $result['age_minimum']) {
@@ -480,11 +476,7 @@ class ControllerProductManufacturer extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer_info.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/manufacturer_info.tpl';
-			} else {
-				$this->template = 'default/template/product/manufacturer_info.tpl';
-			}
+			$this->resolveTemplate('product/manufacturer_info');
 
 			$this->children = [
 				'common/content_higher',
@@ -539,11 +531,7 @@ class ControllerProductManufacturer extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',

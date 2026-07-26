@@ -20,11 +20,7 @@ class ControllerPaymentCod extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/cod.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/cod.tpl';
-		} else {
-			$this->template = 'default/template/payment/cod.tpl';
-		}
+		$this->resolveTemplate('payment/cod');
 
 		$this->render();
 	}

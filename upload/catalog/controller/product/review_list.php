@@ -76,7 +76,7 @@ class ControllerProductReviewList extends Controller {
 			'limit'              => $limit
 		];
 
-		$review_total   = $this->model_catalog_review->getTotalReviews();
+		$review_total = $this->model_catalog_review->getTotalReviews();
 		$review_results = $this->model_catalog_review->getReviews($data);
 
 		if ($review_results) {
@@ -392,11 +392,7 @@ class ControllerProductReviewList extends Controller {
 			// Template
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/review_list.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/review_list.tpl';
-			} else {
-				$this->template = 'default/template/product/review_list.tpl';
-			}
+			$this->resolveTemplate('product/review_list');
 
 			$this->children = [
 				'common/content_higher',
@@ -425,11 +421,7 @@ class ControllerProductReviewList extends Controller {
 
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',

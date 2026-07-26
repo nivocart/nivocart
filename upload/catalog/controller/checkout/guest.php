@@ -174,11 +174,7 @@ class ControllerCheckoutGuest extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/guest.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/guest.tpl';
-		} else {
-			$this->template = 'default/template/checkout/guest.tpl';
-		}
+		$this->resolveTemplate('checkout/guest');
 
 		$this->response->setOutput($this->render());
 	}

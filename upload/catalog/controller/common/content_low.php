@@ -91,12 +91,7 @@ class ControllerCommonContentLow extends Controller {
 			}
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/content_low.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/content_low.tpl';
-		} else {
-			$this->template = 'default/template/common/content_low.tpl';
-		}
-
+		$this->resolveTemplate('common/content_low');
 		$this->render();
 	}
 }

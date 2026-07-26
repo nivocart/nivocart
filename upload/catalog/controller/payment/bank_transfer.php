@@ -24,11 +24,7 @@ class ControllerPaymentBankTransfer extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/bank_transfer.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/payment/bank_transfer.tpl';
-		} else {
-			$this->template = 'default/template/payment/bank_transfer.tpl';
-		}
+		$this->resolveTemplate('payment/bank_transfer');
 
 		$this->render();
 	}

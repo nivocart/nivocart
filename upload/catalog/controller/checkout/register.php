@@ -112,11 +112,7 @@ class ControllerCheckoutRegister extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/register.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/register.tpl';
-		} else {
-			$this->template = 'default/template/checkout/register.tpl';
-		}
+		$this->resolveTemplate('checkout/register');
 
 		$this->response->setOutput($this->render());
 	}

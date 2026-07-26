@@ -91,12 +91,7 @@ class ControllerCommonContentHigh extends Controller {
 			}
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/content_high.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/content_high.tpl';
-		} else {
-			$this->template = 'default/template/common/content_high.tpl';
-		}
-
+		$this->resolveTemplate('common/content_high');
 		$this->render();
 	}
 }

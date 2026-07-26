@@ -103,11 +103,7 @@ class ControllerAccountReturn extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/return_list.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/return_list.tpl';
-		} else {
-			$this->template = 'default/template/account/return_list.tpl';
-		}
+		$this->resolveTemplate('account/return_list');
 
 		$this->children = [
 			'common/content_higher',
@@ -245,11 +241,7 @@ class ControllerAccountReturn extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/return_info.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/account/return_info.tpl';
-			} else {
-				$this->template = 'default/template/account/return_info.tpl';
-			}
+			$this->resolveTemplate('account/return_info');
 
 			$this->children = [
 				'common/content_higher',
@@ -310,11 +302,7 @@ class ControllerAccountReturn extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',
@@ -541,11 +529,7 @@ class ControllerAccountReturn extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/return_form.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/return_form.tpl';
-		} else {
-			$this->template = 'default/template/account/return_form.tpl';
-		}
+		$this->resolveTemplate('account/return_form');
 
 		$this->children = [
 			'common/content_higher',
@@ -593,11 +577,7 @@ class ControllerAccountReturn extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/common/success.tpl';
-		} else {
-			$this->template = 'default/template/common/success.tpl';
-		}
+		$this->resolveTemplate('common/success');
 
 		$this->children = [
 			'common/content_higher',

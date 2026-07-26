@@ -296,11 +296,7 @@ class ControllerAccountAddress extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/address_list.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/address_list.tpl';
-		} else {
-			$this->template = 'default/template/account/address_list.tpl';
-		}
+		$this->resolveTemplate('account/address_list');
 
 		$this->children = [
 			'common/content_higher',
@@ -561,11 +557,7 @@ class ControllerAccountAddress extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/address_form.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/address_form.tpl';
-		} else {
-			$this->template = 'default/template/account/address_form.tpl';
-		}
+		$this->resolveTemplate('account/address_form');
 
 		$this->children = [
 			'common/content_higher',
@@ -627,7 +619,7 @@ class ControllerAccountAddress extends Controller {
 	}
 
 	protected function validateDelete() {
-		if ($this->model_account_address->getTotalAddresses() === 1) {
+		if ($this->model_account_address->getTotalAddresses() > 0) {
 			$this->error['warning'] = $this->language->get('error_delete');
 		}
 

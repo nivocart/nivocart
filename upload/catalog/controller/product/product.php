@@ -875,11 +875,7 @@ class ControllerProductProduct extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/product.tpl';
-			} else {
-				$this->template = 'default/template/product/product.tpl';
-			}
+			$this->resolveTemplate('product/product');
 
 			$this->children = [
 				'common/content_higher',
@@ -958,11 +954,7 @@ class ControllerProductProduct extends Controller {
 			// Theme
 			$this->data['template'] = $this->config->get('config_template');
 
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-			} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->resolveTemplate('error/not_found');
 
 			$this->children = [
 				'common/content_higher',
@@ -1021,11 +1013,7 @@ class ControllerProductProduct extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product_reviews.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/product/product_reviews.tpl';
-		} else {
-			$this->template = 'default/template/product/product_reviews.tpl';
-		}
+		$this->resolveTemplate('product/product_reviews');
 
 		return $this->render();
 	}
@@ -1056,72 +1044,6 @@ class ControllerProductProduct extends Controller {
 				$this->model_catalog_review->addReview($product_id, $this->request->post);
 
 				$json['success'] = $this->language->get('text_success');
-			}
-		}
-
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
-
-	public function getRecurringDescription() {
-		$this->language->load('product/product');
-
-		$this->load->model('catalog/product');
-
-		if (isset($this->request->post['product_id'])) {
-			$product_id = $this->request->post['product_id'];
-		} elseif (isset($this->request->get['product_id'])) {
-			$product_id = $this->request->get['product_id'];
-		} else {
-			$product_id = 0;
-		}
-
-		if (isset($this->request->post['profile_id'])) {
-			$profile_id = $this->request->post['profile_id'];
-		} elseif (isset($this->request->get['profile_id'])) {
-			$profile_id = $this->request->get['profile_id'];
-		} else {
-			$profile_id = 0;
-		}
-
-		if (isset($this->request->post['quantity'])) {
-			$quantity = $this->request->post['quantity'];
-		} else {
-			$quantity = 1;
-		}
-
-		$product_info = $this->model_catalog_product->getProduct($product_id);
-		$profile_info = $this->model_catalog_product->getProfile($product_id, $profile_id);
-
-		$json = [];
-
-		if ($product_info && $profile_info && !$json) {
-			$frequencies = [
-				'day'        => $this->language->get('text_day'),
-				'week'       => $this->language->get('text_week'),
-				'semi_month' => $this->language->get('text_semi_month'),
-				'month'      => $this->language->get('text_month'),
-				'year'       => $this->language->get('text_year')
-			];
-
-			foreach ($profile_info as $result) {
-				if ($result['trial_status'] === 1) {
-					$price = $this->currency->format($this->tax->calculate(($result['trial_price'] * $quantity), $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-
-					$trial_text = sprintf($this->language->get('text_trial_description'), $price, $result['trial_cycle'], $frequencies[$result['trial_frequency']], $result['trial_duration']) . ' ';
-				} else {
-					$trial_text = '';
-				}
-
-				$price = $this->currency->format($this->tax->calculate(($result['price'] * $quantity), $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
-
-				if ($result['duration']) {
-					$text = $trial_text . sprintf($this->language->get('text_payment_description'), $price, $result['cycle'], $frequencies[$result['frequency']], $result['duration']);
-				} else {
-					$text = $trial_text . sprintf($this->language->get('text_payment_until_canceled_description'), $price, $result['cycle'], $frequencies[$result['frequency']], $result['duration']);
-				}
-
-				$json['success'] = $text;
 			}
 		}
 

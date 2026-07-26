@@ -174,12 +174,7 @@ class ControllerCommonHeader extends Controller {
 			'node/cart'
 		];
 
-		if (file_exists(DIR_TEMPLATE . $template . '/template/common/header.tpl')) {
-			$this->template = $template . '/template/common/header.tpl';
-		} else {
-			$this->template = 'default/template/common/header.tpl';
-		}
-
+		$this->resolveTemplate('common/header');
 		$this->render();
 	}
 }

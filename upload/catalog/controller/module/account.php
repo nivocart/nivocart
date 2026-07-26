@@ -84,11 +84,7 @@ class ControllerModuleAccount extends Controller {
 		$this->data['template'] = $this->config->get('config_template');
 
 		if (!$this->customer->isLogged() || ($this->customer->isLogged() && $this->config->get($this->name . '_mode') > 0)) {
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/' . $this->name . '.tpl';
-			} else {
-				$this->template = 'default/template/module/' . $this->name . '.tpl';
-			}
+			$this->resolveTemplate('module/' . $this->name);
 
 			$this->render();
 		}

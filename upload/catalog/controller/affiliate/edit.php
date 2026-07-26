@@ -258,11 +258,7 @@ class ControllerAffiliateEdit extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/edit.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/affiliate/edit.tpl';
-		} else {
-			$this->template = 'default/template/affiliate/edit.tpl';
-		}
+		$this->resolveTemplate('affiliate/edit');
 
 		$this->children = [
 			'common/content_higher',

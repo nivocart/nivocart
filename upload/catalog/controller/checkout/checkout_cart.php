@@ -352,11 +352,7 @@ class ControllerCheckoutCheckoutCart extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/checkout_cart.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/checkout_cart.tpl';
-		} else {
-			$this->template = 'default/template/checkout/checkout_cart.tpl';
-		}
+		$this->resolveTemplate('checkout/checkout_cart');
 
 		$this->response->setOutput($this->render());
 	}

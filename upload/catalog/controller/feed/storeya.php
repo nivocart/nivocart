@@ -11,7 +11,8 @@ class ControllerFeedStoreya extends Controller {
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
 			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
-			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+		) {
 			$base = HTTPS_SERVER;
 		} else {
 			$base = HTTP_SERVER;
@@ -60,7 +61,7 @@ class ControllerFeedStoreya extends Controller {
 
 		foreach ($products as $product) {
 			if ($product['description']) {
-				$output .= '<item>'. "\n";
+				$output .= '<item>' . "\n";
 				$output .= '<title>' . $this->stripHtmlTags($this->replaceProblemCharacters($this->encodeIfNeeded($product['name']))) . '</title>' . "\n";
 				$output .= '<link>' . $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL') . '</link>' . "\n";
 				$output .= '<description>' . $this->stripHtmlTags($this->replaceProblemCharacters($this->encodeIfNeeded(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')))) . '</description>' . "\n";
@@ -154,7 +155,12 @@ class ControllerFeedStoreya extends Controller {
 	}
 
 	protected function encodeIfNeeded($text) {
-		$text = iconv(mb_detect_encoding($text, mb_detect_order(), true), "UTF-8", $text);
+		$encoding = mb_detect_encoding($text, mb_detect_order(), true);
+
+		if ($encoding && $encoding !== 'UTF-8') {
+			$text = mb_convert_encoding($text, 'UTF-8', $encoding);
+		}
+
 		return $text;
 	}
 

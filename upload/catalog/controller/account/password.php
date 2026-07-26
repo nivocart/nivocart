@@ -131,11 +131,7 @@ class ControllerAccountPassword extends Controller {
 		// Theme
 		$this->data['template'] = $this->config->get('config_template');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/password.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/password.tpl';
-		} else {
-			$this->template = 'default/template/account/password.tpl';
-		}
+		$this->resolveTemplate('account/password');
 
 		$this->children = [
 			'common/content_higher',

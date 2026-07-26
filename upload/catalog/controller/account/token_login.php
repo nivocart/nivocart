@@ -67,13 +67,13 @@ class ControllerAccountTokenLogin extends Controller {
         if ($address_info) {
             if ($this->config->get('config_tax_customer') === 'shipping') {
                 $this->session->data['shipping_country_id'] = $address_info['country_id'];
-                $this->session->data['shipping_zone_id']    = $address_info['zone_id'];
-                $this->session->data['shipping_postcode']   = $address_info['postcode'];
+                $this->session->data['shipping_zone_id'] = $address_info['zone_id'];
+                $this->session->data['shipping_postcode'] = $address_info['postcode'];
             }
 
             if ($this->config->get('config_tax_customer') === 'payment') {
                 $this->session->data['payment_country_id'] = $address_info['country_id'];
-                $this->session->data['payment_zone_id']    = $address_info['zone_id'];
+                $this->session->data['payment_zone_id'] = $address_info['zone_id'];
             }
         }
 
