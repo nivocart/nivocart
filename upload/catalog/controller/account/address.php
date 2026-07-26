@@ -619,7 +619,7 @@ class ControllerAccountAddress extends Controller {
 	}
 
 	protected function validateDelete() {
-		if ($this->model_account_address->getTotalAddresses() > 0) {
+		if ($this->model_account_address->getTotalAddresses() === 1) {
 			$this->error['warning'] = $this->language->get('error_delete');
 		}
 
