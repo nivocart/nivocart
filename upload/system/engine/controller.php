@@ -146,6 +146,29 @@ abstract class Controller {
 	}
 
 	/**
+	 * Resolve Template
+	 *
+	 * Resolves the correct catalog template path for a given template name,
+	 * falling back to the default theme if the active theme does not provide it.
+	 * Sets $this->template ready for render().
+	 *
+	 * Usage (catalog controllers only):
+	 *   $this->resolveTemplate('common/content_high');
+	 *   $this->resolveTemplate('product/product');
+	 *
+	 * @param string $name  Template name relative to /template/, without .tpl extension
+	 *
+	 * @return void
+	 */
+	protected function resolveTemplate(string $name): void {
+		$theme = (string)$this->config->get('config_template');
+
+		$themed = $theme . '/template/' . $name . '.tpl';
+
+		$this->template = file_exists(DIR_TEMPLATE . $themed) ? $themed : 'default/template/' . $name . '.tpl';
+	}
+
+	/**
 	 * Render
 	 *
 	 * @return string

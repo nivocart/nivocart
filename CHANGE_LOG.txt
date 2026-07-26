@@ -23,6 +23,7 @@ Release: TBA
 - Fix all deprecated "curl_close()" function instances (PHP 8.5+).
 - Removed all instances of "$_REQUEST" superglobal for increased security.
 - Refactored all 6 Content Position Controllers for faster response.
+- Added a new resolveTemplate() method in Library Engine Controller.
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
 - Extensive Admin/Catalog Templates code quality updates.
