@@ -5,7 +5,7 @@
 
 NivoCart v2.1.0
 ---------------
-Release: TBA
+Release: 27/07/2026
 
 - Fixed Documents Metas for Search Engines.
 - Updated "robots.txt" file for the main crawlers.
