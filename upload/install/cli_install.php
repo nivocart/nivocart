@@ -61,7 +61,7 @@ function usage() {
 	$options = implode(" ", [
 		'--db_hostname', 'localhost',
 		'--db_username', 'root',
-		'--db_password', 'pass',
+		'--db_password', 'password',
 		'--db_database', 'nivocart',
 		'--db_driver', 'mysqli',
 		'--db_port', '3306',
