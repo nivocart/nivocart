@@ -397,12 +397,29 @@ class ModelUpgrade extends Model {
 	private function buildFieldDefinition(array $field, bool $with_autoincrement = false): string {
 		$sql = mb_strtoupper($field['type'], 'UTF-8');
 
-		if ($field['size']) $sql .= "({$field['size']})";
-		if ($field['collation']) $sql .= " {$field['collation']}";
-		if ($field['unsigned']) $sql .= " {$field['unsigned']}";
-		if ($field['notnull']) $sql .= " {$field['notnull']}";
-		if ($field['default'] !== '') $sql .= " DEFAULT '{$field['default']}'";
-		if ($with_autoincrement && $field['autoincrement']) $sql .= ' AUTO_INCREMENT';
+		if ($field['size']) {
+			$sql .= "({$field['size']})";
+		}
+
+		if ($field['collation']) {
+			$sql .= " {$field['collation']}";
+		}
+
+		if ($field['unsigned']) {
+			$sql .= " {$field['unsigned']}";
+		}
+
+		if ($field['notnull']) {
+			$sql .= " {$field['notnull']}";
+		}
+
+		if ($field['default'] !== '') {
+			$sql .= " DEFAULT '{$field['default']}'";
+		}
+
+		if ($with_autoincrement && $field['autoincrement']) {
+			$sql .= ' AUTO_INCREMENT';
+		}
 
 		return $sql;
 	}
