@@ -59,6 +59,19 @@ class ControllerToolConfiguration extends Controller {
 		$this->data['text_integrity_info'] = $this->language->get('text_integrity_info');
 		$this->data['text_server_info'] = $this->language->get('text_server_info');
 
+		$this->data['text_update_check'] = $this->language->get('text_update_check');
+		$this->data['text_latest_version'] = $this->language->get('text_latest_version');
+		$this->data['text_not_checked'] = $this->language->get('text_not_checked');
+		$this->data['text_checking'] = $this->language->get('text_checking');
+		$this->data['text_update_available'] = $this->language->get('text_update_available');
+		$this->data['text_up_to_date'] = $this->language->get('text_up_to_date');
+		$this->data['text_view_release'] = $this->language->get('text_view_release');
+		$this->data['text_release_notes'] = $this->language->get('text_release_notes');
+		$this->data['text_next_check'] = $this->language->get('text_next_check');
+		$this->data['text_check_failed'] = $this->language->get('text_check_failed');
+
+		$this->data['button_check_update'] = $this->language->get('button_check_update');
+
 		$this->data['tab_store'] = $this->language->get('tab_store');
 		$this->data['tab_setting'] = $this->language->get('tab_setting');
 		$this->data['tab_image'] = $this->language->get('tab_image');
@@ -363,6 +376,18 @@ class ControllerToolConfiguration extends Controller {
 			];
 		}
 
+		// -----------------------
+		// Update Check
+		// -----------------------
+		$this->load->model('tool/system');
+
+		$cache_age = $this->model_tool_system->getUpdateCacheAge();
+
+		// Pass remaining cooldown in seconds (0 means button is active)
+		$this->data['update_cooldown'] = ($cache_age !== null && $cache_age < 86400) ? (86400 - $cache_age) : 0;
+
+		$this->data['update_check_url'] = $this->url->link('tool/configuration/checkUpdate', 'token=' . $this->session->data['token'], 'SSL');
+
 		// Render
 		$this->template = 'tool/' . $this->name . '.tpl';
 		$this->children = [
@@ -371,6 +396,14 @@ class ControllerToolConfiguration extends Controller {
 		];
 
 		$this->response->setOutput($this->render());
+	}
+
+	protected function validate() {
+		if (!$this->user->hasPermission('modify', 'tool/configuration')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		return empty($this->error);
 	}
 
 	/**
@@ -398,11 +431,25 @@ class ControllerToolConfiguration extends Controller {
 		return $results;
 	}
 
-	protected function validate() {
+	/**
+	 * Check for update — AJAX endpoint
+	 *
+	 * @return void
+	 */
+	public function checkUpdate(): void {
+		$this->language->load('tool/' . $this->name);
+
 		if (!$this->user->hasPermission('modify', 'tool/configuration')) {
-			$this->error['warning'] = $this->language->get('error_permission');
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode(['status' => 'error', 'message' => $this->language->get('error_permission')]));
+			return;
 		}
 
-		return empty($this->error);
+		$this->load->model('tool/system');
+
+		$result = $this->model_tool_system->checkForUpdate();
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($result));
 	}
 }

@@ -79,6 +79,38 @@
         <?php if ($error_install) { ?>
           <div class="warning"><?php echo $error_install; ?></div>
         <?php } ?>
+        <!-- Update Check -->
+        <h2><?php echo $text_update_check; ?></h2>
+        <table class="form">
+          <tr>
+            <td><?php echo $text_latest_version; ?></td>
+            <td>
+              <span id="update-result"><?php echo $text_not_checked; ?></span>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+			  <a id="btn-check-update" href="javascript:void(0);" class="button ripple<?php echo $update_cooldown ? ' disabled' : ''; ?>">
+                <?php echo $button_check_update; ?>
+              </a>
+              <?php if ($update_cooldown) { ?>
+                <span class="help" id="update-cooldown-msg">
+                  <?php echo sprintf($text_next_check, gmdate('H:i', $update_cooldown)); ?>
+                </span>
+              <?php } ?>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <div id="update-release-notes" style="display:none;">
+                <strong><?php echo $text_release_notes; ?></strong>
+                <div id="update-release-body" style="margin-top:4px; white-space:pre-wrap;"></div>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
       <div id="tab-setting">
         <h2><?php echo $text_setting_info; ?></h2>
@@ -392,6 +424,66 @@
 
 <script type="text/javascript"><!--
 $('#tabs a').tabs();
+//--></script>
+
+<script type="text/javascript"><!--
+(function () {
+    var btn = document.getElementById('btn-check-update');
+    var result = document.getElementById('update-result');
+    var notes = document.getElementById('update-release-notes');
+    var noteBody = document.getElementById('update-release-body');
+
+    if (!btn) return;
+
+	btn.addEventListener('click', function () {
+		if (btn.classList.contains('disabled')) return;
+
+		btn.classList.add('disabled');
+		result.innerHTML = '<?php echo $text_checking; ?>';
+
+		$.ajax({
+			url: '<?php echo $update_check_url; ?>',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				if (data.status === 'error') {
+					result.innerHTML = '<span style="color:#DE5954;">' + data.message + '</span>';
+					btn.classList.remove('disabled');
+					return;
+				}
+
+				if (data.update) {
+					result.innerHTML = '<span style="color:#DE5954;">'
+						+ '<?php echo $text_update_available; ?> v' + data.latest
+						+ ' &mdash; <a href="' + data.release_url + '" target="_blank"><?php echo $text_view_release; ?></a>'
+						+ '</span>';
+				} else {
+					result.innerHTML = '<span style="color:#5DC15E;"><?php echo $text_up_to_date; ?> (v' + data.latest + ')</span>';
+				}
+
+				if (data.release_notes) {
+					noteBody.textContent = data.release_notes;
+					notes.style.display = 'block';
+				}
+
+				if (!data.cached) {
+					var msg = document.getElementById('update-cooldown-msg');
+					if (!msg) {
+						msg = document.createElement('span');
+						msg.id = 'update-cooldown-msg';
+						msg.className = 'help';
+						btn.parentNode.appendChild(msg);
+					}
+					msg.textContent = '<?php echo $text_next_check; ?>'.replace('%s', '24:00');
+				}
+			},
+			error: function () {
+				result.innerHTML = '<span style="color:#DE5954;"><?php echo $text_check_failed; ?></span>';
+				btn.classList.remove('disabled');
+			}
+		});
+	});
+}());
 //--></script>
 
 <?php echo $footer; ?>

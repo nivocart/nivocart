@@ -25,6 +25,19 @@ $_['text_setting_info']     = 'Settings Information';
 $_['text_image_info']       = 'Images Information';
 $_['text_integrity_info']   = 'System Files Integrity';
 $_['text_server_info']      = 'Server Information';
+$_['text_update_check']     = 'New Version Check';
+$_['text_latest_version']   = 'Latest Version';
+$_['text_not_checked']      = 'Not checked yet';
+$_['text_checking']         = 'Checking...';
+$_['text_update_available'] = 'Update available:';
+$_['text_up_to_date']       = 'Up to date';
+$_['text_view_release']     = 'View release';
+$_['text_release_notes']    = 'Release notes:';
+$_['text_next_check']       = 'Next check available in %s';
+$_['text_check_failed']     = 'Check failed. Please try again later.';
+
+// Button
+$_['button_check_update']   = 'Check for Updates';
 
 // Tab
 $_['tab_store']             = 'Store';

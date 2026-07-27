@@ -25,6 +25,7 @@ Release: TBA
 - Refactored Upgrade script files for improved PHP 8.1+ support.
 - Refactored all 6 Content Position Controllers for faster response.
 - Added a new resolveTemplate() method in Library Engine Controller.
+- Added a check for New NivoCart Version under Admin Configuration.
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
 - Extensive Admin/Catalog Templates code quality updates.
