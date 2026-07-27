@@ -29,6 +29,7 @@ Release: TBA
 - FlexSlider CSS: removed container box-shadow and obsolete -moz- tag.
 - Added text helpers in Settings to facilitate Search Engines indexing.
 - Extensive Admin/Catalog Templates code quality updates.
+- Updated "cli_install.php" install script.
 
 
 NivoCart v2.0.0
