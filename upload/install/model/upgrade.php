@@ -1,25 +1,15 @@
 <?php
 /**
- * Class Upgrade
+ * Class ModelUpgrade
  *
- * NivoCart Upgrade Script
- *
- * Minimum version supported: v2.0.0
+ * NivoCart Upgrade Script — minimum supported version: v2.0.0
  *
  * @package NivoCart
  */
 class ModelUpgrade extends Model {
-	/**
-	 * DataTables
-	 *
-	 * @param $step1 value = false
-	 *
-	 * @throws \Exception
-	 *
-	 * @return $step1
-	 */
-	public function dataTables($step1) {
-		// Load the MySql upgrade file
+	/* Error Array Placeholder */
+
+	public function dataTables(): bool {
 		$file = DIR_APPLICATION . 'nivocart-upgrade.sql';
 
 		if (!file_exists($file)) {
@@ -29,18 +19,12 @@ class ModelUpgrade extends Model {
 		clearstatcache();
 
 		$string = '';
-
-		$lines = file($file);
-
 		$status = false;
 
-		// Get only the Create statements
-		foreach ($lines as $line) {
-			// Set any prefix
-			$line = str_replace("CREATE TABLE `nc_", "CREATE TABLE `" . DB_PREFIX, $line);
+		foreach (file($file) as $line) {
+			$line = str_replace('CREATE TABLE `nc_', 'CREATE TABLE `' . DB_PREFIX, $line);
 
-			// If line begins with Create Table, start recording
-			if (substr($line, 0, 12) === 'CREATE TABLE') {
+			if (str_starts_with($line, 'CREATE TABLE')) {
 				$status = true;
 			}
 
@@ -48,26 +32,24 @@ class ModelUpgrade extends Model {
 				$string .= $line;
 			}
 
-			// If line contains ';', stop recording
-			if (preg_match('/;/', $line)) {
+			if (str_contains($line, ';')) {
 				$status = false;
 			}
 		}
 
-		$table_new_data = [];
-
-		// Trim any spaces, and ';'
-		$string = trim($string);
-		$string = trim($string, ';');
-
-		// Start reading each Create statement
+		$string = trim($string, " \t\n\r\0\x0B;");
 		$statements = explode(';', $string);
+
+		$table_new_data = [];
 
 		foreach ($statements as $sql) {
 			$field_data = [];
 
-			// Get all fields
-			preg_match_all('#`(\w[\w\d]*)`\s+((tinyint|smallint|mediumint|bigint|int|tinytext|text|mediumtext|longtext|tinyblob|blob|mediumblob|longblob|varchar|char|datetime|date|float|double|decimal|timestamp|time|year|enum|set|binary|varbinary)(\((.*)\))?){1}\s*(collate (\w+)\s*)?(unsigned\s*)?((NOT\s*NULL\s*)|(NULL\s*))?(auto_increment\s*)?(default \'([^\']*)\'\s*)?#i', $sql, $match);
+			preg_match_all(
+				'#`(\w[\w\d]*)`\s+((tinyint|smallint|mediumint|bigint|int|tinytext|text|mediumtext|longtext|tinyblob|blob|mediumblob|longblob|varchar|char|datetime|date|float|double|decimal|timestamp|time|year|enum|set|binary|varbinary)(\((.*)\))?){1}\s*(collate (\w+)\s*)?(unsigned\s*)?((NOT\s*NULL\s*)|(NULL\s*))?(auto_increment\s*)?(default \'([^\']*)\'\s*)?#i',
+				$sql,
+				$match
+			);
 
 			foreach (array_keys($match[0]) as $key) {
 				$field_data[] = [
@@ -79,61 +61,42 @@ class ModelUpgrade extends Model {
 					'unsigned'      => trim($match[8][$key]),
 					'notnull'       => trim($match[9][$key]),
 					'autoincrement' => trim($match[12][$key]),
-					'default'       => trim($match[14][$key])
+					'default'       => trim($match[14][$key]),
 				];
 			}
 
-			// Get primary keys
+			// Primary keys
 			$primary_data = [];
-
 			preg_match('#primary\s*key\s*\([^)]+\)#i', $sql, $match);
 
-			if (isset($match[0])) {
+			if (!empty($match[0])) {
 				preg_match_all('#`(\w[\w\d]*)`#', $match[0], $match);
-			} else {
-				$match = [];
+				$primary_data = $match[1] ?? [];
 			}
 
-			if ($match) {
-				foreach ($match[1] as $primary) {
-					$primary_data[] = $primary;
-				}
-			}
-
-			// Get indexes
+			// Indexes
 			$index_data = [];
-			$indexes = [];
-
 			preg_match_all('#key\s*`\w[\w\d]*`\s*\(.*\)#i', $sql, $match);
 
 			foreach ($match[0] as $key) {
-				preg_match_all('#`(\w[\w\d]*)`#', $key, $match);
+				preg_match_all('#`(\w[\w\d]*)`#', $key, $parts);
+				$fields = $parts[1] ?? [];
 
-				$indexes[] = $match;
-			}
-
-			foreach ($indexes as $index) {
-				$key = '';
-
-				foreach ($index[1] as $field) {
-					if ($key === '') {
-						$key = $field;
-					} else {
-						$index_data[$key][] = $field;
-					}
+				if (count($fields) >= 2) {
+					$name = array_shift($fields);
+					$index_data[$name] = $fields;
 				}
 			}
 
 			// Table options
 			$option_data = [];
-
 			preg_match_all('#(\w+)=(\w+)#', $sql, $option);
 
 			foreach (array_keys($option[0]) as $key) {
 				$option_data[$option[1][$key]] = $option[2][$key];
 			}
 
-			// Get Table Name
+			// Table name
 			preg_match_all('#create\s*table\s*`(\w[\w\d]*)`#i', $sql, $table);
 
 			if (isset($table[1][0])) {
@@ -143,547 +106,280 @@ class ModelUpgrade extends Model {
 					'field'   => $field_data,
 					'primary' => $primary_data,
 					'index'   => $index_data,
-					'option'  => $option_data
+					'option'  => $option_data,
 				];
 			}
 		}
 
-		$this->db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+		$this->db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 
-		// Get all current tables, fields, type, size, etc..
+		// Snapshot existing tables
 		$table_old_data = [];
 
 		$table_query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
 
-		foreach ($table_query->rows as $table) {
-			if (mb_substr($table['Tables_in_' . DB_DATABASE], 0, mb_strlen(DB_PREFIX, 'UTF-8'), 'UTF-8') === DB_PREFIX) {
-				$field_data = [];
-				$extended_field_data = [];
+		foreach ($table_query->rows as $row) {
+			$table_name = $row['Tables_in_' . DB_DATABASE];
 
-				$field_query = $this->db->query("SHOW COLUMNS FROM `" . $table['Tables_in_' . DB_DATABASE] . "`");
-
-				foreach ($field_query->rows as $field) {
-					$field_data[] = $field['Field'];
-					$extended_field_data[] = $field;
-				}
-
-				$table_old_data[$table['Tables_in_' . DB_DATABASE]]['field_list'] = $field_data;
-				$table_old_data[$table['Tables_in_' . DB_DATABASE]]['extended_field_data'] = $extended_field_data;
+			if (mb_substr($table_name, 0, mb_strlen(DB_PREFIX, 'UTF-8'), 'UTF-8') !== DB_PREFIX) {
+				continue;
 			}
+
+			$field_list = [];
+			$extended_field_data = [];
+
+			foreach ($this->db->query("SHOW COLUMNS FROM `{$table_name}`")->rows as $field) {
+				$field_list[] = $field['Field'];
+				$extended_field_data[] = $field;
+			}
+
+			$table_old_data[$table_name] = [
+				'field_list'          => $field_list,
+				'extended_field_data' => $extended_field_data,
+			];
 		}
 
 		foreach ($table_new_data as $table) {
-			// If table is not found create it
 			if (!isset($table_old_data[$table['name']])) {
+				// Table is new — create it
 				$this->db->query($table['sql']);
-			} else {
-				// DB Engine
-				if (isset($table['option']['ENGINE'])) {
-					$this->db->query("ALTER TABLE `" . $table['name'] . "` ENGINE = `" . $table['option']['ENGINE'] . "`");
-				}
+				continue;
+			}
 
-				// Charset
-				if (isset($table['option']['CHARSET']) && isset($table['option']['COLLATE'])) {
-					$this->db->query("ALTER TABLE `" . $table['name'] . "` DEFAULT CHARACTER SET `" . $table['option']['CHARSET'] . "` COLLATE `" . $table['option']['COLLATE'] . "`");
-				}
+			// Engine
+			if (isset($table['option']['ENGINE'])) {
+				$this->db->query("ALTER TABLE `{$table['name']}` ENGINE = `{$table['option']['ENGINE']}`");
+			}
 
-				set_time_limit(60);
+			// Charset / collation
+			if (isset($table['option']['CHARSET'], $table['option']['COLLATE'])) {
+				$this->db->query("ALTER TABLE `{$table['name']}` DEFAULT CHARACTER SET `{$table['option']['CHARSET']}` COLLATE `{$table['option']['COLLATE']}`");
+			}
 
-				// Loop through all tables and adjust based on nivocart-upgrade.sql file
-				$i = 0;
+			set_time_limit(60);
 
-				foreach ($table['field'] as $field) {
-					// If field is not found create it
-					if (!in_array($field['name'], $table_old_data[$table['name']]['field_list'])) {
-						$status = true;
+			$old = $table_old_data[$table['name']];
 
-						foreach ($table_old_data[$table['name']]['extended_field_data'] as $oldfield) {
-							if ($oldfield['Extra'] === 'auto_increment' && $field['autoincrement']) {
-								$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $oldfield['Field'] . "` `" . $field['name'] . "` " . mb_strtoupper($field['type'], 'UTF-8');
-								$status = false;
-								break;
-							}
-						}
+			foreach ($table['field'] as $i => $field) {
+				$after = isset($table['field'][$i - 1]) ? " AFTER `{$table['field'][$i - 1]['name']}`" : ' FIRST';
 
-						if ($status) {
-							$sql = "ALTER TABLE `" . $table['name'] . "` ADD `" . $field['name'] . "` " . $field['type'];
-						}
+				$definition = $this->buildFieldDefinition($field);
 
-						if ($field['size']) {
-							$sql .= "(" . $field['size'] . ")";
-						}
+				if (!in_array($field['name'], $old['field_list'])) {
+					// Check if this is a renamed auto-increment column
+					$renamed = false;
 
-						if ($field['collation']) {
-							$sql .= " " . $field['collation'];
-						}
-
-						if ($field['unsigned']) {
-							$sql .= " " . $field['unsigned'];
-						}
-
-						if ($field['notnull']) {
-							$sql .= " " . $field['notnull'];
-						}
-
-						if ($field['default'] !== '') {
-							$sql .= " DEFAULT '" . $field['default'] . "'";
-						}
-
-						if (isset($table['field'][$i - 1])) {
-							$sql .= " AFTER `" . $table['field'][$i - 1]['name'] . "`";
-						} else {
-							$sql .= " FIRST";
-						}
-
-						$this->db->query($sql);
-
-					} else {
-						// Remove auto-increment from all fields
-						$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $field['name'] . "` `" . $field['name'] . "` " . mb_strtoupper($field['type'], 'UTF-8');
-
-						if ($field['size']) {
-							$sql .= "(" . $field['size'] . ")";
-						}
-
-						if ($field['collation']) {
-							$sql .= " " . $field['collation'];
-						}
-
-						if ($field['unsigned']) {
-							$sql .= " " . $field['unsigned'];
-						}
-
-						if ($field['notnull']) {
-							$sql .= " " . $field['notnull'];
-						}
-
-						if ($field['default'] !== '') {
-							$sql .= " DEFAULT '" . $field['default'] . "'";
-						}
-
-						if (isset($table['field'][$i - 1])) {
-							$sql .= " AFTER `" . $table['field'][$i - 1]['name'] . "`";
-						} else {
-							$sql .= " FIRST";
-						}
-
-						$this->db->query($sql);
-					}
-
-					$i++;
-				}
-
-				$status = false;
-
-				// Drop primary keys and indexes
-				$query = $this->db->query("SHOW INDEXES FROM `" . $table['name'] . "`");
-
-				$last_key_name = '';
-
-				if ($query->num_rows) {
-					foreach ($query->rows as $result) {
-						if ($result['Key_name'] !== 'PRIMARY' && $result['Key_name'] !== $last_key_name) {
-							$last_key_name = $result['Key_name'];
-
-							$this->db->query("ALTER TABLE `" . $table['name'] . "` DROP INDEX `" . $result['Key_name'] . "`");
-						} else {
-							$status = true;
+					foreach ($old['extended_field_data'] as $oldfield) {
+						if ($oldfield['Extra'] === 'auto_increment' && $field['autoincrement']) {
+							$this->db->query("ALTER TABLE `{$table['name']}` CHANGE `{$oldfield['Field']}` `{$field['name']}` {$definition}{$after}");
+							$renamed = true;
+							break;
 						}
 					}
-				}
 
-				if ($status) {
-					$this->db->query("ALTER TABLE `" . $table['name'] . "` DROP PRIMARY KEY");
-				}
-
-				// Add a new primary key
-				$primary_data = [];
-
-				foreach ($table['primary'] as $primary) {
-					$primary_data[] = "`" . $primary . "`";
-				}
-
-				if ($primary_data) {
-					$this->db->query("ALTER TABLE `" . $table['name'] . "` ADD PRIMARY KEY(" . implode(',', $primary_data) . ")");
-				}
-
-				// Add the new indexes
-				foreach ($table['index'] as $name => $index) {
-					$index_data = [];
-
-					foreach ($index as $key) {
-						$index_data[] = '`' . $key . '`';
+					if (!$renamed) {
+						$this->db->query("ALTER TABLE `{$table['name']}` ADD `{$field['name']}` {$definition}{$after}");
 					}
-
-					if ($index_data) {
-						$this->db->query("ALTER TABLE `" . $table['name'] . "` ADD INDEX `" . $name . "` (" . implode(',', $index_data) . ")");
-					}
+				} else {
+					// Modify existing field (strips auto_increment before re-adding below)
+					$this->db->query("ALTER TABLE `{$table['name']}` CHANGE `{$field['name']}` `{$field['name']}` {$definition}{$after}");
 				}
+			}
 
-				// Add auto-increment to primary keys again
-				foreach ($table['field'] as $field) {
-					if ($field['autoincrement']) {
-						$sql = "ALTER TABLE `" . $table['name'] . "` CHANGE `" . $field['name'] . "` `" . $field['name'] . "` " . mb_strtoupper($field['type'], 'UTF-8');
+			// Drop non-primary indexes, then primary key
+			$has_primary = false;
+			$index_query = $this->db->query("SHOW INDEXES FROM `{$table['name']}`");
+			$seen_keys = [];
 
-						if ($field['size']) {
-							$sql .= "(" . $field['size'] . ")";
-						}
+			foreach ($index_query->rows as $result) {
+				if ($result['Key_name'] === 'PRIMARY') {
+					$has_primary = true;
+				} elseif (!in_array($result['Key_name'], $seen_keys)) {
+					$seen_keys[] = $result['Key_name'];
+					$this->db->query("ALTER TABLE `{$table['name']}` DROP INDEX `{$result['Key_name']}`");
+				}
+			}
 
-						if ($field['collation']) {
-							$sql .= " " . $field['collation'];
-						}
+			if ($has_primary) {
+				$this->db->query("ALTER TABLE `{$table['name']}` DROP PRIMARY KEY");
+			}
 
-						if ($field['unsigned']) {
-							$sql .= " " . $field['unsigned'];
-						}
+			// Re-add primary key
+			if ($table['primary']) {
+				$cols = implode(',', array_map(fn($p) => "`{$p}`", $table['primary']));
+				$this->db->query("ALTER TABLE `{$table['name']}` ADD PRIMARY KEY({$cols})");
+			}
 
-						if ($field['notnull']) {
-							$sql .= " " . $field['notnull'];
-						}
+			// Re-add indexes
+			foreach ($table['index'] as $name => $cols) {
+				$col_list = implode(',', array_map(fn($c) => "`{$c}`", $cols));
+				$this->db->query("ALTER TABLE `{$table['name']}` ADD INDEX `{$name}` ({$col_list})");
+			}
 
-						if ($field['default'] != '') {
-							$sql .= " DEFAULT '" . $field['default'] . "'";
-						}
-
-						if ($field['autoincrement']) {
-							$sql .= " AUTO_INCREMENT";
-						}
-
-						$this->db->query($sql);
-					}
+			// Re-add auto_increment
+			foreach ($table['field'] as $field) {
+				if ($field['autoincrement']) {
+					$definition = $this->buildFieldDefinition($field, true);
+					$this->db->query("ALTER TABLE `{$table['name']}` CHANGE `{$field['name']}` `{$field['name']}` {$definition}");
 				}
 			}
 		}
 
-		// Add version
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "version` SET `version` = '" . NC_VERSION . "', date_added = NOW()");
 
-		$step1 = true;
-
-		return $step1;
+		return true;
 	}
 
-	// -------------------------------------
-	// Function to update additional tables
-	// -------------------------------------
-	public function additionalTables($step2) {
+	public function additionalTables(): bool {
 		set_time_limit(60);
 
-		// Add json_decode to Setting
 		$setting_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE store_id = '0' ORDER BY store_id ASC");
 
+		$settings = [];
+
 		foreach ($setting_query->rows as $setting) {
-			if (!$setting['serialized']) {
-				$settings[$setting['key']] = $setting['value'];
-			} else {
-				$settings[$setting['key']] = $setting['value'] ? json_decode($setting['value'], true) : [];
-			}
+			$settings[$setting['key']] = $setting['serialized'] ? ($setting['value'] ? json_decode($setting['value'], true) : []) : $setting['value'];
 		}
 
-		// ----------------------------------
-		// No additional tables at this time
-		// ----------------------------------
+		// No additional table changes at this time.
 
 		flush();
 
-		$step2 = true;
-
-		return $step2;
+		return true;
 	}
 
-	// ------------------------------------------------------------------------------------
-	// Function to repair any erroneous categories that are not in the category path table
-	// ------------------------------------------------------------------------------------
-	public function repairCategories($step3, $parent_id = 0) {
+	public function repairCategories(int $parent_id = 0): bool {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category` WHERE parent_id = '" . (int)$parent_id . "'");
 
 		foreach ($query->rows as $category) {
-			// Delete the path below the current one
 			$this->db->query("DELETE FROM `" . DB_PREFIX . "category_path` WHERE category_id = '" . (int)$category['category_id'] . "'");
 
-			// Fix for records with no paths
 			$level = 0;
-
 			$level_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "category_path` WHERE category_id = '" . (int)$parent_id . "' ORDER BY `level` ASC");
 
 			foreach ($level_query->rows as $result) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "category_path` SET category_id = '" . (int)$category['category_id'] . "', path_id = '" . (int)$result['path_id'] . "', `level` = '" . (int)$level . "'");
-
 				$level++;
 			}
 
 			$this->db->query("REPLACE INTO `" . DB_PREFIX . "category_path` SET category_id = '" . (int)$category['category_id'] . "', path_id = '" . (int)$category['category_id'] . "', `level` = '" . (int)$level . "'");
 
-			$this->repairCategories($category['category_id'], false);
+			$this->repairCategories($category['category_id']);
 		}
 
-		// --------------------------------------------------
-		// Check system/upload directory. Create if missing
-		// --------------------------------------------------
 		$upload_directory = DIR_SYSTEM . 'upload/';
 
 		if (!is_dir($upload_directory)) {
-			mkdir(DIR_SYSTEM . 'upload', 0777);
+			mkdir($upload_directory, 0777, true);
 		}
 
-		$step3 = true;
-
-		return $step3;
+		return true;
 	}
 
-	// ---------------------------------------------------
-	// Function to update the existing "config.php" files
-	//
-	// If missing, deprecated or redundant:
-	// ------------------------------------
-	// Add constant: 'HTTP_IMAGE'
-	// Add constant: 'HTTPS_IMAGE'
-	// Add constant: 'DIR_UPLOAD'
-	// Remove PHP closing tag
-	// ---------------------------------------------------
-	public function updateConfig($step4) {
+	public function updateConfig(): bool {
 		set_time_limit(60);
 
-		if (is_file(DIR_NIVOCART . 'config.php')) {
-			$candidates = [
-				DIR_NIVOCART . 'config.php',
-				DIR_NIVOCART . 'admin/config.php',
-			];
+		$root_config = DIR_NIVOCART . 'config.php';
 
-			$files = array_filter($candidates, 'is_file');
+		if (!is_file($root_config)) {
+			return true;
+		}
 
-			// Check if config files are writeable
-			foreach ($files as $file) {
-				if (!is_writable($file)) {
-					exit('ATTENTION: ' . $file . ' file is read only. Please adjust CHMOD and try again.');
-				}
+		$candidates = array_filter([
+			DIR_NIVOCART . 'config.php',
+			DIR_NIVOCART . 'admin/config.php',
+		], 'is_file');
+
+		foreach ($candidates as $file) {
+			if (!is_writable($file)) {
+				exit('ATTENTION: ' . $file . ' is read-only. Please adjust CHMOD and try again.');
 			}
+		}
 
-			// --------------------------
-			// Add HTTP_IMAGE if missing
-			// --------------------------
-			foreach ($files as $file) {
-				$upgrade_http = true;
+		$patches = [
+			'HTTP_IMAGE'  => ['search' => 'HTTP_SERVER',  'build' => fn() => "define('HTTP_IMAGE', '" . str_replace('\\', '/', str_replace('/install', '', HTTP_SERVER)) . "image/');"],
+			'HTTPS_IMAGE' => ['search' => 'HTTPS_SERVER', 'build' => fn() => "define('HTTPS_IMAGE', '" . str_replace('\\', '/', str_replace('/install', '', HTTP_SERVER)) . "image/');"],
+			'DIR_UPLOAD'  => ['search' => 'DIR_DOWNLOAD', 'build' => fn() => "define('DIR_UPLOAD', '" . str_replace('\\', '/', DIR_SYSTEM) . "upload/');"],
+		];
 
-				$lines = file($file);
+		foreach ($candidates as $file) {
+			$lines = file($file);
+
+			foreach ($patches as $constant => $patch) {
+				$already_defined = array_filter($lines, fn($l) => str_contains($l, $constant));
+
+				if ($already_defined) {
+					continue;
+				}
+
+				$output = '';
 
 				foreach ($lines as $line) {
-					if (strpos($line, 'HTTP_IMAGE') !== false) {
-						$upgrade_http = false;
-						break;
-					}
-				}
-
-				if ($upgrade_http) {
-					$output = '';
-
-					foreach ($lines as $line) {
-						if (strpos($line, 'HTTP_SERVER') !== false) {
-							$new_line = "define('HTTP_IMAGE', '" . str_replace("\\", "/", HTTP_SERVER) . 'image/' . "');";
-							$strip_line = str_replace("/install", "", $new_line);
-
-							$output .= $strip_line . "\n";
-							$output .= $line;
-						} else {
-							$output .= $line;
-						}
+					if (str_contains($line, $patch['search'])) {
+						$output .= $patch['build']() . "\n";
 					}
 
-					file_put_contents($file, $output);
+					$output .= $line;
 				}
+
+				file_put_contents($file, $output);
+
+				$lines = file($file); // re-read for next patch
 			}
 
-			// ---------------------------
-			// Add HTTPS_IMAGE if missing
-			// ---------------------------
-			foreach ($files as $file) {
-				$upgrade_https = true;
-
-				$lines = file($file);
-
-				foreach ($lines as $line) {
-					if (strpos($line, 'HTTPS_IMAGE') !== false) {
-						$upgrade_https = false;
-						break;
-					}
-				}
-
-				if ($upgrade_https) {
-					$output = '';
-
-					foreach ($lines as $line) {
-						if (strpos($line, 'HTTPS_SERVER') !== false) {
-							$new_line = "define('HTTPS_IMAGE', '" . str_replace("\\", "/", HTTP_SERVER) . 'image/' . "');";
-							$strip_line = str_replace("/install", "", $new_line);
-							$output .= $strip_line . "\n";
-							$output .= $line;
-						} else {
-							$output .= $line;
-						}
-					}
-
-					file_put_contents($file, $output);
-				}
-			}
-
-			// ---------------------------
-			// Add DIR_UPLOAD if missing
-			// ---------------------------
-			foreach ($files as $file) {
-				$upgrade_upload = true;
-
-				$lines = file($file);
-
-				foreach ($lines as $line) {
-					if (strpos($line, 'DIR_UPLOAD') !== false) {
-						$upgrade_upload = false;
-						break;
-					}
-				}
-
-				if ($upgrade_upload) {
-					$output = '';
-
-					foreach ($lines as $line) {
-						if (strpos($line, 'DIR_DOWNLOAD') !== false) {
-							$new_line = "define('DIR_UPLOAD', '" . str_replace("\\", "/", DIR_SYSTEM) . 'upload/' . "');";
-							$output .= $new_line . "\n";
-							$output .= $line;
-						} else {
-							$output .= $line;
-						}
-					}
-
-					file_put_contents($file, $output);
-				}
-			}
-
-			// ---------------------------
 			// Remove PHP closing tag
-			// ---------------------------
-			foreach ($files as $file) {
-				$upgrade_tag = false;
+			$lines = file($file);
 
-				$lines = file($file);
+			$has_close_tag = array_filter($lines, fn($l) => str_contains($l, '?>'));
 
-				foreach ($lines as $line) {
-					if (strpos($line, "?>") !== false) {
-						$upgrade_tag = true;
-						break;
-					}
-				}
-
-				if ($upgrade_tag) {
-					$output = '';
-
-					foreach ($lines as $line) {
-						if (strpos($line, "?>") !== false) {
-							$output .= str_replace("?>", "", $line);
-						} else {
-							$output .= $line;
-						}
-					}
-
-					file_put_contents($file, $output);
-				}
+			if ($has_close_tag) {
+				$output = implode('', array_map(fn($l) => str_replace('?>', '', $l), $lines));
+				file_put_contents($file, $output);
 			}
 		}
 
 		clearstatcache();
-
 		flush();
 
-		$step4 = true;
-
-		return $step4;
+		return true;
 	}
 
-	// -------------------------------------
-	// Function to update the layout routes
-	// -------------------------------------
-	public function updateLayouts($step5) {
-		// -----------
-		// Get stores
-		// -----------
-		$stores = [];
+	public function updateLayouts(): bool {
+		$store_query = $this->db->query("SELECT store_id FROM `" . DB_PREFIX . "store`");
 
-		$sql = "SELECT store_id FROM `" . DB_PREFIX . "store`";
+		$stores = array_column($store_query->rows, 'store_id');
 
-		$query_store = $this->db->query($sql);
+		$layout_groups = [
+			'News'    => ['information/news', 'information/news_list'],
+			'Special' => ['product/special'],
+		];
 
-		foreach ($query_store->rows as $store) {
-			$stores[] = $store['store_id'];
-		}
+		foreach ($layout_groups as $layout_name => $routes) {
+			$exists = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = '" . $this->db->escape($layout_name) . "' LIMIT 1");
 
-		// -------------------------------------------------
-		// Check News entry in layout table. Add if missing
-		// -------------------------------------------------
-		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'News' LIMIT 0,1";
+			if ($exists->num_rows === 0) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = '" . $this->db->escape($layout_name) . "'");
+			}
 
-		$query_name = $this->db->query($sql);
+			foreach ($stores as $store_id) {
+				foreach ($routes as $route) {
+					$exists = $this->db->query("SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` = '" . $this->db->escape($route) . "' LIMIT 1");
 
-		if ($query_name->num_rows === 0) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = 'News'");
-		}
-
-		// --------------------------------------------------------------------
-		// Check News routes in layout_route table. Add News routes if missing
-		// --------------------------------------------------------------------
-		$news_routes = ['information/news', 'information/news_list'];
-
-		foreach ($stores as $store_id) {
-			foreach ($news_routes as $news_route) {
-				$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` LIKE '" . $news_route . "' LIMIT 0,1";
-
-				$query = $this->db->query($sql);
-
-				if ($query->num_rows === 0) {
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = 'News'), store_id = '" . (int)$store_id . "', `route` = '" . $news_route . "'");
+					if ($exists->num_rows === 0) {
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = '" . $this->db->escape($layout_name) . "'), store_id = '" . (int)$store_id . "', `route` = '" . $this->db->escape($route) . "'");
+					}
 				}
 			}
 		}
 
-		// -------------------------------------------------
-		// Check Special entry in layout table. Add if missing
-		// -------------------------------------------------
-		$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` LIKE 'Special' LIMIT 0,1";
-
-		$query_name = $this->db->query($sql);
-
-		if ($query_name->num_rows === 0) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "layout` SET `name` = 'Special'");
-		}
-
-		// --------------------------------------------------------------------------
-		// Check Special routes in layout_route table. Add Special routes if missing
-		// --------------------------------------------------------------------------
-		$special_routes = ['product/special'];
-
-		foreach ($stores as $store_id) {
-			foreach ($special_routes as $special_route) {
-				$sql = "SELECT layout_id FROM `" . DB_PREFIX . "layout_route` WHERE store_id = '" . (int)$store_id . "' AND `route` LIKE '" . $special_route . "' LIMIT 0,1";
-
-				$query = $this->db->query($sql);
-
-				if ($query->num_rows === 0) {
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "layout_route` SET layout_id = (SELECT DISTINCT layout_id FROM `" . DB_PREFIX . "layout` WHERE `name` = 'Special'), store_id = '" . (int)$store_id . "', `route` = '" . $special_route . "'");
-				}
-			}
-		}
-
-		$step5 = true;
-
-		return $step5;
+		return true;
 	}
 
-	// ---------------------------------------
-	// Function to update fields and finalize
-	// ---------------------------------------
-	public function updateFields() {
+	public function updateFields(): void {
 		$country_query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "country' AND COLUMN_NAME = 'name'");
 
 		if ($country_query->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "country` DROP name`");
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "country` DROP `name`");
 		}
 
 		$manufacturer_query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "manufacturer' AND COLUMN_NAME = 'name'");
@@ -691,7 +387,23 @@ class ModelUpgrade extends Model {
 		if ($manufacturer_query->num_rows) {
 			$this->db->query("ALTER TABLE `" . DB_PREFIX . "manufacturer` DROP `name`");
 		}
+	}
 
-		return;
+	// -----------------------------------------------------------------------
+	// Private helper: builds a column definition string from a field array.
+	// Pass $with_autoincrement = true when re-adding AUTO_INCREMENT after
+	// primary keys have been restored.
+	// -----------------------------------------------------------------------
+	private function buildFieldDefinition(array $field, bool $with_autoincrement = false): string {
+		$sql = mb_strtoupper($field['type'], 'UTF-8');
+
+		if ($field['size']) $sql .= "({$field['size']})";
+		if ($field['collation']) $sql .= " {$field['collation']}";
+		if ($field['unsigned']) $sql .= " {$field['unsigned']}";
+		if ($field['notnull']) $sql .= " {$field['notnull']}";
+		if ($field['default'] !== '') $sql .= " DEFAULT '{$field['default']}'";
+		if ($with_autoincrement && $field['autoincrement']) $sql .= ' AUTO_INCREMENT';
+
+		return $sql;
 	}
 }

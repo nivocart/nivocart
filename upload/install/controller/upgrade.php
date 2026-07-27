@@ -1,22 +1,17 @@
 <?php
 /**
- * Class Upgrade
+ * Class ControllerUpgrade
  *
  * @package NivoCart
  */
 class ControllerUpgrade extends Controller {
 	private array $error = [];
 
-	/**
-	 * Index
-	 *
-	 * @return void
-	 */
 	public function index(): void {
 		$this->document->setTitle($this->language->get('heading_upgrade'));
 
-		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
-			$this->initialize($this->request->post);
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate()) {
+			$this->initialize();
 
 			$this->data['heading_success'] = $this->language->get('heading_success');
 			$this->data['heading_next'] = $this->language->get('heading_next');
@@ -30,13 +25,6 @@ class ControllerUpgrade extends Controller {
 			$this->data['help_installer'] = $this->language->get('help_installer');
 
 			$this->template = 'success.tpl';
-			$this->children = [
-				'header',
-				'footer'
-			];
-
-			$this->response->setOutput($this->render());
-
 		} else {
 			$this->data['heading_upgrade'] = $this->language->get('heading_upgrade');
 
@@ -53,90 +41,67 @@ class ControllerUpgrade extends Controller {
 
 			$this->data['action'] = $this->url->link('upgrade', '', 'SSL');
 
-			if (isset($this->error['warning'])) {
-				$this->data['error_warning'] = $this->error['warning'];
-			} else {
-				$this->data['error_warning'] = '';
-			}
+			$this->data['error_warning'] = $this->error['warning'] ?? '';
 
 			$this->template = 'upgrade.tpl';
-			$this->children = [
-				'header',
-				'footer'
-			];
-
-			$this->response->setOutput($this->render());
 		}
+
+		$this->children = ['header', 'footer'];
+		$this->response->setOutput($this->render());
 	}
 
-	protected function initialize($data) {
-		$status = false;
-
-		// Check if the sql file exists
+	protected function initialize(): void {
 		$file = DIR_APPLICATION . 'nivocart-upgrade.sql';
 
 		if (!file_exists($file)) {
 			exit('Could not load sql file: ' . $file);
-		} else {
-			$status = true;
 		}
 
 		clearstatcache();
 
 		$this->load->model('upgrade');
 
-		if ($status) {
-			$step1 = false;
-			$step2 = false;
-			$step3 = false;
-			$step4 = false;
-			$step5 = false;
+		$step1 = $this->model_upgrade->dataTables();
+		$step2 = $step1 ? $this->model_upgrade->additionalTables() : false;
+		$step3 = $step2 ? $this->model_upgrade->repairCategories() : false;
+		$step4 = $step3 ? $this->model_upgrade->updateConfig() : false;
+		$step5 = $step4 ? $this->model_upgrade->updateLayouts() : false;
 
-			$this->model_upgrade->dataTables($step1);
-
-			if (isset($step1) && $step1 = true) {
-				$this->model_upgrade->additionalTables($step2);
-			}
-
-			if (isset($step2) && $step2 = true) {
-				$parent_id = 0;
-
-				$this->model_upgrade->repairCategories($parent_id, false);
-			}
-
-			if (isset($step3) && $step3 = true) {
-				$this->model_upgrade->updateConfig($step4);
-			}
-
-			if (isset($step4) && $step4 = true) {
-				$this->model_upgrade->updateLayouts($step5);
-			}
-
-			if (isset($step5) && $step5 = true) {
-				$this->model_upgrade->updateFields();
-			}
-
-		} else {
-			return;
+		if ($step5) {
+			$this->model_upgrade->updateFields();
 		}
 	}
 
-	protected function validate() {
-		if (DB_DRIVER === 'mysqli') {
-			$connection = mysqli_connect(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
-
-			if (mysqli_connect_errno()) {
-				$this->error['warning'] = 'Error database connect: "' . mysqli_connect_error() . '"';
-				exit();
-			}
-
-			if (!mysqli_query($connection, 'DO 1')) {
-				$this->error['warning'] = 'Error database server: "' . mysqli_error($connection) . '"';
-			}
-
-			unset($connection);
+	protected function validate(): bool {
+		if (DB_DRIVER !== 'mysqli') {
+			return true;
 		}
 
-		return empty($this->error);
+		// PHP 8 throws mysqli_sql_exception on connection failure — must catch it.
+		mysqli_report(MYSQLI_REPORT_OFF);
+
+		$port = defined('DB_PORT') ? (int)DB_PORT : 3306;
+
+		try {
+			$connection = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, $port);
+
+			if ($connection->connect_errno) {
+				$this->error['warning'] = 'Error database connect: "' . $connection->connect_error . '"';
+				return false;
+			}
+
+			if (!$connection->query('DO 1')) {
+				$this->error['warning'] = 'Error database server: "' . $connection->error . '"';
+				return false;
+			}
+
+			$connection->close();
+
+		} catch (\mysqli_sql_exception $e) {
+			$this->error['warning'] = 'Error database connect: "' . $e->getMessage() . '"';
+			return false;
+		}
+
+		return true;
 	}
 }
