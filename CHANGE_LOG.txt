@@ -3,6 +3,12 @@
   CHANGE LOG
 ---------------
 
+
+NivoCart v2.X.X
+---------------
+Release: TBA
+
+
 NivoCart v2.1.0
 ---------------
 Release: 27/07/2026
