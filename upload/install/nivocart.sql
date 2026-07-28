@@ -4028,7 +4028,8 @@ CREATE TABLE `nc_setting` (
   `key` varchar(64) NOT NULL,
   `value` text CHARACTER SET utf8mb4 NOT NULL,
   `serialized` tinyint(1) NOT NULL,
-  PRIMARY KEY (`setting_id`)
+  PRIMARY KEY (`setting_id`),
+  UNIQUE KEY `nc_store_group_key` (`store_id`,`group`,`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

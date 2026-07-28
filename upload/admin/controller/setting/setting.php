@@ -15,17 +15,23 @@ class ControllerSettingSetting extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
-			$this->model_setting_setting->editSetting('config', $this->request->post);
+			// Determine which tab triggered the save.
+			// General tab fields are always included in every POST, so they are
+			// always saved regardless of which tab the user is on.
+			// The active tab's fields arrive on top of that baseline.
+			$this->model_setting_setting->mergeSettings('config', $this->request->post);
 
-			// Auto update currency values
-			if ($this->config->get('config_currency_auto')) {
+			// Auto update currency values — only relevant when Local tab is saved,
+			// but safe to run whenever the flag is present in the POST.
+			if (!empty($this->request->post['config_currency_auto'])) {
 				$this->load->model('localisation/currency');
 
 				$this->model_localisation_currency->updateCurrencies();
 			}
 
-			// Load setupSeo model only if .htaccess.txt file still exists
-			if ($this->config->get('config_seo_url') && !file_exists('../.htaccess')) {
+			// Set up SEO rewrite rules if the Server tab toggled SEO URLs on
+			// and .htaccess does not yet exist.
+			if (!empty($this->request->post['config_seo_url']) && !file_exists('../.htaccess')) {
 				$this->load->model('tool/system');
 
 				$this->model_tool_system->setupSeo();
@@ -2142,161 +2148,147 @@ class ControllerSettingSetting extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	protected function validate() {
+	protected function validate(): bool {
 		if (!$this->user->hasPermission('modify', 'setting/setting')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (!$this->request->post['config_name'] || (mb_strlen($this->request->post['config_name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_name'], 'UTF-8') > 32)) {
+		// --- General tab fields — always validated on every save ---
+
+		if (!isset($this->request->post['config_name']) || (mb_strlen($this->request->post['config_name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_name'], 'UTF-8') > 32)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if ((mb_strlen($this->request->post['config_owner'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_owner'], 'UTF-8') > 64)) {
+		if (!isset($this->request->post['config_owner']) || (mb_strlen($this->request->post['config_owner'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_owner'], 'UTF-8') > 64)) {
 			$this->error['owner'] = $this->language->get('error_owner');
 		}
 
-		if ((mb_strlen($this->request->post['config_address'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_address'], 'UTF-8') > 256)) {
+		if (!isset($this->request->post['config_address']) || (mb_strlen($this->request->post['config_address'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_address'], 'UTF-8') > 256)) {
 			$this->error['address'] = $this->language->get('error_address');
 		}
 
-		if ((mb_strlen($this->request->post['config_email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email'])) {
+		if (!isset($this->request->post['config_email']) || (mb_strlen($this->request->post['config_email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
-		if ((mb_strlen($this->request->post['config_email_noreply'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email_noreply'])) {
+		if (!isset($this->request->post['config_email_noreply']) || (mb_strlen($this->request->post['config_email_noreply'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email_noreply'])) {
 			$this->error['email_noreply'] = $this->language->get('error_email_noreply');
 		}
 
-		if ((mb_strlen($this->request->post['config_telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_telephone'], 'UTF-8') > 32)) {
+		if (!isset($this->request->post['config_telephone']) || (mb_strlen($this->request->post['config_telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_telephone'], 'UTF-8') > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
 
-		if (!$this->request->post['config_title'] || (mb_strlen($this->request->post['config_title'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_title'], 'UTF-8') > 32)) {
-			$this->error['title'] = $this->language->get('error_title');
+		// --- Store tab ---
+
+		$active_tab = isset($this->request->post['config_active_tab']) ? $this->request->post['config_active_tab'] : 'general';
+
+		if ($active_tab === 'store') {
+			if (!isset($this->request->post['config_title']) || (mb_strlen($this->request->post['config_title'], 'UTF-8') < 3) || (mb_strlen($this->request->post['config_title'], 'UTF-8') > 32)) {
+				$this->error['title'] = $this->language->get('error_title');
+			}
 		}
 
-		if (!empty($this->request->post['config_customer_group_display']) && !in_array($this->request->post['config_customer_group_id'], $this->request->post['config_customer_group_display'])) {
-			$this->error['customer_group_display'] = $this->language->get('error_customer_group_display');
+		// --- Option tab ---
+
+		if ($active_tab === 'option') {
+			if (!empty($this->request->post['config_customer_group_display']) && !in_array($this->request->post['config_customer_group_id'], $this->request->post['config_customer_group_display'])) {
+				$this->error['customer_group_display'] = $this->language->get('error_customer_group_display');
+			}
+
+			if (!isset($this->request->post['config_login_attempts']) || $this->request->post['config_login_attempts'] < 1) {
+				$this->error['login_attempts'] = $this->language->get('error_login_attempts');
+			}
+
+			if (!isset($this->request->post['config_reward_rate']) || ((int)$this->request->post['config_reward_rate'] != $this->request->post['config_reward_rate']) || $this->request->post['config_reward_rate'] < 1) {
+				$this->error['reward_rate'] = $this->language->get('error_reward_rate');
+			}
+
+			if (empty($this->request->post['config_voucher_min'])) {
+				$this->error['voucher_min'] = $this->language->get('error_voucher_min');
+			}
+
+			if (empty($this->request->post['config_voucher_max'])) {
+				$this->error['voucher_max'] = $this->language->get('error_voucher_max');
+			}
 		}
 
-		if ($this->request->post['config_login_attempts'] < 1) {
-			$this->error['login_attempts'] = $this->language->get('error_login_attempts');
+		// --- Preference tab ---
+
+		if ($active_tab === 'preference') {
+			if (!isset($this->request->post['config_admin_limit']) || !$this->request->post['config_admin_limit']) {
+				$this->error['admin_limit'] = $this->language->get('error_limit');
+			}
+
+			if (!isset($this->request->post['config_catalog_limit']) || !$this->request->post['config_catalog_limit']) {
+				$this->error['catalog_limit'] = $this->language->get('error_limit');
+			}
+
+			if (empty($this->request->post['config_pagination_hi']) && empty($this->request->post['config_pagination_lo'])) {
+				$this->error['preference_pagination'] = $this->language->get('error_preference_pagination');
+			}
 		}
 
-		if (((int)$this->request->post['config_reward_rate'] != $this->request->post['config_reward_rate']) || $this->request->post['config_reward_rate'] < 1) {
-			$this->error['reward_rate'] = $this->language->get('error_reward_rate');
+		// --- Image tab ---
+
+		if ($active_tab === 'image') {
+			$image_fields = [
+				'image_category', 'image_thumb', 'image_popup', 'image_product',
+				'image_additional', 'image_brand', 'image_related', 'image_compare',
+				'image_wishlist', 'image_newsthumb', 'image_newspopup', 'image_cart'
+			];
+
+			foreach ($image_fields as $field) {
+				if (empty($this->request->post['config_' . $field . '_width']) || empty($this->request->post['config_' . $field . '_height'])) {
+					$this->error[$field] = $this->language->get('error_' . $field);
+				}
+			}
 		}
 
-		if (!$this->request->post['config_voucher_min']) {
-			$this->error['voucher_min'] = $this->language->get('error_voucher_min');
-		}
+		// --- FTP tab ---
 
-		if (!$this->request->post['config_voucher_max']) {
-			$this->error['voucher_max'] = $this->language->get('error_voucher_max');
-		}
-
-		if (!$this->request->post['config_catalog_limit']) {
-			$this->error['catalog_limit'] = $this->language->get('error_limit');
-		}
-
-		if (!$this->request->post['config_admin_limit']) {
-			$this->error['admin_limit'] = $this->language->get('error_limit');
-		}
-
-		if (!$this->request->post['config_pagination_hi'] && !$this->request->post['config_pagination_lo']) {
-			$this->error['preference_pagination'] = $this->language->get('error_preference_pagination');
-		}
-
-		if (!$this->request->post['config_image_category_width'] || !$this->request->post['config_image_category_height']) {
-			$this->error['image_category'] = $this->language->get('error_image_category');
-		}
-
-		if (!$this->request->post['config_image_thumb_width'] || !$this->request->post['config_image_thumb_height']) {
-			$this->error['image_thumb'] = $this->language->get('error_image_thumb');
-		}
-
-		if (!$this->request->post['config_image_popup_width'] || !$this->request->post['config_image_popup_height']) {
-			$this->error['image_popup'] = $this->language->get('error_image_popup');
-		}
-
-		if (!$this->request->post['config_image_product_width'] || !$this->request->post['config_image_product_height']) {
-			$this->error['image_product'] = $this->language->get('error_image_product');
-		}
-
-		if (!$this->request->post['config_image_additional_width'] || !$this->request->post['config_image_additional_height']) {
-			$this->error['image_additional'] = $this->language->get('error_image_additional');
-		}
-
-		if (!$this->request->post['config_image_brand_width'] || !$this->request->post['config_image_brand_height']) {
-			$this->error['image_brand'] = $this->language->get('error_image_brand');
-		}
-
-		if (!$this->request->post['config_image_related_width'] || !$this->request->post['config_image_related_height']) {
-			$this->error['image_related'] = $this->language->get('error_image_related');
-		}
-
-		if (!$this->request->post['config_image_compare_width'] || !$this->request->post['config_image_compare_height']) {
-			$this->error['image_compare'] = $this->language->get('error_image_compare');
-		}
-
-		if (!$this->request->post['config_image_wishlist_width'] || !$this->request->post['config_image_wishlist_height']) {
-			$this->error['image_wishlist'] = $this->language->get('error_image_wishlist');
-		}
-
-		if (!$this->request->post['config_image_newsthumb_width'] || !$this->request->post['config_image_newsthumb_height']) {
-			$this->error['image_newsthumb'] = $this->language->get('error_image_newsthumb');
-		}
-
-		if (!$this->request->post['config_image_newspopup_width'] || !$this->request->post['config_image_newspopup_height']) {
-			$this->error['image_newspopup'] = $this->language->get('error_image_newspopup');
-		}
-
-		if (!$this->request->post['config_image_cart_width'] || !$this->request->post['config_image_cart_height']) {
-			$this->error['image_cart'] = $this->language->get('error_image_cart');
-		}
-
-		if ($this->request->post['config_ftp_status']) {
-			if (!$this->request->post['config_ftp_host']) {
+		if ($active_tab === 'ftp' && !empty($this->request->post['config_ftp_status'])) {
+			if (empty($this->request->post['config_ftp_host'])) {
 				$this->error['ftp_host'] = $this->language->get('error_ftp_host');
 			}
 
-			if (!$this->request->post['config_ftp_port']) {
+			if (empty($this->request->post['config_ftp_port'])) {
 				$this->error['ftp_port'] = $this->language->get('error_ftp_port');
 			}
 
-			if (!$this->request->post['config_ftp_username']) {
+			if (empty($this->request->post['config_ftp_username'])) {
 				$this->error['ftp_username'] = $this->language->get('error_ftp_username');
 			}
 
-			if (!$this->request->post['config_ftp_password']) {
+			if (empty($this->request->post['config_ftp_password'])) {
 				$this->error['ftp_password'] = $this->language->get('error_ftp_password');
 			}
 		}
 
-		if (!$this->request->post['config_error_filename'] || !preg_match('/\.txt$/i', $this->request->post['config_error_filename'])) {
-			$this->error['error_filename'] = $this->language->get('error_error_filename');
-		}
+		// --- Server tab ---
 
-		if ($this->request->post['config_file_max_size'] < 100000) {
-			$this->error['file_max_size'] = $this->language->get('error_file_max_size');
-		}
+		if ($active_tab === 'server') {
+			if (!isset($this->request->post['config_error_filename']) || !preg_match('/\.txt$/i', $this->request->post['config_error_filename'])) {
+				$this->error['error_filename'] = $this->language->get('error_error_filename');
+			}
 
-		if (!$this->request->post['config_mail_filename'] || !preg_match('/\.txt$/i', $this->request->post['config_mail_filename'])) {
-			$this->error['mail_filename'] = $this->language->get('error_mail_filename');
-		}
+			if (!isset($this->request->post['config_file_max_size']) || $this->request->post['config_file_max_size'] < 100000) {
+				$this->error['file_max_size'] = $this->language->get('error_file_max_size');
+			}
 
-		if (!$this->request->post['config_quote_filename'] || !preg_match('/\.txt$/i', $this->request->post['config_quote_filename'])) {
-			$this->error['quote_filename'] = $this->language->get('error_quote_filename');
-		}
+			if (!isset($this->request->post['config_mail_filename']) || !preg_match('/\.txt$/i', $this->request->post['config_mail_filename'])) {
+				$this->error['mail_filename'] = $this->language->get('error_mail_filename');
+			}
 
-		if ($this->request->post['config_seo_url'] && !file_exists('../.htaccess')) {
-			$this->load->model('tool/system');
+			if (!isset($this->request->post['config_quote_filename']) || !preg_match('/\.txt$/i', $this->request->post['config_quote_filename'])) {
+				$this->error['quote_filename'] = $this->language->get('error_quote_filename');
+			}
 
-			$this->model_tool_system->setupSeo();
-		}
+			if (!isset($this->request->post['config_encryption']) || (mb_strlen($this->request->post['config_encryption'], 'UTF-8') < 8) || (mb_strlen($this->request->post['config_encryption'], 'UTF-8') > 32)) {
+				$this->error['encryption'] = $this->language->get('error_encryption');
+			}
 
-		if ((mb_strlen($this->request->post['config_encryption'], 'UTF-8') < 8) || (mb_strlen($this->request->post['config_encryption'], 'UTF-8') > 32)) {
-			$this->error['encryption'] = $this->language->get('error_encryption');
+			// SEO URL setup is a side-effect, not a validation — handled in index().
 		}
 
 		if ($this->error && !isset($this->error['warning'])) {

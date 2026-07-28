@@ -36,6 +36,7 @@
         <a href="#tab-server"><?php echo $tab_server; ?></a>
       </div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+	  <input type="hidden" name="config_active_tab" id="config_active_tab" value="general" />
       <div id="tab-general">
         <table class="form">
           <tr>
@@ -2287,7 +2288,7 @@ $('select[name=\'config_country_id\']').on('change', function() {
 			$('.wait').remove();
 		},
 		success: function(json) {
-			if (json['postcode_required'] === '1') {
+			if (json['postcode_required'] === 1) {
 				$('#postcode-required').show();
 			} else {
 				$('#postcode-required').hide();
@@ -2351,6 +2352,75 @@ function image_upload(field, thumb) {
 
 <script type="text/javascript"><!--
 $('#tabs a').tabs();
+
+(function () {
+    // Map each tab's anchor href to a short key matching config_active_tab values.
+    // Adjust these selectors to match your actual tab link markup if needed.
+    var tabMap = {
+        'general' : 'general',
+        'store' : 'store',
+        'local' : 'local',
+        'checkout' : 'checkout',
+        'option' : 'option',
+        'preference' : 'preference',
+        'image' : 'image',
+        'ftp' : 'ftp',
+        'mail' : 'mail',
+        'media' : 'media',
+        'server' : 'server'
+    };
+
+    // Update the hidden field whenever a tab is clicked.
+    // This assumes your tab links have an href of "#tab-general", "#tab-store" etc.
+    // Adjust the selector to match your actual tab link elements.
+    var tabLinks = document.querySelectorAll('a[href^="#tab-"]');
+
+    tabLinks.forEach(function (link) {
+        link.addEventListener('click', function () {
+            var href = this.getAttribute('href');           // e.g. "#tab-general"
+            var tabKey = href.replace('#tab-', '');         // e.g. "general"
+
+            if (tabMap[tabKey]) {
+                document.getElementById('config_active_tab').value = tabMap[tabKey];
+            }
+        });
+    });
+
+    // On form submit, disable all fields that belong to inactive tabs
+    // so they are not included in the POST payload.
+    var form = document.querySelector('form');  // adjust if your form has an id
+
+    if (form) {
+        form.addEventListener('submit', function () {
+            var activeTab = document.getElementById('config_active_tab').value;
+
+            // Each tab panel wraps its fields in a div with id="tab-{key}".
+            // We disable fields in every panel that is NOT general and NOT active.
+            var panels = document.querySelectorAll('[id^="tab-"]');
+
+            panels.forEach(function (panel) {
+                var panelKey = panel.id.replace('tab-', '');
+
+                // General tab fields are always submitted.
+                if (panelKey === 'general') {
+                    return;
+                }
+
+                // Active tab fields are submitted.
+                if (panelKey === activeTab) {
+                    return;
+                }
+
+                // All other panels: disable their inputs so they are excluded from POST.
+                var fields = panel.querySelectorAll('input, select, textarea');
+
+                fields.forEach(function (field) {
+                    field.disabled = true;
+                });
+            });
+        });
+    }
+}());
 //--></script>
 
 <?php echo $footer; ?>

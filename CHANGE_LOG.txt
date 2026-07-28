@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Admin "Settings" form can now Save/Apply a partial array of data.
+
 
 NivoCart v2.1.0
 ---------------

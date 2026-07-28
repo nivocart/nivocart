@@ -77,6 +77,36 @@ class ModelSettingSetting extends Model {
 	}
 
 	/**
+	 * Merge Settings
+	 *
+	 * Upserts a partial array of settings without touching other keys in the group.
+	 * Use this instead of editSetting() when only a subset of settings is being saved.
+	 *
+	 * @param string               $group
+	 * @param array<string, mixed> $data
+	 * @param int                  $store_id
+	 *
+	 * @return void
+	 *
+	 * @example
+	 * $this->load->model('setting/setting');
+	 *
+	 * $this->model_setting_setting->mergeSettings('config', $data);
+	 */
+	public function mergeSettings(string $group, array $data = [], int $store_id = 0): void {
+		foreach ($data as $key => $value) {
+			if (substr($key, 0, strlen($group)) !== $group) {
+				continue;
+			}
+
+			$serialized = is_array($value);
+			$encoded = $serialized ? json_encode($value) : $value;
+
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` (`store_id`, `group`, `key`, `value`, `serialized`) VALUES ('" . (int)$store_id . "', '" . $this->db->escape($group) . "', '" . $this->db->escape($key) . "', '" . $this->db->escape($encoded) . "', '" . (int)$serialized . "') ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `serialized` = VALUES(`serialized`)");
+		}
+	}
+
+	/**
 	 * Edit Setting Value
 	 *
 	 * @param string              $group
