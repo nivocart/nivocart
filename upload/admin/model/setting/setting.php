@@ -70,7 +70,7 @@ class ModelSettingSetting extends Model {
 		$this->deleteSetting($group, $store_id);
 
 		foreach ($data as $key => $value) {
-			if (substr($key, 0, strlen($group)) == $group) {
+			if (substr($key, 0, strlen($group)) === $group) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '" . (int)$store_id . "', `group` = '" . $this->db->escape($group) . "', `key` = '" . $this->db->escape($key) . "', `value` = '" . $this->db->escape(!is_array($value) ? $value : json_encode($value)) . "', `serialized` = '" . (bool)is_array($value) . "'");
 			}
 		}
