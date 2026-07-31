@@ -3723,7 +3723,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (534, 0, 'config', 'config_quote_filename', 'quote.txt', 0),
 (535, 0, 'config', 'config_secure', '0', 0),
 (536, 0, 'config', 'config_shared', '0', 0),
-(537, 0, 'config', 'config_robots', 'GPTBot\r\nChatGPT-User\r\nOAI-SearchBot\r\nanthropic-ai\r\nClaudeBot\r\nClaude-SearchBot\r\nGoogle-Extended\r\nCCBot\r\nBytespider\r\nFacebookBot\r\ncohere-ai\r\nMeta-ExternalAgent\r\nDiffbot\r\nApplebot-Extended\r\nimg2dataset\r\nAhrefsBot\r\nSemrushBot\r\nDotBot\r\nBLEXBot\r\nMJ12bot\r\nDataForSeoBot\r\nSeobilityBot\r\nserpstatbot\r\nPetalBot\r\nScrapy\r\nia_archiver\r\nyandex\r\nbaiduspider\r\nyeti\r\nmiva\r\nwebbandit\r\nwebcopier\r\nwebcopy\r\nwebreaper\r\nwebmirror\r\nwebvac\r\nblackwidow\r\nteleport\r\ndownload express\r\nnutch\r\nlarbin\r\ngrub\r\nheritrix', 0),
+(537, 0, 'config', 'config_robots', 'GPTBot\r\nChatGPT-User\r\nOAI-SearchBot\r\nanthropic-ai\r\nClaudeBot\r\nClaude-SearchBot\r\nGoogle-Extended\r\nCCBot\r\nBytespider\r\nFacebookBot\r\ncohere-ai\r\nMeta-ExternalAgent\r\nDiffbot\r\nApplebot-Extended\r\nimg2dataset\r\nAhrefsBot\r\nSemrushBot\r\nDotBot\r\nBLEXBot\r\nMJ12bot\r\nDataForSeoBot\r\nSeobilityBot\r\nserpstatbot\r\nPetalBot\r\nScrapy\r\nia_archiver\r\nbaiduspider\r\nyeti\r\nmiva\r\nwebbandit\r\nwebcopier\r\nwebcopy\r\nwebreaper\r\nwebmirror\r\nwebvac\r\nblackwidow\r\nteleport\r\ndownload express\r\nnutch\r\nlarbin\r\ngrub\r\nheritrix', 0),
 (538, 0, 'config', 'config_robots_online', '1', 0),
 (539, 0, 'config', 'config_password', '1', 0),
 (540, 0, 'config', 'config_ban_page', 'search', 0),
