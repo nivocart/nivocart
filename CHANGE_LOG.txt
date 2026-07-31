@@ -9,7 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - Admin "Settings" form can now Save/Apply a partial array of data.
-
+- Admin "Settings" robots list optimized, and with latest AI crawlers. 
 
 NivoCart v2.1.0
 ---------------
