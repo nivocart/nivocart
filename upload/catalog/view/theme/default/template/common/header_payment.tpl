@@ -30,8 +30,8 @@
 <?php foreach ($styles as $style) { ?>
 <link rel="<?php echo $style['rel']; ?>" type="text/css" href="<?php echo $style['href']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
-<script type="text/javascript" src="catalog/view/javascript/jquery/jquery-2.2.4.min.js"></script>
-<script type="text/javascript" src="catalog/view/javascript/jquery/jquery-migrate-1.4.1.min.js"></script>
+<script type="text/javascript" src="catalog/view/javascript/jquery/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="catalog/view/javascript/jquery/jquery-migrate-3.6.0.min.js"></script>
 <?php echo $google_analytics ? $google_analytics : ''; ?>
 </head>
 <body>
