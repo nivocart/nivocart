@@ -472,9 +472,11 @@ $(document).ready(function() {
                             dataType: 'json',
                             success: function(json) {
                                 if (json.success) {
-                                    // CHANGE: tree.select_branch(tree.selected) →
-                                    //         select_node to reload the file list
-                                    if (selectedId) tree.select_node(selectedId);
+                                    // CHANGE: tree.select_branch(tree.selected) → select_node to reload the file list
+									if (selectedId) {
+										tree.deselect_node(selectedId);
+										tree.select_node(selectedId);
+									}
                                 }
                                 if (json.error) alert(json.error);
                             },
@@ -526,7 +528,10 @@ $(document).ready(function() {
                     success: function(json) {
                         if (json.success) {
                             $('#dialog').remove();
-                            if (selectedId) tree.select_node(selectedId);
+							if (selectedId) {
+								tree.deselect_node(selectedId);
+								tree.select_node(selectedId);
+							}
                         }
                         if (json.error) alert(json.error);
                     },
@@ -588,7 +593,10 @@ $(document).ready(function() {
                     success: function(json) {
                         if (json.success) {
                             $('#dialog').remove();
-                            if (selectedId) tree.select_node(selectedId);
+							if (selectedId) {
+								tree.deselect_node(selectedId);
+								tree.select_node(selectedId);
+							}
                         }
                         if (json.error) alert(json.error);
                     },
@@ -650,7 +658,10 @@ $(document).ready(function() {
                     success: function(json) {
                         if (json.success) {
                             $('#dialog').remove();
-                            if (selectedId) tree.select_node(selectedId);
+							if (selectedId) {
+								tree.deselect_node(selectedId);
+								tree.select_node(selectedId);
+							}
                         }
                         if (json.error) alert(json.error);
                     },
@@ -734,7 +745,10 @@ $(document).ready(function() {
                 var tree = getTree();
                 var selectedId = tree.get_selected()[0];
                 // CHANGE: tree.select_branch(tree.selected) → select_node(selectedId)
-                if (selectedId) tree.select_node(selectedId);
+				if (selectedId) {
+					tree.deselect_node(selectedId);
+					tree.select_node(selectedId);
+				}
                 $('#upload-multi').remove();
             }
         });
