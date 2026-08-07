@@ -366,7 +366,7 @@ class ControllerCheckoutCart extends Controller {
 					if (($product['price'] === '0.0000') && $this->config->get('config_price_free')) {
 						$price = $this->language->get('text_free');
 					} else {
-						$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+						$price = $this->currency->format($product['price'], $this->config->get('config_currency'));
 					}
 				} else {
 					$price = false;

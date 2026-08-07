@@ -13,6 +13,8 @@ Release: TBA
 - JQuery Migrate upgraded from v1.4.1 to v3.6.0 (Admin + Catalog).
 - JQuery Cookie upgraded from v1.4.1 to v3.0.8 (Admin).
 - JQuery jsTree upgraded from v0.9.9 to v3.3.17 (Admin).
+- Fix bug in Admin Product Form where Cost (float) was a string.
+- Fix bug in Shopping Cart where Price was including Tax. 
 - Fix for Extensions lists not displaying in alphabetical order.
 - Added QoL feature in Admin Modules List to filter alphabetically.
 - Admin File Managers fixes and refactor (both instances).
