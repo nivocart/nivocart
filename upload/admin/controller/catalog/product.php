@@ -1157,7 +1157,7 @@ class ControllerCatalogProduct extends Controller {
 		} elseif (!empty($product_info)) {
 			$this->data['cost'] = $product_info['cost'];
 		} else {
-			$this->data['cost'] = '';
+			$this->data['cost'] = 0;
 		}
 
 		$this->load->model('localisation/tax_class');
