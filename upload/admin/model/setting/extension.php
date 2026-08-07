@@ -11,7 +11,7 @@ class ModelSettingExtension extends Model {
 	public function getInstalled(string $type): array {
 		$extension_data = [];
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension` WHERE `type` = '" . $this->db->escape((string)$type) . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "extension` WHERE `type` = '" . $this->db->escape((string)$type) . "' ORDER BY `code` ASC");
 
 		foreach ($query->rows as $result) {
 			$extension_data[] = $result['code'];

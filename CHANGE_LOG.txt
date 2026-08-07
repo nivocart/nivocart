@@ -8,12 +8,13 @@ NivoCart v2.2.X
 ---------------
 Release: TBA
 
-- JQuery upgraded to v3.7.1 (Admin + Catalog).
-- JQuery UI upgraded to v1.14.2 (Admin + Catalog).
-- JQuery Migrate upgraded to v3.6.0 (Admin + Catalog).
-- JQuery Cookie upgraded to v3.0.8 (Admin + Catalog).
-- JQuery jsTree upgraded to v3.3.17 (Admin).
-- Admin File Managers refactor (both instances).
+- JQuery upgraded from v2.2.4 to v3.7.1 (Admin + Catalog).
+- JQuery UI upgraded from v1.12.1 to v1.14.2 (Admin + Catalog).
+- JQuery Migrate upgraded from v1.4.1 to v3.6.0 (Admin + Catalog).
+- JQuery Cookie upgraded from v1.4.1 to v3.0.8 (Admin).
+- JQuery jsTree upgraded from v0.9.9 to v3.3.17 (Admin).
+- Fix for Extensions lists not displaying in alphabetical order.
+- Admin File Managers fixes and refactor (both instances).
 - Admin "Settings" Controller complete refactor.
 - Admin "Settings" form can now Save/Apply a partial array of data.
 - Admin "Settings" robots list optimized, and with latest AI crawlers.

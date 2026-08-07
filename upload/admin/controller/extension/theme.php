@@ -127,6 +127,9 @@ class ControllerExtensionTheme extends Controller {
 					'action' => $action
 				];
 			}
+
+			// Sort extensions alphabetically by name
+			usort($this->data['extensions'], fn($a, $b) => strcasecmp($a['name'], $b['name']));
 		}
 
 		$this->template = 'extension/theme.tpl';
