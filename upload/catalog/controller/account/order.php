@@ -44,7 +44,7 @@ class ControllerAccountOrder extends Controller {
 							$option_data[$order_option['product_option_id']] = $order_option['product_option_value_id'];
 						} elseif ($order_option['type'] === 'checkbox') {
 							$option_data[$order_option['product_option_id']][] = $order_option['product_option_value_id'];
-						} elseif ($order_option['type'] === 'text' || $order_option['type'] === 'textarea' || $order_option['type'] === 'date' || $order_option['type'] === 'datetime' || $order_option['type'] === 'time') {
+						} elseif ($order_option['type'] === 'text' || $order_option['type'] === 'textarea' || $order_option['type'] === 'date' || $order_option['type'] === 'time') {
 							$option_data[$order_option['product_option_id']] = $order_option['value'];
 						} elseif ($order_option['type'] === 'file') {
 							$option_data[$order_option['product_option_id']] = $this->encryption->encrypt($order_option['value']);
@@ -260,7 +260,7 @@ class ControllerAccountOrder extends Controller {
 					'model'       => $product['model'],
 					'option'      => $option_data,
 					'quantity'    => $product['quantity'],
-					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'price'       => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], true),
 					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'return'      => $this->url->link('account/return/insert', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
 					'picked'      => $product['picked'],
@@ -557,7 +557,7 @@ class ControllerAccountOrder extends Controller {
 					'model'       => $product['model'],
 					'option'      => $option_data,
 					'quantity'    => $product['quantity'],
-					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'price'       => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], true),
 					'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'tax_percent' => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
 					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
@@ -905,7 +905,7 @@ class ControllerAccountOrder extends Controller {
 					'model'       => $product['model'],
 					'option'      => $option_data,
 					'quantity'    => $product['quantity'],
-					'price'       => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'price'       => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], true),
 					'tax_value'   => $this->currency->format(($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
 					'tax_percent' => number_format(((($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0) * 100) / (($product['price'] > 0) ? ($product['price'] * $product['quantity']) : $product['quantity'])), 2, '.', ''),
 					'total'       => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
