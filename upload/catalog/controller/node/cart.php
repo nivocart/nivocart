@@ -127,14 +127,14 @@ class ControllerNodeCart extends Controller {
 
 			// Display price
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+				$price = $this->currency->format($product['price'], $this->config->get('config_currency'));
 			} else {
 				$price = false;
 			}
 
 			// Display total
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+				$total = $this->currency->format(($product['price'] * $product['quantity']), $this->config->get('config_currency'));
 			} else {
 				$total = false;
 			}
