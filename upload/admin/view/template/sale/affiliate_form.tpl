@@ -398,7 +398,7 @@ $("#transaction").load('index.php?route=sale/affiliate/transactions&token=<?php 
 
 function addTransaction() {
 	$.ajax({
-		url: 'index.php?route=sale/affiliate/add_transaction&token=<?php echo $token; ?>&affiliate_id=<?php echo $affiliate_id; ?>',
+		url: 'index.php?route=sale/affiliate/addTransaction&token=<?php echo $token; ?>&affiliate_id=<?php echo $affiliate_id; ?>',
 		type: 'POST',
 		dataType: 'html',
 		data: 'description=' + encodeURIComponent($("#tab-transaction input[name='description']").val()) + '&amount=' + encodeURIComponent($("#tab-transaction input[name='amount']").val()),
@@ -424,7 +424,7 @@ function addTransaction() {
 function deleteTransaction(affiliate_transaction_id) {
 	if (confirm('<?php echo addslashes($text_delete_transaction_confirm); ?>')) {
 		$.ajax({
-			url: 'index.php?route=sale/affiliate/delete_transaction&token=<?php echo $token; ?>&affiliate_id=<?php echo $affiliate_id; ?>',
+			url: 'index.php?route=sale/affiliate/deleteTransaction&token=<?php echo $token; ?>&affiliate_id=<?php echo $affiliate_id; ?>',
 			type: 'POST',
 			data: {"affiliate_id":<?php echo (isset($affiliate_id) ? $affiliate_id : 0); ?>, "affiliate_transaction_id":affiliate_transaction_id},
 			dataType: 'html',

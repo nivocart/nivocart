@@ -987,9 +987,7 @@ class ControllerSaleAffiliate extends Controller {
 
 		$this->load->model('localisation/country');
 
-		$countries_array = [];
-
-		$this->data['countries'] = $this->model_localisation_country->getCountries($countries_array);
+		$this->data['countries'] = $this->model_localisation_country->getCountries([]);
 
 		if (isset($this->request->post['zone_id'])) {
 			$this->data['zone_id'] = (int)$this->request->post['zone_id'];
@@ -1270,7 +1268,7 @@ class ControllerSaleAffiliate extends Controller {
 		$this->listTransactions();
 	}
 
-	public function add_transaction() {
+	public function addTransaction() {
 		$this->language->load('sale/affiliate');
 
 		$this->load->model('sale/affiliate');
@@ -1284,7 +1282,7 @@ class ControllerSaleAffiliate extends Controller {
 		$this->listTransactions();
 	}
 
-	public function delete_transaction() {
+	public function deleteTransaction() {
 		$this->language->load('sale/affiliate');
 
 		$this->load->model('sale/affiliate');
