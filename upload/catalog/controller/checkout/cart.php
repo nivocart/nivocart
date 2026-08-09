@@ -402,7 +402,11 @@ class ControllerCheckoutCart extends Controller {
 					}
 				}
 
-				$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')) - ($product['price'] * $product['quantity']));
+				if ($this->customer->isLogged() && $this->customer->isSecure()) {
+					$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax_customer')) - ($product['price'] * $product['quantity']));
+				} else {
+					$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax_default')) - ($product['price'] * $product['quantity']));
+				}
 
 				$this->data['products'][] = [
 					'product_id'          => $product['product_id'],
