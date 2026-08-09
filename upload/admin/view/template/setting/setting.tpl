@@ -463,20 +463,6 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_tax_breakdown; ?><span class="help"><?php echo $help_tax_breakdown; ?></span></td>
-            <td><?php if ($config_tax_breakdown) { ?>
-              <input type="radio" name="config_tax_breakdown" value="1" id="tax-breakdown-on" class="radio" checked />
-              <label for="tax-breakdown-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_tax_breakdown" value="0" id="tax-breakdown-off" class="radio" />
-              <label for="tax-breakdown-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_tax_breakdown" value="1" id="tax-breakdown-on" class="radio" />
-              <label for="tax-breakdown-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_tax_breakdown" value="0" id="tax-breakdown-off" class="radio" checked />
-              <label for="tax-breakdown-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
             <td><?php echo $entry_order_edit; ?><span class="help"><?php echo $help_order_edit; ?></span></td>
             <td><input type="text" name="config_order_edit" value="<?php echo $config_order_edit; ?>" size="3" /></td>
           </tr>
@@ -520,6 +506,83 @@
           <tr>
             <td><?php echo $entry_abandoned_cart; ?><span class="help"><?php echo $help_abandoned_cart; ?></span></td>
             <td><input type="text" name="config_abandoned_cart" value="<?php echo $config_abandoned_cart; ?>" size="3" /></td>
+          </tr>
+        </table>
+        <h2><?php echo $text_tax; ?></h2>
+        <table class="form">
+          <tr>
+            <td><?php echo $entry_tax; ?></td>
+            <td><?php if ($config_tax) { ?>
+              <input type="radio" name="config_tax" value="1" id="tax-on" class="radio" checked />
+              <label for="tax-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_tax" value="0" id="tax-off" class="radio" />
+              <label for="tax-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_tax" value="1" id="tax-on" class="radio" />
+              <label for="tax-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_tax" value="0" id="tax-off" class="radio" checked />
+              <label for="tax-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_tax_breakdown; ?><span class="help"><?php echo $help_tax_breakdown; ?></span></td>
+            <td><?php if ($config_tax_breakdown) { ?>
+              <input type="radio" name="config_tax_breakdown" value="1" id="tax-breakdown-on" class="radio" checked />
+              <label for="tax-breakdown-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_tax_breakdown" value="0" id="tax-breakdown-off" class="radio" />
+              <label for="tax-breakdown-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_tax_breakdown" value="1" id="tax-breakdown-on" class="radio" />
+              <label for="tax-breakdown-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_tax_breakdown" value="0" id="tax-breakdown-off" class="radio" checked />
+              <label for="tax-breakdown-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_vat; ?><span class="help"><?php echo $help_vat; ?></span></td>
+            <td><?php if ($config_vat) { ?>
+              <input type="radio" name="config_vat" value="1" id="vat-on" class="radio" checked />
+              <label for="vat-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_vat" value="0" id="vat-off" class="radio" />
+              <label for="vat-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_vat" value="1" id="vat-on" class="radio" />
+              <label for="vat-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_vat" value="0" id="vat-off" class="radio" checked />
+              <label for="vat-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_tax_default; ?><span class="help"><?php echo $help_tax_default; ?></span></td>
+            <td><select name="config_tax_default">
+              <option value=""><?php echo $text_none; ?></option>
+              <?php if ($config_tax_default === 'shipping') { ?>
+                <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
+              <?php } else { ?>
+                <option value="shipping"><?php echo $text_shipping; ?></option>
+              <?php } ?>
+              <?php if ($config_tax_default === 'payment') { ?>
+                <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
+              <?php } else { ?>
+                <option value="payment"><?php echo $text_payment; ?></option>
+              <?php } ?>
+            </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_tax_customer; ?><span class="help"><?php echo $help_tax_customer; ?></span></td>
+            <td><select name="config_tax_customer">
+              <option value=""><?php echo $text_none; ?></option>
+              <?php if ($config_tax_customer === 'shipping') { ?>
+                <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
+              <?php } else { ?>
+                <option value="shipping"><?php echo $text_shipping; ?></option>
+              <?php } ?>
+              <?php if ($config_tax_customer === 'payment') { ?>
+                <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
+              <?php } else { ?>
+                <option value="payment"><?php echo $text_payment; ?></option>
+              <?php } ?>
+            </select></td>
           </tr>
         </table>
         <h2><?php echo $text_checkout; ?></h2>
@@ -677,69 +740,6 @@
               <input type="radio" name="config_review_login" value="0" id="review-login-off" class="radio" checked />
               <label for="review-login-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
-          </tr>
-        </table>
-        <h2><?php echo $text_tax; ?></h2>
-        <table class="form">
-          <tr>
-            <td><?php echo $entry_tax; ?></td>
-            <td><?php if ($config_tax) { ?>
-              <input type="radio" name="config_tax" value="1" id="tax-on" class="radio" checked />
-              <label for="tax-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_tax" value="0" id="tax-off" class="radio" />
-              <label for="tax-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_tax" value="1" id="tax-on" class="radio" />
-              <label for="tax-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_tax" value="0" id="tax-off" class="radio" checked />
-              <label for="tax-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_vat; ?><span class="help"><?php echo $help_vat; ?></span></td>
-            <td><?php if ($config_vat) { ?>
-              <input type="radio" name="config_vat" value="1" id="vat-on" class="radio" checked />
-              <label for="vat-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_vat" value="0" id="vat-off" class="radio" />
-              <label for="vat-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_vat" value="1" id="vat-on" class="radio" />
-              <label for="vat-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_vat" value="0" id="vat-off" class="radio" checked />
-              <label for="vat-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_tax_default; ?><span class="help"><?php echo $help_tax_default; ?></span></td>
-            <td><select name="config_tax_default">
-              <option value=""><?php echo $text_none; ?></option>
-              <?php if ($config_tax_default === 'shipping') { ?>
-                <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
-              <?php } else { ?>
-                <option value="shipping"><?php echo $text_shipping; ?></option>
-              <?php } ?>
-              <?php if ($config_tax_default === 'payment') { ?>
-                <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
-              <?php } else { ?>
-                <option value="payment"><?php echo $text_payment; ?></option>
-              <?php } ?>
-            </select></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_tax_customer; ?><span class="help"><?php echo $help_tax_customer; ?></span></td>
-            <td><select name="config_tax_customer">
-              <option value=""><?php echo $text_none; ?></option>
-              <?php if ($config_tax_customer === 'shipping') { ?>
-                <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
-              <?php } else { ?>
-                <option value="shipping"><?php echo $text_shipping; ?></option>
-              <?php } ?>
-              <?php if ($config_tax_customer === 'payment') { ?>
-                <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
-              <?php } else { ?>
-                <option value="payment"><?php echo $text_payment; ?></option>
-              <?php } ?>
-            </select></td>
           </tr>
         </table>
         <h2><?php echo $text_stock; ?></h2>
