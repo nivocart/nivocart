@@ -9,6 +9,23 @@
 class ModelUpgrade extends Model {
 	/* Error Array Placeholder */
 
+	// Legacy tables removed in NivoCart v2.2.0 and later
+	public function dropLegacyTables(): bool {
+		$this->db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+
+		$legacy_tables = [
+			DB_PREFIX . 'product_tax_local_rate',
+			DB_PREFIX . 'tax_local_rate',
+		];
+
+		foreach ($legacy_tables as $table) {
+			$this->db->query("DROP TABLE IF EXISTS `{$table}`");
+		}
+
+		return true;
+	}
+
+	// Perform table upgrades as required
 	public function dataTables(): bool {
 		$file = DIR_APPLICATION . 'nivocart-upgrade.sql';
 
@@ -297,7 +314,7 @@ class ModelUpgrade extends Model {
 		}
 
 		$patches = [
-			'HTTP_IMAGE'  => ['search' => 'HTTP_SERVER',  'build' => fn() => "define('HTTP_IMAGE', '" . str_replace('\\', '/', str_replace('/install', '', HTTP_SERVER)) . "image/');"],
+			'HTTP_IMAGE'  => ['search' => 'HTTP_SERVER', 'build' => fn() => "define('HTTP_IMAGE', '" . str_replace('\\', '/', str_replace('/install', '', HTTP_SERVER)) . "image/');"],
 			'HTTPS_IMAGE' => ['search' => 'HTTPS_SERVER', 'build' => fn() => "define('HTTPS_IMAGE', '" . str_replace('\\', '/', str_replace('/install', '', HTTP_SERVER)) . "image/');"],
 			'DIR_UPLOAD'  => ['search' => 'DIR_DOWNLOAD', 'build' => fn() => "define('DIR_UPLOAD', '" . str_replace('\\', '/', DIR_SYSTEM) . "upload/');"],
 		];

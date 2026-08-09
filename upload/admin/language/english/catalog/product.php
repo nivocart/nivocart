@@ -65,7 +65,6 @@ $_['entry_image']             = 'Main Image:<span class="help">The main image wi
 $_['entry_label']             = 'Main Image Label:<span class="help">The main image label will be applied in the top right hand corner of the main image.</span>';
 $_['entry_video_code']        = 'YouTube Video:<span class="help">Enter a YouTube video code. (optional)</span>';
 $_['entry_keyword']           = 'SEO Keyword:<span class="help">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>';
-$_['entry_local_tax_rate']    = 'Price Local Tax Rate:<span class="help">Select a local tax rate for this product in order to view the price excluding / including tax below.</span>';
 $_['entry_price']             = 'Price (%s):';
 $_['entry_cost']              = 'Average Cost:';
 $_['entry_tax_class']         = 'Tax Class:<span class="help">Select the tax class to use in the store.</span>';

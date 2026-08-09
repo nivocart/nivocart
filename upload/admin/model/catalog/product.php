@@ -40,10 +40,6 @@ class ModelCatalogProduct extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "product_youtube` SET product_id = '" . (int)$product_id . "', video_code = '" . $this->db->escape(trim($data['video_code'])) . "'");
 		}
 
-		if (isset($data['tax_local_rate_id'])) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "product_tax_local_rate` SET product_id = '" . (int)$product_id . "', tax_local_rate_id = '" . (int)$data['tax_local_rate_id'] . "'");
-		}
-
 		if (isset($data['product_location'])) {
 			foreach ($data['product_location'] as $location_id) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_to_location` SET product_id = '" . (int)$product_id . "', location_id = '" . (int)$location_id . "'");
@@ -210,12 +206,6 @@ class ModelCatalogProduct extends Model {
 
 		if (isset($data['video_code']) && mb_strlen($data['video_code'], 'UTF-8') > 10) {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "product_youtube` SET product_id = '" . (int)$product_id . "', video_code = '" . $this->db->escape(trim($data['video_code'])) . "'");
-		}
-
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_tax_local_rate` WHERE product_id = '" . (int)$product_id . "'");
-
-		if (isset($data['tax_local_rate_id'])) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "product_tax_local_rate` SET product_id = '" . (int)$product_id . "', tax_local_rate_id = '" . (int)$data['tax_local_rate_id'] . "'");
 		}
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_location` WHERE product_id = '" . (int)$product_id . "'");
@@ -427,7 +417,6 @@ class ModelCatalogProduct extends Model {
 			$data = array_merge($data, ['product_special' => $this->getProductSpecials($product_id)]);
 			$data = array_merge($data, ['product_store' => $this->getProductStores($product_id)]);
 			$data = array_merge($data, ['product_tag' => $this->getProductTags($product_id)]);
-			$data = array_merge($data, ['product_tax_local_rate' => $this->getProductTaxLocalRates($product_id)]);
 
 			$this->addProduct($data);
 		}
@@ -449,7 +438,6 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_reward` WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_special` WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_tag` WHERE product_id='" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_tax_local_rate` WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_category` WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_download` WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_layout` WHERE product_id = '" . (int)$product_id . "'");
@@ -655,16 +643,6 @@ class ModelCatalogProduct extends Model {
 		}
 
 		return $product_color_data;
-	}
-
-	public function getProductTaxLocalRates(int $product_id) {
-		$query = $this->db->query("SELECT DISTINCT plr.tax_local_rate_id AS `tax_local_rate_id` FROM `" . DB_PREFIX . "product_tax_local_rate` plr LEFT JOIN `" . DB_PREFIX . "product` p ON (plr.product_id = p.product_id) WHERE plr.product_id = '" . (int)$product_id . "'");
-
-		if (!empty($query->num_rows) && $query->num_rows > 0) {
-			return (int)$query->row['tax_local_rate_id'];
-		} else {
-			return 0;
-		}
 	}
 
 	public function getProductAttributes(int $product_id): array {

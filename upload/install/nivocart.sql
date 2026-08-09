@@ -3684,42 +3684,6 @@ INSERT INTO `nc_product_tag` (`product_tag_id`, `product_id`, `language_id`, `ta
 -- --------------------------------------------------------
 
 --
--- Table structure for table `nc_product_tax_local_rate`
---
-
-DROP TABLE IF EXISTS `nc_product_tax_local_rate`;
-CREATE TABLE `nc_product_tax_local_rate` (
-  `product_tax_local_rate_id` int NOT NULL AUTO_INCREMENT,
-  `product_id` int NOT NULL,
-  `tax_local_rate_id` int NOT NULL,
-  PRIMARY KEY (`product_tax_local_rate_id`),
-  KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `nc_product_tax_local_rate`
---
-
-INSERT INTO `nc_product_tax_local_rate` (`product_tax_local_rate_id`, `product_id`, `tax_local_rate_id`) VALUES
-(2, 1, 0),
-(3, 2, 0),
-(4, 3, 0),
-(5, 4, 0),
-(6, 5, 0),
-(7, 6, 0),
-(8, 7, 0),
-(9, 8, 0),
-(10, 9, 0),
-(11, 10, 0),
-(12, 11, 0),
-(13, 12, 0),
-(15, 13, 0),
-(17, 14, 0),
-(19, 15, 0);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `nc_product_to_category`
 --
 
@@ -4549,28 +4513,6 @@ INSERT INTO `nc_tax_class` (`tax_class_id`, `title`, `description`, `date_added`
 (1, 'Taxable Goods', 'Taxed Products', '2025-01-06 23:21:53', '2025-09-23 14:07:50'),
 (2, 'Downloadable Products', 'Downloadable', '2025-09-21 22:19:39', '2025-09-22 10:27:36'),
 (3, 'EU E-medias', 'EU Tax Law', '2026-01-01 00:00:01', '2026-01-17 10:15:15');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nc_tax_local_rate`
---
-
-DROP TABLE IF EXISTS `nc_tax_local_rate`;
-CREATE TABLE `nc_tax_local_rate` (
-  `tax_local_rate_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `rate` decimal(15,4) NOT NULL DEFAULT '0.0000',
-  `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`tax_local_rate_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `nc_tax_local_rate`
---
-
-INSERT INTO `nc_tax_local_rate` (`tax_local_rate_id`, `name`, `rate`, `status`) VALUES
-(1, 'UK VAT', '20.0000', 1);
 
 -- --------------------------------------------------------
 

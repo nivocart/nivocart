@@ -61,6 +61,8 @@ class ControllerUpgrade extends Controller {
 
 		$this->load->model('upgrade');
 
+		$this->model_upgrade->dropLegacyTables();
+
 		$step1 = $this->model_upgrade->dataTables();
 		$step2 = $step1 ? $this->model_upgrade->additionalTables() : false;
 		$step3 = $step2 ? $this->model_upgrade->repairCategories() : false;

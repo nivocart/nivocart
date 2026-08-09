@@ -3150,21 +3150,6 @@ CREATE TABLE `nc_product_tag` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `nc_product_tax_local_rate`
---
-
-DROP TABLE IF EXISTS `nc_product_tax_local_rate`;
-CREATE TABLE `nc_product_tax_local_rate` (
-  `product_tax_local_rate_id` int NOT NULL AUTO_INCREMENT,
-  `product_id` int NOT NULL,
-  `tax_local_rate_id` int NOT NULL,
-  PRIMARY KEY (`product_tax_local_rate_id`),
-  KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `nc_product_to_category`
 --
 
@@ -3932,21 +3917,6 @@ INSERT INTO `nc_tax_class` (`tax_class_id`, `title`, `description`, `date_added`
 (1, 'Taxable Goods', 'Taxed Products', '2025-01-06 23:21:53', '2025-09-23 14:07:50'),
 (2, 'Downloadable Products', 'Downloadable', '2025-09-21 22:19:39', '2025-09-22 10:27:36'),
 (3, 'EU E-medias', 'EU Tax Law', '2026-01-01 00:00:01', '2026-01-17 10:15:15');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nc_tax_local_rate`
---
-
-DROP TABLE IF EXISTS `nc_tax_local_rate`;
-CREATE TABLE `nc_tax_local_rate` (
-  `tax_local_rate_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `rate` decimal(15,4) NOT NULL DEFAULT '0.0000',
-  `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`tax_local_rate_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 

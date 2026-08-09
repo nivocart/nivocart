@@ -792,7 +792,6 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['entry_label'] = $this->language->get('entry_label');
 		$this->data['entry_video_code'] = $this->language->get('entry_video_code');
 		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
-		$this->data['entry_local_tax_rate'] = $this->language->get('entry_local_tax_rate');
 		$this->data['entry_price'] = sprintf($this->language->get('entry_price'), $this->config->get('config_currency'));
 		$this->data['entry_cost'] = $this->language->get('entry_cost');
 		$this->data['entry_tax_class'] = $this->language->get('entry_tax_class');
@@ -1107,43 +1106,6 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		// Price
-		$this->load->model('localisation/tax_local_rate');
-
-		$tax_local_rates = [];
-
-		$tax_local_rates = $this->model_localisation_tax_local_rate->getTaxLocalRates();
-
-		if (!empty($tax_local_rates)) {
-			foreach ($tax_local_rates as $tax_local_rate) {
-				$tax_local_rate_id = (int)$tax_local_rate['tax_local_rate_id'];
-			}
-		}
-
-		$this->data['tax_local_rates'] = $tax_local_rates;
-
-		if (isset($this->request->post['tax_local_rate_id'])) {
-			$tax_local_rate_id = $this->request->post['tax_local_rate_id'];
-			$this->data['tax_local_rate_id'] = (int)$tax_local_rate_id;
-		} elseif (isset($this->request->get['product_id'])) {
-			$tax_local_rate_id = $this->model_catalog_product->getProductTaxLocalRates($this->request->get['product_id']);
-			$this->data['tax_local_rate_id'] = (int)$tax_local_rate_id;
-		} else {
-			$tax_local_rate_id = 0;
-			$this->data['tax_local_rate_id'] = (int)$tax_local_rate_id;
-		}
-
-		$this->data['configure_tax_local_rate'] = $this->url->link('localisation/tax_local_rate', 'token=' . $this->session->data['token'], 'SSL');
-
-		$base_rate = $this->model_localisation_tax_local_rate->getTaxLocalRate((int)$tax_local_rate_id);
-
-		if (!empty($base_rate) && (int)$tax_local_rate_id > 0 && is_numeric((float)$base_rate)) {
-			$this->data['vat_rate'] = 1 + ((float)$base_rate / 100);
-			$this->data['base_rate'] = (float)$base_rate;
-		} else {
-			$this->data['vat_rate'] = 1;
-			$this->data['base_rate'] = 0;
-		}
-
 		if (isset($this->request->post['price'])) {
 			$this->data['price'] = $this->request->post['price'];
 		} elseif (!empty($product_info)) {

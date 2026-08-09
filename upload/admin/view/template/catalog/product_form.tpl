@@ -119,25 +119,8 @@
             <td><input type="text" name="keyword" value="<?php echo $keyword; ?>" size="30" /></td>
           </tr>
           <tr class="highlighted">
-            <td><?php echo $entry_local_tax_rate; ?></td>
-            <td><select name="tax_local_rate_id">
-              <option value="0"><?php echo $text_none; ?></option>
-              <?php foreach ($tax_local_rates as $tax_local_rate) { ?>
-                <?php if ($tax_local_rate['tax_local_rate_id'] === $tax_local_rate_id) { ?>
-                  <option value="<?php echo $tax_local_rate['tax_local_rate_id']; ?>" selected="selected"><?php echo $tax_local_rate['name']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $tax_local_rate['tax_local_rate_id']; ?>"><?php echo $tax_local_rate['name']; ?></option>
-                <?php } ?>
-              <?php } ?>
-            </select> &nbsp; <a href="<?php echo $configure_tax_local_rate; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
-          </tr>
-          <tr class="highlighted">
             <td><?php echo $entry_price; ?></td>
-            <td>
-              <input type="text" name="price" class="excvat" value="<?php echo number_format($price, 2, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?> &nbsp; <a onclick="apply();" id="price-apply" class="button-save"><i class="fa fa-refresh"></i></a>
-              <br /><br />
-              <input type="text" name="incvat" class="incvat" value="<?php echo number_format(($price * $vat_rate), 2, '.', ''); ?>" /> &nbsp; <?php echo $text_inc_vat; ?> (<?php echo round($base_rate, 2, PHP_ROUND_HALF_UP); ?>%)
-            </td>
+            <td><input type="text" name="price" class="excvat" value="<?php echo number_format($price, 2, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_cost; ?></td>
@@ -1416,28 +1399,6 @@ getProducts();
 getRelated();
 //--></script>
 <?php } ?>
-
-<script type="text/javascript"><!--
-$('select[name=\'tax_local_rate_id\']').on('change', function() {
-	if ($(this).val() !== <?php echo $tax_local_rate_id; ?>) {
-		$('#price-apply').fadeIn(500);
-	} else {
-		$('#price-apply').hide();
-	}
-});
-
-$('select[name=\'tax_local_rate_id\']').trigger('change');
-//--></script>
-
-<script type="text/javascript"><!--
-$('.incvat').on('change keydown keyup', function() {
-	$('input.excvat').val(($(this).val()/<?php echo $vat_rate; ?>).toFixed(2));
-});
-
-$('.excvat').on('change keydown keyup', function() {
-	$('input.incvat').val(($(this).val()*<?php echo $vat_rate; ?>).toFixed(2));
-});
-//--></script>
 
 <script type="text/javascript"><!--
 $('select[name=\'palette_id\']').on('change', function() {

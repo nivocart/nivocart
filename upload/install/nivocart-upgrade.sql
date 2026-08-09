@@ -2148,21 +2148,6 @@ CREATE TABLE `nc_product_tag` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `nc_product_tax_local_rate`
---
-
-DROP TABLE IF EXISTS `nc_product_tax_local_rate`;
-CREATE TABLE `nc_product_tax_local_rate` (
-  `product_tax_local_rate_id` int NOT NULL AUTO_INCREMENT,
-  `product_id` int NOT NULL,
-  `tax_local_rate_id` int NOT NULL,
-  PRIMARY KEY (`product_tax_local_rate_id`),
-  KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `nc_product_to_category`
 --
 
@@ -2548,21 +2533,6 @@ CREATE TABLE `nc_tax_class` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`tax_class_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nc_tax_local_rate`
---
-
-DROP TABLE IF EXISTS `nc_tax_local_rate`;
-CREATE TABLE `nc_tax_local_rate` (
-  `tax_local_rate_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `rate` decimal(15,4) NOT NULL DEFAULT '0.0000',
-  `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`tax_local_rate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

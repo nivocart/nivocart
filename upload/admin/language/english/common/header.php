@@ -126,7 +126,6 @@ $_['text_supplier_product']            = 'Supplier Products';
 $_['text_system']                      = 'System';
 $_['text_tax']                         = 'Taxes';
 $_['text_tax_class']                   = 'Tax Classes';
-$_['text_tax_local_rate']              = 'Tax Local Rates';
 $_['text_tax_rate']                    = 'Tax Rates';
 $_['text_theme']                       = 'Themes';
 $_['text_tool']                        = 'Tools';

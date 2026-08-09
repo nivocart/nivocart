@@ -16,7 +16,9 @@ Release: TBA
 - Fix bug in Admin Product Form where Cost (float) was a string.
 - Fix bug in Shopping Cart where Price was including Tax. 
 - Fix for Extensions lists not displaying in alphabetical order.
+- Removed unnecessary Admin Product feature "Tax Local Rate".
 - Added QoL feature in Admin Modules List to filter alphabetically.
+- Cleaned up Install/Upgrade CSS stylesheet and font files.
 - Admin File Managers fixes and refactor (both instances).
 - Admin "Settings" Controller complete refactor.
 - Admin "Settings" form can now Save/Apply a partial array of data.

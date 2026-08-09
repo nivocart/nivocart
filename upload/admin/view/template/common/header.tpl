@@ -272,7 +272,6 @@
                   <li><a href="<?php echo $tax_class; ?>"><?php echo ($icons) ? '<i class="fa fa-briefcase"></i>' : ''; ?><?php echo $text_tax_class; ?></a></li>
                   <li><a href="<?php echo $tax_rate; ?>"><?php echo ($icons) ? '<i class="fa fa-percent"></i>' : ''; ?><?php echo $text_tax_rate; ?></a></li>
                   <li><a href="<?php echo $geo_zone; ?>"><?php echo ($icons) ? '<i class="fa fa-map-signs"></i>' : ''; ?><?php echo $text_geo_zone; ?></a></li>
-                  <li><a href="<?php echo $tax_local_rate; ?>"><?php echo ($icons) ? '<i class="fa fa-home"></i>' : ''; ?><?php echo $text_tax_local_rate; ?></a></li>
                 </ul>
               </li>
               <li><a href="<?php echo $country; ?>"><?php echo ($icons) ? '<i class="fa fa-globe"></i>' : ''; ?><?php echo $text_country; ?></a></li>
