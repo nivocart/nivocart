@@ -65,8 +65,8 @@ $_['entry_image']             = 'Main Image:<span class="help">The main image wi
 $_['entry_label']             = 'Main Image Label:<span class="help">The main image label will be applied in the top right hand corner of the main image.</span>';
 $_['entry_video_code']        = 'YouTube Video:<span class="help">Enter a YouTube video code. (optional)</span>';
 $_['entry_keyword']           = 'SEO Keyword:<span class="help">Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</span>';
-$_['entry_price']             = 'Price (%s):';
 $_['entry_cost']              = 'Average Cost:';
+$_['entry_price']             = 'Retail Price (%s):';
 $_['entry_tax_class']         = 'Tax Class:<span class="help">Select the tax class to use in the store.</span>';
 $_['entry_quote']             = 'Request a Quote:<span class="help">Select if the product is made to order or only available on request. The customer will be redirected to the quotation form.</span>';
 $_['entry_age_minimum']       = 'Minimum Age:<span class="help">Minimum age a customer must be to purchase this product. Enter 0 for no minimum.</span>';

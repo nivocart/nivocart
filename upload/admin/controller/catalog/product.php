@@ -1106,20 +1106,20 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		// Price
-		if (isset($this->request->post['price'])) {
-			$this->data['price'] = $this->request->post['price'];
-		} elseif (!empty($product_info)) {
-			$this->data['price'] = $product_info['price'];
-		} else {
-			$this->data['price'] = 0;
-		}
-
 		if (isset($this->request->post['cost'])) {
 			$this->data['cost'] = $this->request->post['cost'];
 		} elseif (!empty($product_info)) {
 			$this->data['cost'] = $product_info['cost'];
 		} else {
 			$this->data['cost'] = 0;
+		}
+
+		if (isset($this->request->post['price'])) {
+			$this->data['price'] = $this->request->post['price'];
+		} elseif (!empty($product_info)) {
+			$this->data['price'] = $product_info['price'];
+		} else {
+			$this->data['price'] = 0;
 		}
 
 		$this->load->model('localisation/tax_class');
@@ -1133,6 +1133,8 @@ class ControllerCatalogProduct extends Controller {
 		} else {
 			$this->data['tax_class_id'] = 0;
 		}
+
+		$this->data['tax_rate_data'] = $this->getTaxRateData();
 
 		$this->data['configure_tax_class'] = $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -2475,5 +2477,43 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
+	}
+
+	private function getTaxRateData(): string {
+		$this->load->model('localisation/tax_rate');
+
+		$all_rates = $this->model_localisation_tax_rate->getTaxRates([]);
+
+		// Index rates by tax_rate_id for quick lookup
+		$rate_map = [];
+
+		foreach ($all_rates as $rate) {
+			$rate_map[(int)$rate['tax_rate_id']] = [
+				'rate' => (float)$rate['rate'],
+				'type' => $rate['type'],
+			];
+		}
+
+		// Sum percentage rates per tax class via nc_tax_rule
+		$query = $this->db->query("SELECT `tax_class_id`, `tax_rate_id` FROM `" . DB_PREFIX . "tax_rule`");
+
+		$tax_rate_data = [];
+
+		foreach ($query->rows as $row) {
+			$class_id = (int)$row['tax_class_id'];
+			$rate_id = (int)$row['tax_rate_id'];
+
+			if (!isset($rate_map[$rate_id])) {
+				continue;
+			}
+
+			if ($rate_map[$rate_id]['type'] !== 'P') {
+				continue;
+			}
+
+			$tax_rate_data[$class_id] = ($tax_rate_data[$class_id] ?? 0.0) + $rate_map[$rate_id]['rate'];
+		}
+
+		return json_encode($tax_rate_data);
 	}
 }

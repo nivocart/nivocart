@@ -118,24 +118,27 @@
             <td><?php echo $entry_keyword; ?></td>
             <td><input type="text" name="keyword" value="<?php echo $keyword; ?>" size="30" /></td>
           </tr>
-          <tr class="highlighted">
-            <td><?php echo $entry_price; ?></td>
-            <td><input type="text" name="price" class="excvat" value="<?php echo number_format($price, 2, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?></td>
-          </tr>
           <tr>
             <td><?php echo $entry_cost; ?></td>
             <td><input type="text" name="cost" value="<?php echo number_format($cost, 2, '.', ''); ?>" /></td>
           </tr>
           <tr class="highlighted">
+            <td><?php echo $entry_price; ?></td>
+            <td><input type="text" name="price" id="input-price" class="excvat" value="<?php echo number_format($price, 2, '.', ''); ?>" /> &nbsp; <?php echo $text_exc_vat; ?>
+              <span id="price-inc-tax" style="display:none;">
+              &nbsp;&mdash;&nbsp; <span id="price-inc-tax-value"></span> &nbsp; <?php echo $text_inc_vat; ?>
+              </span>
+            </td>
+          </tr>
+          <tr class="highlighted">
             <td><?php echo $entry_tax_class; ?></td>
-            <td><select name="tax_class_id">
+            <td><select name="tax_class_id" id="input-tax-class">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($tax_classes as $tax_class) { ?>
-                <?php if ($tax_class['tax_class_id'] === $tax_class_id) { ?>
-                  <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
-                <?php } ?>
+                <option value="<?php echo $tax_class['tax_class_id']; ?>"
+                <?php if ($tax_class['tax_class_id'] === $tax_class_id) echo 'selected="selected"'; ?>>
+                <?php echo $tax_class['title']; ?>
+                </option>
               <?php } ?>
             </select> &nbsp; <a href="<?php echo $configure_tax_class; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
           </tr>
@@ -1920,6 +1923,35 @@ $(document).ready(function() {
 });
 //--></script>
 <?php } ?>
+
+<script><!--
+(function () {
+	var taxRates = <?php echo $tax_rate_data; ?>;
+	var priceInput = document.getElementById('input-price');
+	var taxSelect = document.getElementById('input-tax-class');
+	var incTaxWrap = document.getElementById('price-inc-tax');
+	var incTaxValue = document.getElementById('price-inc-tax-value');
+
+	function updateIncTax() {
+		var price = parseFloat(priceInput.value);
+		var taxClassId = taxSelect.value;
+		var rate = taxRates[taxClassId] || 0;
+
+		if (!isNaN(price) && price > 0 && rate > 0) {
+			var incTax = price * (1 + rate / 100);
+			incTaxValue.textContent = incTax.toFixed(2);
+			incTaxWrap.style.display = 'inline';
+		} else {
+			incTaxWrap.style.display = 'none';
+		}
+	}
+
+	priceInput.addEventListener('input', updateIncTax);
+	taxSelect.addEventListener('change', updateIncTax);
+
+	updateIncTax(); // Run on page load for existing products
+})();
+//--></script>
 
 <script type="text/javascript"><!--
 $('#tabs a').tabs();
