@@ -374,7 +374,7 @@ class ControllerCheckoutCart extends Controller {
 
 				// Display totals
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+					$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax_customer')), $this->config->get('config_currency'));
 				} else {
 					$total = false;
 				}

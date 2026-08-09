@@ -279,7 +279,7 @@ class ControllerCheckoutCheckoutCart extends Controller {
 
 			// Display totals
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
+				$total = $this->currency->format($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax_customer')), $this->config->get('config_currency'));
 			} else {
 				$total = false;
 			}
@@ -307,7 +307,11 @@ class ControllerCheckoutCheckoutCart extends Controller {
 				}
 			}
 
-			$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax')) - ($product['price'] * $product['quantity']));
+			if ($this->customer->isLogged() && $this->customer->isSecure()) {
+				$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax_customer')) - ($product['price'] * $product['quantity']));
+			} else {
+				$product_tax_value = ($this->tax->calculate(($product['price'] * $product['quantity']), $product['tax_class_id'], $this->config->get('config_tax_default')) - ($product['price'] * $product['quantity']));
+			}
 
 			$this->data['products'][] = [
 				'product_id'          => $product['product_id'],
