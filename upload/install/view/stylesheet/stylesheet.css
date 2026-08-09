@@ -5,18 +5,15 @@
 */
 
 @font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Roboto'), local('Roboto-Regular'),
-    url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff2') format('woff2'),
-    url('fonts/roboto-v18-cyrillic_greek_latin-regular.woff') format('woff'),
-    url('fonts/roboto-v18-cyrillic_greek_latin-regular.ttf') format('truetype'),
-    url('fonts/roboto-v18-cyrillic_greek_latin-regular.svg#Roboto') format('svg');
+	font-family: 'Roboto';
+	src: local('Roboto'), local('Roboto-Regular'),
+		url('fonts/Roboto-Regular.woff2') format('woff2'),
+		url('fonts/Roboto-Regular.woff') format('woff');
+	font-style: normal;
+	font-weight: 400;
 }
 
 html {
-	overflow: -moz-scrollbars-vertical;
 	padding: 0;
 	margin: 0;
 }
@@ -63,16 +60,8 @@ form {
 }
 fieldset {
 	background-color: #E6E6E6;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#E6E6E6), to(#D4D4D4));
-	background-image: -webkit-linear-gradient(top, #E6E6E6, #D4D4D4);
-	background-image: -moz-linear-gradient(top, #E6E6E6, #D4D4D4);
-	background-image: -ms-linear-gradient(top, #E6E6E6, #D4D4D4);
-	background-image: -o-linear-gradient(top, #E6E6E6, #D4D4D4);
 	background-image: linear-gradient(to bottom, #E6E6E6, #D4D4D4);
 	border: 1px solid #111;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-khtml-border-radius: 3px;
 	border-radius: 3px;
 	overflow: auto;
 	padding: 10px;
@@ -101,19 +90,9 @@ input[type='text'], input[type='password'], textarea {
 	border-left: 1px solid #B6B6B6;
 	border-bottom: 1px solid #E1E1E1;
 	border-right: 1px solid #E1E1E1;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-khtml-border-radius: 3px;
 	border-radius: 3px;
 	background-color: #FFF;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#F2F5F7), to(#FFF));
-	background-image: -webkit-linear-gradient(top, #F2F5F7, #FFF);
-	background-image: -moz-linear-gradient(top, #F2F5F7, #FFF);
-	background-image: -ms-linear-gradient(top, #F2F5F7, #FFF);
-	background-image: -o-linear-gradient(top, #F2F5F7, #FFF);
 	background-image: linear-gradient(to bottom, #F2F5F7, #FFF);
-	-webkit-box-shadow: inset 0 2px 0 -1px #EDEDED;
-	-moz-box-shadow: inset 0 2px 0 -1px #EDEDED;
 	box-shadow: inset 0 2px 0 -1px #EDEDED;
 	margin: 0;
 }
@@ -122,19 +101,9 @@ select {
 	border-left: 1px solid #B6B6B6;
 	border-bottom: 1px solid #E1E1E1;
 	border-right: 1px solid #E1E1E1;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-khtml-border-radius: 3px;
 	border-radius: 3px;
 	background-color: #FFF;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#F2F5F7), to(#FFF));
-	background-image: -webkit-linear-gradient(top, #F2F5F7, #FFF);
-	background-image: -moz-linear-gradient(top, #F2F5F7, #FFF);
-	background-image: -ms-linear-gradient(top, #F2F5F7, #FFF);
-	background-image: -o-linear-gradient(top, #F2F5F7, #FFF);
 	background-image: linear-gradient(to bottom, #F2F5F7, #FFF);
-	-webkit-box-shadow: inset 0 2px 0 -1px #EDEDED;
-	-moz-box-shadow: inset 0 2px 0 -1px #EDEDED;
 	box-shadow: inset 0 2px 0 -1px #EDEDED;
 	padding: 2px;
 }
@@ -167,9 +136,6 @@ label {
 	font-weight: bold;
 	text-transform: uppercase;
 	background: #23A4C8;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	vertical-align: middle;
 	margin: 0 0 20px 0;
@@ -200,9 +166,6 @@ label {
 .success, .warning, .tooltip {
 	padding: 10px 10px 10px 33px;
 	margin: 0 0 15px 0;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 }
 .success {
@@ -232,9 +195,6 @@ a.button, a.button-cancel, input.button {
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	text-shadow: 0 0 1px rgba(255, 255, 255, 0.05);
 	text-decoration: none;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	cursor: pointer;
 }
@@ -285,12 +245,7 @@ a.button-go {
 	text-align: center;
 	text-decoration: none;
 	background: #24A5C9;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
-	-moz-box-shadow: 0 1px 0 rgba(48, 53, 58, 1), inset 0 4px 4px -3px rgba(0, 0, 0, 0.2);
-	-webkit-box-shadow: 0 1px 0 rgba(48, 53, 58, 1), inset 0 4px 4px -3px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 1px 0 rgba(48, 53, 58, 1), inset 0 4px 4px -3px rgba(0, 0, 0, 0.2);
 	outline: none;
 	cursor: pointer;
@@ -301,11 +256,6 @@ a.button-go:hover {
 /* Buttons */
 .buttons {
 	background-color: #3C4044;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#3C4044), to(#171C19));
-	background-image: -webkit-linear-gradient(top, #3C4044, #171C19);
-	background-image: -moz-linear-gradient(top, #3C4044, #171C19);
-	background-image: -ms-linear-gradient(top, #3C4044, #171C19);
-	background-image: -o-linear-gradient(top, #3C4044, #171C19);
 	background-image: linear-gradient(to bottom, #3C4044, #171C19);
 	border: 1px solid #111;
 	margin: 0 0 20px 0;
@@ -345,14 +295,10 @@ a.button-go:hover {
 	height: 472px;
 	background: #DADADA;
 	border: 1px solid #111;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	margin: 3px 0 20px 0;
 	padding: 6px 12px;
 	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
 }
 .terms h3, .terms p, .terms ul, .terms ol {
 	color: #111;
@@ -390,7 +336,6 @@ a.button-go:hover {
 @media only screen and (min-width: 481px) and (max-width: 641px) {
 	html {
 		-webkit-text-size-adjust: none;
-		-ms-text-size-adjust: none;
 	}
 	body {
 		padding: 0;
@@ -405,7 +350,6 @@ a.button-go:hover {
 @media only screen and (max-width: 480px) {
 	html {
 		-webkit-text-size-adjust: none;
-		-ms-text-size-adjust: none;
 	}
 	body {
 		padding: 0;
