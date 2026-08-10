@@ -4,9 +4,14 @@
 ---------------
 
 
-NivoCart v2.2.X
+NivoCart v2.X.X
 ---------------
 Release: TBA
+
+
+NivoCart v2.2.0
+---------------
+Release: 10/08/2026
 
 - JQuery upgraded from v2.2.4 to v3.7.1 (Admin + Catalog).
 - JQuery UI upgraded from v1.12.1 to v1.14.2 (Admin + Catalog).
