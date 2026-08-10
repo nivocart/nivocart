@@ -38,7 +38,7 @@ define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 
-define('NC_VERSION', '2.1.0');
+define('NC_VERSION', '2.2.0');
 
 require_once DIR_SYSTEM . 'startup.php';
 
@@ -238,10 +238,7 @@ function setupDb(array $options): void {
         $sql = '';
 
         foreach ($lines as $line) {
-            if (!$line
-                || mb_substr($line, 0, 2, 'UTF-8') === '--'
-                || mb_substr($line, 0, 1, 'UTF-8') === '#'
-            ) {
+            if (!$line || mb_substr($line, 0, 2, 'UTF-8') === '--' || mb_substr($line, 0, 1, 'UTF-8') === '#') {
                 continue;
             }
 
