@@ -1,0 +1,10 @@
+------------------
+ SYSTEM/DROPSHIP
+------------------
+
+Library folder for Dropshipping APIs
+
+- AutoDS
+- Avasam
+- Syncee
+- ...

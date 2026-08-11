@@ -1,0 +1,9 @@
+------------------
+ SYSTEM/CONNECTOR
+------------------
+
+Library Connector for Marketplace APIs
+
+- Amazon
+- Ebay
+- ...

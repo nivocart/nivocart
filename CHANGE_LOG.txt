@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Added new folders, placeholders for future API extensions.
+
 
 NivoCart v2.2.0
 ---------------
