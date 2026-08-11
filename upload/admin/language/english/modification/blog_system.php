@@ -38,7 +38,7 @@ $_['text_blog_tables']         = 'Blog Database Tables:';
 
 $_['blog_version']             = '1.0.0 - NivoCart';
 $_['blog_author']              = 'Nivocart';
-$_['blog_support']             = 'contact@nivocart.com';
+$_['blog_support']             = 'contact@nivocart.org';
 $_['blog_license']             = 'GPLv3 (GNU General Public License)';
 $_['blog_tables']              = '
 	- blog_article<br />
