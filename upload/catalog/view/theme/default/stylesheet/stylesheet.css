@@ -695,7 +695,7 @@ table.radio tr.highlight:hover td {
 /** -----------------------------
  * BUTTON Types
  * ----------------------------*/
-a.button, input.button, button.button, input.button-cart, input.button-wrap-add, input.button-wrap-remove {
+a.button, input.button, button.button, input.button-cart {
 	color: #FFF;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	background-color: #239DD1;
@@ -741,30 +741,6 @@ input.button-cart {
 	font-weight: bold;
 	line-height: 16px;
 	border: 0;
-}
-/* Button Wrap */
-input.button-wrap-add, input.button-wrap-remove, input.button-wrap-add:hover, input.button-wrap-remove:hover {
-	border: 0;
-	height: 28px;
-	padding: 0 16px;
-	font-size: 14px;
-	font-weight: bold;
-	line-height: 16px;
-}
-input.button-wrap-add, input.button-wrap-add:hover {
-	background-image: url('../image/wrap-add.png');
-	background-repeat: no-repeat;
-	background-position: left;
-	padding-left: 28px;
-}
-input.button-wrap-remove, input.button-wrap-remove:hover {
-	background-image: url('../image/wrap-remove.png');
-	background-repeat: no-repeat;
-	background-position: left;
-	padding-left: 28px;
-}
-input.button-wrap-add:hover, input.button-wrap-remove:hover {
-	background-color: #0D6D98;
 }
 /* All Buttons Hover */
 a.button:hover, input.button:hover, button.button:hover, input.button-cart:hover {
