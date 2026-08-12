@@ -1672,6 +1672,13 @@
               <a onclick="image_upload('icon', 'thumb-icon');" class="button-browse"></a><a onclick="$('#thumb-icon').attr('src', '<?php echo $no_image; ?>'); $('#icon').attr('value', '');" class="button-recycle"></a>
             </div></td>
           </tr>
+          <tr>
+            <td><?php echo $entry_apple_icon; ?><span class="help"><?php echo $help_apple_icon; ?></span></td>
+            <td><div class="image"><img src="<?php echo $apple_icon; ?>" alt="" id="thumb-apple-icon" /><br />
+              <input type="hidden" name="config_apple_icon" value="<?php echo $config_apple_icon; ?>" id="apple-icon" />
+              <a onclick="image_upload('apple-icon', 'thumb-apple-icon');" class="button-browse"></a><a onclick="$('#thumb-apple-icon').attr('src', '<?php echo $no_image; ?>'); $('#apple-icon').attr('value', '');" class="button-recycle"></a>
+            </div></td>
+          </tr>
         </table>
         <h2><?php echo $text_image_resize; ?></h2>
         <table class="form">

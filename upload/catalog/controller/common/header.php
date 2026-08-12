@@ -65,6 +65,12 @@ class ControllerCommonHeader extends Controller {
 			$this->data['icon'] = '';
 		}
 
+		if ($this->config->get('config_apple_icon') && file_exists(DIR_IMAGE . $this->config->get('config_apple_icon'))) {
+			$this->data['apple_icon'] = $server . 'image/' . $this->config->get('config_apple_icon');
+		} else {
+			$this->data['apple_icon'] = '';
+		}
+
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
 			$this->data['logo'] = $server . 'image/' . $this->config->get('config_logo');
 		} else {

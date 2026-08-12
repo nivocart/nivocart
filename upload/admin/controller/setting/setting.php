@@ -77,7 +77,7 @@ class ControllerSettingSetting extends Controller {
 		'entry_notification_approval', 'entry_notification_stock',
 		'entry_notification_low', 'entry_notification_review',
 		'entry_notification_affiliate', 'entry_notification_comment',
-		'entry_logo', 'entry_icon', 'entry_image_category', 'entry_image_thumb',
+		'entry_logo', 'entry_icon', 'entry_apple_icon', 'entry_image_category', 'entry_image_thumb',
 		'entry_image_popup', 'entry_image_product', 'entry_image_additional',
 		'entry_image_brand', 'entry_image_related', 'entry_image_compare',
 		'entry_image_wishlist', 'entry_image_newsthumb', 'entry_image_newspopup',
@@ -127,7 +127,7 @@ class ControllerSettingSetting extends Controller {
 		'help_news_sharethis', 'help_news_chars', 'help_notification_return',
 		'help_notification_online', 'help_notification_review',
 		'help_notification_affiliate', 'help_notification_comment',
-		'help_logo', 'help_icon', 'help_image_category', 'help_image_thumb',
+		'help_logo', 'help_icon', 'help_apple_icon', 'help_image_category', 'help_image_thumb',
 		'help_image_popup', 'help_image_product', 'help_image_additional',
 		'help_image_brand', 'help_image_related', 'help_image_compare',
 		'help_image_wishlist', 'help_image_newsthumb', 'help_image_newspopup',
@@ -293,6 +293,7 @@ class ControllerSettingSetting extends Controller {
 		// Image
 		'config_logo'             => [],
 		'config_icon'             => [],
+		'config_apple_icon'       => [],
 		'config_image_category_width'   => [], 'config_image_category_height'  => [],
 		'config_image_thumb_width'      => [], 'config_image_thumb_height'     => [],
 		'config_image_popup_width'      => [], 'config_image_popup_height'     => [],
@@ -620,7 +621,7 @@ class ControllerSettingSetting extends Controller {
 
 		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 120, 120);
 
-		$imageFields = ['logo' => 'config_logo', 'icon' => 'config_icon'];
+		$imageFields = ['logo' => 'config_logo', 'icon' => 'config_icon', 'apple_icon' => 'config_apple_icon'];
 
 		foreach ($imageFields as $thumbKey => $configKey) {
 			$path = $this->config->get($configKey);

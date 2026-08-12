@@ -21,6 +21,9 @@
 <?php if ($icon) { ?>
 <link rel="icon" type="image/png" href="<?php echo $icon; ?>" />
 <?php } ?>
+<?php if ($apple_icon) { ?>
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $apple_icon; ?>" />
+<?php } ?>
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
