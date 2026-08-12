@@ -8,6 +8,7 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- All 3 Main Stylesheets have been updated, 2 in Admin and 1 in Catalog.
 - Added new folders, placeholders for future API extensions.
 - Removed error prone options from the Checkout page.
 
