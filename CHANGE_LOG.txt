@@ -9,6 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - Added new folders, placeholders for future API extensions.
+- Removed error prone options from the Checkout page.
 
 
 NivoCart v2.2.0

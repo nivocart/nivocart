@@ -16,63 +16,8 @@
   <?php if (!$logged && $guest_checkout) { ?>
     <div class="guest-notice"><?php echo $text_guest_login; ?></div>
   <?php } ?>
-  <?php if ($wrapping_status || $this->config->get('config_checkout_coupon') || $this->config->get('config_checkout_voucher') || $reward_point) { ?>
-    <div style="margin-bottom:15px;">
-      <?php if ($wrapping_status) { ?>
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
-          <?php if (isset($this->session->data['wrapping'])) { ?>
-            <input type="submit" name="remove_wrapping" value="<?php echo $button_wrapping_remove; ?>" class="button-wrap-remove" />
-          <?php } else { ?>
-            <input type="submit" name="add_wrapping" value="<?php echo $button_wrapping_add; ?>" class="button-wrap-add" />
-          <?php } ?>
-        </form>
-      <?php } ?>
-      <?php if ($this->config->get('config_checkout_coupon')) { ?>
-        <a onclick="$('#coupon').toggle(500);$('#voucher').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_one_page_coupon; ?></a>
-      <?php } ?>
-      <?php if ($this->config->get('config_checkout_voucher')) { ?>
-        <a onclick="$('#voucher').toggle(500);$('#coupon').hide(500);$('#reward').hide(500);" class="button"><?php echo $text_one_page_voucher; ?></a>
-      <?php } ?>
-      <?php if ($show_point && $reward_point) { ?>
-        <a onclick="$('#reward').toggle(500);$('#coupon').hide(500);$('#voucher').hide(500);" class="button"><?php echo $text_one_page_reward; ?></a>
-      <?php } ?>
-      <div id="coupon" class="content" style="margin-top:10px; margin-bottom:20px; display:none;">
-        <img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" onclick="dismiss1('coupon');" class="close" />
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
-          <?php echo $entry_coupon; ?>&nbsp;
-          <input type="text" name="coupon" value="<?php echo $coupon; ?>" />
-          <input type="hidden" name="next" value="coupon" />
-          &nbsp;
-          <input type="submit" value="<?php echo $button_coupon; ?>" class="button" />
-        </form>
-      </div>
-      <div id="voucher" class="content" style="margin-top:10px; margin-bottom:20px; display:none;">
-        <img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" onclick="dismiss2('voucher');" class="close" />
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
-          <?php echo $entry_voucher; ?>&nbsp;
-          <input type="text" name="voucher" value="<?php echo $voucher; ?>" />
-          <input type="hidden" name="next" value="voucher" />
-          &nbsp;
-          <input type="submit" value="<?php echo $button_voucher; ?>" class="button" />
-        </form>
-      </div>
-      <div id="reward" class="content" style="margin-top:10px; margin-bottom:20px; display:none;">
-        <img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" onclick="dismiss3('reward');" class="close" />
-        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">
-          <?php echo $entry_reward; ?>&nbsp;
-          <input type="text" name="reward" value="<?php echo $reward; ?>" />
-          <input type="hidden" name="next" value="reward" />
-          &nbsp;
-          <input type="submit" value="<?php echo $button_reward; ?>" class="button" />
-        </form>
-      </div>
-    </div>
-  <?php } ?>
   <?php if (!empty($attention)) { ?>
     <div class="attention"><?php echo $attention; ?><img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>
-  <?php } ?>
-  <?php if (!empty($success)) { ?>
-    <div class="success"><?php echo $success; ?><img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>
   <?php } ?>
   <?php if (!empty($error_warning)) { ?>
     <div class="warning"><?php echo $error_warning; ?><img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>
@@ -121,7 +66,7 @@
           <?php if ($one_page_gender) { ?>
             <tr>
               <td colspan="2">
-                <?php if ($gender == 0) { ?> <!-- Loose check required here -->
+                <?php if ($gender == 0) { ?>
                   <input type="radio" name="gender" value="0" checked="checked" /><?php echo $text_male; ?>&nbsp;&nbsp;
                   <input type="radio" name="gender" value="1" /><?php echo $text_female; ?>
                 <?php } else { ?>
@@ -378,9 +323,6 @@
 
         <!-- ================================================================
              Payment gateway widgets
-             One div per gateway: id="widget-{code}" class="payment-gateway-widget"
-             gateway_loader.js handles show/hide and delegates to each module.
-             To add a new gateway widget: copy the pattern below.
              ================================================================ -->
 
         <!-- Stripe — mounted by stripe_payments.js -->
@@ -392,17 +334,17 @@
           <div id="stripe-card-errors" role="alert" style="color:#c0392b; font-size:13px; margin-top:6px; min-height:16px;"></div>
         </div>
 
-		<!-- PayPal Express — mounted by pp_express.js -->
-		<div id="widget-pp_express" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
-		  <div id="payment-widget-pp_express"></div>
-		  <div id="payment-widget-paylater-pp_express"></div>
-		</div>
+        <!-- PayPal Express — mounted by pp_express.js -->
+        <div id="widget-pp_express" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <div id="payment-widget-pp_express"></div>
+          <div id="payment-widget-paylater-pp_express"></div>
+        </div>
 
-		<!-- Klarna Payments — mounted by klarna.js -->
-		<div id="widget-klarna" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
-		  <div id="klarna-payments-container"></div>
-		  <div id="klarna-payments-errors" role="alert" style="color:#c0392b; font-size:13px; margin-top:6px; min-height:16px;"></div>
-		</div>
+        <!-- Klarna Payments — mounted by klarna.js -->
+        <div id="widget-klarna" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <div id="klarna-payments-container"></div>
+          <div id="klarna-payments-errors" role="alert" style="color:#c0392b; font-size:13px; margin-top:6px; min-height:16px;"></div>
+        </div>
 
         <!-- PayPal Standard — mounted by pp_standard.js -->
         <div id="widget-pp_standard" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
@@ -441,11 +383,7 @@
           <p id="cheque-payment-note" style="font-size:12px; color:#888; margin:0;"></p>
         </div>
 
-        <!-- Add future gateway widget divs here:
-             <div id="widget-{code}" class="payment-gateway-widget" style="display:none; ...">
-               ...
-             </div>
-        -->
+        <!-- Add future gateway widget divs here -->
 
         <div class="division"></div>
         <div id="checkout-one-cart"></div>
@@ -470,7 +408,6 @@
       </div>
     </div>
   </form>
-
   <div style="clear:both;"></div>
   <?php echo $content_low; ?>
 </div>
@@ -478,30 +415,25 @@
 
 <!-- ============================================================
      Payment gateway data blob + script loader
-     All gateway JS is driven from here — no inline gateway code.
      ============================================================ -->
 
-<!-- Gateway payment data — read by gateway_loader.js and individual modules -->
 <script type="text/javascript">
   window.NIVOCART_PAYMENT_DATA = <?php echo $payment_widget_data; ?>;
   window.NIVOCART_TEMPLATE = '<?php echo $template; ?>';
 </script>
 
-<!-- External gateway scripts (only loaded when that gateway is active) -->
 <?php foreach ($payment_gateway_scripts as $ext_script) { ?>
   <script type="text/javascript" src="<?php echo $ext_script; ?>"></script>
 <?php } ?>
 
-<!-- Gateway loader — coordinates widget show/hide + button submission -->
 <script type="text/javascript" src="catalog/view/javascript/payment/gateway_loader.js"></script>
 
-<!-- Individual gateway modules (only loaded when that gateway is active) -->
 <?php foreach ($local_gateway_scripts as $gw_script) { ?>
   <script type="text/javascript" src="<?php echo $gw_script; ?>"></script>
 <?php } ?>
 
 <!-- ============================================================
-     Non-payment JS — unchanged
+     Non-payment JS
      ============================================================ -->
 
 <script type="text/javascript"><!--
@@ -613,18 +545,15 @@ $('body').on('change', 'input[name=\'shipping_method\']:checked', function() {
     type: 'post',
     data: 'shipping_method=' + $('input[name=\'shipping_method\']:checked').attr('value'),
     dataType: 'json',
-	success: function(json) {
-		if (json['code']) {
-			$('#checkout-one-cart').load('index.php?route=checkout/checkout_cart');
-			// Re-sync any active gateway session if the total has changed.
-			// Only Klarna uses this currently — other gateways ignore it.
-			var active = $('input[name="payment_method"]:checked').val();
-
-			if (active && window.GatewayModules[active] && typeof window.GatewayModules[active].sessionUpdate === 'function') {
-				window.GatewayModules[active].sessionUpdate();
-			}
-		}
-	},
+    success: function(json) {
+      if (json['code']) {
+        $('#checkout-one-cart').load('index.php?route=checkout/checkout_cart');
+        var active = $('input[name="payment_method"]:checked').val();
+        if (active && window.GatewayModules[active] && typeof window.GatewayModules[active].sessionUpdate === 'function') {
+          window.GatewayModules[active].sessionUpdate();
+        }
+      }
+    },
     error: function(xhr, ajaxOptions, thrownError) { alert(thrownError + '\r\n' + xhr.statusText + '\r\n' + xhr.responseText); }
   });
 });
@@ -666,10 +595,6 @@ $(document).ready(function() {
     height: 480
   });
 });
-
-function dismiss1(coupon) { document.getElementById('coupon').style.display = 'none'; }
-function dismiss2(voucher) { document.getElementById('voucher').style.display = 'none'; }
-function dismiss3(reward) { document.getElementById('reward').style.display = 'none'; }
 //--></script>
 
 <?php echo $footer; ?>

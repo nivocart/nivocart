@@ -11,6 +11,7 @@ class ControllerCheckoutCheckout extends Controller {
 		// Secure redirect
 		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
 			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+			return;
 		}
 
 		// Customer Login redirect
@@ -19,14 +20,17 @@ class ControllerCheckoutCheckout extends Controller {
 		if (!$this->customer->isLogged()) {
 			if (!$this->config->get('config_guest_checkout')) {
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
+				return;
 			}
 		} elseif (!$this->customer->isSecure()) {
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
+			return;
 		}
 
 		// Validate cart has products and has stock
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 			$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
+			return;
 		}
 
 		// Validate minimum quantity requirements
@@ -43,12 +47,14 @@ class ControllerCheckoutCheckout extends Controller {
 
 			if ($product['minimum'] > $product_total) {
 				$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
+				return;
 			}
 
 			// Validate minimum age — requires a logged-in account
 			if ($this->config->get('config_customer_dob') && ($product['age_minimum'] > 0)) {
 				if (!$this->customer->isLogged() || !$this->customer->isSecure()) {
 					$this->redirect($this->url->link('account/login', '', 'SSL'));
+					return;
 				}
 			}
 		}
@@ -66,68 +72,11 @@ class ControllerCheckoutCheckout extends Controller {
 		}
 
 		$this->language->load('checkout/checkout');
-		$this->language->load('total/gift_wrapping');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.min.css');
 		$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
-
-		// Coupon session
-		if (isset($this->request->post['coupon']) && $this->validateCoupon()) {
-			unset($this->session->data['coupon']);
-
-			$this->session->data['check_shipping_address'] = isset($this->session->data['check_shipping_address']) ? 1 : 0;
-			$this->session->data['coupon'] = $this->request->post['coupon'];
-			$this->session->data['success'] = $this->language->get('text_coupon');
-
-			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
-		}
-
-		// Voucher session
-		if (!isset($this->session->data['vouchers'])) {
-			$this->session->data['vouchers'] = [];
-		}
-
-		if (isset($this->request->post['voucher']) && $this->validateVoucher()) {
-			unset($this->session->data['voucher']);
-
-			$this->session->data['check_shipping_address'] = isset($this->session->data['check_shipping_address']) ? 1 : 0;
-			$this->session->data['voucher'] = $this->request->post['voucher'];
-			$this->session->data['success'] = $this->language->get('text_voucher');
-
-			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
-		}
-
-		// Reward session
-		if (isset($this->request->post['reward']) && $this->validateReward()) {
-			unset($this->session->data['reward']);
-
-			$this->session->data['check_shipping_address'] = isset($this->session->data['check_shipping_address']) ? 1 : 0;
-			$this->session->data['reward'] = abs($this->request->post['reward']);
-			$this->session->data['success'] = $this->language->get('text_reward');
-
-			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
-		}
-
-		// Add Wrapping
-		if (isset($this->request->post['add_wrapping'])) {
-			$this->session->data['check_shipping_address'] = isset($this->session->data['check_shipping_address']) ? 1 : 0;
-			$this->session->data['wrapping'] = $this->request->post['add_wrapping'];
-			$this->session->data['success'] = $this->language->get('text_add_wrapping');
-
-			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
-		}
-
-		// Remove Wrapping
-		if (isset($this->request->post['remove_wrapping'])) {
-			unset($this->session->data['wrapping']);
-
-			$this->session->data['check_shipping_address'] = isset($this->session->data['check_shipping_address']) ? 1 : 0;
-			$this->session->data['success'] = $this->language->get('text_remove_wrapping');
-
-			$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
-		}
 
 		// Breadcrumbs
 		$this->data['breadcrumbs'] = [];
@@ -150,119 +99,11 @@ class ControllerCheckoutCheckout extends Controller {
 			'separator' => $this->language->get('text_separator')
 		];
 
-		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} elseif (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {
-			$this->data['error_warning'] = $this->language->get('error_stock');
-		} else {
-			$this->data['error_warning'] = '';
-		}
-
-		if (isset($this->session->data['success'])) {
-			$this->data['success'] = $this->session->data['success'];
-			unset($this->session->data['success']);
-		} else {
-			$this->data['success'] = '';
-		}
-
-		$this->data['action'] = $this->url->link('checkout/checkout', '', 'SSL');
-
-		// Coupon
-		$this->data['coupon_status'] = $this->config->get('coupon_status');
-
-		if (isset($this->request->post['coupon'])) {
-			$this->data['coupon'] = $this->request->post['coupon'];
-		} elseif (isset($this->session->data['coupon'])) {
-			$this->data['coupon'] = $this->session->data['coupon'];
-		} else {
-			$this->data['coupon'] = '';
-		}
-
-		// Gift Voucher
-		$this->data['vouchers'] = [];
-
-		if (!empty($this->session->data['vouchers'])) {
-			foreach ($this->session->data['vouchers'] as $key => $voucher) {
-				$this->data['vouchers'][] = [
-					'key'         => $key,
-					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'], $this->config->get('config_currency')),
-					'remove'      => $this->url->link('checkout/checkout', 'remove=' . $key, 'SSL')
-				];
-			}
-		}
-
-		$this->data['voucher_status'] = $this->config->get('voucher_status');
-
-		if (isset($this->request->post['voucher'])) {
-			$this->data['voucher'] = $this->request->post['voucher'];
-		} elseif (isset($this->session->data['voucher'])) {
-			$this->data['voucher'] = $this->session->data['voucher'];
-		} else {
-			$this->data['voucher'] = '';
-		}
-
-		// Reward points — guests have no points; skip calculation entirely
-		if ($this->customer->isLogged()) {
-			$points_rate = $this->config->get('config_reward_rate') ? $this->config->get('config_reward_rate') : 1;
-			$points = $this->customer->getRewardPoints();
-
-			$points_total = 0;
-
-			foreach ($this->cart->getProducts() as $product) {
-				if ($product['points']) {
-					$points_total += $product['points'];
-				}
-			}
-
-			$max_points = min($points / $points_rate, $points_total);
-			$sub_total = $this->cart->getSubTotal();
-			$reward_points = ($points && $max_points > $sub_total) ? $sub_total : $max_points;
-
-			$available_points = ($points && isset($this->session->data['reward'])) ? ($reward_points * $points_rate) - $this->session->data['reward'] : ($reward_points * $points_rate);
-
-			if ($points && $points_total && $this->config->get('reward_status')) {
-				$this->data['reward_point'] = true;
-			} else {
-				$this->data['reward_point'] = false;
-			}
-
-			if ($this->config->get('config_checkout_point') === 2) {
-				$this->data['show_point'] = false;
-
-				if ($points && $this->config->get('reward_status')) {
-					$this->session->data['reward'] = $reward_points;
-				}
-			} elseif ($this->config->get('config_checkout_point') === 1) {
-				$this->data['show_point'] = true;
-			} else {
-				$this->data['show_point'] = false;
-			}
-		} else {
-			// Guest — no reward points available
-			$available_points = 0;
-
-			$this->data['reward_point'] = false;
-			$this->data['show_point'] = false;
-		}
-
-		if (isset($this->request->post['reward'])) {
-			$this->data['reward'] = $this->request->post['reward'];
-		} elseif (isset($this->session->data['reward'])) {
-			$this->data['reward'] = $this->session->data['reward'];
-		} else {
-			$this->data['reward'] = '';
-		}
-
 		// Language strings
 		$this->data['heading_title'] = $this->language->get('heading_title');
-
 		$this->data['text_cart'] = $this->language->get('text_cart');
 		$this->data['text_checkout_payment_address'] = $this->language->get('text_checkout_payment_address');
 		$this->data['text_checkout_shipping_address'] = $this->language->get('text_checkout_shipping_address');
-		$this->data['text_one_page_coupon'] = $this->language->get('text_one_page_coupon');
-		$this->data['text_one_page_voucher'] = $this->language->get('text_one_page_voucher');
-		$this->data['text_one_page_reward'] = sprintf($this->language->get('text_one_page_reward'), $available_points);
 		$this->data['text_guest_login'] = sprintf($this->language->get('text_guest_login'), $this->url->link('account/login', '', 'SSL'));
 		$this->data['text_select'] = $this->language->get('text_select');
 		$this->data['text_none'] = $this->language->get('text_none');
@@ -272,9 +113,6 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->data['text_payment_method'] = $this->language->get('text_payment_method');
 		$this->data['text_comments'] = $this->language->get('text_comments');
 
-		$this->data['entry_coupon'] = $this->language->get('entry_coupon');
-		$this->data['entry_voucher'] = $this->language->get('entry_voucher');
-		$this->data['entry_reward'] = sprintf($this->language->get('entry_reward'), $available_points);
 		$this->data['entry_firstname'] = $this->language->get('entry_firstname');
 		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
 		$this->data['entry_email'] = $this->language->get('entry_email');
@@ -293,11 +131,6 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->data['entry_zone'] = $this->language->get('entry_zone');
 		$this->data['entry_shipping'] = $this->language->get('entry_shipping');
 
-		$this->data['button_wrapping_add'] = $this->language->get('button_wrapping_add');
-		$this->data['button_wrapping_remove'] = $this->language->get('button_wrapping_remove');
-		$this->data['button_coupon'] = $this->language->get('button_coupon');
-		$this->data['button_voucher'] = $this->language->get('button_voucher');
-		$this->data['button_reward'] = $this->language->get('button_reward');
 		$this->data['button_continue'] = $this->language->get('button_continue');
 
 		$this->data['logged'] = $this->customer->isLogged();
@@ -306,6 +139,14 @@ class ControllerCheckoutCheckout extends Controller {
 
 		$this->data['one_page_cart'] = $this->url->link('checkout/cart', '', 'SSL');
 		$this->data['login_url'] = $this->url->link('account/login', '', 'SSL');
+		$this->data['action'] = $this->url->link('checkout/checkout', '', 'SSL');
+
+		// Error warning — stock only (coupon/voucher/reward no longer handled here)
+		if (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {
+			$this->data['error_warning'] = $this->language->get('error_stock');
+		} else {
+			$this->data['error_warning'] = '';
+		}
 
 		$this->load->model('checkout/order');
 		$this->load->model('account/address');
@@ -367,6 +208,7 @@ class ControllerCheckoutCheckout extends Controller {
 
 						if ($customer_status && !$customer_status['approved']) {
 							$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
+							return;
 						} else {
 							$this->customer->login($customer_data['email'], $customer_data['password']);
 						}
@@ -426,17 +268,17 @@ class ControllerCheckoutCheckout extends Controller {
 				if (isset($customer_info['check_shipping_address'])) {
 					// Same as payment address
 					$shipping = [
-						'firstname'   => $customer_info['firstname'],
-						'lastname'    => $customer_info['lastname'],
-						'company'     => $customer_info['company'],
-						'address_1'   => $customer_info['address_1'],
-						'address_2'   => $customer_info['address_2'],
-						'city'        => $customer_info['city'],
-						'postcode'    => $customer_info['postcode'],
-						'zone'        => $zone_name,
-						'zone_id'     => $customer_info['zone_id'],
-						'country'     => $country_name,
-						'country_id'  => $customer_info['country_id']
+						'firstname'  => $customer_info['firstname'],
+						'lastname'   => $customer_info['lastname'],
+						'company'    => $customer_info['company'],
+						'address_1'  => $customer_info['address_1'],
+						'address_2'  => $customer_info['address_2'],
+						'city'       => $customer_info['city'],
+						'postcode'   => $customer_info['postcode'],
+						'zone'       => $zone_name,
+						'zone_id'    => $customer_info['zone_id'],
+						'country'    => $country_name,
+						'country_id' => $customer_info['country_id']
 					];
 
 					$this->session->data['check_shipping_address'] = 1;
@@ -555,9 +397,7 @@ class ControllerCheckoutCheckout extends Controller {
 		}
 
 		// Shipping options
-		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
-			$this->data['check_shipping_address'] = isset($this->request->post['check_shipping_address']) ? 1 : 0;
-		} elseif (isset($this->session->data['check_shipping_address'])) {
+		if (isset($this->session->data['check_shipping_address'])) {
 			$this->data['check_shipping_address'] = $this->session->data['check_shipping_address'];
 		} else {
 			$this->data['check_shipping_address'] = 1;
@@ -864,11 +704,6 @@ class ControllerCheckoutCheckout extends Controller {
 
 		$this->data['payment_method_code'] = isset($this->session->data['payment_method']['code']) ? $this->session->data['payment_method']['code'] : '';
 
-		// Gift Wrapping
-		$this->data['wrapping_status'] = $this->config->get('gift_wrapping_status') ? $this->config->get('gift_wrapping_status') : 0;
-
-		$this->data['wrapping'] = isset($this->request->post['wrapping']) ? $this->request->post['wrapping'] : (isset($this->session->data['wrapping']) ? $this->session->data['wrapping'] : '');
-
 		if (isset($this->request->get['quickconfirm'])) {
 			$this->data['quickconfirm'] = $this->request->get['quickconfirm'];
 		}
@@ -877,44 +712,29 @@ class ControllerCheckoutCheckout extends Controller {
 		// Payment widget data — generic, gateway-agnostic
 		// ----------------------------------------------------------------
 
-		// Resolve currency (shared by all gateways)
 		$this->load->model('localisation/currency');
 
 		$currency_info = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
 		$currency_code = $currency_info ? $currency_info['code'] : $this->config->get('config_currency');
 
-		// Load the payment widget model and get per-gateway data blobs
 		$this->load->model('checkout/payment_widget');
 
 		$payment_widget_data = $this->model_checkout_payment_widget->getWidgetData($method_data, $total, $currency_code);
 
-		// Pass as JSON blob for gateway_loader.js + individual gateway JS files
 		$this->data['payment_widget_data'] = json_encode($payment_widget_data);
-
-		// Pass template name so gateway_loader.js can build image/loading paths
 		$this->data['template'] = $this->config->get('config_template');
 
 		// ----------------------------------------------------------------
-		// Gateway-specific assets — loaded only when that gateway is active
+		// Gateway-specific assets
 		// ----------------------------------------------------------------
-		// Each gateway that needs external JS adds it here.
-		// gateway_loader.js and the individual gateway JS files are added
-		// unconditionally below in the template via $payment_gateway_scripts.
-
 		$payment_gateway_scripts = [];
 
 		if (isset($method_data['stripe_payments'])) {
 			$payment_gateway_scripts[] = 'https://js.stripe.com/v3/';
 		}
 
-		// Add future external scripts here:
-		// if (isset($method_data['klarna'])) {
-		//     $payment_gateway_scripts[] = 'https://x.klarnacdn.net/kp/lib/v1/api.js';
-		// }
-
 		$this->data['payment_gateway_scripts'] = $payment_gateway_scripts;
 
-		// Which local gateway JS files to load (one per active gateway that has a widget)
 		$local_gateway_scripts = [];
 
 		foreach (array_keys($payment_widget_data) as $gw_code) {
@@ -941,17 +761,13 @@ class ControllerCheckoutCheckout extends Controller {
 	}
 
 	public function validate() {
-		if (isset($this->request->post['coupon']) || isset($this->request->post['voucher']) || isset($this->request->post['reward']) || isset($this->request->post['wrapping']) || isset($this->request->post['refresh'])) {
-			return;
-		}
-
 		$this->language->load('checkout/checkout');
 
-		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
+		if ((mb_strlen($this->request->post['firstname'] ?? '', 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'] ?? '', 'UTF-8') > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
+		if ((mb_strlen($this->request->post['lastname'] ?? '', 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'] ?? '', 'UTF-8') > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
@@ -961,9 +777,6 @@ class ControllerCheckoutCheckout extends Controller {
 			}
 
 			if (!$this->customer->isLogged()) {
-				// Only block on existing email when guest checkout is OFF (auto-register mode).
-				// When guest checkout is ON, any email is permitted — including one already
-				// registered — because no account is being created.
 				if (!$this->config->get('config_guest_checkout')) {
 					$this->load->model('account/customer');
 
@@ -981,7 +794,7 @@ class ControllerCheckoutCheckout extends Controller {
 		}
 
 		if ($this->config->get('config_checkout_phone')) {
-			if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
+			if ((mb_strlen($this->request->post['telephone'] ?? '', 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'] ?? '', 'UTF-8') > 32)) {
 				$this->error['telephone'] = $this->language->get('error_telephone');
 			}
 		}
@@ -1016,20 +829,20 @@ class ControllerCheckoutCheckout extends Controller {
 			}
 		}
 
-		if ((mb_strlen($this->request->post['address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['address_1'], 'UTF-8') > 128)) {
+		if ((mb_strlen($this->request->post['address_1'] ?? '', 'UTF-8') < 3) || (mb_strlen($this->request->post['address_1'] ?? '', 'UTF-8') > 128)) {
 			$this->error['address_1'] = $this->language->get('error_address_1');
 		}
 
-		if ((mb_strlen($this->request->post['city'], 'UTF-8') < 2) || (mb_strlen($this->request->post['city'], 'UTF-8') > 128)) {
+		if ((mb_strlen($this->request->post['city'] ?? '', 'UTF-8') < 2) || (mb_strlen($this->request->post['city'] ?? '', 'UTF-8') > 128)) {
 			$this->error['city'] = $this->language->get('error_city');
 		}
 
 		$this->load->model('localisation/country');
 
-		$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
+		$country_info = !empty($this->request->post['country_id']) ? $this->model_localisation_country->getCountry((int)$this->request->post['country_id']) : null;
 
 		if ($country_info) {
-			if ($country_info['postcode_required'] && (mb_strlen($this->request->post['postcode'], 'UTF-8') < 2) || (mb_strlen($this->request->post['postcode'], 'UTF-8') > 10)) {
+			if ($country_info['postcode_required'] && (mb_strlen($this->request->post['postcode'] ?? '', 'UTF-8') < 2) || (mb_strlen($this->request->post['postcode'] ?? '', 'UTF-8') > 10)) {
 				$this->error['postcode'] = $this->language->get('error_postcode');
 			}
 
@@ -1051,23 +864,23 @@ class ControllerCheckoutCheckout extends Controller {
 		}
 
 		if (!isset($this->request->post['check_shipping_address'])) {
-			if ((mb_strlen($this->request->post['shipping_firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_firstname'], 'UTF-8') > 32)) {
+			if ((mb_strlen($this->request->post['shipping_firstname'] ?? '', 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_firstname'] ?? '', 'UTF-8') > 32)) {
 				$this->error['shipping_firstname'] = $this->language->get('error_firstname');
 			}
 
-			if ((mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_lastname'], 'UTF-8') > 32)) {
+			if ((mb_strlen($this->request->post['shipping_lastname'] ?? '', 'UTF-8') < 1) || (mb_strlen($this->request->post['shipping_lastname'] ?? '', 'UTF-8') > 32)) {
 				$this->error['shipping_lastname'] = $this->language->get('error_lastname');
 			}
 
-			if ((mb_strlen($this->request->post['shipping_address_1'], 'UTF-8') < 3) || (mb_strlen($this->request->post['shipping_address_1'], 'UTF-8') > 128)) {
+			if ((mb_strlen($this->request->post['shipping_address_1'] ?? '', 'UTF-8') < 3) || (mb_strlen($this->request->post['shipping_address_1'] ?? '', 'UTF-8') > 128)) {
 				$this->error['shipping_address_1'] = $this->language->get('error_address_1');
 			}
 
-			if ((mb_strlen($this->request->post['shipping_city'], 'UTF-8') < 2) || (mb_strlen($this->request->post['shipping_city'], 'UTF-8') > 128)) {
+			if ((mb_strlen($this->request->post['shipping_city'] ?? '', 'UTF-8') < 2) || (mb_strlen($this->request->post['shipping_city'] ?? '', 'UTF-8') > 128)) {
 				$this->error['shipping_city'] = $this->language->get('error_city');
 			}
 
-			if ($this->request->post['shipping_country_id'] === '') {
+			if (empty($this->request->post['shipping_country_id'])) {
 				$this->error['shipping_country'] = $this->language->get('error_country');
 			}
 
@@ -1151,64 +964,5 @@ class ControllerCheckoutCheckout extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
-	}
-
-	protected function validateCoupon() {
-		$this->load->model('checkout/coupon');
-
-		if (!$this->model_checkout_coupon->getCoupon($this->request->post['coupon'])) {
-			$this->error['warning'] = $this->language->get('error_coupon');
-		}
-
-		return empty($this->error);
-	}
-
-	protected function validateVoucher() {
-		$this->load->model('checkout/voucher');
-
-		if (!$this->model_checkout_voucher->getVoucher($this->request->post['voucher'])) {
-			$this->error['warning'] = $this->language->get('error_voucher');
-		}
-
-		return empty($this->error);
-	}
-
-	protected function validateReward() {
-		// Guests cannot use reward points — this method should not be reached
-		// by guests since the reward UI is hidden, but guard defensively.
-		if (!$this->customer->isLogged()) {
-			$this->error['warning'] = $this->language->get('error_reward');
-			return false;
-		}
-
-		$points_rate = $this->config->get('config_reward_rate');
-
-		$points = $this->customer->getRewardPoints();
-
-		$points_total = 0;
-
-		foreach ($this->cart->getProducts() as $product) {
-			if ($product['points']) {
-				$points_total += $product['points'];
-			}
-		}
-
-		$max_points = min($points / $points_rate, $points_total);
-		$sub_total = $this->cart->getSubTotal();
-		$reward_points = ($points && $max_points > $sub_total) ? $sub_total : $max_points;
-
-		if (empty($this->request->post['reward'])) {
-			$this->error['warning'] = $this->language->get('error_reward');
-		}
-
-		if ($this->request->post['reward'] > $points) {
-			$this->error['warning'] = sprintf($this->language->get('error_points'), $this->request->post['reward']);
-		}
-
-		if ($this->request->post['reward'] > ($reward_points * $points_rate)) {
-			$this->error['warning'] = sprintf($this->language->get('error_maximum'), $reward_points * $points_rate);
-		}
-
-		return empty($this->error);
 	}
 }
