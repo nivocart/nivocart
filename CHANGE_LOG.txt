@@ -10,8 +10,9 @@ Release: TBA
 
 - All 3 Main Stylesheets have been updated, 2 in Admin and 1 in Catalog.
 - Added new folders, placeholders for future API extensions.
+- Added Apple Touch Icon entry in Admin Settings and Catalog Header.
+- Fix bug with Search Engines special characters in Settings pages.
 - Removed error prone options from the Checkout page.
-- Apple Touch Icon implementation in Admin Settings and Catalog Header.
 
 
 NivoCart v2.2.0

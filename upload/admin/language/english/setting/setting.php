@@ -365,10 +365,10 @@ $_['help_account_mail']             = 'Send a email to the store owner when a ne
 $_['help_alert_mail']               = 'Send a email to the store owner when a new order is created.';
 $_['help_alert_emails']             = 'Any additional emails you want to receive the alert email, in addition to the main store email. (comma separated)';
 $_['help_sharethis']                = 'Login to your <a onclick="window.open(\'http://www.sharethis.com/\');" title=""><u>ShareThis</u></a> account and enter your Property ID into this field.';
-$_['help_meta_google']              = 'Enter the website unique "meta name" <b>Key</b> here.<br />It will be added to the Catalog Header to identify the site with <b>Google</b>.';
-$_['help_meta_bing']                = 'Enter the website unique "meta name" <b>Key</b> here.<br />It will be added to the Catalog Header to identify the site with <b>Bing</b>.';
-$_['help_meta_yandex']              = 'Enter the website unique "meta name" <b>Key</b> here.<br />It will be added to the Catalog Header to identify the site with <b>Yandex</b>.';
-$_['help_meta_baidu']               = 'Enter the website unique "meta name" <b>Key</b> here.<br />It will be added to the Catalog Header to identify the site with <b>Baidu</b>.';
+$_['help_meta_google']              = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Google</b> Search Console here.<br />It will be added to the Catalog Header to verify site ownership.';
+$_['help_meta_bing']                = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Bing</b> Webmaster Tools here.<br />It will be added to the Catalog Header to verify site ownership.';
+$_['help_meta_yandex']              = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Yandex</b> Webmaster here.<br />It will be added to the Catalog Header to verify site ownership.';
+$_['help_meta_baidu']               = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Baidu</b> Webmaster Tools here.<br />It will be added to the Catalog Header to verify site ownership.';
 $_['help_google_analytics']         = 'Login to your <a onclick="window.open(\'http://www.google.com/analytics/\');"><u>Google Analytics</u></a> account and after creating your web site profile copy and paste the analytics code into this field.';
 $_['help_matomo_analytics']         = 'Login to your <a onclick="window.open(\'https://matomo.org/\');"><u>Matomo Analytics</u></a> server and copy and paste the analytics code into this field.';
 $_['help_maintenance']              = 'Prevents customers from browsing your store. They will instead see a maintenance message. If logged in as admin, you will see the store as normal.';

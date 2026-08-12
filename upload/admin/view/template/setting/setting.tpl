@@ -2019,19 +2019,19 @@
         <table class="form">
           <tr>
             <td><?php echo $entry_meta_google; ?><span class="help"><?php echo $help_meta_google; ?></span></td>
-            <td><input type="text" name="config_meta_google" value="<?php echo $config_meta_google; ?>" size="50" /></td>
+            <td><input type="text" name="config_meta_google" value="<?php echo htmlspecialchars($config_meta_google ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
           </tr>
           <tr>
             <td><?php echo $entry_meta_bing; ?><span class="help"><?php echo $help_meta_bing; ?></span></td>
-            <td><input type="text" name="config_meta_bing" value="<?php echo $config_meta_bing; ?>" size="50" /></td>
+            <td><input type="text" name="config_meta_bing" value="<?php echo htmlspecialchars($config_meta_bing ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
           </tr>
           <tr>
             <td><?php echo $entry_meta_yandex; ?><span class="help"><?php echo $help_meta_yandex; ?></span></td>
-            <td><input type="text" name="config_meta_yandex" value="<?php echo $config_meta_yandex; ?>" size="50" /></td>
+            <td><input type="text" name="config_meta_yandex" value="<?php echo htmlspecialchars($config_meta_yandex ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
           </tr>
           <tr>
             <td><?php echo $entry_meta_baidu; ?><span class="help"><?php echo $help_meta_baidu; ?></span></td>
-            <td><input type="text" name="config_meta_baidu" value="<?php echo $config_meta_baidu; ?>" size="50" /></td>
+            <td><input type="text" name="config_meta_baidu" value="<?php echo htmlspecialchars($config_meta_baidu ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
           </tr>
         </table>
         <h2><?php echo $text_analytic; ?></h2>
