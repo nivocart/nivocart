@@ -281,14 +281,6 @@ class ControllerCheckoutCart extends Controller {
 			// Get Products
 			$this->load->model('tool/image');
 
-			$frequencies = [
-				'day'        => $this->language->get('text_day'),
-				'week'       => $this->language->get('text_week'),
-				'semi_month' => $this->language->get('text_semi_month'),
-				'month'      => $this->language->get('text_month'),
-				'year'       => $this->language->get('text_year')
-			];
-
 			$this->data['products'] = [];
 
 			$products = $this->cart->getProducts();
