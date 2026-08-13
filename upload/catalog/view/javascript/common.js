@@ -96,20 +96,21 @@ function getURLVar(key) {
 }
 
 // Banner Tracking
+// Uses sendBeacon so the request survives page navigation (the click follows the href
+// immediately, which would cancel a normal XHR before it completes).
 function addClick(banner_image_id) {
-	$.ajax({
-		url: 'index.php?route=common/footer/add',
-		type: 'post',
-		data: 'banner_image_id=' + banner_image_id,
-		dataType: 'json',
-		success: function(json) {
-			$('.success, .warning, .attention, .tooltip').remove();
-			if (json['success']) {
-				$('#notification').html('<div class="success" style="display:none;">' + json['success'] + '</div>');
-			}
-		},
-		error: function(xhr, ajaxOptions, thrownError) { }
-	});
+	if (navigator.sendBeacon) {
+		navigator.sendBeacon('index.php?route=common/footer/add', new URLSearchParams({banner_image_id: banner_image_id}));
+	} else {
+		// Fallback for very old browsers that lack sendBeacon
+		$.ajax({
+			url: 'index.php?route=common/footer/add',
+			type: 'post',
+			data: 'banner_image_id=' + banner_image_id,
+			dataType: 'json',
+			error: function(xhr, ajaxOptions, thrownError) { }
+		});
+	}
 }
 
 // Add to Cart / Wishlist / Compare

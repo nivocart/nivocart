@@ -12,6 +12,7 @@ Release: TBA
 - Added new folders, placeholders for future API extensions.
 - Added Apple Touch Icon entry in Admin Settings and Catalog Header.
 - Fix bug with Search Engines special characters in Settings pages.
+- Fix bug in "common.js" preventing banner images from being recorded.
 - Removed error prone options from the Checkout page.
 
 
