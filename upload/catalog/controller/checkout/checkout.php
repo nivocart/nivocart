@@ -494,6 +494,7 @@ class ControllerCheckoutCheckout extends Controller {
 
 		// Comment
 		$this->data['comment'] = isset($this->request->post['comment']) ? $this->request->post['comment'] : '';
+		$this->data['checkout_comments'] = $this->config->get('config_checkout_comments');
 
 		// Customer groups
 		$this->load->model('account/customer_group');

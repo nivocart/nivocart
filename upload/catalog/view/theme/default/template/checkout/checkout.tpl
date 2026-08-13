@@ -387,10 +387,12 @@
 
         <div class="division"></div>
         <div id="checkout-one-cart"></div>
+        <?php if ($checkout_comments) { ?>
         <div style="margin-bottom:10px;">
           <h2><?php echo $text_comments; ?></h2>
           <textarea name="comment" rows="4" style="width:100%;"><?php echo $comment; ?></textarea>
         </div>
+        <?php } ?>
         <div>
           <?php if ($error_agree) { ?>
             <div class="attention" style="margin:5px 0;"><?php echo $error_agree; ?></div>

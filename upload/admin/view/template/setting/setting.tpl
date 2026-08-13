@@ -491,19 +491,6 @@
             </select></td>
           </tr>
           <tr>
-            <td><?php echo $entry_checkout; ?><span class="help"><?php echo $help_checkout; ?></span></td>
-            <td><select name="config_checkout_id">
-              <option value="0"><?php echo $text_none; ?></option>
-              <?php foreach ($informations as $information) { ?>
-                <?php if ($information['information_id'] === $config_checkout_id) { ?>
-                  <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
-                <?php } ?>
-              <?php } ?>
-            </select></td>
-          </tr>
-          <tr>
             <td><?php echo $entry_abandoned_cart; ?><span class="help"><?php echo $help_abandoned_cart; ?></span></td>
             <td><input type="text" name="config_abandoned_cart" value="<?php echo $config_abandoned_cart; ?>" size="3" /></td>
           </tr>
@@ -626,46 +613,31 @@
             </select></td>
           </tr>
           <tr>
-            <td><?php echo $entry_one_page_coupon; ?></td>
-            <td><?php if ($config_checkout_coupon) { ?>
-              <input type="radio" name="config_checkout_coupon" value="1" id="one-page-coupon-on" class="radio" checked />
-              <label for="one-page-coupon-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_checkout_coupon" value="0" id="one-page-coupon-off" class="radio" />
-              <label for="one-page-coupon-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_checkout_coupon" value="1" id="one-page-coupon-on" class="radio" />
-              <label for="one-page-coupon-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_checkout_coupon" value="0" id="one-page-coupon-off" class="radio" checked />
-              <label for="one-page-coupon-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_one_page_voucher; ?></td>
-            <td><?php if ($config_checkout_voucher) { ?>
-              <input type="radio" name="config_checkout_voucher" value="1" id="one-page-voucher-on" class="radio" checked />
-              <label for="one-page-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_checkout_voucher" value="0" id="one-page-voucher-off" class="radio" />
-              <label for="one-page-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="config_checkout_voucher" value="1" id="one-page-voucher-on" class="radio" />
-              <label for="one-page-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="config_checkout_voucher" value="0" id="one-page-voucher-off" class="radio" checked />
-              <label for="one-page-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_one_page_point; ?></td>
-            <td><select name="config_checkout_point">
-              <?php if (isset($config_checkout_point)) { $selected = "selected"; ?>
-                <option value="0" <?php if ($config_checkout_point === '0') { echo $selected; } ?>><?php echo $text_no; ?></option>
-                <option value="1" <?php if ($config_checkout_point === '1') { echo $selected; } ?>><?php echo $text_yes; ?></option>
-                <option value="2" <?php if ($config_checkout_point === '2') { echo $selected; } ?>><?php echo $text_automatic; ?></option>
-              <?php } else { ?>
-                <option value="0"><?php echo $text_no; ?></option>
-                <option value="1"><?php echo $text_yes; ?></option>
-                <option value="2"><?php echo $text_automatic; ?></option>
+            <td><?php echo $entry_checkout; ?><span class="help"><?php echo $help_checkout; ?></span></td>
+            <td><select name="config_checkout_id">
+              <option value="0"><?php echo $text_none; ?></option>
+              <?php foreach ($informations as $information) { ?>
+                <?php if ($information['information_id'] === $config_checkout_id) { ?>
+                  <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+                <?php } ?>
               <?php } ?>
             </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_checkout_comments; ?><span class="help"><?php echo $help_checkout_comments; ?></span></td>
+            <td><?php if ($config_checkout_comments) { ?>
+              <input type="radio" name="config_checkout_comments" value="1" id="checkout-comments-on" class="radio" checked />
+              <label for="checkout-comments-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_checkout_comments" value="0" id="checkout-comments-off" class="radio" />
+              <label for="checkout-comments-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_checkout_comments" value="1" id="checkout-comments-on" class="radio" />
+              <label for="checkout-comments-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_checkout_comments" value="0" id="checkout-comments-off" class="radio" checked />
+              <label for="checkout-comments-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
           </tr>
         </table>
       </div>
