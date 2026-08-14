@@ -13,6 +13,7 @@ Release: TBA
 - Added Apple Touch Icon entry in Admin Settings and Catalog Header.
 - Added ability to hide customer comments at checkout in Setting pages.
 - Added "Reduced Motion" CSS tag in main frontend Catalog Stylesheets.
+- Fix bug in "Settings" creating duplicates on Save/Apply (regression).
 - Fix bug with Search Engines special characters in Setting pages.
 - Fix bug in "common.js" preventing banner images from being recorded.
 - Removed error prone options from the Checkout pages.
