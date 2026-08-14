@@ -2765,11 +2765,6 @@ table.order-options tr td #payment-method h2 {
 
 /* ============================================================
  * RESPONSIVE
- * NOTE: Tablets-medium (641-801) and Tablets-large (801-961)
- *       were 100% identical — merged into one 641-961 block.
- *       Phone breakpoints consolidated: shared rules live in
- *       the max-width:481px block; max-width:320px has only
- *       its 3 small-screen adjustments.
  * ============================================================ */
 
 /* Laptops - Small (961–1281px) */
@@ -2929,4 +2924,16 @@ table.order-options tr td #payment-method h2 {
   .product-filter .selectors > .sort { right: 10px; }
   .product-filter .selectors > .limit { right: 0; }
   #product-info > span #price-button-add { clear: left; }
+}
+
+/* ============================================================
+ * REDUCED MOTION
+ * ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
