@@ -4,9 +4,9 @@
 ---------------
 
 
-NivoCart v2.X.X
+NivoCart v2.2.1
 ---------------
-Release: TBA
+Release: 14/08/2026
 
 - All 3 Main Stylesheets have been updated, 2 in Admin and 1 in Catalog.
 - Added new folders, placeholders for future API extensions.
@@ -14,7 +14,7 @@ Release: TBA
 - Added ability to hide customer comments at checkout in Setting pages.
 - Added "Reduced Motion" CSS tag in main frontend Catalog Stylesheets.
 - Fix bug in "Settings" creating duplicates on Save/Apply (regression).
-- Fix bug with Search Engines special characters in Setting pages.
+- Fix bug with Search Engines Meta Tags entry fields in Setting pages.
 - Fix bug in "common.js" preventing banner images from being recorded.
 - Removed error prone options from the Checkout pages.
 - Removed some no longer needed Setting entries.

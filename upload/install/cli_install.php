@@ -38,7 +38,7 @@ define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 
-define('NC_VERSION', '2.2.0');
+define('NC_VERSION', '2.2.1');
 
 require_once DIR_SYSTEM . 'startup.php';
 
