@@ -4,15 +4,17 @@
 * ------------------------------------
 */
 
-@font-face {
-  font-family: 'Roboto';
-  src: local('Roboto'), local('Roboto-Regular'),
-    url('../fonts/Roboto-Regular.woff2') format('woff2'),
-    url('../fonts/Roboto-Regular.woff') format('woff');
-  font-style: normal;
-  font-weight: 400;
+/* Note: Roboto @font-face is declared in the main stylesheet.css — Q1 */
+
+/* Q2 — Wrapper class replaces the inline margin on the template div */
+.menu-h-wrapper {
+	margin-bottom: 10px;
 }
 
+/* Q4 — Empty blocks below are intentional extension points for the
+   custom-theme overlay files (menu-dark.css / menu-light.css).
+   They define structure; colour, backgrounds, and icons are filled
+   in by the overlay. */
 #menu-holder, #menu-holder .menu-rtl {}
 .menu-rtl #menu {
 	min-height: 45px;
@@ -35,6 +37,7 @@
 	background-position: left top;
 	z-index: 515;
 }
+/* Extension point */
 .menu-rtl #menu > ul > li:hover {
 }
 .menu-rtl #menu > ul > li > a {
@@ -48,7 +51,15 @@
 	outline: none;
 	cursor: pointer;
 }
+/* Extension point */
 .menu-rtl #menu > ul > li:hover > a, .menu-rtl #menu > ul > li > a:hover {
+}
+/* A1 — Visible keyboard focus ring */
+.menu-rtl #menu a:focus-visible,
+#menu-phone a:focus-visible {
+	outline: 2px solid #36AAD8;
+	outline-offset: 2px;
+	border-radius: 2px;
 }
 .menu-rtl #menu > ul > li > a > span {
 	padding: 0 14px 0 0;
@@ -60,6 +71,9 @@
 	padding: 0;
 	display: block;
 }
+/* H1 — Dropdown visibility is controlled exclusively by jQuery
+   slideDown/slideUp in common.js. The CSS :hover rule has been
+   removed to prevent the open/close animation asymmetry. */
 .menu-rtl #menu > ul > li > div {
 	display: none;
 	position: absolute;
@@ -69,16 +83,14 @@
 	padding: 0 0 10px 0;
 	border: 1px solid transparent;
 }
-.menu-rtl #menu > ul > li:hover > div {
-	display: block;
-}
 .menu-rtl #menu > ul > li > div > ul {
 	display: table-cell;
 	padding: 7px 0 0 2px;
 	border-top: 1px solid #45494B;
 }
+/* B3 — RTL multi-column gap: use padding-right, not padding-left */
 .menu-rtl #menu > ul > li ul + ul {
-	padding-left: 16px;
+	padding-right: 16px;
 }
 .menu-rtl #menu > ul > li ul > li > a {
 	display: block;
@@ -108,11 +120,21 @@
 	padding-left: 0;
 	padding-right: 12px;
 }
+/* Extension point */
 .menu-rtl #menu > ul > li > div > ul > li > a {
 	text-decoration: none;
 }
 #menu-trigger, #menu-phone {
 	display: none;
+}
+/* R3 — Wide screens: explicit rule for 1282px and above */
+@media only screen and (min-width: 1282px) {
+	.menu-rtl #menu {
+		display: block;
+	}
+	#menu-trigger, #menu-phone {
+		display: none;
+	}
 }
 /* Desktops */
 @media only screen and (min-width: 1025px) and (max-width: 1281px) {
@@ -145,17 +167,24 @@
 	.menu-rtl #menu {
 		display: none;
 	}
+	/* A2/J4 — button element reset; SVG icon colour set by overlay */
 	#menu-trigger {
 		display: block;
 		position: relative;
 		height: 45px;
 		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #222;
 	}
+	/* R1 — fluid width; R4 — unified top offset; R5 — overlay sets colour */
 	#menu-phone {
-		width: 600px;
+		width: 100%;
 		position: relative;
-		top: 10px;
-		background: rgba(255,255,255,1);
+		top: 0;
+		background: transparent;
 		box-shadow: none;
 		display: none;
 		z-index: 550;
@@ -167,7 +196,7 @@
 		padding: 0;
 	}
 	.box-phone > ul > li {
-		padding: 10px 1px 10px 9px;
+		padding: 10px 9px 10px 1px;
 	}
 	.box-phone > ul > li + li {
 		border-top: 1px solid #CCC;
@@ -191,7 +220,7 @@
 		font-weight: bold;
 	}
 	.box-phone > ul > li a.active + ul {
-		padding-left: 15px;
+		padding-right: 15px;
 		display: block;
 	}
 	.box-phone > ul > li > ul > li {
@@ -210,8 +239,8 @@
 		font-weight: normal;
 	}
 }
-/* Tablets / Phones */
-@media only screen and (max-width: 641px) {
+/* Phones — R2: max-width adjusted to 640px to close the 1px overlap at 641px */
+@media only screen and (max-width: 640px) {
 	.menu-rtl #menu {
 		display: none;
 	}
@@ -220,12 +249,17 @@
 		position: relative;
 		height: 45px;
 		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #222;
 	}
 	#menu-phone {
-		width: 300px;
+		width: 100%;
 		position: relative;
-		top: 10px;
-		background: rgba(255,255,255,1);
+		top: 0;
+		background: transparent;
 		box-shadow: none;
 		display: none;
 		z-index: 550;
@@ -237,7 +271,7 @@
 		padding: 0;
 	}
 	.box-phone > ul > li {
-		padding: 10px 1px 10px 9px;
+		padding: 10px 9px 10px 1px;
 	}
 	.box-phone > ul > li + li {
 		border-top: 1px solid #CCC;
@@ -261,7 +295,7 @@
 		font-weight: bold;
 	}
 	.box-phone > ul > li a.active + ul {
-		padding-left: 15px;
+		padding-right: 15px;
 		display: block;
 	}
 	.box-phone > ul > li > ul > li {
@@ -278,5 +312,19 @@
 	}
 	.box-phone > ul > li > ul > li a.active span.inactive {
 		font-weight: normal;
+	}
+}
+/* H2 — Touch devices: force mobile navigation regardless of screen width */
+@media (hover: none) and (pointer: coarse) {
+	.menu-rtl #menu { display: none; }
+	#menu-trigger {
+		display: block;
+		height: 45px;
+		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #222;
 	}
 }

@@ -6,20 +6,20 @@
   <div id="menu_vertical_<?php echo $module; ?>" class="box-category">
   <ul>
   <?php foreach ($menu_vertical as $category) { ?>
-  <li id="<?php echo $category['item_id']; ?>">
+  <li id="menu-v-item-<?php echo $category['item_id']; ?>">
   <?php if ($category['href']) { ?>
-  <a href="<?php echo $category['href']; ?>" title="" class="inactive"><?php echo $category['name']; ?></a>
+  <a href="<?php echo $category['href']; ?>" class="inactive"><?php echo $category['name']; ?></a>
   <?php } else { ?>
-  <a title="" class="inactive"><?php echo $category['name']; ?></a>
+  <a class="inactive"><?php echo $category['name']; ?></a>
   <?php } ?>
   <?php if ($category['children']) { ?>
   <ul class="children">
   <?php foreach ($category['children'] as $child) { ?>
   <li>
   <?php if ($child['href']) { ?>
-  <a href="<?php echo $child['href']; ?>" title=""><span class="inactive"><?php echo $child['name']; ?></span></a>
+  <a href="<?php echo $child['href']; ?>"><span class="inactive"><?php echo $child['name']; ?></span></a>
   <?php } else { ?>
-  <a title=""><span class="inactive"><?php echo $child['name']; ?></span></a>
+  <a><span class="inactive"><?php echo $child['name']; ?></span></a>
   <?php } ?>
   </li>
   <?php } ?>
@@ -36,20 +36,20 @@
   <div id="menu_vertical_<?php echo $module; ?>" class="box-category">
   <ul>
   <?php foreach ($menu_vertical as $category) { ?>
-  <li id="<?php echo $category['item_id']; ?>">
+  <li id="menu-v-item-<?php echo $category['item_id']; ?>">
   <?php if ($category['href']) { ?>
-  <a href="<?php echo $category['href']; ?>" title="" class="inactive"><?php echo $category['name']; ?></a>
+  <a href="<?php echo $category['href']; ?>" class="inactive"><?php echo $category['name']; ?></a>
   <?php } else { ?>
-  <a title="" class="inactive"><?php echo $category['name']; ?></a>
+  <a class="inactive"><?php echo $category['name']; ?></a>
   <?php } ?>
   <?php if ($category['children']) { ?>
   <ul class="children">
   <?php foreach ($category['children'] as $child) { ?>
   <li>
   <?php if ($child['href']) { ?>
-  <a href="<?php echo $child['href']; ?>" title=""><span class="inactive"><?php echo $child['name']; ?></span></a>
+  <a href="<?php echo $child['href']; ?>"><span class="inactive"><?php echo $child['name']; ?></span></a>
   <?php } else { ?>
-  <a title=""><span class="inactive"><?php echo $child['name']; ?></span></a>
+  <a><span class="inactive"><?php echo $child['name']; ?></span></a>
   <?php } ?>
   </li>
   <?php } ?>
@@ -61,13 +61,13 @@
   </div>
 </div>
 <?php } ?>
-<?php foreach ($menu_vertical as $category) { ?>
-<script type="text/javascript"><!--
+<script>
 $(document).ready(function() {
-	$('#<?php echo $category['item_id']; ?>').on('click', function() {
-		$('#<?php echo $category['item_id']; ?> a').toggleClass('active');
-	});
+  <?php foreach ($menu_vertical as $category) { ?>
+  $('#menu-v-item-<?php echo $category['item_id']; ?>').on('click', function() {
+    $('#menu-v-item-<?php echo $category['item_id']; ?> a').toggleClass('active');
+  });
+  <?php } ?>
 });
-//--></script>
-<?php } ?>
+</script>
 <?php } ?>

@@ -1,17 +1,17 @@
-<div style="margin-bottom:10px;">
+<div class="menu-h-wrapper">
 <?php if ($menu_horizontal) { ?>
   <div id="menu-holder">
   <div class="<?php echo $menu_class; ?>">
   <div id="menu" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>">
   <ul>
   <?php if ($menu_home) { ?>
-  <li><a href="<?php echo $home; ?>" title=""><span class="home-icon"></span></a></li>
+  <li><a href="<?php echo $home; ?>" aria-label="Home"><span class="home-icon"></span></a></li>
   <?php } ?>
   <?php foreach ($menu_horizontal as $category) { ?>
   <?php if ($category['href']) { ?>
-  <li><a href="<?php echo $category['href']; ?>" title=""><?php echo $category['name']; ?><?php if ($category['children']) { ?><span></span><?php } ?></a>
+  <li><a href="<?php echo $category['href']; ?>"<?php if ($category['children']) { ?> aria-haspopup="true" aria-expanded="false"<?php } ?>><?php echo $category['name']; ?><?php if ($category['children']) { ?><span></span><?php } ?></a>
   <?php } else { ?>
-  <li><a title=""><?php echo $category['name']; ?><?php if ($category['children']) { ?><span></span><?php } ?></a>
+  <li><a<?php if ($category['children']) { ?> aria-haspopup="true" aria-expanded="false"<?php } ?>><?php echo $category['name']; ?><?php if ($category['children']) { ?><span></span><?php } ?></a>
   <?php } ?>
   <?php if ($category['children']) { ?>
   <div class="<?php echo $mod_shape; ?>-bottom <?php echo $mod_color; ?>">
@@ -22,9 +22,9 @@
   <?php for (; $i < $j; $i++) { ?>
   <?php if (isset($category['children'][$i])) { ?>
   <?php if ($category['children'][$i]['href']) { ?>
-  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>" title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a<?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>"><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } else { ?>
-  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a<?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?>><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } ?>
   <?php } ?>
   <?php } ?>
@@ -37,9 +37,9 @@
   <?php for (; $i < $j; $i++) { ?>
   <?php if (isset($category['children'][$i])) { ?>
   <?php if ($category['children'][$i]['href']) { ?>
-  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>" title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a<?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> href="<?php echo $category['children'][$i]['href']; ?>"><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } else { ?>
-  <li><a <?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?> title=""><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
+  <li><a<?php echo $i === (count($category['children']) - 1) ? " class='last-submenu-item'" : ''; ?>><span><?php echo $category['children'][$i]['name']; ?></span></a></li>
   <?php } ?>
   <?php } ?>
   <?php } ?>
@@ -59,18 +59,18 @@
   <?php foreach ($menu_horizontal as $category) { ?>
   <li id="menu-horizontal-<?php echo $category['item_id']; ?>">
   <?php if ($category['href']) { ?>
-  <a href="<?php echo $category['href']; ?>" title="" class="inactive"><?php echo $category['name']; ?></a>
+  <a href="<?php echo $category['href']; ?>" class="inactive"><?php echo $category['name']; ?></a>
   <?php } else { ?>
-  <a title="" class="inactive"><?php echo $category['name']; ?></a>
+  <a class="inactive"><?php echo $category['name']; ?></a>
   <?php } ?>
   <?php if ($category['children']) { ?>
   <ul class="children">
   <?php foreach ($category['children'] as $child) { ?>
   <li>
   <?php if ($child['href']) { ?>
-  <a href="<?php echo $child['href']; ?>" title=""><span class="inactive"><?php echo $child['name']; ?></span></a>
+  <a href="<?php echo $child['href']; ?>"><span class="inactive"><?php echo $child['name']; ?></span></a>
   <?php } else { ?>
-  <a title=""><span class="inactive"><?php echo $child['name']; ?></span></a>
+  <a><span class="inactive"><?php echo $child['name']; ?></span></a>
   <?php } ?>
   </li>
   <?php } ?>
@@ -84,20 +84,30 @@
 <?php } ?>
 </div>
 
-<script type="text/javascript"><!--
-$('#menu-holder').prepend('<div id="menu-trigger" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/menu/menu-button-<?php echo ($menu_theme == 'light') ? 'dark' : 'light'; ?>.png" alt="" style="padding:5px 15px;" /></div>');
-$('body').on('click', '#menu-trigger', function(e) {
-	e.preventDefault();
-	$('#menu-phone').slideToggle();
-});
-//--></script>
-
-<?php foreach ($menu_horizontal as $category) { ?>
-<script type="text/javascript"><!--
+<script>
 $(document).ready(function() {
-	$('#menu-horizontal-<?php echo $category['item_id']; ?>').on('click', function() {
-		$('#menu-horizontal-<?php echo $category['item_id']; ?> a').toggleClass('active');
-	});
+  // Burger trigger button — injected so it is absent when JS is disabled (A2/J4)
+  var triggerHTML = '<button id="menu-trigger" type="button" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>" aria-label="Menu" aria-controls="menu-phone" aria-expanded="false">'
+    + '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false">'
+    + '<rect y="0" width="22" height="2" rx="1" fill="currentColor"/>'
+    + '<rect y="7" width="22" height="2" rx="1" fill="currentColor"/>'
+    + '<rect y="14" width="22" height="2" rx="1" fill="currentColor"/>'
+    + '</svg></button>';
+  $('#menu-holder').prepend(triggerHTML);
+
+  $('body').on('click', '#menu-trigger', function(e) {
+    e.preventDefault();
+    var $btn = $(this);
+    var expanded = $btn.attr('aria-expanded') === 'true';
+    $btn.attr('aria-expanded', String(!expanded));
+    $('#menu-phone').slideToggle();
+  });
+
+  // Phone menu — top-level item tap toggles children
+  <?php foreach ($menu_horizontal as $category) { ?>
+  $('#menu-horizontal-<?php echo $category['item_id']; ?>').on('click', function() {
+    $('#menu-horizontal-<?php echo $category['item_id']; ?> a').toggleClass('active');
+  });
+  <?php } ?>
 });
-//--></script>
-<?php } ?>
+</script>

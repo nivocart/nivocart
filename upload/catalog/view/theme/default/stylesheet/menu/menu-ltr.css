@@ -4,15 +4,17 @@
 * ------------------------------------
 */
 
-@font-face {
-  font-family: 'Roboto';
-  src: local('Roboto'), local('Roboto-Regular'),
-    url('../fonts/Roboto-Regular.woff2') format('woff2'),
-    url('../fonts/Roboto-Regular.woff') format('woff');
-  font-style: normal;
-  font-weight: 400;
+/* Note: Roboto @font-face is declared in the main stylesheet.css — Q1 */
+
+/* Q2 — Wrapper class replaces the inline margin on the template div */
+.menu-h-wrapper {
+	margin-bottom: 10px;
 }
 
+/* Q4 — Empty blocks below are intentional extension points for the
+   custom-theme overlay files (menu-dark.css / menu-light.css).
+   They define structure; colour, backgrounds, and icons are filled
+   in by the overlay. */
 #menu-holder, #menu-holder .menu-ltr {}
 .menu-ltr #menu {
 	min-height: 45px;
@@ -34,6 +36,7 @@
 	padding: 0 2px 0 0;
 	z-index: 515;
 }
+/* Extension point */
 .menu-ltr #menu > ul > li:hover {
 }
 .menu-ltr #menu > ul > li > a {
@@ -47,7 +50,15 @@
 	outline: none;
 	cursor: pointer;
 }
+/* Extension point */
 .menu-ltr #menu > ul > li:hover > a, .menu-ltr #menu > ul > li > a:hover {
+}
+/* A1 — Visible keyboard focus ring (replaces outline:none suppression) */
+.menu-ltr #menu a:focus-visible,
+#menu-phone a:focus-visible {
+	outline: 2px solid #36AAD8;
+	outline-offset: 2px;
+	border-radius: 2px;
 }
 .menu-ltr #menu > ul > li > a > span {
 	padding: 0 0 0 14px;
@@ -58,6 +69,11 @@
 	padding: 0;
 	display: block;
 }
+/* H1 — Dropdown visibility is controlled exclusively by jQuery
+   slideDown/slideUp in common.js. The CSS :hover rule has been
+   removed to prevent a conflict where CSS shows the div instantly
+   while jQuery tries to animate it, causing the open to be
+   instant and the close to be animated (asymmetric behaviour). */
 .menu-ltr #menu > ul > li > div {
 	display: none;
 	position: absolute;
@@ -65,9 +81,6 @@
 	z-index: 520;
 	padding: 0 0 10px 0;
 	border: 1px solid transparent;
-}
-.menu-ltr #menu > ul > li:hover > div {
-	display: block;
 }
 .menu-ltr #menu > ul > li > div > ul {
 	display: table-cell;
@@ -103,11 +116,21 @@
 .menu-ltr #menu > ul > li ul > li > a:hover > span {
 	padding-left: 12px;
 }
+/* Extension point */
 .menu-ltr #menu > ul > li > div > ul > li > a {
 	text-decoration: none;
 }
 #menu-trigger, #menu-phone {
 	display: none;
+}
+/* R3 — Wide screens: explicit rule for 1282px and above */
+@media only screen and (min-width: 1282px) {
+	.menu-ltr #menu {
+		display: block;
+	}
+	#menu-trigger, #menu-phone {
+		display: none;
+	}
 }
 /* Desktops */
 @media only screen and (min-width: 1025px) and (max-width: 1281px) {
@@ -140,17 +163,24 @@
 	.menu-ltr #menu {
 		display: none;
 	}
+	/* A2/J4 — button element reset; SVG icon colour set by overlay */
 	#menu-trigger {
 		display: block;
 		position: relative;
 		height: 45px;
 		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #222;
 	}
+	/* R1 — fluid width; R4 — unified top offset; R5 — overlay sets colour */
 	#menu-phone {
-		width: 600px;
+		width: 100%;
 		position: relative;
-		top: 10px;
-		background: rgba(255,255,255,1);
+		top: 0;
+		background: transparent;
 		box-shadow: none;
 		display: none;
 		z-index: 550;
@@ -205,8 +235,8 @@
 		font-weight: normal;
 	}
 }
-/* Phones */
-@media only screen and (max-width: 641px) {
+/* Phones — R2: max-width adjusted to 640px to close the 1px overlap at 641px */
+@media only screen and (max-width: 640px) {
 	.menu-ltr #menu {
 		display: none;
 	}
@@ -215,12 +245,17 @@
 		position: relative;
 		height: 45px;
 		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #222;
 	}
 	#menu-phone {
-		width: 300px;
+		width: 100%;
 		position: relative;
-		top: 10px;
-		background: rgba(255,255,255,1);
+		top: 0;
+		background: transparent;
 		box-shadow: none;
 		display: none;
 		z-index: 550;
@@ -273,5 +308,21 @@
 	}
 	.box-phone > ul > li > ul > li a.active span.inactive {
 		font-weight: normal;
+	}
+}
+/* H2 — Touch devices: force mobile navigation regardless of screen width.
+   Covers wide-format tablets and 2-in-1 laptops in touch mode where the
+   desktop :hover-driven menu is inaccessible. */
+@media (hover: none) and (pointer: coarse) {
+	.menu-ltr #menu { display: none; }
+	#menu-trigger {
+		display: block;
+		height: 45px;
+		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #222;
 	}
 }

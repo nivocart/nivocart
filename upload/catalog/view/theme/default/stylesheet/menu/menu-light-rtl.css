@@ -4,13 +4,11 @@
 * ------------------------------------
 */
 
-@font-face {
-  font-family: 'Roboto';
-  src: local('Roboto'), local('Roboto-Regular'),
-    url('../fonts/Roboto-Regular.woff2') format('woff2'),
-    url('../fonts/Roboto-Regular.woff') format('woff');
-  font-style: normal;
-  font-weight: 400;
+/* Note: Roboto @font-face is declared in the main stylesheet.css — Q1 */
+
+/* Q2 — Wrapper class */
+.menu-h-wrapper {
+	margin-bottom: 10px;
 }
 
 #menu-holder, #menu-holder .menu-light {
@@ -34,7 +32,7 @@
 	padding: 0;
 }
 .menu-light #menu > ul > li {
-	background: url('../../image/menu/sep_light.png') right top no-repeat;
+	background: url('../../image/menu/sep_light.png') left top no-repeat;
 	position: relative;
 	float: right;
 	padding: 0 0 0 2px;
@@ -60,6 +58,13 @@
 	background-color: #FCFCFC;
 	background-image: linear-gradient(to bottom, #FCFCFC, #EDEDED);
 }
+/* A1 — Visible keyboard focus ring */
+.menu-light #menu a:focus-visible,
+#menu-phone a:focus-visible {
+	outline: 2px solid #36AAD8;
+	outline-offset: 2px;
+	border-radius: 2px;
+}
 .menu-light #menu > ul > li > a > span {
 	background: url('../../image/menu/arrow_down_dark.png') right center no-repeat;
 	padding: 0 14px 0 0;
@@ -72,6 +77,7 @@
 	padding: 0;
 	display: block;
 }
+/* H1 — Dropdown controlled by jQuery slideDown/slideUp; :hover rule removed */
 .menu-light #menu > ul > li > div {
 	display: none;
 	position: absolute;
@@ -88,16 +94,14 @@
 	border-radius: 0 0 2px 2px;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
 }
-.menu-light #menu > ul > li:hover > div {
-	display: block;
-}
 .menu-light #menu > ul > li > div > ul {
 	display: table-cell;
 	padding: 7px 0 0 2px;
 	border-top: 3px solid #E9E9E9;
 }
+/* B3 — RTL multi-column gap: padding-right */
 .menu-light #menu > ul > li ul + ul {
-	padding-left: 16px;
+	padding-right: 16px;
 }
 .menu-light #menu > ul > li ul > li > a {
 	background: url('../../image/menu/sep_vertical_light.png') bottom left repeat-x;
@@ -138,6 +142,15 @@
 #menu-trigger, #menu-phone {
 	display: none;
 }
+/* R3 — Wide screens: explicit rule for 1282px and above */
+@media only screen and (min-width: 1282px) {
+	.menu-light #menu {
+		display: block;
+	}
+	#menu-trigger, #menu-phone {
+		display: none;
+	}
+}
 /* Desktops */
 @media only screen and (min-width: 1025px) and (max-width: 1281px) {
 	.menu-light #menu {
@@ -166,7 +179,8 @@
 }
 /* Tablets */
 @media only screen and (min-width: 641px) and (max-width: 961px) {
-	.menu-light, #menu {
+	/* B1 — Fixed: was ".menu-light, #menu" */
+	.menu-light #menu {
 		display: none;
 	}
 	#menu-trigger {
@@ -177,12 +191,16 @@
 		border-radius: 2px;
 		height: 45px;
 		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		color: #222;
 	}
 	#menu-phone {
-		width: 600px;
+		width: 100%;
 		position: relative;
 		top: 0;
-		background: rgba(255,255,255,1);
+		background: rgba(255, 255, 255, 1);
 		box-shadow: none;
 		display: none;
 		z-index: 550;
@@ -194,7 +212,7 @@
 		padding: 0;
 	}
 	.box-phone > ul > li {
-		padding: 10px 1px 10px 15px;
+		padding: 10px 15px 10px 1px;
 	}
 	.box-phone > ul > li + li {
 		border-top: 1px solid #CCC;
@@ -218,7 +236,7 @@
 		font-weight: bold;
 	}
 	.box-phone > ul > li a.active + ul {
-		padding-left: 15px;
+		padding-right: 15px;
 		display: block;
 	}
 	.box-phone > ul > li > ul > li {
@@ -237,9 +255,10 @@
 		font-weight: normal;
 	}
 }
-/* Phones */
-@media only screen and (max-width: 641px) {
-	.menu-light, #menu {
+/* Phones — R2: max-width adjusted to 640px */
+@media only screen and (max-width: 640px) {
+	/* B1 — Fixed: was ".menu-light, #menu" */
+	.menu-light #menu {
 		display: none;
 	}
 	#menu-trigger {
@@ -250,12 +269,16 @@
 		border-radius: 2px;
 		height: 45px;
 		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		color: #222;
 	}
 	#menu-phone {
-		width: 300px;
+		width: 100%;
 		position: relative;
 		top: 0;
-		background: rgba(255,255,255,1);
+		background: rgba(255, 255, 255, 1);
 		box-shadow: none;
 		display: none;
 		z-index: 550;
@@ -267,13 +290,13 @@
 		padding: 0;
 	}
 	.box-phone > ul > li {
-		padding: 10px 1px 10px 15px;
+		padding: 10px 15px 10px 1px;
 	}
 	.box-phone > ul > li + li {
 		border-top: 1px solid #CCC;
 	}
 	.box-phone > ul > li a {
-		font-size: 15px;
+		font-size: 14px;
 		text-decoration: none;
 		outline: none;
 		color: #222;
@@ -291,7 +314,7 @@
 		font-weight: bold;
 	}
 	.box-phone > ul > li a.active + ul {
-		padding-left: 15px;
+		padding-right: 15px;
 		display: block;
 	}
 	.box-phone > ul > li > ul > li {
@@ -309,4 +332,21 @@
 	.box-phone > ul > li > ul > li a.active span.inactive {
 		font-weight: normal;
 	}
+}
+/* H2 — Touch devices: force mobile navigation regardless of screen width */
+@media (hover: none) and (pointer: coarse) {
+	.menu-light #menu { display: none; }
+	#menu-trigger {
+		display: block;
+		background-color: #F6F6F6;
+		background-image: linear-gradient(to bottom, #F6F6F6, #E7E7E7);
+		border-radius: 2px;
+		height: 45px;
+		width: auto;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		color: #222;
+	}
+	#menu-phone { display: none; }
 }

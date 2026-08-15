@@ -38,24 +38,44 @@ $(document).ready(function() {
 		});
 	});
 
-	// Mega Menu
+	// Mega Menu — A3: update aria-expanded; H1: use direct child selector
 	$('#menu > ul > li').hover(
 		function() {
-			$(this).addClass("active");
-			$(this).find('div').stop(false, true).slideDown('slow');
+			$(this).addClass('active');
+			$(this).find('> a[aria-haspopup]').attr('aria-expanded', 'true');
+			$(this).find('> div').stop(false, true).slideDown('slow');
 		},
 		function() {
-			$(this).removeClass("active");
-			$(this).find('div').stop(false, true).slideUp('slow');
+			$(this).removeClass('active');
+			$(this).find('> a[aria-haspopup]').attr('aria-expanded', 'false');
+			$(this).find('> div').stop(false, true).slideUp('slow');
 		}
 	);
 
-	$('#menu ul > li > a + div').each(function(index, element) {
-		var menu = $('#menu').offset();
-		var dropdown = $(this).parent().offset();
-		i = (dropdown.left + $(this).outerWidth()) - (menu.left + $('#menu').outerWidth());
-		if (i > 0) {
-			$(this).css('margin-left', '-' + (i + 5) + 'px');
+	// Mega Menu overflow fix — H3: handles both LTR and RTL layouts
+	$('#menu ul > li > a + div').each(function() {
+		var $menu = $('#menu');
+		var $dropdown = $(this);
+		var $li = $(this).parent();
+		var menuOffset = $menu.offset();
+		var liOffset = $li.offset();
+		var dropWidth = $dropdown.outerWidth();
+		var isRtl = $menu.closest('.menu-rtl').length > 0;
+
+		if (isRtl) {
+			// RTL: dropdown is right-anchored to the li; check left overflow
+			var liRight = liOffset.left + $li.outerWidth();
+			var dropLeft = liRight - dropWidth;
+			var overflow = menuOffset.left - dropLeft;
+			if (overflow > 0) {
+				$dropdown.css('margin-right', (overflow + 5) + 'px');
+			}
+		} else {
+			// LTR: dropdown is left-anchored to the li; check right overflow
+			var overflow = (liOffset.left + dropWidth) - (menuOffset.left + $menu.outerWidth());
+			if (overflow > 0) {
+				$dropdown.css('margin-left', '-' + (overflow + 5) + 'px');
+			}
 		}
 	});
 
