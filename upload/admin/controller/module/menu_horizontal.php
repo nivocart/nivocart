@@ -51,6 +51,7 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->data['entry_theme'] = $this->language->get('entry_theme');
 		$this->data['entry_header_color'] = $this->language->get('entry_header_color');
+		$this->data['entry_header_color_opacity'] = $this->language->get('entry_header_color_opacity');
 		$this->data['entry_header_shape'] = $this->language->get('entry_header_shape');
 		$this->data['entry_column_limit'] = $this->language->get('entry_column_limit');
 		$this->data['entry_column_number'] = $this->language->get('entry_column_number');
@@ -118,10 +119,19 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->data['skins'] = $this->model_setting_setting->getColors();
 
+		// Build skin color map for JS live preview (skin => hex)
+		$this->data['skin_color_map'] = json_encode(array_column($this->data['skins'], 'color', 'skin'));
+
 		if (isset($this->request->post[$this->name . '_header_color'])) {
 			$this->data[$this->name . '_header_color'] = $this->request->post[$this->name . '_header_color'];
 		} else {
 			$this->data[$this->name . '_header_color'] = $this->config->get($this->name . '_header_color');
+		}
+
+		if (isset($this->request->post[$this->name . '_header_color_opacity'])) {
+			$this->data[$this->name . '_header_color_opacity'] = $this->request->post[$this->name . '_header_color_opacity'];
+		} else {
+			$this->data[$this->name . '_header_color_opacity'] = $this->config->get($this->name . '_header_color_opacity') ?: '1.0';
 		}
 
 		$this->data['shapes'] = $this->model_setting_setting->getShapes();

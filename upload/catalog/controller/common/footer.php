@@ -102,6 +102,30 @@ class ControllerCommonFooter extends Controller {
 
 		$this->data['footer_class'] = $footer_class;
 
+		// Footer background rgba override (Custom theme + opacity < 1.0)
+		$this->data['footer_bg_rgba'] = '';
+
+		if ($footer_theme === 'custom' && $footer_color && $footer_color !== 'clear') {
+			$raw_opacity = $this->config->get($template . '_footer_color_opacity');
+			$footer_color_opacity = ($raw_opacity !== null && $raw_opacity !== '') ? (float)$raw_opacity : 1.0;
+
+			if ($footer_color_opacity < 1.0) {
+				$this->load->model('setting/setting');
+				$skins = $this->model_setting_setting->getColors();
+				$color_map = array_column($skins, 'color', 'skin');
+
+				if (isset($color_map[$footer_color])) {
+					$hex = ltrim($color_map[$footer_color], '#');
+					if (strlen($hex) === 6) {
+						$r = hexdec(substr($hex, 0, 2));
+						$g = hexdec(substr($hex, 2, 2));
+						$b = hexdec(substr($hex, 4, 2));
+						$this->data['footer_bg_rgba'] = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $footer_color_opacity . ')';
+					}
+				}
+			}
+		}
+
 		// Matomo
 		$this->data['matomo'] = html_entity_decode($this->config->get('config_matomo_analytics'), ENT_QUOTES, 'UTF-8');
 

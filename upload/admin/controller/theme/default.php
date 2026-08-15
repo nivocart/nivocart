@@ -56,6 +56,7 @@ class ControllerThemeDefault extends Controller {
 		$this->data['entry_powered_by'] = $this->language->get('entry_powered_by');
 		$this->data['entry_footer_theme'] = $this->language->get('entry_footer_theme');
 		$this->data['entry_footer_color'] = $this->language->get('entry_footer_color');
+		$this->data['entry_footer_color_opacity'] = $this->language->get('entry_footer_color_opacity');
 		$this->data['entry_footer_shape'] = $this->language->get('entry_footer_shape');
 		$this->data['entry_footer_big_column'] = $this->language->get('entry_footer_big_column');
 		$this->data['entry_footer_location'] = $this->language->get('entry_footer_location');
@@ -63,7 +64,6 @@ class ControllerThemeDefault extends Controller {
 		$this->data['entry_footer_email'] = $this->language->get('entry_footer_email');
 		$this->data['entry_footer_facebook'] = $this->language->get('entry_footer_facebook');
 		$this->data['entry_footer_twitter'] = $this->language->get('entry_footer_twitter');
-		$this->data['entry_footer_google'] = $this->language->get('entry_footer_google');
 		$this->data['entry_footer_pinterest'] = $this->language->get('entry_footer_pinterest');
 		$this->data['entry_footer_instagram'] = $this->language->get('entry_footer_instagram');
 		$this->data['entry_livesearch'] = $this->language->get('entry_livesearch');
@@ -206,10 +206,19 @@ class ControllerThemeDefault extends Controller {
 
 		$this->data['skins'] = $this->model_setting_setting->getColors();
 
+		// Build skin color map for JS live preview (skin => hex)
+		$this->data['skin_color_map'] = json_encode(array_column($this->data['skins'], 'color', 'skin'));
+
 		if (isset($this->request->post[$this->name . '_footer_color'])) {
 			$this->data[$this->name . '_footer_color'] = $this->request->post[$this->name . '_footer_color'];
 		} else {
 			$this->data[$this->name . '_footer_color'] = $this->config->get($this->name . '_footer_color');
+		}
+
+		if (isset($this->request->post[$this->name . '_footer_color_opacity'])) {
+			$this->data[$this->name . '_footer_color_opacity'] = $this->request->post[$this->name . '_footer_color_opacity'];
+		} else {
+			$this->data[$this->name . '_footer_color_opacity'] = $this->config->get($this->name . '_footer_color_opacity') ?: '1.0';
 		}
 
 		$this->data['shapes'] = $this->model_setting_setting->getShapes();
@@ -254,12 +263,6 @@ class ControllerThemeDefault extends Controller {
 			$this->data[$this->name . '_footer_twitter'] = $this->request->post[$this->name . '_footer_twitter'];
 		} else {
 			$this->data[$this->name . '_footer_twitter'] = $this->config->get($this->name . '_footer_twitter');
-		}
-
-		if (isset($this->request->post[$this->name . '_footer_google'])) {
-			$this->data[$this->name . '_footer_google'] = $this->request->post[$this->name . '_footer_google'];
-		} else {
-			$this->data[$this->name . '_footer_google'] = $this->config->get($this->name . '_footer_google');
 		}
 
 		if (isset($this->request->post[$this->name . '_footer_pinterest'])) {

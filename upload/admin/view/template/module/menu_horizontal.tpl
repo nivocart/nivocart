@@ -51,14 +51,30 @@
         <tbody id="theme-custom" class="menu-theme">
           <tr class="highlighted">
             <td><?php echo $entry_header_color; ?></td>
-            <td><select name="menu_horizontal_header_color">
-              <?php foreach ($skins as $skin) { ?>
-                <?php if ($skin['skin'] === $menu_horizontal_header_color) { ?>
-                  <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;" selected="selected"><?php echo $skin['title']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;"><?php echo $skin['title']; ?></option>
+            <td>
+              <select name="menu_horizontal_header_color" id="menu_horizontal_header_color">
+                <?php foreach ($skins as $skin) { ?>
+                  <?php if ($skin['skin'] === $menu_horizontal_header_color) { ?>
+                    <option value="<?php echo $skin['skin']; ?>" selected="selected"><?php echo $skin['title']; ?></option>
+                  <?php } else { ?>
+                    <option value="<?php echo $skin['skin']; ?>"><?php echo $skin['title']; ?></option>
+                  <?php } ?>
                 <?php } ?>
-              <?php } ?>
+              </select>
+              <span id="menu-color-preview" style="display:inline-block; width:60px; height:22px; border:1px solid #ccc; border-radius:3px; vertical-align:middle; margin-left:8px;"></span>
+            </td>
+          </tr>
+          <tr class="highlighted">
+            <td><?php echo $entry_header_color_opacity; ?></td>
+            <td><select name="menu_horizontal_header_color_opacity">
+              <?php
+              $opacity_steps = ['0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1.0'];
+              foreach ($opacity_steps as $step) {
+                $pct = (int)round((float)$step * 100) . '%';
+                $selected = ((string)$menu_horizontal_header_color_opacity === $step) ? ' selected="selected"' : '';
+                echo '<option value="' . $step . '"' . $selected . '>' . $pct . '</option>';
+              }
+              ?>
             </select></td>
           </tr>
           <tr class="highlighted">
@@ -198,6 +214,18 @@ $('input[name=\'menu_horizontal_theme\']').on('change', function() {
 });
 
 $('input[name=\'menu_horizontal_theme\']:checked').trigger('change');
+
+// Color preview box
+var menuSkinColorMap = <?php echo $skin_color_map; ?>;
+
+function updateMenuColorPreview() {
+	var skin = $('#menu_horizontal_header_color').val();
+	var color = menuSkinColorMap[skin] || 'transparent';
+	$('#menu-color-preview').css('background-color', color);
+}
+
+$('#menu_horizontal_header_color').on('change', updateMenuColorPreview);
+updateMenuColorPreview();
 //--></script>
 
 <script type="text/javascript"><!--

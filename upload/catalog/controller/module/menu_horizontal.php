@@ -27,6 +27,9 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$menu_direction = $setting['direction'] ? 'ltr' : 'rtl';
 
+		// Capture before the conditional reassigns $menu_theme
+		$is_custom = ($menu_theme === 'custom');
+
 		if ($menu_theme === 'custom') {
 			$this->document->addStyle('catalog/view/theme/' . $template . '/stylesheet/menu/menu-' . $menu_direction . '.css');
 
@@ -55,6 +58,30 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->data['column_limit'] = $this->config->get($this->name . '_column_limit') ? $this->config->get($this->name . '_column_limit') : 10;
 		$this->data['column_number'] = $this->config->get($this->name . '_column_number') ? $this->config->get($this->name . '_column_number') : 4;
+
+		// Menu background rgba override (Custom theme + opacity < 1.0)
+		$this->data['menu_bg_rgba'] = '';
+
+		if ($is_custom && $header_color && $header_color !== 'clear') {
+			$raw_opacity = $this->config->get($this->name . '_header_color_opacity');
+			$header_color_opacity = ($raw_opacity !== null && $raw_opacity !== '') ? (float)$raw_opacity : 1.0;
+
+			if ($header_color_opacity < 1.0) {
+				$this->load->model('setting/setting');
+				$skins = $this->model_setting_setting->getColors();
+				$color_map = array_column($skins, 'color', 'skin');
+
+				if (isset($color_map[$header_color])) {
+					$hex = ltrim($color_map[$header_color], '#');
+					if (strlen($hex) === 6) {
+						$r = hexdec(substr($hex, 0, 2));
+						$g = hexdec(substr($hex, 2, 2));
+						$b = hexdec(substr($hex, 4, 2));
+						$this->data['menu_bg_rgba'] = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $header_color_opacity . ')';
+					}
+				}
+			}
+		}
 
 		// Resolve server base URL
 		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||

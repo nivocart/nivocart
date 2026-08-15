@@ -137,14 +137,30 @@
         <tbody id="theme-custom" class="footer-theme">
           <tr class="highlighted">
             <td><?php echo $entry_footer_color; ?></td>
-            <td><select name="default_footer_color">
-              <?php foreach ($skins as $skin) { ?>
-                <?php if ($skin['skin'] === $default_footer_color) { ?>
-                  <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;" selected="selected"><?php echo $skin['title']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $skin['skin']; ?>" style="background-color:<?php echo $skin['color']; ?>; padding:2px 4px;"><?php echo $skin['title']; ?></option>
+            <td>
+              <select name="default_footer_color" id="default_footer_color">
+                <?php foreach ($skins as $skin) { ?>
+                  <?php if ($skin['skin'] === $default_footer_color) { ?>
+                    <option value="<?php echo $skin['skin']; ?>" selected="selected"><?php echo $skin['title']; ?></option>
+                  <?php } else { ?>
+                    <option value="<?php echo $skin['skin']; ?>"><?php echo $skin['title']; ?></option>
+                  <?php } ?>
                 <?php } ?>
-              <?php } ?>
+              </select>
+              <span id="footer-color-preview" style="display:inline-block; width:60px; height:22px; border:1px solid #ccc; border-radius:3px; vertical-align:middle; margin-left:8px;"></span>
+            </td>
+          </tr>
+          <tr class="highlighted">
+            <td><?php echo $entry_footer_color_opacity; ?></td>
+            <td><select name="default_footer_color_opacity">
+              <?php
+              $opacity_steps = ['0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1.0'];
+              foreach ($opacity_steps as $step) {
+                $pct = (int)round((float)$step * 100) . '%';
+                $selected = ((string)$default_footer_color_opacity === $step) ? ' selected="selected"' : '';
+                echo '<option value="' . $step . '"' . $selected . '>' . $pct . '</option>';
+              }
+              ?>
             </select></td>
           </tr>
           <tr class="highlighted">
@@ -243,20 +259,6 @@
               <label for="footer-twitter-on"><span><span></span></span><?php echo $text_yes; ?></label>
               <input type="radio" name="default_footer_twitter" value="0" id="footer-twitter-off" class="radio" checked />
               <label for="footer-twitter-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_footer_google; ?></td>
-            <td><?php if ($default_footer_google) { ?>
-              <input type="radio" name="default_footer_google" value="1" id="footer-google-on" class="radio" checked />
-              <label for="footer-google-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="default_footer_google" value="0" id="footer-google-off" class="radio" />
-              <label for="footer-google-off"><span><span></span></span><?php echo $text_no; ?></label>
-            <?php } else { ?>
-              <input type="radio" name="default_footer_google" value="1" id="footer-google-on" class="radio" />
-              <label for="footer-google-on"><span><span></span></span><?php echo $text_yes; ?></label>
-              <input type="radio" name="default_footer_google" value="0" id="footer-google-off" class="radio" checked />
-              <label for="footer-google-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
           <tr>
@@ -410,6 +412,18 @@ $('input[name=\'default_footer_theme\']').on('change', function() {
 });
 
 $('input[name=\'default_footer_theme\']:checked').trigger('change');
+
+// Color preview box
+var footerSkinColorMap = <?php echo $skin_color_map; ?>;
+
+function updateFooterColorPreview() {
+	var skin = $('#default_footer_color').val();
+	var color = footerSkinColorMap[skin] || 'transparent';
+	$('#footer-color-preview').css('background-color', color);
+}
+
+$('#default_footer_color').on('change', updateFooterColorPreview);
+updateFooterColorPreview();
 //--></script>
 
 <script type="text/javascript"><!--

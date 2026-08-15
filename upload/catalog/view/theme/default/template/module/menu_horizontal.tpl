@@ -2,7 +2,7 @@
 <?php if ($menu_horizontal) { ?>
   <div id="menu-holder">
   <div class="<?php echo $menu_class; ?>">
-  <div id="menu" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>">
+  <div id="menu" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>"<?php if ($menu_bg_rgba) { ?> style="background-color:<?php echo $menu_bg_rgba; ?>;"<?php } ?>>
   <ul>
   <?php if ($menu_home) { ?>
   <li><a href="<?php echo $home; ?>" aria-label="Home"><span class="home-icon"></span></a></li>
@@ -14,7 +14,7 @@
   <li><a<?php if ($category['children']) { ?> aria-haspopup="true" aria-expanded="false"<?php } ?>><?php echo $category['name']; ?><?php if ($category['children']) { ?><span></span><?php } ?></a>
   <?php } ?>
   <?php if ($category['children']) { ?>
-  <div class="<?php echo $mod_shape; ?>-bottom <?php echo $mod_color; ?>">
+  <div class="<?php echo $mod_shape; ?>-bottom <?php echo $mod_color; ?>"<?php if ($menu_bg_rgba) { ?> style="background-color:<?php echo $menu_bg_rgba; ?>;"<?php } ?>>
   <?php if (count($category['children']) <= $column_limit) { ?>
   <?php for ($i = 0; $i < count($category['children']);) { ?>
   <ul>
@@ -87,7 +87,9 @@
 <script>
 $(document).ready(function() {
   // Burger trigger button — injected so it is absent when JS is disabled (A2/J4)
-  var triggerHTML = '<button id="menu-trigger" type="button" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>" aria-label="Menu" aria-controls="menu-phone" aria-expanded="false">'
+  var menuBgStyle = '<?php echo $menu_bg_rgba ? 'background-color:' . $menu_bg_rgba . ';' : ''; ?>';
+  var triggerStyle = menuBgStyle ? ' style="' + menuBgStyle + '"' : '';
+  var triggerHTML = '<button id="menu-trigger" type="button" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>"' + triggerStyle + ' aria-label="Menu" aria-controls="menu-phone" aria-expanded="false">'
     + '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false">'
     + '<rect y="0" width="22" height="2" rx="1" fill="currentColor"/>'
     + '<rect y="7" width="22" height="2" rx="1" fill="currentColor"/>'

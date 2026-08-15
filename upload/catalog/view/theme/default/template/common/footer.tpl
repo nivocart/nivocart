@@ -4,7 +4,7 @@
 </p>
 <?php } ?>
 <div id="footer-holder" class="<?php echo $footer_class; ?>">
-  <div id="footer" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>">
+  <div id="footer" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>"<?php if ($footer_bg_rgba) { ?> style="background-color:<?php echo $footer_bg_rgba; ?>;"<?php } ?>>
   <?php if ($footer_blocks) { ?>
   <?php $col_width = (int)(($this->config->get($template . '_footer_big_column')) ? (72 / max(1, $max_position)) : (100 / max(1, $max_position))); ?>
   <div class="column-one" style="width:<?php echo $col_width; ?>%; display:<?php echo ($max_position > 0) ? 'block' : 'none'; ?>">

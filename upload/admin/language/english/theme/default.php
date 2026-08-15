@@ -26,6 +26,7 @@ $_['entry_web_design']          = 'Display Web Design Credits:<span class="help"
 $_['entry_powered_by']          = 'Display Powered by:<span class="help">Show "Powered by NivoCart".</span>';
 $_['entry_footer_theme']        = 'Footer Theme:<span class="help">Choose between a Light, Dark or Custom theme.</span>';
 $_['entry_footer_color']        = 'Select Footer Color:';
+$_['entry_footer_color_opacity'] = 'Select Footer Opacity:<span class="help">Applies to Custom theme only. Reduces the background color intensity. 100% is fully opaque.</span>';
 $_['entry_footer_shape']        = 'Select Footer Shape:';
 $_['entry_footer_big_column']   = 'Display Address Block (<b>Master</b>):<span class="help">Select Yes if you want to display any of the options below.</span>';
 $_['entry_footer_location']     = 'Display Address:';
@@ -33,7 +34,6 @@ $_['entry_footer_phone']        = 'Display Telephone:';
 $_['entry_footer_email']        = 'Display Email:';
 $_['entry_footer_facebook']     = 'Display Facebook:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_twitter']      = 'Display X:<span class="help">Link must be defined in store Settings.</span>';
-$_['entry_footer_google']       = 'Display Google+:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_pinterest']    = 'Display Pinterest:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_footer_instagram']    = 'Display Instagram:<span class="help">Link must be defined in store Settings.</span>';
 $_['entry_livesearch']          = 'Use Live Search:<span class="help">Display product results based on 3 or more search keywords. Header Search only.</span>';
