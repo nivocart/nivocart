@@ -372,6 +372,8 @@ class ControllerDesignFooter extends Controller {
 
 		$this->data['text_info'] = sprintf($this->language->get('text_info'), $this->url->link('design/footer/info', 'token=' . $this->session->data['token'], 'SSL'));
 
+		$footer_info = [];
+
 		if (isset($this->request->get['footer_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$footer_info = $this->model_design_footer->getFooter($this->request->get['footer_id']);
 		}

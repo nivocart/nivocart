@@ -97,18 +97,11 @@
           <tr>
             <td><?php echo $entry_position; ?></td>
             <td><select name="position">
-            <?php if (isset($position)) { $selected = "selected"; ?>
-              <option value="1" <?php if ($position === '1') { echo $selected; } ?>><?php echo $text_position; ?> 1 </option>
-              <option value="2" <?php if ($position === '2') { echo $selected; } ?>><?php echo $text_position; ?> 2 </option>
-              <option value="3" <?php if ($position === '3') { echo $selected; } ?>><?php echo $text_position; ?> 3 </option>
-              <option value="4" <?php if ($position === '4') { echo $selected; } ?>><?php echo $text_position; ?> 4 </option>
-            <?php } else { ?>
-              <option selected="selected"></option>
-              <option value="1" selected><?php echo $text_position; ?> 1 </option>
-              <option value="2"><?php echo $text_position; ?> 2 </option>
-              <option value="3"><?php echo $text_position; ?> 3 </option>
-              <option value="4"><?php echo $text_position; ?> 4 </option>
-            <?php } ?>
+              <option value="" <?php if (!isset($position) || $position === '') { echo 'selected="selected"'; } ?>></option>
+              <option value="1" <?php if (isset($position) && $position === '1') { echo 'selected="selected"'; } ?>><?php echo $text_position; ?> 1</option>
+              <option value="2" <?php if (isset($position) && $position === '2') { echo 'selected="selected"'; } ?>><?php echo $text_position; ?> 2</option>
+              <option value="3" <?php if (isset($position) && $position === '3') { echo 'selected="selected"'; } ?>><?php echo $text_position; ?> 3</option>
+              <option value="4" <?php if (isset($position) && $position === '4') { echo 'selected="selected"'; } ?>><?php echo $text_position; ?> 4</option>
             </select></td>
           </tr>
           <tr>
@@ -196,7 +189,7 @@ $(document).ready(function() {
 	$('.colorbox').colorbox({
 		overlayClose: true,
 		opacity: 0.3,
-		width: <?php echo ($this->browser->checkMobile()) ? 580 : 760; ?>,
+		width: (window.innerWidth < 600) ? 580 : 760,
 		height: 400
 	});
 });

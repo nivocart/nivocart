@@ -9,6 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - Menu System responsive stylesheets update and bug fixes.
+- Footer System responsive stylesheets update and bug fixes.
  
 
 NivoCart v2.2.1

@@ -28,7 +28,7 @@ class ModelDesignFooter extends Model {
 
 		if (isset($data['footer_route'])) {
 			foreach ($data['footer_route'] as $footer_route) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "footer_route` SET footer_id = '" . (int)$footer_id . "', route = '" . $this->db->escape($footer_route['route']) . "', external_link = '" . (int)$footer_route['external_link'] . "', sort_order = '" . $this->db->escape($footer_route['sort_order']) . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "footer_route` SET footer_id = '" . (int)$footer_id . "', route = '" . $this->db->escape($footer_route['route']) . "', external_link = '" . (int)$footer_route['external_link'] . "', sort_order = '" . (int)$footer_route['sort_order'] . "'");
 
 				$footer_route_id = $this->db->getLastId();
 
@@ -65,7 +65,7 @@ class ModelDesignFooter extends Model {
 
 		if (isset($data['footer_route'])) {
 			foreach ($data['footer_route'] as $footer_route) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "footer_route` SET footer_id = '" . (int)$footer_id . "', route = '" .  $this->db->escape($footer_route['route']) . "', external_link = '" . (int)$footer_route['external_link'] . "', sort_order = '" .  $this->db->escape($footer_route['sort_order']) . "'");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "footer_route` SET footer_id = '" . (int)$footer_id . "', route = '" .  $this->db->escape($footer_route['route']) . "', external_link = '" . (int)$footer_route['external_link'] . "', sort_order = '" . (int)$footer_route['sort_order'] . "'");
 
 				$footer_route_id = $this->db->getLastId();
 
@@ -208,7 +208,7 @@ class ModelDesignFooter extends Model {
 	public function getFooterIds(array $data = []): array {
 		$footer_data = [];
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "footer`");
+		$query = $this->db->query("SELECT footer_id FROM `" . DB_PREFIX . "footer`");
 
 		foreach ($query->rows as $result) {
 			$footer_data[] = ['footer_id' => $result['footer_id']];

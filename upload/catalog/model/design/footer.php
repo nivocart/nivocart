@@ -9,7 +9,7 @@ class ModelDesignFooter extends Model {
 	 * Functions Get
 	 */
 	public function getFooter(int $footer_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "footer` f LEFT JOIN `" . DB_PREFIX . "footer_description` fd ON (f.footer_id = fd.footer_id) LEFT JOIN `" . DB_PREFIX . "footer_to_store` f2s ON (f.footer_id = f2s.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.footer_id = '" . (int)$this->config->get('config_language_id') . "' AND f2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND f.status = '1'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "footer` f LEFT JOIN `" . DB_PREFIX . "footer_description` fd ON (f.footer_id = fd.footer_id) LEFT JOIN `" . DB_PREFIX . "footer_to_store` f2s ON (f.footer_id = f2s.footer_id) WHERE f.footer_id = '" . (int)$footer_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND f2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND f.status = '1'");
 
 		return $query->row;
 	}
@@ -49,7 +49,7 @@ class ModelDesignFooter extends Model {
 
 		$total = $this->cache->get($cache_id);
 
-		if (!$total || $total === null) {
+		if ($total === null || $total === false) {
 			$query = $this->db->query($sql);
 
 			$total = $query->row['total'];

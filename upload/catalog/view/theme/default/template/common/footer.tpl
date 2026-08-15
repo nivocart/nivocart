@@ -1,12 +1,13 @@
 <?php if ($this->config->get($template . '_back_to_top')) { ?>
-<p id="backtotop" style="display:block;">
-  <a href="#" title=""><span></span></a>
+<p id="backtotop" style="display:none;">
+  <a href="#" title="Back to top"><span class="sr-only">Back to top</span></a>
 </p>
 <?php } ?>
 <div id="footer-holder" class="<?php echo $footer_class; ?>">
   <div id="footer" class="<?php echo $mod_shape; ?> <?php echo $mod_color; ?>">
   <?php if ($footer_blocks) { ?>
-  <div class="column-one" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 0) ? 'block' : 'none'; ?>">
+  <?php $col_width = (int)(($this->config->get($template . '_footer_big_column')) ? (72 / max(1, $max_position)) : (100 / max(1, $max_position))); ?>
+  <div class="column-one" style="width:<?php echo $col_width; ?>%; display:<?php echo ($max_position > 0) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
   <?php if (($footer_block['position'] === '1') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
@@ -20,7 +21,7 @@
   <?php } ?>
   <?php } ?>
   </div>
-  <div class="column-two" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 1) ? 'block' : 'none'; ?>">
+  <div class="column-two" style="width:<?php echo $col_width; ?>%; display:<?php echo ($max_position > 1) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
   <?php if (($footer_block['position'] === '2') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
@@ -34,7 +35,7 @@
   <?php } ?>
   <?php } ?>
   </div>
-  <div class="column-three" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 2) ? 'block' : 'none'; ?>">
+  <div class="column-three" style="width:<?php echo $col_width; ?>%; display:<?php echo ($max_position > 2) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
   <?php if (($footer_block['position'] === '3') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
@@ -48,7 +49,7 @@
   <?php } ?>
   <?php } ?>
   </div>
-  <div class="column-four" style="width:<?php echo ($this->config->get($template . '_footer_big_column')) ? (72 / $max_position) : (100 / $max_position); ?>%; display:<?php echo ($max_position > 3) ? 'block' : 'none'; ?>">
+  <div class="column-four" style="width:<?php echo $col_width; ?>%; display:<?php echo ($max_position > 3) ? 'block' : 'none'; ?>">
   <?php foreach ($footer_blocks as $footer_block) { ?>
   <?php if (($footer_block['position'] === '4') && $footer_block['status']) { ?>
   <h3><?php echo $footer_block['name']; ?></h3>
@@ -75,19 +76,16 @@
   <?php } ?>
   <span>
   <?php if ($this->config->get($template . '_footer_instagram') && $instagram) { ?>
-  <a onclick="window.open('<?php echo $instagram; ?>');" class="icon-instagram" title="Instagram"></a>
+  <a href="<?php echo $instagram; ?>" target="_blank" rel="noopener noreferrer" class="icon-instagram" title="Instagram"><span class="sr-only">Instagram</span></a>
   <?php } ?>
   <?php if ($this->config->get($template . '_footer_pinterest') && $pinterest) { ?>
-  <a onclick="window.open('<?php echo $pinterest; ?>');" class="icon-pinterest" title="Pinterest"></a>
-  <?php } ?>
-  <?php if ($this->config->get($template . '_footer_google') && $google) { ?>
-  <a onclick="window.open('<?php echo $google; ?>');" class="icon-google" title="Google+"></a>
+  <a href="<?php echo $pinterest; ?>" target="_blank" rel="noopener noreferrer" class="icon-pinterest" title="Pinterest"><span class="sr-only">Pinterest</span></a>
   <?php } ?>
   <?php if ($this->config->get($template . '_footer_twitter') && $twitter) { ?>
-  <a onclick="window.open('<?php echo $twitter; ?>');" class="icon-twitter" title="Twitter"></a>
+  <a href="<?php echo $twitter; ?>" target="_blank" rel="noopener noreferrer" class="icon-twitter" title="Twitter"><span class="sr-only">Twitter</span></a>
   <?php } ?>
   <?php if ($this->config->get($template . '_footer_facebook') && $facebook) { ?>
-  <a onclick="window.open('<?php echo $facebook; ?>');" class="icon-facebook" title="Facebook"></a>
+  <a href="<?php echo $facebook; ?>" target="_blank" rel="noopener noreferrer" class="icon-facebook" title="Facebook"><span class="sr-only">Facebook</span></a>
   <?php } ?>
   </span>
   </div>
@@ -95,32 +93,32 @@
   <?php } ?>
   </div>
 </div>
-<?php if ($web_design) { ?>
-<div style="float:right;"><?php echo $web_design; ?></div>
-<?php } ?>
-<?php if ($this->config->get($template . '_powered_by')) { ?>
-<div id="powered"><?php echo $powered; ?></div>
-<?php } ?>
-<?php echo ($matomo) ? $matomo : ''; ?><br />
+<div id="footer-bottom" style="overflow:hidden;">
+  <?php if ($web_design) { ?>
+  <div style="float:right;"><?php echo $web_design; ?></div>
+  <?php } ?>
+  <?php if ($this->config->get($template . '_powered_by')) { ?>
+  <div id="powered"><?php echo $powered; ?></div>
+  <?php } ?>
 </div>
-</div>
+<?php if ($matomo) { echo $matomo; } ?>
+</div><!-- /.container -->
+</div><!-- /#container -->
 
 <?php foreach ($scripts as $script) { ?>
 <script type="text/javascript" src="<?php echo $script; ?>"></script>
 <?php } ?>
 
 <?php if ($this->config->get($template . '_right_click')) { ?>
-<script type="text/javascript"><!--
-document.onselectstart = new Function('return false');
-document.oncontextmenu = new Function('return false');
-$('img').mousedown(function() {
-  return false;
-});
-//--></script>
+<script type="text/javascript">
+document.addEventListener('selectstart', function(e) { e.preventDefault(); });
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+$('img').on('mousedown', function() { return false; });
+</script>
 <?php } ?>
 
 <?php if ($this->config->get($template . '_back_to_top')) { ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 $(document).ready(function() {
   $('#backtotop').hide();
   $(function() {
@@ -137,7 +135,7 @@ $(document).ready(function() {
     });
   });
 });
-//--></script>
+</script>
 <?php } ?>
 
 <?php if ($cookie_consent) { ?>
@@ -169,7 +167,6 @@ $(document).ready(function() {
     font-family: inherit;
     font-size: 14px;
     line-height: 1.5;
-    /* Slide in from the relevant edge */
     <?php if ($cookie_position === 'top') { ?>
     transform: translateY(-100%);
     <?php } else { ?>
@@ -179,13 +176,11 @@ $(document).ready(function() {
     opacity: 0;
   }
 
-  /* Visible state — toggled by JS */
   #cc-banner.cc-visible {
     transform: translateY(0);
     opacity: 1;
   }
 
-  /* Push page content down when banner sits at the top */
   <?php if ($cookie_position === 'top') { ?>
   body.cc-top-offset {
     transition: margin-top var(--cc-transition);
@@ -255,7 +250,7 @@ $(document).ready(function() {
   </div>
 </div>
 
-<script><!--
+<script>
 (function () {
   'use strict';
 
@@ -276,8 +271,8 @@ $(document).ready(function() {
     document.cookie = name + '=' + encodeURIComponent(value) +
       '; expires=' + expires +
       '; path=/' +
-      '; SameSite=Lax';
-	  '<?php echo $cookie_secure; ?>';
+      '; SameSite=Lax' +
+      '<?php echo $cookie_secure; ?>';
   }
 
   /* ── Banner logic ─────────────────────────────────── */
@@ -288,7 +283,6 @@ $(document).ready(function() {
     banner.classList.add('cc-visible');
 
     if (POSITION === 'top') {
-      /* Wait for transition to finish then nudge the page */
       banner.addEventListener('transitionend', function nudge() {
         document.body.style.marginTop = banner.offsetHeight + 'px';
         banner.removeEventListener('transitionend', nudge);
@@ -311,7 +305,6 @@ $(document).ready(function() {
 
   /* ── Init ─────────────────────────────────────────── */
   if (!getCookie(COOKIE_NAME)) {
-    /* Small delay so the first paint is complete before sliding in */
     window.addEventListener('load', function () {
       setTimeout(showBanner, 200);
     });
@@ -320,7 +313,7 @@ $(document).ready(function() {
   btnAccept.addEventListener('click', acceptCookies);
 
 })();
-//--></script>
+</script>
 <?php } ?>
 
 </body>

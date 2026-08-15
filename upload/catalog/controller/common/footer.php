@@ -19,6 +19,7 @@ class ControllerCommonFooter extends Controller {
 		$this->data['max_position'] = $this->model_design_footer->getFooterMaxPosition();
 
 		$this->data['footer_routes'] = [];
+		$this->data['footer_blocks'] = [];
 
 		$routes = $this->model_design_footer->getFooterRoutes();
 
@@ -35,25 +36,20 @@ class ControllerCommonFooter extends Controller {
 					'title'     => $route['title'],
 					'route'     => $href
 				];
-
-				$this->data['footer_blocks'] = [];
-
-				$blocks = $this->model_design_footer->getFooters();
-
-				if ($blocks) {
-					foreach ($blocks as $block) {
-						$this->data['footer_blocks'][] = [
-							'footer_id' => $block['footer_id'],
-							'name'      => $block['name'],
-							'position'  => $block['position'],
-							'status'    => $block['status']
-						];
-					}
-				}
 			}
+		}
 
-		} else {
-			$this->data['footer_blocks'] = 0;
+		$blocks = $this->model_design_footer->getFooters();
+
+		if ($blocks) {
+			foreach ($blocks as $block) {
+				$this->data['footer_blocks'][] = [
+					'footer_id' => $block['footer_id'],
+					'name'      => $block['name'],
+					'position'  => $block['position'],
+					'status'    => $block['status']
+				];
+			}
 		}
 
 		$this->data['company'] = $this->config->get('config_name');
@@ -63,7 +59,6 @@ class ControllerCommonFooter extends Controller {
 
 		$this->data['facebook'] = html_entity_decode($this->config->get('config_facebook'), ENT_QUOTES, 'UTF-8');
 		$this->data['twitter'] = html_entity_decode($this->config->get('config_twitter'), ENT_QUOTES, 'UTF-8');
-		$this->data['google'] = html_entity_decode($this->config->get('config_google'), ENT_QUOTES, 'UTF-8');
 		$this->data['pinterest'] = html_entity_decode($this->config->get('config_pinterest'), ENT_QUOTES, 'UTF-8');
 		$this->data['instagram'] = html_entity_decode($this->config->get('config_instagram'), ENT_QUOTES, 'UTF-8');
 
@@ -120,7 +115,8 @@ class ControllerCommonFooter extends Controller {
 
 			if ($this->config->get('config_customer_online')) {
 				if (isset($this->request->server['HTTP_HOST']) && isset($this->request->server['REQUEST_URI'])) {
-					$url = 'http://' . $this->request->server['HTTP_HOST'] . $this->request->server['REQUEST_URI'];
+					$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+					$url = $scheme . '://' . $this->request->server['HTTP_HOST'] . $this->request->server['REQUEST_URI'];
 				} else {
 					$url = '';
 				}
@@ -139,7 +135,7 @@ class ControllerCommonFooter extends Controller {
 				foreach ($signatures as $signature) {
 					$robot_signature = strtolower($signature['signature']);
 
-					if (strpos($lower_agent, $robot_signature)) {
+					if (strpos($lower_agent, $robot_signature) !== false) {
 						$robot_name = $signature['name'];
 						break;
 					}
