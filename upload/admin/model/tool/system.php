@@ -131,7 +131,7 @@ class ModelToolSystem extends Model {
 		}
 
 		// Hit the GitHub API
-		$api_url = 'https://api.github.com/repos/YOUR_USERNAME/nivocart/releases/latest';
+		$api_url = 'https://api.github.com/repos/nivocart/nivocart/releases/latest';
 
 		$check = curl_init();
 
