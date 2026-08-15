@@ -1,6 +1,6 @@
 <?php if ($this->config->get($template . '_back_to_top')) { ?>
 <p id="backtotop" style="display:none;">
-  <a href="#" title="Back to top"><span class="sr-only">Back to top</span></a>
+  <a href="#" aria-label="Back to top"><span aria-hidden="true"></span></a>
 </p>
 <?php } ?>
 <div id="footer-holder" class="<?php echo $footer_class; ?>">
