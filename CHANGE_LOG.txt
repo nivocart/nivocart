@@ -14,6 +14,7 @@ Release: TBA
 - Add Qol Opacity feature for custom colour Menu Horizontal and Footer.
 - Remove unused/obsolete Google+ entry in Default Theme settings.
 - Fix bug in "Check new version" feature where the Github link was wrong.
+- Default stylesheet product information page update. 
 
 
 NivoCart v2.2.1
