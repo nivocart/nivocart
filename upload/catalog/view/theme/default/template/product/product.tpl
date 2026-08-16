@@ -386,9 +386,9 @@
         <?php } elseif ($dob && $age_minimum > 0 && !$age_checked) { ?>
           <p class="hidden"></p>
         <?php } else { ?>
-          <b class="sub-prod-count" onclick="subProductCount();"></b>
-          <input type="text" name="quantity" id="quantity" class="quantity-input" size="2" value="<?php echo $minimum; ?>" readonly="readonly" />
-          <b class="add-prod-count" onclick="addProductCount();"></b>
+          <b class="sub-prod-count" onclick="subProductCount();" aria-label="Decrease quantity" role="button"></b>
+          <input type="text" name="quantity" id="quantity" class="quantity-input" size="2" value="<?php echo $minimum; ?>" readonly="readonly" aria-label="Quantity" />
+          <b class="add-prod-count" onclick="addProductCount();" aria-label="Increase quantity" role="button"></b>
           <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
           <?php if ($is_quote) { ?>
             <a href="<?php echo $is_quote; ?>" class="button" style="margin-left:15px;"><?php echo $button_quote; ?></a>
