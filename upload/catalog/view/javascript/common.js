@@ -43,28 +43,28 @@ $(document).ready(function() {
 		function() {
 			$(this).addClass('active');
 			$(this).find('> a[aria-haspopup]').attr('aria-expanded', 'true');
-			$(this).find('> div').stop(false, true).slideDown('slow');
+			$(this).find('> div').show();
 		},
 		function() {
 			$(this).removeClass('active');
 			$(this).find('> a[aria-haspopup]').attr('aria-expanded', 'false');
-			$(this).find('> div').stop(false, true).slideUp('slow');
+			$(this).find('> div').hide();
 		}
 	);
 
 	// Mega Menu overflow fix — H3: handles both LTR and RTL layouts
 	$('#menu ul > li > a + div').each(function() {
-		var $menu = $('#menu');
+		var $menu    = $('#menu');
 		var $dropdown = $(this);
-		var $li = $(this).parent();
+		var $li      = $(this).parent();
 		var menuOffset = $menu.offset();
-		var liOffset = $li.offset();
-		var dropWidth = $dropdown.outerWidth();
+		var liOffset   = $li.offset();
+		var dropWidth  = $dropdown.outerWidth();
 		var isRtl = $menu.closest('.menu-rtl').length > 0;
 
 		if (isRtl) {
 			// RTL: dropdown is right-anchored to the li; check left overflow
-			var liRight = liOffset.left + $li.outerWidth();
+			var liRight  = liOffset.left + $li.outerWidth();
 			var dropLeft = liRight - dropWidth;
 			var overflow = menuOffset.left - dropLeft;
 			if (overflow > 0) {
