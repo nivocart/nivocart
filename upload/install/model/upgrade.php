@@ -258,7 +258,13 @@ class ModelUpgrade extends Model {
 			$settings[$setting['key']] = $setting['serialized'] ? ($setting['value'] ? json_decode($setting['value'], true) : []) : $setting['value'];
 		}
 
-		// No additional table changes at this time.
+		if (!isset($settings['config_image_quality'])) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET store_id = '0', `group` = 'config', `key` = 'config_image_quality', `value` = '80', serialized = '0'");
+		}
+
+		if (!isset($settings['config_image_webp'])) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET store_id = '0', `group` = 'config', `key` = 'config_image_webp', `value` = '1', serialized = '0'");
+		}
 
 		flush();
 

@@ -37,13 +37,19 @@
             <img src="<?php echo $label; ?>" alt="" /></div>
           <?php } ?>
           <div class="image">
-            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="colorbox"><img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
+            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="colorbox"><picture>
+              <source srcset="<?php echo substr($thumb, 0, strrpos($thumb, '.')) . '.webp'; ?>" type="image/webp" />
+              <img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+            </picture></a>
           </div>
         <?php } ?>
         <?php if ($images) { ?>
           <div class="image-additional">
             <?php foreach ($images as $image) { ?>
-              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="colorbox"><img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" /></a>
+              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="colorbox"><picture>
+                <source srcset="<?php echo substr($image['thumb'], 0, strrpos($image['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+                <img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" loading="lazy" />
+              </picture></a>
             <?php } ?>
           </div>
         <?php } ?>
@@ -64,13 +70,19 @@
             <img src="<?php echo $label; ?>" alt="" /></div>
           <?php } ?>
           <div class="image">
-            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="fancybox" rel="gallery"><img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
+            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="fancybox" rel="gallery"><picture>
+              <source srcset="<?php echo substr($thumb, 0, strrpos($thumb, '.')) . '.webp'; ?>" type="image/webp" />
+              <img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+            </picture></a>
           </div>
         <?php } ?>
         <?php if ($images) { ?>
           <div class="image-additional">
             <?php foreach ($images as $image) { ?>
-              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="fancybox" rel="gallery"><img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" /></a>
+              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="fancybox" rel="gallery"><picture>
+                <source srcset="<?php echo substr($image['thumb'], 0, strrpos($image['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+                <img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" loading="lazy" />
+              </picture></a>
             <?php } ?>
           </div>
         <?php } ?>
@@ -91,13 +103,19 @@
             <img src="<?php echo $label; ?>" alt="" /></div>
           <?php } ?>
           <div class="image">
-            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="magnific"><img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
+            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="magnific"><picture>
+              <source srcset="<?php echo substr($thumb, 0, strrpos($thumb, '.')) . '.webp'; ?>" type="image/webp" />
+              <img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+            </picture></a>
           </div>
         <?php } ?>
         <?php if ($images) { ?>
           <div class="image-additional">
             <?php foreach ($images as $image) { ?>
-              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="magnific"><img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" /></a>
+              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="magnific"><picture>
+                <source srcset="<?php echo substr($image['thumb'], 0, strrpos($image['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+                <img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" loading="lazy" />
+              </picture></a>
             <?php } ?>
           </div>
         <?php } ?>
@@ -118,13 +136,19 @@
             <img src="<?php echo $label; ?>" alt="" /></div>
           <?php } ?>
           <div class="image">
-            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="viewbox"><img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" /></a>
+            <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="viewbox"><picture>
+              <source srcset="<?php echo substr($thumb, 0, strrpos($thumb, '.')) . '.webp'; ?>" type="image/webp" />
+              <img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+            </picture></a>
           </div>
         <?php } ?>
         <?php if ($images) { ?>
           <div class="image-additional">
             <?php foreach ($images as $image) { ?>
-              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="viewbox"><img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" /></a>
+              <a href="<?php echo $image['popup']; ?>" title="<?php echo $heading_title; ?>" class="viewbox"><picture>
+                <source srcset="<?php echo substr($image['thumb'], 0, strrpos($image['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+                <img src="<?php echo $image['thumb']; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" loading="lazy" />
+              </picture></a>
             <?php } ?>
           </div>
         <?php } ?>
@@ -147,13 +171,13 @@
           <div class="simpleLens-gallery-container" id="zoom">
             <div class="simpleLens-container">
               <div class="simpleLens-big-image-container">
-                <a class="simpleLens-lens-image" data-lens-image="<?php echo $zoom; ?>"><img src="<?php echo $thumb; ?>" class="simpleLens-big-image" alt="" /></a>
+                <a class="simpleLens-lens-image" data-lens-image="<?php echo $zoom; ?>"><img src="<?php echo $thumb; ?>" class="simpleLens-big-image" alt="" loading="eager" /></a>
               </div>
             </div>
             <div class="simpleLens-thumbnails-container">
-              <a href="#" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php echo $zoom; ?>" data-big-image="<?php echo $popup; ?>"><img src="<?php echo $gallery_thumb; ?>" alt="" /></a>
+              <a href="#" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php echo $zoom; ?>" data-big-image="<?php echo $popup; ?>"><img src="<?php echo $gallery_thumb; ?>" alt="" loading="eager" /></a>
               <?php foreach ($images as $image) { ?>
-                <a href="#" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php echo $image['zoom']; ?>" data-big-image="<?php echo $image['popup']; ?>"><img src="<?php echo $image['thumb']; ?>" alt="" /></a>
+                <a href="#" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php echo $image['zoom']; ?>" data-big-image="<?php echo $image['popup']; ?>"><img src="<?php echo $image['thumb']; ?>" alt="" loading="lazy" /></a>
               <?php } ?>
             </div>
           </div>
@@ -483,7 +507,10 @@
               <div class="offer-medium"><img src="<?php echo $offer_label_medium; ?>" alt="" /></div>
             <?php } ?>
             <?php if ($offer['thumb']) { ?>
-              <div class="image"><a href="<?php echo $offer['href']; ?>"><img src="<?php echo $offer['thumb']; ?>" alt="<?php echo $offer['name']; ?>" /></a></div>
+              <div class="image"><a href="<?php echo $offer['href']; ?>"><picture>
+                <source srcset="<?php echo substr($offer['thumb'], 0, strrpos($offer['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+                <img src="<?php echo $offer['thumb']; ?>" alt="<?php echo $offer['name']; ?>" loading="lazy" />
+              </picture></a></div>
             <?php } ?>
             <div class="name"><a href="<?php echo $offer['href']; ?>"><?php echo $offer['name']; ?></a></div>
             <div class="offer"><a href="<?php echo $offer['href']; ?>"><?php echo $offer['group']; ?></a></div>
@@ -514,7 +541,10 @@
                 <div class="product-label" style="left:<?php echo $product['label_style']; ?>px; margin:0 0 -<?php echo $product['label_style']; ?>px 0;">
                 <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>
               <?php } ?>
-              <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a></div>
+              <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
+                <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+                <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
+              </picture></a></div>
             <?php } ?>
             <div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
             <?php if ($product['price'] && !$price_hide) { ?>

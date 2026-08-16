@@ -1652,19 +1652,34 @@
             </div></td>
           </tr>
         </table>
-        <h2><?php echo $text_image_resize; ?></h2>
+        <h2><?php echo $text_image_quality; ?></h2>
         <table class="form">
           <tr>
-            <td><span class="required">*</span> <?php echo $entry_image_category; ?><span class="help"><?php echo $help_image_category; ?></span></td>
-            <td><?php if ($error_image_category) { ?>
-              <input type="text" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="3" class="input-error" /> x
-              <input type="text" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="3" class="input-error" /> px
-              <span class="error"><?php echo $error_image_category; ?></span>
+            <td><span class="required">*</span> <?php echo $entry_image_quality; ?><span class="help"><?php echo $help_image_quality; ?></span></td>
+            <td><?php if ($error_image_quality) { ?>
+              <input type="text" name="config_image_quality" value="<?php echo $config_image_quality; ?>" size="3" class="input-error" />
+              <span class="error"><?php echo $error_image_quality; ?></span>
             <?php } else { ?>
-              <input type="text" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="3" /> x
-              <input type="text" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="3" /> px
+              <input type="text" name="config_image_quality" value="<?php echo $config_image_quality; ?>" size="3" />
             <?php } ?></td>
           </tr>
+          <tr>
+            <td><?php echo $entry_image_webp; ?><span class="help"><?php echo $help_image_webp; ?></span></td>
+            <td><?php if ($config_image_webp) { ?>
+              <input type="radio" name="config_image_webp" value="1" id="image-webp-on" class="radio" checked />
+              <label for="image-webp-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_image_webp" value="0" id="image-webp-off" class="radio" />
+              <label for="image-webp-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_image_webp" value="1" id="image-webp-on" class="radio" />
+              <label for="image-webp-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_image_webp" value="0" id="image-webp-off" class="radio" checked />
+              <label for="image-webp-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+        </table>
+        <h2><?php echo $text_image_resize; ?></h2>
+        <table class="form">
           <tr>
             <td><span class="required">*</span> <?php echo $entry_image_thumb; ?><span class="help"><?php echo $help_image_thumb; ?></span></td>
             <td><?php if ($error_image_thumb) { ?>
@@ -1707,6 +1722,17 @@
             <?php } else { ?>
               <input type="text" name="config_image_additional_width" value="<?php echo $config_image_additional_width; ?>" size="3" /> x
               <input type="text" name="config_image_additional_height" value="<?php echo $config_image_additional_height; ?>" size="3" /> px
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><span class="required">*</span> <?php echo $entry_image_category; ?><span class="help"><?php echo $help_image_category; ?></span></td>
+            <td><?php if ($error_image_category) { ?>
+              <input type="text" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="3" class="input-error" /> x
+              <input type="text" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="3" class="input-error" /> px
+              <span class="error"><?php echo $error_image_category; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="3" /> x
+              <input type="text" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="3" /> px
             <?php } ?></td>
           </tr>
           <tr>

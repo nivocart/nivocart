@@ -4266,6 +4266,8 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (495, 0, 'config', 'config_image_newspopup_height', '500', 0),
 (496, 0, 'config', 'config_image_cart_width', '47', 0),
 (497, 0, 'config', 'config_image_cart_height', '47', 0),
+(545, 0, 'config', 'config_image_quality', '80', 0),
+(546, 0, 'config', 'config_image_webp', '1', 0),
 (498, 0, 'config', 'config_label_size_ratio', '60', 0),
 (499, 0, 'config', 'config_label_stock', 'data/sold-out.png', 0),
 (500, 0, 'config', 'config_label_offer', 'data/offer.png', 0),

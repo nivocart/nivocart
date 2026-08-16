@@ -20,7 +20,7 @@ class ControllerSettingSetting extends Controller {
 		'text_affiliate', 'text_return', 'text_reward', 'text_coupon',
 		'text_voucher', 'text_administration', 'text_cookies', 'text_black',
 		'text_white', 'text_top', 'text_bottom', 'text_news',
-		'text_notifications', 'text_image_resize', 'text_image_labels',
+		'text_notifications', 'text_image_quality', 'text_image_resize', 'text_image_labels',
 		'text_image_manager', 'text_browse', 'text_clear', 'text_shipping',
 		'text_payment', 'text_mail', 'text_verification', 'text_analytic',
 		'text_security', 'text_search_page', 'text_block_page', 'text_upload',
@@ -77,7 +77,7 @@ class ControllerSettingSetting extends Controller {
 		'entry_notification_approval', 'entry_notification_stock',
 		'entry_notification_low', 'entry_notification_review',
 		'entry_notification_affiliate', 'entry_notification_comment',
-		'entry_logo', 'entry_icon', 'entry_apple_icon', 'entry_image_category', 'entry_image_thumb',
+		'entry_logo', 'entry_icon', 'entry_apple_icon', 'entry_image_quality', 'entry_image_webp', 'entry_image_category', 'entry_image_thumb',
 		'entry_image_popup', 'entry_image_product', 'entry_image_additional',
 		'entry_image_brand', 'entry_image_related', 'entry_image_compare',
 		'entry_image_wishlist', 'entry_image_newsthumb', 'entry_image_newspopup',
@@ -127,7 +127,7 @@ class ControllerSettingSetting extends Controller {
 		'help_news_sharethis', 'help_news_chars', 'help_notification_return',
 		'help_notification_online', 'help_notification_review',
 		'help_notification_affiliate', 'help_notification_comment',
-		'help_logo', 'help_icon', 'help_apple_icon', 'help_image_category', 'help_image_thumb',
+		'help_logo', 'help_icon', 'help_apple_icon', 'help_image_quality', 'help_image_webp', 'help_image_category', 'help_image_thumb',
 		'help_image_popup', 'help_image_product', 'help_image_additional',
 		'help_image_brand', 'help_image_related', 'help_image_compare',
 		'help_image_wishlist', 'help_image_newsthumb', 'help_image_newspopup',
@@ -292,6 +292,8 @@ class ControllerSettingSetting extends Controller {
 		'config_logo'             => [],
 		'config_icon'             => [],
 		'config_apple_icon'       => [],
+			'config_image_quality'    => ['default' => 80],
+			'config_image_webp'       => ['default' => '1'],
 		'config_image_category_width'   => [], 'config_image_category_height'  => [],
 		'config_image_thumb_width'      => [], 'config_image_thumb_height'     => [],
 		'config_image_popup_width'      => [], 'config_image_popup_height'     => [],
@@ -363,7 +365,7 @@ class ControllerSettingSetting extends Controller {
 		'warning', 'name', 'owner', 'address', 'email', 'email_noreply',
 		'telephone', 'title', 'customer_group_display', 'login_attempts',
 		'reward_rate', 'voucher_min', 'voucher_max', 'catalog_limit',
-		'admin_limit', 'preference_pagination', 'image_category', 'image_thumb',
+		'admin_limit', 'preference_pagination', 'image_quality', 'image_category', 'image_thumb',
 		'image_popup', 'image_product', 'image_additional', 'image_brand',
 		'image_related', 'image_compare', 'image_wishlist', 'image_newsthumb',
 		'image_newspopup', 'image_cart', 'ftp_host', 'ftp_port', 'ftp_username',
@@ -762,6 +764,11 @@ class ControllerSettingSetting extends Controller {
 	}
 
 	private function validateImage(): void {
+		$quality = $this->request->post['config_image_quality'] ?? '';
+		if ($quality === '' || !ctype_digit((string)$quality) || (int)$quality < 1 || (int)$quality > 100) {
+			$this->error['image_quality'] = $this->language->get('error_image_quality');
+		}
+
 		foreach ([
 			'image_category', 'image_thumb', 'image_popup', 'image_product',
 			'image_additional', 'image_brand', 'image_related', 'image_compare',

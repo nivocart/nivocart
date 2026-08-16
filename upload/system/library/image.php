@@ -148,7 +148,7 @@ class Image {
 				})(),
 				'png'   => imagepng($this->image, $imagefile),
 				'gif'   => imagegif($this->image, $imagefile),
-				'webp'  => imagewebp($this->image, $imagefile),
+				'webp'  => imagewebp($this->image, $imagefile, $quality),
 				default => ''
 			};
 
@@ -193,7 +193,7 @@ class Image {
 			default => min($scale_w, $scale_h)
 		};
 
-		if ($scale === 1 && $scale_h === $scale_w && $this->mime !== 'image/png') {
+		if ($scale === 1 && $scale_h === $scale_w && $this->mime !== 'image/png' && $this->mime !== 'image/webp') {
 			return;
 		}
 
@@ -207,7 +207,7 @@ class Image {
 
 		$this->image = imagecreatetruecolor($width, $height);
 
-		if ($this->mime === 'image/png') {
+		if ($this->mime === 'image/png' || $this->mime === 'image/webp') {
 			imagealphablending($this->image, false);
 			imagesavealpha($this->image, true);
 			$background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);

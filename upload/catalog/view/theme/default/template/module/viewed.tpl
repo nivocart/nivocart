@@ -21,7 +21,10 @@
             <div class="product-label" style="left:<?php echo $product['label_style']; ?>px; margin:0 0 -<?php echo $product['label_style']; ?>px 0;">
             <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>
           <?php } ?>
-          <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a></div>
+          <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
+          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
+        </picture></a></div>
         <?php } ?>
         <div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
         <?php if ($product['price'] && !$price_hide) { ?>
@@ -69,7 +72,10 @@
     <ul class="box-product-list">
     <?php foreach ($products as $product) { ?>
       <li>
-        <a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a>
+        <a href="<?php echo $product['href']; ?>"><picture>
+          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
+        </picture></a>
         <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a><br />
       <?php if ($product['price'] && !$price_hide) { ?>
         <a href="<?php echo $product['href']; ?>" class="list-price">
@@ -109,7 +115,10 @@
             <div class="product-label" style="left:<?php echo $product['label_style']; ?>px; margin:0 0 -<?php echo $product['label_style']; ?>px 0;">
             <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>
           <?php } ?>
-          <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a></div>
+          <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
+          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
+        </picture></a></div>
         <?php } ?>
         <div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
         <?php if ($product['price'] && !$price_hide) { ?>
@@ -157,7 +166,10 @@
     <ul class="box-product-list">
     <?php foreach ($products as $product) { ?>
       <li>
-        <a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a>
+        <a href="<?php echo $product['href']; ?>"><picture>
+          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
+        </picture></a>
         <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a><br />
       <?php if ($product['price'] && !$price_hide) { ?>
         <a href="<?php echo $product['href']; ?>" class="list-price">
