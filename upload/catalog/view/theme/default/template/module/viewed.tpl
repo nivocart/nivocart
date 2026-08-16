@@ -22,7 +22,7 @@
             <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>
           <?php } ?>
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
-          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
           <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
         </picture></a></div>
         <?php } ?>
@@ -73,7 +73,7 @@
     <?php foreach ($products as $product) { ?>
       <li>
         <a href="<?php echo $product['href']; ?>"><picture>
-          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
           <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
         </picture></a>
         <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a><br />
@@ -116,7 +116,7 @@
             <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>
           <?php } ?>
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
-          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
           <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
         </picture></a></div>
         <?php } ?>
@@ -167,7 +167,7 @@
     <?php foreach ($products as $product) { ?>
       <li>
         <a href="<?php echo $product['href']; ?>"><picture>
-          <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+          <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
           <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
         </picture></a>
         <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a><br />

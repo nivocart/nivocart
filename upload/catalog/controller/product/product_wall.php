@@ -117,6 +117,8 @@ class ControllerProductProductWall extends Controller {
 			$this->load->model('catalog/offer');
 			$this->load->model('account/customer');
 
+			$webp = (bool)$this->config->get('config_image_webp');
+
 			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			foreach ($product_results as $result) {
@@ -128,6 +130,7 @@ class ControllerProductProductWall extends Controller {
 					$image = false;
 					$label_ratio = 50;
 				}
+				$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 				// Label
 				if ($result['label']) {
@@ -214,6 +217,7 @@ class ControllerProductProductWall extends Controller {
 				$this->data['products'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
+					'thumb_webp'      => $image_webp,
 					'label'           => $label,
 					'label_style'     => $label_style,
 					'stock_label'     => $stock_label,

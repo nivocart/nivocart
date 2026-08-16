@@ -84,6 +84,8 @@ class ControllerProductCompare extends Controller {
 
 		$this->load->model('catalog/offer');
 
+		$webp = (bool)$this->config->get('config_image_webp');
+
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
 		$this->data['products'] = [];
@@ -104,6 +106,7 @@ class ControllerProductCompare extends Controller {
 					$image = false;
 					$label_ratio = 50;
 				}
+				$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 				// Label
 				if ($product_info['label']) {
@@ -215,6 +218,7 @@ class ControllerProductCompare extends Controller {
 					'product_id'        => $current_product_id,
 					'name'              => $product_info['name'],
 					'thumb'             => $image,
+					'thumb_webp'        => $image_webp,
 					'label'             => $label,
 					'label_style'       => $label_style,
 					'stock_label'       => $stock_label,

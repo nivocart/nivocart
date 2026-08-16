@@ -47,7 +47,7 @@
               </div>
             <?php } ?>
             <a href="<?php echo $products[$product['product_id']]['href']; ?>"><picture>
-            <source srcset="<?php echo substr($products[$product['product_id']]['thumb'], 0, strrpos($products[$product['product_id']]['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+            <?php if ($products[$product['product_id']]['thumb_webp']) { ?><source srcset="<?php echo $products[$product['product_id']]['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $products[$product['product_id']]['thumb']; ?>" alt="<?php echo $products[$product['product_id']]['name']; ?>" loading="lazy" />
           </picture></a>
           <?php } ?>

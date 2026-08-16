@@ -58,7 +58,7 @@
             </div>
           <?php } ?>
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
-            <source srcset="<?php echo substr($product['thumb'], 0, strrpos($product['thumb'], '.')) . '.webp'; ?>" type="image/webp" />
+            <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $product['thumb']; ?>" title="<?php echo $product['name']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
           </picture></a></div>
         <?php } ?>

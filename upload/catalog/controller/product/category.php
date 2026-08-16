@@ -198,6 +198,8 @@ class ControllerProductCategory extends Controller {
 			$this->load->model('catalog/offer');
 			$this->load->model('account/customer');
 
+			$webp = (bool)$this->config->get('config_image_webp');
+
 			$offers = $this->model_catalog_offer->getListProductOffers();
 
 			$empty_category = $this->config->get('config_empty_category');
@@ -259,6 +261,7 @@ class ControllerProductCategory extends Controller {
 					$image = false;
 					$label_ratio = 50;
 				}
+				$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 				if ($result['label']) {
 					$label = $this->model_tool_image->resize($result['label'], round(($this->image_product_width / 3), 0, PHP_ROUND_HALF_UP), round(($this->image_product_height / 3), 0, PHP_ROUND_HALF_UP));
@@ -346,6 +349,7 @@ class ControllerProductCategory extends Controller {
 				$this->data['products'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
+					'thumb_webp'      => $image_webp,
 					'label'           => $label,
 					'label_style'     => $label_style,
 					'stock_label'     => $stock_label,

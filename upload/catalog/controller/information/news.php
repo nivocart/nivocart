@@ -74,6 +74,8 @@ class ControllerInformationNews extends Controller {
 
 			$this->load->model('tool/image');
 
+			$webp = (bool)$this->config->get('config_image_webp');
+
 			if ($news_info['lightbox'] === 'viewbox') {
 				$this->document->addStyle('catalog/view/javascript/jquery/viewbox/viewbox.min.css');
 				$this->document->addScript('catalog/view/javascript/jquery/viewbox/jquery.viewbox.min.js');
@@ -123,11 +125,14 @@ class ControllerInformationNews extends Controller {
 				$this->data['lightbox'] = 'colorbox';
 			}
 
+			$this->data['thumb_webp'] = ($this->data['thumb'] && $webp) ? substr($this->data['thumb'], 0, strrpos($this->data['thumb'], '.')) . '.webp' : '';
+
 			if ($news_info['image']) {
 				$this->data['popup'] = $this->model_tool_image->resize($news_info['image'], $config_image_newsthumb_width, $config_image_newsthumb_height);
 			} else {
 				$this->data['popup'] = '';
 			}
+			$this->data['popup_webp'] = ($this->data['popup'] && $webp) ? substr($this->data['popup'], 0, strrpos($this->data['popup'], '.')) . '.webp' : '';
 
 			// ShareThis
 			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
@@ -197,6 +202,7 @@ class ControllerInformationNews extends Controller {
 				$product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
 				$image = $product_info['image'] ? $this->model_tool_image->resize($product_info['image'], 100, 100) : false;
+				$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 				$manufacturer = $product_info['manufacturer'] ? $product_info['manufacturer'] : false;
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -258,6 +264,7 @@ class ControllerInformationNews extends Controller {
 				$this->data['products'][] = [
 					'product_id'      => $product_info['product_id'],
 					'thumb'           => $image,
+					'thumb_webp'      => $image_webp,
 					'stock_label'     => $stock_label,
 					'offer_label'     => $offer_label,
 					'special_label'   => $special_label,

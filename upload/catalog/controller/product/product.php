@@ -306,6 +306,8 @@ class ControllerProductProduct extends Controller {
 			$this->load->model('catalog/review');
 			$this->load->model('tool/image');
 
+			$webp = (bool)$this->config->get('config_image_webp');
+
 			// Image viewers
 			if ($this->config->get('config_lightbox') === 'zoomlens') {
 				$this->document->addStyle('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.css');
@@ -403,6 +405,8 @@ class ControllerProductProduct extends Controller {
 				$this->data['lightbox'] = 'colorbox';
 			}
 
+			$this->data['thumb_webp'] = ($this->data['thumb'] && $webp) ? substr($this->data['thumb'], 0, strrpos($this->data['thumb'], '.')) . '.webp' : '';
+
 			if ($product_info['image']) {
 				$label_ratio = round((($this->image_thumb_width * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 				$this->data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width, $this->image_popup_height);
@@ -410,16 +414,19 @@ class ControllerProductProduct extends Controller {
 				$label_ratio = 90;
 				$this->data['popup'] = '';
 			}
+			$this->data['popup_webp'] = ($this->data['popup'] && $webp) ? substr($this->data['popup'], 0, strrpos($this->data['popup'], '.')) . '.webp' : '';
 
 			$this->data['images'] = [];
 
 			$results = $this->model_catalog_product->getProductImages($product_id);
 
 			foreach ($results as $result) {
+				$add_thumb = $this->model_tool_image->resize($result['image'], $this->image_additional_width, $this->image_additional_height);
 				$this->data['images'][] = [
-					'zoom'  => $this->model_tool_image->resize($result['image'], $this->image_popup_width * 2, $this->image_popup_height * 2),
-					'popup' => $this->model_tool_image->resize($result['image'], $this->image_popup_width, $this->image_popup_height),
-					'thumb' => $this->model_tool_image->resize($result['image'], $this->image_additional_width, $this->image_additional_height)
+					'zoom'       => $this->model_tool_image->resize($result['image'], $this->image_popup_width * 2, $this->image_popup_height * 2),
+					'popup'      => $this->model_tool_image->resize($result['image'], $this->image_popup_width, $this->image_popup_height),
+					'thumb'      => $add_thumb,
+					'thumb_webp' => ($add_thumb && $webp) ? substr($add_thumb, 0, strrpos($add_thumb, '.')) . '.webp' : ''
 				];
 			}
 
@@ -723,8 +730,9 @@ class ControllerProductProduct extends Controller {
 					}
 
 					$this->data['offers'][] = [
-						'thumb' => $offer_image,
-						'name'  => $offer_name,
+						'thumb'      => $offer_image,
+						'thumb_webp' => ($offer_image && $webp) ? substr($offer_image, 0, strrpos($offer_image, '.')) . '.webp' : '',
+						'name'       => $offer_name,
 						'href'  => $this->url->link('product/product', 'product_id=' . $offer_product, 'SSL'),
 						'group' => $offer_label
 					];
@@ -833,6 +841,7 @@ class ControllerProductProduct extends Controller {
 				$this->data['products'][] = [
 					'product_id'      => $result['product_id'],
 					'thumb'           => $image,
+					'thumb_webp'      => ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '',
 					'label'           => $label,
 					'label_style'     => $label_style,
 					'stock_label'     => $stock_label,

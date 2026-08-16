@@ -47,6 +47,8 @@ class ControllerModuleViewed extends Controller {
 		$this->load->model('catalog/offer');
 		$this->load->model('tool/image');
 
+		$webp = (bool)$this->config->get('config_image_webp');
+
 		$offers = $this->model_catalog_offer->getListProductOffers();
 
 		$products = [];
@@ -86,6 +88,7 @@ class ControllerModuleViewed extends Controller {
 					$image = false;
 					$label_ratio = 50;
 				}
+				$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 				if ($product_info['label']) {
 					$label = $this->model_tool_image->resize($product_info['label'], round(($setting['image_width'] / 3), 0, PHP_ROUND_HALF_UP), round(($setting['image_height'] / 3), 0, PHP_ROUND_HALF_UP));
@@ -131,6 +134,7 @@ class ControllerModuleViewed extends Controller {
 				$this->data['products'][] = [
 					'product_id'      => $product_info['product_id'],
 					'thumb'           => $image,
+					'thumb_webp'      => $image_webp,
 					'label'           => $label,
 					'label_style'     => $label_style,
 					'stock_label'     => $stock_label,
