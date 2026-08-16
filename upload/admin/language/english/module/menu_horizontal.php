@@ -24,7 +24,7 @@ $_['text_content_lower']         = 'Content Lower';
 // Entry
 $_['entry_theme']                = 'Menu Theme:<span class="help">Choose between a Light, Dark or Custom theme.</span>';
 $_['entry_header_color']         = 'Select Menu Color:';
-$_['entry_header_color_opacity'] = 'Select Menu Opacity:<span class="help">Applies to Custom theme only. Reduces the background color intensity. 100% is fully opaque.</span>';
+$_['entry_header_color_opacity'] = 'Select Menu Opacity:<span class="help">Reduces the background color intensity. 100% is fully opaque.</span>';
 $_['entry_header_shape']         = 'Select Menu Shape:';
 $_['entry_column_limit']         = 'Menu Items Limit:<span class="help">Set the maximum number of menu items per column.</span>';
 $_['entry_column_number']        = 'Number of Columns:<span class="help">Set the number of columns to generate when over the Menu Item Limit.';
