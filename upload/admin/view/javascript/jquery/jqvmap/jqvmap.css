@@ -28,6 +28,7 @@
 	left: 10px;
 	border-radius: 3px;
 	background: #4A4A4A;
+	box-sizing: content-box;
 	padding: 3px;
 	color: #FCFCFC;
 	width: 10px;
