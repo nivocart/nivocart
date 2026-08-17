@@ -50,7 +50,7 @@ class Browser {
 	// Compile the User Agent data
 	protected function loadAgentFile() {
 		if (file_exists(DIR_SYSTEM . 'helper/agent.php') && is_file(DIR_SYSTEM . 'helper/agent.php')) {
-			include(DIR_SYSTEM . 'helper/agent.php');
+			include DIR_SYSTEM . 'helper/agent.php';
 		} else {
 			return false;
 		}
