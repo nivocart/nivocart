@@ -72,10 +72,11 @@
 	text-decoration: none;
 	color: #EFEFEF;
 	font-size: 15px;
+	transition: transform 0.2s ease;
 }
 .footer-light #footer > .column-one a:hover, .footer-light #footer > .column-two a:hover, .footer-light #footer > .column-three a:hover, .footer-light #footer > .column-four a:hover {
-	color: #FFFFFF;
-	text-decoration: underline;
+	color: #FFF;
+	transform: translateX(4px);
 }
 .footer-light #footer > .big-column {
 	float: right;
@@ -129,9 +130,11 @@
 	text-decoration: none;
 	color: #444;
 	font-size: 15px;
+	transition: transform 0.2s ease;
 }
 .footer-dark #footer > .column-one a:hover, .footer-dark #footer > .column-two a:hover, .footer-dark #footer > .column-three a:hover, .footer-dark #footer > .column-four a:hover {
-	color: #36AAD8;
+	color: #222;
+	transform: translateX(4px);
 }
 .footer-dark #footer > .big-column {
 	float: right;

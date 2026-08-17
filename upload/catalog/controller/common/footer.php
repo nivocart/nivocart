@@ -107,6 +107,7 @@ class ControllerCommonFooter extends Controller {
 
 		if ($footer_theme === 'custom' && $footer_color && $footer_color !== 'clear') {
 			$raw_opacity = $this->config->get($template . '_footer_color_opacity');
+
 			$footer_color_opacity = ($raw_opacity !== null && $raw_opacity !== '') ? (float)$raw_opacity : 1.0;
 
 			if ($footer_color_opacity < 1.0) {
@@ -123,6 +124,7 @@ class ControllerCommonFooter extends Controller {
 						$r = hexdec(substr($hex, 0, 2));
 						$g = hexdec(substr($hex, 2, 2));
 						$b = hexdec(substr($hex, 4, 2));
+
 						$this->data['footer_bg_rgba'] = 'rgba(' . $r . ',' . $g . ',' . $b . ',' . $footer_color_opacity . ')';
 					}
 				}
