@@ -16,6 +16,7 @@ Release: TBA
 - Remove unused/obsolete Google+ entry in Default Theme settings.
 - Fix bug in "Check new version" feature where the Github link was wrong.
 - Fix bug in Catalog Product List where the totals were not accurate.
+- Updated built-in colours palette for custom Footer and Menus.
 - Default stylesheet product information page update. 
 
 
