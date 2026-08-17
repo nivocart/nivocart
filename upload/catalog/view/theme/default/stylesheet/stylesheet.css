@@ -999,51 +999,6 @@ a.button-add:hover {
 }
 
 /* ============================================================
- * TABS - Horizontal
- * ============================================================ */
-.htabs {
-  height: 32px;
-  line-height: 16px;
-  border-bottom: 1px solid #888;
-  margin: 0 0 30px 0;
-}
-.htabs a {
-  float: left;
-  color: #222;
-  font-size: var(--font-size);
-  font-weight: normal;
-  text-align: center;
-  text-decoration: none;
-  text-shadow: 0 0 1px rgba(52, 52, 52, 0.5);
-  border-top: 1px solid #CCC;
-  border-left: 1px solid #CCC;
-  border-right: 1px solid #CCC;
-  border-bottom: 1px solid #888;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  background-color: #FAFAFA;
-  background-image: linear-gradient(to bottom, #FAFAFA, #EAEAEA);
-  padding: 7px 15px;
-  margin: 0 2px 0 0;
-  display: none; /* jQuery manages visibility */
-}
-.htabs a.selected {
-  background: var(--clr-bg);
-  border-top: 1px solid #888;
-  border-left: 1px solid #888;
-  border-right: 1px solid #888;
-  border-bottom: 1px solid var(--clr-bg);
-}
-.htabs-content {
-  border: none;
-  min-height: 100px;
-  background: transparent;
-  margin: 0 0 20px 0;
-  padding: 10px;
-  overflow: auto;
-  z-index: 2;
-}
-
-/* ============================================================
  * BOXES -> Heading + Content
  * ============================================================ */
 .box {
