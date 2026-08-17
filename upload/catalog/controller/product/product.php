@@ -407,6 +407,34 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['thumb_webp'] = ($this->data['thumb'] && $webp) ? substr($this->data['thumb'], 0, strrpos($this->data['thumb'], '.')) . '.webp' : '';
 
+			// Responsive failsafe — always generate the safe mobile thumb at the hardcoded
+			// default size (230×230) so small-screen srcset entries remain correct even if
+			// an admin has increased the thumb dimensions in Settings.
+			$this->data['thumb_safe'] = $product_info['image'] ? $this->model_tool_image->resize($product_info['image'], 230, 230) : '';
+			$this->data['thumb_safe_webp'] = ($this->data['thumb_safe'] && $webp) ? substr($this->data['thumb_safe'], 0, strrpos($this->data['thumb_safe'], '.')) . '.webp' : '';
+
+			// Responsive large-screen thumbs keyed to the active theme display width.
+			// Normal  (≤1267px container) → left column ≈ 583px → thumb_medium at 500px
+			// Wide / Unlimited (≤1907px) → left column ≈ 877px → also thumb_large at 800px
+			$widescreen = $this->config->get('default_widescreen');
+
+			$this->data['thumb_medium'] = '';
+			$this->data['thumb_medium_webp'] = '';
+			$this->data['thumb_large'] = '';
+			$this->data['thumb_large_webp'] = '';
+
+			if ($product_info['image']) {
+				$thumb_medium = $this->model_tool_image->resize($product_info['image'], 320, 320);
+				$this->data['thumb_medium'] = $thumb_medium;
+				$this->data['thumb_medium_webp'] = ($thumb_medium && $webp) ? substr($thumb_medium, 0, strrpos($thumb_medium, '.')) . '.webp' : '';
+
+				if ($widescreen === 'wide' || $widescreen === 'unlimited') {
+					$thumb_large = $this->model_tool_image->resize($product_info['image'], 560, 560);
+					$this->data['thumb_large'] = $thumb_large;
+					$this->data['thumb_large_webp'] = ($thumb_large && $webp) ? substr($thumb_large, 0, strrpos($thumb_large, '.')) . '.webp' : '';
+				}
+			}
+
 			if ($product_info['image']) {
 				$label_ratio = round((($this->image_thumb_width * $this->config->get('config_label_size_ratio')) / 100), 0, PHP_ROUND_HALF_UP);
 				$this->data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width, $this->image_popup_height);
