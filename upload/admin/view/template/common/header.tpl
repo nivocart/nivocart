@@ -389,21 +389,21 @@ $(document).ready(function() {
 
 		var outHour = now.getHours()+offset;
 		if (outHour < 10) {
-			document.getElementById('hour').innerHTML = "0"+outHour;
+			document.getElementById('hour').innerHTML = "0" + outHour;
 		} else {
 			document.getElementById('hour').innerHTML = outHour;
 		}
 
 		var outMin = now.getMinutes();
 		if (outMin < 10) {
-			document.getElementById('minute').innerHTML = "0"+outMin;
+			document.getElementById('minute').innerHTML = "0" + outMin;
 		} else {
 			document.getElementById('minute').innerHTML = outMin;
 		}
 
 		var outSec = now.getSeconds();
 		if (outSec < 10) {
-			document.getElementById('second').innerHTML = "0"+outSec;
+			document.getElementById('second').innerHTML = "0" + outSec;
 		} else {
 			document.getElementById('second').innerHTML = outSec;
 		}
