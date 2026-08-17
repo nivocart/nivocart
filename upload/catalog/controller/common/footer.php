@@ -111,11 +111,14 @@ class ControllerCommonFooter extends Controller {
 
 			if ($footer_color_opacity < 1.0) {
 				$this->load->model('setting/setting');
+
 				$skins = $this->model_setting_setting->getColors();
+
 				$color_map = array_column($skins, 'color', 'skin');
 
 				if (isset($color_map[$footer_color])) {
 					$hex = ltrim($color_map[$footer_color], '#');
+
 					if (strlen($hex) === 6) {
 						$r = hexdec(substr($hex, 0, 2));
 						$g = hexdec(substr($hex, 2, 2));
