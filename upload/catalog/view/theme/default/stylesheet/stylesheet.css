@@ -1912,14 +1912,10 @@ ul.box-filter > li ul {
 .product-info > .left .image img {
   max-width: 100%;
   height: auto;
-  border: 1px solid var(--clr-border-light);
+  border: 0;
   padding: 10px;
-  border-radius: var(--radius-sm);
-  transition: box-shadow var(--ease);
 }
-.product-info > .left .image img:hover {
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-}
+.product-info > .left .image img:hover {}
 .product-info > .left .image-additional {
   width: 100%;
   min-height: 80px;
