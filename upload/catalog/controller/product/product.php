@@ -308,101 +308,69 @@ class ControllerProductProduct extends Controller {
 
 			$webp = (bool)$this->config->get('config_image_webp');
 
-			// Image viewers
-			if ($this->config->get('config_lightbox') === 'zoomlens') {
-				$this->document->addStyle('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.css');
-				$this->document->addScript('catalog/view/javascript/jquery/simple-lens/jquery.simpleGallery.min.js');
-				$this->document->addScript('catalog/view/javascript/jquery/simple-lens/jquery.simpleLens.min.js');
+			// Image viewers — resolve active viewer once, then load assets from a data map.
+			// To add a new viewer, extend $viewer_assets; no logic changes needed.
+			$lightbox = match($this->config->get('config_lightbox') ?? '') {
+				'viewbox'  => 'viewbox',
+				'magnific' => 'magnific',
+				'fancybox' => 'fancybox',
+				'zoomlens' => 'zoomlens',
+				default    => 'colorbox',
+			};
 
-				if ($product_info['image']) {
-					$this->data['zoom'] = $this->model_tool_image->resize($product_info['image'], $this->image_popup_width * 3, $this->image_popup_height * 3);
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 232, 232);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], 58, 58);
-					$this->data['label_style'] = 176;
-					$this->data['label_height'] = 61;
-					$this->data['gallery_thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_additional_width, $this->image_additional_height);
-				} else {
-					$this->data['zoom'] = '';
-					$this->data['thumb'] = '';
-					$this->data['label'] = '';
-					$this->data['label_style'] = '';
-					$this->data['label_height'] = '';
-					$this->data['gallery_thumb'] = '';
-				}
+			$this->data['lightbox'] = $lightbox;
 
-				$this->data['lightbox'] = 'zoomlens';
+			$viewer_assets = [
+				'zoomlens' => [
+					'styles'  => [
+						'catalog/view/javascript/jquery/drift/drift-basic.min.css',
+						'catalog/view/javascript/jquery/drift/drift-gallery.css',
+					],
+					'scripts' => ['catalog/view/javascript/jquery/drift/Drift.min.js'],
+				],
+				'viewbox' => [
+					'styles'  => ['catalog/view/javascript/jquery/viewbox/viewbox.min.css'],
+					'scripts' => ['catalog/view/javascript/jquery/viewbox/jquery.viewbox.min.js'],
+				],
+				'magnific' => [
+					'styles'  => ['catalog/view/javascript/jquery/magnific/magnific.min.css'],
+					'scripts' => ['catalog/view/javascript/jquery/magnific/magnific.min.js'],
+				],
+				'fancybox' => [
+					'styles'  => ['catalog/view/javascript/jquery/fancybox-plus/css/jquery.fancybox-plus.min.css'],
+					'scripts' => ['catalog/view/javascript/jquery/fancybox-plus/js/jquery.fancybox-plus.min.js'],
+				],
+				'colorbox' => [
+					'styles'  => ['catalog/view/javascript/jquery/colorbox/colorbox.min.css'],
+					'scripts' => ['catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js'],
+				],
+			];
 
-			} elseif ($this->config->get('config_lightbox') === 'viewbox') {
-				$this->document->addStyle('catalog/view/javascript/jquery/viewbox/viewbox.min.css');
-				$this->document->addScript('catalog/view/javascript/jquery/viewbox/jquery.viewbox.min.js');
+			foreach ($viewer_assets[$lightbox]['styles'] as $style) {
+				$this->document->addStyle($style);
+			}
 
-				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
-				} else {
-					$this->data['thumb'] = '';
-					$this->data['label'] = '';
-					$this->data['label_style'] = '';
-					$this->data['label_height'] = '';
-				}
+			foreach ($viewer_assets[$lightbox]['scripts'] as $script) {
+				$this->document->addScript($script);
+			}
 
-				$this->data['lightbox'] = 'viewbox';
-
-			} elseif ($this->config->get('config_lightbox') === 'magnific') {
-				$this->document->addStyle('catalog/view/javascript/jquery/magnific/magnific.min.css');
-				$this->document->addScript('catalog/view/javascript/jquery/magnific/magnific.min.js');
-
-				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
-				} else {
-					$this->data['thumb'] = '';
-					$this->data['label'] = '';
-					$this->data['label_style'] = '';
-					$this->data['label_height'] = '';
-				}
-
-				$this->data['lightbox'] = 'magnific';
-
-			} elseif ($this->config->get('config_lightbox') === 'fancybox') {
-				$this->document->addStyle('catalog/view/javascript/jquery/fancybox-plus/css/jquery.fancybox-plus.min.css');
-				$this->document->addScript('catalog/view/javascript/jquery/fancybox-plus/js/jquery.fancybox-plus.min.js');
-
-				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
-				} else {
-					$this->data['thumb'] = '';
-					$this->data['label'] = '';
-					$this->data['label_style'] = '';
-					$this->data['label_height'] = '';
-				}
-
-				$this->data['lightbox'] = 'fancybox';
-
+			// Main product image and label — shared logic across all viewers
+			if ($product_info['image']) {
+				$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
+				$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
+				$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
+				$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
 			} else {
-				$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.min.css');
-				$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
+				$this->data['thumb'] = '';
+				$this->data['label'] = '';
+				$this->data['label_style'] = '';
+				$this->data['label_height'] = '';
+			}
 
-				if ($product_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], $this->image_thumb_width, $this->image_thumb_height);
-					$this->data['label'] = $this->model_tool_image->resize($product_info['label'], round(($this->image_thumb_width / 4), 0, PHP_ROUND_HALF_UP), round(($this->image_thumb_height / 4), 0, PHP_ROUND_HALF_UP));
-					$this->data['label_style'] = round(($this->image_thumb_width * 0.75), 0, PHP_ROUND_HALF_UP);
-					$this->data['label_height'] = round(($this->image_thumb_height * 0.25), 0, PHP_ROUND_HALF_UP);
-				} else {
-					$this->data['thumb'] = '';
-					$this->data['label'] = '';
-					$this->data['label_style'] = '';
-					$this->data['label_height'] = '';
-				}
-
-				$this->data['lightbox'] = 'colorbox';
+			// Zoomlens additionally needs a high-res zoom image and a small gallery thumbnail
+			if ($lightbox === 'zoomlens') {
+				$this->data['zoom'] = $product_info['image'] ? $this->model_tool_image->resize($product_info['image'], $this->image_popup_width * 2, $this->image_popup_height * 2) : '';
+				$this->data['gallery_thumb'] = $product_info['image'] ? $this->model_tool_image->resize($product_info['image'], $this->image_additional_width, $this->image_additional_height) : '';
 			}
 
 			$this->data['thumb_webp'] = ($this->data['thumb'] && $webp) ? substr($this->data['thumb'], 0, strrpos($this->data['thumb'], '.')) . '.webp' : '';
@@ -461,6 +429,7 @@ class ControllerProductProduct extends Controller {
 				$this->data['images'][] = [
 					'zoom'       => $this->model_tool_image->resize($result['image'], $this->image_popup_width * 2, $this->image_popup_height * 2),
 					'popup'      => $this->model_tool_image->resize($result['image'], $this->image_popup_width, $this->image_popup_height),
+					'medium'     => $this->model_tool_image->resize($result['image'], $this->image_thumb_width, $this->image_thumb_height),
 					'thumb'      => $add_thumb,
 					'thumb_webp' => ($add_thumb && $webp) ? substr($add_thumb, 0, strrpos($add_thumb, '.')) . '.webp' : ''
 				];

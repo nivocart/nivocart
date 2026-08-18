@@ -168,16 +168,24 @@
             <div class="product-label" style="left:<?php echo $label_style; ?>px; margin:0 0 -<?php echo $label_height; ?>px 0;">
             <img src="<?php echo $label; ?>" alt="" /></div>
           <?php } ?>
-          <div class="simpleLens-gallery-container" id="zoom">
-            <div class="simpleLens-container">
-              <div class="simpleLens-big-image-container">
-                <a class="simpleLens-lens-image" data-lens-image="<?php echo $zoom; ?>"><img src="<?php echo $thumb; ?>" class="simpleLens-big-image" alt="" loading="eager" /></a>
-              </div>
+          <div class="drift-gallery-container" id="zoom">
+            <div class="drift-image-wrapper">
+              <img id="drift-main"
+                   src="<?php echo $thumb; ?>"
+                   srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> <?php echo $thumb_medium_width; ?>w<?php } ?>"
+                   sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_medium_width; ?>px"
+                   data-zoom="<?php echo $zoom; ?>"
+                   alt="<?php echo $heading_title; ?>"
+                   loading="eager" />
             </div>
-            <div class="simpleLens-thumbnails-container">
-              <a href="#" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php echo $zoom; ?>" data-big-image="<?php echo $popup; ?>"><img src="<?php echo $gallery_thumb; ?>" alt="" loading="eager" /></a>
+            <div class="drift-thumbnails-container">
+              <a href="javascript:void(0)" class="drift-thumb active" data-zoom="<?php echo $zoom; ?>" data-src="<?php echo $thumb; ?>">
+                <img src="<?php echo $gallery_thumb; ?>" alt="" loading="eager" />
+              </a>
               <?php foreach ($images as $image) { ?>
-                <a href="#" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php echo $image['zoom']; ?>" data-big-image="<?php echo $image['popup']; ?>"><img src="<?php echo $image['thumb']; ?>" alt="" loading="lazy" /></a>
+                <a href="javascript:void(0)" class="drift-thumb" data-zoom="<?php echo $image['zoom']; ?>" data-src="<?php echo $image['medium']; ?>">
+                  <img src="<?php echo $image['thumb']; ?>" alt="" loading="lazy" />
+                </a>
               <?php } ?>
             </div>
           </div>
@@ -711,16 +719,40 @@ $(document).ready(function() {
 <?php } ?>
 
 <?php if ($lightbox === 'zoomlens') { ?>
-<script type="text/javascript"><!--
-$(document).ready(function() {
-	$('#zoom .simpleLens-thumbnails-container img').click(function(event) {
-		event.preventDefault();
-		return false;
-	});
-	$('#zoom .simpleLens-thumbnails-container img').simpleGallery();
-	$('#zoom .simpleLens-big-image').simpleLens();
+<script type="text/javascript">
+$(document).ready(function () {
+  var mainImg = document.getElementById('drift-main');
+  if (!mainImg || !mainImg.getAttribute('data-zoom')) {
+	  return;
+  }
+
+  try {
+    new Drift(mainImg, {
+      inlinePane: 99999,   /* always use inline circular lens */
+      containInline: true,
+      hoverBoundingBox: true,
+      zoomFactor: 3,
+      sourceAttribute: 'data-zoom'
+    });
+  } catch (e) {
+    console.error('Drift init failed:', e);
+  }
+
+  /* Thumbnail gallery: swap main image + zoom source on click */
+  document.querySelectorAll('#zoom .drift-thumb').forEach(function (thumb) {
+    thumb.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelectorAll('#zoom .drift-thumb').forEach(function (t) {
+        t.classList.remove('active');
+      });
+      this.classList.add('active');
+      mainImg.src = this.dataset.src;
+      mainImg.srcset = '';
+      mainImg.setAttribute('data-zoom', this.dataset.zoom);
+    });
+  });
 });
-//--></script>
+</script>
 <?php } ?>
 
 <!-- Shopping Cart Scripts //-->

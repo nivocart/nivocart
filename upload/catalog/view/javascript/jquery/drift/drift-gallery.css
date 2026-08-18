@@ -1,0 +1,84 @@
+/*
+ * drift-gallery.css
+ * Custom layout for Drift.js product gallery in NivoCart
+ * Uses inline circular lens mode (always-on) — no external pane.
+ */
+
+/* ── Outer container — centred, same as other lightbox viewers ── */
+.drift-gallery-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ── Main image wrapper — position:relative is REQUIRED
+   so Drift can place the circular lens over the image ────── */
+.drift-image-wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 0; /* remove phantom bottom gap under img */
+}
+
+/* Target only the product image, NOT any element Drift injects */
+#drift-main {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    cursor: crosshair;
+}
+
+/* ── Inline circular lens ────────────────────────────────────
+   drift-basic.css provides .drift-zoom-pane.drift-inline with
+   position:absolute and a 150px circle. We override the size. */
+.drift-zoom-pane.drift-inline {
+    width: 232px !important;
+    height: 232px !important;
+    border-radius: 116px !important;
+    border: 2px solid rgba(255,255,255,0.6);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    /* Ensure Drift's own img/bg inside is never squashed by
+       any inherited max-width or height:auto rules */
+    max-width: none !important;
+}
+
+/* Reset any inherited img constraints inside the lens */
+.drift-zoom-pane img {
+    max-width: none !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* ── Thumbnail strip ─────────────────────────────────────── */
+.drift-thumbnails-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.drift-thumb {
+    display: inline-block;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+    line-height: 0;
+}
+
+.drift-thumb:hover {
+    border-color: #aaa;
+}
+
+.drift-thumb.active {
+    border-color: #e44d26; /* accent colour — adjust to match your theme */
+}
+
+.drift-thumb img {
+    display: block;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}

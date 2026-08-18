@@ -1324,13 +1324,13 @@
                 <option value="fancybox" <?php if ($config_lightbox === 'fancybox') { echo $selected; } ?>>Fancybox</option>
                 <option value="colorbox" <?php if ($config_lightbox === 'colorbox') { echo $selected; } ?>>Colorbox</option>
                 <option value="viewbox" <?php if ($config_lightbox === 'viewbox') { echo $selected; } ?>>Viewbox</option>
-                <option value="zoomlens" <?php if ($config_lightbox === 'zoomlens') { echo $selected; } ?>>ZoomLens</option>
+                <option value="zoomlens" <?php if ($config_lightbox === 'zoomlens') { echo $selected; } ?>>Drift (Zoom Lens)</option>
               <?php } else { ?>
                 <option value="magnific">Magnific <?php echo $text_default; ?></option>
                 <option value="fancybox">Fancybox</option>
                 <option value="colorbox">Colorbox</option>
                 <option value="viewbox">Viewbox</option>
-                <option value="zoomlens">ZoomLens</option>
+                <option value="zoomlens">Drift (Zoom Lens)</option>
               <?php } ?>
             </select></td>
           </tr>
