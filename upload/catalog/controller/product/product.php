@@ -414,7 +414,7 @@ class ControllerProductProduct extends Controller {
 			$this->data['thumb_safe_webp'] = ($this->data['thumb_safe'] && $webp) ? substr($this->data['thumb_safe'], 0, strrpos($this->data['thumb_safe'], '.')) . '.webp' : '';
 
 			// Responsive large-screen thumbs keyed to the active theme display width.
-			// Normal  (≤1267px container) → left column ≈ 583px → thumb_medium at 500px
+			// Normal (≤1267px container) → left column ≈ 583px → thumb_medium at 500px
 			// Wide / Unlimited (≤1907px) → left column ≈ 877px → also thumb_large at 800px
 			$widescreen = $this->config->get('default_widescreen');
 
@@ -425,11 +425,13 @@ class ControllerProductProduct extends Controller {
 
 			if ($product_info['image']) {
 				$thumb_medium = $this->model_tool_image->resize($product_info['image'], 320, 320);
+
 				$this->data['thumb_medium'] = $thumb_medium;
 				$this->data['thumb_medium_webp'] = ($thumb_medium && $webp) ? substr($thumb_medium, 0, strrpos($thumb_medium, '.')) . '.webp' : '';
 
 				if ($widescreen === 'wide' || $widescreen === 'unlimited') {
 					$thumb_large = $this->model_tool_image->resize($product_info['image'], 560, 560);
+
 					$this->data['thumb_large'] = $thumb_large;
 					$this->data['thumb_large_webp'] = ($thumb_large && $webp) ? substr($thumb_large, 0, strrpos($thumb_large, '.')) . '.webp' : '';
 				}
@@ -442,6 +444,7 @@ class ControllerProductProduct extends Controller {
 				$label_ratio = 90;
 				$this->data['popup'] = '';
 			}
+
 			$this->data['popup_webp'] = ($this->data['popup'] && $webp) ? substr($this->data['popup'], 0, strrpos($this->data['popup'], '.')) . '.webp' : '';
 
 			$this->data['images'] = [];
