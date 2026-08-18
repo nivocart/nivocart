@@ -266,6 +266,20 @@ class ModelUpgrade extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET store_id = '0', `group` = 'config', `key` = 'config_image_webp', `value` = '1', serialized = '0'");
 		}
 
+		// Migrate thumb from 230 (old mobile-only default) to 320 (Normal Desktop display size)
+		if (isset($settings['config_image_thumb_width']) && $settings['config_image_thumb_width'] === '230') {
+			$this->db->query("UPDATE `" . DB_PREFIX . "setting` SET `value` = '320' WHERE store_id = '0' AND `key` = 'config_image_thumb_width'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "setting` SET `value` = '320' WHERE store_id = '0' AND `key` = 'config_image_thumb_height'");
+		}
+
+		if (!isset($settings['config_image_wide_thumb_width'])) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET store_id = '0', `group` = 'config', `key` = 'config_image_wide_thumb_width', `value` = '520', serialized = '0'");
+		}
+
+		if (!isset($settings['config_image_wide_thumb_height'])) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET store_id = '0', `group` = 'config', `key` = 'config_image_wide_thumb_height', `value` = '520', serialized = '0'");
+		}
+
 		flush();
 
 		return true;

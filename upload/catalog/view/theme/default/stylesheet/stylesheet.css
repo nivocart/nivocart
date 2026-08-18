@@ -2144,7 +2144,7 @@ ul.box-filter > li ul {
 .add-prod-count,
 .sub-prod-count {
   float: left;
-  height: 36px;
+  height: 32px;
   width: 28px;
   background: #E5E5E5;
   cursor: pointer;

@@ -1692,6 +1692,17 @@
             <?php } ?></td>
           </tr>
           <tr>
+            <td><span class="required">*</span> <?php echo $entry_image_wide_thumb; ?><span class="help"><?php echo $help_image_wide_thumb; ?></span></td>
+            <td><?php if ($error_image_wide_thumb) { ?>
+              <input type="text" name="config_image_wide_thumb_width" value="<?php echo $config_image_wide_thumb_width; ?>" size="3" class="input-error" /> x
+              <input type="text" name="config_image_wide_thumb_height" value="<?php echo $config_image_wide_thumb_height; ?>" size="3" class="input-error" /> px
+              <span class="error"><?php echo $error_image_wide_thumb; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_image_wide_thumb_width" value="<?php echo $config_image_wide_thumb_width; ?>" size="3" /> x
+              <input type="text" name="config_image_wide_thumb_height" value="<?php echo $config_image_wide_thumb_height; ?>" size="3" /> px
+            <?php } ?></td>
+          </tr>
+          <tr>
             <td><span class="required">*</span> <?php echo $entry_image_popup; ?><span class="help"><?php echo $help_image_popup; ?></span></td>
             <td><?php if ($error_image_popup) { ?>
               <input type="text" name="config_image_popup_width" value="<?php echo $config_image_popup_width; ?>" size="3" class="input-error" /> x

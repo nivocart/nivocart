@@ -4,19 +4,21 @@
 ---------------
 
 
-NivoCart v2.X.X
+NivoCart v2.3.X
 ---------------
 Release: TBA
 
 - Menu System responsive stylesheets update and bug fixes.
 - Footer System responsive stylesheets update and bug fixes.
+- Add new image size option "config_image_wide_thumb" in Settings.
 - Add Webp image generating and resizing for all images under Catalog.
 - Add Qol colour preview for custom colour Menu Horizontal and Footer.
 - Add Qol Opacity feature for custom colour Menu Horizontal and Footer.
+- Updated built-in colours palette for custom Footer and Menus.
+- Updated Product Info page Default layout and Images management.
 - Remove unused/obsolete Google+ entry in Default Theme settings.
 - Fix bug in "Check new version" feature where the Github link was wrong.
 - Fix bug in Catalog Product List where the totals were not accurate.
-- Updated built-in colours palette for custom Footer and Menus.
 - Default stylesheet product information page update. 
 
 

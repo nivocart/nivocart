@@ -38,8 +38,8 @@
           <?php } ?>
           <div class="image">
             <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="colorbox"><picture>
-              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> 320w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" /><?php } ?>
-              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> 320w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" /><?php } ?>
+              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
             </picture></a>
           </div>
         <?php } ?>
@@ -71,8 +71,8 @@
           <?php } ?>
           <div class="image">
             <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="fancybox" rel="gallery"><picture>
-              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> 320w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" /><?php } ?>
-              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> 320w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" /><?php } ?>
+              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
             </picture></a>
           </div>
         <?php } ?>
@@ -104,8 +104,8 @@
           <?php } ?>
           <div class="image">
             <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="magnific"><picture>
-              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> 320w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" /><?php } ?>
-              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> 320w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" /><?php } ?>
+              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
             </picture></a>
           </div>
         <?php } ?>
@@ -137,8 +137,8 @@
           <?php } ?>
           <div class="image">
             <a href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>" class="viewbox"><picture>
-              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> 320w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" /><?php } ?>
-              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> 320w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> 560w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? '560px' : '320px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
+              <?php if ($thumb_safe_webp) { ?><source type="image/webp" srcset="<?php echo $thumb_safe_webp; ?> 230w<?php if ($thumb_medium_webp) { ?>, <?php echo $thumb_medium_webp; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large_webp) { ?>, <?php echo $thumb_large_webp; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" /><?php } ?>
+              <img src="<?php echo $thumb; ?>" srcset="<?php echo $thumb_safe; ?> 230w<?php if ($thumb_medium) { ?>, <?php echo $thumb_medium; ?> <?php echo $thumb_medium_width; ?>w<?php } ?><?php if ($thumb_large) { ?>, <?php echo $thumb_large; ?> <?php echo $thumb_large_width; ?>w<?php } ?>" sizes="(max-width: 640px) calc(100vw - 40px), <?php echo $thumb_large ? $thumb_large_width . 'px' : $thumb_medium_width . 'px'; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" id="image" loading="eager" />
             </picture></a>
           </div>
         <?php } ?>

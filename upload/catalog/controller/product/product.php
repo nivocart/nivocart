@@ -414,23 +414,28 @@ class ControllerProductProduct extends Controller {
 			$this->data['thumb_safe_webp'] = ($this->data['thumb_safe'] && $webp) ? substr($this->data['thumb_safe'], 0, strrpos($this->data['thumb_safe'], '.')) . '.webp' : '';
 
 			// Responsive large-screen thumbs keyed to the active theme display width.
-			// Normal (≤1267px container) → left column ≈ 583px → thumb_medium at 500px
-			// Wide / Unlimited (≤1907px) → left column ≈ 877px → also thumb_large at 800px
+			// Normal (≤1267px container) → thumb_medium at admin "Normal Desktop Thumb" size (default 320px)
+			// Wide / Unlimited (≤1907px) → also thumb_large at admin "Wide Screen Thumb" size (default 560px)
 			$widescreen = $this->config->get('default_widescreen');
+
+			$thumb_medium_size = (int)$this->config->get('config_image_thumb_width') ?: 320;
+			$thumb_large_size = (int)$this->config->get('config_image_wide_thumb_width') ?: 520;
 
 			$this->data['thumb_medium'] = '';
 			$this->data['thumb_medium_webp'] = '';
+			$this->data['thumb_medium_width'] = $thumb_medium_size;
 			$this->data['thumb_large'] = '';
 			$this->data['thumb_large_webp'] = '';
+			$this->data['thumb_large_width'] = $thumb_large_size;
 
 			if ($product_info['image']) {
-				$thumb_medium = $this->model_tool_image->resize($product_info['image'], 320, 320);
+				$thumb_medium = $this->model_tool_image->resize($product_info['image'], $thumb_medium_size, $thumb_medium_size);
 
 				$this->data['thumb_medium'] = $thumb_medium;
 				$this->data['thumb_medium_webp'] = ($thumb_medium && $webp) ? substr($thumb_medium, 0, strrpos($thumb_medium, '.')) . '.webp' : '';
 
 				if ($widescreen === 'wide' || $widescreen === 'unlimited') {
-					$thumb_large = $this->model_tool_image->resize($product_info['image'], 560, 560);
+					$thumb_large = $this->model_tool_image->resize($product_info['image'], $thumb_large_size, $thumb_large_size);
 
 					$this->data['thumb_large'] = $thumb_large;
 					$this->data['thumb_large_webp'] = ($thumb_large && $webp) ? substr($thumb_large, 0, strrpos($thumb_large, '.')) . '.webp' : '';
