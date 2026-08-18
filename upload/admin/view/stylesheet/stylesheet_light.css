@@ -1115,8 +1115,7 @@ a.button-form-uninstall:hover, .list a.button-form-uninstall:hover, input.button
 }
 
 /* Button Select/Unselect */
-a.button-select, a.button-unselect,
-.list a.button-select, .list a.button-unselect {
+a.button-select, a.button-unselect, .list a.button-select, .list a.button-unselect {
   display: inline-block;
   box-sizing: content-box;
   width: 16px;
@@ -1145,8 +1144,7 @@ a.button-unselect:hover, .list a.button-unselect:hover {
 }
 
 /* Button Browse/Recycle */
-a.button-browse, a.button-recycle,
-.list a.button-browse, .list a.button-recycle {
+a.button-browse, a.button-recycle, .list a.button-browse, .list a.button-recycle {
   display: inline-block;
   box-sizing: content-box;
   width: 16px;
@@ -1369,25 +1367,25 @@ a.button-print:hover {
   font-size: 10px;
   text-align: center;
 }
-.list .left  { text-align: left;   padding: 7px; }
+.list .left { text-align: left; padding: 7px; }
 .list .right { text-align: right;  padding: 7px; }
 .list .center { text-align: center; padding: 7px; }
-.list .asc  { background: url('../image/asc.png')  right center no-repeat; padding-right: 15px; }
+.list .asc { background: url('../image/asc.png') right center no-repeat; padding-right: 15px; }
 .list .desc { background: url('../image/desc.png') right center no-repeat; padding-right: 15px; }
 .list tr.filter td, .list tr:hover.filter td {
   padding: 5px;
   background-color: #EEE;
 }
-.list tr td.picked  { background: url('../image/success.png')   center no-repeat; margin: 0 auto; width: 22px; }
+.list tr td.picked { background: url('../image/success.png') center no-repeat; margin: 0 auto; width: 22px; }
 .list tr td.delayed { background: url('../image/attention.png') center no-repeat; margin: 0 auto; width: 22px; }
-.list tr td.staged  { background: url('../image/warning.png')   center no-repeat; margin: 0 auto; width: 22px; }
+.list tr td.staged { background: url('../image/warning.png') center no-repeat; margin: 0 auto; width: 22px; }
 
 /* Admin Log */
-.list tbody.log tr.denied td, .list tbody.log tr.clear td  { background-color: #FFBABA; }
-.list tbody.log tr.login td                                 { background-color: #ACE8A7; }
-.list tbody.log tr.logout td                                { background-color: #D1D1D1; }
-.list tbody.log tr.access td                                { background-color: #B2DCFF; }
-.list tbody.log tr.modify td                                { background-color: #FFE699; }
+.list tbody.log tr.denied td, .list tbody.log tr.clear td { background-color: #FFBABA; }
+.list tbody.log tr.login td { background-color: #ACE8A7; }
+.list tbody.log tr.logout td { background-color: #D1D1D1; }
+.list tbody.log tr.access td { background-color: #B2DCFF; }
+.list tbody.log tr.modify td { background-color: #FFE699; }
 .list tbody.log td, .list tbody.log td a { color: #333; }
 .list tbody.log td a { text-decoration: underline; }
 .list tbody.log td a:hover { color: #000; }
@@ -1601,7 +1599,7 @@ table.tool tr td {
   min-height: 0;
 }
 .scrollbox div.even, .scrollbox-store div.even { background: var(--clr-container-bg); }
-.scrollbox div.odd,  .scrollbox-store div.odd  { background: #E4EEF7; }
+.scrollbox div.odd, .scrollbox-store div.odd  { background: #E4EEF7; }
 
 /** -----------------------------
  * PROGRESS BAR
@@ -1726,9 +1724,9 @@ table.tool tr td {
   border-radius: 0 0 3px 3px;
   padding: 10px;
 }
-.tops .tiers .dashboard-content-left,  .tops .tiers .dashboard-heading-left  { margin-right: 10px; }
-.tops .tiers .dashboard-content-middle,.tops .tiers .dashboard-heading-middle { margin-right: 10px; margin-left: 10px; }
-.tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right  { margin-left: 10px; }
+.tops .tiers .dashboard-content-left, .tops .tiers .dashboard-heading-left { margin-right: 10px; }
+.tops .tiers .dashboard-content-middle, .tops .tiers .dashboard-heading-middle { margin-right: 10px; margin-left: 10px; }
+.tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right { margin-left: 10px; }
 
 /* Tiles */
 .tiles {
@@ -1992,9 +1990,9 @@ table.tool tr td {
   .menu .right ul li span.admin-notify-li { font-size: 15px; }
   .menu ul a { line-height: 29px; font-size: 15px; }
   #content { padding: 10px 20px 128px 20px; }
-  .tops .tiers .dashboard-content-left,  .tops .tiers .dashboard-heading-left  { margin-right: 7px; }
-  .tops .tiers .dashboard-content-middle,.tops .tiers .dashboard-heading-middle { margin-right: 7px; margin-left: 7px; }
-  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right  { margin-left: 7px; }
+  .tops .tiers .dashboard-content-left, .tops .tiers .dashboard-heading-left { margin-right: 7px; }
+  .tops .tiers .dashboard-content-middle, .tops .tiers .dashboard-heading-middle { margin-right: 7px; margin-left: 7px; }
+  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right { margin-left: 7px; }
   #vmap { height: 350px; }
 }
 
@@ -2012,9 +2010,9 @@ table.tool tr td {
   .menu .right ul li span.admin-notify-li { font-size: 14px; }
   .menu ul a { line-height: 28px; font-size: 14px; }
   #content { padding: 10px 10px 128px 10px; }
-  .tops .tiers .dashboard-content-left,  .tops .tiers .dashboard-heading-left  { margin-right: 5px; }
-  .tops .tiers .dashboard-content-middle,.tops .tiers .dashboard-heading-middle { margin-right: 5px; margin-left: 5px; }
-  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right  { margin-left: 5px; }
+  .tops .tiers .dashboard-content-left, .tops .tiers .dashboard-heading-left { margin-right: 5px; }
+  .tops .tiers .dashboard-content-middle, .tops .tiers .dashboard-heading-middle { margin-right: 5px; margin-left: 5px; }
+  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right { margin-left: 5px; }
   .tiles .tile .tile-red span,
   .tiles .tile .tile-blue span,
   .tiles .tile .tile-yellow span,
@@ -2049,9 +2047,9 @@ table.tool tr td {
   .breadcrumb, .breadcrumb a { font-size: 11px; }
   table.form > tbody > tr > td:first-child,
   table.form-slim > tbody > tr > td:first-child { width: 200px; }
-  .tops .tiers .dashboard-content-left,  .tops .tiers .dashboard-heading-left  { margin-right: 3px; }
-  .tops .tiers .dashboard-content-middle,.tops .tiers .dashboard-heading-middle { margin-right: 3px; margin-left: 3px; }
-  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right  { margin-left: 3px; }
+  .tops .tiers .dashboard-content-left, .tops .tiers .dashboard-heading-left { margin-right: 3px; }
+  .tops .tiers .dashboard-content-middle, .tops .tiers .dashboard-heading-middle { margin-right: 3px; margin-left: 3px; }
+  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right { margin-left: 3px; }
   .htabs a { font-size: 12px; padding: 7px 12px; }
   .vtabs a, .vtabs span { font-size: 12px; }
   .dashboard-heading,
@@ -2093,9 +2091,9 @@ table.tool tr td {
   .breadcrumb, .breadcrumb a { font-size: 11px; }
   table.form > tbody > tr > td:first-child,
   table.form-slim > tbody > tr > td:first-child { width: 160px; }
-  .tops .tiers .dashboard-content-left,  .tops .tiers .dashboard-heading-left  { margin-right: 3px; }
-  .tops .tiers .dashboard-content-middle,.tops .tiers .dashboard-heading-middle { margin-right: 3px; margin-left: 3px; }
-  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right  { margin-left: 3px; }
+  .tops .tiers .dashboard-content-left, .tops .tiers .dashboard-heading-left { margin-right: 3px; }
+  .tops .tiers .dashboard-content-middle, .tops .tiers .dashboard-heading-middle { margin-right: 3px; margin-left: 3px; }
+  .tops .tiers .dashboard-content-right, .tops .tiers .dashboard-heading-right { margin-left: 3px; }
   .htabs a { font-size: 11px; padding: 7px 9px; }
   .vtabs a, .vtabs span { font-size: 11px; }
   .dashboard-heading,
