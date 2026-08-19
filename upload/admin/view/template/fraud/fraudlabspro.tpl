@@ -38,7 +38,7 @@
             <td><?php echo $entry_order_status; ?></td>
             <td><select name="fraudlabspro_order_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $fraudlabspro_order_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $fraudlabspro_order_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -65,7 +65,7 @@
             <td><?php echo $entry_review_status; ?></td>
             <td><select name="fraudlabspro_review_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $fraudlabspro_review_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $fraudlabspro_review_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -77,7 +77,7 @@
             <td><?php echo $entry_approve_status; ?></td>
             <td><select name="fraudlabspro_approve_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $fraudlabspro_approve_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $fraudlabspro_approve_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -89,7 +89,7 @@
             <td><?php echo $entry_reject_status; ?></td>
             <td><select name="fraudlabspro_reject_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $fraudlabspro_reject_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $fraudlabspro_reject_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>

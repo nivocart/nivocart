@@ -22,6 +22,16 @@
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="maxmind">
         <table class="form">
           <tr>
+            <td><span class="required">*</span> <?php echo $entry_account_id; ?></td>
+            <td><?php if ($error_account_id) { ?>
+              <input type="text" name="maxmind_account_id" value="<?php echo $maxmind_account_id; ?>" size="20" class="input-error" />
+              <span class="error"><?php echo $error_account_id; ?></span>
+            <?php } else { ?>
+              <input type="text" name="maxmind_account_id" value="<?php echo $maxmind_account_id; ?>" size="20" />
+            <?php } ?>
+            </td>
+          </tr>
+          <tr>
             <td><span class="required">*</span> <?php echo $entry_key; ?></td>
             <td><?php if ($error_key) { ?>
               <input type="text" name="maxmind_key" value="<?php echo $maxmind_key; ?>" size="50" class="input-error" />
@@ -39,7 +49,7 @@
             <td><?php echo $entry_order_status; ?></td>
             <td><select name="maxmind_order_status_id">
               <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $maxmind_order_status_id) { ?>
+                <?php if ($order_status['order_status_id'] === $maxmind_order_status_id) { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>

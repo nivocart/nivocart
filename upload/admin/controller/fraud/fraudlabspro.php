@@ -86,7 +86,6 @@ class ControllerFraudFraudLabsPro extends Controller {
 		];
 
 		$this->data['action'] = $this->url->link('fraud/fraudlabspro', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/fraud', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['fraudlabspro_key'])) {
@@ -105,7 +104,7 @@ class ControllerFraudFraudLabsPro extends Controller {
 
 		$this->load->model('localisation/order_status');
 
-		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses([]);
 
 		if (isset($this->request->post['fraudlabspro_order_status_id'])) {
 			$this->data['fraudlabspro_order_status_id'] = $this->request->post['fraudlabspro_order_status_id'];
@@ -182,93 +181,61 @@ class ControllerFraudFraudLabsPro extends Controller {
 		$this->load->model('fraud/fraudlabspro');
 
 		// Get current Order Id
-		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
+		$order_id = isset($this->request->get['order_id']) ? (int)$this->request->get['order_id'] : 0;
 
-		// Action of the Approve/Reject button click
+		// Action of the Approve / Reject / Reject & Blacklist button click
 		if (isset($_POST['flp_id'])) {
-			$flp_status = $_POST['new_flp_status'] ?? '';
+			$flp_status = strtoupper(trim($_POST['new_flp_status'] ?? ''));
+
+			// Valid feedback actions for the v2 Feedback API
+			$allowed_actions = ['APPROVE', 'REJECT', 'REJECT_BLACKLIST'];
+
+			if (!in_array($flp_status, $allowed_actions, true)) {
+				throw new \InvalidArgumentException('Invalid FLP feedback action.');
+			}
+
+			$flp_id = trim($_POST['flp_id'] ?? '');
+
+			// v2 IDs may be alphanumeric; reject anything that looks unsafe
+			if (!is_string($flp_id) || !preg_match('/^[A-Za-z0-9\-]{1,50}$/', $flp_id)) {
+				throw new \InvalidArgumentException('Invalid FLP transaction ID.');
+			}
+
+			// Send feedback to FraudLabs Pro v2 Feedback API
+			$this->model_fraud_fraudlabspro->sendFeedback($flp_id, $flp_status);
+
+			// Update local DB status
+			$this->model_fraud_fraudlabspro->updateFeedback($order_id, $flp_status);
 
 			$this->data['flp_status'] = $flp_status;
 
-			$fraudlabspro_key = (string)$this->config->get('fraudlabspro_key');
-
-			/**
-			 * Allowlist / validation
-			 * (Adjust allowed actions to exactly what your integration supports.)
-			 */
-			$allowedStatuses = ['APPROVE', 'REJECT', 'REVIEW'];
-
-			$flp_status = strtoupper(trim($flp_status));
-
-			if (!in_array($flp_status, $allowedStatuses, true)) {
-				throw new \InvalidArgumentException('Invalid FLP status.');
-			}
-
-			$flp_id = $_POST['flp_id'] ?? '';
-
-			if (!is_string($flp_id) || !preg_match('/^\d{1,20}$/', $flp_id)) {
-				throw new \InvalidArgumentException('Invalid FLP id.');
-			}
-
-			/**
-			 * Constant, allowlisted destination (prevents SSRF)
-			 */
-			$baseUrl = 'https://api.fraudlabspro.com/v1/order/feedback';
-			$allowedHost = 'api.fraudlabspro.com';
-
-			$query = http_build_query([
-				'key'    => $fraudlabspro_key,
-				'format' => 'json',
-				'id'     => $flp_id,
-				'action' => $flp_status,
-			], '', '&', PHP_QUERY_RFC3986);
-
-			$url = $baseUrl . '?' . $query;
-
-			// Optional defensive check (should always pass since baseUrl is constant)
-			$parts = parse_url($url);
-
-			if (($parts['scheme'] ?? '') !== 'https' || ($parts['host'] ?? '') !== $allowedHost) {
-				throw new \RuntimeException('Blocked unexpected destination.');
-			}
-
-			$context = stream_context_create([
-				'http' => [
-					'method'  => 'GET',
-					'timeout' => 5,
-					'header'  => "Accept: application/json\r\n",
-				],
-			]);
-
-			$result = false;
-
-			for ($i = 0; $i < 3; $i++) {
-				$result = file_get_contents($url, false, $context);
-				if ($result !== false && $result !== '') {
-					break;
-				}
-			}
-
-			$this->model_fraud_fraudlabspro->updateFeedback($order_id, $flp_status);
-
-			// Update history record
-			if (strtolower($flp_status) === 'approve') {
+			// Update order history record
+			if ($flp_status === 'APPROVE') {
 				$data_temp = [
 					'order_status_id' => $this->config->get('fraudlabspro_approve_status_id'),
 					'notify'          => 0,
-					'comment'         => $this->language->get('text_comment_approve')
+					'comment'         => $this->language->get('text_comment_approve'),
 				];
 
-				$this->model_fraud_fraudlabspro->addOrderHistory($order_id, $data_temp);
+				$this->model_fraud_fraudlabspro->addOrderHistory($order_id, 0, $data_temp);
 
-			} elseif (strtolower($flp_status) === 'reject') {
+			} elseif ($flp_status === 'REJECT') {
 				$data_temp = [
 					'order_status_id' => $this->config->get('fraudlabspro_reject_status_id'),
 					'notify'          => 0,
-					'comment'         => $this->language->get('text_comment_reject')
+					'comment'         => $this->language->get('text_comment_reject'),
 				];
 
-				$this->model_fraud_fraudlabspro->addOrderHistory($this->request->get['order_id'], $data_temp);
+				$this->model_fraud_fraudlabspro->addOrderHistory($order_id, 0, $data_temp);
+
+			} elseif ($flp_status === 'REJECT_BLACKLIST') {
+				$data_temp = [
+					'order_status_id' => $this->config->get('fraudlabspro_reject_status_id'),
+					'notify'          => 0,
+					'comment'         => $this->language->get('text_comment_reject_blacklist'),
+				];
+
+				$this->model_fraud_fraudlabspro->addOrderHistory($order_id, 0, $data_temp);
 			}
 		}
 
@@ -292,7 +259,13 @@ class ControllerFraudFraudLabsPro extends Controller {
 			$this->data['text_ip_longitude'] = $this->language->get('text_ip_longitude');
 			$this->data['text_risk_country'] = $this->language->get('text_risk_country');
 			$this->data['text_free_email'] = $this->language->get('text_free_email');
+			$this->data['text_email_disposable'] = $this->language->get('text_email_disposable');
+			$this->data['text_phone_disposable'] = $this->language->get('text_phone_disposable');
+			$this->data['text_phone_blacklist'] = $this->language->get('text_phone_blacklist');
+			$this->data['text_card_brand'] = $this->language->get('text_card_brand');
+			$this->data['text_card_type'] = $this->language->get('text_card_type');
 			$this->data['text_ship_forward'] = $this->language->get('text_ship_forward');
+			$this->data['text_ship_export_controlled'] = $this->language->get('text_ship_export_controlled');
 			$this->data['text_using_proxy'] = $this->language->get('text_using_proxy');
 			$this->data['text_bin_found'] = $this->language->get('text_bin_found');
 			$this->data['text_email_blacklist'] = $this->language->get('text_email_blacklist');
@@ -304,140 +277,62 @@ class ControllerFraudFraudLabsPro extends Controller {
 
 			$this->data['button_approve'] = $this->language->get('button_approve');
 			$this->data['button_reject'] = $this->language->get('button_reject');
+			$this->data['button_reject_blacklist'] = $this->language->get('button_reject_blacklist');
 
-			if ($fraud_info['ip_address']) {
-				$this->data['flp_ip_address'] = $fraud_info['ip_address'];
-			} else {
-				$this->data['flp_ip_address'] = '';
-			}
+			$this->data['flp_ip_address'] = $fraud_info['ip_address'] ?: '';
 
-			if ($fraud_info['ip_netspeed']) {
-				$this->data['flp_ip_net_speed'] = $fraud_info['ip_netspeed'];
-			} else {
-				$this->data['flp_ip_net_speed'] = '';
-			}
+			$this->data['flp_ip_net_speed'] = $fraud_info['ip_netspeed'] ?: '';
 
-			if ($fraud_info['ip_isp_name']) {
-				$this->data['flp_ip_isp_name'] = $fraud_info['ip_isp_name'];
-			} else {
-				$this->data['flp_ip_isp_name'] = '';
-			}
+			$this->data['flp_ip_isp_name'] = $fraud_info['ip_isp_name'] ?: '';
 
-			if ($fraud_info['ip_usage_type']) {
-				$this->data['flp_ip_usage_type'] = $fraud_info['ip_usage_type'];
-			} else {
-				$this->data['flp_ip_usage_type'] = '';
-			}
+			$this->data['flp_ip_usage_type'] = $fraud_info['ip_usage_type'] ?: '';
 
-			if ($fraud_info['ip_domain']) {
-				$this->data['flp_ip_domain'] = $fraud_info['ip_domain'];
-			} else {
-				$this->data['flp_ip_domain'] = '';
-			}
+			$this->data['flp_ip_domain'] = $fraud_info['ip_domain'] ?: '';
 
-			if ($fraud_info['ip_timezone']) {
-				$this->data['flp_ip_time_zone'] = $fraud_info['ip_timezone'];
-			} else {
-				$this->data['flp_ip_time_zone'] = '';
-			}
+			$this->data['flp_ip_time_zone'] = $fraud_info['ip_timezone'] ?: '';
 
 			if ($fraud_info['ip_country']) {
-				$this->data['flp_ip_location'] = $this->fixCase($fraud_info['ip_continent']) . ", " . $fraud_info['ip_country'] . ", " . $fraud_info['ip_region'] . ", " . $fraud_info['ip_city'] . " &nbsp;&nbsp; <a href=\"http://www.geolocation.com/" . $fraud_info['ip_address'] . "\" target=\"_blank\"><b>[ Map ]</b></a>";
+				$this->data['flp_ip_location'] = $this->fixCase($fraud_info['ip_continent']) . ', ' . ($fraud_info['ip_country_name'] ?: $fraud_info['ip_country']) . ', ' . $fraud_info['ip_region'] . ', ' . $fraud_info['ip_city'] . ' &nbsp;&nbsp; <a href="http://www.geolocation.com/' . $fraud_info['ip_address'] . '" target="_blank"><b>[ Map ]</b></a>';
 			} else {
 				$this->data['flp_ip_location'] = '-';
 			}
 
 			if ($fraud_info['distance_in_mile'] != '-') {
-				$this->data['flp_ip_distance'] = $fraud_info['distance_in_mile'] . " miles";
+				$this->data['flp_ip_distance'] = $fraud_info['distance_in_mile'] . ' miles / ' . $fraud_info['distance_in_km'] . ' km';
 			} else {
 				$this->data['flp_ip_distance'] = '';
 			}
 
-			if ($fraud_info['ip_latitude']) {
-				$this->data['flp_ip_latitude'] = $fraud_info['ip_latitude'];
-			} else {
-				$this->data['flp_ip_latitude'] = '';
-			}
+			$this->data['flp_ip_latitude'] = $fraud_info['ip_latitude'] ?: '';
+			$this->data['flp_ip_longitude'] = $fraud_info['ip_longitude'] ?: '';
 
-			if ($fraud_info['ip_longitude']) {
-				$this->data['flp_ip_longitude'] = $fraud_info['ip_longitude'];
-			} else {
-				$this->data['flp_ip_longitude'] = '';
-			}
+			$this->data['flp_risk_country'] = $fraud_info['is_high_risk_country'] ?: '';
 
-			if ($fraud_info['is_high_risk_country']) {
-				$this->data['flp_risk_country'] = $fraud_info['is_high_risk_country'];
-			} else {
-				$this->data['flp_risk_country'] = '';
-			}
+			$this->data['flp_free_email'] = $fraud_info['is_free_email'] ?: '';
+			$this->data['flp_email_disposable']= $fraud_info['email_is_disposable'] ?: '';
 
-			if ($fraud_info['is_free_email']) {
-				$this->data['flp_free_email'] = $fraud_info['is_free_email'];
-			} else {
-				$this->data['flp_free_email'] = '';
-			}
+			$this->data['flp_phone_disposable'] = $fraud_info['phone_is_disposable'] ?: '';
+			$this->data['flp_phone_blacklist'] = $fraud_info['phone_in_blacklist'] ?: '';
 
-			if ($fraud_info['is_address_ship_forward']) {
-				$this->data['flp_ship_forward'] = $fraud_info['is_address_ship_forward'];
-			} else {
-				$this->data['flp_ship_forward'] = '';
-			}
+			$this->data['flp_card_brand'] = $fraud_info['card_brand'] ?: '';
+			$this->data['flp_card_type'] = $fraud_info['card_type'] ?: '';
 
-			if ($fraud_info['is_proxy_ip_address']) {
-				$this->data['flp_using_proxy'] = $fraud_info['is_proxy_ip_address'];
-			} else {
-				$this->data['flp_using_proxy'] = '';
-			}
+			$this->data['flp_ship_forward'] = $fraud_info['is_address_ship_forward'] ?: '';
+			$this->data['flp_ship_export_controlled'] = $fraud_info['ship_export_controlled'] ?: '';
 
-			if ($fraud_info['is_bin_found']) {
-				$this->data['flp_bin_found'] = $fraud_info['is_bin_found'];
-			} else {
-				$this->data['flp_bin_found'] = '';
-			}
+			$this->data['flp_using_proxy'] = $fraud_info['is_proxy_ip_address'] ?: '';
+			$this->data['flp_bin_found'] = $fraud_info['is_bin_found'] ?: '';
+			$this->data['flp_email_blacklist'] = $fraud_info['is_email_blacklist'] ?: '';
+			$this->data['flp_credit_card_blacklist'] = $fraud_info['is_credit_card_blacklist'] ?: '';
 
-			if ($fraud_info['is_email_blacklist']) {
-				$this->data['flp_email_blacklist'] = $fraud_info['is_email_blacklist'];
-			} else {
-				$this->data['flp_email_blacklist'] = '';
-			}
+			$this->data['flp_score'] = $fraud_info['fraudlabspro_score'] ?: '';
+			$this->data['flp_status'] = $fraud_info['fraudlabspro_status'] ?: '';
+			$this->data['flp_message'] = $fraud_info['fraudlabspro_message'] ?: '';
 
-			if ($fraud_info['is_credit_card_blacklist']) {
-				$this->data['flp_credit_card_blacklist'] = $fraud_info['is_credit_card_blacklist'];
-			} else {
-				$this->data['flp_credit_card_blacklist'] = '';
-			}
+			$this->data['flp_id'] = $fraud_info['fraudlabspro_id'] ?: '';
+			$this->data['flp_link'] = $fraud_info['fraudlabspro_id'] ?: '';
 
-			if ($fraud_info['fraudlabspro_score']) {
-				$this->data['flp_score'] = $fraud_info['fraudlabspro_score'];
-			} else {
-				$this->data['flp_score'] = '';
-			}
-
-			if ($fraud_info['fraudlabspro_status']) {
-				$this->data['flp_status'] = $fraud_info['fraudlabspro_status'];
-			} else {
-				$this->data['flp_status'] = '';
-			}
-
-			if ($fraud_info['fraudlabspro_message']) {
-				$this->data['flp_message'] = $fraud_info['fraudlabspro_message'];
-			} else {
-				$this->data['flp_message'] = '';
-			}
-
-			if ($fraud_info['fraudlabspro_id']) {
-				$this->data['flp_id'] = $fraud_info['fraudlabspro_id'];
-				$this->data['flp_link'] = $fraud_info['fraudlabspro_id'];
-			} else {
-				$this->data['flp_id'] = '';
-				$this->data['flp_link'] = '';
-			}
-
-			if ($fraud_info['fraudlabspro_credits']) {
-				$this->data['flp_credits'] = $fraud_info['fraudlabspro_credits'];
-			} else {
-				$this->data['flp_credits'] = '';
-			}
+			$this->data['flp_credits'] = $fraud_info['fraudlabspro_credits'] ?: '';
 
 			$this->template = 'fraud/fraudlabspro_info.tpl';
 

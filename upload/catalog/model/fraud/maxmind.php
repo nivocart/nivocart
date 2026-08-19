@@ -6,398 +6,251 @@
  */
 class ModelFraudMaxMind extends Model {
 	/**
-	 * Functions Check, Get
+	 * Functions Check, GetFraud
 	 */
 	public function check(array $data = []) {
-		$risk_score = 0;
+		// Do not perform a fraud check if MaxMind is disabled or credentials are missing.
+		if (!$this->config->get('maxmind_status') || !$this->config->get('maxmind_key') || !$this->config->get('maxmind_account_id')) {
+			return $this->config->get('config_order_status_id');
+		}
 
 		$order_id = $data['order_id'];
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "maxmind` WHERE order_id = '" . (int)$order_id . "'");
+		$existing = $this->getFraud((int)$order_id);
 
-		if ($query->num_rows) {
-			$risk_score = $query->row['risk_score'];
-		} else {
-			/* maxmind api
-			http://www.maxmind.com/app/ccv */
-			/* paypal api
-			https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_html_IPNandPDTVariables */
+		if ($existing) {
+			// Already screened — return the stored risk score decision.
+			$risk_score = (float)$existing['risk_score'];
 
-			$request = 'i=' . urlencode($data['ip']);
-			$request .= '&city=' . urlencode($data['payment_city']);
-			$request .= '&region=' . urlencode($data['payment_zone']);
-			$request .= '&postal=' . urlencode($data['payment_postcode']);
-			$request .= '&country=' . urlencode($data['payment_country']);
-			$request .= '&domain=' . urlencode(substr(strrchr($data['email'], '@'), 1));
-			$request .= '&custPhone=' . urlencode($data['telephone']);
-			$request .= '&license_key=' . urlencode($this->config->get('maxmind_key'));
-
-			if ($data['shipping_method']) {
-				$request .= '&shipAddr=' . urlencode($data['shipping_address_1']);
-				$request .= '&shipCity=' . urlencode($data['shipping_city']);
-				$request .= '&shipRegion=' . urlencode($data['shipping_zone']);
-				$request .= '&shipPostal=' . urlencode($data['shipping_postcode']);
-				$request .= '&shipCountry=' . urlencode($data['shipping_country']);
+			if ($risk_score > $this->config->get('maxmind_score') && $this->config->get('maxmind_key')) {
+				return $this->config->get('maxmind_order_status_id');
 			}
 
-			$request .= '&user_agent=' . urlencode($data['user_agent']);
-			$request .= '&forwardedIP=' . urlencode($data['forwarded_ip']);
-			$request .= '&emailMD5=' . urlencode(md5(mb_strtolower($data['email'], 'UTF-8')));
-			$request .= '&accept_language=' . urlencode($data['accept_language']);
-			$request .= '&order_amount=' . urlencode($this->currency->format($data['total'], $data['currency_code'], $data['currency_value'], false));
-			$request .= '&order_currency=' . urlencode($data['currency_code']);
+			return $this->config->get('config_order_status_id');
+		}
 
-			$curl = curl_init('https://minfraud1.maxmind.com/app/ccv2r');
+		// Build JSON request body for minFraud Score v2.
+		$email_lower = strtolower(trim($data['email'] ?? ''));
+		$email_hash = hash('sha256', $email_lower);
+		$email_domain = substr(strrchr($data['email'] ?? '', '@'), 1);
 
-			curl_setopt($curl, CURLOPT_HEADER, false);
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
-			curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
-			curl_setopt($curl, CURLOPT_POST, 1);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+		$request = [
+			'device' => [
+				'ip_address'      => $data['ip'],
+				'user_agent'      => $data['user_agent'] ?? '',
+				'accept_language' => $data['accept_language'] ?? '',
+			],
+			'event' => [
+				'transaction_id' => (string)$order_id,
+				'type'           => 'purchase',
+			],
+			'account' => [
+				'user_id' => (string)($data['customer_id'] ?? 0),
+			],
+			'email' => [
+				'address' => $email_hash,
+				'domain'  => $email_domain,
+			],
+			'billing' => [
+				'first_name'   => $data['payment_firstname'] ?? '',
+				'last_name'    => $data['payment_lastname'] ?? '',
+				'address'      => $data['payment_address_1'] ?? '',
+				'city'         => $data['payment_city'] ?? '',
+				'region'       => $data['payment_zone'] ?? '',
+				'postal'       => $data['payment_postcode'] ?? '',
+				'country'      => $data['payment_iso_code_2'] ?? '',
+				'phone_number' => $data['telephone'] ?? '',
+			],
+			'order' => [
+				'amount'   => (float)$this->currency->format($data['total'], $data['currency_code'], $data['currency_value'], false),
+				'currency' => $data['currency_code'] ?? 'USD',
+			],
+			'payment' => [
+				'processor' => $this->mapPaymentProcessor($data['payment_code'] ?? ''),
+			],
+		];
 
-			$response = curl_exec($curl);
+		// Shipping address (only if physical shipping is used).
+		if (!empty($data['shipping_method'])) {
+			$request['shipping'] = [
+				'address' => $data['shipping_address_1'] ?? '',
+				'city'    => $data['shipping_city'] ?? '',
+				'region'  => $data['shipping_zone'] ?? '',
+				'postal'  => $data['shipping_postcode'] ?? '',
+				'country' => $data['shipping_iso_code_2'] ?? '',
+			];
+		}
 
-			unset($curl);
+		// Coupon code.
+		if (!empty($data['coupon_code'])) {
+			$request['order']['discount_code'] = $data['coupon_code'];
+		}
 
-			$risk_score = 0;
+		$curl = curl_init();
 
-			if ($response) {
-				$customer_id = $data['customer_id'];
+		curl_setopt($curl, CURLOPT_URL, 'https://minfraud.maxmind.com/minfraud/v2.0/score');
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($request));
+		curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Accept: application/json']);
+		curl_setopt($curl, CURLOPT_USERPWD, $this->config->get('maxmind_account_id') . ':' . $this->config->get('maxmind_key'));
+		curl_setopt($curl, CURLOPT_HEADER, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
+		curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 
-				$data = [];
+		$response = curl_exec($curl);
 
-				$parts = explode(';', $response);
+		unset($curl);
 
-				foreach ($parts as $part) {
-					list($key, $value) = explode('=', $part);
+		$risk_score = 0;
 
-					$data[$key] = $value;
+		if ($response !== false && $response !== '') {
+			$json = json_decode($response);
+
+			if ($json !== null) {
+				// Helpers for safe nested property access.
+				$g = static fn (?object $obj, string $prop): string =>
+					($obj !== null && isset($obj->{$prop})) ? (string)$obj->{$prop} : '';
+				$gf = static fn (?object $obj, string $prop): float =>
+					($obj !== null && isset($obj->{$prop})) ? (float)$obj->{$prop} : 0.0;
+				$gi = static fn (?object $obj, string $prop): int =>
+					($obj !== null && isset($obj->{$prop})) ? (int)$obj->{$prop} : 0;
+				$yn = static fn (?object $obj, string $prop): string =>
+					($obj !== null && isset($obj->{$prop})) ? ($obj->{$prop} ? 'Yes' : 'No') : '';
+
+				$ip = $json->ip_address ?? null;
+				$ip_co = $ip->country ?? null;
+				$ip_cont = $ip->continent ?? null;
+				$ip_city = $ip->city ?? null;
+				$ip_post = $ip->postal ?? null;
+				$ip_loc = $ip->location ?? null;
+				$ip_tr = $ip->traits ?? null;
+				$ip_sub = $ip->subdivisions ?? [];
+				$ip_sub0 = $ip_sub[0] ?? null;
+				$bill = $json->billing_address ?? null;
+				$ship = $json->shipping_address ?? null;
+				$email = $json->email ?? null;
+				$cc = $json->credit_card ?? null;
+				$cc_iss = $cc->issuer ?? null;
+
+				$risk_score = $gf($json, 'risk_score');
+
+				// Collect any warnings into the error field.
+				$warnings = [];
+
+				if (!empty($json->warnings) && is_array($json->warnings)) {
+					foreach ($json->warnings as $w) {
+						if (isset($w->warning)) {
+							$warnings[] = $w->warning;
+						}
+					}
 				}
+				$error_text = implode('; ', $warnings);
 
-				if (isset($data['countryMatch'])) {
-					$country_match = $data['countryMatch'];
-				} else {
-					$country_match = '';
-				}
-
-				if (isset($data['countryCode'])) {
-					$country_code = $data['countryCode'];
-				} else {
-					$country_code = '';
-				}
-
-				if (isset($data['highRiskCountry'])) {
-					$high_risk_country = $data['highRiskCountry'];
-				} else {
-					$high_risk_country = '';
-				}
-
-				if (isset($data['distance'])) {
-					$distance = $data['distance'];
-				} else {
-					$distance = '';
-				}
-
-				if (isset($data['ip_region'])) {
-					$ip_region = $data['ip_region'];
-				} else {
-					$ip_region = '';
-				}
-
-				if (isset($data['ip_city'])) {
-					$ip_city = $data['ip_city'];
-				} else {
-					$ip_city = '';
-				}
-
-				if (isset($data['ip_city'])) {
-					$ip_city = $data['ip_city'];
-				} else {
-					$ip_city = '';
-				}
-
-				if (isset($data['ip_latitude'])) {
-					$ip_latitude = $data['ip_latitude'];
-				} else {
-					$ip_latitude = '';
-				}
-
-				if (isset($data['ip_longitude'])) {
-					$ip_longitude = $data['ip_longitude'];
-				} else {
-					$ip_longitude = '';
-				}
-
-				if (isset($data['ip_isp'])) {
-					$ip_isp = $data['ip_isp'];
-				} else {
-					$ip_isp = '';
-				}
-
-				if (isset($data['ip_org'])) {
-					$ip_org = $data['ip_org'];
-				} else {
-					$ip_org = '';
-				}
-
-				if (isset($data['ip_asnum'])) {
-					$ip_asnum = $data['ip_asnum'];
-				} else {
-					$ip_asnum = '';
-				}
-
-				if (isset($data['ip_userType'])) {
-					$ip_user_type = $data['ip_userType'];
-				} else {
-					$ip_user_type = '';
-				}
-
-				if (isset($data['ip_countryConf'])) {
-					$ip_country_confidence = $data['ip_countryConf'];
-				} else {
-					$ip_country_confidence = '';
-				}
-
-				if (isset($data['ip_regionConf'])) {
-					$ip_region_confidence = $data['ip_regionConf'];
-				} else {
-					$ip_region_confidence = '';
-				}
-
-				if (isset($data['ip_cityConf'])) {
-					$ip_city_confidence = $data['ip_cityConf'];
-				} else {
-					$ip_city_confidence = '';
-				}
-
-				if (isset($data['ip_postalConf'])) {
-					$ip_postal_confidence = $data['ip_postalConf'];
-				} else {
-					$ip_postal_confidence = '';
-				}
-
-				if (isset($data['ip_postalCode'])) {
-					$ip_postal_code = $data['ip_postalCode'];
-				} else {
-					$ip_postal_code = '';
-				}
-
-				if (isset($data['ip_accuracyRadius'])) {
-					$ip_accuracy_radius = $data['ip_accuracyRadius'];
-				} else {
-					$ip_accuracy_radius = '';
-				}
-
-				if (isset($data['ip_netSpeedCell'])) {
-					$ip_net_speed_cell = $data['ip_netSpeedCell'];
-				} else {
-					$ip_net_speed_cell = '';
-				}
-
-				if (isset($data['ip_metroCode'])) {
-					$ip_metro_code = $data['ip_metroCode'];
-				} else {
-					$ip_metro_code = '';
-				}
-
-				if (isset($data['ip_areaCode'])) {
-					$ip_area_code = $data['ip_areaCode'];
-				} else {
-					$ip_area_code = '';
-				}
-
-				if (isset($data['ip_timeZone'])) {
-					$ip_time_zone = $data['ip_timeZone'];
-				} else {
-					$ip_time_zone = '';
-				}
-
-				if (isset($data['ip_regionName'])) {
-					$ip_region_name = $data['ip_regionName'];
-				} else {
-					$ip_region_name = '';
-				}
-
-				if (isset($data['ip_domain'])) {
-					$ip_domain = $data['ip_domain'];
-				} else {
-					$ip_domain = '';
-				}
-
-				if (isset($data['ip_countryName'])) {
-					$ip_country_name = $data['ip_countryName'];
-				} else {
-					$ip_country_name = '';
-				}
-
-				if (isset($data['ip_continentCode'])) {
-					$ip_continent_code = $data['ip_continentCode'];
-				} else {
-					$ip_continent_code = '';
-				}
-
-				if (isset($data['ip_corporateProxy'])) {
-					$ip_corporate_proxy = $data['ip_corporateProxy'];
-				} else {
-					$ip_corporate_proxy = '';
-				}
-
-				if (isset($data['anonymousProxy'])) {
-					$anonymous_proxy = $data['anonymousProxy'];
-				} else {
-					$anonymous_proxy = '';
-				}
-
-				if (isset($data['proxyScore'])) {
-					$proxy_score = $data['proxyScore'];
-				} else {
-					$proxy_score = '';
-				}
-
-				if (isset($data['isTransProxy'])) {
-					$is_trans_proxy = $data['isTransProxy'];
-				} else {
-					$is_trans_proxy = '';
-				}
-
-				if (isset($data['freeMail'])) {
-					$free_mail = $data['freeMail'];
-				} else {
-					$free_mail = '';
-				}
-
-				if (isset($data['carderEmail'])) {
-					$carder_email = $data['carderEmail'];
-				} else {
-					$carder_email = '';
-				}
-
-				if (isset($data['highRiskUsername'])) {
-					$high_risk_username = $data['highRiskUsername'];
-				} else {
-					$high_risk_username = '';
-				}
-
-				if (isset($data['highRiskPassword'])) {
-					$high_risk_password = $data['highRiskPassword'];
-				} else {
-					$high_risk_password = '';
-				}
-
-				if (isset($data['binMatch'])) {
-					$bin_match = $data['binMatch'];
-				} else {
-					$bin_match = '';
-				}
-
-				if (isset($data['binCountry'])) {
-					$bin_country = $data['binCountry'];
-				} else {
-					$bin_country = '';
-				}
-
-				if (isset($data['binNameMatch'])) {
-					$bin_name_match = $data['binNameMatch'];
-				} else {
-					$bin_name_match = '';
-				}
-
-				if (isset($data['binName'])) {
-					$bin_name = $data['binName'];
-				} else {
-					$bin_name = '';
-				}
-
-				if (isset($data['binPhoneMatch'])) {
-					$bin_phone_match = $data['binPhoneMatch'];
-				} else {
-					$bin_phone_match = '';
-				}
-
-				if (isset($data['binPhone'])) {
-					$bin_phone = $data['binPhone'];
-				} else {
-					$bin_phone = '';
-				}
-
-				if (isset($data['custPhoneInBillingLoc'])) {
-					$customer_phone_in_billing_location = $data['custPhoneInBillingLoc'];
-				} else {
-					$customer_phone_in_billing_location = '';
-				}
-
-				if (isset($data['shipForward'])) {
-					$ship_forward = $data['shipForward'];
-				} else {
-					$ship_forward = '';
-				}
-
-				if (isset($data['cityPostalMatch'])) {
-					$city_postal_match = $data['cityPostalMatch'];
-				} else {
-					$city_postal_match = '';
-				}
-
-				if (isset($data['shipCityPostalMatch'])) {
-					$ship_city_postal_match = $data['shipCityPostalMatch'];
-				} else {
-					$ship_city_postal_match = '';
-				}
-
-				if (isset($data['score'])) {
-					$score = $data['score'];
-				} else {
-					$score = '';
-				}
-
-				if (isset($data['explanation'])) {
-					$explanation = $data['explanation'];
-				} else {
-					$explanation = '';
-				}
-
-				if (isset($data['riskScore'])) {
-					$risk_score = $data['riskScore'];
-				} else {
-					$risk_score = '';
-				}
-
-				if (isset($data['queriesRemaining'])) {
-					$queries_remaining = $data['queriesRemaining'];
-				} else {
-					$queries_remaining = '';
-				}
-
-				if (isset($data['maxmindID'])) {
-					$maxmind_id = $data['maxmindID'];
-				} else {
-					$maxmind_id = '';
-				}
-
-				if (isset($data['err'])) {
-					$error = $data['err'];
-				} else {
-					$error = '';
-				}
-
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "maxmind` SET order_id = '" . (int)$order_id . "', customer_id = '" . (int)$customer_id . "', country_match = '" . $this->db->escape($country_match) . "', country_code = '" . $this->db->escape($country_code) . "', high_risk_country = '" . $this->db->escape($high_risk_country) . "', distance = '" . (int)$distance . "', ip_region = '" . $this->db->escape($ip_region) . "', ip_city = '" . $this->db->escape($ip_city) . "', ip_latitude = '" . $this->db->escape($ip_latitude) . "', ip_longitude = '" . $this->db->escape($ip_longitude) . "', ip_isp = '" . $this->db->escape($ip_isp) . "', ip_org = '" . $this->db->escape($ip_org) . "', ip_asnum = '" . (int)$ip_asnum . "', ip_user_type = '" . $this->db->escape($ip_user_type) . "', ip_country_confidence = '" . $this->db->escape($ip_country_confidence) . "', ip_region_confidence = '" . $this->db->escape($ip_region_confidence) . "', ip_city_confidence = '" . $this->db->escape($ip_city_confidence) . "', ip_postal_confidence = '" . $this->db->escape($ip_postal_confidence) . "', ip_postal_code = '" . $this->db->escape($ip_postal_code) . "', ip_accuracy_radius = '" . (int)$ip_accuracy_radius . "', ip_net_speed_cell = '" . $this->db->escape($ip_net_speed_cell) . "', ip_metro_code = '" . (int)$ip_metro_code . "', ip_area_code = '" . (int)$ip_area_code . "', ip_time_zone = '" . $this->db->escape($ip_time_zone) . "', ip_region_name = '" . $this->db->escape($ip_region_name) . "', ip_domain = '" . $this->db->escape($ip_domain) . "', ip_country_name = '" . $this->db->escape($ip_country_name) . "', ip_continent_code = '" . $this->db->escape($ip_continent_code) . "', ip_corporate_proxy = '" . $this->db->escape($ip_corporate_proxy) . "', anonymous_proxy = '" . $this->db->escape($anonymous_proxy) . "', proxy_score = '" . (float)$proxy_score . "', is_trans_proxy = '" . $this->db->escape($is_trans_proxy) . "', free_mail = '" . $this->db->escape($free_mail) . "', carder_email = '" . $this->db->escape($carder_email) . "', high_risk_username = '" . $this->db->escape($high_risk_username) . "', high_risk_password = '" . $this->db->escape($high_risk_password) . "', bin_match = '" . $this->db->escape($bin_match) . "', bin_country = '" . $this->db->escape($bin_country) . "',  bin_name_match = '" . $this->db->escape($bin_name_match) . "', bin_name = '" . $this->db->escape($bin_name) . "', bin_phone_match = '" . $this->db->escape($bin_phone_match) . "', bin_phone = '" . $this->db->escape($bin_phone) . "', customer_phone_in_billing_location = '" . $this->db->escape($customer_phone_in_billing_location) . "', ship_forward = '" . $this->db->escape($ship_forward) . "', city_postal_match = '" . $this->db->escape($city_postal_match) . "', ship_city_postal_match = '" . $this->db->escape($ship_city_postal_match) . "', `score` = '" . (float)$score . "', explanation = '" . $this->db->escape($explanation) . "', risk_score = '" . (float)$risk_score . "', queries_remaining = '" . (int)$queries_remaining . "', maxmind_id = '" . $this->db->escape($maxmind_id) . "', `error` = '" . $this->db->escape($error) . "', date_added = NOW()");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "maxmind` SET
+					order_id = '" . (int)$order_id . "',
+					customer_id = '" . (int)($data['customer_id'] ?? 0) . "',
+					country_match = '" . $this->db->escape($yn($bill, 'is_in_ip_country')) . "',
+					country_code = '" . $this->db->escape($g($ip_co, 'code')) . "',
+					high_risk_country = '" . $this->db->escape($yn($ip_co, 'is_high_risk')) . "',
+					distance = '" . $gi($bill, 'distance_to_ip_location') . "',
+					ip_region = '" . $this->db->escape($g($ip_sub0, 'iso_code')) . "',
+					ip_city = '" . $this->db->escape($g($ip_city, 'name')) . "',
+					ip_latitude = '" . $gf($ip_loc, 'latitude') . "',
+					ip_longitude = '" . $gf($ip_loc, 'longitude') . "',
+					ip_isp = '" . $this->db->escape($g($ip_tr, 'isp')) . "',
+					ip_org = '" . $this->db->escape($g($ip_tr, 'organization')) . "',
+					ip_asnum = '" . $gi($ip_tr, 'autonomous_system_number') . "',
+					ip_user_type = '" . $this->db->escape($g($ip_tr, 'user_type')) . "',
+					ip_country_confidence = '" . $this->db->escape($g($ip_co, 'confidence')) . "',
+					ip_region_confidence = '" . $this->db->escape($g($ip_sub0, 'confidence')) . "',
+					ip_city_confidence = '" . $this->db->escape($g($ip_city, 'confidence')) . "',
+					ip_postal_confidence = '" . $this->db->escape($g($ip_post, 'confidence')) . "',
+					ip_postal_code = '" . $this->db->escape($g($ip_post, 'code')) . "',
+					ip_accuracy_radius = '" . $gi($ip_loc, 'accuracy_radius') . "',
+					ip_net_speed_cell = '" . $this->db->escape($g($ip_tr, 'connection_type')) . "',
+					ip_metro_code = '0',
+					ip_area_code = '0',
+					ip_time_zone = '" . $this->db->escape($g($ip_loc, 'time_zone')) . "',
+					ip_region_name = '" . $this->db->escape($g($ip_sub0, 'name')) . "',
+					ip_domain = '',
+					ip_country_name = '" . $this->db->escape($g($ip_co, 'name')) . "',
+					ip_continent_code = '" . $this->db->escape($g($ip_cont, 'code')) . "',
+					ip_corporate_proxy = '" . $this->db->escape($yn($ip_tr, 'is_legitimate_proxy')) . "',
+					anonymous_proxy = '" . $this->db->escape($yn($ip_tr, 'is_anonymous')) . "',
+					proxy_score = '" . $gf($ip, 'risk') . "',
+					is_trans_proxy = '',
+					free_mail = '" . $this->db->escape($yn($email, 'is_free')) . "',
+					carder_email = '" . $this->db->escape($yn($email, 'is_high_risk')) . "',
+					high_risk_username = '',
+					high_risk_password = '',
+					bin_match = '" . $this->db->escape($yn($cc, 'is_issued_in_ip_country')) . "',
+					bin_country = '" . $this->db->escape($g($cc, 'country')) . "',
+					bin_name_match = '" . $this->db->escape($yn($cc_iss, 'matches_provided_name')) . "',
+					bin_name = '" . $this->db->escape($g($cc_iss, 'name')) . "',
+					bin_phone_match = '" . $this->db->escape($yn($cc_iss, 'matches_provided_phone_number')) . "',
+					bin_phone = '" . $this->db->escape($g($cc_iss, 'phone_number')) . "',
+					customer_phone_in_billing_location = '',
+					ship_forward = '" . $this->db->escape($yn($ship, 'is_ship_forward')) . "',
+					city_postal_match = '" . $this->db->escape($yn($bill, 'is_postal_in_city')) . "',
+					ship_city_postal_match = '" . $this->db->escape($yn($ship, 'is_postal_in_city')) . "',
+					`score` = '0',
+					explanation = '',
+					risk_score = '" . $risk_score . "',
+					queries_remaining = '" . $gi($json, 'queries_remaining') . "',
+					maxmind_id = '" . $this->db->escape($g($json, 'id')) . "',
+					`error` = '" . $this->db->escape($error_text) . "',
+					email_is_disposable = '" . $this->db->escape($yn($email, 'is_disposable')) . "',
+					email_is_high_risk = '" . $this->db->escape($yn($email, 'is_high_risk')) . "',
+					credit_card_brand = '" . $this->db->escape($g($cc, 'brand')) . "',
+					credit_card_type = '" . $this->db->escape($g($cc, 'type')) . "',
+					credit_card_is_prepaid = '" . $this->db->escape($yn($cc, 'is_prepaid')) . "',
+					ship_is_high_risk = '" . $this->db->escape($yn($ship, 'is_high_risk')) . "',
+					date_added = NOW()
+				");
 			}
 		}
 
 		if ($risk_score > $this->config->get('maxmind_score') && $this->config->get('maxmind_key')) {
-			$fraud_status_id = $this->config->get('maxmind_order_status_id');
-		} else {
-			$fraud_status_id = $this->config->get('config_order_status_id');
+			return $this->config->get('maxmind_order_status_id');
 		}
 
-		return $fraud_status_id;
+		return $this->config->get('config_order_status_id');
 	}
 
 	public function getFraud(int $order_id) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "maxmind` WHERE order_id = '" . (int)$data['order_id'] . "'");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "maxmind` WHERE order_id = '" . (int)$order_id . "'");
 
 		return $query->row;
+	}
+
+	/**
+	 * Map NivoCart payment code to a minFraud v2 payment processor value.
+	 */
+	private function mapPaymentProcessor(string $code): string {
+		$code = strtolower($code);
+
+		$map = [
+			'paypal'    => 'paypal',
+			'stripe'    => 'stripe',
+			'braintree' => 'braintree',
+			'square'    => 'square',
+			'authnet'   => 'authorizenet',
+			'authorize' => 'authorizenet',
+			'worldpay'  => 'worldpay',
+			'sagepay'   => 'sagepay',
+			'klarna'    => 'klarna',
+			'amazon'    => 'amazon',
+		];
+
+		foreach ($map as $key => $processor) {
+			if (str_contains($code, $key)) {
+				return $processor;
+			}
+		}
+
+		return 'other';
 	}
 }

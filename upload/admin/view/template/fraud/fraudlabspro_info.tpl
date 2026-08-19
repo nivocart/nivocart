@@ -1,7 +1,7 @@
 <table class="form">
   <tr>
     <td style="text-align:center; background-color:#AB1B1C; border:1px solid #AB1B1C;" colspan="2">
-      <a onclick="window.open('http://www.fraudlabspro.com');"><img src="view/image/fraud/fraudlabspro.png" alt="FraudLabs Pro" /></a>
+      <a onclick="window.open('https://www.fraudlabspro.com');"><img src="view/image/fraud/fraudlabspro.png" alt="FraudLabs Pro" /></a>
     </td>
   </tr>
   <tr>
@@ -28,22 +28,28 @@
     <td><?php echo $text_ip_address; ?></td>
     <td><?php echo $flp_ip_address; ?></td>
   </tr>
+  <?php if ($flp_ip_net_speed) { ?>
   <tr>
     <td><?php echo $text_ip_net_speed; ?></td>
     <td><?php echo $flp_ip_net_speed; ?></td>
   </tr>
+  <?php } ?>
   <tr>
     <td><?php echo $text_ip_isp_name; ?></td>
     <td><?php echo $flp_ip_isp_name; ?></td>
   </tr>
+  <?php if ($flp_ip_usage_type) { ?>
   <tr>
     <td><?php echo $text_ip_usage_type; ?></td>
     <td><?php echo $flp_ip_usage_type; ?></td>
   </tr>
+  <?php } ?>
+  <?php if ($flp_ip_domain) { ?>
   <tr>
     <td><?php echo $text_ip_domain; ?></td>
     <td><?php echo $flp_ip_domain; ?></td>
   </tr>
+  <?php } ?>
   <tr>
     <td><?php echo $text_ip_time_zone; ?></td>
     <td><?php echo $flp_ip_time_zone; ?></td>
@@ -64,42 +70,82 @@
     <td><?php echo $text_ip_longitude; ?></td>
     <td><?php echo $flp_ip_longitude; ?></td>
   </tr>
+  <?php if ($flp_risk_country) { ?>
   <tr>
     <td><?php echo $text_risk_country; ?></td>
     <td><?php echo $flp_risk_country; ?></td>
   </tr>
-  <tr>
-    <td><?php echo $text_free_email; ?></td>
-    <td><?php echo $flp_free_email; ?></td>
-  </tr>
-  <tr>
-    <td><?php echo $text_ship_forward; ?></td>
-    <td><?php echo $flp_ship_forward; ?></td>
-  </tr>
+  <?php } ?>
   <tr>
     <td><?php echo $text_using_proxy; ?></td>
     <td><?php echo $flp_using_proxy; ?></td>
   </tr>
   <tr>
-    <td><?php echo $text_bin_found; ?></td>
-    <td><?php echo $flp_bin_found; ?></td>
+    <td><?php echo $text_free_email; ?></td>
+    <td><?php echo $flp_free_email; ?></td>
   </tr>
+  <?php if ($flp_email_disposable) { ?>
+  <tr>
+    <td><?php echo $text_email_disposable; ?></td>
+    <td><?php echo $flp_email_disposable; ?></td>
+  </tr>
+  <?php } ?>
   <tr>
     <td><?php echo $text_email_blacklist; ?></td>
     <td><?php echo $flp_email_blacklist; ?></td>
+  </tr>
+  <?php if ($flp_phone_disposable) { ?>
+  <tr>
+    <td><?php echo $text_phone_disposable; ?></td>
+    <td><?php echo $flp_phone_disposable; ?></td>
+  </tr>
+  <?php } ?>
+  <?php if ($flp_phone_blacklist) { ?>
+  <tr>
+    <td><?php echo $text_phone_blacklist; ?></td>
+    <td><?php echo $flp_phone_blacklist; ?></td>
+  </tr>
+  <?php } ?>
+  <?php if ($flp_card_brand) { ?>
+  <tr>
+    <td><?php echo $text_card_brand; ?></td>
+    <td><?php echo $flp_card_brand; ?></td>
+  </tr>
+  <?php } ?>
+  <?php if ($flp_card_type) { ?>
+  <tr>
+    <td><?php echo $text_card_type; ?></td>
+    <td><?php echo $flp_card_type; ?></td>
+  </tr>
+  <?php } ?>
+  <tr>
+    <td><?php echo $text_bin_found; ?></td>
+    <td><?php echo $flp_bin_found; ?></td>
   </tr>
   <tr>
     <td><?php echo $text_credit_card_blacklist; ?></td>
     <td><?php echo $flp_credit_card_blacklist; ?></td>
   </tr>
   <tr>
+    <td><?php echo $text_ship_forward; ?></td>
+    <td><?php echo $flp_ship_forward; ?></td>
+  </tr>
+  <?php if ($flp_ship_export_controlled) { ?>
+  <tr>
+    <td><?php echo $text_ship_export_controlled; ?></td>
+    <td><?php echo $flp_ship_export_controlled; ?></td>
+  </tr>
+  <?php } ?>
+  <tr>
     <td><?php echo $text_credits; ?></td>
     <td><span style="font-size:1.5em; font-weight:bold;"><?php echo $flp_credits; ?></span> &nbsp;&nbsp; <?php echo $text_flp_upgrade; ?></td>
   </tr>
+  <?php if ($flp_message) { ?>
   <tr>
     <td><?php echo $text_message; ?></td>
     <td><?php echo $flp_message; ?></td>
   </tr>
+  <?php } ?>
 <?php if (strtolower($flp_status) == 'review') { ?>
   <tr style="background:#FCFCFC;">
     <td></td>
@@ -107,6 +153,7 @@
       <form id="review-action" method="post">
         <a id="button-flp-approve" class="button"><?php echo $button_approve; ?></a>
         <a id="button-flp-reject" class="button"><?php echo $button_reject; ?></a>
+        <a id="button-flp-reject-blacklist" class="button"><?php echo $button_reject_blacklist; ?></a>
         <input type="hidden" id="flp_id" name="flp_id" value="<?php echo $flp_id; ?>" />
         <input type="hidden" id="new_flp_status" name="new_flp_status" value="" />
       </form>
@@ -127,6 +174,13 @@ $(document).ready(function() {
 	$("#button-flp-reject").click(function() {
 		$("#new_flp_status").val("REJECT");
 		$("#review-action").submit();
+	});
+
+	$("#button-flp-reject-blacklist").click(function() {
+		if (confirm("This will reject the order AND blacklist the customer. Continue?")) {
+			$("#new_flp_status").val("REJECT_BLACKLIST");
+			$("#review-action").submit();
+		}
 	});
 });
 //--></script>
