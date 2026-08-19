@@ -309,7 +309,7 @@ class ControllerFraudFraudLabsPro extends Controller {
 			$this->data['flp_risk_country'] = $fraud_info['is_high_risk_country'] ?: '';
 
 			$this->data['flp_free_email'] = $fraud_info['is_free_email'] ?: '';
-			$this->data['flp_email_disposable']= $fraud_info['email_is_disposable'] ?: '';
+			$this->data['flp_email_disposable'] = $fraud_info['email_is_disposable'] ?: '';
 
 			$this->data['flp_phone_disposable'] = $fraud_info['phone_is_disposable'] ?: '';
 			$this->data['flp_phone_blacklist'] = $fraud_info['phone_in_blacklist'] ?: '';
