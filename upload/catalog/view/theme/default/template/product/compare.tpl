@@ -46,10 +46,10 @@
                 <img src="<?php echo $products[$product['product_id']]['label']; ?>" alt="" height="<?php echo $products[$product['product_id']]['label_style']; ?>" width="<?php echo $products[$product['product_id']]['label_style']; ?>" style="margin:0 0 -<?php echo $products[$product['product_id']]['label_style']; ?>px <?php echo ($products[$product['product_id']]['label_style'] * 2); ?>px;" />
               </div>
             <?php } ?>
-            <a href="<?php echo $products[$product['product_id']]['href']; ?>"><picture>
+            <div class="image"><a href="<?php echo $products[$product['product_id']]['href']; ?>"><picture>
             <?php if ($products[$product['product_id']]['thumb_webp']) { ?><source srcset="<?php echo $products[$product['product_id']]['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $products[$product['product_id']]['thumb']; ?>" alt="<?php echo $products[$product['product_id']]['name']; ?>" loading="lazy" />
-          </picture></a>
+          </picture></a><?php if ($show_mini_label && $products[$product['product_id']]['mini_label']) { ?><span class="mini-label"><?php echo $products[$product['product_id']]['mini_label']; ?></span><?php } ?></div>
           <?php } ?>
           </td>
         <?php } ?>

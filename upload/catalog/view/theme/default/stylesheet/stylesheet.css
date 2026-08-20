@@ -1047,6 +1047,7 @@ a.button-add:hover {
   display: block;
   margin-bottom: 7px;
   overflow: hidden;
+  position: relative;
 }
 .box-product .image img {
   padding: 2px;
@@ -1704,6 +1705,7 @@ ul.box-filter > li ul {
   float: left;
   margin-right: 10px;
   overflow: hidden;
+  position: relative;
 }
 .product-list .image img {
   padding: 3px;
@@ -1815,6 +1817,28 @@ ul.box-filter > li ul {
   display: block;
   margin-bottom: 0;
   overflow: hidden;
+  position: relative;
+}
+
+/* =====================================================
+   Mini Label — pill badge (top-right of product image)
+   ===================================================== */
+.mini-label {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  background-color: var(--clr-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
 }
 .product-grid .image img {
   padding: 3px;

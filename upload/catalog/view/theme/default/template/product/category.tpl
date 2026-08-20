@@ -94,7 +94,7 @@
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
             <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $product['thumb']; ?>" title="<?php echo $product['name']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
-          </picture></a></div>
+          </picture></a><?php if ($show_mini_label && $product['mini_label']) { ?><span class="mini-label"><?php echo $product['mini_label']; ?></span><?php } ?></div>
         <?php } ?>
         <?php if ($product['price'] && !$price_hide) { ?>
           <div class="price">
@@ -131,9 +131,9 @@
           <?php } elseif (!$product['quote'] && !$stock_checkout && $product['stock_quantity'] <= 0) { ?>
             <span class="stock-status"><?php echo $product['stock_status']; ?></span>
           <?php } elseif (!$product['quote'] && $stock_checkout && $product['stock_quantity'] <= 0) { ?>
-            <input type="button" value="<?php echo $button_cart; ?>" onclick="addToCart('<?php echo $product['product_id']; ?>');" class="button" />
+			<input type="button" value="<?php echo $button_cart; ?>" onclick="addToCart('<?php echo $product['product_id']; ?>');" class="button" />
           <?php } else { ?>
-            <input type="button" value="<?php echo $button_cart; ?>" onclick="addToCart('<?php echo $product['product_id']; ?>');" class="button" />
+			<input type="button" value="<?php echo $button_cart; ?>" onclick="addToCart('<?php echo $product['product_id']; ?>');" class="button" />
           <?php } ?>
         <?php } ?>
         </div>
@@ -273,6 +273,12 @@ function display(view) {
 			html += '<div class="name">' + $(element).find('.name').html() + '</div>';
 			html += '<div class="description">' + $(element).find('.description').html() + '</div>';
 
+			var price = $(element).find('.price').html();
+
+			if (price != null) {
+				html += '<div class="price">' + price + '</div>';
+			}
+
 			var rating = $(element).find('.rating').html();
 
 			if (rating != null) {
@@ -283,12 +289,6 @@ function display(view) {
 
 			if (remaining != null) {
 				html += '<div class="remaining">' + remaining + '</div>';
-			}
-
-			var price = $(element).find('.price').html();
-
-			if (price != null) {
-				html += '<div class="price">' + price + '</div>';
 			}
 
 			html += '<div class="addons">' + $(element).find('.addons').html() + '</div>';

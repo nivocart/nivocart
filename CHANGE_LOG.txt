@@ -14,6 +14,7 @@ Release: TBA
 - Add Webp image generating and resizing for all images under Catalog.
 - Add Qol colour preview for custom colour Menu Horizontal and Footer.
 - Add Qol Opacity feature for custom colour Menu Horizontal and Footer.
+- Add a new "Mini label" feature for modules and product pages.
 - Updated built-in colours palette for custom Footer and Menus.
 - Updated Product Info page Default layout and Images management.
 - Updated optional "Fraudlabs Pro" extension with the latest V2 API.

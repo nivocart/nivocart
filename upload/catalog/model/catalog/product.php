@@ -638,6 +638,55 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
+	public function getMiniLabel(int $product_id): string {
+		// Priority 1: Bestseller — top-selling product by quantity in any shared category
+		$bestseller_query = $this->db->query("
+			SELECT IF(
+				(SELECT op.product_id
+				 FROM `" . DB_PREFIX . "order_product` op
+				 LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)
+				 LEFT JOIN `" . DB_PREFIX . "product_to_category` p2c ON (op.product_id = p2c.product_id)
+				 LEFT JOIN `" . DB_PREFIX . "product` p ON (op.product_id = p.product_id)
+				 LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)
+				 WHERE o.order_status_id > '0'
+				 AND p.status = '1'
+				 AND p.date_available <= NOW()
+				 AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+				 AND p2c.category_id IN (
+					SELECT category_id FROM `" . DB_PREFIX . "product_to_category` WHERE product_id = '" . (int)$product_id . "'
+				 )
+				 GROUP BY op.product_id
+				 ORDER BY SUM(op.quantity) DESC
+				 LIMIT 1
+				) = '" . (int)$product_id . "', 1, 0) AS `is_bestseller`");
+
+		if (!empty($bestseller_query->row['is_bestseller'])) {
+			return 'Bestseller';
+		}
+
+		// Priority 2: Sale — has an active special price for the current customer group
+		if ($this->customer->isLogged()) {
+			$customer_group_id = $this->customer->getCustomerGroupId();
+		} else {
+			$customer_group_id = $this->config->get('config_customer_group_id');
+		}
+
+		$special_query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product_special` WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW()))");
+
+		if ($special_query->row['total'] > 0) {
+			return 'Sale';
+		}
+
+		// Priority 3: New — date_added within the last 30 days
+		$new_query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "' AND date_added >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
+
+		if ($new_query->row['total'] > 0) {
+			return 'New';
+		}
+
+		return '';
+	}
+
 	/**
 	 * Total Functions
 	 */

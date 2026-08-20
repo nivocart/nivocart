@@ -23,7 +23,7 @@
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
             <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
-          </picture></a></div>
+          </picture></a><?php if ($show_mini_label && $product['mini_label']) { ?><span class="mini-label"><?php echo $product['mini_label']; ?></span><?php } ?></div>
         <?php } ?>
         <?php if ($brand && $product['manufacturer']) { ?>
           <div class="brand"><?php echo $product['manufacturer']; ?></div>
@@ -129,7 +129,7 @@
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
             <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
-          </picture></a></div>
+          </picture></a><?php if ($show_mini_label && $product['mini_label']) { ?><span class="mini-label"><?php echo $product['mini_label']; ?></span><?php } ?></div>
         <?php } ?>
         <?php if ($brand && $product['manufacturer']) { ?>
           <div class="brand"><?php echo $product['manufacturer']; ?></div>

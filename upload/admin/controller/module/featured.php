@@ -59,6 +59,7 @@ class ControllerModuleFeatured extends Controller {
 
 		$this->data['entry_viewproduct'] = $this->language->get('entry_viewproduct');
 		$this->data['entry_addproduct'] = $this->language->get('entry_addproduct');
+		$this->data['entry_show_mini_label'] = $this->language->get('entry_show_mini_label');
 
 		$this->data['entry_style'] = $this->language->get('entry_style');
 		$this->data['entry_image'] = $this->language->get('entry_image');
@@ -207,6 +208,12 @@ class ControllerModuleFeatured extends Controller {
 			$this->data[$this->name . '_addproduct'] = $this->request->post[$this->name . '_addproduct'];
 		} else {
 			$this->data[$this->name . '_addproduct'] = $this->config->get($this->name . '_addproduct');
+		}
+
+		if (isset($this->request->post[$this->name . '_show_mini_label'])) {
+			$this->data[$this->name . '_show_mini_label'] = $this->request->post[$this->name . '_show_mini_label'];
+		} else {
+			$this->data[$this->name . '_show_mini_label'] = $this->config->get($this->name . '_show_mini_label');
 		}
 
 		$this->data['modules'] = [];

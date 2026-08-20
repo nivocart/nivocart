@@ -1376,6 +1376,20 @@
               <label for="price-hide-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
+          <tr>
+            <td><?php echo $entry_hide_mini_label; ?><span class="help"><?php echo $help_hide_mini_label; ?></span></td>
+            <td><?php if ($config_hide_mini_label) { ?>
+              <input type="radio" name="config_hide_mini_label" value="1" id="hide-mini-label-on" class="radio" checked />
+              <label for="hide-mini-label-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_hide_mini_label" value="0" id="hide-mini-label-off" class="radio" />
+              <label for="hide-mini-label-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_hide_mini_label" value="1" id="hide-mini-label-on" class="radio" />
+              <label for="hide-mini-label-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_hide_mini_label" value="0" id="hide-mini-label-off" class="radio" checked />
+              <label for="hide-mini-label-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
         </table>
         <h2><?php echo $text_cookies; ?></h2>
         <table class="form">

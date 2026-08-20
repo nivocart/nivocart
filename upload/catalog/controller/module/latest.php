@@ -38,6 +38,7 @@ class ControllerModuleLatest extends Controller {
 
 		$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 		$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
+		$this->data['show_mini_label'] = (!$this->config->get('config_hide_mini_label') && $this->config->get($this->name . '_show_mini_label')) ? true : false;
 
 		$display_style = $setting['style'] ? $setting['style'] : 'box';
 
@@ -128,7 +129,8 @@ class ControllerModuleLatest extends Controller {
 				'age_minimum'     => ($result['age_minimum'] > 0) ? $result['age_minimum'] : '',
 				'rating'          => (int)$rating,
 				'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
-				'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
+				'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($result['product_id']) : '',
+			'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
 			];
 		}
 

@@ -70,6 +70,20 @@
               <label for="addproduct-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
+          <tr class="highlighted">
+            <td><?php echo $entry_show_mini_label; ?></td>
+            <td><?php if ($latest_show_mini_label) { ?>
+              <input type="radio" name="latest_show_mini_label" value="1" id="show_mini_label-on" class="radio" checked />
+              <label for="show_mini_label-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="latest_show_mini_label" value="0" id="show_mini_label-off" class="radio" />
+              <label for="show_mini_label-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="latest_show_mini_label" value="1" id="show_mini_label-on" class="radio" />
+              <label for="show_mini_label-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="latest_show_mini_label" value="0" id="show_mini_label-off" class="radio" checked />
+              <label for="show_mini_label-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
         </tbody>
         </table>
         <table id="module" class="list">

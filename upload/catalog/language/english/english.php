@@ -20,6 +20,9 @@ $_['text_pagination']       = 'Showing {start}-{end} of {total} Results ({pages}
 $_['text_separator']        = ' &gt; ';
 $_['text_offer']            = 'Offer!';
 $_['text_free']             = 'Free';
+$_['text_mini_label_new']         = 'New';
+$_['text_mini_label_sale']        = 'Sale';
+$_['text_mini_label_bestseller']  = 'Bestseller';
 $_['text_remaining']        = 'Only %s left!';
 $_['text_wait']             = 'Please wait!';
 

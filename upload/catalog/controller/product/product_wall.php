@@ -108,6 +108,7 @@ class ControllerProductProductWall extends Controller {
 			$this->data['dob'] = $this->config->get('config_customer_dob');
 			$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 			$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
+			$this->data['show_mini_label'] = !$this->config->get('config_hide_mini_label') ? true : false;
 
 			// Image Size Variables
 			$this->image_product_width = $this->config->get('config_image_product_width');
@@ -240,6 +241,7 @@ class ControllerProductProductWall extends Controller {
 					'tax'             => $tax,
 					'rating'          => $rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
+					'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel((int)$result['product_id']) : '',
 					'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url, 'SSL')
 				];
 			}

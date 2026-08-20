@@ -57,7 +57,7 @@
               <img src="<?php echo $review['label']; ?>" alt="" height="<?php echo $review['label_style']; ?>" width="<?php echo $review['label_style']; ?>" style="margin:0 0 -<?php echo $review['label_style']; ?>px <?php echo ($review['label_style'] * 2); ?>px;" />
             </div>
           <?php } ?>
-          <div class="image"><a href="<?php echo $review['href']; ?>"><img src="<?php echo $review['thumb']; ?>" alt="<?php echo $review['name']; ?>" /></a></div>
+          <div class="image"><a href="<?php echo $review['href']; ?>"><img src="<?php echo $review['thumb']; ?>" alt="<?php echo $review['name']; ?>" /></a><?php if ($show_mini_label && $review['mini_label']) { ?><span class="mini-label"><?php echo $review['mini_label']; ?></span><?php } ?></div>
         <?php } ?>
       <?php if ($review['price'] && !$price_hide) { ?>
         <div class="price">

@@ -13,6 +13,7 @@ $_['entry_theme']         = 'Complete Module:<span class="help">Show content wit
 $_['entry_title']         = 'Custom Title:<span class="help">Overrides the default module title.</span>';
 $_['entry_viewproduct']   = 'Show View Product Button:<span class="help">Box style only.</span>';
 $_['entry_addproduct']    = 'Show Add to Cart Button:<span class="help">Not recommended if some products have age restrictions. Box style only.</span>';
+$_['entry_show_mini_label'] = 'Show Mini-label:';
 
 $_['entry_style']         = 'Style';
 $_['entry_limit']         = 'Limit';

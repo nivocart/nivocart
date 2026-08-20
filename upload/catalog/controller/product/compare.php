@@ -81,6 +81,7 @@ class ControllerProductCompare extends Controller {
 		$this->data['stock_checkout'] = $this->config->get('config_stock_checkout');
 		$this->data['review_status'] = $this->config->get('config_review_status');
 		$this->data['price_hide'] = $this->config->get('config_price_hide') ? true : false;
+		$this->data['show_mini_label'] = !$this->config->get('config_hide_mini_label') ? true : false;
 
 		$this->load->model('catalog/offer');
 
@@ -245,6 +246,7 @@ class ControllerProductCompare extends Controller {
 					'height'            => $this->length->format($product_info['height'], $product_info['length_class_id']),
 					'attribute'         => $attribute_data,
 					'href'              => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL'),
+					'mini_label'        => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($current_product_id) : '',
 					'remove'            => $this->url->link('product/compare', 'remove=' . $product_info['product_id'], 'SSL')
 				];
 

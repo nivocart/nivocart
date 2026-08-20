@@ -25,6 +25,7 @@ $_['entry_review']        = 'Show Product Star Rating:<span class="help">(if any
 
 $_['entry_viewproduct']   = 'Show View Product Button:<span class="help">Box style only.</span>';
 $_['entry_addproduct']    = 'Show Add to Cart Button:<span class="help">Not recommended if some products have age restrictions. Box style only.</span>';
+$_['entry_show_mini_label'] = 'Show Mini-label:';
 
 $_['entry_style']         = 'Style';
 $_['entry_image']         = 'Image (W x H)';
