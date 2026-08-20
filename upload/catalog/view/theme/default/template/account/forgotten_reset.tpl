@@ -1,8 +1,8 @@
 <?php echo $header; ?>
-<?php echo $content_higher; ?>
 <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
+<?php echo $content_higher; ?>
 <?php echo $content_left; ?><?php echo $content_right; ?>
 <div id="content"><?php echo $content_high; ?>
   <h1><?php echo $heading_title_reset; ?></h1>

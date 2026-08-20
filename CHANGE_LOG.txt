@@ -23,7 +23,7 @@ Release: TBA
 - Removed unused/obsolete Google+ entry in Default Theme settings.
 - Fix bug in "Check new version" feature where the Github link was wrong.
 - Fix bug in Catalog Product List where the totals were not accurate.
-- Default stylesheet product information page update. 
+- Default stylesheet product information page update.
 
 
 NivoCart v2.2.1

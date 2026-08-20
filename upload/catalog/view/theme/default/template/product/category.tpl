@@ -1,5 +1,4 @@
 <?php echo $header; ?>
-<?php echo $content_higher; ?>
 <?php if ($this->config->get($template . '_breadcrumbs')) { ?>
   <div class="breadcrumb">
   <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -8,6 +7,7 @@
   <?php } ?>
   </div>
 <?php } ?>
+<?php echo $content_higher; ?>
 <?php echo $content_left; ?><?php echo $content_right; ?>
 <div id="content"><?php echo $content_high; ?>
   <h1><?php echo $heading_title; ?></h1>
