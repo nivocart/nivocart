@@ -85,7 +85,6 @@ class ControllerModuleLinks extends Controller {
 		];
 
 		$this->data['action'] = $this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Manager
@@ -100,9 +99,7 @@ class ControllerModuleLinks extends Controller {
 
 		$this->load->model('localisation/language');
 
-		$languages_array = [];
-
-		$languages = $this->model_localisation_language->getLanguages($languages_array);
+		$languages = $this->model_localisation_language->getLanguages([]);
 
 		foreach ($languages as $language) {
 			if (isset($this->request->post[$this->name . '_title' . $language['language_id']])) {
@@ -130,9 +127,7 @@ class ControllerModuleLinks extends Controller {
 
 		$this->load->model('design/layout');
 
-		$layouts_array = [];
-
-		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
+		$this->data['layouts'] = $this->model_design_layout->getLayouts([]);
 
 		$this->template = 'module/' . $this->name . '.tpl';
 		$this->children = [

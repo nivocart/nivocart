@@ -104,7 +104,6 @@ class ControllerModuleMenuHorizontal extends Controller {
 		];
 
 		$this->data['action'] = $this->url->link('module/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Manager
@@ -164,15 +163,11 @@ class ControllerModuleMenuHorizontal extends Controller {
 
 		$this->load->model('design/menu');
 
-		$menus_array = [];
-
-		$this->data['menus'] = $this->model_design_menu->getMenus($menus_array);
+		$this->data['menus'] = $this->model_design_menu->getMenus([]);
 
 		$this->load->model('design/layout');
 
-		$layouts_array = [];
-
-		$this->data['layouts'] = $this->model_design_layout->getLayouts($layouts_array);
+		$this->data['layouts'] = $this->model_design_layout->getLayouts([]);
 
 		$this->template = 'module/' . $this->name . '.tpl';
 		$this->children = [
