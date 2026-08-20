@@ -1681,7 +1681,24 @@ ul.box-filter > li ul {
   right: 5px;
   float: right;
 }
-
+/* Mini Label — pill badge (top-right of product image) */
+.mini-label {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  background-color: var(--clr-primary);
+  color: #FFF;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+}
 /* Product list */
 .product-list > div {
   overflow: auto;
@@ -1818,27 +1835,6 @@ ul.box-filter > li ul {
   margin-bottom: 0;
   overflow: hidden;
   position: relative;
-}
-
-/* =====================================================
-   Mini Label — pill badge (top-right of product image)
-   ===================================================== */
-.mini-label {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 50px;
-  background-color: var(--clr-primary);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  line-height: 1.4;
-  white-space: nowrap;
-  pointer-events: none;
 }
 .product-grid .image img {
   padding: 3px;
