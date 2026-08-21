@@ -95,38 +95,57 @@ class ModelSettingSetting extends Model {
 	public function getColors(): array {
 		$skins = [];
 
-		$skins[] = ['skin' => 'white','color' => '#FFFFFF','title' => 'White'];
-		$skins[] = ['skin' => 'beige','color' => '#F5F5DC','title' => 'Beige'];
-		$skins[] = ['skin' => 'ash','color' => '#E5E5D0','title' => 'Ash'];
-		$skins[] = ['skin' => 'silver','color' => '#C2C2C2','title' => 'Silver'];
-		$skins[] = ['skin' => 'grey','color' => '#808080','title' => 'Grey'];
-		$skins[] = ['skin' => 'charcoal','color' => '#36454F','title' => 'Charcoal'];
-		$skins[] = ['skin' => 'black','color' => '#000000','title' => 'Black'];
-		$skins[] = ['skin' => 'pistachio','color' => '#93C572','title' => 'Pistachio'];
-		$skins[] = ['skin' => 'lime','color' => '#A4C400','title' => 'Lime'];
-		$skins[] = ['skin' => 'green','color' => '#60A917','title' => 'Green'];
-		$skins[] = ['skin' => 'emerald','color' => '#008A00','title' => 'Emerald'];
-		$skins[] = ['skin' => 'teal','color' => '#00ABA9','title' => 'Teal'];
-		$skins[] = ['skin' => 'cyan','color' => '#1BA1E2','title' => 'Cyan'];
-		$skins[] = ['skin' => 'cobalt','color' => '#0000FF','title' => 'Cobalt'];
-		$skins[] = ['skin' => 'navy','color' => '#000084','title' => 'Navy'];
-		$skins[] = ['skin' => 'indigo','color' => '#6A00FF','title' => 'Indigo'];
-		$skins[] = ['skin' => 'violet','color' => '#AA00FF','title' => 'Violet'];
-		$skins[] = ['skin' => 'pink','color' => '#F472D0','title' => 'Pink'];
-		$skins[] = ['skin' => 'magenta','color' => '#D80073','title' => 'Magenta'];
-		$skins[] = ['skin' => 'crimson','color' => '#A20025','title' => 'Crimson'];
-		$skins[] = ['skin' => 'red','color' => '#E51400','title' => 'Red'];
-		$skins[] = ['skin' => 'orange','color' => '#FA6800','title' => 'Orange'];
-		$skins[] = ['skin' => 'amber','color' => '#F0A30A','title' => 'Amber'];
-		$skins[] = ['skin' => 'citrus','color' => '#FFF033','title' => 'Citrus'];
-		$skins[] = ['skin' => 'yellow','color' => '#E3C800','title' => 'Yellow'];
-		$skins[] = ['skin' => 'brown','color' => '#825A2C','title' => 'Brown'];
-		$skins[] = ['skin' => 'olive','color' => '#6D8759','title' => 'Olive'];
-		$skins[] = ['skin' => 'steel','color' => '#647687','title' => 'Steel'];
-		$skins[] = ['skin' => 'mauve','color' => '#76608A','title' => 'Mauve'];
-		$skins[] = ['skin' => 'sienna','color' => '#B77733','title' => 'Sienna'];
-		$skins[] = ['skin' => 'mist','color' => '#F2F2F2','title' => 'Mist'];
-		$skins[] = ['skin' => 'clear','color' => 'transparent','title' => 'Clear'];
+		// Neutrals — light to dark
+		$skins[] = ['skin' => 'white', 'color' => '#FFFFFF', 'title' => 'White'];
+		$skins[] = ['skin' => 'mist', 'color' => '#F2F2F2', 'title' => 'Mist'];
+		$skins[] = ['skin' => 'beige', 'color' => '#F5F0E8', 'title' => 'Beige'];
+		$skins[] = ['skin' => 'ash', 'color' => '#E5E5D0', 'title' => 'Ash'];
+		$skins[] = ['skin' => 'silver', 'color' => '#BDC3C7', 'title' => 'Silver'];
+		$skins[] = ['skin' => 'grey', 'color' => '#6B7280', 'title' => 'Grey'];
+		$skins[] = ['skin' => 'steel', 'color' => '#647687', 'title' => 'Steel'];
+		$skins[] = ['skin' => 'charcoal', 'color' => '#36454F', 'title' => 'Charcoal'];
+		$skins[] = ['skin' => 'black', 'color' => '#000000', 'title' => 'Black'];
+
+		// Reds
+		$skins[] = ['skin' => 'red', 'color' => '#EF4444', 'title' => 'Red'];
+		$skins[] = ['skin' => 'crimson', 'color' => '#9F1239', 'title' => 'Crimson'];
+
+		// Oranges & browns
+		$skins[] = ['skin' => 'orange', 'color' => '#F97316', 'title' => 'Orange'];
+		$skins[] = ['skin' => 'sienna', 'color' => '#B77733', 'title' => 'Sienna'];
+		$skins[] = ['skin' => 'brown', 'color' => '#825A2C', 'title' => 'Brown'];
+
+		// Ambers & yellows
+		$skins[] = ['skin' => 'amber', 'color' => '#F59E0B', 'title' => 'Amber'];
+		$skins[] = ['skin' => 'citrus', 'color' => '#FACC15', 'title' => 'Citrus'];
+		$skins[] = ['skin' => 'yellow', 'color' => '#EAB308', 'title' => 'Yellow'];
+
+		// Greens
+		$skins[] = ['skin' => 'lime', 'color' => '#84CC16', 'title' => 'Lime'];
+		$skins[] = ['skin' => 'pistachio', 'color' => '#93C572', 'title' => 'Pistachio'];
+		$skins[] = ['skin' => 'olive', 'color' => '#6D8759', 'title' => 'Olive'];
+		$skins[] = ['skin' => 'green', 'color' => '#16A34A', 'title' => 'Green'];
+		$skins[] = ['skin' => 'emerald', 'color' => '#059669', 'title' => 'Emerald'];
+
+		// Teals & cyans
+		$skins[] = ['skin' => 'teal', 'color' => '#0D9488', 'title' => 'Teal'];
+		$skins[] = ['skin' => 'cyan', 'color' => '#0EA5E9', 'title' => 'Cyan'];
+
+		// Blues
+		$skins[] = ['skin' => 'cobalt', 'color' => '#0050EF', 'title' => 'Cobalt'];
+		$skins[] = ['skin' => 'navy', 'color' => '#1E3A5F', 'title' => 'Navy'];
+
+		// Indigos & violets
+		$skins[] = ['skin' => 'indigo', 'color' => '#6366F1', 'title' => 'Indigo'];
+		$skins[] = ['skin' => 'violet', 'color' => '#8B5CF6', 'title' => 'Violet'];
+		$skins[] = ['skin' => 'mauve', 'color' => '#76608A', 'title' => 'Mauve'];
+
+		// Pinks & magentas
+		$skins[] = ['skin' => 'magenta', 'color' => '#BE185D', 'title' => 'Magenta'];
+		$skins[] = ['skin' => 'pink', 'color' => '#EC4899', 'title' => 'Pink'];
+
+		// Special
+		$skins[] = ['skin' => 'clear', 'color' => 'transparent', 'title' => 'Clear'];
 
 		return $skins;
 	}

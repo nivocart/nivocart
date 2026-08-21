@@ -226,7 +226,7 @@ class ModelSettingSetting extends Model {
 		$skins[] = ['skin' => 'cyan', 'color' => '#0EA5E9', 'title' => 'Cyan'];
 
 		// Blues
-		$skins[] = ['skin' => 'cobalt', 'color' => '#3B82F6', 'title' => 'Cobalt'];
+		$skins[] = ['skin' => 'cobalt', 'color' => '#0050EF', 'title' => 'Cobalt'];
 		$skins[] = ['skin' => 'navy', 'color' => '#1E3A5F', 'title' => 'Navy'];
 
 		// Indigos & violets
