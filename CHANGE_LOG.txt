@@ -4,7 +4,7 @@
 ---------------
 
 
-NivoCart v2.3.X
+NivoCart v2.3.0
 ---------------
 Release: TBA
 
@@ -14,7 +14,7 @@ Release: TBA
 - Add Webp image generating and resizing for all images under Catalog.
 - Add Qol colour preview for custom colour Menu Horizontal and Footer.
 - Add Qol Opacity feature for custom colour Menu Horizontal and Footer.
-- Add a new "Mini label" feature for modules and product pages.
+- Add a new optional "Mini label" feature for modules and product pages.
 - Updated built-in colours palette for custom Footer and Menus.
 - Updated Product Info page Default layout and Images management.
 - Updated optional "Fraudlabs Pro" extension with the latest V2 API.
@@ -23,6 +23,7 @@ Release: TBA
 - Removed unused/obsolete Google+ entry in Default Theme settings.
 - Fix bug in "Check new version" feature where the Github link was wrong.
 - Fix bug in Catalog Product List where the totals were not accurate.
+- Moved Breadcrumbs up, outside of the Content, on all Catalog pages.
 - Default stylesheet product information page update.
 
 
