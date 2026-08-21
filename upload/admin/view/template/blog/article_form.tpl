@@ -581,7 +581,7 @@ function getArticles(article_row, value) {
 		delay: 10,
 		source: function(request, response) {
 			$.ajax({
-				url: 'index.php?route=blog/article/autocomplete_article&token=<?php echo $token; ?>&blog_article_id=<?php echo $blog_article_id; ?>&filter_name=' + encodeURIComponent(request.term),
+				url: 'index.php?route=blog/article/autocompleteArticle&token=<?php echo $token; ?>&blog_article_id=<?php echo $blog_article_id; ?>&filter_name=' + encodeURIComponent(request.term),
 				dataType: 'json',
 				success: function(json) {
 					response($.map(json, function(item) {

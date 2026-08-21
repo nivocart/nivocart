@@ -735,7 +735,7 @@ class ControllerBlogArticle extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function autocomplete_article() {
+	public function autocompleteArticle() {
 		$json = [];
 
 		if (isset($this->request->get['blog_article_id'])) {
