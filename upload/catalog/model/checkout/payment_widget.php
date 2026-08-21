@@ -7,7 +7,7 @@
  * is JSON-encoded into window.NIVOCART_PAYMENT_DATA in the template.
  *
  * Adding a new gateway:
- *   1. Add a public getWidgetData_{code}() method here.
+ *   1. Add a public getWidgetData{Code}() method here (camelCase, e.g. getWidgetDataPpExpress).
  *   2. Add the code to the appropriate array in checkout_confirm.php.
  *   3. Create catalog/view/theme/default/javascript/payment/{code}.js.
  *
@@ -28,7 +28,7 @@ class ModelCheckoutPaymentWidget extends Model {
 		$data = [];
 
 		foreach ($payment_methods as $code => $method) {
-			$method_name = 'getWidgetData_' . $code;
+			$method_name = 'getWidgetData' . str_replace('_', '', ucwords($code, '_'));
 
 			if (method_exists($this, $method_name)) {
 				$data[$code] = $this->$method_name($total, $currency_code);
@@ -42,7 +42,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// PP Standard
 	// =========================================================================
 
-	private function getWidgetData_pp_standard(float $total, string $currency_code): array {
+	private function getWidgetDataPpStandard(float $total, string $currency_code): array {
 		$products = [];
 		$pp_subtotal = 0;
 
@@ -115,7 +115,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// Sagepay Payments
 	// =========================================================================
 
-	private function getWidgetData_sagepay(float $total, string $currency_code): array {
+	private function getWidgetDataSagepay(float $total, string $currency_code): array {
 		return [
 			'testmode' => $this->config->get('sagepay_test') !== 'live',
 		];
@@ -125,7 +125,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// Stripe Payments
 	// =========================================================================
 
-	private function getWidgetData_stripe_payments(float $total, string $currency_code): array {
+	private function getWidgetDataStripePayments(float $total, string $currency_code): array {
 		return [
 			'publishable_key' => $this->config->get('stripe_payments_publishable_key'),
 			'intent_url'      => 'index.php?route=payment/stripe_payments/intentCreate',
@@ -139,7 +139,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// Klarna Payments
 	// =========================================================================
 
-	private function getWidgetData_klarna(float $total, string $currency_code): array {
+	private function getWidgetDataKlarna(float $total, string $currency_code): array {
 		// Resolve the payment country from session — same approach as
 		// ControllerPaymentKlarna::_resolvePaymentCountry(). We need the
 		// country at widget-data-build time (checkout page load) to verify
@@ -182,7 +182,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// PP Express
 	// =========================================================================
 
-	public function getWidgetData_pp_express(array $cart, float $total): array {
+	public function getWidgetDataPpExpress(array $cart, float $total): array {
 		$sandbox = (bool)$this->config->get('pp_express_sandbox');
 
 		return [
@@ -201,7 +201,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// Bank Transfer
 	// =========================================================================
 
-	private function getWidgetData_bank_transfer(float $total, string $currency_code): array {
+	private function getWidgetDataBankTransfer(float $total, string $currency_code): array {
 		$this->language->load('payment/bank_transfer');
 
 		return [
@@ -216,7 +216,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// Cheque / Money Order
 	// =========================================================================
 
-	private function getWidgetData_cheque(float $total, string $currency_code): array {
+	private function getWidgetDataCheque(float $total, string $currency_code): array {
 		$this->language->load('payment/cheque');
 
 		return [
@@ -232,7 +232,7 @@ class ModelCheckoutPaymentWidget extends Model {
 	// =========================================================================
 	// Add future gateways below following the same pattern:
 	//
-	// private function getWidgetData_klarna(float $total, string $currency_code): array {
+	// private function getWidgetDataGatewayName(float $total, string $currency_code): array {
 	//     return [ ... ];
 	// }
 	// =========================================================================

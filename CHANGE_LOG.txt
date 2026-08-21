@@ -19,6 +19,7 @@ Release: TBA
 - Updated Product Info page Default layout and Images management.
 - Updated optional "Fraudlabs Pro" extension with the latest V2 API.
 - Updated optional "MaxMind" extension with the current latest V2 API.
+- Updated multiple non-camelCase methods to Code Quality standards.
 - Replaced "SimpleLens" lightbox with modern Drift.js (ZoomLens).
 - Removed unused/obsolete Google+ entry in Default Theme settings.
 - Fix bug in "Check new version" feature where the Github link was wrong.
