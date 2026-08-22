@@ -12,11 +12,6 @@
  * @package NivoCart
  */
 class ModelReportDropship extends Model {
-
-    // =====================================================================
-    // DEPENDENCY CHECK
-    // =====================================================================
-
     /**
      * Return true if the required DS tables all exist.
      */
@@ -55,12 +50,7 @@ class ModelReportDropship extends Model {
      * Return all active DS channels for the filter dropdown.
      */
     public function getChannelsForFilter(): array {
-        $query = $this->db->query("
-            SELECT `channel_id`, `name`, `provider`
-            FROM `" . DB_PREFIX . "dropship_channel`
-            WHERE `status` = '1'
-            ORDER BY `name` ASC
-        ");
+        $query = $this->db->query("SELECT `channel_id`, `name`, `provider` FROM `" . DB_PREFIX . "dropship_channel` WHERE `status` = '1' ORDER BY `name` ASC");
 
         return $query->rows;
     }
@@ -81,23 +71,23 @@ class ModelReportDropship extends Model {
      * separately via getOverheadSummary() and subtracted from gross totals.
      */
     public function getDropshipProfit(array $data = []): array {
-        $group      = $data['filter_group']            ?? 'week';
-        $date_start = $data['filter_date_start']       ?? '';
-        $date_end   = $data['filter_date_end']         ?? '';
-        $status_id  = (int)($data['filter_order_status_id'] ?? 0);
-        $channel_id = (int)($data['filter_channel_id']     ?? 0);
-        $vat_reg    = (bool)($data['vat_registered']        ?? false);
+        $group = $data['filter_group'] ?? 'week';
+        $date_start = $data['filter_date_start'] ?? '';
+        $date_end = $data['filter_date_end'] ?? '';
+        $status_id = (int)($data['filter_order_status_id'] ?? 0);
+        $channel_id = (int)($data['filter_channel_id'] ?? 0);
+        $vat_reg = (bool)($data['vat_registered'] ?? false);
 
         // Base query — one row per DS order line item
         $sql = "
             SELECT
                 o.order_id,
                 o.date_added,
-                o.total           AS order_total,
+                o.total AS order_total,
                 op.quantity,
-                op.price          AS sale_price,
+                op.price AS sale_price,
                 dch.channel_id,
-                dch.name          AS channel_name,
+                dch.name AS channel_name,
                 pd.supplier_cost,
                 pd.vat_rate,
                 cc_ch.gateway_fee_pct,
@@ -117,17 +107,10 @@ class ModelReportDropship extends Model {
 
         // Join cost config only if table exists
         if ($this->costConfigExists()) {
-            $sql .= "
-            LEFT JOIN `" . DB_PREFIX . "ds_cost_config` cc_ch
-                ON (cc_ch.channel_id = dord.channel_id)
-            ";
+            $sql .= "LEFT JOIN `" . DB_PREFIX . "ds_cost_config` cc_ch ON (cc_ch.channel_id = dord.channel_id)";
         } else {
             // Provide null columns so calculations below still work
-            $sql .= "
-            LEFT JOIN (SELECT NULL AS gateway_fee_pct, NULL AS gateway_fee_fixed,
-                              NULL AS returns_pct, NULL AS fx_fee_pct,
-                              NULL AS channel_id) cc_ch ON (1=0)
-            ";
+            $sql .= "LEFT JOIN (SELECT NULL AS gateway_fee_pct, NULL AS gateway_fee_fixed, NULL AS returns_pct, NULL AS fx_fee_pct, NULL AS channel_id) cc_ch ON (1=0)";
         }
 
         $sql .= " WHERE 1";
@@ -160,7 +143,7 @@ class ModelReportDropship extends Model {
         // Group rows in PHP (avoids complex SQL with per-order gateway
         // fee aggregation and VAT-adjusted cost calculation)
         // ---------------------------------------------------------------
-        $buckets    = [];   // key → aggregated row
+        $buckets = [];      // key → aggregated row
         $seen_order = [];   // track order totals already counted (gateway fee per unique order)
 
         foreach ($raw->rows as $r) {
@@ -168,14 +151,14 @@ class ModelReportDropship extends Model {
 
             if (!isset($buckets[$bucket_key])) {
                 $buckets[$bucket_key] = [
-                    'date_added'       => $r['date_added'],
-                    'channel_id'       => (int)$r['channel_id'],
-                    'channel_name'     => $r['channel_name'],
-                    'orders'           => [],
-                    'revenue'          => 0.0,
-                    'product_cost'     => 0.0,
-                    'gateway_fees'     => 0.0,
-                    'returns_provision'=> 0.0,
+                    'date_added'        => $r['date_added'],
+                    'channel_id'        => (int)$r['channel_id'],
+                    'channel_name'      => $r['channel_name'],
+                    'orders'            => [],
+                    'revenue'           => 0.0,
+                    'product_cost'      => 0.0,
+                    'gateway_fees'      => 0.0,
+                    'returns_provision' => 0.0,
                 ];
             }
 
@@ -213,9 +196,9 @@ class ModelReportDropship extends Model {
 
             if (!isset($seen_order[$order_bucket_key])) {
                 $seen_order[$order_bucket_key] = true;
-                $order_total   = (float)$r['order_total'];
-                $gw_pct        = (float)($r['gateway_fee_pct']   ?? 0);
-                $gw_fixed      = (float)($r['gateway_fee_fixed']  ?? 0);
+                $order_total = (float)$r['order_total'];
+                $gw_pct = (float)($r['gateway_fee_pct'] ?? 0);
+                $gw_fixed = (float)($r['gateway_fee_fixed'] ?? 0);
                 $b['gateway_fees'] += ($order_total * $gw_pct / 100) + $gw_fixed;
             }
 
@@ -228,11 +211,13 @@ class ModelReportDropship extends Model {
         $results = [];
 
         foreach ($buckets as $bucket) {
-            $revenue          = round($bucket['revenue'],           4);
-            $product_cost     = round($bucket['product_cost'],      4);
-            $gateway_fees     = round($bucket['gateway_fees'],      4);
-            $returns_prov     = round($bucket['returns_provision'], 4);
-            $gross_profit     = $revenue - $product_cost - $gateway_fees - $returns_prov;
+            $revenue = round($bucket['revenue'], 4, PHP_ROUND_HALF_UP);
+
+            $product_cost = round($bucket['product_cost'], 4, PHP_ROUND_HALF_UP);
+            $gateway_fees = round($bucket['gateway_fees'], 4, PHP_ROUND_HALF_UP);
+            $returns_prov = round($bucket['returns_provision'], 4, PHP_ROUND_HALF_UP);
+
+            $gross_profit = $revenue - $product_cost - $gateway_fees - $returns_prov;
             $gross_margin_pct = ($revenue > 0) ? ($gross_profit / $revenue) * 100 : 0;
 
             [$date_start_out, $date_end_out] = $this->bucketDates($bucket['date_added'], $group);
@@ -248,7 +233,7 @@ class ModelReportDropship extends Model {
                 'gateway_fees'      => $gateway_fees,
                 'returns_provision' => $returns_prov,
                 'gross_profit'      => $gross_profit,
-                'gross_margin_pct'  => round($gross_margin_pct, 2),
+                'gross_margin_pct'  => round($gross_margin_pct, 2, PHP_ROUND_HALF_UP)
             ];
         }
 
@@ -269,6 +254,7 @@ class ModelReportDropship extends Model {
     public function getTotalDropshipProfit(array $data = []): int {
         // Re-run without pagination to count buckets
         $data_all = $data;
+
         unset($data_all['start'], $data_all['limit']);
 
         return count($this->getDropshipProfit($data_all));
@@ -300,29 +286,24 @@ class ModelReportDropship extends Model {
         }
 
         $date_start = $data['filter_date_start'] ?? date('Y-m-d');
-        $date_end   = $data['filter_date_end']   ?? date('Y-m-d');
+        $date_end = $data['filter_date_end'] ?? date('Y-m-d');
         $channel_id = (int)($data['filter_channel_id'] ?? 0);
 
         // Days in period
-        $days = max(1, (int)(
-            (strtotime($date_end) - strtotime($date_start)) / 86400
-        ) + 1);
+        $days = max(1, (int)((strtotime($date_end) - strtotime($date_start)) / 86400) + 1);
 
         // Global costs (channel_id = 0)
-        $global_query = $this->db->query("
-            SELECT * FROM `" . DB_PREFIX . "ds_cost_config`
-            WHERE `channel_id` = '0' LIMIT 1
-        ");
+        $global_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "ds_cost_config` WHERE `channel_id` = '0' LIMIT 1");
 
         $global = $global_query->row ?? [];
 
-        $hosting_share    = ((float)($global['hosting_monthly'] ?? 0)) * ($days / 30.44);
-        $domain_share     = ((float)($global['domain_annual']   ?? 0)) / 365 * $days;
-        $tools_share      = ((float)($global['tools_annual']    ?? 0)) / 365 * $days;
-        $other_share      = ((float)($global['other_monthly']   ?? 0)) * ($days / 30.44);
+        $hosting_share = ((float)($global['hosting_monthly'] ?? 0)) * ($days / 30.44);
+        $domain_share = ((float)($global['domain_annual'] ?? 0)) / 365 * $days;
+        $tools_share = ((float)($global['tools_annual'] ?? 0)) / 365 * $days;
+        $other_share = ((float)($global['other_monthly'] ?? 0)) * ($days / 30.44);
 
         // Revenue total for chargeback % calculation
-        $revenue_total    = $this->getTotalRevenue($data);
+        $revenue_total = $this->getTotalRevenue($data);
         $chargeback_share = $revenue_total * ((float)($global['chargeback_pct'] ?? 0) / 100);
 
         // Per-channel costs
@@ -334,26 +315,25 @@ class ModelReportDropship extends Model {
 
         $ch_query = $this->db->query($ch_sql);
 
-        $platform_share     = 0.0;
-        $advertising_share  = 0.0;
+        $platform_share = 0.0;
+        $advertising_share = 0.0;
 
         foreach ($ch_query->rows as $ch) {
-            $platform_share    += ((float)($ch['platform_monthly']    ?? 0)) * ($days / 30.44);
+            $platform_share += ((float)($ch['platform_monthly'] ?? 0)) * ($days / 30.44);
             $advertising_share += ((float)($ch['advertising_monthly'] ?? 0)) * ($days / 30.44);
         }
 
-        $total = $hosting_share + $domain_share + $tools_share + $platform_share
-               + $advertising_share + $chargeback_share + $other_share;
+        $total = $hosting_share + $domain_share + $tools_share + $platform_share + $advertising_share + $chargeback_share + $other_share;
 
         return [
-            'hosting'     => round($hosting_share,    4),
-            'domain'      => round($domain_share,     4),
-            'tools'       => round($tools_share,      4),
-            'platform'    => round($platform_share,   4),
-            'advertising' => round($advertising_share,4),
-            'chargeback'  => round($chargeback_share, 4),
-            'other'       => round($other_share,      4),
-            'total'       => round($total,            4),
+            'hosting'     => round($hosting_share, 4, PHP_ROUND_HALF_UP),
+            'domain'      => round($domain_share, 4, PHP_ROUND_HALF_UP),
+            'tools'       => round($tools_share, 4, PHP_ROUND_HALF_UP),
+            'platform'    => round($platform_share, 4, PHP_ROUND_HALF_UP),
+            'advertising' => round($advertising_share, 4, PHP_ROUND_HALF_UP),
+            'chargeback'  => round($chargeback_share, 4, PHP_ROUND_HALF_UP),
+            'other'       => round($other_share, 4, PHP_ROUND_HALF_UP),
+            'total'       => round($total, 4, PHP_ROUND_HALF_UP),
         ];
     }
 
@@ -361,10 +341,10 @@ class ModelReportDropship extends Model {
      * Return the total revenue for the given filters (for chargeback % base).
      */
     private function getTotalRevenue(array $data): float {
-        $status_id  = (int)($data['filter_order_status_id'] ?? 0);
-        $channel_id = (int)($data['filter_channel_id']     ?? 0);
+        $status_id = (int)($data['filter_order_status_id'] ?? 0);
+        $channel_id = (int)($data['filter_channel_id'] ?? 0);
         $date_start = $data['filter_date_start'] ?? '';
-        $date_end   = $data['filter_date_end']   ?? '';
+        $date_end = $data['filter_date_end'] ?? '';
 
         $sql = "
             SELECT SUM(op.price * op.quantity) AS revenue
@@ -405,10 +385,7 @@ class ModelReportDropship extends Model {
             return false;
         }
 
-        $q = $this->db->query("
-            SELECT `vat_registered` FROM `" . DB_PREFIX . "ds_cost_config`
-            WHERE `channel_id` = '0' LIMIT 1
-        ");
+        $q = $this->db->query("SELECT `vat_registered` FROM `" . DB_PREFIX . "ds_cost_config` WHERE `channel_id` = '0' LIMIT 1");
 
         return (bool)($q->row['vat_registered'] ?? false);
     }
@@ -444,7 +421,7 @@ class ModelReportDropship extends Model {
             'day'   => [date('Y-m-d', $ts), date('Y-m-d', $ts)],
             'month' => [
                 date('Y-m-01', $ts),
-                date('Y-m-t',  $ts),
+                date('Y-m-t', $ts),
             ],
             'year'  => [
                 date('Y-01-01', $ts),
