@@ -1003,9 +1003,6 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		// Auto-complete
-		$this->data['autocomplete_off'] = $this->config->get('config_autocomplete_product');
-
 		// Auto Seo Urls
 		$this->data['auto_seo_url'] = false;
 

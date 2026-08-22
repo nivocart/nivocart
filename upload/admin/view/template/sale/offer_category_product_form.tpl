@@ -69,35 +69,6 @@
               <label for="logged-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
-        <?php if ($autocomplete_off) { ?>
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_category_one; ?></td>
-            <td><?php if ($error_category) { ?>
-              <select name="category_one" class="input-error">
-                <option value=""><?php echo $text_select; ?></option>
-                <?php foreach ($categories as $category) { ?>
-                  <?php if ($category['category_id'] === $category_one) { ?>
-                    <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
-                  <?php } else { ?>
-                    <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
-                  <?php } ?>
-                <?php } ?>
-              </select>
-              <span class="error"><?php echo $error_category; ?></span>
-            <?php } else { ?>
-              <select name="category_one">
-                <option value=""><?php echo $text_select; ?></option>
-                <?php foreach ($categories as $category) { ?>
-                  <?php if ($category['category_id'] === $category_one) { ?>
-                    <option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category['name']; ?></option>
-                  <?php } else { ?>
-                    <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
-                  <?php } ?>
-                <?php } ?>
-              </select>
-            <?php } ?></td>
-          </tr>
-        <?php } else { ?>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_category_one; ?><?php echo $text_autocomplete; ?></td>
             <td><?php if ($error_category) { ?>
@@ -110,36 +81,6 @@
             <?php } ?>
             </td>
           </tr>
-        <?php } ?>
-        <?php if ($autocomplete_off) { ?>
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_product_two; ?></td>
-            <td><?php if ($error_product) { ?>
-              <select name="product_two" class="input-error">
-                <option value=""><?php echo $text_select; ?></option>
-                <?php foreach ($products as $product) { ?>
-                  <?php if ($product['product_id'] === $product_two) { ?>
-                    <option value="<?php echo $product['product_id']; ?>" selected="selected"><?php echo $product['name']; ?></option>
-                  <?php } else { ?>
-                    <option value="<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></option>
-                  <?php } ?>
-                <?php } ?>
-              </select>
-              <span class="error"><?php echo $error_product; ?></span>
-            <?php } else { ?>
-              <select name="product_two">
-                <option value=""><?php echo $text_select; ?></option>
-                <?php foreach ($products as $product) { ?>
-                  <?php if ($product['product_id'] === $product_two) { ?>
-                    <option value="<?php echo $product['product_id']; ?>" selected="selected"><?php echo $product['name']; ?></option>
-                  <?php } else { ?>
-                    <option value="<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></option>
-                  <?php } ?>
-                <?php } ?>
-              </select>
-            <?php } ?></td>
-          </tr>
-        <?php } else { ?>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_product_two; ?><?php echo $text_autocomplete; ?></td>
             <td><?php if ($error_product) { ?>
@@ -151,7 +92,6 @@
               <input type="hidden" name="product_two" value="<?php echo $product_two; ?>" />
             <?php } ?></td>
           </tr>
-        <?php } ?>
           <tr>
             <td><?php echo $entry_date_start; ?></td>
             <td><input type="text" name="date_start" value="<?php echo $date_start; ?>" id="date-start" size="12" />

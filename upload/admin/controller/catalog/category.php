@@ -553,9 +553,6 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->data['cancel'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		// Auto-complete
-		$this->data['autocomplete_off'] = $this->config->get('config_autocomplete_category');
-
 		// Auto Seo Urls
 		$this->data['auto_seo_url'] = false;
 

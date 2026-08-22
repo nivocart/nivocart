@@ -280,6 +280,11 @@ class ModelUpgrade extends Model {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET store_id = '0', `group` = 'config', `key` = 'config_image_wide_thumb_height', `value` = '520', serialized = '0'");
 		}
 
+		// Remove deprecated autocomplete toggle settings (autocomplete is now always active)
+		foreach (['config_autocomplete_category', 'config_autocomplete_product', 'config_autocomplete_offer'] as $key) {
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = '" . $this->db->escape($key) . "'");
+		}
+
 		flush();
 
 		return true;

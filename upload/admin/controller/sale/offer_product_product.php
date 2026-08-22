@@ -391,9 +391,6 @@ class ControllerSaleOfferProductProduct extends Controller {
 
 		$this->data['cancel'] = $this->url->link('sale/offer_product_product', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		// Auto-complete
-		$this->data['autocomplete_off'] = $this->config->get('config_autocomplete_offer');
-
 		if (isset($this->request->get['offer_product_product_id']) && (!$this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$offer_product_product_info = $this->model_sale_offer_product_product->getOfferProductProduct($this->request->get['offer_product_product_id']);
 		}

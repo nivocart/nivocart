@@ -23,7 +23,8 @@ Release: TBA
 - Updated optional "MaxMind" extension with the current latest V2 API.
 - Updated multiple methods to Code Quality Camel Case standards.
 - Replaced "SimpleLens" lightbox with modern Drift.js (ZoomLens).
-- Removed unused/obsolete Google+ entry in Default Theme settings.
+- Removed unused/obsolete Google+ entry in Default Footer settings.
+- Removed 3 redundant/legacy Setting entries bypassing AutoComplete.
 - Fix bug in Admin forms using Vertical Tabs (vtabs) and AutoComplete.
 - Fix bug in "Check new version" feature where the Github link was wrong.
 - Fix bug in Catalog Product List where the totals were not accurate.
