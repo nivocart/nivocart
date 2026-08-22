@@ -156,6 +156,7 @@
             <ul>
               <li><a href="<?php echo $report_sale_order; ?>"><?php echo ($icons) ? '<i class="fa fa-shopping-basket"></i>' : ''; ?><?php echo $text_report_sale_order; ?></a></li>
               <li><a href="<?php echo $report_sale_profit; ?>"><?php echo ($icons) ? '<i class="fa fa-line-chart"></i>' : ''; ?><?php echo $text_report_sale_profit; ?></a></li>
+              <li><a href="<?php echo $report_sale_dropship_profit; ?>"><?php echo ($icons) ? '<i class="fa fa-cloud-download"></i>' : ''; ?><?php echo $text_report_sale_dropship_profit; ?></a></li>
               <li><a href="<?php echo $report_sale_tax; ?>"><?php echo ($icons) ? '<i class="fa fa-briefcase"></i>' : ''; ?><?php echo $text_report_sale_tax; ?></a></li>
               <li><a href="<?php echo $report_sale_shipping; ?>"><?php echo ($icons) ? '<i class="fa fa-truck"></i>' : ''; ?><?php echo $text_report_sale_shipping; ?></a></li>
               <li><a href="<?php echo $report_sale_return; ?>"><?php echo ($icons) ? '<i class="fa fa-history"></i>' : ''; ?><?php echo $text_report_sale_return; ?></a></li>

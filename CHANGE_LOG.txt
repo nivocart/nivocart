@@ -15,11 +15,13 @@ Release: TBA
 - Add Qol colour preview for custom colour Menu Horizontal and Footer.
 - Add Qol Opacity feature for custom colour Menu Horizontal and Footer.
 - Add a new optional "Mini label" feature for modules and product pages.
+- Add a new optional dropshipping cost calculator modification.
+- Add a new dropshipping profit report under admin reports.
 - Updated built-in colours palette for custom Footer and Menus.
 - Updated Product Info page Default layout and Images management.
 - Updated optional "Fraudlabs Pro" extension with the latest V2 API.
 - Updated optional "MaxMind" extension with the current latest V2 API.
-- Updated multiple non-camelCase methods to Code Quality standards.
+- Updated multiple methods to Code Quality Camel Case standards.
 - Replaced "SimpleLens" lightbox with modern Drift.js (ZoomLens).
 - Removed unused/obsolete Google+ entry in Default Theme settings.
 - Fix bug in "Check new version" feature where the Github link was wrong.

@@ -90,6 +90,7 @@ $_['text_report_sale_shipping']        = 'Shipping';
 $_['text_report_sale_return']          = 'Returns';
 $_['text_report_sale_coupon']          = 'Coupons';
 $_['text_report_sale_profit']          = 'Profits';
+$_['text_report_sale_dropship_profit'] = 'Dropship Profits';
 $_['text_report_product_label']        = 'Labels';
 $_['text_report_product_markup']       = 'Profit Margins';
 $_['text_report_product_viewed']       = 'Viewed';

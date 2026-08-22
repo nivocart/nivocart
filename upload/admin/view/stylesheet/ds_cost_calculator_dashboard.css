@@ -1,0 +1,234 @@
+/* =========================================================================
+   DS Cost Calculator — Admin Dashboard Stylesheet
+   Location: admin/view/stylesheet/ds_cost_calculator_dashboard.css
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   Tab bar
+   ------------------------------------------------------------------------- */
+.dscc-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #d0d4da;
+    margin-bottom: 20px;
+}
+.dscc-tab {
+    padding: 9px 22px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    background: #f5f6f8;
+    margin-right: 2px;
+    transition: background 0.15s, color 0.15s;
+}
+.dscc-tab:hover {
+    background: #eaedf1;
+    color: #2e6da4;
+}
+.dscc-tab.active {
+    background: #fff;
+    color: #2e6da4;
+    border-color: #d0d4da #d0d4da #fff #d0d4da;
+    margin-bottom: -2px;
+}
+/* -------------------------------------------------------------------------
+   Tab panels
+   ------------------------------------------------------------------------- */
+.dscc-panel {
+    display: none;
+}
+.dscc-panel.active {
+    display: block;
+}
+/* -------------------------------------------------------------------------
+   Section header inside a panel
+   ------------------------------------------------------------------------- */
+.dscc-section-head {
+    background: #f0f3f7;
+    border: 1px solid #d9dde4;
+    border-radius: 4px 4px 0 0;
+    padding: 10px 16px;
+    margin-bottom: 0;
+}
+.dscc-section-head h3 {
+    margin: 0 0 3px 0;
+    font-size: 14px;
+    color: #2e4a6e;
+}
+.dscc-section-head p {
+    margin: 0;
+    font-size: 12px;
+    color: #777;
+}
+/* -------------------------------------------------------------------------
+   Cost form card
+   ------------------------------------------------------------------------- */
+.dscc-card {
+    border: 1px solid #d9dde4;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    background: #fff;
+    padding: 18px 20px 10px;
+    margin-bottom: 22px;
+}
+
+/* Channel card gets its own full border (top included) */
+.dscc-channel-card {
+    border: 1px solid #d9dde4;
+    border-radius: 4px;
+    background: #fff;
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+.dscc-channel-head {
+    background: #e8f0fa;
+    border-bottom: 1px solid #c8d7ed;
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.dscc-channel-head h4 {
+    margin: 0;
+    font-size: 13px;
+    color: #1a3d6b;
+    flex: 1;
+}
+.dscc-channel-badge {
+    font-size: 11px;
+    background: #2e6da4;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.dscc-channel-body {
+    padding: 16px 20px 8px;
+}
+/* -------------------------------------------------------------------------
+   Form rows
+   ------------------------------------------------------------------------- */
+.dscc-form-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+.dscc-form-row label {
+    width: 240px;
+    min-width: 240px;
+    font-size: 13px;
+    color: #444;
+    padding-top: 6px;
+    line-height: 1.4;
+}
+.dscc-form-row .dscc-input-wrap {
+    flex: 1;
+}
+.dscc-form-row input[type="text"],
+.dscc-form-row input[type="number"] {
+    width: 160px;
+    padding: 5px 8px;
+    border: 1px solid #c5cad3;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #333;
+}
+.dscc-form-row input[type="text"]:focus,
+.dscc-form-row input[type="number"]:focus {
+    border-color: #2e6da4;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(46, 109, 164, 0.15);
+}
+.dscc-help-text {
+    font-size: 11px;
+    color: #888;
+    margin-top: 3px;
+}
+.dscc-suffix {
+    font-size: 13px;
+    color: #666;
+    margin-left: 5px;
+}
+/* -------------------------------------------------------------------------
+   VAT radio row
+   ------------------------------------------------------------------------- */
+.dscc-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 4px;
+}
+.dscc-radio-group label {
+    width: auto;
+    min-width: auto;
+    padding-top: 0;
+    font-size: 13px;
+    color: #444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+/* -------------------------------------------------------------------------
+   Form actions bar
+   ------------------------------------------------------------------------- */
+.dscc-form-actions {
+    border-top: 1px solid #e8eaed;
+    padding-top: 12px;
+    margin-top: 6px;
+    text-align: right;
+}
+/* -------------------------------------------------------------------------
+   Alert / info box
+   ------------------------------------------------------------------------- */
+.dscc-alert {
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+.dscc-alert-info {
+    background: #eaf3fb;
+    border: 1px solid #b8d9f0;
+    color: #2e5c8a;
+}
+.dscc-alert-warning {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    color: #7a5f00;
+}
+.dscc-alert-success {
+    background: #e9f7ef;
+    border: 1px solid #a9dfbf;
+    color: #1d6a3c;
+}
+/* -------------------------------------------------------------------------
+   Help tab
+   ------------------------------------------------------------------------- */
+.dscc-help-section {
+    max-width: 680px;
+}
+.dscc-help-section p {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+/* -------------------------------------------------------------------------
+   No-channels notice
+   ------------------------------------------------------------------------- */
+.dscc-no-channels {
+    padding: 20px;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+    background: #fafbfc;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+}
