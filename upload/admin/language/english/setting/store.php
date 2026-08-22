@@ -27,10 +27,6 @@ $_['column_template']              = 'Template';
 $_['column_url']                   = 'URL';
 $_['column_action']                = 'Action';
 
-// Info
-$_['info_one_page']                = 'New customer accounts will always be created, but not automatically approved. Guest Checkout is not possible.';
-$_['info_express']                 = 'Express Checkout: Please note that customer accounts will always be created and systematically approved, therefore Guest Checkout will no longer be possible.';
-
 // Entry
 $_['entry_url']                    = 'Store URL:';
 $_['entry_ssl']                    = 'Store SSL URL:';

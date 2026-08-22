@@ -225,9 +225,6 @@ class ControllerSettingStore extends Controller {
 		$this->data['text_shipping'] = $this->language->get('text_shipping');
 		$this->data['text_payment'] = $this->language->get('text_payment');
 
-		$this->data['info_one_page'] = $this->language->get('info_one_page');
-		$this->data['info_express'] = $this->language->get('info_express');
-
 		$this->data['tab_general'] = $this->language->get('tab_general');
 		$this->data['tab_store'] = $this->language->get('tab_store');
 		$this->data['tab_local'] = $this->language->get('tab_local');
