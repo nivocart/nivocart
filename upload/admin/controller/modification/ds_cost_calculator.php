@@ -46,7 +46,7 @@ class ControllerModificationDsCostCalculator extends Controller {
                 ]
             ];
 
-            $this->template = 'modification/ds_cost_calculator_install.tpl';
+            $this->template = 'modification/ds_cost_install.tpl';
             $this->children = ['common/header', 'common/footer'];
 
             $this->response->setOutput($this->render());
@@ -89,7 +89,6 @@ class ControllerModificationDsCostCalculator extends Controller {
 
         // Active DS channels with their configs
         $channels = $this->model_modification_ds_cost_calculator->getChannels();
-
         $channel_data = [];
 
         foreach ($channels as $ch) {
@@ -166,7 +165,7 @@ class ControllerModificationDsCostCalculator extends Controller {
             ]
         ];
 
-        $this->template = 'modification/ds_cost_calculator_dashboard.tpl';
+        $this->template = 'modification/ds_cost_dashboard.tpl';
         $this->children = ['common/header', 'common/footer'];
 
         $this->response->setOutput($this->render());
