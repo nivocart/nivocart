@@ -93,7 +93,7 @@ class ControllerSettingSetting extends Controller {
 		'entry_compression', 'entry_error_display', 'entry_error_log',
 		'entry_error_filename', 'entry_mail_filename', 'entry_quote_filename',
 		'entry_secure', 'entry_shared', 'entry_robots', 'entry_robots_online',
-		'entry_password', 'entry_ban_page', 'entry_sitemap_links',
+		'entry_password', 'entry_ban_page',
 		'entry_file_max_size', 'entry_file_extension_allowed',
 		'entry_file_mime_allowed',
 		// Help
@@ -137,7 +137,7 @@ class ControllerSettingSetting extends Controller {
 		'help_matomo_analytics', 'help_maintenance', 'help_seo_url',
 		'help_seo_url_cache', 'help_encryption', 'help_compression',
 		'help_secure', 'help_shared', 'help_robots', 'help_robots_online',
-		'help_password', 'help_ban_page', 'help_sitemap_links',
+		'help_password', 'help_ban_page',
 		'help_file_max_size', 'help_file_extension_allowed', 'help_file_mime_allowed',
 		// Buttons
 		'button_themes', 'button_save', 'button_apply', 'button_cancel',
@@ -353,7 +353,6 @@ class ControllerSettingSetting extends Controller {
 		'config_robots_online'    => [],
 		'config_password'         => [],
 		'config_ban_page'         => [],
-		'config_sitemap_links'    => [],
 	];
 
 	// ─── Error keys that map directly from $this->error ─────────────────────

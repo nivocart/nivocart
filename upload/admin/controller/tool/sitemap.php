@@ -8,6 +8,56 @@ class ControllerToolSitemap extends Controller {
 	private $error = [];
 	private $_name = 'sitemap';
 
+	/** Grouped route definitions for the Sitemap Settings form */
+	private array $sitemap_route_defs = [
+		'shopping' => [
+			['route' => 'common/home',          'lang' => 'route_home'],
+			['route' => 'checkout/cart',         'lang' => 'route_cart'],
+			['route' => 'checkout/checkout',     'lang' => 'route_checkout'],
+			['route' => 'product/search',        'lang' => 'route_search'],
+			['route' => 'product/special',       'lang' => 'route_special'],
+			['route' => 'product/compare',       'lang' => 'route_compare'],
+			['route' => 'product/product_list',  'lang' => 'route_product_list'],
+			['route' => 'product/product_wall',  'lang' => 'route_product_wall'],
+			['route' => 'product/review_list',   'lang' => 'route_review_list'],
+			['route' => 'product/category_list', 'lang' => 'route_category_list'],
+			['route' => 'product/manufacturer',  'lang' => 'route_manufacturer'],
+		],
+		'account' => [
+			['route' => 'account/account',       'lang' => 'route_account'],
+			['route' => 'account/login',         'lang' => 'route_login'],
+			['route' => 'account/register',      'lang' => 'route_register'],
+			['route' => 'account/edit',          'lang' => 'route_edit'],
+			['route' => 'account/password',      'lang' => 'route_password'],
+			['route' => 'account/address',       'lang' => 'route_address'],
+			['route' => 'account/wishlist',      'lang' => 'route_wishlist'],
+			['route' => 'account/order',         'lang' => 'route_order'],
+			['route' => 'account/download',      'lang' => 'route_download'],
+			['route' => 'account/reward',        'lang' => 'route_reward'],
+			['route' => 'account/return',        'lang' => 'route_return'],
+			['route' => 'account/return/insert', 'lang' => 'route_return_insert'],
+			['route' => 'account/transaction',   'lang' => 'route_transaction'],
+			['route' => 'account/newsletter',    'lang' => 'route_newsletter'],
+		],
+		'affiliate' => [
+			['route' => 'affiliate/account',     'lang' => 'route_affiliate_account'],
+			['route' => 'affiliate/login',       'lang' => 'route_affiliate_login'],
+			['route' => 'affiliate/register',    'lang' => 'route_affiliate_register'],
+			['route' => 'affiliate/edit',        'lang' => 'route_affiliate_edit'],
+			['route' => 'affiliate/password',    'lang' => 'route_affiliate_password'],
+			['route' => 'affiliate/payment',     'lang' => 'route_affiliate_payment'],
+			['route' => 'affiliate/product',     'lang' => 'route_affiliate_product'],
+			['route' => 'affiliate/tracking',    'lang' => 'route_affiliate_tracking'],
+			['route' => 'affiliate/transaction', 'lang' => 'route_affiliate_transaction'],
+		],
+		'information' => [
+			['route' => 'information/contact',  'lang' => 'route_contact'],
+			['route' => 'information/sitemap',  'lang' => 'route_sitemap'],
+			['route' => 'information/news_list','lang' => 'route_news_list'],
+			['route' => 'information/quote',    'lang' => 'route_quote'],
+		],
+	];
+
 	public function index() {
 		$this->language->load('tool/' . $this->_name);
 
@@ -72,6 +122,15 @@ class ControllerToolSitemap extends Controller {
 			unset($this->session->data['output']);
 		} else {
 			$this->data['output'] = '';
+		}
+
+		// Sitemap Settings success
+		if (isset($this->session->data['success_settings'])) {
+			$this->data['success_settings'] = $this->session->data['success_settings'];
+
+			unset($this->session->data['success_settings']);
+		} else {
+			$this->data['success_settings'] = '';
 		}
 
 		$this->data['breadcrumbs'] = [];
@@ -219,6 +278,50 @@ class ControllerToolSitemap extends Controller {
 
 		clearstatcache();
 
+		// ── Sitemap Page Settings ──────────────────────────────────────────────
+
+		// Current enabled pages (stored as serialized JSON array)
+		$sitemap_pages = $this->config->get('config_sitemap_pages');
+
+		if (!is_array($sitemap_pages) || empty($sitemap_pages)) {
+			$sitemap_pages = $this->getDefaultSitemapPages();
+		}
+
+		$this->data['sitemap_pages'] = $sitemap_pages;
+
+		// Build labelled route groups for the template
+		$group_lang_keys = [
+			'shopping'    => 'text_group_shopping',
+			'account'     => 'text_group_account',
+			'affiliate'   => 'text_group_affiliate',
+			'information' => 'text_group_information',
+		];
+
+		$route_groups = [];
+
+		foreach ($this->sitemap_route_defs as $group_key => $route_items) {
+			$labeled = [];
+
+			foreach ($route_items as $item) {
+				$labeled[] = [
+					'route' => $item['route'],
+					'label' => $this->language->get($item['lang']),
+				];
+			}
+
+			$route_groups[] = [
+				'label'  => $this->language->get($group_lang_keys[$group_key]),
+				'routes' => $labeled,
+			];
+		}
+
+		$this->data['sitemap_route_groups'] = $route_groups;
+		$this->data['text_sitemap_settings'] = $this->language->get('text_sitemap_settings');
+		$this->data['text_settings_intro'] = $this->language->get('text_settings_intro');
+		$this->data['text_always_included'] = $this->language->get('text_always_included');
+		$this->data['button_save_settings'] = $this->language->get('button_save_settings');
+		$this->data['save_settings'] = $this->url->link('tool/' . $this->_name . '/saveSettings', 'token=' . $this->session->data['token'], 'SSL');
+
 		$this->template = 'tool/' . $this->_name . '.tpl';
 		$this->children = [
 			'common/header',
@@ -226,6 +329,23 @@ class ControllerToolSitemap extends Controller {
 		];
 
 		$this->response->setOutput($this->render());
+	}
+
+	/** Save the sitemap page selection */
+	public function saveSettings() {
+		$this->language->load('tool/' . $this->_name);
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate()) {
+			$pages = isset($this->request->post['sitemap_pages']) ? array_values(array_filter((array)$this->request->post['sitemap_pages'])) : [];
+
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = 'config_sitemap_pages' AND `store_id` = '0'");
+
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = 'config', `key` = 'config_sitemap_pages', `value` = '" . $this->db->escape(json_encode($pages)) . "', `serialized` = '1'");
+
+			$this->session->data['success_settings'] = $this->language->get('text_success_settings');
+		}
+
+		$this->redirect($this->url->link('tool/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
 	}
 
 	// Master Text Sitemap
@@ -378,5 +498,18 @@ class ControllerToolSitemap extends Controller {
 		}
 
 		return empty($this->error);
+	}
+
+	/** Returns the full list of routes as the default when no setting has been saved yet */
+	private function getDefaultSitemapPages(): array {
+		$all = [];
+
+		foreach ($this->sitemap_route_defs as $routes) {
+			foreach ($routes as $item) {
+				$all[] = $item['route'];
+			}
+		}
+
+		return $all;
 	}
 }

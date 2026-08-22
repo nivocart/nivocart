@@ -243,7 +243,6 @@ $_['entry_robots']                  = 'Robots:';
 $_['entry_robots_online']           = 'Robots Online:';
 $_['entry_password']                = 'Allow Forgotten Password:';
 $_['entry_ban_page']                = 'Blocked IPs Exit Page:';
-$_['entry_sitemap_links']           = 'Display Account Links in Sitemap:';
 
 // Button
 $_['button_themes']                 = 'Themes';
@@ -384,7 +383,6 @@ $_['help_robots']                   = 'A list of web crawler user agents that sh
 $_['help_robots_online']            = 'Track robots online via the reports section.';
 $_['help_password']                 = 'Allow forgotten password to be used for the admin. This will be disabled automatically if the system detects a hack attempt.';
 $_['help_ban_page']                 = 'Select the type of page to use for blocked ip addresses re-direction.';
-$_['help_sitemap_links']            = 'If Yes, all Customer and Affiliate Account links will be shown in the Sitemap.';
 
 // Error
 $_['error_warning']                 = 'Warning: Please check the form carefully for errors!';

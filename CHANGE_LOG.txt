@@ -10,6 +10,7 @@ Release: TBA
 
 - Menu System responsive stylesheets update and bug fixes.
 - Footer System responsive stylesheets update and bug fixes.
+- Complete rewrite of the sitemap system, creation and generation.
 - Add new image size option "config_image_wide_thumb" in Settings.
 - Add Webp image generating and resizing for all images under Catalog.
 - Add Qol colour preview for custom colour Menu Horizontal and Footer.

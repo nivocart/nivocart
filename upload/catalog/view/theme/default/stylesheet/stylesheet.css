@@ -2707,7 +2707,7 @@ table.order-options tr td #payment-method h2 {
 .sitemap-info { overflow: auto; margin-bottom: 30px; }
 .sitemap-info .left { float: left; width: 48%; }
 .sitemap-info .right { float: left; width: 48%; }
-.sitemap-info .left a, .sitemap-info .right a { color: #333; font-size: 14px; text-decoration: none; transition: color var(--ease); }
+.sitemap-info .left a, .sitemap-info .right a { color: #333; font-size: 16px; text-decoration: none; transition: color var(--ease); }
 .sitemap-info .left a:hover, .sitemap-info .right a:hover { color: var(--clr-link); }
 .sitemap-info .left > ul, .sitemap-info .right > ul { list-style-image: url('../image/bullet-3.png'); margin-bottom: 5px; }
 .sitemap-info .left > ul > li, .sitemap-info .right > ul > li { margin: 2px 0; }

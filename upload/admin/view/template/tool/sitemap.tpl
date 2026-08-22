@@ -17,6 +17,9 @@
       </div>
     </div>
     <div class="content-body">
+      <?php if ($success_settings) { ?>
+        <div class="success"><?php echo $success_settings; ?></div>
+      <?php } ?>
       <?php if ($success_text) { ?>
         <div class="success"><?php echo $success_text; ?></div>
       <?php } ?>
@@ -26,6 +29,40 @@
       <?php if ($success_gzip) { ?>
         <div class="success"><?php echo $success_gzip; ?></div>
       <?php } ?>
+
+      <!-- ── Sitemap Page Settings ───────────────────────────────────────── -->
+      <h2><?php echo $text_sitemap_settings; ?></h2>
+      <form action="<?php echo $save_settings; ?>" method="post" id="sitemap-settings-form">
+        <div class="toolbox">
+          <p style="padding:5px 10px 0;"><?php echo $text_settings_intro; ?></p>
+          <table class="tool" style="margin-top:0;">
+            <?php foreach ($sitemap_route_groups as $group) { ?>
+            <tr>
+              <td style="width:110px;font-weight:bold;vertical-align:top;padding-top:10px;"><?php echo $group['label']; ?></td>
+              <td style="padding:6px 0;">
+                <?php foreach ($group['routes'] as $route) { ?>
+                  <label style="display:inline-block;margin:3px 14px 3px 0;white-space:nowrap;">
+                    <input type="checkbox" name="sitemap_pages[]" value="<?php echo $route['route']; ?>"<?php if (in_array($route['route'], $sitemap_pages)) { echo ' checked="checked"'; } ?> />
+                    <?php echo $route['label']; ?>
+                  </label>
+                <?php } ?>
+              </td>
+            </tr>
+            <?php } ?>
+            <tr>
+              <td></td>
+              <td style="padding:4px 0 8px;"><em style="color:#777;"><?php echo $text_always_included; ?></em></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding:4px 0 8px;">
+                <a onclick="$('#sitemap-settings-form').submit();" class="button-save ripple"><?php echo $button_save_settings; ?></a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </form>
+
+      <!-- ── Generator ──────────────────────────────────────────────────── -->
       <form action="<?php echo $sitemap; ?>" method="post" enctype="multipart/form-data" id="form" name="generator">
       <?php if (!$sitemaptext || !$sitemapxml) { ?>
         <div class="tooltip" style="margin:5px 0 0 0;"><?php echo $text_create; ?></div>

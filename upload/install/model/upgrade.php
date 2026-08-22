@@ -285,6 +285,16 @@ class ModelUpgrade extends Model {
 			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = '" . $this->db->escape($key) . "'");
 		}
 
+		// Remove old sitemap_links toggle — replaced by granular config_sitemap_pages in tool/sitemap
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = 'config_sitemap_links'");
+
+		// Seed config_sitemap_pages with all pages enabled if not already set
+		$check = $this->db->query("SELECT `setting_id` FROM `" . DB_PREFIX . "setting` WHERE `key` = 'config_sitemap_pages' AND `store_id` = '0'");
+		if (!$check->num_rows) {
+			$default_pages = json_encode(['checkout/cart','checkout/checkout','product/search','product/special','product/compare','product/product_list','product/product_wall','product/review_list','product/category_list','product/manufacturer','account/account','account/login','account/register','account/edit','account/password','account/address','account/wishlist','account/order','account/download','account/reward','account/return','account/return/insert','account/transaction','account/newsletter','affiliate/account','affiliate/login','affiliate/register','affiliate/edit','affiliate/password','affiliate/payment','affiliate/product','affiliate/tracking','affiliate/transaction','common/home','information/contact','information/sitemap','information/news_list','information/quote']);
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = 'config', `key` = 'config_sitemap_pages', `value` = '" . $this->db->escape($default_pages) . "', `serialized` = '1'");
+		}
+
 		flush();
 
 		return true;

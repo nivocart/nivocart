@@ -90,6 +90,20 @@ class ModelToolSitemap extends Model {
 		return $base;
 	}
 
+	/**
+	 * Check whether a given route is enabled in the sitemap settings.
+	 * Returns true when no setting exists yet (backwards-compatible default = all enabled).
+	 */
+	protected function isPageEnabled(string $route): bool {
+		$pages = $this->config->get('config_sitemap_pages');
+
+		if (empty($pages)) {
+			return true;
+		}
+
+		return in_array($route, (array)$pages, true);
+	}
+
 	// Generators
 	protected function getCommonPages() {
 		$this->load->model('catalog/sitemap');
@@ -98,19 +112,29 @@ class ModelToolSitemap extends Model {
 
 		$output = '';
 
-		$output .= $this->standardLinkNode($base . 'index.php');
-		$output .= $this->standardLinkNode($base . 'index.php?route=common/home');
-		$output .= $this->standardLinkNode($base . 'index.php?route=information/contact');
-		$output .= $this->standardLinkNode($base . 'index.php?route=information/quote');
-		$output .= $this->standardLinkNode($base . 'index.php?route=information/sitemap');
-		$output .= $this->standardLinkNode($base . 'index.php?route=account/login');
-		$output .= $this->standardLinkNode($base . 'index.php?route=account/register');
-		$output .= $this->standardLinkNode($base . 'index.php?route=product/search');
-		$output .= $this->standardLinkNode($base . 'index.php?route=product/special');
-		$output .= $this->standardLinkNode($base . 'index.php?route=product/product_list');
-		$output .= $this->standardLinkNode($base . 'index.php?route=product/product_wall');
-		$output .= $this->standardLinkNode($base . 'index.php?route=product/review_list');
-		$output .= $this->standardLinkNode($base . 'index.php?route=product/category_list');
+		// Routes mapped to the config_sitemap_pages keys
+		$static_routes = [
+			'common/home'            => ['index.php', 'index.php?route=common/home'],
+			'information/contact'    => ['index.php?route=information/contact'],
+			'information/quote'      => ['index.php?route=information/quote'],
+			'information/sitemap'    => ['index.php?route=information/sitemap'],
+			'account/login'          => ['index.php?route=account/login'],
+			'account/register'       => ['index.php?route=account/register'],
+			'product/search'         => ['index.php?route=product/search'],
+			'product/special'        => ['index.php?route=product/special'],
+			'product/product_list'   => ['index.php?route=product/product_list'],
+			'product/product_wall'   => ['index.php?route=product/product_wall'],
+			'product/review_list'    => ['index.php?route=product/review_list'],
+			'product/category_list'  => ['index.php?route=product/category_list'],
+		];
+
+		foreach ($static_routes as $route => $paths) {
+			if ($this->isPageEnabled($route)) {
+				foreach ($paths as $path) {
+					$output .= $this->standardLinkNode($base . $path);
+				}
+			}
+		}
 
 		$stores_pag = $this->model_catalog_sitemap->getAllStores();
 
@@ -119,19 +143,13 @@ class ModelToolSitemap extends Model {
 				if ((int)$store_pag['store_id'] !== 0) {
 					$store_url = $store_pag['url'];
 
-					$output .= $this->standardLinkNode($store_url . 'index.php');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=common/home');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=information/contact');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=information/quote');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=information/sitemap');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=account/login');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=account/register');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=product/search');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=product/special');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=product/product_list');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=product/product_wall');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=product/review_list');
-					$output .= $this->standardLinkNode($store_url . 'index.php?route=product/category_list');
+					foreach ($static_routes as $route => $paths) {
+						if ($this->isPageEnabled($route)) {
+							foreach ($paths as $path) {
+								$output .= $this->standardLinkNode($store_url . $path);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -379,20 +397,29 @@ class ModelToolSitemap extends Model {
 
 		$output = '';
 
-		// Common Pages
-		$output .= mb_convert_encoding($base . 'index.php', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=common/home', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=information/contact', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=information/quote', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=information/sitemap', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=account/login', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=account/register', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=product/search', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=product/special', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=product/product_list', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=product/product_wall', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=product/review_list', 'UTF-8') . "\r";
-		$output .= mb_convert_encoding($base . 'index.php?route=product/category_list', 'UTF-8') . "\r";
+		// Static common pages — filtered by sitemap settings
+		$static_routes = [
+			'common/home'           => ['index.php', 'index.php?route=common/home'],
+			'information/contact'   => ['index.php?route=information/contact'],
+			'information/quote'     => ['index.php?route=information/quote'],
+			'information/sitemap'   => ['index.php?route=information/sitemap'],
+			'account/login'         => ['index.php?route=account/login'],
+			'account/register'      => ['index.php?route=account/register'],
+			'product/search'        => ['index.php?route=product/search'],
+			'product/special'       => ['index.php?route=product/special'],
+			'product/product_list'  => ['index.php?route=product/product_list'],
+			'product/product_wall'  => ['index.php?route=product/product_wall'],
+			'product/review_list'   => ['index.php?route=product/review_list'],
+			'product/category_list' => ['index.php?route=product/category_list'],
+		];
+
+		foreach ($static_routes as $route => $paths) {
+			if ($this->isPageEnabled($route)) {
+				foreach ($paths as $path) {
+					$output .= mb_convert_encoding($base . $path, 'UTF-8') . "\r";
+				}
+			}
+		}
 
 		$stores_pag = $this->model_catalog_sitemap->getAllStores();
 
@@ -401,19 +428,13 @@ class ModelToolSitemap extends Model {
 				if ((int)$store_pag['store_id'] !== 0) {
 					$store_url = $store_pag['url'];
 
-					$output .= mb_convert_encoding($store_url . 'index.php', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=common/home', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=information/contact', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=information/quote', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=information/sitemap', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=account/login', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=account/register', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=product/search', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=product/special', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=product/product_list', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=product/product_wall', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=product/review_list', 'UTF-8') . "\r";
-					$output .= mb_convert_encoding($store_url . 'index.php?route=product/category_list', 'UTF-8') . "\r";
+					foreach ($static_routes as $route => $paths) {
+						if ($this->isPageEnabled($route)) {
+							foreach ($paths as $path) {
+								$output .= mb_convert_encoding($store_url . $path, 'UTF-8') . "\r";
+							}
+						}
+					}
 				}
 			}
 		}

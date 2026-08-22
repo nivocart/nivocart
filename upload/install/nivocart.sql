@@ -4209,6 +4209,9 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (438, 0, 'config', 'config_catalog_limit', '12', 0),
 (439, 0, 'config', 'config_pagination_hi', '0', 0),
 (440, 0, 'config', 'config_pagination_lo', '1', 0),
+(441, 0, 'config', 'config_autocomplete_category', '1', 0),
+(442, 0, 'config', 'config_autocomplete_product', '1', 0),
+(443, 0, 'config', 'config_autocomplete_offer', '1', 0),
 (444, 0, 'config', 'config_user_group_display', '[\"1\"]', 1),
 (445, 0, 'config', 'config_catalog_barcode', '0', 0),
 (446, 0, 'config', 'config_admin_barcode', '0', 0),
@@ -4310,7 +4313,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (538, 0, 'config', 'config_robots_online', '1', 0),
 (539, 0, 'config', 'config_password', '1', 0),
 (540, 0, 'config', 'config_ban_page', 'search', 0),
-(541, 0, 'config', 'config_sitemap_links', '0', 0),
+(541, 0, 'config', 'config_sitemap_pages', '["checkout\/cart","checkout\/checkout","product\/search","product\/special","product\/compare","product\/product_list","product\/product_wall","product\/review_list","product\/category_list","product\/manufacturer","account\/account","account\/login","account\/register","account\/edit","account\/password","account\/address","account\/wishlist","account\/order","account\/download","account\/reward","account\/return","account\/return\/insert","account\/transaction","account\/newsletter","affiliate\/account","affiliate\/login","affiliate\/register","affiliate\/edit","affiliate\/password","affiliate\/payment","affiliate\/product","affiliate\/tracking","affiliate\/transaction","common\/home","information\/contact","information\/sitemap","information\/news_list","information\/quote"]', 1),
 (542, 0, 'config', 'config_file_max_size', '2048000', 0),
 (543, 0, 'config', 'config_file_extension_allowed', 'txt\r\npng\r\njpe\r\njpeg\r\njpg\r\ngif\r\nbmp\r\nico\r\ntiff\r\ntif\r\nsvg\r\nsvgz\r\nzip\r\nrar\r\nmsi\r\ncab\r\nmp3\r\nmp4\r\navi\r\noga\r\nogv\r\nogg\r\nm4a\r\nm4v\r\nwav\r\nwebm\r\nwma\r\nwmv\r\nqt\r\nmov\r\npdf\r\npsd\r\nai\r\neps\r\nps\r\ndoc\r\nrtf\r\nxls\r\nppt\r\nodt\r\nods', 0),
 (544, 0, 'config', 'config_file_mime_allowed', 'text/plain\r\nimage/png\r\nimage/x-png\r\nimage/jpeg\r\nimage/pjpeg\r\nimage/gif\r\nimage/bmp\r\nimage/tiff\r\nimage/svg+xml\r\nmultipart/x-zip\r\napplication/zip\r\n&quot;application/zip&quot;\r\napplication/x-zip\r\n&quot;application/x-zip&quot;\r\napplication/x-zip-compressed\r\n&quot;application/x-zip-compressed&quot;\r\napplication/rar\r\n&quot;application/rar&quot;\r\napplication/x-rar\r\n&quot;application/x-rar&quot;\r\napplication/x-rar-compressed\r\n&quot;application/x-rar-compressed&quot;\r\napplication/octet-stream\r\n&quot;application/octet-stream&quot;\r\naudio/mp3\r\naudio/mpeg\r\naudio/x-mpeg\r\naudio/mpeg3\r\naudio/x-mpeg-3\r\naudio/oga\r\naudio/m4a\r\naudio/wav\r\naudio/x-wav\r\naudio/wave\r\naudio/x-pn-wav\r\naudio/webm\r\naudio/x-ms-wma\r\nvideo/x-ms-asf\r\nvideo/mp4\r\nvideo/mpeg\r\nvideo/x-mpeg\r\nvideo/x-mpeq2a\r\nvideo/ogv\r\nvideo/ogm\r\nvideo/webm\r\nvideo/x-m4v\r\nvideo/msvideo\r\nvideo/x-ms-wmv\r\nvideo/quicktime\r\napplication/ogg\r\napplication/pdf\r\napplication/x-pdf\r\napplication/x-shockwave-flash\r\napplication/msword\r\napplication/rtf\r\napplication/vnd.ms-excel\r\napplication/vnd.ms-powerpoint\r\napplication/vnd.oasis.opendocument.text\r\napplication/vnd.oasis.opendocument.spreadsheet', 0);
