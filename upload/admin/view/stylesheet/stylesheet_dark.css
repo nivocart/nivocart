@@ -85,7 +85,7 @@ body {
   padding: 0;
 }
 body, td, th, input, select, textarea, fieldset, option, optgroup {
-  color: #050505;
+  color: var(--clr-text);
   font-size: 14px;
   font-family: 'Roboto', Arial, Helvetica, sans-serif;
   text-shadow: 0 0 1px rgba(5, 5, 5, 0.05);
