@@ -692,7 +692,7 @@
           foreach ($available_options as $available_option) {
             if (in_array($available_option['type'], $seen_types)) continue;
           $seen_types[] = $available_option['type']; ?>
-          <?php echo $available_option['type']; ?>&nbsp;
+          <?php echo $available_option['type']; ?>,&nbsp;
         <?php } ?>
         </div>
         <div id="vtab-option" class="vtabs">
@@ -1690,14 +1690,15 @@ $('input[name=\'option\']').catcomplete({
 			}
 
 			html += '  </select>';
-			html += '</div>';
 		}
+
+		html += '</div>';
 
 		$('#tab-option').append(html);
 
 		$('#option-add').before('<a href="#tab-option-' + option_row + '" id="option-' + option_row + '">' + ui.item.label + '&nbsp;<img src="view/image/delete.png" alt="" onclick="$(\'#option-' + option_row + '\').remove(); $(\'#tab-option-' + option_row + '\').remove(); $(\'#vtab-option a:first\').trigger(\'click\'); return false;" /></a>');
 
-		$('#vtab-option a').tabs();
+		$('#vtab-option a').off('click').tabs();
 
 		$('#option-' + option_row).trigger('click');
 
@@ -1707,6 +1708,8 @@ $('input[name=\'option\']').catcomplete({
 			addSliderAccess: true,
 			sliderAccessArgs: { touchonly: false }
 		});
+
+		$(this).val('');
 
 		option_row++;
 

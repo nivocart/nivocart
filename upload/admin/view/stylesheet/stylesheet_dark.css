@@ -1543,7 +1543,7 @@ table.tool tr td {
 .vtabs a, .vtabs span {
   float: left;
   display: block;
-  width: 160px;
+  width: 100%;
   font-family: 'Roboto', Arial, Helvetica, sans-serif;
   color: var(--clr-text-bright);
   font-size: 14px;
@@ -1565,8 +1565,12 @@ table.tool tr td {
   border-top: 1px solid var(--clr-accent);
   border-left: 1px solid var(--clr-accent);
   border-bottom: 1px solid var(--clr-accent);
+  border-right: 1px solid var(--clr-panel-bg);
   padding-right: 15px;
   outline: 0;
+  margin-right: -1px;
+  position: relative;
+  z-index: 1;
 }
 .vtabs a img, .vtabs span img {
   position: relative;

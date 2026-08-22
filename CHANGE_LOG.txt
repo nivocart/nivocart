@@ -24,6 +24,7 @@ Release: TBA
 - Updated multiple methods to Code Quality Camel Case standards.
 - Replaced "SimpleLens" lightbox with modern Drift.js (ZoomLens).
 - Removed unused/obsolete Google+ entry in Default Theme settings.
+- Fix bug in Admin forms using Vertical Tabs (vtabs) and AutoComplete.
 - Fix bug in "Check new version" feature where the Github link was wrong.
 - Fix bug in Catalog Product List where the totals were not accurate.
 - Moved Breadcrumbs up, outside of the Content, on all Catalog pages.

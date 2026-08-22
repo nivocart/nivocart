@@ -535,7 +535,7 @@ function addAddress() {
 
 	$('#address-add').before('<a href="#tab-address-' + address_row + '" id="address-' + address_row + '"><?php echo $tab_address; ?> ' + address_row + '&nbsp;<img src="view/image/delete.png" alt="" onclick="$(\'#vtabs a:first\').trigger(\'click\'); $(\'#address-' + address_row + '\').remove(); $(\'#tab-address-' + address_row + '\').remove(); return false;" /></a>');
 
-	$('.vtabs a').tabs();
+	$('.vtabs a').off('click').tabs();
 
 	$('#address-' + address_row).trigger('click');
 
