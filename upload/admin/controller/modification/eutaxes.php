@@ -6,14 +6,14 @@
  */
 class ControllerModificationEutaxes extends Controller {
 	private $error = [];
-	private $_name = 'eutaxes';
+	private $name = 'eutaxes';
 
 	public function index() {
-		$this->language->load('modification/' . $this->_name);
+		$this->language->load('modification/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('modification/' . $this->_name);
+		$this->load->model('modification/' . $this->name);
 
 		$this->model_modification_eutaxes->checkEUCountries();
 
@@ -21,11 +21,11 @@ class ControllerModificationEutaxes extends Controller {
 	}
 
 	public function insert() {
-		$this->language->load('modification/' . $this->_name);
+		$this->language->load('modification/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('modification/' . $this->_name);
+		$this->load->model('modification/' . $this->name);
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validateForm())) {
 			$this->model_modification_eutaxes->addEUCountries($this->request->post);
@@ -58,11 +58,11 @@ class ControllerModificationEutaxes extends Controller {
 	}
 
 	public function update() {
-		$this->language->load('modification/' . $this->_name);
+		$this->language->load('modification/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('modification/' . $this->_name);
+		$this->load->model('modification/' . $this->name);
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validateForm())) {
 			$this->model_modification_eutaxes->editEUCountries($this->request->get['eucountry_id'], $this->request->post);
@@ -93,11 +93,11 @@ class ControllerModificationEutaxes extends Controller {
 	}
 
 	public function delete() {
-		$this->language->load('modification/' . $this->_name);
+		$this->language->load('modification/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$this->load->model('modification/' . $this->_name);
+		$this->load->model('modification/' . $this->name);
 
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $eucountry_id) {
@@ -121,7 +121,7 @@ class ControllerModificationEutaxes extends Controller {
 	}
 
 	public function listing() {
-		$this->language->load('modification/' . $this->_name);
+		$this->language->load('modification/' . $this->name);
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -129,7 +129,7 @@ class ControllerModificationEutaxes extends Controller {
 	}
 
 	protected function getModification() {
-		$this->language->load('modification/' . $this->_name);
+		$this->language->load('modification/' . $this->name);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -173,7 +173,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['breadcrumbs'][] = [
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('modification/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => ' :: '
 		];
 
@@ -502,7 +502,7 @@ class ControllerModificationEutaxes extends Controller {
 
 		$this->data['cancel'] = $this->url->link('modification/eutaxes/listing', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		$this->load->model('modification/' . $this->_name);
+		$this->load->model('modification/' . $this->name);
 
 		if ((isset($this->request->get['eucountry_id'])) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$eucountry_info = $this->model_modification_eutaxes->getEUCountryStory($this->request->get['eucountry_id']);
