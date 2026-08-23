@@ -6,7 +6,7 @@
 
 NivoCart v2.3.0
 ---------------
-Release: TBA
+Release: 23/08/2026
 
 - Menu System responsive stylesheets update and bug fixes.
 - Footer System responsive stylesheets update and bug fixes.
