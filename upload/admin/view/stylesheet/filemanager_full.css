@@ -200,6 +200,33 @@ span.branding a {
 	color: #269BC6;
 }
 
+/** Information dialog - force dark text.
+ *  Content is loaded via AJAX from filemanager_info.tpl into
+ *  #information-dialog, which jQuery UI moves to <body> and inherits
+ *  the main stylesheet's global white text colour. */
+#information-dialog,
+#information-dialog td,
+#information-dialog a {
+	color: #333 !important;
+}
+
+/** JsTree - force dark text against #FAFAFA background.
+ *  The main admin stylesheet sets a global light/white text colour
+ *  (via $header). Override it here so folder labels stay legible. */
+#column-left,
+#column-left a,
+#column-left .jstree-anchor {
+	color: #333 !important;
+}
+#column-left .jstree-hovered,
+#column-left .jstree-default .jstree-node .jstree-hovered {
+	color: #000 !important;
+}
+#column-left .jstree-clicked,
+#column-left .jstree-default .jstree-node .jstree-clicked {
+	color: #1571B0 !important;
+}
+
 /** Tablets */
 @media only screen and (min-width: 640px) and (max-width: 790px) {
 	#column-left {
