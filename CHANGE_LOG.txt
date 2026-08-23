@@ -4,6 +4,18 @@
 ---------------
 
 
+NivoCart v2.X.X
+---------------
+Release: TBA
+
+
+NivoCart v2.3.1
+---------------
+Release: 23/08/2026
+
+- Fix bug in filemanager_full.css where the text wasn't displayed properly.
+
+
 NivoCart v2.3.0
 ---------------
 Release: 23/08/2026
