@@ -200,6 +200,19 @@ span.branding a {
 	color: #269BC6;
 }
 
+/** Action dialogs (copy, move, rename, folder, delete) - force dark text.
+ *  jQuery UI moves #dialog to <body> where the main stylesheet's global
+ *  white text colour bleeds in. Also covers the Submit input button. */
+#dialog,
+#dialog p,
+#dialog label,
+#dialog select {
+	color: #333 !important;
+}
+#dialog input[type="button"] {
+	color: #333 !important;
+}
+
 /** Information dialog - force dark text.
  *  Content is loaded via AJAX from filemanager_info.tpl into
  *  #information-dialog, which jQuery UI moves to <body> and inherits
