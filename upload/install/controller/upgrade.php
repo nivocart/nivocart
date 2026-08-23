@@ -47,6 +47,7 @@ class ControllerUpgrade extends Controller {
 		}
 
 		$this->children = ['header', 'footer'];
+
 		$this->response->setOutput($this->render());
 	}
 
