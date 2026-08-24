@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Re-worked both File Managers for a more efficient and modern appearance.
+
 
 NivoCart v2.3.1
 ---------------

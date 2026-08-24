@@ -82,7 +82,7 @@ $_['text_info_scripts']   = 'Scripts:';
 $_['text_info_license']   = 'License:';
 $_['text_info_files']     = 'Formats:';
 
-$_['info_version']        = 'v2.2.0';
+$_['info_version']        = 'v2.3.0';
 $_['info_author']         = 'Nivocart (contact@nivocart.org)';
 $_['info_credit']         = 'Kay Lohn (Original script), Dhaupin (Performance).';
 $_['info_scripts']        = 'jsTree v3.3.17 and Plupload v2.3.6.';

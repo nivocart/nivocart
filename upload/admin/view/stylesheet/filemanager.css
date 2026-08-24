@@ -1,8 +1,8 @@
 /** -----------------------------------
- * NivoCart - File Manager
+ * NivoCart - File Manager (Popup)
  * Copyright © 2026
  * ------------------------------------
- * Modal Styles
+ * Modal Styles - v2 Refresh
  * ------------------------------------
  */
 
@@ -21,6 +21,7 @@ body {
 	background: #EFEFEF;
 	font-family: 'Roboto', Arial, Helvetica, sans-serif;
 	font-size: 11px;
+	color: #333;
 	overflow-y: hidden;
 }
 img {
@@ -31,24 +32,33 @@ img {
 	height: 355px;
 	overflow: hidden;
 }
+
+/** Toolbar */
 #file-menu {
-	clear: both;
-	height: 29px;
+	display: flex;
+	align-items: center;
+	height: 30px;
 	margin-bottom: 3px;
 }
+
+/** Columns */
 #column-left {
 	background: #FAFAFA;
-	border: 1px solid #CCC;
+	border: 1px solid #D5D5D5;
+	border-radius: 2px;
+	box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.03);
 	float: left;
-	width: 26%;
+	width: 22%;
 	height: 258px;
 	overflow: auto;
+	color: #333 !important;
 }
 #column-right {
 	background: #FAFAFA;
-	border: 1px solid #CCC;
+	border: 1px solid #D5D5D5;
+	border-radius: 2px;
 	float: right;
-	width: 72%;
+	width: 76%;
 	height: 285px;
 	overflow: auto;
 }
@@ -60,14 +70,22 @@ img {
 	display: inline-block;
 	text-align: center;
 	text-decoration: none;
-	border: 1px solid #CCC;
+	color: #444 !important;
+	border: 1px solid #DCDCDC;
+	border-radius: 3px;
 	cursor: pointer;
 	margin: 5px;
 	padding: 5px;
+	transition: border-color 0.12s, background 0.12s;
+}
+#column-right a:hover {
+	border-color: #A8C8E8;
+	background: #F2F7FD;
 }
 #column-right a.selected {
 	border: 1px solid #7DA2CE;
 	background: #EBF4FD;
+	color: #1571B0 !important;
 }
 #column-right input {
 	display: none;
@@ -75,25 +93,39 @@ img {
 #dialog {
 	display: none;
 }
-/** Buttons */
+
+/** Toolbar Buttons */
 .filemanager-button {
-	display: block;
-	float: left;
-	padding: 8px 5px 8px 25px;
-	margin-top: 1px;
-	margin-right: 5px;
-	background-position: 5px 6px;
-	background-repeat: no-repeat;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	margin-right: 1px;
+	border-radius: 3px;
+	background: linear-gradient(to bottom, #5A5A5A, #3C3C3C);
+	color: #FFF !important;
+	font-size: 11px;
 	text-decoration: none;
 	cursor: pointer;
+	transition: background 0.15s ease;
+	white-space: nowrap;
 }
+.filemanager-button .fa {
+	font-size: 12px;
+	line-height: 1;
+}
+.filemanager-button:hover {
+	background: linear-gradient(to bottom, #6A6A6A, #4C4C4C);
+	text-decoration: none;
+}
+
 /** Images */
 .thumb {
 	padding: 5px;
 	width: 90px;
 	height: 90px;
 	background: #FAFAFA;
-	border: 1px solid #BBB;
+	border: 1px solid #C8C8C8;
 	cursor: pointer;
 	cursor: move;
 	position: relative;
@@ -117,35 +149,40 @@ img {
 	background-position: 0 0;
 	background-color: #EFEFEF;
 }
+
 /** Filter */
 .filter {
 	position: relative;
 	clear: left;
 	float: left;
-    width: 26%;
-	background: #FAFAFA;
-    border: 1px solid #CCC;
-	margin: 3px 0 0 0;
+	width: 22%;
+	display: flex;
+	align-items: center;
+	background: #FFF;
+	border: 1px solid #D5D5D5;
+	border-top: none;
+	margin: 0;
 }
 .filter > input {
+	flex: 1;
 	margin: 0;
-	padding-left: 2px;
-	background: #FAFAFA;
+	padding: 3px 4px;
+	background: transparent;
 	border: none;
 	height: 20px;
-	width: 80%;
+	font-size: 11px;
+	color: #333;
 }
 .filter > input:focus {
-	margin: 0;
 	outline: 0;
 }
-.filter > img {
-	position: relative;
-	float: right;
-	background: #FAFAFA;
-	line-height: 20px;
-	margin-right: 2px;
+.filter .fa-search {
+	color: #AAAAAA;
+	font-size: 11px;
+	padding: 0 5px 0 2px;
+	pointer-events: none;
 }
+
 /** Tools */
 #toolset {
 	clear: both;
@@ -177,15 +214,128 @@ span.branding a {
 	color: #269BC6;
 }
 
+/** JsTree - force dark text against #FAFAFA background */
+#column-left,
+#column-left a,
+#column-left .jstree-anchor {
+	color: #333 !important;
+}
+#column-left .jstree-hovered,
+#column-left .jstree-default .jstree-node .jstree-hovered {
+	color: #000 !important;
+}
+#column-left .jstree-clicked,
+#column-left .jstree-default .jstree-node .jstree-clicked {
+	color: #1571B0 !important;
+}
+
+/** jQuery UI Dialog - Modern Compact Skin */
+.ui-dialog {
+	border: none !important;
+	border-radius: 5px !important;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24) !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	font-family: 'Roboto', Arial, Helvetica, sans-serif !important;
+	font-size: 12px !important;
+}
+.ui-dialog .ui-dialog-titlebar {
+	background: linear-gradient(to bottom, #5A5A5A, #3C3C3C) !important;
+	border: none !important;
+	border-radius: 5px 5px 0 0 !important;
+	padding: 7px 12px !important;
+	color: #FFF !important;
+}
+.ui-dialog .ui-dialog-title {
+	color: #FFF !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+	background: transparent !important;
+	border: none !important;
+	border-radius: 3px !important;
+	padding: 2px 4px !important;
+	opacity: 0.65;
+	transition: opacity 0.12s;
+}
+.ui-dialog .ui-dialog-titlebar-close:hover {
+	opacity: 1;
+	background: #1571B0 !important;
+}
+.ui-dialog .ui-dialog-titlebar-close:hover .ui-button-icon {
+	filter: brightness(0) invert(1);
+}
+.ui-dialog .ui-dialog-titlebar-close .ui-button-icon {
+	color: #FFF !important;
+}
+.ui-dialog .ui-dialog-content {
+	padding: 14px 16px 12px !important;
+	color: #333 !important;
+	background: #F8F8F8 !important;
+	line-height: 1.6;
+}
+.ui-dialog .ui-dialog-content p {
+	color: #333 !important;
+	margin: 0 0 8px 0;
+}
+.ui-dialog .ui-dialog-content label,
+.ui-dialog .ui-dialog-content td {
+	color: #333 !important;
+}
+.ui-dialog .ui-dialog-content a {
+	color: #1571B0 !important;
+}
+.ui-dialog .ui-dialog-content input[type="text"],
+.ui-dialog .ui-dialog-content select {
+	border: 1px solid #CCC;
+	border-radius: 3px;
+	padding: 4px 7px;
+	font-size: 11px;
+	color: #333;
+	background: #FFF;
+	margin-left: 4px;
+}
+.ui-dialog .ui-dialog-content input[type="button"],
+.ui-dialog .ui-dialog-content input[type="submit"] {
+	background: linear-gradient(to bottom, #6AACD8, #4A89B9);
+	color: #FFF !important;
+	border: 1px solid #3D7BAD;
+	border-radius: 3px;
+	padding: 5px 16px;
+	cursor: pointer;
+	font-size: 11px;
+	font-weight: 600;
+	transition: background 0.15s;
+	margin-top: 6px;
+}
+.ui-dialog .ui-dialog-content input[type="button"]:hover,
+.ui-dialog .ui-dialog-content input[type="submit"]:hover {
+	background: linear-gradient(to bottom, #5A9FD0, #3D7BAD);
+}
+.ui-widget-overlay {
+	background: #1A1A1A !important;
+	opacity: 0.40 !important;
+}
+
+/** Information dialog */
+#information-dialog,
+#information-dialog td,
+#information-dialog a {
+	color: #333 !important;
+}
+
 /** Tablets */
 @media only screen and (min-width: 640px) and (max-width: 790px) {
 	.filemanager-button {
-		padding: 7px 4px 7px 24px;
+		padding: 4px 6px;
+		font-size: 10px;
 	}
 }
 /** Phones */
 @media only screen and (max-width: 640px) {
 	.filemanager-button {
-		padding: 7px 2px 7px 22px;
+		padding: 4px 4px;
+		font-size: 10px;
 	}
 }

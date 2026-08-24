@@ -23,20 +23,20 @@
     </div>
     <div class="content-body">
       <div id="files-menu">
-        <a id="create" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/folder.png');"><?php echo $button_folder; ?></a>
-        <a id="delete" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/edit-delete.png');"><?php echo $button_delete; ?></a>
-        <a id="move" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/edit-cut.png');"><?php echo $button_move; ?></a>
-        <a id="copy" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/edit-copy.png');"><?php echo $button_copy; ?></a>
-        <a id="rename" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/edit-rename.png');"><?php echo $button_rename; ?></a>
-        <a id="upload" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/upload-plus.png');"><?php echo $button_upload; ?></a>
-        <a id="refresh" class="filemanager-button ripple" style="background-image: url('view/image/filemanager/refresh.png');"><?php echo $button_refresh; ?></a>
-        <a id="information" class="filemanager-button ripple hide-phone" style="background-image: url('view/image/filemanager/information.png');"><?php echo $button_info; ?></a>
+        <a id="create" class="filemanager-button ripple"><i class="fa fa-folder-o"></i><?php echo $button_folder; ?></a>
+        <a id="delete" class="filemanager-button ripple"><i class="fa fa-trash-o"></i><?php echo $button_delete; ?></a>
+        <a id="move" class="filemanager-button ripple"><i class="fa fa-scissors"></i><?php echo $button_move; ?></a>
+        <a id="copy" class="filemanager-button ripple"><i class="fa fa-files-o"></i><?php echo $button_copy; ?></a>
+        <a id="rename" class="filemanager-button ripple"><i class="fa fa-pencil"></i><?php echo $button_rename; ?></a>
+        <a id="upload" class="filemanager-button ripple"><i class="fa fa-upload"></i><?php echo $button_upload; ?></a>
+        <a id="refresh" class="filemanager-button ripple"><i class="fa fa-refresh"></i><?php echo $button_refresh; ?></a>
+        <a id="information" class="filemanager-button ripple hide-phone"><i class="fa fa-info-circle"></i><?php echo $button_info; ?></a>
       </div>
       <div class="workspace">
         <div id="column-right"></div>
         <div id="column-left"></div>
         <div id="jstree" class="filter">
-          <input type="text" name="filter" id="filter" /><img src="view/image/filemanager/filter.png" alt="" />
+          <input type="text" name="filter" id="filter" /><i class="fa fa-search"></i>
         </div>
         <div id="toolset">
           <button id="btnExpand" class="btn"><?php echo $button_expand; ?></button>
