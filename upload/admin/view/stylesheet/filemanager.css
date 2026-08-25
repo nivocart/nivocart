@@ -267,7 +267,7 @@ span.branding a {
 	filter: brightness(0) invert(1);
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-button-icon {
-	color: #FFF !important;
+	filter: brightness(0) invert(1);
 }
 .ui-dialog .ui-dialog-content {
 	padding: 14px 16px 12px !important;
