@@ -2661,15 +2661,40 @@ table.order-options tr td #payment-method {
   width: 34%;
   height: auto;
 }
-table.order-options tr td #shipping-method h2,
-table.order-options tr td #payment-method h2 {
-  color: #444;
-  margin-left: 3px;
-  margin-bottom: 12px;
+table.order-options tr td h2 {
+  color: var(--clr-h2);
+  margin: 0 0 12px 0;
   font-size: 16px;
-  font-weight: bold;
-  text-shadow: 0 1px 1px #EEE;
-  vertical-align: top;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+table.address-options td h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--clr-h2);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0 0 10px 0;
+}
+/* Numbered step badge */
+.checkout-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: var(--clr-primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
 }
 #checkout-one-cart { width: 100%; }
 .division {

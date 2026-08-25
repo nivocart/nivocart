@@ -9,6 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - Re-worked both File Managers for a more efficient and modern appearance.
+- Add numbered steps to the Checkout page to help go through the process.
 
 
 NivoCart v2.3.1

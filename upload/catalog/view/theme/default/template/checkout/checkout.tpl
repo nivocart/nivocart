@@ -27,7 +27,7 @@
       <div class="checkout-page-left">
         <table class="address-options">
           <tr>
-            <td colspan="2"><h2><?php echo $text_checkout_payment_address; ?></h2></td>
+            <td colspan="2"><h2><span class="checkout-step-badge">1</span><?php echo $text_checkout_payment_address; ?></h2></td>
           </tr>
           <tr>
             <td colspan="2"><label for="firstname" class="hidden">firstname</label>
@@ -254,9 +254,9 @@
       <div class="checkout-page-right">
         <table class="order-options">
           <tr>
-            <td><h2><?php echo $text_shipping_method; ?></h2></td>
+            <td><h2><span class="checkout-step-badge">2</span><?php echo $text_shipping_method; ?></h2></td>
             <td class="spacer"></td>
-            <td><h2><?php echo $text_payment_method; ?></h2></td>
+            <td><h2><span class="checkout-step-badge">3</span><?php echo $text_payment_method; ?></h2></td>
           </tr>
           <tr>
             <td id="shipping-method">
