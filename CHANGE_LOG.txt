@@ -8,6 +8,11 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+
+NivoCart v2.3.2
+---------------
+Release: 26/08/2026
+
 - Re-worked both File Managers for a more efficient and modern appearance.
 - Add numbered steps to the Checkout page to help go through the process.
 
