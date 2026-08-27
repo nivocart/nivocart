@@ -19,7 +19,6 @@ class ControllerCommonHome extends Controller {
 
 		// Dynamic map selection based on store setting (falls back to world_en)
 		$dashboardMap = $this->config->get('config_dashboard_map') ?: 'world_en';
-
 		$mapScripts = [
 			'world_en'         => 'maps/jquery.vmap.world.js',
 			'europe_en'        => 'maps/jquery.vmap.europe.js',
@@ -42,11 +41,8 @@ class ControllerCommonHome extends Controller {
 			'north-america_en' => 'maps/continents/jquery.vmap.north-america.js',
 			'south-america_en' => 'maps/continents/jquery.vmap.south-america.js',
 		];
-
 		$mapScript = $mapScripts[$dashboardMap] ?? 'maps/jquery.vmap.world.js';
-
 		$this->document->addScript('view/javascript/jquery/jqvmap/' . $mapScript);
-
 		$this->data['dashboard_map'] = $dashboardMap;
 
 		$this->document->addScript('view/javascript/jquery/chart/jquery.chart.min.js');
@@ -80,7 +76,7 @@ class ControllerCommonHome extends Controller {
 		$this->data['text_topseller'] = $this->language->get('text_topseller');
 		$this->data['text_topview'] = $this->language->get('text_topview');
 		$this->data['text_topcustomer'] = $this->language->get('text_topcustomer');
-		$this->data['text_topcountry'] = $this->language->get('text_topcountry');
+		$this->data['text_topcountry'] = 'Sales by Region';
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
@@ -430,38 +426,43 @@ class ControllerCommonHome extends Controller {
 
 		$this->data['show_dob'] = $this->config->get('config_customer_dob');
 
-		// Tab Map
+		// Tab Map - Sales by Region/Zone for the top country (payment address)
 		$this->load->model('report/sale');
 
-		$total_sales = $this->model_report_sale->getTotalSales([]);
-
 		$this->data['top_countries'] = [];
+		$this->data['top_flag'] = '';
 
-		$flag = '';
-		$limit = 1;
+		// Find the #1 country by sales value (now also returns country_name)
+		$top_country_results = $this->model_report_sale->getTopOrdersByCountry(1);
+		$top_country = $top_country_results[0] ?? null;
 
-		$top_countries = $this->model_report_sale->getTopOrdersByCountry($limit);
+		if ($top_country && !empty($top_country['iso_code_2'])) {
+			$iso = $top_country['iso_code_2'];
+			$country_total = (float)$top_country['amount'];
 
-		foreach ($top_countries as $top_country) {
-			if ($total_sales > 0) {
+			// Look up the country name for the heading
+			$country_name_row = $this->db->query("SELECT name FROM `" . DB_PREFIX . "country` WHERE iso_code_2 = '" . $this->db->escape($iso) . "' LIMIT 1");
+			$country_name = $country_name_row->row['name'] ?? $iso;
+
+			// Override heading to show the country name dynamically
+			$this->data['text_topcountry'] = $country_name . ' — by Region';
+
+			// Restore the country flag for the top country
+			$this->data['top_flag'] = 'view/image/flags/' . strtolower($iso) . '.png';
+
+			// Get payment-address zone breakdown for that country
+			$zone_results = $this->model_report_sale->getTopOrdersByZone($iso);
+
+			foreach ($zone_results as $zone_row) {
 				// Note: rounding mode PHP_ROUND_HALF_UP required for PHP 8.4+
-				$sale_amount = round((float)$top_country['amount'], 2, PHP_ROUND_HALF_UP);
-				$sale_total = round((float)$total_sales, 2, PHP_ROUND_HALF_UP);
+				$circle_percent = ($country_total > 0) ? round((float)$zone_row['amount'] / $country_total, 4, PHP_ROUND_HALF_UP) : 0;
 
-				$flag = ($top_country['iso_code_2']) ? 'view/image/flags/' . strtolower($top_country['iso_code_2']) . '.png' : '';
-				$circle_percent = $sale_amount / $sale_total;
-			} else {
-				$flag = '';
-				$circle_percent = 1;
+				$this->data['top_countries'][] = [
+					'amount'  => $circle_percent,
+					'country' => $zone_row['zone_name']
+				];
 			}
-
-			$this->data['top_countries'][] = [
-				'amount'  => $circle_percent,
-				'country' => ($top_country['iso_code_2']) ? $top_country['iso_code_2'] : '00'
-			];
 		}
-
-		$this->data['top_flag'] = $flag;
 
 		// Tab Orders
 		$this->data['orders'] = [];

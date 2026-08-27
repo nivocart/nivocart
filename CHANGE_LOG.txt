@@ -19,6 +19,7 @@ Release: 27/08/2026
 - Fix bug in the Sitemap System where the options were being cleared by Settings.
 - Updated Admin Dashboard to display a wider range of continent and country maps.
 - Updated Catalog Default Stylesheet to address some minor responsive issues.
+- Removed the old obsolete CSS Chart jQuery library, now replaced by Canvas.
 
 
 NivoCart v2.3.2

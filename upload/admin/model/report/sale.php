@@ -98,6 +98,12 @@ class ModelReportSale extends Model {
 		return $query->rows;
 	}
 
+	public function getTopOrdersByZone(string $iso_code_2): array {
+		$query = $this->db->query("SELECT o.payment_zone AS zone_name, SUM(o.total) AS amount FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "country` c ON (o.payment_country_id = c.country_id) WHERE o.order_status_id > '0' AND c.iso_code_2 = '" . $this->db->escape($iso_code_2) . "' AND o.payment_zone != '' GROUP BY o.payment_zone ORDER BY amount DESC");
+
+		return $query->rows ?? [];
+	}
+
 	public function getTotalSales(array $data = []) {
 		$sql = "SELECT SUM(total) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0'";
 

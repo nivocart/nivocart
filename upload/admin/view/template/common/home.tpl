@@ -192,12 +192,21 @@
           <?php if ($top_countries) { ?>
             <div style="width:26%; float:right;">
               <h2><?php echo $text_topcountry; ?> &nbsp; <?php echo (!empty($top_flag)) ? "<img src='" . $top_flag . "' alt='' />" : ''; ?></h2>
-              <br /><br />
-              <div class="chart animated fadeIn">
-              <?php foreach ($top_countries as $top_country) { ?>
-                <div class="donut-chart fill" data-percent="<?php echo $top_country['amount']; ?>" data-title="<?php echo $top_country['country']; ?> %"></div>
+              <br />
+              <?php
+              $donut_colors = ['#4691D2','#DE5954','#F2B155','#5BAD6F','#9B59B6','#1ABC9C','#E67E22','#95A5A6'];
+              ?>
+              <canvas id="region-donut" width="200" height="200" style="display:block; margin:0 auto;"></canvas>
+              <ul style="list-style:none; margin:8px 0 0; padding:0; font-size:11px; color:<?php echo $chart_colour; ?>; max-height:130px; overflow-y:auto;">
+              <?php foreach ($top_countries as $i => $top_country) {
+                $color = $donut_colors[$i % count($donut_colors)];
+                $pct = round($top_country['amount'] * 100, 1, PHP_ROUND_HALF_UP);
+              ?>
+                <li style="margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?php echo htmlspecialchars($top_country['country']); ?> <?php echo $pct; ?>%">
+                  <span style="display:inline-block;width:9px;height:9px;background:<?php echo $color; ?>;border-radius:2px;margin-right:5px;vertical-align:middle;"></span><?php echo htmlspecialchars($top_country['country']); ?> <b><?php echo $pct; ?>%</b>
+                </li>
               <?php } ?>
-              </div>
+              </ul>
             </div>
             <div id="vmap" style="width:72%;"></div>
           <?php } else { ?>
@@ -683,7 +692,32 @@ $(document).ready(function() {
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('.donut-chart').cssCharts({type:"donut"}).trigger('show-donut-chart');
+	var regions = <?php echo json_encode(array_values($top_countries)); ?>;
+	var canvas = document.getElementById('region-donut');
+	if (!canvas || !canvas.getContext || !regions.length) return;
+
+	var ctx = canvas.getContext('2d');
+	var cx = canvas.width / 2;
+	var cy = canvas.height / 2;
+	var outerR = cx - 4;
+	var innerR = outerR * 0.52;
+	var colors = ['#4691D2','#DE5954','#F2B155','#5BAD6F','#9B59B6','#1ABC9C','#E67E22','#95A5A6'];
+	var gap = 0.025; // radians gap between segments
+	var start = -Math.PI / 2;
+
+	regions.forEach(function(r, i) {
+		var sweep = parseFloat(r.amount) * 2 * Math.PI;
+		if (sweep < 0.001) { start += sweep; return; }
+		var s = start + gap / 2;
+		var e = start + sweep - gap / 2;
+		ctx.beginPath();
+		ctx.arc(cx, cy, outerR, s, e);
+		ctx.arc(cx, cy, innerR, e, s, true);
+		ctx.closePath();
+		ctx.fillStyle = colors[i % colors.length];
+		ctx.fill();
+		start += sweep;
+	});
 });
 //--></script>
 
