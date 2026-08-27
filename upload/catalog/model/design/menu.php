@@ -32,7 +32,7 @@ class ModelDesignMenu extends Model {
 
 	public function getMenuItems(int $menu_id, int $parent_id = 0): array {
 		if ($parent_id == 0) {
-			$menu_item_data = $this->cache->get('menu_items.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$parent_id);
+			$menu_item_data = $this->cache->get('menu_items.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$menu_id . '.' . (int)$parent_id);
 
 			if (!$menu_item_data) {
 				$menu_item_data = [];
@@ -43,7 +43,7 @@ class ModelDesignMenu extends Model {
 					$menu_item_data[$result['menu_item_id']] = $this->getMenuItem($result['menu_item_id'], (int)$menu_id);
 				}
 
-				$this->cache->set('menu_items.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $parent_id, $menu_item_data);
+				$this->cache->set('menu_items.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$menu_id . '.' . $parent_id, $menu_item_data);
 			}
 
 			return $menu_item_data;
@@ -58,7 +58,7 @@ class ModelDesignMenu extends Model {
 	public function getTotalMenuItems(int $menu_id): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "menu_item` WHERE menu_id = '" . (int)$menu_id . "' AND status = '1'";
 
-		$cache_id = 'menu_items.total';
+		$cache_id = 'menu_items.total.' . (int)$menu_id;
 
 		$total = $this->cache->get($cache_id);
 
@@ -76,7 +76,7 @@ class ModelDesignMenu extends Model {
 	public function getTotalMenuItemsByParentId(int $menu_id, int $parent_id): int {
 		$sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "menu_item` WHERE menu_id = '" . (int)$menu_id . "' AND parent_id = '" . (int)$parent_id . "' AND status = '1'";
 
-		$cache_id = 'menu_items.parents.total';
+		$cache_id = 'menu_items.parents.total.' . (int)$menu_id . '.' . (int)$parent_id;
 
 		$total = $this->cache->get($cache_id);
 

@@ -8,7 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
-- Fix bug in Admin jQuery Colorbox where text content wasn't clearly visible. 
+- Fix bug in Admin jQuery Colorbox where text content wasn't clearly visible.
+- Fix bug in Catalog where Menus with different content failed to cache correctly.
 
 
 NivoCart v2.3.2
