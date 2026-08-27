@@ -47,6 +47,17 @@
             </select></td>
           </tr>
           <tr>
+            <td><?php echo $entry_mobile_logo; ?></td>
+            <td>
+              <div class="image">
+                <img src="<?php echo $default_mobile_logo_thumb; ?>" alt="" id="thumb-default-mobile-logo" /><br />
+                <input type="hidden" name="default_mobile_logo" value="<?php echo $default_mobile_logo; ?>" id="default-mobile-logo" />
+                <a onclick="image_upload('default-mobile-logo', 'thumb-default-mobile-logo');" class="button-browse"></a>
+                <a onclick="$('#thumb-default-mobile-logo').attr('src', '<?php echo $no_image; ?>'); $('#default-mobile-logo').val('');" class="button-recycle"></a>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <td><?php echo $entry_breadcrumbs; ?></td>
             <td><?php if ($default_breadcrumbs) { ?>
               <input type="radio" name="default_breadcrumbs" value="1" id="breadcrumbs-on" class="radio" checked />
@@ -424,6 +435,32 @@ function updateFooterColorPreview() {
 
 $('#default_footer_color').on('change', updateFooterColorPreview);
 updateFooterColorPreview();
+//--></script>
+
+<script type="text/javascript"><!--
+function image_upload(field, thumb) {
+	$('#dialog').remove();
+	$('#content').prepend('<div id="dialog" style="padding:3px 0 0 0;"><iframe src="index.php?route=common/filemanager&token=<?php echo $token; ?>&field=' + encodeURIComponent(field) + '" style="padding:0; margin:0; display:block; width:100%; height:100%;" frameborder="no" scrolling="auto"></iframe></div>');
+	$('#dialog').dialog({
+		title: '<?php echo $text_image_manager; ?>',
+		close: function(event, ui) {
+			if ($('#' + field).val()) {
+				$.ajax({
+					url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>&image=' + encodeURIComponent($('#' + field).val()),
+					dataType: 'text',
+					success: function(data) {
+						$('#' + thumb).replaceWith('<img src="' + data + '" alt="" id="' + thumb + '" />');
+					}
+				});
+			}
+		},
+		bgiframe: false,
+		width: 760,
+		height: 400,
+		resizable: false,
+		modal: false
+	});
+}
 //--></script>
 
 <script type="text/javascript"><!--

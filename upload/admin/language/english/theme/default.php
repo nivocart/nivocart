@@ -10,6 +10,7 @@ $_['text_dark']                  = 'Dark';
 $_['text_custom']                = 'Custom';
 $_['text_active']                = 'This theme is active and currently selected in <b>System > Settings - Store</b>.';
 $_['text_not_active']            = 'This theme is not active and not currently selected in <b>System > Settings - Store</b>.';
+$_['text_image_manager']         = 'Image Manager';
 
 // Tab
 $_['tab_footer']                 = 'Footer';
@@ -19,6 +20,7 @@ $_['tab_credits']                = 'Credits';
 
 // Entry
 $_['entry_widescreen']           = 'Widescreen Mode:<span class="help">Normal at 1280px, Wide at 1920px, or Unlimited. Default is Normal.</span>';
+$_['entry_mobile_logo']          = 'Mobile Logo:<span class="help">Compact logo displayed on small screens (640px and below). Optimal size: 240 &times; 80 px. If left empty, the main store logo is used.</span>';
 $_['entry_breadcrumbs']          = 'Show Breadcrumbs:<span class="help">If "No" is selected, the breadcrumb trail will not show on catalog pages.</span>';
 $_['entry_back_to_top']          = 'Enable Scroll Back to Top:';
 $_['entry_right_click']          = 'Block Mouse Right Click:<span class="help">Protects copyright content like images from being copied without explicit permission.</span>';

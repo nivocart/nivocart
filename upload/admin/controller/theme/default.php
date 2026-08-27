@@ -14,6 +14,7 @@ class ControllerThemeDefault extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('setting/setting');
+		$this->load->model('tool/image');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting($this->name, $this->request->post);
@@ -41,6 +42,7 @@ class ControllerThemeDefault extends Controller {
 		$this->data['text_default'] = $this->language->get('text_default');
 		$this->data['text_active'] = $this->language->get('text_active');
 		$this->data['text_not_active'] = $this->language->get('text_not_active');
+		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
 
 		$this->data['tab_general'] = $this->language->get('tab_general');
 		$this->data['tab_footer'] = $this->language->get('tab_footer');
@@ -49,6 +51,7 @@ class ControllerThemeDefault extends Controller {
 		$this->data['tab_credits'] = $this->language->get('tab_credits');
 
 		$this->data['entry_widescreen'] = $this->language->get('entry_widescreen');
+		$this->data['entry_mobile_logo'] = $this->language->get('entry_mobile_logo');
 		$this->data['entry_breadcrumbs'] = $this->language->get('entry_breadcrumbs');
 		$this->data['entry_back_to_top'] = $this->language->get('entry_back_to_top');
 		$this->data['entry_right_click'] = $this->language->get('entry_right_click');
@@ -165,6 +168,24 @@ class ControllerThemeDefault extends Controller {
 			$this->data[$this->name . '_widescreen'] = $this->config->get($this->name . '_widescreen');
 		} else {
 			$this->data[$this->name . '_widescreen'] = 'normal';
+		}
+
+		// No-image placeholder
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 200, 100);
+
+		// Mobile logo
+		if (isset($this->request->post[$this->name . '_mobile_logo'])) {
+			$this->data[$this->name . '_mobile_logo'] = $this->request->post[$this->name . '_mobile_logo'];
+		} else {
+			$this->data[$this->name . '_mobile_logo'] = $this->config->get($this->name . '_mobile_logo');
+		}
+
+		$mobile_logo_path = $this->config->get($this->name . '_mobile_logo');
+
+		if ($mobile_logo_path && file_exists(DIR_IMAGE . $mobile_logo_path) && is_file(DIR_IMAGE . $mobile_logo_path)) {
+			$this->data[$this->name . '_mobile_logo_thumb'] = $this->model_tool_image->resize($mobile_logo_path, 200, 100);
+		} else {
+			$this->data[$this->name . '_mobile_logo_thumb'] = $this->model_tool_image->resize('no_image.png', 200, 100);
 		}
 
 		if (isset($this->request->post[$this->name . '_breadcrumbs'])) {

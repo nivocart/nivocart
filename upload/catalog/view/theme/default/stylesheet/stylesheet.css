@@ -407,6 +407,9 @@ a.top-link:hover {
   top: 5px;
   left: 15px;
 }
+/* Mobile logo swap — desktop visible by default, mobile hidden */
+#header #logo img.logo-desktop { display: block; }
+#header #logo img.logo-mobile  { display: none; }
 #header-bottom {
   position: absolute;
   top: 70px;
@@ -2907,6 +2910,9 @@ table.address-options td h2 {
   #header { height: 180px; text-align: center; }
   #header #logo { position: relative; top: 0; left: 0; margin: 0 auto; padding-top: 16px; }
   #header #logo img { max-width: 85%; max-height: 50px; }
+  /* Mobile logo swap at ≤640px */
+  #header #logo img.logo-desktop { display: none; }
+  #header #logo img.logo-mobile  { display: block; max-height: 40px; width: auto; }
   #header #cart { position: relative; clear: left; }
   #header #cart .heading { float: none; display: block; margin-top: 10px; margin-left: auto; margin-right: auto; }
   #header #cart .heading a { float: none; padding: 9px 15px; }
@@ -2961,6 +2967,9 @@ table.address-options td h2 {
   #header { height: 180px; text-align: center; }
   #header #logo { position: relative; top: 0; left: 0; margin: 0 auto; padding-top: 16px; }
   #header #logo img { max-width: 85%; max-height: 50px; }
+  /* Mobile logo swap at ≤481px */
+  #header #logo img.logo-desktop { display: none; }
+  #header #logo img.logo-mobile  { display: block; max-height: 36px; width: auto; }
   #header #cart { position: relative; clear: left; }
   #header #cart .heading { float: none; display: block; margin-top: 10px; margin-left: auto; margin-right: auto; }
   #header #cart .heading a { float: none; padding: 9px 15px; }

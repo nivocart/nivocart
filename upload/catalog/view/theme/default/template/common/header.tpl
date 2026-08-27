@@ -76,7 +76,15 @@ $(document).ready(function() {
 <div class="container-<?php echo $display_size; ?>">
 <div id="header">
 <?php if ($logo) { ?>
-  <div id="logo"><a href="<?php echo $home; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" /></a></div>
+  <?php $default_mobile_logo = $this->config->get('default_mobile_logo'); ?>
+  <div id="logo"><a href="<?php echo $home; ?>">
+    <img class="logo-desktop" src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" />
+    <?php if ($default_mobile_logo) { ?>
+    <img class="logo-mobile" src="<?php echo $base; ?>image/<?php echo $default_mobile_logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" />
+    <?php } else { ?>
+    <img class="logo-mobile" src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" />
+    <?php } ?>
+  </a></div>
 <?php } ?>
   <?php echo $cart; ?>
   <div id="header-bottom">
