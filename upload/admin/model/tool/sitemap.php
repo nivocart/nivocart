@@ -95,7 +95,7 @@ class ModelToolSitemap extends Model {
 	 * Returns true when no setting exists yet (backwards-compatible default = all enabled).
 	 */
 	protected function isPageEnabled(string $route): bool {
-		$pages = $this->config->get('config_sitemap_pages');
+		$pages = $this->config->get('sitemap_pages');
 
 		if (empty($pages)) {
 			return true;

@@ -281,7 +281,7 @@ class ControllerToolSitemap extends Controller {
 		// ── Sitemap Page Settings ──────────────────────────────────────────────
 
 		// Current enabled pages (stored as serialized JSON array)
-		$sitemap_pages = $this->config->get('config_sitemap_pages');
+		$sitemap_pages = $this->config->get('sitemap_pages');
 
 		if (!is_array($sitemap_pages) || empty($sitemap_pages)) {
 			$sitemap_pages = $this->getDefaultSitemapPages();
@@ -338,9 +338,9 @@ class ControllerToolSitemap extends Controller {
 		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate()) {
 			$pages = isset($this->request->post['sitemap_pages']) ? array_values(array_filter((array)$this->request->post['sitemap_pages'])) : [];
 
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = 'config_sitemap_pages' AND `store_id` = '0'");
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = 'sitemap_pages' AND `store_id` = '0'");
 
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = 'config', `key` = 'config_sitemap_pages', `value` = '" . $this->db->escape(json_encode($pages)) . "', `serialized` = '1'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = 'sitemap', `key` = 'sitemap_pages', `value` = '" . $this->db->escape(json_encode($pages)) . "', `serialized` = '1'");
 
 			$this->session->data['success_settings'] = $this->language->get('text_success_settings');
 		}

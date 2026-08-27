@@ -72,7 +72,7 @@ class ControllerInformationSitemap extends Controller {
 		$this->load->model('catalog/product');
 
 		// Load the per-route sitemap page setting (stored as a serialized JSON array)
-		$sitemap_pages = $this->config->get('config_sitemap_pages');
+		$sitemap_pages = $this->config->get('sitemap_pages');
 
 		// Backwards-compatible default: if the setting is empty, treat all pages as enabled
 		if (!is_array($sitemap_pages) || empty($sitemap_pages)) {

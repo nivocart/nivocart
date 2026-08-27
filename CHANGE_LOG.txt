@@ -11,6 +11,7 @@ Release: TBA
 - Add Mobile size store logo to Default theme settings.
 - Fix bug in Admin jQuery Colorbox where text content wasn't clearly visible.
 - Fix bug in Catalog where Menus with different content failed to cache correctly.
+- Fix bug in the Sitemap System where the options were being cleared by Settings.
 - Updated Catalog Default Stylesheet to address some minor responsive issues.
 
 
