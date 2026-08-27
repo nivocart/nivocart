@@ -2944,6 +2944,10 @@ table.address-options td h2 {
   /* product-info: stack to single column on small tablets */
   .product-info { grid-template-columns: 1fr; gap: 20px; }
   .product-info > .left { position: static; }
+  /* Account forms — stack label above input at ≤640px */
+  table.form, table.form tbody, table.form tr, table.form td { display: block; width: 100%; box-sizing: border-box; }
+  table.form tr td:first-child { width: auto; }
+  table.form td input[type="text"], table.form td input[type="password"], table.form td select { width: 100%; box-sizing: border-box; }
 }
 
 /* Phones (≤481px) — shared rules for all phone sizes */
@@ -2994,6 +2998,10 @@ table.address-options td h2 {
   .return-name, .return-quantity, .return-reason, .return-opened { width: 100%; }
   .login-content .right { clear: left; float: left; }
   .login-content .left, .login-content .right { width: 100%; }
+  /* Account forms — stack label above input at ≤481px */
+  table.form, table.form tbody, table.form tr, table.form td { display: block; width: 100%; box-sizing: border-box; }
+  table.form tr td:first-child { width: auto; }
+  table.form td input[type="text"], table.form td input[type="password"], table.form td select { width: 100%; box-sizing: border-box; }
   .contact-info .info-right { clear: left; }
   .contact-info .info-left, .contact-info .info-right { width: 100%; margin: 0; }
   .checkout-content .left { width: 100%; }

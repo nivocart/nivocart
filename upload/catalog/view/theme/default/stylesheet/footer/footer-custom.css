@@ -244,21 +244,31 @@ a.icon-instagram:hover {
  * RESPONSIVE
  * ============================================================ */
 
-/* Tablets (601px – 900px): two-column link grid, big-column full-width */
+/* Tablets (601px – 900px): 2×2 grid — col-one/col-two on row 1, col-three/address on row 2 */
 @media only screen and (min-width: 601px) and (max-width: 900px) {
+	.footer-light #footer, .footer-dark #footer {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
 	.footer-light #footer > .column-one, .footer-light #footer > .column-two,
 	.footer-light #footer > .column-three, .footer-light #footer > .column-four,
 	.footer-dark #footer > .column-one, .footer-dark #footer > .column-two,
 	.footer-dark #footer > .column-three, .footer-dark #footer > .column-four {
-		width: 48% !important;
+		width: auto !important;
 		min-width: 0;
+		float: none;
 	}
+	.footer-light #footer > .column-one, .footer-dark #footer > .column-one { grid-column: 1; grid-row: 1; }
+	.footer-light #footer > .column-two, .footer-dark #footer > .column-two { grid-column: 2; grid-row: 1; }
+	.footer-light #footer > .column-three, .footer-dark #footer > .column-three { grid-column: 1; grid-row: 2; }
 	.footer-light #footer > .big-column, .footer-dark #footer > .big-column {
-		clear: left;
-		float: left;
-		width: 100% !important;
+		grid-column: 2;
+		grid-row: 2;
+		width: auto !important;
 		min-width: 0;
-		margin: 10px 0 0 15px;
+		float: none;
+		clear: none;
+		margin: 0;
 	}
 }
 
