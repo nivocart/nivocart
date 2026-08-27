@@ -30,7 +30,7 @@
  * Change the following styles to modify the appearance of Colorbox. They are
  * ordered & tabbed in a way that represents the nesting of the generated HTML.
  */
-#cboxOverlay {background:#30353A; opacity: .4;} /* <-- Admin version dark background */
+#cboxOverlay {background:#888; opacity: .4;} /* <-- Admin version dark background */
 #colorbox {outline:0;}
 
 #cboxTopLeft {width:25px; height:25px; background:url(images/border1.png) no-repeat 0 0;}
@@ -41,14 +41,14 @@
 #cboxBottomRight {width:25px; height:25px; background:url(images/border1.png) no-repeat -25px -25px;}
 #cboxMiddleLeft {width:25px; background:url(images/border2.png) repeat-y 0 0;}
 #cboxMiddleRight {width:25px; background:url(images/border2.png) repeat-y -25px 0;}
-#cboxContent {background:#30353A; overflow:hidden;} /* <-- Admin version dark background */
+#cboxContent {background:#888; overflow:hidden;} /* <-- Admin version dark background */
 
 .cboxIframe {background:#FCFCFC;}
 #cboxError {padding:50px; border:1px solid #CCC;}
 #cboxLoadedContent {margin-bottom:20px;}
 #cboxTitle {position:absolute; bottom:0; left:0; text-align:center; width:100%; color:#999;}
 #cboxCurrent {position:absolute; bottom:0; left:100px; color:#999;}
-#cboxLoadingOverlay {background:#30353A url(images/loading.gif) no-repeat 5px 5px;} /* <-- Admin version dark background */
+#cboxLoadingOverlay {background:#888 url(images/loading.gif) no-repeat 5px 5px;} /* <-- Admin version dark background */
 
 /**
  * these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles
