@@ -2814,6 +2814,23 @@ table.address-options td h2 {
 }
 
 /* ============================================================
+ * WIDE LAYOUT (1920px) — 6-COLUMN PRODUCT GRID
+ * At min-width 1282px, switch box-product and product-grid
+ * from 4 columns (container-normal) to 6 columns (container-wide).
+ * Percentages are relative to #content width, matching the
+ * 1280÷4 = 1920÷6 = 320px card-width identity.
+ * ============================================================ */
+
+@media only screen and (min-width: 1282px) {
+  .container-wide #content .box-product > div {
+    width: 15.5%;
+  }
+  .container-wide .product-grid > div {
+    width: 15.5%;
+  }
+}
+
+/* ============================================================
  * RESPONSIVE
  * ============================================================ */
 
@@ -2832,6 +2849,7 @@ table.address-options td h2 {
   #content-left + #content { margin-left: 270px; }
   #content-right + #content { margin-right: 270px; }
   #content-left + #content-right + #content .product-filter .selectors { clear: left; margin-bottom: 10px; }
+  .category-list > ul.refine { float: none; width: 100%; }
   .hide-tablet { display: none; }
   /* product-info: tighter gap on laptops */
   .product-info { gap: 24px; }
@@ -2856,6 +2874,7 @@ table.address-options td h2 {
   #content-right + #content .product-filter .selectors,
   #content-left + #content-right + #content .product-filter .selectors { clear: left; margin-bottom: 10px; }
   .product-grid > div { width: 30%; }
+  .category-list > ul.refine { float: none; width: 100%; }
   #review { float: left; }
   #add-review { clear: left; }
   .contact-info .info-left, .contact-info .info-right { margin-left: 0; }
@@ -2903,6 +2922,7 @@ table.address-options td h2 {
   #content-right + #content .product-filter .selectors,
   #content-left + #content-right + #content .product-filter .selectors { clear: left; margin-bottom: 10px; }
   .product-grid > div { width: 45%; }
+  .category-list > ul.refine { float: none; width: 100%; }
   #review { float: left; }
   #add-review { clear: left; }
   #return-product .content .return-product,
@@ -2956,6 +2976,7 @@ table.address-options td h2 {
   .product-filter .selectors > .sort { right: 15px; }
   .product-filter .selectors > .limit { right: 2px; }
   .product-grid > div { width: 95%; }
+  .category-list > ul.refine { float: none; width: 100%; }
   #review { float: left; }
   #add-review { clear: left; }
   #return-product .content .return-product,
