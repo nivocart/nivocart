@@ -17,6 +17,7 @@ Release: 27/08/2026
 - Fix bug in Admin jQuery Colorbox where text content wasn't clearly visible.
 - Fix bug in Catalog where Menus with different content failed to cache correctly.
 - Fix bug in the Sitemap System where the options were being cleared by Settings.
+- Updated Admin Dashboard to display a wider range of continent and country maps.
 - Updated Catalog Default Stylesheet to address some minor responsive issues.
 
 

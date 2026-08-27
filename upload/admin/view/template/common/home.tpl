@@ -655,7 +655,7 @@ $(document).ready(function() {
 			}
 
 			$('#vmap').vectorMap({
-				map: 'world_en',
+				map: '<?php echo $dashboard_map; ?>',
 				backgroundColor: '<?php echo $chart_background; ?>',
 				borderColor: '<?php echo $chart_border; ?>',
 				borderOpacity: 0.25,

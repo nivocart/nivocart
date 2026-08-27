@@ -16,7 +16,38 @@ class ControllerCommonHome extends Controller {
 		$this->document->addStyle('view/javascript/jquery/chart/chart-donut.min.css');
 
 		$this->document->addScript('view/javascript/jquery/jqvmap/jquery.vmap.min.js');
-		$this->document->addScript('view/javascript/jquery/jqvmap/maps/jquery.vmap.world.js');
+
+		// Dynamic map selection based on store setting (falls back to world_en)
+		$dashboardMap = $this->config->get('config_dashboard_map') ?: 'world_en';
+
+		$mapScripts = [
+			'world_en'         => 'maps/jquery.vmap.world.js',
+			'europe_en'        => 'maps/jquery.vmap.europe.js',
+			'usa_en'           => 'maps/jquery.vmap.usa.js',
+			'germany_en'       => 'maps/jquery.vmap.germany.js',
+			'algeria_en'       => 'maps/jquery.vmap.algeria.js',
+			'argentina_en'     => 'maps/jquery.vmap.argentina.js',
+			'brazil_en'        => 'maps/jquery.vmap.brazil.js',
+			'canada_en'        => 'maps/jquery.vmap.canada.js',
+			'france_en'        => 'maps/jquery.vmap.france.js',
+			'greece_en'        => 'maps/jquery.vmap.greece.js',
+			'iran_en'          => 'maps/jquery.vmap.iran.js',
+			'iraq_en'          => 'maps/jquery.vmap.iraq.js',
+			'russia_en'        => 'maps/jquery.vmap.russia.js',
+			'tunisia_en'       => 'maps/jquery.vmap.tunisia.js',
+			'turkey_en'        => 'maps/jquery.vmap.turkey.js',
+			'africa_en'        => 'maps/continents/jquery.vmap.africa.js',
+			'asia_en'          => 'maps/continents/jquery.vmap.asia.js',
+			'australia_en'     => 'maps/continents/jquery.vmap.australia.js',
+			'north-america_en' => 'maps/continents/jquery.vmap.north-america.js',
+			'south-america_en' => 'maps/continents/jquery.vmap.south-america.js',
+		];
+
+		$mapScript = $mapScripts[$dashboardMap] ?? 'maps/jquery.vmap.world.js';
+
+		$this->document->addScript('view/javascript/jquery/jqvmap/' . $mapScript);
+
+		$this->data['dashboard_map'] = $dashboardMap;
 
 		$this->document->addScript('view/javascript/jquery/chart/jquery.chart.min.js');
 

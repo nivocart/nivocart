@@ -1144,6 +1144,39 @@
       <div id="tab-preference">
         <table class="form">
           <tr>
+            <td><?php echo $entry_dashboard_map; ?><span class="help"><?php echo $help_dashboard_map; ?></span></td>
+            <td>
+              <select name="config_dashboard_map">
+                <optgroup label="World">
+                  <option value="world_en"<?php if ($config_dashboard_map == 'world_en') echo ' selected="selected"'; ?>>World</option>
+                </optgroup>
+                <optgroup label="Continents">
+                  <option value="africa_en"<?php if ($config_dashboard_map == 'africa_en') echo ' selected="selected"'; ?>>Africa</option>
+                  <option value="asia_en"<?php if ($config_dashboard_map == 'asia_en') echo ' selected="selected"'; ?>>Asia</option>
+                  <option value="australia_en"<?php if ($config_dashboard_map == 'australia_en') echo ' selected="selected"'; ?>>Australia &amp; Oceania</option>
+                  <option value="north-america_en"<?php if ($config_dashboard_map == 'north-america_en') echo ' selected="selected"'; ?>>North America</option>
+                  <option value="south-america_en"<?php if ($config_dashboard_map == 'south-america_en') echo ' selected="selected"'; ?>>South America</option>
+                </optgroup>
+                <optgroup label="Countries &amp; Regions">
+                  <option value="europe_en"<?php if ($config_dashboard_map == 'europe_en') echo ' selected="selected"'; ?>>Europe (by Country)</option>
+                  <option value="usa_en"<?php if ($config_dashboard_map == 'usa_en') echo ' selected="selected"'; ?>>United States (by State)</option>
+                  <option value="canada_en"<?php if ($config_dashboard_map == 'canada_en') echo ' selected="selected"'; ?>>Canada (by Province)</option>
+                  <option value="france_en"<?php if ($config_dashboard_map == 'france_en') echo ' selected="selected"'; ?>>France</option>
+                  <option value="germany_en"<?php if ($config_dashboard_map == 'germany_en') echo ' selected="selected"'; ?>>Germany</option>
+                  <option value="russia_en"<?php if ($config_dashboard_map == 'russia_en') echo ' selected="selected"'; ?>>Russia</option>
+                  <option value="turkey_en"<?php if ($config_dashboard_map == 'turkey_en') echo ' selected="selected"'; ?>>Turkey</option>
+                  <option value="brazil_en"<?php if ($config_dashboard_map == 'brazil_en') echo ' selected="selected"'; ?>>Brazil</option>
+                  <option value="argentina_en"<?php if ($config_dashboard_map == 'argentina_en') echo ' selected="selected"'; ?>>Argentina</option>
+                  <option value="algeria_en"<?php if ($config_dashboard_map == 'algeria_en') echo ' selected="selected"'; ?>>Algeria</option>
+                  <option value="greece_en"<?php if ($config_dashboard_map == 'greece_en') echo ' selected="selected"'; ?>>Greece</option>
+                  <option value="iran_en"<?php if ($config_dashboard_map == 'iran_en') echo ' selected="selected"'; ?>>Iran</option>
+                  <option value="iraq_en"<?php if ($config_dashboard_map == 'iraq_en') echo ' selected="selected"'; ?>>Iraq</option>
+                  <option value="tunisia_en"<?php if ($config_dashboard_map == 'tunisia_en') echo ' selected="selected"'; ?>>Tunisia</option>
+                </optgroup>
+              </select>
+            </td>
+          </tr>
+          <tr>
             <td><?php echo $entry_pagination_hi; ?><span class="help"><?php echo $help_pagination_hi; ?></span></td>
             <td><?php if ($config_pagination_hi) { ?>
               <input type="radio" name="config_pagination_hi" value="1" id="pagination-hi-on" class="radio" checked />
