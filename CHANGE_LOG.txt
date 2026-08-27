@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Fix bug in Admin jQuery Colorbox where text content wasn't clearly visible. 
+
 
 NivoCart v2.3.2
 ---------------
