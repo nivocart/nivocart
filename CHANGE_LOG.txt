@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Updated the new Admin dashboard canvas donut graph, now limited to 4 results.
+
 
 NivoCart v2.3.3
 ---------------
