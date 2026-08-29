@@ -6,3 +6,4 @@ $_['text_powered'] = 'Powered by <a onclick="window.open(\'https://github.com/ni
 $_['text_message'] = 'This website uses cookies to enhance your browsing experience and provide additional functionalities.';
 $_['text_policy']  = 'Cookie Policy';
 $_['text_accept']  = 'Accept';
+$_['text_decline'] = 'Decline';

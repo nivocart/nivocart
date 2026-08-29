@@ -211,6 +211,44 @@ class ControllerAccountEdit extends Controller {
 
 		$this->data['track_online'] = $this->config->get('config_customer_online');
 
+		// Cookie Consent section — only shown when at least one analytics tool is configured
+		$ga_raw = trim($this->config->get('config_google_analytics') ?? '');
+		$matomo_raw = trim($this->config->get('config_matomo_analytics') ?? '');
+
+		$analytics_configured = ($ga_raw !== '' || $matomo_raw !== '');
+
+		$this->data['show_cookie_consent'] = $analytics_configured;
+
+		$this->data['heading_cookie_consent'] = $this->language->get('heading_cookie_consent');
+		$this->data['entry_cookie_consent'] = $this->language->get('entry_cookie_consent');
+		$this->data['help_cookie_consent'] = $this->language->get('help_cookie_consent');
+		$this->data['text_cookie_yes'] = $this->language->get('text_cookie_yes');
+		$this->data['text_cookie_no'] = $this->language->get('text_cookie_no');
+
+		if (isset($this->request->post['cookie_analytics_consent'])) {
+			$this->data['cookie_analytics_consent'] = $this->request->post['cookie_analytics_consent'] !== '' ? (int)$this->request->post['cookie_analytics_consent'] : null;
+		} elseif (isset($customer_info['cookie_analytics_consent'])) {
+			$val = $customer_info['cookie_analytics_consent'];
+			$this->data['cookie_analytics_consent'] = ($val !== null && $val !== '') ? (int)$val : null;
+		} else {
+			$this->data['cookie_analytics_consent'] = null;
+		}
+
+		// Sync browser cookie with DB preference when saved
+		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $analytics_configured && array_key_exists('cookie_analytics_consent', $this->request->post)) {
+			$consent_val = $this->request->post['cookie_analytics_consent'];
+			$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+			$cookie_val = ($consent_val !== '') ? (string)(int)$consent_val : '0';
+
+			setcookie('cc_accepted', $cookie_val, [
+				'expires'  => time() + (365 * 24 * 3600),
+				'path'     => '/',
+				'secure'   => $secure,
+				'httponly' => false,
+				'samesite' => 'Lax',
+			]);
+		}
+
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 
 		// Theme

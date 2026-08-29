@@ -94,7 +94,31 @@ class ControllerCommonHeader extends Controller {
 		$this->data['shopping_cart'] = $this->url->link('checkout/cart', '', 'SSL');
 		$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
-		$this->data['google_analytics'] = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
+		// Google Analytics — only load when visitor has given analytics cookie consent
+		$ga_code = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
+
+		if ($ga_code) {
+			$consented = false;
+
+			if ($this->customer->isLogged()) {
+				$this->load->model('account/customer');
+				$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+				$db_consent = isset($customer_info['cookie_analytics_consent']) ? $customer_info['cookie_analytics_consent'] : null;
+
+				if ($db_consent !== null) {
+					$consented = (int)$db_consent === 1;
+				} else {
+					// DB preference not set — fall back to browser cookie
+					$consented = isset($_COOKIE['cc_accepted']) && $_COOKIE['cc_accepted'] === '1';
+				}
+			} else {
+				$consented = isset($_COOKIE['cc_accepted']) && $_COOKIE['cc_accepted'] === '1';
+			}
+
+			$this->data['google_analytics'] = $consented ? $ga_code : '';
+		} else {
+			$this->data['google_analytics'] = '';
+		}
 
 		// Robot detector
 		$status = true;

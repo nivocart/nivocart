@@ -244,7 +244,9 @@ class ModelAccountCustomer extends Model {
 
 	// Edit
 	public function editCustomer(array $data = []): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : 0) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+		$consent_sql = array_key_exists('cookie_analytics_consent', $data) ? ", cookie_analytics_consent = " . ($data['cookie_analytics_consent'] !== '' ? (int)$data['cookie_analytics_consent'] : 'NULL') : '';
+
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : 0) . "'" . $consent_sql . " WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 	}
 
 	public function editPassword(string $email, string $password): void {

@@ -131,8 +131,44 @@ class ControllerCommonFooter extends Controller {
 			}
 		}
 
-		// Matomo
-		$this->data['matomo'] = html_entity_decode($this->config->get('config_matomo_analytics'), ENT_QUOTES, 'UTF-8');
+		// Matomo — only load when visitor has given analytics cookie consent
+		$matomo_code = html_entity_decode($this->config->get('config_matomo_analytics'), ENT_QUOTES, 'UTF-8');
+
+		$ga_raw = trim($this->config->get('config_google_analytics') ?? '');
+		$matomo_raw = trim($this->config->get('config_matomo_analytics') ?? '');
+
+		// Banner only appears when at least one analytics tool is configured
+		$analytics_configured = ($ga_raw !== '' || $matomo_raw !== '');
+
+		// Determine consent state (DB for logged-in customers; browser cookie for guests)
+		$consented = false;
+		$decision_made = false;
+
+		if ($this->customer->isLogged()) {
+			$this->load->model('account/customer');
+
+			$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+			$db_consent = isset($customer_info['cookie_analytics_consent']) ? $customer_info['cookie_analytics_consent'] : null;
+
+			if ($db_consent !== null) {
+				$decision_made = true;
+				$consented = (int)$db_consent === 1;
+			} else {
+				// Fall back to browser cookie
+				if (isset($_COOKIE['cc_accepted'])) {
+					$decision_made = true;
+					$consented = $_COOKIE['cc_accepted'] === '1';
+				}
+			}
+		} else {
+			if (isset($_COOKIE['cc_accepted'])) {
+				$decision_made = true;
+				$consented = $_COOKIE['cc_accepted'] === '1';
+			}
+		}
+
+		$this->data['matomo'] = ($matomo_code && $consented) ? $matomo_code : '';
 
 		// Whos Online
 		if (isset($this->request->server['HTTP_USER_AGENT'])) {
@@ -180,8 +216,10 @@ class ControllerCommonFooter extends Controller {
 		$this->data['text_message'] = $this->language->get('text_message');
 		$this->data['text_policy'] = $this->language->get('text_policy');
 		$this->data['text_accept'] = $this->language->get('text_accept');
+		$this->data['text_decline'] = $this->language->get('text_decline');
 
-		$this->data['cookie_consent'] = $this->config->get('config_cookie_consent');
+		// Show banner only when: admin has enabled it AND analytics are configured AND visitor has not yet decided
+		$this->data['cookie_consent'] = $this->config->get('config_cookie_consent') && $analytics_configured && !$decision_made;
 
 		$cookie_theme = $this->config->get('config_cookie_theme');
 

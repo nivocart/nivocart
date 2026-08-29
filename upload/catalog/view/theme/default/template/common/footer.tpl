@@ -102,8 +102,8 @@
   <?php } ?>
 </div>
 <?php if ($matomo) { echo $matomo; } ?>
-</div><!-- /.container -->
-</div><!-- /#container -->
+</div>
+</div>
 
 <?php foreach ($scripts as $script) { ?>
 <script type="text/javascript" src="<?php echo $script; ?>"></script>
@@ -141,13 +141,13 @@ $(document).ready(function() {
 <?php if ($cookie_consent) { ?>
 <style>
   :root {
-    --cc-popup-bg:   <?php echo $cookie_popup; ?>;
-    --cc-text:       <?php echo $cookie_text; ?>;
-    --cc-btn-bg:     <?php echo $cookie_button; ?>;
-    --cc-btn-text:   #ffffff;
-    --cc-radius:     6px;
-    --cc-shadow:     0 4px 24px rgba(0,0,0,0.18);
-    --cc-z:          99999;
+    --cc-popup-bg: <?php echo $cookie_popup; ?>;
+    --cc-text: <?php echo $cookie_text; ?>;
+    --cc-btn-bg: <?php echo $cookie_button; ?>;
+    --cc-btn-text: #ffffff;
+    --cc-radius: 6px;
+    --cc-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    --cc-z: 99999;
     --cc-transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -236,6 +236,31 @@ $(document).ready(function() {
     outline: 3px solid var(--cc-btn-bg);
     outline-offset: 3px;
   }
+
+  #cc-decline {
+    flex-shrink: 0;
+    background: transparent;
+    color: var(--cc-text);
+    border: 1px solid currentColor;
+    border-radius: var(--cc-radius);
+    padding: 9px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
+    opacity: 0.75;
+  }
+
+  #cc-decline:hover {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+
+  #cc-decline:focus-visible {
+    outline: 3px solid var(--cc-text);
+    outline-offset: 3px;
+  }
 </style>
 
 <div id="cc-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
@@ -246,6 +271,7 @@ $(document).ready(function() {
         <?php echo $text_policy; ?>
       </a>
     </p>
+    <button id="cc-decline" type="button"><?php echo $text_decline; ?></button>
     <button id="cc-accept" type="button"><?php echo $text_accept; ?></button>
   </div>
 </div>
@@ -278,6 +304,7 @@ $(document).ready(function() {
   /* ── Banner logic ─────────────────────────────────── */
   var banner = document.getElementById('cc-banner');
   var btnAccept = document.getElementById('cc-accept');
+  var btnDecline = document.getElementById('cc-decline');
 
   function showBanner() {
     banner.classList.add('cc-visible');
@@ -300,17 +327,23 @@ $(document).ready(function() {
 
   function acceptCookies() {
     setCookie(COOKIE_NAME, '1', EXPIRY_DAYS);
+    window.location.reload();
+  }
+
+  function declineCookies() {
+    setCookie(COOKIE_NAME, '0', EXPIRY_DAYS);
     hideBanner();
   }
 
-  /* ── Init ─────────────────────────────────────────── */
-  if (!getCookie(COOKIE_NAME)) {
+  /* ── Init — only show when no decision has been made yet ── */
+  if (getCookie(COOKIE_NAME) === null) {
     window.addEventListener('load', function () {
       setTimeout(showBanner, 200);
     });
   }
 
   btnAccept.addEventListener('click', acceptCookies);
+  btnDecline.addEventListener('click', declineCookies);
 
 })();
 </script>

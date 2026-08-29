@@ -70,6 +70,22 @@
       <?php } ?>
     </table>
   </div>
+  <?php if ($show_cookie_consent) { ?>
+  <h2><?php echo $heading_cookie_consent; ?></h2>
+  <div class="content">
+    <p><?php echo $help_cookie_consent; ?></p>
+    <table class="form">
+      <tr>
+        <td><?php echo $entry_cookie_consent; ?></td>
+        <td>
+          <label><input type="radio" name="cookie_analytics_consent" value="1" <?php echo ($cookie_analytics_consent === 1) ? 'checked="checked"' : ''; ?> /> <?php echo $text_cookie_yes; ?></label>
+          &nbsp;
+          <label><input type="radio" name="cookie_analytics_consent" value="0" <?php echo ($cookie_analytics_consent === 0) ? 'checked="checked"' : ''; ?> /> <?php echo $text_cookie_no; ?></label>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <?php } ?>
   <div class="buttons">
     <div class="left"><a href="<?php echo $back; ?>" class="button"><i class="fa fa-arrow-left"></i> &nbsp; <?php echo $button_back; ?></a></div>
     <div class="right"><input type="submit" value="<?php echo $button_continue; ?>" class="button" /></div>
