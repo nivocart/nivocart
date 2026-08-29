@@ -288,6 +288,7 @@
               <li><a href="<?php echo $sitemap; ?>"><?php echo ($icons) ? '<i class="fa fa-sitemap"></i>' : ''; ?><?php echo $text_sitemap; ?></a></li>
               <li><a href="<?php echo $block_ip; ?>"><?php echo ($icons) ? '<i class="fa fa-ban"></i>' : ''; ?><?php echo $text_block_ip; ?></a></li>
               <li><a href="<?php echo $backup; ?>"><?php echo ($icons) ? '<i class="fa fa-hdd-o"></i>' : ''; ?><?php echo $text_backup; ?></a></li>
+              <li><a href="<?php echo $data_retention; ?>"><?php echo ($icons) ? '<i class="fa fa-shield"></i>' : ''; ?><?php echo $text_data_retention; ?></a></li>
             </ul>
           </li>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-exclamation-circle"></i>' : ''; ?><?php echo $text_logs; ?></a>

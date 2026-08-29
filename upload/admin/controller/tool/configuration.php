@@ -76,7 +76,22 @@ class ControllerToolConfiguration extends Controller {
 		$this->data['tab_setting'] = $this->language->get('tab_setting');
 		$this->data['tab_image'] = $this->language->get('tab_image');
 		$this->data['tab_integrity'] = $this->language->get('tab_integrity');
+		$this->data['tab_cron'] = $this->language->get('tab_cron');
 		$this->data['tab_server'] = $this->language->get('tab_server');
+
+		$this->data['text_cron_info'] = $this->language->get('text_cron_info');
+		$this->data['text_cron_task'] = $this->language->get('text_cron_task');
+		$this->data['text_cron_frequency'] = $this->language->get('text_cron_frequency');
+		$this->data['text_cron_manage'] = $this->language->get('text_cron_manage');
+		$this->data['text_cron_ip_columns'] = $this->language->get('text_cron_ip_columns');
+		$this->data['text_cron_ip_log'] = $this->language->get('text_cron_ip_log');
+		$this->data['text_cron_online_sessions'] = $this->language->get('text_cron_online_sessions');
+		$this->data['text_cron_deleted_accounts'] = $this->language->get('text_cron_deleted_accounts');
+		$this->data['text_cron_freq_90days'] = $this->language->get('text_cron_freq_90days');
+		$this->data['text_cron_freq_2hours'] = $this->language->get('text_cron_freq_2hours');
+		$this->data['text_cron_freq_2years'] = $this->language->get('text_cron_freq_2years');
+
+		$this->data['data_retention_url'] = $this->url->link('tool/data_retention', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['column_php'] = $this->language->get('column_php');
 		$this->data['column_extension'] = $this->language->get('column_extension');
@@ -317,6 +332,7 @@ class ControllerToolConfiguration extends Controller {
 			'captcha'    => $ds(DIR_SYSTEM . 'library/captcha.php'),
 			'cart'       => $ds(DIR_SYSTEM . 'library/cart.php'),
 			'config'     => $ds(DIR_SYSTEM . 'library/config.php'),
+			'cron'       => $ds(DIR_SYSTEM . 'library/cron.php'),
 			'currency'   => $ds(DIR_SYSTEM . 'library/currency.php'),
 			'customer'   => $ds(DIR_SYSTEM . 'library/customer.php'),
 			'db'         => $ds(DIR_SYSTEM . 'library/db.php'),

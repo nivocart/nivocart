@@ -35,6 +35,7 @@ $_['text_customer_group']              = 'Customer Groups';
 $_['text_customer_ban_ip']             = 'Banned IP';
 $_['text_dashboard']                   = 'Dashboard';
 $_['text_database']                    = 'Database';
+$_['text_data_retention']              = 'Data Retention';
 $_['text_design']                      = 'Design';
 $_['text_download']                    = 'Downloads';
 $_['text_email_log']                   = 'Email Logs';

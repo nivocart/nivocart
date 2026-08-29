@@ -4,10 +4,11 @@
 ---------------
 
 
-NivoCart v2.X.X
+NivoCart v2.4.0
 ---------------
 Release: TBA
 
+- Add new Data Retention Cron tool to manage customers data for compliance. 
 - Updated store settings to include an ICO Registration field (UK Law). 
 - Updated the cookie script for compliance with GDPR and PECR (Europe).
 - Updated the Checkout checks to confirm that customers are above the legal age.

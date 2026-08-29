@@ -533,6 +533,23 @@ CREATE TABLE `nc_coupon_product` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nc_cron_log`
+--
+
+DROP TABLE IF EXISTS `nc_cron_log`;
+CREATE TABLE `nc_cron_log` (
+  `log_id` int NOT NULL AUTO_INCREMENT,
+  `task` varchar(64) NOT NULL,
+  `rows_affected` int NOT NULL DEFAULT 0,
+  `status` varchar(16) NOT NULL DEFAULT 'success',
+  `message` text,
+  `date_added` datetime NOT NULL,
+  PRIMARY KEY (`log_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nc_currency`
 --
 

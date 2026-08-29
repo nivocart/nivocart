@@ -1,82 +1,96 @@
 <?php
 // Heading
-$_['heading_title']         = 'Configuration';
+$_['heading_title']              = 'Configuration';
 
 // Text
-$_['text_on']               = 'On';
-$_['text_off']              = 'Off';
-$_['text_system_core']      = 'NivoCart Version:';
-$_['text_version']          = '%s';
-$_['text_system_name']      = 'Released:';
-$_['text_revision']         = '%s';
-$_['text_theme']            = 'Active Theme:';
-$_['text_timezone']         = 'Server Time Zone:<span class="help">Defined by the hosting provider through the server\'s php.ini file.</span>';
-$_['text_phptime']          = 'Server Time:<span class="help">Current time for the selected server time zone.</span>';
-$_['text_dbtime']           = 'Database Time:<span class="help">Current system date and time.</span>';
-$_['text_dbname']           = 'Database Driver:<span class="help">Current system database driver.</span>';
-$_['text_dbengine']         = 'Database Table Engine:<span class="help">Current system database table engine.</span>';
-$_['text_rewrite_base']     = 'Htaccess RewriteBase:<span class="help">Canonical base for Seo_urls routing.</span>';
-$_['text_no_timezone']      = 'Time Zone data not available.';
-$_['text_present']          = '<span style="color:#5DC15E;">File is present</span>';
-$_['text_missing']          = '<span style="color:#F2B155;">File is missing</span>';
-$_['text_unknown']          = '<span style="color:#DE5954;">File is unknown</span>';
-$_['text_store_info']       = 'Store Information';
-$_['text_setting_info']     = 'Settings Information';
-$_['text_image_info']       = 'Images Information';
-$_['text_integrity_info']   = 'System Files Integrity';
-$_['text_server_info']      = 'Server Information';
-$_['text_update_check']     = 'New Version Check';
-$_['text_latest_version']   = 'Latest Version';
-$_['text_not_checked']      = 'Not checked yet';
-$_['text_checking']         = 'Checking...';
-$_['text_update_available'] = 'Update available:';
-$_['text_up_to_date']       = 'Up to date';
-$_['text_view_release']     = 'View release';
-$_['text_release_notes']    = 'Release notes:';
-$_['text_next_check']       = 'Next check available in %s';
-$_['text_check_failed']     = 'Check failed. Please try again later.';
+$_['text_on']                    = 'On';
+$_['text_off']                   = 'Off';
+$_['text_system_core']           = 'NivoCart Version:';
+$_['text_version']               = '%s';
+$_['text_system_name']           = 'Released:';
+$_['text_revision']              = '%s';
+$_['text_theme']                 = 'Active Theme:';
+$_['text_timezone']              = 'Server Time Zone:<span class="help">Defined by the hosting provider through the server\'s php.ini file.</span>';
+$_['text_phptime']               = 'Server Time:<span class="help">Current time for the selected server time zone.</span>';
+$_['text_dbtime']                = 'Database Time:<span class="help">Current system date and time.</span>';
+$_['text_dbname']                = 'Database Driver:<span class="help">Current system database driver.</span>';
+$_['text_dbengine']              = 'Database Table Engine:<span class="help">Current system database table engine.</span>';
+$_['text_rewrite_base']          = 'Htaccess RewriteBase:<span class="help">Canonical base for Seo_urls routing.</span>';
+$_['text_no_timezone']           = 'Time Zone data not available.';
+$_['text_present']               = '<span style="color:#5DC15E;">File is present</span>';
+$_['text_missing']               = '<span style="color:#F2B155;">File is missing</span>';
+$_['text_unknown']               = '<span style="color:#DE5954;">File is unknown</span>';
+$_['text_store_info']            = 'Store Information';
+$_['text_setting_info']          = 'Settings Information';
+$_['text_image_info']            = 'Images Information';
+$_['text_integrity_info']        = 'System Files Integrity';
+$_['text_server_info']           = 'Server Information';
+$_['text_update_check']          = 'New Version Check';
+$_['text_latest_version']        = 'Latest Version';
+$_['text_not_checked']           = 'Not checked yet';
+$_['text_checking']              = 'Checking...';
+$_['text_update_available']      = 'Update available:';
+$_['text_up_to_date']            = 'Up to date';
+$_['text_view_release']          = 'View release';
+$_['text_release_notes']         = 'Release notes:';
+$_['text_next_check']            = 'Next check available in %s';
+$_['text_check_failed']          = 'Check failed. Please try again later.';
 
 // Button
-$_['button_check_update']   = 'Check for Updates';
+$_['button_check_update']        = 'Check for Updates';
 
 // Tab
-$_['tab_store']             = 'Store';
-$_['tab_setting']           = 'Settings';
-$_['tab_image']             = 'Images';
-$_['tab_integrity']         = 'Integrity';
-$_['tab_server']            = 'Server';
+$_['tab_store']                  = 'Store';
+$_['tab_setting']                = 'Settings';
+$_['tab_image']                  = 'Images';
+$_['tab_integrity']              = 'Integrity';
+$_['tab_cron']                   = 'Cron';
+$_['tab_server']                 = 'Server';
 
 // Columns
-$_['column_php']            = 'PHP Settings';
-$_['column_extension']      = 'Extensions';
-$_['column_directories']    = 'Directories';
-$_['column_required']       = 'Required Settings';
-$_['column_current']        = 'Current Settings';
-$_['column_status']         = 'Status';
-$_['column_gd_library']     = 'GD Library';
-$_['column_php_library']    = 'PHP Library';
-$_['column_database_files'] = 'Database Files';
-$_['column_engine_files']   = 'Engine Files';
-$_['column_helper_files']   = 'Helper Files';
-$_['column_library_files']  = 'Library Files';
+$_['column_php']                 = 'PHP Settings';
+$_['column_extension']           = 'Extensions';
+$_['column_directories']         = 'Directories';
+$_['column_required']            = 'Required Settings';
+$_['column_current']             = 'Current Settings';
+$_['column_status']              = 'Status';
+$_['column_gd_library']          = 'GD Library';
+$_['column_php_library']         = 'PHP Library';
+$_['column_database_files']      = 'Database Files';
+$_['column_engine_files']        = 'Engine Files';
+$_['column_helper_files']        = 'Helper Files';
+$_['column_library_files']       = 'Library Files';
 
 // Checks
-$_['text_phpversion']       = 'PHP Version:';
-$_['text_registerglobals']  = 'Register Globals:';
-$_['text_magicquotes']      = 'Magic Quotes GPC:';
-$_['text_fileuploads']      = 'File Uploads:';
-$_['text_autostart']        = 'Session Auto Start:';
-$_['text_mysql']            = 'MySQL:';
-$_['text_gd']               = 'GD:';
-$_['text_curl']             = 'cURL:';
-$_['text_dom']              = 'DOM:';
-$_['text_xml']              = 'XML:';
-$_['text_mcrypt']           = 'mCrypt:';
-$_['text_openssl']          = 'OpenSSL Encrypt:';
-$_['text_zlib']             = 'ZLIB:';
-$_['text_zip']              = 'ZIP:';
-$_['text_mbstring']         = 'mbstring:';
+$_['text_phpversion']            = 'PHP Version:';
+$_['text_registerglobals']       = 'Register Globals:';
+$_['text_magicquotes']           = 'Magic Quotes GPC:';
+$_['text_fileuploads']           = 'File Uploads:';
+$_['text_autostart']             = 'Session Auto Start:';
+$_['text_mysql']                 = 'MySQL:';
+$_['text_gd']                    = 'GD:';
+$_['text_curl']                  = 'cURL:';
+$_['text_dom']                   = 'DOM:';
+$_['text_xml']                   = 'XML:';
+$_['text_mcrypt']                = 'mCrypt:';
+$_['text_openssl']               = 'OpenSSL Encrypt:';
+$_['text_zlib']                  = 'ZLIB:';
+$_['text_zip']                   = 'ZIP:';
+$_['text_mbstring']              = 'mbstring:';
+
+// Cron Tab
+$_['text_cron_info']             = 'Scheduled Data Retention Tasks';
+$_['text_cron_task']             = 'Task';
+$_['text_cron_frequency']        = 'Frequency';
+$_['text_cron_manage']           = 'Manage Data Retention';
+$_['text_cron_ip_columns']       = 'Anonymise registration IPs (nc_customer.ip)';
+$_['text_cron_ip_log']           = 'Delete login IP log rows (nc_customer_ip)';
+$_['text_cron_online_sessions']  = 'Delete stale online sessions (nc_customer_online)';
+$_['text_cron_deleted_accounts'] = 'Hard-delete soft-deleted accounts (nc_customer_deleted)';
+$_['text_cron_freq_90days']      = 'Nightly &mdash; purge records older than 90 days';
+$_['text_cron_freq_2hours']      = 'Nightly &mdash; purge records older than 2 hours';
+$_['text_cron_freq_2years']      = 'Nightly &mdash; purge records older than 2 years';
 
 // Error
-$_['error_permission']      = 'Warning: You do not have permission to modify <b>Configuration</b>!';
-$_['error_install']         = 'Warning: Install folder still exists and should be deleted for security reasons!';
+$_['error_permission']           = 'Warning: You do not have permission to modify <b>Configuration</b>!';
+$_['error_install']              = 'Warning: Install folder still exists and should be deleted for security reasons!';

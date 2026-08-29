@@ -135,6 +135,7 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_customer_ban_ip'] = $this->language->get('text_customer_ban_ip');
 		$this->data['text_dashboard'] = $this->language->get('text_dashboard');
 		$this->data['text_database'] = $this->language->get('text_database');
+		$this->data['text_data_retention'] = $this->language->get('text_data_retention');
 		$this->data['text_design'] = $this->language->get('text_design');
 		$this->data['text_download'] = $this->language->get('text_download');
 		$this->data['text_email_log'] = $this->language->get('text_email_log');
@@ -305,6 +306,7 @@ class ControllerCommonHeader extends Controller {
 			$this->data['customer_group'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['customer_ban_ip'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['database'] = $this->url->link('tool/database', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['data_retention'] = $this->url->link('tool/data_retention', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['download'] = $this->url->link('catalog/download', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['email_log'] = $this->url->link('tool/mail_log', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['email_manager'] = $this->url->link('tool/mail_manager', 'token=' . $this->session->data['token'], 'SSL');
@@ -464,9 +466,7 @@ class ControllerCommonHeader extends Controller {
 		$this->template = 'common/header.tpl';
 
 		if ($this->user->isLogged() && $this->config->get('config_notifications')) {
-			$this->children = [
-				'common/notification'
-			];
+			$this->children = ['common/notification'];
 		}
 
 		$this->render();

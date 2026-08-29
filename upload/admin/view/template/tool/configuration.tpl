@@ -26,6 +26,7 @@
         <a href="#tab-image"><?php echo $tab_image; ?></a>
       <?php } ?>
         <a href="#tab-integrity"><?php echo $tab_integrity; ?></a>
+        <a href="#tab-cron"><?php echo $tab_cron; ?></a>
         <a href="#tab-server"><?php echo $tab_server; ?></a>
       </div>
       <div id="tab-store">
@@ -405,6 +406,38 @@
             </tr>
           <?php } ?>
           </table>
+        </div>
+      </div>
+      <div id="tab-cron">
+        <h2><?php echo $text_cron_info; ?></h2>
+        <div class="toolbox">
+          <table class="tool">
+            <tr>
+              <th style="text-align:left; width:60%;"><?php echo $text_cron_task; ?></th>
+              <th style="text-align:left; width:40%;"><?php echo $text_cron_frequency; ?></th>
+            </tr>
+            <tr>
+              <td><?php echo $text_cron_ip_columns; ?></td>
+              <td><?php echo $text_cron_freq_90days; ?></td>
+            </tr>
+            <tr>
+              <td><?php echo $text_cron_ip_log; ?></td>
+              <td><?php echo $text_cron_freq_90days; ?></td>
+            </tr>
+            <tr>
+              <td><?php echo $text_cron_online_sessions; ?></td>
+              <td><?php echo $text_cron_freq_2hours; ?></td>
+            </tr>
+            <tr>
+              <td><?php echo $text_cron_deleted_accounts; ?></td>
+              <td><?php echo $text_cron_freq_2years; ?></td>
+            </tr>
+          </table>
+        </div>
+        <div class="buttons" style="margin-top:15px;">
+          <div class="right">
+            <a onclick="location='<?php echo $data_retention_url; ?>';" class="button ripple animated fadeIn"><?php echo $text_cron_manage; ?></a>
+          </div>
         </div>
       </div>
       <div id="tab-server">
