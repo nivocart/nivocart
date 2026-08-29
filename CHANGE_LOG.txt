@@ -10,6 +10,7 @@ Release: TBA
 
 - Updated store settings to include an ICO Registration field (UK Law). 
 - Updated the cookie script for compliance with GDPR and PECR (Europe).
+- Updated the Checkout checks to confirm that customers are above the legal age.
 - Updated the new Admin dashboard canvas donut graph, now limited to 4 results.
 
 

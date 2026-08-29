@@ -66,7 +66,6 @@ $_['entry_bank_name']               = 'Bank Name:';
 $_['entry_bank_sort_code']          = 'Bank Sort Code:';
 $_['entry_bank_account']            = 'Bank Account:';
 $_['entry_ico_registration']        = 'ICO Registration (UK):';
-$_['help_ico_registration']         = 'Your ICO (Information Commissioner\'s Office) registration number. Required for UK data controller registration. Publish this number in your Privacy Policy. Format: Z followed by 7 digits (e.g. Z1234567). Register at <a onclick="window.open(\'https://ico.org.uk/registration/\');">ico.org.uk/registration</a>.';
 $_['entry_title']                   = 'Multi-store Title:';
 $_['entry_meta_description']        = 'Meta Tag Description:';
 $_['entry_meta_keyword']            = 'Meta Tag Keywords:';
@@ -252,6 +251,7 @@ $_['button_themes']                 = 'Themes';
 
 // Help
 $_['help_title']                    = 'Title should be at least 15 characters long for better SEO indexing.';
+$_['help_ico_registration']         = 'Your ICO (Information Commissioner\'s Office) registration number. Required for UK data controller registration. Publish this number in your Privacy Policy. Format: Z followed by 7 digits (e.g. Z1234567). Register at <a onclick="window.open(\'https://ico.org.uk/registration/\');">ico.org.uk/registration</a>.';
 $_['help_meta_description']         = 'Meta Tag Description should be between 150 and 160 characters long for better SEO indexing.';
 $_['help_meta_keyword']             = 'Default SEO Keywords for the store. Not language dependent, they will be used globally unless page specific keywords are available.';
 $_['help_currency']                 = 'Change the default currency. Clear your browser cache to see the change and reset your existing cookie.';

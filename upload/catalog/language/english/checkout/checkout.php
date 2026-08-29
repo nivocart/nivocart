@@ -8,6 +8,7 @@ $_['text_checkout_payment_address']           = 'Billing Details';
 $_['text_checkout_shipping_address']          = 'Delivery Details';
 $_['text_female']                             = 'Female';
 $_['text_male']                               = 'Male';
+$_['text_age_verify']                         = 'I confirm that I am 18 years of age or older.';
 $_['text_agree']                              = 'I have read and agree to the <a class="colorbox" href="%s" title="%s"><b>%s</b></a>';
 $_['text_guest_login']                        = 'Already have an account? <a href="%s">Log in</a> to check out faster.';
 $_['text_shipping_method']                    = 'Shipping method';
@@ -74,6 +75,7 @@ $_['error_postcode']                          = 'Postcode must be between 2 and 
 $_['error_country']                           = 'Please select a country!';
 $_['error_zone']                              = 'Please select a region / state!';
 $_['error_agree']                             = 'You must read and agree to the %s!';
+$_['error_age_verify']                        = 'You must confirm that you are 18 years of age or older to place an order.';
 $_['error_shipping']                          = 'Shipping method is required!';
 $_['error_no_shipping']                       = 'No Shipping options are available. Please <a href="%s">contact us</a> for assistance!';
 $_['error_payment']                           = 'Payment method is required!';

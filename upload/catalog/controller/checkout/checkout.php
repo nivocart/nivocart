@@ -373,7 +373,7 @@ class ControllerCheckoutCheckout extends Controller {
 			'company_id', 'tax_id', 'address_1', 'city', 'postcode', 'country', 'zone',
 			'shipping_firstname', 'shipping_lastname', 'shipping_address_1',
 			'shipping_city', 'shipping_postcode', 'shipping_country', 'shipping_zone',
-			'shipping_method', 'payment_method', 'agree'
+			'shipping_method', 'payment_method', 'age_verify', 'agree'
 		];
 
 		foreach ($error_fields as $field) {
@@ -533,6 +533,9 @@ class ControllerCheckoutCheckout extends Controller {
 		} else {
 			$this->data['text_agree'] = '';
 		}
+
+		$this->data['age_verify'] = isset($this->request->post['age_verify']) ? $this->request->post['age_verify'] : '';
+		$this->data['text_age_verify'] = $this->language->get('text_age_verify');
 
 		$this->data['agree'] = (isset($this->request->post['agree']) && $this->config->get('config_checkout_id')) ? $this->request->post['agree'] : '';
 
@@ -896,6 +899,10 @@ class ControllerCheckoutCheckout extends Controller {
 
 		if (!isset($this->session->data['payment_method']) || empty($this->session->data['payment_method'])) {
 			$this->error['payment_method'] = $this->language->get('error_payment');
+		}
+
+		if (!isset($this->request->post['age_verify'])) {
+			$this->error['age_verify'] = $this->language->get('error_age_verify');
 		}
 
 		if (!isset($this->request->post['agree']) && $this->config->get('config_checkout_id')) {

@@ -394,15 +394,23 @@
         </div>
         <?php } ?>
         <div>
+          <?php if ($error_age_verify) { ?>
+            <div class="attention" style="margin:5px 0;"><?php echo $error_age_verify; ?></div>
+          <?php } ?>
+          <div class="buttons">
+            <div class="right"><?php echo $text_age_verify; ?>
+              <input type="checkbox" name="age_verify" value="1"<?php echo $age_verify ? ' checked="checked"' : ''; ?> />
+            </div>
+          </div>
           <?php if ($error_agree) { ?>
             <div class="attention" style="margin:5px 0;"><?php echo $error_agree; ?></div>
           <?php } ?>
           <?php if ($text_agree) { ?>
-            <div class="buttons">
-              <div class="right"><?php echo $text_agree; ?>
-                <input type="checkbox" name="agree" value="1"<?php echo $agree ? ' checked="checked"' : ''; ?> />
-              </div>
+          <div class="buttons">
+            <div class="right"><?php echo $text_agree; ?>
+              <input type="checkbox" name="agree" value="1"<?php echo $agree ? ' checked="checked"' : ''; ?> />
             </div>
+          </div>
           <?php } ?>
           <div id="order-errors"></div>
           <input type="button" value="<?php echo $button_continue; ?>" id="button-order" class="button" style="float:right; margin-bottom:10px;" />
