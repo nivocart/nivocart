@@ -116,6 +116,10 @@
             <td><?php echo $entry_bank_account; ?></td>
             <td><input type="text" name="config_bank_account" value="<?php echo $config_bank_account; ?>" size="40" /></td>
           </tr>
+          <tr>
+            <td><?php echo $entry_ico_registration; ?><span class="help"><?php echo $help_ico_registration; ?></span></td>
+            <td><input type="text" name="config_ico_registration" value="<?php echo $config_ico_registration; ?>" size="40" placeholder="e.g. Z1234567" /></td>
+          </tr>
         </table>
       </div>
       <div id="tab-store">

@@ -35,7 +35,7 @@ class ControllerSettingSetting extends Controller {
 		'entry_name', 'entry_owner', 'entry_address', 'entry_email',
 		'entry_email_noreply', 'entry_telephone', 'entry_company_id',
 		'entry_company_tax_id', 'entry_bank_name', 'entry_bank_sort_code',
-		'entry_bank_account', 'entry_title', 'entry_meta_description',
+		'entry_bank_account', 'entry_ico_registration', 'help_ico_registration', 'entry_title', 'entry_meta_description',
 		'entry_meta_keyword', 'entry_layout', 'entry_template',
 		'entry_country', 'entry_zone', 'entry_language', 'entry_admin_language',
 		'entry_length_class', 'entry_weight_class', 'entry_currency',
@@ -165,7 +165,8 @@ class ControllerSettingSetting extends Controller {
 		'config_company_tax_id'   => [],
 		'config_bank_name'        => [],
 		'config_bank_sort_code'   => [],
-		'config_bank_account'     => [],
+		'config_bank_account'        => [],
+		'config_ico_registration'    => [],
 		// Store
 		'config_title'            => [],
 		'config_meta_description' => [],
