@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']     = 'Product Wall';
+$_['heading_title']     = 'All Products';
 
 // Text
 $_['text_refine']       = 'Refine Search';

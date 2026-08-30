@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']     = 'Brand List';
+$_['heading_title']     = 'All Brands';
 
 // Text
 $_['text_brand']        = 'Brand';
