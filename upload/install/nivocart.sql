@@ -3935,7 +3935,9 @@ INSERT INTO `nc_return_reason` (`return_reason_id`, `language_id`, `name`) VALUE
 (2, 1, 'Received Wrong Item'),
 (3, 1, 'Order Error'),
 (4, 1, 'Faulty, please supply details'),
-(5, 1, 'Other, please supply details');
+(5, 1, 'Other, please supply details'),
+(6, 1, 'Cooling-off cancellation (within 14 days)'),
+(7, 1, 'Not as described');
 
 -- --------------------------------------------------------
 
