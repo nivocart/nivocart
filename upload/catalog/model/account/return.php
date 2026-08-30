@@ -9,7 +9,57 @@ class ModelAccountReturn extends Model {
 	 * Functions Get, Add
 	 */
 	public function addReturn(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "return` SET order_id = '" . (int)$data['order_id'] . "', customer_id = '" . (int)$this->customer->getId() . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', product = '" . $this->db->escape($data['product']) . "', model = '" . $this->db->escape($data['model']) . "', quantity = '" . (int)$data['quantity'] . "', opened = '" . (int)$data['opened'] . "', return_reason_id = '" . (int)$data['return_reason_id'] . "', return_status_id = '" . (int)$this->config->get('config_return_status_id') . "', `comment` = '" . $this->db->escape($data['comment']) . "', date_ordered = '" . $this->db->escape($data['date_ordered']) . "', date_added = NOW(), date_modified = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "return` SET
+			order_id = '" . (int)$data['order_id'] . "',
+			customer_id = '" . (int)$this->customer->getId() . "',
+			firstname = '" . $this->db->escape((string)$data['firstname']) . "',
+			lastname = '" . $this->db->escape((string)$data['lastname']) . "',
+			email = '" . $this->db->escape((string)$data['email']) . "',
+			telephone = '" . $this->db->escape($data['telephone']) . "',
+			product = '" . $this->db->escape($data['product']) . "',
+			model = '" . $this->db->escape($data['model']) . "',
+			quantity = '" . (int)$data['quantity'] . "',
+			opened = '" . (int)$data['opened'] . "',
+			return_reason_id = '" . (int)$data['return_reason_id'] . "',
+			return_action_id = '" . (int)($data['return_action_id'] ?? 0) . "',
+			return_status_id = '" . (int)$this->config->get('config_return_status_id') . "',
+			`comment` = '" . $this->db->escape($data['comment']) . "',
+			date_ordered = '" . $this->db->escape($data['date_ordered']) . "',
+			date_added = NOW(),
+			date_modified = NOW()");
+
+		$return_id = $this->db->getLastId();
+
+		// Send acknowledgment email — required by CCR 2013 Regulation 27(2)
+		$mail = new Mail();
+		$mail->setTo($data['email']);
+		$mail->setFrom($this->config->get('config_email'));
+		$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+		$mail->setSubject(html_entity_decode(sprintf($this->language->get('text_return_subject'), $this->config->get('config_name'), $return_id), ENT_QUOTES, 'UTF-8'));
+		$mail->setText($this->buildReturnAcknowledgmentText($return_id, $data));
+		$mail->send();
+	}
+
+	private function buildReturnAcknowledgmentText(int $return_id, array $data): string {
+		return sprintf(
+			"Dear %s %s,\r\n\r\n" .
+			"We have received your return request and can confirm it has been logged.\r\n\r\n" .
+			"Return Reference: #%d\r\n" .
+			"Order ID:         #%d\r\n" .
+			"Product:          %s\r\n" .
+			"Submitted:        %s\r\n\r\n" .
+			"Please keep this email as your durable record of notification. We will be in touch shortly.\r\n\r\n" .
+			"If you are exercising your right to cancel under the Consumer Contracts Regulations 2013, " .
+			"your 14-day cancellation window is counted from the date above.\r\n\r\n" .
+			"Regards,\r\n%s",
+			html_entity_decode($data['firstname'], ENT_QUOTES, 'UTF-8'),
+			html_entity_decode($data['lastname'], ENT_QUOTES, 'UTF-8'),
+			$return_id,
+			(int)$data['order_id'],
+			html_entity_decode($data['product'], ENT_QUOTES, 'UTF-8'),
+			date('d M Y H:i'),
+			html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8')
+		);
 	}
 
 	public function getReturn(int $return_id) {

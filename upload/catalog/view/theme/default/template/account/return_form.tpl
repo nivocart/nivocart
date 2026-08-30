@@ -131,6 +131,23 @@
                 <span class="error"><?php echo $error_reason; ?></span>
               <?php } ?>
             </div>
+            <div class="return-action">
+              <b><?php echo $entry_action_requested; ?></b><br />
+              <table>
+                <?php foreach ($return_actions as $return_action) { ?>
+                <tr>
+                  <td width="1">
+                    <input type="radio" name="return_action_id" value="<?php echo $return_action['return_action_id']; ?>" id="return-action-id<?php echo $return_action['return_action_id']; ?>" <?php if ($return_action['return_action_id'] == $return_action_id) { echo 'checked="checked"'; } ?> />
+                  </td>
+                  <td>
+                    <label for="return-action-id<?php echo $return_action['return_action_id']; ?>">
+                      <?php echo $return_action['name']; ?>
+                    </label>
+                  </td>
+                </tr>
+                <?php } ?>
+              </table>
+            </div>
             <div class="return-opened">
               <b><?php echo $entry_opened; ?></b><br />
               <input type="radio" name="opened" value="1" id="opened" <?php if ($opened) { echo 'checked="checked"'; } ?> />

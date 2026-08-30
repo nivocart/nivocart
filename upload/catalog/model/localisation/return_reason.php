@@ -50,7 +50,7 @@ class ModelLocalisationReturnReason extends Model {
 
 			$sql .= " ORDER BY `name`";
 
-			if (isset($data['return']) && ($data['return'] == 'DESC')) {
+			if (isset($data['return']) && ($data['return'] === 'DESC')) {
 				$sql .= " DESC";
 			} else {
 				$sql .= " ASC";

@@ -455,6 +455,7 @@ class ControllerAccountReturn extends Controller {
 		$this->data['entry_model'] = $this->language->get('entry_model');
 		$this->data['entry_quantity'] = $this->language->get('entry_quantity');
 		$this->data['entry_reason'] = $this->language->get('entry_reason');
+		$this->data['entry_action_requested'] = $this->language->get('entry_action_requested');
 		$this->data['entry_opened'] = $this->language->get('entry_opened');
 		$this->data['entry_fault_detail'] = $this->language->get('entry_fault_detail');
 		$this->data['entry_captcha'] = $this->language->get('entry_captcha');
@@ -487,12 +488,17 @@ class ControllerAccountReturn extends Controller {
 		$this->data['quantity'] = isset($this->request->post['quantity']) ? $this->request->post['quantity'] : 1;
 		$this->data['opened'] = isset($this->request->post['opened']) ? $this->request->post['opened'] : false;
 		$this->data['return_reason_id'] = isset($this->request->post['return_reason_id']) ? $this->request->post['return_reason_id'] : '';
+		$this->data['return_action_id'] = isset($this->request->post['return_action_id']) ? $this->request->post['return_action_id'] : '';
 		$this->data['comment'] = isset($this->request->post['comment']) ? $this->request->post['comment'] : '';
 		$this->data['captcha'] = isset($this->request->post['captcha']) ? $this->request->post['captcha'] : '';
 
 		$this->load->model('localisation/return_reason');
 
 		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons([]);
+
+		$this->load->model('localisation/return_action');
+
+		$this->data['return_actions'] = $this->model_localisation_return_action->getReturnActions([]);
 
 		// Create session Captcha
 		$this->load->library('captcha');
