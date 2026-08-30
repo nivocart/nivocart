@@ -137,7 +137,7 @@ table.bank {
 <body>
 <div class="documents">
   <?php if ($logo) { ?>
-    <img src="<?php echo $image_base; ?>data/logo.png" alt="" style="padding:15px 0 0 5px;" />
+    <div style="margin: 10px 0 0 5px;"><img src="<?php echo $image_base; ?>data/<?php echo $logo_name; ?>.<?php echo $logo_ext; ?>" alt="" /></div>
   <?php } ?>
   <h1><?php echo $heading_order; ?></h1>
   <table class="store">
@@ -259,7 +259,7 @@ table.bank {
     <tr>
       <td class="center"><span><b><?php echo $text_damages; ?></b></span></td>
     </tr>
-  <?php if (isset($bank_name) && isset($bank_sort_code) && isset($bank_account)) { ?>
+  <?php if (!empty($bank_name) && !empty($bank_account)) { ?>
     <tr>
       <td class="center"><span><?php echo $text_bank_name; ?> <?php echo $bank_name; ?> - <?php echo $text_bank_account; ?> <?php echo $bank_sort_code; ?> <?php echo $bank_account; ?></span></td>
     </tr>

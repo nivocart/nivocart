@@ -743,11 +743,13 @@ class ControllerAccountOrder extends Controller {
 		// Check if pdf has been selected
 		$pdf = (isset($this->request->get['pdf'])) ? true : false;
 
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->request->server['HTTPS'] ? HTTPS_IMAGE . $this->config->get('config_logo') : HTTP_IMAGE . $this->config->get('config_logo');
-		} else {
-			$this->data['logo'] = '';
-		}
+		// Get Store Logo
+		$config_logo = $this->config->get('config_logo');
+		$logo_path = ($config_logo && file_exists(DIR_IMAGE . $config_logo)) ? $config_logo : 'data/logo.png';
+
+		$this->data['logo'] = ($config_logo && file_exists(DIR_IMAGE . $config_logo)) ? true : false;
+		$this->data['logo_name'] = pathinfo($logo_path, PATHINFO_FILENAME);
+		$this->data['logo_ext'] = pathinfo($logo_path, PATHINFO_EXTENSION);
 
 		$this->data['bank_name'] = $this->config->get('config_bank_name') ? $this->config->get('config_bank_name') : '';
 		$this->data['bank_sort_code'] = $this->config->get('config_bank_sort_code') ? $this->config->get('config_bank_sort_code') : '';
