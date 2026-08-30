@@ -409,6 +409,8 @@ class ControllerSaleReturn extends Controller {
 				'href' => $this->url->link('sale/return/update', 'token=' . $this->session->data['token'] . '&return_id=' . $result['return_id'] . $url, 'SSL')
 			];
 
+			$days_open = (int)((time() - strtotime($result['date_added'])) / 86400);
+
 			$this->data['returns'][] = [
 				'return_id'     => $result['return_id'],
 				'order_id'      => $result['order_id'],
@@ -418,6 +420,8 @@ class ControllerSaleReturn extends Controller {
 				'status'        => $result['status'],
 				'date_added'    => date($this->language->get('date_format_time'), strtotime($result['date_added'])),
 				'date_modified' => date($this->language->get('date_format_time'), strtotime($result['date_modified'])),
+				'days_open'     => $days_open,
+				'overdue'       => ($days_open >= 10),
 				'selected'      => isset($this->request->post['selected']) && in_array($result['return_id'], $this->request->post['selected']),
 				'action'        => $action
 			];
@@ -580,7 +584,7 @@ class ControllerSaleReturn extends Controller {
 
 		$this->load->model('localisation/return_status');
 
-		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses();
+		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses([]);
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -882,9 +886,7 @@ class ControllerSaleReturn extends Controller {
 
 		$this->load->model('localisation/return_reason');
 
-		$return_reasons_array = [];
-
-		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons($return_reasons_array);
+		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons([]);
 
 		if (isset($this->request->post['return_action_id'])) {
 			$this->data['return_action_id'] = $this->request->post['return_action_id'];
@@ -896,9 +898,7 @@ class ControllerSaleReturn extends Controller {
 
 		$this->load->model('localisation/return_action');
 
-		$return_actions_array = [];
-
-		$this->data['return_actions'] = $this->model_localisation_return_action->getReturnActions($return_actions_array);
+		$this->data['return_actions'] = $this->model_localisation_return_action->getReturnActions([]);
 
 		if (isset($this->request->post['comment'])) {
 			$this->data['comment'] = $this->request->post['comment'];
@@ -918,9 +918,7 @@ class ControllerSaleReturn extends Controller {
 
 		$this->load->model('localisation/return_status');
 
-		$return_statuses_array = [];
-
-		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses($return_statuses_array);
+		$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses([]);
 
 		$this->template = 'sale/return_form.tpl';
 		$this->children = [
@@ -1113,15 +1111,11 @@ class ControllerSaleReturn extends Controller {
 
 			$this->data['comment'] = nl2br($return_info['comment']);
 
-			$return_actions_array = [];
-
-			$this->data['return_actions'] = $this->model_localisation_return_action->getReturnActions($return_actions_array);
+			$this->data['return_actions'] = $this->model_localisation_return_action->getReturnActions([]);
 
 			$this->data['return_action_id'] = $return_info['return_action_id'];
 
-			$return_statuses_array = [];
-
-			$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses($return_statuses_array);
+			$this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses([]);
 
 			$this->data['return_status_id'] = $return_info['return_status_id'];
 

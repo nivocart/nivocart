@@ -96,7 +96,7 @@
             </tr>
           <?php if ($returns) { ?>
             <?php foreach ($returns as $return) { ?>
-            <tr>
+            <tr<?php if ($return['overdue']) { echo ' class="overdue-return"'; } ?>>
               <td style="text-align:center;"><?php if ($return['selected']) { ?>
                 <input type="checkbox" name="selected[]" value="<?php echo $return['return_id']; ?>" id="<?php echo $return['return_id']; ?>" class="checkbox" checked />
                 <label for="<?php echo $return['return_id']; ?>"><span></span></label>
@@ -110,7 +110,11 @@
               <td class="left"><?php echo $return['product']; ?></td>
               <td class="left"><?php echo $return['model']; ?></td>
               <td class="left"><?php echo $return['status']; ?></td>
-              <td class="left"><?php echo $return['date_added']; ?></td>
+              <td class="left"><?php echo $return['date_added']; ?>
+                <?php if ($return['overdue']) { ?>
+                  &nbsp;<span class="label label-warning" style="background:#f0ad4e;color:#fff;padding:2px 5px;border-radius:3px;font-size:11px;white-space:nowrap;" title="Return is <?php echo $return['days_open']; ?> days old — refund deadline approaching">&#9888; <?php echo $return['days_open']; ?>d</span>
+                <?php } ?>
+              </td>
               <td class="left"><?php echo $return['date_modified']; ?></td>
               <td class="right"><?php foreach ($return['action'] as $action) { ?>
                 <a href="<?php echo $action['href']; ?>" class="button-form animated fadeIn ripple"><?php echo $action['text']; ?></a>
@@ -277,4 +281,8 @@ $('#delete').on('click', function() {
 });
 //--></script>
 
+<style>
+tr.overdue-return { background-color: #fff8e1 !important; }
+tr.overdue-return td { border-left: 3px solid #f0ad4e; }
+</style>
 <?php echo $footer; ?>
