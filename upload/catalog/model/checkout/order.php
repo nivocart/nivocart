@@ -362,8 +362,10 @@ class ModelCheckoutOrder extends Model {
 				'{payment_method}'  => $order_info['payment_method'],
 				'{shipping_method}' => $order_info['shipping_method'],
 				'{order_link}'      => $order_link,
-				'{comment}'         => $order_info['comment'] ? nl2br($order_info['comment']) : '',
-				'{instruction}'     => ($comment && $notify) ? nl2br($comment) : ''
+				'{comment}'                  => $order_info['comment'] ? nl2br($order_info['comment']) : '',
+				'{instruction}'              => ($comment && $notify) ? nl2br($comment) : '',
+				'{cancellation_deadline}'    => date($language->get('date_format_short'), strtotime('+14 days', strtotime($order_info['date_added']))),
+				'{returns_url}'              => $store_url . 'index.php?route=' . ($order_info['customer_id'] == 0 ? 'account/return/guest' : 'account/return/insert')
 			];
 
 			// Mail Manager override — falls back to order.tpl if no active template found
@@ -524,6 +526,14 @@ class ModelCheckoutOrder extends Model {
 				$template->data['totals'] = $order_total_query->rows;
 				$template->data['comment'] = $order_info['comment'] ? nl2br($order_info['comment']) : '';
 
+				// CCR 2013 Schedule 3 — cancellation notice
+				$template->data['text_ccr_heading'] = $language->get('text_new_ccr_heading');
+				$template->data['text_ccr_notice'] = $language->get('text_new_ccr_notice');
+				$template->data['text_ccr_deadline'] = $language->get('text_new_ccr_deadline');
+				$template->data['text_ccr_link'] = $language->get('text_new_ccr_link');
+				$template->data['ccr_deadline'] = date($language->get('date_format_short'), strtotime('+14 days', strtotime($order_info['date_added'])));
+				$template->data['returns_url'] = $store_url . 'index.php?route=' . ($order_info['customer_id'] == 0 ? 'account/return/guest' : 'account/return/insert');
+
 				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/mail/order.tpl')) {
 					$html = $template->fetch($this->config->get('config_template') . '/template/mail/order.tpl');
 				} else {
@@ -581,6 +591,15 @@ class ModelCheckoutOrder extends Model {
 				$text .= $language->get('text_new_comment') . "\n\n";
 				$text .= $order_info['comment'] . "\n\n";
 			}
+
+			// CCR 2013 Schedule 3 — cancellation notice (plain text)
+			$text .= "---\n";
+			$text .= $language->get('text_new_ccr_heading') . "\n\n";
+			$text .= $language->get('text_new_ccr_notice') . "\n\n";
+			$text .= $language->get('text_new_ccr_deadline') . ' ' . date($language->get('date_format_short'), strtotime('+14 days', strtotime($order_info['date_added']))) . "\n\n";
+			$text .= $language->get('text_new_ccr_link') . "\n";
+			$text .= $store_url . 'index.php?route=' . ($order_info['customer_id'] == 0 ? 'account/return/guest' : 'account/return/insert') . "\n\n";
+			$text .= "---\n\n";
 
 			$text .= $language->get('text_new_footer') . "\n\n";
 

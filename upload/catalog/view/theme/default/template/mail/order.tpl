@@ -131,6 +131,24 @@
     </tbody>
   </table>
   <?php } ?>
+  <!-- CCR 2013 Schedule 3 — 14-day right to cancel notice -->
+  <table style="border-collapse:collapse;width:100%;border-top:1px solid #DDDDDD;border-left:1px solid #DDDDDD;margin-bottom:20px;">
+    <thead>
+      <tr>
+        <td style="font-size:12px;border-right:1px solid #DDDDDD;border-bottom:1px solid #DDDDDD;background-color:#FFF8E1;font-weight:bold;text-align:left;padding:7px;color:#222222;"><?php echo $text_ccr_heading; ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-size:12px;border-right:1px solid #DDDDDD;border-bottom:1px solid #DDDDDD;text-align:left;padding:7px;">
+          <?php echo $text_ccr_notice; ?><br /><br />
+          <b><?php echo $text_ccr_deadline; ?></b> <?php echo $ccr_deadline; ?><br /><br />
+          <?php echo $text_ccr_link; ?><br />
+          <a href="<?php echo $returns_url; ?>" style="color:#0088CC;"><?php echo $returns_url; ?></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   <p style="margin-top: 0; margin-bottom: 20px;"><?php echo $text_footer; ?></p>
   <p style="margin-top: 0; margin-bottom: 20px;"><?php echo $text_powered; ?></p>
 </div>

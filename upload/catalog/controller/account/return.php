@@ -385,12 +385,26 @@ class ControllerAccountReturn extends Controller {
 			return;
 		}
 
+		$age_days    = $this->calcOrderAgeDays($order_info['date_added']);
+		$age_blocked = $age_days > 180;
+		if ($age_days > 180) {
+			$age_warning = $this->language->get('error_age_180');
+		} elseif ($age_days > 60) {
+			$age_warning = $this->language->get('text_warning_age_60');
+		} elseif ($age_days > 30) {
+			$age_warning = $this->language->get('text_warning_age_30');
+		} else {
+			$age_warning = '';
+		}
+
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode([
 			'success' => true,
 			'data'    => [
 				'date_ordered' => date('Y-m-d', strtotime($order_info['date_added'])),
 				'products'     => $products,
+				'age_warning'  => $age_warning,
+				'age_blocked'  => $age_blocked,
 			]
 		]));
 	}
@@ -404,12 +418,24 @@ class ControllerAccountReturn extends Controller {
 
 		$this->load->model('account/return');
 
-		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
-			$this->model_account_return->addReturn($this->request->post);
-
-			unset($this->session->data['captcha']);
-
-			$this->redirect($this->url->link('account/return/success', '', 'SSL'));
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			// Age check — re-query DB so the posted date_ordered cannot be spoofed
+			$order_id_post = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
+			if ($order_id_post) {
+				$age_q = $this->db->query(
+					"SELECT date_added FROM `" . DB_PREFIX . "order` " .
+					"WHERE order_id = '" . $order_id_post . "' " .
+					"AND customer_id = '" . (int)$this->customer->getId() . "'"
+				);
+				if ($age_q->num_rows && $this->calcOrderAgeDays($age_q->row['date_added']) > 180) {
+					$this->error['warning'] = $this->language->get('error_age_180');
+				}
+			}
+			if (empty($this->error) && $this->validate()) {
+				$this->model_account_return->addReturn($this->request->post);
+				unset($this->session->data['captcha']);
+				$this->redirect($this->url->link('account/return/success', '', 'SSL'));
+			}
 		}
 
 		$this->document->setTitle($this->language->get('heading_title'));
@@ -597,6 +623,501 @@ class ControllerAccountReturn extends Controller {
 		];
 
 		$this->response->setOutput($this->render());
+	}
+
+	// -------------------------------------------------------------------------
+	// Guest return flow (no account required)
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Step 1 — order lookup form.
+	 * Guest enters Order ID + order email. On success, order data is stored in
+	 * the session and the guest is redirected to guestInsert().
+	 */
+	public function guest() {
+		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
+			$this->redirect($this->url->link('account/return/guest', '', 'SSL'), 301);
+		}
+
+		$this->language->load('account/return');
+
+		$this->document->setTitle($this->language->get('text_guest_heading'));
+
+		$this->data['breadcrumbs'] = [
+			[
+				'text'      => $this->language->get('text_home'),
+				'href'      => $this->url->link('common/home', '', 'SSL'),
+				'separator' => false
+			],
+			[
+				'text'      => $this->language->get('text_guest_heading'),
+				'href'      => $this->url->link('account/return/guest', '', 'SSL'),
+				'separator' => $this->language->get('text_separator')
+			]
+		];
+
+		$this->data['heading_title']     = $this->language->get('text_guest_heading');
+		$this->data['text_guest_lookup'] = $this->language->get('text_guest_lookup');
+		$this->data['entry_order_id']    = $this->language->get('entry_order_id');
+		$this->data['entry_email_order'] = $this->language->get('entry_email_order');
+		$this->data['button_lookup']     = $this->language->get('button_lookup');
+		$this->data['error_warning']     = '';
+		$this->data['order_id']          = '';
+		$this->data['email']             = '';
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			$order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
+			$email    = isset($this->request->post['email'])    ? trim($this->request->post['email'])    : '';
+
+			$this->data['order_id'] = $order_id;
+			$this->data['email']    = $email;
+
+			if (!$order_id || empty($email)) {
+				$this->data['error_warning'] = $this->language->get('error_guest_order_not_found');
+			} else {
+				$order_query = $this->db->query(
+					"SELECT o.order_id, o.firstname, o.lastname, o.email, o.telephone, o.date_added " .
+					"FROM `" . DB_PREFIX . "order` o " .
+					"WHERE o.order_id = '" . (int)$order_id . "' " .
+					"AND LOWER(o.email) = LOWER('" . $this->db->escape($email) . "')"
+				);
+
+				if (!$order_query->num_rows) {
+					$this->data['error_warning'] = $this->language->get('error_guest_order_not_found');
+				} else {
+					$order    = $order_query->row;
+					$age_days = $this->calcOrderAgeDays($order['date_added']);
+
+					if ($age_days > 180) {
+						$this->data['error_warning'] = $this->language->get('error_age_180');
+					} else {
+						$products_query = $this->db->query(
+							"SELECT product_id, `name`, model, quantity FROM `" . DB_PREFIX . "order_product` " .
+							"WHERE order_id = '" . (int)$order_id . "' ORDER BY `name` ASC"
+						);
+
+						$warning_level = '';
+						if ($age_days > 60) {
+							$warning_level = 'hard';
+						} elseif ($age_days > 30) {
+							$warning_level = 'soft';
+						}
+
+						$this->session->data['guest_return_order'] = [
+							'order_id'          => (int)$order['order_id'],
+							'firstname'         => $order['firstname'],
+							'lastname'          => $order['lastname'],
+							'email'             => $order['email'],
+							'telephone'         => $order['telephone'],
+							'date_ordered'      => date('Y-m-d', strtotime($order['date_added'])),
+							'products'          => $products_query->rows,
+							'age_warning_level' => $warning_level
+						];
+
+						$this->redirect($this->url->link('account/return/guestInsert', '', 'SSL'));
+					}
+				}
+			}
+		}
+
+		$this->data['action'] = $this->url->link('account/return/guest', '', 'SSL');
+
+		$this->data['template'] = $this->config->get('config_template');
+
+		$this->resolveTemplate('account/return_guest');
+
+		$this->children = [
+			'common/content_higher',
+			'common/content_high',
+			'common/content_left',
+			'common/content_right',
+			'common/content_low',
+			'common/content_lower',
+			'common/footer',
+			'common/header'
+		];
+
+		$this->response->setOutput($this->render());
+	}
+
+	/**
+	 * Step 2 — full return form (pre-filled from validated order in session).
+	 * Also handles the final POST submission.
+	 */
+	public function guestInsert() {
+		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
+			$this->redirect($this->url->link('account/return/guestInsert', '', 'SSL'), 301);
+		}
+
+		$this->language->load('account/return');
+
+		// Guard: must have a validated order in session
+		if (empty($this->session->data['guest_return_order'])) {
+			$this->redirect($this->url->link('account/return/guest', '', 'SSL'));
+		}
+
+		$order = $this->session->data['guest_return_order'];
+
+		$this->load->model('account/return');
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			// Age check — use date_ordered from verified session (cannot be spoofed via POST)
+			if ($this->calcOrderAgeDays($order['date_ordered']) > 180) {
+				$this->error['warning'] = $this->language->get('error_age_180');
+			} elseif ($this->validateGuest()) {
+				$post_data                 = $this->request->post;
+				$post_data['customer_id']  = 0;
+				$post_data['order_id']     = $order['order_id'];
+				$post_data['date_ordered'] = $order['date_ordered'];
+				$post_data['email']        = $order['email'];   // locked to verified order email
+
+				$this->model_account_return->addReturn($post_data);
+
+				unset($this->session->data['captcha']);
+				unset($this->session->data['guest_return_order']);
+
+				$this->redirect($this->url->link('account/return/guestSuccess', '', 'SSL'));
+			}
+		}
+
+		$this->document->setTitle($this->language->get('text_guest_heading'));
+		$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
+		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.css');
+
+		$this->data['breadcrumbs'] = [
+			[
+				'text'      => $this->language->get('text_home'),
+				'href'      => $this->url->link('common/home', '', 'SSL'),
+				'separator' => false
+			],
+			[
+				'text'      => $this->language->get('text_guest_heading'),
+				'href'      => $this->url->link('account/return/guest', '', 'SSL'),
+				'separator' => $this->language->get('text_separator')
+			],
+			[
+				'text'      => $this->language->get('text_return'),
+				'href'      => $this->url->link('account/return/guestInsert', '', 'SSL'),
+				'separator' => $this->language->get('text_separator')
+			]
+		];
+
+		$this->data['heading_title']          = $this->language->get('text_guest_heading');
+		$this->data['text_description']       = $this->language->get('text_guest_form_intro');
+		$this->data['text_order']             = $this->language->get('text_order');
+		$this->data['text_product']           = $this->language->get('text_product');
+		$this->data['text_yes']               = $this->language->get('text_yes');
+		$this->data['text_no']                = $this->language->get('text_no');
+
+		$this->data['entry_order_id']         = $this->language->get('entry_order_id');
+		$this->data['entry_date_ordered']     = $this->language->get('entry_date_ordered');
+		$this->data['entry_firstname']        = $this->language->get('entry_firstname');
+		$this->data['entry_lastname']         = $this->language->get('entry_lastname');
+		$this->data['entry_email']            = $this->language->get('entry_email');
+		$this->data['entry_telephone']        = $this->language->get('entry_telephone');
+		$this->data['entry_product']          = $this->language->get('entry_product');
+		$this->data['entry_model']            = $this->language->get('entry_model');
+		$this->data['entry_quantity']         = $this->language->get('entry_quantity');
+		$this->data['entry_reason']           = $this->language->get('entry_reason');
+		$this->data['entry_action_requested'] = $this->language->get('entry_action_requested');
+		$this->data['entry_opened']           = $this->language->get('entry_opened');
+		$this->data['entry_fault_detail']     = $this->language->get('entry_fault_detail');
+		$this->data['entry_captcha']          = $this->language->get('entry_captcha');
+
+		$this->data['button_continue'] = $this->language->get('button_continue');
+		$this->data['button_back']     = $this->language->get('button_back');
+
+		foreach (['warning', 'firstname', 'lastname', 'telephone', 'product', 'model', 'reason', 'captcha'] as $key) {
+			$this->data['error_' . $key] = isset($this->error[$key]) ? $this->error[$key] : '';
+		}
+
+		// Age warning (30/60 day — informational, form still submits)
+		$warning_level = $order['age_warning_level'] ?? '';
+		if ($warning_level === 'hard') {
+			$this->data['age_warning'] = $this->language->get('text_warning_age_60');
+		} elseif ($warning_level === 'soft') {
+			$this->data['age_warning'] = $this->language->get('text_warning_age_30');
+		} else {
+			$this->data['age_warning'] = '';
+		}
+
+		$this->data['action'] = $this->url->link('account/return/guestInsert', '', 'SSL');
+
+		// Order data locked from validated session
+		$this->data['order_id']     = $order['order_id'];
+		$this->data['date_ordered'] = $order['date_ordered'];
+		$this->data['email']        = $order['email'];
+
+		// Personal details: from POST on validation failure, otherwise from order record
+		$this->data['firstname'] = isset($this->request->post['firstname']) ? $this->request->post['firstname'] : $order['firstname'];
+		$this->data['lastname']  = isset($this->request->post['lastname'])  ? $this->request->post['lastname']  : $order['lastname'];
+		$this->data['telephone'] = isset($this->request->post['telephone']) ? $this->request->post['telephone'] : $order['telephone'];
+
+		// Product list from order (for the dropdown / pre-fill)
+		$this->data['products'] = $order['products'];
+
+		$single = count($order['products']) === 1;
+		$this->data['product'] = isset($this->request->post['product']) ? $this->request->post['product']
+			: ($single ? $order['products'][0]['name']  : '');
+		$this->data['model']   = isset($this->request->post['model'])   ? $this->request->post['model']
+			: ($single ? $order['products'][0]['model'] : '');
+		$this->data['quantity']         = isset($this->request->post['quantity'])         ? $this->request->post['quantity']         : 1;
+		$this->data['opened']           = isset($this->request->post['opened'])           ? $this->request->post['opened']           : false;
+		$this->data['return_reason_id'] = isset($this->request->post['return_reason_id']) ? $this->request->post['return_reason_id'] : '';
+		$this->data['return_action_id'] = isset($this->request->post['return_action_id']) ? $this->request->post['return_action_id'] : '';
+		$this->data['comment']          = isset($this->request->post['comment'])          ? $this->request->post['comment']          : '';
+		$this->data['captcha']          = isset($this->request->post['captcha'])          ? $this->request->post['captcha']          : '';
+
+		$this->load->model('localisation/return_reason');
+		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons([]);
+
+		$this->load->model('localisation/return_action');
+		$this->data['return_actions'] = $this->model_localisation_return_action->getReturnActions([]);
+
+		$this->load->library('captcha');
+		$captcha = new Captcha();
+		$this->session->data['captcha'] = $captcha->getCode();
+		$this->data['captcha_image']    = $this->session->data['captcha'];
+
+		if ($this->config->get('config_return_id')) {
+			$this->load->model('catalog/information');
+			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_return_id'));
+			if ($information_info) {
+				$this->data['text_agree'] = sprintf(
+					$this->language->get('text_agree'),
+					$this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'),
+					$information_info['title'],
+					$information_info['title']
+				);
+			} else {
+				$this->data['text_agree'] = '';
+			}
+		} else {
+			$this->data['text_agree'] = '';
+		}
+
+		$this->data['agree'] = isset($this->request->post['agree']) ? $this->request->post['agree'] : false;
+		$this->data['back']  = $this->url->link('account/return/guest', '', 'SSL');
+
+		$this->data['template'] = $this->config->get('config_template');
+
+		$this->resolveTemplate('account/return_guest_form');
+
+		$this->children = [
+			'common/content_higher',
+			'common/content_high',
+			'common/content_left',
+			'common/content_right',
+			'common/content_low',
+			'common/content_lower',
+			'common/footer',
+			'common/header'
+		];
+
+		$this->response->setOutput($this->render());
+	}
+
+	/**
+	 * Success page shown after a guest return is submitted.
+	 */
+	public function guestSuccess() {
+		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
+			$this->redirect($this->url->link('account/return/guestSuccess', '', 'SSL'));
+		}
+
+		$this->language->load('account/return');
+
+		$this->document->setTitle($this->language->get('text_guest_heading'));
+
+		$this->data['breadcrumbs'] = [
+			[
+				'text'      => $this->language->get('text_home'),
+				'href'      => $this->url->link('common/home', '', 'SSL'),
+				'separator' => false
+			],
+			[
+				'text'      => $this->language->get('text_guest_heading'),
+				'href'      => $this->url->link('account/return/guest', '', 'SSL'),
+				'separator' => $this->language->get('text_separator')
+			]
+		];
+
+		$this->data['heading_title']    = $this->language->get('text_guest_heading');
+		$this->data['text_message']     = $this->language->get('text_guest_success');
+		$this->data['button_continue']  = $this->language->get('button_continue');
+		$this->data['continue']         = $this->url->link('common/home', '', 'SSL');
+
+		$this->data['template'] = $this->config->get('config_template');
+
+		$this->resolveTemplate('common/success');
+
+		$this->children = [
+			'common/content_higher',
+			'common/content_high',
+			'common/content_left',
+			'common/content_right',
+			'common/content_low',
+			'common/content_lower',
+			'common/footer',
+			'common/header'
+		];
+
+		$this->response->setOutput($this->render());
+	}
+
+	/**
+	 * Guest return status lookup — Option B self-service tracking.
+	 * Guest enters Order ID + email to view all returns on that order.
+	 */
+	public function guestTrack() {
+		if ($this->config->get('config_secure') && !$this->request->isSecure()) {
+			$this->redirect($this->url->link('account/return/guestTrack', '', 'SSL'), 301);
+		}
+
+		$this->language->load('account/return');
+
+		$this->document->setTitle($this->language->get('text_guest_track_heading'));
+
+		$this->data['breadcrumbs'] = [
+			[
+				'text'      => $this->language->get('text_home'),
+				'href'      => $this->url->link('common/home', '', 'SSL'),
+				'separator' => false
+			],
+			[
+				'text'      => $this->language->get('text_guest_track_heading'),
+				'href'      => $this->url->link('account/return/guestTrack', '', 'SSL'),
+				'separator' => $this->language->get('text_separator')
+			]
+		];
+
+		$this->data['heading_title']          = $this->language->get('text_guest_track_heading');
+		$this->data['text_guest_track_intro'] = $this->language->get('text_guest_track_intro');
+		$this->data['text_guest_track_no_returns'] = $this->language->get('text_guest_track_no_returns');
+		$this->data['text_return_id']         = $this->language->get('text_return_id');
+		$this->data['text_status']            = $this->language->get('text_status');
+		$this->data['text_date_added']        = $this->language->get('text_date_added');
+		$this->data['column_product']         = $this->language->get('column_product');
+		$this->data['column_reason']          = $this->language->get('column_reason');
+		$this->data['column_status']          = $this->language->get('column_status');
+		$this->data['column_date_added']      = $this->language->get('column_date_added');
+		$this->data['entry_order_id']         = $this->language->get('entry_order_id');
+		$this->data['entry_email_order']      = $this->language->get('entry_email_order');
+		$this->data['button_lookup']          = $this->language->get('button_lookup');
+		$this->data['text_guest_no_account']  = sprintf(
+			$this->language->get('text_guest_no_account'),
+			$this->url->link('account/return/guest', '', 'SSL')
+		);
+
+		$this->data['error_warning'] = '';
+		$this->data['returns']       = [];
+		$this->data['order_id']      = '';
+		$this->data['email']         = '';
+		$this->data['searched']      = false;
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			$order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
+			$email    = isset($this->request->post['email'])    ? trim($this->request->post['email'])    : '';
+
+			$this->data['order_id'] = $order_id;
+			$this->data['email']    = $email;
+			$this->data['searched'] = true;
+
+			if (!$order_id || empty($email)) {
+				$this->data['error_warning'] = $this->language->get('error_guest_order_not_found');
+			} else {
+				$this->load->model('account/return');
+				$results = $this->model_account_return->getReturnsByGuest($order_id, $email);
+
+				if (empty($results)) {
+					$this->data['error_warning'] = $this->language->get('text_guest_track_no_returns');
+				} else {
+					foreach ($results as $result) {
+						$this->data['returns'][] = [
+							'return_id'  => $result['return_id'],
+							'product'    => $result['product'],
+							'reason'     => $result['reason'],
+							'status'     => $result['status'],
+							'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+						];
+					}
+				}
+			}
+		}
+
+		$this->data['action'] = $this->url->link('account/return/guestTrack', '', 'SSL');
+
+		$this->data['template'] = $this->config->get('config_template');
+
+		$this->resolveTemplate('account/return_guest_track');
+
+		$this->children = [
+			'common/content_higher',
+			'common/content_high',
+			'common/content_left',
+			'common/content_right',
+			'common/content_low',
+			'common/content_lower',
+			'common/footer',
+			'common/header'
+		];
+
+		$this->response->setOutput($this->render());
+	}
+
+	/**
+	 * Validates the guest return form submission.
+	 * Email is not validated here — it is locked to the verified order email from session.
+	 */
+	protected function validateGuest(): bool {
+		if ((mb_strlen($this->request->post['firstname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['firstname'], 'UTF-8') > 32)) {
+			$this->error['firstname'] = $this->language->get('error_firstname');
+		}
+
+		if ((mb_strlen($this->request->post['lastname'], 'UTF-8') < 1) || (mb_strlen($this->request->post['lastname'], 'UTF-8') > 32)) {
+			$this->error['lastname'] = $this->language->get('error_lastname');
+		}
+
+		if ((mb_strlen($this->request->post['telephone'], 'UTF-8') < 3) || (mb_strlen($this->request->post['telephone'], 'UTF-8') > 32)) {
+			$this->error['telephone'] = $this->language->get('error_telephone');
+		}
+
+		if ((mb_strlen($this->request->post['product'], 'UTF-8') < 1) || (mb_strlen($this->request->post['product'], 'UTF-8') > 255)) {
+			$this->error['product'] = $this->language->get('error_product');
+		}
+
+		if ((mb_strlen($this->request->post['model'], 'UTF-8') < 1) || (mb_strlen($this->request->post['model'], 'UTF-8') > 64)) {
+			$this->error['model'] = $this->language->get('error_model');
+		}
+
+		if (empty($this->request->post['return_reason_id'])) {
+			$this->error['reason'] = $this->language->get('error_reason');
+		}
+
+		if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
+			$this->error['captcha'] = $this->language->get('error_captcha');
+		}
+
+		if ($this->config->get('config_return_id')) {
+			$this->load->model('catalog/information');
+			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_return_id'));
+			if ($information_info && !isset($this->request->post['agree'])) {
+				$this->error['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
+			}
+		}
+
+		return empty($this->error);
+	}
+
+	/**
+	 * Calculate the effective age of an order in whole days.
+	 * A +1-day grace period is added before the comparison so that an order
+	 * placed late at night on the recorded date always gets the full benefit
+	 * of each return window. Use strict > (not >=) at each threshold.
+	 */
+	private function calcOrderAgeDays(string $date_added): int {
+		$order_time = strtotime($date_added) + 86400; // +1 grace day
+		return (int)((time() - $order_time) / 86400);
 	}
 
 	protected function validate() {

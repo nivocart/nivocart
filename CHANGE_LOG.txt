@@ -8,6 +8,7 @@ NivoCart v2.4.0
 ---------------
 Release: TBA
 
+- Add ability for guests to request a return without a customer account.
 - Add new Data Retention Cron tool to manage customers data for compliance. 
 - Updated store settings to include an ICO Registration field (UK Law). 
 - Updated the cookie script for compliance with GDPR and PECR (Europe).

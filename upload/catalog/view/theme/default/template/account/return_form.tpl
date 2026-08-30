@@ -9,6 +9,8 @@
 <?php if ($error_warning) { ?>
   <div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
+<!-- Age-based warning — populated and shown by JS after order lookup -->
+<div id="order-age-warning" class="warning" style="display:none;"></div>
 <?php echo $content_higher; ?>
 <?php echo $content_left; ?><?php echo $content_right; ?>
 <div id="content"><?php echo $content_high; ?>
@@ -275,6 +277,17 @@
         $('#date-ordered-hidden').val(data.date_ordered);
         $('#date-ordered-text').text(data.date_ordered);
         $('#date-ordered-display').show();
+
+        // Age warning / block
+        var $ageWarn = $('#order-age-warning');
+        if (data.age_warning) {
+          $ageWarn.text(data.age_warning).show();
+        } else {
+          $ageWarn.hide().text('');
+        }
+        if (data.age_blocked) {
+          return; // Do not reveal the product section or submit button
+        }
 
         if (products.length > 1) {
           // The hidden #product-hidden field carries the actual POST value.
