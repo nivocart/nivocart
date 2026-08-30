@@ -385,8 +385,9 @@ class ControllerAccountReturn extends Controller {
 			return;
 		}
 
-		$age_days    = $this->calcOrderAgeDays($order_info['date_added']);
+		$age_days = $this->calcOrderAgeDays($order_info['date_added']);
 		$age_blocked = $age_days > 180;
+
 		if ($age_days > 180) {
 			$age_warning = $this->language->get('error_age_180');
 		} elseif ($age_days > 60) {
@@ -421,19 +422,20 @@ class ControllerAccountReturn extends Controller {
 		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			// Age check — re-query DB so the posted date_ordered cannot be spoofed
 			$order_id_post = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
+
 			if ($order_id_post) {
-				$age_q = $this->db->query(
-					"SELECT date_added FROM `" . DB_PREFIX . "order` " .
-					"WHERE order_id = '" . $order_id_post . "' " .
-					"AND customer_id = '" . (int)$this->customer->getId() . "'"
-				);
+				$age_q = $this->db->query("SELECT date_added FROM `" . DB_PREFIX . "order` " . "WHERE order_id = '" . $order_id_post . "' " . "AND customer_id = '" . (int)$this->customer->getId() . "'");
+
 				if ($age_q->num_rows && $this->calcOrderAgeDays($age_q->row['date_added']) > 180) {
 					$this->error['warning'] = $this->language->get('error_age_180');
 				}
 			}
+
 			if (empty($this->error) && $this->validate()) {
 				$this->model_account_return->addReturn($this->request->post);
+
 				unset($this->session->data['captcha']);
+
 				$this->redirect($this->url->link('account/return/success', '', 'SSL'));
 			}
 		}
@@ -541,12 +543,7 @@ class ControllerAccountReturn extends Controller {
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_return_id'));
 
 			if ($information_info) {
-				$this->data['text_agree'] = sprintf(
-					$this->language->get('text_agree'),
-					$this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'),
-					$information_info['title'],
-					$information_info['title']
-				);
+				$this->data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
 			} else {
 				$this->data['text_agree'] = '';
 			}
@@ -656,45 +653,41 @@ class ControllerAccountReturn extends Controller {
 			]
 		];
 
-		$this->data['heading_title']     = $this->language->get('text_guest_heading');
+		$this->data['heading_title'] = $this->language->get('text_guest_heading');
+
 		$this->data['text_guest_lookup'] = $this->language->get('text_guest_lookup');
-		$this->data['entry_order_id']    = $this->language->get('entry_order_id');
+
+		$this->data['entry_order_id'] = $this->language->get('entry_order_id');
 		$this->data['entry_email_order'] = $this->language->get('entry_email_order');
-		$this->data['button_lookup']     = $this->language->get('button_lookup');
-		$this->data['error_warning']     = '';
-		$this->data['order_id']          = '';
-		$this->data['email']             = '';
+
+		$this->data['button_lookup'] = $this->language->get('button_lookup');
+
+		$this->data['error_warning'] = '';
+		$this->data['order_id'] = '';
+		$this->data['email'] = '';
 
 		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
-			$email    = isset($this->request->post['email'])    ? trim($this->request->post['email'])    : '';
+			$email = isset($this->request->post['email']) ? trim($this->request->post['email']) : '';
 
 			$this->data['order_id'] = $order_id;
-			$this->data['email']    = $email;
+			$this->data['email'] = $email;
 
 			if (!$order_id || empty($email)) {
 				$this->data['error_warning'] = $this->language->get('error_guest_order_not_found');
 			} else {
-				$order_query = $this->db->query(
-					"SELECT o.order_id, o.firstname, o.lastname, o.email, o.telephone, o.date_added " .
-					"FROM `" . DB_PREFIX . "order` o " .
-					"WHERE o.order_id = '" . (int)$order_id . "' " .
-					"AND LOWER(o.email) = LOWER('" . $this->db->escape($email) . "')"
-				);
+				$order_query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, o.email, o.telephone, o.date_added " . "FROM `" . DB_PREFIX . "order` o " . "WHERE o.order_id = '" . (int)$order_id . "' " . "AND LOWER(o.email) = LOWER('" . $this->db->escape($email) . "')");
 
 				if (!$order_query->num_rows) {
 					$this->data['error_warning'] = $this->language->get('error_guest_order_not_found');
 				} else {
-					$order    = $order_query->row;
+					$order = $order_query->row;
 					$age_days = $this->calcOrderAgeDays($order['date_added']);
 
 					if ($age_days > 180) {
 						$this->data['error_warning'] = $this->language->get('error_age_180');
 					} else {
-						$products_query = $this->db->query(
-							"SELECT product_id, `name`, model, quantity FROM `" . DB_PREFIX . "order_product` " .
-							"WHERE order_id = '" . (int)$order_id . "' ORDER BY `name` ASC"
-						);
+						$products_query = $this->db->query("SELECT product_id, `name`, model, quantity FROM `" . DB_PREFIX . "order_product` " . "WHERE order_id = '" . (int)$order_id . "' ORDER BY `name` ASC");
 
 						$warning_level = '';
 						if ($age_days > 60) {
@@ -765,11 +758,11 @@ class ControllerAccountReturn extends Controller {
 			if ($this->calcOrderAgeDays($order['date_ordered']) > 180) {
 				$this->error['warning'] = $this->language->get('error_age_180');
 			} elseif ($this->validateGuest()) {
-				$post_data                 = $this->request->post;
-				$post_data['customer_id']  = 0;
-				$post_data['order_id']     = $order['order_id'];
+				$post_data = $this->request->post;
+				$post_data['customer_id'] = 0;
+				$post_data['order_id'] = $order['order_id'];
 				$post_data['date_ordered'] = $order['date_ordered'];
-				$post_data['email']        = $order['email'];   // locked to verified order email
+				$post_data['email'] = $order['email'];   // locked to verified order email
 
 				$this->model_account_return->addReturn($post_data);
 
@@ -781,6 +774,7 @@ class ControllerAccountReturn extends Controller {
 		}
 
 		$this->document->setTitle($this->language->get('text_guest_heading'));
+
 		$this->document->addScript('catalog/view/javascript/jquery/colorbox/jquery.colorbox-min.js');
 		$this->document->addStyle('catalog/view/javascript/jquery/colorbox/colorbox.css');
 
@@ -802,30 +796,31 @@ class ControllerAccountReturn extends Controller {
 			]
 		];
 
-		$this->data['heading_title']          = $this->language->get('text_guest_heading');
-		$this->data['text_description']       = $this->language->get('text_guest_form_intro');
-		$this->data['text_order']             = $this->language->get('text_order');
-		$this->data['text_product']           = $this->language->get('text_product');
-		$this->data['text_yes']               = $this->language->get('text_yes');
-		$this->data['text_no']                = $this->language->get('text_no');
+		$this->data['heading_title'] = $this->language->get('text_guest_heading');
 
-		$this->data['entry_order_id']         = $this->language->get('entry_order_id');
-		$this->data['entry_date_ordered']     = $this->language->get('entry_date_ordered');
-		$this->data['entry_firstname']        = $this->language->get('entry_firstname');
-		$this->data['entry_lastname']         = $this->language->get('entry_lastname');
-		$this->data['entry_email']            = $this->language->get('entry_email');
-		$this->data['entry_telephone']        = $this->language->get('entry_telephone');
-		$this->data['entry_product']          = $this->language->get('entry_product');
-		$this->data['entry_model']            = $this->language->get('entry_model');
-		$this->data['entry_quantity']         = $this->language->get('entry_quantity');
-		$this->data['entry_reason']           = $this->language->get('entry_reason');
+		$this->data['text_description'] = $this->language->get('text_guest_form_intro');
+		$this->data['text_order'] = $this->language->get('text_order');
+		$this->data['text_product'] = $this->language->get('text_product');
+		$this->data['text_yes'] = $this->language->get('text_yes');
+		$this->data['text_no'] = $this->language->get('text_no');
+
+		$this->data['entry_order_id'] = $this->language->get('entry_order_id');
+		$this->data['entry_date_ordered'] = $this->language->get('entry_date_ordered');
+		$this->data['entry_firstname'] = $this->language->get('entry_firstname');
+		$this->data['entry_lastname'] = $this->language->get('entry_lastname');
+		$this->data['entry_email'] = $this->language->get('entry_email');
+		$this->data['entry_telephone'] = $this->language->get('entry_telephone');
+		$this->data['entry_product'] = $this->language->get('entry_product');
+		$this->data['entry_model'] = $this->language->get('entry_model');
+		$this->data['entry_quantity'] = $this->language->get('entry_quantity');
+		$this->data['entry_reason'] = $this->language->get('entry_reason');
 		$this->data['entry_action_requested'] = $this->language->get('entry_action_requested');
-		$this->data['entry_opened']           = $this->language->get('entry_opened');
-		$this->data['entry_fault_detail']     = $this->language->get('entry_fault_detail');
-		$this->data['entry_captcha']          = $this->language->get('entry_captcha');
+		$this->data['entry_opened'] = $this->language->get('entry_opened');
+		$this->data['entry_fault_detail'] = $this->language->get('entry_fault_detail');
+		$this->data['entry_captcha'] = $this->language->get('entry_captcha');
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
-		$this->data['button_back']     = $this->language->get('button_back');
+		$this->data['button_back'] = $this->language->get('button_back');
 
 		foreach (['warning', 'firstname', 'lastname', 'telephone', 'product', 'model', 'reason', 'captcha'] as $key) {
 			$this->data['error_' . $key] = isset($this->error[$key]) ? $this->error[$key] : '';
@@ -833,6 +828,7 @@ class ControllerAccountReturn extends Controller {
 
 		// Age warning (30/60 day — informational, form still submits)
 		$warning_level = $order['age_warning_level'] ?? '';
+
 		if ($warning_level === 'hard') {
 			$this->data['age_warning'] = $this->language->get('text_warning_age_60');
 		} elseif ($warning_level === 'soft') {
@@ -844,29 +840,28 @@ class ControllerAccountReturn extends Controller {
 		$this->data['action'] = $this->url->link('account/return/guestInsert', '', 'SSL');
 
 		// Order data locked from validated session
-		$this->data['order_id']     = $order['order_id'];
+		$this->data['order_id'] = $order['order_id'];
 		$this->data['date_ordered'] = $order['date_ordered'];
-		$this->data['email']        = $order['email'];
+		$this->data['email'] = $order['email'];
 
 		// Personal details: from POST on validation failure, otherwise from order record
 		$this->data['firstname'] = isset($this->request->post['firstname']) ? $this->request->post['firstname'] : $order['firstname'];
-		$this->data['lastname']  = isset($this->request->post['lastname'])  ? $this->request->post['lastname']  : $order['lastname'];
+		$this->data['lastname'] = isset($this->request->post['lastname']) ? $this->request->post['lastname'] : $order['lastname'];
 		$this->data['telephone'] = isset($this->request->post['telephone']) ? $this->request->post['telephone'] : $order['telephone'];
 
 		// Product list from order (for the dropdown / pre-fill)
 		$this->data['products'] = $order['products'];
 
 		$single = count($order['products']) === 1;
-		$this->data['product'] = isset($this->request->post['product']) ? $this->request->post['product']
-			: ($single ? $order['products'][0]['name']  : '');
-		$this->data['model']   = isset($this->request->post['model'])   ? $this->request->post['model']
-			: ($single ? $order['products'][0]['model'] : '');
-		$this->data['quantity']         = isset($this->request->post['quantity'])         ? $this->request->post['quantity']         : 1;
-		$this->data['opened']           = isset($this->request->post['opened'])           ? $this->request->post['opened']           : false;
+
+		$this->data['product'] = isset($this->request->post['product']) ? $this->request->post['product'] : ($single ? $order['products'][0]['name'] : '');
+		$this->data['model'] = isset($this->request->post['model']) ? $this->request->post['model'] : ($single ? $order['products'][0]['model'] : '');
+		$this->data['quantity'] = isset($this->request->post['quantity']) ? $this->request->post['quantity'] : 1;
+		$this->data['opened'] = isset($this->request->post['opened']) ? $this->request->post['opened'] : false;
 		$this->data['return_reason_id'] = isset($this->request->post['return_reason_id']) ? $this->request->post['return_reason_id'] : '';
 		$this->data['return_action_id'] = isset($this->request->post['return_action_id']) ? $this->request->post['return_action_id'] : '';
-		$this->data['comment']          = isset($this->request->post['comment'])          ? $this->request->post['comment']          : '';
-		$this->data['captcha']          = isset($this->request->post['captcha'])          ? $this->request->post['captcha']          : '';
+		$this->data['comment'] = isset($this->request->post['comment']) ? $this->request->post['comment'] : '';
+		$this->data['captcha'] = isset($this->request->post['captcha']) ? $this->request->post['captcha'] : '';
 
 		$this->load->model('localisation/return_reason');
 		$this->data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons([]);
@@ -874,21 +869,22 @@ class ControllerAccountReturn extends Controller {
 		$this->load->model('localisation/return_action');
 		$this->data['return_actions'] = $this->model_localisation_return_action->getReturnActions([]);
 
+		// Create session Captcha
 		$this->load->library('captcha');
+
 		$captcha = new Captcha();
+
 		$this->session->data['captcha'] = $captcha->getCode();
-		$this->data['captcha_image']    = $this->session->data['captcha'];
+
+		$this->data['captcha_image'] = $this->session->data['captcha'];
 
 		if ($this->config->get('config_return_id')) {
 			$this->load->model('catalog/information');
+
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_return_id'));
+
 			if ($information_info) {
-				$this->data['text_agree'] = sprintf(
-					$this->language->get('text_agree'),
-					$this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'),
-					$information_info['title'],
-					$information_info['title']
-				);
+				$this->data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
 			} else {
 				$this->data['text_agree'] = '';
 			}
@@ -897,7 +893,8 @@ class ControllerAccountReturn extends Controller {
 		}
 
 		$this->data['agree'] = isset($this->request->post['agree']) ? $this->request->post['agree'] : false;
-		$this->data['back']  = $this->url->link('account/return/guest', '', 'SSL');
+
+		$this->data['back'] = $this->url->link('account/return/guest', '', 'SSL');
 
 		$this->data['template'] = $this->config->get('config_template');
 
@@ -942,10 +939,13 @@ class ControllerAccountReturn extends Controller {
 			]
 		];
 
-		$this->data['heading_title']    = $this->language->get('text_guest_heading');
-		$this->data['text_message']     = $this->language->get('text_guest_success');
-		$this->data['button_continue']  = $this->language->get('button_continue');
-		$this->data['continue']         = $this->url->link('common/home', '', 'SSL');
+		$this->data['heading_title'] = $this->language->get('text_guest_heading');
+
+		$this->data['text_message'] = $this->language->get('text_guest_success');
+
+		$this->data['button_continue'] = $this->language->get('button_continue');
+
+		$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
 
 		$this->data['template'] = $this->config->get('config_template');
 
@@ -991,42 +991,45 @@ class ControllerAccountReturn extends Controller {
 			]
 		];
 
-		$this->data['heading_title']          = $this->language->get('text_guest_track_heading');
+		$this->data['heading_title'] = $this->language->get('text_guest_track_heading');
+
 		$this->data['text_guest_track_intro'] = $this->language->get('text_guest_track_intro');
 		$this->data['text_guest_track_no_returns'] = $this->language->get('text_guest_track_no_returns');
-		$this->data['text_return_id']         = $this->language->get('text_return_id');
-		$this->data['text_status']            = $this->language->get('text_status');
-		$this->data['text_date_added']        = $this->language->get('text_date_added');
-		$this->data['column_product']         = $this->language->get('column_product');
-		$this->data['column_reason']          = $this->language->get('column_reason');
-		$this->data['column_status']          = $this->language->get('column_status');
-		$this->data['column_date_added']      = $this->language->get('column_date_added');
-		$this->data['entry_order_id']         = $this->language->get('entry_order_id');
-		$this->data['entry_email_order']      = $this->language->get('entry_email_order');
-		$this->data['button_lookup']          = $this->language->get('button_lookup');
-		$this->data['text_guest_no_account']  = sprintf(
-			$this->language->get('text_guest_no_account'),
-			$this->url->link('account/return/guest', '', 'SSL')
-		);
+		$this->data['text_return_id'] = $this->language->get('text_return_id');
+		$this->data['text_status'] = $this->language->get('text_status');
+		$this->data['text_date_added'] = $this->language->get('text_date_added');
+
+		$this->data['column_product'] = $this->language->get('column_product');
+		$this->data['column_reason'] = $this->language->get('column_reason');
+		$this->data['column_status'] = $this->language->get('column_status');
+		$this->data['column_date_added'] = $this->language->get('column_date_added');
+
+		$this->data['entry_order_id'] = $this->language->get('entry_order_id');
+		$this->data['entry_email_order'] = $this->language->get('entry_email_order');
+
+		$this->data['button_lookup'] = $this->language->get('button_lookup');
+
+		$this->data['text_guest_no_account'] = sprintf($this->language->get('text_guest_no_account'), $this->url->link('account/return/guest', '', 'SSL'));
 
 		$this->data['error_warning'] = '';
-		$this->data['returns']       = [];
-		$this->data['order_id']      = '';
-		$this->data['email']         = '';
-		$this->data['searched']      = false;
+		$this->data['returns'] = [];
+		$this->data['order_id'] = '';
+		$this->data['email'] = '';
+		$this->data['searched'] = false;
 
 		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			$order_id = isset($this->request->post['order_id']) ? (int)$this->request->post['order_id'] : 0;
-			$email    = isset($this->request->post['email'])    ? trim($this->request->post['email'])    : '';
+			$email = isset($this->request->post['email']) ? trim($this->request->post['email']) : '';
 
 			$this->data['order_id'] = $order_id;
-			$this->data['email']    = $email;
+			$this->data['email'] = $email;
 			$this->data['searched'] = true;
 
 			if (!$order_id || empty($email)) {
 				$this->data['error_warning'] = $this->language->get('error_guest_order_not_found');
 			} else {
 				$this->load->model('account/return');
+
 				$results = $this->model_account_return->getReturnsByGuest($order_id, $email);
 
 				if (empty($results)) {
@@ -1100,7 +1103,9 @@ class ControllerAccountReturn extends Controller {
 
 		if ($this->config->get('config_return_id')) {
 			$this->load->model('catalog/information');
+
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_return_id'));
+
 			if ($information_info && !isset($this->request->post['agree'])) {
 				$this->error['warning'] = sprintf($this->language->get('error_agree'), $information_info['title']);
 			}
