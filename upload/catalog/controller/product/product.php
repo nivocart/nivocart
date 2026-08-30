@@ -384,7 +384,7 @@ class ControllerProductProduct extends Controller {
 			// Responsive large-screen thumbs keyed to the active theme display width.
 			// Normal (≤1267px container) → thumb_medium at admin "Normal Desktop Thumb" size (default 320px)
 			// Wide / Unlimited (≤1907px) → also thumb_large at admin "Wide Screen Thumb" size (default 560px)
-			$widescreen = $this->config->get('default_widescreen');
+			$widescreen = $this->config->get($this->config->get('config_template') . '_widescreen');
 
 			$thumb_medium_size = (int)$this->config->get('config_image_thumb_width') ?: 320;
 			$thumb_large_size = (int)$this->config->get('config_image_wide_thumb_width') ?: 520;
