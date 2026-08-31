@@ -20,6 +20,7 @@
     <div class="left">
     <?php if ($categories) { ?>
       <ul>
+	  <li class="last-line"><a href="<?php echo $home; ?>"><?php echo $text_home; ?></a>
       <?php foreach ($categories as $category_1) { ?>
         <li><a href="<?php echo $category_1['href']; ?>"><?php echo $category_1['name']; ?></a>
         <?php if ($category_1['children']) { ?>

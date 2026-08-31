@@ -28,6 +28,7 @@ class ControllerInformationSitemap extends Controller {
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
+		$this->data['text_home'] = $this->language->get('text_home');
 		$this->data['text_cart'] = $this->language->get('text_cart');
 		$this->data['text_checkout'] = $this->language->get('text_checkout');
 
@@ -167,6 +168,7 @@ class ControllerInformationSitemap extends Controller {
 			}
 		}
 
+		$this->data['home'] = $this->url->link('common/home', '', 'SSL');
 		$this->data['cart'] = $this->url->link('checkout/cart', '', 'SSL');
 		$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
