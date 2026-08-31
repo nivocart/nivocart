@@ -325,6 +325,20 @@ span.branding a {
 	color: #333 !important;
 }
 
+/** Plupload upload dialog - remove content padding so the widget's
+ *  absolute internal layout (top: 86px; bottom: 44px) has full room. */
+.ui-dialog #upload-multi.ui-dialog-content {
+	padding: 0 !important;
+	background: transparent !important;
+}
+
+/** Plupload - force legible button text */
+.ui-dialog .plupload_wrapper a,
+.ui-dialog .plupload_wrapper .plupload_button,
+.ui-dialog .plupload_wrapper .ui-button {
+	color: #FFF !important;
+}
+
 /** Tablets */
 @media only screen and (min-width: 640px) and (max-width: 790px) {
 	.filemanager-button {

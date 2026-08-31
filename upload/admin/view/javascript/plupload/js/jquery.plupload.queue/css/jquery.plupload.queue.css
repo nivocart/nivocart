@@ -11,7 +11,7 @@
 	display: inline-block;
 	font: normal 12px sans-serif;
 	text-decoration: none;
-    color: #42454A;
+    color: #42454A !important;
     border: 1px solid #BABABA;
     padding: 2px 8px 3px 20px;
 	margin-right: 4px;
@@ -20,7 +20,7 @@
     border-radius: 3px;
 }
 .plupload_button:hover {
-	color: #000;
+	color: #000 !important;
 	text-decoration: none;
 }
 .plupload_disabled, a.plupload_disabled:hover {

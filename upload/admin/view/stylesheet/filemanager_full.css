@@ -332,6 +332,23 @@ span.branding a {
 	opacity: 0.40 !important;
 }
 
+/** Plupload upload dialog - remove content padding so the widget's
+ *  absolute internal layout (top: 86px; bottom: 44px) has full room. */
+.ui-dialog #upload-multi.ui-dialog-content {
+	padding: 0 !important;
+	background: transparent !important;
+}
+
+/** Plupload - force legible button text.
+ *  The admin stylesheet sets a, a:visited { color: #36AAD8 } which
+ *  bleeds into plupload's <a> buttons. Target the dialog wrapper
+ *  so the override beats the global link rule. */
+.ui-dialog .plupload_wrapper a,
+.ui-dialog .plupload_wrapper .plupload_button,
+.ui-dialog .plupload_wrapper .ui-button {
+	color: #FFF !important;
+}
+
 /** Tablets */
 @media only screen and (min-width: 640px) and (max-width: 790px) {
 	#column-left {
