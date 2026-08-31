@@ -4,12 +4,12 @@
     <thead>
       <tr>
         <td class="name"><?php echo $column_name; ?></td>
-        <td class="model"><?php echo $column_model; ?></td>
+        <td class="model hide-phone"><?php echo $column_model; ?></td>
         <td class="quantity"><?php echo $column_quantity; ?></td>
         <td class="price"><?php echo $column_price; ?></td>
       <?php if ($tax_breakdown) { ?>
-        <td class="price"><?php echo $column_tax_value; ?></td>
-        <td class="price"><?php echo $column_tax_percent; ?></td>
+        <td class="price hide-phone"><?php echo $column_tax_value; ?></td>
+        <td class="price hide-phone"><?php echo $column_tax_percent; ?></td>
       <?php } ?>
         <td class="total"><?php echo $column_total; ?></td>
       </tr>
@@ -29,12 +29,12 @@
               <?php } ?>
             </div>
           </td>
-          <td class="model"><?php echo $product['model']; ?></td>
+          <td class="model hide-phone"><?php echo $product['model']; ?></td>
           <td class="quantity"><?php echo $product['quantity']; ?></td>
           <td class="price"><?php echo $product['price']; ?></td>
         <?php if ($tax_breakdown) { ?>
-          <td class="price"><?php echo $product['tax_value']; ?></td>
-          <td class="price"><?php echo $product['tax_percent']; ?>%</td>
+          <td class="price hide-phone"><?php echo $product['tax_value']; ?></td>
+          <td class="price hide-phone"><?php echo $product['tax_percent']; ?>%</td>
         <?php } ?>
           <td class="total"><?php echo $product['total']; ?></td>
         </tr>
@@ -42,12 +42,12 @@
       <?php foreach ($vouchers as $voucher) { ?>
         <tr>
           <td class="name"><?php echo $voucher['description']; ?></td>
-          <td class="model"></td>
+          <td class="model hide-phone"></td>
           <td class="quantity">1</td>
           <td class="price"><?php echo $voucher['amount']; ?></td>
         <?php if ($tax_breakdown) { ?>
-          <td class="price">0.00</td>
-          <td class="price">0%</td>
+          <td class="price hide-phone">0.00</td>
+          <td class="price hide-phone">0%</td>
         <?php } ?>
           <td class="total"><?php echo $voucher['amount']; ?></td>
         </tr>

@@ -2618,6 +2618,7 @@ ul.box-filter > li ul {
 .checkout-content .left { float: left; width: 48%; }
 .checkout-content .right { float: right; width: 48%; }
 .checkout-content .buttons, .checkout-product { clear: both; }
+.checkout-product { overflow-x: auto; }
 .checkout-product table {
   width: 100%;
   border-collapse: collapse;
@@ -2647,7 +2648,7 @@ ul.box-filter > li ul {
 .checkout-one-page .spacer { width: 3%; }
 .checkout-one-page .address-checkbox { float: left; width: 100%; margin: 8px 0 8px 3px; }
 
-table.address-options, table.order-options {
+table.address-options {
   width: 100%;
   background: #FEFEFE;
   border: 1px solid #EEE;
@@ -2659,12 +2660,21 @@ table.address-options tr td > div.error {
   color: var(--clr-danger);
   display: block;
 }
-table.order-options tr td #shipping-method,
-table.order-options tr td #payment-method {
-  width: 34%;
-  height: auto;
+.order-options {
+  width: 100%;
+  background: #FEFEFE;
+  border: 1px solid #EEE;
+  border-radius: var(--radius-md);
+  padding: 8px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 3%;
 }
-table.order-options tr td h2 {
+.order-option-panel {
+  flex: 1;
+  min-width: 0;
+}
+.order-option-panel h2 {
   color: var(--clr-h2);
   margin: 0 0 12px 0;
   font-size: 16px;
@@ -3009,6 +3019,8 @@ table.address-options td h2 {
   .checkout-one-page .spacer { display: none; }
   .checkout-one-page .checkout-page-left { width: 100%; }
   .checkout-one-page .checkout-page-right { width: 100%; float: left; clear: left; }
+  .order-options { flex-direction: column; gap: 0; }
+  .order-option-panel + .order-option-panel { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--clr-border); }
   .buttons { width: auto; }
   .hide-tablet { display: none; }
   .hide-phone { display: none; }

@@ -252,14 +252,10 @@
       </div>
       <div class="spacer"></div>
       <div class="checkout-page-right">
-        <table class="order-options">
-          <tr>
-            <td><h2><span class="checkout-step-badge">2</span><?php echo $text_shipping_method; ?></h2></td>
-            <td class="spacer"></td>
-            <td><h2><span class="checkout-step-badge">3</span><?php echo $text_payment_method; ?></h2></td>
-          </tr>
-          <tr>
-            <td id="shipping-method">
+        <div class="order-options">
+          <div class="order-option-panel" id="shipping-method-col">
+            <h2><span class="checkout-step-badge">2</span><?php echo $text_shipping_method; ?></h2>
+            <div id="shipping-method">
               <?php if ($shipping_methods) { ?>
                 <?php if ($error_shipping_method) { ?>
                   <div class="attention" style="margin:5px 0;"><?php echo $error_shipping_method; ?></div>
@@ -280,9 +276,11 @@
                 <?php } ?>
                 </table>
               <?php } ?>
-            </td>
-            <td class="spacer"></td>
-            <td id="payment-method">
+            </div>
+          </div>
+          <div class="order-option-panel" id="payment-method-col">
+            <h2><span class="checkout-step-badge">3</span><?php echo $text_payment_method; ?></h2>
+            <div id="payment-method">
               <?php if ($payment_methods) { ?>
                 <?php if ($error_payment_method) { ?>
                   <div class="attention" style="margin:5px 0;"><?php echo $error_payment_method; ?></div>
@@ -317,9 +315,9 @@
                 <?php } ?>
                 </table>
               <?php } ?>
-            </td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
 
         <!-- ================================================================
              Payment gateway widgets
