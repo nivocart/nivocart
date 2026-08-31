@@ -17,6 +17,7 @@ Release: TBA
 - Updated the Checkout checks to confirm that customers are above the legal age.
 - Updated the new Admin dashboard canvas donut graph, now limited to 4 results.
 - Updated customer return reasons in Install Database for compliance.
+- Updated custom module shapes by increments from rounded 11px to 21px.
 
 
 NivoCart v2.3.3

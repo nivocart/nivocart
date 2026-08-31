@@ -171,6 +171,11 @@ class ModelSettingSetting extends Model {
 		$shapes[] = ['shape' => 'rounded-7','title' => 'Round 7'];
 		$shapes[] = ['shape' => 'rounded-9','title' => 'Round 9'];
 		$shapes[] = ['shape' => 'rounded-11','title' => 'Round 11'];
+		$shapes[] = ['shape' => 'rounded-13','title' => 'Round 13'];
+		$shapes[] = ['shape' => 'rounded-15','title' => 'Round 15'];
+		$shapes[] = ['shape' => 'rounded-17','title' => 'Round 17'];
+		$shapes[] = ['shape' => 'rounded-19','title' => 'Round 19'];
+		$shapes[] = ['shape' => 'rounded-21','title' => 'Round 21'];
 
 		return $shapes;
 	}

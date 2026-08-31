@@ -3,6 +3,8 @@
 * Copyright © 2026
 * -------------------------------
 */
+
+/* Shapes */
 .rounded-3{border-radius:3px}
 .rounded-3-top{border-radius:3px 3px 0 0}
 .rounded-3-bottom{border-radius:0 0 3px 3px}
@@ -28,7 +30,33 @@
 .rounded-11-bottom{border-radius:0 0 11px 11px}
 .rounded-11-left{border-radius:11px 0 0 11px}
 .rounded-11-right{border-radius:0 11px 11px 0}
+.rounded-13{border-radius:13px}
+.rounded-13-top{border-radius:13px 13px 0 0}
+.rounded-13-bottom{border-radius:0 0 13px 13px}
+.rounded-13-left{border-radius:13px 0 0 13px}
+.rounded-13-right{border-radius:0 13px 13px 0}
+.rounded-15{border-radius:15px}
+.rounded-15-top{border-radius:15px 15px 0 0}
+.rounded-15-bottom{border-radius:0 0 15px 15px}
+.rounded-15-left{border-radius:15px 0 0 15px}
+.rounded-15-right{border-radius:0 15px 15px 0}
+.rounded-17{border-radius:17px}
+.rounded-17-top{border-radius:17px 17px 0 0}
+.rounded-17-bottom{border-radius:0 0 17px 17px}
+.rounded-17-left{border-radius:17px 0 0 17px}
+.rounded-17-right{border-radius:0 17px 17px 0}
+.rounded-19{border-radius:19px}
+.rounded-19-top{border-radius:19px 19px 0 0}
+.rounded-19-bottom{border-radius:0 0 19px 19px}
+.rounded-19-left{border-radius:19px 0 0 19px}
+.rounded-19-right{border-radius:0 19px 19px 0}
+.rounded-21{border-radius:21px}
+.rounded-21-top{border-radius:21px 21px 0 0}
+.rounded-21-bottom{border-radius:0 0 21px 21px}
+.rounded-21-left{border-radius:21px 0 0 21px}
+.rounded-21-right{border-radius:0 21px 21px 0}
 
+/* Colours */
 .white-skin{background:#FFF;color:#222}
 .beige-skin{background:#F5F5DC;color:#222}
 .ash-skin{background:#E5E5D0;color:#222}
