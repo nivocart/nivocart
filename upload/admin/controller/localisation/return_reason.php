@@ -346,13 +346,33 @@ class ControllerLocalisationReturnReason extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		$this->load->model('sale/return');
+		// Compliance-protected reasons — required by Return Policy and cannot be deleted under any circumstances
+		$compliance_reasons = [
+			'cooling-off cancellation (within 14 days)',
+			'not as described',
+			'dead on arrival',
+			'received wrong item',
+			'faulty, please supply details',
+			'order error',
+		];
 
 		foreach ($this->request->post['selected'] as $return_reason_id) {
-			$return_total = $this->model_sale_return->getTotalReturnsByReturnReasonId($return_reason_id);
+			$return_reason = $this->model_localisation_return_reason->getReturnReason($return_reason_id);
 
-			if ($return_total) {
-				$this->error['warning'] = sprintf($this->language->get('error_return'), $return_total);
+			if ($return_reason && in_array(strtolower($return_reason['name']), $compliance_reasons)) {
+				$this->error['warning'] = $this->language->get('error_compliance');
+			}
+		}
+
+		if (empty($this->error)) {
+			$this->load->model('sale/return');
+
+			foreach ($this->request->post['selected'] as $return_reason_id) {
+				$return_total = $this->model_sale_return->getTotalReturnsByReturnReasonId($return_reason_id);
+
+				if ($return_total) {
+					$this->error['warning'] = sprintf($this->language->get('error_return'), $return_total);
+				}
 			}
 		}
 
