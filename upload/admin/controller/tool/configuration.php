@@ -339,6 +339,7 @@ class ControllerToolConfiguration extends Controller {
 			'dbmemory'   => $ds(DIR_SYSTEM . 'library/dbmemory.php'),
 			'document'   => $ds(DIR_SYSTEM . 'library/document.php'),
 			'encryption' => $ds(DIR_SYSTEM . 'library/encryption.php'),
+			'hmrc_mtd'   => $ds(DIR_SYSTEM . 'library/hmrc_mtd.php'),
 			'image'      => $ds(DIR_SYSTEM . 'library/image.php'),
 			'language'   => $ds(DIR_SYSTEM . 'library/language.php'),
 			'length'     => $ds(DIR_SYSTEM . 'library/length.php'),

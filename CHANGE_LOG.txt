@@ -6,8 +6,9 @@
 
 NivoCart v2.4.0
 ---------------
-Release: TBA
+Release: 01/09/2026
 
+- Add HMRC (MTD and MTD ITSA) API connector for UK businesses.
 - Add ability for guests to request a return without a customer account.
 - Add new Data Retention Cron tool to manage customers data for compliance.
 - Fix a couple of bugs in the downloadable/printable customer order documents.
