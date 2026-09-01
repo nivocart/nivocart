@@ -144,7 +144,9 @@ echo json_encode(['received' => true]);
 if (function_exists('fastcgi_finish_request')) {
     fastcgi_finish_request();
 } else {
-    if (ob_get_level()) ob_end_flush();
+    if (ob_get_level()) {
+		ob_end_flush();
+	}
     flush();
 }
 
