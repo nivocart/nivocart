@@ -293,7 +293,7 @@ class ControllerModificationHmrcMtd extends Controller {
      * Fetch ITSA quarterly periods and business details from HMRC, store locally.
      * Also discovers the selfEmploymentId if not yet stored in settings.
      */
-    public function itsa_periods(): void {
+    public function itsaPeriods(): void {
         $this->language->load('modification/' . $this->name);
 
         $this->load->model('modification/' . $this->name);
@@ -413,7 +413,7 @@ class ControllerModificationHmrcMtd extends Controller {
     /**
      * Show the ITSA quarterly update preparation form for a given period.
      */
-    public function itsa_prepare(): void {
+    public function itsaPrepare(): void {
         $this->language->load('modification/' . $this->name);
 
         $this->document->setTitle($this->language->get('heading_itsa_prepare'));
@@ -442,7 +442,7 @@ class ControllerModificationHmrcMtd extends Controller {
     /**
      * Submit a quarterly income/expense update to HMRC.
      */
-    public function itsa_submit(): void {
+    public function itsaSubmit(): void {
         $this->language->load('modification/' . $this->name);
 
         $this->load->model('modification/' . $this->name);
@@ -455,7 +455,7 @@ class ControllerModificationHmrcMtd extends Controller {
 
         if ($this->request->server['REQUEST_METHOD'] !== 'POST' || !$this->validateItsaSubmit()) {
             if ($business_id && $period_start) {
-                $this->redirect($this->url->link('modification/' . $this->name . '/itsa_prepare', 'token=' . $this->session->data['token'] . '&business_id=' . urlencode($business_id) . '&period_start=' . urlencode($period_start), 'SSL'));
+                $this->redirect($this->url->link('modification/' . $this->name . '/itsaPrepare', 'token=' . $this->session->data['token'] . '&business_id=' . urlencode($business_id) . '&period_start=' . urlencode($period_start), 'SSL'));
             } else {
                 $this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
             }
@@ -515,7 +515,7 @@ class ControllerModificationHmrcMtd extends Controller {
 
         if (isset($response['error'])) {
             $this->session->data['error'] = sprintf($this->language->get('error_api'), $response['error']);
-            $this->redirect($this->url->link('modification/' . $this->name . '/itsa_prepare', 'token=' . $this->session->data['token'] . '&business_id=' . urlencode($business_id) . '&period_start=' . urlencode($period_start), 'SSL'));
+            $this->redirect($this->url->link('modification/' . $this->name . '/itsaPrepare', 'token=' . $this->session->data['token'] . '&business_id=' . urlencode($business_id) . '&period_start=' . urlencode($period_start), 'SSL'));
             return;
         }
 
@@ -768,9 +768,9 @@ class ControllerModificationHmrcMtd extends Controller {
         $this->data['action_disconnect'] = $this->url->link('modification/' . $this->name . '/disconnect', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['action_obligations'] = $this->url->link('modification/' . $this->name . '/obligations', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['action_prepare'] = $this->url->link('modification/' . $this->name . '/prepare', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['action_itsa_periods'] = $this->url->link('modification/' . $this->name . '/itsa_periods', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['action_itsa_prepare'] = $this->url->link('modification/' . $this->name . '/itsa_prepare', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['action_itsa_submit'] = $this->url->link('modification/' . $this->name . '/itsa_submit', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action_itsa_periods'] = $this->url->link('modification/' . $this->name . '/itsaPeriods', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action_itsa_prepare'] = $this->url->link('modification/' . $this->name . '/itsaPrepare', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action_itsa_submit'] = $this->url->link('modification/' . $this->name . '/itsaSubmit', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['action_eops'] = $this->url->link('modification/' . $this->name . '/eops', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['action_declaration'] = $this->url->link('modification/' . $this->name . '/declaration', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -1005,12 +1005,12 @@ class ControllerModificationHmrcMtd extends Controller {
             ],
             [
                 'text'      => $lang->get('heading_itsa_prepare'),
-                'href'      => $this->url->link('modification/' . $this->name . '/itsa_prepare', 'token=' . $this->session->data['token'] . '&business_id=' . urlencode($period['business_id']) . '&period_start=' . urlencode($period['period_start']), 'SSL'),
+                'href'      => $this->url->link('modification/' . $this->name . '/itsaPrepare', 'token=' . $this->session->data['token'] . '&business_id=' . urlencode($period['business_id']) . '&period_start=' . urlencode($period['period_start']), 'SSL'),
                 'separator' => ' :: ',
             ],
         ];
 
-        $this->data['action_submit'] = $this->url->link('modification/' . $this->name . '/itsa_submit', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action_submit'] = $this->url->link('modification/' . $this->name . '/itsaSubmit', 'token=' . $this->session->data['token'], 'SSL');
         $this->data['back'] = $this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
 
         $this->data['period'] = $period;
