@@ -1,8 +1,8 @@
 <?php
 // Version
-define('VERSION', '2.3.3');
-define('REVISION', 20260827);
-define('RELEASED', '2026-08-27');
+define('VERSION', '2.4.0');
+define('REVISION', 20260901);
+define('RELEASED', '2026-09-01');
 
 // Configuration
 if (file_exists('config.php')) {
