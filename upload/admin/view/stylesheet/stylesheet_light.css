@@ -244,6 +244,10 @@ fieldset p.field {
   padding: 3px 5px;
   width: 23%;
 }
+/* Pre-hide toggler panels so content never flashes before JS runs */
+.toggler {
+  display: none;
+}
 
 label {
   cursor: pointer;

@@ -225,10 +225,10 @@ textarea.log {
 /* ── Fieldset ───────────────────────────────────────────── */
 fieldset {
   width: 90%;
-  border: 1px solid var(--clr-input-border);
+  border: 1px solid var(--clr-panel-border);
   border-radius: var(--radius-sm);
-  background-color: var(--clr-input-bg);
-  background-image: var(--input-bg-grad);
+  background-color: var(--clr-panel-bg);
+  background-image: linear-gradient(to bottom, var(--clr-panel-bg), var(--clr-body-bg));
   margin: 10px 0;
 }
 fieldset p.field {
@@ -236,6 +236,10 @@ fieldset p.field {
   margin: 0;
   padding: 3px 5px;
   width: 23%;
+}
+/* Pre-hide toggler panels so content never flashes before JS runs */
+.toggler {
+  display: none;
 }
 
 label {

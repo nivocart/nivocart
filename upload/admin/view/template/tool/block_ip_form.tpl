@@ -55,7 +55,7 @@
 $(document).ready(function() {
 	$('.toggler').hide().before('<a id="<?php echo 'toggler'; ?>" class="button ripple" style="margin:15px auto;"><i class="fa fa-info-circle"></i> &nbsp; <?php echo $button_info; ?></a>');
 	$('#<?php echo 'toggler'; ?>').click(function() {
-		$('.toggler').slideToggle(600);
+		$('.toggler').slideToggle(50);
 		return false;
 	});
 });

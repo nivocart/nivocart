@@ -9,6 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
+- Fix a visibility issue with the information toggles in Admin templates.
 
 
 NivoCart v2.4.0
