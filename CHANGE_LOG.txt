@@ -4,6 +4,13 @@
 ---------------
 
 
+NivoCart v2.X.X
+---------------
+Release: TBA
+
+- Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
+
+
 NivoCart v2.4.0
 ---------------
 Release: 01/09/2026
