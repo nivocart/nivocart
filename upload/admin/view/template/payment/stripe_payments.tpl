@@ -135,5 +135,137 @@
     </form>
     </div>
   </div>
+
+<?php
+// ---------------------------------------------------------------------------
+// Webhook URL for this store — constructed from the live HTTP_HOST.
+// Checks all common HTTPS indicators: $_SERVER['HTTPS'] is often absent
+// behind reverse proxies, load balancers, and cPanel-managed hosts.
+// HTTP_X_FORWARDED_PROTO and REQUEST_SCHEME cover those cases.
+// ---------------------------------------------------------------------------
+$_stripe_is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+    || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) === 'on')
+    || (isset($_SERVER['REQUEST_SCHEME']) && strtolower($_SERVER['REQUEST_SCHEME']) === 'https')
+    || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+
+$_stripe_webhook_url = ($_stripe_is_https ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'yourdomain.com') . '/catalog/webhooks/stripe.php';
+?>
+<div class="box" style="margin-top:20px;">
+  <div class="heading">
+    <h1><img src="view/image/api.png" alt="" /> Stripe Webhook Setup Reference</h1>
+  </div>
+  <div class="content">
+    <table class="form">
+      <tr>
+        <td colspan="2" style="padding:10px 0 4px;">
+          <strong>Step 1 &mdash; Register the endpoint in the Stripe Dashboard</strong><br>
+          Go to <em>Developers &rarr; Webhooks &rarr; Add endpoint</em> and paste the URL below.
+        </td>
+      </tr>
+      <tr>
+        <td style="width:180px;">Endpoint URL</td>
+        <td>
+          <input type="text" value="<?php echo htmlspecialchars($_stripe_webhook_url); ?>" size="60" readonly onclick="this.select();" style="font-family:monospace;cursor:pointer;" title="Click to select" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding:14px 0 4px;">
+          <strong>Step 2 &mdash; Subscribe to exactly these 3 events</strong>
+        </td>
+      </tr>
+      <tr>
+        <td><code>payment_intent.succeeded</code></td>
+        <td>
+          Async payment confirmation fallback &mdash; fires when Stripe collects payment
+          successfully. Used to mark the order as <em>Paid</em> when the customer's browser
+          closed before the redirect completed. Idempotent: skipped if the order is already
+          in the configured paid status.
+        </td>
+      </tr>
+      <tr>
+        <td><code>payment_intent.payment_failed</code></td>
+        <td>
+          Fires on card decline, insufficient funds, SCA / 3D-Secure failure, or any other
+          payment error. Updates the order to the configured <em>Failed</em> status and writes
+          the Stripe error code and message to the order history for admin review.
+        </td>
+      </tr>
+      <tr>
+        <td><code>charge.dispute.created</code></td>
+        <td>
+          Fires when a customer raises a chargeback. Looks up the order via the payment intent
+          ID stored in order history and moves it to the configured <em>Disputed</em> status so
+          it is flagged for manual review before responding to Stripe.
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding:14px 0 4px;">
+          <strong>Step 3 &mdash; Copy the Signing Secret and save it above</strong><br>
+          After adding the endpoint, Stripe reveals a <em>Signing Secret</em> (starts with
+          <code>whsec_</code>). Paste it into the <strong>Webhook Secret</strong> field at the
+          top of this page. The webhook handler verifies every incoming request against this
+          secret &mdash; without it all webhook calls are rejected with HTTP&nbsp;400.
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding:14px 0 4px;">
+          <strong>Technical notes</strong>
+        </td>
+      </tr>
+      <tr>
+        <td>API version</td>
+        <td>
+          In the Stripe Dashboard under <em>Developers &rarr; Webhooks &rarr; API version</em>
+          select <strong>2026-08-26.dahlia</strong> (or the latest Dahlia release). The three
+          events above are stable across all Dahlia versions; the new granular error codes in
+          this release automatically enrich the failure messages logged to order history.
+        </td>
+      </tr>
+      <tr>
+        <td>Payload field used</td>
+        <td>
+          The handler reads <code>data.object.metadata.order_ref</code> from
+          <code>payment_intent.succeeded</code> and <code>payment_intent.payment_failed</code>
+          to resolve the NivoCart order ID. This metadata key is written by the payment
+          controller at intent-creation time &mdash; do not rename it.
+        </td>
+      </tr>
+      <tr>
+        <td>Dispute lookup</td>
+        <td>
+          For <code>charge.dispute.created</code> there is no <code>order_ref</code> metadata.
+          The handler resolves the order by searching the order history table for the payment
+          intent ID. Ensure order history comments are never cleared.
+        </td>
+      </tr>
+      <tr>
+        <td>.htaccess rule</td>
+        <td>
+          Add this rule to your root <code>.htaccess</code> so the webhook URL is not rewritten
+          by NivoCart's SEO router:<br>
+          <code>RewriteRule ^catalog/webhooks/ - [L]</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Stripe retry policy</td>
+        <td>
+          Stripe retries failed deliveries (non-2xx responses) up to 3&nbsp;days with
+          exponential back-off. The handler sends HTTP&nbsp;200 immediately and flushes the
+          response before any DB work, so server-side timeouts will not cause duplicate
+          order-status updates &mdash; the idempotency guard handles retries safely.
+        </td>
+      </tr>
+      <tr>
+        <td>Log file</td>
+        <td>
+          All webhook activity is written to <code>system/logs/stripe_webhook.log</code>.
+          Check this file first when debugging missing order updates.
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>
+</div>
+
 <?php echo $footer; ?>
