@@ -2399,25 +2399,44 @@ $('#tabs a').tabs();
 // We Base64-encode the textarea content into a hidden input right before
 // the form submits, then the controller decodes it server-side before saving.
 // btoa/encodeURIComponent combo handles any Unicode characters safely.
+//
+// Uses jQuery's .on('submit') — required because the Save/Apply buttons call
+// $('#form').submit() which fires jQuery's event chain, not the native one,
+// so a plain addEventListener('submit') never runs in this admin.
+// A secondary oninput handler keeps the hidden input in sync as you type,
+// and an on-load encode ensures any pre-existing value is ready immediately.
 // ---------------------------------------------------------------------------
-(function () {
+(function ($) {
     var fields = [
-        { display: 'config_google_analytics_display', hidden: 'config_google_analytics_b64' },
-        { display: 'config_matomo_analytics_display', hidden: 'config_matomo_analytics_b64' }
+        { display: '#config_google_analytics_display', hidden: '#config_google_analytics_b64' },
+        { display: '#config_matomo_analytics_display', hidden: '#config_matomo_analytics_b64' }
     ];
 
-    document.getElementById('form').addEventListener('submit', function () {
-        fields.forEach(function (f) {
-            var ta = document.getElementById(f.display);
-            var inp = document.getElementById(f.hidden);
-            if (ta && inp) {
-                // encodeURIComponent → unescape converts UTF-8 to a byte string
-                // that btoa can safely encode without throwing on non-Latin chars.
-                inp.value = btoa(unescape(encodeURIComponent(ta.value)));
-            }
+    function encodeField(displaySel, hiddenSel) {
+        var val = $(displaySel).val();
+        if (val === undefined) { return; }
+        $(hiddenSel).val(btoa(unescape(encodeURIComponent(val))));
+    }
+
+    $(document).ready(function () {
+        // Keep hidden inputs in sync as the user types.
+        $.each(fields, function (i, f) {
+            $(f.display).on('input', function () {
+                encodeField(f.display, f.hidden);
+            });
+            // Encode any pre-existing value on page load.
+            encodeField(f.display, f.hidden);
         });
-    }, false);
-}());
+
+        // Encode on submit — fires reliably via jQuery's event chain.
+        $('#form').on('submit', function () {
+            $.each(fields, function (i, f) {
+                encodeField(f.display, f.hidden);
+            });
+            return true;
+        });
+    });
+}(jQuery));
 //--></script>
 
 <?php echo $footer; ?>
