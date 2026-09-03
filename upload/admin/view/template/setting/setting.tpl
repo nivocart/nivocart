@@ -2056,11 +2056,18 @@
         <table class="form">
           <tr>
             <td><?php echo $entry_google_analytics; ?><span class="help"><?php echo $help_google_analytics; ?></span></td>
-            <td><textarea name="config_google_analytics" cols="50" rows="10"><?php echo $config_google_analytics; ?></textarea></td>
+            <td>
+              <!-- Hidden input carries the Base64-encoded value on POST so the WAF never sees <script> tags. -->
+              <input type="hidden" name="config_google_analytics" id="config_google_analytics_b64" />
+              <textarea id="config_google_analytics_display" cols="50" rows="10"><?php echo htmlspecialchars($config_google_analytics ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+            </td>
           </tr>
           <tr>
             <td><?php echo $entry_matomo_analytics; ?><span class="help"><?php echo $help_matomo_analytics; ?></span></td>
-            <td><textarea name="config_matomo_analytics" cols="50" rows="10"><?php echo $config_matomo_analytics; ?></textarea></td>
+            <td>
+              <input type="hidden" name="config_matomo_analytics" id="config_matomo_analytics_b64" />
+              <textarea id="config_matomo_analytics_display" cols="50" rows="10"><?php echo htmlspecialchars($config_matomo_analytics ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+            </td>
           </tr>
         </table>
         <div>
@@ -2382,6 +2389,34 @@ $('#tabs a').tabs();
             }
         });
     });
+}());
+//--></script>
+
+<script type="text/javascript"><!--
+// ---------------------------------------------------------------------------
+// WAF bypass for analytics script fields
+// Hostinger's ModSecurity blocks POST bodies that contain <script> tags.
+// We Base64-encode the textarea content into a hidden input right before
+// the form submits, then the controller decodes it server-side before saving.
+// btoa/encodeURIComponent combo handles any Unicode characters safely.
+// ---------------------------------------------------------------------------
+(function () {
+    var fields = [
+        { display: 'config_google_analytics_display', hidden: 'config_google_analytics_b64' },
+        { display: 'config_matomo_analytics_display', hidden: 'config_matomo_analytics_b64' }
+    ];
+
+    document.getElementById('form').addEventListener('submit', function () {
+        fields.forEach(function (f) {
+            var ta = document.getElementById(f.display);
+            var inp = document.getElementById(f.hidden);
+            if (ta && inp) {
+                // encodeURIComponent → unescape converts UTF-8 to a byte string
+                // that btoa can safely encode without throwing on non-Latin chars.
+                inp.value = btoa(unescape(encodeURIComponent(ta.value)));
+            }
+        });
+    }, false);
 }());
 //--></script>
 

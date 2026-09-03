@@ -10,6 +10,7 @@ Release: TBA
 
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.
+- Fix issue with inserting JS scripts in Setting form from being blocked.
 - Add Stripe Payments setup instructions for Admin user reference.
 
 
