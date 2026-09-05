@@ -41,11 +41,12 @@ class ControllerCommonHome extends Controller {
 			'north-america_en' => 'maps/continents/jquery.vmap.north-america.js',
 			'south-america_en' => 'maps/continents/jquery.vmap.south-america.js',
 		];
-		$mapScript = $mapScripts[$dashboardMap] ?? 'maps/jquery.vmap.world.js';
-		$this->document->addScript('view/javascript/jquery/jqvmap/' . $mapScript);
-		$this->data['dashboard_map'] = $dashboardMap;
 
-		$this->document->addScript('view/javascript/jquery/chart/jquery.chart.min.js');
+		$mapScript = $mapScripts[$dashboardMap] ?? 'maps/jquery.vmap.world.js';
+
+		$this->document->addScript('view/javascript/jquery/jqvmap/' . $mapScript);
+
+		$this->data['dashboard_map'] = $dashboardMap;
 
 		$this->document->addScript('view/javascript/jquery/flot/jquery.flot.min.js');
 		$this->document->addScript('view/javascript/jquery/flot/jquery.flot.resize.min.js');
