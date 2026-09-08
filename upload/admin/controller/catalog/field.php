@@ -484,7 +484,7 @@ class ControllerCatalogField extends Controller {
 		foreach ($this->request->post['selected'] as $field_id) {
 			$product_total = $this->model_catalog_product->getTotalProductsByFieldId($field_id);
 
-			if ($product_total !== null) {
+			if ($product_total > 0) {
 				$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
 			}
 		}
