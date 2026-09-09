@@ -18,10 +18,10 @@ class ModelToolImage extends Model {
             return null;
         }
 
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-
         $old_image = $filename;
-        $new_image = 'cache/' . mb_substr($filename, 0, strrpos($filename, '.'), 'UTF-8') . '-' . $width . 'x' . $height . '.' . $extension;
+
+        // Always cache as WebP — accepts any input format (jpg, png, gif, webp)
+        $new_image = 'cache/' . mb_substr($filename, 0, strrpos($filename, '.'), 'UTF-8') . '-' . $width . 'x' . $height . '.webp';
 
         // Create cache directory if needed
         $cache_dir = DIR_IMAGE . dirname($new_image);
@@ -33,28 +33,17 @@ class ModelToolImage extends Model {
         // Compression quality (falls back to 80 until config_image_quality is added in Settings)
         $quality = (int)($this->config->get('config_image_quality') ?: 80);
 
-        // Generate cached image if missing or stale
+        // Generate cached WebP if missing or stale
         if (!is_file(DIR_IMAGE . $new_image) || filemtime(DIR_IMAGE . $old_image) > filemtime(DIR_IMAGE . $new_image)) {
             [$width_orig, $height_orig] = getimagesize(DIR_IMAGE . $old_image);
 
+            $image = new Image(DIR_IMAGE . $old_image);
+
             if ($width_orig !== $width || $height_orig !== $height) {
-                $image = new Image(DIR_IMAGE . $old_image);
                 $image->resize($width, $height);
-                $image->save(DIR_IMAGE . $new_image, $quality);
-            } else {
-                copy(DIR_IMAGE . $old_image, DIR_IMAGE . $new_image);
             }
-        }
 
-        // Generate WebP version if missing or stale (config_image_webp defaults to enabled)
-        if ($this->config->get('config_image_webp') !== '0') {
-            $new_image_webp = mb_substr($new_image, 0, strrpos($new_image, '.'), 'UTF-8') . '.webp';
-
-            if (!is_file(DIR_IMAGE . $new_image_webp) || filemtime(DIR_IMAGE . $old_image) > filemtime(DIR_IMAGE . $new_image_webp)) {
-                $image_webp = new Image(DIR_IMAGE . $old_image);
-                $image_webp->resize($width, $height);
-                $image_webp->save(DIR_IMAGE . $new_image_webp, $quality);
-            }
+            $image->save(DIR_IMAGE . $new_image, $quality);
         }
 
 		// Sanitize the new image URL

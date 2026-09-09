@@ -8,11 +8,12 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Add Stripe Payments setup instructions for Admin user reference.
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.
 - Fix issue with inserting JS scripts in Setting form from being blocked.
 - Fix bug in Admin Product Model not saving when no Palette id exist.
-- Add Stripe Payments setup instructions for Admin user reference.
+- Updated Image models to resize all image formats to WebP for caching.
 
 
 NivoCart v2.4.0
