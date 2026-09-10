@@ -54,7 +54,11 @@ class ControllerToolDataRetention extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
-		if (isset($this->error['warning'])) {
+		// Flash errors set by runNow() on the previous request
+		if (isset($this->session->data['error'])) {
+			$this->data['error_warning'] = $this->session->data['error'];
+			unset($this->session->data['error']);
+		} elseif (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';
@@ -91,40 +95,92 @@ class ControllerToolDataRetention extends Controller {
 
 	/**
 	 * Manual trigger — runs all purge tasks immediately.
+	 *
+	 * Design notes:
+	 *  - ob_start() at the top prevents any stray PHP notice or DB exception
+	 *    output from causing "headers already sent" and silently dropping the
+	 *    Location redirect (which made the browser park on the runNow URL,
+	 *    leaving Phil with no auth token and looking like an admin logout).
+	 *  - The outer try/catch ensures redirect() is ALWAYS called, even when
+	 *    something fails before the task loop (e.g. a missing table referenced
+	 *    in require_once, a broken model load, a DB connection issue).
+	 *  - Per-task try/catch logs each task's outcome individually so a single
+	 *    failure does not abort the remaining tasks.
+	 *  - Any caught exception is surfaced as a flash error in the session so
+	 *    the admin can see exactly what went wrong on the next page load.
 	 */
 	public function runNow(): void {
+		ob_start();
+
 		$this->language->load('tool/data_retention');
 
 		if (!$this->validate()) {
 			$this->session->data['error'] = $this->error['warning'];
-			$this->response->redirect($this->url->link('tool/data_retention', 'token=' . $this->session->data['token'], 'SSL'));
+			ob_end_clean();
+			$this->response->redirect(str_replace('&amp;', '&', $this->url->link('tool/data_retention', 'token=' . $this->session->data['token'], 'SSL')));
 			return;
 		}
 
-		$this->load->model('tool/data_retention');
-
-		require_once DIR_SYSTEM . 'library/cron.php';
-
-		$cron = new Cron($this->registry);
-
-		$tasks = [
-			'purge_ip_columns'       => [$this->model_tool_data_retention, 'purgeIpColumns'],
-			'purge_ip_log'           => [$this->model_tool_data_retention, 'purgeIpLog'],
-			'purge_online_sessions'  => [$this->model_tool_data_retention, 'purgeOnlineSessions'],
-			'purge_deleted_accounts' => [$this->model_tool_data_retention, 'purgeDeletedAccounts'],
-		];
-
+		$errors = [];
 		$total = 0;
 
-		foreach ($tasks as $key => $callable) {
-			$rows = $callable();
-			$total += $rows;
-			$cron->log($key, $rows, 'success', 'Manual run');
+		try {
+			$this->load->model('tool/data_retention');
+
+			require_once DIR_SYSTEM . 'library/cron.php';
+
+			$cron = new Cron($this->registry);
+
+			// Capture the admin's IP so we can exclude it from the
+			// online-session cleanup and avoid self-logout.
+			$admin_ip = $this->request->server['REMOTE_ADDR'] ?? '';
+
+			$tasks = [
+				'purge_ip_columns'       => fn() => $this->model_tool_data_retention->purgeIpColumns(),
+				'purge_ip_log'           => fn() => $this->model_tool_data_retention->purgeIpLog(),
+				'purge_online_sessions'  => fn() => $this->model_tool_data_retention->purgeOnlineSessions($admin_ip),
+				'purge_deleted_accounts' => fn() => $this->model_tool_data_retention->purgeDeletedAccounts(),
+			];
+
+			foreach ($tasks as $key => $callable) {
+				$rows = 0;
+				$status = 'success';
+				$message = 'Manual run';
+
+				try {
+					$rows = $callable();
+					$total += $rows;
+				} catch (\Exception $e) {
+					$status = 'error';
+					$message = $e->getMessage();
+					$errors[] = $key . ': ' . $e->getMessage();
+				}
+
+				try {
+					$cron->log($key, $rows, $status, $message);
+				} catch (\Exception $e) {
+					// Log the logging failure but continue — the task itself ran.
+					$errors[] = 'log(' . $key . '): ' . $e->getMessage();
+				}
+			}
+
+		} catch (\Exception $e) {
+			// Something failed before or during task setup (model load, cron
+			// init, DB issue).  Store the error for display on the next page.
+			$errors[] = 'Setup error: ' . $e->getMessage();
+		}
+
+		if ($errors) {
+			$this->session->data['error'] = implode(' | ', $errors);
 		}
 
 		$this->session->data['success'] = sprintf($this->language->get('text_success'), $total);
 
-		$this->response->redirect($this->url->link('tool/data_retention', 'token=' . $this->session->data['token'], 'SSL'));
+		ob_end_clean();
+		// url->link() returns &amp;-encoded URLs designed for HTML attributes.
+		// The HTTP Location header is not HTML — decode before sending so the
+		// browser lands on ?token=TOKEN rather than ?amp;token=TOKEN.
+		$this->response->redirect(str_replace('&amp;', '&', $this->url->link('tool/data_retention', 'token=' . $this->session->data['token'], 'SSL')));
 	}
 
 	protected function validate(): bool {

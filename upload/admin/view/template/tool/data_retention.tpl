@@ -55,13 +55,13 @@
       <!-- Manual Trigger -->
       <div class="buttons" style="margin:15px 0;">
         <div class="right">
-          <a onclick="if(confirm('<?php echo $text_confirm; ?>')) { location='<?php echo $action; ?>'; }" class="button ripple animated fadeIn"><?php echo $button_run_now; ?></a>
+          <a id="run-now" class="button ripple animated fadeIn"><?php echo $button_run_now; ?></a>
         </div>
       </div>
       <!-- Cron Command -->
       <h2><?php echo $text_cron_cmd; ?></h2>
       <div class="toolbox">
-        <pre style="margin:0; padding:8px; background:#f5f5f5; border:1px solid #ddd; font-size:12px; white-space:pre-wrap; word-break:break-all; color:#333;">0 2 * * * php /path/to/upload/cron.php >> /var/log/nivocart_cron.log 2>&1</pre>
+        <pre style="margin:0; padding:8px; background:#f5f5f5; border:1px solid #ddd; font-size:12px; white-space:pre-wrap; word-break:break-all; color:#333;">0 2 * * * php /path/to/public_html/cron.php >> /path/to/log/nivocart_cron.log 2>&1</pre>
       </div>
       <!-- Recent Activity Log -->
       <h2 style="margin-top:20px;"><?php echo $text_recent_log; ?></h2>
@@ -96,4 +96,34 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript"><!--
+// url->link() returns &amp;-encoded URLs suitable for HTML attributes.
+// In a JavaScript string that is NOT decoded — the browser would navigate
+// to a URL with a literal &amp; in the query string, giving PHP a parameter
+// named "amp;token" instead of "token", which trips the login pre-action
+// and looks like an admin logout.  Decode here before embedding in JS.
+var runNowUrl = '<?php echo str_replace('&amp;', '&', $action); ?>';
+
+$('#run-now').on('click', function() {
+	$.confirm({
+		title: '<?php echo $button_run_now; ?>',
+		content: '<?php echo $text_confirm; ?>',
+		icon: 'fa fa-question-circle',
+		theme: 'light',
+		useBootstrap: false,
+		boxWidth: 580,
+		animation: 'zoom',
+		closeAnimation: 'scale',
+		opacity: 0.1,
+		buttons: {
+			confirm: function() {
+				location = runNowUrl;
+			},
+			cancel: function() { }
+		}
+	});
+});
+//--></script>
+
 <?php echo $footer; ?>
