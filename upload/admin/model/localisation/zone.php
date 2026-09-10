@@ -38,7 +38,7 @@ class ModelLocalisationZone extends Model {
 	}
 
 	public function getZones(array $data = []): array {
-		$sql = "SELECT *, z.name, cd.name AS `country` FROM `" . DB_PREFIX . "zone` z LEFT JOIN `" . DB_PREFIX . "country` c ON (z.country_id = c.country_id) LEFT JOIN `" . DB_PREFIX . "country_description` cd ON (z.country_id = cd.country_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT z.*, cd.name AS `country` FROM `" . DB_PREFIX . "zone` z LEFT JOIN `" . DB_PREFIX . "country_description` cd ON (z.country_id = cd.country_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (isset($data['filter_name'])) {
 			$sql .= " AND cd.name = '" . $data['filter_name'] . "'";
