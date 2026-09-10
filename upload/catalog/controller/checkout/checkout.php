@@ -919,6 +919,12 @@ class ControllerCheckoutCheckout extends Controller {
 	public function country() {
 		$json = [];
 
+		if (empty($this->request->get['country_id'])) {
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+			return;
+		}
+
 		$this->load->model('localisation/country');
 
 		$country_info = $this->model_localisation_country->getCountry($this->request->get['country_id']);
