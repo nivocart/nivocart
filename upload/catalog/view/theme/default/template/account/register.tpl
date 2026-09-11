@@ -72,7 +72,7 @@
   <h2><?php echo $text_your_address; ?></h2>
   <div class="content">
     <table class="form">
-      <tr>
+      <tr id="company-display" style="display:<?php echo ($show_company_id ? '' : 'none'); ?>;">
         <td><?php echo $entry_company; ?></td>
         <td><input type="text" name="company" value="<?php echo $company; ?>" size="30" /></td>
       </tr>
@@ -90,14 +90,14 @@
           <?php } ?>
         <?php } ?></td>
       </tr>
-      <tr id="company-id-display">
+      <tr id="company-id-display" style="display:<?php echo ($show_company_id ? '' : 'none'); ?>;">
         <td><span id="company-id-required" class="required">*</span> <?php echo $entry_company_id; ?></td>
         <td><input type="text" name="company_id" value="<?php echo $company_id; ?>" />
         <?php if ($error_company_id) { ?>
           <span class="error"><?php echo $error_company_id; ?></span>
         <?php } ?></td>
       </tr>
-      <tr id="tax-id-display">
+      <tr id="tax-id-display" style="display:<?php echo ($show_tax_id ? '' : 'none'); ?>;">
         <td><span id="tax-id-required" class="required">*</span> <?php echo $entry_tax_id; ?></td>
         <td><input type="text" name="tax_id" value="<?php echo $tax_id; ?>" />
         <?php if ($error_tax_id) { ?>
@@ -251,8 +251,10 @@ $('input[name=\'customer_group_id\']:checked').on('change', function() {
 
 	if (customer_group[this.value]) {
 		if (customer_group[this.value]['company_id_display'] === '1') {
+			$('#company-display').show();
 			$('#company-id-display').show();
 		} else {
+			$('#company-display').hide();
 			$('#company-id-display').hide();
 		}
 

@@ -275,6 +275,12 @@ class ControllerAccountRegister extends Controller {
 			$this->data['customer_group_id'] = $this->config->get('config_customer_group_id');
 		}
 
+		// Company / Tax ID display flags — driven by the active customer group settings
+		$customer_group_info = $this->model_account_customer_group->getCustomerGroup($this->data['customer_group_id']);
+
+		$this->data['show_company_id'] = $customer_group_info ? (bool)$customer_group_info['company_id_display'] : false;
+		$this->data['show_tax_id'] = $customer_group_info ? (bool)$customer_group_info['tax_id_display'] : false;
+
 		// Company ID
 		if (isset($this->request->post['company_id'])) {
 			$this->data['company_id'] = $this->request->post['company_id'];

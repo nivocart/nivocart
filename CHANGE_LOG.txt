@@ -16,6 +16,7 @@ Release: TBA
 - Fix bug in Cart and Checkout to prevent malformed Country/zones errors.
 - Fix bug in Data Retention Cron Tool preventing User being logged-off.
 - Updated Image models to resize all image formats to WebP for caching.
+- Updated Account Register and Checkout fixing a Customer Group issue.
 
 
 NivoCart v2.4.0

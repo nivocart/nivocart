@@ -86,11 +86,13 @@
               <tr><td colspan="2"><div class="error"><?php echo $error_date_of_birth; ?></div></td></tr>
             <?php } ?>
           <?php } ?>
+          <?php if ($one_page_company_id) { ?>
           <tr>
             <td colspan="2"><label for="company" class="hidden">company</label>
               <input type="text" name="company" id="company" placeholder="<?php echo $entry_company; ?>" value="<?php echo $company; ?>" size="26" />
             </td>
           </tr>
+          <?php } ?>
           <tr>
             <td colspan="2">
               <div style="display:<?php echo (count($customer_groups) > 1 ? 'table-row' : 'none'); ?>;">
@@ -102,6 +104,7 @@
               </div>
             </td>
           </tr>
+          <?php if ($one_page_company_id) { ?>
           <tr id="company-id-display">
             <td colspan="2"><label for="company-id" class="hidden">company id</label>
               <input type="text" name="company_id" id="company-id" placeholder="<?php echo $entry_company_id; ?>" value="<?php echo $company_id; ?>" size="26" />
@@ -110,6 +113,8 @@
           <?php if ($error_company_id) { ?>
             <tr><td colspan="2"><div class="error"><?php echo $error_company_id; ?></div></td></tr>
           <?php } ?>
+          <?php } ?>
+          <?php if ($one_page_tax_id) { ?>
           <tr id="tax-id-display">
             <td colspan="2"><label for="tax-id" class="hidden">tax id</label>
               <input type="text" name="tax_id" id="tax-id" placeholder="<?php echo $entry_tax_id; ?>" value="<?php echo $tax_id; ?>" size="26" />
@@ -117,6 +122,7 @@
           </tr>
           <?php if ($error_tax_id) { ?>
             <tr><td colspan="2"><div class="error"><?php echo $error_tax_id; ?></div></td></tr>
+          <?php } ?>
           <?php } ?>
           <tr>
             <td colspan="2"><label for="address-1" class="hidden">address 1</label>
@@ -192,11 +198,13 @@
           <?php if ($error_shipping_lastname) { ?>
             <tr><td colspan="2"><div class="error"><?php echo $error_shipping_lastname; ?></div></td></tr>
           <?php } ?>
+          <?php if ($one_page_company_id) { ?>
           <tr>
             <td colspan="2"><label for="shipping-company" class="hidden">shipping company</label>
               <input type="text" name="shipping_company" id="shipping-company" placeholder="<?php echo $entry_company; ?>" value="<?php echo $shipping_company; ?>" size="26" />
             </td>
           </tr>
+          <?php } ?>
           <tr>
             <td colspan="2"><label for="shipping-address-1" class="hidden">shipping address 1</label>
               <input type="text" name="shipping_address_1" id="shipping-address-1" placeholder="<?php echo $entry_address_1; ?>" value="<?php echo $shipping_address_1; ?>" size="26" /> <span class="required">*</span>
