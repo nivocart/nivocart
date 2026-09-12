@@ -56,7 +56,7 @@
               <?php } ?></td>
             </tr>
             <tr>
-              <td><?php echo $entry_meta_description; ?></td>
+              <td><span class="<?php echo $is_required; ?>">*</span> <?php echo $entry_meta_description; ?></td>
               <td><textarea name="product_description[<?php echo $language['language_id']; ?>][meta_description]" id="meta-description<?php echo $language['language_id']; ?>" data-limit="156" cols="40" rows="5"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
               <span id="remaining<?php echo $language['language_id']; ?>"></span></td>
             </tr>
@@ -115,7 +115,7 @@
             <td>youtube.com/watch?v=<input type="text" name="video_code" value="<?php echo $video_code; ?>" size="25" /> &nbsp; <a onclick="window.open('https://www.youtube.com/');" title="YouTube" class="button-form"><i class="fa fa-youtube"></i> &nbsp; YouTube</a></td>
           </tr>
           <tr>
-            <td><?php echo $entry_keyword; ?></td>
+            <td><span class="<?php echo $is_required; ?>">*</span> <?php echo $entry_keyword; ?></td>
             <td><input type="text" name="keyword" value="<?php echo $keyword; ?>" size="30" /></td>
           </tr>
           <tr>
@@ -131,7 +131,7 @@
             </td>
           </tr>
           <tr class="highlighted">
-            <td><?php echo $entry_tax_class; ?></td>
+            <td><span class="<?php echo $is_required; ?>">*</span> <?php echo $entry_tax_class; ?></td>
             <td><select name="tax_class_id" id="input-tax-class">
               <option value="0"><?php echo $text_none; ?></option>
               <?php foreach ($tax_classes as $tax_class) { ?>
@@ -168,7 +168,7 @@
             <td><input type="text" name="sort_order" value="<?php echo $sort_order; ?>" size="2" /></td>
           </tr>
           <tr class="highlighted">
-            <td><?php echo $entry_status; ?></td>
+            <td><span class="<?php echo $is_required; ?>">*</span> <?php echo $entry_status; ?></td>
             <td><select name="status">
               <?php if ($status) { ?>
                 <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -336,7 +336,7 @@
             </td>
           </tr>
           <tr>
-            <td><?php echo $entry_store; ?></td>
+            <td><span class="<?php echo $is_required; ?>">*</span> <?php echo $entry_store; ?></td>
             <td><div id="store_ids" class="scrollbox-store">
               <?php $class = 'even'; ?>
               <div class="<?php echo $class; ?>">

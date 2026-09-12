@@ -1012,6 +1012,10 @@ class ControllerCatalogProduct extends Controller {
 			}
 		}
 
+		// Advised
+		$this->data['is_required'] = 'advised';
+
+		// POST form
 		if (isset($this->request->get['product_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
 			$product_info = $this->model_catalog_product->getProduct($this->request->get['product_id']);
 		}
