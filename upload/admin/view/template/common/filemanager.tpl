@@ -22,11 +22,11 @@
 <div id="container">
   <div id="file-menu">
     <a id="create" class="filemanager-button ripple"><i class="fa fa-folder-o"></i><?php echo $button_folder; ?></a>
-    <a id="delete" class="filemanager-button ripple"><i class="fa fa-trash-o"></i><?php echo $button_delete; ?></a>
     <a id="move" class="filemanager-button ripple"><i class="fa fa-scissors"></i><?php echo $button_move; ?></a>
     <a id="copy" class="filemanager-button ripple"><i class="fa fa-files-o"></i><?php echo $button_copy; ?></a>
     <a id="rename" class="filemanager-button ripple"><i class="fa fa-pencil"></i><?php echo $button_rename; ?></a>
     <a id="upload" class="filemanager-button ripple"><i class="fa fa-upload"></i><?php echo $button_upload; ?></a>
+    <a id="delete" class="filemanager-button ripple"><i class="fa fa-trash-o"></i><?php echo $button_delete; ?></a>
     <a id="refresh" class="filemanager-button ripple"><i class="fa fa-refresh"></i><?php echo $button_refresh; ?></a>
     <a id="information" class="filemanager-button ripple hide-phone"><i class="fa fa-info-circle"></i><?php echo $button_info; ?></a>
   </div>
@@ -64,6 +64,73 @@ $(document).ready(function() {
     // ----------------------------------------------------------
     function getTree() {
         return $('#column-left').jstree(true);
+    }
+
+    // ----------------------------------------------------------
+    // PAGINATION STATE
+    // ----------------------------------------------------------
+    var currentDirectory = '';
+    var currentPage      = 1;
+
+    // ----------------------------------------------------------
+    // loadFiles(directory, page)
+    // ----------------------------------------------------------
+    function loadFiles(directory, page) {
+        currentDirectory = directory;
+        currentPage      = page || 1;
+
+        $.ajax({
+            url: 'index.php?route=common/filemanager/files&token=<?php echo $token; ?>',
+            type: 'post',
+            data: { directory: directory, page: currentPage },
+            dataType: 'json',
+            success: function(json) {
+                var html = '<div>';
+
+                if (!json || !json.files || json.files.length === 0) {
+                    html += '<div class="feedback"><?php echo $text_no_file_found; ?></div>';
+                } else {
+                    for (var i = 0; i < json.files.length; i++) {
+                        var f = json.files[i];
+                        html += '<a file="' + f['file'] + '" style="float:left;" title="' + f['filename'] + '">'
+                              + '<img src="' + f['image'] + '" title="" alt="" />'
+                              + '<span class="fileName">' + (f['filename'].length > 16 ? f['filename'].substr(0, 16) + '..' : f['filename']) + '</span>'
+                              + '<span class="fileSize">' + f['size'] + '</span>'
+                              + '<input type="hidden" name="image" value="' + f['file'] + '" /></a>';
+                    }
+                }
+
+                html += '</div>';
+
+                if (json.pages && json.pages > 1) {
+                    var pageLabel = '<?php echo addslashes($text_page_of); ?>'
+                        .replace('{page}', json.page)
+                        .replace('{pages}', json.pages);
+
+                    html += '<div id="fm-pagination" style="clear:both; padding:10px 4px 4px; text-align:center; font-size:13px;">';
+
+                    if (json.page > 1) {
+                        html += '<a id="fm-prev" class="filemanager-button ripple" style="margin-right:8px; cursor:pointer;"><?php echo $text_prev_page; ?></a>';
+                    }
+
+                    html += '<span style="margin:0 8px;">' + pageLabel + '</span>';
+
+                    if (json.page < json.pages) {
+                        html += '<a id="fm-next" class="filemanager-button ripple" style="margin-left:8px; cursor:pointer;"><?php echo $text_next_page; ?></a>';
+                    }
+
+                    html += '</div>';
+                }
+
+                $('#column-right').html(html);
+
+                $('#fm-prev').on('click', function() { loadFiles(currentDirectory, currentPage - 1); });
+                $('#fm-next').on('click', function() { loadFiles(currentDirectory, currentPage + 1); });
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
     }
 
     // ----------------------------------------------------------
@@ -165,11 +232,10 @@ $(document).ready(function() {
     });
 
     // ----------------------------------------------------------
-    // EVENT: node selected → load files in #column-right
+    // EVENT: node selected → load files in #column-right (page 1)
     // CHANGE: Old API used callback.onselect inside the tree config.
     //         jsTree 3.x fires a jQuery event: 'select_node.jstree'
-    //         'data.node' is the selected node object.
-    //         $(NODE).attr('directory') becomes node.li_attr.directory
+    //         File loading delegated to loadFiles(); new folder = page 1.
     // ----------------------------------------------------------
     $('#column-left').on('select_node.jstree', function(e, data) {
         var directory = data.node.li_attr.directory;
@@ -177,33 +243,7 @@ $(document).ready(function() {
         // Keep window.dr in sync (used by the upload dialog)
         window.dr = directory;
 
-        $.ajax({
-            url: 'index.php?route=common/filemanager/files&token=<?php echo $token; ?>',
-            type: 'post',
-            data: 'directory=' + encodeURIComponent(directory),
-            dataType: 'json',
-            success: function(json) {
-                var html = '<div>';
-                if (json) {
-                    if (json.length === 0) {
-                        html += '<div class="feedback"><?php echo $text_no_file_found; ?></div>';
-                    } else {
-                        for (var i = 0; i < json.length; i++) {
-                            html += '<a file="' + json[i]['file'] + '" style="float:left;" title="' + json[i]['filename'] + '">'
-                                  + '<img src="' + json[i]['image'] + '" title="" alt="" />'
-                                  + '<span class="fileName">' + (json[i]['filename'].length > 16 ? json[i]['filename'].substr(0, 16) + '..' : json[i]['filename']) + '</span>'
-                                  + '<span class="fileSize">' + json[i]['size'] + '</span>'
-                                  + '<input type="hidden" name="image" value="' + json[i]['file'] + '" /></a>';
-                        }
-                    }
-                }
-                html += '</div>';
-                $('#column-right').html(html);
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-            }
-        });
+        loadFiles(directory, 1);
     });
 
     // ----------------------------------------------------------

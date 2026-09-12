@@ -87,3 +87,8 @@ $_['info_credit']         = 'Kay Lohn (Original script), Dhaupin (Performance).'
 $_['info_scripts']        = 'jsTree v3.3.17 and Plupload v2.3.6.';
 $_['info_license']        = 'GPLv3 (GNU General Public License)';
 $_['info_files']          = 'jpg, jpeg, png, gif, mp3, mp4, oga, ogv, ogg, webm, m4a, m4v, wav, wma, wmv, zip, rar, pdf, swf, flv.';
+
+// Pagination
+$_['text_page_of']        = 'Page {page} of {pages}';
+$_['text_prev_page']      = '&laquo; Prev';
+$_['text_next_page']      = 'Next &raquo;';

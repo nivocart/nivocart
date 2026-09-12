@@ -44,6 +44,8 @@ class ControllerCommonFileManagerFull extends Controller {
 		$this->data['entry_copy'] = $this->language->get('entry_copy');
 		$this->data['entry_rename'] = $this->language->get('entry_rename');
 
+		$this->data['button_images_cleanup'] = $this->language->get('button_images_cleanup');
+		$this->data['images_cleanup'] = $this->url->link('tool/images_cleanup', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['button_exit'] = $this->language->get('button_exit');
 		$this->data['button_folder'] = $this->language->get('button_folder');
 		$this->data['button_delete'] = $this->language->get('button_delete');
@@ -77,6 +79,9 @@ class ControllerCommonFileManagerFull extends Controller {
 		$this->data['text_upload_plus'] = $this->language->get('text_upload_plus');
 		$this->data['text_no_selection'] = $this->language->get('text_no_selection');
 		$this->data['text_allowed'] = $this->language->get('text_allowed');
+		$this->data['text_page_of'] = $this->language->get('text_page_of');
+		$this->data['text_prev_page'] = $this->language->get('text_prev_page');
+		$this->data['text_next_page'] = $this->language->get('text_next_page');
 
 		$this->data['error_directory'] = $this->language->get('error_directory');
 
@@ -204,23 +209,26 @@ class ControllerCommonFileManagerFull extends Controller {
 	public function files() {
 		$this->data['token'] = $this->session->data['token'];
 
-		$json = [];
-
 		if (!empty($this->request->post['directory'])) {
 			$directory = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->post['directory'], ENT_QUOTES, 'UTF-8')), '/');
 		} else {
 			$directory = rtrim(DIR_IMAGE . 'data/', '/');
 		}
 
-		$allowed = ['jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
+		$page     = isset($this->request->post['page']) ? max(1, (int)$this->request->post['page']) : 1;
+		$per_page = 200;
 
-		$suffix = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
+		$allowed = ['jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
+		$suffix  = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
 
 		if (!is_dir($directory)) {
 			$this->response->addHeader('Content-Type: application/json');
-			$this->response->setOutput(json_encode($json));
+			$this->response->setOutput(json_encode(['files' => [], 'total' => 0, 'page' => 1, 'pages' => 1]));
 			return;
 		}
+
+		// Collect all matching file paths
+		$all_paths = [];
 
 		$iterator = new FilesystemIterator($directory, FilesystemIterator::SKIP_DOTS);
 
@@ -235,7 +243,23 @@ class ControllerCommonFileManagerFull extends Controller {
 				continue;
 			}
 
-			$size = $entry->getSize();
+			$all_paths[] = str_replace('\\', '/', $entry->getPathname());
+		}
+
+		// Natural-sort for consistent page order across requests
+		natsort($all_paths);
+		$all_paths = array_values($all_paths);
+
+		$total  = count($all_paths);
+		$pages  = $total > 0 ? (int)ceil($total / $per_page) : 1;
+		$page   = min($page, $pages);
+		$slice  = array_slice($all_paths, ($page - 1) * $per_page, $per_page);
+
+		$base  = str_replace('\\', '/', DIR_IMAGE . 'data/');
+		$files = [];
+
+		foreach ($slice as $pathname) {
+			$size = filesize($pathname);
 			$i = 0;
 
 			while (($size / 1024) > 1) {
@@ -243,21 +267,23 @@ class ControllerCommonFileManagerFull extends Controller {
 				$i++;
 			}
 
-			$base = str_replace('\\', '/', DIR_IMAGE . 'data/');
-			$pathname = str_replace('\\', '/', $entry->getPathname());
-
 			$filename_path_data = htmlspecialchars(substr($pathname, mb_strlen($base, 'UTF-8')), ENT_QUOTES, 'UTF-8');
 
-			$json[] = [
-				'filename' => htmlspecialchars($entry->getFilename(), ENT_QUOTES, 'UTF-8'),
+			$files[] = [
+				'filename' => htmlspecialchars(basename($pathname), ENT_QUOTES, 'UTF-8'),
 				'file'     => $filename_path_data,
-				'size'     => round(substr($size, 0, strpos($size, '.') + 4), 2, PHP_ROUND_HALF_UP) . $suffix[$i],
+				'size'     => round($size, 2) . $suffix[$i],
 				'image'    => $this->image($filename_path_data)
 			];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
+		$this->response->setOutput(json_encode([
+			'files' => $files,
+			'total' => $total,
+			'page'  => $page,
+			'pages' => $pages,
+		]));
 	}
 
 	public function create() {
