@@ -3709,7 +3709,7 @@ INSERT INTO `nc_setting` (`setting_id`, `store_id`, `group`, `key`, `value`, `se
 (511, 0, 'config', 'config_alert_emails', '', 0),
 (512, 0, 'config', 'config_facebook', '', 0),
 (513, 0, 'config', 'config_twitter', '', 0),
-(514, 0, 'config', 'config_google', '', 0),
+(514, 0, 'config', 'config_tiktok', '', 0),
 (515, 0, 'config', 'config_pinterest', '', 0),
 (516, 0, 'config', 'config_instagram', '', 0),
 (517, 0, 'config', 'config_teams', '', 0),

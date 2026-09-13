@@ -85,7 +85,7 @@ class ControllerSettingSetting extends Controller {
 		'entry_ftp_host', 'entry_ftp_port', 'entry_ftp_username',
 		'entry_ftp_password', 'entry_ftp_root', 'entry_mail_parameter',
 		'entry_alert_mail', 'entry_account_mail', 'entry_alert_emails',
-		'entry_facebook', 'entry_twitter', 'entry_google', 'entry_pinterest',
+		'entry_facebook', 'entry_twitter', 'entry_tiktok', 'entry_pinterest',
 		'entry_instagram', 'entry_teams', 'entry_sharethis', 'entry_meta_google',
 		'entry_meta_bing', 'entry_meta_yandex', 'entry_meta_baidu',
 		'entry_google_analytics', 'entry_matomo_analytics', 'entry_maintenance',
@@ -327,7 +327,7 @@ class ControllerSettingSetting extends Controller {
 		// Media
 		'config_facebook'         => [],
 		'config_twitter'          => [],
-		'config_google'           => [],
+		'config_tiktok'           => [],
 		'config_pinterest'        => [],
 		'config_instagram'        => [],
 		'config_teams'            => [],
@@ -464,7 +464,9 @@ class ControllerSettingSetting extends Controller {
 		$token = $this->session->data['token'];
 
 		$this->data['customer_approval'] = $this->url->link('sale/customer_group', 'token=' . $token, 'SSL');
+
 		$this->data['themes'] = $this->url->link('extension/theme', 'token=' . $token, 'SSL');
+
 		$this->data['configure_theme'] = $this->url->link('extension/theme', 'token=' . $token, 'SSL');
 		$this->data['configure_layout'] = $this->url->link('design/layout', 'token=' . $token, 'SSL');
 		$this->data['configure_language'] = $this->url->link('localisation/language', 'token=' . $token, 'SSL');

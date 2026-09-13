@@ -2013,8 +2013,8 @@
             <td><input name="config_twitter" type="text" size="60" value="<?php echo $config_twitter; ?>" /></td>
           <tr>
           <tr>
-            <td><?php echo $entry_google; ?></td>
-            <td><input name="config_google" type="text" size="60" value="<?php echo $config_google; ?>" /></td>
+            <td><?php echo $entry_tiktok; ?></td>
+            <td><input name="config_tiktok" type="text" size="60" value="<?php echo $config_tiktok; ?>" /></td>
           <tr>
           <tr>
             <td><?php echo $entry_pinterest; ?></td>
