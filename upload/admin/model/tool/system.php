@@ -84,7 +84,10 @@ class ModelToolSystem extends Model {
 	public function getRewriteBase(): string {
 		$base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 
-		return $base ? $base . '/' : '/';
+		// For root installs $base is '' (falsy) — return '' not '/', so any
+		// Location: redirect built from this doesn't produce '//slug' (protocol-relative).
+		// Subdirectory installs return '/subdir' with no trailing slash.
+		return $base ?: '';
 	}
 
 	/**

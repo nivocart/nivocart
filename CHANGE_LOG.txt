@@ -17,6 +17,7 @@ Release: TBA
 - Fix bug in Admin Product Model not saving when no Palette id exist.
 - Fix bug in Cart and Checkout to prevent malformed Country/zones errors.
 - Fix bug in Data Retention Cron Tool preventing User being logged-off.
+- Fix bug in Model Tool System, Admin and Catalog, for Seo_Urls routing issue.
 - Updated Image models to resize all image formats to WebP for caching.
 - Updated Account Register and Checkout fixing a Customer Group issue.
 
