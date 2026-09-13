@@ -11,6 +11,7 @@ class ControllerProductCategoryList extends Controller {
 		$this->language->load('product/' . $this->_name);
 
 		$this->load->model('catalog/category');
+		$this->load->model('tool/image');
 
 		$this->data['breadcrumbs'] = [];
 
@@ -43,61 +44,61 @@ class ControllerProductCategoryList extends Controller {
 
 			$empty_category = $this->config->get('config_empty_category');
 
+			$cat_width = $this->config->get('config_image_category_width');
+			$cat_height = $this->config->get('config_image_category_height');
+
 			$this->data['categories'] = [];
 
-			$this->data['ccount'] = 0;
-
 			foreach ($categories_list as $category_1) {
-				$level_2_data = [];
+				// Image
+				if (!empty($category_1['image'])) {
+					$thumb = $this->model_tool_image->resize($category_1['image'], $cat_width, $cat_height);
+				} else {
+					$thumb = '';
+				}
+
+				// Description — strip tags, truncate to 200 chars
+				$description = substr(strip_tags(html_entity_decode($category_1['description'], ENT_QUOTES, 'UTF-8')), 0, 200);
+
+				if (strlen(strip_tags(html_entity_decode($category_1['description'], ENT_QUOTES, 'UTF-8'))) > 200) {
+					$description .= '..';
+				}
+
+				// Direct child categories (level 2 only) — used as pills
+				$children = [];
 
 				$categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
 
 				foreach ($categories_2 as $category_2) {
-					$level_3_data = [];
+					$show = true;
 
-					$categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
-
-					foreach ($categories_3 as $category_3) {
+					if (!$empty_category) {
 						$data = [
-							'filter_category_id'  => $category_3['category_id'],
+							'filter_category_id'  => $category_2['category_id'],
 							'filter_sub_category' => true
 						];
 
-						if (!$empty_category) {
-							$product_total = $this->model_catalog_product->getTotalProducts($data);
-						} else {
-							$product_total = 0;
-						}
+						$product_total = $this->model_catalog_product->getTotalProducts($data);
 
-						if ($empty_category || $product_total > 0) {
-							$level_3_data[] = [
-								'name' => $category_3['name'],
-								'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id'], 'SSL')
-							];
-						}
+						$show = ($product_total > 0);
 					}
 
-					$level_2_data[] = [
-						'name'     => $category_2['name'],
-						'children' => $level_3_data,
-						'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'], 'SSL')
-					];
+					if ($show) {
+						$children[] = [
+							'name' => $category_2['name'],
+							'href' => $this->url->link('product/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'], 'SSL')
+						];
+					}
 				}
 
 				$this->data['categories'][] = [
-					'name'     => $category_1['name'],
-					'children' => $level_2_data,
-					'href'     => $this->url->link('product/category', 'path=' . $category_1['category_id'], 'SSL'),
-					'count'    => $this->data['ccount']
+					'name'        => $category_1['name'],
+					'thumb'       => $thumb,
+					'description' => $description,
+					'href'        => $this->url->link('product/category', 'path=' . $category_1['category_id'], 'SSL'),
+					'children'    => $children
 				];
-
-				$this->data['ccount'] = $this->data['ccount'] + 1;
 			}
-
-			$this->data['cattotal'] = $this->data['ccount'];
-
-			$this->data['cattotal1'] = round(($this->data['cattotal'] / 3), 0, PHP_ROUND_HALF_UP);
-			$this->data['cattotal2'] = $this->data['cattotal1'] * 2;
 
 			$this->data['continue'] = $this->url->link('common/home', '', 'SSL');
 

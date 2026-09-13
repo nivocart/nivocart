@@ -1504,58 +1504,75 @@ ul.box-filter > li ul {
 /* ============================================================
  * TIER PAGES - Categories
  * ============================================================ */
-.tier-page {
+/* Category Page - All Categories list */
+.category-page {
   width: 100%;
-  overflow: auto;
   margin-top: 10px;
   margin-bottom: 30px;
 }
-.tier-page ul {
-  list-style: url('../image/bullet-3.png');
+.category-page > div {
+  overflow: auto;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
 }
-.tier-page ul li {
-  text-decoration: none;
-  padding: 2px 0;
+.category-page > div + div {
+  border-top: 1px solid var(--clr-border-light);
 }
-.tier-page ul li a {
-  text-decoration: none;
-  font-size: var(--font-size);
-  color: #333;
-  transition: color var(--ease);
-}
-.tier-page ul li a:hover {
-  color: var(--clr-link);
-}
-.tier-page ul li.head, .tier-page div.head {
-  list-style: none;
-  background: #F4F4F4;
-  margin-bottom: 3px;
-  margin-left: -15px;
-  padding: 5px 5px 5px 10px;
-}
-.tier-page ul li.head a, .tier-page div.head a {
-  text-decoration: none;
-  font-size: var(--font-size);
-  font-weight: normal;
-  text-shadow: 0 1px 0 #FCFCFC;
-  color: #333;
-  transition: color var(--ease);
-}
-.tier-page ul li.head a:hover, .tier-page div.head a:hover {
-  color: #22C0F0;
-}
-.tier-page ul li ul {
-  list-style: url('../image/arrow-right.png');
-  margin-bottom: 5px;
-  margin-left: -10px;
-}
-.tier-page .left, .tier-page .middle, .tier-page .right {
+.category-page .image {
   float: left;
-  width: 31%;
+  margin-right: 10px;
+  overflow: hidden;
 }
-.tier-page .left div.head, .tier-page .middle div.head, .tier-page .right div.head {
-  margin: 10px 5px;
+.category-page .image img {
+  display: block;
+  padding: 3px;
+}
+.category-page .info {
+  overflow: hidden;
+}
+.category-page .name {
+  margin-bottom: 3px;
+}
+.category-page .name a {
+  color: var(--clr-link);
+  font-size: 16px;
   font-weight: bold;
+  text-decoration: none;
+}
+.category-page .name a:hover {
+  color: #22C0F0;
+  text-decoration: underline;
+}
+.category-page .description {
+  color: #4D4D4D;
+  line-height: 20px;
+  margin-bottom: 6px;
+  overflow-wrap: break-word;
+}
+/* Child category pills */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+.category-pill {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 50px;
+  background: #F4F4F4;
+  border: 1px solid var(--clr-border);
+  color: #333;
+  font-size: 12px;
+  text-decoration: none;
+  transition: color var(--ease);
+}
+.category-pill:hover {
+  background: #E8E8E8;
+  color: var(--clr-link);
+  text-decoration: none;
 }
 
 /* Category */
@@ -2045,6 +2062,65 @@ ul.box-filter > li ul {
   color: #4D4D4D;
   margin-top: 6px;
 }
+/* ---- Dropship variant selector ---- */
+.product-info .product-variants {
+  border-bottom: 1px solid var(--clr-border-light);
+  padding: 0 5px 14px 5px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+.product-info .product-variants .variant-tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90px;
+  border: 2px solid var(--clr-border-light);
+  border-radius: 4px;
+  padding: 5px;
+  text-decoration: none;
+  color: var(--clr-text);
+  font-size: 12px;
+  transition: border-color 0.15s ease;
+  overflow: hidden;
+  background: transparent;
+}
+.product-info .product-variants .variant-tile img {
+  display: block;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 2px;
+  margin-bottom: 4px;
+}
+.product-info .product-variants .variant-tile .variant-label {
+  display: block;
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+  hyphens: auto;
+  margin-bottom: 3px;
+  max-height: 2.4em;
+  overflow: hidden;
+}
+.product-info .product-variants .variant-tile .variant-price {
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--clr-primary);
+  white-space: nowrap;
+}
+.product-info .product-variants .variant-tile:hover {
+  border-color: var(--clr-primary);
+}
+.product-info .product-variants .variant-tile.active {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 1px var(--clr-primary);
+}
+/* ------------------------------------ */
 .product-info .options {
   border-bottom: 1px solid var(--clr-border-light);
   padding: 0 5px 14px 5px;
@@ -2897,6 +2973,8 @@ table.address-options td h2 {
   .hide-tablet { display: none; }
   /* product-info: tighter gap on tablets */
   .product-info { gap: 24px; }
+  /* category-page: tighter image margin on tablets */
+  .category-page .image { margin-right: 8px; }
 }
 
 /* Small tablets (481–640px) */
@@ -3027,6 +3105,9 @@ table.address-options td h2 {
   /* product-info: single column on phones */
   .product-info { grid-template-columns: 1fr; gap: 16px; }
   .product-info > .left { position: static; }
+  /* category-page: stack image above text on phones */
+  .category-page .image { float: none; margin-right: 0; margin-bottom: 8px; }
+  .category-page .image img { width: 100%; height: auto; }
 }
 
 /* Phones Very Small (≤320px) — overrides only */

@@ -11,79 +11,31 @@
 <div id="content"><?php echo $content_high; ?>
   <?php if ($categories) { ?>
   <h1><?php echo $heading_title; ?></h1>
-  <div class="tier-page">
-    <div class="left">
-      <?php foreach ($categories as $category_1) { ?>
-        <?php if ($category_1['count'] <= $cattotal1) { ?>
-          <ul>
-            <li class="head"><a href="<?php echo $category_1['href']; ?>"><?php echo $category_1['name']; ?></a></li>
-          </ul>
-          <?php if ($category_1['children']) { ?>
-            <ul>
-            <?php foreach ($category_1['children'] as $category_2) { ?>
-              <li><a href="<?php echo $category_2['href']; ?>"><?php echo $category_2['name']; ?></a>
-              <?php if ($category_2['children']) { ?>
-                <ul>
-                <?php foreach ($category_2['children'] as $category_3) { ?>
-                  <li><a href="<?php echo $category_3['href']; ?>"><?php echo $category_3['name']; ?></a></li>
-                <?php } ?>
-                </ul>
-              <?php } ?>
-              </li>
-            <?php } ?>
-            </ul>
-          <?php } ?>
-        <?php } ?>
+  <div class="category-page">
+    <?php foreach ($categories as $category) { ?>
+    <div>
+      <?php if ($category['thumb']) { ?>
+      <div class="image">
+        <a href="<?php echo $category['href']; ?>">
+          <img src="<?php echo $category['thumb']; ?>" alt="<?php echo $category['name']; ?>" />
+        </a>
+      </div>
       <?php } ?>
-    </div>
-    <div class="middle">
-      <?php foreach ($categories as $category_1) { ?>
-        <?php if ($category_1['count'] > $cattotal1 && $category_1['count'] <= $cattotal2) { ?>
-          <ul>
-            <li class="head"><a href="<?php echo $category_1['href']; ?>"><?php echo $category_1['name']; ?></a></li>
-          </ul>
-          <?php if ($category_1['children']) { ?>
-            <ul>
-            <?php foreach ($category_1['children'] as $category_2) { ?>
-              <li><a href="<?php echo $category_2['href']; ?>"><?php echo $category_2['name']; ?></a>
-              <?php if ($category_2['children']) { ?>
-                <ul>
-                <?php foreach ($category_2['children'] as $category_3) { ?>
-                  <li><a href="<?php echo $category_3['href']; ?>"><?php echo $category_3['name']; ?></a></li>
-                <?php } ?>
-                </ul>
-              <?php } ?>
-              </li>
-            <?php } ?>
-            </ul>
-          <?php } ?>
+      <div class="info">
+        <div class="name"><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></div>
+        <?php if ($category['description']) { ?>
+        <div class="description"><?php echo $category['description']; ?></div>
         <?php } ?>
-      <?php } ?>
-    </div>
-    <div class="right">
-      <?php foreach ($categories as $category_1) { ?>
-        <?php if ($category_1['count'] > $cattotal2) { ?>
-          <ul>
-            <li class="head"><a href="<?php echo $category_1['href']; ?>"><?php echo $category_1['name']; ?></a></li>
-          </ul>
-          <?php if ($category_1['children']) { ?>
-            <ul>
-            <?php foreach ($category_1['children'] as $category_2) { ?>
-              <li><a href="<?php echo $category_2['href']; ?>"><?php echo $category_2['name']; ?></a>
-              <?php if ($category_2['children']) { ?>
-                <ul>
-                <?php foreach ($category_2['children'] as $category_3) { ?>
-                  <li><a href="<?php echo $category_3['href']; ?>"><?php echo $category_3['name']; ?></a></li>
-                <?php } ?>
-                </ul>
-              <?php } ?>
-              </li>
-            <?php } ?>
-            </ul>
+        <?php if ($category['children']) { ?>
+        <div class="category-pills">
+          <?php foreach ($category['children'] as $child) { ?>
+          <a href="<?php echo $child['href']; ?>" class="category-pill"><?php echo $child['name']; ?></a>
           <?php } ?>
+        </div>
         <?php } ?>
-      <?php } ?>
+      </div>
     </div>
+    <?php } ?>
   </div>
   <?php } else { ?>
     <div class="content"><?php echo $text_empty; ?></div>

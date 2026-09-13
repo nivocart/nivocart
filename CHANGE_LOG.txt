@@ -20,6 +20,7 @@ Release: TBA
 - Fix bug in Model Tool System, Admin and Catalog, for Seo_Urls routing issue.
 - Updated Image models to resize all image formats to WebP for caching.
 - Updated Account Register and Checkout fixing a Customer Group issue.
+- Updated the Catalog Category List page with a more modern design.
 
 
 NivoCart v2.4.0
