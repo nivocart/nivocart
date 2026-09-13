@@ -215,11 +215,11 @@ class ControllerCommonFileManagerFull extends Controller {
 			$directory = rtrim(DIR_IMAGE . 'data/', '/');
 		}
 
-		$page     = isset($this->request->post['page']) ? max(1, (int)$this->request->post['page']) : 1;
-		$per_page = 200;
+		$page = isset($this->request->post['page']) ? max(1, (int)$this->request->post['page']) : 1;
+		$per_page = 168;
 
 		$allowed = ['jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
-		$suffix  = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
+		$suffix = ['B','KB','MB','GB','TB','PB','EB','ZB','YB'];
 
 		if (!is_dir($directory)) {
 			$this->response->addHeader('Content-Type: application/json');
@@ -248,14 +248,15 @@ class ControllerCommonFileManagerFull extends Controller {
 
 		// Natural-sort for consistent page order across requests
 		natsort($all_paths);
+
 		$all_paths = array_values($all_paths);
 
-		$total  = count($all_paths);
-		$pages  = $total > 0 ? (int)ceil($total / $per_page) : 1;
-		$page   = min($page, $pages);
-		$slice  = array_slice($all_paths, ($page - 1) * $per_page, $per_page);
+		$total = count($all_paths);
+		$pages = $total > 0 ? (int)ceil($total / $per_page) : 1;
+		$page = min($page, $pages);
+		$slice = array_slice($all_paths, ($page - 1) * $per_page, $per_page);
 
-		$base  = str_replace('\\', '/', DIR_IMAGE . 'data/');
+		$base = str_replace('\\', '/', DIR_IMAGE . 'data/');
 		$files = [];
 
 		foreach ($slice as $pathname) {
@@ -282,7 +283,7 @@ class ControllerCommonFileManagerFull extends Controller {
 			'files' => $files,
 			'total' => $total,
 			'page'  => $page,
-			'pages' => $pages,
+			'pages' => $pages
 		]));
 	}
 
