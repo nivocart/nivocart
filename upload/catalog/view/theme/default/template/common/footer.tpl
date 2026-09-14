@@ -95,10 +95,10 @@
 </div>
 <div id="footer-bottom" style="overflow:hidden;">
   <?php if ($web_design) { ?>
-  <div style="float:right;"><?php echo $web_design; ?></div>
+  <div style="float:right; margin:10px 0;"><?php echo $web_design; ?></div>
   <?php } ?>
   <?php if ($this->config->get($template . '_copyright')) { ?>
-  <div style="float:right;"><?php echo $copyright; ?></div>
+  <div style="float:right; margin:10px 0;"><?php echo $copyright; ?></div>
   <?php } ?>
   <?php if ($this->config->get($template . '_powered_by')) { ?>
   <div id="powered"><?php echo $powered; ?></div>
