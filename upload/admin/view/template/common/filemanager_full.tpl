@@ -80,7 +80,7 @@ $(document).ready(function() {
     // needing the jsTree selection state.
     // ----------------------------------------------------------
     var currentDirectory = '';
-    var currentPage      = 1;
+    var currentPage = 1;
 
     // ----------------------------------------------------------
     // loadFiles(directory, page)
@@ -90,7 +90,7 @@ $(document).ready(function() {
     // ----------------------------------------------------------
     function loadFiles(directory, page) {
         currentDirectory = directory;
-        currentPage      = page || 1;
+        currentPage = page || 1;
 
         $.ajax({
             url: 'index.php?route=common/filemanager_full/files&token=<?php echo $token; ?>',

@@ -70,14 +70,14 @@ $(document).ready(function() {
     // PAGINATION STATE
     // ----------------------------------------------------------
     var currentDirectory = '';
-    var currentPage      = 1;
+    var currentPage = 1;
 
     // ----------------------------------------------------------
     // loadFiles(directory, page)
     // ----------------------------------------------------------
     function loadFiles(directory, page) {
         currentDirectory = directory;
-        currentPage      = page || 1;
+        currentPage = page || 1;
 
         $.ajax({
             url: 'index.php?route=common/filemanager/files&token=<?php echo $token; ?>',
