@@ -101,7 +101,7 @@
           </tr>
           <tr>
             <td><?php echo $entry_web_design; ?></td>
-            <td><textarea name="default_web_design" cols="40" rows="10"><?php echo $default_web_design; ?></textarea></td>
+            <td><textarea name="default_web_design" cols="30" rows="5"><?php echo $default_web_design; ?></textarea></td>
           </tr>
           <tr>
             <td><?php echo $entry_powered_by; ?></td>
