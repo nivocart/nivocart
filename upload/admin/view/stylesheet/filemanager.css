@@ -339,6 +339,41 @@ span.branding a {
 	color: #FFF !important;
 }
 
+/** Pagination
+ *  #column-right a styles file items; these overrides restore the
+ *  .filemanager-button appearance for the Prev/Next controls and
+ *  make the page-of-pages label clearly visible. */
+#fm-pagination {
+	clear: both;
+	padding: 12px 4px 6px;
+	text-align: center;
+}
+#fm-pagination .filemanager-button {
+	display: inline-flex !important;
+	align-items: center;
+	padding: 6px 18px !important;
+	margin: 0 4px !important;
+	border-radius: 3px !important;
+	background: linear-gradient(to bottom, #5A5A5A, #3C3C3C) !important;
+	color: #FFF !important;
+	font-size: 13px !important;
+	font-weight: 600;
+	border: 1px solid #2C2C2C !important;
+	text-decoration: none !important;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+#fm-pagination .filemanager-button:hover {
+	background: linear-gradient(to bottom, #6A6A6A, #4C4C4C) !important;
+	border-color: #1C1C1C !important;
+}
+#fm-pagination span {
+	color: #333 !important;
+	font-size: 13px;
+	font-weight: 600;
+	margin: 0 6px;
+}
+
 /** Tablets */
 @media only screen and (min-width: 640px) and (max-width: 790px) {
 	.filemanager-button {
