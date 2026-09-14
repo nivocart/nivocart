@@ -273,7 +273,7 @@ class ControllerCommonFileManagerFull extends Controller {
 			$files[] = [
 				'filename' => htmlspecialchars(basename($pathname), ENT_QUOTES, 'UTF-8'),
 				'file'     => $filename_path_data,
-				'size'     => round($size, 2) . $suffix[$i],
+				'size'     => round($size, 2, PHP_ROUND_HALF_UP) . $suffix[$i],
 				'image'    => $this->image($filename_path_data)
 			];
 		}
