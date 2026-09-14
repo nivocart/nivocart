@@ -57,6 +57,7 @@ class ControllerThemeDefault extends Controller {
 		$this->data['entry_right_click'] = $this->language->get('entry_right_click');
 		$this->data['entry_web_design'] = $this->language->get('entry_web_design');
 		$this->data['entry_powered_by'] = $this->language->get('entry_powered_by');
+		$this->data['entry_copyright'] = $this->language->get('entry_copyright');
 		$this->data['entry_footer_theme'] = $this->language->get('entry_footer_theme');
 		$this->data['entry_footer_color'] = $this->language->get('entry_footer_color');
 		$this->data['entry_footer_color_opacity'] = $this->language->get('entry_footer_color_opacity');
@@ -216,6 +217,12 @@ class ControllerThemeDefault extends Controller {
 			$this->data[$this->name . '_powered_by'] = $this->request->post[$this->name . '_powered_by'];
 		} else {
 			$this->data[$this->name . '_powered_by'] = $this->config->get($this->name . '_powered_by');
+		}
+
+		if (isset($this->request->post[$this->name . '_copyright'])) {
+			$this->data[$this->name . '_copyright'] = $this->request->post[$this->name . '_copyright'];
+		} else {
+			$this->data[$this->name . '_copyright'] = $this->config->get($this->name . '_copyright');
 		}
 
 		// Footer

@@ -68,7 +68,8 @@ class ControllerCommonFooter extends Controller {
 
 		$this->data['web_design'] = $web_design ? html_entity_decode($web_design, ENT_QUOTES, 'UTF-8') : '';
 
-		$this->data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
+		$this->data['powered'] = $this->language->get('text_powered');
+		$this->data['copyright'] = sprintf($this->language->get('text_copyright'), $this->config->get('config_name'), date('Y', time()));
 
 		// Theme
 		$footer_theme = $this->config->get($template . '_footer_theme');
