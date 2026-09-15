@@ -24,7 +24,6 @@ class ControllerAccountOrder extends Controller {
 
 		$this->language->load('account/order');
 
-		$this->load->model('account/recurring');
 		$this->load->model('account/order');
 
 		if (isset($this->request->get['order_id'])) {
@@ -32,7 +31,7 @@ class ControllerAccountOrder extends Controller {
 
 			if ($order_info) {
 				$order_products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
-				$profile_id = $this->model_account_recurring->getProfileId($this->request->get['order_id']);
+				$profile_id = 0;
 
 				foreach ($order_products as $order_product) {
 					$option_data = [];
