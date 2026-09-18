@@ -381,9 +381,16 @@ class ControllerSettingSetting extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
-			// Decode Base64-encoded analytics fields — the template encodes them
-			// before submit so Hostinger's WAF does not block <script> in POST bodies.
-			foreach (['config_google_analytics', 'config_matomo_analytics'] as $_analytics_field) {
+			// Decode Base64-encoded fields — the template encodes them before submit
+			// so server's WAF does not block <script> or <meta> tags in POST bodies.
+			foreach ([
+				'config_meta_google',
+				'config_meta_bing',
+				'config_meta_yandex',
+				'config_meta_baidu',
+				'config_google_analytics',
+				'config_matomo_analytics',
+			] as $_analytics_field) {
 				if (!empty($this->request->post[$_analytics_field])) {
 					$_decoded = base64_decode($this->request->post[$_analytics_field], true);
 					if ($_decoded !== false) {

@@ -2037,19 +2037,32 @@
         <table class="form">
           <tr>
             <td><?php echo $entry_meta_google; ?><span class="help"><?php echo $help_meta_google; ?></span></td>
-            <td><input type="text" name="config_meta_google" value="<?php echo htmlspecialchars($config_meta_google ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
+            <td>
+              <!-- Hidden input carries the Base64-encoded value on POST so the WAF never sees <meta> tags. -->
+              <input type="hidden" name="config_meta_google" id="config_meta_google_b64" />
+              <input type="text" id="config_meta_google_display" value="<?php echo htmlspecialchars($config_meta_google ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" />
+            </td>
           </tr>
           <tr>
             <td><?php echo $entry_meta_bing; ?><span class="help"><?php echo $help_meta_bing; ?></span></td>
-            <td><input type="text" name="config_meta_bing" value="<?php echo htmlspecialchars($config_meta_bing ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
+            <td>
+              <input type="hidden" name="config_meta_bing" id="config_meta_bing_b64" />
+              <input type="text" id="config_meta_bing_display" value="<?php echo htmlspecialchars($config_meta_bing ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" />
+            </td>
           </tr>
           <tr>
             <td><?php echo $entry_meta_yandex; ?><span class="help"><?php echo $help_meta_yandex; ?></span></td>
-            <td><input type="text" name="config_meta_yandex" value="<?php echo htmlspecialchars($config_meta_yandex ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
+            <td>
+              <input type="hidden" name="config_meta_yandex" id="config_meta_yandex_b64" />
+              <input type="text" id="config_meta_yandex_display" value="<?php echo htmlspecialchars($config_meta_yandex ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" />
+            </td>
           </tr>
           <tr>
             <td><?php echo $entry_meta_baidu; ?><span class="help"><?php echo $help_meta_baidu; ?></span></td>
-            <td><input type="text" name="config_meta_baidu" value="<?php echo htmlspecialchars($config_meta_baidu ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" /></td>
+            <td>
+              <input type="hidden" name="config_meta_baidu" id="config_meta_baidu_b64" />
+              <input type="text" id="config_meta_baidu_display" value="<?php echo htmlspecialchars($config_meta_baidu ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" />
+            </td>
           </tr>
         </table>
         <h2><?php echo $text_analytic; ?></h2>
@@ -2395,7 +2408,7 @@ $('#tabs a').tabs();
 <script type="text/javascript"><!--
 // ---------------------------------------------------------------------------
 // WAF bypass for analytics script fields
-// Hostinger's ModSecurity blocks POST bodies that contain <script> tags.
+// Some server's ModSecurity blocks POST bodies that contain <script> tags.
 // We Base64-encode the textarea content into a hidden input right before
 // the form submits, then the controller decodes it server-side before saving.
 // btoa/encodeURIComponent combo handles any Unicode characters safely.
@@ -2408,6 +2421,10 @@ $('#tabs a').tabs();
 // ---------------------------------------------------------------------------
 (function ($) {
     var fields = [
+        { display: '#config_meta_google_display', hidden: '#config_meta_google_b64' },
+        { display: '#config_meta_bing_display', hidden: '#config_meta_bing_b64' },
+        { display: '#config_meta_yandex_display', hidden: '#config_meta_yandex_b64' },
+        { display: '#config_meta_baidu_display', hidden: '#config_meta_baidu_b64' },
         { display: '#config_google_analytics_display', hidden: '#config_google_analytics_b64' },
         { display: '#config_matomo_analytics_display', hidden: '#config_matomo_analytics_b64' }
     ];

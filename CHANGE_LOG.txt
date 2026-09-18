@@ -21,6 +21,7 @@ Release: TBA
 - Updated Image models to resize all image formats to WebP for caching.
 - Updated Account Register and Checkout fixing a Customer Group issue.
 - Updated the Catalog Category List page with a more modern design.
+- Updated Admin Settings to bypass server's ModSecurity blocks on scripts.
 - Updated the Catalog Footer "Powered by" and Copyright notice.
 
 
