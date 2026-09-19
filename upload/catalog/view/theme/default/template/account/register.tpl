@@ -283,6 +283,12 @@ $('input[name=\'customer_group_id\']:checked').trigger('change');
 
 <script type="text/javascript"><!--
 $('select[name=\'country_id\']').on('change', function() {
+	if (!this.value) {
+		$('select[name=\'zone_id\']').html('<option value=""><?php echo $text_select; ?></option>');
+		$('#postcode-required').hide();
+		return;
+	}
+
 	$.ajax({
 		url: 'index.php?route=account/register/country&country_id=' + this.value,
 		dataType: 'json',
@@ -301,7 +307,7 @@ $('select[name=\'country_id\']').on('change', function() {
 
 			html = '<option value=""><?php echo $text_select; ?></option>';
 
-			if (json['zone'] !== '') {
+			if (json['zone'] && json['zone'].length) {
 				for (i = 0; i < json['zone'].length; i++) {
 					html += '<option value="' + json['zone'][i]['zone_id'] + '"';
 
@@ -318,7 +324,7 @@ $('select[name=\'country_id\']').on('change', function() {
 			$('select[name=\'zone_id\']').html(html);
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
-			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			$('select[name=\'zone_id\']').html('<option value=""><?php echo $text_select; ?></option>');
 		}
 	});
 });
