@@ -180,6 +180,45 @@
             </select></td>
           </tr>
         </table>
+        <h2><?php echo $heading_dimension; ?></h2>
+        <table class="form">
+          <tr>
+            <td><?php echo $entry_dimension; ?></td>
+            <td>
+              <input type="text" name="length" value="<?php echo $length; ?>" size="10" /> x
+              <input type="text" name="width" value="<?php echo $width; ?>" size="10" /> x
+              <input type="text" name="height" value="<?php echo $height; ?>" size="10" />
+            </td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_length; ?></td>
+            <td><select name="length_class_id">
+              <?php foreach ($length_classes as $length_class) { ?>
+                <?php if ($length_class['length_class_id'] === $length_class_id) { ?>
+                  <option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
+                <?php } ?>
+              <?php } ?>
+            </select> &nbsp; <a href="<?php echo $configure_length_class; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_weight; ?></td>
+            <td><input type="text" name="weight" value="<?php echo $weight; ?>" /></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_weight_class; ?></td>
+            <td><select name="weight_class_id">
+              <?php foreach ($weight_classes as $weight_class) { ?>
+                <?php if ($weight_class['weight_class_id'] === $weight_class_id) { ?>
+                  <option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+                <?php } ?>
+              <?php } ?>
+            </select> &nbsp; <a href="<?php echo $configure_weight_class; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
+          </tr>
+        </table>
         <h2><?php echo $heading_inventory; ?></h2>
         <table class="form">
           <tr>
@@ -284,45 +323,6 @@
           <tr>
             <td><?php echo $entry_location; ?></td>
             <td><input type="text" name="location" value="<?php echo $location; ?>" size="30" /></td>
-          </tr>
-        </table>
-        <h2><?php echo $heading_dimension; ?></h2>
-        <table class="form">
-          <tr>
-            <td><?php echo $entry_dimension; ?></td>
-            <td>
-              <input type="text" name="length" value="<?php echo $length; ?>" size="10" /> x
-              <input type="text" name="width" value="<?php echo $width; ?>" size="10" /> x
-              <input type="text" name="height" value="<?php echo $height; ?>" size="10" />
-            </td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_length; ?></td>
-            <td><select name="length_class_id">
-              <?php foreach ($length_classes as $length_class) { ?>
-                <?php if ($length_class['length_class_id'] === $length_class_id) { ?>
-                  <option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
-                <?php } ?>
-              <?php } ?>
-            </select> &nbsp; <a href="<?php echo $configure_length_class; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_weight; ?></td>
-            <td><input type="text" name="weight" value="<?php echo $weight; ?>" /></td>
-          </tr>
-          <tr>
-            <td><?php echo $entry_weight_class; ?></td>
-            <td><select name="weight_class_id">
-              <?php foreach ($weight_classes as $weight_class) { ?>
-                <?php if ($weight_class['weight_class_id'] === $weight_class_id) { ?>
-                  <option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
-                <?php } else { ?>
-                  <option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
-                <?php } ?>
-              <?php } ?>
-            </select> &nbsp; <a href="<?php echo $configure_weight_class; ?>" class="button-form"><i class="fa fa-gear"></i></a></td>
           </tr>
         </table>
       </div>
@@ -1290,8 +1290,8 @@ function fieldAutocomplete(field_row) {
 			});
 		},
 		select: function(event, ui) {
-			$('input[name=\'product_field[' + field_row + '][title]\']').attr('value', ui.item.label);
-			$('input[name=\'product_field[' + field_row + '][field_id]\']').attr('value', ui.item.value);
+			$('input[name=\'product_field[' + field_row + '][title]\']').val(ui.item.label);
+			$('input[name=\'product_field[' + field_row + '][field_id]\']').val(ui.item.value);
 
 			return false;
 		},
@@ -1362,8 +1362,8 @@ function attributeAutocomplete(attribute_row) {
 			});
 		},
 		select: function(event, ui) {
-			$('input[name=\'product_attribute[' + attribute_row + '][name]\']').attr('value', ui.item.label);
-			$('input[name=\'product_attribute[' + attribute_row + '][attribute_id]\']').attr('value', ui.item.value);
+			$('input[name=\'product_attribute[' + attribute_row + '][name]\']').val(ui.item.label);
+			$('input[name=\'product_attribute[' + attribute_row + '][attribute_id]\']').val(ui.item.value);
 
 			return false;
 		},
