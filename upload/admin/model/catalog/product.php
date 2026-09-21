@@ -1003,6 +1003,22 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
+	public function updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id) {
+		// Update scalar fields on all products
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `shipping` = '" . (int)$shipping . "', `subtract` = '" . (int)$subtract . "', `length_class_id` = '" . (int)$length_class_id . "', `weight_class_id` = '" . (int)$weight_class_id . "', `date_modified` = NOW()");
+
+		// Replace store assignment for all products (skipped when "No change" sentinel -1 is selected)
+		if ($store_id >= 0) {
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_store`");
+
+			$product_ids = $this->db->query("SELECT `product_id` FROM `" . DB_PREFIX . "product`");
+
+			foreach ($product_ids->rows as $row) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_to_store` SET `product_id` = '" . (int)$row['product_id'] . "', `store_id`   = '" . (int)$store_id . "'");
+			}
+		}
+	}
+
 	/**
 	 * Total Functions
 	 */

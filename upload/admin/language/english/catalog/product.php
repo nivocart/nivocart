@@ -148,6 +148,18 @@ $_['button_update_price']     = 'Prices';
 $_['button_update_quantity']  = 'Quantities';
 $_['button_update_special']   = 'Specials';
 $_['button_update_discount']  = 'Discounts';
+$_['button_update_global']    = 'Global';
+
+$_['text_global_title']       = 'Global Product Settings';
+$_['text_global_success']     = 'Success: you have updated <b>Global Settings</b> for all products!';
+
+$_['entry_gl_store']          = 'Assign all products to Store:';
+$_['entry_gl_shipping']       = 'Requires Shipping:';
+$_['entry_gl_subtract']       = 'Subtract Stock:';
+$_['entry_gl_length_class']   = 'Length Class:';
+$_['entry_gl_weight_class']   = 'Weight Class:';
+$_['text_gl_store_nochange']  = '— No change —';
+$_['text_default_store']      = 'Default Store';
 
 $_['error_selected']          = 'No products are currently selected!';
 $_['error_price']             = 'Price is required and cannot be negative!';

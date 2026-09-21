@@ -586,6 +586,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['text_quantity_title'] = $this->language->get('text_quantity_title');
 		$this->data['text_special_title'] = $this->language->get('text_special_title');
 		$this->data['text_discount_title'] = $this->language->get('text_discount_title');
+		$this->data['text_global_title'] = $this->language->get('text_global_title');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
@@ -612,6 +613,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['button_update_quantity'] = $this->language->get('button_update_quantity');
 		$this->data['button_update_special'] = $this->language->get('button_update_special');
 		$this->data['button_update_discount'] = $this->language->get('button_update_discount');
+		$this->data['button_update_global'] = $this->language->get('button_update_global');
 		$this->data['button_filter'] = $this->language->get('button_filter');
 
 		$this->data['token'] = $this->session->data['token'];
@@ -2135,6 +2137,70 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['token'] = $this->session->data['token'];
 
 			$this->template = 'catalog/product_discount_form.tpl';
+
+			$json['html'] = $this->render();
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function updateGlobal() {
+		$json = [];
+
+		$this->language->load('catalog/product');
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!$this->user->hasPermission('modify', 'catalog/product')) {
+				$json['error'] = $this->language->get('error_permission');
+			} else {
+				$store_id = isset($this->request->post['gl_store_id']) ? (int)$this->request->post['gl_store_id'] : 0;
+				$shipping = isset($this->request->post['gl_shipping']) ? (int)$this->request->post['gl_shipping'] : 1;
+				$subtract = isset($this->request->post['gl_subtract']) ? (int)$this->request->post['gl_subtract'] : 1;
+				$length_class_id = isset($this->request->post['gl_length_class_id']) ? (int)$this->request->post['gl_length_class_id'] : (int)$this->config->get('config_length_class_id');
+				$weight_class_id = isset($this->request->post['gl_weight_class_id']) ? (int)$this->request->post['gl_weight_class_id'] : (int)$this->config->get('config_weight_class_id');
+
+				$this->load->model('catalog/product');
+
+				$this->model_catalog_product->updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id);
+
+				$json['success'] = $this->language->get('text_global_success');
+			}
+		} else {
+			$this->load->model('localisation/length_class');
+			$this->load->model('localisation/weight_class');
+			$this->load->model('setting/store');
+
+			$this->data['entry_gl_store'] = $this->language->get('entry_gl_store');
+			$this->data['entry_gl_shipping'] = $this->language->get('entry_gl_shipping');
+			$this->data['entry_gl_subtract'] = $this->language->get('entry_gl_subtract');
+			$this->data['entry_gl_length_class'] = $this->language->get('entry_gl_length_class');
+			$this->data['entry_gl_weight_class'] = $this->language->get('entry_gl_weight_class');
+
+			$this->data['text_enabled'] = $this->language->get('text_enabled');
+			$this->data['text_disabled'] = $this->language->get('text_disabled');
+			$this->data['text_gl_store_nochange'] = $this->language->get('text_gl_store_nochange');
+
+			$this->data['button_submit'] = $this->language->get('button_submit');
+
+			$stores = $this->model_setting_store->getStores([]);
+			// store_id = 0 is the Default Store — not in the store table, so prepend it manually
+			array_unshift($stores, [
+				'store_id' => 0,
+				'name'     => $this->config->get('config_name') . ' (' . $this->language->get('text_default') . ')'
+			]);
+			$this->data['stores'] = $stores;
+			$this->data['default_store_id'] = 0;
+
+			$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses([]);
+			$this->data['default_length_class_id'] = (int)$this->config->get('config_length_class_id');
+
+			$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses([]);
+			$this->data['default_weight_class_id'] = (int)$this->config->get('config_weight_class_id');
+
+			$this->data['token'] = $this->session->data['token'];
+
+			$this->template = 'catalog/product_global_form.tpl';
 
 			$json['html'] = $this->render();
 		}
