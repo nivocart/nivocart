@@ -172,9 +172,17 @@ class ControllerLocalisationLengthClass extends Controller {
 				'href' => $this->url->link('localisation/length_class/update', 'token=' . $this->session->data['token'] . '&length_class_id=' . $result['length_class_id'] . $url, 'SSL')
 			];
 
+			if ((int)$result['length_class_id'] !== (int)$this->config->get('config_length_class_id')) {
+				$action[] = [
+					'text' => $this->language->get('button_set_default'),
+					'href' => $this->url->link('localisation/length_class/setDefault', 'token=' . $this->session->data['token'] . '&length_class_id=' . $result['length_class_id'] . $url, 'SSL')
+				];
+			}
+
 			$this->data['length_classes'][] = [
 				'length_class_id' => $result['length_class_id'],
-				'title'           => $result['title'] . (($result['length_class_id'] === $this->config->get('config_length_class')) ? $this->language->get('text_default') : null),
+				'title'           => $result['title'],
+				'is_default'      => (int)$result['length_class_id'] === (int)$this->config->get('config_length_class_id'),
 				'unit'            => $result['unit'],
 				'value'           => $result['value'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['length_class_id'], $this->request->post['selected']),
@@ -187,6 +195,7 @@ class ControllerLocalisationLengthClass extends Controller {
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
 		$this->data['text_confirm_delete'] = $this->language->get('text_confirm_delete');
+		$this->data['text_default'] = $this->language->get('text_default');
 
 		$this->data['column_title'] = $this->language->get('column_title');
 		$this->data['column_unit'] = $this->language->get('column_unit');
@@ -198,6 +207,10 @@ class ControllerLocalisationLengthClass extends Controller {
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
+		} elseif (isset($this->session->data['error_warning'])) {
+			$this->data['error_warning'] = $this->session->data['error_warning'];
+
+			unset($this->session->data['error_warning']);
 		} else {
 			$this->data['error_warning'] = '';
 		}
@@ -355,6 +368,40 @@ class ControllerLocalisationLengthClass extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	public function setDefault() {
+		$this->language->load('localisation/length_class');
+
+		$this->load->model('localisation/length_class');
+
+		if (!$this->user->hasPermission('modify', 'localisation/length_class')) {
+			$this->session->data['error_warning'] = $this->language->get('error_permission');
+		} elseif (isset($this->request->get['length_class_id'])) {
+			$length_class_id = (int)$this->request->get['length_class_id'];
+
+			$length_class_info = $this->model_localisation_length_class->getLengthClass($length_class_id);
+
+			if ($length_class_info) {
+				$this->load->model('setting/setting');
+
+				$this->model_setting_setting->editSettingValue('config', 'config_length_class_id', $length_class_id);
+
+				$this->config->set('config_length_class_id', $length_class_id);
+
+				$this->session->data['success'] = $this->language->get('text_default_success');
+			}
+		}
+
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? null,
+			'order' => $this->request->get['order'] ?? null,
+			'page'  => $this->request->get['page'] ?? null
+		]);
+
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
+
+		$this->redirect($this->url->link('localisation/length_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+	}
+
 	protected function validateForm() {
 		if (!$this->user->hasPermission('modify', 'localisation/length_class')) {
 			$this->error['warning'] = $this->language->get('error_permission');
@@ -381,7 +428,7 @@ class ControllerLocalisationLengthClass extends Controller {
 		$this->load->model('catalog/product');
 
 		foreach ($this->request->post['selected'] as $length_class_id) {
-			if ($this->config->get('config_length_class_id') === $length_class_id) {
+			if ((int)$this->config->get('config_length_class_id') === (int)$length_class_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

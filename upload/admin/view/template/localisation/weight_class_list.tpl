@@ -13,7 +13,7 @@
   <?php } ?>
   <div class="box">
     <div class="heading">
-      <h1><img src="view/image/shipping.png" alt="" /> <?php echo $heading_title; ?></h1>
+      <h1><img src="view/image/weight.png" alt="" /> <?php echo $heading_title; ?></h1>
       <div class="buttons">
         <a href="<?php echo $insert; ?>" class="button ripple"><?php echo $button_insert; ?></a>
         <a id="delete" class="button-delete ripple"><?php echo $button_delete; ?></a>
@@ -58,7 +58,7 @@
               <input type="checkbox" name="selected[]" value="<?php echo $weight_class['weight_class_id']; ?>" id="<?php echo $weight_class['weight_class_id']; ?>" class="checkbox" />
               <label for="<?php echo $weight_class['weight_class_id']; ?>"><span></span></label>
             <?php } ?></td>
-            <td class="left"><?php echo $weight_class['title']; ?></td>
+            <td class="left"><?php echo $weight_class['title']; ?><?php if ($weight_class['is_default']) { ?> <span class="label label-success"><?php echo $text_default; ?></span><?php } ?></td>
             <td class="left"><?php echo $weight_class['unit']; ?></td>
             <td class="right"><?php echo $weight_class['value']; ?></td>
             <td class="right"><?php foreach ($weight_class['action'] as $action) { ?>

@@ -172,9 +172,17 @@ class ControllerLocalisationWeightClass extends Controller {
 				'href' => $this->url->link('localisation/weight_class/update', 'token=' . $this->session->data['token'] . '&weight_class_id=' . $result['weight_class_id'] . $url, 'SSL')
 			];
 
+			if ((int)$result['weight_class_id'] !== (int)$this->config->get('config_weight_class_id')) {
+				$action[] = [
+					'text' => $this->language->get('button_set_default'),
+					'href' => $this->url->link('localisation/weight_class/setDefault', 'token=' . $this->session->data['token'] . '&weight_class_id=' . $result['weight_class_id'] . $url, 'SSL')
+				];
+			}
+
 			$this->data['weight_classes'][] = [
 				'weight_class_id' => $result['weight_class_id'],
-				'title'           => $result['title'] . (($result['weight_class_id'] === $this->config->get('config_weight_class')) ? $this->language->get('text_default') : null),
+				'title'           => $result['title'],
+				'is_default'      => (int)$result['weight_class_id'] === (int)$this->config->get('config_weight_class_id'),
 				'unit'            => $result['unit'],
 				'value'           => $result['value'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['weight_class_id'], $this->request->post['selected']),
@@ -187,6 +195,7 @@ class ControllerLocalisationWeightClass extends Controller {
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
 		$this->data['text_confirm_delete'] = $this->language->get('text_confirm_delete');
+		$this->data['text_default'] = $this->language->get('text_default');
 
 		$this->data['column_title'] = $this->language->get('column_title');
 		$this->data['column_unit'] = $this->language->get('column_unit');
@@ -198,6 +207,10 @@ class ControllerLocalisationWeightClass extends Controller {
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
+		} elseif (isset($this->session->data['error_warning'])) {
+			$this->data['error_warning'] = $this->session->data['error_warning'];
+
+			unset($this->session->data['error_warning']);
 		} else {
 			$this->data['error_warning'] = '';
 		}
@@ -353,6 +366,40 @@ class ControllerLocalisationWeightClass extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	public function setDefault() {
+		$this->language->load('localisation/weight_class');
+
+		$this->load->model('localisation/weight_class');
+
+		if (!$this->user->hasPermission('modify', 'localisation/weight_class')) {
+			$this->session->data['error_warning'] = $this->language->get('error_permission');
+		} elseif (isset($this->request->get['weight_class_id'])) {
+			$weight_class_id = (int)$this->request->get['weight_class_id'];
+
+			$weight_class_info = $this->model_localisation_weight_class->getWeightClass($weight_class_id);
+
+			if ($weight_class_info) {
+				$this->load->model('setting/setting');
+
+				$this->model_setting_setting->editSettingValue('config', 'config_weight_class_id', $weight_class_id);
+
+				$this->config->set('config_weight_class_id', $weight_class_id);
+
+				$this->session->data['success'] = $this->language->get('text_default_success');
+			}
+		}
+
+		$page_url = array_filter([
+			'sort'  => $this->request->get['sort'] ?? null,
+			'order' => $this->request->get['order'] ?? null,
+			'page'  => $this->request->get['page'] ?? null
+		]);
+
+		$url = $page_url ? '&' . http_build_query($page_url) : '';
+
+		$this->redirect($this->url->link('localisation/weight_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+	}
+
 	protected function validateForm() {
 		if (!$this->user->hasPermission('modify', 'localisation/weight_class')) {
 			$this->error['warning'] = $this->language->get('error_permission');
@@ -379,7 +426,7 @@ class ControllerLocalisationWeightClass extends Controller {
 		$this->load->model('catalog/product');
 
 		foreach ($this->request->post['selected'] as $weight_class_id) {
-			if ($this->config->get('config_weight_class_id') === $weight_class_id) {
+			if ((int)$this->config->get('config_weight_class_id') === (int)$weight_class_id) {
 				$this->error['warning'] = $this->language->get('error_default');
 			}
 

@@ -58,7 +58,7 @@
               <input type="checkbox" name="selected[]" value="<?php echo $length_class['length_class_id']; ?>" id="<?php echo $length_class['length_class_id']; ?>" class="checkbox" />
               <label for="<?php echo $length_class['length_class_id']; ?>"><span></span></label>
             <?php } ?></td>
-            <td class="left"><?php echo $length_class['title']; ?></td>
+            <td class="left"><?php echo $length_class['title']; ?><?php if ($length_class['is_default']) { ?> <span class="label label-success"><?php echo $text_default; ?></span><?php } ?></td>
             <td class="left"><?php echo $length_class['unit']; ?></td>
             <td class="right"><?php echo $length_class['value']; ?></td>
             <td class="right"><?php foreach ($length_class['action'] as $action) { ?>
