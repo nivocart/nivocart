@@ -84,7 +84,6 @@ require_once DIR_SYSTEM . 'helper/minify.php';
 require_once DIR_SYSTEM . 'helper/pdf.php';
 require_once DIR_SYSTEM . 'helper/totals.php';
 require_once DIR_SYSTEM . 'helper/vat.php';
-require_once DIR_SYSTEM . 'helper/variant_filter.php';
 
 // Vendor
 require_once DIR_SYSTEM . 'vendor/dompdf/autoload.inc.php';

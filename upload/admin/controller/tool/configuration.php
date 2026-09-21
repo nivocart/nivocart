@@ -322,7 +322,6 @@ class ControllerToolConfiguration extends Controller {
 			'minify'         => $ds(DIR_SYSTEM . 'helper/minify.php'),
 			'pdf'            => $ds(DIR_SYSTEM . 'helper/pdf.php'),
 			'totals'         => $ds(DIR_SYSTEM . 'helper/totals.php'),
-			'variant_filter' => $ds(DIR_SYSTEM . 'helper/variant_filter.php'),
 			'vat'            => $ds(DIR_SYSTEM . 'helper/vat.php')
 		];
 
