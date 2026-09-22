@@ -1814,7 +1814,7 @@ class ControllerCatalogProduct extends Controller {
 			if ($this->validatePriceUpdate($selected, $products)) {
 				$this->load->model('catalog/product');
 
-				$this->model_catalog_product->updateProductPrice($selected, $products, $price, $cost);
+				$this->model_catalog_product->updateProductPrice($selected, $price, $cost, $products);
 
 				$json['success'] = $this->language->get('text_price_success');
 			}
@@ -1883,7 +1883,7 @@ class ControllerCatalogProduct extends Controller {
 			if ($this->validateQuantityUpdate($selected, $products)) {
 				$this->load->model('catalog/product');
 
-				$this->model_catalog_product->updateProductQuantity($selected, $products, $quantity, $minimum);
+				$this->model_catalog_product->updateProductQuantity($selected, $quantity, $minimum, $products);
 
 				$json['success'] = $this->language->get('text_quantity_success');
 			}
@@ -1983,7 +1983,7 @@ class ControllerCatalogProduct extends Controller {
 			if ($this->validateSpecialUpdate($selected, $products)) {
 				$this->load->model('catalog/product');
 
-				$this->model_catalog_product->updateProductSpecial($selected, $append, $products, $customer_group, $date_start, $date_end, $discount);
+				$this->model_catalog_product->updateProductSpecial($selected, $append, $customer_group, $date_start, $date_end, $discount, $products);
 
 				$json['success'] = $this->language->get('text_special_success');
 			}
@@ -2101,7 +2101,7 @@ class ControllerCatalogProduct extends Controller {
 			if ($this->validateSpecialUpdate($selected, $products)) {
 				$this->load->model('catalog/product');
 
-				$this->model_catalog_product->updateProductDiscount($selected, $append, $products, $customer_group, $quantity, $date_start, $date_end, $discount);
+				$this->model_catalog_product->updateProductDiscount($selected, $append, $customer_group, $quantity, $date_start, $date_end, $discount, $products);
 
 				$json['success'] = $this->language->get('text_discount_success');
 			}
