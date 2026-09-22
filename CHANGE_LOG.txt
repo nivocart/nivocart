@@ -20,6 +20,7 @@ Release: TBA
 - Fix bug in Cart and Checkout to prevent malformed Country/zones errors.
 - Fix bug in Data Retention Cron Tool preventing User being logged-off.
 - Fix bug in Model Tool System, Admin and Catalog, for Seo_Urls routing issue.
+- Fix bug in Admin Model Tool Route not retrieving sub-level categories.
 - Updated "Localisation/length_class" now returning correct default values.
 - Updated "Localisation/weight_class" now returning correct default values.
 - Updated Image models to resize all image formats to WebP for caching.

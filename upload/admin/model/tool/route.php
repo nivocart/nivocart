@@ -88,14 +88,18 @@ class ModelToolRoute extends Model {
 		return $links_data;
 	}
 
-	public function getCategories(int $parent_id, $current_path = ''): array {
+	public function getCategories(int $parent_id, string $current_path = '', int $depth = 0, int $max_depth = 3): array {
 		$categories_data = [];
+
+		if ($depth >= $max_depth) {
+			return $categories_data;
+		}
 
 		$this->load->model('catalog/sitemap');
 
 		$store_id = 0;
 
-		$results = $this->model_catalog_sitemap->getAllCategories($parent_id, $store_id);
+		$results = $this->model_catalog_sitemap->getAllCategories($store_id, $parent_id);
 
 		foreach ($results as $result) {
 			if (!$current_path) {
@@ -104,12 +108,14 @@ class ModelToolRoute extends Model {
 				$new_path = $current_path . '_' . $result['category_id'];
 			}
 
+			$indent = str_repeat('— ', $depth);
+
 			$categories_data[] = [
 				'link' => str_replace('&', '&amp;', 'product/category&path=' . $new_path),
-				'name' => ' [ ' . $result['name'] . ' ] '
+				'name' => ' [ ' . $indent . $result['name'] . ' ] '
 			];
 
-			$this->getCategories($result['category_id'], $new_path);
+			$categories_data = array_merge($categories_data, $this->getCategories($result['category_id'], $new_path, $depth + 1, $max_depth));
 		}
 
 		return $categories_data;
