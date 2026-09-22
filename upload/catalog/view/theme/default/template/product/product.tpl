@@ -234,6 +234,19 @@
           <?php } ?>
         <?php } ?>
       </div>
+      <?php if (!empty($ds_variants)) { ?>
+        <div class="product-variants">
+          <?php foreach ($ds_variants as $v) { ?>
+            <a href="<?php echo $v['href']; ?>" class="variant-tile<?php echo $v['current'] ? ' active' : ''; ?>" title="<?php echo htmlspecialchars($v['variant_key'], ENT_QUOTES, 'UTF-8'); ?>">
+              <?php if ($v['image']) { ?>
+                <img src="<?php echo $v['image']; ?>" alt="<?php echo htmlspecialchars($v['variant_key'], ENT_QUOTES, 'UTF-8'); ?>" />
+              <?php } ?>
+              <span class="variant-label"><?php echo htmlspecialchars($v['variant_key'], ENT_QUOTES, 'UTF-8'); ?></span>
+              <span class="variant-price"<?php if ($v['has_special']) { ?> style="color:#D80000;"<?php } ?>><?php echo $v['price']; ?></span>
+            </a>
+          <?php } ?>
+        </div>
+      <?php } ?>
       <?php if ($price && !$price_hide) { ?>
         <div class="price"><?php echo $text_price; ?>
         <?php if ($price_option) { ?>
@@ -966,7 +979,7 @@ $('a.button-resource').confirm({
 	icon: 'fa fa-question-circle',
 	theme: 'light',
 	useBootstrap: false,
-	boxWidth: 300,
+		boxWidth: 300,
 	animation: 'zoom',
 	closeAnimation: 'scale',
 	opacity: 0.1,
@@ -975,5 +988,34 @@ $('a.button-resource').confirm({
 	}
 });
 //--></script>
+
+<!-- Force Description panel to always start collapsed (clears its cookie entry before panels.js reads it) -->
+<script type="text/javascript">
+(function() {
+  var cn = 'panels';
+  var descKey = '<?php echo addslashes($tab_description); ?>';
+  var start = document.cookie.indexOf(cn + '=');
+
+  if (start === -1) {
+	return;
+  }
+
+  start += cn.length + 1;
+
+  var end = document.cookie.indexOf(';', start);
+
+  if (end === -1) {
+	end = document.cookie.length;
+  }
+
+  var val = unescape(document.cookie.substring(start, end));
+  var pairs = val.split('|').filter(function(p) {
+    return p.split(':')[0] !== descKey;
+  });
+  var exp = new Date(Date.now() + 365 * 864e5).toGMTString();
+
+  document.cookie = cn + '=' + escape(pairs.join('|')) + ';expires=' + exp;
+})();
+</script>
 
 <?php echo $footer; ?>

@@ -738,8 +738,8 @@ class ControllerProductProduct extends Controller {
 						'thumb'      => $offer_image,
 						'thumb_webp' => ($offer_image && $webp) ? substr($offer_image, 0, strrpos($offer_image, '.')) . '.webp' : '',
 						'name'       => $offer_name,
-						'href'  => $this->url->link('product/product', 'product_id=' . $offer_product, 'SSL'),
-						'group' => $offer_label
+						'href'       => $this->url->link('product/product', 'product_id=' . $offer_product, 'SSL'),
+						'group'      => $offer_label
 					];
 				}
 
@@ -770,7 +770,9 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']);
 			$this->data['rating'] = (int)$product_info['rating'];
-			$this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+			$description = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+			$description = preg_replace('/<img(?![^>]*\bloading\b)/i', '<img loading="lazy"', $description);
+			$this->data['description'] = $description;
 
 			// Captcha required
 			$this->data['captcha'] = '';
@@ -879,6 +881,48 @@ class ControllerProductProduct extends Controller {
 					$this->data['tags'][] = [
 						'tag'  => $tag,
 						'href' => $this->url->link('product/search', 'search=' . $tag . '&tag=' . $tag, 'SSL')
+					];
+				}
+			}
+
+			// Dropship variant selector
+			// model_catalog_product is already loaded above; getProductVariants() returns []
+			// safely if nc_product_variant table does not exist (DB wrapper returns true on error,
+			// which fails the is_object() guard inside the method).
+			$this->data['ds_variants'] = [];
+
+			$ds_raw = $this->model_catalog_product->getProductVariants($product_id);
+
+			if (!empty($ds_raw)) {
+				$this->load->model('tool/image');
+
+				// Sort variants alphabetically by name.
+				usort($ds_raw, function(array $a, array $b): int {
+					return strcasecmp($a['variant_key'], $b['variant_key']);
+				});
+
+				$currency_code = $this->config->get('config_currency');
+
+				foreach ($ds_raw as $row) {
+					// Resize to tile dimensions and convert to WebP via the image model
+					$tile_image = null;
+
+					if (!empty($row['image'])) {
+						$tile_image = $this->model_tool_image->resize($row['image'], 60, 60);
+					}
+
+					// Use special price when available; display flag lets the template colour it red.
+					$has_special = !empty($row['special']) && (float)$row['special'] > 0;
+					$display_price = $has_special ? (float)$row['special'] : (float)$row['price'];
+
+					$this->data['ds_variants'][] = [
+						'product_id'  => (int)$row['product_id'],
+						'variant_key' => $row['variant_key'],
+						'image'       => $tile_image,
+						'price'       => $this->currency->format($this->tax->calculate($display_price, $product_info['tax_class_id'], $this->config->get('config_tax')), $currency_code),
+						'has_special' => $has_special,
+						'href'        => $this->url->link('product/product', 'product_id=' . (int)$row['product_id'], 'SSL'),
+						'current'     => ((int)$row['product_id'] === $product_id)
 					];
 				}
 			}

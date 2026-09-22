@@ -9,9 +9,10 @@ NivoCart v2.X.X
 Release: TBA
 
 - Add new "images_cleanup" Tool to safely purge obsolete images.
+- Add Stripe Payments setup instructions for Admin user reference.
 - Add new feature in Admin product list to apply Global settings to products.
 - Add File Managers pagination for Image folders with more than 100 images.
-- Add Stripe Payments setup instructions for Admin user reference.
+- Add Lazy Loading to images inside the catalog product description panels.
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.
 - Fix issue with inserting JS scripts in Setting form from being blocked.
