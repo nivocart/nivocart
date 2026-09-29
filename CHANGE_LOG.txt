@@ -24,6 +24,8 @@ Release: TBA
 - Updated "Localisation/length_class" now returning correct default values.
 - Updated "Localisation/weight_class" now returning correct default values.
 - Updated Image models to resize all image formats to WebP for caching.
+- Updated jQuery image viewer Fancybox-plus to support Webp images.
+- Updated jQuery image viewer Viewbox to support Webp images.
 - Updated Account Register and Checkout fixing a Customer Group issue.
 - Updated the Catalog Category List page with a more modern design.
 - Updated Admin Settings to bypass server's ModSecurity blocks on scripts.

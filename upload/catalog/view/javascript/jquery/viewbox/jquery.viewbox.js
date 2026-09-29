@@ -159,7 +159,7 @@
 	};
 
 	function isImage(href) {
-		return href.match(/(png|jpg|jpeg|gif)(\?.*)?$/i);
+		return href.match(/(png|jpg|jpeg|gif|webp)(\?.*)?$/i);
 	};
 
 	function isAnchor(href) {

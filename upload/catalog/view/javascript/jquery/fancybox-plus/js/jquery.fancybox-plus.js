@@ -20,7 +20,7 @@
 		currentArray = [],
 		ajaxLoader = null,
 		imgPreloader = new Image(),
-		imgRegExp = /\.(jpg|gif|png|bmp|jpeg)(.*)?$/i,
+		imgRegExp = /\.(jpg|gif|png|bmp|jpeg|webp)(.*)?$/i,
 		swfRegExp = /[^\.]\.(swf)\s*$/i,
         loadingTimer,
 		loadingFrame = 1,

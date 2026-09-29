@@ -1584,7 +1584,7 @@
             image = $imgsToLoad.first();
             imageSource = image.attr('data-lazy');
             imageSrcSet = image.attr('data-srcset');
-            imageSizes  = image.attr('data-sizes') || _.$slider.attr('data-sizes');
+            imageSizes = image.attr('data-sizes') || _.$slider.attr('data-sizes');
             imageToLoad = document.createElement('img');
 
             imageToLoad.onload = function() {
@@ -1927,12 +1927,12 @@
         var _ = this, l, item, option, value, refresh = false, type;
 
         if ( $.type( arguments[0] ) === 'object' ) {
-            option =  arguments[0];
+            option = arguments[0];
             refresh = arguments[1];
             type = 'multiple';
 
         } else if ( $.type( arguments[0] ) === 'string' ) {
-            option =  arguments[0];
+            option = arguments[0];
             value = arguments[1];
             refresh = arguments[2];
 

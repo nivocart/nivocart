@@ -218,8 +218,7 @@
 
 	// Determine the next and previous members in a group.
 	function getIndex(increment) {
-		var
-		max = $related.length,
+		var max = $related.length,
 		newIndex = (index + increment) % max;
 
 		return (newIndex < 0) ? max + newIndex : newIndex;
@@ -602,13 +601,7 @@
 	};
 
 	publicMethod.position = function(speed, loadedCallback) {
-		var
-		css,
-		top = 0,
-		left = 0,
-		offset = $box.offset(),
-		scrollTop,
-		scrollLeft;
+		var css, top = 0, left = 0, offset = $box.offset(), scrollTop, scrollLeft;
 
 		$window.unbind('resize.' + prefix);
 
@@ -877,7 +870,6 @@
 		var href, setResize, prep = publicMethod.prep, $inline, request = ++requests;
 
 		active = true;
-
 		photo = false;
 
 		trigger(event_purge);
@@ -902,6 +894,7 @@
 			settings.mw = setSize(settings.get('maxWidth'), 'x') - loadedWidth - interfaceWidth;
 			settings.mw = settings.w && settings.w < settings.mw ? settings.w : settings.mw;
 		}
+
 		if (settings.get('maxHeight')) {
 			settings.mh = setSize(settings.get('maxHeight'), 'y') - loadedHeight - interfaceHeight;
 			settings.mh = settings.h && settings.h < settings.mh ? settings.h : settings.mh;
