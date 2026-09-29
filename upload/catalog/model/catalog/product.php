@@ -8,6 +8,37 @@ class ModelCatalogProduct extends Model {
 	/**
 	 * Functions Get
 	 */
+	/** Cached result of the product_variant table existence check. */
+	private ?bool $hasVariantTable = null;
+
+	/**
+	 * Returns the LEFT JOIN clause and GROUP BY expression for variant deduplication.
+	 * When nc_product_variant exists, groups by pid (the CJD parent-product identifier).
+	 * When the table is absent (vanilla NivoCart, no dropship mod), falls back to
+	 * grouping by product_id so no deduplication is applied and no SQL error is thrown.
+	 * The SHOW TABLES result is cached for the lifetime of this model instance.
+	 *
+	 * @return array{join: string, group: string}
+	 */
+	private function variantJoinAndGroup(): array {
+		if ($this->hasVariantTable === null) {
+			$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_variant'");
+			$this->hasVariantTable = ($check->num_rows > 0);
+		}
+
+		if ($this->hasVariantTable) {
+			return [
+				'join'  => " LEFT JOIN `" . DB_PREFIX . "product_variant` pv ON (p.product_id = pv.product_id)",
+				'group' => "IFNULL(pv.`pid`, CONCAT('np_', p.`product_id`))",
+			];
+		}
+
+		return [
+			'join'  => '',
+			'group' => "p.`product_id`",
+		];
+	}
+
 	public function updateViewed(int $product_id): void {
 		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
@@ -76,7 +107,7 @@ class ModelCatalogProduct extends Model {
 				'special'          => $query->row['special'],
 				'reward'           => $query->row['reward'],
 				'points'           => $query->row['points'],
-				'rating'           => $query->row['rating'] ? round($query->row['rating']) : 0,
+				'rating'           => $query->row['rating'] ? round($query->row['rating'], 0, PHP_ROUND_HALF_UP) : 0,
 				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0,
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
@@ -95,7 +126,9 @@ class ModelCatalogProduct extends Model {
 			$customer_group_id = $this->config->get('config_customer_group_id');
 		}
 
-		$sql = "SELECT p.product_id,";
+		$vg = $this->variantJoinAndGroup();
+
+		$sql = "SELECT MIN(p.product_id) AS product_id, COUNT(p.product_id) AS variant_count,";
 		$sql .= " (SELECT AVG(rating) AS `total` FROM `" . DB_PREFIX . "review` r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS `rating`,";
 		$sql .= " (SELECT price FROM `" . DB_PREFIX . "product_discount` pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW()))";
 		$sql .= " ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 0,1) AS `discount`,";
@@ -123,6 +156,7 @@ class ModelCatalogProduct extends Model {
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id)";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "palette_color` pc ON (p.palette_id = pc.palette_id)";
+		$sql .= $vg['join'];
 		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		$sql .= " AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
@@ -190,7 +224,7 @@ class ModelCatalogProduct extends Model {
 			$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 		}
 
-		$sql .= " GROUP BY p.product_id";
+		$sql .= " GROUP BY " . $vg['group'];
 
 		$sort_data = [
 			'pd.name',
@@ -240,6 +274,9 @@ class ModelCatalogProduct extends Model {
 
 		foreach ($query->rows as $result) {
 			$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+			if (isset($product_data[$result['product_id']])) {
+				$product_data[$result['product_id']]['variant_count'] = (int)$result['variant_count'];
+			}
 		}
 
 		return $product_data;
@@ -267,20 +304,25 @@ class ModelCatalogProduct extends Model {
 			'p.sort_order'
 		];
 
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			if ($data['sort'] === 'pd.name' || $data['sort'] === 'p.model') {
-				$sql .= " ORDER BY LOWER(" . $data['sort'] . ")";
+		if (isset($data['sort']) && ($data['sort'] === 'random')) {
+			// Random order
+			$sql .= " ORDER BY RAND()";
+		} else {
+			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+				if ($data['sort'] === 'pd.name' || $data['sort'] === 'p.model') {
+					$sql .= " ORDER BY LOWER(" . $data['sort'] . ")";
+				} else {
+					$sql .= " ORDER BY " . $data['sort'];
+				}
 			} else {
-				$sql .= " ORDER BY " . $data['sort'];
+				$sql .= " ORDER BY p.sort_order";
 			}
-		} else {
-			$sql .= " ORDER BY p.sort_order";
-		}
 
-		if (isset($data['order']) && ($data['order'] === 'DESC')) {
-			$sql .= " DESC, LOWER(pd.name) DESC";
-		} else {
-			$sql .= " ASC, LOWER(pd.name) ASC";
+			if (isset($data['order']) && ($data['order'] === 'DESC')) {
+				$sql .= " DESC, LOWER(pd.name) DESC";
+			} else {
+				$sql .= " ASC, LOWER(pd.name) ASC";
+			}
 		}
 
 		if (isset($data['start']) && isset($data['limit'])) {
@@ -318,10 +360,16 @@ class ModelCatalogProduct extends Model {
 		if (!$product_data) {
 			$product_data = [];
 
-			$query = $this->db->query("SELECT p.product_id FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.date_added DESC LIMIT 0," . (int)$limit);
+			$vg = $this->variantJoinAndGroup();
+
+			$query = $this->db->query("SELECT MIN(p.product_id) AS product_id, COUNT(p.product_id) AS variant_count FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)" . $vg['join'] . " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY " . $vg['group'] . " ORDER BY MAX(p.date_added) DESC LIMIT 0," . (int)$limit);
 
 			foreach ($query->rows as $result) {
 				$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+
+				if (isset($product_data[$result['product_id']])) {
+					$product_data[$result['product_id']]['variant_count'] = (int)$result['variant_count'];
+				}
 			}
 
 			$this->cache->set('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$customer_group_id . '.' . (int)$limit, $product_data);
@@ -342,16 +390,44 @@ class ModelCatalogProduct extends Model {
 		if (!$product_data) {
 			$product_data = [];
 
-			$query = $this->db->query("SELECT p.product_id FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.viewed DESC, p.date_added DESC LIMIT 0," . (int)$limit);
+			$vg = $this->variantJoinAndGroup();
+
+			$query = $this->db->query("SELECT MIN(p.product_id) AS product_id, COUNT(p.product_id) AS variant_count FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)" . $vg['join'] . " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY " . $vg['group'] . " ORDER BY MAX(p.viewed) DESC, MAX(p.date_added) DESC LIMIT 0," . (int)$limit);
 
 			foreach ($query->rows as $result) {
 				$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+
+				if (isset($product_data[$result['product_id']])) {
+					$product_data[$result['product_id']]['variant_count'] = (int)$result['variant_count'];
+				}
 			}
 
 			$this->cache->set('product.popular.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$customer_group_id . '.' . (int)$limit, $product_data);
 		}
 
 		return $product_data;
+	}
+
+	/**
+	 * Returns the number of variants sharing the same pid as the given product.
+	 * Returns 1 when the product_variant table is absent (vanilla NivoCart).
+	 */
+	public function getVariantCount(int $product_id): int {
+		$vg = $this->variantJoinAndGroup();
+
+		if (!$this->hasVariantTable) {
+			return 1;
+		}
+
+		$map = $this->db->query("SELECT `pid` FROM `" . DB_PREFIX . "product_variant` WHERE `product_id` = '" . (int)$product_id . "' LIMIT 1");
+
+		if (empty($map->row)) {
+			return 1;
+		}
+
+		$result = $this->db->query("SELECT COUNT(pv.product_id) AS variant_count FROM `" . DB_PREFIX . "product_variant` pv INNER JOIN `" . DB_PREFIX . "product` p ON (pv.product_id = p.product_id) WHERE pv.`pid` = '" . $this->db->escape($map->row['pid']) . "' AND p.status = '1'");
+
+		return $result->row ? max(1, (int)$result->row['variant_count']) : 1;
 	}
 
 	public function getBestSellerProducts(int $limit): array {
@@ -691,7 +767,9 @@ class ModelCatalogProduct extends Model {
 	 * Total Functions
 	 */
 	public function getTotalProducts(array $data = []): int {
-		$sql = "SELECT COUNT(DISTINCT p.product_id) AS `total`";
+		$vg = $this->variantJoinAndGroup();
+
+		$sql = "SELECT COUNT(DISTINCT " . $vg['group'] . ") AS `total`";
 
 		if (!empty($data['filter_category_id'])) {
 			if (!empty($data['filter_sub_category'])) {
@@ -714,6 +792,7 @@ class ModelCatalogProduct extends Model {
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id)";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "palette_color` pc ON (p.palette_id = pc.palette_id)";
+		$sql .= $vg['join'];
 		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		$sql .= " AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
@@ -852,5 +931,48 @@ class ModelCatalogProduct extends Model {
 		}
 
 		return $total;
+	}
+
+	// -----------------------------------------------------------------------
+	// DROPSHIP VARIANT GROUPING
+	// -----------------------------------------------------------------------
+
+	public function getProductVariants(int $product_id): array {
+		// Find the pid and channel_id for this product
+		$map = $this->db->query("SELECT `pid`, `channel_id` FROM `" . DB_PREFIX . "product_variant` WHERE `product_id` = '" . (int)$product_id . "' LIMIT 1");
+
+		if (!is_object($map) || empty($map->row)) {
+			return [];
+		}
+
+		$pid = $map->row['pid'];
+		$channel_id = (int)$map->row['channel_id'];
+
+		// Resolve customer group for special-price lookup (mirrors getProduct() pattern).
+		if ($this->customer->isLogged()) {
+			$customer_group_id = (int)$this->customer->getCustomerGroupId();
+		} else {
+			$customer_group_id = (int)$this->config->get('config_customer_group_id');
+		}
+
+		// Return all sibling variants for this pid/channel, with enough info to render tiles.
+		// p.price is the regular price; the correlated subquery fetches the active special price (if any).
+		$query = $this->db->query("SELECT pv.`product_id`, dv.`variant_key`, dv.`image`, p.`price`,
+				(SELECT ps.`price` FROM `" . DB_PREFIX . "product_special` ps
+				 WHERE ps.`product_id` = pv.`product_id`
+				   AND ps.`customer_group_id` = '" . $customer_group_id . "'
+				   AND (ps.`date_start` = '0000-00-00' OR ps.`date_start` < NOW())
+				   AND (ps.`date_end` = '0000-00-00' OR ps.`date_end`   > NOW())
+				 ORDER BY ps.`priority` ASC, ps.`price` ASC
+				 LIMIT 1) AS `special`
+			FROM `" . DB_PREFIX . "product_variant` pv
+			INNER JOIN `" . DB_PREFIX . "dropship_variant` dv ON pv.`variant_id` = dv.`variant_id`
+			INNER JOIN `" . DB_PREFIX . "product` p ON pv.`product_id`  = p.`product_id`
+			WHERE pv.`pid` = '" . $this->db->escape($pid) . "'
+			  AND pv.`channel_id` = '" . $channel_id . "'
+			ORDER BY pv.`sort_order` ASC, pv.`id` ASC
+		");
+
+		return is_object($query) ? $query->rows : [];
 	}
 }

@@ -84,6 +84,20 @@
               <label for="show_mini_label-off"><span><span></span></span><?php echo $text_no; ?></label>
             <?php } ?></td>
           </tr>
+          <tr>
+            <td><?php echo $entry_random; ?></td>
+            <td><?php if ($special_random) { ?>
+              <input type="radio" name="special_random" value="1" id="random-on" class="radio" checked />
+              <label for="random-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="special_random" value="0" id="random-off" class="radio" />
+              <label for="random-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="special_random" value="1" id="random-on" class="radio" />
+              <label for="random-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="special_random" value="0" id="random-off" class="radio" checked />
+              <label for="random-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
         </tbody>
         </table>
         <table id="module" class="list">

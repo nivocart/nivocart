@@ -55,7 +55,7 @@ class ControllerModuleSpecial extends Controller {
 		$this->data['products'] = [];
 
 		$data = [
-			'sort'  => 'pd.name',
+			'sort'  => $this->config->get($this->name . '_random') ? 'random' : 'pd.name',
 			'order' => 'ASC',
 			'start' => 0,
 			'limit' => $setting['limit']
@@ -71,6 +71,7 @@ class ControllerModuleSpecial extends Controller {
 				$image = false;
 				$label_ratio = 50;
 			}
+
 			$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 			if ($result['label']) {
@@ -137,7 +138,8 @@ class ControllerModuleSpecial extends Controller {
 				'rating'          => (int)$rating,
 				'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 				'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($result['product_id']) : '',
-			'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
+				'variant_count'   => $this->model_catalog_product->getVariantCount($result['product_id']),
+				'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
 			];
 		}
 
