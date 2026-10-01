@@ -18,7 +18,8 @@
 class ControllerModificationHmrcMtd extends Controller {
     /**
      * OAuth callback entry point.
-     * Registered as redirect URI: HTTPS_CATALOG . 'index.php?route=modification/hmrc_mtd/callback'
+     * Registered as redirect URI: HTTPS_SERVER . 'index.php?route=modification/hmrc_mtd/callback'
+     * (On the catalog side HTTPS_SERVER is the storefront URL; HTTPS_CATALOG only exists in admin.)
      */
     public function callback(): void {
         $this->load->model('modification/hmrc_mtd');
@@ -63,7 +64,7 @@ class ControllerModificationHmrcMtd extends Controller {
 
         $hmrc = new HmrcMtd($settings['client_id'], $settings['client_secret'], (bool)(int)($settings['sandbox'] ?? 1));
 
-        $redirect_uri = HTTPS_CATALOG . 'index.php?route=modification/hmrc_mtd/callback';
+        $redirect_uri = HTTPS_SERVER . 'index.php?route=modification/hmrc_mtd/callback';
 
         $tokens = $hmrc->exchangeCodeForTokens($code, $redirect_uri);
 
@@ -88,7 +89,7 @@ class ControllerModificationHmrcMtd extends Controller {
      * @param string $message  Optional error detail shown on failure
      */
     private function renderResult(bool $success, string $message = ''): void {
-        $admin_url = HTTPS_SERVER . 'index.php?route=modification/hmrc_mtd';
+        $admin_url = HTTPS_SERVER . 'admin/index.php?route=modification/hmrc_mtd';
 
         $store_name = $this->config->get('config_name') ?: 'NivoCart';
 

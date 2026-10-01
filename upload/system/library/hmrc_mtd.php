@@ -16,7 +16,8 @@ class HmrcMtd {
     // -----------------------------------------------------------------------
     // Endpoints
     // -----------------------------------------------------------------------
-    const AUTH_URL = 'https://www.tax.service.gov.uk/oauth/authorize';
+    const AUTH_SANDBOX = 'https://test-www.tax.service.gov.uk/oauth/authorize';
+    const AUTH_PRODUCTION = 'https://www.tax.service.gov.uk/oauth/authorize';
     const TOKEN_SANDBOX = 'https://test-api.service.hmrc.gov.uk/oauth/token';
     const TOKEN_PRODUCTION = 'https://api.service.hmrc.gov.uk/oauth/token';
     const API_SANDBOX = 'https://test-api.service.hmrc.gov.uk';
@@ -54,7 +55,9 @@ class HmrcMtd {
      * @param string $redirect_uri Must match the URI registered on HMRC Developer Hub
      */
     public function getAuthorisationUrl(string $scope, string $state, string $redirect_uri): string {
-        return self::AUTH_URL . '?' . http_build_query([
+        $auth_url = $this->sandbox ? self::AUTH_SANDBOX : self::AUTH_PRODUCTION;
+
+        return $auth_url . '?' . http_build_query([
             'response_type' => 'code',
             'client_id'     => $this->clientId,
             'scope'         => $scope,
@@ -112,16 +115,17 @@ class HmrcMtd {
      * @param string $access_token Current OAuth access token
      * @param string $username     Admin username — used in fraud prevention headers
      * @param array  $params       Query string parameters
+     * @param string $version      HMRC API version for the Accept header (e.g. '2.0')
      * @return array Decoded JSON response, always including 'http_code'
      */
-    public function get(string $endpoint, string $access_token, string $username, array $params = []): array {
+    public function get(string $endpoint, string $access_token, string $username, array $params = [], string $version = '1.0'): array {
         $url = $this->getBaseUrl() . $endpoint;
 
         if ($params) {
             $url .= '?' . http_build_query($params);
         }
 
-        return $this->call($url, 'GET', $access_token, $username);
+        return $this->call($url, 'GET', $access_token, $username, [], $version);
     }
 
     /**
@@ -131,10 +135,11 @@ class HmrcMtd {
      * @param string $access_token Current OAuth access token
      * @param string $username     Admin username — used in fraud prevention headers
      * @param array  $payload      Request body (will be JSON-encoded)
+     * @param string $version      HMRC API version for the Accept header (e.g. '5.0')
      * @return array Decoded JSON response, always including 'http_code'
      */
-    public function post(string $endpoint, string $access_token, string $username, array $payload): array {
-        return $this->call($this->getBaseUrl() . $endpoint, 'POST', $access_token, $username, $payload);
+    public function post(string $endpoint, string $access_token, string $username, array $payload, string $version = '1.0'): array {
+        return $this->call($this->getBaseUrl() . $endpoint, 'POST', $access_token, $username, $payload, $version);
     }
 
     // -----------------------------------------------------------------------
@@ -225,10 +230,10 @@ class HmrcMtd {
     /**
      * Execute an authenticated cURL call with fraud prevention headers.
      */
-    private function call(string $url, string $method, string $access_token, string $username, array $payload = []): array {
+    private function call(string $url, string $method, string $access_token, string $username, array $payload = [], string $version = '1.0'): array {
         $headers = array_merge($this->buildFraudHeaders($username), [
             'Authorization: Bearer ' . $access_token,
-            'Accept: application/vnd.hmrc.1.0+json',
+            'Accept: application/vnd.hmrc.' . $version . '+json',
             'Content-Type: application/json',
         ]);
 
@@ -261,7 +266,7 @@ class HmrcMtd {
         $data['http_code'] = $httpCode;
 
         if ($httpCode >= 400) {
-            $data['error'] = $data['message'] ?? $data['code'] ?? 'HMRC API error (HTTP ' . $httpCode . ')';
+            $data['error'] = isset($data['code'], $data['message']) ? $data['code'] . ': ' . $data['message'] : ($data['message'] ?? $data['code'] ?? 'HMRC API error (HTTP ' . $httpCode . ')');
         }
 
         return $data;

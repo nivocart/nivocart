@@ -158,18 +158,40 @@ class ControllerModificationHmrcMtd extends Controller {
 
         $hmrc = $this->buildHmrcClient($settings);
 
-        // Fetch obligations for current + next year window
-        $from = date('Y-m-d', strtotime('-1 year'));
-        $to = date('Y-m-d', strtotime('+3 months'));
+        // HMRC limits from/to to a maximum of 365 days, and neither is needed for open obligations.
+        // Request 1: all open obligations (status=O, no dates). Request 2: fulfilled ones over the last 364 days.
+        $endpoint = '/organisations/vat/' . rawurlencode($vrn) . '/obligations';
+        $username = $this->user->getUserName();
 
-        $response = $hmrc->get('/organisations/vat/' . rawurlencode($vrn) . '/obligations', $tokens['access_token'], $this->user->getUserName(), ['from' => $from, 'to' => $to]);
+        $obligations = [];
+        $api_error = '';
 
-        if (isset($response['error'])) {
-            $this->session->data['error'] = sprintf($this->language->get('error_api'), $response['error']);
-        } elseif (!empty($response['obligations'])) {
-            $this->model_modification_hmrc_mtd->saveObligations($store_id, $response['obligations']);
-            $this->session->data['success'] = $this->language->get('text_success_obligations');
+        $requests = [
+            ['status' => 'O'],
+            ['status' => 'F', 'from' => date('Y-m-d', strtotime('-364 days')), 'to' => date('Y-m-d')],
+        ];
+
+        foreach ($requests as $params) {
+            $response = $hmrc->get($endpoint, $tokens['access_token'], $username, $params);
+
+            if (isset($response['error'])) {
+                // No fulfilled obligations yet is not an error worth reporting
+                if ((int)($response['http_code'] ?? 0) !== 404 && ($response['code'] ?? '') !== 'NOT_FOUND') {
+                    $api_error = $response['error'];
+                    break;
+                }
+            } elseif (!empty($response['obligations'])) {
+                $obligations = array_merge($obligations, $response['obligations']);
+            }
+        }
+
+        if ($api_error) {
+            $this->session->data['error'] = sprintf($this->language->get('error_api'), $api_error);
         } else {
+            if ($obligations) {
+                $this->model_modification_hmrc_mtd->saveObligations($store_id, $obligations);
+            }
+
             $this->session->data['success'] = $this->language->get('text_success_obligations');
         }
 
@@ -332,7 +354,7 @@ class ControllerModificationHmrcMtd extends Controller {
         $business_id = $settings['itsa_business_id'] ?? '';
 
         if (!$business_id) {
-            $biz_response = $hmrc->get('/individuals/business/details/' . rawurlencode($nino) . '/list', $tokens['access_token'], $username);
+            $biz_response = $hmrc->get('/individuals/business/details/' . rawurlencode($nino) . '/list', $tokens['access_token'], $username, [], '2.0');
 
             if (isset($biz_response['error'])) {
                 $this->session->data['error'] = sprintf($this->language->get('error_api'), $biz_response['error']);
@@ -341,7 +363,7 @@ class ControllerModificationHmrcMtd extends Controller {
             }
 
             // Use the first self-employment business found
-            foreach ($biz_response['businessDetails'] ?? [] as $biz) {
+            foreach ($biz_response['listOfBusinesses'] ?? $biz_response['businessDetails'] ?? [] as $biz) {
                 if (($biz['typeOfBusiness'] ?? '') === 'self-employment') {
                     $business_id = $biz['businessId'] ?? '';
                     break;
@@ -357,29 +379,46 @@ class ControllerModificationHmrcMtd extends Controller {
             }
         }
 
-        // Step 2 — fetch quarterly obligations for the current tax year window
-        $from = date('Y-m-d', strtotime('-18 months'));
-        $to = date('Y-m-d', strtotime('+6 months'));
+        // Step 2 — fetch quarterly obligations (Obligations MTD 3.0).
+        // HMRC allows max 366 days per request, so fetch the previous and current tax years separately.
+        $year_now = (int)date('Y');
+        $current_start = (date('Y-m-d') >= $year_now . '-04-06') ? $year_now : $year_now - 1;
 
-        $response = $hmrc->get('/obligations/details/' . rawurlencode($nino) . '/income-and-expenditure', $tokens['access_token'], $username, ['from' => $from, 'to' => $to, 'status' => 'Open']);
+        $windows = [
+            [($current_start - 1) . '-04-06', $current_start . '-04-05'],
+            [$current_start . '-04-06', ($current_start + 1) . '-04-05'],
+        ];
 
-        if (isset($response['error'])) {
-            $this->session->data['error'] = sprintf($this->language->get('error_api'), $response['error']);
-            $this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
-            return;
+        $obligations = [];
+
+        foreach ($windows as $window) {
+            $response = $hmrc->get('/obligations/details/' . rawurlencode($nino) . '/income-and-expenditure', $tokens['access_token'], $username, ['fromDate' => $window[0], 'toDate' => $window[1], 'typeOfBusiness' => 'self-employment', 'businessId' => $business_id], '3.0');
+
+            if (isset($response['error'])) {
+                // No obligations in a window is not an error worth reporting
+                if ((int)($response['http_code'] ?? 0) === 404) {
+                    continue;
+                }
+
+                $this->session->data['error'] = sprintf($this->language->get('error_api'), $response['error']);
+                $this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
+                return;
+            }
+
+            $obligations = array_merge($obligations, $response['obligations'] ?? []);
         }
 
         // Parse HMRC obligation response into normalised period rows
         $periods = [];
 
-        foreach ($response['obligations'] ?? [] as $obligation) {
-            $ref = $obligation['identification']['referenceNumber'] ?? $business_id;
+        foreach ($obligations as $obligation) {
+            $ref = $obligation['businessId'] ?? $business_id;
 
             foreach ($obligation['obligationDetails'] ?? [] as $detail) {
-                $period_start = $detail['inboundCorrespondenceFromDate'] ?? '';
-                $period_end = $detail['inboundCorrespondenceToDate'] ?? '';
-                $due = $detail['inboundCorrespondenceDueDate'] ?? '';
-                $status = $detail['status'] ?? 'O';
+                $period_start = $detail['periodStartDate'] ?? '';
+                $period_end = $detail['periodEndDate'] ?? '';
+                $due = $detail['dueDate'] ?? '';
+                $status = (($detail['status'] ?? 'Open') === 'Fulfilled') ? 'F' : 'O';
 
                 if (!$period_start || !$period_end) { continue; }
 
