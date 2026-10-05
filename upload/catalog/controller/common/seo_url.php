@@ -132,8 +132,8 @@ class ControllerCommonSeoUrl extends Controller {
 			}
 		}
 
-		if ((isset($this->request->get['route'])) && ($this->config->get('config_seo_url'))) {
-			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->request->get['route'] . "'");
+		if ((isset($this->request->get['route'])) && is_string($this->request->get['route']) && ($this->config->get('config_seo_url'))) {
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($this->request->get['route']) . "'");
 
 			if ($query->num_rows) {
 				header('Location:/' . $query->row['keyword'], true, 301);
@@ -197,7 +197,7 @@ class ControllerCommonSeoUrl extends Controller {
 					$clean_route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$data['route']);
 
 					if ($this->config->get('config_seo_url')) {
-						$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $clean_route . "'");
+						$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($clean_route) . "'");
 
 						if ($query->num_rows && $query->row['keyword']) {
 							$url .= '/' . $query->row['keyword'];
