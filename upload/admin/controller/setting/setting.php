@@ -737,7 +737,7 @@ class ControllerSettingSetting extends Controller {
 	}
 
 	private function validateStore(): void {
-		$this->validateLength('config_title', 'error_title', 3, 32);
+		$this->validateLength('config_title', 'error_title', 3, 64);
 	}
 
 	private function validateOption(): void {
