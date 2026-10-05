@@ -24,6 +24,7 @@ Release: TBA
 - Fix for Reported Issue #25 NC-01: Arbitrary File Upload in File Manager.
 - Fix for Reported Issue #25 NC-02: Permanent Disable of Admin Password Recovery.
 - Fix for Reported Issue #25 NC-03: Lack of Expiry in Password Reset Tokens.
+- Fix for Reported Issue #25 NC-04: Missing Authorization for "Login as Customer".
 - Updated "Localisation/length_class" now returning correct default values.
 - Updated "Localisation/weight_class" now returning correct default values.
 - Updated Image models to resize all image formats to WebP for caching.

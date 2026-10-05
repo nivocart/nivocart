@@ -1249,6 +1249,11 @@ class ControllerSaleCustomer extends Controller {
 	}
 
 	public function login() {
+		// Impersonating a customer is a modify-level action
+		if (!$this->user->hasPermission('modify', 'sale/customer')) {
+			return $this->forward('error/permission');
+		}
+
 		$customer_id = isset($this->request->get['customer_id']) ? (int)$this->request->get['customer_id'] : 0;
 
 		$this->load->model('sale/customer');
