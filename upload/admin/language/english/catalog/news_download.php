@@ -26,6 +26,7 @@ $_['error_permission'] = 'Warning: You do not have permission to modify <b>News 
 $_['error_name']       = 'Name must be between 3 and 64 characters!';
 $_['error_upload']     = 'Upload required!';
 $_['error_filename']   = 'Filename must be between 3 and 128 characters!';
+$_['error_filename_upload'] = 'Filename must be between 3 and 111 characters!';
 $_['error_exists']     = 'File does not exist!';
 $_['error_mask']       = 'Mask must be between 3 and 128 characters!';
 $_['error_mask_type']  = 'Mask must end with a file type!';

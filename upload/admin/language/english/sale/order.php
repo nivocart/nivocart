@@ -197,5 +197,6 @@ $_['error_shipping']             = 'Warning: Shipping method required!';
 $_['error_payment']              = 'Warning: Payment method required!';
 $_['error_upload']               = 'Upload required!';
 $_['error_filename']             = 'Filename must be between 3 and 128 characters!';
+$_['error_filename_upload']      = 'Filename must be between 3 and 111 characters!';
 $_['error_filetype']             = 'Invalid file type!';
 $_['error_action']               = 'Warning: Could not complete this action!';

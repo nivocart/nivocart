@@ -435,8 +435,8 @@ class ControllerCatalogNewsDownload extends Controller {
 			if (!empty($this->request->files['file']['name'])) {
 				$filename = basename(html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8'));
 
-				if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 128)) {
-					$json['error'] = $this->language->get('error_filename');
+				if ((mb_strlen($filename, 'UTF-8') < 3) || (mb_strlen($filename, 'UTF-8') > 111)) {
+					$json['error'] = $this->language->get('error_filename_upload');
 				}
 
 				// Allowed file extension types
