@@ -5,6 +5,8 @@
  * @package NivoCart
  */
 class ControllerCommonReset extends Controller {
+	private const MAX_FAILED_CODES = 10;
+
 	private $error = [];
 
 	public function index() {
@@ -14,12 +16,23 @@ class ControllerCommonReset extends Controller {
 
 		$code = (isset($this->request->get['code']) && is_string($this->request->get['code'])) ? $this->request->get['code'] : '';
 
+		$ip = $this->request->server['REMOTE_ADDR'] ?? '';
+
 		$user_info = [];
 
 		if ($code !== '') {
 			$this->load->model('user/user');
 
+			// Rate limiting: too many failed attempts from this IP address
+			if ($this->model_user_user->getTotalRecoveryAttempts('redeem', 'ip', $ip) >= self::MAX_FAILED_CODES) {
+				$this->redirect($this->url->link('common/login', '', 'SSL'));
+			}
+
 			$user_info = $this->model_user_user->getUserByCode($code);
+
+			if (!$user_info) {
+				$this->model_user_user->addRecoveryAttempt('redeem', '', $ip);
+			}
 		}
 
 		if ($user_info) {

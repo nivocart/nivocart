@@ -5,6 +5,10 @@
  * @package NivoCart
  */
 class ModelUserUser extends Model {
+	// Password reset token lifetime and rate-limit window, in minutes
+	public const CODE_LIFETIME = 60;
+	public const RECOVERY_WINDOW = 60;
+
 	/**
 	 * Functions Add, Edit, Delete, Get, Check
 	 */
@@ -34,11 +38,12 @@ class ModelUserUser extends Model {
 	}
 
 	public function editPassword(int $user_id, string $password) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$password)))) . "', `code` = '' WHERE user_id = '" . (int)$user_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$password)))) . "', `code` = '', `code_expires` = NULL WHERE user_id = '" . (int)$user_id . "'");
 	}
 
-	public function editCode(string $email, $code) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET `code` = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
+	public function editCode(string $email, string $code): void {
+		// Only a SHA-256 hash of the token is stored, the plain token is only ever sent by email
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET `code` = '" . $this->db->escape(hash('sha256', $code)) . "', `code_expires` = DATE_ADD(NOW(), INTERVAL " . (int)self::CODE_LIFETIME . " MINUTE) WHERE LCASE(email) = '" . $this->db->escape(mb_strtolower((string)$email), 'UTF-8') . "'");
 	}
 
 	public function deleteUser(int $user_id): void {
@@ -117,9 +122,26 @@ class ModelUserUser extends Model {
 	}
 
 	public function getUserByCode($code) {
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE `code` = '" . $this->db->escape($code) . "' AND `code` != ''");
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE `code` = '" . $this->db->escape(hash('sha256', (string)$code)) . "' AND `code` != '' AND `code_expires` > NOW()");
 
 		return $query->row;
+	}
+
+	/**
+	 * Password recovery rate limiting
+	 */
+	public function addRecoveryAttempt(string $action, string $email, string $ip): void {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "user_recovery` WHERE date_added < DATE_SUB(NOW(), INTERVAL 1 DAY)");
+
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user_recovery` SET `action` = '" . $this->db->escape($action) . "', `email` = '" . $this->db->escape($email) . "', `ip` = '" . $this->db->escape($ip) . "', date_added = NOW()");
+	}
+
+	public function getTotalRecoveryAttempts(string $action, string $field, string $value): int {
+		$field = ($field === 'email') ? 'email' : 'ip';
+
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "user_recovery` WHERE `action` = '" . $this->db->escape($action) . "' AND `" . $field . "` = '" . $this->db->escape($value) . "' AND date_added > DATE_SUB(NOW(), INTERVAL " . (int)self::RECOVERY_WINDOW . " MINUTE)");
+
+		return (int)$query->row['total'];
 	}
 
 	public function getUserGroup(int $user_id, int $user_group_id) {

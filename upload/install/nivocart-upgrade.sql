@@ -2649,7 +2649,8 @@ CREATE TABLE `nc_user` (
   `firstname` varchar(32) NOT NULL,
   `lastname` varchar(32) NOT NULL,
   `email` varchar(96) NOT NULL,
-  `code` varchar(40) NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `code_expires` datetime DEFAULT NULL,
   `ip` varchar(32) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
@@ -2669,6 +2670,25 @@ CREATE TABLE `nc_user_group` (
   `permission` text CHARACTER SET utf8mb4 NOT NULL,
   PRIMARY KEY (`user_group_id`),
   KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nc_user_recovery`
+--
+
+DROP TABLE IF EXISTS `nc_user_recovery`;
+CREATE TABLE `nc_user_recovery` (
+  `user_recovery_id` int NOT NULL AUTO_INCREMENT,
+  `action` varchar(16) NOT NULL,
+  `email` varchar(96) NOT NULL,
+  `ip` varchar(40) NOT NULL,
+  `date_added` datetime NOT NULL,
+  PRIMARY KEY (`user_recovery_id`),
+  KEY `email` (`email`),
+  KEY `ip` (`ip`),
+  KEY `date_added` (`date_added`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
