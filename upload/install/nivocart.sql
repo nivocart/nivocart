@@ -1282,7 +1282,7 @@ CREATE TABLE `nc_customer` (
   `newsletter` tinyint(1) NOT NULL DEFAULT '0',
   `address_id` int NOT NULL DEFAULT '0',
   `customer_group_id` int NOT NULL,
-  `ip` varchar(32) NOT NULL DEFAULT '0',
+  `ip` varchar(40) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL,
   `approved` tinyint(1) NOT NULL,
   `token` varchar(255) NOT NULL,
@@ -1300,7 +1300,7 @@ CREATE TABLE `nc_customer` (
 DROP TABLE IF EXISTS `nc_customer_ban_ip`;
 CREATE TABLE `nc_customer_ban_ip` (
   `customer_ban_ip_id` int NOT NULL AUTO_INCREMENT,
-  `ip` varchar(32) NOT NULL,
+  `ip` varchar(40) NOT NULL,
   PRIMARY KEY (`customer_ban_ip_id`),
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1428,7 +1428,7 @@ DROP TABLE IF EXISTS `nc_customer_ip`;
 CREATE TABLE `nc_customer_ip` (
   `customer_ip_id` int NOT NULL AUTO_INCREMENT,
   `customer_id` int NOT NULL,
-  `ip` varchar(32) NOT NULL,
+  `ip` varchar(40) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`customer_ip_id`),
   KEY `ip` (`ip`)
@@ -1442,7 +1442,7 @@ CREATE TABLE `nc_customer_ip` (
 
 DROP TABLE IF EXISTS `nc_customer_online`;
 CREATE TABLE `nc_customer_online` (
-  `ip` varchar(32) NOT NULL,
+  `ip` varchar(40) NOT NULL,
   `customer_id` int NOT NULL,
   `url` text NOT NULL,
   `referer` text NOT NULL,
@@ -2951,7 +2951,7 @@ CREATE TABLE `nc_order` (
   `currency_id` int NOT NULL,
   `currency_code` varchar(3) NOT NULL,
   `currency_value` decimal(15,8) NOT NULL DEFAULT '1.00000000',
-  `ip` varchar(32) NOT NULL,
+  `ip` varchar(40) NOT NULL,
   `forwarded_ip` varchar(32) NOT NULL,
   `user_agent` varchar(255) NOT NULL,
   `accept_language` varchar(255) NOT NULL,
@@ -3991,7 +3991,7 @@ CREATE TABLE `nc_review` (
 
 DROP TABLE IF EXISTS `nc_robot_online`;
 CREATE TABLE `nc_robot_online` (
-  `ip` varchar(32) NOT NULL,
+  `ip` varchar(40) NOT NULL,
   `robot` varchar(64) NOT NULL,
   `user_agent` text NOT NULL,
   `date_added` datetime NOT NULL,
@@ -4701,7 +4701,7 @@ CREATE TABLE `nc_user` (
   `email` varchar(96) NOT NULL,
   `code` varchar(64) NOT NULL,
   `code_expires` datetime DEFAULT NULL,
-  `ip` varchar(32) NOT NULL,
+  `ip` varchar(40) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`user_id`)
@@ -4764,7 +4764,7 @@ CREATE TABLE `nc_user_log` (
   `action` varchar(50) NOT NULL,
   `allowed` tinyint(1) NOT NULL,
   `url` varchar(200) NOT NULL,
-  `ip` varchar(32) NOT NULL,
+  `ip` varchar(40) NOT NULL,
   `date` datetime NOT NULL,
   PRIMARY KEY (`log_id`),
   KEY `username` (`username`)

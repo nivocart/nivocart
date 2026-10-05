@@ -141,7 +141,7 @@ class User {
 
 			// User Log
 			if ($this->config->get('user_log_enable') && $this->config->get('user_log_login')) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . (string)$this->username . "', `action` = 'login', `allowed` = '1', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . $this->db->escape((string)$this->username) . "', `action` = 'login', `allowed` = '1', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
 			}
 
 			return true;
@@ -149,10 +149,34 @@ class User {
 		} else {
 			// User Log
 			if ($this->config->get('user_log_enable') && $this->config->get('user_log_hacklog')) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . $this->db->escape((string)$username) . "', `action` = 'login', `allowed` = '0', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . $this->db->escape(mb_substr((string)$username, 0, 20, 'UTF-8')) . "', `action` = 'login', `allowed` = '0', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
 			}
 
 			return false;
+		}
+	}
+
+	/**
+	 * Log a login attempt that was refused by the brute-force lockout
+	 *
+	 * The attempt is refused before the password is checked, so login() never
+	 * runs. This keeps the User Log complete during an attack. It follows the
+	 * "Failed Login events" setting.
+	 *
+	 * @param string $username
+	 *
+	 * @return void
+	 *
+	 * @example
+	 *
+	 * $this->user->logLockout($username);
+	 */
+	public function logLockout(string $username): void {
+		if ($this->config->get('user_log_enable') && $this->config->get('user_log_hacklog')) {
+			$url = $this->request->server['REQUEST_URI'] ?? '';
+			$ip = $this->request->server['REMOTE_ADDR'] ?? '';
+
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '0', username = '" . $this->db->escape(mb_substr($this->sanitize($username), 0, 20, 'UTF-8')) . "', `action` = 'login locked', `allowed` = '0', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape((string)$ip) . "', `date` = NOW()");
 		}
 	}
 
@@ -171,7 +195,7 @@ class User {
 			$url = $this->request->server['REQUEST_URI'];
 			$ip = $this->request->server['REMOTE_ADDR'];
 
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . (string)$this->username . "', `action` = 'logout', `allowed` = '1', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . $this->db->escape((string)$this->username) . "', `action` = 'logout', `allowed` = '1', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
 		}
 
 		unset($this->session->data['user_id']);
@@ -204,7 +228,7 @@ class User {
 			if ($this->config->get('user_log_enable')) {
 				if ((($this->config->get('user_log_allowed') === 1 || $this->config->get('user_log_allowed') === 2) && (in_array($value, $this->permission[$key]))) || (($this->config->get('user_log_allowed') === 0 || $this->config->get('user_log_allowed') === 2) && !(in_array($value, $this->permission[$key])))) {
 					if (($this->config->get('user_log_access') && $key === "access") || ($this->config->get('user_log_modify') && $key === "modify")) {
-						$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . (string)$this->username . "', `action` = '" . $key . "', `allowed` = '" . in_array($value, $this->permission[$key]) . "', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . $this->db->escape((string)$this->username) . "', `action` = '" . $this->db->escape($key) . "', `allowed` = '" . (int)in_array($value, $this->permission[$key]) . "', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
 					}
 				}
 			}
@@ -214,7 +238,7 @@ class User {
 		} else {
 			// User Log
 			if ($this->config->get('user_log_enable') && ($this->config->get('user_log_allowed') === 0 || $this->config->get('user_log_allowed') === 2)) {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . (string)$this->username . "', `action` = '" . $key . "', `allowed` = '0', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "user_log` SET user_id = '" . (int)$this->user_id . "', username = '" . $this->db->escape((string)$this->username) . "', `action` = '" . $this->db->escape($key) . "', `allowed` = '0', `url` = '" . $this->db->escape((string)$url) . "', `ip` = '" . $this->db->escape($ip) . "', `date` = NOW()");
 			}
 
 			return false;

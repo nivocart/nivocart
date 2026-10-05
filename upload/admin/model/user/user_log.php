@@ -12,13 +12,23 @@ class ModelUserUserLog extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM `" . DB_PREFIX . "user_log`";
 
-			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-				$sql .= " ORDER BY " . $data['sort'];
+			$sort_data = [
+				'log_id',
+				'user_id',
+				'username',
+				'action',
+				'allowed',
+				'ip',
+				'date'
+			];
+
+			if (isset($data['sort']) && in_array($data['sort'], $sort_data, true)) {
+				$sql .= " ORDER BY `" . $data['sort'] . "`";
 			} else {
-				$sql .= " ORDER BY date";
+				$sql .= " ORDER BY `date`";
 			}
 
-			if (isset($data['order']) && ($data['order'] === 'DESC')) {
+			if (isset($data['order']) && ($data['order'] === 'ASC')) {
 				$sql .= " ASC";
 			} else {
 				$sql .= " DESC";
@@ -40,7 +50,7 @@ class ModelUserUserLog extends Model {
 
 			return $query->rows;
 		} else {
-			return false;
+			return [];
 		}
 	}
 

@@ -27,6 +27,7 @@ Release: TBA
 - Fix for Reported Issue #25 NC-04: Missing Authorization for "Login as Customer".
 - Fix for Reported Issue #25 NC-05: Latent SQL Injection in SEO URL Handler.
 - Fix for Missing permission check on order file uploads under Admin.
+- Updated Admin login protection against brute force attempts to gain access.
 - Updated Download folder protection with Admin and Catalog related files.
 - Updated "Localisation/length_class" now returning correct default values.
 - Updated "Localisation/weight_class" now returning correct default values.

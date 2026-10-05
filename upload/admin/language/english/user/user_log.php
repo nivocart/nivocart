@@ -20,7 +20,7 @@ $_['column_date']            = 'Date';
 $_['entry_user_log_enable']  = 'Enable Log';
 $_['entry_user_log_login']   = 'Login events';
 $_['entry_user_log_logout']  = 'Logout events';
-$_['entry_user_log_hacklog'] = 'Failed Login events (brute force)';
+$_['entry_user_log_hacklog'] = 'Failed Login events';
 $_['entry_user_log_access']  = 'Page Access events';
 $_['entry_user_log_modify']  = 'Page Modify events';
 $_['entry_user_log_allowed'] = 'Log Permissions';
@@ -41,7 +41,7 @@ $_['text_description']       = '<p>The Administration User Log allows you to rec
     <li>Enable log - enables and disables event recording (master);</li>
     <li>Login events - records every login attempts to the administration;</li>
     <li>Logout events - records every logout actions from the administration;</li>
-    <li>Failed Login events - records every failed login attempts (brute force);</li>
+    <li>Failed Login events - records every failed login attempt, and every attempt refused by the brute-force lockout (too many failed logins from one IP address or for one username);</li>
     <li>Page Access events - records every page view/access;</li>
     <li>Page Modify events - records every insert/update/delete actions;</li>
     <li>Log Permissions - select the events to record. Events can be allowed, denied or all;</li>

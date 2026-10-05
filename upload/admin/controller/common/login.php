@@ -5,6 +5,10 @@
  * @package NivoCart
  */
 class ControllerCommonLogin extends Controller {
+	// Maximum failed login attempts per IP address / per username within the model's recovery window
+	private const MAX_ATTEMPTS_IP = 10;
+	private const MAX_ATTEMPTS_USER = 25;
+
 	private $error = [];
 
 	public function index() {
@@ -124,7 +128,25 @@ class ControllerCommonLogin extends Controller {
 	}
 
 	protected function validate() {
+		$this->load->model('user/user');
+
+		$ip = $this->request->server['REMOTE_ADDR'] ?? '';
+
+		// Same normalisation for every submitted name, whether or not the account exists
+		$username = mb_strtolower(mb_substr(trim((string)$this->request->post['username']), 0, 96, 'UTF-8'), 'UTF-8');
+
+		// Brute-force protection: refuse before the password is even checked
+		if (($this->model_user_user->getTotalRecoveryAttempts('login', 'ip', $ip) >= self::MAX_ATTEMPTS_IP) || (($username !== '') && ($this->model_user_user->getTotalRecoveryAttempts('login', 'email', $username) >= self::MAX_ATTEMPTS_USER))) {
+			$this->user->logLockout($username);
+
+			$this->error['warning'] = $this->language->get('error_attempts');
+
+			return false;
+		}
+
 		if (!$this->user->login($this->request->post['username'], $this->request->post['password'])) {
+			$this->model_user_user->addRecoveryAttempt('login', $username, $ip);
+
 			$this->error['warning'] = $this->language->get('error_login');
 		}
 
