@@ -12,11 +12,15 @@ class ControllerCommonReset extends Controller {
 			$this->redirect($this->url->link('common/login', '', 'SSL'));
 		}
 
-		$code = isset($this->request->get['code']) ? $this->request->get['code'] : '';
+		$code = (isset($this->request->get['code']) && is_string($this->request->get['code'])) ? $this->request->get['code'] : '';
 
-		$this->load->model('user/user');
+		$user_info = [];
 
-		$user_info = $this->model_user_user->getUserByCode($code);
+		if ($code !== '') {
+			$this->load->model('user/user');
+
+			$user_info = $this->model_user_user->getUserByCode($code);
+		}
 
 		if ($user_info) {
 			$this->language->load('common/reset');
@@ -91,11 +95,8 @@ class ControllerCommonReset extends Controller {
 			$this->response->setOutput($this->render());
 
 		} else {
-			$this->load->model('setting/setting');
-
-			$this->model_setting_setting->editSettingValue('config', 'config_password', '0');
-
-			return $this->forward('common/login');
+			// Invalid or missing code: never alter the configuration, just return to the login page
+			$this->redirect($this->url->link('common/login', '', 'SSL'));
 		}
 	}
 

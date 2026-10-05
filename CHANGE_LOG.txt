@@ -22,6 +22,7 @@ Release: TBA
 - Fix bug in Model Tool System, Admin and Catalog, for Seo_Urls routing issue.
 - Fix bug in Admin Model Tool Route not retrieving sub-level categories.
 - Fix for Reported Issue #25 NC-01: Arbitrary File Upload in File Manager.
+- Fix for Reported Issue #25 NC-02: Permanent Disable of Admin Password Recovery.
 - Updated "Localisation/length_class" now returning correct default values.
 - Updated "Localisation/weight_class" now returning correct default values.
 - Updated Image models to resize all image formats to WebP for caching.
