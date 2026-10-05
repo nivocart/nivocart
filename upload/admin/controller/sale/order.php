@@ -3085,7 +3085,11 @@ class ControllerSaleOrder extends Controller {
 
 		$json = [];
 
-		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+		if (!$this->user->hasPermission('modify', 'sale/order')) {
+			$json['error'] = $this->language->get('error_permission');
+		}
+
+		if (!$json && ($this->request->server['REQUEST_METHOD'] === 'POST')) {
 			if (!empty($this->request->files['file']['name'])) {
 				$filename = html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8');
 
