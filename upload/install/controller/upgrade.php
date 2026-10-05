@@ -73,6 +73,9 @@ class ControllerUpgrade extends Controller {
 		if ($step5) {
 			$this->model_upgrade->updateFields();
 		}
+
+		// Activate the upload folder protection file (image/data/.htaccess)
+		$this->model_upgrade->activateUploadHtaccess();
 	}
 
 	protected function validate(): bool {

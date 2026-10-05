@@ -194,5 +194,45 @@ class ModelInstall extends Model {
 				clearstatcache();
 			}
 		}
+
+		// Activate the upload folder protection file
+		$this->activateUploadHtaccess();
+	}
+
+	/**
+	 * Activate the upload folder protection file.
+	 *
+	 * The repository ships "image/data/.htaccess.txt" (GitHub does not accept
+	 * a file named ".htaccess"). Rename it to ".htaccess" so that the web server
+	 * blocks script execution inside the upload area. An existing ".htaccess"
+	 * is never overwritten, so local customisations are preserved.
+	 *
+	 * @return bool
+	 */
+	public function activateUploadHtaccess(): bool {
+		$source = DIR_NIVOCART . 'image/data/.htaccess.txt';
+		$target = DIR_NIVOCART . 'image/data/.htaccess';
+
+		if (is_file($target)) {
+			return true;
+		}
+
+		if (!is_file($source)) {
+			return false;
+		}
+
+		if (!@rename($source, $target)) {
+			if (!@copy($source, $target)) {
+				return false;
+			}
+
+			@unlink($source);
+		}
+
+		@chmod($target, 0644);
+
+		clearstatcache();
+
+		return is_file($target);
 	}
 }
