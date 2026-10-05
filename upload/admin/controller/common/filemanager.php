@@ -556,26 +556,37 @@ class ControllerCommonFileManager extends Controller {
 		header("Cache-Control: post-check=0, pre-check=0", false);
 		header("Pragma: no-cache");
 
+		$this->language->load('common/filemanager');
+
+		if (!$this->user->hasPermission('modify', 'common/filemanager')) {
+			$this->multiError(104, strip_tags($this->language->get('error_permission')));
+		}
+
+		if (!isset($this->request->get['directory'])) {
+			$this->multiError(105, $this->language->get('error_directory'));
+		}
+
 		$targetDir = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', html_entity_decode($this->request->get['directory'], ENT_QUOTES, 'UTF-8')), '/');
 
 		$chunk = isset($_POST['chunk']) ? (int)$_POST['chunk'] : 0;
 		$chunks = isset($_POST['chunks']) ? (int)$_POST['chunks'] : 0;
 		$filename = $_POST['name'] ?? '';
 
-		$fileName = htmlspecialchars(basename(html_entity_decode($filename, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8');
+		$fileName = htmlspecialchars(basename(str_replace("\0", '', html_entity_decode($filename, ENT_QUOTES, 'UTF-8'))), ENT_QUOTES, 'UTF-8');
+
+		// Extension whitelist: evaluated unconditionally on every request and every chunk
+		$allowed = ['jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
+
+		$ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+		if ($ext === '' || !in_array($ext, $allowed, true)) {
+			$this->multiError(106, $this->language->get('error_file_type'));
+		}
 
 		if ($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName)) {
-			$ext = strrpos($fileName, '.');
-			$fileName_a = substr($fileName, 0, $ext);
-			$fileName_b = substr($fileName, $ext);
-
-			$allowed = ['jpg','jpeg','png','gif','mp3','mp4','oga','ogv','ogg','webm','m4a','m4v','wav','wma','wmv','zip','rar','pdf','swf','flv'];
-
-			$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-
-			if (!in_array($ext, $allowed)) {
-				exit();
-			}
+			$dot = strrpos($fileName, '.');
+			$fileName_a = substr($fileName, 0, $dot);
+			$fileName_b = substr($fileName, $dot);
 
 			$count = 1;
 
@@ -589,6 +600,8 @@ class ControllerCommonFileManager extends Controller {
 		if (!file_exists($targetDir)) {
 			@mkdir($targetDir);
 		}
+
+		$contentType = '';
 
 		if (isset($_SERVER['HTTP_CONTENT_TYPE'])) {
 			$contentType = $_SERVER['HTTP_CONTENT_TYPE'];
@@ -650,7 +663,20 @@ class ControllerCommonFileManager extends Controller {
 			}
 		}
 
+		// Once the last chunk is written, make sure images really are images
+		if ($chunks < 2 || $chunk >= ($chunks - 1)) {
+			if (in_array($ext, ['jpg','jpeg','png','gif'], true) && !@getimagesize($targetDir . DIRECTORY_SEPARATOR . $fileName)) {
+				@unlink($targetDir . DIRECTORY_SEPARATOR . $fileName);
+
+				$this->multiError(107, $this->language->get('error_file_type'));
+			}
+		}
+
 		die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
+	}
+
+	protected function multiError($code, $message) {
+		die(json_encode(['jsonrpc' => '2.0', 'error' => ['code' => $code, 'message' => $message], 'id' => 'id']));
 	}
 
 	public function information() {
