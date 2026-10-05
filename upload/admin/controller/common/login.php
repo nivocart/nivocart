@@ -23,14 +23,6 @@ class ControllerCommonLogin extends Controller {
 			$this->model_tool_system->deleteDirectory('../install');
 		}
 
-		// Destroy any existing session and start a new one
-		if (!$this->user->isLogged() && $this->request->server['REQUEST_METHOD'] !== 'POST') {
-			if (!empty($this->session->data)) {
-				$this->session->destroy('default');
-				$this->session->start('default');
-			}
-		}
-
 		if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] === $this->session->data['token'])) {
 			$this->redirect($this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'));
 		}

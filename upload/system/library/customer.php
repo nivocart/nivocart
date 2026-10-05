@@ -170,11 +170,17 @@ class Customer {
 	private function completeLogin($customer_query): bool {
 		if ($this->config->get('config_secure')) {
 			if ($this->request->isSecure()) {
+				// New session ID on login (session fixation protection)
+				$this->session->regenerate();
+
 				$this->session->data['customer_cookie'] = bin2hex(random_bytes(32));
-				setcookie('customer', $this->session->data['customer_cookie'], 0, '/', '', true, true);
+				setcookie('customer', $this->session->data['customer_cookie'], ['expires' => 0, 'path' => '/', 'domain' => '', 'secure' => true, 'httponly' => true, 'samesite' => 'Lax']);
 			} else {
 				return false;
 			}
+		} else {
+			// New session ID on login (session fixation protection)
+			$this->session->regenerate();
 		}
 
 		$this->setToken();
