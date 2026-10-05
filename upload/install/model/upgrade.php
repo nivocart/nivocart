@@ -455,40 +455,56 @@ class ModelUpgrade extends Model {
 	}
 
 	/**
-	 * Activate the upload folder protection file.
+	 * Activate the upload folder protection files.
 	 *
-	 * The repository ships "image/data/.htaccess.txt" (GitHub does not accept
-	 * a file named ".htaccess"). Rename it to ".htaccess" so that the web server
-	 * blocks script execution inside the upload area. An existing ".htaccess"
-	 * is never overwritten, so local customisations are preserved.
+	 * The repository ships a ".htaccess.txt" in each protected folder (GitHub
+	 * does not accept a file named ".htaccess"). Rename each one to ".htaccess"
+	 * so that the web server blocks script execution in "image/data" and denies
+	 * all direct access to "download" and "system/upload" (those files are only
+	 * ever served through PHP). An existing ".htaccess" is never overwritten, so
+	 * local customisations are preserved.
 	 *
-	 * @return bool
+	 * @return bool True only if every protection file is active.
 	 */
 	public function activateUploadHtaccess(): bool {
-		$source = DIR_NIVOCART . 'image/data/.htaccess.txt';
-		$target = DIR_NIVOCART . 'image/data/.htaccess';
+		$folders = ['image/data', 'download', 'system/upload'];
 
-		if (is_file($target)) {
-			return true;
-		}
+		$result = true;
 
-		if (!is_file($source)) {
-			return false;
-		}
+		foreach ($folders as $folder) {
+			$source = DIR_NIVOCART . $folder . '/.htaccess.txt';
+			$target = DIR_NIVOCART . $folder . '/.htaccess';
 
-		if (!@rename($source, $target)) {
-			if (!@copy($source, $target)) {
-				return false;
+			if (is_file($target)) {
+				continue;
 			}
 
-			@unlink($source);
+			if (!is_file($source)) {
+				$result = false;
+
+				continue;
+			}
+
+			if (!@rename($source, $target)) {
+				if (!@copy($source, $target)) {
+					$result = false;
+
+					continue;
+				}
+
+				@unlink($source);
+			}
+
+			@chmod($target, 0644);
+
+			clearstatcache();
+
+			if (!is_file($target)) {
+				$result = false;
+			}
 		}
 
-		@chmod($target, 0644);
-
-		clearstatcache();
-
-		return is_file($target);
+		return $result;
 	}
 
 	// -----------------------------------------------------------------------

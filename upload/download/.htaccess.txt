@@ -1,0 +1,9 @@
+# NivoCart: deny all direct web access to this folder.
+# Files here are only ever served through PHP, never directly by the web server.
+<IfModule mod_authz_core.c>
+	Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+	Order allow,deny
+	Deny from all
+</IfModule>

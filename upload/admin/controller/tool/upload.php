@@ -404,7 +404,7 @@ class ControllerToolUpload extends Controller {
 			// Sanitize the temp filename
 			$filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['tmp_name'], ENT_QUOTES, 'UTF-8')));
 
-			$ms = substr(time().str_shuffle(md5(time())), 0, 8);
+			$ms = bin2hex(random_bytes(8));
 
 			$file = $filename . '.' . $ms;
 

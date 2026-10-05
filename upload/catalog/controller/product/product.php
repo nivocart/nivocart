@@ -1163,7 +1163,7 @@ class ControllerProductProduct extends Controller {
 		}
 
 		if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-			$file = basename($filename) . '.' . substr(md5(mt_rand()), 0, 10);
+			$file = basename($filename) . '.' . bin2hex(random_bytes(8));
 
 			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_UPLOAD . $file);
 
