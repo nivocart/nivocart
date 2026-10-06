@@ -41,10 +41,20 @@ class ModelToolDataRetention extends Model {
 	 * nc_customer_online uses ip as PRIMARY KEY — rows are overwritten on each
 	 * page visit, so date_added reflects last activity time.
 	 *
+	 * The current requester's IP is excluded so that a manual admin run
+	 * cannot invalidate the running admin's own session.
+	 *
+	 * @param string $exclude_ip  IP to preserve (pass REMOTE_ADDR from the controller).
 	 * @return int Rows affected
 	 */
-	public function purgeOnlineSessions(): int {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_online` WHERE `date_added` < NOW() - INTERVAL 2 HOUR");
+	public function purgeOnlineSessions(string $exclude_ip = ''): int {
+		$safe_ip = $this->db->escape($exclude_ip);
+
+		if ($safe_ip !== '') {
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_online` WHERE `date_added` < NOW() - INTERVAL 2 HOUR AND `ip` != '" . $safe_ip . "'");
+		} else {
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_online` WHERE `date_added` < NOW() - INTERVAL 2 HOUR");
+		}
 
 		return $this->db->countAffected();
 	}
