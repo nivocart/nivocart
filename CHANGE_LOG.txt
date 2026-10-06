@@ -14,6 +14,7 @@ Release: TBA
 - Add File Managers pagination for Image folders with more than 100 images.
 - Add Lazy Loading to images inside the catalog product description panels.
 - Add a new "Random" module in the modules list to display Random Products.
+- Add a new Dropship Supplier "CJ Dropshipping" API Connector Modification.
 - Add a new "DS Margin Checker" Modification specifically for Dropshipping.
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.

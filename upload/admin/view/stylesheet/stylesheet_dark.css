@@ -2044,6 +2044,73 @@ table.tool tr td {
 }
 
 /** -----------------------------
+ * CJDROPSHIPPING
+ * ----------------------------*/
+.cj-dashboard [hidden] {
+  display: none;
+}
+.cj-wide {
+  width: 280px;
+}
+.cj-narrow {
+  width: 160px;
+}
+.cj-mono {
+  font-family: monospace;
+}
+.cj-nowrap {
+  white-space: nowrap;
+}
+.cj-actions {
+  margin: 10px 0 20px 0;
+}
+.cj-toolbar {
+  margin-bottom: 12px;
+}
+.cj-busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.cj-progress {
+  margin: 8px 0 4px 0;
+  overflow: hidden;
+  background: var(--clr-surface-bg);
+  border: 1px solid var(--clr-panel-border);
+  border-radius: var(--radius-sm);
+}
+.cj-progress .progress-bar-blue {
+  width: 0;
+  border: 0;
+  border-radius: 0;
+  transition: width 0.5s ease;
+}
+.cj-progress-label {
+  min-height: 16px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  text-align: right;
+  color: var(--clr-text);
+}
+.cj-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1.6;
+  color: #111;
+}
+.cj-badge-ok {
+  background: var(--clr-success);
+}
+.cj-badge-pending {
+  background: var(--clr-warning);
+}
+.cj-badge-error {
+  background: var(--clr-danger);
+}
+
+/** -----------------------------
  * FOOTER
  * ----------------------------*/
 #footer-normal {
