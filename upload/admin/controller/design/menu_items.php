@@ -242,6 +242,39 @@ class ControllerDesignMenuItems extends Controller {
 		$this->getList();
 	}
 
+	public function metaDescription() {
+		$this->language->load('design/' . $this->_name);
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('design/menu_items');
+
+		if ($this->validateRepair()) {
+			$total = $this->model_design_menu_items->updateMenuItemsMetaDescription((int)$this->request->get['menu_id']);
+
+			$this->session->data['success'] = sprintf($this->language->get('text_meta_success'), $total);
+
+			if (isset($this->request->get['filter_name'])) {
+				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$filter_name = null;
+			}
+
+			$page_url = array_filter([
+				'filter_name' => $filter_name,
+				'sort'        => $this->request->get['sort'] ?? null,
+				'order'       => $this->request->get['order'] ?? null,
+				'page'        => $this->request->get['page'] ?? null
+			]);
+
+			$url = $page_url ? '&' . http_build_query($page_url) : '';
+
+			$this->redirect($this->url->link('design/menu_items', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL'));
+		}
+
+		$this->getList();
+	}
+
 	protected function getList() {
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
@@ -279,6 +312,7 @@ class ControllerDesignMenuItems extends Controller {
 		$this->data['disabled'] = $this->url->link('design/menu_items/disable', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL');
 		$this->data['insert'] = $this->url->link('design/menu_items/insert', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL');
 		$this->data['repair'] = $this->url->link('design/menu_items/repair', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL');
+		$this->data['meta'] = $this->url->link('design/menu_items/metaDescription', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('design/menu_items/delete', 'token=' . $this->session->data['token'] . '&menu_id=' . $menu_id . $url, 'SSL');
 
 		// Pagination
@@ -330,6 +364,8 @@ class ControllerDesignMenuItems extends Controller {
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
 		$this->data['text_confirm_delete'] = $this->language->get('text_confirm_delete');
+		$this->data['text_confirm_meta_title'] = $this->language->get('text_confirm_meta_title');
+		$this->data['text_confirm_meta'] = $this->language->get('text_confirm_meta');
 
 		$this->data['column_name'] = $this->language->get('column_name');
 		$this->data['column_external'] = $this->language->get('column_external');
@@ -342,6 +378,7 @@ class ControllerDesignMenuItems extends Controller {
 		$this->data['button_disable'] = $this->language->get('button_disable');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_repair'] = $this->language->get('button_repair');
+		$this->data['button_meta'] = $this->language->get('button_meta');
 		$this->data['button_delete'] = $this->language->get('button_delete');
 
 		$this->data['token'] = $this->session->data['token'];

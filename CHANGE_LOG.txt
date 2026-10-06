@@ -17,6 +17,7 @@ Release: TBA
 - Add a new "Random" module in the modules list to display Random Products.
 - Add a new Dropship Supplier "CJ Dropshipping" API Connector Modification.
 - Add a new "DS Margin Checker" Modification specifically for Dropshipping.
+- Add a new quick "Meta Description" import button to Design "Menu Items". 
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.
 - Fix issue with inserting JS scripts in Setting form from being blocked.

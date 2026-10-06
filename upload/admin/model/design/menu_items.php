@@ -156,6 +156,39 @@ class ModelDesignMenuItems extends Model {
 		$this->cache->delete('menu_items.parents.total');
 	}
 
+	// Function to copy the Meta Description of the linked internal page (Category or Information) into the menu items of a menu
+	public function updateMenuItemsMetaDescription(int $menu_id): int {
+		$total = 0;
+
+		$items = $this->db->query("SELECT `menu_item_id`, `menu_item_link` FROM `" . DB_PREFIX . "menu_item` WHERE `menu_id` = '" . (int)$menu_id . "' AND `external_link` = '0' AND `menu_item_link` != ''");
+
+		foreach ($items->rows as $item) {
+			$link = html_entity_decode($item['menu_item_link'], ENT_QUOTES, 'UTF-8');
+
+			$source = '';
+
+			if (preg_match('/product\/category(?:.*?)[&?]path=([0-9_]+)/', $link, $matches)) {
+				$parts = explode('_', rtrim($matches[1], '_'));
+
+				$source = $this->db->query("SELECT `language_id`, `meta_description` FROM `" . DB_PREFIX . "category_description` WHERE `category_id` = '" . (int)end($parts) . "' AND `meta_description` != ''");
+			} elseif (preg_match('/information\/information(?:.*?)[&?]information_id=([0-9]+)/', $link, $matches)) {
+				$source = $this->db->query("SELECT `language_id`, `meta_description` FROM `" . DB_PREFIX . "information_description` WHERE `information_id` = '" . (int)$matches[1] . "' AND `meta_description` != ''");
+			}
+
+			if ($source && $source->rows) {
+				foreach ($source->rows as $row) {
+					$this->db->query("UPDATE `" . DB_PREFIX . "menu_item_description` SET `meta_description` = '" . $this->db->escape($row['meta_description']) . "' WHERE `menu_item_id` = '" . (int)$item['menu_item_id'] . "' AND `language_id` = '" . (int)$row['language_id'] . "'");
+				}
+
+				$total++;
+			}
+		}
+
+		$this->cache->delete('menu_items');
+
+		return $total;
+	}
+
 	public function getMenuItem(int $menu_item_id) {
 		$query = $this->db->query("SELECT DISTINCT *, (SELECT GROUP_CONCAT(mid1.menu_item_name ORDER BY `level` SEPARATOR ' &gt; ') FROM `" . DB_PREFIX . "menu_item_path` mip LEFT JOIN `" . DB_PREFIX . "menu_item_description` mid1 ON (mip.path_id = mid1.menu_item_id AND mip.menu_item_id != mip.path_id) WHERE mip.menu_item_id = mi.menu_item_id AND mid1.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY mip.menu_item_id) AS `path`, mi.menu_item_link FROM " . DB_PREFIX . "menu_item mi LEFT JOIN " . DB_PREFIX . "menu_item_description mid2 ON (mi.menu_item_id = mid2.menu_item_id) WHERE mi.menu_item_id = '" . (int)$menu_item_id . "' AND mid2.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 

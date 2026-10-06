@@ -20,6 +20,7 @@
         <a onclick="$('#form').attr('action','<?php echo $disabled; ?>'); $('#form').submit();" class="button-cancel ripple"><?php echo $button_disable; ?></a>
         <a onclick="location = '<?php echo $insert; ?>'" class="button ripple"><?php echo $button_insert; ?></a>
         <a href="<?php echo $repair; ?>" class="button-repair ripple"><?php echo $button_repair; ?></a>
+        <a id="meta-description" href="<?php echo $meta; ?>" class="button ripple"><?php echo $button_meta; ?></a>
         <a id="delete" class="button-delete ripple"><?php echo $button_delete; ?></a>
       </div>
     </div>
@@ -108,6 +109,29 @@ $('#delete').on('click', function() {
 		buttons: {
 			confirm: function() {
 				$('form').submit();
+			},
+			cancel: function() { }
+		}
+	});
+});
+$('#meta-description').on('click', function(e) {
+	e.preventDefault();
+
+	var href = $(this).attr('href');
+
+	$.confirm({
+		title: '<?php echo addslashes($text_confirm_meta_title); ?>',
+		content: '<?php echo addslashes($text_confirm_meta); ?>',
+		icon: 'fa fa-question-circle',
+		theme: 'light',
+		useBootstrap: false,
+		boxWidth: 580,
+		animation: 'zoom',
+		closeAnimation: 'scale',
+		opacity: 0.1,
+		buttons: {
+			confirm: function() {
+				location = href;
 			},
 			cancel: function() { }
 		}
