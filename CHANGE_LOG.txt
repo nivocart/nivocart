@@ -13,6 +13,7 @@ Release: TBA
 - Add new feature in Admin product list to apply Global settings to products.
 - Add File Managers pagination for Image folders with more than 100 images.
 - Add Lazy Loading to images inside the catalog product description panels.
+- Add a new module in the modules list for Random Products.
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.
 - Fix issue with inserting JS scripts in Setting form from being blocked.
