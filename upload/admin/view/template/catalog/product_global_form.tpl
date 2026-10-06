@@ -10,6 +10,16 @@
     </select></td>
   </tr>
   <tr>
+    <td><?php echo $entry_gl_tax_class; ?></td>
+    <td><select name="gl_tax_class_id">
+      <option value="-1" selected="selected"><?php echo $text_gl_store_nochange; ?></option>
+      <option value="0">--- None ---</option>
+      <?php foreach ($tax_classes as $tax_class) { ?>
+      <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+      <?php } ?>
+    </select></td>
+  </tr>
+  <tr>
     <td><?php echo $entry_gl_shipping; ?></td>
     <td><select name="gl_shipping">
       <option value="1"><?php echo $text_enabled; ?></option>

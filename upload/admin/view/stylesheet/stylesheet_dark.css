@@ -1433,6 +1433,25 @@ table.form-modal > tbody > tr > td {
   border-bottom: 1px dotted #AAA;
   padding: 10px;
 }
+table.form-modal > tbody > tr.separator > td {
+  padding: 0;
+  height: 0;
+  border-bottom: 2px solid #AAA;
+}
+table.form-modal span.form-note {
+  color: #444;
+  font-size: 12px;
+}
+div.form-modal-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+}
+div.form-modal-buttons a.button,
+div.form-modal-buttons a.button-delete {
+  font-size: 12px;
+}
 table.form > tbody > tr > td span.form-icon {
   position: relative;
   top: 5px;

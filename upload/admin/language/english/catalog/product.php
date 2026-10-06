@@ -154,12 +154,29 @@ $_['text_global_title']       = 'Global Product Settings';
 $_['text_global_success']     = 'Success: you have updated <b>Global Settings</b> for all products!';
 
 $_['entry_gl_store']          = 'Assign all products to Store:';
+$_['entry_gl_tax_class']      = 'Tax Class:';
 $_['entry_gl_shipping']       = 'Requires Shipping:';
 $_['entry_gl_subtract']       = 'Subtract Stock:';
 $_['entry_gl_length_class']   = 'Length Class:';
 $_['entry_gl_weight_class']   = 'Weight Class:';
 $_['text_gl_store_nochange']  = '— No change —';
 $_['text_default_store']      = 'Default Store';
+
+$_['button_update_points']    = 'Points';
+$_['text_points_title']       = 'Reward Points Settings';
+$_['text_points_success']     = 'Success: you have updated <b>Reward Points</b> for all products!';
+$_['text_points_reset_success'] = 'Success: <b>Points to Buy</b> and <b>Reward Points</b> have been reset for all products!';
+$_['entry_pt_points']         = 'Points to Buy:';
+$_['entry_pt_customer_group'] = 'Customer Group:';
+$_['entry_pt_reward']         = 'Reward Points:';
+$_['text_pt_nochange']        = '— No change —';
+$_['text_pt_calculate']       = 'Calculate from price';
+$_['text_pt_all_groups']      = 'All Customer Groups';
+$_['text_pt_reward_step']     = '1 point for %s';
+$_['button_pt_reset']         = 'Reset All';
+$_['text_pt_reset_title']     = 'Reset All Points';
+$_['text_pt_reset_confirm']   = 'This will set <b>Points to Buy</b> to zero and delete all <b>Reward Points</b> (all customer groups) on ALL products. Continue?';
+$_['error_pt_nothing']        = 'Nothing to update: please select an option for Points to Buy or Reward Points!';
 
 $_['error_selected']          = 'No products are currently selected!';
 $_['error_price']             = 'Price is required and cannot be negative!';

@@ -587,6 +587,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['text_special_title'] = $this->language->get('text_special_title');
 		$this->data['text_discount_title'] = $this->language->get('text_discount_title');
 		$this->data['text_global_title'] = $this->language->get('text_global_title');
+		$this->data['text_points_title'] = $this->language->get('text_points_title');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
@@ -614,6 +615,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['button_update_special'] = $this->language->get('button_update_special');
 		$this->data['button_update_discount'] = $this->language->get('button_update_discount');
 		$this->data['button_update_global'] = $this->language->get('button_update_global');
+		$this->data['button_update_points'] = $this->language->get('button_update_points');
 		$this->data['button_filter'] = $this->language->get('button_filter');
 
 		$this->data['token'] = $this->session->data['token'];
@@ -2159,19 +2161,22 @@ class ControllerCatalogProduct extends Controller {
 				$subtract = isset($this->request->post['gl_subtract']) ? (int)$this->request->post['gl_subtract'] : 1;
 				$length_class_id = isset($this->request->post['gl_length_class_id']) ? (int)$this->request->post['gl_length_class_id'] : (int)$this->config->get('config_length_class_id');
 				$weight_class_id = isset($this->request->post['gl_weight_class_id']) ? (int)$this->request->post['gl_weight_class_id'] : (int)$this->config->get('config_weight_class_id');
+				$tax_class_id = isset($this->request->post['gl_tax_class_id']) ? (int)$this->request->post['gl_tax_class_id'] : -1;
 
 				$this->load->model('catalog/product');
 
-				$this->model_catalog_product->updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id);
+				$this->model_catalog_product->updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id, $tax_class_id);
 
 				$json['success'] = $this->language->get('text_global_success');
 			}
 		} else {
 			$this->load->model('localisation/length_class');
+			$this->load->model('localisation/tax_class');
 			$this->load->model('localisation/weight_class');
 			$this->load->model('setting/store');
 
 			$this->data['entry_gl_store'] = $this->language->get('entry_gl_store');
+			$this->data['entry_gl_tax_class'] = $this->language->get('entry_gl_tax_class');
 			$this->data['entry_gl_shipping'] = $this->language->get('entry_gl_shipping');
 			$this->data['entry_gl_subtract'] = $this->language->get('entry_gl_subtract');
 			$this->data['entry_gl_length_class'] = $this->language->get('entry_gl_length_class');
@@ -2192,6 +2197,8 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['stores'] = $stores;
 			$this->data['default_store_id'] = 0;
 
+			$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
+
 			$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses([]);
 			$this->data['default_length_class_id'] = (int)$this->config->get('config_length_class_id');
 
@@ -2201,6 +2208,98 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['token'] = $this->session->data['token'];
 
 			$this->template = 'catalog/product_global_form.tpl';
+
+			$json['html'] = $this->render();
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function updatePoints() {
+		$json = [];
+
+		$this->language->load('catalog/product');
+
+		$this->load->model('sale/customer_group');
+
+		$reward_steps = [1, 2, 5, 10];
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!$this->user->hasPermission('modify', 'catalog/product')) {
+				$json['error'] = $this->language->get('error_permission');
+			} elseif (isset($this->request->post['pt_action']) && $this->request->post['pt_action'] === 'reset') {
+				$this->load->model('catalog/product');
+
+				$this->model_catalog_product->resetProductPoints();
+
+				$this->cache->delete('product');
+
+				$json['success'] = $this->language->get('text_points_reset_success');
+			} else {
+				$calculate = isset($this->request->post['pt_points']) && (int)$this->request->post['pt_points'] === 1;
+				$step = 0.0;
+
+				if (isset($this->request->post['pt_reward']) && in_array((float)$this->request->post['pt_reward'], $reward_steps)) {
+					$step = (float)$this->request->post['pt_reward'];
+				}
+
+				$group_ids = [];
+
+				if ($step > 0) {
+					$customer_group_id = isset($this->request->post['pt_customer_group_id']) ? (int)$this->request->post['pt_customer_group_id'] : 0;
+
+					foreach ($this->model_sale_customer_group->getCustomerGroups([]) as $customer_group) {
+						if ($customer_group_id === 0 || (int)$customer_group['customer_group_id'] === $customer_group_id) {
+							$group_ids[] = (int)$customer_group['customer_group_id'];
+						}
+					}
+				}
+
+				if (!$calculate && !$group_ids) {
+					$json['error'] = $this->language->get('error_pt_nothing');
+				} else {
+					$this->load->model('catalog/product');
+
+					$this->model_catalog_product->updateProductPoints($calculate, (float)$this->config->get('config_reward_rate'), $step, $group_ids);
+
+					$this->cache->delete('product');
+
+					$json['success'] = $this->language->get('text_points_success');
+				}
+			}
+		} else {
+			$this->data['entry_pt_points'] = $this->language->get('entry_pt_points');
+			$this->data['entry_pt_customer_group'] = $this->language->get('entry_pt_customer_group');
+			$this->data['entry_pt_reward'] = $this->language->get('entry_pt_reward');
+
+			$this->data['text_pt_nochange'] = $this->language->get('text_pt_nochange');
+			$this->data['text_pt_calculate'] = $this->language->get('text_pt_calculate');
+			$this->data['text_pt_all_groups'] = $this->language->get('text_pt_all_groups');
+			$this->data['text_pt_reset_title'] = $this->language->get('text_pt_reset_title');
+			$this->data['text_pt_reset_confirm'] = $this->language->get('text_pt_reset_confirm');
+
+			$this->data['button_pt_reset'] = $this->language->get('button_pt_reset');
+			$this->data['button_submit'] = $this->language->get('button_submit');
+			$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+			$this->data['reward_rate'] = sprintf($this->language->get('text_reward_rate'), $this->config->get('config_reward_rate'));
+
+			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
+			$this->data['default_customer_group_id'] = (int)$this->config->get('config_customer_group_id');
+
+			$this->data['reward_steps'] = [];
+
+			foreach ($reward_steps as $reward_step) {
+				$this->data['reward_steps'][] = [
+					'value' => $reward_step,
+					'text'  => sprintf($this->language->get('text_pt_reward_step'), number_format($reward_step, 2))
+				];
+			}
+
+			$this->data['token'] = $this->session->data['token'];
+
+			$this->template = 'catalog/product_points_form.tpl';
 
 			$json['html'] = $this->render();
 		}

@@ -30,6 +30,7 @@
         <div class="left"><a id="quantity-button" class="button-filter ripple"><?php echo $button_update_quantity; ?></a></div>
         <div class="left"><a id="special-button" class="button-filter ripple"><?php echo $button_update_special; ?></a></div>
         <div class="left"><a id="discount-button" class="button-filter ripple"><?php echo $button_update_discount; ?></a></div>
+        <div class="left"><a id="points-button" class="button-filter ripple"><?php echo $button_update_points; ?></a></div>
         <div class="left"><a id="global-button" class="button-filter ripple"><?php echo $button_update_global; ?></a></div>
         <div class="right"><a onclick="location = '<?php echo $refresh; ?>';" class="button ripple"><?php echo $button_refresh; ?></a></div>
       </div>
@@ -170,6 +171,7 @@
         <div id="update-special-dialog" style="display:none;"></div>
         <div id="update-discount-dialog" style="display:none;"></div>
         <div id="update-global-dialog" style="display:none;"></div>
+        <div id="update-points-dialog"></div>
       </form>
       <?php if ($navigation_lo) { ?>
         <div class="pagination"><?php echo $pagination; ?></div>
@@ -438,6 +440,32 @@ $('body').on('click', '#global-button', function() {
 			}
 		},
 		failure: function() {
+			alert('Ajax error!');
+		}
+	});
+});
+$('body').on('click', '#points-button', function() {
+	$.ajax({
+		url: 'index.php?route=catalog/product/updatePoints&token=<?php echo $token; ?>',
+		dataType: 'json',
+		type: 'get',
+		success: function(json) {
+			$('.success, .warning, .attention, .error').remove();
+
+			if (json['html']) {
+				$('#update-points-dialog').html(json['html']);
+				$('#update-points-dialog').dialog({
+					title: '<?php echo $text_points_title; ?>',
+					width: <?php echo ($this->browser->checkMobile()) ? 630 : 760; ?>,
+					height: 420,
+					resizable: false,
+					modal: true
+				});
+			} else {
+				alert('Invalid response!');
+			}
+		},
+		error: function() {
 			alert('Ajax error!');
 		}
 	});

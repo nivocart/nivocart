@@ -1003,9 +1003,11 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
-	public function updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id) {
+	public function updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id, $tax_class_id = -1) {
 		// Update scalar fields on all products
-		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `shipping` = '" . (int)$shipping . "', `subtract` = '" . (int)$subtract . "', `length_class_id` = '" . (int)$length_class_id . "', `weight_class_id` = '" . (int)$weight_class_id . "', `date_modified` = NOW()");
+		$tax_class_sql = $tax_class_id >= 0 ? ", `tax_class_id` = '" . (int)$tax_class_id . "'" : '';
+
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `shipping` = '" . (int)$shipping . "', `subtract` = '" . (int)$subtract . "'" . $tax_class_sql . ", `length_class_id` = '" . (int)$length_class_id . "', `weight_class_id` = '" . (int)$weight_class_id . "', `date_modified` = NOW()");
 
 		// Replace store assignment for all products (skipped when "No change" sentinel -1 is selected)
 		if ($store_id >= 0) {
@@ -1017,6 +1019,30 @@ class ModelCatalogProduct extends Model {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_to_store` SET `product_id` = '" . (int)$row['product_id'] . "', `store_id`   = '" . (int)$store_id . "'");
 			}
 		}
+	}
+
+	public function updateProductPoints(bool $calculate, float $rate, float $step, array $customer_group_ids): void {
+		// Points to Buy = price (ex tax) x rate
+		if ($calculate) {
+			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `points` = ROUND(`price` * " . (float)$rate . "), `date_modified` = NOW()");
+		}
+
+		// Reward Points = floor(price / step), replacing the reward row of each selected customer group
+		if ($step > 0 && $customer_group_ids) {
+			foreach ($customer_group_ids as $customer_group_id) {
+				$this->db->query("DELETE FROM `" . DB_PREFIX . "product_reward` WHERE `customer_group_id` = '" . (int)$customer_group_id . "'");
+
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_reward` (`product_id`, `customer_group_id`, `points`) SELECT `product_id`, '" . (int)$customer_group_id . "', FLOOR(`price` / " . (float)$step . ") FROM `" . DB_PREFIX . "product` WHERE FLOOR(`price` / " . (float)$step . ") > 0");
+			}
+
+			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `date_modified` = NOW()");
+		}
+	}
+
+	public function resetProductPoints(): void {
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `points` = '0', `date_modified` = NOW()");
+
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_reward`");
 	}
 
 	/**

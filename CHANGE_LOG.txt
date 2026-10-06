@@ -11,6 +11,7 @@ Release: TBA
 - Add new "images_cleanup" Tool to safely purge obsolete images.
 - Add Stripe Payments setup instructions for Admin user reference.
 - Add new feature in Admin product list to apply Global settings to products.
+- Add new feature in Admin product list to apply Points settings to products.
 - Add File Managers pagination for Image folders with more than 100 images.
 - Add Lazy Loading to images inside the catalog product description panels.
 - Add a new "Random" module in the modules list to display Random Products.
