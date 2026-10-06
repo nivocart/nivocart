@@ -25,6 +25,7 @@ $_['text_dependency']           = 'The DS Cost Calculator requires at least one 
 $_['text_install_message']      = 'The DS Cost Calculator database table is missing. Click Install to set it up.';
 $_['text_install_btn']          = 'Install DS Cost Calculator';
 $_['text_home']                 = 'Home';
+$_['text_modification']         = 'Modifications';
 $_['text_loading']              = 'Loading…';
 $_['text_saved']                = 'Cost configuration saved successfully.';
 $_['text_vat_yes']              = 'Yes — supplier costs are ex-VAT (VAT reclaimable)';
