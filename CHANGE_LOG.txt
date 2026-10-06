@@ -13,7 +13,8 @@ Release: TBA
 - Add new feature in Admin product list to apply Global settings to products.
 - Add File Managers pagination for Image folders with more than 100 images.
 - Add Lazy Loading to images inside the catalog product description panels.
-- Add a new module in the modules list for Random Products.
+- Add a new "Random" module in the modules list to display Random Products.
+- Add a new "DS Margin Checker" Modification specifically for Dropshipping.
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.
 - Fix issue with inserting JS scripts in Setting form from being blocked.
@@ -39,6 +40,7 @@ Release: TBA
 - Updated Account Register and Checkout fixing a Customer Group issue.
 - Updated the Catalog Category List page with a more modern design.
 - Updated Admin Settings to bypass server's ModSecurity blocks on scripts.
+- Updated the Modification "DS Cost Calculator" with minor improvements.
 - Updated the Catalog Footer "Powered by" and Copyright notice.
 
 

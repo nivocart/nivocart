@@ -1972,6 +1972,78 @@ table.tool tr td {
 }
 
 /** -----------------------------
+ * DS MARGIN CHECKER
+ * ----------------------------*/
+.mc-kpi-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.mc-kpi {
+  flex: 1 1 140px;
+  padding: 12px 14px;
+  text-align: center;
+  background: var(--clr-surface-bg);
+  border: 1px solid var(--clr-panel-border);
+  border-top-width: 4px;
+  border-radius: var(--radius-md);
+}
+.mc-kpi-warn {
+  border-top-color: var(--clr-warning);
+}
+.mc-kpi-danger {
+  border-top-color: var(--clr-danger);
+}
+.mc-kpi-good {
+  border-top-color: var(--clr-success);
+}
+.mc-kpi-value {
+  display: block;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1.1;
+  color: var(--clr-text);
+}
+.mc-kpi-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--clr-text);
+}
+.mc-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1.6;
+  color: #111;
+}
+.mc-badge-good {
+  background: var(--clr-success);
+}
+.mc-badge-low {
+  background: var(--clr-warning);
+}
+.mc-badge-negative {
+  background: var(--clr-danger);
+}
+.mc-margin {
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+.mc-price-input {
+  width: 90px;
+  text-align: right;
+}
+#mc-result[hidden] {
+  display: none;
+}
+
+/** -----------------------------
  * FOOTER
  * ----------------------------*/
 #footer-normal {
