@@ -25,6 +25,7 @@ Release: TBA
 - Fix bug in Data Retention Cron Tool preventing User being logged-off.
 - Fix bug in Model Tool System, Admin and Catalog, for Seo_Urls routing issue.
 - Fix bug in Admin Model Tool Route not retrieving sub-level categories.
+- Fix bug in Pagination where Active pages after 5 were not being highlighted.
 - Fix for Reported Issue #25 NC-01: Arbitrary File Upload in File Manager.
 - Fix for Reported Issue #25 NC-02: Permanent Disable of Admin Password Recovery.
 - Fix for Reported Issue #25 NC-03: Lack of Expiry in Password Reset Tokens.

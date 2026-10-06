@@ -1679,7 +1679,7 @@ table.tool tr td {
 .pagination .links a:hover {
   border-color: var(--clr-primary);
 }
-.pagination .links b {
+.pagination .links span {
   color: var(--clr-primary);
   font-size: 12px;
   font-weight: normal;

@@ -45,8 +45,8 @@ class Pagination {
 				$start = 1;
 				$end = $num_pages;
 			} else {
-				$start = $page - floor($num_links / 2);
-				$end = $page + floor($num_links / 2);
+				$start = (int)($page - floor($num_links / 2));
+				$end = (int)($page + floor($num_links / 2));
 
 				if ($start < 1) {
 					$end += abs($start) + 1;
@@ -64,8 +64,8 @@ class Pagination {
 			}
 
 			for ($i = $start; $i <= $end; $i++) {
-				if ($page === $i) {
-					$output .= ' <b>' . $i . '</b> ';
+				if ((int)$page === $i) {
+					$output .= ' <span>' . $i . '</span> ';
 				} else {
 					$output .= ' <a href="' . str_replace('{page}', $i, $this->url) . '">' . $i . '</a> ';
 				}
@@ -84,14 +84,16 @@ class Pagination {
 			'{start}',
 			'{end}',
 			'{total}',
-			'{pages}'
+			'{pages}',
+			'{page}'
 		];
 
 		$replace = [
 			($total) ? (($page - 1) * $limit) + 1 : 0,
 			((($page - 1) * $limit) > ($total - $limit)) ? $total : ((($page - 1) * $limit) + $limit),
 			$total,
-			$num_pages
+			$num_pages,
+			$page
 		];
 
 		return ($output ? '<div class="' . $this->style_links . '">' . $output . '</div>' : '') . '<div class="' . $this->style_results . '">' . str_replace($find, $replace, $this->text) . '</div>';

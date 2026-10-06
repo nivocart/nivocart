@@ -833,7 +833,7 @@ table.radio tr.highlight:hover td {
   margin-top: 10px;
   float: left;
 }
-.pagination .links a, .pagination .links b {
+.pagination .links a, .pagination .links span {
   font-size: 14px;
   font-weight: bold;
   line-height: 14px;
@@ -853,7 +853,7 @@ table.radio tr.highlight:hover td {
   background: #1991BE;
   border: 1px solid #1991BE;
 }
-.pagination .links b {
+.pagination .links span {
   color: #FFF;
   background: #1991BE;
   border: 1px solid #1991BE;
