@@ -27,7 +27,6 @@ $_['text_database_installed']        = 'Success: CJDropshipping database tables 
 $_['text_upgrade']                   = 'Install Database';
 
 // Text — success messages
-$_['text_success']                   = 'Success: CJDropshipping settings have been saved.';
 $_['text_channel_added']             = 'Success: Channel has been added.';
 $_['text_channel_updated']           = 'Success: Channel has been updated.';
 $_['text_channel_deleted']           = 'Success: Channel and all associated data have been deleted.';
@@ -91,7 +90,6 @@ $_['placeholder_keyword']            = 'e.g. dog harness';
 $_['title_generate_secret']          = 'Generate random secret';
 
 // Tabs
-$_['tab_dashboard']                  = 'Dashboard';
 $_['tab_channels']                   = 'Channels';
 $_['tab_products']                   = 'Products';
 $_['tab_orders']                     = 'Orders';
@@ -108,18 +106,12 @@ $_['column_sku']                     = 'CJ SKU';
 $_['column_variant_key']             = 'Variant';
 $_['column_stock']                   = 'Stock (GB)';
 $_['column_supplier_cost']           = 'Cost (USD)';
-$_['column_rrp']                     = 'RRP (USD)';
-$_['column_currency']                = 'Currency';
 $_['column_last_stock_sync']         = 'Last Stock Sync';
 $_['column_last_price_sync']         = 'Last Price Sync';
 
 // Column headings — order list
 $_['column_order_id']                = 'Order ID';
-$_['column_cj_order_ref']            = 'CJ Order Ref';
-$_['column_dispatch_status']         = 'Dispatch Status';
 $_['column_tracking_number']         = 'Tracking Number';
-$_['column_tracking_carrier']        = 'Carrier';
-$_['column_dispatched_at']           = 'Dispatched At';
 $_['column_customer']                = 'Customer';
 $_['column_date']                    = 'Date';
 $_['column_total']                   = 'Total';
@@ -204,11 +196,8 @@ $_['error_order_id']                 = 'Warning: Invalid or missing order ID.';
 $_['error_channel_name']             = 'Warning: Channel name is required.';
 $_['error_api_key']                  = 'Warning: CJ API key is required.';
 $_['error_shipping_map_json']        = 'Warning: Shipping map must be valid JSON.';
-$_['error_import_failed']            = 'Error: Product import failed. Check the error log for details.';
 $_['error_sync_failed']              = 'Error: Sync failed. Check the error log for details.';
-$_['error_dispatch_failed']          = 'Error: Order dispatch failed. Check the error log for details.';
 $_['error_webhooks_failed']          = 'Error: Webhook registration failed. Check the error log for details.';
-$_['error_connection']               = 'Error: Could not connect to CJDropshipping. Check your API key.';
 $_['error_no_tracking']              = 'Error: No tracking number found for this order. Please sync tracking first.';
 $_['error_ajax']                     = 'Error: The request failed. Check the error log for details.';
 

@@ -414,7 +414,7 @@ class ControllerModificationCJDropshipping extends Controller {
 					$filter['keyword'] = $keyword; // myProduct/query uses 'keyword' (not 'keyWord')
 				}
 
-				$result = $this->model_modification_cjdropshipping->importMyProducts($channel_id, $category_id, $filter, 1, $page);
+				$result = $this->model_modification_cjdropshipping->importMyProducts($channel_id, $category_id, $filter, (int)$this->config->get('config_language_id'), $page);
 			} else {
 				// Default: import from the general CJ catalog
 				$filter = ['countryCode' => $country];
@@ -423,7 +423,7 @@ class ControllerModificationCJDropshipping extends Controller {
 					$filter['keyWord'] = $keyword;
 				}
 
-				$result = $this->model_modification_cjdropshipping->importProducts($channel_id, $category_id, $filter, 1, $page);
+				$result = $this->model_modification_cjdropshipping->importProducts($channel_id, $category_id, $filter, (int)$this->config->get('config_language_id'), $page);
 			}
 
 			$this->jsonResponse([
