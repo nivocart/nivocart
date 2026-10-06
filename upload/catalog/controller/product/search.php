@@ -112,6 +112,7 @@ class ControllerProductSearch extends Controller {
 		$this->data['text_display'] = $this->language->get('text_display');
 		$this->data['text_list'] = $this->language->get('text_list');
 		$this->data['text_grid'] = $this->language->get('text_grid');
+		$this->data['text_variants'] = $this->language->get('text_variants');
 		$this->data['text_sort'] = $this->language->get('text_sort');
 		$this->data['text_limit'] = $this->language->get('text_limit');
 		$this->data['text_offer'] = $this->language->get('text_offer');
@@ -398,6 +399,7 @@ class ControllerProductSearch extends Controller {
 			'rating'          => $rating,
 			'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 			'mini_label'      => (!$this->config->get('config_hide_mini_label')) ? $this->model_catalog_product->getMiniLabel((int)$result['product_id']) : '',
+			'variant_count'   => (int)($result['variant_count'] ?? 1),
 			'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
 		];
 	}

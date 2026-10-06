@@ -12,7 +12,7 @@
   <h1><?php echo $heading_title; ?></h1>
   <?php if ($products) { ?>
     <div class="product-filter">
-      <div class="display"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-active.png" alt="" /> <a onclick="display('grid');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-off.png" alt="" /></a></div>
+      <div class="display"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-active.png" alt="<?php echo $text_list; ?>" title="<?php echo $text_list; ?>" /> <a onclick="display('grid');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-off.png" alt="<?php echo $text_grid; ?>" title="<?php echo $text_grid; ?>" /></a></div>
       <div class="product-compare"><a href="<?php echo $compare; ?>" id="compare-total"><i class="fa fa-random"></i><span class="hide-phone"> &nbsp;<?php echo $text_compare; ?></span></a></div>
       <div class="selectors">
         <div class="limit"><span class="hide-phone"><?php echo $text_limit; ?></span>
@@ -191,7 +191,7 @@ function display(view) {
 			$(element).html(html);
 		});
 
-		$('.display').html('<img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-active.png" alt="" /> <a onclick="display(\'grid\');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-off.png" alt="" /></a>');
+		$('.display').html('<img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-active.png" alt="<?php echo $text_list; ?>" title="<?php echo $text_list; ?>" /> <a onclick="display(\'grid\');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-off.png" alt="<?php echo $text_grid; ?>" title="<?php echo $text_grid; ?>" /></a>');
 
 		localStorage.setItem('display', 'list');
 
@@ -261,7 +261,7 @@ function display(view) {
 			$(element).html(html);
 		});
 
-		$('.display').html('<a onclick="display(\'list\');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-off.png" alt="" /></a> <img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-active.png" alt="" /></a>');
+		$('.display').html('<a onclick="display(\'list\');"><img src="catalog/view/theme/<?php echo $template; ?>/image/page-list-off.png" alt="<?php echo $text_list; ?>" title="<?php echo $text_list; ?>" /></a> <img src="catalog/view/theme/<?php echo $template; ?>/image/page-grid-active.png" alt="<?php echo $text_grid; ?>" title="<?php echo $text_grid; ?>" /></a>');
 
 		localStorage.setItem('display', 'grid');
 	}
