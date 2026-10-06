@@ -27,6 +27,7 @@ class ControllerModuleFeatured extends Controller {
 		$this->data['text_reward'] = $this->language->get('text_reward');
 		$this->data['text_points'] = $this->language->get('text_points');
 		$this->data['text_offer'] = $this->language->get('text_offer');
+		$this->data['text_variants'] = $this->language->get('text_variants');
 
 		$this->data['lang'] = $this->language->get('code');
 
@@ -94,6 +95,7 @@ class ControllerModuleFeatured extends Controller {
 					$image = false;
 					$label_ratio = 50;
 				}
+
 				$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 				if ($product_info['label']) {
@@ -167,6 +169,7 @@ class ControllerModuleFeatured extends Controller {
 					'rating'          => (int)$rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 					'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($product_info['product_id']) : '',
+					'variant_count'   => $this->model_catalog_product->getVariantCount($product_info['product_id']),
 					'href'            => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL')
 				];
 			}

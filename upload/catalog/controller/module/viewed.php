@@ -89,6 +89,7 @@ class ControllerModuleViewed extends Controller {
 					$image = false;
 					$label_ratio = 50;
 				}
+
 				$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 				if ($product_info['label']) {

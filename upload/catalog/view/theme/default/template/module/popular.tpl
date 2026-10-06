@@ -36,6 +36,9 @@
           <?php } else { ?>
             <span class="price-old"><?php echo $product['price']; ?></span> <span class="price-new"><?php echo $product['special']; ?></span>
           <?php } ?>
+          <?php if (!empty($product['variant_count']) && $product['variant_count'] > 1) { ?>
+            <span class="variant-badge"><?php echo sprintf($text_variants, $product['variant_count']); ?></span>
+          <?php } ?>
           </div>
         <?php } ?>
         <?php if ($product['age_minimum']) { ?>
@@ -129,6 +132,9 @@
             <?php echo $product['price']; ?>
           <?php } else { ?>
             <span class="price-old"><?php echo $product['price']; ?></span> <span class="price-new"><?php echo $product['special']; ?></span>
+          <?php } ?>
+          <?php if (!empty($product['variant_count']) && $product['variant_count'] > 1) { ?>
+            <span class="variant-badge"><?php echo sprintf($text_variants, $product['variant_count']); ?></span>
           <?php } ?>
           </div>
         <?php } ?>

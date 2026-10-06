@@ -24,6 +24,7 @@ class ControllerModuleRandom extends Controller {
 
 		$this->data['text_from'] = $this->language->get('text_from');
 		$this->data['text_offer'] = $this->language->get('text_offer');
+		$this->data['text_variants'] = $this->language->get('text_variants');
 
 		$this->data['lang'] = $this->language->get('code');
 

@@ -24,6 +24,7 @@ class ControllerModuleLatest extends Controller {
 
 		$this->data['text_from'] = $this->language->get('text_from');
 		$this->data['text_offer'] = $this->language->get('text_offer');
+		$this->data['text_variants'] = $this->language->get('text_variants');
 
 		$this->data['lang'] = $this->language->get('code');
 
@@ -64,6 +65,7 @@ class ControllerModuleLatest extends Controller {
 				$image = false;
 				$label_ratio = 50;
 			}
+
 			$image_webp = ($image && $webp) ? substr($image, 0, strrpos($image, '.')) . '.webp' : '';
 
 			if ($result['label']) {
@@ -130,6 +132,7 @@ class ControllerModuleLatest extends Controller {
 				'rating'          => (int)$rating,
 				'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 				'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($result['product_id']) : '',
+			'variant_count'   => (int)($result['variant_count'] ?? 1),
 			'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
 			];
 		}
