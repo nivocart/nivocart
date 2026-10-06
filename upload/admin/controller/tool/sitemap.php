@@ -69,6 +69,26 @@ class ControllerToolSitemap extends Controller {
 
 		$this->data['text_sitemaps'] = $this->language->get('text_sitemaps');
 		$this->data['text_submit'] = $this->language->get('text_submit');
+		$this->data['text_indexnow_title'] = $this->language->get('text_indexnow_title');
+		$this->data['text_indexnow_info'] = $this->language->get('text_indexnow_info');
+		$this->data['button_indexnow'] = $this->language->get('button_indexnow');
+		$this->data['indexnow'] = $this->url->link('tool/' . $this->_name . '/submitIndexNow', 'token=' . $this->session->data['token'], 'SSL');
+
+		if (isset($this->session->data['success_indexnow'])) {
+			$this->data['success_indexnow'] = $this->session->data['success_indexnow'];
+
+			unset($this->session->data['success_indexnow']);
+		} else {
+			$this->data['success_indexnow'] = '';
+		}
+
+		if (isset($this->session->data['error_indexnow'])) {
+			$this->data['error_indexnow'] = $this->session->data['error_indexnow'];
+
+			unset($this->session->data['error_indexnow']);
+		} else {
+			$this->data['error_indexnow'] = '';
+		}
 
 		$this->data['text_success_text'] = $this->language->get('text_success_text');
 		$this->data['text_success_xml'] = $this->language->get('text_success_xml');
@@ -511,5 +531,133 @@ class ControllerToolSitemap extends Controller {
 		}
 
 		return $all;
+	}
+
+	/** Submit every URL of the generated sitemap.txt to IndexNow (Bing, Yandex) */
+	public function submitIndexNow() {
+		$this->language->load('tool/' . $this->_name);
+
+		$redirect = $this->url->link('tool/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST' || !$this->validate()) {
+			$this->session->data['error_indexnow'] = $this->language->get('error_permission');
+
+			$this->redirect($redirect);
+		}
+
+		$key = $this->getIndexNowKey();
+
+		// The key file in the site root proves ownership of the site to IndexNow
+		$key_file = '../' . $key . '.txt';
+
+		if (!is_file($key_file) || trim((string)file_get_contents($key_file)) !== $key) {
+			if (@file_put_contents($key_file, $key) === false) {
+				$this->session->data['error_indexnow'] = sprintf($this->language->get('error_indexnow_key_write'), $key . '.txt');
+
+				$this->redirect($redirect);
+			}
+		}
+
+		if (!is_file('../sitemap.txt')) {
+			$this->session->data['error_indexnow'] = $this->language->get('error_indexnow_sitemap');
+
+			$this->redirect($redirect);
+		}
+
+		$base = rtrim($this->getCatalogBase(), '/');
+		$host = parse_url($base, PHP_URL_HOST);
+
+		$urls = [];
+
+		// The text sitemap separates URLs with carriage returns (\r), so split on any line ending
+		foreach (preg_split('/[\r\n]+/', (string)file_get_contents('../sitemap.txt')) as $line) {
+			$line = trim($line);
+
+			if ($line !== '' && parse_url($line, PHP_URL_HOST) === $host) {
+				$urls[$line] = $line;
+			}
+		}
+
+		$urls = array_values($urls);
+
+		if (!$urls) {
+			$this->session->data['error_indexnow'] = $this->language->get('error_indexnow_sitemap');
+
+			$this->redirect($redirect);
+		}
+
+		$sent = 0;
+		$error = '';
+
+		foreach (array_chunk($urls, 10000) as $chunk) {
+			$payload = json_encode([
+				'host'        => $host,
+				'key'         => $key,
+				'keyLocation' => $base . '/' . $key . '.txt',
+				'urlList'     => $chunk
+			]);
+
+			$ch = curl_init('https://api.indexnow.org/indexnow');
+
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json; charset=utf-8']);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+			$response = curl_exec($ch);
+			$code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$curl_error = curl_error($ch);
+
+			unset($ch);
+
+			if ($response === false) {
+				$error = sprintf($this->language->get('error_indexnow_curl'), $curl_error);
+
+				break;
+			}
+
+			if ($code === 200 || $code === 202) {
+				$sent += count($chunk);
+			} else {
+				$error = sprintf($this->language->get('error_indexnow_response'), $code);
+
+				break;
+			}
+		}
+
+		if ($error) {
+			$this->session->data['error_indexnow'] = $error;
+		} else {
+			$this->session->data['success_indexnow'] = sprintf($this->language->get('text_success_indexnow'), $sent);
+		}
+
+		$this->redirect($redirect);
+	}
+
+	/** Return the IndexNow key, generating and saving a random one on first use */
+	protected function getIndexNowKey(): string {
+		$key = (string)$this->config->get('sitemap_indexnow_key');
+
+		if (!preg_match('/^[a-zA-Z0-9\-]{8,128}$/', $key)) {
+			$key = bin2hex(random_bytes(16));
+
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = 'sitemap_indexnow_key' AND `store_id` = '0'");
+
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = 'sitemap', `key` = 'sitemap_indexnow_key', `value` = '" . $this->db->escape($key) . "', `serialized` = '0'");
+		}
+
+		return $key;
+	}
+
+	protected function getCatalogBase(): string {
+		if ((isset($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+			(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+			(isset($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https')
+		) {
+			return HTTPS_CATALOG;
+		}
+
+		return HTTP_CATALOG;
 	}
 }

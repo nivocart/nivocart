@@ -158,9 +158,27 @@
             </tr>
           </table>
         </div>
+        <h2><?php echo $text_indexnow_title; ?></h2>
+        <?php if ($success_indexnow) { ?>
+          <div class="success"><?php echo $success_indexnow; ?></div>
+        <?php } ?>
+        <?php if ($error_indexnow) { ?>
+          <div class="warning"><?php echo $error_indexnow; ?></div>
+        <?php } ?>
+        <div class="toolbox">
+          <table class="tool">
+            <tr>
+              <td><?php echo $text_indexnow_info; ?></td>
+            </tr>
+            <tr>
+              <td><a onclick="$('#indexnow-form').submit();" class="button-form ripple"><i class="fa fa-paper-plane"></i> &nbsp; <?php echo $button_indexnow; ?></a></td>
+            </tr>
+          </table>
+        </div>
       <?php } ?>
       <input type="hidden" name="buttonForm" value="" />
     </form>
+    <form action="<?php echo $indexnow; ?>" method="post" id="indexnow-form"></form>
     </div>
   </div>
 </div>

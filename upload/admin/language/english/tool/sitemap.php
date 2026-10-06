@@ -87,9 +87,19 @@ $_['route_sitemap']               = 'Sitemap';
 $_['route_news_list']             = 'News';
 $_['route_quote']                 = 'Request a Quote';
 
+// IndexNow
+$_['text_indexnow_title']         = 'IndexNow (Bing)';
+$_['text_indexnow_info']          = 'IndexNow instantly notifies <b>Bing</b> (and Yandex) of all the URLs in your Text Sitemap. It is only valid for <b>Bing Webmaster Tools</b> and the Bing search engine: Google does not support IndexNow. The key file it requires is created in your site root automatically. Generate the Text Sitemap first, so that it is up to date.';
+$_['text_success_indexnow']       = 'Success: <b>%s</b> URLs have been submitted to IndexNow!';
+$_['error_indexnow_key_write']    = 'Warning: The IndexNow key file <b>%s</b> could not be created in the site root. Please check the folder permissions!';
+$_['error_indexnow_sitemap']      = 'Warning: No URLs found. Please generate the <b>Text Sitemap</b> first!';
+$_['error_indexnow_curl']         = 'Warning: IndexNow connection failed: %s';
+$_['error_indexnow_response']     = 'Warning: IndexNow rejected the submission (HTTP code %s)!';
+
 // Buttons
 $_['button_refresh']              = 'Refresh';
 $_['button_save_settings']        = 'Save Settings';
+$_['button_indexnow']             = 'Submit all URLs to IndexNow';
 
 // Error
 $_['error_permission']            = 'Warning: You do not have permission to modify <b>Sitemaps</b> !';
