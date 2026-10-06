@@ -132,8 +132,8 @@ class ControllerModuleLatest extends Controller {
 				'rating'          => (int)$rating,
 				'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 				'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($result['product_id']) : '',
-			'variant_count'   => (int)($result['variant_count'] ?? 1),
-			'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
+				'variant_count'   => (int)($result['variant_count'] ?? 1),
+				'href'            => $this->url->link('product/product', 'product_id=' . $result['product_id'], 'SSL')
 			];
 		}
 
