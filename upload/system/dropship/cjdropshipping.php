@@ -524,7 +524,7 @@ class CJDropshipping {
 			'orderNumber'          => (string)$order['order_id'],
 			'shippingCountryCode'  => $this->resolveCountryCode($order['shipping_country']),
 			'shippingCountry'      => $order['shipping_country'],
-			'shippingProvince'     => $order['shipping_zone']   ?? '',
+			'shippingProvince'     => $order['shipping_zone'] ?? '',
 			'shippingCity'         => $order['shipping_city'],
 			'shippingZip'          => $order['shipping_postcode'],
 			'shippingCustomerName' => trim($order['shipping_firstname'] . ' ' . $order['shipping_lastname']),

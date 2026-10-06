@@ -624,7 +624,7 @@ class ControllerModificationCJDropshipping extends Controller {
 			return;
 		}
 
-		$order_id = (int)($this->request->get['order_id']   ?? 0);
+		$order_id = (int)($this->request->get['order_id'] ?? 0);
 		$channel_id = (int)($this->request->get['channel_id'] ?? 0);
 
 		if ($order_id < 1 || $channel_id < 1) {

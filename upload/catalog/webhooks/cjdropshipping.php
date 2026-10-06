@@ -108,14 +108,14 @@ $remote = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 // -----------------------------------------------------------------
 // Load channel config
 // -----------------------------------------------------------------
-$channel_query = $db->query("SELECT * FROM `" . DB_PREFIX . "dropship_channel` WHERE `channel_id` = '" . (int)$channel_id . "' AND `provider` = 'cjdropshipping' AND `status` = '1'");
+$model = new ModelModificationCJDropshipping($registry);
 
-if (empty($channel_query->row)) {
+$channel = $model->getActiveChannel($channel_id);
+
+if (!$channel) {
 	http_response_code(404);
 	exit('Channel not found');
 }
-
-$channel = $channel_query->row;
 
 // -----------------------------------------------------------------
 // Validate signature (advisory — never block CJ requests on failure)
@@ -147,8 +147,6 @@ try {
 // -----------------------------------------------------------------
 // Process payload
 // -----------------------------------------------------------------
-$model = new ModelModificationCJDropshipping($registry);
-
 try {
 	switch ($type) {
 		case 'stock':
@@ -201,9 +199,9 @@ try {
 			$orderId = (isset($payload['data']['orderId']) && is_scalar($payload['data']['orderId'])) ? trim((string)$payload['data']['orderId']) : '';
 
 			if ($orderId !== '') {
-				$db->query("UPDATE `" . DB_PREFIX . "dropship_order` SET `supplier_order_id` = '" . $db->escape($orderId) . "', `date_modified` = NOW() WHERE `supplier_order_ref` = '" . $db->escape($orderId) . "' AND `channel_id` = '" . (int)$channel_id . "'");
+				$updated = $model->updateOrderSupplierId($channel_id, $orderId);
 
-				if ($signatureFailed && !$db->countAffected()) {
+				if ($signatureFailed && !$updated) {
 					$log->write('CJDropshipping webhook (order, channel ' . $channel_id . ', unverified): no matching order for reference "' . $orderId . '" — ignored.');
 				}
 			}

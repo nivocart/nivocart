@@ -91,6 +91,28 @@ class ModelModificationCJDropshipping extends Model {
 		return is_object($query) ? $query->row : [];
 	}
 
+	/**
+	 * Return an enabled CJDropshipping channel, or an empty array when the channel
+	 * does not exist or is disabled. Used by the inbound webhook receiver.
+	 */
+	public function getActiveChannel(int $channel_id): array {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "dropship_channel` WHERE `channel_id` = '" . (int)$channel_id . "' AND `provider` = 'cjdropshipping' AND `status` = '1'");
+
+		return is_object($query) ? $query->row : [];
+	}
+
+	/**
+	 * Record the CJ order id on a dropship order that was dispatched from this store.
+	 * Only a row whose supplier_order_ref matches is touched.
+	 *
+	 * @return int Number of rows updated.
+	 */
+	public function updateOrderSupplierId(int $channel_id, string $supplier_order_ref): int {
+		$this->db->query("UPDATE `" . DB_PREFIX . "dropship_order` SET `supplier_order_id` = '" . $this->db->escape($supplier_order_ref) . "', `date_modified` = NOW() WHERE `supplier_order_ref` = '" . $this->db->escape($supplier_order_ref) . "' AND `channel_id` = '" . (int)$channel_id . "'");
+
+		return $this->db->countAffected();
+	}
+
 	public function getChannels(array $data = []): array {
 		$sql = "SELECT * FROM `" . DB_PREFIX . "dropship_channel` WHERE `provider` = 'cjdropshipping'";
 
@@ -1405,17 +1427,6 @@ class ModelModificationCJDropshipping extends Model {
 	// =================================================================
 
 	/**
-	 * Extract total inventory for a specific warehouse country code
-	 * from a CJ inventories array.
-	 *
-	 * CJ inventories shape:
-	 * [ { "countryCode": "GB", "totalInventory": 42, ... }, ... ]
-	 *
-	 * @param  array  $inventories  From variant.inventories or stock query.
-	 * @param  string $countryCode  Target warehouse country code.
-	 * @return int
-	 */
-	/**
 	 * Return the maximum stock quantity across all warehouses.
 	 * Used by syncStock() so CN-only products show real availability
 	 * rather than 0 (which only GB warehouse would return).
@@ -1432,17 +1443,6 @@ class ModelModificationCJDropshipping extends Model {
 		}
 
 		return $max;
-	}
-
-	private function extractWarehouseStock(array $inventories, string $countryCode = 'GB'): int {
-		foreach ($inventories as $inv) {
-			if (($inv['countryCode'] ?? '') === $countryCode) {
-				// API uses 'totalInventory' in variant detail, 'totalInventoryNum' in stock query
-				return (int)($inv['totalInventory'] ?? $inv['totalInventoryNum'] ?? 0);
-			}
-		}
-
-		return 0;
 	}
 
 	/**
