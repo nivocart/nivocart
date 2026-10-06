@@ -15,6 +15,13 @@ $(document).ready(function() {
 		location = url;
 	});
 
+	$('.button-search').on('keydown', function(e) {
+		if (e.keyCode == 13 || e.keyCode == 32) {
+			e.preventDefault();
+			$(this).trigger('click');
+		}
+	});
+
 	$('#header input[name=\'search\']').on('keydown', function(e) {
 		if (e.keyCode == 13) {
 			url = $('base').prop('href') + 'index.php?route=product/search';
@@ -149,6 +156,7 @@ function addToCart(product_id, quantity) {
 				$('#notification').html('<div class="success" style="display:none;">' + json['success'] + '</div>');
 				$('.success').fadeIn('slow');
 				$('#cart-total').html(json['total']);
+				updateCartBadge(json['count']);
 				$('html, body').animate({scrollTop: 0}, 'slow');
 			}
 		},
@@ -156,6 +164,20 @@ function addToCart(product_id, quantity) {
 			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		}
 	});
+}
+
+// Header cart badge: shows the number of items and is hidden when the cart is empty.
+// Does nothing unless the theme's cart template has an element with id="cart-badge".
+function updateCartBadge(count) {
+	var $badge = $('#cart-badge');
+
+	if (!$badge.length || typeof count === 'undefined') {
+		return;
+	}
+
+	count = parseInt(count, 10) || 0;
+
+	$badge.text(count > 99 ? '99+' : count).toggleClass('cart-badge-empty', count < 1);
 }
 
 function addToWishList(product_id) {

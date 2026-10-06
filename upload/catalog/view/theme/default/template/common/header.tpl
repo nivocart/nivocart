@@ -60,21 +60,22 @@ $(document).ready(function() {
 <?php } ?>
 </head>
 <body>
+<a class="skip-link" href="#content"><?php echo $text_skip_to_content; ?></a>
 <div id="container-top">
   <div class="container-top-inner-<?php echo $display_size; ?>">
-  <a class="top-link" onclick="location='<?php echo $checkout; ?>';" title=""><i class="fa fa-play"></i><span class="hide-phone"> &nbsp;<?php echo $text_checkout; ?></span></a>
-  <a class="top-link" onclick="location='<?php echo $shopping_cart; ?>';" title=""><i class="fa fa-shopping-cart"></i><span class="hide-phone"> &nbsp;<?php echo $text_shopping_cart; ?></span></a>
+  <a class="top-link" href="<?php echo $checkout; ?>"><i class="fa fa-play" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_checkout; ?></span></a>
+  <a class="top-link" href="<?php echo $shopping_cart; ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_shopping_cart; ?></span></a>
 <?php if ($logged) { ?>
-  <a class="top-link" onclick="location='<?php echo $account; ?>';" title=""><i class="fa fa-user"></i><span class="hide-phone"> &nbsp;<?php echo $text_account; ?> &nbsp;</span></a>
+  <a class="top-link" href="<?php echo $account; ?>"><i class="fa fa-user" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_account; ?> &nbsp;</span></a>
 <?php } else { ?>
-  <a class="top-link" onclick="location='<?php echo $account; ?>';" title=""><i class="fa fa-user"></i><span class="hide-phone"> &nbsp;<?php echo $text_signin; ?> &nbsp;</span></a>
+  <a class="top-link" href="<?php echo $account; ?>"><i class="fa fa-user" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_signin; ?> &nbsp;</span></a>
 <?php } ?>
   <?php echo $language; ?>
   </div>
 </div>
 <div id="container">
 <div class="container-<?php echo $display_size; ?>">
-<div id="header">
+<div id="header" role="banner">
 <?php if ($logo) { ?>
   <?php $default_mobile_logo = $this->config->get('default_mobile_logo'); ?>
   <div id="logo"><a href="<?php echo $home; ?>">
@@ -90,8 +91,8 @@ $(document).ready(function() {
   <div id="header-bottom">
     <div id="search">
       <div class="search-inside">
-        <input type="text" name="search" placeholder="<?php echo $text_search; ?>" value="" autocomplete="off" aria-label="search" />
-        <div class="button-search"></div>
+        <input type="text" name="search" placeholder="<?php echo $text_search; ?>" value="" autocomplete="off" aria-label="<?php echo $text_search; ?>" />
+        <div class="button-search" role="button" tabindex="0" aria-label="<?php echo $text_search; ?>"></div>
       </div>
     </div>
   </div>

@@ -61,6 +61,12 @@ class ControllerNodeCart extends Controller {
 			$this->data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0));
 		}
 
+		// Cart badge (number of items, vouchers included), available to any theme template
+		$cart_count = $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0);
+
+		$this->data['cart_count'] = $cart_count;
+		$this->data['cart_badge'] = ($cart_count > 99) ? '99+' : (string)$cart_count;
+
 		$this->data['text_empty'] = $this->language->get('text_empty');
 		$this->data['text_cart'] = $this->language->get('text_cart');
 		$this->data['text_checkout'] = $this->language->get('text_checkout');
