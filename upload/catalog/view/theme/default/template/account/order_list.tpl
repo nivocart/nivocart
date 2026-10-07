@@ -23,6 +23,12 @@
           <div>
             <b><?php echo $text_customer; ?></b> <?php echo $order['name']; ?><br />
             <b><?php echo $text_total; ?></b> <?php echo $order['total']; ?>
+            <?php if (!empty($order['tracking'])) { ?>
+              <br /><b><?php echo $text_tracking; ?></b>
+              <?php foreach (explode(', ', $order['tracking']) as $tracking_number) { ?>
+                &nbsp;<a href="https://t.17track.net/en#nums=<?php echo urlencode(trim($tracking_number)); ?>" target="_blank" rel="noopener noreferrer"><?php echo htmlspecialchars(trim($tracking_number), ENT_QUOTES, 'UTF-8'); ?></a>
+              <?php } ?>
+            <?php } ?>
           </div>
           <div class="order-info">
           <?php if ($picklist_status) { ?>

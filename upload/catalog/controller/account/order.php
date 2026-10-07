@@ -97,6 +97,8 @@ class ControllerAccountOrder extends Controller {
 		$this->data['text_products'] = $this->language->get('text_products');
 		$this->data['text_total'] = $this->language->get('text_total');
 		$this->data['text_empty'] = $this->language->get('text_empty');
+		$this->data['text_tracking'] = $this->language->get('text_tracking');
+		$this->data['text_track_parcel'] = $this->language->get('text_track_parcel');
 
 		$this->data['button_pick'] = $this->language->get('button_pick');
 		$this->data['button_view'] = $this->language->get('button_view');
@@ -111,6 +113,12 @@ class ControllerAccountOrder extends Controller {
 		}
 
 		$this->data['orders'] = [];
+
+		// CJDropshipping tracking — load catalog model only when the modification is installed
+		$has_cjd_tracking = file_exists(DIR_APPLICATION . 'model/modification/cjdropshipping.php');
+		if ($has_cjd_tracking) {
+			$this->load->model('modification/cjdropshipping');
+		}
 
 		$order_total = $this->model_account_order->getTotalOrders();
 
@@ -130,7 +138,8 @@ class ControllerAccountOrder extends Controller {
 				'picklist'   => $this->url->link('account/order/picklist', 'order_id=' . $result['order_id'], 'SSL'),
 				'href'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
 				'download'   => $this->url->link('account/order/download', 'order_id=' . $result['order_id'], 'SSL'),
-				'reorder'    => $this->url->link('account/order', 'order_id=' . $result['order_id'], 'SSL')
+				'reorder'    => $this->url->link('account/order', 'order_id=' . $result['order_id'], 'SSL'),
+				'tracking'   => $has_cjd_tracking ? $this->model_modification_cjdropshipping->getOrderTracking((int)$result['order_id']) : ''
 			];
 		}
 

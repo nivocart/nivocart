@@ -90,81 +90,89 @@
           <a id="button-cancel-channel" class="button-cancel ripple"><?php echo $button_cancel; ?></a>
         </div>
       </form>
-      <h2><?php echo $button_import; ?></h2>
-      <table class="form">
-        <tr>
-          <td><?php echo $entry_import_channel; ?></td>
-          <td><select id="import-channel-id" class="cj-narrow">
-              <?php if ($channels) { ?>
-              <?php foreach ($channels as $channel) { ?>
-              <option value="<?php echo (int)$channel['channel_id']; ?>"><?php echo htmlspecialchars($channel['name'], ENT_QUOTES, 'UTF-8'); ?></option>
-              <?php } ?>
-              <?php } else { ?>
-              <option value="0"><?php echo $text_none; ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_import_category; ?><span class="help"><?php echo $help_import_category; ?></span></td>
-          <td><input type="text" id="import-category-name" value="" placeholder="<?php echo $placeholder_category; ?>" class="cj-wide" autocomplete="off" />
-            <input type="hidden" id="import-category-id" value="0" /></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_import_keyword; ?><span class="help"><?php echo $help_import_keyword; ?></span></td>
-          <td><input type="text" id="import-keyword" value="" placeholder="<?php echo $placeholder_keyword; ?>" class="cj-wide" /></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_import_country; ?></td>
-          <td><select id="import-country" class="cj-narrow">
-              <?php foreach ($countries as $code => $country) { ?>
-              <option value="<?php echo $code; ?>"><?php echo $country; ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><a id="button-import" class="button-form ripple"><?php echo $button_import; ?></a></td>
-        </tr>
-      </table>
-      <h2><?php echo $header_set_option; ?></h2>
-      <table class="form">
-        <tr>
-          <td><?php echo $entry_import_channel; ?></td>
-          <td><select id="sync-channel-id" class="cj-narrow">
-              <?php if ($channels) { ?>
-              <?php foreach ($channels as $channel) { ?>
-              <option value="<?php echo (int)$channel['channel_id']; ?>"><?php echo htmlspecialchars($channel['name'], ENT_QUOTES, 'UTF-8'); ?></option>
-              <?php } ?>
-              <?php } else { ?>
-              <option value="0"><?php echo $text_none; ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $button_sync_stock; ?></td>
-          <td><a id="button-sync-stock" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_stock; ?></a></td>
-        </tr>
-        <tr>
-          <td><?php echo $button_sync_prices; ?></td>
-          <td><a id="button-sync-prices" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_prices; ?></a></td>
-        </tr>
-        <tr>
-          <td><?php echo $button_sync_tracking; ?></td>
-          <td><a id="button-sync-tracking" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_tracking; ?></a></td>
-        </tr>
-        <tr>
-          <td><?php echo $button_register_webhooks; ?></td>
-          <td><a id="button-register-webhooks" class="button-form ripple"><?php echo $button_register_webhooks; ?></a></td>
-        </tr>
-        <tr>
-          <td><?php echo $button_test_connection; ?></td>
-          <td><a id="button-test-connection" class="button-form ripple"><?php echo $button_test_connection; ?></a></td>
-        </tr>
-      </table>
-      <div id="sync-progress" class="cj-progress" hidden>
-        <div id="sync-progress-bar" class="progress-bar-blue"></div>
+      <div class="overview">
+        <div class="dashboard-heading"><?php echo $button_import; ?></div>
+        <div class="dashboard-content">
+          <table class="form">
+            <tr>
+              <td><?php echo $entry_import_channel; ?></td>
+              <td><select id="import-channel-id" class="cj-narrow">
+                  <?php if ($channels) { ?>
+                  <?php foreach ($channels as $channel) { ?>
+                  <option value="<?php echo (int)$channel['channel_id']; ?>"><?php echo htmlspecialchars($channel['name'], ENT_QUOTES, 'UTF-8'); ?></option>
+                  <?php } ?>
+                  <?php } else { ?>
+                  <option value="0"><?php echo $text_none; ?></option>
+                  <?php } ?>
+                </select></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_import_category; ?><span class="help"><?php echo $help_import_category; ?></span></td>
+              <td><input type="text" id="import-category-name" value="" placeholder="<?php echo $placeholder_category; ?>" class="cj-wide" autocomplete="off" />
+                <input type="hidden" id="import-category-id" value="0" /></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_import_keyword; ?><span class="help"><?php echo $help_import_keyword; ?></span></td>
+              <td><input type="text" id="import-keyword" value="" placeholder="<?php echo $placeholder_keyword; ?>" class="cj-wide" /></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_import_country; ?></td>
+              <td><select id="import-country" class="cj-narrow">
+                  <?php foreach ($countries as $code => $country) { ?>
+                  <option value="<?php echo $code; ?>"><?php echo $country; ?></option>
+                  <?php } ?>
+                </select></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><a id="button-import" class="button-form ripple"><?php echo $button_import; ?></a></td>
+            </tr>
+          </table>
+        </div>
       </div>
-      <div id="sync-progress-label" class="cj-progress-label"></div>
+      <div class="statistic">
+        <div class="dashboard-heading"><?php echo $header_set_option; ?></div>
+        <div class="dashboard-content">
+          <table class="form">
+            <tr>
+              <td><?php echo $entry_import_channel; ?></td>
+              <td><select id="sync-channel-id" class="cj-narrow">
+                  <?php if ($channels) { ?>
+                  <?php foreach ($channels as $channel) { ?>
+                  <option value="<?php echo (int)$channel['channel_id']; ?>"><?php echo htmlspecialchars($channel['name'], ENT_QUOTES, 'UTF-8'); ?></option>
+                  <?php } ?>
+                  <?php } else { ?>
+                  <option value="0"><?php echo $text_none; ?></option>
+                  <?php } ?>
+                </select></td>
+            </tr>
+            <tr>
+              <td><?php echo $button_sync_stock; ?></td>
+              <td><a id="button-sync-stock" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_stock; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $button_sync_prices; ?></td>
+              <td><a id="button-sync-prices" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_prices; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $button_sync_tracking; ?></td>
+              <td><a id="button-sync-tracking" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_tracking; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $button_register_webhooks; ?></td>
+              <td><a id="button-register-webhooks" class="button-form ripple"><?php echo $button_register_webhooks; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $button_test_connection; ?></td>
+              <td><a id="button-test-connection" class="button-form ripple"><?php echo $button_test_connection; ?></a></td>
+            </tr>
+          </table>
+          <div id="sync-progress" class="cj-progress" hidden>
+            <div id="sync-progress-bar" class="progress-bar-blue"></div>
+          </div>
+          <div id="sync-progress-label" class="cj-progress-label"></div>
+        </div>
+      </div>
       <h2><?php echo $tab_orders; ?></h2>
       <div class="cj-toolbar">
         <select id="orders-channel-select" class="cj-narrow">

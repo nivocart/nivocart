@@ -48,6 +48,10 @@ $_['text_success']            = 'You have successfully added the products from o
 $_['text_empty']              = 'You have not made any previous orders!';
 $_['text_error']              = 'The order you requested could not be found!';
 
+// Tracking (CJDropshipping / 17Track)
+$_['text_tracking']           = 'Tracking:';
+$_['text_track_parcel']       = 'Track your parcel';
+
 // Button
 $_['button_invoice']          = 'Download Invoice';
 $_['button_pick']             = 'Pick List';

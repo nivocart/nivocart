@@ -2068,6 +2068,17 @@ table.tool tr td {
 .cj-dashboard [hidden] {
   display: none;
 }
+.cj-dashboard h2 {
+  clear: both;
+}
+.cj-dashboard .overview td + td {
+  text-align: left;
+}
+.cj-dashboard .overview .cj-wide,
+.cj-dashboard .overview .cj-narrow {
+  width: 100%;
+  box-sizing: border-box;
+}
 .cj-wide {
   width: 280px;
 }
@@ -2084,6 +2095,9 @@ table.tool tr td {
   margin: 10px 0 20px 0;
 }
 .cj-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 12px;
 }
 .cj-busy {
