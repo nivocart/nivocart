@@ -24,6 +24,7 @@ class ControllerModuleViewed extends Controller {
 
 		$this->data['text_from'] = $this->language->get('text_from');
 		$this->data['text_offer'] = $this->language->get('text_offer');
+		$this->data['text_variants'] = $this->language->get('text_variants');
 
 		$this->data['lang'] = $this->language->get('code');
 
@@ -156,6 +157,7 @@ class ControllerModuleViewed extends Controller {
 					'rating'          => (int)$rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 					'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($product_info['product_id']) : '',
+					'variant_count'   => $this->model_catalog_product->getVariantCount($product_info['product_id']),
 					'href'            => $this->url->link('product/product', 'product_id=' . $product_info['product_id'], 'SSL')
 				];
 			}
