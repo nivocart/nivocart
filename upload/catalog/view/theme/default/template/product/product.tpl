@@ -799,6 +799,9 @@ $('#button-cart').on('click', function() {
 				$('#notification').html('<div class="success" style="display:none;">' + json['success'] + '<img src="catalog/view/theme/<?php echo $template; ?>/image/close.png" alt="" class="close" /></div>');
 				$('.success').fadeIn('slow');
 				$('#cart-total').html(json['total']);
+				if (typeof updateCartBadge === 'function') {
+					updateCartBadge(json['count']);
+				}
 				$('html, body').animate({ scrollTop:0 }, 800);
 			}
 		}
