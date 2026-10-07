@@ -8,7 +8,6 @@
  * @package NivoCart
  */
 class ModelModificationCjdropshipping extends Model {
-
 	/**
 	 * Return a comma-separated string of distinct, non-empty tracking numbers
 	 * for the given order, or an empty string if none exist.
