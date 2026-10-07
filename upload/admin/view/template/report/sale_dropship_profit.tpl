@@ -15,12 +15,12 @@
     <div class="content-body">
       <?php if (!isset($has_results)) { ?>
         <!-- DS tables not installed -->
-        <div style="padding:20px; background:#fff8e1; border:1px solid #ffe082; border-radius:4px; color:#7a5f00; margin-bottom:16px;">
+        <div class="attention">
           <?php echo $text_no_ds_tables; ?>
         </div>
       <?php } else { ?>
       <?php if (!$has_cost_config) { ?>
-      <div style="padding:10px 14px; background:#eaf3fb; border:1px solid #b8d9f0; border-radius:4px; color:#2e5c8a; margin-bottom:12px; font-size:13px;">
+      <div class="tooltip">
         <?php echo $text_no_cost_config; ?>
       </div>
       <?php } ?>
@@ -85,7 +85,7 @@
             <td class="right"><?php echo $row['product_cost']; ?></td>
             <td class="right"><?php echo $row['gateway_fees']; ?></td>
             <td class="right"><?php echo $row['returns_provision']; ?></td>
-            <td class="right"<?php echo ($row['gross_profit_raw'] < 0) ? ' style="color:#c0392b;"' : ''; ?>><?php echo $row['gross_profit']; ?></td>
+            <td class="right<?php echo ($row['gross_profit_raw'] < 0) ? ' profit-negative' : ''; ?>"><?php echo $row['gross_profit']; ?></td>
             <td class="right"><?php echo $row['gross_margin_pct']; ?></td>
           </tr>
           <?php } ?>
@@ -112,11 +112,9 @@
       <div class="pagination"><?php echo $pagination; ?></div>
       <?php } ?>
       <!-- Overhead summary panel -->
-      <div style="margin-top:24px; border:1px solid #d9dde4; border-radius:4px; overflow:hidden;">
-        <div style="background:#f0f3f7; border-bottom:1px solid #d9dde4; padding:9px 16px;">
-          <strong style="font-size:13px; color:#2e4a6e;"><?php echo $text_overhead_summary; ?></strong>
-        </div>
-        <table class="list" style="margin:0;">
+      <div class="profit-summary">
+        <div class="profit-summary-heading"><?php echo $text_overhead_summary; ?></div>
+        <table class="list">
           <tbody>
             <tr>
               <td class="left" style="width:60%;"><?php echo $text_hosting_share; ?></td>
@@ -148,17 +146,17 @@
             </tr>
           </tbody>
           <tfoot>
-            <tr style="background:#f5f6f8;">
+            <tr>
               <td class="left"><strong><?php echo $text_total_overhead; ?></strong></td>
               <td class="right"><strong><?php echo $overhead['total']; ?></strong></td>
             </tr>
-            <tr style="background:#e8f0fa;">
-              <td class="left"><strong style="font-size:14px; color:#1a3d6b;"><?php echo $text_net_profit; ?></strong></td>
-              <td class="right"><strong style="font-size:14px; color:<?php echo ($net_profit_raw < 0) ? '#c0392b' : '#1d6a3c'; ?>;"><?php echo $net_profit; ?></strong></td>
+            <tr class="profit-net">
+              <td class="left"><strong><?php echo $text_net_profit; ?></strong></td>
+              <td class="right"><strong class="<?php echo ($net_profit_raw < 0) ? 'profit-negative' : 'profit-positive'; ?>"><?php echo $net_profit; ?></strong></td>
             </tr>
-            <tr style="background:#e8f0fa;">
-              <td class="left"><strong style="color:#1a3d6b;"><?php echo $text_net_margin; ?></strong></td>
-              <td class="right"><strong style="color:<?php echo ($net_profit_raw < 0) ? '#c0392b' : '#1d6a3c'; ?>;"><?php echo $net_margin_pct; ?></strong></td>
+            <tr class="profit-net">
+              <td class="left"><strong><?php echo $text_net_margin; ?></strong></td>
+              <td class="right"><strong class="<?php echo ($net_profit_raw < 0) ? 'profit-negative' : 'profit-positive'; ?>"><?php echo $net_margin_pct; ?></strong></td>
             </tr>
           </tfoot>
         </table>

@@ -58,7 +58,7 @@ $_['text_all_channels']        = 'All Platforms';
 
 // Info / warning notices
 $_['text_no_results']          = 'No dropshipping orders found for the selected period.';
-$_['text_no_ds_tables']        = 'No dropshipping connector is currently installed. Please install the Avasam or CJ Dropshipping connector to use this report.';
+$_['text_no_ds_tables']        = 'A Dropshipping Modification must be installed to use this report.';
 $_['text_no_cost_config']      = '<strong>Notice:</strong> DS Cost Calculator has not been configured yet. The report shows revenue and product costs only — overhead costs are excluded. <a href="%s">Configure now &rarr;</a>';
 $_['text_partial_cost_config'] = '<strong>Notice:</strong> Some platform cost configurations are incomplete. Profit figures may be understated.';
 

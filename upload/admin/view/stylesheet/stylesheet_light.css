@@ -2116,6 +2116,42 @@ table.tool tr td {
 }
 
 /** -----------------------------
+ * DROPSHIP PROFIT REPORT
+ * ----------------------------*/
+.profit-summary {
+  margin-top: 24px;
+  border: 1px solid var(--clr-list-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.profit-summary-heading {
+  background: var(--clr-surface-bg);
+  border-bottom: 1px solid var(--clr-list-border);
+  color: var(--clr-text);
+  font-size: 13px;
+  font-weight: bold;
+  padding: 9px 16px;
+}
+.profit-summary .list {
+  margin: 0;
+  border-top: none;
+  border-left: none;
+}
+.profit-summary .list td:last-child {
+  border-right: none;
+}
+.profit-net td {
+  background: var(--clr-surface-bg);
+  font-size: 14px;
+}
+.profit-positive {
+  color: #1D6A3C;
+}
+.profit-negative {
+  color: #B3261E;
+}
+
+/** -----------------------------
  * FOOTER
  * ----------------------------*/
 #footer-normal {
