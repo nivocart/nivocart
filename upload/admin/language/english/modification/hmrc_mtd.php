@@ -105,7 +105,7 @@ $_['text_period_label']           = 'Period: %s to %s';
 // Buttons
 // -----------------------------------------------------------------------
 $_['button_save']                 = 'Save';
-$_['button_cancel']               = 'Cancel';
+$_['button_cancel']               = 'Close';
 $_['button_connect']              = 'Connect to HMRC';
 $_['button_disconnect']           = 'Disconnect';
 $_['button_fetch_obligations']    = 'Fetch Obligations from HMRC';
