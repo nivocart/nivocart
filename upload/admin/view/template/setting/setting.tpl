@@ -2408,7 +2408,7 @@ $('#tabs a').tabs();
 <script type="text/javascript"><!--
 // ---------------------------------------------------------------------------
 // WAF bypass for analytics script fields
-// Some server's ModSecurity blocks POST bodies that contain <script> tags.
+// Some servers' ModSecurity blocks POST bodies that contain <script> tags.
 // We Base64-encode the textarea content into a hidden input right before
 // the form submits, then the controller decodes it server-side before saving.
 // btoa/encodeURIComponent combo handles any Unicode characters safely.
