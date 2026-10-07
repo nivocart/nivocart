@@ -46,6 +46,7 @@ Release: TBA
 - Updated Admin Settings to bypass server's ModSecurity blocks on scripts.
 - Updated the Modification "DS Cost Calculator" with minor improvements.
 - Updated the Catalog Footer "Powered by" and Copyright notice.
+- Housekeeping done converting all CRLF Line Endings in files to LF.
 
 
 NivoCart v2.4.0
