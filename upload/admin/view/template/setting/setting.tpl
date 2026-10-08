@@ -407,7 +407,8 @@
             <td><?php echo $entry_map_code; ?><span class="help"><?php echo $help_map_code; ?></span></td>
             <td><a onclick="window.open('https://developers.google.com/maps/documentation/embed/');" title="Google Maps" class="button-form"><i class="fa fa-map-marker"></i> &nbsp; Google Maps</a>
               <br /><br />
-              <textarea name="config_map_code" cols="50" rows="7"><?php echo $config_map_code; ?></textarea>
+              <input type="hidden" name="config_map_code" id="config_map_code_b64" />
+              <textarea id="config_map_code_display" cols="50" rows="7"><?php echo $config_map_code; ?></textarea>
             </td>
           </tr>
           <?php if (!empty($config_map_code)) { ?>
@@ -2407,7 +2408,7 @@ $('#tabs a').tabs();
 
 <script type="text/javascript"><!--
 // ---------------------------------------------------------------------------
-// WAF bypass for analytics script fields
+// WAF bypass for script and embed fields (analytics, meta tags, map iframe)
 // Some servers' ModSecurity blocks POST bodies that contain <script> tags.
 // We Base64-encode the textarea content into a hidden input right before
 // the form submits, then the controller decodes it server-side before saving.
@@ -2426,7 +2427,8 @@ $('#tabs a').tabs();
         { display: '#config_meta_yandex_display', hidden: '#config_meta_yandex_b64' },
         { display: '#config_meta_baidu_display', hidden: '#config_meta_baidu_b64' },
         { display: '#config_google_analytics_display', hidden: '#config_google_analytics_b64' },
-        { display: '#config_matomo_analytics_display', hidden: '#config_matomo_analytics_b64' }
+        { display: '#config_matomo_analytics_display', hidden: '#config_matomo_analytics_b64' },
+        { display: '#config_map_code_display', hidden: '#config_map_code_b64' }
     ];
 
     function encodeField(displaySel, hiddenSel) {

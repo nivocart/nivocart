@@ -380,9 +380,11 @@ class ControllerSettingSetting extends Controller {
 
 		$this->load->model('setting/setting');
 
-		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
 			// Decode Base64-encoded fields — the template encodes them before submit
 			// so server's WAF does not block <script> or <meta> tags in POST bodies.
+			// This runs before validate() so a form that fails validation is shown again with the
+			// decoded text and not the Base64 string.
 			foreach ([
 				'config_meta_google',
 				'config_meta_bing',
@@ -390,15 +392,23 @@ class ControllerSettingSetting extends Controller {
 				'config_meta_baidu',
 				'config_google_analytics',
 				'config_matomo_analytics',
-			] as $_analytics_field) {
-				if (!empty($this->request->post[$_analytics_field])) {
-					$_decoded = base64_decode($this->request->post[$_analytics_field], true);
+				'config_map_code',
+			] as $_b64_field) {
+				if (!empty($this->request->post[$_b64_field])) {
+					$_decoded = base64_decode($this->request->post[$_b64_field], true);
+
 					if ($_decoded !== false) {
-						$this->request->post[$_analytics_field] = $_decoded;
+						// The map code is stored HTML-escaped like every other plain setting (this is
+						// what Request::clean() did before the field was Base64 encoded).
+						$this->request->post[$_b64_field] = ($_b64_field === 'config_map_code') ? htmlspecialchars($_decoded, ENT_QUOTES, 'UTF-8') : $_decoded;
 					}
 				}
 			}
-			unset($_analytics_field, $_decoded);
+
+			unset($_b64_field, $_decoded);
+		}
+
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 
 			$this->model_setting_setting->editSetting('config', $this->request->post);
 
