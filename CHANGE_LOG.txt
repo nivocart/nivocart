@@ -25,6 +25,7 @@ Release: 08/10/2026
 - Add a new quick "Meta Description" import button to Design "Menu Items". 
 - Fix a jQuery Confirm stylesheet visibility issue in Admin dark theme.
 - Fix a visibility issue with the information toggles in Admin templates.
+- Fix a FontAwesome glyph display issue on the Install/Upgrade Success page.
 - Fix issue with inserting JS scripts in Setting form from being blocked.
 - Fix bug in Admin Product Model not saving when no Palette id exist.
 - Fix bug in Cart and Checkout to prevent malformed Country/zones errors.
