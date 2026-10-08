@@ -42,6 +42,8 @@ class ControllerAccountEdit extends Controller {
 			if ($this->validate()) {
 				$this->model_account_customer->editCustomer($this->request->post);
 
+				$this->syncCookieConsent();
+
 				$this->session->data['success'] = $this->language->get('text_success');
 
 				$this->redirect($this->url->link('account/account', '', 'SSL'));
@@ -234,21 +236,6 @@ class ControllerAccountEdit extends Controller {
 			$this->data['cookie_analytics_consent'] = null;
 		}
 
-		// Sync browser cookie with DB preference when saved
-		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $analytics_configured && array_key_exists('cookie_analytics_consent', $this->request->post)) {
-			$consent_val = $this->request->post['cookie_analytics_consent'];
-			$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-			$cookie_val = ($consent_val !== '') ? (string)(int)$consent_val : '0';
-
-			setcookie('cc_accepted', $cookie_val, [
-				'expires'  => time() + (365 * 24 * 3600),
-				'path'     => '/',
-				'secure'   => $secure,
-				'httponly' => false,
-				'samesite' => 'Lax',
-			]);
-		}
-
 		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
 
 		// Theme
@@ -268,6 +255,88 @@ class ControllerAccountEdit extends Controller {
 		];
 
 		$this->response->setOutput($this->render());
+	}
+
+	/**
+	 * Keeps the cc_accepted browser cookie in step with the saved Cookie Consent choice.
+	 * When the customer opts out, the analytics cookies set earlier (Google Analytics
+	 * and Matomo) are expired as well, so withdrawing consent removes what was stored.
+	 *
+	 * @return void
+	 */
+	protected function syncCookieConsent(): void {
+		$ga_raw = trim($this->config->get('config_google_analytics') ?? '');
+		$matomo_raw = trim($this->config->get('config_matomo_analytics') ?? '');
+
+		if (($ga_raw === '' && $matomo_raw === '') || !array_key_exists('cookie_analytics_consent', $this->request->post)) {
+			return;
+		}
+
+		$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+		$consent_val = $this->request->post['cookie_analytics_consent'];
+		$cookie_val = ($consent_val !== '') ? (string)(int)$consent_val : '0';
+
+		setcookie('cc_accepted', $cookie_val, [
+			'expires'  => time() + (365 * 24 * 3600),
+			'path'     => '/',
+			'secure'   => $secure,
+			'httponly' => false,
+			'samesite' => 'Lax',
+		]);
+
+		if ($cookie_val === '0') {
+			$this->expireAnalyticsCookies($secure);
+		}
+	}
+
+	/**
+	 * Expires the analytics cookies the browser sent with this request: Google Analytics
+	 * (_ga, _ga_<ID>, _gid, _gat*, _gcl_*, _gac_*, __utm*) and Matomo (_pk_*, mtm_*, matomo_*).
+	 * They are set by JavaScript on the site domain or one of its parent domains, so each
+	 * one is expired for the host itself and for every parent domain of the host.
+	 *
+	 * @param bool $secure
+	 *
+	 * @return void
+	 */
+	protected function expireAnalyticsCookies(bool $secure): void {
+		$host = preg_replace('/:\d+$/', '', (string)($this->request->server['HTTP_HOST'] ?? ''));
+
+		$domains = [''];
+
+		if ($host !== '' && !filter_var($host, FILTER_VALIDATE_IP)) {
+			$parts = explode('.', $host);
+
+			for ($i = 0; $i < count($parts) - 1; $i++) {
+				$domains[] = '.' . implode('.', array_slice($parts, $i));
+			}
+		}
+
+		$pattern = '/^(_ga|_ga_.+|_gid|_gat|_gat_.+|_gcl_.+|_gac_.+|_gaexp|__utm[a-z]+|_pk_.+|mtm_.+|matomo_.+)$/i';
+
+		foreach (array_keys($_COOKIE) as $name) {
+			if (!preg_match($pattern, (string)$name)) {
+				continue;
+			}
+
+			foreach ($domains as $domain) {
+				$options = [
+					'expires'  => time() - 3600,
+					'path'     => '/',
+					'secure'   => $secure,
+					'httponly' => false,
+					'samesite' => 'Lax',
+				];
+
+				if ($domain !== '') {
+					$options['domain'] = $domain;
+				}
+
+				setcookie((string)$name, '', $options);
+			}
+
+			unset($_COOKIE[$name]);
+		}
 	}
 
 	protected function validate() {
