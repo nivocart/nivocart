@@ -59,3 +59,37 @@ $_['help_accepted_status']      = 'Default status is "Processed".';
 $_['error_permission']          = 'Warning: You do not have permission to modify payment <b>Klarna</b> !';
 $_['error_credentials_missing'] = 'Warning: Some credentials are missing for region %s !';
 $_['error_credentials_invalid'] = 'Warning: Invalid credentials for region %s : Username: %s, Password: %s, Server: %s !';
+
+// Setup Reference panel
+$_['text_setup_title']     = 'Klarna Setup Reference';
+$_['text_setup_url_label'] = 'Push endpoint';
+$_['text_setup_url_hint']  = 'Click to select';
+$_['setup_sections'] = array(
+	array(
+		'title' => 'Step 1 &mdash; Get your API credentials',
+		'intro' => 'Log in to the Klarna Merchant Portal and create API credentials (Username and Password) for each region you sell in. Enter them on the matching region tab: Europe / UK, Canada / USA or Australia / NZL.',
+	),
+	array(
+		'title' => 'Step 2 &mdash; Choose the server',
+		'intro' => 'Select <strong>Playground</strong> while testing with Klarna test credentials and <strong>Live</strong> only once Klarna has approved your account. Playground and Live credentials are different and cannot be swapped.',
+	),
+	array(
+		'title' => 'Step 3 &mdash; Push notifications (automatic)',
+		'intro' => 'The push endpoint below is registered with Klarna automatically for every order, so nothing needs to be added in the Klarna portal. Klarna calls it when the fraud check on a pending order is resolved.',
+		'url'   => true,
+		'rows'  => array(
+			array('Accepted', 'The order is moved to the region\'s <em>Accepted Status</em>.'),
+			array('Rejected', 'The order is moved to the store\'s <em>Failed</em> order status.'),
+			array('Pending', 'No change. Klarna pushes again when the decision is made.'),
+			array('Security', 'Klarna\'s push carries only the order ID. The handler fetches the order from Klarna with your credentials and acts only on the status returned.'),
+		),
+	),
+	array(
+		'title' => 'Technical notes',
+		'rows'  => array(
+			array('.htaccess rule', 'Add this rule to your root <code>.htaccess</code> so the push endpoint is not rewritten by NivoCart\'s SEO router:<br /><code>RewriteRule ^catalog/webhooks/ - [L]</code>'),
+			array('Pending and Accepted status', '<em>Pending Status</em> is given when Klarna returns a pending fraud decision at checkout. <em>Accepted Status</em> is applied once Klarna approves the order.'),
+			array('Log file', 'Push activity is written to <code>system/logs/klarna_webhook.log</code>.'),
+		),
+	),
+);

@@ -114,3 +114,42 @@ $_['error_capture_amt']           = 'Please enter a valid capture amount.';
 $_['error_partial_amt']           = 'Please enter a refund amount for a partial refund.';
 $_['error_positive_amt']          = 'Refund amount must be greater than zero.';
 $_['error_timeout']               = 'The request timed out. Please try again.';
+
+// Setup Reference panel
+$_['text_setup_title']     = 'PayPal Express Setup Reference';
+$_['text_setup_url_label'] = 'Webhook URL';
+$_['text_setup_url_hint']  = 'Click to select';
+$_['setup_sections'] = array(
+	array(
+		'title' => 'Step 1 &mdash; Create a REST app in PayPal',
+		'intro' => 'Log in to <em>developer.paypal.com &rarr; Apps &amp; Credentials</em>. Create a <strong>Live</strong> app (and a <strong>Sandbox</strong> app for testing) and copy the Client ID and Secret into the matching fields on the <strong>API Credentials</strong> tab.',
+	),
+	array(
+		'title' => 'Step 2 &mdash; Add a webhook to the app',
+		'intro' => 'In the same app, add a webhook and paste the URL below. The URL must be reachable over HTTPS.',
+		'url'   => true,
+	),
+	array(
+		'title' => 'Step 3 &mdash; Subscribe to these 5 events',
+		'rows'  => array(
+			array('<code>PAYMENT.CAPTURE.COMPLETED</code>', 'The payment was captured. Moves the order to the Completed status.'),
+			array('<code>PAYMENT.CAPTURE.PENDING</code>', 'The capture is waiting for PayPal. Moves the order to the Pending status.'),
+			array('<code>PAYMENT.CAPTURE.DENIED</code>', 'The capture was denied. Moves the order to the Denied status.'),
+			array('<code>PAYMENT.CAPTURE.REFUNDED</code>', 'A refund was issued. Moves the order to the Refunded status.'),
+			array('<code>PAYMENT.AUTHORIZATION.VOIDED</code>', 'An authorization was voided. Moves the order to the Voided status.'),
+		),
+	),
+	array(
+		'title' => 'Step 4 &mdash; Copy the Webhook ID and save it above',
+		'intro' => 'After saving the webhook, PayPal shows a <strong>Webhook ID</strong>. Paste it into the Live or Sandbox <strong>Webhook ID</strong> field on the <strong>API Credentials</strong> tab. Every incoming event is verified against this ID using PayPal\'s signature check; if the field is left empty the check is skipped, so always fill it in.',
+	),
+	array(
+		'title' => 'Technical notes',
+		'rows'  => array(
+			array('Sandbox and Live', 'Sandbox Mode uses the Sandbox credentials and Webhook ID; otherwise the Live ones are used. Create a separate webhook in each PayPal environment.'),
+			array('Transaction Mode', '<strong>Capture</strong> charges the customer immediately. <strong>Authorize</strong> places funds on hold, and you capture or void them from the order page.'),
+			array('Order Status tab', 'Choose which NivoCart order status each webhook event above should set.'),
+			array('Debug Logging', 'When enabled, API requests and responses are written to <code>pp_express.log</code> and shown on the Debug Log tab.'),
+		),
+	),
+);

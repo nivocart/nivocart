@@ -33,7 +33,7 @@ class ControllerPaymentKlarna extends Controller {
 	];
 
 	public function index() {
-		$this->language->load('payment/klarna');
+		$language_data = $this->language->load('payment/klarna');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -171,6 +171,12 @@ class ControllerPaymentKlarna extends Controller {
 		}
 
 		$this->data['clear'] = $this->url->link('payment/klarna/clear', 'token=' . $this->session->data['token'], 'SSL');
+
+		$this->data['setup_title'] = $this->language->get('text_setup_title');
+		$this->data['setup_url_label'] = $this->language->get('text_setup_url_label');
+		$this->data['setup_url_hint'] = $this->language->get('text_setup_url_hint');
+		$this->data['setup_sections'] = $language_data['setup_sections'];
+		$this->data['setup_url'] = HTTPS_CATALOG . 'catalog/webhooks/klarna.php';
 
 		$this->template = 'payment/klarna.tpl';
 		$this->children = [

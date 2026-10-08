@@ -151,6 +151,7 @@
       </form>
     </div>
   </div>
+  <?php include(DIR_TEMPLATE . 'payment/setup_reference.tpl'); ?>
 </div>
 
 <script type="text/javascript"><!--

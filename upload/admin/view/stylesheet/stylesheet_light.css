@@ -2151,6 +2151,28 @@ table.tool tr td {
   color: #B3261E;
 }
 
+/* Payment setup reference panels */
+.setup-ref {
+  margin-top: 20px;
+}
+.setup-ref table.form td.setup-step {
+  padding: 14px 0 4px;
+}
+.setup-ref table.form td.setup-label {
+  width: 180px;
+}
+.setup-ref input.setup-url {
+  font-family: monospace;
+  cursor: pointer;
+}
+.setup-ref code {
+  font-family: monospace;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--clr-surface-bg);
+  color: var(--clr-text);
+}
+
 /** -----------------------------
  * FOOTER
  * ----------------------------*/

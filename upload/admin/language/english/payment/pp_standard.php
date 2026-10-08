@@ -45,3 +45,39 @@ $_['help_transaction']               = 'Sale will charge customer immediately. A
 // Error
 $_['error_permission']               = 'Warning: You do not have permission to modify <b>PayPal Standard</b>!';
 $_['error_email']                    = 'Email is required!';
+
+// Setup Reference panel
+$_['text_setup_title']     = 'PayPal Standard Setup Reference';
+$_['text_setup_url_label'] = 'IPN URL';
+$_['text_setup_url_hint']  = 'Click to select';
+$_['setup_sections'] = array(
+	array(
+		'title' => 'Step 1 &mdash; Enter your PayPal Business email',
+		'intro' => 'Enter the email address of your PayPal <strong>Business</strong> account in the <strong>Email</strong> field above. The IPN handler compares it with the <code>receiver_email</code> sent by PayPal, so the two must match exactly or the payment will not be marked as completed.',
+	),
+	array(
+		'title' => 'Step 2 &mdash; Instant Payment Notification (IPN)',
+		'intro' => 'NivoCart sends the notification URL below to PayPal with every payment, so nothing needs to be registered. Make sure IPN is not switched off in your PayPal account (<em>Notifications &rarr; Instant payment notifications</em>) and that your server accepts POST requests from PayPal. Every notification is sent back to PayPal for verification before any order is changed.',
+		'url'   => true,
+	),
+	array(
+		'title' => 'Step 3 &mdash; Map the order statuses',
+		'intro' => 'Use the <strong>Order Status</strong> tab to choose what each PayPal payment status does to the order:',
+		'rows'  => array(
+			array('Completed', 'Payment received. The receiver email and the amount are checked against the order before it is accepted.'),
+			array('Pending / Processed', 'Payment is waiting for PayPal (for example an e-check or a manual review) or has been accepted but not yet completed.'),
+			array('Denied / Expired / Failed', 'The payment did not go through. The order is moved to the status you select so it can be reviewed.'),
+			array('Refunded', 'A refund was issued from the PayPal account.'),
+			array('Reversed / Canceled Reversal', 'A chargeback was raised by the buyer, or later resolved in your favour.'),
+			array('Voided', 'An authorization was voided before it was captured.'),
+		),
+	),
+	array(
+		'title' => 'Testing and troubleshooting',
+		'rows'  => array(
+			array('Sandbox Mode', 'Set Sandbox Mode to <strong>Yes</strong>, use a PayPal sandbox Business email (from developer.paypal.com) and pay with a sandbox buyer account. Set it back to <strong>No</strong> before going live.'),
+			array('Debug Mode', 'When enabled, IPN requests and responses are written to the system log. Check it first if an order stays at the default status after payment.'),
+			array('Common causes', 'IPN not verified by PayPal, a receiver email that differs from the Email field, or an amount that differs from the order total.'),
+		),
+	),
+);
