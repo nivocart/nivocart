@@ -4,9 +4,14 @@
 ---------------
 
 
-NivoCart v2.5.0
+NivoCart v2.X.X
 ---------------
 Release: TBA
+
+
+NivoCart v2.5.0
+---------------
+Release: 08/10/2026
 
 - Add new "images_cleanup" Tool to safely purge obsolete images.
 - Add Stripe Payments setup instructions for Admin user reference.
