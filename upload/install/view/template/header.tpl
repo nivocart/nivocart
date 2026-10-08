@@ -6,7 +6,7 @@
 <title>NivoCart - Installation</title>
 <base href="<?php echo $base; ?>" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/stylesheet.css" />
-<link rel="stylesheet" type="text/css" href="view/javascript/awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="view/stylesheet/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/animate-custom.min.css" />
 </head>
 <body>
