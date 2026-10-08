@@ -119,7 +119,7 @@
           </tr>
           <tr>
             <td><?php echo $entry_copyright; ?></td>
-            <td><?php if ($paws_copyright) { ?>
+            <td><?php if ($default_copyright) { ?>
               <input type="radio" name="default_copyright" value="1" id="copyright-on" class="radio" checked />
               <label for="copyright-on"><span><span></span></span><?php echo $text_yes; ?></label>
               <input type="radio" name="default_copyright" value="0" id="copyright-off" class="radio" />
