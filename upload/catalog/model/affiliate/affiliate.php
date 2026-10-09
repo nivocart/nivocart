@@ -9,7 +9,7 @@ class ModelAffiliateAffiliate extends Model {
 	 * Functions Add, Edit, Delete, Get
 	 */
 	public function addAffiliate(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', company = '" . $this->db->escape((string)$data['company']) . "', website = '" . $this->db->escape((string)$data['website']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape((string)$data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int)$data['country_id'] . "', zone_id = '" . (int)$data['zone_id'] . "', code = '" . $this->db->escape(uniqid()) . "', commission = '" . (float)$this->config->get('config_affiliate_commission') . "', tax = '" . $this->db->escape($data['tax']) . "', payment = '" . $this->db->escape($data['payment']) . "', cheque = '" . $this->db->escape($data['cheque']) . "', paypal = '" . $this->db->escape($data['paypal']) . "', bank_name = '" . $this->db->escape($data['bank_name']) . "', bank_branch_number = '" . $this->db->escape($data['bank_branch_number']) . "', bank_swift_code = '" . $this->db->escape($data['bank_swift_code']) . "', bank_account_name = '" . $this->db->escape($data['bank_account_name']) . "', bank_account_number = '" . $this->db->escape($data['bank_account_number']) . "', status = '1', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate` SET firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', salt = '', password = '" . $this->db->escape(passwordHash($data['password'])) . "', company = '" . $this->db->escape((string)$data['company']) . "', website = '" . $this->db->escape((string)$data['website']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape((string)$data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int)$data['country_id'] . "', zone_id = '" . (int)$data['zone_id'] . "', code = '" . $this->db->escape(uniqid()) . "', commission = '" . (float)$this->config->get('config_affiliate_commission') . "', tax = '" . $this->db->escape($data['tax']) . "', payment = '" . $this->db->escape($data['payment']) . "', cheque = '" . $this->db->escape($data['cheque']) . "', paypal = '" . $this->db->escape($data['paypal']) . "', bank_name = '" . $this->db->escape($data['bank_name']) . "', bank_branch_number = '" . $this->db->escape($data['bank_branch_number']) . "', bank_swift_code = '" . $this->db->escape($data['bank_swift_code']) . "', bank_account_name = '" . $this->db->escape($data['bank_account_name']) . "', bank_account_number = '" . $this->db->escape($data['bank_account_number']) . "', status = '1', date_added = NOW()");
 
 		$affiliate_id = $this->db->getLastId();
 
@@ -126,17 +126,18 @@ class ModelAffiliateAffiliate extends Model {
 	}
 
 	public function editPassword(string $email, string $password): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "affiliate` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "affiliate` SET salt = '', password = '" . $this->db->escape(passwordHash((string)$password)) . "' WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "'");
 	}
 
-	public function checkAffiliatePassword(int $affiliate_id, string $email, string$password) {
-		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') THEN 0 ELSE 1 END AS result FROM " . DB_PREFIX . "affiliate WHERE affiliate_id = '" . (int)$affiliate_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
+	public function checkAffiliatePassword(int $affiliate_id, string $email, string $password) {
+		$query = $this->db->query("SELECT password, salt FROM `" . DB_PREFIX . "affiliate` WHERE affiliate_id = '" . (int)$affiliate_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
 
-		if ($query->row['result']) {
-			return $query->row['result'];
-		} else {
+		// Returns false when the password matches, '1' when it does not
+		if ($query->num_rows && passwordVerify($password, (string)$query->row['password'], (string)$query->row['salt'])) {
 			return false;
 		}
+
+		return '1';
 	}
 
 	public function getAffiliate(int $affiliate_id) {

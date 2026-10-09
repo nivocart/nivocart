@@ -130,9 +130,14 @@ class Customer {
 	 * $login = $this->customer->login($email, $password);
 	 */
 	public function login(string $email, string $password): bool {
-		$customer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5((string)$password)) . "') AND status = '1' AND approved = '1'");
+		$customer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
 
-		if ($customer_query->num_rows) {
+		if ($customer_query->num_rows && passwordVerify((string)$password, (string)$customer_query->row['password'], (string)$customer_query->row['salt'])) {
+			// Upgrade a legacy hash (salted SHA1 or MD5) to bcrypt after a successful login
+			if (passwordNeedsRehash((string)$customer_query->row['password'])) {
+				$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '', password = '" . $this->db->escape(passwordHash((string)$password)) . "' WHERE customer_id = '" . (int)$customer_query->row['customer_id'] . "'");
+			}
+
 			return $this->completeLogin($customer_query);
 		}
 

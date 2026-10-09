@@ -255,15 +255,13 @@ function setupDb(array $options): void {
         }
 
         // Admin user
-        $salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8');
-
         $db->query("DELETE FROM `" . $options['db_prefix'] . "user` WHERE user_id = '1'");
         $db->query("INSERT INTO `" . $options['db_prefix'] . "user` SET
             user_id = '1',
             user_group_id = '1',
             username = '" . $db->escape($options['username']) . "',
-            salt = '" . $db->escape($salt) . "',
-            password = '" . $db->escape(sha1($salt . sha1($salt . sha1($options['password'])))) . "',
+            salt = '',
+            password = '" . $db->escape(passwordHash((string)$options['password'])) . "',
             status = '1',
             email = '" . $db->escape($options['email']) . "',
             date_added = NOW()"

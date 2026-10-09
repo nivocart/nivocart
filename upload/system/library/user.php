@@ -111,9 +111,14 @@ class User {
 		$url = $this->request->server['REQUEST_URI'];
 		$ip = $this->request->server['REMOTE_ADDR'];
 
-		$user_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE username = '" . $this->db->escape((string)$username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5((string)$password)) . "') AND status = '1'");
+		$user_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE username = '" . $this->db->escape((string)$username) . "' AND status = '1'");
 
-		if ($user_query->num_rows) {
+		if ($user_query->num_rows && passwordVerify((string)$password, (string)$user_query->row['password'], (string)$user_query->row['salt'])) {
+			// Upgrade a legacy hash (salted SHA1 or MD5) to bcrypt after a successful login
+			if (passwordNeedsRehash((string)$user_query->row['password'])) {
+				$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '', password = '" . $this->db->escape(passwordHash((string)$password)) . "' WHERE user_id = '" . (int)$user_query->row['user_id'] . "'");
+			}
+
 			// New session ID on login (session fixation protection)
 			$this->session->regenerate();
 

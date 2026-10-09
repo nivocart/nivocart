@@ -61,7 +61,7 @@ class ModelInstall extends Model {
 			}
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "user` WHERE user_id = '1'");
-			$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape((string)$data['username']) . "', salt = '" . $db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '1', email = '" . $db->escape((string)$data['email']) . "', date_added = NOW()");
+			$db->query("INSERT INTO `" . $data['db_prefix'] . "user` SET user_id = '1', user_group_id = '1', username = '" . $db->escape((string)$data['username']) . "', salt = '', password = '" . $db->escape(passwordHash((string)$data['password'])) . "', status = '1', email = '" . $db->escape((string)$data['email']) . "', date_added = NOW()");
 
 			$db->query("DELETE FROM `" . $data['db_prefix'] . "setting` WHERE `key` = 'config_email'");
 			$db->query("INSERT INTO `" . $data['db_prefix'] . "setting` SET `group` = 'config', `key` = 'config_email', `value` = '" . $db->escape($data['email']) . "'");

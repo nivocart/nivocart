@@ -106,9 +106,14 @@ class Affiliate {
 	 * $login = $this->affiliate->login($username, $password);
 	 */
 	public function login(string $email, string $password): bool {
-		$affiliate_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "'))))) OR password = '" . $this->db->escape(md5((string)$password)) . "') AND status = '1' AND approved = '1'");
+		$affiliate_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate` WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower((string)$email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
 
-		if ($affiliate_query->num_rows) {
+		if ($affiliate_query->num_rows && passwordVerify((string)$password, (string)$affiliate_query->row['password'], (string)$affiliate_query->row['salt'])) {
+			// Upgrade a legacy hash (salted SHA1 or MD5) to bcrypt after a successful login
+			if (passwordNeedsRehash((string)$affiliate_query->row['password'])) {
+				$this->db->query("UPDATE `" . DB_PREFIX . "affiliate` SET salt = '', password = '" . $this->db->escape(passwordHash((string)$password)) . "' WHERE affiliate_id = '" . (int)$affiliate_query->row['affiliate_id'] . "'");
+			}
+
 			// Create affiliate login cookie if HTTPS
 			if ($this->config->get('config_secure')) {
 				if ($this->request->isSecure()) {

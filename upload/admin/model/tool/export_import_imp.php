@@ -299,13 +299,15 @@ class ModelToolExportImportImp extends ModelToolExportImportBase {
 			$salt = trim($this->getCell($data, $i, $j++));
 
 			if ($password === '') {
-				if ($salt === '') {
-					$salt = substr(md5(uniqid(rand(), true)), 0, 9);
-				}
-				$password = sha1($salt . sha1($salt . sha1('nivocart')));
-			} else {
-				$password = md5('nivocart');
+				// No password supplied: store a random, unusable hash (the customer uses "Forgotten Password")
+				$salt = '';
+				$password = passwordHash(bin2hex(random_bytes(16)));
+			} elseif (!passwordIsHash($password)) {
+				// A plain text password was supplied: hash it
+				$salt = '';
+				$password = passwordHash($password);
 			}
+			// Otherwise the supplied value is an exported hash (and its salt): keep both as they are
 
 			$cart = $this->getCell($data, $i, $j++);
 			$wishlist = $this->getCell($data, $i, $j++);

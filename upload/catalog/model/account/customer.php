@@ -19,7 +19,7 @@ class ModelAccountCustomer extends Model {
 
 		$customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET store_id = '" . (int)$this->config->get('config_store_id') . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : 0) . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 0) . "', customer_group_id = '" . (int)$customer_group_id . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int)!$customer_group_info['approval'] . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET store_id = '" . (int)$this->config->get('config_store_id') . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : 0) . "', salt = '', password = '" . $this->db->escape(passwordHash($data['password'])) . "', newsletter = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 0) . "', customer_group_id = '" . (int)$customer_group_id . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int)!$customer_group_info['approval'] . "', date_added = NOW()");
 
 		$customer_id = $this->db->getLastId();
 
@@ -237,7 +237,7 @@ class ModelAccountCustomer extends Model {
 			$password .= chr(rand(97, 122));
 		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', gender = '0', date_of_birth = '0', newsletter = '0' WHERE customer_id = '" . (int)$customer_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '', password = '" . $this->db->escape(passwordHash($password)) . "', gender = '0', date_of_birth = '0', newsletter = '0' WHERE customer_id = '" . (int)$customer_id . "'");
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_ip` WHERE customer_id = '" . (int)$customer_id . "'");
 	}
@@ -250,7 +250,7 @@ class ModelAccountCustomer extends Model {
 	}
 
 	public function editPassword(string $email, string $password): void {
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '', password = '" . $this->db->escape(passwordHash($password)) . "' WHERE LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "'");
 	}
 
 	public function editNewsletter(int $newsletter): void {
@@ -481,13 +481,14 @@ class ModelAccountCustomer extends Model {
 
 	// Checks
 	public function checkCustomerPassword(string $password, int $customer_id, string $email) {
-		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') THEN 0 ELSE 1 END AS `result` FROM `" . DB_PREFIX . "customer` WHERE customer_id = '" . (int)$customer_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
+		$query = $this->db->query("SELECT password, salt FROM `" . DB_PREFIX . "customer` WHERE customer_id = '" . (int)$customer_id . "' AND LOWER(email) = '" . $this->db->escape(mb_strtolower($email, 'UTF-8')) . "' AND status = '1' AND approved = '1'");
 
-		if ($query->row['result']) {
-			return $query->row['result'];
-		} else {
+		// Returns false when the password matches, '1' when it does not
+		if ($query->num_rows && passwordVerify($password, (string)$query->row['password'], (string)$query->row['salt'])) {
 			return false;
 		}
+
+		return '1';
 	}
 
 	public function isBanIp($ip) {

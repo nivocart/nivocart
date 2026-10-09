@@ -13,7 +13,7 @@ class ModelUserUser extends Model {
 	 * Functions Add, Edit, Delete, Get, Check
 	 */
 	public function addUser(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$data['password'])))) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', salt = '', password = '" . $this->db->escape(passwordHash((string)$data['password'])) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
 
 		$user_id = $this->db->getLastId();
 
@@ -29,7 +29,7 @@ class ModelUserUser extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape((string)$data['username']) . "', firstname = '" . $this->db->escape((string)$data['firstname']) . "', lastname = '" . $this->db->escape((string)$data['lastname']) . "', email = '" . $this->db->escape((string)$data['email']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
 
 		if (isset($data['password'])) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '', password = '" . $this->db->escape(passwordHash((string)$data['password'])) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 
 		if (isset($data['image'])) {
@@ -38,7 +38,7 @@ class ModelUserUser extends Model {
 	}
 
 	public function editPassword(int $user_id, string $password) {
-		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1((string)$password)))) . "', `code` = '', `code_expires` = NULL WHERE user_id = '" . (int)$user_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '', password = '" . $this->db->escape(passwordHash((string)$password)) . "', `code` = '', `code_expires` = NULL WHERE user_id = '" . (int)$user_id . "'");
 	}
 
 	public function editCode(string $email, string $code): void {
@@ -152,13 +152,14 @@ class ModelUserUser extends Model {
 
 	// Checks
 	public function checkUserPassword(string $password, int $user_id, string $username) {
-		$query = $this->db->query("SELECT CASE WHEN (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape((string)$password) . "')))))) THEN 0 ELSE 1 END AS `result` FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "' AND username = '" . $this->db->escape((string)$username) . "' AND status = '1'");
+		$query = $this->db->query("SELECT password, salt FROM `" . DB_PREFIX . "user` WHERE user_id = '" . (int)$user_id . "' AND username = '" . $this->db->escape((string)$username) . "' AND status = '1'");
 
-		if ($query->row['result']) {
-			return $query->row['result'];
-		} else {
+		// Returns false when the password matches, '1' when it does not
+		if ($query->num_rows && passwordVerify($password, (string)$query->row['password'], (string)$query->row['salt'])) {
 			return false;
 		}
+
+		return '1';
 	}
 
 	public function checkTopAdministrator(): bool {

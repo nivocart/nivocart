@@ -9,7 +9,7 @@ class ModelSaleCustomer extends Model {
 	 * Functions Add, Edit, Delete, Get
 	 */
 	public function addCustomer(array $data = []): void {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : '0000-00-00') . "', newsletter = '" . (int)$data['newsletter'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int)$data['status'] . "', approved = '" . (int)$data['approved'] . "', date_added = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : '0000-00-00') . "', newsletter = '" . (int)$data['newsletter'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', salt = '', password = '" . $this->db->escape(passwordHash($data['password'])) . "', status = '" . (int)$data['status'] . "', approved = '" . (int)$data['approved'] . "', date_added = NOW()");
 
 		$customer_id = $this->db->getLastId();
 
@@ -33,7 +33,7 @@ class ModelSaleCustomer extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . (isset($data['gender']) ? (int)$data['gender'] : 0) . "', date_of_birth = '" . (isset($data['date_of_birth']) ? $data['date_of_birth'] : '0000-00-00') . "', newsletter = '" . (int)$data['newsletter'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', status = '" . (int)$data['status'] . "', approved = '" . (int)$data['approved'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
 
 		if ($data['password']) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE customer_id = '" . (int)$customer_id . "'");
+			$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '', password = '" . $this->db->escape(passwordHash($data['password'])) . "' WHERE customer_id = '" . (int)$customer_id . "'");
 		}
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "address` WHERE customer_id = '" . (int)$customer_id . "'");
@@ -78,7 +78,7 @@ class ModelSaleCustomer extends Model {
 			$password .= chr(rand(97, 122));
 		}
 
-		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '" . $this->db->escape($salt = mb_substr(md5(uniqid(rand(), true)), 0, 9, 'UTF-8')) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', gender = '0', date_of_birth = '0', newsletter = '0' WHERE customer_id = '" . (int)$customer_id . "'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET salt = '', password = '" . $this->db->escape(passwordHash($password)) . "', gender = '0', date_of_birth = '0', newsletter = '0' WHERE customer_id = '" . (int)$customer_id . "'");
 
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_ip` WHERE customer_id = '" . (int)$customer_id . "'");
 	}
