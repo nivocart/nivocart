@@ -182,12 +182,12 @@ class ModelCheckoutPaymentWidget extends Model {
 	// PP Express
 	// =========================================================================
 
-	public function getWidgetDataPpExpress(array $cart, float $total): array {
+	private function getWidgetDataPpExpress(float $total, string $currency_code): array {
 		$sandbox = (bool)$this->config->get('pp_express_sandbox');
 
 		return [
 			'client_id'         => $sandbox ? $this->config->get('pp_express_sandbox_client_id') : $this->config->get('pp_express_client_id'),
-			'currency'          => $this->config->get('pp_express_currency') ?: $this->config->get('config_currency'),
+			'currency'          => $this->config->get('pp_express_currency') ?: $currency_code,
 			'intent'            => strtolower($this->config->get('pp_express_transaction_mode') ?: 'capture'),
 			'pay_later'         => (bool)$this->config->get('pp_express_pay_later'),
 			'sandbox'           => $sandbox,
