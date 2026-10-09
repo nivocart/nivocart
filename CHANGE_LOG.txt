@@ -9,6 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - All old MD5+SHA1 passwords have now been replaced with new password_hash.
+- Fix minor issue where product variants are showing when they shouldn't do.
 - Fix minor language definition error in Default theme Admin template.
 
 

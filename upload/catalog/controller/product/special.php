@@ -88,6 +88,7 @@ class ControllerProductSpecial extends Controller {
 			$this->data['text_display'] = $this->language->get('text_display');
 			$this->data['text_list'] = $this->language->get('text_list');
 			$this->data['text_grid'] = $this->language->get('text_grid');
+			$this->data['text_variants'] = $this->language->get('text_variants');
 			$this->data['text_sort'] = $this->language->get('text_sort');
 			$this->data['text_limit'] = $this->language->get('text_limit');
 			$this->data['text_offer'] = $this->language->get('text_offer');
@@ -244,6 +245,7 @@ class ControllerProductSpecial extends Controller {
 					'price_option'    => $this->model_catalog_product->hasOptionPriceIncrease($result_product_id),
 					'special'         => $special,
 					'tax'             => $tax,
+					'variant_count'   => $this->model_catalog_product->getVariantCount($result_product_id),
 					'rating'          => $rating,
 					'reviews'         => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
 					'mini_label'      => $this->data['show_mini_label'] ? $this->model_catalog_product->getMiniLabel($result_product_id) : '',

@@ -128,7 +128,7 @@ class ModelCatalogProduct extends Model {
 
 		$variant_group = $this->variantJoinAndGroup();
 
-		$sql = "SELECT MIN(p.product_id) AS product_id, COUNT(p.product_id) AS variant_count,";
+		$sql = "SELECT MIN(p.product_id) AS product_id, COUNT(DISTINCT p.product_id) AS variant_count,";
 		$sql .= " (SELECT AVG(rating) AS `total` FROM `" . DB_PREFIX . "review` r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS `rating`,";
 		$sql .= " (SELECT price FROM `" . DB_PREFIX . "product_discount` pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW()))";
 		$sql .= " ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 0,1) AS `discount`,";
@@ -363,7 +363,7 @@ class ModelCatalogProduct extends Model {
 
 			$variant_group = $this->variantJoinAndGroup();
 
-			$query = $this->db->query("SELECT MIN(p.product_id) AS product_id, COUNT(p.product_id) AS variant_count FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)" . $variant_group['join'] . " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY " . $variant_group['group'] . " ORDER BY MAX(p.date_added) DESC LIMIT 0," . (int)$limit);
+			$query = $this->db->query("SELECT MIN(p.product_id) AS product_id, COUNT(DISTINCT p.product_id) AS variant_count FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)" . $variant_group['join'] . " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY " . $variant_group['group'] . " ORDER BY MAX(p.date_added) DESC LIMIT 0," . (int)$limit);
 
 			foreach ($query->rows as $result) {
 				$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
@@ -393,7 +393,7 @@ class ModelCatalogProduct extends Model {
 
 			$variant_group = $this->variantJoinAndGroup();
 
-			$query = $this->db->query("SELECT MIN(p.product_id) AS product_id, COUNT(p.product_id) AS variant_count FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)" . $variant_group['join'] . " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY " . $variant_group['group'] . " ORDER BY MAX(p.viewed) DESC, MAX(p.date_added) DESC LIMIT 0," . (int)$limit);
+			$query = $this->db->query("SELECT MIN(p.product_id) AS product_id, COUNT(DISTINCT p.product_id) AS variant_count FROM `" . DB_PREFIX . "product` p LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)" . $variant_group['join'] . " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY " . $variant_group['group'] . " ORDER BY MAX(p.viewed) DESC, MAX(p.date_added) DESC LIMIT 0," . (int)$limit);
 
 			foreach ($query->rows as $result) {
 				$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
