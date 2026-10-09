@@ -173,6 +173,31 @@
           <div id="sync-progress-label" class="cj-progress-label"></div>
         </div>
       </div>
+      <div class="overview">
+        <div class="dashboard-heading"><?php echo $text_products_maintenance; ?></div>
+        <div class="dashboard-content">
+          <div id="purge-result" hidden></div>
+          <div id="purge-dup-result" hidden></div>
+          <table class="form">
+            <tr>
+              <td><?php echo $text_purge_confirm; ?></td>
+              <td><a id="button-purge-stale" class="button-form ripple"><?php echo $button_purge_stale; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $text_purge_dup_confirm; ?></td>
+              <td><a id="button-purge-dup" class="button-form ripple"><?php echo $button_purge_duplicates; ?></a></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="statistic">
+        <div class="dashboard-heading"><?php echo $text_note; ?></div>
+        <div class="dashboard-content">
+          <div class="tooltip"><?php echo $text_cj_payment_note; ?></div>
+          <div class="tooltip"><?php echo $text_cj_currency_note; ?></div>
+          <a href="https://cjdropshipping.com/home" target="_blank" class="button-form ripple"><?php echo $button_cj_dashboard; ?></a>
+        </div>
+      </div>
       <h2><?php echo $tab_orders; ?></h2>
       <div class="cj-toolbar">
         <select id="orders-channel-select" class="cj-narrow">
@@ -239,23 +264,6 @@
         <div class="links"><a href="#" id="products-prev"><?php echo $text_prev; ?></a> <a href="#" id="products-next"><?php echo $text_next; ?></a></div>
         <div class="results" id="products-page-info"></div>
       </div>
-      <h2><?php echo $text_products_maintenance; ?></h2>
-      <div id="purge-result" hidden></div>
-      <div id="purge-dup-result" hidden></div>
-      <table class="form">
-        <tr>
-          <td><?php echo $text_purge_confirm; ?></td>
-          <td><a id="button-purge-stale" class="button-form ripple"><?php echo $button_purge_stale; ?></a></td>
-        </tr>
-        <tr>
-          <td><?php echo $text_purge_dup_confirm; ?></td>
-          <td><a id="button-purge-dup" class="button-form ripple"><?php echo $button_purge_duplicates; ?></a></td>
-        </tr>
-      </table>
-      <h2><?php echo $text_note; ?></h2>
-      <div class="tooltip"><?php echo $text_cj_payment_note; ?></div>
-      <div class="tooltip"><?php echo $text_cj_currency_note; ?></div>
-      <a href="https://cjdropshipping.com/home" target="_blank" class="button-form ripple"><?php echo $button_cj_dashboard; ?></a>
       <h2><?php echo $tab_about; ?></h2>
       <table class="form">
         <tr>
