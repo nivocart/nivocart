@@ -4,9 +4,14 @@
 ---------------
 
 
-NivoCart v2.5.1
+NivoCart v2.X.X
 ---------------
 Release: TBA
+
+
+NivoCart v2.5.1
+---------------
+Release: 09/10/2026
 
 - All old MD5+SHA1 passwords have now been replaced with new password_hash.
 - Fix issue where product variants are showing when they shouldn't do.
