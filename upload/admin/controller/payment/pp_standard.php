@@ -255,7 +255,7 @@ class ControllerPaymentPPStandard extends Controller {
 
 			$email_valid = $this->model_tool_email->verifyMail($this->request->post['pp_standard_email']);
 
-			if (!preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['pp_standard_email']) || !$email_valid) {
+			if (!$email_valid) {
 				$this->error['email'] = $this->language->get('error_email');
 			}
 

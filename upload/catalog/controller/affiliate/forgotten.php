@@ -218,7 +218,7 @@ class ControllerAffiliateForgotten extends Controller {
 	protected function validateEmail() {
 		$email = $this->request->post['email'] ?? '';
 
-		if ((mb_strlen($email, 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
+		if (!emailIsValid($email)) {
 			$this->error['warning'] = $this->language->get('error_email');
 			return false;
 		}
@@ -237,14 +237,6 @@ class ControllerAffiliateForgotten extends Controller {
 			$this->error['skip_send'] = true;
 			// anti-enumeration: show success anyway
 			return true;
-		}
-
-		// MX / format check.
-		$this->load->model('tool/email');
-
-		if (!$this->model_tool_email->verifyMail($email)) {
-			$this->error['warning'] = $this->language->get('error_email');
-			return false;
 		}
 
 		return true;

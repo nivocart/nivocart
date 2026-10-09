@@ -423,7 +423,7 @@ class ControllerAccountRegister extends Controller {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if (!isset($this->request->post['email']) || (mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if (!isset($this->request->post['email']) || !emailIsValid($this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 

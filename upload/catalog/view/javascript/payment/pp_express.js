@@ -12,6 +12,7 @@
 
 	var WIDGET_ID = 'payment-widget-pp_express';
 	var SDK_ID = 'paypal-js-sdk';
+	var errorShown = false;
 
 	// ── Retrieve widget data passed from PHP ──────────────────────────────────
 	function cfg() {
@@ -85,6 +86,7 @@
 
 			// ── Create order server-side ──────────────────────────────────────
 			createOrder: function () {
+				clearError();
 				return fetch(data.url_create_order, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -142,7 +144,10 @@
 			// ── SDK error ─────────────────────────────────────────────────────
 			onError: function (err) {
 				showLoading(false);
-				showError('PayPal encountered an error. Please try again.');
+				// Keep a more specific message (e.g. from createOrder) if one is already shown
+				if (!errorShown) {
+					showError('PayPal encountered an error. Please try again.');
+				}
 				console.error('PayPal SDK error:', err);
 			},
 
@@ -163,11 +168,13 @@
 		}
 		el.textContent = msg;
 		el.style.display = 'block';
+		errorShown = true;
 	}
 
 	function clearError() {
 		var el = document.getElementById('pp-express-error');
 		if (el) el.style.display = 'none';
+		errorShown = false;
 	}
 
 	function showLoading(show) {

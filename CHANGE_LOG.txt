@@ -9,6 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - Fix issues with PayPal Express integration in both Admin and Catalog.
+- Updated Email validation and filtering across all Admin and Catalog files.
 
 
 NivoCart v2.5.1

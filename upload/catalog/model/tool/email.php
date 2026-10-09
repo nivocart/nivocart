@@ -6,23 +6,23 @@
  */
 class ModelToolEmail extends Model {
 	/**
-	 * Check if email string is valid
+	 * Check that an email address has a valid format and that its domain can receive mail.
+	 * On a local server the DNS lookup is skipped (format is still checked).
+	 *
+	 * @param string $email
 	 *
 	 * @return bool
 	 */
 	public function verifyMail($email): bool {
-		$valid = false;
-		if ($this->url->isLocal()) {
-			$valid = true;
-		} else {
-			if ($email && filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
-				$domain = substr(strrchr($email, '@'), 1);
-				if (checkdnsrr($domain, 'MX')) {
-					$valid = true;
-				}
-			}
+		if (!emailIsValid($email)) {
+			return false;
 		}
-		return $valid;
+
+		if ($this->url->isLocal()) {
+			return true;
+		}
+
+		return emailDomainCanReceive($email);
 	}
 
 	/**

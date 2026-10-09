@@ -1117,11 +1117,11 @@ class ControllerSettingStore extends Controller {
 			$this->error['address'] = $this->language->get('error_address');
 		}
 
-		if ((mb_strlen($this->request->post['config_email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email'])) {
+		if (!emailIsValid($this->request->post['config_email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
-		if ((mb_strlen($this->request->post['config_email_noreply'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['config_email_noreply'])) {
+		if (!emailIsValid($this->request->post['config_email_noreply'])) {
 			$this->error['email_noreply'] = $this->language->get('error_email_noreply');
 		}
 

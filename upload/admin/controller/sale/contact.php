@@ -173,7 +173,7 @@ class ControllerSaleContact extends Controller {
 			$message .= '</html>' . "\n";
 
 			foreach ($emails as $email) {
-				if (preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
+				if (emailIsValid($email)) {
 					$mail = new Mail();
 					$mail->setTo($email);
 					$mail->setFrom($this->config->get('config_email'));

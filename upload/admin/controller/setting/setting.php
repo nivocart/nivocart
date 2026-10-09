@@ -870,7 +870,7 @@ class ControllerSettingSetting extends Controller {
 	private function validateEmail(string $post_key, string $error_key, int $max_length): void {
 		$val = $this->request->post[$post_key] ?? '';
 
-		if (mb_strlen($val, 'UTF-8') > $max_length || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $val)) {
+		if (!emailIsValid($val, $max_length)) {
 			$this->error[$this->errorKey($error_key)] = $this->language->get($error_key);
 		}
 	}

@@ -782,7 +782,7 @@ class ControllerCheckoutCheckout extends Controller {
 		}
 
 		if (isset($this->request->post['email'])) {
-			if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+			if (!emailIsValid($this->request->post['email'])) {
 				$this->error['email'] = $this->language->get('error_email');
 			}
 

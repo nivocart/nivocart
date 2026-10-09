@@ -32,28 +32,17 @@ class ControllerPaymentPpExpress extends Controller {
 		$this->language->load('payment/pp_express');
 
 		$this->load->model('payment/pp_express');
-		$this->load->model('checkout/order');
 
-		// order_id must already exist — addOrder() runs in checkout_confirm
-		// before the gateway fires, but for pp_express it is created here
-		// because we are interactive. We read cart data directly from session.
-		$order_id = (int)($this->session->data['order_id'] ?? 0);
-
-		if (!$order_id) {
+		// The NivoCart order does not exist yet in the one page checkout: it is
+		// created by checkout_confirm AFTER the customer has paid. Everything here
+		// is therefore built from the cart and the session totals only.
+		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 			$json['error'] = $this->language->get('error_session');
 			$this->jsonOutput($json);
 			return;
 		}
 
-		$order_info = $this->model_checkout_order->getOrder($order_id);
-
-		if (!$order_info) {
-			$json['error'] = $this->language->get('error_session');
-			$this->jsonOutput($json);
-			return;
-		}
-
-		$currency_code = $this->config->get('pp_express_currency') ?: $order_info['currency_code'];
+		$currency_code = $this->config->get('pp_express_currency') ?: $this->config->get('config_currency');
 		$intent = strtoupper($this->config->get('pp_express_transaction_mode') ?: 'CAPTURE');
 
 		// ── Build purchase_units items from cart ──────────────────────────────
@@ -108,45 +97,34 @@ class ControllerPaymentPpExpress extends Controller {
 		}
 
 		// ── Totals: shipping + tax + discounts ────────────────────────────────
-		// We pass item_total + handling (discounts, fees) as breakdown.
-		// Tax is included in NivoCart prices (tax-inclusive), so tax_total = 0.
-		$order_total = round((float)$this->currency->convert($order_info['total'], $this->config->get('config_currency'), $currency_code), 2, PHP_ROUND_HALF_UP);
+		// We pass item_total + handling (tax, fees) as breakdown.
+		// PayPal rejects a tax_total that does not match per-item tax, so tax and
+		// any rounding difference are carried in handling instead.
+		$cart_totals = $this->getCartTotals();
+
+		$order_total = round((float)$this->currency->convert($cart_totals['total'], $this->config->get('config_currency'), $currency_code), 2, PHP_ROUND_HALF_UP);
 		$item_total = round($item_total, 2, PHP_ROUND_HALF_UP);
 
 		$shipping_total = 0.00;
 		$discount_total = 0.00;
 
-		if (!empty($order_info['shipping_method'])) {
-			// Extract shipping from order totals
-			foreach ($order_info['totals'] ?? [] as $total_row) {
-				if ($total_row['code'] === 'shipping') {
-					$shipping_total = round((float)$this->currency->convert($total_row['value'], $this->config->get('config_currency'), $currency_code), 2, PHP_ROUND_HALF_UP);
-				}
-				if (in_array($total_row['code'], ['coupon', 'voucher', 'reward'])) {
-					$discount_total += round((float)abs($this->currency->convert($total_row['value'], $this->config->get('config_currency'), $currency_code)), 2, PHP_ROUND_HALF_UP);
-				}
+		foreach ($cart_totals['totals'] as $total_row) {
+			if ($total_row['code'] === 'shipping') {
+				$shipping_total = round((float)$this->currency->convert($total_row['value'], $this->config->get('config_currency'), $currency_code), 2, PHP_ROUND_HALF_UP);
+			}
+
+			if (in_array($total_row['code'], ['coupon', 'voucher', 'reward'])) {
+				$discount_total += round((float)abs($this->currency->convert($total_row['value'], $this->config->get('config_currency'), $currency_code)), 2, PHP_ROUND_HALF_UP);
 			}
 		}
 
 		// handling = order_total - item_total - shipping + discount
-		// Catches any rounding or fee differences
+		// A negative difference cannot be sent as handling, so it becomes discount.
 		$handling = round($order_total - $item_total - $shipping_total + $discount_total, 2, PHP_ROUND_HALF_UP);
 
-		// ── Shipping address ──────────────────────────────────────────────────
-		$shipping_address = null;
-
-		if ($this->cart->hasShipping() && !empty($order_info['shipping_address_1'])) {
-			$shipping_address = [
-				'name'    => ['full_name' => trim($order_info['shipping_firstname'] . ' ' . $order_info['shipping_lastname'])],
-				'address' => [
-					'address_line_1'  => $order_info['shipping_address_1'],
-					'address_line_2'  => $order_info['shipping_address_2'] ?: '',
-					'admin_area_2'    => $order_info['shipping_city'],
-					'admin_area_1'    => $order_info['shipping_zone'],
-					'postal_code'     => $order_info['shipping_postcode'],
-					'country_code'    => $order_info['shipping_iso_code_2'],
-				],
-			];
+		if ($handling < 0) {
+			$discount_total = round($discount_total + abs($handling), 2, PHP_ROUND_HALF_UP);
+			$handling = 0.00;
 		}
 
 		// ── Assemble purchase_unit ────────────────────────────────────────────
@@ -161,7 +139,7 @@ class ControllerPaymentPpExpress extends Controller {
 			],
 			'tax_total' => [
 				'currency_code' => $currency_code,
-				'value'         => '0.00', // tax-inclusive pricing
+				'value'         => '0.00',
 			],
 		];
 
@@ -172,16 +150,15 @@ class ControllerPaymentPpExpress extends Controller {
 			];
 		}
 
-		if ($handling != 0) {
+		if ($handling > 0) {
 			$breakdown['handling'] = [
 				'currency_code' => $currency_code,
-				'value'         => number_format(abs($handling), 2, '.', ''),
+				'value'         => number_format($handling, 2, '.', ''),
 			];
 		}
 
 		$purchase_unit = [
-			'reference_id' => (string)$order_id,
-			'invoice_id'   => $order_info['invoice_prefix'] . $order_id,
+			'reference_id' => 'default',
 			'amount'       => [
 				'currency_code' => $currency_code,
 				'value'         => number_format($order_total, 2, '.', ''),
@@ -189,10 +166,6 @@ class ControllerPaymentPpExpress extends Controller {
 			],
 			'items' => $items,
 		];
-
-		if ($shipping_address) {
-			$purchase_unit['shipping'] = ['address' => $shipping_address['address'], 'name' => $shipping_address['name']];
-		}
 
 		// ── Full payload ──────────────────────────────────────────────────────
 		$payload = [
@@ -205,6 +178,7 @@ class ControllerPaymentPpExpress extends Controller {
 						'brand_name'                => $this->config->get('config_name'),
 						'locale'                    => 'en-GB',
 						'user_action'               => 'PAY_NOW',
+						'shipping_preference'       => $this->cart->hasShipping() ? 'GET_FROM_FILE' : 'NO_SHIPPING',
 					],
 				],
 			],
@@ -213,13 +187,14 @@ class ControllerPaymentPpExpress extends Controller {
 		$response = $this->model_payment_pp_express->createPayPalOrder($payload);
 
 		if (!$response || empty($response['id'])) {
-			$json['error'] = $this->language->get('error_connection');
+			$json['error'] = $this->extractApiError(is_array($response) ? $response : []);
 			$this->jsonOutput($json);
 			return;
 		}
 
-		// Store pp_order_id in session for checkout_confirm verification
+		// Remember the PayPal order for captureOrder and checkout_confirm
 		$this->session->data['pp_express_order_id'] = $response['id'];
+		unset($this->session->data['pp_express_capture']);
 
 		$json['id'] = $response['id'];
 
@@ -229,8 +204,9 @@ class ControllerPaymentPpExpress extends Controller {
 	// -------------------------------------------------------------------------
 	// Capture Order
 	// Called by JS SDK onApprove() callback after customer approves in pop-up.
-	// Captures payment server-side and saves to DB.
-	// checkout_confirm then calls _confirmInteractivePayment to finalize.
+	// Captures (or authorizes) the payment server-side and holds the result in
+	// the session. checkout_confirm saves it to the database once the NivoCart
+	// order exists, then finalizes the order.
 	// -------------------------------------------------------------------------
 
 	public function captureOrder(): void {
@@ -239,11 +215,19 @@ class ControllerPaymentPpExpress extends Controller {
 		$this->language->load('payment/pp_express');
 		$this->load->model('payment/pp_express');
 
-		$pp_order_id = $this->request->post['pp_order_id'] ?? $this->session->data['pp_express_order_id'] ?? '';
-		$order_id = (int)($this->session->data['order_id'] ?? 0);
+		$pp_order_id = $this->session->data['pp_express_order_id'] ?? '';
+		$posted_id = $this->request->post['pp_order_id'] ?? '';
 
-		if (!$pp_order_id || !$order_id) {
+		if (!$pp_order_id || ($posted_id !== '' && $posted_id !== $pp_order_id)) {
 			$json['error'] = $this->language->get('error_session');
+			$this->jsonOutput($json);
+			return;
+		}
+
+		// Already captured for this PayPal order (e.g. double click): do not capture twice
+		if (!empty($this->session->data['pp_express_capture']['pp_order_id']) && $this->session->data['pp_express_capture']['pp_order_id'] === $pp_order_id) {
+			$json['success'] = true;
+			$json['status'] = $this->session->data['pp_express_capture']['status'];
 			$this->jsonOutput($json);
 			return;
 		}
@@ -257,7 +241,7 @@ class ControllerPaymentPpExpress extends Controller {
 		}
 
 		if (!$response || empty($response['status'])) {
-			$json['error'] = $this->language->get('error_connection');
+			$json['error'] = $this->extractApiError(is_array($response) ? $response : []);
 			$this->jsonOutput($json);
 			return;
 		}
@@ -281,31 +265,22 @@ class ControllerPaymentPpExpress extends Controller {
 			$status = $capture['status'] ?? $response['status'];
 		}
 
-		// ── Save to DB ────────────────────────────────────────────────────────
-		$paypal_order_id = $this->model_payment_pp_express->saveOrder([
-			'order_id'      => $order_id,
+		if (!$capture_id || !in_array($status, ['COMPLETED', 'PENDING', 'APPROVED', 'CREATED'], true)) {
+			$json['error'] = $this->language->get('error_general');
+			$this->jsonOutput($json);
+			return;
+		}
+
+		// Hold in session — checkout_confirm writes it to the DB against the real order_id
+		$this->session->data['pp_express_capture'] = [
 			'pp_order_id'   => $pp_order_id,
 			'intent'        => $intent,
 			'status'        => $status,
 			'capture_id'    => $capture_id,
+			'amount'        => $amount,
 			'currency_code' => $currency_code,
-			'total'         => $amount,
-		]);
-
-		$this->model_payment_pp_express->saveTransaction([
-			'paypal_order_id'  => $paypal_order_id,
-			'pp_order_id'      => $pp_order_id,
-			'capture_id'       => $capture_id,
-			'transaction_type' => $intent,
-			'status'           => $status,
-			'amount'           => $amount,
-			'currency_code'    => $currency_code,
-			'note'             => 'Initial ' . strtolower($intent),
-			'raw_response'     => json_encode($response),
-		]);
-
-		// Store session key for checkout_confirm verification
-		$this->session->data['pp_express_order_id'] = $pp_order_id;
+			'raw_response'  => json_encode($response),
+		];
 
 		$json['success'] = true;
 		$json['status'] = $status;
@@ -321,7 +296,7 @@ class ControllerPaymentPpExpress extends Controller {
 	public function cancelOrder(): void {
 		$this->language->load('payment/pp_express');
 
-		unset($this->session->data['pp_express_order_id']);
+		unset($this->session->data['pp_express_order_id'], $this->session->data['pp_express_capture']);
 
 		$json['success'] = false;
 		$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
@@ -389,6 +364,57 @@ class ControllerPaymentPpExpress extends Controller {
 	// -------------------------------------------------------------------------
 	// Private helpers
 	// -------------------------------------------------------------------------
+
+	/**
+	 * Cart totals through the enabled total extensions — same calculation as
+	 * checkout_confirm, needed here because no order exists yet.
+	 *
+	 * @return array{total: float, totals: array}
+	 */
+	private function getCartTotals(): array {
+		$total_data = [];
+		$total = 0.0;
+		$taxes = $this->cart->getTaxes();
+
+		$this->load->model('setting/extension');
+
+		$results = $this->model_setting_extension->getExtensions('total');
+
+		usort($results, fn($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
+
+		foreach ($results as $result) {
+			if ($this->config->get($result['code'] . '_status')) {
+				$this->load->model('total/' . $result['code']);
+
+				$model = $this->{'model_total_' . $result['code']};
+				$contribution = $model->getTotal($taxes, $total);
+
+				$total_data = array_merge($total_data, $contribution['total_data']);
+				$total += $contribution['total'];
+				$taxes += $contribution['taxes'];
+			}
+		}
+
+		return ['total' => $total, 'totals' => $total_data];
+	}
+
+	/**
+	 * Extract a readable message from a PayPal v2 error response.
+	 */
+	private function extractApiError(array $response): string {
+		// PayPal's own wording is only shown while testing (sandbox or debug on)
+		if (!empty($response['message']) && ($this->config->get('pp_express_sandbox') || $this->config->get('pp_express_debug'))) {
+			$msg = $response['message'];
+
+			if (!empty($response['details'][0]['description'])) {
+				$msg .= ' ' . $response['details'][0]['description'];
+			}
+
+			return $msg;
+		}
+
+		return $this->language->get('error_connection');
+	}
 
 	private function jsonOutput(array $json): void {
 		$this->response->addHeader('Content-Type: application/json');

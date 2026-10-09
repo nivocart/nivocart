@@ -237,7 +237,7 @@ class ControllerInformationContact extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if (!isset($this->request->post['email']) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if (!isset($this->request->post['email']) || !emailIsValid($this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 

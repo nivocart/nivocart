@@ -348,8 +348,15 @@ class ControllerAccountEdit extends Controller {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if ((mb_strlen($this->request->post['email'], 'UTF-8') > 96) || !preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $this->request->post['email'])) {
+		if (!emailIsValid($this->request->post['email'])) {
 			$this->error['email'] = $this->language->get('error_email');
+		} elseif ($this->customer->getEmail() !== $this->request->post['email']) {
+			// Only check the domain's mail records when the address has changed
+			$this->load->model('tool/email');
+
+			if (!$this->model_tool_email->verifyMail($this->request->post['email'])) {
+				$this->error['email'] = $this->language->get('error_email');
+			}
 		}
 
 		if (($this->customer->getEmail() !== $this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {

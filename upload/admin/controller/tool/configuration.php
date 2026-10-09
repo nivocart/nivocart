@@ -319,6 +319,7 @@ class ControllerToolConfiguration extends Controller {
 
 		$this->data['helper_files'] = [
 			'agent'      => $ds(DIR_SYSTEM . 'helper/agent.php'),
+			'email'      => $ds(DIR_SYSTEM . 'helper/email.php'),
 			'minify'     => $ds(DIR_SYSTEM . 'helper/minify.php'),
 			'password'   => $ds(DIR_SYSTEM . 'helper/password.php'),
 			'pdf'        => $ds(DIR_SYSTEM . 'helper/pdf.php'),

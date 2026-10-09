@@ -103,6 +103,27 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 
 		usort($total_data, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
 
+		// Guard — PayPal Express: the amount already paid must match the final total.
+		// Checked BEFORE addOrder() so a changed cart never produces a part-paid order.
+		if ($payment_code === 'pp_express') {
+			$pp_capture = $this->session->data['pp_express_capture'] ?? [];
+
+			if (empty($pp_capture)) {
+				$this->session->data['error'] = 'Please complete your PayPal payment before confirming your order.';
+				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+			}
+
+			$pp_expected = round((float)$this->currency->convert($total, $this->config->get('config_currency'), $pp_capture['currency_code']), 2);
+
+			if (abs($pp_expected - (float)$pp_capture['amount']) > 0.01) {
+				$this->load->model('payment/pp_express');
+				$this->model_payment_pp_express->log(['pp_order_id' => $pp_capture['pp_order_id'], 'paid' => $pp_capture['amount'], 'expected' => $pp_expected], 'amount mismatch', true);
+
+				$this->session->data['error'] = 'Your order total changed after payment. Please contact us quoting PayPal reference ' . $pp_capture['pp_order_id'] . '.';
+				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+			}
+		}
+
 		// ----------------------------------------------------------------
 		// Build order data
 		// ----------------------------------------------------------------
@@ -355,31 +376,46 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 				$this->load->model('checkout/order');
 
 				$pp_order_id = $this->session->data['pp_express_order_id'] ?? '';
+				$pp_capture = $this->session->data['pp_express_capture'] ?? [];
 
-				if (!$pp_order_id) {
-					$this->session->data['error'] = 'PayPal order reference missing. Please try again.';
-					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
-				}
-
-				// Verify the PayPal order is in a captured/authorized state
-				$pp_order = $this->model_payment_pp_express->getPaypalOrderByOrderId($this->session->data['order_id']);
-
-				if (!$pp_order || !in_array($pp_order['status'], ['COMPLETED', 'APPROVED'])) {
+				// Verify the payment held in session belongs to this PayPal order
+				if (!$pp_order_id || empty($pp_capture) || $pp_capture['pp_order_id'] !== $pp_order_id || !in_array($pp_capture['status'], ['COMPLETED', 'PENDING', 'APPROVED', 'CREATED'], true)) {
 					$this->session->data['error'] = 'Payment could not be verified. Please try again.';
 					$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
 				}
 
-				$status_map = [
-					'COMPLETED' => 'pp_express_completed_status_id',
-					'APPROVED'  => 'pp_express_pending_status_id',  // AUTHORIZE mode
-				];
+				$order_id = (int)$this->session->data['order_id'];
 
-				$status_config_key = $status_map[$pp_order['status']] ?? 'pp_express_pending_status_id';
+				// The order now exists: save the PayPal records against it
+				$paypal_order_id = $this->model_payment_pp_express->saveOrder([
+					'order_id'      => $order_id,
+					'pp_order_id'   => $pp_order_id,
+					'intent'        => $pp_capture['intent'],
+					'status'        => $pp_capture['status'],
+					'capture_id'    => $pp_capture['capture_id'],
+					'currency_code' => $pp_capture['currency_code'],
+					'total'         => $pp_capture['amount'],
+				]);
+
+				$this->model_payment_pp_express->saveTransaction([
+					'paypal_order_id'  => $paypal_order_id,
+					'pp_order_id'      => $pp_order_id,
+					'capture_id'       => $pp_capture['capture_id'],
+					'transaction_type' => $pp_capture['intent'],
+					'status'           => $pp_capture['status'],
+					'amount'           => $pp_capture['amount'],
+					'currency_code'    => $pp_capture['currency_code'],
+					'note'             => 'Initial ' . strtolower($pp_capture['intent']),
+					'raw_response'     => $pp_capture['raw_response'],
+				]);
+
+				// Completed capture → completed status; pending capture or authorization → pending status
+				$status_config_key = ($pp_capture['status'] === 'COMPLETED') ? 'pp_express_completed_status_id' : 'pp_express_pending_status_id';
 				$order_status_id = (int)$this->config->get($status_config_key);
 
-				$this->model_checkout_order->confirm($this->session->data['order_id'], $order_status_id);
+				$this->model_checkout_order->confirm($order_id, $order_status_id);
 
-				unset($this->session->data['pp_express_order_id']);
+				unset($this->session->data['pp_express_order_id'], $this->session->data['pp_express_capture']);
 				break;
 
 			case 'klarna':
