@@ -11,7 +11,6 @@
 	'use strict';
 
 	var WIDGET_ID = 'payment-widget-pp_express';
-	var PAYLATER_ID = 'payment-widget-paylater-pp_express';
 	var SDK_ID = 'paypal-js-sdk';
 
 	// ── Retrieve widget data passed from PHP ──────────────────────────────────
@@ -40,8 +39,11 @@
 			'components=buttons',
 		];
 
+		// Pay Later is shown by the main button stack (gold button) when enabled
 		if (data.pay_later) {
 			params.push('enable-funding=paylater');
+		} else {
+			params.push('disable-funding=paylater');
 		}
 
 		var script = document.createElement('script');
@@ -145,89 +147,6 @@
 			},
 
 		}).render('#' + WIDGET_ID);
-
-		// ── Optional Pay Later button ─────────────────────────────────────────
-		if (data.pay_later) {
-			// Ensure container exists
-			var plContainer = document.getElementById(PAYLATER_ID);
-
-			if (!plContainer) {
-				plContainer = document.createElement('div');
-				plContainer.id = PAYLATER_ID;
-				plContainer.style.marginTop = '10px';
-				container.parentNode.insertBefore(plContainer, container.nextSibling);
-			} else {
-				plContainer.innerHTML = '';
-			}
-
-			paypal.Buttons({
-				fundingSource: paypal.FUNDING.PAYLATER,
-				style: {
-					layout: 'vertical',
-					color: 'white',
-					shape: 'rect',
-					label: 'pay',
-					height: 45,
-				},
-
-				createOrder: function () {
-					return fetch(data.url_create_order, {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-						body: 'token=' + encodeURIComponent(data.token || ''),
-					})
-					.then(function (res) { return res.json(); })
-					.then(function (json) {
-						if (json.error) {
-							showError(json.error);
-							return Promise.reject(json.error);
-						}
-						return json.id;
-					});
-				},
-
-				onApprove: function (ppData) {
-					showLoading(true);
-
-					return fetch(data.url_capture_order, {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-						body: 'token=' + encodeURIComponent(data.token || '') + '&pp_order_id=' + encodeURIComponent(ppData.orderID),
-					})
-					.then(function (res) { return res.json(); })
-					.then(function (json) {
-						if (json.error) {
-							showLoading(false);
-							showError(json.error);
-							return;
-						}
-						window._ppExpressCaptured = true;
-						if (typeof window._ppExpressResolve === 'function') {
-							window._ppExpressResolve();
-						}
-					})
-					.catch(function () {
-						showLoading(false);
-						showError('An error occurred processing your payment. Please try again.');
-					});
-				},
-
-				onCancel: function () {
-					fetch(data.url_cancel_order, {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-						body: 'token=' + encodeURIComponent(data.token || ''),
-					});
-				},
-
-				onError: function (err) {
-					showLoading(false);
-					showError('PayPal Pay Later encountered an error. Please try again.');
-					console.error('PayPal Pay Later error:', err);
-				},
-
-			}).render('#' + PAYLATER_ID);
-		}
 	}
 
 	// ── UI helpers ────────────────────────────────────────────────────────────
