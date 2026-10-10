@@ -1916,118 +1916,6 @@ class ControllerCatalogProduct extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function updateSpecial() {
-		$json = [];
-
-		$this->language->load('catalog/product');
-
-		$periods = [
-			'today'     => $this->language->get('text_end_today'),
-			'day'       => $this->language->get('text_end_day'),
-			'week'      => $this->language->get('text_end_week'),
-			'month'     => $this->language->get('text_end_month'),
-			'undefined' => $this->language->get('text_end_undefined')
-		];
-
-		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
-			$selected = false;
-			$append = false;
-			$date_start = date('Y-m-d');
-			$date_end = '';
-			$customer_group = $this->config->get('config_customer_group_id');
-			$discount = 0;
-			$products = [];
-
-			if (isset($this->request->post['sp_selected'])) {
-				$selected = (int)$this->request->post['sp_selected'] > 0;
-
-				if ($selected) {
-					if (isset($this->request->post['selected']) && is_array($this->request->post['selected'])) {
-						foreach ($this->request->post['selected'] as $product_id) {
-							if ((int)$product_id > 0) {
-								$products[] = (int)$product_id;
-							}
-						}
-					}
-				}
-			}
-
-			if (isset($this->request->post['sp_append'])) {
-				$append = (int)$this->request->post['sp_append'] > 0;
-			}
-
-			if (isset($this->request->post['sp_customer_group']) && (int)$this->request->post['sp_customer_group'] > 0) {
-				$customer_group = (int)$this->request->post['sp_customer_group'];
-			}
-
-			if (isset($this->request->post['sp_period']) && array_key_exists($this->request->post['sp_period'], $periods)) {
-				$period = $this->request->post['sp_period'];
-
-				if ($period === 'today') {
-					$date_end = date('Y-m-d');
-				} elseif ($period === 'day') {
-					$date_end = date('Y-m-d', strtotime('+1 day'));
-				} elseif ($period === 'week') {
-					$date_end = date('Y-m-d', strtotime('+1 week'));
-				} elseif ($period === 'month') {
-					$date_end = date('Y-m-d', strtotime('+1 month'));
-				} elseif ($period === 'undefined') {
-					$date_end = '0000-00-00';
-				} else {
-					$date_end = '0000-00-00';
-				}
-			}
-
-			if (isset($this->request->post['sp_discount']) && (int)$this->request->post['sp_discount'] > 0 && (int)$this->request->post['sp_discount'] <= 100) {
-				$discount = (int)$this->request->post['sp_discount'];
-			}
-
-			if ($this->validateSpecialUpdate($selected, $products)) {
-				$this->load->model('catalog/product');
-
-				$this->model_catalog_product->updateProductSpecial($selected, $append, $customer_group, $date_start, $date_end, $discount, $products);
-
-				$json['success'] = $this->language->get('text_special_success');
-			}
-
-			$json['error'] = $this->error;
-
-		} else {
-			$this->load->model('sale/customer_group');
-
-			$this->data['text_select_all'] = $this->language->get('text_select_all');
-			$this->data['text_unselect_all'] = $this->language->get('text_unselect_all');
-			$this->data['text_selected_yes'] = $this->language->get('text_selected_yes');
-			$this->data['text_selected_no'] = $this->language->get('text_selected_no');
-			$this->data['text_append_yes'] = $this->language->get('text_append_yes');
-			$this->data['text_append_no'] = $this->language->get('text_append_no');
-
-			$this->data['entry_sp_selected'] = $this->language->get('entry_sp_selected');
-			$this->data['entry_sp_append'] = $this->language->get('entry_sp_append');
-			$this->data['entry_sp_customer_group'] = $this->language->get('entry_sp_customer_group');
-			$this->data['entry_sp_period'] = $this->language->get('entry_sp_period');
-			$this->data['entry_sp_discount'] = $this->language->get('entry_sp_discount');
-
-			$this->data['button_update_special'] = $this->language->get('button_update_special');
-			$this->data['button_submit'] = $this->language->get('button_submit');
-
-			$this->data['periods'] = $periods;
-
-			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
-
-			$this->data['default_customer_group'] = $this->config->get('config_customer_group_id');
-
-			$this->data['token'] = $this->session->data['token'];
-
-			$this->template = 'catalog/product_special_form.tpl';
-
-			$json['html'] = $this->render();
-		}
-
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
-
 	public function updateDiscount() {
 		$json = [];
 
@@ -2147,67 +2035,110 @@ class ControllerCatalogProduct extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-	public function updateGlobal() {
+	public function updateSpecial() {
 		$json = [];
 
 		$this->language->load('catalog/product');
 
-		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
-			if (!$this->user->hasPermission('modify', 'catalog/product')) {
-				$json['error'] = $this->language->get('error_permission');
-			} else {
-				$store_id = isset($this->request->post['gl_store_id']) ? (int)$this->request->post['gl_store_id'] : 0;
-				$shipping = isset($this->request->post['gl_shipping']) ? (int)$this->request->post['gl_shipping'] : 1;
-				$subtract = isset($this->request->post['gl_subtract']) ? (int)$this->request->post['gl_subtract'] : 1;
-				$length_class_id = isset($this->request->post['gl_length_class_id']) ? (int)$this->request->post['gl_length_class_id'] : (int)$this->config->get('config_length_class_id');
-				$weight_class_id = isset($this->request->post['gl_weight_class_id']) ? (int)$this->request->post['gl_weight_class_id'] : (int)$this->config->get('config_weight_class_id');
-				$tax_class_id = isset($this->request->post['gl_tax_class_id']) ? (int)$this->request->post['gl_tax_class_id'] : -1;
+		$periods = [
+			'today'     => $this->language->get('text_end_today'),
+			'day'       => $this->language->get('text_end_day'),
+			'week'      => $this->language->get('text_end_week'),
+			'month'     => $this->language->get('text_end_month'),
+			'undefined' => $this->language->get('text_end_undefined')
+		];
 
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			$selected = false;
+			$append = false;
+			$date_start = date('Y-m-d');
+			$date_end = '';
+			$customer_group = $this->config->get('config_customer_group_id');
+			$discount = 0;
+			$products = [];
+
+			if (isset($this->request->post['sp_selected'])) {
+				$selected = (int)$this->request->post['sp_selected'] > 0;
+
+				if ($selected) {
+					if (isset($this->request->post['selected']) && is_array($this->request->post['selected'])) {
+						foreach ($this->request->post['selected'] as $product_id) {
+							if ((int)$product_id > 0) {
+								$products[] = (int)$product_id;
+							}
+						}
+					}
+				}
+			}
+
+			if (isset($this->request->post['sp_append'])) {
+				$append = (int)$this->request->post['sp_append'] > 0;
+			}
+
+			if (isset($this->request->post['sp_customer_group']) && (int)$this->request->post['sp_customer_group'] > 0) {
+				$customer_group = (int)$this->request->post['sp_customer_group'];
+			}
+
+			if (isset($this->request->post['sp_period']) && array_key_exists($this->request->post['sp_period'], $periods)) {
+				$period = $this->request->post['sp_period'];
+
+				if ($period === 'today') {
+					$date_end = date('Y-m-d');
+				} elseif ($period === 'day') {
+					$date_end = date('Y-m-d', strtotime('+1 day'));
+				} elseif ($period === 'week') {
+					$date_end = date('Y-m-d', strtotime('+1 week'));
+				} elseif ($period === 'month') {
+					$date_end = date('Y-m-d', strtotime('+1 month'));
+				} elseif ($period === 'undefined') {
+					$date_end = '0000-00-00';
+				} else {
+					$date_end = '0000-00-00';
+				}
+			}
+
+			if (isset($this->request->post['sp_discount']) && (int)$this->request->post['sp_discount'] > 0 && (int)$this->request->post['sp_discount'] <= 100) {
+				$discount = (int)$this->request->post['sp_discount'];
+			}
+
+			if ($this->validateSpecialUpdate($selected, $products)) {
 				$this->load->model('catalog/product');
 
-				$this->model_catalog_product->updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id, $tax_class_id);
+				$this->model_catalog_product->updateProductSpecial($selected, $append, $customer_group, $date_start, $date_end, $discount, $products);
 
-				$json['success'] = $this->language->get('text_global_success');
+				$json['success'] = $this->language->get('text_special_success');
 			}
+
+			$json['error'] = $this->error;
+
 		} else {
-			$this->load->model('localisation/length_class');
-			$this->load->model('localisation/tax_class');
-			$this->load->model('localisation/weight_class');
-			$this->load->model('setting/store');
+			$this->load->model('sale/customer_group');
 
-			$this->data['entry_gl_store'] = $this->language->get('entry_gl_store');
-			$this->data['entry_gl_tax_class'] = $this->language->get('entry_gl_tax_class');
-			$this->data['entry_gl_shipping'] = $this->language->get('entry_gl_shipping');
-			$this->data['entry_gl_subtract'] = $this->language->get('entry_gl_subtract');
-			$this->data['entry_gl_length_class'] = $this->language->get('entry_gl_length_class');
-			$this->data['entry_gl_weight_class'] = $this->language->get('entry_gl_weight_class');
+			$this->data['text_select_all'] = $this->language->get('text_select_all');
+			$this->data['text_unselect_all'] = $this->language->get('text_unselect_all');
+			$this->data['text_selected_yes'] = $this->language->get('text_selected_yes');
+			$this->data['text_selected_no'] = $this->language->get('text_selected_no');
+			$this->data['text_append_yes'] = $this->language->get('text_append_yes');
+			$this->data['text_append_no'] = $this->language->get('text_append_no');
 
-			$this->data['text_enabled'] = $this->language->get('text_enabled');
-			$this->data['text_disabled'] = $this->language->get('text_disabled');
-			$this->data['text_gl_store_nochange'] = $this->language->get('text_gl_store_nochange');
+			$this->data['entry_sp_selected'] = $this->language->get('entry_sp_selected');
+			$this->data['entry_sp_append'] = $this->language->get('entry_sp_append');
+			$this->data['entry_sp_customer_group'] = $this->language->get('entry_sp_customer_group');
+			$this->data['entry_sp_period'] = $this->language->get('entry_sp_period');
+			$this->data['entry_sp_discount'] = $this->language->get('entry_sp_discount');
 
+			$this->data['button_update_special'] = $this->language->get('button_update_special');
 			$this->data['button_submit'] = $this->language->get('button_submit');
 
-			$stores = $this->model_setting_store->getStores([]);
-			// store_id = 0 is the Default Store — not in the store table, so prepend it manually
-			array_unshift($stores, [
-				'store_id' => 0,
-				'name'     => $this->config->get('config_name') . ' (' . $this->language->get('text_default') . ')'
-			]);
-			$this->data['stores'] = $stores;
-			$this->data['default_store_id'] = 0;
+			$this->data['periods'] = $periods;
 
-			$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
+			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups([]);
 
-			$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses([]);
-			$this->data['default_length_class_id'] = (int)$this->config->get('config_length_class_id');
-
-			$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses([]);
-			$this->data['default_weight_class_id'] = (int)$this->config->get('config_weight_class_id');
+			$this->data['default_customer_group'] = $this->config->get('config_customer_group_id');
 
 			$this->data['token'] = $this->session->data['token'];
 
-			$this->template = 'catalog/product_global_form.tpl';
+			$this->template = 'catalog/product_special_form.tpl';
 
 			$json['html'] = $this->render();
 		}
@@ -2300,6 +2231,76 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['token'] = $this->session->data['token'];
 
 			$this->template = 'catalog/product_points_form.tpl';
+
+			$json['html'] = $this->render();
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function updateGlobal() {
+		$json = [];
+
+		$this->language->load('catalog/product');
+
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			if (!$this->user->hasPermission('modify', 'catalog/product')) {
+				$json['error'] = $this->language->get('error_permission');
+			} else {
+				$store_id = isset($this->request->post['gl_store_id']) ? (int)$this->request->post['gl_store_id'] : 0;
+				$shipping = isset($this->request->post['gl_shipping']) ? (int)$this->request->post['gl_shipping'] : 1;
+				$subtract = isset($this->request->post['gl_subtract']) ? (int)$this->request->post['gl_subtract'] : 1;
+				$length_class_id = isset($this->request->post['gl_length_class_id']) ? (int)$this->request->post['gl_length_class_id'] : (int)$this->config->get('config_length_class_id');
+				$weight_class_id = isset($this->request->post['gl_weight_class_id']) ? (int)$this->request->post['gl_weight_class_id'] : (int)$this->config->get('config_weight_class_id');
+				$tax_class_id = isset($this->request->post['gl_tax_class_id']) ? (int)$this->request->post['gl_tax_class_id'] : -1;
+
+				$this->load->model('catalog/product');
+
+				$this->model_catalog_product->updateProductGlobal($store_id, $shipping, $subtract, $length_class_id, $weight_class_id, $tax_class_id);
+
+				$json['success'] = $this->language->get('text_global_success');
+			}
+		} else {
+			$this->load->model('localisation/length_class');
+			$this->load->model('localisation/tax_class');
+			$this->load->model('localisation/weight_class');
+			$this->load->model('setting/store');
+
+			$this->data['entry_gl_store'] = $this->language->get('entry_gl_store');
+			$this->data['entry_gl_tax_class'] = $this->language->get('entry_gl_tax_class');
+			$this->data['entry_gl_shipping'] = $this->language->get('entry_gl_shipping');
+			$this->data['entry_gl_subtract'] = $this->language->get('entry_gl_subtract');
+			$this->data['entry_gl_length_class'] = $this->language->get('entry_gl_length_class');
+			$this->data['entry_gl_weight_class'] = $this->language->get('entry_gl_weight_class');
+
+			$this->data['text_enabled'] = $this->language->get('text_enabled');
+			$this->data['text_disabled'] = $this->language->get('text_disabled');
+			$this->data['text_gl_store_nochange'] = $this->language->get('text_gl_store_nochange');
+
+			$this->data['button_submit'] = $this->language->get('button_submit');
+
+			$stores = $this->model_setting_store->getStores([]);
+			// store_id = 0 is the Default Store — not in the store table, so prepend it manually
+			array_unshift($stores, [
+				'store_id' => 0,
+				'name'     => $this->config->get('config_name') . ' (' . $this->language->get('text_default') . ')'
+			]);
+
+			$this->data['stores'] = $stores;
+			$this->data['default_store_id'] = 0;
+
+			$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
+
+			$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses([]);
+			$this->data['default_length_class_id'] = (int)$this->config->get('config_length_class_id');
+
+			$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses([]);
+			$this->data['default_weight_class_id'] = (int)$this->config->get('config_weight_class_id');
+
+			$this->data['token'] = $this->session->data['token'];
+
+			$this->template = 'catalog/product_global_form.tpl';
 
 			$json['html'] = $this->render();
 		}

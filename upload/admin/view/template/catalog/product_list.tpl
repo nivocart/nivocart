@@ -28,8 +28,8 @@
         <div class="left hide-mobile"><img src="view/image/product-add.png" alt="" /></div>
         <div class="left"><a id="price-button" class="button-filter ripple"><?php echo $button_update_price; ?></a></div>
         <div class="left"><a id="quantity-button" class="button-filter ripple"><?php echo $button_update_quantity; ?></a></div>
-        <div class="left"><a id="special-button" class="button-filter ripple"><?php echo $button_update_special; ?></a></div>
         <div class="left"><a id="discount-button" class="button-filter ripple"><?php echo $button_update_discount; ?></a></div>
+        <div class="left"><a id="special-button" class="button-filter ripple"><?php echo $button_update_special; ?></a></div>
         <div class="left"><a id="points-button" class="button-filter ripple"><?php echo $button_update_points; ?></a></div>
         <div class="left"><a id="global-button" class="button-filter ripple"><?php echo $button_update_global; ?></a></div>
         <div class="right"><a onclick="location = '<?php echo $refresh; ?>';" class="button ripple"><?php echo $button_refresh; ?></a></div>
@@ -364,33 +364,6 @@ $('body').on('click', '#quantity-button', function() {
 	});
 });
 
-$('body').on('click', '#special-button', function() {
-	$.ajax({
-		url: 'index.php?route=catalog/product/updateSpecial&token=<?php echo $token; ?>',
-		dataType: 'json',
-		type: 'get',
-		success: function(json) {
-			$('.success, .warning, .attention, .error').remove();
-
-			if (json['html']) {
-				$('#update-special-dialog').html(json['html']);
-				$('#update-special-dialog').dialog({
-					title: '<?php echo $text_special_title; ?>',
-					width: <?php echo ($this->browser->checkMobile()) ? 630 : 760; ?>,
-					height: 400,
-					resizable: false,
-					modal: true
-				});
-			} else {
-				alert('Invalid response!');
-			}
-		},
-		failure: function() {
-			alert('Ajax error!');
-		}
-	});
-});
-
 $('body').on('click', '#discount-button', function() {
 	$.ajax({
 		url: 'index.php?route=catalog/product/updateDiscount&token=<?php echo $token; ?>',
@@ -418,20 +391,20 @@ $('body').on('click', '#discount-button', function() {
 	});
 });
 
-$('body').on('click', '#global-button', function() {
+$('body').on('click', '#special-button', function() {
 	$.ajax({
-		url: 'index.php?route=catalog/product/updateGlobal&token=<?php echo $token; ?>',
+		url: 'index.php?route=catalog/product/updateSpecial&token=<?php echo $token; ?>',
 		dataType: 'json',
 		type: 'get',
 		success: function(json) {
 			$('.success, .warning, .attention, .error').remove();
 
 			if (json['html']) {
-				$('#update-global-dialog').html(json['html']);
-				$('#update-global-dialog').dialog({
-					title: '<?php echo $text_global_title; ?>',
+				$('#update-special-dialog').html(json['html']);
+				$('#update-special-dialog').dialog({
+					title: '<?php echo $text_special_title; ?>',
 					width: <?php echo ($this->browser->checkMobile()) ? 630 : 760; ?>,
-					height: 420,
+					height: 400,
 					resizable: false,
 					modal: true
 				});
@@ -444,6 +417,7 @@ $('body').on('click', '#global-button', function() {
 		}
 	});
 });
+
 $('body').on('click', '#points-button', function() {
 	$.ajax({
 		url: 'index.php?route=catalog/product/updatePoints&token=<?php echo $token; ?>',
@@ -466,6 +440,33 @@ $('body').on('click', '#points-button', function() {
 			}
 		},
 		error: function() {
+			alert('Ajax error!');
+		}
+	});
+});
+
+$('body').on('click', '#global-button', function() {
+	$.ajax({
+		url: 'index.php?route=catalog/product/updateGlobal&token=<?php echo $token; ?>',
+		dataType: 'json',
+		type: 'get',
+		success: function(json) {
+			$('.success, .warning, .attention, .error').remove();
+
+			if (json['html']) {
+				$('#update-global-dialog').html(json['html']);
+				$('#update-global-dialog').dialog({
+					title: '<?php echo $text_global_title; ?>',
+					width: <?php echo ($this->browser->checkMobile()) ? 630 : 760; ?>,
+					height: 420,
+					resizable: false,
+					modal: true
+				});
+			} else {
+				alert('Invalid response!');
+			}
+		},
+		failure: function() {
 			alert('Ajax error!');
 		}
 	});
