@@ -684,7 +684,7 @@
                     <option value="-">-</option>
                   <?php } ?>
                   </select>
-                  <input type="text" name="product_option[<?php echo $option_row; ?>][product_option_value][<?php echo $option_value_row; ?>][price]" value="<?php echo $product_option_value['price']; ?>" size="5" />
+                  <input type="text" name="product_option[<?php echo $option_row; ?>][product_option_value][<?php echo $option_value_row; ?>][price]" value="<?php echo number_format((float)$product_option_value['price'], 2, '.', ''); ?>" size="5" />
                 </td>
                 <td class="right">
                   <select name="product_option[<?php echo $option_row; ?>][product_option_value][<?php echo $option_value_row; ?>][points_prefix]">
@@ -745,9 +745,9 @@
         <thead>
           <tr>
             <td class="left"><?php echo $column_customer_group; ?></td>
-            <td class="left"><?php echo $column_quantity; ?></td>
+            <td class="left"><span class="required">*</span> <?php echo $column_quantity; ?></td>
             <td class="left"><?php echo $column_priority; ?></td>
-            <td class="left"><?php echo $column_price; ?></td>
+            <td class="left"><span class="required">*</span> <?php echo $column_price; ?></td>
             <td class="left"><?php echo $column_date_start; ?></td>
             <td class="left"><?php echo $column_date_end; ?></td>
             <td></td>
@@ -768,7 +768,7 @@
             </select></td>
             <td class="left"><input type="text" name="product_discount[<?php echo $discount_row; ?>][quantity]" value="<?php echo $product_discount['quantity']; ?>" size="2" /></td>
             <td class="left"><input type="text" name="product_discount[<?php echo $discount_row; ?>][priority]" value="<?php echo $product_discount['priority']; ?>" size="2" /></td>
-            <td class="left"><input type="text" name="product_discount[<?php echo $discount_row; ?>][price]" value="<?php echo $product_discount['price']; ?>" /></td>
+            <td class="left"><input type="text" name="product_discount[<?php echo $discount_row; ?>][price]" value="<?php echo number_format((float)$product_discount['price'], 2, '.', ''); ?>" /> <span class="retail-ref"></span></td>
             <td class="left"><input type="text" name="product_discount[<?php echo $discount_row; ?>][date_start]" value="<?php echo $product_discount['date_start']; ?>" class="date" size="12" />
             <span class="form-icon"><img src="view/image/calendar.png" alt="" /></span></td>
             <td class="left"><input type="text" name="product_discount[<?php echo $discount_row; ?>][date_end]" value="<?php echo $product_discount['date_end']; ?>" class="date" size="12" />
@@ -792,7 +792,7 @@
           <tr>
             <td class="left"><?php echo $column_customer_group; ?></td>
             <td class="left"><?php echo $column_priority; ?></td>
-            <td class="left"><?php echo $column_price; ?></td>
+            <td class="left"><span class="required">*</span> <?php echo $column_price; ?></td>
             <td class="left"><?php echo $column_date_start; ?></td>
             <td class="left"><?php echo $column_date_end; ?></td>
             <td></td>
@@ -812,7 +812,7 @@
             <?php } ?>
             </select></td>
             <td class="left"><input type="text" name="product_special[<?php echo $special_row; ?>][priority]" value="<?php echo $product_special['priority']; ?>" size="2" /></td>
-            <td class="left"><input type="text" name="product_special[<?php echo $special_row; ?>][price]" value="<?php echo $product_special['price']; ?>" /></td>
+            <td class="left"><input type="text" name="product_special[<?php echo $special_row; ?>][price]" value="<?php echo number_format((float)$product_special['price'], 2, '.', ''); ?>" /> <span class="retail-ref"></span></td>
             <td class="left"><input type="text" name="product_special[<?php echo $special_row; ?>][date_start]" value="<?php echo $product_special['date_start']; ?>" class="date" size="12" />
             <span class="form-icon"><img src="view/image/calendar.png" alt="" /></span></td>
             <td class="left"><input type="text" name="product_special[<?php echo $special_row; ?>][date_end]" value="<?php echo $product_special['date_end']; ?>" class="date" size="12" />
@@ -1576,7 +1576,7 @@ function addDiscount() {
 	html += '    </select></td>';
 	html += '    <td class="left"><input type="text" name="product_discount[' + discount_row + '][quantity]" value="" size="2" /></td>';
 	html += '    <td class="left"><input type="text" name="product_discount[' + discount_row + '][priority]" value="" size="2" /></td>';
-	html += '    <td class="left"><input type="text" name="product_discount[' + discount_row + '][price]" value="" /></td>';
+	html += '    <td class="left"><input type="text" name="product_discount[' + discount_row + '][price]" value="" /> <span class="retail-ref"></span></td>';
 	html += '    <td class="left"><input type="text" name="product_discount[' + discount_row + '][date_start]" value="" class="date" size="12" />';
 	html += '    <span class="form-icon"><img src="view/image/calendar.png" alt="" /></span></td>';
 	html += '    <td class="left"><input type="text" name="product_discount[' + discount_row + '][date_end]" value="" class="date" size="12" />';
@@ -1588,6 +1588,8 @@ function addDiscount() {
 	$('#discount tfoot').before(html);
 
 	$('#discount-row' + discount_row + ' .date').datepicker({dateFormat: 'yy-mm-dd'});
+
+	checkPriceRows();
 
 	discount_row++;
 };
@@ -1605,7 +1607,7 @@ function addSpecial() {
 	<?php } ?>
 	html += '    </select></td>';
 	html += '    <td class="left"><input type="text" name="product_special[' + special_row + '][priority]" value="" size="2" /></td>';
-	html += '    <td class="left"><input type="text" name="product_special[' + special_row + '][price]" value="" /></td>';
+	html += '    <td class="left"><input type="text" name="product_special[' + special_row + '][price]" value="" /> <span class="retail-ref"></span></td>';
 	html += '    <td class="left"><input type="text" name="product_special[' + special_row + '][date_start]" value="" class="date" size="12" />';
     html += '    <span class="form-icon"><img src="view/image/calendar.png" alt="" /></span></td>';
 	html += '    <td class="left"><input type="text" name="product_special[' + special_row + '][date_end]" value="" class="date" size="12" />';
@@ -1618,8 +1620,42 @@ function addSpecial() {
 
 	$('#special-row' + special_row + ' .date').datepicker({dateFormat: 'yy-mm-dd'});
 
+	checkPriceRows();
+
 	special_row++;
 };
+//--></script>
+
+<script type="text/javascript"><!--
+// Show the Retail Price next to each Special / Discount price and flag rows that would be ignored on save
+function checkPriceRows() {
+	var retail = Math.round((Number($.trim($('#input-price').val())) || 0) * 100) / 100;
+	var label = '[' + retail.toFixed(2) + ']';
+	var bad = {special: 0, discount: 0};
+
+	$.each(['special', 'discount'], function(index, type) {
+		$('#' + type + ' tbody').each(function() {
+			var $input = $(this).find('input[name$="[price]"]');
+			var $ref = $(this).find('.retail-ref');
+			var raw = $.trim($input.val());
+			var value = Math.round(Number(raw) * 100) / 100;
+			var invalid = (raw === '' || isNaN(value) || value <= 0 || value >= retail);
+
+			$ref.text(label).toggleClass('invalid', invalid).attr('title', invalid ? '<?php echo addslashes($text_price_rule); ?>' : '');
+			$input.toggleClass('input-error', invalid);
+
+			if (invalid) {
+				bad[type]++;
+			}
+		});
+
+		$('#tabs a[href="#tab-' + type + '"]').toggleClass('tab-error', bad[type] > 0);
+	});
+}
+
+$(document).on('input change keyup', '#input-price, #special input[name$="[price]"], #discount input[name$="[price]"]', checkPriceRows);
+
+$(document).ready(checkPriceRows);
 //--></script>
 
 <script type="text/javascript"><!--

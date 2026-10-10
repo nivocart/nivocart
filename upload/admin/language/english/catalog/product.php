@@ -6,6 +6,7 @@ $_['heading_dimension']       = 'Measurements';
 
 // Text
 $_['text_success']            = 'Success: You have modified <b>Products</b> !';
+$_['text_price_rule']         = 'Required: the Price must be above 0 and lower than the Retail Price.';
 $_['text_plus']               = '+';
 $_['text_minus']              = '-';
 $_['text_default']            = 'Default';
@@ -185,6 +186,8 @@ $_['error_quantity']          = 'Quantity is required and cannot be negative!';
 // Error
 $_['error_permission']        = 'Warning: You do not have permission to modify <b>Products</b> !';
 $_['error_warning']           = 'Warning: Please check the form carefully for errors!';
+$_['error_special_rows']      = 'Warning: Product saved, but Special row(s) %s on the <b>Special</b> tab were ignored! Each Special needs a valid Customer Group, a Price above 0 and lower than the Retail Price (%s), and valid dates.';
+$_['error_discount_rows']     = 'Warning: Product saved, but Discount row(s) %s on the <b>Discount</b> tab were ignored! Each Discount needs a valid Customer Group, a Quantity of 1 or more, a Price above 0 and lower than the Retail Price (%s), and valid dates.';
 $_['error_name']              = 'Product Name must be greater than 3 and less than 255 characters!';
 $_['error_model']             = 'Product Model must be greater than 3 and less than 64 characters!';
 $_['error_image_format']      = 'Invalid image format!';

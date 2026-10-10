@@ -25,9 +25,15 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('catalog/product');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
+			$price_warning = $this->cleanPriceRows();
+
 			$this->model_catalog_product->addProduct($this->request->post);
 
-			$this->session->data['success'] = $this->language->get('text_success');
+			if ($price_warning) {
+				$this->session->data['price_warning'] = $price_warning;
+			} else {
+				$this->session->data['success'] = $this->language->get('text_success');
+			}
 
 			if (isset($this->request->get['filter_name'])) {
 				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
@@ -97,9 +103,15 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('catalog/product');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
+			$price_warning = $this->cleanPriceRows();
+
 			$this->model_catalog_product->editProduct($this->request->get['product_id'], $this->request->post);
 
-			$this->session->data['success'] = $this->language->get('text_success');
+			if ($price_warning) {
+				$this->session->data['price_warning'] = $price_warning;
+			} else {
+				$this->session->data['success'] = $this->language->get('text_success');
+			}
 
 			if (isset($this->request->get['filter_name'])) {
 				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
@@ -626,6 +638,12 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
+		if (!$this->data['error_warning'] && isset($this->session->data['price_warning'])) {
+			$this->data['error_warning'] = $this->session->data['price_warning'];
+		}
+
+		unset($this->session->data['price_warning']);
+
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
 
@@ -869,6 +887,8 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['tab_image'] = $this->language->get('tab_image');
 		$this->data['tab_design'] = $this->language->get('tab_design');
 
+		$this->data['text_price_rule'] = $this->language->get('text_price_rule');
+
 		$this->data['token'] = $this->session->data['token'];
 
 		// Errors
@@ -877,6 +897,12 @@ class ControllerCatalogProduct extends Controller {
 		} else {
 			$this->data['error_warning'] = '';
 		}
+
+		if (!$this->data['error_warning'] && isset($this->session->data['price_warning'])) {
+			$this->data['error_warning'] = $this->session->data['price_warning'];
+		}
+
+		unset($this->session->data['price_warning']);
 
 		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
@@ -2312,6 +2338,120 @@ class ControllerCatalogProduct extends Controller {
 	/**
 	 * Validate Functions
 	 */
+	/**
+	 * Remove invalid Special and Discount rows from the posted data.
+	 *
+	 * @return string Warning text (empty when every row is valid)
+	 */
+	protected function cleanPriceRows(): string {
+		$this->load->model('sale/customer_group');
+
+		$group_ids = [];
+
+		foreach ($this->model_sale_customer_group->getCustomerGroups([]) as $customer_group) {
+			$group_ids[] = (string)$customer_group['customer_group_id'];
+		}
+
+		$retail = round((float)($this->request->post['price'] ?? 0), 2);
+		$messages = [];
+
+		foreach (['special' => 'product_special', 'discount' => 'product_discount'] as $type => $key) {
+			if (!isset($this->request->post[$key]) || !is_array($this->request->post[$key])) {
+				continue;
+			}
+
+			$valid = [];
+			$invalid = [];
+			$row_number = 0;
+
+			foreach ($this->request->post[$key] as $row) {
+				$row_number++;
+
+				if (is_array($row) && $this->isValidPriceRow($row, $retail, $group_ids, $type === 'discount')) {
+					$valid[] = $row;
+				} else {
+					$invalid[] = $row_number;
+				}
+			}
+
+			$this->request->post[$key] = $valid;
+
+			if ($invalid) {
+				$messages[] = sprintf($this->language->get('error_' . $type . '_rows'), implode(', ', $invalid), number_format($retail, 2, '.', ''));
+			}
+		}
+
+		return implode('<br />', $messages);
+	}
+
+	/**
+	 * A row is valid when the customer group exists, the price is above 0 and below the retail price,
+	 * the quantity (Discount only) is 1 or more, the priority (if given) is a whole number
+	 * and the dates (if given) are real Y-m-d dates with the end not before the start.
+	 *
+	 * @param array<string, mixed> $row
+	 * @param float                $retail
+	 * @param array<int, string>   $group_ids
+	 * @param bool                 $quantity_required
+	 *
+	 * @return bool
+	 */
+	protected function isValidPriceRow(array $row, float $retail, array $group_ids, bool $quantity_required): bool {
+		if (!isset($row['customer_group_id']) || !in_array((string)$row['customer_group_id'], $group_ids, true)) {
+			return false;
+		}
+
+		$price = trim((string)($row['price'] ?? ''));
+
+		if ($price === '' || !is_numeric($price)) {
+			return false;
+		}
+
+		$price = round((float)$price, 2);
+
+		if ($price <= 0 || $price >= $retail) {
+			return false;
+		}
+
+		if ($quantity_required) {
+			$quantity = trim((string)($row['quantity'] ?? ''));
+
+			if (!ctype_digit($quantity) || (int)$quantity < 1) {
+				return false;
+			}
+		}
+
+		$priority = trim((string)($row['priority'] ?? ''));
+
+		if ($priority !== '' && !ctype_digit($priority)) {
+			return false;
+		}
+
+		$dates = [];
+
+		foreach (['date_start', 'date_end'] as $field) {
+			$date = trim((string)($row[$field] ?? ''));
+
+			if ($date === '' || $date === '0000-00-00') {
+				continue;
+			}
+
+			$check = DateTime::createFromFormat('Y-m-d', $date);
+
+			if (!$check || $check->format('Y-m-d') !== $date) {
+				return false;
+			}
+
+			$dates[$field] = $date;
+		}
+
+		if (isset($dates['date_start'], $dates['date_end']) && $dates['date_end'] < $dates['date_start']) {
+			return false;
+		}
+
+		return true;
+	}
+
 	protected function validateForm() {
 		if (!$this->user->hasPermission('modify', 'catalog/product')) {
 			$this->error['warning'] = $this->language->get('error_permission');

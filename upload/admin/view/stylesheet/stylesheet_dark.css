@@ -153,6 +153,35 @@ select.input-error {
   box-shadow: 0 0 0 3px var(--clr-error-ring);
 }
 
+/* ── Retail price reference (Special / Discount tabs) ───── */
+.retail-ref {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: var(--clr-text);
+  white-space: nowrap;
+}
+.retail-ref.invalid {
+  background: #C62828;
+  color: #FFF;
+  font-weight: bold;
+}
+.list input[type='text'].input-error {
+  border-color: #C62828;
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.45);
+}
+.htabs a.tab-error::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 7px;
+  border-radius: 50%;
+  background: #C62828;
+  box-shadow: 0 0 0 1px #FFF;
+}
+
 /* ── Custom checkbox / radio (preserved system) ──────────── */
 input.checkbox:not(old),
 input.radio:not(old) {

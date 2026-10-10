@@ -10,6 +10,8 @@ Release: TBA
 
 - Add new Special label for products in Catalog showing the amount of saving.
 - Fix issues with PayPal Express integration in both Admin and Catalog.
+- Fix issue with some product form prices being displayed with 4 decimals.
+- Updated Discount and Special Tabs in product form to be more user friendly.
 - Updated Email validation and filtering across all Admin and Catalog files.
 
 
