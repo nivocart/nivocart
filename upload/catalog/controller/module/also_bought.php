@@ -37,6 +37,7 @@ class ControllerModuleAlsoBought extends Controller {
 		$this->data['lang'] = $this->language->get('code');
 
 		$this->data['button_cart'] = $this->language->get('button_cart');
+		$this->data['text_special_save'] = $this->language->get('text_special_save');
 		$this->data['button_view'] = $this->language->get('button_view');
 		$this->data['button_quote'] = $this->language->get('button_quote');
 		$this->data['button_compare'] = $this->language->get('button_compare');
@@ -95,10 +96,10 @@ class ControllerModuleAlsoBought extends Controller {
 			}
 
 			if ((float)$result['special']) {
-				$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
+				$special_save = $this->model_catalog_product->getSpecialSaving((float)$result['price'], (float)$result['special'], (int)$result['tax_class_id']);
 				$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 			} else {
-				$special_label = false;
+				$special_save = '';
 				$special = false;
 			}
 
@@ -125,7 +126,7 @@ class ControllerModuleAlsoBought extends Controller {
 				'label_style'     => $label_style,
 				'stock_label'     => $stock_label,
 				'offer_label'     => $offer_label,
-				'special_label'   => $special_label,
+				'special_save'    => $special_save,
 				'offer'           => $offer,
 				'name'            => $result['name'],
 				'stock_status'    => $result['stock_status'],

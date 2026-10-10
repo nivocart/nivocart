@@ -180,10 +180,8 @@ class ControllerProductReviewList extends Controller {
 
 				// Special
 				if ((float)$result['special']) {
-					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
 					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
-					$special_label = false;
 					$special = false;
 				}
 
@@ -247,7 +245,6 @@ class ControllerProductReviewList extends Controller {
 					'label_style'     => $label_style,
 					'stock_label'     => $stock_label,
 					'offer_label'     => $offer_label,
-					'special_label'   => $special_label,
 					'offer'           => $offer,
 					'name'            => $result['name'],
 					'text'            => substr(strip_tags(html_entity_decode($result['text'], ENT_QUOTES, 'UTF-8')), 0, 300) . '..',

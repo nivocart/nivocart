@@ -765,6 +765,34 @@ class ModelCatalogProduct extends Model {
 	}
 
 	/**
+	 * Amount saved on a special price, formatted for display ('' when nothing to show).
+	 * Both prices are tax-adjusted per the tax setting and rounded as displayed,
+	 * so the saving always equals the difference of the two prices shown.
+	 */
+	public function getSpecialSaving(float $price, float $special, int $tax_class_id): string {
+		if ($this->config->get('config_customer_price') && !$this->customer->isLogged()) {
+			return '';
+		}
+
+		if ($special <= 0 || $price <= 0) {
+			return '';
+		}
+
+		$currency = $this->config->get('config_currency');
+
+		$old = $this->currency->format($this->tax->calculate($price, $tax_class_id, $this->config->get('config_tax')), $currency, 0, false);
+		$new = $this->currency->format($this->tax->calculate($special, $tax_class_id, $this->config->get('config_tax')), $currency, 0, false);
+
+		$saving = (float)$old - (float)$new;
+
+		if ($saving < 0.0001) {
+			return '';
+		}
+
+		return $this->currency->format($saving, $currency, 1);
+	}
+
+	/**
 	 * Total Functions
 	 */
 	public function getTotalProducts(array $data = []): int {

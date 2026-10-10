@@ -49,10 +49,7 @@
           <?php if (!$product['stock_label'] && $product['offer']) { ?>
             <div class="offer-medium"><img src="<?php echo $product['offer_label']; ?>" alt="" /></div>
           <?php } ?>
-          <?php if (!$product['stock_label'] && !$product['offer'] && $product['special']) { ?>
-            <div class="special-medium"><img src="<?php echo $product['special_label']; ?>" alt="" /></div>
-          <?php } ?>
-          <?php if ($product['label']) { ?>
+          <?php if ($product['label'] && ($product['stock_label'] || $product['offer'] || !$product['special_save'])) { ?>
             <div class="product-label">
               <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" style="margin:0 0 -<?php echo $product['label_style']; ?>px <?php echo ($product['label_style'] * 2); ?>px;" />
             </div>
@@ -60,7 +57,14 @@
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
             <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $product['thumb']; ?>" title="<?php echo $product['name']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
-          </picture></a><?php if ($show_mini_label && $product['mini_label']) { ?><span class="mini-label"><?php echo $product['mini_label']; ?></span><?php } ?></div>
+            </picture></a>
+            <?php if (!$product['stock_label'] && !$product['offer'] && $product['special_save']) { ?>
+              <span class="special-save"><?php echo $text_special_save; ?> <?php echo $product['special_save']; ?></span>
+            <?php } ?>
+            <?php if ($show_mini_label && $product['mini_label']) { ?>
+              <span class="mini-label"><?php echo $product['mini_label']; ?></span>
+            <?php } ?>
+          </div>
         <?php } ?>
         <?php if ($product['price'] && !$price_hide) { ?>
           <div class="price">
@@ -149,12 +153,6 @@ function display(view) {
 					html += '<div class="offer-medium">' + offer + '</div>';
 				}
 
-				var special = $(element).find('.special-medium').html();
-
-				if (special != null) {
-					html += '<div class="special-medium">' + special + '</div>';
-				}
-
 				var label = $(element).find('.product-label').html();
 
 				if (label != null) {
@@ -217,12 +215,6 @@ function display(view) {
 
 				if (offer != null) {
 					html += '<div class="offer-medium">' + offer + '</div>';
-				}
-
-				var special = $(element).find('.special-medium').html();
-
-				if (special != null) {
-					html += '<div class="special-medium">' + special + '</div>';
 				}
 
 				var label = $(element).find('.product-label').html();

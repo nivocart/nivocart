@@ -81,7 +81,7 @@ class ControllerSettingSetting extends Controller {
 		'entry_image_brand', 'entry_image_related', 'entry_image_compare',
 		'entry_image_wishlist', 'entry_image_newsthumb', 'entry_image_newspopup',
 		'entry_image_cart', 'entry_label_size_ratio', 'entry_label_stock',
-		'entry_label_offer', 'entry_label_special', 'entry_ftp_status',
+		'entry_label_offer', 'entry_ftp_status',
 		'entry_ftp_host', 'entry_ftp_port', 'entry_ftp_username',
 		'entry_ftp_password', 'entry_ftp_root', 'entry_mail_parameter',
 		'entry_alert_mail', 'entry_account_mail', 'entry_alert_emails',
@@ -130,7 +130,7 @@ class ControllerSettingSetting extends Controller {
 		'help_image_brand', 'help_image_related', 'help_image_compare',
 		'help_image_wishlist', 'help_image_newsthumb', 'help_image_newspopup',
 		'help_image_cart', 'help_label_size_ratio', 'help_label_stock',
-		'help_label_offer', 'help_label_special', 'help_ftp_root',
+		'help_label_offer', 'help_ftp_root',
 		'help_mail_parameter', 'help_account_mail', 'help_alert_mail',
 		'help_alert_emails', 'help_sharethis', 'help_meta_google', 'help_meta_bing',
 		'help_meta_yandex', 'help_meta_baidu', 'help_google_analytics',
@@ -308,7 +308,6 @@ class ControllerSettingSetting extends Controller {
 		'config_label_size_ratio' => ['default' => '60'],
 		'config_label_stock'      => [],
 		'config_label_offer'      => [],
-		'config_label_special'    => [],
 		// FTP / Upload
 		'config_ftp_status'       => [],
 		'config_ftp_host'         => ['default' => 'CALLBACK_ftp_host'],
@@ -658,7 +657,7 @@ class ControllerSettingSetting extends Controller {
 			$this->data[$thumbKey] = ($path && file_exists(DIR_IMAGE . $path) && is_file(DIR_IMAGE . $path)) ? $this->model_tool_image->resize($path, 120, 120) : $this->model_tool_image->resize('no_image.png', 120, 120);
 		}
 
-		foreach (['label_stock', 'label_offer', 'label_special'] as $label) {
+		foreach (['label_stock', 'label_offer'] as $label) {
 			$path = $this->config->get('config_' . $label);
 
 			$this->data[$label] = ($path && file_exists(DIR_IMAGE . $path) && is_file(DIR_IMAGE . $path)) ? $this->model_tool_image->resize($path, 120, 120) : $this->model_tool_image->resize('no_image.png', 120, 120);

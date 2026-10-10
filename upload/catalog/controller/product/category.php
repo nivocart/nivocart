@@ -120,6 +120,7 @@ class ControllerProductCategory extends Controller {
 			$this->data['text_list'] = $this->language->get('text_list');
 			$this->data['text_grid'] = $this->language->get('text_grid');
 			$this->data['text_variants'] = $this->language->get('text_variants');
+			$this->data['text_special_save'] = $this->language->get('text_special_save');
 			$this->data['text_sort'] = $this->language->get('text_sort');
 			$this->data['text_limit'] = $this->language->get('text_limit');
 			$this->data['text_offer'] = $this->language->get('text_offer');
@@ -290,10 +291,10 @@ class ControllerProductCategory extends Controller {
 				}
 
 				if ((float)$result['special']) {
-					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
+					$special_save = $this->model_catalog_product->getSpecialSaving((float)$result['price'], (float)$result['special'], (int)$result['tax_class_id']);
 					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
-					$special_label = false;
+					$special_save = '';
 					$special = false;
 				}
 
@@ -356,7 +357,7 @@ class ControllerProductCategory extends Controller {
 					'label_style'     => $label_style,
 					'stock_label'     => $stock_label,
 					'offer_label'     => $offer_label,
-					'special_label'   => $special_label,
+					'special_save'    => $special_save,
 					'offer'           => $offer,
 					'manufacturer'    => $manufacturer,
 					'name'            => $result['name'],

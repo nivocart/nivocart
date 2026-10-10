@@ -25,6 +25,7 @@ class ControllerModuleViewed extends Controller {
 		$this->data['text_from'] = $this->language->get('text_from');
 		$this->data['text_offer'] = $this->language->get('text_offer');
 		$this->data['text_variants'] = $this->language->get('text_variants');
+		$this->data['text_special_save'] = $this->language->get('text_special_save');
 
 		$this->data['lang'] = $this->language->get('code');
 
@@ -112,10 +113,10 @@ class ControllerModuleViewed extends Controller {
 				}
 
 				if ((float)$product_info['special']) {
-					$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
+					$special_save = $this->model_catalog_product->getSpecialSaving((float)$product_info['price'], (float)$product_info['special'], (int)$product_info['tax_class_id']);
 					$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->config->get('config_currency'));
 				} else {
-					$special_label = false;
+					$special_save = '';
 					$special = false;
 				}
 
@@ -142,7 +143,7 @@ class ControllerModuleViewed extends Controller {
 					'label_style'     => $label_style,
 					'stock_label'     => $stock_label,
 					'offer_label'     => $offer_label,
-					'special_label'   => $special_label,
+					'special_save'    => $special_save,
 					'offer'           => $offer,
 					'name'            => $product_info['name'],
 					'stock_status'    => $product_info['stock_status'],

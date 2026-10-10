@@ -92,10 +92,8 @@ class ControllerNodeCart extends Controller {
 			}
 
 			if ((float)$product['special']) {
-				$special_label = $this->model_tool_image->resize($this->config->get('config_label_special'), $label_ratio, $label_ratio);
 				$special = true;
 			} else {
-				$special_label = false;
 				$special = false;
 			}
 
@@ -150,7 +148,6 @@ class ControllerNodeCart extends Controller {
 				'thumb'         => $image,
 				'stock_label'   => $stock_label,
 				'offer_label'   => $offer_label,
-				'special_label' => $special_label,
 				'offer'         => $offer,
 				'name'          => $product['name'],
 				'model'         => $product['model'],

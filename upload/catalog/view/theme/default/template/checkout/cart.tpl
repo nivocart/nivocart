@@ -57,9 +57,6 @@
                   <?php if (!$product['stock_label'] && $product['offer']) { ?>
                     <div class="offer-small"><img src="<?php echo $product['offer_label']; ?>" alt="" /></div>
                   <?php } ?>
-                  <?php if (!$product['stock_label'] && !$product['offer'] && $product['special']) { ?>
-                    <div class="special-small"><img src="<?php echo $product['special_label']; ?>" alt="" /></div>
-                  <?php } ?>
                   <?php if ($product['label']) { ?>
                     <div class="product-label" style="left:<?php echo $product['label_style']; ?>px; margin:0 0 -<?php echo $product['label_style']; ?>px 0;">
                     <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>

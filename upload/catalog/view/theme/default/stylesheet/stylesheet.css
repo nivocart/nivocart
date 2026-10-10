@@ -1795,6 +1795,23 @@ ul.box-filter > li ul {
   white-space: nowrap;
   pointer-events: none;
 }
+/* Special Save — red "Save £x.xx" banner (top-left of product image, replaces the Special Label image) */
+.special-save {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 0;
+  background-color: var(--clr-danger);
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+}
 /* Product list */
 .product-list > div {
   overflow: auto;
@@ -2925,17 +2942,17 @@ table.address-options td h2 {
 /* ============================================================
  * OFFER LABELS
  * ============================================================ */
-.stock-large, .offer-large, .special-large {
+.stock-large, .offer-large {
   position: relative; top: 0; left: 0;
   height: 90px; width: 90px;
   display: block; margin: 0 0 -90px 0; padding: 0; z-index: 9;
 }
-.stock-medium, .offer-medium, .special-medium {
+.stock-medium, .offer-medium {
   position: relative; top: 0; left: 0;
   height: 50px; width: 50px;
   display: block; margin: 0 0 -50px 0; padding: 0; z-index: 9;
 }
-.stock-small, .offer-small, .special-small {
+.stock-small, .offer-small {
   position: relative; top: 0; left: 0;
   height: 30px; width: 30px;
   display: block; margin: 0 0 -30px 0; padding: 0; z-index: 9;
@@ -3122,7 +3139,7 @@ table.address-options td h2 {
   .hide-phone { display: none; }
   /* product-info: stack to single column on small tablets */
   .product-info { grid-template-columns: 1fr; gap: 20px; }
-  .product-info > .left { position: static; }
+  .product-info > .left { position: relative; top: auto; }
   /* Account forms — stack label above input at ≤640px */
   table.form, table.form tbody, table.form tr, table.form td { display: block; width: 100%; box-sizing: border-box; }
   table.form tr td:first-child { width: auto; }
@@ -3195,7 +3212,7 @@ table.address-options td h2 {
   .hide-phone { display: none; }
   /* product-info: single column on phones */
   .product-info { grid-template-columns: 1fr; gap: 16px; }
-  .product-info > .left { position: static; }
+  .product-info > .left { position: relative; top: auto; }
   /* category-page: stack image above text on phones */
   .category-page .image { float: none; margin-right: 0; margin-bottom: 8px; }
   .category-page .image img { width: 100%; height: auto; }

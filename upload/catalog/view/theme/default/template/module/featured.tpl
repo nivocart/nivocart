@@ -13,17 +13,21 @@
           <?php if (!$product['stock_label'] && $product['offer']) { ?>
             <div class="offer-medium"><img src="<?php echo $product['offer_label']; ?>" alt="" /></div>
           <?php } ?>
-          <?php if (!$product['stock_label'] && !$product['offer'] && $product['special']) { ?>
-            <div class="special-medium"><img src="<?php echo $product['special_label']; ?>" alt="" /></div>
-          <?php } ?>
-          <?php if ($product['label']) { ?>
+          <?php if ($product['label'] && ($product['stock_label'] || $product['offer'] || !$product['special_save'])) { ?>
             <div class="product-label" style="left:<?php echo $product['label_style']; ?>px; margin:0 0 -<?php echo $product['label_style']; ?>px 0;">
             <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>
           <?php } ?>
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
             <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
-          </picture></a><?php if ($show_mini_label && $product['mini_label']) { ?><span class="mini-label"><?php echo $product['mini_label']; ?></span><?php } ?></div>
+            </picture></a>
+            <?php if (!$product['stock_label'] && !$product['offer'] && $product['special_save']) { ?>
+              <span class="special-save"><?php echo $text_special_save; ?> <?php echo $product['special_save']; ?></span>
+            <?php } ?>
+            <?php if ($show_mini_label && $product['mini_label']) { ?>
+              <span class="mini-label"><?php echo $product['mini_label']; ?></span>
+            <?php } ?>
+          </div>
         <?php } ?>
         <?php if ($brand && $product['manufacturer']) { ?>
           <div class="brand"><?php echo $product['manufacturer']; ?></div>
@@ -122,17 +126,21 @@
           <?php if (!$product['stock_label'] && $product['offer']) { ?>
             <div class="offer-medium"><img src="<?php echo $product['offer_label']; ?>" alt="" /></div>
           <?php } ?>
-          <?php if (!$product['stock_label'] && !$product['offer'] && $product['special']) { ?>
-            <div class="special-medium"><img src="<?php echo $product['special_label']; ?>" alt="" /></div>
-          <?php } ?>
-          <?php if ($product['label']) { ?>
+          <?php if ($product['label'] && ($product['stock_label'] || $product['offer'] || !$product['special_save'])) { ?>
             <div class="product-label" style="left:<?php echo $product['label_style']; ?>px; margin:0 0 -<?php echo $product['label_style']; ?>px 0;">
             <img src="<?php echo $product['label']; ?>" alt="" height="<?php echo $product['label_style']; ?>" width="<?php echo $product['label_style']; ?>" /></div>
           <?php } ?>
           <div class="image"><a href="<?php echo $product['href']; ?>"><picture>
             <?php if ($product['thumb_webp']) { ?><source srcset="<?php echo $product['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" loading="lazy" />
-          </picture></a><?php if ($show_mini_label && $product['mini_label']) { ?><span class="mini-label"><?php echo $product['mini_label']; ?></span><?php } ?></div>
+            </picture></a>
+            <?php if (!$product['stock_label'] && !$product['offer'] && $product['special_save']) { ?>
+              <span class="special-save"><?php echo $text_special_save; ?> <?php echo $product['special_save']; ?></span>
+            <?php } ?>
+            <?php if ($show_mini_label && $product['mini_label']) { ?>
+              <span class="mini-label"><?php echo $product['mini_label']; ?></span>
+            <?php } ?>
+          </div>
         <?php } ?>
         <?php if ($brand && $product['manufacturer']) { ?>
           <div class="brand"><?php echo $product['manufacturer']; ?></div>

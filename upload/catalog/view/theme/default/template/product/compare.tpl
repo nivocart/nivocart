@@ -38,10 +38,7 @@
             <?php if (!$products[$product['product_id']]['stock_label'] && $products[$product['product_id']]['offer']) { ?>
               <div class="offer-medium"><img src="<?php echo $products[$product['product_id']]['offer_label']; ?>" alt="" /></div>
             <?php } ?>
-            <?php if (!$products[$product['product_id']]['stock_label'] && !$products[$product['product_id']]['offer'] && $products[$product['product_id']]['special']) { ?>
-              <div class="special-medium"><img src="<?php echo $products[$product['product_id']]['special_label']; ?>" alt="" /></div>
-            <?php } ?>
-            <?php if ($products[$product['product_id']]['label']) { ?>
+            <?php if ($products[$product['product_id']]['label'] && ($products[$product['product_id']]['stock_label'] || $products[$product['product_id']]['offer'] || !$products[$product['product_id']]['special_save'])) { ?>
               <div class="product-label">
                 <img src="<?php echo $products[$product['product_id']]['label']; ?>" alt="" height="<?php echo $products[$product['product_id']]['label_style']; ?>" width="<?php echo $products[$product['product_id']]['label_style']; ?>" style="margin:0 0 -<?php echo $products[$product['product_id']]['label_style']; ?>px <?php echo ($products[$product['product_id']]['label_style'] * 2); ?>px;" />
               </div>
@@ -49,7 +46,14 @@
             <div class="image"><a href="<?php echo $products[$product['product_id']]['href']; ?>"><picture>
             <?php if ($products[$product['product_id']]['thumb_webp']) { ?><source srcset="<?php echo $products[$product['product_id']]['thumb_webp']; ?>" type="image/webp" /><?php } ?>
             <img src="<?php echo $products[$product['product_id']]['thumb']; ?>" alt="<?php echo $products[$product['product_id']]['name']; ?>" loading="lazy" />
-          </picture></a><?php if ($show_mini_label && $products[$product['product_id']]['mini_label']) { ?><span class="mini-label"><?php echo $products[$product['product_id']]['mini_label']; ?></span><?php } ?></div>
+              </picture></a>
+              <?php if (!$products[$product['product_id']]['stock_label'] && !$products[$product['product_id']]['offer'] && $products[$product['product_id']]['special_save']) { ?>
+                <span class="special-save"><?php echo $text_special_save; ?> <?php echo $products[$product['product_id']]['special_save']; ?></span>
+              <?php } ?>
+              <?php if ($show_mini_label && $products[$product['product_id']]['mini_label']) { ?>
+                <span class="mini-label"><?php echo $products[$product['product_id']]['mini_label']; ?></span>
+              <?php } ?>
+            </div>
           <?php } ?>
           </td>
         <?php } ?>
