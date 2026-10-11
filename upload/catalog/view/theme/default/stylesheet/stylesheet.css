@@ -3236,3 +3236,8 @@ table.address-options td h2 {
     scroll-behavior: auto !important;
   }
 }
+
+/* Stripe Apple Pay / Google Pay buttons (checkout) */
+.stripe-express-wrap { margin: 0 0 12px 0; }
+.stripe-express-or { margin-top: 10px; font-size: 13px; text-align: center; color: #666; }
+.stripe-wallet-notice { margin: 0 0 10px 0; }

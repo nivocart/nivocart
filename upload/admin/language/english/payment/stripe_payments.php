@@ -24,6 +24,7 @@ $_['entry_order_status']    = 'Order Status:<span class="help">Paid: Select Proc
 $_['entry_order_failed']    = 'Order failed:<span class="help">Failed: Select Failed.</span>';
 $_['entry_order_disputed']  = 'Order disputed:<span class="help">Disputed: Select Chargeback.</span>';
 $_['entry_geo_zone']        = 'Geo Zone:';
+$_['entry_wallets']         = 'Apple Pay / Google Pay:<span class="help">Shows Apple Pay and Google Pay buttons on the checkout when the customer\'s device offers them. See the setup notes below before enabling.</span>';
 $_['entry_status']          = 'Status:';
 $_['entry_sort_order']      = 'Sort Order:';
 
@@ -54,6 +55,18 @@ $_['setup_sections'] = [
 	[
 		'title' => 'Step 3 &mdash; Copy the Signing Secret and save it above',
 		'intro' => 'After adding the endpoint, Stripe reveals a <em>Signing Secret</em> (starts with <code>whsec_</code>). Paste it into the <strong>Webhook Secret</strong> field at the top of this page. The webhook handler verifies every incoming request against this secret &mdash; without it all webhook calls are rejected with HTTP&nbsp;400.',
+	],
+	[
+		'title' => 'Apple Pay &amp; Google Pay (optional)',
+		'intro' => 'Both wallets are processed as normal card payments, so the fees, payouts and webhooks are the same. Turn on the <strong>Apple Pay / Google Pay</strong> setting above only after the steps below.',
+		'rows'  => [
+			['Stripe Dashboard', 'Under <em>Settings &rarr; Payment methods</em> make sure Apple Pay and Google Pay are switched on.'],
+			['Register the domain', 'Under <em>Settings &rarr; Payment method domains</em> add every domain that shows the checkout (live shop, demo, bench). Do this once per domain.'],
+			['Apple Pay file', 'Stripe gives you a file called <code>apple-developer-merchantid-domain-association</code>. Upload it to <code>.well-known/</code> in the web root of each domain so that <code>https://your-domain/.well-known/apple-developer-merchantid-domain-association</code> opens in a browser, then click Verify in Stripe.'],
+			['Google Pay', 'No registration is needed. The domain must use HTTPS.'],
+			['Where the buttons show', 'Apple Pay appears in Safari on a device with a card in Wallet. Google Pay appears in Chrome when the customer is signed in to a Google account with a saved card. Other browsers just show the card form.'],
+			['Live and test keys', 'Wallets use the same keys as the card form. Domain registration is separate for test and live mode in the Stripe Dashboard.'],
+		],
 	],
 	[
 		'title' => 'Technical notes',

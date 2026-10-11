@@ -46,6 +46,7 @@ class ControllerPaymentStripePayments extends Controller {
 		$this->data['entry_order_failed'] = $this->language->get('entry_order_failed');
 		$this->data['entry_order_disputed'] = $this->language->get('entry_order_disputed');
 		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
+		$this->data['entry_wallets'] = $this->language->get('entry_wallets');
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
@@ -170,6 +171,12 @@ class ControllerPaymentStripePayments extends Controller {
 			$this->data['stripe_payments_status'] = $this->request->post['stripe_payments_status'];
 		} else {
 			$this->data['stripe_payments_status'] = $this->config->get('stripe_payments_status');
+		}
+
+		if (isset($this->request->post['stripe_payments_wallets'])) {
+			$this->data['stripe_payments_wallets'] = $this->request->post['stripe_payments_wallets'];
+		} else {
+			$this->data['stripe_payments_wallets'] = $this->config->get('stripe_payments_wallets');
 		}
 
 		if (isset($this->request->post['stripe_payments_total'])) {

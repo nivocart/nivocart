@@ -3,6 +3,8 @@
 $_['text_title']             = 'Stripe Payments';
 $_['text_credit_card']       = 'Card Details';
 $_['text_wait']              = 'Please wait!';
+$_['text_wallet_or']         = 'or pay by card';
+$_['text_wallet_paid']       = 'Payment received. Please check your order details and confirm your order if it has not been placed automatically.';
 
 // Entry
 $_['entry_cc_owner']         = 'Cardholder Name:';
@@ -12,3 +14,4 @@ $_['error_payment_init']     = 'Payment could not be initialised. Please try aga
 $_['error_payment_failed']   = 'Your payment could not be completed. Please check your card details and try again.';
 $_['error_payment_mismatch'] = 'Payment session error. Please refresh the page and try again.';
 $_['error_order_not_found']  = 'Your order could not be found. Please contact support.';
+$_['error_wallet_total_changed'] = 'Your order total has changed. Nothing has been charged. Please try again.';

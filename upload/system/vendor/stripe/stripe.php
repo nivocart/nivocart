@@ -100,6 +100,63 @@ class stripe {
     }
 
     /**
+     * Fetch a PaymentIntent without requiring it to be succeeded.
+     *
+     * @param  string $payment_intent_id
+     * @return array  ['id', 'status', 'amount', 'currency', 'client_secret']
+     * @throws RuntimeException on API error
+     */
+    public function getPaymentIntent(string $payment_intent_id): array {
+        $response = $this->get('/payment_intents/' . $payment_intent_id);
+
+        return [
+            'id'            => $response['id'],
+            'status'        => $response['status'],
+            'amount'        => (int)$response['amount'],
+            'currency'      => strtolower($response['currency']),
+            'client_secret' => $response['client_secret'] ?? '',
+        ];
+    }
+
+    /**
+     * Change the amount of a PaymentIntent that has not been paid yet.
+     *
+     * @param  string $payment_intent_id
+     * @param  int    $amount_pence
+     * @return array  Same shape as getPaymentIntent()
+     * @throws RuntimeException on API error
+     */
+    public function updatePaymentIntentAmount(string $payment_intent_id, int $amount_pence): array {
+        $response = $this->post('/payment_intents/' . $payment_intent_id, ['amount' => $amount_pence]);
+
+        return [
+            'id'            => $response['id'],
+            'status'        => $response['status'],
+            'amount'        => (int)$response['amount'],
+            'currency'      => strtolower($response['currency']),
+            'client_secret' => $response['client_secret'] ?? '',
+        ];
+    }
+
+    /**
+     * Convert a decimal amount into Stripe's smallest currency unit.
+     * Zero-decimal currencies (JPY etc.) are not multiplied by 100.
+     *
+     * @param  float  $amount
+     * @param  string $currency ISO 4217 code
+     * @return int
+     */
+    public function toMinorUnits(float $amount, string $currency): int {
+        $zero_decimal = ['bif', 'clp', 'djf', 'gnf', 'jpy', 'kmf', 'krw', 'mga', 'pyg', 'rwf', 'ugx', 'vnd', 'vuv', 'xaf', 'xof', 'xpf'];
+
+        if (in_array(strtolower($currency), $zero_decimal, true)) {
+            return (int)round($amount);
+        }
+
+        return (int)round($amount * 100);
+    }
+
+    /**
      * Step 3 (optional) — Refund a payment, fully or partially.
      *
      * @param  string   $payment_intent_id
@@ -229,7 +286,7 @@ class stripe {
         $body = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_error = curl_error($ch);
-        curl_close($ch);
+        unset($ch);
 
         if ($curl_error !== '') {
             throw new RuntimeException('Stripe cURL error: ' . $curl_error);

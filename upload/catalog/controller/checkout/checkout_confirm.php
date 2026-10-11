@@ -124,6 +124,49 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 			}
 		}
 
+		// Guard — Stripe: the payment must be complete AND match the final total.
+		// Checked BEFORE addOrder() so a changed cart never produces a part-paid order.
+		// If the amounts differ the payment is refunded straight away.
+		if ($payment_code === 'stripe_payments') {
+			require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
+
+			$stripe = new Stripe(
+				$this->config->get('stripe_payments_secret_key'),
+				$this->config->get('stripe_payments_publishable_key'),
+				$this->config->get('stripe_payments_webhook_secret')
+			);
+
+			$stripe_intent_id = $this->session->data['stripe_payment_intent_id'] ?? '';
+
+			try {
+				$stripe_paid = $stripe->verifyPayment($stripe_intent_id);
+			} catch (RuntimeException $e) {
+				$this->log->write('Stripe checkout_confirm: payment not verified (' . $stripe_intent_id . '): ' . $e->getMessage());
+
+				$this->session->data['error'] = 'Payment could not be verified. Please try again.';
+				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+			}
+
+			$stripe_currency = strtolower($this->config->get('config_currency'));
+			$stripe_expected = $stripe->toMinorUnits(round($total, 2), $stripe_currency);
+
+			if ((int)$stripe_paid['amount'] !== $stripe_expected || strtolower($stripe_paid['currency']) !== $stripe_currency) {
+				$this->log->write('Stripe checkout_confirm: amount mismatch for ' . $stripe_intent_id . ' (paid ' . $stripe_paid['amount'] . ' ' . $stripe_paid['currency'] . ', expected ' . $stripe_expected . ' ' . $stripe_currency . ')');
+
+				unset($this->session->data['stripe_payment_intent_id']);
+
+				try {
+					$stripe->refund($stripe_intent_id);
+					$this->session->data['error'] = 'Your order total changed after payment, so the payment has been refunded. Please check your order and try again.';
+				} catch (RuntimeException $e) {
+					$this->log->write('Stripe checkout_confirm: refund failed for ' . $stripe_intent_id . ': ' . $e->getMessage());
+					$this->session->data['error'] = 'Your order total changed after payment. Please contact us quoting Stripe reference ' . $stripe_intent_id . '.';
+				}
+
+				$this->redirect($this->url->link('checkout/checkout', '', 'SSL'));
+			}
+		}
+
 		// ----------------------------------------------------------------
 		// Build order data
 		// ----------------------------------------------------------------

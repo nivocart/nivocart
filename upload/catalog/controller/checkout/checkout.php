@@ -148,6 +148,13 @@ class ControllerCheckoutCheckout extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
+		// Message left by checkout_confirm (payment not verified, total changed after payment, etc.)
+		if (isset($this->session->data['error'])) {
+			$this->data['error_warning'] = $this->session->data['error'];
+
+			unset($this->session->data['error']);
+		}
+
 		$this->load->model('checkout/order');
 		$this->load->model('account/address');
 		$this->load->model('localisation/country');

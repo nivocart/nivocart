@@ -77,35 +77,85 @@ class ControllerPaymentStripePayments extends Controller {
     }
 
     // -------------------------------------------------------------------------
-    // intentCreate() — AJAX: create PaymentIntent for one page checkout
-    // Called by JS before the order form is submitted, so the client_secret
-    // is available for Stripe.js to confirm the card in the browser.
-    // Returns JSON: { client_secret, publishable_key } or { error }
+    // intentCreate() — AJAX: create (or refresh) the PaymentIntent for one page checkout
+    // The amount is ALWAYS worked out on the server from the cart and the
+    // selected shipping / payment method. Nothing posted by the browser is trusted.
+    // An unpaid intent already in the session is reused and its amount updated,
+    // so abandoned intents do not pile up in Stripe.
+    // Returns JSON: { client_secret, publishable_key, amount } or { paid: true } or { error }
     // -------------------------------------------------------------------------
     public function intentCreate() {
         $this->language->load('payment/stripe_payments');
 
         $json = [];
 
-		$amount = (int)round((float)($this->request->post['cart_total'] ?? 0) * 100);
-		$currency_code = $this->request->post['currency_code'] ?? $this->config->get('config_currency');
+		if (!$this->cart->hasProducts()) {
+			$json['error'] = $this->language->get('error_payment_init');
+			$this->_sendJson($json);
+			return;
+		}
 
-        // Use a temporary reference — real order_id set after addOrder() in confirm
-        // We store the intent in session; order_id is updated in send() after addOrder()
-        $temp_ref = 'pending_' . $this->customer->getId() . '_' . time();
+		$currency_code = $this->config->get('config_currency');
+		$total = round($this->getOrderTotal(), 2);
 
-		require_once(DIR_SYSTEM . 'vendor/stripe/stripe.php');
+		if ($total <= 0) {
+			$json['error'] = $this->language->get('error_payment_init');
+			$this->_sendJson($json);
+			return;
+		}
 
         $stripe = $this->_loadStripe();
 
-        try {
-            $intent = $stripe->createPaymentIntent($amount, $currency_code, $temp_ref, $this->customer->getEmail());
+		$amount = $stripe->toMinorUnits($total, $currency_code);
 
-            // Store in session — send() will verify against this
+        try {
+			$intent_id = $this->session->data['stripe_payment_intent_id'] ?? '';
+			$intent = [];
+
+			if ($intent_id !== '') {
+				try {
+					$existing = $stripe->getPaymentIntent($intent_id);
+
+					if ($existing['currency'] === strtolower($currency_code)) {
+						if ($existing['status'] === 'succeeded' && $existing['amount'] === $amount) {
+							// Already paid for exactly this total (e.g. wallet payment before the form was submitted)
+							$json['paid'] = true;
+							$this->_sendJson($json);
+							return;
+						}
+
+						if ($existing['status'] === 'requires_payment_method') {
+							if ($existing['amount'] !== $amount) {
+								$existing = $stripe->updatePaymentIntentAmount($intent_id, $amount);
+							}
+
+							$intent = ['client_secret' => $existing['client_secret'], 'payment_intent_id' => $existing['id']];
+						}
+					}
+
+					if (!$intent && $existing['status'] === 'succeeded') {
+						// Paid for a different total: give the money back before starting again
+						$stripe->refund($intent_id);
+						$this->log->write('Stripe intentCreate: refunded ' . $intent_id . ' (paid ' . $existing['amount'] . ', cart now ' . $amount . ')');
+					}
+				} catch (RuntimeException $e) {
+					$this->log->write('Stripe intentCreate lookup error: ' . $e->getMessage());
+				}
+			}
+
+			if (!$intent) {
+				// Use a temporary reference — the real order_id exists only after addOrder()
+				$temp_ref = 'pending_' . $this->customer->getId() . '_' . time();
+
+				$intent = $stripe->createPaymentIntent($amount, $currency_code, $temp_ref, $this->customer->getEmail());
+			}
+
+            // Store in session — storeIntent() and checkout_confirm verify against this
             $this->session->data['stripe_payment_intent_id'] = $intent['payment_intent_id'];
 
             $json['client_secret'] = $intent['client_secret'];
             $json['publishable_key'] = $stripe->getPublishableKey();
+			$json['amount'] = $amount;
 
         } catch (RuntimeException $e) {
             $this->log->write('Stripe intentCreate error: ' . $e->getMessage());
@@ -173,15 +223,31 @@ class ControllerPaymentStripePayments extends Controller {
         $this->_sendJson($json);
     }
 
+	// -------------------------------------------------------------------------
+	// storeIntent() — AJAX: called after Stripe.js reports the payment succeeded.
+	// The intent must be the one this session created, and Stripe itself must
+	// confirm it is paid. The amount is checked again in checkout_confirm.
+	// -------------------------------------------------------------------------
 	public function storeIntent() {
-		$intent_id = isset($this->request->post['payment_intent_id']) ? trim($this->request->post['payment_intent_id']) : '';
+		$this->language->load('payment/stripe_payments');
 
-		if ($intent_id === '') {
-			$this->_sendJson(['error' => 'Missing intent ID']);
+		$intent_id = isset($this->request->post['payment_intent_id']) ? trim($this->request->post['payment_intent_id']) : '';
+		$session_intent_id = $this->session->data['stripe_payment_intent_id'] ?? '';
+
+		if ($intent_id === '' || $intent_id !== $session_intent_id) {
+			$this->log->write('Stripe storeIntent(): intent mismatch. Posted: ' . $intent_id . ' Session: ' . $session_intent_id);
+			$this->_sendJson(['error' => $this->language->get('error_payment_mismatch')]);
 			return;
 		}
 
-		$this->session->data['stripe_payment_intent_id'] = $intent_id;
+		try {
+			$this->_loadStripe()->verifyPayment($intent_id);
+		} catch (RuntimeException $e) {
+			$this->log->write('Stripe storeIntent() verify error: ' . $e->getMessage());
+			$this->_sendJson(['error' => $this->language->get('error_payment_failed')]);
+			return;
+		}
+
 		$this->_sendJson(['success' => true]);
 	}
 
@@ -199,6 +265,34 @@ class ControllerPaymentStripePayments extends Controller {
 
         return $stripe;
     }
+
+	/**
+	 * Order total in the store's default currency, built exactly as checkout_confirm builds it.
+	 */
+	private function getOrderTotal(): float {
+		$total = 0.0;
+		$taxes = $this->cart->getTaxes();
+
+		$this->load->model('setting/extension');
+
+		$results = $this->model_setting_extension->getExtensions('total');
+
+		usort($results, fn($a, $b) => $this->config->get($a['code'] . '_sort_order') <=> $this->config->get($b['code'] . '_sort_order'));
+
+		foreach ($results as $result) {
+			if ($this->config->get($result['code'] . '_status')) {
+				$this->load->model('total/' . $result['code']);
+
+				$model = $this->{'model_total_' . $result['code']};
+				$contribution = $model->getTotal($taxes, $total);
+
+				$total += $contribution['total'];
+				$taxes += $contribution['taxes'];
+			}
+		}
+
+		return $total;
+	}
 
     private function _sendJson(array $data): void {
         $this->response->addHeader('Content-Type: application/json');

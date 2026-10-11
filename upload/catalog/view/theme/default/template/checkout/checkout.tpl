@@ -333,6 +333,11 @@
 
         <!-- Stripe — mounted by stripe_payments.js -->
         <div id="widget-stripe_payments" class="payment-gateway-widget" style="display:none; margin:15px 0; padding:12px; border:1px solid #ddd; border-radius:4px; background:#fafafa;">
+          <div id="stripe-wallet-notice" class="stripe-wallet-notice success" hidden></div>
+          <div id="stripe-express-wrap" class="stripe-express-wrap" hidden>
+            <div id="stripe-express-element"></div>
+            <div id="stripe-express-or" class="stripe-express-or"></div>
+          </div>
           <h3 style="margin:0 0 10px 0; font-size:14px;"><?php echo isset($text_credit_card) ? $text_credit_card : 'Card Details'; ?></h3>
           <label for="stripe-cc-owner" style="display:block; font-size:13px; margin-bottom:4px;"><?php echo isset($entry_cc_owner) ? $entry_cc_owner : 'Cardholder Name'; ?></label>
           <input type="text" id="stripe-cc-owner" placeholder="Name on card" size="30" style="margin-bottom:8px; width:100%; box-sizing:border-box;" />

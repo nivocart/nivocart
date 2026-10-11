@@ -126,12 +126,18 @@ class ModelCheckoutPaymentWidget extends Model {
 	// =========================================================================
 
 	private function getWidgetDataStripePayments(float $total, string $currency_code): array {
+		$this->language->load('payment/stripe_payments');
+
 		return [
-			'publishable_key' => $this->config->get('stripe_payments_publishable_key'),
-			'intent_url'      => 'index.php?route=payment/stripe_payments/intentCreate',
-			'store_url'       => 'index.php?route=payment/stripe_payments/storeIntent',
-			'currency'        => $currency_code,
-			'total'           => $total
+			'publishable_key'           => $this->config->get('stripe_payments_publishable_key'),
+			'intent_url'                => 'index.php?route=payment/stripe_payments/intentCreate',
+			'store_url'                 => 'index.php?route=payment/stripe_payments/storeIntent',
+			'currency'                  => $currency_code,
+			'total'                     => $total,
+			'wallets'                   => (bool)$this->config->get('stripe_payments_wallets'),
+			'text_wallet_or'            => $this->language->get('text_wallet_or'),
+			'text_wallet_paid'          => $this->language->get('text_wallet_paid'),
+			'error_wallet_total_changed' => $this->language->get('error_wallet_total_changed')
 		];
 	}
 

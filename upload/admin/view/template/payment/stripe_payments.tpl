@@ -112,6 +112,18 @@
           </select></td>
         </tr>
         <tr>
+          <td><?php echo $entry_wallets; ?></td>
+          <td><select name="stripe_payments_wallets">
+            <?php if ($stripe_payments_wallets) { ?>
+              <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+              <option value="0"><?php echo $text_disabled; ?></option>
+            <?php } else { ?>
+              <option value="1"><?php echo $text_enabled; ?></option>
+              <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+            <?php } ?>
+          </select></td>
+        </tr>
+        <tr>
           <td><?php echo $entry_total; ?></td>
           <td><input type="text" name="stripe_payments_total" value="<?php echo $stripe_payments_total; ?>" /></td>
         </tr>
