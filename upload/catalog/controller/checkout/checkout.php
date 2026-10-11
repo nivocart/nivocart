@@ -614,6 +614,23 @@ class ControllerCheckoutCheckout extends Controller {
 		$this->data['shipping_methods'] = $quote_data;
 		$this->session->data['shipping_methods'] = $this->data['shipping_methods'];
 
+		// Only one shipping option available: select it automatically
+		if ($this->data['shipping_required']) {
+			$available_quotes = [];
+
+			foreach ($quote_data as $shipping_option) {
+				if (!$shipping_option['error'] && !empty($shipping_option['quote'])) {
+					foreach ($shipping_option['quote'] as $quote) {
+						$available_quotes[] = $quote;
+					}
+				}
+			}
+
+			if (count($available_quotes) === 1) {
+				$this->session->data['shipping_method'] = $available_quotes[0];
+			}
+		}
+
 		$this->data['shipping_method_code'] = (isset($this->session->data['shipping_method']) && $this->session->data['shipping_method']) ? $this->session->data['shipping_method']['code'] : '';
 
 		// Payment methods
