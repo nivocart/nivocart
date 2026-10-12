@@ -10,6 +10,7 @@ Release: TBA
 
 - Add new Special label for products in Catalog showing the amount of saving.
 - Add new Pinterest Business Meta Tag entry into the Main Setting Page.
+- Add new Pinterest/Google product feed for better Search Engine Optimization.
 - Fix issues with PayPal Express integration in both Admin and Catalog.
 - Fix issue with some product form prices being displayed with 4 decimals.
 - Fix issue with deprecated "data-vocabulary.org" breadcrumb markup in code.
