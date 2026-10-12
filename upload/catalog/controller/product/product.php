@@ -771,6 +771,7 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']);
 			$this->data['rating'] = (int)$product_info['rating'];
+			$this->data['review_total'] = (int)$product_info['reviews'];
 			$description = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
 			$description = preg_replace('/<img(?![^>]*\bloading\b)/i', '<img loading="lazy"', $description);
 			$this->data['description'] = $description;

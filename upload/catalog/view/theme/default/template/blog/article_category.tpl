@@ -1,9 +1,11 @@
 <?php echo $header; ?>
 <?php if ($this->config->get($template . '_breadcrumbs')) { ?>
-  <div class="breadcrumb">
-  <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <?php echo $breadcrumb['separator']; ?><div itemscope itemtype="http://data-vocabulary.org/Breadcrumb" style="display:inline;">
-    <a href="<?php echo $breadcrumb['href']; ?>" itemprop="url"><span itemprop="title"><?php echo $breadcrumb['text']; ?></span></a></div>
+  <div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+  <?php foreach ($breadcrumbs as $key => $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="<?php echo $breadcrumb['href']; ?>" itemprop="item"><span itemprop="name"><?php echo $breadcrumb['text']; ?></span></a>
+      <meta itemprop="position" content="<?php echo $key + 1; ?>" />
+    </span>
   <?php } ?>
   </div>
 <?php } ?>
