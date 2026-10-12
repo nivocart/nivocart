@@ -226,6 +226,7 @@ $_['entry_meta_google']             = 'Google Identification:';
 $_['entry_meta_bing']               = 'Bing Identification:';
 $_['entry_meta_yandex']             = 'Yandex Identification:';
 $_['entry_meta_baidu']              = 'Baidu Identification:';
+$_['entry_meta_pinterest']          = 'Pinterest (Business) Identification:';
 $_['entry_google_analytics']        = 'Google Analytics Code:';
 $_['entry_matomo_analytics']        = 'Matomo Analytics Code:';
 $_['entry_maintenance']             = 'Maintenance Mode:';
@@ -372,6 +373,7 @@ $_['help_meta_google']              = 'Paste the complete <b>&lt;meta&gt;</b> ta
 $_['help_meta_bing']                = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Bing</b> Webmaster Tools here.<br />It will be added to the Catalog Header to verify site ownership.';
 $_['help_meta_yandex']              = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Yandex</b> Webmaster here.<br />It will be added to the Catalog Header to verify site ownership.';
 $_['help_meta_baidu']               = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Baidu</b> Webmaster Tools here.<br />It will be added to the Catalog Header to verify site ownership.';
+$_['help_meta_pinterest']           = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Pinterest Business</b> (Claim your website) here.<br />It will be added to the Catalog Header to verify site ownership.';
 $_['help_google_analytics']         = 'Login to your <a onclick="window.open(\'http://www.google.com/analytics/\');"><u>Google Analytics</u></a> account and after creating your web site profile copy and paste the analytics code into this field. <b>Cookie Consent Compliant</b> — this script is only loaded after the visitor has accepted analytics cookies.';
 $_['help_matomo_analytics']         = 'Login to your <a onclick="window.open(\'https://matomo.org/\');"><u>Matomo Analytics</u></a> server and copy and paste the analytics code into this field. <b>Cookie Consent Compliant</b> — this script is only loaded after the visitor has accepted analytics cookies.';
 $_['help_maintenance']              = 'Prevents customers from browsing your store. They will instead see a maintenance message. If logged in as admin, you will see the store as normal.';

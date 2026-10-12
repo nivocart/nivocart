@@ -2058,6 +2058,13 @@
               <input type="text" id="config_meta_baidu_display" value="<?php echo htmlspecialchars($config_meta_baidu ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" />
             </td>
           </tr>
+          <tr>
+            <td><?php echo $entry_meta_pinterest; ?><span class="help"><?php echo $help_meta_pinterest; ?></span></td>
+            <td>
+              <input type="hidden" name="config_meta_pinterest" id="config_meta_pinterest_b64" />
+              <input type="text" id="config_meta_pinterest_display" value="<?php echo htmlspecialchars($config_meta_pinterest ?? '', ENT_QUOTES, 'UTF-8'); ?>" size="50" />
+            </td>
+          </tr>
         </table>
         <h2><?php echo $text_analytic; ?></h2>
         <table class="form">
@@ -2419,6 +2426,7 @@ $('#tabs a').tabs();
         { display: '#config_meta_bing_display', hidden: '#config_meta_bing_b64' },
         { display: '#config_meta_yandex_display', hidden: '#config_meta_yandex_b64' },
         { display: '#config_meta_baidu_display', hidden: '#config_meta_baidu_b64' },
+        { display: '#config_meta_pinterest_display', hidden: '#config_meta_pinterest_b64' },
         { display: '#config_google_analytics_display', hidden: '#config_google_analytics_b64' },
         { display: '#config_matomo_analytics_display', hidden: '#config_matomo_analytics_b64' },
         { display: '#config_map_code_display', hidden: '#config_map_code_b64' }

@@ -42,6 +42,10 @@ class ControllerCommonHeader extends Controller {
 			$this->document->addMeta(html_entity_decode($this->config->get('config_meta_baidu'), ENT_QUOTES, 'UTF-8'));
 		}
 
+		if ($this->config->get('config_meta_pinterest')) {
+			$this->document->addMeta(html_entity_decode($this->config->get('config_meta_pinterest'), ENT_QUOTES, 'UTF-8'));
+		}
+
 		$page_keywords = $this->document->getKeywords();
 
 		$default_keywords = $this->config->get('config_meta_keyword');
