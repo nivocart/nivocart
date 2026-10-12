@@ -73,7 +73,7 @@
           <td><table class="form">
             <?php foreach ($categories as $category) { ?>
               <tr>
-                <td><?php echo $category['name']; ?></td>
+                <td><?php echo $category['indent']; ?><?php echo $category['name']; ?></td>
                 <td><input type="text" name="pinterest_feed_category[<?php echo $category['category_id']; ?>]" value="<?php echo $category['value']; ?>" size="10" />
                   <?php if ($category['error']) { ?>
                     <span class="error"><?php echo $category['error']; ?></span>

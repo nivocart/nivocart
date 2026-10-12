@@ -146,10 +146,12 @@ class ControllerFeedPinterestFeed extends Controller {
 
 		$this->data['categories'] = [];
 
-		foreach ($this->model_feed_pinterest_feed->getTopCategories() as $category) {
+		foreach ($this->model_feed_pinterest_feed->getMappableCategories() as $category) {
 			$this->data['categories'][] = [
 				'category_id' => $category['category_id'],
 				'name'        => $category['name'],
+				'indent'      => $category['level'] ? '&nbsp;&nbsp;&nbsp;&nbsp;- ' : '',
+				'level'       => $category['level'],
 				'value'       => $saved[$category['category_id']] ?? '',
 				'error'       => isset($this->error['category_map'][(int)$category['category_id']]) ? $this->language->get('error_category') : ''
 			];

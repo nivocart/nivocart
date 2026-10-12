@@ -199,9 +199,10 @@ class ControllerFeedPinterestFeed extends Controller {
 
 		$description = mb_substr($description, 0, 10000, 'UTF-8');
 
-		// Category path (product_type) and Google category from the top level category
+		// Category path (product_type) and Google category: the most specific category that has an ID wins
 		$product_type = '';
 		$google_category = '';
+		$best_depth = 0;
 
 		foreach ($category_ids as $category_id) {
 			$path = $this->getCategoryPath($category_id, $categories);
@@ -214,13 +215,19 @@ class ControllerFeedPinterestFeed extends Controller {
 				$product_type = implode(' > ', array_column($path, 'name'));
 			}
 
-			$top_id = (int)$path[0]['category_id'];
+			// Walk from the deepest category up to the top level one
+			for ($depth = count($path); $depth >= 1; $depth--) {
+				$id = (int)$path[$depth - 1]['category_id'];
 
-			if (!empty($map[$top_id])) {
-				$google_category = (string)$map[$top_id];
-				$product_type = implode(' > ', array_column($path, 'name'));
+				if (!empty($map[$id])) {
+					if ($depth > $best_depth) {
+						$best_depth = $depth;
+						$google_category = (string)$map[$id];
+						$product_type = implode(' > ', array_column($path, 'name'));
+					}
 
-				break;
+					break;
+				}
 			}
 		}
 

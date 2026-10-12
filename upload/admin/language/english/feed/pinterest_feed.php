@@ -20,15 +20,15 @@ $_['entry_currency']         = 'Currency:';
 $_['entry_cache_hours']      = 'Cache Lifetime (hours):';
 $_['entry_min_image']        = 'Minimum Image Size (px):';
 $_['entry_category_default'] = 'Default Google Product Category:';
-$_['entry_category_map']     = 'Google Product Category per Top Category:';
+$_['entry_category_map']     = 'Google Product Category per Category:';
 $_['entry_cache']            = 'Feed Cache:';
 
 // Help
 $_['help_currency']          = 'Three letter ISO 4217 code. Prices are exported tax inclusive.';
 $_['help_cache_hours']       = 'The feed file is rebuilt when it is older than this (1 to 168). Pinterest fetches about once a day.';
 $_['help_min_image']         = 'Products whose main image is smaller than this (shortest side) are left out of the feed.';
-$_['help_category']          = 'Used for products whose top level category has no ID below. Enter the numeric ID only, from the <a href="https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt" target="_blank">Google Product Taxonomy</a>. Leave blank to omit the field.';
-$_['help_category_map']      = 'One box per top level category. Enter the <b>numeric ID</b> only (digits, not the text path) of the Google category that fits all products in that category. Leave a box blank to use the default.';
+$_['help_category']          = 'Used for products whose category (and its parent category) has no ID below. Enter the numeric ID only, from the <a href="https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt" target="_blank">Google Product Taxonomy</a>. Leave blank to omit the field.';
+$_['help_category_map']      = 'Top level categories are listed with their sub-categories indented. Enter the <b>numeric ID</b> only (digits, not the text path) of the Google category that fits the products in that category. A product uses the ID of its most specific category; if that box is blank it uses its parent category, then the default.';
 
 // Error
 $_['error_permission']       = 'Warning: You do not have permission to modify <b>Pinterest / Google Product Feed</b> !';
