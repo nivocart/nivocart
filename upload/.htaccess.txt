@@ -106,6 +106,9 @@ RewriteRule ^catalog/webhooks/ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^sitemap.xml$ index.php?route=feed/google_sitemap [L]
 
+## Pinterest / Google product feed (plain .xml address for feed fetchers)
+RewriteRule ^pinterest-feed\.xml$ index.php?route=feed/pinterest_feed [L]
+
 ## Block direct access to download directory
 RewriteRule ^download/(.*) index.php?route=error/not_found [L]
 
