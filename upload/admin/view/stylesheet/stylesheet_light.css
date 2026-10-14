@@ -1088,6 +1088,12 @@ a.button-filter:hover, .list a.button-filter:hover {
   border-color: var(--clr-success);
 }
 
+/* Button on the same line as a text input (centres the 26px button on the 32px input) */
+a.button.button-align {
+  vertical-align: top;
+  margin-top: 3px;
+}
+
 /* Button Form */
 a.button-form, .list a.button-form,
 a.button-form-install, .list a.button-form-install,

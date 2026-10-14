@@ -5,6 +5,8 @@
  * @package NivoCart
  */
 class ControllerFeedPinterestFeed extends Controller {
+	private const TAXONOMY_URL = 'https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt';
+
 	private $error = [];
 
 	public function index() {
@@ -52,6 +54,14 @@ class ControllerFeedPinterestFeed extends Controller {
 		$this->data['help_category'] = $this->language->get('help_category');
 		$this->data['help_category_map'] = $this->language->get('help_category_map');
 
+		$this->data['entry_taxonomy'] = $this->language->get('entry_taxonomy');
+		$this->data['help_taxonomy'] = $this->language->get('help_taxonomy');
+		$this->data['text_taxonomy_link'] = $this->language->get('text_taxonomy_link');
+		$this->data['text_taxonomy_placeholder'] = $this->language->get('text_taxonomy_placeholder');
+		$this->data['text_taxonomy_target'] = $this->language->get('text_taxonomy_target');
+		$this->data['text_taxonomy_empty'] = $this->language->get('text_taxonomy_empty');
+		$this->data['text_taxonomy_default'] = rtrim($this->language->get('entry_category_default'), ':');
+
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_apply'] = $this->language->get('button_apply');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -96,6 +106,8 @@ class ControllerFeedPinterestFeed extends Controller {
 		$this->data['action'] = $this->url->link('feed/pinterest_feed', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['clear'] = $this->url->link('feed/pinterest_feed/clear', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['taxonomy'] = str_replace('&amp;', '&', $this->url->link('feed/pinterest_feed/taxonomy', 'token=' . $this->session->data['token'], 'SSL'));
+		$this->data['taxonomy_url'] = self::TAXONOMY_URL;
 
 		// Settings
 		if (isset($this->request->post['pinterest_feed_status'])) {
@@ -209,6 +221,144 @@ class ControllerFeedPinterestFeed extends Controller {
 		}
 
 		$this->redirect($this->url->link('feed/pinterest_feed', 'token=' . $this->session->data['token'], 'SSL'));
+	}
+
+	/**
+	 * Ajax search in the Google Product Taxonomy: returns up to 25 matching "ID - path" entries as JSON.
+	 */
+	public function taxonomy() {
+		$this->language->load('feed/pinterest_feed');
+
+		$json = [];
+
+		$term = mb_strtolower(trim(html_entity_decode((string)($this->request->get['q'] ?? ''), ENT_QUOTES, 'UTF-8')), 'UTF-8');
+
+		if (!$this->user->hasPermission('modify', 'feed/pinterest_feed')) {
+			$json['error'] = $this->language->get('error_permission');
+		} elseif (mb_strlen($term, 'UTF-8') >= 2) {
+			$rows = $this->getTaxonomy();
+
+			if (!$rows) {
+				$json['error'] = $this->language->get('error_taxonomy');
+			} else {
+				$terms = preg_split('/\s+/u', $term, -1, PREG_SPLIT_NO_EMPTY);
+				$found = [];
+
+				foreach ($rows as $row) {
+					$path = mb_strtolower($row['path'], 'UTF-8');
+
+					if (count($terms) === 1 && ctype_digit($terms[0])) {
+						if (str_starts_with((string)$row['id'], $terms[0])) {
+							$found[] = [0, strlen($row['path']), $row];
+						}
+
+						continue;
+					}
+
+					$all = true;
+
+					foreach ($terms as $word) {
+						if (mb_strpos($path, $word, 0, 'UTF-8') === false) {
+							$all = false;
+
+							break;
+						}
+					}
+
+					if (!$all) {
+						continue;
+					}
+
+					// Matches in the last part of the path (the category itself) come first
+					$parts = explode(' > ', $path);
+					$last = end($parts);
+					$in_last = true;
+
+					foreach ($terms as $word) {
+						if (mb_strpos($last, $word, 0, 'UTF-8') === false) {
+							$in_last = false;
+
+							break;
+						}
+					}
+
+					$found[] = [$in_last ? 0 : 1, strlen($row['path']), $row];
+				}
+
+				usort($found, fn($a, $b) => [$a[0], $a[1]] <=> [$b[0], $b[1]]);
+
+				$json['results'] = [];
+
+				foreach (array_slice($found, 0, 25) as $item) {
+					$json['results'][] = [
+						'id'   => $item[2]['id'],
+						'path' => $item[2]['path']
+					];
+				}
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	/**
+	 * Reads the Google Product Taxonomy from the local copy, downloading it when it is missing or older than 30 days.
+	 *
+	 * @return array<int, array{id: int, path: string}>
+	 */
+	protected function getTaxonomy(): array {
+		$file = $this->getCacheDir() . 'pinterest_taxonomy.txt';
+
+		if (!is_file($file) || (time() - filemtime($file)) > 2592000) {
+			$this->downloadTaxonomy($file);
+		}
+
+		if (!is_file($file)) {
+			return [];
+		}
+
+		$rows = [];
+
+		foreach (file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $line) {
+			if (preg_match('/^(\d+) - (.+)$/u', $line, $match)) {
+				$rows[] = [
+					'id'   => (int)$match[1],
+					'path' => trim($match[2])
+				];
+			}
+		}
+
+		return $rows;
+	}
+
+	protected function downloadTaxonomy(string $file): void {
+		if (!function_exists('curl_init')) {
+			return;
+		}
+
+		$curl = curl_init(self::TAXONOMY_URL);
+
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($curl, CURLOPT_TIMEOUT, 20);
+
+		$body = curl_exec($curl);
+		$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+		unset($curl);
+
+		if ($code === 200 && is_string($body) && strlen($body) > 10000 && str_contains($body, 'Animals & Pet Supplies')) {
+			$tmp = $file . '.tmp';
+
+			if (file_put_contents($tmp, $body) !== false) {
+				rename($tmp, $file);
+			}
+		} elseif (is_file($file)) {
+			// Keep the old copy and try again in a day
+			touch($file, time() - 2592000 + 86400);
+		}
 	}
 
 	protected function getCacheDir(): string {

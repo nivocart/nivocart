@@ -357,12 +357,27 @@ class ControllerFeedPinterestFeed extends Controller {
 		foreach (['upc', 'ean', 'jan', 'isbn'] as $field) {
 			$value = preg_replace('/\D/', '', (string)$product[$field]);
 
-			if (in_array(strlen($value), [8, 12, 13, 14], true)) {
+			if (in_array(strlen($value), [8, 12, 13, 14], true) && $this->isValidGtin($value)) {
 				return $value;
 			}
 		}
 
 		return '';
+	}
+
+	/**
+	 * Checks the GS1 check digit (the last digit) of a GTIN-8, 12, 13 or 14.
+	 */
+	protected function isValidGtin(string $gtin): bool {
+		$digits = array_map('intval', str_split($gtin));
+		$check = array_pop($digits);
+		$sum = 0;
+
+		foreach (array_reverse($digits) as $index => $digit) {
+			$sum += $digit * ($index % 2 === 0 ? 3 : 1);
+		}
+
+		return ((10 - ($sum % 10)) % 10) === $check;
 	}
 
 	protected function formatPrice(float $amount, string $currency): string {
