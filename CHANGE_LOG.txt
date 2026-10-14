@@ -17,6 +17,7 @@ Release: TBA
 - Updated Stripe Payment method to allow Apple Pay and Google Pay Wallets.
 - Updated Email validation and filtering across all Admin and Catalog files.
 - Updated Discount and Special Tabs in product form to be more user friendly.
+- Removed obsolete Google Sitemap Feed no longer needed.
 
 
 NivoCart v2.5.1

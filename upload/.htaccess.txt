@@ -102,9 +102,8 @@ RewriteRule ^index\.php - [L]
 RewriteRule ^(admin|install|system|image|download|security)(/.*)?$ - [L]
 RewriteRule ^catalog/webhooks/ - [L]
 
-## Sitemap (serve the generated file if it exists, otherwise fall back to the dynamic feed)
+## Sitemap (serve the generated file if it exists)
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^sitemap.xml$ index.php?route=feed/google_sitemap [L]
 
 ## Pinterest / Google product feed (plain .xml address for feed fetchers)
 RewriteRule ^pinterest-feed\.xml$ index.php?route=feed/pinterest_feed [L]
