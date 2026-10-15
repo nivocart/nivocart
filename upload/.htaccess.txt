@@ -66,7 +66,7 @@ AddType video/webm .webm
 
 ## Set Cache Control header
 <IfModule mod_headers.c> 
- <filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+ <filesMatch ".(ico|pdf|flv|jpg|jpeg|png|webp|gif|js|css|swf)$">
    Header set Cache-Control "max-age=84600, public"
  </filesMatch>
 </IfModule>
@@ -185,6 +185,7 @@ RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
   ExpiresByType image/jpg                "access plus 3 months"
   ExpiresByType image/jpeg               "access plus 3 months"
   ExpiresByType image/png                "access plus 3 months"
+  ExpiresByType image/webp               "access plus 3 months"
   ExpiresByType image/svg+xml            "access plus 3 months"
   ExpiresByType video/mp4                "access plus 3 months"
   ExpiresByType video/ogg                "access plus 3 months"
