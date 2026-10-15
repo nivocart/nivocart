@@ -14,8 +14,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.uiColor = '#AADC6E';
 
 	// Define Responsive values
-	config.filebrowserWindowWidth = '640';
-	config.filebrowserWindowHeight = '440';
+	config.filebrowserWindowWidth = Math.min(screen.availWidth - 40, 1400);
+	config.filebrowserWindowHeight = Math.min(screen.availHeight - 80, 508);
 
 	config.enterMode = CKEDITOR.ENTER_BR;
 	config.shiftEnterMode = CKEDITOR.ENTER_P;

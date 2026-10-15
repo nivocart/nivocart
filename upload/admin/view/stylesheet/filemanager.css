@@ -332,6 +332,32 @@ span.branding a {
 	background: transparent !important;
 }
 
+/** Plupload fills the dialog: the widget is only min-height 300px, which
+ *  leaves empty space below it inside the taller jQuery UI dialog.
+ *  jQuery UI sets the content height, so the chain below follows it and
+ *  the file list (absolutely positioned) stretches with the container. */
+.ui-dialog #upload-multi #uploader,
+.ui-dialog #upload-multi .plupload_wrapper,
+.ui-dialog #upload-multi .plupload_container {
+	height: 100%;
+}
+.ui-dialog #upload-multi .plupload_wrapper,
+.ui-dialog #upload-multi .plupload_container {
+	box-sizing: border-box;
+	min-width: 0;
+	min-height: 0;
+}
+
+/** Phone widths: the intro sentence wraps over the column header, so hide it */
+.ui-dialog #upload-multi .plupload_header_content {
+	padding-right: 10px;
+}
+@media (max-width: 600px) {
+	.ui-dialog #upload-multi .plupload_header_text {
+		display: none;
+	}
+}
+
 /** Plupload - force legible button text */
 .ui-dialog .plupload_wrapper a,
 .ui-dialog .plupload_wrapper .plupload_button,

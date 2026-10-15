@@ -746,8 +746,8 @@ $(document).ready(function() {
         $('#column-left').prepend(html);
 
         $('#upload-multi').dialog({
-            height: 360,
-            width: <?php echo ($this->browser->checkMobile()) ? 600 : 730; ?>,
+            height: Math.min($(window).height() - 8, 500),
+            width: Math.min($(window).width() - 8, 1400),
             modal: true,
             resizable: false,
             create: function() {

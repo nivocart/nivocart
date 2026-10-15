@@ -714,8 +714,8 @@ function image_upload(field, thumb) {
 			}
 		},
 		bgiframe: false,
-		width: <?php echo ($this->browser->checkMobile()) ? 580 : 760; ?>,
-		height: 400,
+		width: Math.min($(window).width() - 20, 1400),
+		height: Math.min($(window).height() - 20, 500),
 		resizable: false,
 		modal: false
 	});
