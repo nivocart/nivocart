@@ -29,6 +29,9 @@
   <?php if ($error_user_log) { ?>
     <div class="attention"><?php echo $error_user_log; ?> &nbsp; <a href="<?php echo $view_user_log; ?>" title="<?php echo $text_user_log; ?>"><b><?php echo $text_user_log; ?></b></a></div>
   <?php } ?>
+  <?php if ($error_seo_url) { ?>
+    <div class="attention"><?php echo $error_seo_url; ?> &nbsp; <a href="<?php echo $open_seo_url_audit; ?>" title="<?php echo $text_seo_url_audit; ?>"><b><?php echo $text_seo_url_audit; ?></b></a></div>
+  <?php } ?>
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/home.png" alt="" /> <?php echo $heading_title; ?></h1>

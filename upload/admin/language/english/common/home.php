@@ -34,6 +34,7 @@ $_['text_topcountry']               = 'Top Country';
 $_['text_download']                 = 'Download';
 $_['text_guest']                    = 'Guest';
 $_['text_user_log']                 = 'View User Log';
+$_['text_seo_url_audit']            = 'Audit SEO URLs';
 
 // Help
 $_['help_mail_log']                 = 'Mail log';
@@ -90,3 +91,4 @@ $_['error_upload']                  = 'Warning: Upload directory %s not writeabl
 $_['error_logs']                    = 'Warning: Logs directory %s not writeable!';
 $_['error_unserialize']             = 'Warning: Expected a serialized string!';
 $_['error_user_log']                = 'Attention: Your <b>User Log</b> has %s records and is becoming very large!';
+$_['error_seo_url']                 = 'Attention: SEO URLs are enabled but some catalog entries have problems: <b>%d</b> missing, <b>%d</b> duplicated, <b>%d</b> mistyped and <b>%d</b> orphaned.';

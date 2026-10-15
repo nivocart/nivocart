@@ -298,27 +298,33 @@ class ControllerCommonHome extends Controller {
 		$seo_url_status = $this->config->get('config_seo_url');
 		$seo_url_ratio = 0;
 
+		$this->data['error_seo_url'] = '';
+
 		if ($seo_url_status) {
 			$this->load->model('tool/seo_url_manager');
 
-			$seo_url_total = $this->model_tool_seo_url_manager->getTotalUrls();
-			$keyword_total = $this->model_tool_seo_url_manager->getTotalUniqueKeywords();
+			$seo_url_audit = $this->model_tool_seo_url_manager->getAuditSummary();
 
-			$seo_url_variance = $seo_url_total - $keyword_total;
-
-			if ($seo_url_total === $keyword_total) {
+			if (!$seo_url_audit['total']) {
 				$seo_url_ratio = 1;
-			} elseif ($seo_url_variance <= 5) {
+			} elseif ($seo_url_audit['total'] <= 5) {
 				$seo_url_ratio = 2;
 			} else {
 				$seo_url_ratio = 3;
 			}
+
+			if ($seo_url_audit['total']) {
+				$this->data['error_seo_url'] = sprintf($this->language->get('error_seo_url'), (int)$seo_url_audit['missing'], (int)$seo_url_audit['duplicate'], (int)$seo_url_audit['mistyped'], (int)$seo_url_audit['orphan']);
+			}
 		}
+
+		$this->data['text_seo_url_audit'] = $this->language->get('text_seo_url_audit');
 
 		$this->data['seo_url_status'] = $seo_url_status;
 		$this->data['seo_url_ratio'] = $seo_url_ratio;
 
 		$this->data['open_seo_url'] = $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['open_seo_url_audit'] = $this->url->link('tool/seo_url_manager/audit', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Stylesheet
 		$admin_css = $this->config->get('config_admin_stylesheet');

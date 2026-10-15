@@ -17,6 +17,207 @@ class ControllerToolSeoUrlManager extends Controller {
 		$this->getList();
 	}
 
+	public function audit() {
+		$this->language->load('tool/seo_url_manager');
+
+		$this->document->setTitle($this->language->get('heading_title_audit'));
+
+		$this->load->model('tool/seo_url_manager');
+
+		$problems = ['missing', 'duplicate', 'mistyped', 'orphan'];
+		$types = ['product', 'category', 'manufacturer', 'information', 'news', 'other'];
+
+		$filter_problem = (isset($this->request->get['filter_problem']) && in_array($this->request->get['filter_problem'], $problems)) ? $this->request->get['filter_problem'] : '';
+		$filter_type = (isset($this->request->get['filter_type']) && in_array($this->request->get['filter_type'], $types)) ? $this->request->get['filter_type'] : '';
+		$page = isset($this->request->get['page']) ? max(1, (int)$this->request->get['page']) : 1;
+
+		$url = '';
+
+		if ($filter_problem) {
+			$url .= '&filter_problem=' . $filter_problem;
+		}
+
+		if ($filter_type) {
+			$url .= '&filter_type=' . $filter_type;
+		}
+
+		$this->data['breadcrumbs'] = [];
+
+		$this->data['breadcrumbs'][] = [
+			'text'      => $this->language->get('text_home'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'separator' => false
+		];
+
+		$this->data['breadcrumbs'][] = [
+			'text'      => $this->language->get('heading_title'),
+			'href'      => $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'], 'SSL'),
+			'separator' => ' :: '
+		];
+
+		$this->data['breadcrumbs'][] = [
+			'text'      => $this->language->get('heading_title_audit'),
+			'href'      => $this->url->link('tool/seo_url_manager/audit', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'separator' => ' :: '
+		];
+
+		$audit = $this->model_tool_seo_url_manager->getAudit();
+
+		$summary = $audit['summary'];
+
+		// Summary matrix, one row per entry type
+		$this->data['summary_rows'] = [];
+
+		foreach ($types as $type) {
+			if (!isset($summary['types'][$type]) && ($type === 'other')) {
+				continue;
+			}
+
+			$counts = [];
+
+			foreach ($problems as $problem) {
+				$count = $summary['types'][$type][$problem] ?? 0;
+
+				$counts[$problem] = [
+					'count' => $count,
+					'href'  => $count ? $this->url->link('tool/seo_url_manager/audit', 'token=' . $this->session->data['token'] . '&filter_problem=' . $problem . '&filter_type=' . $type, 'SSL') : ''
+				];
+			}
+
+			$this->data['summary_rows'][] = [
+				'label'  => $this->language->get('text_type_' . $type),
+				'counts' => $counts
+			];
+		}
+
+		$this->data['summary_totals'] = [];
+
+		foreach ($problems as $problem) {
+			$this->data['summary_totals'][$problem] = [
+				'count' => $summary[$problem],
+				'href'  => $summary[$problem] ? $this->url->link('tool/seo_url_manager/audit', 'token=' . $this->session->data['token'] . '&filter_problem=' . $problem, 'SSL') : ''
+			];
+		}
+
+		$this->data['audit_total'] = $summary['total'];
+
+		// Filtered, paged list
+		$rows = [];
+
+		foreach ($audit['rows'] as $row) {
+			if ((!$filter_problem || ($row['problem'] === $filter_problem)) && (!$filter_type || ($row['type'] === $filter_type))) {
+				$rows[] = $row;
+			}
+		}
+
+		$total = count($rows);
+		$limit = max(1, (int)$this->config->get('config_admin_limit'));
+		$page_rows = array_slice($rows, ($page - 1) * $limit, $limit);
+
+		$ids = [];
+
+		foreach ($page_rows as $row) {
+			if ($row['id']) {
+				$ids[$row['type']][] = $row['id'];
+			}
+		}
+
+		$names = [];
+
+		foreach ($ids as $type => $type_ids) {
+			$names[$type] = $this->model_tool_seo_url_manager->getAuditNames($type, $type_ids);
+		}
+
+		$this->data['audit_rows'] = [];
+
+		foreach ($page_rows as $row) {
+			$href = false;
+			$name = '';
+
+			if ($row['type'] !== 'other') {
+				$name = $names[$row['type']][$row['id']] ?? '';
+
+				$href = $this->url->link('catalog/' . $row['type'] . '/update', 'token=' . $this->session->data['token'] . '&' . $row['type'] . '_id=' . $row['id'], 'SSL');
+			}
+
+			$detail = [];
+
+			foreach (explode(',', $row['detail']) as $code) {
+				$detail[] = $this->language->get('text_detail_' . $row['problem'] . '_' . $code);
+			}
+
+			$this->data['audit_rows'][] = [
+				'problem' => $this->language->get('text_problem_' . $row['problem']),
+				'status'  => $row['problem'],
+				'type'    => $this->language->get('text_type_' . $row['type']),
+				'name'    => $name,
+				'href'    => $href,
+				'query'   => $row['query'],
+				'keyword' => $row['keyword'],
+				'detail'  => implode(', ', $detail),
+				'alias'   => $row['url_alias_id'] ? $this->url->link('tool/seo_url_manager/update', 'token=' . $this->session->data['token'] . '&url_alias_id=' . $row['url_alias_id'], 'SSL') : ''
+			];
+		}
+
+		$this->data['heading_title'] = $this->language->get('heading_title_audit');
+
+		$this->data['text_no_results'] = $this->language->get('text_audit_clean');
+		$this->data['text_summary'] = $this->language->get('text_summary');
+		$this->data['text_problems_found'] = sprintf($this->language->get('text_problems_found'), $summary['total']);
+		$this->data['text_filtered'] = ($filter_problem || $filter_type) ? $this->language->get('text_filtered') : '';
+
+		$this->data['column_type'] = $this->language->get('column_type');
+		$this->data['column_problem'] = $this->language->get('column_problem');
+		$this->data['column_name'] = $this->language->get('column_name');
+		$this->data['column_query'] = $this->language->get('column_query');
+		$this->data['column_keyword'] = $this->language->get('column_keyword');
+		$this->data['column_detail'] = $this->language->get('column_detail');
+		$this->data['column_action'] = $this->language->get('column_action');
+
+		$this->data['problem_labels'] = [];
+
+		foreach ($problems as $problem) {
+			$this->data['problem_labels'][$problem] = $this->language->get('text_problem_' . $problem);
+		}
+
+		$this->data['text_edit_entry'] = $this->language->get('text_edit_entry');
+		$this->data['text_edit_alias'] = $this->language->get('text_edit_alias');
+		$this->data['text_total'] = $this->language->get('text_total');
+
+		$this->data['button_run_audit'] = $this->language->get('button_run_audit');
+		$this->data['button_show_all'] = $this->language->get('button_show_all');
+		$this->data['button_back'] = $this->language->get('button_back');
+
+		$this->data['run_audit'] = $this->url->link('tool/seo_url_manager/audit', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['back'] = $this->url->link('tool/seo_url_manager', 'token=' . $this->session->data['token'], 'SSL');
+
+		if (!$this->config->get('config_seo_url')) {
+			$this->data['error_url_status'] = $this->language->get('error_url_status');
+		} else {
+			$this->data['error_url_status'] = '';
+		}
+
+		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
+		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
+
+		$pagination = new Pagination();
+		$pagination->total = $total;
+		$pagination->page = $page;
+		$pagination->limit = $limit;
+		$pagination->text = $this->language->get('text_pagination');
+		$pagination->url = $this->url->link('tool/seo_url_manager/audit', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+
+		$this->data['pagination'] = $pagination->render();
+
+		$this->template = 'tool/seo_url_manager_audit.tpl';
+		$this->children = [
+			'common/header',
+			'common/footer'
+		];
+
+		$this->response->setOutput($this->render());
+	}
+
 	public function insert() {
 		$this->language->load('tool/seo_url_manager');
 
@@ -142,6 +343,7 @@ class ControllerToolSeoUrlManager extends Controller {
 
 		$this->data['insert'] = $this->url->link('tool/seo_url_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('tool/seo_url_manager/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['audit'] = $this->url->link('tool/seo_url_manager/audit', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
@@ -225,6 +427,7 @@ class ControllerToolSeoUrlManager extends Controller {
 		$this->data['link_seo_information'] = $this->language->get('link_seo_information');
 		$this->data['link_seo_news'] = $this->language->get('link_seo_news');
 
+		$this->data['button_audit'] = $this->language->get('button_audit');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
 
