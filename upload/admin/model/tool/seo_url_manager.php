@@ -276,8 +276,7 @@ class ModelToolSeoUrlManager extends Model {
 		$order = array_flip($problems);
 
 		usort($rows, static function (array $a, array $b) use ($order): int {
-			return [$order[$a['problem']], $a['problem'] === 'duplicate' ? mb_strtolower($a['keyword'], 'UTF-8') : '', $a['type'], $a['id'], $a['url_alias_id']]
-				<=> [$order[$b['problem']], $b['problem'] === 'duplicate' ? mb_strtolower($b['keyword'], 'UTF-8') : '', $b['type'], $b['id'], $b['url_alias_id']];
+			return [$order[$a['problem']], $a['problem'] === 'duplicate' ? mb_strtolower($a['keyword'], 'UTF-8') : '', $a['type'], $a['id'], $a['url_alias_id']] <=> [$order[$b['problem']], $b['problem'] === 'duplicate' ? mb_strtolower($b['keyword'], 'UTF-8') : '', $b['type'], $b['id'], $b['url_alias_id']];
 		});
 
 		foreach ($rows as $row) {
