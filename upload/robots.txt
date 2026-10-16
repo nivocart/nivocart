@@ -97,6 +97,20 @@ Disallow: /permission.php
 Disallow: /maintenance.php
 
 # ---------------------------------------------------------------
+# Pinterest (catalog feed and image fetcher): no Crawl-delay, so it can
+# download the product images listed in the product feed in one run.
+# ---------------------------------------------------------------
+User-agent: Pinterestbot
+User-agent: Pinterest
+Allow: /image/
+
+Disallow: /admin/
+Disallow: /download/
+Disallow: /security/
+Disallow: /system/
+Disallow: /vendor/
+
+# ---------------------------------------------------------------
 # Catch-all for everything else (unknown/other bots): keep a
 # conservative delay as a safety net.
 # ---------------------------------------------------------------
