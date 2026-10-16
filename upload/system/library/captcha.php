@@ -11,61 +11,91 @@ class Captcha {
 	public string $code = '';
 
 	/**
-	 * @var string
-	 */
-	public string $font;
-
-	/**
-	 * @var string
-	 */
-	public string $file;
-
-	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		$captchaText = substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 4);
+		$characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+		$last = strlen($characters) - 1;
 
-		$this->code = $captchaText;
+		for ($i = 0; $i < 4; $i++) {
+			$this->code .= $characters[random_int(0, $last)];
+		}
 	}
 
+	/**
+	 * Get Code
+	 *
+	 * The code must only ever be stored in the session. It must never be sent to the client as text.
+	 *
+	 * @return string
+	 */
 	public function getCode(): string {
 		return $this->code;
 	}
 
 	/**
-	 * Image Function
+	 * Get Image
 	 *
-	 * Currently not displaying. Not being used.
+	 * Builds the captcha as a PNG image and returns the raw image data. Nothing is sent to the browser here,
+	 * so no stray output can corrupt the image.
+	 *
+	 * @param string $font
+	 *
+	 * @return string Raw PNG data or an empty string if GD/FreeType is unavailable.
 	 */
-	public function showImage(string $font) {
-		if ($font) {
-			$file = DIR_SYSTEM . 'fonts/' . (string)$font . '.ttf';
-		} else {
-			$file = DIR_SYSTEM . 'fonts/Recaptcha.ttf';
+	public function getImage(string $font = ''): string {
+		if (!function_exists('imagecreatetruecolor') || !function_exists('imagettftext')) {
+			return '';
 		}
 
-		$this->image = imagecreatetruecolor(186, 42);
+		$file = DIR_SYSTEM . 'fonts/' . ($font ? basename($font) : 'Recaptcha') . '.ttf';
 
-		$background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
+		if (!is_file($file)) {
+			return '';
+		}
 
-		$text_color = imagecolorallocate($this->image, 10, 10, 10);
-		$text_shadow = imagecolorallocate($this->image, 128, 128, 128);
+		$width = 186;
+		$height = 42;
 
-		imagefilledrectangle($this->image, 0, 0, 292, 42, $background);
+		$image = imagecreatetruecolor($width, $height);
 
-		imagettftext($this->image, 22, 0, 6, 28, $text_color, $file, $this->code);
-		imagettftext($this->image, 22, 0, 7, 29, $text_shadow, $file, $this->code);
+		$background = imagecolorallocate($image, 250, 250, 250);
+		$text_color = imagecolorallocate($image, 10, 10, 10);
+		$text_shadow = imagecolorallocate($image, 128, 128, 128);
+		$noise_color = imagecolorallocate($image, 150, 150, 150);
 
-		// PNG image post-processing functions
-		imagealphablending($this->image, false);
-		imagesavealpha($this->image, true);
-		imagecolortransparent($this->image, $background);
+		imagefilledrectangle($image, 0, 0, $width, $height, $background);
 
-		header('Content-type: image/png');
+		// Background noise: dots and lines
+		for ($i = 0; $i < 60; $i++) {
+			imagesetpixel($image, random_int(0, $width - 1), random_int(0, $height - 1), $noise_color);
+		}
 
-		imagepng($this->image, null, 9);
+		for ($i = 0; $i < 4; $i++) {
+			imageline($image, random_int(0, $width), random_int(0, $height), random_int(0, $width), random_int(0, $height), $noise_color);
+		}
 
-		unset($this->image);
+		// Draw each character with a slight random angle and vertical offset
+		$length = strlen($this->code);
+		$step = (int)floor(($width - 20) / $length);
+
+		for ($i = 0; $i < $length; $i++) {
+			$x = 10 + ($i * $step) + random_int(0, 6);
+			$y = 29 + random_int(-3, 3);
+			$angle = random_int(-12, 12);
+
+			imagettftext($image, 22, $angle, $x + 1, $y + 1, $text_shadow, $file, $this->code[$i]);
+			imagettftext($image, 22, $angle, $x, $y, $text_color, $file, $this->code[$i]);
+		}
+
+		ob_start();
+
+		imagepng($image, null, 9);
+
+		$data = (string)ob_get_clean();
+
+		unset($image);
+
+		return $data;
 	}
 }

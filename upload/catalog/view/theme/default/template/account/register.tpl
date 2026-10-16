@@ -200,7 +200,7 @@
     <div id="captcha-wrap">
       <div class="captcha-box">
         <div class="captcha-view">
-          <div><b><?php echo $captcha_image; ?></b></div>
+          <img src="<?php echo $captcha_image; ?>" width="186" height="42" alt="<?php echo $entry_captcha; ?>" />
         </div>
       </div>
       <div class="captcha-text">

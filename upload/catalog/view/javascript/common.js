@@ -247,3 +247,16 @@ function goToReviews(product_id) {
 	}, 'slow');
 	return false;
 }
+
+// Refresh Captcha Image
+function refreshCaptcha() {
+	var $img = $('#captcha-wrap .captcha-view img');
+
+	if ($img.length) {
+		$img.attr('src', $img.attr('src').replace(/[&?]t=\d+$/, '') + '&t=' + Date.now());
+	}
+}
+
+$(document).on('click', '#captcha-wrap .captcha-action', function() {
+	refreshCaptcha();
+});

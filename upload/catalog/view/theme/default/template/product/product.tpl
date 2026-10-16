@@ -646,7 +646,7 @@
           <div id="captcha-wrap">
             <div class="captcha-box">
               <div class="captcha-view">
-                <div id="captcha-image" style="font-size: 28px; padding:3px 0;"><b><?php echo $captcha_image; ?></b></div>
+                <img src="<?php echo $captcha_image; ?>" id="captcha-image" width="186" height="42" alt="<?php echo $entry_captcha; ?>" />
               </div>
             </div>
             <div class="captcha-text">
@@ -942,6 +942,8 @@ $('#button-review').on('click', function() {
 			$('#button-review').attr('disabled', false);
 			$('.attention').remove();
 			$('input[name=\'captcha\']').val('');
+
+			refreshCaptcha();
 		},
 		success: function(data) {
 			if (data['error']) {

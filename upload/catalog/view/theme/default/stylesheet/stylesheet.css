@@ -2713,6 +2713,11 @@ ul.box-filter > li ul {
   text-align: center;
   margin-top: 6px;
   margin-right: 1px;
+  cursor: pointer;
+}
+#captcha-wrap .captcha-box .captcha-view img {
+  display: block;
+  margin: 0 auto;
 }
 
 /* ============================================================

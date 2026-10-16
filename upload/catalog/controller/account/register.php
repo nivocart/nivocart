@@ -365,14 +365,8 @@ class ControllerAccountRegister extends Controller {
 			$this->data['captcha'] = '';
 		}
 
-		// Create session Captcha
-		$this->load->library('captcha');
-
-		$captcha = new Captcha();
-
-		$this->session->data['captcha'] = $captcha->getCode();
-
-		$this->data['captcha_image'] = $this->session->data['captcha'];
+		// Captcha is served as an image by common/captcha. The code is only ever kept in the session.
+		$this->data['captcha_image'] = $this->url->link('common/captcha', '', 'SSL');
 
 		if ($this->config->get('config_account_id')) {
 			$this->load->model('catalog/information');
@@ -529,6 +523,9 @@ class ControllerAccountRegister extends Controller {
 
 		if ($this->config->get('config_account_captcha')) {
 			if (!isset($this->request->post['captcha']) || empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== ($this->request->post['captcha']))) {
+				// A failed attempt invalidates the code, so it cannot be guessed repeatedly
+				unset($this->session->data['captcha']);
+
 				$this->error['captcha'] = $this->language->get('error_captcha');
 			}
 		}

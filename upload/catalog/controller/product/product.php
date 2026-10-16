@@ -778,14 +778,8 @@ class ControllerProductProduct extends Controller {
 
 			// Captcha required
 			$this->data['captcha'] = '';
-			// Generate session captcha
-			$this->load->library('captcha');
-
-			$captcha = new Captcha();
-
-			$this->session->data['captcha'] = $captcha->getCode();
-
-			$this->data['captcha_image'] = $this->session->data['captcha'];
+			// Captcha is served as an image by common/captcha. The code is only ever kept in the session.
+			$this->data['captcha_image'] = $this->url->link('common/captcha', '', 'SSL');
 
 			// Attributes
 			$attribute_groups = $this->model_catalog_product->getProductAttributes($product_id);
@@ -1094,7 +1088,10 @@ class ControllerProductProduct extends Controller {
 				$json['error'] = $this->language->get('error_text');
 			} elseif (empty($this->request->post['rating'])) {
 				$json['error'] = $this->language->get('error_rating');
-			} elseif (empty($this->session->data['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
+			} elseif (empty($this->session->data['captcha']) || !isset($this->request->post['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
+				// A failed attempt invalidates the code, so it cannot be guessed repeatedly
+				unset($this->session->data['captcha']);
+
 				$json['error'] = $this->language->get('error_captcha');
 			}
 
