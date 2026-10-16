@@ -1083,7 +1083,8 @@ a.button-filter:hover, .list a.button-filter:hover {
 }
 
 /* Button on the same line as a text input (centres the 26px button on the 32px input) */
-a.button.button-align {
+a.button.button-align,
+a.button-delete.button-align {
   vertical-align: top;
   margin-top: 3px;
 }
