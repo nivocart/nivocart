@@ -21,40 +21,12 @@ class ControllerToolUpload extends Controller {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
-			// Allowed file extension types
-			$allowed = [];
+			// Validate the extension, the real MIME type (detected server-side) and the contents
+			$this->load->library('fileupload');
 
-			$extension_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_ext_allowed'));
+			$fileupload = new FileUpload();
 
-			$filetypes = explode("\n", $extension_allowed);
-
-			foreach ($filetypes as $filetype) {
-				$allowed[] = trim($filetype);
-			}
-
-			if (!in_array(strtolower(substr(strrchr($filename, '.'), 1)), $allowed)) {
-				$json['error'] = $this->language->get('error_filetype');
-			}
-
-			// Allowed file mime types
-			$allowed = [];
-
-			$mime_allowed = preg_replace('~\r?\n~', "\n", $this->config->get('config_file_mime_allowed'));
-
-			$filetypes = explode("\n", $mime_allowed);
-
-			foreach ($filetypes as $filetype) {
-				$allowed[] = trim($filetype);
-			}
-
-			if (!in_array($this->request->files['file']['type'], $allowed)) {
-				$json['error'] = $this->language->get('error_filetype');
-			}
-
-			// Check to see if any PHP files are trying to be uploaded
-			$content = file_get_contents($this->request->files['file']['tmp_name']);
-
-			if (preg_match('/\<\?php/i', $content)) {
+			if (!$fileupload->validate($this->request->files['file']['tmp_name'], $filename, (string)$this->config->get('config_file_extension_allowed'), (string)$this->config->get('config_file_mime_allowed'))) {
 				$json['error'] = $this->language->get('error_filetype');
 			}
 
@@ -70,7 +42,7 @@ class ControllerToolUpload extends Controller {
 		clearstatcache();
 
 		if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-			$file = basename($filename) . '.' . substr(md5(mt_rand()), 0, 10);
+			$file = basename($filename) . '.' . bin2hex(random_bytes(8));
 
 			move_uploaded_file($this->request->files['file']['tmp_name'], DIR_UPLOAD . $file);
 

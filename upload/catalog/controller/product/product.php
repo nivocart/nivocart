@@ -1120,36 +1120,12 @@ class ControllerProductProduct extends Controller {
 				$json['error'] = $this->language->get('error_filename');
 			}
 
-			// Allowed file extension types
-			$allowed = [];
+			// Validate the extension, the real MIME type (detected server-side) and the contents
+			$this->load->library('fileupload');
 
-			$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_extension_allowed')));
+			$fileupload = new FileUpload();
 
-			foreach ($filetypes as $filetype) {
-				$allowed[] = trim($filetype);
-			}
-
-			if (!in_array(substr(strrchr($filename, '.'), 1), $allowed)) {
-				$json['error'] = $this->language->get('error_filetype');
-			}
-
-			// Allowed file mime types
-			$allowed = [];
-
-			$filetypes = explode("\n", str_replace(["\r\n", "\r"], "\n", $this->config->get('config_file_mime_allowed')));
-
-			foreach ($filetypes as $filetype) {
-				$allowed[] = trim($filetype);
-			}
-
-			if (!in_array($this->request->files['file']['type'], $allowed)) {
-				$json['error'] = $this->language->get('error_filetype');
-			}
-
-			// Check to see if any PHP files are trying to be uploaded
-			$content = file_get_contents($this->request->files['file']['tmp_name']);
-
-			if (preg_match('/\<\?php/i', $content)) {
+			if (!$fileupload->validate($this->request->files['file']['tmp_name'], $filename, (string)$this->config->get('config_file_extension_allowed'), (string)$this->config->get('config_file_mime_allowed'))) {
 				$json['error'] = $this->language->get('error_filetype');
 			}
 
