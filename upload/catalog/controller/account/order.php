@@ -693,6 +693,26 @@ class ControllerAccountOrder extends Controller {
 	 * Calls -> order_download.tpl
 	 */
 	public function download() {
+		if (isset($this->request->get['order_id'])) {
+			$order_id = (int)$this->request->get['order_id'];
+		} else {
+			$order_id = 0;
+		}
+
+		if (!$this->customer->isLogged()) {
+			$this->session->data['redirect'] = $this->url->link('account/order/download', 'order_id=' . $order_id, 'SSL');
+
+			$this->redirect($this->url->link('account/login', '', 'SSL'));
+		}
+
+		if (!$this->customer->isSecure() || $this->customer->loginExpired()) {
+			$this->customer->logout();
+
+			$this->session->data['redirect'] = $this->url->link('account/order/download', 'order_id=' . $order_id, 'SSL');
+
+			$this->redirect($this->url->link('account/login', '', 'SSL'));
+		}
+
 		$this->language->load('account/order');
 
 		$this->data['title'] = $this->language->get('heading_title');
