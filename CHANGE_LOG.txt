@@ -12,6 +12,7 @@ Release: TBA
 - Add new Pinterest Business Meta Tag entry into the Main Setting Page.
 - Add new Pinterest/Google product feed for better Search Engine Optimization.
 - Add new Seo_Urls Audit function in "Seo Url Manager" to validate the Urls.
+- Add new meta description tags to dynamic catalog pages such as Search.
 - Fix issues with PayPal Express integration in both Admin and Catalog.
 - Fix issue with some product form prices being displayed with 4 decimals.
 - Fix issue with deprecated "data-vocabulary.org" breadcrumb markup in code.

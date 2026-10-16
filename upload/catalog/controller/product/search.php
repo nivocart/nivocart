@@ -76,6 +76,13 @@ class ControllerProductSearch extends Controller {
 
 		$this->document->setTitle($page_title);
 
+		// --- Meta description ---
+		if ($title_suffix) {
+			$this->document->setDescription(sprintf($this->language->get('text_meta_description'), htmlspecialchars(mb_substr($title_suffix, 0, 60), ENT_QUOTES, 'UTF-8', false), $this->config->get('config_name')));
+		} else {
+			$this->document->setDescription(sprintf($this->language->get('text_meta_description_empty'), $this->config->get('config_name')));
+		}
+
 		// --- Breadcrumbs ---
 		$core_keys = ['search', 'tag', 'color', 'description', 'category_id', 'sub_category', 'sort', 'order', 'limit', 'page'];
 

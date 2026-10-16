@@ -3,6 +3,8 @@
 $_['heading_title']     = 'All Brands';
 
 // Text
+$_['text_meta_description']      = 'Shop %s products at %s. Browse the range, prices and offers.';
+$_['text_meta_description_list'] = 'Browse all brands at %s.';
 $_['text_brand']        = 'Brand';
 $_['text_index']        = 'Brand Index:';
 $_['text_error']        = 'Brand not found!';

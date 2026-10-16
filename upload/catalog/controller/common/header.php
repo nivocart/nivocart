@@ -53,7 +53,25 @@ class ControllerCommonHeader extends Controller {
 		$this->language->load('common/header');
 
 		$this->data['base'] = $server;
-		$this->data['description'] = $this->document->getDescription();
+		// Use the store description when the page did not set one (search engines flag a missing description)
+		$page_description = $this->document->getDescription();
+
+		if ($page_description === '') {
+			$page_description = (string)$this->config->get('config_meta_description');
+		}
+
+		// Private, per-visitor and search result pages must not be indexed
+		$route = isset($this->request->get['route']) ? (string)$this->request->get['route'] : '';
+
+		foreach (['account/', 'affiliate/', 'checkout/', 'product/search', 'product/compare', 'error/not_found'] as $noindex_route) {
+			if (str_starts_with($route, $noindex_route)) {
+				$this->document->addMeta('<meta name="robots" content="noindex, follow">');
+
+				break;
+			}
+		}
+
+		$this->data['description'] = $page_description;
 		$this->data['keywords'] = $page_keywords ? $page_keywords : $default_keywords;
 		$this->data['metas'] = $this->document->getMetas();
 		$this->data['links'] = $this->document->getLinks();

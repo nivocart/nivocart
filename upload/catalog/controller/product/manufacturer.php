@@ -16,6 +16,7 @@ class ControllerProductManufacturer extends Controller {
 		$this->load->model('tool/image');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setDescription(sprintf($this->language->get('text_meta_description_list'), $this->config->get('config_name')));
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -132,6 +133,8 @@ class ControllerProductManufacturer extends Controller {
 			} else {
 				$this->document->setTitle($manufacturer_info['name']);
 			}
+
+			$this->document->setDescription(sprintf($this->language->get('text_meta_description'), htmlspecialchars($manufacturer_info['name'], ENT_QUOTES, 'UTF-8', false), $this->config->get('config_name')));
 
 			$this->document->addScript('catalog/view/javascript/jquery/jquery.total-storage.min.js');
 

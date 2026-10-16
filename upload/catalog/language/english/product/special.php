@@ -3,6 +3,7 @@
 $_['heading_title']     = 'Special Offers';
 
 // Text
+$_['text_meta_description'] = 'Special offers and discounts at %s. Browse reduced-price products.';
 $_['text_error']        = 'Product not found!';
 $_['text_empty']        = 'There are no products on special offer.';
 $_['text_quantity']     = 'Qty:';

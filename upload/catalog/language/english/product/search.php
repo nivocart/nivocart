@@ -3,6 +3,8 @@
 $_['heading_title']     = 'Search';
 
 // Text
+$_['text_meta_description']       = 'Search results for "%s" at %s. Browse matching products, prices and offers.';
+$_['text_meta_description_empty'] = 'Search all products at %s.';
 $_['text_search']       = 'Search Results';
 $_['text_keyword']      = 'Keywords';
 $_['text_category']     = 'All Categories';

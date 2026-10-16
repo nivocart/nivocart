@@ -3,6 +3,7 @@
 $_['heading_title']     = 'All Products';
 
 // Text
+$_['text_meta_description'] = 'Browse all products at %s in one place, with prices, offers and availability.';
 $_['text_refine']       = 'Refine Search';
 $_['text_empty']        = 'There are no products to display!';
 $_['text_error']        = 'Product not found!';
