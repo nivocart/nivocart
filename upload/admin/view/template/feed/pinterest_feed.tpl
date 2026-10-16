@@ -62,6 +62,13 @@
             <?php } ?></td>
         </tr>
         <tr>
+          <td><span class="required">*</span> <?php echo $entry_extra_images; ?><span class="help"><?php echo $help_extra_images; ?></span></td>
+          <td><input type="text" name="pinterest_feed_extra_images" value="<?php echo $pinterest_feed_extra_images; ?>" size="5" />
+            <?php if ($error_extra_images) { ?>
+              <span class="error"><?php echo $error_extra_images; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
           <td><?php echo $entry_taxonomy; ?><span class="help"><?php echo $help_taxonomy; ?></span></td>
           <td><input type="text" id="taxonomy-search" value="" size="40" placeholder="<?php echo $text_taxonomy_placeholder; ?>" autocomplete="off" />
             <br /><span id="taxonomy-target"></span>

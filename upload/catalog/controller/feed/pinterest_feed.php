@@ -13,6 +13,9 @@ class ControllerFeedPinterestFeed extends Controller {
 	/** @var array<string, array{0: int, 1: int}|false> Image validation results for this run */
 	private array $image_checked = [];
 
+	/** @var int Maximum number of additional_image_link values per item (admin setting) */
+	private int $extra_limit = 3;
+
 	public function index() {
 		if (!$this->config->get('pinterest_feed_status')) {
 			$this->response->addHeader('HTTP/1.1 404 Not Found');
@@ -66,6 +69,10 @@ class ControllerFeedPinterestFeed extends Controller {
 		}
 
 		$min_image = (int)($this->config->get('pinterest_feed_min_image') ?: 600);
+
+		$extra_limit = $this->config->get('pinterest_feed_extra_images');
+
+		$this->extra_limit = ($extra_limit === null || $extra_limit === '') ? 3 : min(10, max(0, (int)$extra_limit));
 		$map = $this->config->get('pinterest_feed_category');
 		$map = is_array($map) ? $map : [];
 		$default_category = (string)$this->config->get('pinterest_feed_category_default');
@@ -249,7 +256,7 @@ class ControllerFeedPinterestFeed extends Controller {
 		$count = 0;
 
 		foreach ($extra_images as $extra) {
-			if ($count >= 10) {
+			if ($count >= $this->extra_limit) {
 				break;
 			}
 

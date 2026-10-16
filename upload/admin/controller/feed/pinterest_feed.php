@@ -44,6 +44,7 @@ class ControllerFeedPinterestFeed extends Controller {
 		$this->data['entry_currency'] = $this->language->get('entry_currency');
 		$this->data['entry_cache_hours'] = $this->language->get('entry_cache_hours');
 		$this->data['entry_min_image'] = $this->language->get('entry_min_image');
+		$this->data['entry_extra_images'] = $this->language->get('entry_extra_images');
 		$this->data['entry_category_default'] = $this->language->get('entry_category_default');
 		$this->data['entry_category_map'] = $this->language->get('entry_category_map');
 		$this->data['entry_cache'] = $this->language->get('entry_cache');
@@ -51,6 +52,7 @@ class ControllerFeedPinterestFeed extends Controller {
 		$this->data['help_currency'] = $this->language->get('help_currency');
 		$this->data['help_cache_hours'] = $this->language->get('help_cache_hours');
 		$this->data['help_min_image'] = $this->language->get('help_min_image');
+		$this->data['help_extra_images'] = $this->language->get('help_extra_images');
 		$this->data['help_category'] = $this->language->get('help_category');
 		$this->data['help_category_map'] = $this->language->get('help_category_map');
 
@@ -71,6 +73,7 @@ class ControllerFeedPinterestFeed extends Controller {
 		$this->data['error_currency'] = $this->error['currency'] ?? '';
 		$this->data['error_cache_hours'] = $this->error['cache_hours'] ?? '';
 		$this->data['error_min_image'] = $this->error['min_image'] ?? '';
+		$this->data['error_extra_images'] = $this->error['extra_images'] ?? '';
 		$this->data['error_category'] = $this->error['category'] ?? '';
 
 		// Success
@@ -138,6 +141,14 @@ class ControllerFeedPinterestFeed extends Controller {
 			$this->data['pinterest_feed_min_image'] = $this->config->get('pinterest_feed_min_image');
 		} else {
 			$this->data['pinterest_feed_min_image'] = 600;
+		}
+
+		if (isset($this->request->post['pinterest_feed_extra_images'])) {
+			$this->data['pinterest_feed_extra_images'] = $this->request->post['pinterest_feed_extra_images'];
+		} elseif ($this->config->get('pinterest_feed_extra_images') !== null) {
+			$this->data['pinterest_feed_extra_images'] = $this->config->get('pinterest_feed_extra_images');
+		} else {
+			$this->data['pinterest_feed_extra_images'] = 3;
 		}
 
 		if (isset($this->request->post['pinterest_feed_category_default'])) {
@@ -386,6 +397,14 @@ class ControllerFeedPinterestFeed extends Controller {
 
 		if ($min_image < 100 || $min_image > 5000) {
 			$this->error['min_image'] = $this->language->get('error_min_image');
+		}
+
+		$extra_images = trim((string)($this->request->post['pinterest_feed_extra_images'] ?? ''));
+
+		$this->request->post['pinterest_feed_extra_images'] = $extra_images;
+
+		if (!ctype_digit($extra_images) || (int)$extra_images > 10) {
+			$this->error['extra_images'] = $this->language->get('error_extra_images');
 		}
 
 		// Google category IDs: digits only, surrounding spaces are removed
