@@ -70,7 +70,7 @@ class ControllerModuleFilter extends Controller {
 
 						$filter_data[] = [
 							'filter_id' => $filter['filter_id'],
-							'name'      => $filter['name'] . $this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($data) . ')' : ''
+							'name'      => $filter['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($data) . ')' : '')
 						];
 					}
 

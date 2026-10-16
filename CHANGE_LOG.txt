@@ -23,6 +23,7 @@ Release: TBA
 - Updated Email validation and filtering across all Admin and Catalog files.
 - Updated Discount and Special Tabs in product form to be more user friendly.
 - Updated both Image Managers to improve the display of modal jQuery boxes.
+- Updated product Filter feature to display a setup Helper dropdown.
 - Removed obsolete Google Sitemap Feed no longer needed.
 
 
