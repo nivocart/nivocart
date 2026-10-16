@@ -21,7 +21,6 @@
         <option>Bing</option>
         <option>Yandex</option>
         <option>Baidu</option>
-        <option>Lycos</option>
       </select></div>
       <div>
         <a onclick="startSearch();"><img src="../security/image/go.png" alt="" width="30" height="30" /></a>
@@ -31,7 +30,7 @@
   </div>
 </div>
 <div id="footer">
-  <a title="">Search - Copyright &copy; 2019</a>
+  <a title="">Search - Copyright &copy; 2026</a>
 </div>
 
 <script type="text/javascript"><!--
@@ -54,9 +53,6 @@ function startSearch() {
 		}
 		if (searchEngine == 4) {
 			finalSearchString = "http://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=0&rsv_idx=1&tn=baidu&wd=" + searchString;
-		}
-		if (searchEngine == 5) {
-			finalSearchString = "http://search.lycos.co.uk/web/?q=" + searchString;
 		}
 
 		location.href = finalSearchString;
