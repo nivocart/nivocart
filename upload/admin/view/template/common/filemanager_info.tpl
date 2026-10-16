@@ -1,5 +1,5 @@
 <table id="info-table">
-  <tr style="height:24px;">
+  <tr style="height:22px;">
     <td colspan="2"><b><?php echo $info_title; ?></b></td>
   </tr>
   <tr style="height:20px;">
@@ -9,10 +9,6 @@
   <tr style="height:20px;">
     <td style="width:50px;"><?php echo $text_info_author; ?></td>
     <td><?php echo $info_author; ?></td>
-  </tr>
-  <tr style="height:20px;">
-    <td style="width:50px;"><?php echo $text_info_credit; ?></td>
-    <td><?php echo $info_credit; ?></td>
   </tr>
   <tr style="height:20px;">
     <td style="width:50px;"><?php echo $text_info_scripts; ?></td>

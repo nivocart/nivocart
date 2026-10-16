@@ -90,7 +90,6 @@ $_['text_info_files']       = 'Formats:';
 
 $_['info_version']          = 'v2.5.2';
 $_['info_author']           = 'Nivocart (contact@nivocart.org)';
-$_['info_credit']           = 'Kay Lohn (Original script), Dhaupin (Performance).';
 $_['info_scripts']          = 'jsTree v3.3.17 and Plupload v2.3.6.';
 $_['info_license']          = 'GPLv3 (GNU General Public License)';
 $_['info_files']            = 'jpg, jpeg, png, gif, mp3, mp4, oga, ogv, ogg, webm, m4a, m4v, wav, wma, wmv, zip, rar, pdf, swf, flv.';

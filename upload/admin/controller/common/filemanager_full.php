@@ -718,7 +718,6 @@ class ControllerCommonFileManagerFull extends Controller {
 
 		$this->data['info_version'] = $this->language->get('info_version');
 		$this->data['info_author'] = $this->language->get('info_author');
-		$this->data['info_credit'] = $this->language->get('info_credit');
 		$this->data['info_scripts'] = $this->language->get('info_scripts');
 		$this->data['info_license'] = $this->language->get('info_license');
 		$this->data['info_files'] = $this->language->get('info_files');
