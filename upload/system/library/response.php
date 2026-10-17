@@ -17,6 +17,14 @@ class Response {
 	 * @var string
 	 */
 	private string $output = '';
+	/**
+	 * @var array<string, string>
+	 */
+	private array $image_roots = [];
+	/**
+	 * @var array<string, array<int, int>|null>
+	 */
+	private array $image_sizes = [];
 
 	/**
 	 * Sanitize a header string against newline/CRLF injection.
@@ -184,6 +192,139 @@ class Response {
 	}
 
 	/**
+	 * Set Image Roots
+	 *
+	 * Enables automatic width and height attributes on <img> tags that have none (prevents layout shifts).
+	 * Each key is a public URL prefix and each value is the matching directory on disk (with a trailing slash).
+	 *
+	 * @param array<string, string> $roots
+	 *
+	 * @return void
+	 */
+	public function setImageRoots(array $roots): void {
+		$this->image_roots = $roots;
+	}
+
+	/**
+	 * Get Image Size
+	 *
+	 * Resolves an image URL to its pixel size. Cache images are read from the file name (name-WxH.ext),
+	 * any other local image is read with getimagesize(). Returns null for anything that is not a local image.
+	 *
+	 * @param string $src
+	 *
+	 * @return array<int, int>|null
+	 */
+	private function getImageSize(string $src): ?array {
+		$src = html_entity_decode($src, ENT_QUOTES, 'UTF-8');
+
+		if (array_key_exists($src, $this->image_sizes)) {
+			return $this->image_sizes[$src];
+		}
+
+		$this->image_sizes[$src] = null;
+
+		$path = null;
+		$root = '';
+
+		foreach ($this->image_roots as $prefix => $directory) {
+			if ($prefix !== '' && str_starts_with($src, $prefix)) {
+				$path = substr($src, strlen($prefix));
+				$root = $directory;
+				break;
+			}
+		}
+
+		// Relative URLs resolve against the store base URL
+		if ($path === null && $src !== '' && !str_starts_with($src, '/') && !preg_match('/^[a-z][a-z0-9+.\-]*:/i', $src)) {
+			$path = $src;
+			$root = (string)reset($this->image_roots);
+		}
+
+		if ($path === null || $root === '') {
+			return null;
+		}
+
+		$path = rawurldecode((string)preg_replace('/[?#].*$/', '', $path));
+
+		if ($path === '' || str_contains($path, '..') || str_contains($path, "\0") || str_contains($path, '\\')) {
+			return null;
+		}
+
+		if (!preg_match('/\.(?:avif|gif|jpe?g|png|webp)$/i', $path)) {
+			return null;
+		}
+
+		// Cache images are always written at the exact size in the file name
+		if (preg_match('#^image/cache/.+-(\d+)x(\d+)\.[a-z]+$#i', $path, $match)) {
+			if ((int)$match[1] > 0 && (int)$match[2] > 0) {
+				return $this->image_sizes[$src] = [(int)$match[1], (int)$match[2]];
+			}
+
+			return null;
+		}
+
+		$file = $root . $path;
+
+		if (!is_file($file)) {
+			return null;
+		}
+
+		$info = getimagesize($file);
+
+		if ($info === false || $info[0] < 1 || $info[1] < 1) {
+			return null;
+		}
+
+		return $this->image_sizes[$src] = [(int)$info[0], (int)$info[1]];
+	}
+
+	/**
+	 * Add Image Dimensions
+	 *
+	 * Adds width and height to every <img> tag that has neither, so the browser can reserve the space before the image loads.
+	 *
+	 * @param string $html
+	 *
+	 * @return string
+	 */
+	private function addImageDimensions(string $html): string {
+		if (!$this->image_roots || stripos($html, '<img') === false) {
+			return $html;
+		}
+
+		$result = preg_replace_callback('/<img\b((?:[^>"\']|"[^"]*"|\'[^\']*\')*)>/i', function (array $match): string {
+			$attributes = $match[1];
+
+			// Leave tags alone that already have a width or a height
+			if (preg_match('/\s(?:width|height)\s*=/i', $attributes)) {
+				return $match[0];
+			}
+
+			if (!preg_match('/\ssrc\s*=\s*(?:"([^"]*)"|\'([^\']*)\')/i', $attributes, $src)) {
+				return $match[0];
+			}
+
+			$size = $this->getImageSize($src[1] !== '' ? $src[1] : ($src[2] ?? ''));
+
+			if ($size === null) {
+				return $match[0];
+			}
+
+			$closing = '';
+
+			if (preg_match('/\s*\/\s*$/', $attributes, $end)) {
+				$attributes = substr($attributes, 0, -strlen($end[0]));
+				$closing = ' /';
+			}
+
+			return '<img' . $attributes . ' width="' . $size[0] . '" height="' . $size[1] . '"' . $closing . '>';
+		}, $html);
+
+		return $result ?? $html;
+	}
+
+	/**
 	 * Output
 	 *
 	 * Displays the set HTML output.
@@ -192,7 +333,26 @@ class Response {
 	 */
 	public function output(): void {
 		if ($this->output) {
-			$output = $this->level ? $this->compress($this->output, $this->level) : $this->output;
+			$output = $this->output;
+
+			// Only HTML pages are post-processed (JSON, XML and other types are left untouched)
+			if ($this->image_roots) {
+				$content_type = '';
+
+				foreach ($this->headers as $header) {
+					if (stripos($header, 'Content-Type:') === 0) {
+						$content_type = $header;
+					}
+				}
+
+				if (stripos($content_type, 'text/html') !== false) {
+					$output = $this->addImageDimensions($output);
+				}
+			}
+
+			if ($this->level) {
+				$output = $this->compress($output, $this->level);
+			}
 
 			if (!headers_sent()) {
 				foreach ($this->headers as $header) {

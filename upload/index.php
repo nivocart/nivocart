@@ -113,6 +113,10 @@ $registry->set('request', $request);
 $response = new Response();
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 $response->setCompression($config->get('config_compression'));
+
+// Image Dimensions (adds width and height to <img> tags to prevent layout shifts)
+$image_root = str_replace('\\', '/', dirname(rtrim(DIR_APPLICATION, '/\\'))) . '/';
+$response->setImageRoots([HTTP_SERVER => $image_root, HTTPS_SERVER => $image_root]);
 $registry->set('response', $response);
 
 // Cache

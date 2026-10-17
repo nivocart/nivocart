@@ -14,7 +14,8 @@ Release: TBA
 - Add new Seo_Urls Audit function in "Seo Url Manager" to validate the Urls.
 - Add new meta description tags to dynamic catalog pages such as Search.
 - Fix issues with PayPal Express integration in both Admin and Catalog.
-- Fix issue with some product form prices being displayed with 4 decimals.
+- Fix issue with some Admin product form prices displaying with 4 decimals.
+- Fix issue with Catalog images being flagged as missing set Width and Height.
 - Fix issue with deprecated "data-vocabulary.org" breadcrumb markup in code.
 - Fix for Reported Issue #26: Unauthenticated Guest Order Invoice Disclosure.
 - Fix for Reported Issue #27: CAPTCHA Answer Leaked in Plaintext, no image.

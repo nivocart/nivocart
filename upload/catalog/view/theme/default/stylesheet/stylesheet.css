@@ -93,6 +93,13 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+:where(img[width][height]) {
+  height: auto;
+  box-sizing: content-box;
+}
+:where(img[srcset][width][height]) {
+  width: auto;
+}
 body {
   background-color: var(--clr-bg);
   margin: 0;
@@ -2045,6 +2052,7 @@ ul.box-filter > li ul {
 .product-info > .left .image img {
   max-width: 100%;
   height: auto;
+  box-sizing: border-box;
   border: 0;
   padding: 10px;
 }
