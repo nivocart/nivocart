@@ -21,6 +21,7 @@ $_['text_age_restriction']                    = 'This product has a minimum age 
 $_['text_age_band']                           = 'Age Band:';
 $_['text_or']                                 = '- OR -';
 $_['text_reviews']                            = '%s review(s)';
+$_['text_meta_description']                   = 'Buy %s online at %s.';
 $_['text_write']                              = 'Write a review';
 $_['text_latest']                             = 'Latest reviews';
 $_['text_no_reviews']                         = 'There are no reviews for this product.';

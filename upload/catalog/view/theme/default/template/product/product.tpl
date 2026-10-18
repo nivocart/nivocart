@@ -10,6 +10,9 @@
     <?php } ?>
   </div>
 <?php } ?>
+<?php if ($schema) { ?>
+<script type="application/ld+json"><?php echo $schema; ?></script>
+<?php } ?>
 <?php echo $content_higher; ?>
 <?php echo $content_left; ?><?php echo $content_right; ?>
 <div id="content"><?php echo $content_high; ?>
@@ -465,16 +468,6 @@
       <div id="cart-warnings"></div>
     <?php if ($review_status) { ?>
       <div class="review">
-        <?php if ($review_total > 0) { ?>
-          <span itemscope itemtype="https://schema.org/Product">
-            <meta itemprop="name" content="<?php echo $heading_title; ?>" />
-            <span itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
-              <meta itemprop="ratingValue" content="<?php echo $rating; ?>" />
-              <meta itemprop="bestRating" content="5" />
-              <meta itemprop="reviewCount" content="<?php echo $review_total; ?>" />
-            </span>
-          </span>
-        <?php } ?>
         <div class="rating">
           <img src="catalog/view/theme/<?php echo $template; ?>/image/stars-<?php echo $rating; ?>.png" alt="<?php echo $reviews; ?>" />
           <span style="padding-left:15px;"><?php echo $reviews; ?></span>

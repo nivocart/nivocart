@@ -221,7 +221,16 @@ class ControllerProductProduct extends Controller {
 			];
 
 			$this->document->setTitle($product_info['name']);
-			$this->document->setDescription($product_info['meta_description']);
+			$product_name_plain = html_entity_decode((string)$product_info['name'], ENT_QUOTES, 'UTF-8');
+			$plain_description = $this->getPlainText((string)$product_info['description']);
+			$meta_description = trim(html_entity_decode((string)$product_info['meta_description'], ENT_QUOTES, 'UTF-8'));
+
+			// No description entered, or only the product name: build one from the product text
+			if ($meta_description === '' || strcasecmp($meta_description, $product_name_plain) === 0) {
+				$meta_description = $this->getMetaDescription($plain_description, $product_name_plain);
+			}
+
+			$this->document->setDescription(htmlspecialchars($meta_description, ENT_QUOTES, 'UTF-8'));
 			$this->document->setKeywords($product_info['meta_keyword']);
 
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $product_id, 'SSL'), 'canonical');
@@ -423,9 +432,13 @@ class ControllerProductProduct extends Controller {
 
 			$this->data['images'] = [];
 
+			$image_paths = [(string)$product_info['image']];
+
 			$results = $this->model_catalog_product->getProductImages($product_id);
 
 			foreach ($results as $result) {
+				$image_paths[] = (string)$result['image'];
+
 				$add_thumb = $this->model_tool_image->resize($result['image'], $this->image_additional_width, $this->image_additional_height);
 				$this->data['images'][] = [
 					'zoom'       => $this->model_tool_image->resize($result['image'], $this->image_popup_width * 2, $this->image_popup_height * 2),
@@ -775,6 +788,13 @@ class ControllerProductProduct extends Controller {
 			$description = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
 			$description = preg_replace('/<img(?![^>]*\bloading\b)/i', '<img loading="lazy"', $description);
 			$this->data['description'] = $description;
+
+			// Structured data (JSON-LD) and Open Graph tags
+			$schema = $this->getProductSchema($product_info, $plain_description, $image_paths, $this->url->link('product/product', 'product_id=' . $product_id, 'SSL'));
+
+			$this->data['schema'] = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS) ?: '';
+
+			$this->addProductMeta($schema, $meta_description);
 
 			// Captcha required
 			$this->data['captcha'] = '';
@@ -1152,5 +1172,218 @@ class ControllerProductProduct extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
+	}
+
+	/**
+	 * Plain text version of an HTML description (tags, scripts and extra white space removed).
+	 *
+	 * @param string $html
+	 *
+	 * @return string
+	 */
+	protected function getPlainText(string $html): string {
+		$text = html_entity_decode($html, ENT_QUOTES, 'UTF-8');
+		$text = (string)preg_replace('#<(script|style)\b.*?</\1>#is', ' ', $text);
+		$text = (string)preg_replace('#<(br|/p|/div|/li|/h[1-6]|/tr)\b[^>]*>#i', ' ', $text);
+		$text = html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8');
+
+		return trim((string)preg_replace('/\s+/u', ' ', $text));
+	}
+
+	/**
+	 * Meta description built from the product text when none (or only the product name) was entered.
+	 *
+	 * @param string $text Plain text description
+	 * @param string $name Plain text product name
+	 *
+	 * @return string Plain text, not yet escaped
+	 */
+	protected function getMetaDescription(string $text, string $name): string {
+		$text = (string)preg_replace('/^(product information|product description|product details|description|features|specifications|details)\s*:\s*/iu', '', $text);
+
+		if (mb_strlen($text) >= 30) {
+			if (mb_strlen($text) > 155) {
+				$text = rtrim((string)preg_replace('/\s+\S*$/u', '', mb_substr($text, 0, 155)), ' ,;:-') . '...';
+			}
+
+			return $text;
+		}
+
+		return sprintf($this->language->get('text_meta_description'), $name, html_entity_decode((string)$this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+	}
+
+	/**
+	 * schema.org Product data (JSON-LD) for the product page.
+	 *
+	 * @param array<string, mixed> $product_info
+	 * @param string               $description Plain text description
+	 * @param array<int, string>   $image_paths Original image paths relative to the image folder
+	 * @param string               $url         Canonical product URL
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getProductSchema(array $product_info, string $description, array $image_paths, string $url): array {
+		$base = $this->config->get('config_secure') ? $this->config->get('config_ssl') : $this->config->get('config_url');
+		$store_name = html_entity_decode((string)$this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
+
+		$schema = [
+			'@context' => 'https://schema.org',
+			'@type'    => 'Product',
+			'name'     => html_entity_decode((string)$product_info['name'], ENT_QUOTES, 'UTF-8'),
+			'url'      => $url
+		];
+
+		if ($description !== '') {
+			$schema['description'] = mb_substr($description, 0, 1000);
+		}
+
+		$images = [];
+
+		foreach ($image_paths as $path) {
+			if ($path && count($images) < 8 && is_file(DIR_IMAGE . $path)) {
+				$images[] = $base . 'image/' . implode('/', array_map('rawurlencode', explode('/', $path)));
+			}
+		}
+
+		if ($images) {
+			$schema['image'] = array_values(array_unique($images));
+		}
+
+		$sku = trim((string)($product_info['sku'] ?: $product_info['model']));
+
+		if ($sku !== '') {
+			$schema['sku'] = $sku;
+		}
+
+		$mpn = trim((string)$product_info['mpn']);
+
+		if ($mpn !== '') {
+			$schema['mpn'] = $mpn;
+		}
+
+		$gtin = $this->getGtin($product_info);
+
+		if ($gtin !== '') {
+			$schema['gtin'] = $gtin;
+		}
+
+		$brand = html_entity_decode((string)$product_info['manufacturer'], ENT_QUOTES, 'UTF-8') ?: $store_name;
+
+		if ($brand !== '') {
+			$schema['brand'] = [
+				'@type' => 'Brand',
+				'name'  => $brand
+			];
+		}
+
+		// Offer (not shown when prices are hidden or only visible to logged in customers)
+		$currency = (string)$this->config->get('config_currency');
+
+		if (!$this->config->get('config_price_hide') && (!$this->config->get('config_customer_price') || $this->customer->isLogged())) {
+			$amount = (float)$product_info['special'] ? $product_info['special'] : $product_info['price'];
+			$amount = (float)$this->currency->format($this->tax->calculate($amount, $product_info['tax_class_id'], $this->config->get('config_tax')), $currency, 0, false);
+
+			if ($amount > 0) {
+				$schema['offers'] = [
+					'@type'         => 'Offer',
+					'url'           => $url,
+					'price'         => number_format($amount, 2, '.', ''),
+					'priceCurrency' => strtoupper($currency),
+					'availability'  => ((int)$product_info['quantity'] > 0) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+					'itemCondition' => 'https://schema.org/NewCondition'
+				];
+
+				if ($store_name !== '') {
+					$schema['offers']['seller'] = [
+						'@type' => 'Organization',
+						'name'  => $store_name
+					];
+				}
+			}
+		}
+
+		if (!empty($this->data['review_status']) && (int)$product_info['reviews'] > 0 && (float)$product_info['rating'] > 0) {
+			$schema['aggregateRating'] = [
+				'@type'       => 'AggregateRating',
+				'ratingValue' => (float)$product_info['rating'],
+				'bestRating'  => 5,
+				'worstRating' => 1,
+				'reviewCount' => (int)$product_info['reviews']
+			];
+		}
+
+		return $schema;
+	}
+
+	/**
+	 * Open Graph and product meta tags (read by Pinterest Rich Pins and when a page is shared).
+	 *
+	 * @param array<string, mixed> $schema           Result of getProductSchema()
+	 * @param string               $meta_description Plain text
+	 *
+	 * @return void
+	 */
+	protected function addProductMeta(array $schema, string $meta_description): void {
+		$tags = [
+			'og:type'        => 'product',
+			'og:title'       => $schema['name'],
+			'og:description' => $meta_description,
+			'og:url'         => $schema['url'],
+			'og:site_name'   => html_entity_decode((string)$this->config->get('config_name'), ENT_QUOTES, 'UTF-8')
+		];
+
+		if (!empty($schema['image'])) {
+			$tags['og:image'] = $schema['image'][0];
+		}
+
+		if (!empty($schema['offers'])) {
+			$tags['product:price:amount'] = $schema['offers']['price'];
+			$tags['product:price:currency'] = $schema['offers']['priceCurrency'];
+			$tags['product:availability'] = ($schema['offers']['availability'] === 'https://schema.org/InStock') ? 'in stock' : 'out of stock';
+		}
+
+		foreach ($tags as $property => $content) {
+			if ((string)$content !== '') {
+				$this->document->addMeta('<meta property="' . $property . '" content="' . htmlspecialchars((string)$content, ENT_QUOTES, 'UTF-8') . '">');
+			}
+		}
+	}
+
+	/**
+	 * First valid GTIN (GS1 check digit) of the UPC, EAN, JAN and ISBN fields.
+	 *
+	 * @param array<string, mixed> $product
+	 *
+	 * @return string
+	 */
+	protected function getGtin(array $product): string {
+		foreach (['upc', 'ean', 'jan', 'isbn'] as $field) {
+			$value = preg_replace('/\D/', '', (string)$product[$field]);
+
+			if (in_array(strlen($value), [8, 12, 13, 14], true) && $this->isValidGtin($value)) {
+				return $value;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * Checks the GS1 check digit (the last digit) of a GTIN-8, 12, 13 or 14.
+	 *
+	 * @param string $gtin
+	 *
+	 * @return bool
+	 */
+	protected function isValidGtin(string $gtin): bool {
+		$digits = array_map('intval', str_split($gtin));
+		$check = array_pop($digits);
+		$sum = 0;
+
+		foreach (array_reverse($digits) as $index => $digit) {
+			$sum += $digit * ($index % 2 === 0 ? 3 : 1);
+		}
+
+		return ((10 - ($sum % 10)) % 10) === $check;
 	}
 }
