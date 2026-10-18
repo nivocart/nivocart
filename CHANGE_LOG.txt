@@ -6,7 +6,7 @@
 
 NivoCart v2.5.2
 ---------------
-Release: TBA
+Release: 18/10/2026
 
 - Add new Special label for products in Catalog showing the amount of saving.
 - Add new Pinterest Business Meta Tag entry into the Main Setting Page.
