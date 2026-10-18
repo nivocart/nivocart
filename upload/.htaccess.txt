@@ -108,6 +108,9 @@ RewriteCond %{REQUEST_FILENAME} !-f
 ## Pinterest / Google product feed (plain .xml address for feed fetchers)
 RewriteRule ^pinterest-feed\.xml$ index.php?route=feed/pinterest_feed [L]
 
+## Google Merchant Center product feed (plain .xml address for feed fetchers)
+RewriteRule ^google-merchant-feed\.xml$ index.php?route=feed/google_merchant [L]
+
 ## Block direct access to download directory
 RewriteRule ^download/(.*) index.php?route=error/not_found [L]
 
