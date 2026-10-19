@@ -1249,7 +1249,9 @@ class ControllerProductProduct extends Controller {
 			$schema['image'] = array_values(array_unique($images));
 		}
 
-		$sku = trim((string)($product_info['sku'] ?: $product_info['model']));
+		// Google wants a plain identifier: spaces and other odd characters become hyphens
+		$sku = html_entity_decode(trim((string)($product_info['sku'] ?: $product_info['model'])), ENT_QUOTES, 'UTF-8');
+		$sku = trim((string)preg_replace('/[^A-Za-z0-9._\/#+-]+/', '-', $sku), '-');
 
 		if ($sku !== '') {
 			$schema['sku'] = $sku;
