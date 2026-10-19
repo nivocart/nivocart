@@ -94,6 +94,7 @@ $_['text_report_sale_profit']          = 'Profits';
 $_['text_report_sale_dropship_profit'] = 'Dropship Profits';
 $_['text_report_product_label']        = 'Labels';
 $_['text_report_product_markup']       = 'Profit Margins';
+$_['text_report_product_competitor_price'] = 'Competitor Prices';
 $_['text_report_product_viewed']       = 'Viewed';
 $_['text_report_product_quantity']     = 'Stock Levels';
 $_['text_report_product_purchased']    = 'Purchased';
