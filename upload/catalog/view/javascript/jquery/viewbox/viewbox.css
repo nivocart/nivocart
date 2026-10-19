@@ -82,32 +82,41 @@
 	left: 10px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
 	.viewbox-button-close {
 		top: 0;
 		right: 0;
 	}
 	.viewbox-button-next,
 	.viewbox-button-prev {
-		height: 81px;
-    	width: 81px;
-		margin-top: -40px;
+		height: 64px;
+		width: 64px;
+		margin-top: -32px;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.45);
+		fill: #FFF;
+	}
+	.viewbox-button-next > svg,
+	.viewbox-button-prev > svg {
+		background: none;
 	}
 	.viewbox-button-next {
-		right: -15px;
+		right: 4px;
 	}
 	.viewbox-button-prev {
-		left: -15px;
+		left: 4px;
 	}
 }
 
 /* Loader */
 .viewbox-container .loader {
-	width: 100%;
+	width: 50px;
+	height: 50px;
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	margin: -25px 0 0 -25px;
+	pointer-events: none;
 }
 .viewbox-container .loader * {
 	margin: 0;
