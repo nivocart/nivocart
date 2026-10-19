@@ -287,6 +287,32 @@
           <td><?php echo $cj_tables; ?></td>
         </tr>
       </table>
+      <h2><?php echo $tab_cron; ?></h2>
+      <div class="tooltip"><?php echo $text_cron_info; ?></div>
+      <table class="form">
+        <tr>
+          <td><?php echo $text_cron_schedule; ?></td>
+          <td><input type="text" value="<?php echo htmlspecialchars($cron_schedule, ENT_QUOTES, 'UTF-8'); ?>" class="cj-narrow cj-mono" readonly="readonly" onfocus="this.select();" />
+            <span class="help"><?php echo htmlspecialchars($cron_time_text, ENT_QUOTES, 'UTF-8'); ?></span></td>
+        </tr>
+        <tr>
+          <td><?php echo $text_cron_command; ?></td>
+          <td><textarea rows="2" class="cj-wide cj-mono" readonly="readonly" onfocus="this.select();"><?php echo htmlspecialchars($cron_command, ENT_QUOTES, 'UTF-8'); ?></textarea>
+            <span class="help"><?php echo $text_cron_note; ?></span></td>
+        </tr>
+        <tr>
+          <td><?php echo $text_cron_last_run; ?></td>
+          <td><?php if ($cron_last) { ?>
+            <span class="cj-badge <?php echo $cron_last['ok'] ? 'cj-badge-ok' : 'cj-badge-error'; ?>"><?php echo $cron_last['status']; ?></span>
+            <?php echo htmlspecialchars($cron_last['date'], ENT_QUOTES, 'UTF-8'); ?>
+            <?php if ($cron_last['message']) { ?>
+            <span class="help"><?php echo htmlspecialchars($cron_last['message'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <?php } ?>
+            <?php } else { ?>
+            <?php echo $text_cron_never; ?>
+            <?php } ?></td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>
@@ -610,7 +636,7 @@ var stockSyncState = null;
 function stockSyncPage() {
 	var s = stockSyncState;
 
-	request(cj.url.sync_stock + '&channel_id=' + s.channelId + '&offset=' + s.offset, function(res) {
+	request(cj.url.sync_stock + '&channel_id=' + s.channelId + '&after_id=' + s.afterId, function(res) {
 		if (res.error) {
 			progressDone();
 			showResult(res.error, 'warning');
@@ -635,9 +661,10 @@ function stockSyncPage() {
 		var progress = s.grandTotal > 0 ? fmt(cj.text.text_x_of_y, s.totalUpdated, s.grandTotal) : s.totalUpdated;
 
 		if (res.has_more) {
+			s.afterId = res.last_id || s.afterId;
 			s.offset += (res.processed || 10);
 
-			var pct = s.grandTotal > 0 ? Math.round((s.offset / s.grandTotal) * 100) : 0;
+			var pct = s.grandTotal > 0 ? Math.min(100, Math.round((s.offset / s.grandTotal) * 100)) : 0;
 
 			progressUpdate(pct, fmt(cj.text.text_progress_variants, pct, s.offset, s.grandTotal));
 
@@ -667,7 +694,7 @@ $('#button-sync-stock').on('click', function() {
 
 	setSyncBusy(true);
 
-	stockSyncState = { channelId: id, offset: 0, totalUpdated: 0, grandTotal: 0, allErrors: [] };
+	stockSyncState = { channelId: id, afterId: 0, offset: 0, totalUpdated: 0, grandTotal: 0, allErrors: [] };
 
 	progressInit();
 	showResult(cj.text.text_loading, 'tooltip');

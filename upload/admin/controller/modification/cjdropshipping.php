@@ -19,6 +19,10 @@ class ControllerModificationCJDropshipping extends Controller {
 	private array $error = [];
 	private string $name = 'cjdropshipping';
 
+	// Hour (China Standard Time, 24h) at which the daily stock-sync cron should run:
+	// the CJ servers are quietest in the early hours there.
+	private const CRON_CHINA_HOUR = 3;
+
 	// =================================================================
 	// INDEX — DB check gate
 	// =================================================================
@@ -178,7 +182,9 @@ class ControllerModificationCJDropshipping extends Controller {
 			'text_products_maintenance',
 			'button_purge_stale', 'text_purge_confirm',
 			'button_purge_duplicates', 'text_purge_dup_confirm',
-			'text_prev', 'text_next'
+			'text_prev', 'text_next',
+			'tab_cron', 'text_cron_info', 'text_cron_schedule', 'text_cron_command', 'text_cron_note',
+			'text_cron_last_run', 'text_cron_never', 'text_cron_success', 'text_cron_error'
 		] as $key) {
 			$this->data[$key] = $this->language->get($key);
 		}
@@ -229,6 +235,28 @@ class ControllerModificationCJDropshipping extends Controller {
 		}
 
 		$this->data['cj_tables'] = implode('<br />', $tables);
+
+		// Stock Sync cron panel: fixed quiet hour in China time, shown converted to UTC
+		// (China has no daylight saving, so the UTC hour never moves).
+		$china_time = new \DateTime('today ' . self::CRON_CHINA_HOUR . ':00', new \DateTimeZone('Asia/Shanghai'));
+		$utc_time = clone $china_time;
+		$utc_time->setTimezone(new \DateTimeZone('UTC'));
+
+		$cron_script = str_replace('\\', '/', dirname(rtrim(DIR_SYSTEM, '/\\'))) . '/cron_cjdropshipping.php';
+
+		$this->data['cron_schedule'] = '0 ' . $utc_time->format('G') . ' * * *';
+		$this->data['cron_command'] = '/usr/bin/php ' . $cron_script . ' > /dev/null 2>&1';
+		$this->data['cron_time_text'] = sprintf($this->language->get('text_cron_time'), $china_time->format('H:i'), $utc_time->format('H:i'));
+
+		$cron_last = $this->model_modification_cjdropshipping->getLastStockCronRun();
+
+		$this->data['cron_last'] = $cron_last ? [
+			'ok'      => ($cron_last['status'] === 'success'),
+			'status'  => ($cron_last['status'] === 'success') ? $this->language->get('text_cron_success') : $this->language->get('text_cron_error'),
+			'date'    => $cron_last['date_added'],
+			'rows'    => (int)$cron_last['rows_affected'],
+			'message' => $cron_last['message']
+		] : [];
 
 		// Channel list — CJ only
 		$this->data['channels'] = $this->model_modification_cjdropshipping->getChannels();
@@ -467,10 +495,10 @@ class ControllerModificationCJDropshipping extends Controller {
 			return;
 		}
 
-		$offset = max(0, (int)($this->request->get['offset'] ?? 0));
+		$after_id = max(0, (int)($this->request->get['after_id'] ?? 0));
 
 		try {
-			$result = $this->model_modification_cjdropshipping->syncStock($channel_id, $offset, 10);
+			$result = $this->model_modification_cjdropshipping->syncStock($channel_id, $after_id, 10);
 
 			$this->jsonResponse([
 				'success'   => true,
@@ -479,6 +507,7 @@ class ControllerModificationCJDropshipping extends Controller {
 				'total'     => $result['total'],
 				'processed' => $result['processed'],
 				'has_more'  => $result['has_more'],
+				'last_id'   => $result['last_id'],
 			]);
 		} catch (\Exception $e) {
 			$this->jsonResponse(['error' => $e->getMessage()]);

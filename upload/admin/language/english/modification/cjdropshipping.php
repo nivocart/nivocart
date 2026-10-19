@@ -188,6 +188,18 @@ $_['text_purge_dup_complete']        = 'Purge complete: %s duplicate product(s) 
 $_['text_purge_dup_none']            = 'No duplicate products found &mdash; all clean!';
 $_['text_purge_dup_sample']          = 'First %s flagged (to be deleted):';
 
+// Stock Sync Cron Job
+$_['tab_cron']                       = 'Stock Sync Cron Job';
+$_['text_cron_info']                 = 'Keeps stock availability accurate every day without anyone clicking Sync Stock. Add the cron job below at your hosting provider (in your hosting control panel, usually under Cron Jobs). It syncs every active CJDropshipping channel, one variant at a time, and records the result here and in the server log.';
+$_['text_cron_schedule']             = 'Schedule:';
+$_['text_cron_command']              = 'Cron job:';
+$_['text_cron_time']                 = 'Runs at %s China time (UTC+8), when the CJ servers are quietest. That is %s UTC: if your hosting provider asks for the schedule in another time zone, convert it.';
+$_['text_cron_note']                 = 'The script only runs from the command line, never from a browser. Use the PHP path shown by your hosting provider if it differs from /usr/bin/php. A second run is refused while the previous one is still working. Log file: system/logs/cjdropshipping_cron.log.';
+$_['text_cron_last_run']             = 'Last run:';
+$_['text_cron_never']                = 'The cron job has not run yet.';
+$_['text_cron_success']              = 'Success';
+$_['text_cron_error']                = 'Error';
+
 // Errors
 $_['error_permission']               = 'Warning: You do not have permission to modify <b>CJDropshipping</b>!';
 $_['error_database']                 = 'Database tables not found!';

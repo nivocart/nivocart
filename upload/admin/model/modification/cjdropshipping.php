@@ -708,32 +708,41 @@ class ModelModificationCJDropshipping extends Model {
 	 * per-warehouse inventory array (countryCode + totalInventory), exactly the
 	 * shape extractMaxWarehouseStock() expects.
 	 *
-	 * @return array ['updated' => int, 'errors' => array]
+	 * Pages by variant_id (keyset) instead of OFFSET: a variant that CJD reports as
+	 * removed is deactivated during the run, which would shift an OFFSET window and
+	 * make the next batch skip variants. Pass the returned last_id as $after_id to
+	 * fetch the next batch.
+	 *
+	 * @param  int $channel_id
+	 * @param  int $after_id  Only variants with a higher variant_id are processed (0 = start).
+	 * @param  int $limit     Variants per batch.
+	 * @return array ['updated' => int, 'errors' => array, 'total' => int, 'processed' => int, 'has_more' => bool, 'last_id' => int]
 	 */
-	public function syncStock(int $channel_id, int $offset = 0, int $limit = 10): array {
+	public function syncStock(int $channel_id, int $after_id = 0, int $limit = 10): array {
 		$adapter = $this->getAdapter($channel_id);
 
-		// Total active variants for this channel — needed to compute has_more.
+		// Total active variants for this channel — used for progress display.
 		$count_query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "dropship_variant` WHERE `channel_id` = '" . (int)$channel_id . "' AND `is_active` = '1'");
 
 		$total = (int)($count_query->row['total'] ?? 0);
 
 		if ($total === 0) {
-			return ['updated' => 0, 'errors' => [], 'total' => 0, 'processed' => 0, 'has_more' => false];
+			return ['updated' => 0, 'errors' => [], 'total' => 0, 'processed' => 0, 'has_more' => false, 'last_id' => $after_id];
 		}
 
-		// Fetch the requested slice — no JOIN needed; product_id lives on the variant row.
+		// Fetch the next slice — no JOIN needed; product_id lives on the variant row.
 		$variants_query = $this->db->query(
 			"SELECT `variant_id`, `product_id`, `supplier_sku`
 			 FROM `" . DB_PREFIX . "dropship_variant`
 			 WHERE `channel_id` = '" . (int)$channel_id . "'
 			   AND `is_active` = '1'
+			   AND `variant_id` > '" . (int)$after_id . "'
 			 ORDER BY `variant_id` ASC
-			 LIMIT " . (int)$limit . " OFFSET " . (int)$offset
+			 LIMIT " . (int)$limit
 		);
 
 		if (!is_object($variants_query) || empty($variants_query->rows)) {
-			return ['updated' => 0, 'errors' => [], 'total' => $total, 'processed' => 0, 'has_more' => false];
+			return ['updated' => 0, 'errors' => [], 'total' => $total, 'processed' => 0, 'has_more' => false, 'last_id' => $after_id];
 		}
 
 		$updated = 0;
@@ -775,7 +784,11 @@ class ModelModificationCJDropshipping extends Model {
 		}
 
 		$processed = count($variants_query->rows);
-		$has_more = ($offset + $processed) < $total;
+		$last_id = (int)end($variants_query->rows)['variant_id'];
+
+		$more_query = $this->db->query("SELECT COUNT(*) AS remaining FROM `" . DB_PREFIX . "dropship_variant` WHERE `channel_id` = '" . (int)$channel_id . "' AND `is_active` = '1' AND `variant_id` > '" . (int)$last_id . "'");
+
+		$has_more = (int)($more_query->row['remaining'] ?? 0) > 0;
 
 		return [
 			'updated'   => $updated,
@@ -783,7 +796,26 @@ class ModelModificationCJDropshipping extends Model {
 			'total'     => $total,
 			'processed' => $processed,
 			'has_more'  => $has_more,
+			'last_id'   => $last_id,
 		];
+	}
+
+	/**
+	 * Return the most recent stock-sync cron run from nc_cron_log, or an empty array
+	 * when the cron has never run (or the log table does not exist yet).
+	 *
+	 * @return array ['rows_affected' => int, 'status' => string, 'message' => string, 'date_added' => string]
+	 */
+	public function getLastStockCronRun(): array {
+		$table = $this->db->query("SHOW TABLES LIKE '" . $this->db->escape(DB_PREFIX . 'cron_log') . "'");
+
+		if (!is_object($table) || !$table->num_rows) {
+			return [];
+		}
+
+		$query = $this->db->query("SELECT `rows_affected`, `status`, `message`, `date_added` FROM `" . DB_PREFIX . "cron_log` WHERE `task` = 'cjd_stock_sync' ORDER BY `log_id` DESC LIMIT 1");
+
+		return is_object($query) ? $query->row : [];
 	}
 
 	// =================================================================
