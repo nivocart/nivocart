@@ -1487,6 +1487,7 @@ div.form-modal-buttons {
 }
 div.form-modal-buttons a.button,
 div.form-modal-buttons a.button-delete {
+  color: var(--clr-text-bright);
   font-size: 12px;
 }
 table.form > tbody > tr > td span.form-icon {
