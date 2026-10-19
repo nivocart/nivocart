@@ -21,4 +21,5 @@ to create a new issue at Github, in the nivocart/nivocart repository.
 
 In both cases, please provide as much detail as possible, so we can assess
 and reproduce the issue being raised.
+
 Thank you.
