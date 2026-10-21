@@ -456,24 +456,17 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getAlsoBoughtProducts(int $product_id, int $limit): array {
-		if ($this->customer->isLogged()) {
-			$customer_group_id = $this->customer->getCustomerGroupId();
-		} else {
-			$customer_group_id = $this->config->get('config_customer_group_id');
-		}
+		$product_data = [];
 
-		$product_data = $this->cache->get('product.also_bought.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$customer_group_id . '.' . (int)$limit);
+		// Orders are matched on order_id (not customer_id, which is 0 for every guest order) and only confirmed orders count
+		$query = $this->db->query("SELECT op.product_id, COUNT(DISTINCT op.order_id) AS `total` FROM `" . DB_PREFIX . "order_product` op INNER JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) INNER JOIN `" . DB_PREFIX . "product` p ON (op.product_id = p.product_id) INNER JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id) WHERE op.order_id IN (SELECT op2.order_id FROM `" . DB_PREFIX . "order_product` op2 INNER JOIN `" . DB_PREFIX . "order` o2 ON (op2.order_id = o2.order_id) WHERE op2.product_id = '" . (int)$product_id . "' AND o2.order_status_id > '0') AND o.order_status_id > '0' AND op.product_id != '" . (int)$product_id . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY op.product_id ORDER BY `total` DESC, op.product_id ASC LIMIT 0," . (int)$limit);
 
-		if (!$product_data) {
-			$product_data = [];
+		foreach ($query->rows as $result) {
+			$product = $this->getProduct($result['product_id']);
 
-			$query = $this->db->query("SELECT op.product_id, COUNT(*) AS `total` FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) LEFT JOIN `" . DB_PREFIX . "product` p ON (op.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (pd.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id) WHERE o.customer_id IN (SELECT o.customer_id FROM `" . DB_PREFIX . "order_product` op INNER JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE op.product_id = '" . (int)$product_id . "' GROUP BY o.customer_id) AND p.product_id != '" . (int)$product_id . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() AND p.status = '1' GROUP BY op.product_id ORDER BY `total` DESC LIMIT 0," . (int)$limit);
-
-			foreach ($query->rows as $result) {
-				$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+			if ($product) {
+				$product_data[$result['product_id']] = $product;
 			}
-
-			$this->cache->set('product.also_bought.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$customer_group_id . '.' . (int)$limit, $product_data);
 		}
 
 		return $product_data;

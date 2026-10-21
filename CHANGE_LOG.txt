@@ -9,6 +9,7 @@ NivoCart v2.X.X
 Release: TBA
 
 - Add new Google Merchant Feed for better Search Engine Optimisation.
+- Updated the over-complicated "Also Bought" query in Catalog model product.
 - Updated the Product page with Structured data and Open Graph tags.
 - Updated the CJDropshipping Dashboard to setup of a Stock Sync Cron Job.
 - Updated Viewbox product image viewer CSS for better responsive display.
