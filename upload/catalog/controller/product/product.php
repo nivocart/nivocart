@@ -787,6 +787,18 @@ class ControllerProductProduct extends Controller {
 			$this->data['review_total'] = (int)$product_info['reviews'];
 			$description = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
 			$description = preg_replace('/<img(?![^>]*\bloading\b)/i', '<img loading="lazy"', $description);
+
+			// Images pasted into the description (supplier imports) often have no alt attribute: use the product name
+			$alt_text = htmlspecialchars(trim(strip_tags($product_name_plain)), ENT_QUOTES, 'UTF-8');
+
+			$description = preg_replace_callback('/<img\b(?:[^>"\']|"[^"]*"|\'[^\']*\')*>/i', function (array $match) use ($alt_text): string {
+				if (preg_match('/\salt\s*=/i', $match[0])) {
+					return $match[0];
+				}
+
+				return '<img alt="' . $alt_text . '"' . substr($match[0], 4);
+			}, $description) ?? $description;
+
 			$this->data['description'] = $description;
 
 			// Structured data (JSON-LD) and Open Graph tags
