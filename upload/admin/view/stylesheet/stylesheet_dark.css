@@ -1084,8 +1084,7 @@ a.button-filter:hover, .list a.button-filter:hover {
 
 /* Button on the same line as a text input (centres the 26px button on the 32px input) */
 a.button.button-align,
-a.button-delete.button-align,
-a.button-form.button-align {
+a.button-delete.button-align {
   vertical-align: top;
   margin-top: 3px;
 }
@@ -2178,80 +2177,6 @@ table.tool tr td {
   background: var(--clr-warning);
 }
 .cj-badge-error {
-  background: var(--clr-danger);
-}
-
-/** -----------------------------
- * COMPETITOR PRICES REPORT
- * ----------------------------*/
-.cp-report [hidden] {
-  display: none;
-}
-.cp-report h2 {
-  clear: both;
-}
-.cp-wide {
-  width: 280px;
-}
-.cp-narrow {
-  width: 160px;
-}
-.cp-mono {
-  font-family: monospace;
-}
-.cp-nowrap {
-  white-space: nowrap;
-}
-.cp-busy {
-  opacity: 0.5;
-  pointer-events: none;
-}
-.cp-progress {
-  margin: 8px 0 4px 0;
-  overflow: hidden;
-  background: var(--clr-surface-bg);
-  border: 1px solid var(--clr-panel-border);
-  border-radius: var(--radius-sm);
-}
-.cp-progress .progress-bar-blue {
-  width: 0;
-  border: 0;
-  border-radius: 0;
-  transition: width 0.5s ease;
-}
-.cp-progress-label {
-  min-height: 16px;
-  margin-bottom: 10px;
-  font-size: 11px;
-  text-align: right;
-  color: var(--clr-text);
-}
-.cp-showing {
-  margin: 8px 0 0 0;
-  font-size: 11px;
-  text-align: right;
-  color: var(--clr-text);
-}
-.cp-special {
-  font-weight: bold;
-  color: #FFE0DD;
-}
-.cp-badge {
-  display: inline-block;
-  padding: 1px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 1.6;
-  color: #111;
-}
-.cp-badge-ok {
-  background: var(--clr-success);
-}
-.cp-badge-unknown {
-  background: var(--clr-warning);
-}
-.cp-badge-no {
   background: var(--clr-danger);
 }
 

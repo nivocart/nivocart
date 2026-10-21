@@ -169,7 +169,6 @@
               <li><a href="<?php echo $report_product_label; ?>"><?php echo ($icons) ? '<i class="fa fa-leaf"></i>' : ''; ?><?php echo $text_report_product_label; ?></a></li>
               <li><a href="<?php echo $report_product_quantity; ?>"><?php echo ($icons) ? '<i class="fa fa-cubes"></i>' : ''; ?><?php echo $text_report_product_quantity; ?></a></li>
               <li><a href="<?php echo $report_product_markup; ?>"><?php echo ($icons) ? '<i class="fa fa-bar-chart"></i>' : ''; ?><?php echo $text_report_product_markup; ?></a></li>
-              <li><a href="<?php echo $report_product_competitor_price; ?>"><?php echo ($icons) ? '<i class="fa fa-balance-scale"></i>' : ''; ?><?php echo $text_report_product_competitor_price; ?></a></li>
               <li><a href="<?php echo $report_product_purchased; ?>"><?php echo ($icons) ? '<i class="fa fa-dollar"></i>' : ''; ?><?php echo $text_report_product_purchased; ?></a></li>
             </ul>
           </li>

@@ -8,7 +8,6 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
-- Add new Competitor Prices Report (eBay) to assess the market conditions.
 - Add new Google Merchant Feed for better Search Engine Optimisation.
 - Updated the Product page with Structured data and Open Graph tags.
 - Updated the CJDropshipping Dashboard to setup of a Stock Sync Cron Job.
