@@ -72,7 +72,7 @@
                     &nbsp; <small><?php echo sprintf($this->language->get('text_token_expires'), $token_expires); ?></small>
                   <?php } ?>
                   &nbsp;&nbsp;
-                  <a href="<?php echo $action_disconnect; ?>" class="button-delete ripple" onclick="return confirm('<?php echo $button_disconnect; ?>?');">
+                  <a href="<?php echo $action_disconnect; ?>" id="hmrc-disconnect" class="button-delete ripple">
                     <i class="fa fa-unlink"></i> <?php echo $button_disconnect; ?>
                   </a>
                 <?php } else { ?>
@@ -349,6 +349,30 @@
 
 <script type="text/javascript"><!--
 $('#tabs a').tabs();
+
+$('#hmrc-disconnect').on('click', function(e) {
+    e.preventDefault();
+
+    var url = $(this).attr('href');
+
+    $.confirm({
+        title: '<?php echo addslashes($text_confirm_disconnect); ?>',
+        content: '<?php echo addslashes($text_confirm_disconnect_help); ?>',
+        icon: 'fa fa-question-circle',
+        theme: 'light',
+        useBootstrap: false,
+        boxWidth: 580,
+        animation: 'zoom',
+        closeAnimation: 'scale',
+        opacity: 0.1,
+        buttons: {
+            confirm: function() {
+                window.location.href = url;
+            },
+            cancel: function() { }
+        }
+    });
+});
 
 function hmrcSubmitEops(businessId, taxYear) {
     if (!confirm('<?php echo addslashes($itsa_eops_confirm); ?>')) { return; }

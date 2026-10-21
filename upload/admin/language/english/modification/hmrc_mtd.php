@@ -118,6 +118,8 @@ $_['button_back']                 = 'Back';
 // -----------------------------------------------------------------------
 $_['text_success_save']           = 'Settings have been saved.';
 $_['text_success_disconnect']     = 'HMRC account disconnected.';
+$_['text_confirm_disconnect']     = 'Disconnect from HMRC?';
+$_['text_confirm_disconnect_help'] = 'This removes the stored HMRC access tokens. You will need to click Connect to HMRC and sign in again to reconnect.';
 $_['text_success_obligations']    = 'Obligations fetched from HMRC and updated.';
 $_['text_success_submit']         = 'VAT return submitted successfully. Receipt stored.';
 

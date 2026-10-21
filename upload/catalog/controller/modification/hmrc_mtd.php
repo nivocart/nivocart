@@ -89,7 +89,13 @@ class ControllerModificationHmrcMtd extends Controller {
      * @param string $message  Optional error detail shown on failure
      */
     private function renderResult(bool $success, string $message = ''): void {
-        $admin_url = HTTPS_SERVER . 'admin/index.php?route=modification/hmrc_mtd';
+        // Admin settings URL saved at connect time (no token). Add the admin session token when it is
+        // available here; without one the admin simply shows its login page.
+        $admin_url = $this->model_modification_hmrc_mtd->getSetting(0, 'admin_return_url', '');
+
+        if ($admin_url && !empty($this->session->data['token'])) {
+            $admin_url .= '&token=' . urlencode((string)$this->session->data['token']);
+        }
 
         $store_name = $this->config->get('config_name') ?: 'NivoCart';
 
@@ -118,7 +124,7 @@ class ControllerModificationHmrcMtd extends Controller {
               . '<div class="card">'
               . '<h1>' . htmlspecialchars($title) . '</h1>'
               . $body
-              . '<p><a href="' . htmlspecialchars($admin_url) . '" class="btn">&larr; Return to HMRC MTD Settings</a></p>'
+              . ($admin_url ? '<p><a href="' . htmlspecialchars($admin_url) . '" class="btn">&larr; Return to HMRC MTD Settings</a></p>' : '')
               . '</div>'
               . '</body></html>';
 

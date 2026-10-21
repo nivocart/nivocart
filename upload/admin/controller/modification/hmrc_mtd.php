@@ -81,6 +81,9 @@ class ControllerModificationHmrcMtd extends Controller {
 
         $this->model_modification_hmrc_mtd->saveSetting($store_id, 'oauth_state', $state);
 
+        // Remember the admin settings URL (no token) so the storefront callback page can link back to it
+        $this->model_modification_hmrc_mtd->saveSetting($store_id, 'admin_return_url', str_replace('&amp;', '&', $this->url->link('modification/' . $this->name, '', 'SSL')));
+
         require_once DIR_SYSTEM . 'library/hmrc_mtd.php';
 
         $hmrc = new HmrcMtd($settings['client_id'], $settings['client_secret'], (bool)(int)($settings['sandbox'] ?? 1));
@@ -775,6 +778,8 @@ class ControllerModificationHmrcMtd extends Controller {
         $this->data['button_cancel'] = $lang->get('button_cancel');
         $this->data['button_connect'] = $lang->get('button_connect');
         $this->data['button_disconnect'] = $lang->get('button_disconnect');
+        $this->data['text_confirm_disconnect'] = $lang->get('text_confirm_disconnect');
+        $this->data['text_confirm_disconnect_help'] = $lang->get('text_confirm_disconnect_help');
         $this->data['button_fetch_obligations'] = $lang->get('button_fetch_obligations');
         $this->data['button_prepare'] = $lang->get('button_prepare');
         $this->data['button_fetch_periods'] = $lang->get('button_fetch_periods');
