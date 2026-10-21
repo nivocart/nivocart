@@ -13,7 +13,6 @@ class ControllerCommonHome extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->document->addStyle('view/javascript/jquery/jqvmap/jqvmap.min.css');
-		$this->document->addStyle('view/javascript/jquery/chart/chart-donut.min.css');
 
 		$this->document->addScript('view/javascript/jquery/jqvmap/jquery.vmap.min.js');
 
