@@ -13,6 +13,7 @@ $_['text_address']       = 'Modify your address book';
 $_['text_no_address']    = 'There is no address linked to your account. Please provide at least one valid Address!';
 $_['text_wishlist']      = 'Modify your wish list';
 $_['text_order']         = 'View your order history';
+$_['text_review']        = 'Your product reviews';
 $_['text_download']      = 'Your downloads';
 $_['text_reward']        = 'Your fidelity points';
 $_['text_transaction']   = 'Your transactions';

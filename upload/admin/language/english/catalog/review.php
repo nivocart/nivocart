@@ -6,6 +6,14 @@ $_['heading_title']      = 'Reviews';
 $_['text_success']       = 'Success: You have modified <b>Reviews</b> !';
 $_['text_date_added']    = 'Date Added:';
 $_['text_date_modified'] = 'Date Modified:';
+$_['text_pending']       = 'Pending';
+$_['text_approved']      = 'Approved';
+$_['text_refused']       = 'Refused';
+
+// Button
+$_['button_approve']     = 'Approve';
+$_['button_pending']     = 'Set Pending';
+$_['button_refuse']      = 'Refuse';
 
 // Column
 $_['column_product']     = 'Product';

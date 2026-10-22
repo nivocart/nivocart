@@ -101,13 +101,9 @@
         <tr class="highlighted">
           <td><?php echo $entry_status; ?></td>
           <td><select name="status">
-            <?php if ($status) { ?>
-              <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-              <option value="0"><?php echo $text_disabled; ?></option>
-            <?php } else { ?>
-              <option value="1"><?php echo $text_enabled; ?></option>
-              <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-            <?php } ?>
+            <option value="0"<?php echo ((int)$status === 0) ? ' selected="selected"' : ''; ?>><?php echo $text_pending; ?></option>
+            <option value="1"<?php echo ((int)$status === 1) ? ' selected="selected"' : ''; ?>><?php echo $text_approved; ?></option>
+            <option value="2"<?php echo ((int)$status === 2) ? ' selected="selected"' : ''; ?>><?php echo $text_refused; ?></option>
           </select></td>
         </tr>
         <?php if ($date_added) { ?>

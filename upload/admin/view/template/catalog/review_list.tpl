@@ -15,8 +15,9 @@
     <div class="heading">
       <h1><img src="view/image/review.png" alt="" /> <?php echo $heading_title; ?></h1>
       <div class="buttons">
-        <a onclick="$('#form').attr('action','<?php echo $enabled; ?>'); $('#form').submit();" class="button-save ripple"><?php echo $button_enable; ?></a>
-        <a onclick="$('#form').attr('action','<?php echo $disabled; ?>'); $('#form').submit();" class="button-cancel ripple"><?php echo $button_disable; ?></a>
+        <a onclick="$('#form').attr('action','<?php echo $enabled; ?>'); $('#form').submit();" class="button-save ripple"><?php echo $button_approve; ?></a>
+        <a onclick="$('#form').attr('action','<?php echo $disabled; ?>'); $('#form').submit();" class="button ripple"><?php echo $button_pending; ?></a>
+        <a onclick="$('#form').attr('action','<?php echo $refused; ?>'); $('#form').submit();" class="button-cancel ripple"><?php echo $button_refuse; ?></a>
         <a href="<?php echo $insert; ?>" class="button ripple"><?php echo $button_insert; ?></a>
         <a id="delete" class="button-delete ripple"><?php echo $button_delete; ?></a>
       </div>
@@ -83,10 +84,12 @@
             <td class="left"><?php echo $review['author']; ?></td>
             <td class="left"><?php echo $review['date_added']; ?></td>
             <td class="center"><img src="view/image/rating/stars-<?php echo $review['rating'] . '.png'; ?>" alt="<?php echo $review['rating']; ?>" style="margin-top:2px;" /></td>
-            <?php if ($review['status'] === '1') { ?>
-              <td class="center"><span class="enabled"><?php echo $text_enabled; ?></span></td>
+            <?php if ((int)$review['status'] === 1) { ?>
+              <td class="center"><span class="enabled"><?php echo $text_approved; ?></span></td>
+            <?php } elseif ((int)$review['status'] === 2) { ?>
+              <td class="center"><span class="missed"><?php echo $text_refused; ?></span></td>
             <?php } else { ?>
-              <td class="center"><span class="disabled"><?php echo $text_disabled; ?></span></td>
+              <td class="center"><span class="disabled"><?php echo $text_pending; ?></span></td>
             <?php } ?>
             <td class="right"><?php foreach ($review['action'] as $action) { ?>
               <a href="<?php echo $action['href']; ?>" class="button-form animated fadeIn ripple"><?php echo $action['text']; ?></a>

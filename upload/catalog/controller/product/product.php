@@ -259,17 +259,10 @@ class ControllerProductProduct extends Controller {
 			$this->data['text_age_band'] = $this->language->get('text_age_band');
 			$this->data['text_or'] = $this->language->get('text_or');
 			$this->data['text_write'] = $this->language->get('text_write');
-			$this->data['text_note'] = $this->language->get('text_note');
 			$this->data['text_share'] = $this->language->get('text_share');
 			$this->data['text_wait'] = $this->language->get('text_wait');
 			$this->data['text_tags'] = $this->language->get('text_tags');
 
-			$this->data['entry_name'] = $this->language->get('entry_name');
-			$this->data['entry_review'] = $this->language->get('entry_review');
-			$this->data['entry_rating'] = $this->language->get('entry_rating');
-			$this->data['entry_good'] = $this->language->get('entry_good');
-			$this->data['entry_bad'] = $this->language->get('entry_bad');
-			$this->data['entry_captcha'] = $this->language->get('entry_captcha');
 
 			$this->data['button_cart'] = $this->language->get('button_cart');
 			$this->data['text_special_save'] = $this->language->get('text_special_save');
@@ -280,6 +273,8 @@ class ControllerProductProduct extends Controller {
 			$this->data['button_compare'] = $this->language->get('button_compare');
 			$this->data['button_upload'] = $this->language->get('button_upload');
 			$this->data['button_continue'] = $this->language->get('button_continue');
+			$this->data['button_write_review'] = $this->language->get('button_write_review');
+			$this->data['text_review_invite'] = $this->language->get('text_review_invite');
 
 			$this->data['tab_description'] = $this->language->get('tab_description');
 			$this->data['tab_attribute'] = $this->language->get('tab_attribute');
@@ -767,17 +762,34 @@ class ControllerProductProduct extends Controller {
 
 			// Reviews - Write
 			$review_status = $this->config->get('config_review_status');
-			$review_login = $this->config->get('config_review_login');
 
-			if ($review_status && !$review_login) {
-				$this->data['review_allowed'] = true;
-				$this->data['help_review_logged'] = false;
-			} elseif ($review_status && $review_login && $this->customer->isLogged() && $this->customer->isSecure()) {
-				$this->data['review_allowed'] = true;
-				$this->data['help_review_logged'] = false;
-			} else {
-				$this->data['review_allowed'] = false;
-				$this->data['help_review_logged'] = $this->language->get('help_review_logged');
+			// Only logged customers with a completed order for this product can review it (see account/review)
+			$this->data['review_write'] = '';
+			$this->data['help_review'] = '';
+
+			if ($review_status) {
+				if ($this->customer->isLogged() && $this->customer->isSecure()) {
+					$this->load->model('account/review');
+
+					$review_form = $this->url->link('account/review/form', 'product_id=' . (int)$this->data['product_id'], 'SSL');
+
+					if (!$this->model_account_review->hasPurchased((int)$this->data['product_id'])) {
+						$this->data['help_review'] = $this->language->get('help_review_purchase');
+					} else {
+						$customer_review = $this->model_account_review->getCustomerReview((int)$this->data['product_id']);
+
+						if (!$customer_review) {
+							$this->data['review_write'] = $review_form;
+						} elseif ((int)$customer_review['status'] === ModelAccountReview::STATUS_PENDING) {
+							$this->data['help_review'] = sprintf($this->language->get('help_review_pending'), $review_form);
+						} else {
+							$this->data['help_review'] = $this->language->get('help_review_done');
+						}
+					}
+
+				} else {
+					$this->data['help_review'] = sprintf($this->language->get('help_review_logged'), $this->url->link('account/login', '', 'SSL'));
+				}
 			}
 
 			$this->data['review_status'] = $review_status;
@@ -807,11 +819,6 @@ class ControllerProductProduct extends Controller {
 			$this->data['schema'] = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS) ?: '';
 
 			$this->addProductMeta($schema, $meta_description);
-
-			// Captcha required
-			$this->data['captcha'] = '';
-			// Captcha is served as an image by common/captcha. The code is only ever kept in the session.
-			$this->data['captcha_image'] = $this->url->link('common/captcha', '', 'SSL');
 
 			// Attributes
 			$attribute_groups = $this->model_catalog_product->getProductAttributes($product_id);
@@ -1102,42 +1109,6 @@ class ControllerProductProduct extends Controller {
 		$this->resolveTemplate('product/product_reviews');
 
 		return $this->render();
-	}
-
-	public function write() {
-		$this->language->load('product/product');
-
-		$this->load->model('catalog/review');
-
-		$product_id = isset($this->request->post['product_id']) ? (int)$this->request->post['product_id'] : (int)$this->request->get['product_id'];
-
-		$json = [];
-
-		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->config->get('config_review_status')) {
-			if (empty($this->request->post['name']) || (mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 25)) {
-				$json['error'] = $this->language->get('error_name');
-			} elseif (empty($this->request->post['text']) || (mb_strlen($this->request->post['text'], 'UTF-8') < 25) || (mb_strlen($this->request->post['text'], 'UTF-8') > 1000)) {
-				$json['error'] = $this->language->get('error_text');
-			} elseif (empty($this->request->post['rating'])) {
-				$json['error'] = $this->language->get('error_rating');
-			} elseif (empty($this->session->data['captcha']) || !isset($this->request->post['captcha']) || ($this->session->data['captcha'] !== $this->request->post['captcha'])) {
-				// A failed attempt invalidates the code, so it cannot be guessed repeatedly
-				unset($this->session->data['captcha']);
-
-				$json['error'] = $this->language->get('error_captcha');
-			}
-
-			if (!isset($json['error'])) {
-				unset($this->session->data['captcha']);
-
-				$this->model_catalog_review->addReview($product_id, $this->request->post);
-
-				$json['success'] = $this->language->get('text_success');
-			}
-		}
-
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
 	}
 
 	public function upload() {

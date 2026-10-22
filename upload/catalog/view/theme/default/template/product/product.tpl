@@ -617,43 +617,12 @@
           <?php echo $review_block; ?>
         </div>
         <div id="add-review">
-        <?php if ($review_allowed) { ?>
+        <?php if ($review_write) { ?>
           <h2 id="review-title"><?php echo $text_write; ?></h2>
-          <div class="review-element">
-            <input type="text" name="name" placeholder="<?php echo $entry_name; ?>" value="" size="30" />
-          </div>
-          <div class="review-element">
-            <textarea name="text" cols="40" rows="3" placeholder="<?php echo $entry_review; ?>"></textarea>
-            <br /><?php echo $text_note; ?>
-          </div>
-          <div class="review-rating">
-            <b><?php echo $entry_rating; ?></b>&nbsp;
-            <img src="catalog/view/theme/<?php echo $template; ?>/image/thumbs-down.png" alt="<?php echo $entry_bad; ?>" title="<?php echo $entry_bad; ?>" />&nbsp;
-            <input type="radio" name="rating" value="1" />&nbsp;
-            <input type="radio" name="rating" value="2" />&nbsp;
-            <input type="radio" name="rating" value="3" />&nbsp;
-            <input type="radio" name="rating" value="4" />&nbsp;
-            <input type="radio" name="rating" value="5" />&nbsp;
-            <img src="catalog/view/theme/<?php echo $template; ?>/image/thumbs-up.png" alt="<?php echo $entry_good; ?>" title="<?php echo $entry_good; ?>" />
-          </div>
-          <div id="captcha-wrap">
-            <div class="captcha-box">
-              <div class="captcha-view">
-                <img src="<?php echo $captcha_image; ?>" id="captcha-image" width="186" height="42" alt="<?php echo $entry_captcha; ?>" />
-              </div>
-            </div>
-            <div class="captcha-text">
-              <label><?php echo $entry_captcha; ?></label>
-              <input type="text" name="captcha" id="captcha" value="<?php echo $captcha; ?>" autocomplete="off" />
-            </div>
-            <div class="captcha-action"><i class="fa fa-repeat"></i></div>
-          </div>
-          <br />
-          <div><a id="button-review" class="button"><?php echo $button_continue; ?></a></div>
-        <?php } else { ?>
-          <?php if ($help_review_logged) { ?>
-            <div class="attention"><?php echo $help_review_logged; ?></div>
-          <?php } ?>
+          <p><?php echo $text_review_invite; ?></p>
+          <a href="<?php echo $review_write; ?>" class="button"><?php echo $button_write_review; ?></a>
+        <?php } elseif ($help_review) { ?>
+          <div class="attention"><?php echo $help_review; ?></div>
         <?php } ?>
         </div>
       </div>
@@ -911,68 +880,6 @@ $(document).on('click', '#review .pagination a', function(e) {
             $('#review').fadeIn('slow');
         });
     });
-});
-
-$('#button-review').on('click', function() {
-	$.ajax({
-		url: 'index.php?route=product/product/write',
-		type: 'post',
-		dataType: 'json',
-		contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-		data: {
-			product_id: <?php echo $product_id; ?>,
-			name: $('input[name="name"]').val(),
-			text: $('textarea[name="text"]').val(),
-			rating: $('input[name="rating"]:checked').val() || '',
-			captcha: $('input[name="captcha"]').val()
-		},
-		beforeSend: function() {
-			$('.success, .warning').remove();
-			$('#button-review').attr('disabled', true);
-			$('#review-title').after('<div class="attention"><img src="catalog/view/theme/<?php echo $template; ?>/image/loading.gif" alt="" /> <?php echo $text_wait; ?></div>');
-		},
-		complete: function() {
-			$('#button-review').attr('disabled', false);
-			$('.attention').remove();
-			$('input[name=\'captcha\']').val('');
-
-			refreshCaptcha();
-		},
-		success: function(data) {
-			if (data['error']) {
-				$('#review-title').after('<div class="warning">' + data['error'] + '</div>');
-			}
-
-			if (data['success']) {
-				$('#review-title').after('<div class="success">' + data['success'] + '</div>');
-
-				$('input[name=\'name\']').val('');
-				$('textarea[name=\'text\']').val('');
-				$('input[name=\'rating\']:checked').attr('checked', '');
-				$('input[name=\'captcha\']').val('');
-			}
-		}
-	});
-});
-//--></script>
-
-<script type="text/javascript"><!--
-$(document).ready(function() {
-$('.review-rating input:radio').wrap('<span></span>').parent()
-	.on('mouseenter touchstart touchend', function() {
-		$(this).css({
-			'background': '#EAFBFF',
-			'padding': '1px 0 5px 0',
-			'border-radius': '9px',
-			'outline': 'none',
-			'cursor': 'pointer'
-		});
-	})
-	.on('mouseleave', function() {
-		$(this).css({
-			'background': 'transparent'
-		});
-	});
 });
 //--></script>
 

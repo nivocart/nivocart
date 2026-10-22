@@ -22,13 +22,12 @@ $_['text_age_band']                           = 'Age Band:';
 $_['text_or']                                 = '- OR -';
 $_['text_reviews']                            = '%s review(s)';
 $_['text_meta_description']                   = 'Buy %s online at %s.';
-$_['text_write']                              = 'Write a review';
 $_['text_latest']                             = 'Latest reviews';
 $_['text_no_reviews']                         = 'There are no reviews for this product.';
 $_['text_on']                                 = ' on ';
-$_['text_note']                               = '<span style="color:#DE5954;">Note:</span> HTML is not translated!';
+$_['text_write']                              = 'Write a review';
+$_['text_review_invite']                      = 'Bought this product? Share your opinion with other customers.';
 $_['text_share']                              = 'Share';
-$_['text_success']                            = 'Review submitted. Thank you!';
 $_['text_upload']                             = 'Your file was successfully uploaded!';
 $_['text_wait']                               = 'Please Wait!';
 $_['text_tags']                               = 'Tags:';
@@ -44,14 +43,6 @@ $_['text_semi_month']                         = 'half-month';
 $_['text_month']                              = 'month';
 $_['text_year']                               = 'year';
 
-// Entry
-$_['entry_name']                              = 'Your Name';
-$_['entry_review']                            = 'Your Review';
-$_['entry_rating']                            = 'Rating:';
-$_['entry_good']                              = 'Good';
-$_['entry_bad']                               = 'Bad';
-$_['entry_captcha']                           = 'Enter the code below';
-
 // Tabs
 $_['tab_description']                         = 'Description';
 $_['tab_attribute']                           = 'Specification';
@@ -66,6 +57,7 @@ $_['dialog_resource']                         = 'Please be aware that this featu
 // Button
 $_['button_buy_it_now']                       = 'Buy it Now!';
 $_['button_view']                             = 'View Product';
+$_['button_write_review']                     = 'Write a Review';
 
 // Offer
 $_['text_G241']                               = 'Buy 1 Get 1 %s!';
@@ -74,13 +66,12 @@ $_['text_G242D']                              = 'Buy 1 %s and Get 1 %s for %s!';
 $_['text_G142D']                              = '%s %s when you buy 1 %s!';
 
 // Help
-$_['help_review_logged']                      = 'You must be logged-in to post a review.';
+$_['help_review_logged']                      = 'Please <a href="%s">log in</a> to review products you have purchased.';
+$_['help_review_purchase']                    = 'Only customers who have purchased this product can write a review.';
+$_['help_review_pending']                     = 'Your review of this product is awaiting approval. You can still <a href="%s">edit your review</a>.';
+$_['help_review_done']                        = 'Thank you, you have already reviewed this product.';
 
 // Error
-$_['error_name']                              = 'Warning: Review Name must be between 3 and 25 characters!';
-$_['error_text']                              = 'Warning: Review Text must be between 25 and 1000 characters!';
-$_['error_rating']                            = 'Warning: Please select a review rating!';
-$_['error_captcha']                           = 'Warning: Verification codes do not match!';
 $_['error_upload']                            = 'Upload required!';
 $_['error_filename']                          = 'Filename must be between 3 and 64 characters!';
 $_['error_filetype']                          = 'Invalid file type!';

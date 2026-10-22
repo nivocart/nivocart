@@ -60,6 +60,7 @@ class ControllerAccountAccount extends Controller {
 		$this->data['text_no_address'] = $this->language->get('text_no_address');
 		$this->data['text_wishlist'] = $this->language->get('text_wishlist');
 		$this->data['text_order'] = $this->language->get('text_order');
+		$this->data['text_review'] = $this->language->get('text_review');
 		$this->data['text_download'] = $this->language->get('text_download');
 		$this->data['text_reward'] = $this->language->get('text_reward');
 		$this->data['text_transaction'] = $this->language->get('text_transaction');
@@ -72,6 +73,7 @@ class ControllerAccountAccount extends Controller {
 		$this->data['address'] = $this->url->link('account/address', '', 'SSL');
 		$this->data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
 		$this->data['order'] = $this->url->link('account/order', '', 'SSL');
+		$this->data['review'] = $this->url->link('account/review', '', 'SSL');
 		$this->data['download'] = $this->url->link('account/download', '', 'SSL');
 		$this->data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
 		$this->data['return'] = $this->url->link('account/return', '', 'SSL');
@@ -94,6 +96,9 @@ class ControllerAccountAccount extends Controller {
 
 		// Downloads
 		$this->data['allow_download'] = $this->config->get('config_download') ? true : false;
+
+		// Reviews
+		$this->data['review_status'] = $this->config->get('config_review_status') ? true : false;
 
 		// Rewards
 		$this->data['reward'] = $this->config->get('reward_status') ? $this->url->link('account/reward', '', 'SSL') : '';

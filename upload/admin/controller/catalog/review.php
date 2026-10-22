@@ -104,70 +104,36 @@ class ControllerCatalogReview extends Controller {
 	}
 
 	public function enable() {
-		$this->language->load('catalog/review');
-
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('catalog/review');
-
-		if (isset($this->request->post['selected'])) {
-			foreach ($this->request->post['selected'] as $review_id) {
-				$data = [];
-
-				$result = $this->model_catalog_review->getReview($review_id);
-
-				foreach ($result as $key => $value) {
-					$data[$key] = $value;
-				}
-
-				$data['status'] = 1;
-
-				$this->model_catalog_review->editReview($review_id, $data);
-			}
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			if (isset($this->request->get['filter_name'])) {
-				$filter_name = html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8');
-			} else {
-				$filter_name = null;
-			}
-
-			$page_url = array_filter([
-				'filter_name' => $filter_name,
-				'sort'        => $this->request->get['sort'] ?? 'r.date_added',
-				'order'       => $this->request->get['order'] ?? 'ASC',
-				'page'        => $this->request->get['page'] ?? 1
-			]);
-
-			$url = $page_url ? '&' . http_build_query($page_url) : '';
-
-			$this->redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-		}
-
-		$this->getList();
+		$this->setStatus(1);
 	}
 
 	public function disable() {
+		$this->setStatus(0);
+	}
+
+	public function refuse() {
+		$this->setStatus(2);
+	}
+
+	/**
+	 * Set the status of the selected reviews: 0 = Pending, 1 = Approved, 2 = Refused
+	 */
+	protected function setStatus(int $status) {
 		$this->language->load('catalog/review');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('catalog/review');
 
-		if (isset($this->request->post['selected'])) {
+		if (isset($this->request->post['selected']) && $this->validateModify()) {
 			foreach ($this->request->post['selected'] as $review_id) {
-				$data = [];
+				$data = $this->model_catalog_review->getReview((int)$review_id);
 
-				$result = $this->model_catalog_review->getReview($review_id);
+				if ($data) {
+					$data['status'] = $status;
 
-				foreach ($result as $key => $value) {
-					$data[$key] = $value;
+					$this->model_catalog_review->editReview((int)$review_id, $data);
 				}
-
-				$data['status'] = 0;
-
-				$this->model_catalog_review->editReview($review_id, $data);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -188,6 +154,8 @@ class ControllerCatalogReview extends Controller {
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
 
 			$this->redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+
+			return;
 		}
 
 		$this->getList();
@@ -260,6 +228,7 @@ class ControllerCatalogReview extends Controller {
 
 		$this->data['enabled'] = $this->url->link('catalog/review/enable', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['disabled'] = $this->url->link('catalog/review/disable', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['refused'] = $this->url->link('catalog/review/refuse', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['insert'] = $this->url->link('catalog/review/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('catalog/review/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
@@ -308,8 +277,9 @@ class ControllerCatalogReview extends Controller {
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_pending'] = $this->language->get('text_pending');
+		$this->data['text_approved'] = $this->language->get('text_approved');
+		$this->data['text_refused'] = $this->language->get('text_refused');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
 		$this->data['text_confirm_delete'] = $this->language->get('text_confirm_delete');
 
@@ -320,8 +290,9 @@ class ControllerCatalogReview extends Controller {
 		$this->data['column_status'] = $this->language->get('column_status');
 		$this->data['column_action'] = $this->language->get('column_action');
 
-		$this->data['button_enable'] = $this->language->get('button_enable');
-		$this->data['button_disable'] = $this->language->get('button_disable');
+		$this->data['button_approve'] = $this->language->get('button_approve');
+		$this->data['button_pending'] = $this->language->get('button_pending');
+		$this->data['button_refuse'] = $this->language->get('button_refuse');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
 		$this->data['button_filter'] = $this->language->get('button_filter');
@@ -406,8 +377,9 @@ class ControllerCatalogReview extends Controller {
 	protected function getForm() {
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_pending'] = $this->language->get('text_pending');
+		$this->data['text_approved'] = $this->language->get('text_approved');
+		$this->data['text_refused'] = $this->language->get('text_refused');
 		$this->data['text_none'] = $this->language->get('text_none');
 		$this->data['text_select'] = $this->language->get('text_select');
 		$this->data['text_date_added'] = $this->language->get('text_date_added');
@@ -595,6 +567,14 @@ class ControllerCatalogReview extends Controller {
 		}
 
 		return empty($this->error);
+	}
+
+	protected function validateModify() {
+		if (!$this->user->hasPermission('modify', 'catalog/review')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		return !$this->error;
 	}
 
 	protected function validateDelete() {

@@ -21,6 +21,7 @@
 
   /* Status / semantic */
   --clr-danger:         #CC2626;
+  --clr-star:           #F5A623;
   --clr-danger-btn:     #DE5954;
   --clr-danger-hover:   #E3726E;
   --clr-buy-now:        #F9CB37;
@@ -2464,6 +2465,195 @@ ul.box-filter > li ul {
   color: #444;
   font-size: 14px;
   font-style: italic;
+}
+
+/* ============================================================
+ * ACCOUNT REVIEWS
+ * ============================================================ */
+a.button-grey, span.button-disabled {
+  display: inline-block;
+  color: #FFF;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 16px;
+  text-decoration: none;
+  padding: 6px 14px;
+  background: #6E6E6E;
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+  cursor: pointer;
+  transition: background-color var(--ease);
+}
+a.button-grey:hover {
+  background: #575757;
+}
+span.button-disabled {
+  background: #A8A8A8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.review-list a.review-order {
+  display: inline-block;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+span.review-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 18px;
+}
+span.review-badge-none {
+  color: var(--clr-text-muted);
+}
+span.review-badge-pending {
+  color: #6B5400;
+  background: #FFF5CC;
+  border-color: #F2DD8C;
+}
+span.review-badge-approved {
+  color: #2F5D0A;
+  background: #EAF7D9;
+  border-color: #BBDF8D;
+}
+span.review-badge-refused {
+  color: #8A1C1C;
+  background: #FFD1D1;
+  border-color: #F8ACAC;
+}
+
+/* Review form (account page and modal) */
+.review-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+.review-form .review-count {
+  float: right;
+}
+.review-form input[readonly] {
+  background-color: var(--clr-bg-light);
+  cursor: default;
+}
+.review-stars {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+.review-stars label {
+  padding: 0 3px;
+  color: #C8C8C8;
+  font-size: 32px;
+  line-height: 38px;
+  cursor: pointer;
+  transition: color var(--ease);
+}
+.review-stars label::before {
+  content: "\f005";
+  font-family: FontAwesome;
+  font-weight: normal;
+}
+.review-stars input:checked ~ label,
+.review-stars label:hover,
+.review-stars label:hover ~ label {
+  color: var(--clr-star);
+}
+.review-stars input:focus-visible + label {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 1px;
+  border-radius: var(--radius-sm);
+}
+
+/* Review modal */
+body.review-modal-open {
+  overflow: hidden;
+}
+.review-modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.55);
+}
+.review-modal {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 620px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+  background: var(--clr-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+.review-modal:focus {
+  outline: none;
+}
+.review-modal .review-form h2 {
+  margin-top: 0;
+  padding-right: 30px;
+}
+a.review-modal-close, a.review-modal-close:visited {
+  position: absolute;
+  top: 6px;
+  right: 14px;
+  color: var(--clr-text-muted);
+  font-size: 30px;
+  line-height: 1;
+  text-decoration: none;
+}
+a.review-modal-close:hover {
+  color: var(--clr-text);
+}
+
+/* Review list - cards on small screens */
+@media only screen and (max-width: 640px) {
+  table.list.review-list, table.list.review-list tbody, table.list.review-list tr, table.list.review-list td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  table.list.review-list {
+    border: 0;
+  }
+  table.list.review-list thead {
+    display: none;
+  }
+  table.list.review-list tr {
+    margin-bottom: 12px;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+  }
+  table.list.review-list td {
+    text-align: left;
+    border: 0;
+    border-bottom: 1px solid var(--clr-border-light);
+  }
+  table.list.review-list td::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--clr-text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+  table.list.review-list td:last-child {
+    border-bottom: 0;
+  }
+  .review-form .review-count {
+    float: none;
+    display: block;
+  }
 }
 
 /* Attribute */

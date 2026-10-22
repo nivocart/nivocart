@@ -46,6 +46,9 @@
     <div class="box-account">
       <ul>
         <li><a href="<?php echo $order; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/history.png" alt="" /><?php echo $text_order; ?></a></li>
+        <?php if ($review_status) { ?>
+          <li><a href="<?php echo $review; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/review.png" alt="" /><?php echo $text_review; ?></a></li>
+        <?php } ?>
         <?php if ($allow_download) { ?>
           <li><a href="<?php echo $download; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/download.png" alt="" /><?php echo $text_download; ?></a></li>
         <?php } ?>
