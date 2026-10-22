@@ -92,6 +92,9 @@ class ControllerAccountAccount extends Controller {
 
 		$this->data['addresses'] = $this->model_account_address->getTotalAddresses();
 
+		// Downloads
+		$this->data['allow_download'] = $this->config->get('config_download') ? true : false;
+
 		// Rewards
 		$this->data['reward'] = $this->config->get('reward_status') ? $this->url->link('account/reward', '', 'SSL') : '';
 
