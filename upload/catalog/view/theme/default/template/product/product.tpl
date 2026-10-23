@@ -474,19 +474,7 @@
         </div>
         <?php if ($share_sharethis) { ?>
         <div class="share">
-          <!-- ShareThis BEGINS -->
-          <div class="sharethis-share-buttons" data-type="inline-share-buttons" data-labels="cta" data-show_total="false" data-size="small">
-            <span data-network="facebook"></span>
-            <span data-network="twitter"></span>
-            <span data-network="email"></span>
-            <span data-network="sharethis"></span>
-          </div>
-          <!-- ShareThis ENDS -->
-          <?php if ($sharethis) { ?>
-            <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop' async='async'></script>
-          <?php } else { ?>
-            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script>
-          <?php } ?>
+		  <div class="sharethis-inline-share-buttons"></div>
         </div>
         <?php } ?>
       </div>

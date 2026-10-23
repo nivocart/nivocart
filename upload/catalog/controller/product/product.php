@@ -672,8 +672,6 @@ class ControllerProductProduct extends Controller {
 			$this->data['minimum'] = ($product_info['minimum'] > 1) ? $product_info['minimum'] : 1;
 
 			// ShareThis
-			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
-
 			$this->data['share_sharethis'] = $this->config->get('config_share_sharethis') ? true : false;
 
 			// Offers

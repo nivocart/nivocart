@@ -58,6 +58,11 @@ $(document).ready(function() {
 <?php if ($rss) { ?>
 <link rel="alternate" type="application/rss+xml" href="<?php echo $rss_href; ?>" />
 <?php } ?>
+<?php if ($sharethis) { ?>
+<script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop" async="async"></script>
+<?php } else { ?>
+<script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script>
+<?php } ?>
 </head>
 <body>
 <a class="skip-link" href="#content"><?php echo $text_skip_to_content; ?></a>

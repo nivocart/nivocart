@@ -246,9 +246,6 @@ class ControllerBlogArticleInfo extends Controller {
 			// Add view
 			$this->model_blog_article->addBlogView($article_info['blog_article_id']);
 
-			// ShareThis
-			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
-
 			// Captcha
 			if (isset($this->request->post['captcha'])) {
 				$this->data['captcha'] = $this->request->post['captcha'];

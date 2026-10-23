@@ -16,6 +16,7 @@ Release: TBA
 - Updated the CJDropshipping Dashboard to setup of a Stock Sync Cron Job.
 - Updated Viewbox product image viewer CSS for better responsive display.
 - Updated HMRC Modification (UK), waiting for further API updates (2027).
+- Updated Share This optional feature in Catalog News, blog and Products.
 
 
 NivoCart v2.5.2

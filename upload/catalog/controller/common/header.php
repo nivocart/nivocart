@@ -197,6 +197,9 @@ class ControllerCommonHeader extends Controller {
 
 		$this->data['rss_href'] = $this->url->link('feed/rss_feed', 'currency=' . $rss_currency, 'SSL');
 
+		// ShareThis
+		$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
+
 		// Theme
 		$template = $this->config->get('config_template');
 

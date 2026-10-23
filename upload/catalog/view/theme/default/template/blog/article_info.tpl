@@ -28,19 +28,7 @@
       <?php if ($this->config->get('blog_share_social_site')) { ?>
         <span class="article-share" style="float:right; margin-top:10px;">
         <div style="margin:25px 0 10px 0;">
-          <!-- ShareThis BEGINS -->
-          <div class="sharethis-share-buttons" data-type="inline-share-buttons" data-labels="cta" data-show_total="false" data-size="small">
-            <span data-network="facebook"></span>
-            <span data-network="twitter"></span>
-            <span data-network="email"></span>
-            <span data-network="sharethis"></span>
-          </div>
-          <!-- ShareThis ENDS -->
-          <?php if ($sharethis) { ?>
-            <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=<?php echo $sharethis; ?>&product=sop' async='async'></script>
-          <?php } else { ?>
-            <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js" defer></script>
-          <?php } ?>
+          <div class="sharethis-inline-share-buttons"></div>
         </div>
         </span>
       <?php } ?>

@@ -135,8 +135,6 @@ class ControllerInformationNews extends Controller {
 			$this->data['popup_webp'] = ($this->data['popup'] && $webp) ? substr($this->data['popup'], 0, strrpos($this->data['popup'], '.')) . '.webp' : '';
 
 			// ShareThis
-			$this->data['sharethis'] = $this->config->get('config_sharethis') ? $this->config->get('config_sharethis') : false;
-
 			$this->data['news_sharethis'] = $this->config->get('config_news_sharethis') ? true : false;
 
 			// Downloads
