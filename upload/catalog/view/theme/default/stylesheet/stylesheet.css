@@ -2287,7 +2287,7 @@ ul.box-filter > li ul {
   text-decoration: none;
 }
 /* ShareThis widget injects its own stylesheet after page load — override directly */
-.product-info .review .share .sharethis-share-buttons {
+.product-info .review .share .sharethis-inline-share-buttons {
   text-align: left !important;
   justify-content: flex-start !important;
 }
