@@ -455,6 +455,7 @@ class ControllerProductProduct extends Controller {
 			$this->data['video_height'] = $this->image_thumb_height;
 
 			// Hosted video (CJDropshipping import)
+			$video_schema = [];
 			$this->data['video_file'] = '';
 			$this->data['video_poster'] = '';
 			$this->data['video_file_width'] = 0;
@@ -473,6 +474,31 @@ class ControllerProductProduct extends Controller {
 				$this->data['video_poster'] = ($hosted_video['poster'] && is_file(DIR_IMAGE . $hosted_video['poster'])) ? $image_base . $hosted_video['poster'] : '';
 				$this->data['video_file_width'] = (int)$hosted_video['width'];
 				$this->data['video_file_height'] = (int)$hosted_video['height'];
+
+				// schema.org VideoObject (Google needs the cover image, so it is skipped without one)
+				if ($this->data['video_poster'] !== '') {
+					$video_name = trim(html_entity_decode(strip_tags((string)$product_name_plain), ENT_QUOTES, 'UTF-8'));
+					$video_description = trim(mb_substr($plain_description !== '' ? $plain_description : $video_name, 0, 500));
+					$video_seconds = (int)round((float)$hosted_video['duration']);
+
+					$video_schema = [
+						'@type'        => 'VideoObject',
+						'name'         => $video_name,
+						'description'  => $video_description !== '' ? $video_description : $video_name,
+						'thumbnailUrl' => $this->data['video_poster'],
+						'uploadDate'   => date(DATE_ATOM, (int)filemtime(DIR_IMAGE . $hosted_video['video'])),
+						'contentUrl'   => $this->data['video_file']
+					];
+
+					if ($video_seconds >= 1) {
+						$video_schema['duration'] = 'PT' . ($video_seconds >= 60 ? floor($video_seconds / 60) . 'M' : '') . ($video_seconds % 60) . 'S';
+					}
+
+					if ((int)$hosted_video['width'] > 0 && (int)$hosted_video['height'] > 0) {
+						$video_schema['width'] = (int)$hosted_video['width'];
+						$video_schema['height'] = (int)$hosted_video['height'];
+					}
+				}
 			}
 
 			// Barcode
@@ -834,6 +860,10 @@ class ControllerProductProduct extends Controller {
 
 			// Structured data (JSON-LD) and Open Graph tags
 			$schema = $this->getProductSchema($product_info, $plain_description, $image_paths, $this->url->link('product/product', 'product_id=' . $product_id, 'SSL'));
+
+			if ($video_schema) {
+				$schema['video'] = $video_schema;
+			}
 
 			$this->data['schema'] = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS) ?: '';
 
