@@ -159,6 +159,10 @@
               <td><a id="button-sync-tracking" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_tracking; ?></a></td>
             </tr>
             <tr>
+              <td><?php echo $button_sync_videos; ?></td>
+              <td><a id="button-sync-videos" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_videos; ?></a></td>
+            </tr>
+            <tr>
               <td><?php echo $button_register_webhooks; ?></td>
               <td><a id="button-register-webhooks" class="button-form ripple"><?php echo $button_register_webhooks; ?></a></td>
             </tr>
@@ -699,6 +703,78 @@ $('#button-sync-stock').on('click', function() {
 	progressInit();
 	showResult(cj.text.text_loading, 'tooltip');
 	stockSyncPage();
+});
+
+// -----------------------------------------------------------------
+// Video sync (auto-paginated — 2 CJ products per AJAX call)
+// -----------------------------------------------------------------
+var videoSyncState = null;
+
+function videoSyncPage() {
+	var s = videoSyncState;
+
+	request(cj.url.sync_videos + '&channel_id=' + s.channelId + '&after_id=' + s.afterId, function(res) {
+		if (res.error) {
+			progressDone();
+			showResult(res.error, 'warning');
+			setSyncBusy(false);
+
+			videoSyncState = null;
+
+			return;
+		}
+
+		s.totalUpdated += (res.updated || 0);
+		s.checked += (res.processed || 0);
+
+		if (res.total && res.total > s.grandTotal) {
+			s.grandTotal = res.total;
+		}
+
+		if (res.errors && res.errors.length) {
+			s.allErrors = s.allErrors.concat(res.errors);
+		}
+
+		var message = fmt(cj.text.text_video_sync_complete, s.totalUpdated, s.checked);
+
+		if (res.has_more) {
+			s.afterId = res.last_id || s.afterId;
+
+			var pct = s.grandTotal > 0 ? Math.min(100, Math.round((s.checked / s.grandTotal) * 100)) : 0;
+
+			progressUpdate(pct, fmt(cj.text.text_progress_pids, pct, s.checked, s.grandTotal));
+
+			showResult(message + ' ...', 'tooltip');
+
+			setTimeout(videoSyncPage, 1000);
+		} else {
+			progressDone();
+
+			showResult(withErrors(message, s.allErrors), s.allErrors.length ? 'warning' : 'success');
+
+			setSyncBusy(false);
+
+			videoSyncState = null;
+		}
+	});
+}
+
+$('#button-sync-videos').on('click', function() {
+	var id = channelId('sync-channel-id');
+
+	if (id < 1) {
+		showResult(cj.text.error_channel_id, 'warning');
+
+		return;
+	}
+
+	setSyncBusy(true);
+
+	videoSyncState = { channelId: id, afterId: 0, checked: 0, totalUpdated: 0, grandTotal: 0, allErrors: [] };
+
+	progressInit();
+	showResult(cj.text.text_loading, 'tooltip');
+	videoSyncPage();
 });
 
 // -----------------------------------------------------------------

@@ -135,6 +135,7 @@ class ControllerModificationCJDropshipping extends Controller {
 			'channel_delete' => 'deleteChannel',
 			'import'         => 'importProducts',
 			'sync_stock'     => 'syncStock',
+			'sync_videos'    => 'syncVideos',
 			'sync_prices'    => 'syncPrices',
 			'sync_tracking'  => 'syncTracking',
 			'register'       => 'registerWebhooks',
@@ -174,7 +175,7 @@ class ControllerModificationCJDropshipping extends Controller {
 			'placeholder_category', 'placeholder_keyword', 'title_generate_secret',
 			'button_add_channel', 'button_edit', 'button_delete', 'button_save',
 			'button_cancel', 'button_refresh', 'button_import', 'button_sync_stock',
-			'button_sync_prices', 'button_sync_tracking',
+			'button_sync_prices', 'button_sync_tracking', 'button_sync_videos',
 			'button_register_webhooks', 'button_test_connection', 'button_cj_dashboard',
 			'column_order_id', 'column_tracking_number',
 			'column_customer', 'column_date', 'column_total', 'column_order_status',
@@ -197,7 +198,7 @@ class ControllerModificationCJDropshipping extends Controller {
 			'text_loading', 'text_none', 'text_no_channels', 'text_confirm_delete',
 			'text_status_pending', 'text_status_dispatched', 'text_status_error',
 			'text_importing', 'text_import_complete', 'text_stock_sync_complete',
-			'text_price_sync_complete', 'text_tracking_sync_complete', 'text_dispatch_complete',
+			'text_price_sync_complete', 'text_tracking_sync_complete', 'text_dispatch_complete', 'text_video_sync_complete',
 			'text_sync_errors', 'text_webhooks_registered', 'text_tracking_email_sent',
 			'text_progress_variants', 'text_progress_pids', 'text_x_of_y', 'text_prices_updated',
 			'text_page_variants', 'text_page_orders', 'text_no_orders', 'text_sending',
@@ -511,6 +512,52 @@ class ControllerModificationCJDropshipping extends Controller {
 				'last_id'   => $result['last_id'],
 			]);
 		} catch (\Exception $e) {
+			$this->jsonResponse(['error' => $e->getMessage()]);
+		}
+	}
+
+	/**
+	 * Fetch missing CJ product videos for already imported products. Returns JSON.
+	 * Batched like Sync Stock: call repeatedly with after_id = last_id until has_more is false.
+	 */
+	public function syncVideos(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/cjdropshipping');
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if ($this->tablesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_database')]);
+			return;
+		}
+
+		$channel_id = (int)($this->request->get['channel_id'] ?? 0);
+
+		if ($channel_id < 1) {
+			$this->jsonResponse(['error' => $this->language->get('error_channel_id')]);
+			return;
+		}
+
+		$after_id = max(0, (int)($this->request->get['after_id'] ?? 0));
+
+		try {
+			$result = $this->model_modification_cjdropshipping->syncVideos($channel_id, $after_id, 2);
+
+			$this->jsonResponse([
+				'success'   => true,
+				'updated'   => $result['updated'],
+				'skipped'   => $result['skipped'],
+				'errors'    => $result['errors'],
+				'total'     => $result['total'],
+				'processed' => $result['processed'],
+				'has_more'  => $result['has_more'],
+				'last_id'   => $result['last_id']
+			]);
+		} catch (\Throwable $e) {
 			$this->jsonResponse(['error' => $e->getMessage()]);
 		}
 	}

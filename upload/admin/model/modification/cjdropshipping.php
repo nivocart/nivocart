@@ -1584,6 +1584,76 @@ class ModelModificationCJDropshipping extends Model {
 	}
 
 	/**
+	 * Bulk "Sync Videos": give already imported products their free CJ video.
+	 * Works one batch of CJ products (supplier_pid) at a time so the dashboard can page it,
+	 * like Sync Stock. Only products without a product_video row are considered; every
+	 * variant product of a CJ product receives the same downloaded file.
+	 *
+	 * @param  int $channel_id  CJ channel.
+	 * @param  int $after_id    Cursor: only CJ products whose lowest dropship_id is above this.
+	 * @param  int $limit       CJ products per call (each needs an API call and maybe a download).
+	 * @return array            ['updated', 'skipped', 'errors', 'total', 'processed', 'has_more', 'last_id']
+	 */
+	public function syncVideos(int $channel_id, int $after_id = 0, int $limit = 2): array {
+		$adapter = $this->getAdapter($channel_id);
+
+		$from = " FROM `" . DB_PREFIX . "product_dropship` pd
+			LEFT JOIN `" . DB_PREFIX . "product_video` pv ON (pv.`product_id` = pd.`product_id`)
+			WHERE pd.`channel_id` = '" . (int)$channel_id . "' AND pd.`supplier_pid` != '' AND pv.`product_video_id` IS NULL";
+
+		$count_query = $this->db->query("SELECT COUNT(DISTINCT pd.`supplier_pid`) AS total" . $from);
+		$total = (int)($count_query->row['total'] ?? 0);
+
+		$batch = $this->db->query("SELECT pd.`supplier_pid` AS pid, MIN(pd.`dropship_id`) AS first_id" . $from . " GROUP BY pd.`supplier_pid` HAVING MIN(pd.`dropship_id`) > '" . (int)$after_id . "' ORDER BY first_id ASC LIMIT " . (int)$limit);
+
+		if (!is_object($batch) || empty($batch->rows)) {
+			return ['updated' => 0, 'skipped' => 0, 'errors' => [], 'total' => $total, 'processed' => 0, 'has_more' => false, 'last_id' => $after_id];
+		}
+
+		$updated = 0;
+		$skipped = 0;
+		$errors = [];
+		$last_id = $after_id;
+
+		foreach ($batch->rows as $row) {
+			$pid = (string)$row['pid'];
+			$last_id = max($last_id, (int)$row['first_id']);
+
+			try {
+				$video = $this->fetchVideo($adapter, $pid);
+
+				if (empty($video)) {
+					$skipped++;
+					continue;
+				}
+
+				$products = $this->db->query("SELECT pd.`product_id`" . $from . " AND pd.`supplier_pid` = '" . $this->db->escape($pid) . "'");
+
+				// An empty result comes back as true, not an object (another request may have just filled them)
+				foreach ((is_object($products) ? $products->rows : []) as $product) {
+					$this->insertProductVideo((int)$product['product_id'], $video);
+					$updated++;
+				}
+			} catch (\Throwable $e) {
+				$this->log->write('CJDropshipping syncVideos pid ' . $pid . ': ' . $e->getMessage());
+				$errors[] = $pid . ': ' . $e->getMessage();
+			}
+		}
+
+		$more = $this->db->query("SELECT COUNT(*) AS remaining FROM (SELECT pd.`supplier_pid`" . $from . " GROUP BY pd.`supplier_pid` HAVING MIN(pd.`dropship_id`) > '" . (int)$last_id . "') t");
+
+		return [
+			'updated'   => $updated,
+			'skipped'   => $skipped,
+			'errors'    => $errors,
+			'total'     => $total,
+			'processed' => count($batch->rows),
+			'has_more'  => (int)($more->row['remaining'] ?? 0) > 0,
+			'last_id'   => $last_id
+		];
+	}
+
+	/**
 	 * Store the video row for a product (one video per product for now).
 	 */
 	public function insertProductVideo(int $product_id, array $video): void {
