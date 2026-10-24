@@ -22,6 +22,7 @@ class ModelToolImagesCleanup extends Model {
 	 *   - nc_product.image               (main product image)
 	 *   - nc_product_image.image         (additional product images, joined to nc_product)
 	 *   - nc_dropship_variant.image      (dropship variant images, joined to nc_product)
+ *   - nc_product_video.video/poster  (CJDropshipping videos and covers, joined to nc_product)
 	 *
 	 * The joins ensure that images belonging to deleted products are not
 	 * treated as referenced, even when orphaned rows remain in child tables.
@@ -54,6 +55,19 @@ class ModelToolImagesCleanup extends Model {
 
 			foreach ($q->rows as $row) {
 				$referenced[$row['image']] = true;
+			}
+		}
+
+		// CJDropshipping videos and their cover images (table only exists with the CJD modification)
+		$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_video'");
+
+		if ($check->num_rows) {
+			foreach (['video', 'poster'] as $column) {
+				$q = $this->db->query("SELECT DISTINCT pv.`" . $column . "` AS `image` FROM `" . DB_PREFIX . "product_video` pv INNER JOIN `" . DB_PREFIX . "product` p ON p.`product_id` = pv.`product_id` WHERE pv.`" . $column . "` LIKE '" . $like . "' AND pv.`" . $column . "` != ''");
+
+				foreach ($q->rows as $row) {
+					$referenced[$row['image']] = true;
+				}
 			}
 		}
 

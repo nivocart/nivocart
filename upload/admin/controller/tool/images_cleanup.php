@@ -5,6 +5,8 @@
  * Scans an image data folder (e.g. image/data/dropship/) and identifies
  * images that are no longer referenced by any product or dropship variant,
  * then allows the admin user to delete those orphan files in bulk.
+ * The CJDropshipping videos folder is scanned the same way, for video files
+ * (mp4, webm), their cover images and stale partial downloads (.part).
  *
  * Menu visibility: only shown when the nc_dropship_variant table exists
  * (i.e. Avasam or CJD is installed). The check lives in the header controller.
@@ -81,10 +83,16 @@ class ControllerToolImagesCleanup extends Controller {
 			$folders['dropship/cjd'] = 'CJDropshipping (data/dropship/cjd/)';
 		}
 
-		// Legacy flat dropship folder — only show when neither subfolder has been created yet
+		// CJDropshipping videos subfolder — only if the directory exists
+		if (is_dir(DIR_IMAGE . 'data/dropship/cjd-videos')) {
+			$folders['dropship/cjd-videos'] = 'CJDropshipping Videos (data/dropship/cjd-videos/)';
+		}
+
+		// Legacy flat dropship folder — only show when no subfolder has been created yet
 		if (is_dir(DIR_IMAGE . 'data/dropship')
 			&& !is_dir(DIR_IMAGE . 'data/dropship/avasam')
 			&& !is_dir(DIR_IMAGE . 'data/dropship/cjd')
+			&& !is_dir(DIR_IMAGE . 'data/dropship/cjd-videos')
 		) {
 			$folders['dropship'] = 'Dropship (data/dropship/)';
 		}
@@ -124,6 +132,7 @@ class ControllerToolImagesCleanup extends Controller {
 			$folder_path = DIR_IMAGE . 'data/' . $selected_folder . '/';
 			$folder_prefix = 'data/' . $selected_folder . '/';
 			$suffix = ['B', 'KB', 'MB', 'GB', 'TB'];
+			$allowed_ext = $this->getAllowedExtensions($selected_folder);
 
 			// Step 1: collect all image files in the selected folder
 			$filesystem_images = []; // relative_path => ['size_bytes' => int, 'modified' => string]
@@ -143,10 +152,15 @@ class ControllerToolImagesCleanup extends Controller {
 						continue;
 					}
 
-					// Only recognised image extensions
+					// Only recognised file extensions for this folder
 					$ext = strtolower($entry->getExtension());
 
-					if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
+					if (!in_array($ext, $allowed_ext, true)) {
+						continue;
+					}
+
+					// A recent .part file may be a download in progress: leave it alone
+					if ($ext === 'part' && $entry->getMTime() > (time() - 3600)) {
 						continue;
 					}
 
@@ -243,6 +257,7 @@ class ControllerToolImagesCleanup extends Controller {
 
 			// Allowed prefix for this folder (prevents deleting outside it)
 			$folder_prefix = $folder ? 'data/' . $folder . '/' : 'data/';
+			$allowed_ext = $this->getAllowedExtensions($folder);
 
 			foreach ($this->request->post['selected'] as $relative_path) {
 				// Normalise directory separators
@@ -263,10 +278,10 @@ class ControllerToolImagesCleanup extends Controller {
 					continue;
 				}
 
-				// Only recognised image extensions
+				// Only recognised file extensions for this folder
 				$ext = strtolower(pathinfo($relative_path, PATHINFO_EXTENSION));
 
-				if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
+				if (!in_array($ext, $allowed_ext, true)) {
 					continue;
 				}
 
@@ -304,6 +319,21 @@ class ControllerToolImagesCleanup extends Controller {
 		}
 
 		$this->redirect($this->url->link('tool/images_cleanup', $params, 'SSL'));
+	}
+
+	// -----------------------------------------------------------------------
+	// File types handled for a folder
+	// -----------------------------------------------------------------------
+
+	protected function getAllowedExtensions(string $folder): array {
+		$extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+		// The CJDropshipping videos folder also holds the videos and unfinished downloads
+		if ($folder === 'dropship/cjd-videos') {
+			$extensions = array_merge($extensions, ['mp4', 'webm', 'part']);
+		}
+
+		return $extensions;
 	}
 
 	// -----------------------------------------------------------------------
