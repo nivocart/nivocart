@@ -38,7 +38,7 @@
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	plyr.setup('#player-<?php echo $module; ?>', options {
+	new Plyr('#player-<?php echo $module; ?>', {
 		controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
 		iconUrl: '<?php echo $icons; ?>',
 		clickToPlay: true

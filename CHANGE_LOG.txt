@@ -21,6 +21,7 @@ Release: TBA
 - Updated HMRC Modification (UK), waiting for further API updates (2027).
 - Updated Share This optional feature in Catalog News, blog and Products.
 - Updated Pinterest and Google Merchant product feed to support videos.
+- Updated Plyr jQuery Video Player to the latest version in Catalog.
 
 
 NivoCart v2.5.2
