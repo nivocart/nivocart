@@ -15,6 +15,12 @@ class ControllerFeedGoogleMerchant extends Controller {
 	/** @var int Maximum number of additional_image_link values per item (admin setting) */
 	private int $extra_limit = 3;
 
+	/** @var array<int, array<string, mixed>> Hosted video rows of the current batch, by product id */
+	private array $videos = [];
+
+	/** @var bool Send video_link (admin setting, on unless switched off) */
+	private bool $send_video = true;
+
 	public function index() {
 		if (!$this->config->get('google_merchant_status')) {
 			$this->response->addHeader('HTTP/1.1 404 Not Found');
@@ -72,6 +78,7 @@ class ControllerFeedGoogleMerchant extends Controller {
 		$extra_limit = $this->config->get('google_merchant_extra_images');
 
 		$this->extra_limit = ($extra_limit === null || $extra_limit === '') ? 3 : min(10, max(0, (int)$extra_limit));
+		$this->send_video = ((string)$this->config->get('google_merchant_video') !== '0');
 		$map = $this->config->get('google_merchant_category');
 		$map = is_array($map) ? $map : [];
 		$default_category = (string)$this->config->get('google_merchant_category_default');
@@ -82,7 +89,7 @@ class ControllerFeedGoogleMerchant extends Controller {
 		$handling_min = (string)$this->config->get('google_merchant_handling_min');
 		$handling_max = (string)$this->config->get('google_merchant_handling_max');
 
-		$stats = ['items' => 0, 'skipped_image' => 0, 'skipped_price' => 0, 'skipped_other' => 0];
+		$stats = ['items' => 0, 'skipped_image' => 0, 'skipped_price' => 0, 'skipped_other' => 0, 'videos' => 0, 'videos_left_out' => 0];
 
 		$tmp = $file . '.tmp';
 		$handle = fopen($tmp, 'wb');
@@ -114,6 +121,7 @@ class ControllerFeedGoogleMerchant extends Controller {
 			$ids = array_map(fn($row) => (int)$row['product_id'], $products);
 			$product_categories = $this->model_feed_google_merchant->getProductCategories($ids);
 			$product_images = $this->model_feed_google_merchant->getProductImages($ids);
+			$this->videos = $this->send_video ? $this->model_feed_google_merchant->getProductVideos($ids) : [];
 
 			foreach ($products as $product) {
 				$item = $this->buildItem($product, $product_categories[(int)$product['product_id']] ?? [], $product_images[(int)$product['product_id']] ?? [], $categories, $map, $default_category, $currency, $min_image, $brand_default, $group_variants, $handling_min, $handling_max, $stats);
@@ -272,6 +280,12 @@ class ControllerFeedGoogleMerchant extends Controller {
 			}
 		}
 
+		$video_url = $this->send_video ? $this->getVideoUrl((int)$product['product_id'], $stats) : '';
+
+		if ($video_url !== '') {
+			$xml .= '<g:video_link>' . $this->xml($video_url) . '</g:video_link>' . "\n";
+		}
+
 		$xml .= '<g:price>' . $price . ' ' . $currency . '</g:price>' . "\n";
 
 		if ($sale_price !== '') {
@@ -346,6 +360,59 @@ class ControllerFeedGoogleMerchant extends Controller {
 		if (!$size || min($size) < $min_size) {
 			return '';
 		}
+
+		$path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $filename))));
+
+		return HTTPS_SERVER . 'image/' . $path;
+	}
+
+	/**
+	 * Public URL of the hosted product video, or '' when the product has none or it cannot be used.
+	 */
+	protected function getVideoUrl(int $product_id, array &$stats): string {
+		if (empty($this->videos[$product_id])) {
+			return '';
+		}
+
+		$video = $this->videos[$product_id];
+		$filename = html_entity_decode((string)$video['video'], ENT_QUOTES, 'UTF-8');
+
+		// Only MP4 is accepted by the feed specification, and the file must exist
+		$real = realpath(DIR_IMAGE . $filename);
+
+		if ($filename === '' || strtolower(pathinfo($filename, PATHINFO_EXTENSION)) !== 'mp4' || !$real || !is_file($real) || strpos(str_replace('\\', '/', $real), str_replace('\\', '/', rtrim(DIR_IMAGE, '/\\'))) !== 0) {
+			$stats['videos_left_out']++;
+
+			return '';
+		}
+
+		// Google video_link rules: 6 to 240 seconds, at least 720p, aspect ratio 16:9, 9:16 or 1:1
+		$width = (int)$video['width'];
+		$height = (int)$video['height'];
+		$duration = (float)$video['duration'];
+
+		if ($duration < 6 || $duration > 240 || $width <= 0 || $height <= 0 || min($width, $height) < 720) {
+			$stats['videos_left_out']++;
+
+			return '';
+		}
+
+		$ratio = $width / $height;
+		$valid = false;
+
+		foreach ([16 / 9, 9 / 16, 1] as $allowed) {
+			if (abs($ratio - $allowed) / $allowed <= 0.02) {
+				$valid = true;
+			}
+		}
+
+		if (!$valid) {
+			$stats['videos_left_out']++;
+
+			return '';
+		}
+
+		$stats['videos']++;
 
 		$path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $filename))));
 

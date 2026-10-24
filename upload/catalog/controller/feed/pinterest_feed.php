@@ -16,6 +16,12 @@ class ControllerFeedPinterestFeed extends Controller {
 	/** @var int Maximum number of additional_image_link values per item (admin setting) */
 	private int $extra_limit = 3;
 
+	/** @var array<int, array<string, mixed>> Hosted video rows of the current batch, by product id */
+	private array $videos = [];
+
+	/** @var bool Send video_link (admin setting, on unless switched off) */
+	private bool $send_video = true;
+
 	public function index() {
 		if (!$this->config->get('pinterest_feed_status')) {
 			$this->response->addHeader('HTTP/1.1 404 Not Found');
@@ -73,6 +79,7 @@ class ControllerFeedPinterestFeed extends Controller {
 		$extra_limit = $this->config->get('pinterest_feed_extra_images');
 
 		$this->extra_limit = ($extra_limit === null || $extra_limit === '') ? 3 : min(10, max(0, (int)$extra_limit));
+		$this->send_video = ((string)$this->config->get('pinterest_feed_video') !== '0');
 		$map = $this->config->get('pinterest_feed_category');
 		$map = is_array($map) ? $map : [];
 		$default_category = (string)$this->config->get('pinterest_feed_category_default');
@@ -80,7 +87,7 @@ class ControllerFeedPinterestFeed extends Controller {
 		$brand_default = html_entity_decode((string)$this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
 		$has_variants = $this->model_feed_pinterest_feed->hasVariants();
 
-		$stats = ['items' => 0, 'skipped_image' => 0, 'skipped_price' => 0, 'skipped_other' => 0];
+		$stats = ['items' => 0, 'skipped_image' => 0, 'skipped_price' => 0, 'skipped_other' => 0, 'videos' => 0, 'videos_left_out' => 0];
 
 		$tmp = $file . '.tmp';
 		$handle = fopen($tmp, 'wb');
@@ -112,6 +119,7 @@ class ControllerFeedPinterestFeed extends Controller {
 			$ids = array_map(fn($row) => (int)$row['product_id'], $products);
 			$product_categories = $this->model_feed_pinterest_feed->getProductCategories($ids);
 			$product_images = $this->model_feed_pinterest_feed->getProductImages($ids);
+			$this->videos = $this->send_video ? $this->model_feed_pinterest_feed->getProductVideos($ids) : [];
 
 			foreach ($products as $product) {
 				$item = $this->buildItem($product, $product_categories[(int)$product['product_id']] ?? [], $product_images[(int)$product['product_id']] ?? [], $categories, $map, $default_category, $currency, $min_image, $brand_default, $stats);
@@ -269,6 +277,12 @@ class ControllerFeedPinterestFeed extends Controller {
 			}
 		}
 
+		$video_url = $this->send_video ? $this->getVideoUrl((int)$product['product_id'], $stats) : '';
+
+		if ($video_url !== '') {
+			$xml .= '<g:video_link>' . $this->xml($video_url) . '</g:video_link>' . "\n";
+		}
+
 		$xml .= '<g:price>' . $price . ' ' . $currency . '</g:price>' . "\n";
 
 		if ($sale_price !== '') {
@@ -333,6 +347,33 @@ class ControllerFeedPinterestFeed extends Controller {
 		if (!$size || min($size) < $min_size) {
 			return '';
 		}
+
+		$path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $filename))));
+
+		return HTTPS_SERVER . 'image/' . $path;
+	}
+
+	/**
+	 * Public URL of the hosted product video, or '' when the product has none or it cannot be used.
+	 */
+	protected function getVideoUrl(int $product_id, array &$stats): string {
+		if (empty($this->videos[$product_id])) {
+			return '';
+		}
+
+		$video = $this->videos[$product_id];
+		$filename = html_entity_decode((string)$video['video'], ENT_QUOTES, 'UTF-8');
+
+		// Only MP4 is accepted by the feed specification, and the file must exist
+		$real = realpath(DIR_IMAGE . $filename);
+
+		if ($filename === '' || strtolower(pathinfo($filename, PATHINFO_EXTENSION)) !== 'mp4' || !$real || !is_file($real) || strpos(str_replace('\\', '/', $real), str_replace('\\', '/', rtrim(DIR_IMAGE, '/\\'))) !== 0) {
+			$stats['videos_left_out']++;
+
+			return '';
+		}
+
+		$stats['videos']++;
 
 		$path = implode('/', array_map('rawurlencode', explode('/', str_replace('\\', '/', $filename))));
 

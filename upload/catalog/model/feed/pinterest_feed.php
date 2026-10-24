@@ -11,6 +11,9 @@ class ModelFeedPinterestFeed extends Model {
 	/** Cached result of the product_variant table existence check. */
 	private ?bool $hasVariantTable = null;
 
+	/** Cached result of the product_video table existence check. */
+	private ?bool $hasVideoTable = null;
+
 	/**
 	 * True when the dropship product_variant table exists (item_group_id can be exported).
 	 */
@@ -85,6 +88,37 @@ class ModelFeedPinterestFeed extends Model {
 
 		foreach ($query->rows as $row) {
 			$data[(int)$row['product_id']][] = $row['image'];
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Hosted product video per product id (first by sort order), for the given products. Empty when the dropship video table does not exist.
+	 */
+	public function getProductVideos(array $product_ids): array {
+		$data = [];
+
+		if (!$product_ids) {
+			return $data;
+		}
+
+		if ($this->hasVideoTable === null) {
+			$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_video'");
+
+			$this->hasVideoTable = ($check->num_rows > 0);
+		}
+
+		if (!$this->hasVideoTable) {
+			return $data;
+		}
+
+		$query = $this->db->query("SELECT `product_id`, `video`, `width`, `height`, `duration` FROM `" . DB_PREFIX . "product_video` WHERE `product_id` IN (" . implode(',', array_map('intval', $product_ids)) . ") ORDER BY `sort_order` ASC, `product_video_id` ASC");
+
+		foreach ($query->rows as $row) {
+			if (!isset($data[(int)$row['product_id']])) {
+				$data[(int)$row['product_id']] = $row;
+			}
 		}
 
 		return $data;

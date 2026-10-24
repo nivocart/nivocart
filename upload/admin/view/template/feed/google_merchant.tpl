@@ -91,6 +91,18 @@
           </select></td>
         </tr>
         <tr>
+          <td><?php echo $entry_video; ?><span class="help"><?php echo $help_video; ?></span></td>
+          <td><select name="google_merchant_video">
+            <?php if ($google_merchant_video) { ?>
+              <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+              <option value="0"><?php echo $text_disabled; ?></option>
+            <?php } else { ?>
+              <option value="1"><?php echo $text_enabled; ?></option>
+              <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+            <?php } ?>
+          </select></td>
+        </tr>
+        <tr>
           <td><?php echo $entry_taxonomy; ?><span class="help"><?php echo $help_taxonomy; ?></span></td>
           <td><input type="text" id="taxonomy-search" value="" size="40" placeholder="<?php echo $text_taxonomy_placeholder; ?>" autocomplete="off" />
             <br /><span id="taxonomy-target"></span>
@@ -124,6 +136,9 @@
             <br /><?php echo $cache_info; ?>
             <?php if ($cache_skipped) { ?>
               <br /><?php echo $cache_skipped; ?>
+            <?php } ?>
+            <?php if ($cache_videos) { ?>
+              <br /><?php echo $cache_videos; ?>
             <?php } ?>
             <?php if ($variants_info) { ?>
               <br /><?php echo $variants_info; ?>

@@ -53,6 +53,8 @@ class ControllerFeedPinterestFeed extends Controller {
 		$this->data['help_cache_hours'] = $this->language->get('help_cache_hours');
 		$this->data['help_min_image'] = $this->language->get('help_min_image');
 		$this->data['help_extra_images'] = $this->language->get('help_extra_images');
+		$this->data['entry_video'] = $this->language->get('entry_video');
+		$this->data['help_video'] = $this->language->get('help_video');
 		$this->data['help_category'] = $this->language->get('help_category');
 		$this->data['help_category_map'] = $this->language->get('help_category_map');
 
@@ -151,6 +153,14 @@ class ControllerFeedPinterestFeed extends Controller {
 			$this->data['pinterest_feed_extra_images'] = 3;
 		}
 
+		if (isset($this->request->post['pinterest_feed_video'])) {
+			$this->data['pinterest_feed_video'] = $this->request->post['pinterest_feed_video'];
+		} elseif ($this->config->get('pinterest_feed_video') !== null) {
+			$this->data['pinterest_feed_video'] = $this->config->get('pinterest_feed_video');
+		} else {
+			$this->data['pinterest_feed_video'] = 1;
+		}
+
 		if (isset($this->request->post['pinterest_feed_category_default'])) {
 			$this->data['pinterest_feed_category_default'] = $this->request->post['pinterest_feed_category_default'];
 		} else {
@@ -185,6 +195,7 @@ class ControllerFeedPinterestFeed extends Controller {
 		// Cache information written by the catalog feed
 		$this->data['cache_info'] = '';
 		$this->data['cache_skipped'] = '';
+		$this->data['cache_videos'] = '';
 		$this->data['variants_info'] = '';
 
 		$meta_file = $this->getCacheDir() . 'pinterest_feed.json';
@@ -197,6 +208,7 @@ class ControllerFeedPinterestFeed extends Controller {
 
 				$this->data['cache_info'] = sprintf($this->language->get('text_cache_info'), date('d/m/Y H:i', (int)($meta['generated'] ?? 0)), (int)($meta['items'] ?? 0), $skipped);
 				$this->data['cache_skipped'] = sprintf($this->language->get('text_cache_skipped'), (int)($meta['skipped_image'] ?? 0), (int)($meta['skipped_price'] ?? 0), (int)($meta['skipped_other'] ?? 0));
+				$this->data['cache_videos'] = sprintf($this->language->get('text_cache_videos'), (int)($meta['videos'] ?? 0), (int)($meta['videos_left_out'] ?? 0));
 				$this->data['variants_info'] = !empty($meta['variants']) ? $this->language->get('text_variants_on') : $this->language->get('text_variants_off');
 			}
 		}
