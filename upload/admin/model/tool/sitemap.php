@@ -5,6 +5,9 @@
  * @package NivoCart
  */
 class ModelToolSitemap extends Model {
+	// Hosted product videos by product_id, loaded once per request (see getVideoMap())
+	private ?array $video_map = null;
+
 	/**
 	 * Functions Generate, Get
 	 */
@@ -38,7 +41,7 @@ class ModelToolSitemap extends Model {
 		// Generating XML sitemap
 		$fp = fopen('../sitemap.xml', 'w+');
 		fwrite($fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r");
-		fwrite($fp, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\r");
+		fwrite($fp, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:video=\"http://www.google.com/schemas/sitemap-video/1.1\">\r");
 		fwrite($fp, $this->getCommonPages());
 		fwrite($fp, $this->getCategories($parent_id, $current_path));
 		fwrite($fp, $this->getProducts());
@@ -217,7 +220,7 @@ class ModelToolSitemap extends Model {
 		$results = $this->model_catalog_sitemap->getAllProducts($store_id);
 
 		foreach ($results as $result) {
-			$output .= $this->generateLinkNode($base . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0");
+			$output .= $this->generateLinkNode($base . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0", $this->getVideoNode($result, $base));
 		}
 
 		$stores_pro = $this->model_catalog_sitemap->getAllStores();
@@ -230,11 +233,93 @@ class ModelToolSitemap extends Model {
 					foreach ($results as $result) {
 						$store_url = $store_pro['url'];
 
-						$output .= $this->generateLinkNode($store_url . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0");
+						$output .= $this->generateLinkNode($store_url . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0", $this->getVideoNode($result, $store_url));
 					}
 				}
 			}
 		}
+
+		return $output;
+	}
+
+	/**
+	 * Hosted product videos (CJDropshipping import), keyed by product_id.
+	 * Only videos whose file and cover image still exist on disk are returned,
+	 * because Google needs a thumbnail and a reachable video file.
+	 * The table only exists with the CJDropshipping modification.
+	 */
+	protected function getVideoMap(): array {
+		if ($this->video_map !== null) {
+			return $this->video_map;
+		}
+
+		$this->video_map = [];
+
+		$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_video'");
+
+		if (!$check->num_rows) {
+			return $this->video_map;
+		}
+
+		$query = $this->db->query("SELECT `product_id`, `video`, `poster`, `duration` FROM `" . DB_PREFIX . "product_video` WHERE `video` != '' AND `poster` != '' ORDER BY `sort_order` ASC, `product_video_id` ASC");
+
+		foreach ($query->rows as $row) {
+			// One video per product in the sitemap: the first one wins
+			if (isset($this->video_map[$row['product_id']])) {
+				continue;
+			}
+
+			if (is_file(DIR_IMAGE . $row['video']) && is_file(DIR_IMAGE . $row['poster'])) {
+				$this->video_map[$row['product_id']] = $row;
+			}
+		}
+
+		return $this->video_map;
+	}
+
+	/**
+	 * Google video sitemap entry for a product row from getAllProducts()
+	 * (needs name and description). Returns '' when the product has no usable video.
+	 */
+	protected function getVideoNode(array $product, string $base): string {
+		$map = $this->getVideoMap();
+
+		if (!isset($map[$product['product_id']])) {
+			return '';
+		}
+
+		$video = $map[$product['product_id']];
+
+		$title = trim(preg_replace('/\s+/u', ' ', preg_replace('/<[^>]*>/', ' ', html_entity_decode((string)$product['name'], ENT_QUOTES, 'UTF-8'))));
+		$description = trim(preg_replace('/\s+/u', ' ', preg_replace('/<[^>]*>/', ' ', html_entity_decode((string)($product['description'] ?? ''), ENT_QUOTES, 'UTF-8'))));
+
+		if ($description === '') {
+			$description = $title;
+		}
+
+		$title = mb_substr($title, 0, 100);
+		$description = mb_substr($description, 0, 2000);
+
+		if ($title === '') {
+			return '';
+		}
+
+		$content_loc = $base . 'image/' . implode('/', array_map('rawurlencode', explode('/', $video['video'])));
+		$thumbnail_loc = $base . 'image/' . implode('/', array_map('rawurlencode', explode('/', $video['poster'])));
+
+		$output = "<video:video>\r";
+		$output .= "<video:thumbnail_loc>" . htmlspecialchars($thumbnail_loc, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:thumbnail_loc>\r";
+		$output .= "<video:title>" . htmlspecialchars($title, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:title>\r";
+		$output .= "<video:description>" . htmlspecialchars($description, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:description>\r";
+		$output .= "<video:content_loc>" . htmlspecialchars($content_loc, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:content_loc>\r";
+
+		$duration = (int)round((float)$video['duration']);
+
+		if ($duration >= 1 && $duration <= 28800) {
+			$output .= "<video:duration>" . $duration . "</video:duration>\r";
+		}
+
+		$output .= "</video:video>\r";
 
 		return $output;
 	}
@@ -681,7 +766,7 @@ class ModelToolSitemap extends Model {
 		return $output;
 	}
 
-	protected function generateLinkNode($link, $changefreq = 'monthly', $priority = '1.0') {
+	protected function generateLinkNode($link, $changefreq = 'monthly', $priority = '1.0', $extra = '') {
 		$this->load->model('tool/seo_url');
 
 		$link_node = $this->model_tool_seo_url->rewrite($link);
@@ -693,6 +778,7 @@ class ModelToolSitemap extends Model {
 		$output .= "<lastmod>" . date("Y-m-d") . "</lastmod>\r";
 		$output .= "<changefreq>" . $changefreq . "</changefreq>\r";
 		$output .= "<priority>" . $priority . "</priority>\r";
+		$output .= $extra;
 		$output .= "</url>\r";
 
 		return $output;
