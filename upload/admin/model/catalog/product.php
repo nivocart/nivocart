@@ -422,7 +422,45 @@ class ModelCatalogProduct extends Model {
 		}
 	}
 
+	/**
+	 * Remove the video rows of a product, then delete the video and cover files
+	 * from image/data/dropship/cjd-videos/ unless another product still uses them
+	 * (all variants of one CJ product share the same files).
+	 */
+	private function deleteProductVideos(int $product_id): void {
+		// The table belongs to the CJDropshipping modification; absent on plain installs
+		$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_video'");
+
+		if (!$check->num_rows) {
+			return;
+		}
+
+		$query = $this->db->query("SELECT `video`, `poster` FROM `" . DB_PREFIX . "product_video` WHERE `product_id` = '" . (int)$product_id . "'");
+
+		if (!$query->num_rows) {
+			return;
+		}
+
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_video` WHERE `product_id` = '" . (int)$product_id . "'");
+
+		foreach ($query->rows as $row) {
+			foreach ([$row['video'], $row['poster']] as $path) {
+				if ($path === '' || !str_starts_with($path, 'data/dropship/cjd-videos/') || str_contains($path, '..')) {
+					continue;
+				}
+
+				$used = $this->db->query("SELECT `product_video_id` FROM `" . DB_PREFIX . "product_video` WHERE `video` = '" . $this->db->escape($path) . "' OR `poster` = '" . $this->db->escape($path) . "' LIMIT 1");
+
+				if (!$used->num_rows && is_file(DIR_IMAGE . $path)) {
+					@unlink(DIR_IMAGE . $path);
+				}
+			}
+		}
+	}
+
 	public function deleteProduct(int $product_id): void {
+		$this->deleteProductVideos($product_id);
+
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product` WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_attribute` WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_color` WHERE product_id = '" . (int)$product_id . "'");

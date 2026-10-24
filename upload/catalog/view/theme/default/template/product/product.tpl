@@ -195,6 +195,13 @@
           </div>
         <?php } ?>
       <?php } ?>
+      <?php if ($video_file) { ?>
+        <div class="video video-file">
+          <video controls preload="none" playsinline<?php if ($video_poster) { ?> poster="<?php echo $video_poster; ?>"<?php } ?><?php if ($video_file_width && $video_file_height) { ?> width="<?php echo $video_file_width; ?>" height="<?php echo $video_file_height; ?>"<?php } ?>>
+            <source src="<?php echo $video_file; ?>" type="video/<?php echo pathinfo($video_file, PATHINFO_EXTENSION); ?>" />
+          </video>
+        </div>
+      <?php } ?>
       <?php if ($video_code) { ?>
         <div class="video">
           <iframe src="http://www.youtube.com/embed/<?php echo $video_code; ?>?html5=1" width="<?php echo $video_width; ?>" height="<?php echo $video_height; ?>"></iframe>

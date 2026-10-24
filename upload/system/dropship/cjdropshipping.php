@@ -297,6 +297,91 @@ class CJDropshipping {
 	}
 
 	/**
+	 * Get the video list for a CJ product (section 6.1 Query Product Videos).
+	 * Each item has videoUrl, coverURL, videoState, isFree, videoType, width, height, duration.
+	 *
+	 * @param  string $pid  CJ product ID.
+	 * @return array        List of video objects (empty when the product has none).
+	 * @throws \Exception
+	 */
+	public function getProductVideos(string $pid): array {
+		if ($pid === '') {
+			throw new \Exception('CJDropshipping: pid is required for getProductVideos.');
+		}
+
+		$response = $this->post(self::BASE_URL . '/product/queryVideosByProductId', ['productId' => $pid]);
+
+		return (!empty($response['data']) && is_array($response['data'])) ? $response['data'] : [];
+	}
+
+	/**
+	 * Download a CJ media file (video or cover) straight to disk.
+	 * CJ's download host rejects requests without the developers site as Referer.
+	 * The file is written to a .part file first and renamed only when complete.
+	 *
+	 * @param  string $url       Remote URL (https only).
+	 * @param  string $dest      Absolute destination path.
+	 * @param  int    $maxBytes  Abort when the file is larger than this (0 = no limit).
+	 * @param  int    $timeout   Total seconds allowed for the transfer.
+	 * @return bool              True when the file was saved.
+	 */
+	public function downloadMedia(string $url, string $dest, int $maxBytes = 0, int $timeout = 120): bool {
+		if (!str_starts_with($url, 'https://') || !filter_var($url, FILTER_VALIDATE_URL)) {
+			return false;
+		}
+
+		$part = $dest . '.part';
+		$fp = fopen($part, 'wb');
+
+		if ($fp === false) {
+			return false;
+		}
+
+		$ch = curl_init($url);
+
+		curl_setopt_array($ch, [
+			CURLOPT_FILE           => $fp,
+			CURLOPT_HTTPHEADER     => ['Referer: https://developers.cjdropshipping.com/'],
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_MAXREDIRS      => 3,
+			CURLOPT_PROTOCOLS      => CURLPROTO_HTTPS,
+			CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
+			CURLOPT_TIMEOUT        => $timeout,
+			CURLOPT_CONNECTTIMEOUT => self::CONNECT_TIMEOUT,
+			CURLOPT_SSL_VERIFYPEER => true,
+			CURLOPT_SSL_VERIFYHOST => 2,
+			CURLOPT_FAILONERROR    => true,
+		]);
+
+		if ($maxBytes > 0) {
+			curl_setopt($ch, CURLOPT_MAXFILESIZE, $maxBytes);
+			curl_setopt($ch, CURLOPT_NOPROGRESS, false);
+			curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, function ($ch, $dlTotal, $dlNow) use ($maxBytes) {
+				return ($dlNow > $maxBytes) ? 1 : 0;
+			});
+		}
+
+		$ok = curl_exec($ch);
+		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+		unset($ch);
+
+		fclose($fp);
+
+		if ($ok === false || $httpCode !== 200 || !is_file($part) || filesize($part) === 0) {
+			@unlink($part);
+			return false;
+		}
+
+		if (!@rename($part, $dest)) {
+			@unlink($part);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get all variants for a product.
 	 *
 	 * @param  string $pid         CJ product ID.
@@ -876,8 +961,9 @@ class CJDropshipping {
 			throw new \Exception('CJDropshipping: Failed to decode JSON response from ' . $url);
 		}
 
-		// CJ uses code=200 and result=true for success; any other code is an error
-		if (isset($decoded['code']) && (int)$decoded['code'] !== 200) {
+		// CJ uses code=200 and result=true for success (the video endpoint documents code=0);
+		// any other code is an error
+		if (isset($decoded['code']) && !in_array((int)$decoded['code'], [0, 200], true)) {
 			throw new \Exception('CJDropshipping API error ' . $decoded['code'] . ': ' . ($decoded['message'] ?? 'Unknown'));
 		}
 

@@ -10,6 +10,7 @@ Release: TBA
 
 - Add new Google Merchant Feed for better Search Engine Optimisation.
 - Add new Product Review form inside Catalog Customer Account Dashboard.
+- Add support for product videos when using CJDropshipping Modification.
 - Updated the Product Review system in the Product page for better SEO. 
 - Updated the over-complicated "Also Bought" query in Catalog model product.
 - Updated the Product page with Structured data and Open Graph tags.

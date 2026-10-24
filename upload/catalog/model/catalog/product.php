@@ -10,6 +10,7 @@ class ModelCatalogProduct extends Model {
 	 */
 	/** Cached result of the product_variant table existence check. */
 	private ?bool $hasVariantTable = null;
+	private $hasVideoTable = null;
 
 	/**
 	 * Returns the LEFT JOIN clause and GROUP BY expression for variant deduplication.
@@ -478,6 +479,25 @@ class ModelCatalogProduct extends Model {
 		if ($query->num_rows) {
 			return $query->row['video_code'];
 		}
+	}
+
+	/**
+	 * First hosted video of a product (CJDropshipping import), or [] when it has none.
+	 */
+	public function getProductVideo(int $product_id): array {
+		// The table belongs to the CJDropshipping modification; absent on plain installs
+		if ($this->hasVideoTable === null) {
+			$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_video'");
+			$this->hasVideoTable = ($check->num_rows > 0);
+		}
+
+		if (!$this->hasVideoTable) {
+			return [];
+		}
+
+		$query = $this->db->query("SELECT `video`, `poster`, `width`, `height`, `duration` FROM `" . DB_PREFIX . "product_video` WHERE `product_id` = '" . (int)$product_id . "' ORDER BY `sort_order` ASC, `product_video_id` ASC LIMIT 1");
+
+		return $query->num_rows ? $query->row : [];
 	}
 
 	public function getProductFields(int $product_id): array {

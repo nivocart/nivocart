@@ -2094,6 +2094,13 @@ ul.box-filter > li ul {
   padding: 10px;
   border-radius: var(--radius-sm);
 }
+.product-info > .left .video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  background: #000;
+}
 .product-info .description {
   border-top: 1px solid var(--clr-border-light);
   border-bottom: 1px solid var(--clr-border-light);

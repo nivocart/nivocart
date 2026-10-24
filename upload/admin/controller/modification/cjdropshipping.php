@@ -66,7 +66,8 @@ class ControllerModificationCJDropshipping extends Controller {
 			DB_PREFIX . 'dropship_order',
 			DB_PREFIX . 'dropship_variant',
 			DB_PREFIX . 'product_dropship',
-			DB_PREFIX . 'product_variant'
+			DB_PREFIX . 'product_variant',
+			DB_PREFIX . 'product_video'
 		];
 
 		foreach ($tables as $table) {
@@ -230,7 +231,7 @@ class ControllerModificationCJDropshipping extends Controller {
 		// About panel: list the tables with the configured prefix
 		$tables = [];
 
-		foreach (['dropship_channel', 'product_dropship', 'dropship_variant', 'dropship_order', 'product_variant'] as $table) {
+		foreach (['dropship_channel', 'product_dropship', 'dropship_variant', 'dropship_order', 'product_variant', 'product_video'] as $table) {
 			$tables[] = '- ' . DB_PREFIX . $table;
 		}
 
@@ -1134,6 +1135,22 @@ class ControllerModificationCJDropshipping extends Controller {
 			KEY `idx_pid_channel` (`pid`, `channel_id`),
 			KEY `idx_product_id` (`product_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+
+		// Hosted CJ product videos (storefront reads it; only CJDropshipping fills it)
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "product_video` (
+			`product_video_id` int NOT NULL AUTO_INCREMENT,
+			`product_id` int NOT NULL,
+			`video` varchar(255) NOT NULL DEFAULT '',
+			`poster` varchar(255) NOT NULL DEFAULT '',
+			`cj_video_id` varchar(64) NOT NULL DEFAULT '',
+			`width` int NOT NULL DEFAULT '0',
+			`height` int NOT NULL DEFAULT '0',
+			`duration` decimal(8,3) NOT NULL DEFAULT '0.000',
+			`sort_order` int NOT NULL DEFAULT '0',
+			PRIMARY KEY (`product_video_id`),
+			KEY `idx_product_id` (`product_id`),
+			KEY `idx_video` (`video`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 	}
 
 	public function uninstall(): void {
@@ -1148,7 +1165,9 @@ class ControllerModificationCJDropshipping extends Controller {
 		$remaining = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "dropship_channel` WHERE `provider` != 'cjdropshipping'");
 
 		if ((int)$remaining->row['total'] > 0) {
-			// Other connectors still active — only remove CJ channel rows and their data
+			// Other connectors still active — only remove CJ channel rows and their data.
+			// Imported products stay in the catalog, so nc_product_video and the video files
+			// stay too (orphans can be cleaned up later).
 			$cj_channels = $this->db->query("SELECT `channel_id` FROM `" . DB_PREFIX . "dropship_channel` WHERE `provider` = 'cjdropshipping'");
 
 			foreach ($cj_channels->rows as $ch) {
@@ -1164,6 +1183,7 @@ class ControllerModificationCJDropshipping extends Controller {
 		} else {
 			// No other connectors — safe to drop all shared tables
 			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "dropship_order`");
+			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "product_video`");
 			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "product_variant`");
 			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "dropship_variant`");
 			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "product_dropship`");

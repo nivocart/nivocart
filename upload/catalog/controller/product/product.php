@@ -454,6 +454,27 @@ class ControllerProductProduct extends Controller {
 			$this->data['video_width'] = $this->image_thumb_width;
 			$this->data['video_height'] = $this->image_thumb_height;
 
+			// Hosted video (CJDropshipping import)
+			$this->data['video_file'] = '';
+			$this->data['video_poster'] = '';
+			$this->data['video_file_width'] = 0;
+			$this->data['video_file_height'] = 0;
+
+			$hosted_video = $this->model_catalog_product->getProductVideo($product_id);
+
+			if ($hosted_video && is_file(DIR_IMAGE . $hosted_video['video'])) {
+				$is_https = (!empty($this->request->server['HTTPS']) && in_array($this->request->server['HTTPS'], ['on', '1'], true)) ||
+					(isset($this->request->server['SERVER_PORT']) && $this->request->server['SERVER_PORT'] === '443') ||
+					(!empty($this->request->server['HTTP_X_FORWARDED_PROTO']) && $this->request->server['HTTP_X_FORWARDED_PROTO'] === 'https');
+
+				$image_base = ($is_https ? $this->config->get('config_ssl') : $this->config->get('config_url')) . 'image/';
+
+				$this->data['video_file'] = $image_base . $hosted_video['video'];
+				$this->data['video_poster'] = ($hosted_video['poster'] && is_file(DIR_IMAGE . $hosted_video['poster'])) ? $image_base . $hosted_video['poster'] : '';
+				$this->data['video_file_width'] = (int)$hosted_video['width'];
+				$this->data['video_file_height'] = (int)$hosted_video['height'];
+			}
+
 			// Barcode
 			$this->load->model('tool/barcode');
 

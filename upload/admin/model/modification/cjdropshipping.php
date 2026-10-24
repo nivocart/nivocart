@@ -23,6 +23,19 @@ class ModelModificationCJDropshipping extends Model {
 	// Supported image extensions for download
 	private const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
+	// Product video subfolder relative to DIR_IMAGE (videos and their cover images)
+	private const VIDEO_DIR = 'data/dropship/cjd-videos/';
+
+	// Accepted video file types and the largest file we will store (50 MB)
+	private const VIDEO_EXTENSIONS = ['mp4', 'webm'];
+	private const VIDEO_MAX_BYTES = 52428800;
+
+	// Video import state (per request)
+	private $videoAdapter = null;
+	private $videoCache = [];
+	private $videoHint = [];
+	private $videoTable = null;
+
 	// CJ prices are in USD — stored as-is, converted at display time
 	private const CJ_CURRENCY = 'USD';
 
@@ -198,6 +211,7 @@ class ModelModificationCJDropshipping extends Model {
 		}
 
 		$this->ensureImageDirectory();
+		$this->videoAdapter = $adapter;
 
 		// 5 products × 0.5s delay ≈ 2.5s of wait per call — well within PHP timeout.
 		// Adapter retry logic handles any 429 throttle responses automatically.
@@ -229,6 +243,9 @@ class ModelModificationCJDropshipping extends Model {
 					$skipped++;
 					continue;
 				}
+
+				// The list row says whether CJ has a video for this product (0 = none)
+				$this->videoHint[$pid] = isset($product['isVideo']) ? (int)$product['isVideo'] : null;
 
 				// Fetch full detail including all variants.
 				// Short pause to stay within CJ's /product/query rate limit.
@@ -348,6 +365,7 @@ class ModelModificationCJDropshipping extends Model {
 		}
 
 		$this->ensureImageDirectory();
+		$this->videoAdapter = $adapter;
 
 		$pageSize = 5;
 		$imported = 0;
@@ -515,6 +533,9 @@ class ModelModificationCJDropshipping extends Model {
 				$sort++;
 			}
 		}
+
+		// Free CJ product video (one per product); never stops the import
+		$this->attachVideo((int)$product_id, $detail);
 
 		return $product_id;
 	}
@@ -1435,6 +1456,164 @@ class ModelModificationCJDropshipping extends Model {
 	}
 
 	// =================================================================
+	// VIDEO HELPERS
+	// =================================================================
+
+	/**
+	 * True when the nc_product_video table exists (older installs may not have it yet).
+	 */
+	public function videoTableExists(): bool {
+		if ($this->videoTable === null) {
+			$query = $this->db->query("SHOW TABLES LIKE '" . $this->db->escape(DB_PREFIX . 'product_video') . "'");
+			$this->videoTable = $query->num_rows > 0;
+		}
+
+		return $this->videoTable;
+	}
+
+	/**
+	 * Attach the CJ video to a freshly imported product.
+	 * All variants of one CJ product share the same downloaded file, so the
+	 * API lookup and the download happen once per CJ product.
+	 */
+	private function attachVideo(int $product_id, array $detail): void {
+		$pid = (string)($detail['pid'] ?? $detail['id'] ?? '');
+
+		if ($pid === '' || $this->videoAdapter === null || !$this->videoTableExists()) {
+			return;
+		}
+
+		try {
+			if (!array_key_exists($pid, $this->videoCache)) {
+				$this->videoCache[$pid] = $this->fetchVideo($this->videoAdapter, $pid);
+			}
+
+			if (!empty($this->videoCache[$pid])) {
+				$this->insertProductVideo($product_id, $this->videoCache[$pid]);
+			}
+		} catch (\Throwable $e) {
+			$this->log->write('CJDropshipping attachVideo pid ' . $pid . ': ' . $e->getMessage());
+		}
+	}
+
+	/**
+	 * Look up the first free, listed video of a CJ product and download it (and its
+	 * cover image) into DIR_IMAGE/data/dropship/cjd-videos/.
+	 * Returns [] when there is no usable video or the download failed.
+	 *
+	 * Reusable by a later "Sync Videos" action: call it, then insertProductVideo().
+	 *
+	 * @param  object $adapter  CJDropshipping API client.
+	 * @param  string $pid      CJ product ID.
+	 * @return array            ['video', 'poster', 'cj_video_id', 'width', 'height', 'duration'] or [].
+	 */
+	public function fetchVideo($adapter, string $pid): array {
+		// The product list flag says there is no video: save the API call
+		if (isset($this->videoHint[$pid]) && $this->videoHint[$pid] === 0) {
+			return [];
+		}
+
+		usleep(500000);
+
+		$videos = $adapter->getProductVideos($pid);
+		$chosen = null;
+		$ext = '';
+
+		foreach ($videos as $video) {
+			if (($video['videoState'] ?? '') !== 'ON_STATE' || (string)($video['isFree'] ?? '') !== '1') {
+				continue;
+			}
+
+			$url = (string)($video['videoUrl'] ?? '');
+			$ext = strtolower(pathinfo((string)parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+
+			if ($url !== '' && in_array($ext, self::VIDEO_EXTENSIONS, true)) {
+				$chosen = $video;
+				break;
+			}
+		}
+
+		if ($chosen === null) {
+			return [];
+		}
+
+		$videoId = preg_replace('/[^A-Za-z0-9_\-]/', '', (string)($chosen['videoId'] ?? $chosen['id'] ?? ''));
+
+		if ($videoId === '') {
+			return [];
+		}
+
+		$this->ensureVideoDirectory();
+
+		$file = self::VIDEO_DIR . $videoId . '.' . $ext;
+		$dest = DIR_IMAGE . $file;
+
+		if (!is_file($dest) || filesize($dest) === 0) {
+			if (!$adapter->downloadMedia((string)$chosen['videoUrl'], $dest, self::VIDEO_MAX_BYTES, 120)) {
+				$this->log->write('CJDropshipping fetchVideo: download failed for pid ' . $pid . ' video ' . $videoId);
+				return [];
+			}
+		}
+
+		// Cover image (optional)
+		$poster = '';
+		$coverUrl = (string)($chosen['coverURL'] ?? '');
+
+		if ($coverUrl !== '') {
+			$coverExt = strtolower(pathinfo((string)parse_url($coverUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
+
+			if (!in_array($coverExt, self::IMAGE_EXTENSIONS, true)) {
+				$coverExt = 'jpg';
+			}
+
+			$posterFile = self::VIDEO_DIR . $videoId . '.' . $coverExt;
+
+			if (is_file(DIR_IMAGE . $posterFile) || $adapter->downloadMedia($coverUrl, DIR_IMAGE . $posterFile, 5242880, 30)) {
+				$poster = $posterFile;
+			}
+		}
+
+		return [
+			'video'       => $file,
+			'poster'      => $poster,
+			'cj_video_id' => $videoId,
+			'width'       => (int)($chosen['width'] ?? 0),
+			'height'      => (int)($chosen['height'] ?? 0),
+			'duration'    => (float)($chosen['duration'] ?? 0)
+		];
+	}
+
+	/**
+	 * Store the video row for a product (one video per product for now).
+	 */
+	public function insertProductVideo(int $product_id, array $video): void {
+		$query = $this->db->query("SELECT `product_video_id` FROM `" . DB_PREFIX . "product_video` WHERE `product_id` = '" . (int)$product_id . "' LIMIT 1");
+
+		if ($query->num_rows) {
+			return;
+		}
+
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "product_video` SET
+			`product_id` = '" . (int)$product_id . "',
+			`video` = '" . $this->db->escape($video['video']) . "',
+			`poster` = '" . $this->db->escape($video['poster']) . "',
+			`cj_video_id` = '" . $this->db->escape($video['cj_video_id']) . "',
+			`width` = '" . (int)$video['width'] . "',
+			`height` = '" . (int)$video['height'] . "',
+			`duration` = '" . (float)$video['duration'] . "',
+			`sort_order` = '0'
+		");
+	}
+
+	private function ensureVideoDirectory(): void {
+		$dir = DIR_IMAGE . self::VIDEO_DIR;
+
+		if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+			throw new \Exception('CJDropshipping: Failed to create video directory: ' . $dir);
+		}
+	}
+
+	// =================================================================
 	// MANUFACTURER HELPER
 	// =================================================================
 
@@ -1615,7 +1794,7 @@ class ModelModificationCJDropshipping extends Model {
 	 *
 	 * Removes the product from every table the import created:
 	 *   nc_dropship_variant, nc_product_dropship, nc_product_variant,
-	 *   nc_product_image, nc_product_to_category, nc_product_description, nc_product.
+	 *   nc_product_image, nc_product_video, nc_product_to_category, nc_product_description, nc_product.
 	 *
 	 * @return int  Number of duplicate products deleted.
 	 */
@@ -1650,6 +1829,11 @@ class ModelModificationCJDropshipping extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_dropship` WHERE `product_id` IN (" . $ids . ")");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_variant` WHERE `product_id` IN (" . $ids . ")");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_image` WHERE `product_id` IN (" . $ids . ")");
+
+		if ($this->videoTableExists()) {
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "product_video` WHERE `product_id` IN (" . $ids . ")");
+		}
+
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_category` WHERE `product_id` IN (" . $ids . ")");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_description` WHERE `product_id` IN (" . $ids . ")");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product` WHERE `product_id` IN (" . $ids . ")");
