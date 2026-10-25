@@ -24,6 +24,15 @@
             <td><?php echo $entry_threshold; ?><span class="help"><?php echo $help_threshold; ?></span></td>
             <td><input type="number" name="threshold" value="<?php echo number_format((float)$threshold, 2, '.', ''); ?>" min="0" max="100" step="0.5" size="5" /> %</td>
           </tr>
+          <tr>
+            <td><?php echo $entry_default_tax_class; ?><span class="help"><?php echo $help_default_tax_class; ?></span></td>
+            <td><select name="default_tax_class_id">
+                <option value="0"><?php echo $text_none; ?></option>
+                <?php foreach ($tax_classes as $tax_class) { ?>
+                <option value="<?php echo (int)$tax_class['tax_class_id']; ?>"<?php if ((int)$tax_class['tax_class_id'] === (int)$default_tax_class_id) { ?> selected="selected"<?php } ?>><?php echo htmlspecialchars($tax_class['title'], ENT_QUOTES, 'UTF-8'); ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
         </table>
       </form>
     </div>

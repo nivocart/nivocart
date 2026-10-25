@@ -17,6 +17,9 @@ $_['text_no_products']          = 'No products found matching the selected filte
 $_['text_no_dropship']          = 'No active dropship products are configured.';
 $_['text_settings_saved']       = 'Success: Settings have been saved.';
 $_['text_price_updated']        = 'Price updated successfully.';
+$_['text_none']                 = '--- None ---';
+$_['text_rate_title']           = '1 %s = %s %s';
+$_['text_no_rate_warning']      = 'Warning: %s product(s) have no exchange rate for the currency of their cost, so their cost and margin cannot be calculated. Add that currency under Localisation > Currencies.';
 
 // Text — dashboard KPI tile labels
 $_['text_total_products']       = 'Total Dropship Products';
@@ -35,8 +38,9 @@ $_['tab_about']                 = 'About';
 $_['column_product']            = 'Product';
 $_['column_sku']                = 'SKU / Model';
 $_['column_sale_price']         = 'Sale Price';
-$_['column_cost_ex_vat']        = 'Cost (ex VAT)';
-$_['column_cost_inc_vat']       = 'Cost (inc VAT)';
+$_['column_cost_original']      = 'Original Cost';
+$_['column_product_cost']       = 'Cost ex VAT (%s)';
+$_['column_cost_inc_vat']       = 'Cost inc VAT (%s)';
 $_['column_margin_pct']         = 'Margin %';
 $_['column_status']             = 'Status';
 $_['column_channel']            = 'Channel';
@@ -51,10 +55,13 @@ $_['filter_negative']           = 'Negative Margin';
 $_['status_good']               = 'Good';
 $_['status_low']                = 'Low';
 $_['status_negative']           = 'Negative';
+$_['status_no_rate']            = 'No rate';
 
 // Entry — settings form
 $_['entry_threshold']           = 'Minimum Margin Threshold (%)';
-$_['help_threshold']            = 'Products with a gross margin below this percentage are flagged as \'Low\'. Set to 0 to disable. Default: 20%.';
+$_['entry_default_tax_class']   = 'Default Tax Class';
+$_['help_default_tax_class']    = 'Used for the information-only VAT column when a product has no tax class. The rate is taken at the store address from Settings, as the storefront does.';
+$_['help_threshold']            = 'Products with a margin (ex-VAT sale price against the cost) below this percentage are flagged as \'Low\'. Set to 0 to disable. Default: 20%.';
 
 // Buttons
 $_['button_save']               = 'Save Settings';

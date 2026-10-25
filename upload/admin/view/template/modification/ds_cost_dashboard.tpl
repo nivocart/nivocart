@@ -49,16 +49,6 @@
               <td><input type="number" name="chargeback_pct" value="<?php echo number_format((float)$global['chargeback_pct'], 2, '.', ''); ?>" min="0" max="100" step="0.01" style="width:80px;" /> &nbsp;%</td>
             </tr>
             <tr>
-              <td><?php echo $entry_vat_registered; ?></td>
-              <td>
-                <input type="radio" name="vat_registered" value="1" id="vat-yes" class="radio" <?php echo ($global['vat_registered'] ? 'checked="checked"' : ''); ?> />
-                <label for="vat-yes"><span><span></span></span><?php echo $text_vat_yes; ?></label>
-                &nbsp;&nbsp;
-                <input type="radio" name="vat_registered" value="0" id="vat-no" class="radio" <?php echo (!$global['vat_registered'] ? 'checked="checked"' : ''); ?> />
-                <label for="vat-no"><span><span></span></span><?php echo $text_vat_no; ?></label>
-              </td>
-            </tr>
-            <tr>
               <td><?php echo $entry_other_monthly; ?></td>
               <td><input type="number" name="other_monthly" value="<?php echo number_format((float)$global['other_monthly'], 2, '.', ''); ?>" min="0" step="0.01" style="width:110px;" /> &nbsp;/ month</td>
             </tr>
@@ -128,7 +118,6 @@
           <p><?php echo $help_intro; ?></p>
           <p><?php echo $help_global; ?></p>
           <p><?php echo $help_channels; ?></p>
-          <p><?php echo $help_vat; ?></p>
           <p><?php echo $help_proration; ?></p>
         </div>
       </div>

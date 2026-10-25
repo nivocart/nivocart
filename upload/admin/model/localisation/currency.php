@@ -146,6 +146,9 @@ class ModelLocalisationCurrency extends Model {
 	// Largest change (in percent) from the stored rate that one update may apply
 	public const MAX_RATE_CHANGE = 25;
 
+	// Days after which a stored rate counts as outdated and the rate change check is skipped for it
+	public const OUTDATED_DAYS = 14;
+
 	// Hours without a successful run after which the admin shows a warning
 	public const OVERDUE_HOURS = 36;
 
@@ -159,7 +162,7 @@ class ModelLocalisationCurrency extends Model {
 	 * Fetch the rates and save them.
 	 *
 	 * @param string $source Empty for every source in order, or one of SOURCES
-	 * @param array  $only   Upper-case currency codes to update, empty for all enabled ones
+	 * @param array  $only   Upper-case currency codes to update, empty for all of them
 	 * @param bool   $check  Apply the maximum rate change check
 	 *
 	 * @return array ['status' => 'success'|'error', 'updated' => int, 'message' => string]
@@ -171,20 +174,26 @@ class ModelLocalisationCurrency extends Model {
 			return ['status' => 'error', 'updated' => 0, 'message' => 'Unknown rate source "' . $source . '".'];
 		}
 
-		$query = $this->db->query("SELECT `code`, `value` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `status` = '1'");
+		$query = $this->db->query("SELECT `code`, `value`, `date_modified` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "'");
 
 		$pending = [];
+		$outdated = [];
 
 		foreach ($query->rows as $row) {
 			$code = strtoupper($row['code']);
 
 			if (!$only || in_array($code, $only, true)) {
 				$pending[$code] = (float)$row['value'];
+
+				// A rate not refreshed for a long time (for example a disabled currency) may legitimately be far off
+				if (strtotime($row['date_modified']) < strtotime('-' . self::OUTDATED_DAYS . ' days')) {
+					$outdated[$code] = true;
+				}
 			}
 		}
 
 		if (!$pending) {
-			return ['status' => 'success', 'updated' => 0, 'message' => 'No enabled currency needs a rate.'];
+			return ['status' => 'success', 'updated' => 0, 'message' => 'No currency besides the default one needs a rate.'];
 		}
 
 		$updated = [];
@@ -216,7 +225,7 @@ class ModelLocalisationCurrency extends Model {
 
 				unset($pending[$code]);
 
-				$problem = $this->saveRate($code, $rate['rate'], $old, $check);
+				$problem = $this->saveRate($code, $rate['rate'], $old, $check && !isset($outdated[$code]));
 
 				if ($problem !== '') {
 					$notes[] = ($name === 'frankfurter' ? 'Frankfurter' : 'FloatRates') . ': ' . $problem;
@@ -266,7 +275,7 @@ class ModelLocalisationCurrency extends Model {
 
 		$default = strtoupper(trim((string)$this->config->get('config_currency')));
 
-		$query = $this->db->query("SELECT `code`, `value` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `status` = '1' AND `date_modified` < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "'");
+		$query = $this->db->query("SELECT `code`, `value` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `date_modified` < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "'");
 
 		$updated = 0;
 		$date = '';
@@ -374,7 +383,7 @@ class ModelLocalisationCurrency extends Model {
 
 		$default = strtoupper(trim((string)$this->config->get('config_currency')));
 
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `status` = '1' AND `date_modified` < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "'");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `date_modified` < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "'");
 
 		return (int)$query->row['total'] > 0;
 	}

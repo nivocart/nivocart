@@ -65,11 +65,6 @@ class ControllerReportSaleDropshipProfit extends Controller {
         $url .= '&filter_channel_id=' . $filter_channel_id;
 
         // ---------------------------------------------------------------
-        // VAT registration flag (from cost config)
-        // ---------------------------------------------------------------
-        $vat_registered = $this->model_report_dropship->isVatRegistered();
-
-        // ---------------------------------------------------------------
         // Query
         // ---------------------------------------------------------------
         $query_data = [
@@ -78,7 +73,6 @@ class ControllerReportSaleDropshipProfit extends Controller {
             'filter_group'            => $filter_group,
             'filter_order_status_id'  => $filter_order_status_id,
             'filter_channel_id'       => $filter_channel_id,
-            'vat_registered'          => $vat_registered,
             'start'                   => ($page - 1) * $this->config->get('config_admin_limit'),
             'limit'                   => $this->config->get('config_admin_limit'),
         ];
@@ -155,6 +149,11 @@ class ControllerReportSaleDropshipProfit extends Controller {
         $this->data['net_profit'] = $this->currency->format($net_profit, $currency);
         $this->data['net_margin_pct'] = number_format($net_margin_pct, 2) . '%';
         $this->data['net_profit_raw'] = $net_profit;
+
+        // Order lines whose cost currency has no exchange rate
+        $no_rate_lines = $this->model_report_dropship->getNoRateLines();
+
+        $this->data['text_no_rate_warning'] = $no_rate_lines ? sprintf($this->language->get('text_no_rate_warning'), $no_rate_lines) : '';
 
         // Cost config presence
         $has_cost_config = $this->model_report_dropship->costConfigExists();

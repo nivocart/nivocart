@@ -24,6 +24,9 @@
         <?php echo $text_no_cost_config; ?>
       </div>
       <?php } ?>
+      <?php if ($text_no_rate_warning) { ?>
+      <div class="warning"><?php echo $text_no_rate_warning; ?></div>
+      <?php } ?>
       <?php if ($navigation_hi) { ?>
       <div class="pagination" style="margin-bottom:10px;"><?php echo $pagination; ?></div>
       <?php } ?>

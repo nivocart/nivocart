@@ -12,6 +12,8 @@
  * @package NivoCart
  */
 class ModelReportDropship extends Model {
+    private int $no_rate_lines = 0;
+
     /**
      * Return true if the required DS tables all exist.
      */
@@ -67,6 +69,8 @@ class ModelReportDropship extends Model {
      *   orders (unique order count), revenue, product_cost,
      *   gateway_fees, returns_provision, gross_profit, gross_margin_pct
      *
+     * Product cost is the supplier cost converted to the store default currency at the current
+     * exchange rate, with no tax, plus the FX fee for costs in a foreign currency.
      * Overhead costs are NOT included per-row — they are calculated
      * separately via getOverheadSummary() and subtracted from gross totals.
      */
@@ -76,7 +80,9 @@ class ModelReportDropship extends Model {
         $date_end = $data['filter_date_end'] ?? '';
         $status_id = (int)($data['filter_order_status_id'] ?? 0);
         $channel_id = (int)($data['filter_channel_id'] ?? 0);
-        $vat_reg = (bool)($data['vat_registered'] ?? false);
+        $default = strtoupper(trim((string)$this->config->get('config_currency')));
+
+        $this->no_rate_lines = 0;
 
         // Base query — one row per DS order line item
         $sql = "
@@ -88,8 +94,9 @@ class ModelReportDropship extends Model {
                 op.price AS sale_price,
                 dch.channel_id,
                 dch.name AS channel_name,
-                pd.supplier_cost,
-                pd.vat_rate,
+                COALESCE(dv.supplier_cost, pd.supplier_cost) AS original_cost,
+                UPPER(COALESCE(dv.currency_code, '" . $this->db->escape($default) . "')) AS original_currency,
+                cur.`value` AS currency_value,
                 cc_ch.gateway_fee_pct,
                 cc_ch.gateway_fee_fixed,
                 cc_ch.returns_pct,
@@ -103,6 +110,14 @@ class ModelReportDropship extends Model {
                 ON (dord.channel_id = dch.channel_id)
             LEFT JOIN `" . DB_PREFIX . "product_dropship` pd
                 ON (op.product_id = pd.product_id AND dord.channel_id = pd.channel_id)
+            LEFT JOIN `" . DB_PREFIX . "dropship_variant` dv
+                ON (dv.variant_id = COALESCE(NULLIF(dord.variant_id, 0), (
+                    SELECT MAX(dv2.variant_id)
+                    FROM `" . DB_PREFIX . "dropship_variant` dv2
+                    WHERE dv2.product_id = op.product_id AND dv2.channel_id = dord.channel_id AND dv2.is_active = '1'
+                )))
+            LEFT JOIN `" . DB_PREFIX . "currency` cur
+                ON (cur.code = UPPER(COALESCE(dv.currency_code, '" . $this->db->escape($default) . "')))
         ";
 
         // Join cost config only if table exists
@@ -171,21 +186,28 @@ class ModelReportDropship extends Model {
             $line_revenue = (float)$r['sale_price'] * (int)$r['quantity'];
             $b['revenue'] += $line_revenue;
 
-            // Product cost — apply VAT if store is NOT VAT-registered
-            $cost_ex = (float)($r['supplier_cost'] ?? 0);
+            // Product cost in the store default currency at today's rate, no tax.
+            // A cost in a currency with no usable rate is left out and counted, never guessed.
+            $cost = (float)($r['original_cost'] ?? 0);
+            $foreign = ($r['original_currency'] !== $default);
 
-            if (!$vat_reg && !empty($r['vat_rate'])) {
-                $cost_ex = $cost_ex * (1 + (float)$r['vat_rate'] / 100);
+            if ($foreign) {
+                if ((float)$r['currency_value'] > 0) {
+                    $cost = $cost / (float)$r['currency_value'];
+                } else {
+                    $cost = 0.0;
+                    $this->no_rate_lines++;
+                }
             }
 
-            // Apply FX fee on top of supplier cost
+            // FX fee only applies to a cost paid in a foreign currency
             $fx_pct = (float)($r['fx_fee_pct'] ?? 0);
 
-            if ($fx_pct > 0) {
-                $cost_ex = $cost_ex * (1 + $fx_pct / 100);
+            if ($foreign && $fx_pct > 0) {
+                $cost = $cost * (1 + $fx_pct / 100);
             }
 
-            $b['product_cost'] += $cost_ex * (int)$r['quantity'];
+            $b['product_cost'] += $cost * (int)$r['quantity'];
 
             // Returns provision on this line's revenue
             $returns_pct = (float)($r['returns_pct'] ?? 0);
@@ -378,16 +400,11 @@ class ModelReportDropship extends Model {
     }
 
     /**
-     * Return the global VAT registration flag from nc_ds_cost_config.
+     * Number of order lines of the last getDropshipProfit() call whose cost currency has no exchange
+     * rate. Their cost is left out of the report, so the report warns about them.
      */
-    public function isVatRegistered(): bool {
-        if (!$this->costConfigExists()) {
-            return false;
-        }
-
-        $q = $this->db->query("SELECT `vat_registered` FROM `" . DB_PREFIX . "ds_cost_config` WHERE `channel_id` = '0' LIMIT 1");
-
-        return (bool)($q->row['vat_registered'] ?? false);
+    public function getNoRateLines(): int {
+        return $this->no_rate_lines;
     }
 
     // =====================================================================

@@ -46,7 +46,6 @@ class ModelModificationDsCostCalculator extends Model {
                  `platform_monthly`, `advertising_monthly`,
                  `gateway_fee_pct`, `gateway_fee_fixed`,
                  `fx_fee_pct`, `returns_pct`, `chargeback_pct`,
-                 `vat_registered`,
                  `other_monthly`, `other_description`, `date_modified`)
             VALUES (
                 '" . (int)$channel_id . "',
@@ -60,7 +59,6 @@ class ModelModificationDsCostCalculator extends Model {
                 '" . (float)($data['fx_fee_pct'] ?? 0) . "',
                 '" . (float)($data['returns_pct'] ?? 0) . "',
                 '" . (float)($data['chargeback_pct'] ?? 0) . "',
-                '" . (int)($data['vat_registered'] ?? 0) . "',
                 '" . (float)($data['other_monthly'] ?? 0) . "',
                 '" . $this->db->escape($data['other_description'] ?? '') . "',
                 NOW()
@@ -76,7 +74,6 @@ class ModelModificationDsCostCalculator extends Model {
                 `fx_fee_pct` = VALUES(`fx_fee_pct`),
                 `returns_pct` = VALUES(`returns_pct`),
                 `chargeback_pct` = VALUES(`chargeback_pct`),
-                `vat_registered` = VALUES(`vat_registered`),
                 `other_monthly` = VALUES(`other_monthly`),
                 `other_description` = VALUES(`other_description`),
                 `date_modified` = NOW()
@@ -135,7 +132,6 @@ class ModelModificationDsCostCalculator extends Model {
             'fx_fee_pct'          => '0.0000',
             'returns_pct'         => '0.0000',
             'chargeback_pct'      => '0.0000',
-            'vat_registered'      => 0,
             'other_monthly'       => '0.0000',
             'other_description'   => '',
             'date_modified'       => ''

@@ -26,6 +26,9 @@
       <?php if ($error) { ?>
       <div class="warning"><?php echo $error; ?></div>
       <?php } ?>
+      <?php if ($no_rate) { ?>
+      <div class="warning"><?php echo $text_no_rate_warning; ?></div>
+      <?php } ?>
       <h2><?php echo $tab_dashboard; ?></h2>
       <div class="mc-kpi-row">
         <div class="mc-kpi">

@@ -1101,7 +1101,6 @@ class ControllerModificationCJDropshipping extends Controller {
 			`supplier_authkey` varchar(64) NOT NULL DEFAULT '',
 			`supplier_cost` decimal(15,4) NOT NULL DEFAULT '0.0000',
 			`rrp` decimal(15,4) NOT NULL DEFAULT '0.0000',
-			`vat_rate` decimal(5,2) NOT NULL DEFAULT '20.00',
 			`last_price_sync` datetime NULL DEFAULT NULL,
 			`last_stock_sync` datetime NULL DEFAULT NULL,
 			`last_image_sync` datetime NULL DEFAULT NULL,

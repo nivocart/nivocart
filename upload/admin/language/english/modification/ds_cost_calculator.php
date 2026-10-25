@@ -28,8 +28,6 @@ $_['text_home']                 = 'Home';
 $_['text_modification']         = 'Modifications';
 $_['text_loading']              = 'Loading…';
 $_['text_saved']                = 'Cost configuration saved successfully.';
-$_['text_vat_yes']              = 'Yes — supplier costs are ex-VAT (VAT reclaimable)';
-$_['text_vat_no']               = 'No — VAT is included in the true supplier cost';
 
 // Global cost field labels
 $_['entry_hosting_monthly']     = 'Web Hosting (per month)';
@@ -38,7 +36,6 @@ $_['entry_tools_annual']        = 'Annual Tools (per year)';
 $_['entry_tools_annual_help']   = 'e.g. accounting software, email marketing, SEO tools';
 $_['entry_chargeback_pct']      = 'Chargeback / Fraud Provision (%)';
 $_['entry_chargeback_help']     = 'Percentage of revenue set aside for chargebacks (e.g. 0.50)';
-$_['entry_vat_registered']      = 'VAT Registered?';
 $_['entry_other_monthly']       = 'Other Monthly Costs';
 $_['entry_other_description']   = 'Description of Other Costs';
 
@@ -57,10 +54,9 @@ $_['button_save']               = 'Save';
 $_['button_close']              = 'Close';
 
 // Help tab
-$_['help_intro']                = 'The DS Cost Calculator stores all your dropshipping overhead costs so that the <strong>Dropshipping Profit Report</strong> can calculate accurate net profit figures.';
+$_['help_intro']                = 'The DS Cost Calculator stores all your dropshipping overhead costs so that the <strong>Dropshipping Profit Report</strong> can calculate accurate net profit figures. No tax is applied to any of these costs.';
 $_['help_global']               = '<strong>Global Costs</strong> — apply across all platforms: hosting, domain, annual tools, and any miscellaneous monthly overhead.';
-$_['help_channels']             = '<strong>Platform Costs</strong> — specific to each connected DS channel: platform subscription, advertising spend, payment gateway fees, currency conversion, and expected returns.';
-$_['help_vat']                  = '<strong>VAT Registered</strong> — if your business is VAT-registered you reclaim VAT on supplier invoices, so the true product cost is the ex-VAT supplier cost. If you are not VAT-registered, the VAT is a real cost and is added to the supplier cost in the profit calculation.';
+$_['help_channels']             = '<strong>Platform Costs</strong> — specific to each connected DS channel: platform subscription, advertising spend, payment gateway fees, currency conversion fee, and expected returns.';
 $_['help_proration']            = 'Monthly and annual costs are prorated daily within each report period so the profit figures remain accurate for any date range you choose.';
 
 // Errors

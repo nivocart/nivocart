@@ -117,8 +117,6 @@ class ControllerModificationDsCostCalculator extends Controller {
 		$this->data['text_channel_costs_desc'] = $this->language->get('text_channel_costs_desc');
 		$this->data['text_no_channels'] = $this->language->get('text_no_channels');
 		$this->data['text_loading'] = $this->language->get('text_loading');
-		$this->data['text_vat_yes'] = $this->language->get('text_vat_yes');
-		$this->data['text_vat_no'] = $this->language->get('text_vat_no');
 
 		$this->data['tab_global'] = $this->language->get('tab_global');
 		$this->data['tab_channels'] = $this->language->get('tab_channels');
@@ -127,7 +125,6 @@ class ControllerModificationDsCostCalculator extends Controller {
 		$this->data['help_intro'] = $this->language->get('help_intro');
 		$this->data['help_global'] = $this->language->get('help_global');
 		$this->data['help_channels'] = $this->language->get('help_channels');
-		$this->data['help_vat'] = $this->language->get('help_vat');
 		$this->data['help_proration'] = $this->language->get('help_proration');
 
 		$this->data['entry_hosting_monthly'] = $this->language->get('entry_hosting_monthly');
@@ -136,7 +133,6 @@ class ControllerModificationDsCostCalculator extends Controller {
 		$this->data['entry_tools_annual_help'] = $this->language->get('entry_tools_annual_help');
 		$this->data['entry_chargeback_pct'] = $this->language->get('entry_chargeback_pct');
 		$this->data['entry_chargeback_help'] = $this->language->get('entry_chargeback_help');
-		$this->data['entry_vat_registered'] = $this->language->get('entry_vat_registered');
 		$this->data['entry_other_monthly'] = $this->language->get('entry_other_monthly');
 		$this->data['entry_other_description'] = $this->language->get('entry_other_description');
 		$this->data['entry_platform_monthly'] = $this->language->get('entry_platform_monthly');
@@ -257,7 +253,6 @@ class ControllerModificationDsCostCalculator extends Controller {
 			`fx_fee_pct` decimal(5,4) NOT NULL DEFAULT '0.0000' COMMENT 'Currency conversion fee % on supplier cost',
 			`returns_pct` decimal(5,4) NOT NULL DEFAULT '0.0000' COMMENT 'Expected returns as % of revenue',
 			`chargeback_pct` decimal(5,4) NOT NULL DEFAULT '0.0000' COMMENT 'Chargeback provision % of revenue (global row)',
-			`vat_registered` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 = VAT registered; supplier cost is ex-VAT',
 			`other_monthly` decimal(10,4) NOT NULL DEFAULT '0.0000' COMMENT 'Miscellaneous monthly overhead',
 			`other_description` varchar(255) NOT NULL DEFAULT '' COMMENT 'Label for other costs',
 			`date_modified` datetime NOT NULL,

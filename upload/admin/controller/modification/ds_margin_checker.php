@@ -7,7 +7,7 @@
  * highlights below-threshold and negative-margin products, and allows
  * inline price updates from the product list.
  *
- * Requires: nc_product_dropship and nc_dropship_channel tables (created by a
+ * Requires: nc_product_dropship, nc_dropship_variant and nc_dropship_channel tables (created by a
  * Dropshipping connector such as CJ Dropshipping).
  * Does not create its own database tables.
  *
@@ -89,6 +89,10 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['negative_margin'] = $stats['negative_margin'];
 		$this->data['avg_margin'] = $stats['avg_margin'];
 		$this->data['worst_performers'] = $stats['worst_performers'];
+		$this->data['no_rate'] = $stats['no_rate'];
+		$this->data['text_no_rate_warning'] = sprintf($this->language->get('text_no_rate_warning'), $stats['no_rate']);
+
+		$default_currency = strtoupper((string)$this->config->get('config_currency'));
 
 		// Flash messages
 		if (isset($this->session->data['success'])) {
@@ -121,7 +125,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['column_product'] = $this->language->get('column_product');
 		$this->data['column_sku'] = $this->language->get('column_sku');
 		$this->data['column_sale_price'] = $this->language->get('column_sale_price');
-		$this->data['column_cost_inc_vat'] = $this->language->get('column_cost_inc_vat');
+		$this->data['column_cost_inc_vat'] = sprintf($this->language->get('column_cost_inc_vat'), $default_currency);
 		$this->data['column_margin_pct'] = $this->language->get('column_margin_pct');
 		$this->data['column_status'] = $this->language->get('column_status');
 
@@ -133,6 +137,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['status_good'] = $this->language->get('status_good');
 		$this->data['status_low'] = $this->language->get('status_low');
 		$this->data['status_negative'] = $this->language->get('status_negative');
+		$this->data['status_no_rate'] = $this->language->get('status_no_rate');
 
 		// About panel — labels
 		$this->data['text_version'] = $this->language->get('text_version');
@@ -247,8 +252,13 @@ class ControllerModificationDsMarginChecker extends Controller {
 		// Table column headings
 		$this->data['column_product'] = $this->language->get('column_product');
 		$this->data['column_sku'] = $this->language->get('column_sku');
-		$this->data['column_cost_ex_vat'] = $this->language->get('column_cost_ex_vat');
-		$this->data['column_cost_inc_vat'] = $this->language->get('column_cost_inc_vat');
+		$default_currency = strtoupper((string)$this->config->get('config_currency'));
+
+		$this->data['default_currency'] = $default_currency;
+		$this->data['column_cost_original'] = $this->language->get('column_cost_original');
+		$this->data['column_product_cost'] = sprintf($this->language->get('column_product_cost'), $default_currency);
+		$this->data['column_cost_inc_vat'] = sprintf($this->language->get('column_cost_inc_vat'), $default_currency);
+		$this->data['text_rate_title'] = $this->language->get('text_rate_title');
 		$this->data['column_sale_price'] = $this->language->get('column_sale_price');
 		$this->data['column_margin_pct'] = $this->language->get('column_margin_pct');
 		$this->data['column_status'] = $this->language->get('column_status');
@@ -259,6 +269,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['status_good'] = $this->language->get('status_good');
 		$this->data['status_low'] = $this->language->get('status_low');
 		$this->data['status_negative'] = $this->language->get('status_negative');
+		$this->data['status_no_rate'] = $this->language->get('status_no_rate');
 
 		// Text / error strings
 		$this->data['text_no_products'] = $this->language->get('text_no_products');
@@ -337,7 +348,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 				'success'    => true,
 				'message'    => $this->language->get('text_price_updated'),
 				'new_price'  => number_format($price, 2, '.', ''),
-				'margin_pct' => $product['margin_pct'] ?? 0
+				'margin_pct' => $product['margin_pct'] ?? null
 			]);
 		} catch (\Exception $e) {
 			$this->jsonResponse(['error' => $e->getMessage()]);
@@ -361,6 +372,12 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 			$this->model_modification_ds_margin_checker->setSetting('threshold', $threshold);
 
+			// Only a tax class that exists can be the default (0 = none)
+			$tax_class_id = (int)($this->request->post['default_tax_class_id'] ?? 0);
+			$valid = array_column($this->model_modification_ds_margin_checker->getTaxClasses(), 'tax_class_id');
+
+			$this->model_modification_ds_margin_checker->setSetting('default_tax_class_id', in_array((string)$tax_class_id, array_map('strval', $valid), true) ? $tax_class_id : 0);
+
 			$this->session->data['success'] = $this->language->get('text_settings_saved');
 
 			$this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
@@ -368,6 +385,8 @@ class ControllerModificationDsMarginChecker extends Controller {
 		}
 
 		$this->data['threshold'] = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
+		$this->data['default_tax_class_id'] = (int)$this->model_modification_ds_margin_checker->getSetting('default_tax_class_id', 0);
+		$this->data['tax_classes'] = $this->model_modification_ds_margin_checker->getTaxClasses();
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -380,6 +399,9 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['entry_threshold'] = $this->language->get('entry_threshold');
 
 		$this->data['help_threshold'] = $this->language->get('help_threshold');
+		$this->data['entry_default_tax_class'] = $this->language->get('entry_default_tax_class');
+		$this->data['help_default_tax_class'] = $this->language->get('help_default_tax_class');
+		$this->data['text_none'] = $this->language->get('text_none');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -416,11 +438,12 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->load->model('modification/ds_margin_checker');
 
 		$this->model_modification_ds_margin_checker->setSetting('threshold', self::DEFAULT_THRESHOLD);
+		$this->model_modification_ds_margin_checker->setSetting('default_tax_class_id', 0);
 	}
 
 	/**
 	 * Called when the modification is uninstalled.
-	 * Removes the threshold setting from nc_setting.
+	 * Removes the Margin Checker settings from nc_setting.
 	 */
 	public function uninstall(): void {
 		$this->load->model('modification/ds_margin_checker');
@@ -434,12 +457,13 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 	/**
 	 * Returns true if the required dropship dependency tables are missing.
-	 * DS Margin Checker reads from nc_product_dropship and nc_dropship_channel,
-	 * so those tables must exist before the dashboard can load.
+	 * DS Margin Checker reads from nc_product_dropship, nc_dropship_variant and
+	 * nc_dropship_channel, so those tables must exist before the dashboard can load.
 	 */
 	protected function dependenciesMissing(): bool {
 		$required = [
 			DB_PREFIX . 'product_dropship',
+			DB_PREFIX . 'dropship_variant',
 			DB_PREFIX . 'dropship_channel'
 		];
 

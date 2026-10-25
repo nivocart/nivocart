@@ -553,7 +553,6 @@ class ModelModificationCJDropshipping extends Model {
 			`supplier_authkey` = '',
 			`supplier_cost` = '" . (float)($variant['variantSellPrice'] ?? $detail['sellPrice'] ?? 0) . "',
 			`rrp` = '" . (float)($variant['variantSugSellPrice'] ?? 0) . "',
-			`vat_rate` = '20.00',
 			`is_active` = '1',
 			`date_added` = NOW(),
 			`date_modified` = NOW()
