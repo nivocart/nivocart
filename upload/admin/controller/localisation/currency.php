@@ -7,6 +7,11 @@
 class ControllerLocalisationCurrency extends Controller {
 	private $error = [];
 
+	// Hours (UTC) of the daily rate update cron jobs: a quiet time for the Frankfurter servers
+	// in Germany, and one hour earlier for the FloatRates backup so Frankfurter corrects it.
+	private const CRON_FRANKFURTER_HOUR = 2;
+	private const CRON_FLOATRATES_HOUR = 1;
+
 	public function index() {
 		$this->language->load('localisation/currency');
 
@@ -117,6 +122,19 @@ class ControllerLocalisationCurrency extends Controller {
 		$this->getList();
 	}
 
+	/**
+	 * "02:00 UTC (03:00 CET / 04:00 CEST in Germany)" for a cron hour given in UTC.
+	 */
+	private function getCronTimeText(int $hour): string {
+		$utc = new \DateTimeZone('UTC');
+		$berlin = new \DateTimeZone('Europe/Berlin');
+
+		$winter = (new \DateTime(date('Y') . '-01-15 ' . sprintf('%02d', $hour) . ':00', $utc))->setTimezone($berlin);
+		$summer = (new \DateTime(date('Y') . '-07-15 ' . sprintf('%02d', $hour) . ':00', $utc))->setTimezone($berlin);
+
+		return sprintf($this->language->get('text_rates_time'), sprintf('%02d:00', $hour), $winter->format('H:i'), $summer->format('H:i'));
+	}
+
 	protected function getList() {
 		$page_url = array_filter([
 			'sort'  => $this->request->get['sort'] ?? 'title',
@@ -200,6 +218,48 @@ class ControllerLocalisationCurrency extends Controller {
 		$this->data['column_action'] = $this->language->get('column_action');
 
 		$this->data['help_currencies'] = $this->language->get('help_currencies');
+
+		// Rate update status and cron job details
+		foreach ([
+			'tab_rates', 'text_rates_command_primary', 'text_rates_command_backup', 'text_rates_note',
+			'text_rates_last_run', 'text_rates_never', 'text_rates_success', 'text_rates_error'
+		] as $key) {
+			$this->data[$key] = $this->language->get($key);
+		}
+
+		$tasks = [$this->model_localisation_currency::LOG_CRON, $this->model_localisation_currency::LOG_DASHBOARD];
+
+		$last_success = $this->model_localisation_currency->getLastRun($tasks, true);
+		$last_run = $this->model_localisation_currency->getLastRun($tasks);
+		$overdue_hours = $this->model_localisation_currency::OVERDUE_HOURS;
+
+		$this->data['rates_last_success'] = $last_success ? [
+			'date'    => date($this->language->get('date_format_time'), strtotime($last_success['date_added'])),
+			'message' => $last_success['message']
+		] : [];
+
+		// Newest run, shown only when it failed after the last success
+		$this->data['rates_last_failed'] = ($last_run && $last_run['status'] !== 'success') ? [
+			'date'    => date($this->language->get('date_format_time'), strtotime($last_run['date_added'])),
+			'message' => $last_run['message']
+		] : [];
+
+		$this->data['rates_overdue'] = (!$last_success || (time() - strtotime($last_success['date_added'])) > $overdue_hours * 3600);
+		$this->data['rates_auto'] = (bool)$this->config->get('config_currency_auto');
+
+		$this->data['text_rates_last_success'] = $last_success ? sprintf($this->language->get('text_rates_last_success'), $this->data['rates_last_success']['date']) : $this->language->get('text_rates_none');
+		$this->data['text_rates_overdue'] = sprintf($this->language->get('text_rates_overdue'), $overdue_hours);
+		$this->data['text_rates_auto_off'] = $this->language->get('text_rates_auto_off');
+		$this->data['text_rates_failed'] = $this->language->get('text_rates_failed');
+
+		$cron_script = str_replace('\\', '/', dirname(rtrim(DIR_SYSTEM, '/\\'))) . '/cron_currency.php';
+
+		$this->data['cron_schedule_primary'] = '0 ' . self::CRON_FRANKFURTER_HOUR . ' * * *';
+		$this->data['cron_schedule_backup'] = '0 ' . self::CRON_FLOATRATES_HOUR . ' * * *';
+		$this->data['cron_command_primary'] = '/usr/bin/php ' . $cron_script . ' frankfurter > /dev/null 2>&1';
+		$this->data['cron_command_backup'] = '/usr/bin/php ' . $cron_script . ' floatrates > /dev/null 2>&1';
+		$this->data['cron_time_primary'] = $this->getCronTimeText(self::CRON_FRANKFURTER_HOUR);
+		$this->data['cron_time_backup'] = $this->getCronTimeText(self::CRON_FLOATRATES_HOUR);
 
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');

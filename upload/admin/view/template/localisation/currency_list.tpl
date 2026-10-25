@@ -20,7 +20,20 @@
       </div>
     </div>
     <div class="content-body">
-      <div class="tooltip" style="margin:5px 0 15px 0;"><?php echo $help_currencies; ?></div>
+    <?php if ($rates_overdue && $rates_auto) { ?>
+      <div class="warning"><?php echo $text_rates_overdue; ?></div>
+    <?php } ?>
+      <div class="tooltip" style="margin:5px 0 15px 0;"><?php echo $text_rates_last_success; ?>
+      <?php if ($rates_last_success && $rates_last_success['message']) { ?>
+        <br /><?php echo htmlspecialchars($rates_last_success['message'], ENT_QUOTES, 'UTF-8'); ?>
+      <?php } ?>
+      <?php if ($rates_last_failed) { ?>
+        <br /><?php echo $text_rates_failed; ?> <?php echo htmlspecialchars($rates_last_failed['date'] . ' - ' . $rates_last_failed['message'], ENT_QUOTES, 'UTF-8'); ?>
+      <?php } ?>
+      <?php if (!$rates_auto) { ?>
+        <br /><?php echo $text_rates_auto_off; ?>
+      <?php } ?>
+      </div>
 	<?php if ($navigation_hi) { ?>
       <div class="pagination" style="margin-bottom:10px;"><?php echo $pagination; ?></div>
     <?php } ?>
@@ -94,6 +107,38 @@
     <?php if ($navigation_lo) { ?>
       <div class="pagination"><?php echo $pagination; ?></div>
     <?php } ?>
+      <h2><?php echo $tab_rates; ?></h2>
+      <div class="tooltip"><?php echo $help_currencies; ?></div>
+      <table class="form">
+        <tr>
+          <td><?php echo $text_rates_command_primary; ?></td>
+          <td><input type="text" value="<?php echo htmlspecialchars($cron_schedule_primary, ENT_QUOTES, 'UTF-8'); ?>" size="14" readonly="readonly" onfocus="this.select();" />
+            <span class="help"><?php echo htmlspecialchars($cron_time_primary, ENT_QUOTES, 'UTF-8'); ?></span>
+            <textarea rows="2" cols="110" readonly="readonly" onfocus="this.select();"><?php echo htmlspecialchars($cron_command_primary, ENT_QUOTES, 'UTF-8'); ?></textarea></td>
+        </tr>
+        <tr>
+          <td><?php echo $text_rates_command_backup; ?></td>
+          <td><input type="text" value="<?php echo htmlspecialchars($cron_schedule_backup, ENT_QUOTES, 'UTF-8'); ?>" size="14" readonly="readonly" onfocus="this.select();" />
+            <span class="help"><?php echo htmlspecialchars($cron_time_backup, ENT_QUOTES, 'UTF-8'); ?></span>
+            <textarea rows="2" cols="110" readonly="readonly" onfocus="this.select();"><?php echo htmlspecialchars($cron_command_backup, ENT_QUOTES, 'UTF-8'); ?></textarea>
+            <span class="help"><?php echo $text_rates_note; ?></span></td>
+        </tr>
+        <tr>
+          <td><?php echo $text_rates_last_run; ?></td>
+          <td><?php if ($rates_last_success) { ?>
+            <span class="enabled"><?php echo $text_rates_success; ?></span>
+            <?php echo htmlspecialchars($rates_last_success['date'], ENT_QUOTES, 'UTF-8'); ?>
+            <span class="help"><?php echo htmlspecialchars($rates_last_success['message'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <?php } else { ?>
+            <?php echo $text_rates_never; ?>
+            <?php } ?>
+            <?php if ($rates_last_failed) { ?>
+            <br /><span class="disabled"><?php echo $text_rates_error; ?></span>
+            <?php echo htmlspecialchars($rates_last_failed['date'], ENT_QUOTES, 'UTF-8'); ?>
+            <span class="help"><?php echo htmlspecialchars($rates_last_failed['message'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <?php } ?></td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>

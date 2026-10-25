@@ -17,7 +17,8 @@ class ModelLocalisationCurrency extends Model {
 		$this->session->data['new_currency_id'] = $currency_id;
 
 		if ($this->config->get('config_currency_auto')) {
-			$this->updateCurrencies(true);
+			// The admin typed the starting value: fetch the real one without the rate change check
+			$this->updateRates('', [strtoupper(trim($data['code']))], false);
 		}
 
 		$this->cache->delete('currency');
@@ -123,167 +124,453 @@ class ModelLocalisationCurrency extends Model {
 	}
 
 	/** --------------------------------------------------------------------------------
-	 * FloatRates follows 148 currencies using 19 data sources.
+	 * Automatic rate updates
 	 *
-	 * Example USD: http://www.floatrates.com/daily/usd.xml
+	 * Sources (all free, no API key):
+	 *  - Frankfurter (primary): https://api.frankfurter.dev/v2/rates?base=GBP&quotes=USD,EUR
+	 *    Data of the European Central Bank and other central banks, JSON.
+	 *  - FloatRates (backup): https://www.floatrates.com/daily/gbp.xml
 	 *
-	 * Example XML Response:
-	 * <item>
-	 *	<title>1 USD = 0.81253219 EUR</title>
-	 *	<link>https://www.floatrates.com/usd/eur/</link>
-	 *	<description>1 U.S. Dollar = 0.81253219 Euro</description>
-	 *	<pubDate>Mon, 12 Mar 2018 12:00:01 GMT</pubDate>
-	 *	<baseCurrency>USD</baseCurrency>
-	 *	<baseName>U.S. Dollar</baseName>
-	 *	<targetCurrency>EUR</targetCurrency>
-	 *	<targetName>Euro</targetName>
-	 *	<exchangeRate>0.81253219</exchangeRate>
-	 * </item>
+	 * Callers:
+	 *  - cron_currency.php (CLI, recommended): updateRates() with the source given on the
+	 *    command line, or both sources in order when none is given.
+	 *  - Admin dashboard (updateCurrencies / updateAlphaVantageCurrencies): the fallback for
+	 *    stores without a cron job. It steps aside while the cron job keeps succeeding.
+	 *
+	 * Every run is written to nc_cron_log (tasks currency_cron and currency_dashboard) and
+	 * the newest successful run is shown on Localisation > Currency.
 	 * ----------------------------------------------------------------------------------
 	 */
-	public function updateCurrencies($default = '') {
-		$default = $this->config->get('config_currency');
+	public const SOURCES = ['frankfurter', 'floatrates'];
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` WHERE code != '" . trim($default) . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
+	// Largest change (in percent) from the stored rate that one update may apply
+	public const MAX_RATE_CHANGE = 25;
 
-		if (!$query->rows) {
-			return;
+	// Hours without a successful run after which the admin shows a warning
+	public const OVERDUE_HOURS = 36;
+
+	public const LOG_CRON = 'currency_cron';
+	public const LOG_DASHBOARD = 'currency_dashboard';
+
+	// Seconds a request to a rate source may take in total
+	private int $timeout = 15;
+
+	/**
+	 * Fetch the rates and save them.
+	 *
+	 * @param string $source Empty for every source in order, or one of SOURCES
+	 * @param array  $only   Upper-case currency codes to update, empty for all enabled ones
+	 * @param bool   $check  Apply the maximum rate change check
+	 *
+	 * @return array ['status' => 'success'|'error', 'updated' => int, 'message' => string]
+	 */
+	public function updateRates(string $source = '', array $only = [], bool $check = true): array {
+		$default = strtoupper(trim((string)$this->config->get('config_currency')));
+
+		if ($source !== '' && !in_array($source, self::SOURCES, true)) {
+			return ['status' => 'error', 'updated' => 0, 'message' => 'Unknown rate source "' . $source . '".'];
 		}
 
-		$file_url = 'https://www.floatrates.com/daily/' . strtolower($default) . '.xml';
+		$query = $this->db->query("SELECT `code`, `value` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `status` = '1'");
 
-		// --- CONNECTIVITY CHECK ---
-		// Use cURL with a short timeout to verify the remote host is reachable
-		// before attempting any XML load. This prevents fatal errors on login
-		// when the internet is down or floatrates.com is unavailable.
-		$ch = curl_init($file_url);
+		$pending = [];
 
-		curl_setopt_array($ch, [
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_NOBODY         => true,   // HEAD request — don't download the body
-			CURLOPT_TIMEOUT        => 5,      // Max 5 seconds to wait
-			CURLOPT_CONNECTTIMEOUT => 5,      // Max 5 seconds to connect
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_SSL_VERIFYPEER => true,
-		]);
+		foreach ($query->rows as $row) {
+			$code = strtoupper($row['code']);
 
-		curl_exec($ch);
-		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		$curl_error = curl_errno($ch);
-
-		unset($ch);
-
-		// If cURL failed (no network) or HTTP status is not 200, abort silently
-		if ($curl_error || $http_code !== 200) {
-			return;
-		}
-		// --- END CONNECTIVITY CHECK ---
-
-		$data = [
-			'sort'  => 'code',
-			'order' => 'ASC'
-		];
-
-		$results = $this->getCurrencies($data);
-
-		if (!$results) {
-			return;
-		}
-
-		$currencies = [];
-
-		foreach ($results as $result) {
-			if ($result['code'] != strtoupper($default)) {
-				$currencies[] = $result['code'];
+			if (!$only || in_array($code, $only, true)) {
+				$pending[$code] = (float)$row['value'];
 			}
 		}
 
-		if (empty($currencies)) {
-			return;
+		if (!$pending) {
+			return ['status' => 'success', 'updated' => 0, 'message' => 'No enabled currency needs a rate.'];
 		}
 
-		// Suppress warnings and catch any XML parse failure gracefully
-		libxml_use_internal_errors(true);
+		$updated = [];
+		$dates = [];
+		$notes = [];
+		$problems = false;
 
-		$xml = simplexml_load_file($file_url);
+		$sources = ($source !== '') ? [$source] : self::SOURCES;
 
-		if ($xml === false) {
-			libxml_clear_errors();
-			return;
-		}
-
-		foreach ($xml->children() as $response) {
-			if (in_array($response->targetCurrency, $currencies)) {
-				$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . $response->exchangeRate . "', date_modified = NOW() WHERE code = '" . strtoupper($response->targetCurrency) . "'");
+		foreach ($sources as $name) {
+			if (!$pending) {
+				break;
 			}
-		}
 
-		libxml_use_internal_errors(false);
+			try {
+				$rates = ($name === 'frankfurter') ? $this->fetchFrankfurter($default, array_keys($pending)) : $this->fetchFloatRates($default, array_keys($pending));
+			} catch (\Throwable $e) {
+				$notes[] = ($name === 'frankfurter' ? 'Frankfurter' : 'FloatRates') . ' failed: ' . rtrim($e->getMessage(), '.') . '.';
 
-		$this->cache->delete('currency');
+				continue;
+			}
 
-		$this->editValueByCode($default, '1.000000');
-	}
+			foreach ($rates as $code => $rate) {
+				if (!isset($pending[$code])) {
+					continue;
+				}
 
-	//----------------------------------------------------------------------------------
-	// Alpha Vantage : Currency_Exchange_Rate API
-	//
-	// replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
-	//
-	// Example PHP/Json Response:
-	// --------------------------
-	// $json = file_get_contents('https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=USD&to_currency=JPY&apikey=demo');
-	//
-	// $data = json_decode($json,true);
-	//
-	// print_r($data);
-	//
-	// exit;
-	//----------------------------------------------------------------------------------
+				$old = $pending[$code];
 
-	public function updateAlphaVantageCurrencies() {
-		$default = $this->config->get('config_currency');
+				unset($pending[$code]);
 
-		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $default . "' AND date_modified < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "' AND status = '1'");
+				$problem = $this->saveRate($code, $rate['rate'], $old, $check);
 
-		if ($query->rows) {
-			$api_key = $this->config->get('config_alpha_vantage');
+				if ($problem !== '') {
+					$notes[] = ($name === 'frankfurter' ? 'Frankfurter' : 'FloatRates') . ': ' . $problem;
+					$problems = true;
 
-			$api_key = (isset($api_key) && $api_key) ? mb_strtoupper($api_key, 'UTF-8') : 'P6WGY9G9LB22GMBJ';
+					continue;
+				}
 
-			foreach ($query->rows as $result) {
-				$code = mb_strtoupper($result['code'], 'UTF-8');
+				$updated[$name] = ($updated[$name] ?? 0) + 1;
 
-				$url = 'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=' . strtoupper($default) . '&to_currency=' . $code . '&apikey=' . $api_key;
-
-				$curl = curl_init();
-
-				curl_setopt($curl, CURLOPT_URL, $url);
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($curl, CURLOPT_HEADER, false);
-				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-				curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
-				curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-
-				$response = curl_exec($curl);
-
-				unset($curl);
-
-				$response_info = json_decode($response, true);
-
-				if (isset($response_info)) {
-					$value = (float)$response_info["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
-
-					$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . $value . "', date_modified = NOW() WHERE `code` = '" . $this->db->escape($result['code']) . "'");
+				if ($rate['date'] !== '' && $rate['date'] > ($dates[$name] ?? '')) {
+					$dates[$name] = $rate['date'];
 				}
 			}
+		}
 
+		return $this->finishRun($default, $updated, $dates, $notes, array_keys($pending), $problems);
+	}
+
+	/**
+	 * Dashboard fallback for stores without a cron job (Frankfurter, then FloatRates).
+	 */
+	public function updateCurrencies($default = ''): void {
+		if (!$this->dashboardUpdateDue()) {
+			return;
+		}
+
+		$this->timeout = 6;
+
+		$this->logRun(self::LOG_DASHBOARD, $this->updateRates());
+	}
+
+	/**
+	 * Alpha Vantage: optional replacement for the dashboard fallback, needs a personal API key.
+	 * The free key allows 25 requests a day, one per currency.
+	 *
+	 * Example: https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=GBP&to_currency=USD&apikey=KEY
+	 */
+	public function updateAlphaVantageCurrencies(): void {
+		$api_key = trim((string)$this->config->get('config_alpha_vantage'));
+
+		if ($api_key === '' || !$this->dashboardUpdateDue()) {
+			return;
+		}
+
+		$this->timeout = 10;
+
+		$default = strtoupper(trim((string)$this->config->get('config_currency')));
+
+		$query = $this->db->query("SELECT `code`, `value` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `status` = '1' AND `date_modified` < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "'");
+
+		$updated = 0;
+		$date = '';
+		$notes = [];
+		$missing = [];
+		$problems = false;
+
+		foreach ($query->rows as $row) {
+			$code = strtoupper($row['code']);
+
+			try {
+				$body = $this->httpGet('https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=' . rawurlencode($default) . '&to_currency=' . rawurlencode($code) . '&apikey=' . rawurlencode($api_key));
+
+				$data = json_decode($body, true);
+
+				// A rate limit or key error comes back as a "Note", "Information" or "Error Message" without a rate
+				$rate = (float)($data['Realtime Currency Exchange Rate']['5. Exchange Rate'] ?? 0);
+
+				if (!is_array($data) || !is_finite($rate) || $rate <= 0) {
+					throw new \Exception(is_array($data) ? (string)($data['Note'] ?? $data['Information'] ?? $data['Error Message'] ?? 'No rate in the response.') : 'Invalid response.');
+				}
+			} catch (\Throwable $e) {
+				$notes[] = 'Alpha Vantage ' . $code . ': ' . rtrim($e->getMessage(), '.') . '.';
+
+				// Stop at the first failure: a rate limit would fail every remaining request too
+				$missing[] = $code;
+
+				break;
+			}
+
+			$problem = $this->saveRate($code, $rate, (float)$row['value'], true);
+
+			if ($problem !== '') {
+				$notes[] = 'Alpha Vantage: ' . $problem;
+				$problems = true;
+
+				continue;
+			}
+
+			$updated++;
+
+			$date = substr((string)($data['Realtime Currency Exchange Rate']['6. Last Refreshed'] ?? ''), 0, 10);
+		}
+
+		$result = $this->finishRun($default, $updated ? ['alphavantage' => $updated] : [], $date ? ['alphavantage' => $date] : [], $notes, $missing, $problems);
+
+		$this->logRun(self::LOG_DASHBOARD, $result);
+	}
+
+	/**
+	 * Write a run to nc_cron_log. Never throws: logging must not break an update.
+	 */
+	public function logRun(string $task, array $result): void {
+		try {
+			if (!$this->hasLogTable()) {
+				return;
+			}
+
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "cron_log` SET `task` = '" . $this->db->escape($task) . "', `rows_affected` = '" . (int)$result['updated'] . "', `status` = '" . $this->db->escape($result['status']) . "', `message` = '" . $this->db->escape(mb_substr($result['message'], 0, 250)) . "', `date_added` = NOW()");
+		} catch (\Throwable $e) {
+			// Ignore
+		}
+	}
+
+	/**
+	 * Newest log row of the given tasks (optionally only successful ones, optionally only
+	 * from the last $hours hours). Empty array when there is none.
+	 */
+	public function getLastRun(array $tasks, bool $success_only = false, int $hours = 0): array {
+		if (!$tasks || !$this->hasLogTable()) {
+			return [];
+		}
+
+		$sql = "SELECT `rows_affected`, `status`, `message`, `task`, `date_added` FROM `" . DB_PREFIX . "cron_log` WHERE `task` IN ('" . implode("','", array_map([$this->db, 'escape'], $tasks)) . "')";
+
+		if ($success_only) {
+			$sql .= " AND `status` = 'success'";
+		}
+
+		if ($hours > 0) {
+			$sql .= " AND `date_added` > DATE_SUB(NOW(), INTERVAL " . (int)$hours . " HOUR)";
+		}
+
+		$query = $this->db->query($sql . " ORDER BY `log_id` DESC LIMIT 1");
+
+		return is_object($query) ? $query->row : [];
+	}
+
+	/**
+	 * Dashboard fallback guard: only when the cron job is not doing the work, at most once
+	 * an hour after a failed or empty attempt, and only for rates older than a day.
+	 */
+	protected function dashboardUpdateDue(): bool {
+		if (!$this->config->get('config_currency_auto') || !extension_loaded('curl')) {
+			return false;
+		}
+
+		if ($this->getLastRun([self::LOG_CRON], true, self::OVERDUE_HOURS)) {
+			return false;
+		}
+
+		if ($this->getLastRun([self::LOG_DASHBOARD], false, 1)) {
+			return false;
+		}
+
+		$default = strtoupper(trim((string)$this->config->get('config_currency')));
+
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "currency` WHERE `code` != '" . $this->db->escape($default) . "' AND `status` = '1' AND `date_modified` < '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "'");
+
+		return (int)$query->row['total'] > 0;
+	}
+
+	/**
+	 * Save one rate unless it is not usable or moves further than MAX_RATE_CHANGE from the
+	 * stored one. Returns an empty string when saved, otherwise the reason.
+	 */
+	protected function saveRate(string $code, float $rate, float $old, bool $check): string {
+		if (!is_finite($rate) || $rate <= 0) {
+			return $code . ' ignored (invalid rate).';
+		}
+
+		if ($check && $old > 0) {
+			$change = ($rate - $old) / $old * 100;
+
+			if (abs($change) > self::MAX_RATE_CHANGE) {
+				return sprintf('%s rejected (%+.1f%% from the stored rate).', $code, $change);
+			}
+		}
+
+		$this->db->query("UPDATE `" . DB_PREFIX . "currency` SET `value` = '" . number_format($rate, 8, '.', '') . "', `date_modified` = NOW() WHERE `code` = '" . $this->db->escape($code) . "'");
+
+		return '';
+	}
+
+	/**
+	 * Common end of every run: keep the default currency at 1, clear the cache, build the result.
+	 */
+	protected function finishRun(string $default, array $updated, array $dates, array $notes, array $missing, bool $problems): array {
+		$labels = [
+			'frankfurter'  => 'Frankfurter',
+			'floatrates'   => 'FloatRates',
+			'alphavantage' => 'Alpha Vantage'
+		];
+
+		$total = array_sum($updated);
+
+		if ($total) {
 			$this->editValueByCode($default, '1.000000');
 
 			$this->cache->delete('currency');
-		} else {
-			return;
 		}
+
+		$parts = [];
+
+		foreach ($updated as $name => $count) {
+			$parts[] = $count . ' from ' . $labels[$name] . (!empty($dates[$name]) ? ' (rates of ' . $dates[$name] . ')' : '');
+		}
+
+		$message = $total ? 'Updated ' . implode(', ', $parts) . '.' : 'No rate updated.';
+
+		if ($missing) {
+			$notes[] = 'No rate received for ' . implode(', ', $missing) . '.';
+		}
+
+		if ($notes) {
+			$message .= ' ' . implode(' ', $notes);
+		}
+
+		return [
+			'status'  => ($total && !$missing && !$problems) ? 'success' : 'error',
+			'updated' => $total,
+			'message' => $message
+		];
+	}
+
+	/**
+	 * Frankfurter: array of {"date", "base", "quote", "rate"} objects.
+	 *
+	 * @return array [CODE => ['rate' => float, 'date' => 'Y-m-d']]
+	 */
+	protected function fetchFrankfurter(string $base, array $codes): array {
+		$data = json_decode($this->httpGet('https://api.frankfurter.dev/v2/rates?base=' . rawurlencode($base) . '&quotes=' . implode(',', array_map('rawurlencode', $codes))), true);
+
+		if (!is_array($data)) {
+			throw new \Exception('Invalid response.');
+		}
+
+		if (isset($data['message'])) {
+			throw new \Exception((string)$data['message']);
+		}
+
+		$rates = [];
+
+		foreach ($data as $item) {
+			if (!is_array($item) || empty($item['quote']) || !isset($item['rate']) || strtoupper((string)($item['base'] ?? $base)) !== $base) {
+				continue;
+			}
+
+			$rate = (float)$item['rate'];
+
+			if (is_finite($rate) && $rate > 0) {
+				$rates[strtoupper((string)$item['quote'])] = ['rate' => $rate, 'date' => (string)($item['date'] ?? '')];
+			}
+		}
+
+		if (!$rates) {
+			throw new \Exception('No usable rates in the response.');
+		}
+
+		return $rates;
+	}
+
+	/**
+	 * FloatRates: RSS-style XML with one <item> per currency, see the example below.
+	 *
+	 * <item>
+	 *	<pubDate>Mon, 12 Mar 2018 12:00:01 GMT</pubDate>
+	 *	<baseCurrency>USD</baseCurrency>
+	 *	<targetCurrency>EUR</targetCurrency>
+	 *	<exchangeRate>0.81253219</exchangeRate>
+	 * </item>
+	 *
+	 * @return array [CODE => ['rate' => float, 'date' => 'Y-m-d']]
+	 */
+	protected function fetchFloatRates(string $base, array $codes): array {
+		$body = $this->httpGet('https://www.floatrates.com/daily/' . strtolower($base) . '.xml');
+
+		$previous = libxml_use_internal_errors(true);
+
+		$xml = simplexml_load_string($body);
+
+		libxml_clear_errors();
+		libxml_use_internal_errors($previous);
+
+		if ($xml === false) {
+			throw new \Exception('Invalid XML response.');
+		}
+
+		$rates = [];
+
+		foreach ($xml->children() as $item) {
+			$code = strtoupper(trim((string)$item->targetCurrency));
+			$rate = (float)(string)$item->exchangeRate;
+
+			if (in_array($code, $codes, true) && is_finite($rate) && $rate > 0) {
+				$time = strtotime((string)$item->pubDate);
+
+				$rates[$code] = ['rate' => $rate, 'date' => $time ? gmdate('Y-m-d', $time) : ''];
+			}
+		}
+
+		if (!$rates) {
+			throw new \Exception('No usable rates in the response.');
+		}
+
+		return $rates;
+	}
+
+	/**
+	 * GET a URL with cURL and return the body. Throws on any failure.
+	 */
+	protected function httpGet(string $url): string {
+		if (!function_exists('curl_init')) {
+			throw new \Exception('The PHP cURL extension is not available.');
+		}
+
+		$ch = curl_init($url);
+
+		curl_setopt_array($ch, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_CONNECTTIMEOUT => 5,
+			CURLOPT_TIMEOUT        => $this->timeout,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_MAXREDIRS      => 3,
+			CURLOPT_SSL_VERIFYPEER => true,
+			CURLOPT_USERAGENT      => 'NivoCart',
+			CURLOPT_HTTPHEADER     => ['Accept: application/json, application/xml']
+		]);
+
+		$body = curl_exec($ch);
+		$error = curl_error($ch);
+		$code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+		unset($ch);
+
+		if ($body === false) {
+			throw new \Exception('Connection error: ' . $error);
+		}
+
+		if ($code !== 200) {
+			throw new \Exception('HTTP status ' . $code . '.');
+		}
+
+		if ($body === '') {
+			throw new \Exception('Empty response.');
+		}
+
+		return $body;
+	}
+
+	protected function hasLogTable(): bool {
+		$query = $this->db->query("SHOW TABLES LIKE '" . $this->db->escape(DB_PREFIX . 'cron_log') . "'");
+
+		return is_object($query) && $query->num_rows > 0;
 	}
 
 	protected function checkFileExists($url): bool {
