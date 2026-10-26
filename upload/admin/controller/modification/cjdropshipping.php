@@ -909,6 +909,52 @@ class ControllerModificationCJDropshipping extends Controller {
 		$this->jsonResponse($result);
 	}
 
+	/**
+	 * Read-only diagnostic: shows the shipping-related fields CJ returns for the products in the
+	 * seller's "My Products" list (the Added Products dashboard), as readable JSON.
+	 * GET: channel_id, keyword (optional), page (optional), limit (optional, default 10, max 20)
+	 */
+	public function probeShipping(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/cjdropshipping');
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if ($this->tablesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_database')]);
+			return;
+		}
+
+		$channel_id = (int)($this->request->get['channel_id'] ?? 0);
+
+		if ($channel_id < 1) {
+			$this->jsonResponse(['error' => $this->language->get('error_channel_id')]);
+			return;
+		}
+
+		$params = [
+			'pageNum'  => max(1, (int)($this->request->get['page'] ?? 1)),
+			'pageSize' => min(20, max(1, (int)($this->request->get['limit'] ?? 10)))
+		];
+
+		if (!empty($this->request->get['keyword'])) {
+			$params['keyword'] = (string)$this->request->get['keyword'];
+		}
+
+		try {
+			$result = $this->model_modification_cjdropshipping->probeMyProductShipping($channel_id, $params);
+		} catch (\Exception $e) {
+			$result = ['error' => $e->getMessage()];
+		}
+
+		$this->response->addHeader('Content-Type: application/json; charset=utf-8');
+		$this->response->setOutput(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+	}
+
 	// =================================================================
 	// LIST MAPPED VARIANTS (AJAX)
 	// =================================================================

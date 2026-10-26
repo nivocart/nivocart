@@ -839,6 +839,211 @@ class ModelModificationCJDropshipping extends Model {
 	}
 
 	// =================================================================
+	// SHIPPING COST SYNC  (feeds the DS Margin Checker)
+	// =================================================================
+
+	/**
+	 * Sync the shipping cost chosen in the CJ "Added Products" dashboard into the DS Margin Checker.
+	 * One page of the seller's My Products list (GET /product/myProduct/query) per call.
+	 *
+	 * CJ gives ONE freight per product (trialFreight, to trialCountry, by shopMethod). Every imported
+	 * variant of that product (each one is its own NivoCart product, linked by supplier_pid) gets that
+	 * cost, in the currency of the supplier cost (USD). Products shipped from the UK warehouse
+	 * (areaCountryCode GB) are never touched, so shipping costs entered by hand for them are kept.
+	 * Everything else is overwritten on every sync, a freight of 0.00 included.
+	 *
+	 * @param  int $channel_id
+	 * @param  int $page       1-based page of the My Products list.
+	 * @return array ['products' => CJ products on the page, 'updated' => shop products given a cost > 0,
+	 *                'zero_freight' => shop products set to 0 because CJ reports 0.00, 'uk_skipped' => shop products left
+	 *                unchanged (UK warehouse), 'not_imported' => CJ products with no shop product, 'unseen_rows' /
+	 *                'unseen_sample' => shop products whose CJ product was not in the list (last page only),
+	 *                'errors' => array, 'total', 'page', 'page_size', 'has_more']
+	 * @throws \Exception  When the CJ call itself fails.
+	 */
+	public function syncShippingCosts(int $channel_id, int $page = 1): array {
+		$adapter = $this->getAdapter($channel_id);
+
+		$this->load->model('modification/ds_margin_checker');
+
+		$page_size = 10;
+
+		$result = $adapter->getMyProducts(['pageNum' => $page, 'pageSize' => $page_size]);
+
+		$list = $result['content'] ?? [];
+		$total = (int)($result['totalRecords'] ?? $result['total'] ?? 0);
+
+		// CJ product ids seen so far in this sync (kept in the session between the page requests)
+		if ($page === 1) {
+			$this->session->data['mc_sync_seen'] = [];
+		}
+
+		$seen = $this->session->data['mc_sync_seen'] ?? [];
+
+		$updated = 0;
+		$zero_freight = 0;
+		$uk_skipped = 0;
+		$not_imported = 0;
+		$no_freight_rows = 0;
+		$ranged = 0;
+		$no_freight_sample = [];
+		$errors = [];
+
+		foreach ($list as $item) {
+			$pid = (string)($item['productId'] ?? '');
+
+			if ($pid === '') {
+				continue;
+			}
+
+			$seen[$pid] = true;
+
+			$query = $this->db->query("SELECT `product_id` FROM `" . DB_PREFIX . "product_dropship` WHERE `supplier_pid` = '" . $this->db->escape($pid) . "' AND `channel_id` = '" . (int)$channel_id . "' AND `is_active` = '1'");
+
+			if (!$query->num_rows) {
+				$not_imported++;
+				continue;
+			}
+
+			if (strtoupper((string)($item['areaCountryCode'] ?? '')) === 'GB') {
+				$uk_skipped += $query->num_rows;
+				continue;
+			}
+
+			// CJ sends either one number ("10.08") or, when the variants differ, a range ("4.37-5.7"): use the higher end
+			$freight = null;
+			$is_range = false;
+			$raw_freight = isset($item['trialFreight']) ? trim((string)$item['trialFreight']) : '';
+
+			if ($raw_freight !== '' && is_numeric($raw_freight)) {
+				$freight = (float)$raw_freight;
+			} elseif (preg_match('/^(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)$/', $raw_freight, $range)) {
+				$freight = max((float)$range[1], (float)$range[2]);
+				$is_range = true;
+			}
+
+			if ($freight === null) {
+				$no_freight_rows += $query->num_rows;
+
+				if (count($no_freight_sample) < 3) {
+					$no_freight_sample[] = $pid . ' = ' . (isset($item['trialFreight']) ? json_encode($item['trialFreight']) : 'missing');
+				}
+
+				$errors[] = $pid . ': no trialFreight in the CJ response';
+				continue;
+			}
+
+			foreach ($query->rows as $row) {
+				$this->model_modification_ds_margin_checker->updateProductShipping((int)$row['product_id'], $freight);
+
+				if ($is_range) {
+					$ranged++;
+				}
+
+				if ($freight > 0) {
+					$updated++;
+				} else {
+					$zero_freight++;
+				}
+			}
+		}
+
+		$has_more = !empty($list) && ($page * $page_size) < $total;
+
+		$this->session->data['mc_sync_seen'] = $seen;
+
+		$unseen_rows = 0;
+		$unseen_sample = [];
+
+		// On the last page: shop products whose CJ product never appeared in the CJ list
+		if (!$has_more) {
+			$unseen = $this->db->query("SELECT `supplier_pid`, COUNT(*) AS `rows` FROM `" . DB_PREFIX . "product_dropship` WHERE `channel_id` = '" . (int)$channel_id . "' AND `is_active` = '1' GROUP BY `supplier_pid`");
+
+			foreach ($unseen->rows as $row) {
+				if (!isset($seen[(string)$row['supplier_pid']])) {
+					$unseen_rows += (int)$row['rows'];
+
+					if (count($unseen_sample) < 5) {
+						$unseen_sample[] = $row['supplier_pid'];
+					}
+				}
+			}
+
+			unset($this->session->data['mc_sync_seen']);
+		}
+
+		return [
+			'products'      => count($list),
+			'updated'       => $updated,
+			'zero_freight'  => $zero_freight,
+			'uk_skipped'    => $uk_skipped,
+			'not_imported'  => $not_imported,
+			'ranged'        => $ranged,
+			'no_freight'    => $no_freight_rows,
+			'no_freight_sample' => $no_freight_sample,
+			'unseen_rows'   => $unseen_rows,
+			'unseen_sample' => $unseen_sample,
+			'errors'        => $errors,
+			'total'         => $total,
+			'page'          => $page,
+			'page_size'     => $page_size,
+			'has_more'      => $has_more
+		];
+	}
+
+	// =================================================================
+	// DIAGNOSTIC - SHIPPING DATA IN "MY PRODUCTS"
+	// =================================================================
+
+	/**
+	 * Read-only diagnostic: fetch a page of the seller's CJ "My Products" list and return the
+	 * shipping-related fields of each product (trialCountry, trialFreight, freightDiscount,
+	 * totalPrice ...), every field name the API sent, and any nested lists (first 3 items), so it
+	 * can be checked whether the shipping costs chosen in the CJ dashboard come through the API.
+	 * Writes nothing.
+	 *
+	 * @param  int   $channel_id
+	 * @param  array $params     Optional: keyword, pageNum, pageSize.
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function probeMyProductShipping(int $channel_id, array $params = []): array {
+		$adapter = $this->getAdapter($channel_id);
+
+		$result = $adapter->getMyProducts($params);
+
+		$wanted = ['productId', 'nameEn', 'sku', 'productType', 'sellPrice', 'discountPrice', 'totalPrice', 'trialCountry', 'trialFreight', 'freightDiscount', 'defaultArea', 'areaCountryCode', 'areaId', 'shopMethod', 'vid'];
+
+		$products = [];
+
+		foreach ($result['content'] ?? [] as $product) {
+			$row = [];
+
+			foreach ($wanted as $key) {
+				if (array_key_exists($key, $product)) {
+					$row[$key] = $product[$key];
+				}
+			}
+
+			$row['_all_fields'] = array_keys($product);
+
+			foreach ($product as $key => $value) {
+				if (is_array($value) && !in_array($key, ['lengthList', 'widthList', 'heightList', 'volumeList'], true)) {
+					$row['_nested'][$key] = array_slice($value, 0, 3);
+				}
+			}
+
+			$products[] = $row;
+		}
+
+		return [
+			'total_records' => $result['totalRecords'] ?? $result['total'] ?? null,
+			'page'          => $result['pageNumber'] ?? $result['pageNum'] ?? null,
+			'products'      => $products
+		];
+	}
+
+	// =================================================================
 	// PRICE SYNC
 	// =================================================================
 

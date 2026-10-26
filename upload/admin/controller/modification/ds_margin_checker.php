@@ -3,13 +3,13 @@
  * Class ControllerModificationDsMarginChecker
  *
  * Admin controller for the DS Margin Checker tool.
- * Lists all dropship products with their current sale price vs supplier cost,
- * highlights below-threshold and negative-margin products, and allows
- * inline price updates from the product list.
+ * Lists all dropship products with their sale price vs total cost (supplier cost plus a hand-entered
+ * shipping cost, converted to the store default currency), highlights below-threshold and
+ * negative-margin products, and allows inline price and shipping cost updates from the product list.
  *
  * Requires: nc_product_dropship, nc_dropship_variant and nc_dropship_channel tables (created by a
  * Dropshipping connector such as CJ Dropshipping).
- * Does not create its own database tables.
+ * Creates one small table of its own, nc_ds_margin_shipping (shipping cost per product).
  *
  * Location: admin/controller/modification/ds_margin_checker.php
  *
@@ -125,7 +125,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['column_product'] = $this->language->get('column_product');
 		$this->data['column_sku'] = $this->language->get('column_sku');
 		$this->data['column_sale_price'] = $this->language->get('column_sale_price');
-		$this->data['column_cost_inc_vat'] = sprintf($this->language->get('column_cost_inc_vat'), $default_currency);
+		$this->data['column_total_cost_default'] = sprintf($this->language->get('column_total_cost_default'), $default_currency);
 		$this->data['column_margin_pct'] = $this->language->get('column_margin_pct');
 		$this->data['column_status'] = $this->language->get('column_status');
 
@@ -233,6 +233,10 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['dashboard_url'] = $this->url->link('modification/ds_margin_checker', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['settings_url'] = $this->url->link('modification/ds_margin_checker/settings', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['update_price_url'] = 'index.php?route=modification/ds_margin_checker/updatePrice&token=' . $this->session->data['token'];
+		$this->data['sync_shipping_url'] = 'index.php?route=modification/ds_margin_checker/syncShipping&token=' . $this->session->data['token'];
+
+		// The sync button needs the CJ Dropshipping connector and at least one enabled CJ channel
+		$this->data['cj_channels'] = is_file(DIR_APPLICATION . 'model/modification/cjdropshipping.php') ? $this->model_modification_ds_margin_checker->getCjChannelIds() : [];
 
 		// Filter button URLs
 		$this->data['filter_all_url'] = $this->url->link('modification/ds_margin_checker/list', 'token=' . $this->session->data['token'] . '&filter=all', 'SSL');
@@ -243,6 +247,14 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['button_dashboard'] = $this->language->get('button_dashboard');
 		$this->data['button_settings'] = $this->language->get('button_settings');
 		$this->data['button_update_price'] = $this->language->get('button_update_price');
+		$this->data['button_sync_shipping'] = $this->language->get('button_sync_shipping');
+		$this->data['button_refresh'] = $this->language->get('button_refresh');
+		$this->data['text_sync_running'] = $this->language->get('text_sync_running');
+		$this->data['text_sync_done'] = $this->language->get('text_sync_done');
+		$this->data['text_sync_progress'] = $this->language->get('text_sync_progress');
+		$this->data['text_sync_retry'] = $this->language->get('text_sync_retry');
+		$this->data['text_sync_no_freight'] = $this->language->get('text_sync_no_freight');
+		$this->data['text_sync_ranged'] = $this->language->get('text_sync_ranged');
 
 		// Filter labels
 		$this->data['filter_all'] = $this->language->get('filter_all');
@@ -256,8 +268,9 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 		$this->data['default_currency'] = $default_currency;
 		$this->data['column_cost_original'] = $this->language->get('column_cost_original');
-		$this->data['column_product_cost'] = sprintf($this->language->get('column_product_cost'), $default_currency);
-		$this->data['column_cost_inc_vat'] = sprintf($this->language->get('column_cost_inc_vat'), $default_currency);
+		$this->data['column_shipping_cost'] = $this->language->get('column_shipping_cost');
+		$this->data['column_total_cost'] = $this->language->get('column_total_cost');
+		$this->data['column_total_cost_default'] = sprintf($this->language->get('column_total_cost_default'), $default_currency);
 		$this->data['text_rate_title'] = $this->language->get('text_rate_title');
 		$this->data['column_sale_price'] = $this->language->get('column_sale_price');
 		$this->data['column_margin_pct'] = $this->language->get('column_margin_pct');
@@ -274,6 +287,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		// Text / error strings
 		$this->data['text_no_products'] = $this->language->get('text_no_products');
 		$this->data['error_price'] = $this->language->get('error_price');
+		$this->data['error_shipping'] = $this->language->get('error_shipping');
 		$this->data['error_server'] = $this->language->get('error_server');
 
 		$this->data['breadcrumbs'] = $this->getBreadcrumbs([
@@ -326,6 +340,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 		$product_id = (int)($this->request->post['product_id'] ?? 0);
 		$price = $this->request->post['price'] ?? null;
+		$shipping = $this->request->post['shipping_cost'] ?? '0';
 
 		if ($product_id < 1) {
 			$this->jsonResponse(['error' => $this->language->get('error_product_id')]);
@@ -337,10 +352,17 @@ class ControllerModificationDsMarginChecker extends Controller {
 			return;
 		}
 
+		if ($shipping === '' || !is_numeric($shipping) || (float)$shipping < 0) {
+			$this->jsonResponse(['error' => $this->language->get('error_shipping')]);
+			return;
+		}
+
 		$price = (float)$price;
+		$shipping = (float)$shipping;
 
 		try {
 			$this->model_modification_ds_margin_checker->updateProductPrice($product_id, $price);
+			$this->model_modification_ds_margin_checker->updateProductShipping($product_id, $shipping);
 
 			$product = $this->model_modification_ds_margin_checker->getProduct($product_id);
 
@@ -348,11 +370,63 @@ class ControllerModificationDsMarginChecker extends Controller {
 				'success'    => true,
 				'message'    => $this->language->get('text_price_updated'),
 				'new_price'  => number_format($price, 2, '.', ''),
+				'new_shipping' => number_format($shipping, 2, '.', ''),
+				'total_cost_original' => number_format((float)($product['total_cost_original'] ?? 0), 2, '.', ''),
+				'total_cost' => isset($product['total_cost']) ? number_format((float)$product['total_cost'], 2, '.', '') : null,
 				'margin_pct' => $product['margin_pct'] ?? null
 			]);
 		} catch (\Exception $e) {
 			$this->jsonResponse(['error' => $e->getMessage()]);
 		}
+	}
+
+	// =================================================================
+	// AJAX — SYNC SHIPPING COSTS FROM CJ
+	// =================================================================
+
+	/**
+	 * Sync one page of shipping costs from the CJ "Added Products" list.
+	 * Expects POST: channel_id (int), page (int, 1-based).
+	 * Needs modify permission on this tool. Returns the result of ModelModificationCJDropshipping::syncShippingCosts()
+	 * as JSON, or an error.
+	 */
+	public function syncShipping(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/ds_margin_checker');
+
+		if ($this->dependenciesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_dependency')]);
+			return;
+		}
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
+			$this->jsonResponse(['error' => $this->language->get('error_method')]);
+			return;
+		}
+
+		$channel_id = (int)($this->request->post['channel_id'] ?? 0);
+
+		if (!is_file(DIR_APPLICATION . 'model/modification/cjdropshipping.php') || !in_array($channel_id, $this->model_modification_ds_margin_checker->getCjChannelIds(), true)) {
+			$this->jsonResponse(['error' => $this->language->get('error_sync_channel')]);
+			return;
+		}
+
+		$this->load->model('modification/cjdropshipping');
+
+		try {
+			$result = $this->model_modification_cjdropshipping->syncShippingCosts($channel_id, max(1, (int)($this->request->post['page'] ?? 1)));
+		} catch (\Exception $e) {
+			$this->jsonResponse(['error' => $e->getMessage()]);
+			return;
+		}
+
+		$this->jsonResponse($result);
 	}
 
 	// =================================================================
@@ -372,12 +446,6 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 			$this->model_modification_ds_margin_checker->setSetting('threshold', $threshold);
 
-			// Only a tax class that exists can be the default (0 = none)
-			$tax_class_id = (int)($this->request->post['default_tax_class_id'] ?? 0);
-			$valid = array_column($this->model_modification_ds_margin_checker->getTaxClasses(), 'tax_class_id');
-
-			$this->model_modification_ds_margin_checker->setSetting('default_tax_class_id', in_array((string)$tax_class_id, array_map('strval', $valid), true) ? $tax_class_id : 0);
-
 			$this->session->data['success'] = $this->language->get('text_settings_saved');
 
 			$this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
@@ -385,8 +453,6 @@ class ControllerModificationDsMarginChecker extends Controller {
 		}
 
 		$this->data['threshold'] = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
-		$this->data['default_tax_class_id'] = (int)$this->model_modification_ds_margin_checker->getSetting('default_tax_class_id', 0);
-		$this->data['tax_classes'] = $this->model_modification_ds_margin_checker->getTaxClasses();
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -399,9 +465,6 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['entry_threshold'] = $this->language->get('entry_threshold');
 
 		$this->data['help_threshold'] = $this->language->get('help_threshold');
-		$this->data['entry_default_tax_class'] = $this->language->get('entry_default_tax_class');
-		$this->data['help_default_tax_class'] = $this->language->get('help_default_tax_class');
-		$this->data['text_none'] = $this->language->get('text_none');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -432,23 +495,24 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 	/**
 	 * Called when the modification is installed via the admin Modifications page.
-	 * No tables to create — saves default threshold setting only.
+	 * Saves the default threshold setting and creates the shipping cost table.
 	 */
 	public function install(): void {
 		$this->load->model('modification/ds_margin_checker');
 
 		$this->model_modification_ds_margin_checker->setSetting('threshold', self::DEFAULT_THRESHOLD);
-		$this->model_modification_ds_margin_checker->setSetting('default_tax_class_id', 0);
+		$this->model_modification_ds_margin_checker->ensureShippingTable();
 	}
 
 	/**
 	 * Called when the modification is uninstalled.
-	 * Removes the Margin Checker settings from nc_setting.
+	 * Removes the Margin Checker settings and its shipping cost table.
 	 */
 	public function uninstall(): void {
 		$this->load->model('modification/ds_margin_checker');
 
 		$this->model_modification_ds_margin_checker->deleteAllSettings();
+		$this->model_modification_ds_margin_checker->dropShippingTable();
 	}
 
 	// =================================================================

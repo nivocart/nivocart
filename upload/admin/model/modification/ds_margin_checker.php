@@ -4,30 +4,30 @@
  *
  * Admin model for the DS Margin Checker tool.
  *
- * Cost of a product, all in the store default currency (GBP in the examples):
- *   original_cost = nc_dropship_variant.supplier_cost (fallback: nc_product_dropship.supplier_cost)
- *   product_cost  = original_cost / exchange_rate                    (foreign currency)
- *                   original_cost                                      (default currency)
- *   margin_pct    = ((sale_price - product_cost) / sale_price) * 100   (sale price is ex-tax)
+ * Total cost of a product, in the currency of its supplier cost and then in the store default currency:
+ *   original_cost       = nc_dropship_variant.supplier_cost (fallback: nc_product_dropship.supplier_cost)
+ *   shipping_cost       = nc_ds_margin_shipping.shipping_cost (typed in by hand, same currency as the cost, default 0)
+ *   total_cost_original = original_cost + shipping_cost
+ *   total_cost          = total_cost_original / exchange_rate           (foreign currency)
+ *                         total_cost_original                            (default currency)
+ *   margin_pct          = ((sale_price - total_cost) / sale_price) * 100  (sale price is ex-tax)
  *
- * Tax is shown for information only: cost_inc_vat = product_cost * (1 + store tax rate), where the rate is
- * the product's tax class at the store address, or the Default Tax Class setting when the product has none.
- * It never changes the margin. Overhead costs (DS Cost Calculator) are deliberately not part of this tool.
- *
- * exchange_rate is nc_currency.value of the cost currency (units of that currency for one unit
- * of the default currency). When no rate exists for the cost currency the cost and the margin are NULL
+ * No tax and no overhead costs are used here: the tool shows the cost as accurately as possible so the retail price
+ * can be fine-tuned. exchange_rate is nc_currency.value of the cost currency (units of that currency for one unit
+ * of the default currency). When no rate exists for the cost currency the total cost and the margin are NULL
  * ("no rate"): they are never guessed. When sale_price is zero the margin is -100 ("no price set").
  *
  * Reads from: nc_product, nc_product_description, nc_product_dropship, nc_dropship_variant,
- *             nc_dropship_channel, nc_currency and the tax tables.
- * Writes to:  nc_product (price only), nc_setting (threshold, default_tax_class_id).
+ *             nc_dropship_channel, nc_currency and nc_ds_margin_shipping.
+ * Writes to:  nc_product (price only), nc_ds_margin_shipping (own table, created on demand),
+ *             nc_setting (threshold).
  *
  * Intended location: admin/model/modification/ds_margin_checker.php
  *
  * @package NivoCart
  */
 class ModelModificationDsMarginChecker extends Model {
-	protected array $tax_rates = [];
+	protected bool $shipping_table_ready = false;
 
 	// =================================================================
 	// SHARED COST / MARGIN QUERY
@@ -35,31 +35,34 @@ class ModelModificationDsMarginChecker extends Model {
 
 	/**
 	 * SQL of one row per active dropship product with the original cost, its currency, the
-	 * exchange rate, the product cost in the default currency and the margin.
+	 * exchange rate, the total cost in the default currency and the margin.
 	 * Every other query in this model wraps it, so the calculation exists in exactly one place.
 	 *
 	 * @param  string $where  Extra condition on the product row, for example "p.product_id = '5'".
 	 * @return string
 	 */
 	protected function getBaseSql(string $where = ''): string {
+		$this->ensureShippingTable();
+
 		$default = $this->db->escape(strtoupper(trim((string)$this->config->get('config_currency'))));
 
 		$rate = "CASE WHEN src.original_currency = '" . $default . "' THEN 1 WHEN src.currency_value > 0 THEN src.currency_value ELSE NULL END";
 
-		$cost = "CASE WHEN (" . $rate . ") IS NULL THEN NULL WHEN src.original_currency = '" . $default . "' THEN src.original_cost ELSE src.original_cost / (" . $rate . ") END";
+		$cost = "CASE WHEN (" . $rate . ") IS NULL THEN NULL WHEN src.original_currency = '" . $default . "' THEN (src.original_cost + src.shipping_cost) ELSE (src.original_cost + src.shipping_cost) / (" . $rate . ") END";
 
 		return "
 			SELECT
 				x.*,
-				CASE WHEN x.product_cost IS NULL THEN NULL
-					 WHEN x.price > 0 THEN ROUND(((x.price - x.product_cost) / x.price) * 100, 2)
+				CASE WHEN x.total_cost IS NULL THEN NULL
+					 WHEN x.price > 0 THEN ROUND(((x.price - x.total_cost) / x.price) * 100, 2)
 					 ELSE -100
 				END AS margin_pct
 			FROM (
 				SELECT
 					src.*,
+					(src.original_cost + src.shipping_cost) AS total_cost_original,
 					(" . $rate . ") AS exchange_rate,
-					ROUND(" . $cost . ", 4) AS product_cost
+					ROUND(" . $cost . ", 4) AS total_cost
 				FROM (
 					SELECT
 						p.product_id,
@@ -67,7 +70,6 @@ class ModelModificationDsMarginChecker extends Model {
 						p.sku,
 						p.price,
 						p.status,
-						p.tax_class_id,
 						pd.dropship_id,
 						pd.channel_id,
 						pd.rrp,
@@ -75,6 +77,7 @@ class ModelModificationDsMarginChecker extends Model {
 						dc.name AS channel_name,
 						psd.name AS product_name,
 						COALESCE(dv.supplier_cost, pd.supplier_cost) AS original_cost,
+						COALESCE(ms.shipping_cost, 0) AS shipping_cost,
 						UPPER(COALESCE(dv.currency_code, '" . $default . "')) AS original_currency,
 						cur.`value` AS currency_value
 					FROM `" . DB_PREFIX . "product_dropship` pd
@@ -88,6 +91,7 @@ class ModelModificationDsMarginChecker extends Model {
 								FROM `" . DB_PREFIX . "dropship_variant` dv2
 								WHERE dv2.dropship_id = pd.dropship_id AND dv2.product_id = pd.product_id AND dv2.is_active = '1'
 						   ))
+					LEFT JOIN `" . DB_PREFIX . "ds_margin_shipping` ms ON (ms.product_id = p.product_id)
 					LEFT JOIN `" . DB_PREFIX . "currency` cur ON (cur.code = UPPER(COALESCE(dv.currency_code, '" . $default . "')))
 					WHERE pd.is_active = '1'" . ($where ? " AND " . $where : "") . "
 				) src
@@ -96,64 +100,64 @@ class ModelModificationDsMarginChecker extends Model {
 	}
 
 	// =================================================================
-	// STORE TAX RATE  (information only)
+	// SHIPPING COST  (own table, typed in by hand)
 	// =================================================================
 
 	/**
-	 * Percentage tax rate for a tax class at the store address (store country and zone, default
-	 * customer group), using the same rules the storefront uses for a visitor with no address.
-	 * Falls back to the Default Tax Class setting when the product has no tax class. Fixed amount
-	 * rates are ignored. Returns 0 when nothing applies.
-	 *
-	 * @param  int $tax_class_id
-	 * @return float
+	 * Create nc_ds_margin_shipping when it does not exist yet (once per request). It holds one shipping
+	 * cost per product, in the same currency as the product's supplier cost.
 	 */
-	public function getTaxRate(int $tax_class_id): float {
-		if ($tax_class_id < 1) {
-			$tax_class_id = (int)$this->getSetting('default_tax_class_id', 0);
+	public function ensureShippingTable(): void {
+		if ($this->shipping_table_ready) {
+			return;
 		}
 
-		if ($tax_class_id < 1) {
-			return 0.0;
-		}
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "ds_margin_shipping` (
+			`product_id` int NOT NULL,
+			`shipping_cost` decimal(15,4) NOT NULL DEFAULT '0.0000' COMMENT 'In the currency of the supplier cost',
+			`date_modified` datetime NOT NULL,
+			PRIMARY KEY (`product_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='DS Margin Checker - estimated shipping cost per product'");
 
-		if (isset($this->tax_rates[$tax_class_id])) {
-			return $this->tax_rates[$tax_class_id];
-		}
-
-		$based = ($this->config->get('config_tax_default') === 'payment') ? 'payment' : 'shipping';
-
-		$query = $this->db->query("SELECT SUM(t.rate) AS rate FROM (SELECT DISTINCT tr.tax_rate_id, tr.rate FROM `" . DB_PREFIX . "tax_rule` tru INNER JOIN `" . DB_PREFIX . "tax_rate` tr ON (tr.tax_rate_id = tru.tax_rate_id) INNER JOIN `" . DB_PREFIX . "tax_rate_to_customer_group` trcg ON (trcg.tax_rate_id = tr.tax_rate_id AND trcg.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') INNER JOIN `" . DB_PREFIX . "zone_to_geo_zone` z2gz ON (z2gz.geo_zone_id = tr.geo_zone_id AND z2gz.country_id = '" . (int)$this->config->get('config_country_id') . "' AND (z2gz.zone_id = '0' OR z2gz.zone_id = '" . (int)$this->config->get('config_zone_id') . "')) WHERE tru.tax_class_id = '" . (int)$tax_class_id . "' AND tru.based IN ('" . $based . "', 'store') AND tr.type = 'P') t");
-
-		$this->tax_rates[$tax_class_id] = (float)($query->row['rate'] ?? 0);
-
-		return $this->tax_rates[$tax_class_id];
+		$this->shipping_table_ready = true;
 	}
 
 	/**
-	 * Add the information-only tax columns to product rows.
+	 * Save a product's shipping cost (0 removes the row).
 	 *
-	 * @param  array $rows  Rows from getBaseSql().
-	 * @return array        Rows with vat_rate and cost_inc_vat (NULL without a cost).
+	 * @param int   $product_id
+	 * @param float $shipping_cost  Must be >= 0, in the currency of the supplier cost.
 	 */
-	protected function addTax(array $rows): array {
-		foreach ($rows as &$row) {
-			$row['vat_rate'] = $this->getTaxRate((int)($row['tax_class_id'] ?? 0));
-			$row['cost_inc_vat'] = ($row['product_cost'] === null) ? null : round((float)$row['product_cost'] * (1 + $row['vat_rate'] / 100), 4);
+	public function updateProductShipping(int $product_id, float $shipping_cost): void {
+		$this->ensureShippingTable();
+
+		if ($shipping_cost > 0) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "ds_margin_shipping` SET `product_id` = '" . (int)$product_id . "', `shipping_cost` = '" . (float)$shipping_cost . "', `date_modified` = NOW() ON DUPLICATE KEY UPDATE `shipping_cost` = VALUES(`shipping_cost`), `date_modified` = NOW()");
+		} else {
+			$this->db->query("DELETE FROM `" . DB_PREFIX . "ds_margin_shipping` WHERE `product_id` = '" . (int)$product_id . "'");
 		}
-
-		unset($row);
-
-		return $rows;
 	}
 
 	/**
-	 * Tax classes for the Default Tax Class setting.
+	 * Ids of the enabled CJ Dropshipping channels, whose shipping costs can be synced.
 	 *
-	 * @return array
+	 * @return int[]
 	 */
-	public function getTaxClasses(): array {
-		return $this->db->query("SELECT tax_class_id, title FROM `" . DB_PREFIX . "tax_class` ORDER BY title ASC")->rows;
+	public function getCjChannelIds(): array {
+		if (!$this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "dropship_channel'")->num_rows) {
+			return [];
+		}
+
+		return array_map('intval', array_column($this->db->query("SELECT `channel_id` FROM `" . DB_PREFIX . "dropship_channel` WHERE `provider` = 'cjdropshipping' AND `status` = '1' ORDER BY `channel_id` ASC")->rows, 'channel_id'));
+	}
+
+	/**
+	 * Drop the shipping table (called on uninstall).
+	 */
+	public function dropShippingTable(): void {
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "ds_margin_shipping`");
+
+		$this->shipping_table_ready = false;
 	}
 
 	// =================================================================
@@ -188,7 +192,7 @@ class ModelModificationDsMarginChecker extends Model {
 			'negative_margin'  => (int)$q->row['negative_margin'],
 			'no_rate'          => (int)$q->row['no_rate'],
 			'avg_margin'       => $q->row['avg_margin'] !== null ? round((float)$q->row['avg_margin'], 2) : 0.0,
-			'worst_performers' => $this->addTax($worst->rows)
+			'worst_performers' => $worst->rows
 		];
 	}
 
@@ -205,8 +209,8 @@ class ModelModificationDsMarginChecker extends Model {
 	 *     limit: int
 	 * }
 	 * @param  float $threshold
-	 * @return array  Rows including original_cost, original_currency, exchange_rate, product_cost,
-	 *                vat_rate, cost_inc_vat (information only), margin_pct (NULL without a rate), product_name, channel_name.
+	 * @return array  Rows including original_cost, original_currency, shipping_cost, total_cost_original,
+	 *                exchange_rate, total_cost, margin_pct (NULL without a rate), product_name, channel_name.
 	 */
 	public function getProducts(array $data, float $threshold): array {
 		$sql = "SELECT t.* FROM (" . $this->getBaseSql() . ") t" . $this->getFilterSql($data['filter'] ?? 'all', $threshold);
@@ -220,7 +224,7 @@ class ModelModificationDsMarginChecker extends Model {
 
 		$query = $this->db->query($sql);
 
-		return $this->addTax($query->rows);
+		return $query->rows;
 	}
 
 	/**
@@ -246,7 +250,7 @@ class ModelModificationDsMarginChecker extends Model {
 	public function getProduct(int $product_id): array {
 		$query = $this->db->query("SELECT t.* FROM (" . $this->getBaseSql("p.product_id = '" . (int)$product_id . "'") . ") t LIMIT 1");
 
-		return $query->row ? $this->addTax([$query->row])[0] : [];
+		return $query->row ?: [];
 	}
 
 	protected function getFilterSql(string $filter, float $threshold): string {
