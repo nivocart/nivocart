@@ -2067,6 +2067,19 @@ table.tool tr td {
   width: 90px;
   text-align: right;
 }
+.mc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0;
+}
+.mc-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
 #mc-result[hidden] {
   display: none;
 }

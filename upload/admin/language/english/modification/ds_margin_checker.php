@@ -59,6 +59,11 @@ $_['status_no_rate']            = 'No rate';
 
 // Entry — settings form
 $_['entry_threshold']           = 'Minimum Margin Threshold (%)';
+$_['entry_rounding']            = 'Sale Price Rounding Rule';
+$_['help_rounding']             = 'Used by \'Set All Prices Automatically\'. The price is always rounded UP, so the margin never falls below the threshold. The rule is applied to the ex-VAT sale price.';
+$_['text_rounding_none']        = 'No Rounding';
+$_['text_rounding_five']        = 'Rounding by next 5 (7.22 becomes 7.25, 7.26 becomes 7.30)';
+$_['text_rounding_nine']        = 'Rounding by next 9 (7.23 becomes 7.29)';
 $_['help_threshold']            = 'Products with a margin (ex-VAT sale price against the cost) below this percentage are flagged as \'Low\'. Set to 0 to disable. Default: 20%.';
 
 // Buttons
@@ -66,6 +71,10 @@ $_['button_save']               = 'Save Settings';
 $_['button_cancel']             = 'Cancel';
 $_['button_close']              = 'Close';
 $_['button_sync_shipping']      = 'Sync Shipping from CJ';
+$_['button_set_prices']         = 'Set All Prices Automatically';
+$_['text_set_prices_confirm']   = 'Set the Sale Price of ALL dropship products so that each one gets a margin of %s on its Total Cost? Rounding rule: %s. Existing sale prices will be overwritten and this cannot be undone.';
+$_['text_set_prices_done']      = 'Prices set. %s sale prices were changed. %s were already right. %s were skipped because they have no cost (no exchange rate).';
+$_['error_set_prices_margin']   = 'The Minimum Margin Threshold must be below 100% to set prices automatically.';
 $_['button_refresh']            = 'Refresh Page';
 $_['text_sync_running']         = 'Syncing shipping costs from CJ, page %s of %s...';
 $_['text_sync_progress']        = '%s% - page %s of %s';

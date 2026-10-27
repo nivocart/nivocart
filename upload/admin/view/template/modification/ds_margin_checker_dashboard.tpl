@@ -55,8 +55,8 @@
           <tr>
             <td class="left"><?php echo $column_product; ?></td>
             <td class="left"><?php echo $column_sku; ?></td>
-            <td class="right"><?php echo $column_sale_price; ?></td>
             <td class="right"><?php echo $column_total_cost_default; ?></td>
+            <td class="right"><?php echo $column_sale_price; ?></td>
             <td class="right"><?php echo $column_margin_pct; ?></td>
             <td class="left"><?php echo $column_status; ?></td>
           </tr>
@@ -80,8 +80,8 @@
           <tr>
             <td class="left"><?php echo htmlspecialchars($row['product_name'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></td>
             <td class="left"><?php echo htmlspecialchars($row['model'], ENT_QUOTES, 'UTF-8'); ?></td>
-            <td class="right"><?php echo number_format((float)$row['price'], 2); ?></td>
             <td class="right"><?php echo number_format((float)$row['total_cost'], 2); ?></td>
+            <td class="right"><?php echo number_format((float)$row['price'], 2); ?></td>
             <td class="right mc-margin"><?php echo number_format($m, 2); ?>%</td>
             <td class="left"><span class="mc-badge <?php echo $badge; ?>"><?php echo $label; ?></span></td>
           </tr>

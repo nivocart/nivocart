@@ -24,6 +24,16 @@
             <td><?php echo $entry_threshold; ?><span class="help"><?php echo $help_threshold; ?></span></td>
             <td><input type="number" name="threshold" value="<?php echo number_format((float)$threshold, 2, '.', ''); ?>" min="0" max="100" step="0.5" size="5" /> %</td>
           </tr>
+          <tr>
+            <td><?php echo $entry_rounding; ?><span class="help"><?php echo $help_rounding; ?></span></td>
+            <td>
+              <select name="price_rounding">
+                <?php foreach ($rounding_options as $value => $label) { ?>
+                <option value="<?php echo $value; ?>"<?php echo ($value === $price_rounding) ? ' selected="selected"' : ''; ?>><?php echo $label; ?></option>
+                <?php } ?>
+              </select>
+            </td>
+          </tr>
         </table>
       </form>
     </div>

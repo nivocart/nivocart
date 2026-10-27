@@ -22,6 +22,13 @@ class ControllerModificationDsMarginChecker extends Controller {
 	// Default margin threshold percentage
 	private const DEFAULT_THRESHOLD = 20.0;
 
+	// Sale price rounding rules (setting value => language key)
+	private const ROUNDING_RULES = [
+		'none' => 'text_rounding_none',
+		'five' => 'text_rounding_five',
+		'nine' => 'text_rounding_nine'
+	];
+
 	// Allowed values for the product list filter
 	private const FILTERS = ['all', 'below', 'negative'];
 
@@ -234,6 +241,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['settings_url'] = $this->url->link('modification/ds_margin_checker/settings', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['update_price_url'] = 'index.php?route=modification/ds_margin_checker/updatePrice&token=' . $this->session->data['token'];
 		$this->data['sync_shipping_url'] = 'index.php?route=modification/ds_margin_checker/syncShipping&token=' . $this->session->data['token'];
+		$this->data['set_prices_url'] = 'index.php?route=modification/ds_margin_checker/setAllPrices&token=' . $this->session->data['token'];
 
 		// The sync button needs the CJ Dropshipping connector and at least one enabled CJ channel
 		$this->data['cj_channels'] = is_file(DIR_APPLICATION . 'model/modification/cjdropshipping.php') ? $this->model_modification_ds_margin_checker->getCjChannelIds() : [];
@@ -249,6 +257,12 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['button_update_price'] = $this->language->get('button_update_price');
 		$this->data['button_sync_shipping'] = $this->language->get('button_sync_shipping');
 		$this->data['button_refresh'] = $this->language->get('button_refresh');
+		$this->data['button_set_prices'] = $this->language->get('button_set_prices');
+
+		$rounding = $this->getRoundingRule();
+
+		$this->data['text_set_prices_confirm'] = sprintf($this->language->get('text_set_prices_confirm'), number_format($threshold, 1) . '%', $this->language->get(self::ROUNDING_RULES[$rounding]));
+		$this->data['text_set_prices_done'] = $this->language->get('text_set_prices_done');
 		$this->data['text_sync_running'] = $this->language->get('text_sync_running');
 		$this->data['text_sync_done'] = $this->language->get('text_sync_done');
 		$this->data['text_sync_progress'] = $this->language->get('text_sync_progress');
@@ -430,6 +444,54 @@ class ControllerModificationDsMarginChecker extends Controller {
 	}
 
 	// =================================================================
+	// AJAX — SET ALL PRICES AUTOMATICALLY
+	// =================================================================
+
+	/**
+	 * Set every dropship product's sale price from its Total Cost (default currency), the Minimum Margin
+	 * Threshold and the Sale Price Rounding Rule. Expects POST. Needs modify permission on this tool AND on catalog/product.
+	 * Returns JSON: updated, unchanged, skipped.
+	 */
+	public function setAllPrices(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/ds_margin_checker');
+
+		if ($this->dependenciesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_dependency')]);
+			return;
+		}
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if (!$this->user->hasPermission('modify', 'catalog/product')) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission_product')]);
+			return;
+		}
+
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
+			$this->jsonResponse(['error' => $this->language->get('error_method')]);
+			return;
+		}
+
+		$threshold = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
+
+		if ($threshold < 0 || $threshold >= 100) {
+			$this->jsonResponse(['error' => $this->language->get('error_set_prices_margin')]);
+			return;
+		}
+
+		try {
+			$this->jsonResponse($this->model_modification_ds_margin_checker->setAllPrices($threshold, $this->getRoundingRule()));
+		} catch (\Exception $e) {
+			$this->jsonResponse(['error' => $e->getMessage()]);
+		}
+	}
+
+	// =================================================================
 	// SETTINGS
 	// =================================================================
 
@@ -446,6 +508,10 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 			$this->model_modification_ds_margin_checker->setSetting('threshold', $threshold);
 
+			$rounding = (string)($this->request->post['price_rounding'] ?? 'none');
+
+			$this->model_modification_ds_margin_checker->setSetting('price_rounding', isset(self::ROUNDING_RULES[$rounding]) ? $rounding : 'none');
+
 			$this->session->data['success'] = $this->language->get('text_settings_saved');
 
 			$this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
@@ -453,6 +519,13 @@ class ControllerModificationDsMarginChecker extends Controller {
 		}
 
 		$this->data['threshold'] = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
+		$this->data['price_rounding'] = $this->getRoundingRule();
+
+		$this->data['rounding_options'] = [];
+
+		foreach (self::ROUNDING_RULES as $value => $key) {
+			$this->data['rounding_options'][$value] = $this->language->get($key);
+		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -465,6 +538,9 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['entry_threshold'] = $this->language->get('entry_threshold');
 
 		$this->data['help_threshold'] = $this->language->get('help_threshold');
+
+		$this->data['entry_rounding'] = $this->language->get('entry_rounding');
+		$this->data['help_rounding'] = $this->language->get('help_rounding');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -501,6 +577,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->load->model('modification/ds_margin_checker');
 
 		$this->model_modification_ds_margin_checker->setSetting('threshold', self::DEFAULT_THRESHOLD);
+		$this->model_modification_ds_margin_checker->setSetting('price_rounding', 'none');
 		$this->model_modification_ds_margin_checker->ensureShippingTable();
 	}
 
@@ -582,6 +659,15 @@ class ControllerModificationDsMarginChecker extends Controller {
 		}
 
 		return true;
+	}
+
+	/**
+	 * The saved Sale Price Rounding Rule, falling back to 'none' for an unknown value.
+	 */
+	private function getRoundingRule(): string {
+		$rule = (string)$this->model_modification_ds_margin_checker->getSetting('price_rounding', 'none');
+
+		return isset(self::ROUNDING_RULES[$rule]) ? $rule : 'none';
 	}
 
 	private function jsonResponse(array $data): void {

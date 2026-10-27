@@ -279,6 +279,61 @@ class ModelModificationDsMarginChecker extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `price` = '" . (float)$price . "', `date_modified` = NOW() WHERE `product_id` = '" . (int)$product_id . "'");
 	}
 
+	/**
+	 * Price (ex-VAT, in the store default currency) that gives exactly the wanted margin on a cost,
+	 * always rounded UP so the margin never ends below the wanted one. Works in whole pence.
+	 *
+	 * @param  float  $cost       Total cost in the store default currency (> 0).
+	 * @param  float  $margin_pct Wanted margin, 0 to below 100.
+	 * @param  string $rule       none | five (next price ending in 0 or 5 pence) | nine (next price ending in 9 pence).
+	 * @return int    Price in pence.
+	 */
+	public function calculatePricePence(float $cost, float $margin_pct, string $rule): int {
+		$pence = (int)ceil(round(($cost / (1 - ($margin_pct / 100))) * 100, 6));
+
+		if ($rule === 'five') {
+			$pence = (int)(ceil($pence / 5) * 5);
+		} elseif ($rule === 'nine') {
+			$pence = (int)(ceil(($pence - 9) / 10) * 10 + 9);
+		}
+
+		return max(0, $pence);
+	}
+
+	/**
+	 * Set the sale price of every dropship product from its Total Cost (default currency) and the margin threshold.
+	 * Products with no cost (no exchange rate, or a zero cost) are skipped, prices already right are left alone.
+	 *
+	 * @param  float  $margin_pct
+	 * @param  string $rule  none | five | nine
+	 * @return array  ['updated' => int, 'unchanged' => int, 'skipped' => int]
+	 */
+	public function setAllPrices(float $margin_pct, string $rule): array {
+		$result = ['updated' => 0, 'unchanged' => 0, 'skipped' => 0];
+
+		$query = $this->db->query("SELECT t.product_id, t.price, t.total_cost FROM (" . $this->getBaseSql() . ") t");
+
+		foreach ($query->rows as $row) {
+			if ($row['total_cost'] === null || (float)$row['total_cost'] <= 0) {
+				$result['skipped']++;
+				continue;
+			}
+
+			$pence = $this->calculatePricePence((float)$row['total_cost'], $margin_pct, $rule);
+
+			if ($pence === (int)round((float)$row['price'] * 100)) {
+				$result['unchanged']++;
+				continue;
+			}
+
+			$this->updateProductPrice((int)$row['product_id'], $pence / 100);
+
+			$result['updated']++;
+		}
+
+		return $result;
+	}
+
 	// =================================================================
 	// SETTINGS  (nc_setting)
 	// =================================================================

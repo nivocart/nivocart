@@ -15,14 +15,17 @@
     </div>
     <div class="content">
       <div id="mc-result" hidden></div>
-      <p>
+      <div class="mc-toolbar">
         <a href="<?php echo $filter_all_url; ?>" class="<?php echo ($filter === 'all') ? 'button-save' : 'button-form'; ?> ripple"><?php echo $filter_all; ?></a>
         <a href="<?php echo $filter_below_url; ?>" class="<?php echo ($filter === 'below') ? 'button-save' : 'button-form'; ?> ripple"><?php echo $filter_below; ?> (&lt; <?php echo number_format($threshold, 1); ?>%)</a>
         <a href="<?php echo $filter_negative_url; ?>" class="<?php echo ($filter === 'negative') ? 'button-save' : 'button-form'; ?> ripple"><?php echo $filter_negative; ?></a>
-        <?php if ($cj_channels) { ?>
-        <a id="mc-sync-shipping" class="button-save ripple"><?php echo $button_sync_shipping; ?></a>
-        <?php } ?>
-      </p>
+        <div class="mc-toolbar-actions" id="mc-toolbar-actions">
+          <?php if ($cj_channels) { ?>
+          <a id="mc-sync-shipping" class="button-save ripple"><?php echo $button_sync_shipping; ?></a>
+          <?php } ?>
+          <a id="mc-set-prices" class="button-save ripple"><?php echo $button_set_prices; ?></a>
+        </div>
+      </div>
       <?php if ($cj_channels) { ?>
       <div id="mc-sync-progress" class="cj-progress" hidden>
         <div id="mc-sync-progress-bar" class="progress-bar-blue"></div>
@@ -93,6 +96,7 @@
 <script>
 var mcUpdatePriceUrl = <?php echo json_encode($update_price_url); ?>;
 var mcSyncShippingUrl = <?php echo json_encode($sync_shipping_url); ?>;
+var mcSetPricesUrl = <?php echo json_encode($set_prices_url); ?>;
 var mcCjChannels = <?php echo json_encode($cj_channels); ?>;
 var mcThreshold = <?php echo (float)$threshold; ?>;
 var mcText = <?php echo json_encode([
@@ -102,6 +106,9 @@ var mcText = <?php echo json_encode([
   'sync_progress'   => $text_sync_progress,
   'refresh'         => $button_refresh,
   'sync_retry'      => $text_sync_retry,
+  'set_prices_title' => $button_set_prices,
+  'set_prices_confirm' => $text_set_prices_confirm,
+  'set_prices_done' => $text_set_prices_done,
   'sync_no_freight' => $text_sync_no_freight,
   'sync_ranged'     => $text_sync_ranged,
   'error_shipping'  => $error_shipping,
@@ -213,11 +220,69 @@ function mcSyncFinish(isError) {
 
   // The result message stays on screen until the page is refreshed by hand
   if (!isError) {
-    $('<a id="mc-sync-refresh" class="button-form ripple"></a>').text(mcText.refresh).on('click', function() {
-      window.location.reload();
-    }).insertAfter('#mc-sync-shipping');
+    mcAddRefreshButton();
   }
 }
+
+function mcAddRefreshButton() {
+  $('#mc-sync-refresh').remove();
+
+  $('<a id="mc-sync-refresh" class="button-form ripple"></a>').text(mcText.refresh).on('click', function() {
+    window.location.reload();
+  }).appendTo('#mc-toolbar-actions');
+}
+
+function mcSetAllPrices($button) {
+  $button.addClass('mc-busy');
+
+  $.ajax({
+    url: mcSetPricesUrl,
+    type: 'POST',
+    dataType: 'json',
+    success: function(res) {
+      $button.removeClass('mc-busy');
+
+      if (res.error) {
+        mcShowResult(res.error, true);
+        return;
+      }
+
+      mcShowResult(mcText.set_prices_done.replace('%s', res.updated).replace('%s', res.unchanged).replace('%s', res.skipped), false);
+      mcAddRefreshButton();
+    },
+    error: function(xhr) {
+      $button.removeClass('mc-busy');
+
+      mcShowResult(mcText.error_server + ' ' + xhr.status, true);
+    }
+  });
+}
+
+$('#mc-set-prices').on('click', function() {
+  var $button = $(this);
+
+  if ($button.hasClass('mc-busy')) {
+    return;
+  }
+
+  $.confirm({
+    title: mcText.set_prices_title,
+    content: mcText.set_prices_confirm,
+    icon: 'fa fa-question-circle',
+    theme: 'light',
+    useBootstrap: false,
+    boxWidth: 580,
+    animation: 'zoom',
+    closeAnimation: 'scale',
+    opacity: 0.1,
+    buttons: {
+      confirm: function() {
+        mcSetAllPrices($button);
+      },
+      cancel: function() { }
+    }
+  });
+});
 
 function mcSyncShipping(channelIndex, page, totals, attempt) {
   if (channelIndex >= mcCjChannels.length) {
