@@ -2,52 +2,244 @@
 /**
  * Class ControllerToolApiKeyManager
  *
+ * Passphrase-protected vault for API keys. Key Codes are encrypted by the Vault library
+ * and only readable while the vault is unlocked (see system/library/vault.php).
+ *
  * @package NivoCart
  */
 class ControllerToolApiKeyManager extends Controller {
 	private $error = [];
 
 	public function index() {
-		$this->language->load('tool/api_key_manager');
+		$this->initialise();
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		if ($this->vaultReady() && !$this->vault->isSetUp()) {
+			$this->redirect($this->url->link('tool/api_key_manager/setup', 'token=' . $this->session->data['token'], 'SSL'));
 
-		$this->load->model('tool/api_key_manager');
+			return;
+		}
 
 		$this->getList();
 	}
 
-	public function insert() {
-		$this->language->load('tool/api_key_manager');
+	public function setup() {
+		$this->initialise();
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		if (!$this->vaultReady() || $this->vault->isSetUp()) {
+			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
 
-		$this->load->model('tool/api_key_manager');
+			return;
+		}
 
-		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
-			$this->model_tool_api_key_manager->addApiKey($this->request->post);
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validatePassphraseForm('setup')) {
+			try {
+				$this->vault->setUp($this->decode($this->request->post['passphrase'] ?? ''));
 
-			$this->session->data['success'] = $this->language->get('text_success');
+				$migrated = $this->model_tool_api_key_manager->migrateLegacyApiKeys();
 
-			$page_url = array_filter([
-				'sort'  => $this->request->get['sort'] ?? null,
-				'order' => $this->request->get['order'] ?? null,
-				'page'  => $this->request->get['page'] ?? null
-			]);
+				$this->model_tool_api_key_manager->logAction('api key vault setup');
 
-			$url = $page_url ? '&' . http_build_query($page_url) : '';
+				$this->session->data['success'] = sprintf($this->language->get('text_success_setup'), $migrated);
 
-			if (isset($this->request->post['apply'])) {
-				$api_key_id = $this->session->data['new_api_key_id'];
+				$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
 
-				if ($api_key_id) {
-					unset($this->session->data['new_api_key_id']);
+				return;
+			} catch (\Throwable $e) {
+				$this->log->write('API Key Manager setup: ' . $e->getMessage());
 
-					$this->redirect($this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $api_key_id . $url, 'SSL'));
+				$this->error['warning'] = $this->language->get('error_vault');
+			}
+		}
+
+		$this->getVaultForm('setup');
+	}
+
+	public function unlock() {
+		$this->initialise();
+
+		if (!$this->vaultReady()) {
+			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		if (!$this->vault->isSetUp()) {
+			$this->redirect($this->url->link('tool/api_key_manager/setup', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validatePassphraseForm('unlock')) {
+			try {
+				if ($this->vault->unlock($this->decode($this->request->post['passphrase'] ?? ''))) {
+					$this->model_tool_api_key_manager->logAction('api key unlock');
+
+					$this->session->data['success'] = $this->language->get('text_success_unlock');
+
+					$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
+
+					return;
 				}
 
+				$this->model_tool_api_key_manager->logAction('api key unlock failed', false);
+
+				$this->error['warning'] = $this->language->get('error_passphrase_wrong');
+			} catch (\Throwable $e) {
+				$this->log->write('API Key Manager unlock: ' . $e->getMessage());
+
+				$this->error['warning'] = $this->language->get('error_vault');
+			}
+		}
+
+		$this->getVaultForm('unlock');
+	}
+
+	public function lock() {
+		$this->initialise();
+
+		if ($this->vaultReady() && $this->vault->isSetUp() && $this->vault->isUnlocked()) {
+			$this->vault->lock();
+
+			$this->model_tool_api_key_manager->logAction('api key lock');
+
+			$this->session->data['success'] = $this->language->get('text_success_lock');
+		}
+
+		$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
+	}
+
+	public function changepassphrase() {
+		$this->initialise();
+
+		if (!$this->vaultReady() || !$this->vault->isSetUp()) {
+			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validatePassphraseForm('change')) {
+			try {
+				if ($this->vault->changePassphrase($this->decode($this->request->post['passphrase_current'] ?? ''), $this->decode($this->request->post['passphrase'] ?? ''))) {
+					$this->model_tool_api_key_manager->logAction('api key passphrase change');
+
+					$this->session->data['success'] = $this->language->get('text_success_passphrase');
+
+					$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
+
+					return;
+				}
+
+				$this->model_tool_api_key_manager->logAction('api key passphrase failed', false);
+
+				$this->error['warning'] = $this->language->get('error_passphrase_wrong');
+			} catch (\Throwable $e) {
+				$this->log->write('API Key Manager passphrase: ' . $e->getMessage());
+
+				$this->error['warning'] = $this->language->get('error_vault');
+			}
+		}
+
+		$this->getVaultForm('change');
+	}
+
+	public function migrate() {
+		$this->initialise();
+
+		if ($this->vaultReady() && $this->vault->isSetUp() && ($this->request->server['REQUEST_METHOD'] === 'POST')) {
+			if (!$this->user->hasPermission('modify', 'tool/api_key_manager')) {
+				$this->session->data['error'] = $this->language->get('error_permission');
+			} elseif (!$this->vault->isUnlocked()) {
+				$this->session->data['error'] = $this->language->get('error_locked');
 			} else {
-				$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+				try {
+					$migrated = $this->model_tool_api_key_manager->migrateLegacyApiKeys();
+
+					$this->model_tool_api_key_manager->logAction('api key migrate');
+
+					$this->session->data['success'] = sprintf($this->language->get('text_success_migrate'), $migrated);
+				} catch (\Throwable $e) {
+					$this->log->write('API Key Manager migrate: ' . $e->getMessage());
+
+					$this->session->data['error'] = $this->language->get('error_vault');
+				}
+			}
+		}
+
+		$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
+	}
+
+	public function reveal() {
+		$this->initialise();
+
+		$json = [];
+
+		if (!$this->vaultReady() || !$this->vault->isSetUp() || ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
+			$json['error'] = $this->language->get('error_vault');
+		} elseif (!$this->vault->isUnlocked()) {
+			$json['error'] = $this->language->get('error_locked');
+		} else {
+			try {
+				$code = $this->model_tool_api_key_manager->revealApiKey((int)$this->getPostString('api_key_id'));
+
+				if ($code === null) {
+					$json['error'] = $this->language->get('error_not_found');
+				} else {
+					$json['code'] = $code;
+
+					$this->model_tool_api_key_manager->logAction('api key reveal');
+				}
+			} catch (\Throwable $e) {
+				$this->log->write('API Key Manager reveal: ' . $e->getMessage());
+
+				$json['error'] = $this->language->get('error_vault');
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->addHeader('Cache-Control: no-store');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function insert() {
+		$this->initialise();
+
+		if (!$this->vaultReady()) {
+			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		if (!$this->vault->isSetUp()) {
+			$this->redirect($this->url->link('tool/api_key_manager/setup', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		if (!$this->vault->isUnlocked()) {
+			$this->redirect($this->url->link('tool/api_key_manager/unlock', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
+			try {
+				$api_key_id = $this->model_tool_api_key_manager->addApiKey($this->getFormData());
+
+				$this->model_tool_api_key_manager->logAction('api key add');
+
+				$this->session->data['success'] = $this->language->get('text_success');
+
+				if (isset($this->request->post['apply'])) {
+					$this->redirect($this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $api_key_id . $this->getUrlParams(), 'SSL'));
+				} else {
+					$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $this->getUrlParams(), 'SSL'));
+				}
+
+				return;
+			} catch (\Throwable $e) {
+				$this->log->write('API Key Manager add: ' . $e->getMessage());
+
+				$this->error['warning'] = $this->language->get('error_vault');
 			}
 		}
 
@@ -55,34 +247,55 @@ class ControllerToolApiKeyManager extends Controller {
 	}
 
 	public function update() {
-		$this->language->load('tool/api_key_manager');
+		$this->initialise();
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		if (!$this->vaultReady()) {
+			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'));
 
-		$this->load->model('tool/api_key_manager');
+			return;
+		}
+
+		if (!$this->vault->isSetUp()) {
+			$this->redirect($this->url->link('tool/api_key_manager/setup', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		if (!$this->vault->isUnlocked()) {
+			$this->redirect($this->url->link('tool/api_key_manager/unlock', 'token=' . $this->session->data['token'], 'SSL'));
+
+			return;
+		}
+
+		$api_key_id = (int)($this->request->get['api_key_id'] ?? 0);
+
+		if (!$api_key_id || !$this->model_tool_api_key_manager->getApiKey($api_key_id)) {
+			$this->session->data['error'] = $this->language->get('error_not_found');
+
+			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $this->getUrlParams(), 'SSL'));
+
+			return;
+		}
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validateForm()) {
-			$this->model_tool_api_key_manager->editApiKey($this->request->get['api_key_id'], $this->request->post);
+			try {
+				$this->model_tool_api_key_manager->editApiKey($api_key_id, $this->getFormData());
 
-			$this->session->data['success'] = $this->language->get('text_success');
+				$this->model_tool_api_key_manager->logAction('api key edit');
 
-			$page_url = array_filter([
-				'sort'  => $this->request->get['sort'] ?? null,
-				'order' => $this->request->get['order'] ?? null,
-				'page'  => $this->request->get['page'] ?? null
-			]);
+				$this->session->data['success'] = $this->language->get('text_success');
 
-			$url = $page_url ? '&' . http_build_query($page_url) : '';
-
-			if (isset($this->request->post['apply'])) {
-				$api_key_id = $this->request->get['api_key_id'];
-
-				if ($api_key_id) {
-					$this->redirect($this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $api_key_id . $url, 'SSL'));
+				if (isset($this->request->post['apply'])) {
+					$this->redirect($this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $api_key_id . $this->getUrlParams(), 'SSL'));
+				} else {
+					$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $this->getUrlParams(), 'SSL'));
 				}
 
-			} else {
-				$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+				return;
+			} catch (\Throwable $e) {
+				$this->log->write('API Key Manager edit: ' . $e->getMessage());
+
+				$this->error['warning'] = $this->language->get('error_vault');
 			}
 		}
 
@@ -90,41 +303,101 @@ class ControllerToolApiKeyManager extends Controller {
 	}
 
 	public function delete() {
-		$this->language->load('tool/api_key_manager');
+		$this->initialise();
 
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('tool/api_key_manager');
-
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
+		if (isset($this->request->post['selected']) && is_array($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $api_key_id) {
-				$this->model_tool_api_key_manager->deleteApiKey($api_key_id);
+				if (is_scalar($api_key_id) && ((int)$api_key_id > 0)) {
+					$this->model_tool_api_key_manager->deleteApiKey((int)$api_key_id);
+				}
 			}
+
+			$this->model_tool_api_key_manager->logAction('api key delete');
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$page_url = array_filter([
-				'sort'  => $this->request->get['sort'] ?? null,
-				'order' => $this->request->get['order'] ?? null,
-				'page'  => $this->request->get['page'] ?? null
-			]);
+			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $this->getUrlParams(), 'SSL'));
 
-			$url = $page_url ? '&' . http_build_query($page_url) : '';
-
-			$this->redirect($this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+			return;
 		}
 
 		$this->getList();
 	}
 
-	protected function getList() {
-		$page_url = array_filter([
-			'sort'  => $this->request->get['sort'] ?? 'name',
-			'order' => $this->request->get['order'] ?? 'ASC',
-			'page'  => $this->request->get['page'] ?? 1
-		]);
+	protected function initialise(): void {
+		$this->language->load('tool/api_key_manager');
 
-		$url = $page_url ? '&' . http_build_query($page_url) : '';
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->library('vault');
+
+		$this->vault = new Vault($this->registry);
+
+		$this->load->model('tool/api_key_manager');
+	}
+
+	/**
+	 * The database is ready for the vault: the vault table exists and the Key Code column is
+	 * large enough for ciphertext (both come from the upgrade SQL). A column that is too small
+	 * would silently cut encrypted values short, so nothing is saved until this is true.
+	 */
+	protected function vaultReady(): bool {
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '" . $this->db->escape(DB_PREFIX . 'api_key_vault') . "'");
+
+		if ((int)$query->row['total'] < 1) {
+			return false;
+		}
+
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '" . $this->db->escape(DB_PREFIX . 'api_key') . "' AND `COLUMN_NAME` = 'code' AND `DATA_TYPE` IN ('text', 'mediumtext', 'longtext')");
+
+		return (int)$query->row['total'] > 0;
+	}
+
+	/**
+	 * Value as typed: Request::clean() HTML-encodes all input, so decode it before it is
+	 * stored. Output is escaped in the templates instead.
+	 *
+	 * @param mixed $value
+	 */
+	protected function decode($value): string {
+		return is_string($value) ? html_entity_decode($value, ENT_QUOTES, 'UTF-8') : '';
+	}
+
+	/**
+	 * A POST value that must be a plain string (arrays and missing values become '')
+	 */
+	protected function getPostString(string $key): string {
+		return is_string($this->request->post[$key] ?? null) ? $this->request->post[$key] : '';
+	}
+
+	protected function getFormData(): array {
+		return [
+			'name'   => $this->decode($this->request->post['name'] ?? ''),
+			'code'   => trim($this->decode($this->request->post['code'] ?? '')),
+			'status' => ($this->getPostString('status') === '1') ? 1 : 0
+		];
+	}
+
+	protected function getUrlParams(): string {
+		$params = [];
+
+		if (isset($this->request->get['sort']) && in_array($this->request->get['sort'], ['name', 'api_key_id'], true)) {
+			$params['sort'] = $this->request->get['sort'];
+		}
+
+		if (isset($this->request->get['order']) && in_array($this->request->get['order'], ['ASC', 'DESC'], true)) {
+			$params['order'] = $this->request->get['order'];
+		}
+
+		if (isset($this->request->get['page']) && ((int)$this->request->get['page'] > 1)) {
+			$params['page'] = (int)$this->request->get['page'];
+		}
+
+		return $params ? '&' . http_build_query($params) : '';
+	}
+
+	protected function getList() {
+		$url = $this->getUrlParams();
 
 		$this->data['breadcrumbs'] = [];
 
@@ -140,24 +413,31 @@ class ControllerToolApiKeyManager extends Controller {
 			'separator' => ' :: '
 		];
 
-		$this->data['insert'] = $this->url->link('tool/api_key_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('tool/api_key_manager/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$token = 'token=' . $this->session->data['token'];
+
+		$this->data['insert'] = $this->url->link('tool/api_key_manager/insert', $token . $url, 'SSL');
+		$this->data['delete'] = $this->url->link('tool/api_key_manager/delete', $token . $url, 'SSL');
+		$this->data['unlock'] = $this->url->link('tool/api_key_manager/unlock', $token, 'SSL');
+		$this->data['lock'] = $this->url->link('tool/api_key_manager/lock', $token, 'SSL');
+		$this->data['passphrase'] = $this->url->link('tool/api_key_manager/changepassphrase', $token, 'SSL');
+		$this->data['migrate'] = $this->url->link('tool/api_key_manager/migrate', $token, 'SSL');
+		$this->data['reveal'] = $this->url->link('tool/api_key_manager/reveal', $token, 'SSL');
 
 		// Pagination
 		$this->data['navigation_hi'] = $this->config->get('config_pagination_hi');
 		$this->data['navigation_lo'] = $this->config->get('config_pagination_lo');
 
-		$this->data['api_keys'] = [];
+		$sort = (isset($this->request->get['sort']) && in_array($this->request->get['sort'], ['name', 'api_key_id'], true)) ? $this->request->get['sort'] : 'name';
+		$order = (isset($this->request->get['order']) && ($this->request->get['order'] === 'DESC')) ? 'DESC' : 'ASC';
+		$page = isset($this->request->get['page']) ? max(1, (int)$this->request->get['page']) : 1;
 
-		$sort = $this->request->get['sort'] ?? 'name';
-		$order = $this->request->get['order'] ?? 'ASC';
-		$page = $this->request->get['page'] ?? 1;
+		$limit = max(1, (int)$this->config->get('config_admin_limit'));
 
 		$data = [
 			'sort'  => $sort,
 			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit' => $this->config->get('config_admin_limit')
+			'start' => ($page - 1) * $limit,
+			'limit' => $limit
 		];
 
 		$api_key_total = $this->model_tool_api_key_manager->getTotalApiKeys();
@@ -166,23 +446,32 @@ class ControllerToolApiKeyManager extends Controller {
 
 		$results = $this->model_tool_api_key_manager->getApiKeys($data);
 
+		$this->data['api_keys'] = [];
+
 		foreach ($results as $result) {
 			$action = [];
 
 			$action[] = [
 				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $result['api_key_id'] . $url, 'SSL')
+				'href' => $this->url->link('tool/api_key_manager/update', $token . '&api_key_id=' . (int)$result['api_key_id'] . $url, 'SSL')
 			];
 
+			// The Key Code is never sent to the list page, only masked in the template
 			$this->data['api_keys'][] = [
-				'api_key_id' => $result['api_key_id'],
+				'api_key_id' => (int)$result['api_key_id'],
 				'name'       => $result['name'],
-				'code'       => $result['code'],
 				'status'     => $result['status'],
-				'selected'   => isset($this->request->post['selected']) && in_array($result['api_key_id'], $this->request->post['selected']),
+				'selected'   => isset($this->request->post['selected']) && is_array($this->request->post['selected']) && in_array((string)$result['api_key_id'], $this->request->post['selected'], true),
 				'action'     => $action
 			];
 		}
+
+		// Vault state
+		$vault_ready = $this->vaultReady();
+
+		$this->data['vault_ready'] = $vault_ready;
+		$this->data['vault_unlocked'] = $vault_ready && $this->vault->isUnlocked();
+		$this->data['legacy_total'] = $this->model_tool_api_key_manager->getTotalLegacyApiKeys();
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -192,6 +481,9 @@ class ControllerToolApiKeyManager extends Controller {
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_api_info'] = $this->language->get('text_api_info');
 		$this->data['text_confirm_delete'] = $this->language->get('text_confirm_delete');
+		$this->data['text_locked'] = $this->language->get('text_locked');
+		$this->data['text_legacy'] = sprintf($this->language->get('text_legacy'), $this->data['legacy_total']);
+		$this->data['text_legacy_locked'] = $this->language->get('text_legacy_locked');
 
 		$this->data['column_name'] = $this->language->get('column_name');
 		$this->data['column_code'] = $this->language->get('column_code');
@@ -201,8 +493,22 @@ class ControllerToolApiKeyManager extends Controller {
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
 		$this->data['button_info'] = $this->language->get('button_info');
+		$this->data['button_unlock'] = $this->language->get('button_unlock');
+		$this->data['button_lock'] = $this->language->get('button_lock');
+		$this->data['button_passphrase'] = $this->language->get('button_passphrase');
+		$this->data['button_migrate'] = $this->language->get('button_migrate');
+		$this->data['button_reveal'] = $this->language->get('button_reveal');
+		$this->data['button_hide'] = $this->language->get('button_hide');
 
-		if (isset($this->error['warning'])) {
+		$this->data['error_reveal'] = $this->language->get('error_vault');
+
+		if (!$vault_ready) {
+			$this->data['error_warning'] = $this->language->get('error_table');
+		} elseif (isset($this->session->data['error'])) {
+			$this->data['error_warning'] = $this->session->data['error'];
+
+			unset($this->session->data['error']);
+		} elseif (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
 			$this->data['error_warning'] = '';
@@ -217,38 +523,31 @@ class ControllerToolApiKeyManager extends Controller {
 		}
 
 		// Html table sorting data
-		$url = '';
+		$url = '&order=' . (($order === 'ASC') ? 'DESC' : 'ASC');
 
-		if ($order === 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
+		if ($page > 1) {
+			$url .= '&page=' . $page;
 		}
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$this->data['sort_name'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-		$this->data['sort_code'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('tool/api_key_manager', $token . '&sort=name' . $url, 'SSL');
 
 		// Pagination data
 		$url = '';
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
+		if (isset($this->request->get['sort']) && ($this->request->get['sort'] === $sort)) {
+			$url .= '&sort=' . $sort;
 		}
 
 		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
+			$url .= '&order=' . $order;
 		}
 
 		$pagination = new Pagination();
 		$pagination->total = $api_key_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('tool/api_key_manager', $token . $url . '&page={page}', 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -276,6 +575,8 @@ class ControllerToolApiKeyManager extends Controller {
 		$this->data['entry_code'] = $this->language->get('entry_code');
 		$this->data['entry_status'] = $this->language->get('entry_status');
 
+		$this->data['help_code'] = $this->language->get('help_code');
+
 		$this->data['link_google'] = $this->language->get('link_google');
 		$this->data['link_facebook'] = $this->language->get('link_facebook');
 		$this->data['link_twitter'] = $this->language->get('link_twitter');
@@ -286,31 +587,12 @@ class ControllerToolApiKeyManager extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
-		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
+		$this->data['error_warning'] = $this->error['warning'] ?? '';
+		$this->data['error_name'] = $this->error['name'] ?? '';
+		$this->data['error_code'] = $this->error['code'] ?? '';
+		$this->data['error_status'] = $this->error['status'] ?? '';
 
-		if (isset($this->error['name'])) {
-			$this->data['error_name'] = $this->error['name'];
-		} else {
-			$this->data['error_name'] = '';
-		}
-
-		if (isset($this->error['code'])) {
-			$this->data['error_code'] = $this->error['code'];
-		} else {
-			$this->data['error_code'] = '';
-		}
-
-		$page_url = array_filter([
-			'sort'  => $this->request->get['sort'] ?? 'name',
-			'order' => $this->request->get['order'] ?? 'ASC',
-			'page'  => $this->request->get['page'] ?? 1
-		]);
-
-		$url = $page_url ? '&' . http_build_query($page_url) : '';
+		$url = $this->getUrlParams();
 
 		$this->data['breadcrumbs'] = [];
 
@@ -326,39 +608,41 @@ class ControllerToolApiKeyManager extends Controller {
 			'separator' => ' :: '
 		];
 
-		if (!isset($this->request->get['api_key_id'])) {
+		$api_key_id = (int)($this->request->get['api_key_id'] ?? 0);
+
+		if (!$api_key_id) {
 			$this->data['action'] = $this->url->link('tool/api_key_manager/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		} else {
-			$this->data['action'] = $this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $this->request->get['api_key_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('tool/api_key_manager/update', 'token=' . $this->session->data['token'] . '&api_key_id=' . $api_key_id . $url, 'SSL');
 		}
 
 		$this->data['cancel'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		if (isset($this->request->get['api_key_id']) && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
-			$api_key_info = $this->model_tool_api_key_manager->getApiKey($this->request->get['api_key_id']);
+		$api_key_info = [];
+
+		if ($api_key_id && ($this->request->server['REQUEST_METHOD'] !== 'POST')) {
+			try {
+				$api_key_info = $this->model_tool_api_key_manager->getApiKeyDecrypted($api_key_id);
+			} catch (\Throwable $e) {
+				$this->log->write('API Key Manager form: ' . $e->getMessage());
+
+				$this->data['error_warning'] = $this->language->get('error_vault');
+			}
 		}
 
-		if (isset($this->request->post['name'])) {
-			$this->data['name'] = $this->request->post['name'];
+		if ($this->request->server['REQUEST_METHOD'] === 'POST') {
+			$posted = $this->getFormData();
+
+			$this->data['name'] = $posted['name'];
+			$this->data['code'] = $posted['code'];
+			$this->data['status'] = $posted['status'];
 		} elseif (!empty($api_key_info)) {
 			$this->data['name'] = $api_key_info['name'];
-		} else {
-			$this->data['name'] = '';
-		}
-
-		if (isset($this->request->post['code'])) {
-			$this->data['code'] = trim($this->request->post['code']);
-		} elseif (!empty($api_key_info)) {
-			$this->data['code'] = trim($api_key_info['code']);
-		} else {
-			$this->data['code'] = '';
-		}
-
-		if (isset($this->request->post['status'])) {
-			$this->data['status'] = $this->request->post['status'];
-		} elseif (!empty($api_key_info)) {
+			$this->data['code'] = $api_key_info['code'];
 			$this->data['status'] = $api_key_info['status'];
 		} else {
+			$this->data['name'] = '';
+			$this->data['code'] = '';
 			$this->data['status'] = true;
 		}
 
@@ -371,23 +655,116 @@ class ControllerToolApiKeyManager extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	protected function validateForm() {
+	protected function getVaultForm(string $mode) {
+		$this->data['mode'] = $mode;
+
+		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_info'] = $this->language->get('text_' . $mode . '_info');
+
+		$this->data['entry_passphrase'] = $this->language->get('entry_passphrase');
+		$this->data['entry_passphrase_confirm'] = $this->language->get('entry_passphrase_confirm');
+		$this->data['entry_passphrase_current'] = $this->language->get('entry_passphrase_current');
+		$this->data['entry_passphrase_new'] = $this->language->get('entry_passphrase_new');
+
+		$this->data['help_passphrase'] = $this->language->get('help_passphrase');
+
+		$this->data['button_submit'] = $this->language->get('button_' . $mode);
+		$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+		$lockout = $this->vault->getLockoutRemaining();
+
+		if ($lockout > 0) {
+			$this->error['warning'] = sprintf($this->language->get('error_lockout'), (int)ceil($lockout / 60));
+		}
+
+		$this->data['error_warning'] = $this->error['warning'] ?? '';
+		$this->data['error_passphrase'] = $this->error['passphrase'] ?? '';
+		$this->data['error_confirm'] = $this->error['confirm'] ?? '';
+
+		$this->data['breadcrumbs'] = [];
+
+		$this->data['breadcrumbs'][] = [
+			'text'      => $this->language->get('text_home'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'separator' => false
+		];
+
+		$this->data['breadcrumbs'][] = [
+			'text'      => $this->language->get('heading_title'),
+			'href'      => $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL'),
+			'separator' => ' :: '
+		];
+
+		$routes = [
+			'setup'  => 'tool/api_key_manager/setup',
+			'unlock' => 'tool/api_key_manager/unlock',
+			'change' => 'tool/api_key_manager/changepassphrase'
+		];
+
+		$this->data['action'] = $this->url->link($routes[$mode], 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('tool/api_key_manager', 'token=' . $this->session->data['token'], 'SSL');
+
+		$this->template = 'tool/api_key_manager_vault.tpl';
+		$this->children = [
+			'common/header',
+			'common/footer'
+		];
+
+		$this->response->setOutput($this->render());
+	}
+
+	protected function validateForm(): bool {
 		if (!$this->user->hasPermission('modify', 'tool/api_key_manager')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if ((mb_strlen($this->request->post['name'], 'UTF-8') < 3) || (mb_strlen($this->request->post['name'], 'UTF-8') > 64)) {
+		$data = $this->getFormData();
+
+		if ((mb_strlen($data['name'], 'UTF-8') < 3) || (mb_strlen($data['name'], 'UTF-8') > 64)) {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
-		if ((mb_strlen($this->request->post['code'], 'UTF-8') < 3) || (mb_strlen($this->request->post['code'], 'UTF-8') > 255)) {
+		if ((mb_strlen($data['code'], 'UTF-8') < 3) || (mb_strlen($data['code'], 'UTF-8') > 255)) {
 			$this->error['code'] = $this->language->get('error_code');
+		}
+
+		if (!in_array($this->getPostString('status'), ['0', '1'], true)) {
+			$this->error['status'] = $this->language->get('error_status');
 		}
 
 		return empty($this->error);
 	}
 
-	protected function validateDelete() {
+	protected function validatePassphraseForm(string $mode): bool {
+		if (($mode !== 'unlock') && !$this->user->hasPermission('modify', 'tool/api_key_manager')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		$passphrase = $this->decode($this->request->post['passphrase'] ?? '');
+
+		if ($mode === 'unlock') {
+			if ($passphrase === '') {
+				$this->error['passphrase'] = $this->language->get('error_passphrase_empty');
+			}
+		} else {
+			if (mb_strlen($passphrase, 'UTF-8') < Vault::MIN_PASSPHRASE_LENGTH) {
+				$this->error['passphrase'] = sprintf($this->language->get('error_passphrase'), Vault::MIN_PASSPHRASE_LENGTH);
+			}
+
+			if ($passphrase !== $this->decode($this->request->post['passphrase_confirm'] ?? '')) {
+				$this->error['confirm'] = $this->language->get('error_confirm');
+			}
+
+			if (($mode === 'change') && ($this->decode($this->request->post['passphrase_current'] ?? '') === '')) {
+				$this->error['warning'] = $this->language->get('error_passphrase_current');
+			}
+		}
+
+		return empty($this->error);
+	}
+
+	protected function validateDelete(): bool {
 		if (!$this->user->hasPermission('modify', 'tool/api_key_manager')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}

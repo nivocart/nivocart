@@ -185,9 +185,29 @@ DROP TABLE IF EXISTS `nc_api_key`;
 CREATE TABLE `nc_api_key` (
   `api_key_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
-  `code`varchar(128) NOT NULL,
+  `code` text NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`api_key_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nc_api_key_vault`
+--
+
+DROP TABLE IF EXISTS `nc_api_key_vault`;
+CREATE TABLE `nc_api_key_vault` (
+  `vault_id` int NOT NULL AUTO_INCREMENT,
+  `salt` varchar(64) NOT NULL,
+  `opslimit` int NOT NULL,
+  `memlimit` int NOT NULL,
+  `wrapped_key` varchar(255) NOT NULL,
+  `failed_attempts` int NOT NULL DEFAULT '0',
+  `locked_until` bigint NOT NULL DEFAULT '0',
+  `date_added` datetime NOT NULL,
+  `date_modified` datetime NOT NULL,
+  PRIMARY KEY (`vault_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

@@ -357,6 +357,7 @@ class ControllerToolConfiguration extends Controller {
 			'template'   => $ds(DIR_SYSTEM . 'library/template.php'),
 			'url'        => $ds(DIR_SYSTEM . 'library/url.php'),
 			'user'       => $ds(DIR_SYSTEM . 'library/user.php'),
+			'vault'      => $ds(DIR_SYSTEM . 'library/vault.php'),
 			'weight'     => $ds(DIR_SYSTEM . 'library/weight.php')
 		];
 
