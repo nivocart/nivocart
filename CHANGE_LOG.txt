@@ -12,7 +12,7 @@ Release: TBA
 - Add new Product Review form inside Catalog Customer Account Dashboard.
 - Add support for product videos when using CJDropshipping Modification.
 - Add new dropship "Sync Videos" button feature in CJDropshipping Dashboard.
-- Add new currency rates daily update from Frankfurter using a Cron job.
+- Add new currency rates daily update from Frankfurter (ECB) by Cron job.
 - Updated the "Images Cleanup" Tool to also filter orphan dropship videos.
 - Updated the Product Review system in the Product page for better SEO. 
 - Updated the inefficient "Also Bought" query in Catalog model product.
