@@ -721,7 +721,7 @@ function setNotComplete(obj, init) {
 			$.get(href, {backorder: $(obj).val()}).done(function(data) { });
 		}
 
-		$(pick).attr('checked', false);
+		$(pick).prop('checked', false);
 		$(element).removeClass('staged');
 		$(element).removeClass('picked');
 		$(element).addClass('delayed');

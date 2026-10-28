@@ -884,7 +884,7 @@ class ModelSaleOrder extends Model {
 		$order_info = $this->getOrder($order_id);
 
 		// Send out any gift voucher mails
-		if ($this->config->get('config_complete_status_id') === $data['order_status_id']) {
+		if ((int)$this->config->get('config_complete_status_id') === (int)$data['order_status_id']) {
 			$this->load->model('sale/voucher');
 
 			$results = $this->getOrderVouchers($order_id);

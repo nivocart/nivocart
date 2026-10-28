@@ -178,7 +178,7 @@ $('input[name=\'category[]\']').on('change', function() {
 		dataType: 'json',
 		success: function(json) {
 			for (i = 0; i < json.length; i++) {
-				if ($(filter_category_id).attr('checked') == 'checked') {
+				if ($(filter_category_id).is(':checked')) {
 					$('#coupon-product' + json[i]['product_id']).remove();
 
 					$('#coupon-product').append('<div id="coupon-product' + json[i]['product_id'] + '">' + json[i]['name'] + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="coupon_product[]" value="' + json[i]['product_id'] + '" /></div>');
