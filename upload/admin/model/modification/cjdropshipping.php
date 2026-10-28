@@ -1073,7 +1073,7 @@ class ModelModificationCJDropshipping extends Model {
 		$total = (int)($count_query->row['total'] ?? 0);
 
 		if ($total === 0) {
-			return ['updated' => 0, 'errors' => [], 'total' => 0, 'processed' => 0, 'has_more' => false];
+			return ['updated' => 0, 'errors' => [], 'failed' => [], 'total' => 0, 'processed' => 0, 'has_more' => false];
 		}
 
 		// Fetch a sorted slice of distinct PIDs for this batch.
@@ -1088,20 +1088,23 @@ class ModelModificationCJDropshipping extends Model {
 		);
 
 		if (!is_object($pid_query) || empty($pid_query->rows)) {
-			return ['updated' => 0, 'errors' => [], 'total' => $total, 'processed' => 0, 'has_more' => false];
+			return ['updated' => 0, 'errors' => [], 'failed' => [], 'total' => $total, 'processed' => 0, 'has_more' => false];
 		}
 
 		$pids = array_column($pid_query->rows, 'supplier_pid');
 
 		$updated = 0;
 		$errors = [];
+		$failed = [];
+		$removed = [];
 
 		foreach ($pids as $pid) {
-			// Fetch all active variants for this parent PID.
+			// Fetch all active variants for this parent PID (model = the CJ SKU shown in the product lists).
 			$variants_query = $this->db->query(
-				"SELECT dv.`variant_id`, dv.`supplier_sku`
+				"SELECT dv.`variant_id`, dv.`supplier_sku`, p.`model`
 				 FROM `" . DB_PREFIX . "dropship_variant` dv
 				 INNER JOIN `" . DB_PREFIX . "product_dropship` pd ON dv.`dropship_id` = pd.`dropship_id`
+				 LEFT JOIN `" . DB_PREFIX . "product` p ON dv.`product_id` = p.`product_id`
 				 WHERE pd.`supplier_pid` = '" . $this->db->escape($pid) . "'
 				   AND dv.`channel_id` = '" . (int)$channel_id . "'
 				   AND dv.`is_active` = '1'"
@@ -1111,11 +1114,13 @@ class ModelModificationCJDropshipping extends Model {
 				continue;
 			}
 
-			// Build SKU → variant_id lookup for this PID.
+			// Build SKU → variant_id lookup for this PID, and the list of store models.
 			$skuMap = [];
+			$models = [];
 
 			foreach ($variants_query->rows as $row) {
 				$skuMap[$row['supplier_sku']] = (int)$row['variant_id'];
+				$models[] = ($row['model'] !== null && $row['model'] !== '') ? $row['model'] : $row['supplier_sku'];
 			}
 
 			try {
@@ -1145,8 +1150,32 @@ class ModelModificationCJDropshipping extends Model {
 			} catch (\Exception $e) {
 				$this->log->write('CJDropshipping syncPrices PID ' . $pid . ': ' . $e->getMessage());
 				$errors[] = 'PID ' . $pid . ': ' . $e->getMessage();
+
+				// Structured copy for the dashboard: PID, CJ SKUs (product models), CJ code and message.
+				$code = '';
+				$message = $e->getMessage();
+
+				if (preg_match('/API error (\d+): (.*)$/s', $message, $match)) {
+					$code = $match[1];
+					$message = trim(preg_replace('/,\s*pid:\S+\s*$/', '', $match[2]));
+				}
+
+				$failed[] = [
+					'pid'     => (string)$pid,
+					'skus'    => $models,
+					'code'    => $code,
+					'message' => $message
+				];
+
+				// 1602002 = product permanently removed from CJ shelves.
+				if ($code === self::CODE_REMOVED) {
+					$removed[] = (string)$pid;
+				}
 			}
 		}
+
+		// A run starts at offset 0: forget the removed list from earlier runs for this channel.
+		$this->saveRemovedPids($channel_id, $removed, $offset === 0);
 
 		$processed = count($pids);
 		$has_more = ($offset + $processed) < $total;
@@ -1154,6 +1183,7 @@ class ModelModificationCJDropshipping extends Model {
 		return [
 			'updated'   => $updated,
 			'errors'    => $errors,
+			'failed'    => $failed,
 			'total'     => $total,
 			'processed' => $processed,
 			'has_more'  => $has_more,
@@ -1998,6 +2028,135 @@ class ModelModificationCJDropshipping extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_variant` WHERE `product_id` IN (" . $ids . ")");
 
 		return $deleted;
+	}
+
+	// =================================================================
+	// REMOVED FROM SHELVES (CJ error 1602002)
+	// =================================================================
+
+	const CODE_REMOVED = '1602002';
+
+	const REMOVED_SETTING_GROUP = 'cjd_removed';
+	const REMOVED_SETTING_KEY = 'cjd_removed_pids';
+
+	/**
+	 * Load the saved map channel_id => [PIDs] found "removed from shelves" by the last price sync.
+	 */
+	private function loadRemovedPids(): array {
+		$query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '0' AND `group` = '" . self::REMOVED_SETTING_GROUP . "' AND `key` = '" . self::REMOVED_SETTING_KEY . "'");
+
+		if (!is_object($query) || !$query->num_rows) {
+			return [];
+		}
+
+		$map = json_decode($query->row['value'], true);
+
+		return is_array($map) ? $map : [];
+	}
+
+	private function storeRemovedPids(array $map): void {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '0' AND `group` = '" . self::REMOVED_SETTING_GROUP . "' AND `key` = '" . self::REMOVED_SETTING_KEY . "'");
+
+		if ($map) {
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = '" . self::REMOVED_SETTING_GROUP . "', `key` = '" . self::REMOVED_SETTING_KEY . "', `value` = '" . $this->db->escape(json_encode($map)) . "', `serialized` = '0'");
+		}
+	}
+
+	/**
+	 * Remember the PIDs a price sync batch found removed from the CJ shelves.
+	 *
+	 * @param bool $reset  true on the first batch of a run: start the list again for this channel.
+	 */
+	private function saveRemovedPids(int $channel_id, array $pids, bool $reset): void {
+		if (!$reset && !$pids) {
+			return;
+		}
+
+		$map = $this->loadRemovedPids();
+		$current = $reset ? [] : ($map[$channel_id] ?? []);
+
+		$map[$channel_id] = array_values(array_unique(array_merge($current, $pids)));
+
+		if (!$map[$channel_id]) {
+			unset($map[$channel_id]);
+		}
+
+		$this->storeRemovedPids($map);
+	}
+
+	/**
+	 * Products (one per CJ variant) linked to the PIDs the last price sync found removed from the shelves.
+	 * Each row: product_id, model (CJ SKU), product_name, supplier_pid, channel_id.
+	 */
+	public function getRemovedProducts(): array {
+		$rows = [];
+
+		foreach ($this->loadRemovedPids() as $channel_id => $pids) {
+			$pids = array_filter(array_map('strval', (array)$pids), 'strlen');
+
+			if (!$pids) {
+				continue;
+			}
+
+			$in = "'" . implode("','", array_map([$this->db, 'escape'], $pids)) . "'";
+
+			$query = $this->db->query(
+				"SELECT p.`product_id`, p.`model`, COALESCE(pdesc.`name`, '') AS product_name, pd.`supplier_pid`, dv.`channel_id`
+				 FROM `" . DB_PREFIX . "dropship_variant` dv
+				 INNER JOIN `" . DB_PREFIX . "product_dropship` pd ON dv.`dropship_id` = pd.`dropship_id`
+				 INNER JOIN `" . DB_PREFIX . "product` p ON dv.`product_id` = p.`product_id`
+				 LEFT JOIN `" . DB_PREFIX . "product_description` pdesc ON p.`product_id` = pdesc.`product_id` AND pdesc.`language_id` = '" . (int)$this->config->get('config_language_id') . "'
+				 WHERE dv.`channel_id` = '" . (int)$channel_id . "'
+				   AND pd.`supplier_pid` IN (" . $in . ")
+				 ORDER BY pd.`supplier_pid` ASC, p.`model` ASC"
+			);
+
+			if (is_object($query)) {
+				$rows = array_merge($rows, $query->rows);
+			}
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * Delete every product returned by getRemovedProducts() with the standard catalogue delete,
+	 * then its dropship mapping rows. The saved list is cleared afterwards.
+	 *
+	 * @return int  Number of products deleted.
+	 */
+	public function purgeRemovedProducts(): int {
+		$rows = $this->getRemovedProducts();
+
+		if (!$rows) {
+			$this->storeRemovedPids([]);
+
+			return 0;
+		}
+
+		$this->load->model('catalog/product');
+
+		$ids = [];
+
+		foreach ($rows as $row) {
+			$ids[(int)$row['product_id']] = true;
+		}
+
+		$ids = array_keys($ids);
+
+		foreach ($ids as $product_id) {
+			$this->model_catalog_product->deleteProduct($product_id);
+		}
+
+		$in = implode(',', $ids);
+
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "dropship_variant` WHERE `product_id` IN (" . $in . ")");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_dropship` WHERE `product_id` IN (" . $in . ")");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_variant` WHERE `product_id` IN (" . $in . ")");
+
+		$this->storeRemovedPids([]);
+
+		return count($ids);
 	}
 
 	// =================================================================

@@ -190,6 +190,17 @@ $_['text_purge_dup_complete']        = 'Purge complete: %s duplicate product(s) 
 $_['text_purge_dup_none']            = 'No duplicate products found &mdash; all clean!';
 $_['text_purge_dup_sample']          = 'First %s flagged (to be deleted):';
 
+// Price sync: products CJ no longer lists
+$_['text_price_failed']              = '%s CJ product(s) could not be updated:';
+$_['text_price_failed_sku']          = 'CJ SKU: %s';
+$_['text_price_failed_more']         = '+%s more';
+$_['button_purge_removed']           = 'Delete Removed Products';
+$_['text_purge_removed_confirm']     = 'This will permanently delete these products, which CJDropshipping has removed from its shelves, from your catalogue. The list comes from the last Manual Sync Prices run. Continue?';
+$_['text_purge_removed_found']       = '%s product(s) found that CJDropshipping has removed from its shelves.';
+$_['text_purge_removed_complete']    = 'Purge complete: %s product(s) deleted.';
+$_['text_purge_removed_none']        = 'No removed products found. Run Sync Prices first: products CJDropshipping has removed from its shelves are listed after the sync.';
+$_['text_purge_removed_sample']      = 'First %s listed (CJ SKU, name, PID):';
+
 // Stock Sync Cron Job
 $_['tab_cron']                       = 'Stock Sync Cron Job';
 $_['text_cron_info']                 = 'Keeps stock availability accurate every day without anyone clicking Sync Stock. Add the cron job below at your hosting provider (in your hosting control panel, usually under Cron Jobs). It syncs every active CJDropshipping channel, one variant at a time, and records the result here and in the server log.';

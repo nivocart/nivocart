@@ -182,6 +182,7 @@
         <div class="dashboard-content">
           <div id="purge-result" hidden></div>
           <div id="purge-dup-result" hidden></div>
+          <div id="purge-removed-result" hidden></div>
           <table class="form">
             <tr>
               <td><?php echo $text_purge_confirm; ?></td>
@@ -190,6 +191,10 @@
             <tr>
               <td><?php echo $text_purge_dup_confirm; ?></td>
               <td><a id="button-purge-dup" class="button-form ripple"><?php echo $button_purge_duplicates; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $text_purge_removed_confirm; ?></td>
+              <td><a id="button-purge-removed" class="button-form ripple"><?php echo $button_purge_removed; ?></a></td>
             </tr>
           </table>
         </div>
@@ -391,6 +396,29 @@ function request(url, callback, failId) {
 
 function channelId(selectId) {
 	return parseInt($('#' + selectId).val(), 10) || 0;
+}
+
+// Price sync failures: one numbered line per CJ product (PID), with its CJ SKUs (store models)
+function failedList(failed) {
+	if (!failed || !failed.length) {
+		return '';
+	}
+
+	var html = '<br />' + fmt(cj.text.text_price_failed, failed.length) + '<ol>';
+
+	for (var i = 0; i < failed.length; i++) {
+		var f = failed[i];
+		var skus = f.skus || [];
+		var shown = skus.slice(0, 5).map(htmlEsc).join(', ');
+
+		if (skus.length > 5) {
+			shown += ' ' + fmt(cj.text.text_price_failed_more, skus.length - 5);
+		}
+
+		html += '<li>PID ' + htmlEsc(f.pid) + ' &mdash; ' + fmt(cj.text.text_price_failed_sku, shown) + ' &mdash; ' + htmlEsc(f.message) + (f.code ? ' (' + htmlEsc(f.code) + ')' : '') + '</li>';
+	}
+
+	return html + '</ol>';
 }
 
 function withErrors(message, errors) {
@@ -803,7 +831,9 @@ function priceSyncPage() {
 			s.grandTotal = res.total;
 		}
 
-		if (res.errors && res.errors.length) {
+		if (res.failed && res.failed.length) {
+			s.allFailed = s.allFailed.concat(res.failed);
+		} else if (res.errors && res.errors.length) {
 			s.allErrors = s.allErrors.concat(res.errors);
 		}
 
@@ -822,7 +852,7 @@ function priceSyncPage() {
 		} else {
 			progressDone();
 
-			showResult(withErrors(fmt(cj.text.text_price_sync_complete, progress), s.allErrors), s.allErrors.length ? 'warning' : 'success');
+			showResult(htmlEsc(fmt(cj.text.text_price_sync_complete, progress)) + failedList(s.allFailed) + withErrors('', s.allErrors),(s.allFailed.length || s.allErrors.length) ? 'warning' : 'success');
 
 			setSyncBusy(false);
 
@@ -842,7 +872,7 @@ $('#button-sync-prices').on('click', function() {
 
 	setSyncBusy(true);
 
-	priceSyncState = { channelId: id, offset: 0, totalUpdated: 0, grandTotal: 0, allErrors: [] };
+	priceSyncState = { channelId: id, offset: 0, totalUpdated: 0, grandTotal: 0, allErrors: [], allFailed: [] };
 
 	progressInit();
 	showResult(cj.text.text_loading, 'tooltip');
@@ -1041,12 +1071,16 @@ function purgeFlow(opts) {
 		var content = fmt(opts.textFound, count);
 
 		if (res.sample && res.sample.length) {
-			content += '<br /><small><b>' + fmt(cj.text.text_purge_dup_sample, res.sample.length) + '</b><ul>';
+			content += '<br /><small><b>' + fmt(opts.textSample || cj.text.text_purge_dup_sample, res.sample.length) + '</b><ul>';
 
 			for (var i = 0; i < res.sample.length; i++) {
 				var item = res.sample[i];
 
-				content += '<li>#' + htmlEsc(item.product_id) + ' &mdash; ' + htmlEsc(item.product_name || item.supplier_sku) + ' (VID: ' + htmlEsc(item.supplier_vid) + ')</li>';
+				if (opts.sampleLine) {
+					content += '<li>' + opts.sampleLine(item) + '</li>';
+				} else {
+					content += '<li>#' + htmlEsc(item.product_id) + ' &mdash; ' + htmlEsc(item.product_name || item.supplier_sku) + ' (VID: ' + htmlEsc(item.supplier_vid) + ')</li>';
+				}
 			}
 
 			content += '</ul></small>';
@@ -1096,6 +1130,24 @@ $('#button-purge-stale').on('click', function() {
 		textFound: cj.text.text_purge_found,
 		textConfirm: cj.text.text_purge_confirm,
 		textComplete: cj.text.text_purge_complete
+	});
+});
+
+$('#button-purge-removed').on('click', function() {
+	purgeFlow({
+		resultId: 'purge-removed-result',
+		countUrl: cj.url.count_removed,
+		purgeUrl: cj.url.purge_removed,
+		title: cj.text.button_purge_removed,
+		textNone: cj.text.text_purge_removed_none,
+		textFound: cj.text.text_purge_removed_found,
+		textConfirm: cj.text.text_purge_removed_confirm,
+		textComplete: cj.text.text_purge_removed_complete,
+		textSample: cj.text.text_purge_removed_sample,
+		topResult: true,
+		sampleLine: function(item) {
+			return '<b>' + htmlEsc(item.model) + '</b> &mdash; ' + htmlEsc(item.product_name) + ' (PID: ' + htmlEsc(item.supplier_pid) + ')';
+		}
 	});
 });
 

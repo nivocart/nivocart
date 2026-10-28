@@ -145,6 +145,8 @@ class ControllerModificationCJDropshipping extends Controller {
 			'count_orphan'   => 'countOrphans',
 			'purge_dup'      => 'purgeDuplicates',
 			'count_dup'      => 'countDuplicates',
+			'count_removed'  => 'countRemoved',
+			'purge_removed'  => 'purgeRemoved',
 			'orders'         => 'getOrders',
 			'dispatch'       => 'dispatchOrder',
 			'tracking_email' => 'sendTrackingEmail'
@@ -184,6 +186,7 @@ class ControllerModificationCJDropshipping extends Controller {
 			'text_products_maintenance',
 			'button_purge_stale', 'text_purge_confirm',
 			'button_purge_duplicates', 'text_purge_dup_confirm',
+			'button_purge_removed', 'text_purge_removed_confirm',
 			'text_prev', 'text_next',
 			'tab_cron', 'text_cron_info', 'text_cron_schedule', 'text_cron_command', 'text_cron_note',
 			'text_cron_last_run', 'text_cron_never', 'text_cron_success', 'text_cron_error'
@@ -208,6 +211,9 @@ class ControllerModificationCJDropshipping extends Controller {
 			'text_purge_dup_none', 'text_purge_dup_found', 'text_purge_dup_complete',
 			'text_purge_dup_sample', 'text_purge_confirm', 'text_purge_dup_confirm',
 			'button_purge_stale', 'button_purge_duplicates', 'button_purge_confirm', 'button_cancel',
+			'text_price_failed', 'text_price_failed_sku', 'text_price_failed_more',
+			'text_purge_removed_none', 'text_purge_removed_found', 'text_purge_removed_complete',
+			'text_purge_removed_sample', 'text_purge_removed_confirm', 'button_purge_removed',
 			'button_dispatch', 'button_email_tracking', 'button_test_connection',
 			'text_add_channel', 'text_edit_channel', 'button_delete',
 			'error_channel_id', 'error_sync_failed', 'error_ajax'
@@ -597,6 +603,7 @@ class ControllerModificationCJDropshipping extends Controller {
 				'success'   => true,
 				'updated'   => $result['updated'],
 				'errors'    => $result['errors'],
+				'failed'    => $result['failed'],
 				'total'     => $result['total'],
 				'processed' => $result['processed'],
 				'has_more'  => $result['has_more'],
@@ -1101,6 +1108,60 @@ class ControllerModificationCJDropshipping extends Controller {
 			$this->jsonResponse(['success' => true, 'deleted' => $deleted]);
 		} catch (\Throwable $e) {
 			$this->jsonResponse(['error' => 'purgeDuplicates error: ' . $e->getMessage()]);
+		}
+	}
+
+	// =================================================================
+	// PURGE PRODUCTS REMOVED FROM CJ SHELVES
+	// =================================================================
+
+	/**
+	 * AJAX: list the products linked to the PIDs the last price sync found
+	 * "removed from shelves" (CJ error 1602002). Returns JSON.
+	 */
+	public function countRemoved(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/cjdropshipping');
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if ($this->tablesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_database')]);
+			return;
+		}
+
+		$rows = $this->model_modification_cjdropshipping->getRemovedProducts();
+
+		$this->jsonResponse(['count' => count($rows), 'sample' => array_slice($rows, 0, 50)]);
+	}
+
+	/**
+	 * AJAX: delete the products listed by countRemoved(). Returns JSON.
+	 */
+	public function purgeRemoved(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/cjdropshipping');
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if ($this->tablesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_database')]);
+			return;
+		}
+
+		try {
+			$deleted = $this->model_modification_cjdropshipping->purgeRemovedProducts();
+			$this->jsonResponse(['success' => true, 'deleted' => $deleted]);
+		} catch (\Throwable $e) {
+			$this->jsonResponse(['error' => 'purgeRemoved error: ' . $e->getMessage()]);
 		}
 	}
 
