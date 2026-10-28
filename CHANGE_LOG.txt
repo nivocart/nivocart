@@ -13,6 +13,7 @@ Release: TBA
 - Add support for product videos when using CJDropshipping Modification.
 - Add new dropship "Sync Videos" button feature in CJDropshipping Dashboard.
 - Add new currency rates daily update from Frankfurter (ECB) by Cron job.
+- Fix bug in Admin Order Form History update not sending "noreply" emails.
 - Updated the security protocols for API Key Manager tool to act as a vault.
 - Updated the "Images Cleanup" Tool to also filter orphan dropship videos.
 - Updated the Product Review system in the Product page for better SEO. 
