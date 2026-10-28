@@ -64,6 +64,9 @@ foreach ($query->rows as $setting) {
 	}
 }
 
+// Mail (SMTP details from Settings > Mail, used by every Mail object)
+Mail::configure($config);
+
 // Url
 $config->set('config_url', HTTP_SERVER);
 $config->set('config_ssl', HTTPS_SERVER);

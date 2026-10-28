@@ -1945,6 +1945,72 @@
       <div id="tab-mail">
         <table class="form">
           <tr>
+            <td><?php echo $entry_mail_protocol; ?><span class="help"><?php echo $help_mail_protocol; ?></span></td>
+            <td><select name="config_mail_protocol">
+            <?php if ($config_mail_protocol === 'smtp') { ?>
+              <option value="mail"><?php echo $text_mail_protocol_mail; ?></option>
+              <option value="smtp" selected="selected"><?php echo $text_mail_protocol_smtp; ?></option>
+            <?php } else { ?>
+              <option value="mail" selected="selected"><?php echo $text_mail_protocol_mail; ?></option>
+              <option value="smtp"><?php echo $text_mail_protocol_smtp; ?></option>
+            <?php } ?>
+            </select></td>
+          </tr>
+          <tr class="smtp-option">
+            <td><span class="required">*</span> <?php echo $entry_mail_smtp_hostname; ?><span class="help"><?php echo $help_mail_smtp_hostname; ?></span></td>
+            <td><?php if ($error_mail_smtp_hostname) { ?>
+              <input type="text" name="config_mail_smtp_hostname" value="<?php echo $config_mail_smtp_hostname; ?>" size="30" autocomplete="off" class="input-error" />
+              <span class="error"><?php echo $error_mail_smtp_hostname; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_mail_smtp_hostname" value="<?php echo $config_mail_smtp_hostname; ?>" size="30" autocomplete="off" />
+            <?php } ?></td>
+          </tr>
+          <tr class="smtp-option">
+            <td><span class="required">*</span> <?php echo $entry_mail_smtp_username; ?><span class="help"><?php echo $help_mail_smtp_username; ?></span></td>
+            <td><?php if ($error_mail_smtp_username) { ?>
+              <input type="text" name="config_mail_smtp_username" value="<?php echo $config_mail_smtp_username; ?>" size="40" autocomplete="off" class="input-error" />
+              <span class="error"><?php echo $error_mail_smtp_username; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_mail_smtp_username" value="<?php echo $config_mail_smtp_username; ?>" size="40" autocomplete="off" />
+            <?php } ?></td>
+          </tr>
+          <tr class="smtp-option">
+            <td><span class="required">*</span> <?php echo $entry_mail_smtp_password; ?><span class="help"><?php echo $help_mail_smtp_password; ?></span></td>
+            <td><?php if ($error_mail_smtp_password) { ?>
+              <input type="password" name="config_mail_smtp_password" value="" size="30" autocomplete="new-password" class="input-error" />
+              <span class="error"><?php echo $error_mail_smtp_password; ?></span>
+            <?php } else { ?>
+              <input type="password" name="config_mail_smtp_password" value="" size="30" autocomplete="new-password" />
+            <?php } ?></td>
+          </tr>
+          <tr class="smtp-option">
+            <td><span class="required">*</span> <?php echo $entry_mail_smtp_port; ?><span class="help"><?php echo $help_mail_smtp_port; ?></span></td>
+            <td><?php if ($error_mail_smtp_port) { ?>
+              <input type="text" name="config_mail_smtp_port" value="<?php echo $config_mail_smtp_port; ?>" size="6" autocomplete="off" class="input-error" />
+              <span class="error"><?php echo $error_mail_smtp_port; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_mail_smtp_port" value="<?php echo $config_mail_smtp_port; ?>" size="6" autocomplete="off" />
+            <?php } ?></td>
+          </tr>
+          <tr class="smtp-option">
+            <td><?php echo $entry_mail_smtp_encryption; ?><span class="help"><?php echo $help_mail_smtp_encryption; ?></span></td>
+            <td><select name="config_mail_smtp_encryption">
+            <?php foreach (['ssl' => $text_mail_encryption_ssl, 'tls' => $text_mail_encryption_tls, 'none' => $text_mail_encryption_none] as $value => $title) { ?>
+              <?php if ($config_mail_smtp_encryption === $value) { ?>
+                <option value="<?php echo $value; ?>" selected="selected"><?php echo $title; ?></option>
+              <?php } else { ?>
+                <option value="<?php echo $value; ?>"><?php echo $title; ?></option>
+              <?php } ?>
+            <?php } ?>
+            </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_mail_test; ?><span class="help"><?php echo $help_mail_test; ?></span></td>
+            <td><input type="text" name="test_email" value="<?php echo $config_email; ?>" size="40" /> &nbsp;
+              <a id="button-mail-test" class="button button-align ripple"><i class="fa fa-envelope"></i> &nbsp; <?php echo $button_mail_test; ?></a>
+              <div id="mail-test-result"></div></td>
+          </tr>
+          <tr>
             <td><?php echo $entry_mail_parameter; ?><span class="help"><?php echo $help_mail_parameter; ?></span></td>
             <td><input type="text" name="config_mail_parameter" value="<?php echo $config_mail_parameter; ?>" size="30" /></td>
           </tr>
@@ -2380,6 +2446,41 @@ function image_upload(field, thumb) {
 		modal: false
 	});
 };
+//--></script>
+
+<script type="text/javascript"><!--
+// Mail tab: show the SMTP rows only when SMTP is selected, and send a test email with the values on screen.
+$('select[name=\'config_mail_protocol\']').on('change', function() {
+	$('.smtp-option').toggle(this.value === 'smtp');
+}).trigger('change');
+
+$('#button-mail-test').on('click', function() {
+	$.ajax({
+		url: 'index.php?route=setting/setting/testmail&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: $('#tab-mail :input').serialize(),
+		beforeSend: function() {
+			$('#button-mail-test').after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
+			$('#mail-test-result').empty();
+		},
+		complete: function() {
+			$('.wait').remove();
+		},
+		success: function(json) {
+			if (json['error']) {
+				$('#mail-test-result').append($('<div class="warning"></div>').text(json['error']));
+			}
+
+			if (json['success']) {
+				$('#mail-test-result').append($('<div class="success"></div>').text(json['success']));
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			$('#mail-test-result').append($('<div class="warning"></div>').text(thrownError + ' ' + xhr.statusText));
+		}
+	});
+});
 //--></script>
 
 <script type="text/javascript"><!--

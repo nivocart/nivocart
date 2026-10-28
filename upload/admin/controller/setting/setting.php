@@ -24,7 +24,8 @@ class ControllerSettingSetting extends Controller {
 		'text_image_manager', 'text_browse', 'text_clear', 'text_shipping',
 		'text_payment', 'text_mail', 'text_verification', 'text_analytic',
 		'text_security', 'text_search_page', 'text_block_page', 'text_upload',
-		'text_home',
+		'text_home', 'text_mail_protocol_mail', 'text_mail_protocol_smtp', 'text_mail_encryption_ssl',
+		'text_mail_encryption_tls', 'text_mail_encryption_none',
 		// Info
 		'info_meta_name',
 		// Tabs
@@ -84,6 +85,9 @@ class ControllerSettingSetting extends Controller {
 		'entry_label_offer', 'entry_ftp_status',
 		'entry_ftp_host', 'entry_ftp_port', 'entry_ftp_username',
 		'entry_ftp_password', 'entry_ftp_root', 'entry_mail_parameter',
+		'entry_mail_protocol', 'entry_mail_smtp_hostname', 'entry_mail_smtp_username',
+		'entry_mail_smtp_password', 'entry_mail_smtp_port', 'entry_mail_smtp_encryption',
+		'entry_mail_test',
 		'entry_alert_mail', 'entry_account_mail', 'entry_alert_emails',
 		'entry_facebook', 'entry_twitter', 'entry_tiktok', 'entry_pinterest',
 		'entry_instagram', 'entry_teams', 'entry_sharethis', 'entry_meta_google',
@@ -131,6 +135,9 @@ class ControllerSettingSetting extends Controller {
 		'help_image_wishlist', 'help_image_newsthumb', 'help_image_newspopup',
 		'help_image_cart', 'help_label_size_ratio', 'help_label_stock',
 		'help_label_offer', 'help_ftp_root',
+		'help_mail_protocol', 'help_mail_smtp_hostname', 'help_mail_smtp_username',
+		'help_mail_smtp_password', 'help_mail_smtp_port', 'help_mail_smtp_encryption',
+		'help_mail_test',
 		'help_mail_parameter', 'help_account_mail', 'help_alert_mail',
 		'help_alert_emails', 'help_sharethis', 'help_meta_google', 'help_meta_bing',
 		'help_meta_yandex', 'help_meta_baidu', 'help_meta_pinterest', 'help_google_analytics',
@@ -140,7 +147,7 @@ class ControllerSettingSetting extends Controller {
 		'help_password', 'help_ban_page',
 		'help_file_max_size', 'help_file_extension_allowed', 'help_file_mime_allowed',
 		// Buttons
-		'button_themes', 'button_save', 'button_apply', 'button_cancel',
+		'button_themes', 'button_mail_test', 'button_save', 'button_apply', 'button_cancel',
 		// Date formats
 		'date_format_short', 'date_format_long',
 	];
@@ -319,6 +326,11 @@ class ControllerSettingSetting extends Controller {
 		'config_file_extension_allowed' => [],
 		'config_file_mime_allowed'      => [],
 		// Mail
+		'config_mail_protocol'    => ['default' => 'mail'],
+		'config_mail_smtp_hostname' => ['default' => 'smtp.hostinger.com'],
+		'config_mail_smtp_username' => [],
+		'config_mail_smtp_port'   => ['default' => 465],
+		'config_mail_smtp_encryption' => ['default' => 'ssl'],
 		'config_mail_parameter'   => [],
 		'config_alert_mail'       => [],
 		'config_account_mail'     => [],
@@ -368,7 +380,8 @@ class ControllerSettingSetting extends Controller {
 		'image_related', 'image_compare', 'image_wishlist', 'image_newsthumb',
 		'image_newspopup', 'image_cart', 'ftp_host', 'ftp_port', 'ftp_username',
 		'ftp_password', 'error_filename', 'file_max_size', 'mail_filename',
-		'quote_filename', 'encryption',
+		'quote_filename', 'encryption', 'mail_smtp_hostname', 'mail_smtp_username',
+		'mail_smtp_password', 'mail_smtp_port',
 	];
 
 	// ────────────────────────────────────────────────────────────────────────
@@ -410,6 +423,11 @@ class ControllerSettingSetting extends Controller {
 		}
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
+
+			// The SMTP password field is never filled in, so a blank field means keep the saved password
+			if (empty($this->request->post['config_mail_smtp_password'])) {
+				$this->request->post['config_mail_smtp_password'] = (string)$this->config->get('config_mail_smtp_password');
+			}
 
 			$this->model_setting_setting->editSetting('config', $this->request->post);
 
@@ -736,6 +754,7 @@ class ControllerSettingSetting extends Controller {
 			'preference' => $this->validatePreference(),
 			'image'      => $this->validateImage(),
 			'ftp'        => $this->validateFtp(),
+			'mail'       => $this->validateMail(),
 			'server'     => $this->validateServer(),
 			default      => null,
 		};
@@ -827,6 +846,32 @@ class ControllerSettingSetting extends Controller {
 		}
 	}
 
+	private function validateMail(): void {
+		$post = $this->request->post;
+
+		if (($post['config_mail_protocol'] ?? 'mail') !== 'smtp') {
+			return;
+		}
+
+		if (empty(trim($post['config_mail_smtp_hostname'] ?? ''))) {
+			$this->error['mail_smtp_hostname'] = $this->language->get('error_mail_smtp_hostname');
+		}
+
+		if (!filter_var(trim($post['config_mail_smtp_username'] ?? ''), FILTER_VALIDATE_EMAIL)) {
+			$this->error['mail_smtp_username'] = $this->language->get('error_mail_smtp_username');
+		}
+
+		if (empty($post['config_mail_smtp_password']) && !$this->config->get('config_mail_smtp_password')) {
+			$this->error['mail_smtp_password'] = $this->language->get('error_mail_smtp_password');
+		}
+
+		$port = (int)($post['config_mail_smtp_port'] ?? 0);
+
+		if (($port < 1) || ($port > 65535)) {
+			$this->error['mail_smtp_port'] = $this->language->get('error_mail_smtp_port');
+		}
+	}
+
 	private function validateServer(): void {
 		$post = $this->request->post;
 
@@ -877,6 +922,75 @@ class ControllerSettingSetting extends Controller {
 	}
 
 	// ─── AJAX endpoints ───────────────────────────────────────────────────────
+
+	/**
+	 * Send a test email with the Mail settings currently shown in the form (they do not have to be saved).
+	 */
+	public function testmail(): void {
+		$this->language->load('setting/setting');
+
+		$json = [];
+
+		$post = $this->request->post;
+
+		$to = trim($post['test_email'] ?? '');
+
+		if (!$this->user->hasPermission('modify', 'setting/setting')) {
+			$json['error'] = $this->language->get('error_permission');
+		} elseif (!emailIsValid($to, 96)) {
+			$json['error'] = $this->language->get('error_email');
+		} else {
+			$settings = ['protocol' => 'mail', 'smtp_fallback' => false];
+
+			if (($post['config_mail_protocol'] ?? 'mail') === 'smtp') {
+				$hostname = trim($post['config_mail_smtp_hostname'] ?? '');
+				$username = trim($post['config_mail_smtp_username'] ?? '');
+				$password = !empty($post['config_mail_smtp_password']) ? $post['config_mail_smtp_password'] : $this->config->get('config_mail_smtp_password');
+				$password = html_entity_decode((string)$password, ENT_QUOTES, 'UTF-8');
+
+				if (($hostname === '') || ($username === '') || ($password === '')) {
+					$json['error'] = $this->language->get('error_mail_smtp_incomplete');
+				} else {
+					$encryption = $post['config_mail_smtp_encryption'] ?? 'none';
+
+					if (in_array($encryption, ['ssl', 'tls'], true)) {
+						$hostname = $encryption . '://' . $hostname;
+					}
+
+					$settings = [
+						'protocol'      => 'smtp',
+						'smtp_hostname' => $hostname,
+						'smtp_username' => $username,
+						'smtp_password' => $password,
+						'smtp_port'     => (int)($post['config_mail_smtp_port'] ?? 465),
+						'smtp_timeout'  => 10,
+						'smtp_fallback' => false
+					];
+				}
+			}
+
+			if (!$json) {
+				$store_name = html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
+
+				try {
+					$mail = new Mail($settings);
+					$mail->setTo($to);
+					$mail->setFrom($this->config->get('config_email'));
+					$mail->setSender($store_name);
+					$mail->setSubject(sprintf($this->language->get('text_mail_test_subject'), $store_name));
+					$mail->setText(sprintf($this->language->get('text_mail_test_body'), $store_name));
+					$mail->send();
+
+					$json['success'] = sprintf($this->language->get('text_mail_test_success'), $to);
+				} catch (\Exception $e) {
+					$json['error'] = $e->getMessage();
+				}
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
 
 	public function template(): void {
 		$server = $this->catalogBaseUrl();
