@@ -97,7 +97,7 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 
 				$total_data = array_merge($total_data, $contribution['total_data']);
 				$total += $contribution['total'];
-				$taxes += $contribution['taxes'];
+				$taxes = OrderTotalHelper::mergeTaxes($taxes, $contribution['taxes']);
 			}
 		}
 

@@ -118,10 +118,10 @@ class ModelCheckoutOffers extends Model {
 
 			$category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_product` WHERE offer_category_product_id = '" . (int)$result['offer_category_product_id'] . "'");
 
-			if ($product_query->num_rows) {
+			if ($category_query->num_rows) {
 				// Format discount values
-				$discount_type = $product_query->row['type'];
-				$discount_value = $product_query->row['discount'];
+				$discount_type = $category_query->row['type'];
+				$discount_value = $category_query->row['discount'];
 
 				if (($discount_type === 'P') && ($discount_value > 0)) {
 					$discount_value = round($discount_value, 0, PHP_ROUND_HALF_UP);
@@ -165,10 +165,10 @@ class ModelCheckoutOffers extends Model {
 
 			$category_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "offer_category_category` WHERE offer_category_category_id = '" . (int)$result['offer_category_category_id'] . "'");
 
-			if ($product_query->num_rows) {
+			if ($category_query->num_rows) {
 				// Format discount values
-				$discount_type = $product_query->row['type'];
-				$discount_value = $product_query->row['discount'];
+				$discount_type = $category_query->row['type'];
+				$discount_value = $category_query->row['discount'];
 
 				if (($discount_type === 'P') && ($discount_value > 0)) {
 					$discount_value = round($discount_value, 0, PHP_ROUND_HALF_UP);

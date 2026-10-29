@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Fix some Tax calculations issues in the shopping Cart and at Checkout.
+
 
 NivoCart v2.5.3
 ---------------

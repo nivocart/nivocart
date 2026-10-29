@@ -34,10 +34,7 @@ class ControllerTotalOffers extends Controller {
 		$this->data['text_no'] = $this->language->get('text_no');
 
 		$this->data['entry_status'] = $this->language->get('entry_status');
-		$this->data['entry_taxes'] = $this->language->get('entry_taxes');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-
-		$this->data['help_taxes'] = $this->language->get('help_taxes');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_apply'] = $this->language->get('button_apply');
@@ -76,12 +73,6 @@ class ControllerTotalOffers extends Controller {
 			$this->data['offers_status'] = $this->request->post['offers_status'];
 		} else {
 			$this->data['offers_status'] = $this->config->get('offers_status');
-		}
-
-		if (isset($this->request->post['offers_taxes'])) {
-			$this->data['offers_taxes'] = $this->request->post['offers_taxes'];
-		} else {
-			$this->data['offers_taxes'] = $this->config->get('offers_taxes');
 		}
 
 		if (isset($this->request->post['offers_sort_order'])) {

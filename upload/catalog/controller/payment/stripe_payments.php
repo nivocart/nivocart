@@ -287,7 +287,7 @@ class ControllerPaymentStripePayments extends Controller {
 				$contribution = $model->getTotal($taxes, $total);
 
 				$total += $contribution['total'];
-				$taxes += $contribution['taxes'];
+				$taxes = OrderTotalHelper::mergeTaxes($taxes, $contribution['taxes']);
 			}
 		}
 

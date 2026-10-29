@@ -33,6 +33,7 @@ class ControllerTotalGiftWrapping extends Controller {
 		$this->data['text_none'] = $this->language->get('text_none');
 
 		$this->data['entry_price'] = $this->language->get('entry_price');
+		$this->data['entry_tax_class'] = $this->language->get('entry_tax_class');
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
@@ -80,6 +81,16 @@ class ControllerTotalGiftWrapping extends Controller {
 		} else {
 			$this->data['gift_wrapping_price'] = $this->config->get('gift_wrapping_price');
 		}
+
+		if (isset($this->request->post['gift_wrapping_tax_class_id'])) {
+			$this->data['gift_wrapping_tax_class_id'] = $this->request->post['gift_wrapping_tax_class_id'];
+		} else {
+			$this->data['gift_wrapping_tax_class_id'] = $this->config->get('gift_wrapping_tax_class_id');
+		}
+
+		$this->load->model('localisation/tax_class');
+
+		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses([]);
 
 		if (isset($this->request->post['gift_wrapping_status'])) {
 			$this->data['gift_wrapping_status'] = $this->request->post['gift_wrapping_status'];

@@ -10,6 +10,7 @@ $_['text_disabled']         = 'Disabled';
 
 // Entry
 $_['entry_price']           = 'Price:<span class="help">Enter a Fixed price value without the currency symbol, and excluding tax.</span>';
+$_['entry_tax_class']       = 'Tax Class:';
 $_['entry_status']          = 'Status:';
 $_['entry_sort_order']      = 'Sort Order:';
 

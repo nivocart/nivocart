@@ -30,6 +30,19 @@
           <?php } ?></td>
         </tr>
         <tr>
+          <td><?php echo $entry_tax_class; ?></td>
+          <td><select name="gift_wrapping_tax_class_id">
+            <option value="0"><?php echo $text_none; ?></option>
+            <?php foreach ($tax_classes as $tax_class) { ?>
+              <?php if ($tax_class['tax_class_id'] === $gift_wrapping_tax_class_id) { ?>
+                <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+              <?php } else { ?>
+                <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+              <?php } ?>
+            <?php } ?>
+          </select></td>
+        </tr>
+        <tr>
           <td><?php echo $entry_sort_order; ?></td>
           <td><input type="text" name="gift_wrapping_sort_order" value="<?php echo $gift_wrapping_sort_order; ?>" size="1" /></td>
         </tr>

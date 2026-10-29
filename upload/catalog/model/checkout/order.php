@@ -204,7 +204,11 @@ class ModelCheckoutOrder extends Model {
 
 		unset($this->session->data['wrapping']);
 
-		if ($order_info && !$order_info['order_status_id']) {
+		// An order is unconfirmed until its first order_history row exists. addOrder() creates orders with a non-zero status,
+		// so the status can no longer be used to detect this, and it also prevents confirm() from running twice.
+		$confirmed_query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int)$order_id . "'");
+
+		if ($order_info && !(int)$confirmed_query->row['total']) {
 			// Auto Invoice Number
 			$auto_invoice = $this->config->get('config_auto_invoice');
 

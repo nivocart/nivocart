@@ -16,6 +16,13 @@ class ModelTotalGiftWrapping extends Model {
 		$this->language->load('total/gift_wrapping');
 
 		$price = (float)$this->config->get('gift_wrapping_price');
+		$new_taxes = [];
+
+		if ($this->config->get('gift_wrapping_tax_class_id')) {
+			foreach ($this->tax->getRates($price, $this->config->get('gift_wrapping_tax_class_id')) as $tax_rate) {
+				$new_taxes[$tax_rate['tax_rate_id']] = ($new_taxes[$tax_rate['tax_rate_id']] ?? 0) + $tax_rate['amount'];
+			}
+		}
 
 		return [
 			'total_data' => [[
@@ -26,7 +33,7 @@ class ModelTotalGiftWrapping extends Model {
 				'sort_order' => $this->config->get('gift_wrapping_sort_order')
 			]],
 			'total' => $price,
-			'taxes' => [],
+			'taxes' => $new_taxes,
 		];
 	}
 }

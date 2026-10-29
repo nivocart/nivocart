@@ -32,7 +32,6 @@ class ModelTotalOffers extends Model {
         }
 
         $products = $this->cart->getProducts();
-        $apply_taxes = (bool)$this->config->get('offers_taxes');
         $one_to_many = 0;
 
         usort($products, fn($a, $b) => $a['product_id'] <=> $b['product_id']);
@@ -55,14 +54,14 @@ class ModelTotalOffers extends Model {
                     $discountable_products[$i]['quantity']--;
                 }
 
+                $matched_product = null;
+
                 $item_discount = $this->matcher->matchDiscount(
                     $discountable_products[$i],
                     $discountable_products,
                     $already_discounted,
                     $one_to_many,
-                    $apply_taxes,
-                    $this->tax,
-                    $this->config
+                    $matched_product
                 );
 
                 if ($item_discount === 0.0) {
@@ -82,12 +81,11 @@ class ModelTotalOffers extends Model {
 
                 $discount_total += $item_discount;
 
-                if ($apply_taxes) {
-                    foreach ($discountable_products as $product) {
-                        if (!empty($product['tax_class_id']) && $product['total'] > 0) {
-                            foreach ($this->tax->getRates($product['total'], $product['tax_class_id']) as $tax_rate) {
-                                $tax_adjustments[$tax_rate['tax_rate_id']] = ($tax_adjustments[$tax_rate['tax_rate_id']] ?? 0) - $tax_rate['amount'];
-                            }
+                // The discount reduces the price paid, so the tax on it is taken off the tax total
+                if ($matched_product && !empty($matched_product['tax_class_id'])) {
+                    foreach ($this->tax->getRates($item_discount, $matched_product['tax_class_id']) as $tax_rate) {
+                        if ($tax_rate['type'] === 'P') {
+                            $tax_adjustments[$tax_rate['tax_rate_id']] = ($tax_adjustments[$tax_rate['tax_rate_id']] ?? 0) - $tax_rate['amount'];
                         }
                     }
                 }

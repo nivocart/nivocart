@@ -86,21 +86,21 @@ class OfferRule {
 	/**
 	 * calculate Discount
 	 *
+	 * Returns the discount for one unit of the product, excluding tax. The tax on the
+	 * discount is worked out by the order total model.
+	 *
 	 * @param array $product
-	 * @param bool  $apply_taxes
-	 * @param mixed $tax_service
-	 * @param mixed $config
 	 *
 	 * @return float
 	 */
-    public function calculateDiscount(array $product, bool $apply_taxes, mixed $tax_service, mixed $config): float {
+    public function calculateDiscount(array $product): float {
+        $price = (float)$product['price'];
+
         if ($this->type === '$') {
-            return ($apply_taxes && $this->amount > 0) ? (float)$tax_service->calculate($this->amount, $product['tax_class_id'], $config->get('config_tax')) : $this->amount;
+            return min($this->amount, $price);
         }
 
-        $base = $product['price'] * $this->amount;
-
-        return ($apply_taxes && $base > 0) ? (float)$tax_service->calculate($base, $product['tax_class_id'], $config->get('config_tax')) / 100 : $base;
+        return $price * $this->amount / 100;
     }
 }
 
@@ -158,13 +158,13 @@ class OfferMatcher {
 	 * @param array  &$discountable_products
 	 * @param array  &$already_discounted
 	 * @param int    $one_to_many
-	 * @param bool   $apply_taxes
-	 * @param mixed  $tax_service
-	 * @param mixed  $config
+	 * @param array|null $matched_product set to the product the discount was given on, null if none
 	 *
 	 * @return float
 	 */
-    public function matchDiscount(array $trigger_product, array &$discountable_products, array &$already_discounted, int $one_to_many, bool $apply_taxes, mixed $tax_service, mixed $config): float {
+    public function matchDiscount(array $trigger_product, array &$discountable_products, array &$already_discounted, int $one_to_many, ?array &$matched_product = null): float {
+        $matched_product = null;
+
         foreach ($this->rules as $rule) {
             if (!$rule->triggerMatches($trigger_product)) {
                 continue;
@@ -191,12 +191,9 @@ class OfferMatcher {
 
                 $discountable_products[$i]['quantity']--;
 
-                return $rule->calculateDiscount(
-                    $discountable_products[$i],
-                    $apply_taxes,
-                    $tax_service,
-                    $config
-                );
+                $matched_product = $discountable_products[$i];
+
+                return $rule->calculateDiscount($discountable_products[$i]);
             }
         }
 
