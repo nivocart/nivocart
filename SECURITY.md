@@ -6,7 +6,8 @@ Always use the latest release of NivoCart to report vulnerabilities.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 2.5.2   | ✅                |
+| 2.5.3   | ✅                |
+| 2.5.2   | ❌                |
 | 2.5.1   | ❌                |
 | 2.5.0   | ❌                |
 | < 4.0   | ❌                |
