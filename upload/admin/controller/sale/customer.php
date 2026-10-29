@@ -1675,7 +1675,7 @@ class ControllerSaleCustomer extends Controller {
 			];
 		}
 
-		$this->data['balance'] = $this->currency->format($this->model_sale_customer->getRewardTotal($this->request->get['customer_id']), $this->config->get('config_currency'));
+		$this->data['balance'] = $this->model_sale_customer->getRewardTotal($this->request->get['customer_id']);
 
 		$reward_total = $this->model_sale_customer->getTotalRewards($this->request->get['customer_id']);
 
