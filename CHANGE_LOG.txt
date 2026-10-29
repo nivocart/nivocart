@@ -4,9 +4,14 @@
 ---------------
 
 
-NivoCart v2.5.3
+NivoCart v2.X.X
 ---------------
 Release: TBA
+
+
+NivoCart v2.5.3
+---------------
+Release: 29/10/2026
 
 - Add new Google Merchant Feed for better Search Engine Optimisation.
 - Add new Product Review form inside Catalog Customer Account Dashboard.
