@@ -59,6 +59,12 @@ class ControllerCatalogProduct extends Controller {
 				$filter_quantity = null;
 			}
 
+			if (isset($this->request->get['filter_category_id'])) {
+				$filter_category_id = $this->request->get['filter_category_id'];
+			} else {
+				$filter_category_id = null;
+			}
+
 			if (isset($this->request->get['filter_status'])) {
 				$filter_status = $this->request->get['filter_status'];
 			} else {
@@ -66,14 +72,15 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			$page_url = array_filter([
-				'filter_name'     => $filter_name,
-				'filter_model'    => $filter_model,
-				'filter_price'    => $filter_price,
-				'filter_quantity' => $filter_quantity,
-				'filter_status'   => $filter_status,
-				'sort'            => $this->request->get['sort'] ?? null,
-				'order'           => $this->request->get['order'] ?? null,
-				'page'            => $this->request->get['page'] ?? null
+				'filter_name'        => $filter_name,
+				'filter_model'       => $filter_model,
+				'filter_price'       => $filter_price,
+				'filter_quantity'    => $filter_quantity,
+				'filter_category_id' => $filter_category_id,
+				'filter_status'      => $filter_status,
+				'sort'               => $this->request->get['sort'] ?? null,
+				'order'              => $this->request->get['order'] ?? null,
+				'page'               => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -137,6 +144,12 @@ class ControllerCatalogProduct extends Controller {
 				$filter_quantity = null;
 			}
 
+			if (isset($this->request->get['filter_category_id'])) {
+				$filter_category_id = $this->request->get['filter_category_id'];
+			} else {
+				$filter_category_id = null;
+			}
+
 			if (isset($this->request->get['filter_status'])) {
 				$filter_status = $this->request->get['filter_status'];
 			} else {
@@ -144,14 +157,15 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			$page_url = array_filter([
-				'filter_name'     => $filter_name,
-				'filter_model'    => $filter_model,
-				'filter_price'    => $filter_price,
-				'filter_quantity' => $filter_quantity,
-				'filter_status'   => $filter_status,
-				'sort'            => $this->request->get['sort'] ?? null,
-				'order'           => $this->request->get['order'] ?? null,
-				'page'            => $this->request->get['page'] ?? null
+				'filter_name'        => $filter_name,
+				'filter_model'       => $filter_model,
+				'filter_price'       => $filter_price,
+				'filter_quantity'    => $filter_quantity,
+				'filter_category_id' => $filter_category_id,
+				'filter_status'      => $filter_status,
+				'sort'               => $this->request->get['sort'] ?? null,
+				'order'              => $this->request->get['order'] ?? null,
+				'page'               => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -209,6 +223,12 @@ class ControllerCatalogProduct extends Controller {
 				$filter_quantity = null;
 			}
 
+			if (isset($this->request->get['filter_category_id'])) {
+				$filter_category_id = $this->request->get['filter_category_id'];
+			} else {
+				$filter_category_id = null;
+			}
+
 			if (isset($this->request->get['filter_status'])) {
 				$filter_status = $this->request->get['filter_status'];
 			} else {
@@ -216,14 +236,15 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			$page_url = array_filter([
-				'filter_name'     => $filter_name,
-				'filter_model'    => $filter_model,
-				'filter_price'    => $filter_price,
-				'filter_quantity' => $filter_quantity,
-				'filter_status'   => $filter_status,
-				'sort'            => $this->request->get['sort'] ?? 'pd.name',
-				'order'           => $this->request->get['order'] ?? 'ASC',
-				'page'            => $this->request->get['page'] ?? 1
+				'filter_name'        => $filter_name,
+				'filter_model'       => $filter_model,
+				'filter_price'       => $filter_price,
+				'filter_quantity'    => $filter_quantity,
+				'filter_category_id' => $filter_category_id,
+				'filter_status'      => $filter_status,
+				'sort'               => $this->request->get['sort'] ?? 'pd.name',
+				'order'              => $this->request->get['order'] ?? 'ASC',
+				'page'               => $this->request->get['page'] ?? 1
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -272,6 +293,12 @@ class ControllerCatalogProduct extends Controller {
 				$filter_quantity = null;
 			}
 
+			if (isset($this->request->get['filter_category_id'])) {
+				$filter_category_id = $this->request->get['filter_category_id'];
+			} else {
+				$filter_category_id = null;
+			}
+
 			if (isset($this->request->get['filter_status'])) {
 				$filter_status = $this->request->get['filter_status'];
 			} else {
@@ -279,14 +306,15 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			$page_url = array_filter([
-				'filter_name'     => $filter_name,
-				'filter_model'    => $filter_model,
-				'filter_price'    => $filter_price,
-				'filter_quantity' => $filter_quantity,
-				'filter_status'   => $filter_status,
-				'sort'            => $this->request->get['sort'] ?? 'pd.name',
-				'order'           => $this->request->get['order'] ?? 'ASC',
-				'page'            => $this->request->get['page'] ?? 1
+				'filter_name'        => $filter_name,
+				'filter_model'       => $filter_model,
+				'filter_price'       => $filter_price,
+				'filter_quantity'    => $filter_quantity,
+				'filter_category_id' => $filter_category_id,
+				'filter_status'      => $filter_status,
+				'sort'               => $this->request->get['sort'] ?? 'pd.name',
+				'order'              => $this->request->get['order'] ?? 'ASC',
+				'page'               => $this->request->get['page'] ?? 1
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -335,6 +363,12 @@ class ControllerCatalogProduct extends Controller {
 				$filter_quantity = null;
 			}
 
+			if (isset($this->request->get['filter_category_id'])) {
+				$filter_category_id = $this->request->get['filter_category_id'];
+			} else {
+				$filter_category_id = null;
+			}
+
 			if (isset($this->request->get['filter_status'])) {
 				$filter_status = $this->request->get['filter_status'];
 			} else {
@@ -342,14 +376,15 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			$page_url = array_filter([
-				'filter_name'     => $filter_name,
-				'filter_model'    => $filter_model,
-				'filter_price'    => $filter_price,
-				'filter_quantity' => $filter_quantity,
-				'filter_status'   => $filter_status,
-				'sort'            => $this->request->get['sort'] ?? null,
-				'order'           => $this->request->get['order'] ?? null,
-				'page'            => $this->request->get['page'] ?? null
+				'filter_name'        => $filter_name,
+				'filter_model'       => $filter_model,
+				'filter_price'       => $filter_price,
+				'filter_quantity'    => $filter_quantity,
+				'filter_category_id' => $filter_category_id,
+				'filter_status'      => $filter_status,
+				'sort'               => $this->request->get['sort'] ?? null,
+				'order'              => $this->request->get['order'] ?? null,
+				'page'               => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -398,6 +433,12 @@ class ControllerCatalogProduct extends Controller {
 				$filter_quantity = null;
 			}
 
+			if (isset($this->request->get['filter_category_id'])) {
+				$filter_category_id = $this->request->get['filter_category_id'];
+			} else {
+				$filter_category_id = null;
+			}
+
 			if (isset($this->request->get['filter_status'])) {
 				$filter_status = $this->request->get['filter_status'];
 			} else {
@@ -405,14 +446,15 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			$page_url = array_filter([
-				'filter_name'     => $filter_name,
-				'filter_model'    => $filter_model,
-				'filter_price'    => $filter_price,
-				'filter_quantity' => $filter_quantity,
-				'filter_status'   => $filter_status,
-				'sort'            => $this->request->get['sort'] ?? null,
-				'order'           => $this->request->get['order'] ?? null,
-				'page'            => $this->request->get['page'] ?? null
+				'filter_name'        => $filter_name,
+				'filter_model'       => $filter_model,
+				'filter_price'       => $filter_price,
+				'filter_quantity'    => $filter_quantity,
+				'filter_category_id' => $filter_category_id,
+				'filter_status'      => $filter_status,
+				'sort'               => $this->request->get['sort'] ?? null,
+				'order'              => $this->request->get['order'] ?? null,
+				'page'               => $this->request->get['page'] ?? null
 			]);
 
 			$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -448,6 +490,12 @@ class ControllerCatalogProduct extends Controller {
 			$filter_quantity = null;
 		}
 
+		if (isset($this->request->get['filter_category_id'])) {
+			$filter_category_id = $this->request->get['filter_category_id'];
+		} else {
+			$filter_category_id = null;
+		}
+
 		if (isset($this->request->get['filter_status'])) {
 			$filter_status = $this->request->get['filter_status'];
 		} else {
@@ -455,14 +503,15 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$page_url = array_filter([
-			'filter_name'     => $filter_name,
-			'filter_model'    => $filter_model,
-			'filter_price'    => $filter_price,
-			'filter_quantity' => $filter_quantity,
-			'filter_status'   => $filter_status,
-			'sort'            => $this->request->get['sort'] ?? 'pd.name',
-			'order'           => $this->request->get['order'] ?? 'ASC',
-			'page'            => $this->request->get['page'] ?? 1
+			'filter_name'        => $filter_name,
+			'filter_model'       => $filter_model,
+			'filter_price'       => $filter_price,
+			'filter_quantity'    => $filter_quantity,
+			'filter_category_id' => $filter_category_id,
+			'filter_status'      => $filter_status,
+			'sort'               => $this->request->get['sort'] ?? 'pd.name',
+			'order'              => $this->request->get['order'] ?? 'ASC',
+			'page'               => $this->request->get['page'] ?? 1
 		]);
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';
@@ -500,15 +549,16 @@ class ControllerCatalogProduct extends Controller {
 		$page = $this->request->get['page'] ?? 1;
 
 		$filter_data = [
-			'filter_name'     => $filter_name,
-			'filter_model'    => $filter_model,
-			'filter_price'    => $filter_price,
-			'filter_quantity' => $filter_quantity,
-			'filter_status'   => $filter_status,
-			'sort'            => $sort,
-			'order'           => $order,
-			'start'           => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit'           => $this->config->get('config_admin_limit')
+			'filter_name'        => $filter_name,
+			'filter_model'       => $filter_model,
+			'filter_price'       => $filter_price,
+			'filter_quantity'    => $filter_quantity,
+			'filter_category_id' => $filter_category_id,
+			'filter_status'      => $filter_status,
+			'sort'               => $sort,
+			'order'              => $order,
+			'start'              => ($page - 1) * $this->config->get('config_admin_limit'),
+			'limit'              => $this->config->get('config_admin_limit')
 		];
 
 		// Admin user extra permissions
@@ -526,6 +576,18 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('tool/image');
 		$this->load->model('tool/barcode');
+		$this->load->model('catalog/category');
+
+		// Selected category name for the filter field
+		$filter_category = '';
+
+		if ($filter_category_id) {
+			$category_filter_info = $this->model_catalog_category->getCategory((int)$filter_category_id);
+
+			if ($category_filter_info) {
+				$filter_category = ($category_filter_info['path'] ? $category_filter_info['path'] . ' &gt; ' : '') . $category_filter_info['name'];
+			}
+		}
 
 		$admin_barcode = $this->config->get('config_admin_barcode');
 		$barcode_type = $this->config->get('config_barcode_type');
@@ -572,12 +634,23 @@ class ControllerCatalogProduct extends Controller {
 				];
 			}
 
+			$product_categories = [];
+
+			foreach ($this->model_catalog_product->getProductCategories($result['product_id']) as $category_id) {
+				$category_info = $this->model_catalog_category->getCategory($category_id);
+
+				if ($category_info) {
+					$product_categories[] = ($category_info['path'] ? $category_info['path'] . ' &gt; ' : '') . $category_info['name'];
+				}
+			}
+
 			$this->data['products'][] = [
 				'product_id'    => $result['product_id'],
 				'image'         => $image,
 				'name'          => $result['name'],
 				'barcode'       => ($admin_barcode) ? $this->model_tool_barcode->getBarcode($result['model'], strtoupper($barcode_type), 1, 20) : '',
 				'model'         => $result['model'],
+				'categories'    => $product_categories,
 				'price'         => (float)$result['price'],
 				'special'       => $special,
 				'discount'      => $discounts,
@@ -609,6 +682,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['column_image'] = $this->language->get('column_image');
 		$this->data['column_name'] = $this->language->get('column_name');
 		$this->data['column_model'] = $this->language->get('column_model');
+		$this->data['column_category'] = $this->language->get('column_category');
 		$this->data['column_price'] = $this->language->get('column_price');
 		$this->data['column_quantity'] = $this->language->get('column_quantity');
 		$this->data['column_date_added'] = $this->language->get('column_date_added');
@@ -671,6 +745,10 @@ class ControllerCatalogProduct extends Controller {
 			$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
 		}
 
+		if (isset($this->request->get['filter_category_id'])) {
+			$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
+		}
+
 		if (isset($this->request->get['filter_status'])) {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
@@ -712,6 +790,10 @@ class ControllerCatalogProduct extends Controller {
 			$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
 		}
 
+		if (isset($this->request->get['filter_category_id'])) {
+			$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
+		}
+
 		if (isset($this->request->get['filter_status'])) {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
@@ -737,6 +819,8 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['filter_model'] = $filter_model;
 		$this->data['filter_price'] = $filter_price;
 		$this->data['filter_quantity'] = $filter_quantity;
+		$this->data['filter_category_id'] = $filter_category_id;
+		$this->data['filter_category'] = $filter_category;
 		$this->data['filter_status'] = $filter_status;
 
 		$this->data['sort'] = $sort;
@@ -977,6 +1061,12 @@ class ControllerCatalogProduct extends Controller {
 			$filter_quantity = null;
 		}
 
+		if (isset($this->request->get['filter_category_id'])) {
+			$filter_category_id = $this->request->get['filter_category_id'];
+		} else {
+			$filter_category_id = null;
+		}
+
 		if (isset($this->request->get['filter_status'])) {
 			$filter_status = $this->request->get['filter_status'];
 		} else {
@@ -984,14 +1074,15 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$page_url = array_filter([
-			'filter_name'     => $filter_name,
-			'filter_model'    => $filter_model,
-			'filter_price'    => $filter_price,
-			'filter_quantity' => $filter_quantity,
-			'filter_status'   => $filter_status,
-			'sort'            => $this->request->get['sort'] ?? 'pd.name',
-			'order'           => $this->request->get['order'] ?? 'ASC',
-			'page'            => $this->request->get['page'] ?? 1
+			'filter_name'        => $filter_name,
+			'filter_model'       => $filter_model,
+			'filter_price'       => $filter_price,
+			'filter_quantity'    => $filter_quantity,
+			'filter_category_id' => $filter_category_id,
+			'filter_status'      => $filter_status,
+			'sort'               => $this->request->get['sort'] ?? 'pd.name',
+			'order'              => $this->request->get['order'] ?? 'ASC',
+			'page'               => $this->request->get['page'] ?? 1
 		]);
 
 		$url = $page_url ? '&' . http_build_query($page_url) : '';

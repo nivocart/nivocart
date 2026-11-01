@@ -8,6 +8,7 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Add new column "Category" in Admin Product List table header filter. 
 - Fix some Tax calculations issues in the shopping Cart and at Checkout.
 
 

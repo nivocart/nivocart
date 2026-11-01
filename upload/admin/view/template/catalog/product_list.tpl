@@ -56,6 +56,7 @@
           <?php } else { ?>
             <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?>&nbsp;&nbsp;<img src="view/image/sort.png" alt="" /></a>
           <?php } ?></td>
+          <td class="left"><?php echo $column_category; ?></td>
           <td class="left"><?php if ($sort === 'p.price') { ?>
             <a href="<?php echo $sort_price; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_price; ?></a>
           <?php } else { ?>
@@ -91,6 +92,10 @@
             <td></td>
             <td><input type="text" name="filter_name" value="<?php echo $filter_name; ?>" size="18" /></td>
             <td><input type="text" name="filter_model" value="<?php echo $filter_model; ?>" size="14" /></td>
+            <td>
+              <input type="text" name="filter_category" value="<?php echo $filter_category; ?>" size="14" />
+              <input type="hidden" name="filter_category_id" value="<?php echo $filter_category_id; ?>" />
+            </td>
             <td class="right"><input type="text" name="filter_price" value="<?php echo $filter_price; ?>" size="10" /></td>
             <td class="right"><input type="text" name="filter_quantity" value="<?php echo $filter_quantity; ?>" size="8" /></td>
             <td class="hide-tablet"></td>
@@ -124,6 +129,9 @@
               <td class="center"><img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" style="padding:1px; border:1px solid #DDD;" /></td>
               <td class="left"><?php echo $product['name']; ?></td>
               <td class="left"><?php echo $product['barcode']; ?><?php echo $product['model']; ?></td>
+              <td class="left"><?php foreach ($product['categories'] as $category) { ?>
+                <?php echo $category; ?><br />
+              <?php } ?></td>
               <td class="right"><?php if ($product['special']) { ?>
                 <span style="text-decoration:line-through;"><?php echo number_format($product['price'], 2, '.', ''); ?></span><br />
                 <span style="color:#E53030;"><?php echo number_format($product['special'], 2, '.', ''); ?></span><br />
@@ -161,7 +169,7 @@
             <?php } ?>
           <?php } else { ?>
             <tr>
-              <td class="center" colspan="11"><?php echo $text_no_results; ?></td>
+              <td class="center" colspan="12"><?php echo $text_no_results; ?></td>
             </tr>
           <?php } ?>
         </tbody>
@@ -194,6 +202,12 @@ function filter() {
 
 	if (filter_model) {
 		url += '&filter_model=' + encodeURIComponent(filter_model);
+	}
+
+	var filter_category_id = $('input[name=\'filter_category_id\']').prop('value');
+
+	if (filter_category_id) {
+		url += '&filter_category_id=' + encodeURIComponent(filter_category_id);
 	}
 
 	var filter_price = $('input[name=\'filter_price\']').prop('value');
@@ -306,6 +320,37 @@ $('input[name=\'filter_model\']').autocomplete({
 	focus: function(event, ui) {
 		return false;
 	}
+});
+
+$('input[name=\'filter_category\']').autocomplete({
+	delay: 10,
+	source: function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request.term),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item.name,
+						value: item.category_id
+					}
+				}));
+			}
+		});
+	},
+	select: function(event, ui) {
+		$('input[name=\'filter_category\']').val(ui.item.label);
+		$('input[name=\'filter_category_id\']').val(ui.item.value);
+		return false;
+	},
+	focus: function(event, ui) {
+		return false;
+	}
+});
+
+// Typing again invalidates the previously selected category
+$('input[name=\'filter_category\']').on('input', function() {
+	$('input[name=\'filter_category_id\']').val('');
 });
 //--></script>
 

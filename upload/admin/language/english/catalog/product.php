@@ -51,6 +51,7 @@ $_['column_layout']           = 'Layout Override';
 $_['column_id']               = 'ID';
 $_['column_name']             = 'Product Name';
 $_['column_model']            = 'Model';
+$_['column_category']         = 'Category';
 $_['column_status']           = 'Status';
 $_['column_action']           = 'Action';
 
