@@ -194,7 +194,7 @@
             <td><?php echo $entry_length; ?></td>
             <td><select name="length_class_id">
               <?php foreach ($length_classes as $length_class) { ?>
-                <?php if ($length_class['length_class_id'] === $length_class_id) { ?>
+                <?php if ((int)$length_class['length_class_id'] === (int)$length_class_id) { ?>
                   <option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
@@ -210,7 +210,7 @@
             <td><?php echo $entry_weight_class; ?></td>
             <td><select name="weight_class_id">
               <?php foreach ($weight_classes as $weight_class) { ?>
-                <?php if ($weight_class['weight_class_id'] === $weight_class_id) { ?>
+                <?php if ((int)$weight_class['weight_class_id'] === (int)$weight_class_id) { ?>
                   <option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
@@ -245,7 +245,7 @@
             <td><?php echo $entry_stock_status; ?></td>
             <td><select name="stock_status_id">
               <?php foreach ($stock_statuses as $stock_status) { ?>
-                <?php if ($stock_status['stock_status_id'] === $stock_status_id) { ?>
+                <?php if ((int)$stock_status['stock_status_id'] === (int)$stock_status_id) { ?>
                   <option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
                 <?php } else { ?>
                   <option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
@@ -1208,7 +1208,7 @@ $('#product-related').delegate('img', 'click', function() {
 
 <script type="text/javascript"><!--
 $('select[name=\'palette_id\']').on('change', function() {
-	if ($(this).val() !== <?php echo $palette_id; ?>) {
+	if ($(this).val() !== '<?php echo $palette_id; ?>') {
 		$('#color-apply').fadeIn(500);
 	} else {
 		$('#color-apply').hide();
