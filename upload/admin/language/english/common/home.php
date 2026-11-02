@@ -20,6 +20,7 @@ $_['text_total_review']             = 'Total Reviews:';
 $_['text_total_review_approval']    = 'Reviews Awaiting Approval:';
 $_['text_total_affiliate']          = 'Total Affiliates:';
 $_['text_total_affiliate_approval'] = 'Affiliates Awaiting Approval:';
+$_['text_total_store_products']     = 'Total Products:';
 $_['text_day']                      = 'Today';
 $_['text_week']                     = 'This Week';
 $_['text_month']                    = 'This Month';

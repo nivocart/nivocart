@@ -69,6 +69,7 @@ class ControllerCommonHome extends Controller {
 		$this->data['text_total_review_approval'] = $this->language->get('text_total_review_approval');
 		$this->data['text_total_affiliate'] = $this->language->get('text_total_affiliate');
 		$this->data['text_total_affiliate_approval'] = $this->language->get('text_total_affiliate_approval');
+		$this->data['text_total_store_products'] = $this->language->get('text_total_store_products');
 		$this->data['text_day'] = $this->language->get('text_day');
 		$this->data['text_week'] = $this->language->get('text_week');
 		$this->data['text_month'] = $this->language->get('text_month');
@@ -373,6 +374,11 @@ class ControllerCommonHome extends Controller {
 		$this->data['total_affiliate'] = $this->model_sale_affiliate->getTotalAffiliates([]);
 		$this->data['total_affiliate_approval'] = $this->model_sale_affiliate->getTotalAffiliatesAwaitingApproval();
 		$this->data['allow_affiliate'] = $this->config->get('config_affiliate_disable') ? false : true;
+
+		// Overview Store Products
+		$this->load->model('report/product');
+
+		$this->data['total_store_products'] = $this->model_report_product->getTotalProducts([]);
 
 		// Overview Returns
 		$this->load->model('sale/return');

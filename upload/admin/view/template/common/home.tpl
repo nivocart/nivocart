@@ -124,6 +124,12 @@
             </tr>
             <?php } ?>
           </table>
+          <table class="list" style="margin-bottom:1px;">
+            <tr>
+              <td class="left"><?php echo $text_total_store_products; ?></td>
+              <td class="right"><?php echo $total_store_products; ?></td>
+            </tr>
+          </table>
         </div>
       </div>
       <div class="statistic">
