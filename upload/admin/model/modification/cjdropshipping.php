@@ -767,6 +767,7 @@ class ModelModificationCJDropshipping extends Model {
 
 		$updated = 0;
 		$errors = [];
+		$removed = [];
 
 		foreach ($variants_query->rows as $row) {
 			try {
@@ -793,15 +794,25 @@ class ModelModificationCJDropshipping extends Model {
 				$this->log->write('CJDropshipping syncStock SKU ' . $row['supplier_sku'] . ': ' . $e->getMessage());
 				$errors[] = $row['supplier_sku'] . ': ' . $e->getMessage();
 
-				// CJD error 1602001 = product no longer exists on supplier side.
-				// Zero the stock and deactivate so it drops off the storefront and
+				// CJD error 1602003 = this variant was removed from the shelves: remember it
+				// for the Delete Removed Products button (Products Maintenance).
+				if (str_contains($e->getMessage(), 'API error ' . self::CODE_VARIANT_REMOVED)) {
+					$removed[] = (int)$row['variant_id'];
+				}
+
+				// CJD error 1602001 = product no longer exists on supplier side; 1602003 = variant removed
+				// from the shelves. Zero the stock and deactivate so it drops off the storefront and
 				// is excluded from all future syncs (is_active = 0 filter).
-				if (str_contains($e->getMessage(), '1602001')) {
+				if (str_contains($e->getMessage(), '1602001') || str_contains($e->getMessage(), 'API error ' . self::CODE_VARIANT_REMOVED)) {
 					$this->db->query("UPDATE `" . DB_PREFIX . "dropship_variant` SET `quantity` = '0', `is_active` = '0', `date_modified` = NOW() WHERE `variant_id` = '" . (int)$row['variant_id'] . "'");
 					$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0', `status` = '0', `date_modified` = NOW() WHERE `product_id` = '" . (int)$row['product_id'] . "'");
 				}
 			}
 		}
+
+		// Removed variants are deactivated above, so later runs skip them: keep adding to the saved list.
+		// Products already deleted drop out of getRemovedProducts() by themselves.
+		$this->saveRemovedPids($channel_id, $removed, false, self::REMOVED_VARIANTS_KEY);
 
 		$processed = count($variants_query->rows);
 		$last_id = (int)end($variants_query->rows)['variant_id'];
@@ -2038,12 +2049,17 @@ class ModelModificationCJDropshipping extends Model {
 
 	const REMOVED_SETTING_GROUP = 'cjd_removed';
 	const REMOVED_SETTING_KEY = 'cjd_removed_pids';
+	const REMOVED_VARIANTS_KEY = 'cjd_removed_variants';
+
+	// CJ error 1602003 = a single variant removed from the shelves (found by the stock sync).
+	const CODE_VARIANT_REMOVED = '1602003';
 
 	/**
-	 * Load the saved map channel_id => [PIDs] found "removed from shelves" by the last price sync.
+	 * Load a saved map channel_id => [ids]: PIDs found "removed from shelves" by the last price sync
+	 * (default key) or variant_ids found removed by the last stock sync (REMOVED_VARIANTS_KEY).
 	 */
-	private function loadRemovedPids(): array {
-		$query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '0' AND `group` = '" . self::REMOVED_SETTING_GROUP . "' AND `key` = '" . self::REMOVED_SETTING_KEY . "'");
+	private function loadRemovedPids(string $key = self::REMOVED_SETTING_KEY): array {
+		$query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '0' AND `group` = '" . self::REMOVED_SETTING_GROUP . "' AND `key` = '" . $key . "'");
 
 		if (!is_object($query) || !$query->num_rows) {
 			return [];
@@ -2054,11 +2070,11 @@ class ModelModificationCJDropshipping extends Model {
 		return is_array($map) ? $map : [];
 	}
 
-	private function storeRemovedPids(array $map): void {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '0' AND `group` = '" . self::REMOVED_SETTING_GROUP . "' AND `key` = '" . self::REMOVED_SETTING_KEY . "'");
+	private function storeRemovedPids(array $map, string $key = self::REMOVED_SETTING_KEY): void {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `store_id` = '0' AND `group` = '" . self::REMOVED_SETTING_GROUP . "' AND `key` = '" . $key . "'");
 
 		if ($map) {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = '" . self::REMOVED_SETTING_GROUP . "', `key` = '" . self::REMOVED_SETTING_KEY . "', `value` = '" . $this->db->escape(json_encode($map)) . "', `serialized` = '0'");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `group` = '" . self::REMOVED_SETTING_GROUP . "', `key` = '" . $key . "', `value` = '" . $this->db->escape(json_encode($map)) . "', `serialized` = '0'");
 		}
 	}
 
@@ -2067,12 +2083,12 @@ class ModelModificationCJDropshipping extends Model {
 	 *
 	 * @param bool $reset  true on the first batch of a run: start the list again for this channel.
 	 */
-	private function saveRemovedPids(int $channel_id, array $pids, bool $reset): void {
+	private function saveRemovedPids(int $channel_id, array $pids, bool $reset, string $key = self::REMOVED_SETTING_KEY): void {
 		if (!$reset && !$pids) {
 			return;
 		}
 
-		$map = $this->loadRemovedPids();
+		$map = $this->loadRemovedPids($key);
 		$current = $reset ? [] : ($map[$channel_id] ?? []);
 
 		$map[$channel_id] = array_values(array_unique(array_merge($current, $pids)));
@@ -2081,7 +2097,7 @@ class ModelModificationCJDropshipping extends Model {
 			unset($map[$channel_id]);
 		}
 
-		$this->storeRemovedPids($map);
+		$this->storeRemovedPids($map, $key);
 	}
 
 	/**
@@ -2116,7 +2132,43 @@ class ModelModificationCJDropshipping extends Model {
 			}
 		}
 
-		return $rows;
+		// Single variants the last stock sync found removed (CJ error 1602003).
+		foreach ($this->loadRemovedPids(self::REMOVED_VARIANTS_KEY) as $channel_id => $variant_ids) {
+			$variant_ids = array_filter(array_map('intval', (array)$variant_ids));
+
+			if (!$variant_ids) {
+				continue;
+			}
+
+			$query = $this->db->query(
+				"SELECT p.`product_id`, p.`model`, COALESCE(pdesc.`name`, '') AS product_name, pd.`supplier_pid`, dv.`channel_id`
+				 FROM `" . DB_PREFIX . "dropship_variant` dv
+				 INNER JOIN `" . DB_PREFIX . "product_dropship` pd ON dv.`dropship_id` = pd.`dropship_id`
+				 INNER JOIN `" . DB_PREFIX . "product` p ON dv.`product_id` = p.`product_id`
+				 LEFT JOIN `" . DB_PREFIX . "product_description` pdesc ON p.`product_id` = pdesc.`product_id` AND pdesc.`language_id` = '" . (int)$this->config->get('config_language_id') . "'
+				 WHERE dv.`channel_id` = '" . (int)$channel_id . "'
+				   AND dv.`variant_id` IN (" . implode(',', $variant_ids) . ")
+				 ORDER BY pd.`supplier_pid` ASC, p.`model` ASC"
+			);
+
+			if (is_object($query)) {
+				$rows = array_merge($rows, $query->rows);
+			}
+		}
+
+		// A product can be listed by both syncs: keep it once.
+		$unique = [];
+
+		foreach ($rows as $row) {
+			$unique[(int)$row['product_id']] = $row;
+		}
+
+		return array_values($unique);
+	}
+
+	private function clearRemovedLists(): void {
+		$this->storeRemovedPids([]);
+		$this->storeRemovedPids([], self::REMOVED_VARIANTS_KEY);
 	}
 
 	/**
@@ -2129,7 +2181,7 @@ class ModelModificationCJDropshipping extends Model {
 		$rows = $this->getRemovedProducts();
 
 		if (!$rows) {
-			$this->storeRemovedPids([]);
+			$this->clearRemovedLists();
 
 			return 0;
 		}
@@ -2154,7 +2206,7 @@ class ModelModificationCJDropshipping extends Model {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_dropship` WHERE `product_id` IN (" . $in . ")");
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "product_variant` WHERE `product_id` IN (" . $in . ")");
 
-		$this->storeRemovedPids([]);
+		$this->clearRemovedLists();
 
 		return count($ids);
 	}

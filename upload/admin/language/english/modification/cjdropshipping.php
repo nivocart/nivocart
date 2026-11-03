@@ -195,10 +195,10 @@ $_['text_price_failed']              = '%s CJ product(s) could not be updated:';
 $_['text_price_failed_sku']          = 'CJ SKU: %s';
 $_['text_price_failed_more']         = '+%s more';
 $_['button_purge_removed']           = 'Delete Removed Products';
-$_['text_purge_removed_confirm']     = 'This will permanently delete these products, which CJDropshipping has removed from its shelves, from your catalogue. The list comes from the last Manual Sync Prices run. Continue?';
+$_['text_purge_removed_confirm']     = 'This will permanently delete these products, which CJDropshipping has removed from its shelves, from your catalogue. The list comes from the last Sync Prices and Sync Stock runs. Continue?';
 $_['text_purge_removed_found']       = '%s product(s) found that CJDropshipping has removed from its shelves.';
 $_['text_purge_removed_complete']    = 'Purge complete: %s product(s) deleted.';
-$_['text_purge_removed_none']        = 'No removed products found. Run Sync Prices first: products CJDropshipping has removed from its shelves are listed after the sync.';
+$_['text_purge_removed_none']        = 'No removed products found. Products CJDropshipping has removed from its shelves are listed here after a Sync Prices or Sync Stock run.';
 $_['text_purge_removed_sample']      = 'First %s listed (CJ SKU, name, PID):';
 
 // Stock Sync Cron Job
