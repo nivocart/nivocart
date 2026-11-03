@@ -1080,7 +1080,7 @@ class ControllerProductProduct extends Controller {
 			$url = $params ? '&' . http_build_query($params) : '';
 
 			$this->data['breadcrumbs'][] = [
-				'text'      => $product_info['name'],
+				'text'      => $this->language->get('text_search'),
 				'href'      => $this->url->link('product/product', $url . '&product_id=' . $product_id, 'SSL'),
 				'separator' => $this->language->get('text_separator')
 			];
