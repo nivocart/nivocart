@@ -58,11 +58,16 @@ class ControllerCheckoutCart extends Controller {
 			$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
 		}
 
+		// Voucher (link from the gift voucher email: cart&voucher=CODE)
+		if (isset($this->request->get['voucher']) && !isset($this->request->post['voucher'])) {
+			$this->request->post['voucher'] = $this->request->get['voucher'];
+		}
+
 		// Voucher
 		if (isset($this->request->post['voucher']) && $this->validateVoucher()) {
 			unset($this->session->data['voucher']);
 
-			$this->session->data['voucher'] = $this->request->post['voucher'];
+			$this->session->data['voucher'] = voucherCodeFormat(voucherCodeNormalise($this->request->post['voucher']));
 			$this->session->data['success'] = $this->language->get('text_voucher');
 
 			$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
@@ -463,6 +468,9 @@ class ControllerCheckoutCart extends Controller {
 			}
 
 			$this->data['voucher_status'] = $this->config->get('voucher_status');
+			$this->data['allow_voucher'] = $this->config->get('config_checkout_voucher') ? true : false;
+			$this->data['buy_voucher'] = $this->url->link('account/voucher', '', 'SSL');
+			$this->data['text_buy_voucher'] = $this->language->get('text_buy_voucher');
 
 			if (isset($this->request->post['voucher'])) {
 				$this->data['voucher'] = $this->request->post['voucher'];
@@ -638,9 +646,28 @@ class ControllerCheckoutCart extends Controller {
 	protected function validateVoucher() {
 		$this->load->model('checkout/voucher');
 
+		// Limit guessing: 5 failed attempts per 15 minutes for each session
+		$attempts = [];
+
+		foreach ($this->session->data['voucher_attempts'] ?? [] as $time) {
+			if ($time > (time() - 900)) {
+				$attempts[] = $time;
+			}
+		}
+
+		$this->session->data['voucher_attempts'] = $attempts;
+
+		if (count($attempts) >= 5) {
+			$this->error['warning'] = $this->language->get('error_voucher_attempts');
+
+			return false;
+		}
+
 		$voucher_info = $this->model_checkout_voucher->getVoucher($this->request->post['voucher']);
 
 		if (!$voucher_info) {
+			$this->session->data['voucher_attempts'][] = time();
+
 			$this->error['warning'] = $this->language->get('error_voucher');
 		}
 

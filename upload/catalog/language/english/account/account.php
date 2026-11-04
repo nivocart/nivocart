@@ -15,6 +15,7 @@ $_['text_wishlist']      = 'Modify your wish list';
 $_['text_order']         = 'View your order history';
 $_['text_review']        = 'Your product reviews';
 $_['text_download']      = 'Your downloads';
+$_['text_gift_voucher']  = 'Your gift vouchers';
 $_['text_reward']        = 'Your fidelity points';
 $_['text_transaction']   = 'Your transactions';
 $_['text_return']        = 'View your return requests';

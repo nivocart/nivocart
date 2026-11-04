@@ -1848,15 +1848,17 @@ CREATE TABLE `nc_order_voucher` (
   `order_id` int NOT NULL,
   `voucher_id` int NOT NULL,
   `description` text CHARACTER SET utf8mb4 NOT NULL,
-  `code` varchar(10) NOT NULL,
+  `code` varchar(20) NOT NULL,
   `from_name` varchar(64) NOT NULL,
   `from_email` varchar(96) NOT NULL,
   `to_name` varchar(64) NOT NULL,
   `to_email` varchar(96) NOT NULL,
-  `voucher_theme_id` int NOT NULL,
+  `design` varchar(32) NOT NULL DEFAULT 'general',
   `message` text CHARACTER SET utf8mb4 NOT NULL,
   `amount` decimal(15,4) NOT NULL,
-  PRIMARY KEY (`order_voucher_id`)
+  `date_consent` datetime DEFAULT NULL,
+  PRIMARY KEY (`order_voucher_id`),
+  KEY `nc_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2756,17 +2758,22 @@ DROP TABLE IF EXISTS `nc_voucher`;
 CREATE TABLE `nc_voucher` (
   `voucher_id` int NOT NULL AUTO_INCREMENT,
   `order_id` int NOT NULL,
-  `code` varchar(10) NOT NULL,
+  `customer_id` int NOT NULL DEFAULT 0,
+  `code` varchar(20) NOT NULL,
   `from_name` varchar(64) NOT NULL,
   `from_email` varchar(96) NOT NULL,
   `to_name` varchar(64) NOT NULL,
   `to_email` varchar(96) NOT NULL,
-  `voucher_theme_id` int NOT NULL,
+  `design` varchar(32) NOT NULL DEFAULT 'general',
   `message` text CHARACTER SET utf8mb4 NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL,
-  PRIMARY KEY (`voucher_id`)
+  `date_sent` datetime DEFAULT NULL,
+  `date_expire` datetime DEFAULT NULL,
+  PRIMARY KEY (`voucher_id`),
+  UNIQUE KEY `nc_code` (`code`),
+  KEY `nc_order_id` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2783,33 +2790,6 @@ CREATE TABLE `nc_voucher_history` (
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`voucher_history_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nc_voucher_theme`
---
-
-DROP TABLE IF EXISTS `nc_voucher_theme`;
-CREATE TABLE `nc_voucher_theme` (
-  `voucher_theme_id` int NOT NULL AUTO_INCREMENT,
-  `image` varchar(255) NOT NULL,
-  PRIMARY KEY (`voucher_theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nc_voucher_theme_description`
---
-
-DROP TABLE IF EXISTS `nc_voucher_theme_description`;
-CREATE TABLE `nc_voucher_theme_description` (
-  `voucher_theme_id` int NOT NULL,
-  `language_id` int NOT NULL,
-  `name` varchar(32) NOT NULL,
-  PRIMARY KEY (`voucher_theme_id`,`language_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

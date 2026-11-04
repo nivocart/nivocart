@@ -435,7 +435,7 @@
                   <input type="hidden" name="order_voucher[<?php echo $voucher_row; ?>][from_email]" value="<?php echo $order_voucher['from_email']; ?>" />
                   <input type="hidden" name="order_voucher[<?php echo $voucher_row; ?>][to_name]" value="<?php echo $order_voucher['to_name']; ?>" />
                   <input type="hidden" name="order_voucher[<?php echo $voucher_row; ?>][to_email]" value="<?php echo $order_voucher['to_email']; ?>" />
-                  <input type="hidden" name="order_voucher[<?php echo $voucher_row; ?>][voucher_theme_id]" value="<?php echo $order_voucher['voucher_theme_id']; ?>" />
+                  <input type="hidden" name="order_voucher[<?php echo $voucher_row; ?>][design]" value="<?php echo $order_voucher['design']; ?>" />
                   <input type="hidden" name="order_voucher[<?php echo $voucher_row; ?>][message]" value="<?php echo $order_voucher['message']; ?>" />
                   <input type="hidden" name="order_voucher[<?php echo $voucher_row; ?>][amount]" value="<?php echo $order_voucher['amount']; ?>" />
                 </td>
@@ -477,10 +477,10 @@
             <td class="left"><input type="text" name="from_email" value="" /></td>
           </tr>
           <tr>
-            <td class="left"><span class="required">*</span> <?php echo $entry_theme; ?></td>
-            <td class="left"><select name="voucher_theme_id">
-              <?php foreach ($voucher_themes as $voucher_theme) { ?>
-                <option value="<?php echo $voucher_theme['voucher_theme_id']; ?>"><?php echo addslashes($voucher_theme['name']); ?></option>
+            <td class="left"><span class="required">*</span> <?php echo $entry_design; ?></td>
+            <td class="left"><select name="design">
+              <?php foreach ($designs as $design_option) { ?>
+                <option value="<?php echo $design_option['value']; ?>"><?php echo addslashes($design_option['name']); ?></option>
               <?php } ?>
             </select></td>
           </tr>
@@ -1549,7 +1549,7 @@ $('#button-product, #button-voucher, #button-update').on('click', function() {
 					html += '  <input type="hidden" name="order_voucher[' + voucher_row + '][from_email]" value="' + voucher['from_email'] + '" />';
 					html += '  <input type="hidden" name="order_voucher[' + voucher_row + '][to_name]" value="' + voucher['to_name'] + '" />';
 					html += '  <input type="hidden" name="order_voucher[' + voucher_row + '][to_email]" value="' + voucher['to_email'] + '" />';
-					html += '  <input type="hidden" name="order_voucher[' + voucher_row + '][voucher_theme_id]" value="' + voucher['voucher_theme_id'] + '" />';
+					html += '  <input type="hidden" name="order_voucher[' + voucher_row + '][design]" value="' + voucher['design'] + '" />';
 					html += '  <input type="hidden" name="order_voucher[' + voucher_row + '][message]" value="' + voucher['message'] + '" />';
 					html += '  <input type="hidden" name="order_voucher[' + voucher_row + '][amount]" value="' + voucher['amount'] + '" />';
 					html += '  </td>';

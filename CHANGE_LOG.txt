@@ -10,6 +10,7 @@ Release: TBA
 
 - Add new column "Category" in Admin Product List table header filter.
 - Add total number of store products count in Admin Overview Dashboard.
+- Add complete Gift Voucher implementation for guests and customers.
 - Fix some Tax calculations issues in the shopping Cart and at Checkout.
 
 

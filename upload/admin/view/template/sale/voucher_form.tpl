@@ -27,14 +27,29 @@
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
       <div id="tab-general">
         <table class="form">
+          <?php if ($voucher_id) { ?>
           <tr>
-            <td><span class="required">*</span> <?php echo $entry_code; ?></td>
+            <td><?php echo $entry_state; ?></td>
+            <td><?php echo $state; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_balance; ?></td>
+            <td><?php echo $balance; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_sent; ?></td>
+            <td><?php echo $sent; ?></td>
+          </tr>
+          <?php } ?>
+          <tr>
+            <td><?php echo (!$voucher_id) ? '' : '<span class="required">*</span> '; ?><?php echo $entry_code; ?></td>
             <td><?php if ($error_code) { ?>
-              <input type="text" name="code" value="<?php echo $code; ?>" class="input-error" />
+              <input type="text" name="code" value="<?php echo $code; ?>" id="code" class="input-error" />
               <span class="error"><?php echo $error_code; ?></span>
             <?php } else { ?>
-              <input type="text" name="code" value="<?php echo $code; ?>" />
-            <?php } ?></td>
+              <input type="text" name="code" value="<?php echo $code; ?>" id="code" />
+            <?php } ?>
+            <a onclick="generateCode();" class="button button-align ripple"><i class="fa fa-random"></i> &nbsp; <?php echo $button_generate; ?></a></td>
           </tr>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_from_name; ?></td>
@@ -73,16 +88,19 @@
             <?php } ?></td>
           </tr>
           <tr>
-            <td><?php echo $entry_theme; ?></td>
-            <td><select name="voucher_theme_id">
-              <?php foreach ($voucher_themes as $voucher_theme) { ?>
-                <?php if ($voucher_theme['voucher_theme_id'] === $voucher_theme_id) { ?>
-                  <option value="<?php echo $voucher_theme['voucher_theme_id']; ?>" selected="selected"><?php echo $voucher_theme['name']; ?></option>
+            <td><span class="required">*</span> <?php echo $entry_design; ?></td>
+            <td><select name="design">
+              <?php foreach ($designs as $design_option) { ?>
+                <?php if ($design_option['value'] === $design) { ?>
+                  <option value="<?php echo $design_option['value']; ?>" selected="selected"><?php echo $design_option['name']; ?></option>
                 <?php } else { ?>
-                  <option value="<?php echo $voucher_theme['voucher_theme_id']; ?>"><?php echo $voucher_theme['name']; ?></option>
+                  <option value="<?php echo $design_option['value']; ?>"><?php echo $design_option['name']; ?></option>
                 <?php } ?>
               <?php } ?>
-            </select></td>
+            </select>
+            <?php if ($error_design) { ?>
+              <span class="error"><?php echo $error_design; ?></span>
+            <?php } ?></td>
           </tr>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_message; ?></td>
@@ -100,6 +118,15 @@
               <span class="error"><?php echo $error_amount; ?></span>
             <?php } else { ?>
               <input type="text" name="amount" value="<?php echo $amount; ?>" />
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_expire; ?></td>
+            <td><?php if ($error_expire) { ?>
+              <input type="text" name="date_expire" value="<?php echo $date_expire; ?>" id="date-expire" size="12" class="input-error" />
+              <span class="error"><?php echo $error_expire; ?></span>
+            <?php } else { ?>
+              <input type="text" name="date_expire" value="<?php echo $date_expire; ?>" id="date-expire" size="12" />
             <?php } ?></td>
           </tr>
           <tr>
@@ -138,7 +165,32 @@ $('#history').load('index.php?route=sale/voucher/history&token=<?php echo $token
 <?php } ?>
 
 <script type="text/javascript"><!--
+function generateCode() {
+	$.ajax({
+		url: '<?php echo $generate; ?>',
+		type: 'get',
+		dataType: 'json',
+		success: function(json) {
+			$('.warning').remove();
+
+			if (json['error']) {
+				$('.box').before('<div class="warning">' + json['error'] + '</div>');
+			}
+
+			if (json['code']) {
+				$('#code').val(json['code']);
+			}
+		}
+	});
+}
+//--></script>
+
+<script type="text/javascript"><!--
 $('#tabs a').tabs();
+
+$(document).ready(function() {
+	$('#date-expire').datepicker({dateFormat: 'yy-mm-dd'});
+});
 //--></script>
 
 <?php echo $footer; ?>

@@ -52,6 +52,9 @@
         <?php if ($allow_download) { ?>
           <li><a href="<?php echo $download; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/download.png" alt="" /><?php echo $text_download; ?></a></li>
         <?php } ?>
+        <?php if ($allow_voucher) { ?>
+          <li><a href="<?php echo $gift_voucher; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/voucher.png" alt="" /><?php echo $text_gift_voucher; ?></a></li>
+        <?php } ?>
         <?php if ($reward) { ?>
           <li><a href="<?php echo $reward; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/reward.png" alt="" /><?php echo $text_reward; ?></a></li>
         <?php } ?>

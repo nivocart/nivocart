@@ -62,6 +62,7 @@ class ControllerAccountAccount extends Controller {
 		$this->data['text_order'] = $this->language->get('text_order');
 		$this->data['text_review'] = $this->language->get('text_review');
 		$this->data['text_download'] = $this->language->get('text_download');
+		$this->data['text_gift_voucher'] = $this->language->get('text_gift_voucher');
 		$this->data['text_reward'] = $this->language->get('text_reward');
 		$this->data['text_transaction'] = $this->language->get('text_transaction');
 		$this->data['text_return'] = $this->language->get('text_return');
@@ -75,6 +76,8 @@ class ControllerAccountAccount extends Controller {
 		$this->data['order'] = $this->url->link('account/order', '', 'SSL');
 		$this->data['review'] = $this->url->link('account/review', '', 'SSL');
 		$this->data['download'] = $this->url->link('account/download', '', 'SSL');
+		$this->data['gift_voucher'] = $this->url->link('account/voucher/purchased', '', 'SSL');
+		$this->data['allow_voucher'] = $this->config->get('config_checkout_voucher') ? true : false;
 		$this->data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
 		$this->data['return'] = $this->url->link('account/return', '', 'SSL');
 		$this->data['addreturn'] = $this->url->link('account/return/insert', '', 'SSL');

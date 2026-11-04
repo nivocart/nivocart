@@ -1144,6 +1144,51 @@
               <input type="text" name="config_voucher_max" value="<?php echo $config_voucher_max; ?>" />
             <?php } ?></td>
           </tr>
+          <tr>
+            <td><?php echo $entry_checkout_voucher; ?><span class="help"><?php echo $help_checkout_voucher; ?></span></td>
+            <td><?php if ($config_checkout_voucher) { ?>
+              <input type="radio" name="config_checkout_voucher" value="1" id="checkout-voucher-on" class="radio" checked />
+              <label for="checkout-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_checkout_voucher" value="0" id="checkout-voucher-off" class="radio" />
+              <label for="checkout-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } else { ?>
+              <input type="radio" name="config_checkout_voucher" value="1" id="checkout-voucher-on" class="radio" />
+              <label for="checkout-voucher-on"><span><span></span></span><?php echo $text_yes; ?></label>
+              <input type="radio" name="config_checkout_voucher" value="0" id="checkout-voucher-off" class="radio" checked />
+              <label for="checkout-voucher-off"><span><span></span></span><?php echo $text_no; ?></label>
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_voucher_expiry; ?><span class="help"><?php echo $help_voucher_expiry; ?></span></td>
+            <td><?php if ($error_voucher_expiry) { ?>
+              <input type="text" name="config_voucher_expiry" value="<?php echo $config_voucher_expiry; ?>" size="3" class="input-error" />
+              <span class="error"><?php echo $error_voucher_expiry; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_voucher_expiry" value="<?php echo $config_voucher_expiry; ?>" size="3" />
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_voucher_presets; ?><span class="help"><?php echo $help_voucher_presets; ?></span></td>
+            <td><?php if ($error_voucher_presets) { ?>
+              <input type="text" name="config_voucher_presets" value="<?php echo $config_voucher_presets; ?>" size="40" class="input-error" />
+              <span class="error"><?php echo $error_voucher_presets; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_voucher_presets" value="<?php echo $config_voucher_presets; ?>" size="40" />
+            <?php } ?></td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_voucher_information; ?><span class="help"><?php echo $help_voucher_information; ?></span></td>
+            <td><select name="config_voucher_information_id">
+              <option value="0"><?php echo $text_none; ?></option>
+              <?php foreach ($informations as $information) { ?>
+                <?php if ($information['information_id'] === $config_voucher_information_id) { ?>
+                  <option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+                <?php } else { ?>
+                  <option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+                <?php } ?>
+              <?php } ?>
+            </select></td>
+          </tr>
         </table>
       </div>
       <div id="tab-preference">

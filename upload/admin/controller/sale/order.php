@@ -601,7 +601,7 @@ class ControllerSaleOrder extends Controller {
 		$this->data['entry_to_email'] = $this->language->get('entry_to_email');
 		$this->data['entry_from_name'] = $this->language->get('entry_from_name');
 		$this->data['entry_from_email'] = $this->language->get('entry_from_email');
-		$this->data['entry_theme'] = $this->language->get('entry_theme');
+		$this->data['entry_design'] = $this->language->get('entry_design');
 		$this->data['entry_message'] = $this->language->get('entry_message');
 		$this->data['entry_amount'] = $this->language->get('entry_amount');
 		$this->data['entry_shipping'] = $this->language->get('entry_shipping');
@@ -1240,9 +1240,18 @@ class ControllerSaleOrder extends Controller {
 			$this->data['order_vouchers'] = [];
 		}
 
-		$this->load->model('sale/voucher_theme');
+		$this->language->load('mail/voucher');
 
-		$this->data['voucher_themes'] = $this->model_sale_voucher_theme->getVoucherThemes([]);
+		$this->data['designs'] = [];
+
+		foreach (voucherDesigns() as $design_key) {
+			$this->data['designs'][] = [
+				'value' => $design_key,
+				'name'  => $this->language->get('text_design_' . $design_key)
+			];
+		}
+
+		$this->language->load('sale/order');
 
 		if (isset($this->request->post['order_total'])) {
 			$this->data['order_totals'] = $this->request->post['order_total'];
@@ -1364,7 +1373,7 @@ class ControllerSaleOrder extends Controller {
 		$this->data['entry_to_email'] = $this->language->get('entry_to_email');
 		$this->data['entry_from_name'] = $this->language->get('entry_from_name');
 		$this->data['entry_from_email'] = $this->language->get('entry_from_email');
-		$this->data['entry_theme'] = $this->language->get('entry_theme');
+		$this->data['entry_design'] = $this->language->get('entry_design');
 		$this->data['entry_message'] = $this->language->get('entry_message');
 		$this->data['entry_amount'] = $this->language->get('entry_amount');
 		$this->data['entry_shipping'] = $this->language->get('entry_shipping');
@@ -2001,9 +2010,18 @@ class ControllerSaleOrder extends Controller {
 			$this->data['order_vouchers'] = [];
 		}
 
-		$this->load->model('sale/voucher_theme');
+		$this->language->load('mail/voucher');
 
-		$this->data['voucher_themes'] = $this->model_sale_voucher_theme->getVoucherThemes([]);
+		$this->data['designs'] = [];
+
+		foreach (voucherDesigns() as $design_key) {
+			$this->data['designs'][] = [
+				'value' => $design_key,
+				'name'  => $this->language->get('text_design_' . $design_key)
+			];
+		}
+
+		$this->language->load('sale/order');
 
 		if (isset($this->request->post['order_total'])) {
 			$this->data['order_totals'] = $this->request->post['order_total'];

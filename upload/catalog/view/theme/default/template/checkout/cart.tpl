@@ -98,20 +98,20 @@
               <td class="total"><?php echo $product['total']; ?></td>
             </tr>
           <?php } ?>
-          <?php foreach ($vouchers as $vouchers) { ?>
+          <?php foreach ($vouchers as $gift_voucher) { ?>
             <tr>
               <td class="image hide-phone"></td>
-              <td class="name"><?php echo $vouchers['description']; ?></td>
+              <td class="name"><?php echo $gift_voucher['description']; ?></td>
               <td class="model hide-phone"></td>
               <td class="quantity"><input type="text" name="" value="1" size="1" disabled="disabled" />
-                &nbsp;<a href="<?php echo $vouchers['remove']; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/remove.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" /></a>
+                &nbsp;<a href="<?php echo $gift_voucher['remove']; ?>"><img src="catalog/view/theme/<?php echo $template; ?>/image/account/remove.png" alt="<?php echo $button_remove; ?>" title="<?php echo $button_remove; ?>" /></a>
               </td>
-              <td class="price hide-phone"><?php echo $vouchers['amount']; ?></td>
+              <td class="price hide-phone"><?php echo $gift_voucher['amount']; ?></td>
             <?php if ($tax_breakdown) { ?>
               <td class="price hide-phone">0.00</td>
               <td class="price hide-phone">0%</td>
             <?php } ?>
-              <td class="total"><?php echo $vouchers['amount']; ?></td>
+              <td class="total"><?php echo $gift_voucher['amount']; ?></td>
             </tr>
           <?php } ?>
         </tbody>
@@ -193,6 +193,9 @@
         &nbsp;
         <input type="submit" value="<?php echo $button_voucher; ?>" class="button" />
       </form>
+      <?php if ($allow_voucher) { ?>
+        <p class="voucher-buy"><a href="<?php echo $buy_voucher; ?>"><i class="fa fa-gift"></i> <?php echo $text_buy_voucher; ?></a></p>
+      <?php } ?>
     </div>
     <div id="reward" class="content" style="display:<?php echo ($next === 'reward') ? 'block' : 'none'; ?>;">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data">

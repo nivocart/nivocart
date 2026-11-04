@@ -62,7 +62,8 @@ class ControllerSettingSetting extends Controller {
 		'entry_affiliate_mail', 'entry_affiliate_activity', 'entry_affiliate_disable',
 		'entry_return', 'entry_return_status', 'entry_return_disable',
 		'entry_reward_rate', 'entry_reward_display', 'entry_coupon_special',
-		'entry_voucher_min', 'entry_voucher_max', 'entry_admin_stylesheet',
+		'entry_voucher_min', 'entry_voucher_max', 'entry_checkout_voucher',
+		'entry_voucher_expiry', 'entry_voucher_presets', 'entry_voucher_information', 'entry_admin_stylesheet',
 		'entry_admin_width_limit', 'entry_admin_menu_icons', 'entry_admin_limit',
 		'entry_catalog_limit', 'entry_dashboard_map', 'entry_pagination_hi', 'entry_pagination_lo',
 		'entry_auto_seo_url', 'entry_user_group_display',
@@ -120,7 +121,8 @@ class ControllerSettingSetting extends Controller {
 		'help_login_attempts', 'help_affiliate', 'help_affiliate_mail',
 		'help_affiliate_activity', 'help_affiliate_disable', 'help_return',
 		'help_return_status', 'help_return_disable', 'help_reward_rate',
-		'help_coupon_special', 'help_voucher_min', 'help_voucher_max',
+		'help_coupon_special', 'help_voucher_min', 'help_voucher_max', 'help_checkout_voucher',
+		'help_voucher_expiry', 'help_voucher_presets', 'help_voucher_information',
 		'help_admin_width_limit', 'help_admin_limit', 'help_catalog_limit',
 		'help_dashboard_map', 'help_pagination_hi', 'help_pagination_lo', 'help_auto_seo_url',
 		'help_user_group_display', 'help_catalog_barcode', 'help_admin_barcode',
@@ -259,6 +261,10 @@ class ControllerSettingSetting extends Controller {
 		'config_coupon_special'   => [],
 		'config_voucher_min'      => [],
 		'config_voucher_max'      => [],
+		'config_checkout_voucher' => [],
+		'config_voucher_expiry'   => [],
+		'config_voucher_presets'  => [],
+		'config_voucher_information_id' => [],
 		// Preference
 		'config_dashboard_map'    => ['default' => 'world_en'],
 		'config_pagination_hi'    => [],
@@ -374,7 +380,7 @@ class ControllerSettingSetting extends Controller {
 	private const ERROR_KEYS = [
 		'warning', 'name', 'owner', 'address', 'email', 'email_noreply',
 		'telephone', 'title', 'customer_group_display', 'login_attempts',
-		'reward_rate', 'voucher_min', 'voucher_max', 'catalog_limit',
+		'reward_rate', 'voucher_min', 'voucher_max', 'voucher_expiry', 'voucher_presets', 'catalog_limit',
 		'admin_limit', 'preference_pagination', 'image_quality', 'image_category', 'image_thumb',
 		'image_wide_thumb', 'image_popup', 'image_product', 'image_additional', 'image_brand',
 		'image_related', 'image_compare', 'image_wishlist', 'image_newsthumb',
@@ -793,6 +799,26 @@ class ControllerSettingSetting extends Controller {
 
 		if (empty($post['config_voucher_max'])) {
 			$this->error['voucher_max'] = $this->language->get('error_voucher_max');
+		}
+
+		$expiry = $post['config_voucher_expiry'] ?? '';
+
+		if (!is_numeric($expiry) || (int)$expiry != $expiry || $expiry < 0 || $expiry > 120) {
+			$this->error['voucher_expiry'] = $this->language->get('error_voucher_expiry');
+		}
+
+		$presets = trim((string)($post['config_voucher_presets'] ?? ''));
+
+		if ($presets !== '') {
+			foreach (explode(',', $presets) as $preset) {
+				$preset = trim($preset);
+
+				if (!is_numeric($preset) || $preset <= 0 || (!empty($post['config_voucher_min']) && $preset < $post['config_voucher_min']) || (!empty($post['config_voucher_max']) && $preset > $post['config_voucher_max'])) {
+					$this->error['voucher_presets'] = $this->language->get('error_voucher_presets');
+
+					break;
+				}
+			}
 		}
 	}
 

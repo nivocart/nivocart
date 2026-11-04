@@ -198,12 +198,12 @@ class ControllerCheckoutManual extends Controller {
 					$this->session->data['vouchers'][] = [
 						'voucher_id'       => $voucher['voucher_id'],
 						'description'      => $voucher['description'],
-						'code'             => substr(md5(mt_rand()), 0, 10),
+						'code'             => voucherCodeGenerate(),
 						'from_name'        => $voucher['from_name'],
 						'from_email'       => $voucher['from_email'],
 						'to_name'          => $voucher['to_name'],
 						'to_email'         => $voucher['to_email'],
-						'voucher_theme_id' => $voucher['voucher_theme_id'],
+						'design'           => $voucher['design'] ?? 'general',
 						'message'          => $voucher['message'],
 						'amount'           => $voucher['amount']
 					];
@@ -235,12 +235,12 @@ class ControllerCheckoutManual extends Controller {
 				if (!isset($json['error']['vouchers'])) {
 					$voucher_data = [
 						'order_id'         => 0,
-						'code'             => substr(md5(mt_rand()), 0, 10),
+						'code'             => voucherCodeGenerate(),
 						'from_name'        => $this->request->post['from_name'],
 						'from_email'       => $this->request->post['from_email'],
 						'to_name'          => $this->request->post['to_name'],
 						'to_email'         => $this->request->post['to_email'],
-						'voucher_theme_id' => $this->request->post['voucher_theme_id'],
+						'design'           => voucherDesignIsValid($this->request->post['design'] ?? '') ? $this->request->post['design'] : 'general',
 						'message'          => $this->request->post['message'],
 						'amount'           => $this->request->post['amount'],
 						'status'           => true
@@ -255,12 +255,12 @@ class ControllerCheckoutManual extends Controller {
 					$this->session->data['vouchers'][] = [
 						'voucher_id'       => $voucher_id,
 						'description'      => sprintf($this->language->get('text_for'), $this->currency->format($this->request->post['amount'], $this->config->get('config_currency')), $this->request->post['to_name']),
-						'code'             => substr(md5(mt_rand()), 0, 10),
+						'code'             => voucherCodeGenerate(),
 						'from_name'        => $this->request->post['from_name'],
 						'from_email'       => $this->request->post['from_email'],
 						'to_name'          => $this->request->post['to_name'],
 						'to_email'         => $this->request->post['to_email'],
-						'voucher_theme_id' => $this->request->post['voucher_theme_id'],
+						'design'           => voucherDesignIsValid($this->request->post['design'] ?? '') ? $this->request->post['design'] : 'general',
 						'message'          => $this->request->post['message'],
 						'amount'           => $this->request->post['amount']
 					];
@@ -278,7 +278,7 @@ class ControllerCheckoutManual extends Controller {
 					'from_email'       => $voucher['from_email'],
 					'to_name'          => $voucher['to_name'],
 					'to_email'         => $voucher['to_email'],
-					'voucher_theme_id' => $voucher['voucher_theme_id'],
+					'design'           => $voucher['design'] ?? 'general',
 					'message'          => $voucher['message'],
 					'amount'           => $voucher['amount']
 				];

@@ -86,6 +86,7 @@ require_once DIR_SYSTEM . 'helper/password.php';
 require_once DIR_SYSTEM . 'helper/pdf.php';
 require_once DIR_SYSTEM . 'helper/totals.php';
 require_once DIR_SYSTEM . 'helper/vat.php';
+require_once DIR_SYSTEM . 'helper/voucher.php';
 
 // Vendor
 require_once DIR_SYSTEM . 'vendor/dompdf/autoload.inc.php';

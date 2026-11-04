@@ -271,16 +271,19 @@ class ControllerCheckoutCheckoutConfirm extends Controller {
 		// Gift vouchers
 		$voucher_data = [];
 
+		$this->load->model('checkout/voucher');
+
 		if (!empty($this->session->data['vouchers'])) {
 			foreach ($this->session->data['vouchers'] as $voucher) {
 				$voucher_data[] = [
 					'description'      => $voucher['description'],
-					'code'             => substr(md5(mt_rand()), 0, 10),
+					'code'             => $this->model_checkout_voucher->generateCode(),
 					'to_name'          => $voucher['to_name'],
 					'to_email'         => $voucher['to_email'],
 					'from_name'        => $voucher['from_name'],
 					'from_email'       => $voucher['from_email'],
-					'voucher_theme_id' => $voucher['voucher_theme_id'],
+					'design'           => $voucher['design'] ?? 'general',
+					'date_consent'     => !empty($voucher['consent']),
 					'message'          => $voucher['message'],
 					'amount'           => $voucher['amount'],
 				];

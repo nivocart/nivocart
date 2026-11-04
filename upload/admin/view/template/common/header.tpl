@@ -141,12 +141,7 @@
               <li><a href="<?php echo $offer_category_category; ?>"><?php echo ($icons) ? '<i class="fa fa-dot-circle-o"></i>' : ''; ?><?php echo $text_offer_category_category; ?></a></li>
             </ul>
           </li>
-          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-ticket"></i>' : ''; ?><?php echo $text_voucher; ?></a>
-            <ul>
-              <li><a href="<?php echo $voucher; ?>"><?php echo ($icons) ? '<i class="fa fa-ticket"></i>' : ''; ?><?php echo $text_voucher; ?></a></li>
-              <li><a href="<?php echo $voucher_theme; ?>"><?php echo ($icons) ? '<i class="fa fa-image"></i>' : ''; ?><?php echo $text_voucher_theme; ?></a></li>
-            </ul>
-          </li>
+          <li><a href="<?php echo $voucher; ?>"><?php echo ($icons) ? '<i class="fa fa-ticket"></i>' : ''; ?><?php echo $text_voucher; ?></a></li>
           <li><a href="<?php echo $contact; ?>"><?php echo ($icons) ? '<i class="fa fa-mail-forward"></i>' : ''; ?><?php echo $text_contact; ?></a></li>
         </ul>
       </li>
@@ -161,6 +156,7 @@
               <li><a href="<?php echo $report_sale_shipping; ?>"><?php echo ($icons) ? '<i class="fa fa-truck"></i>' : ''; ?><?php echo $text_report_sale_shipping; ?></a></li>
               <li><a href="<?php echo $report_sale_return; ?>"><?php echo ($icons) ? '<i class="fa fa-history"></i>' : ''; ?><?php echo $text_report_sale_return; ?></a></li>
               <li><a href="<?php echo $report_sale_coupon; ?>"><?php echo ($icons) ? '<i class="fa fa-tags"></i>' : ''; ?><?php echo $text_report_sale_coupon; ?></a></li>
+              <li><a href="<?php echo $report_sale_voucher; ?>"><?php echo ($icons) ? '<i class="fa fa-ticket"></i>' : ''; ?><?php echo $text_report_sale_voucher; ?></a></li>
             </ul>
           </li>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-cube"></i>' : ''; ?><?php echo $text_product; ?></a>

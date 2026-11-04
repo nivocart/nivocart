@@ -324,7 +324,8 @@ class ControllerToolConfiguration extends Controller {
 			'password'   => $ds(DIR_SYSTEM . 'helper/password.php'),
 			'pdf'        => $ds(DIR_SYSTEM . 'helper/pdf.php'),
 			'totals'     => $ds(DIR_SYSTEM . 'helper/totals.php'),
-			'vat'        => $ds(DIR_SYSTEM . 'helper/vat.php')
+			'vat'        => $ds(DIR_SYSTEM . 'helper/vat.php'),
+			'voucher'    => $ds(DIR_SYSTEM . 'helper/voucher.php')
 		];
 
 		$this->data['library_files'] = [

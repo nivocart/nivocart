@@ -90,6 +90,7 @@ $_['text_report_sale_tax']             = 'Taxes';
 $_['text_report_sale_shipping']        = 'Shipping';
 $_['text_report_sale_return']          = 'Returns';
 $_['text_report_sale_coupon']          = 'Coupons';
+$_['text_report_sale_voucher']         = 'Gift Vouchers';
 $_['text_report_sale_profit']          = 'Profits';
 $_['text_report_sale_dropship_profit'] = 'Dropship Profits';
 $_['text_report_product_label']        = 'Labels';
@@ -139,7 +140,6 @@ $_['text_user_log']                    = 'User Logs';
 $_['text_user_group']                  = 'User Groups';
 $_['text_users']                       = 'Users';
 $_['text_voucher']                     = 'Gift Vouchers';
-$_['text_voucher_theme']               = 'Voucher Themes';
 $_['text_weight_class']                = 'Weight Classes';
 $_['text_zone']                        = 'Zones';
 
