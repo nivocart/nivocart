@@ -18,4 +18,3 @@ $_['text_design_birthday']        = 'Happy Birthday';
 $_['text_design_christmas']       = 'Merry Christmas';
 $_['text_design_thank_you']       = 'Thank you';
 $_['text_design_congratulations'] = 'Congratulations';
-
