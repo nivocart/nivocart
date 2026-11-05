@@ -246,12 +246,12 @@ class ModelSaleVoucher extends Model {
 			$implode[] = "(v.from_name LIKE '" . $name . "%' OR v.to_name LIKE '" . $name . "%' OR v.from_email LIKE '" . $name . "%' OR v.to_email LIKE '" . $name . "%')";
 		}
 
-		if (!empty($data['filter_date_start'])) {
-			$implode[] = "DATE(v.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+		if (!empty($data['filter_date_expire'])) {
+			$implode[] = "DATE(v.date_expire) = '" . $this->db->escape($data['filter_date_expire']) . "'";
 		}
 
-		if (!empty($data['filter_date_end'])) {
-			$implode[] = "DATE(v.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+		if (!empty($data['filter_date_added'])) {
+			$implode[] = "DATE(v.date_added) = '" . $this->db->escape($data['filter_date_added']) . "'";
 		}
 
 		if ($implode) {

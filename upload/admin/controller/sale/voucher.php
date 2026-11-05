@@ -103,8 +103,8 @@ class ControllerSaleVoucher extends Controller {
 		$filter_code = $this->request->get['filter_code'] ?? '';
 		$filter_name = $this->request->get['filter_name'] ?? '';
 		$filter_state = $this->request->get['filter_state'] ?? '';
-		$filter_date_start = $this->request->get['filter_date_start'] ?? '';
-		$filter_date_end = $this->request->get['filter_date_end'] ?? '';
+		$filter_date_expire = $this->request->get['filter_date_expire'] ?? '';
+		$filter_date_added = $this->request->get['filter_date_added'] ?? '';
 
 		$sort = $this->request->get['sort'] ?? 'v.date_added';
 		$order = $this->request->get['order'] ?? 'DESC';
@@ -140,15 +140,15 @@ class ControllerSaleVoucher extends Controller {
 		$this->data['vouchers'] = [];
 
 		$data = [
-			'filter_code'       => $filter_code,
-			'filter_name'       => $filter_name,
-			'filter_state'      => $filter_state,
-			'filter_date_start' => $filter_date_start,
-			'filter_date_end'   => $filter_date_end,
-			'sort'              => $sort,
-			'order'             => $order,
-			'start'             => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit'             => $this->config->get('config_admin_limit')
+			'filter_code'        => $filter_code,
+			'filter_name'        => $filter_name,
+			'filter_state'       => $filter_state,
+			'filter_date_expire' => $filter_date_expire,
+			'filter_date_added'  => $filter_date_added,
+			'sort'               => $sort,
+			'order'              => $order,
+			'start'              => ($page - 1) * $this->config->get('config_admin_limit'),
+			'limit'              => $this->config->get('config_admin_limit')
 		];
 
 		$voucher_total = $this->model_sale_voucher->getTotalVouchers($data);
@@ -268,8 +268,8 @@ class ControllerSaleVoucher extends Controller {
 		$this->data['filter_code'] = $filter_code;
 		$this->data['filter_name'] = $filter_name;
 		$this->data['filter_state'] = $filter_state;
-		$this->data['filter_date_start'] = $filter_date_start;
-		$this->data['filter_date_end'] = $filter_date_end;
+		$this->data['filter_date_expire'] = $filter_date_expire;
+		$this->data['filter_date_added'] = $filter_date_added;
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -646,7 +646,7 @@ class ControllerSaleVoucher extends Controller {
 	 * @param array<int, string> $exclude Parameters to leave out
 	 */
 	private function getUrl(array $exclude = []): string {
-		$keys = ['filter_code', 'filter_name', 'filter_state', 'filter_date_start', 'filter_date_end', 'sort', 'order', 'page'];
+		$keys = ['filter_code', 'filter_name', 'filter_state', 'filter_date_expire', 'filter_date_added', 'sort', 'order', 'page'];
 
 		$url = '';
 

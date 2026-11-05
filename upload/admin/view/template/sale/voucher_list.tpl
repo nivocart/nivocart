@@ -99,9 +99,8 @@
                 <?php } ?>
               </select></td>
               <td></td>
-              <td></td>
-              <td class="center"><input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" size="10" id="date-start" /><br />
-              <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" size="10" id="date-end" /></td>
+              <td class="center"><input type="text" name="filter_date_expire" value="<?php echo $filter_date_expire; ?>" size="10" id="date-expire" /></td>
+              <td class="center"><input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" size="10" id="date-added" /></td>
               <td style="text-align:right;"><a onclick="filter();" class="button-filter"><?php echo $button_filter; ?></a></td>
             </tr>
           </thead>
@@ -177,16 +176,16 @@ function filter() {
 		url += '&filter_state=' + encodeURIComponent(filter_state);
 	}
 
-	var filter_date_start = $('input[name=\'filter_date_start\']').prop('value');
+	var filter_date_expire = $('input[name=\'filter_date_expire\']').prop('value');
 
-	if (filter_date_start) {
-		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
+	if (filter_date_expire) {
+		url += '&filter_date_expire=' + encodeURIComponent(filter_date_expire);
 	}
 
-	var filter_date_end = $('input[name=\'filter_date_end\']').prop('value');
+	var filter_date_added = $('input[name=\'filter_date_added\']').prop('value');
 
-	if (filter_date_end) {
-		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
+	if (filter_date_added) {
+		url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
 	}
 
 	location = url;
@@ -212,8 +211,8 @@ window.addEventListener("keydown", function(event) {
 
 <script type="text/javascript"><!--
 $(document).ready(function() {
-	$('#date-start').datepicker({dateFormat: 'yy-mm-dd'});
-	$('#date-end').datepicker({dateFormat: 'yy-mm-dd'});
+	$('#date-expire').datepicker({dateFormat: 'yy-mm-dd'});
+	$('#date-added').datepicker({dateFormat: 'yy-mm-dd'});
 });
 //--></script>
 
