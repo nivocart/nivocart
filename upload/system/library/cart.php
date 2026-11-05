@@ -571,12 +571,12 @@ class Cart {
 	 */
 	public function hasStock(): bool {
 		foreach ($this->getProducts() as $product) {
-			if ($product['stock'] > 0) {
-				return true;
+			if (!$product['stock']) {
+				return false;
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
