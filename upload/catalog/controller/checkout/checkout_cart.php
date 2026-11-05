@@ -146,7 +146,8 @@ class ControllerCheckoutCheckoutCart extends Controller {
 					'to_email'         => $voucher['to_email'],
 					'from_name'        => $voucher['from_name'],
 					'from_email'       => $voucher['from_email'],
-					'voucher_theme_id' => $voucher['voucher_theme_id'],
+					'design'           => $voucher['design'] ?? 'general',
+					'date_consent'     => !empty($voucher['consent']),
 					'message'          => $voucher['message'],
 					'amount'           => $voucher['amount']
 				];
@@ -234,6 +235,10 @@ class ControllerCheckoutCheckoutCart extends Controller {
 		$this->data['column_total'] = $this->language->get('column_total');
 
 		$this->data['products'] = [];
+
+		$age_minimum = 0;
+		$age_logged = false;
+		$age_checked = false;
 
 		foreach ($this->cart->getProducts() as $product) {
 			$product_total = 0;
