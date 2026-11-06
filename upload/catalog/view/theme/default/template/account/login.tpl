@@ -18,15 +18,6 @@
   <h1><?php echo $heading_title; ?></h1>
   <div class="login-content">
     <div class="left">
-      <h2><?php echo $text_new_customer; ?></h2>
-      <div class="content">
-        <p><b><?php echo $text_register; ?></b></p>
-        <p><?php echo $text_register_account; ?></p>
-        <p><?php echo $text_register_gdpr; ?></p>
-        <a href="<?php echo $register; ?>" class="button"><i class="fa fa-caret-right"></i> &nbsp; <?php echo $button_continue; ?></a>
-      </div>
-    </div>
-    <div class="right">
       <h2><?php echo $text_returning_customer; ?></h2>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" name="login">
         <div class="content">
@@ -46,6 +37,15 @@
         <?php } ?>
         </div>
       </form>
+    </div>
+    <div class="right">
+      <h2><?php echo $text_new_customer; ?></h2>
+      <div class="content">
+        <p><b><?php echo $text_register; ?></b></p>
+        <p><?php echo $text_register_account; ?></p>
+        <p><?php echo $text_register_gdpr; ?></p>
+        <a href="<?php echo $register; ?>" class="button"><i class="fa fa-caret-right"></i> &nbsp; <?php echo $button_continue; ?></a>
+      </div>
     </div>
   </div>
   <?php echo $content_low; ?>
