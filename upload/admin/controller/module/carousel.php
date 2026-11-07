@@ -8,7 +8,7 @@ class ControllerModuleCarousel extends Controller {
 	private $error = [];
 	private $name = 'carousel';
 	private $plugin = 'Slick';
-	private $version = 'v1.8.1';
+	private $version = 'v2.0.1';
 
 	public function index() {
 		$this->language->load('module/' . $this->name);

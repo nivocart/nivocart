@@ -12,6 +12,7 @@ Release: TBA
 - Add total number of store products count in Admin Overview Dashboard.
 - Add complete Gift Voucher implementation for guests and customers.
 - Fix some Tax calculations issues in the shopping Cart and at Checkout.
+- Updated Slick.js jQuery Carousel module script to latest v2.0.1.
 
 
 NivoCart v2.5.3

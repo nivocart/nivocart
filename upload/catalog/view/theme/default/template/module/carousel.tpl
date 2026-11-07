@@ -1,7 +1,7 @@
 <?php if ($theme) { ?>
 <div class="box">
   <div class="box-heading"><?php echo $title; ?></div>
-  <div style="<?php echo $track_style; ?>">
+  <div class="carousel-wrap">
     <div class="slick_skin" id="carousel<?php echo $module; ?>">
       <?php foreach ($banners as $banner) { ?>
         <?php if ($banner['link']) { ?>
@@ -14,7 +14,7 @@
   </div>
 </div>
 <?php } else { ?>
-  <div style="<?php echo $track_style; ?>">
+  <div class="carousel-wrap">
     <div class="slick_skin" id="carousel<?php echo $module; ?>">
       <?php foreach ($banners as $banner) { ?>
         <?php if ($banner['link']) { ?>
@@ -34,24 +34,17 @@ $(document).ready(function() {
 		autoplay: <?php echo $auto; ?>,
 		autoplaySpeed: <?php echo $duration; ?>,
 		pauseOnHover: true,
+		slidesToShow: 1,
 		slidesToScroll: 1,
 		infinite: true,
 		speed: <?php echo $speed; ?>,
-		easing: 'easeInOutExpo',
+		cssEase: 'cubic-bezier(0.87, 0, 0.13, 1)',
+		respondTo: 'slider',
 		mobileFirst: true,
 		swipe: true,
 		rtl: false,
 		dots: false,
-		responsive: [
-		{ breakpoint: 1440, settings: { slidesToShow: <?php echo $show_1440; ?> } },
-		{ breakpoint: 1280, settings: { slidesToShow: <?php echo $show_1280; ?> } },
-		{ breakpoint: 960, settings: { slidesToShow: <?php echo $show_960; ?> } },
-		{ breakpoint: 640, settings: { slidesToShow: <?php echo $show_640; ?> } },
-		{ breakpoint: 480, settings: { slidesToShow: <?php echo $show_480; ?> } },
-		{ breakpoint: 320, settings: { slidesToShow: <?php echo $show_320; ?> } } ]
-	});
-	$('.carousel-swipe').on('swipe', function(event, slick, direction) {
-		console.log(direction);
+		responsive: <?php echo $responsive; ?>
 	});
 });
 --></script>

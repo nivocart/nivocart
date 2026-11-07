@@ -17,7 +17,6 @@ class ControllerModuleCarousel extends Controller {
 		$this->document->addStyle('catalog/view/javascript/jquery/slick/slick.min.css');
 
 		$this->document->addScript('catalog/view/javascript/jquery/slick/slick.min.js');
-		$this->document->addScript('catalog/view/javascript/jquery/jquery.easing.min.js');
 
 		// Module
 		$this->data['theme'] = $this->config->get($this->name . '_theme');
@@ -30,24 +29,21 @@ class ControllerModuleCarousel extends Controller {
 		$this->data['duration'] = ($this->config->get($this->name . '_duration')) ? $this->config->get($this->name . '_duration') : 3000;
 		$this->data['speed'] = ($this->config->get($this->name . '_speed')) ? $this->config->get($this->name . '_speed') : 300;
 
-		$this->data['track_style'] = 'margin:0 30px 20px 30px;';
+		// Responsive: "show" is the maximum number of images. Each extra image is only shown once the carousel is wide
+		// enough for one more full image (image width + 10px of slide padding), so images are never squeezed or cropped.
+		$show_max = max(1, (int)round($setting['show'], 0, PHP_ROUND_HALF_UP));
+		$slide_width = (int)$setting['width'] + 10;
 
-		// Responsive
-		$show_max = round($setting['show'], 0, PHP_ROUND_HALF_UP);
+		$responsive = [];
 
-		$show_1440 = ($show_max > 6) ? ($show_max - 1) : $show_max;
-		$show_1280 = ($show_1440 > 5) ? ($show_max - 1) : $show_1440;
-		$show_960 = ($show_1280 > 4) ? ($show_1280 - 1) : $show_1280;
-		$show_640 = ($show_960 > 3) ? ($show_960 - 1) : $show_960;
-		$show_480 = ($show_640 > 2) ? ($show_640 - 1) : $show_640;
-		$show_320 = ($show_480 > 1) ? ($show_480 - 1) : $show_480;
+		for ($i = 2; $i <= $show_max; $i++) {
+			$responsive[] = [
+				'breakpoint' => ($i * $slide_width) - 1,
+				'settings'   => ['slidesToShow' => $i]
+			];
+		}
 
-		$this->data['show_1440'] = $show_1440;
-		$this->data['show_1280'] = $show_1280;
-		$this->data['show_960'] = $show_960;
-		$this->data['show_640'] = $show_640;
-		$this->data['show_480'] = $show_480;
-		$this->data['show_320'] = $show_320;
+		$this->data['responsive'] = json_encode($responsive);
 
 		// Auto
 		$this->data['auto'] = $setting['auto'] ? 'true' : 'false';
