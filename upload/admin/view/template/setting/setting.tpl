@@ -2130,6 +2130,10 @@
             <td><input name="config_instagram" type="text" size="60" value="<?php echo $config_instagram; ?>" /></td>
           <tr>
           <tr>
+            <td><?php echo $entry_profile_urls; ?><span class="help"><?php echo $help_profile_urls; ?></span></td>
+            <td><textarea name="config_profile_urls" cols="60" rows="5"><?php echo $config_profile_urls; ?></textarea></td>
+          </tr>
+          <tr>
             <td><?php echo $entry_teams; ?></td>
             <td><input name="config_teams" type="text" size="50" value="<?php echo $config_teams; ?>" /></td>
           <tr>

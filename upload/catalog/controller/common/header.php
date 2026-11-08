@@ -296,6 +296,29 @@ class ControllerCommonHeader extends Controller {
 			$organization['contactPoint'] = $contact;
 		}
 
+		// Profile pages (social and directory URLs) so agents can confirm it is the same entity
+		$profiles = [];
+
+		foreach (['config_facebook', 'config_twitter', 'config_tiktok', 'config_pinterest', 'config_instagram'] as $key) {
+			$profiles[] = (string)$this->config->get($key);
+		}
+
+		$profiles = array_merge($profiles, preg_split('/\R/', (string)$this->config->get('config_profile_urls')) ?: []);
+
+		$same_as = [];
+
+		foreach ($profiles as $profile) {
+			$profile = html_entity_decode(trim($profile), ENT_QUOTES, 'UTF-8');
+
+			if ($profile !== '' && preg_match('#^https?://#i', $profile) && filter_var($profile, FILTER_VALIDATE_URL)) {
+				$same_as[] = $profile;
+			}
+		}
+
+		if ($same_as) {
+			$organization['sameAs'] = array_values(array_unique($same_as));
+		}
+
 		$website = [
 			'@type'           => 'WebSite',
 			'@id'             => $base . '#website',

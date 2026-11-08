@@ -239,6 +239,7 @@ $_['entry_twitter']                 = 'Url X (Twitter) page:';
 $_['entry_tiktok']                  = 'Url Tiktok page:';
 $_['entry_pinterest']               = 'Url Pinterest page:';
 $_['entry_instagram']               = 'Url Instagram page:';
+$_['entry_profile_urls']            = 'Other Profile URLs:';
 $_['entry_teams']                   = 'Teams Name:';
 $_['entry_sharethis']               = 'ShareThis Property ID:';
 $_['entry_meta_google']             = 'Google Identification:';
@@ -399,6 +400,7 @@ $_['help_mail_parameter']           = 'When using \'Mail\', additional mail para
 $_['help_account_mail']             = 'Send a email to the store owner when a new account is registered.';
 $_['help_alert_mail']               = 'Send a email to the store owner when a new order is created.';
 $_['help_alert_emails']             = 'Any additional emails you want to receive the alert email, in addition to the main store email. (comma separated)';
+$_['help_profile_urls']             = 'One URL per line (Google Business Profile, Trustpilot, directories...).<br />Together with the page URLs above, they are added as <b>sameAs</b> links to the Organization structured data of the Home page.';
 $_['help_sharethis']                = 'Login to your <a onclick="window.open(\'http://www.sharethis.com/\');" title=""><u>ShareThis</u></a> account and enter your Property ID into this field.';
 $_['help_meta_google']              = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Google</b> Search Console here.<br />It will be added to the Catalog Header to verify site ownership.';
 $_['help_meta_bing']                = 'Paste the complete <b>&lt;meta&gt;</b> tag provided by <b>Bing</b> Webmaster Tools here.<br />It will be added to the Catalog Header to verify site ownership.';
