@@ -29,6 +29,8 @@ class ControllerInformationNews extends Controller {
 			$this->document->setTitle($news_info['title']);
 			$this->document->setDescription($news_info['meta_description']);
 
+			$this->document->addLink($this->url->link('information/news', 'news_id=' . (int)$news_id, 'SSL'), 'canonical');
+
 			$this->model_catalog_news->updateViewed($news_id);
 
 			$this->data['breadcrumbs'][] = [

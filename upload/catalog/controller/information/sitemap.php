@@ -12,6 +12,8 @@ class ControllerInformationSitemap extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+		$this->document->addLink($this->url->link('information/sitemap', '', 'SSL'), 'canonical');
+
 		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = [

@@ -18,6 +18,8 @@ class ControllerProductManufacturer extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 		$this->document->setDescription(sprintf($this->language->get('text_meta_description_list'), $this->config->get('config_name')));
 
+		$this->document->addLink($this->url->link('product/manufacturer', '', 'SSL'), 'canonical');
+
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$this->data['text_index'] = $this->language->get('text_index');

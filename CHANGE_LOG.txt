@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Add canonical links to seven pages that lacked one for better SEO.
+
 
 NivoCart v2.5.4
 ---------------

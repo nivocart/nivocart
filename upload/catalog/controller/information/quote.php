@@ -12,6 +12,8 @@ class ControllerInformationQuote extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+		$this->document->addLink($this->url->link('information/quote', '', 'SSL'), 'canonical');
+
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && $this->validate()) {
 			unset($this->session->data['captcha']);
 
