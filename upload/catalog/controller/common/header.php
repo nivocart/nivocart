@@ -78,6 +78,9 @@ class ControllerCommonHeader extends Controller {
 			if ($site_schema) {
 				$this->document->addMeta('<script type="application/ld+json">' . $site_schema . '</script>');
 			}
+
+			// Point agents to the llms.txt summary of the store
+			$this->response->addHeader('Link: <' . ($this->config->get('config_secure') ? $this->config->get('config_ssl') : $this->config->get('config_url')) . 'llms.txt>; rel="describedby"; type="text/plain"');
 		}
 
 		$this->data['description'] = $page_description;

@@ -111,6 +111,10 @@ RewriteRule ^pinterest-feed\.xml$ index.php?route=feed/pinterest_feed [L]
 ## Google Merchant Center product feed (plain .xml address for feed fetchers)
 RewriteRule ^google-merchant-feed\.xml$ index.php?route=feed/google_merchant [L]
 
+## llms.txt summary for AI agents (a real llms.txt file in the web root takes priority)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^llms\.txt$ index.php?route=feed/llms [L]
+
 ## Block direct access to download directory
 RewriteRule ^download/(.*) index.php?route=error/not_found [L]
 

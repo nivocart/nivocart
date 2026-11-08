@@ -10,6 +10,7 @@ Release: TBA
 
 - Add canonical links to seven pages that lacked one for better SEO.
 - Add schema.org Organization and WebSite data (JSON-LD) for the home page.
+- Add llms.txt summary for AI agents and to improve SEO further.
 
 
 NivoCart v2.5.4
