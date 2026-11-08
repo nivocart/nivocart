@@ -8,6 +8,11 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+
+NivoCart v2.5.4
+---------------
+Release: 08/11/2026
+
 - Add new column "Category" in Admin Product List table header filter.
 - Add total number of store products count in Admin Overview Dashboard.
 - Add complete Gift Voucher implementation for guests and customers.
