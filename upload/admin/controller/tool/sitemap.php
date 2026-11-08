@@ -34,6 +34,8 @@ class ControllerToolSitemap extends Controller {
 			['route' => 'account/order', 'lang' => 'route_order'],
 			['route' => 'account/download', 'lang' => 'route_download'],
 			['route' => 'account/reward', 'lang' => 'route_reward'],
+			['route' => 'account/review', 'lang' => 'route_review'],
+			['route' => 'account/voucher/purchased', 'lang' => 'route_voucher_purchased'],
 			['route' => 'account/return', 'lang' => 'route_return'],
 			['route' => 'account/return/insert', 'lang' => 'route_return_insert'],
 			['route' => 'account/transaction', 'lang' => 'route_transaction'],

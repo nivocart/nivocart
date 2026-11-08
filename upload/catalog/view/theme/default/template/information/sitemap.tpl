@@ -108,6 +108,8 @@
             <?php } ?>
             <?php if ($sp_enabled('account/reward')) { ?><li><a href="<?php echo $reward; ?>"><?php echo $text_reward; ?></a></li><?php } ?>
             <?php if ($sp_enabled('account/voucher')) { ?><li><a href="<?php echo $giftvoucher; ?>"><?php echo $text_giftvoucher; ?></a></li><?php } ?>
+            <?php if ($sp_enabled('account/review')) { ?><li><a href="<?php echo $review; ?>"><?php echo $text_review; ?></a></li><?php } ?>
+            <?php if ($sp_enabled('account/voucher/purchased')) { ?><li><a href="<?php echo $voucher_purchased; ?>"><?php echo $text_voucher_purchased; ?></a></li><?php } ?>
             <?php if ($sp_enabled('account/newsletter')) { ?><li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li><?php } ?>
           </ul>
         <?php } ?>

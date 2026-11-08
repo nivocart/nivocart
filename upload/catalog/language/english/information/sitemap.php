@@ -27,6 +27,8 @@ $_['text_addreturn']             = 'Add a Return Request';
 $_['text_return']                = 'View Return Requests';
 $_['text_reward']                = 'View Reward Points';
 $_['text_giftvoucher']           = 'Purchase Gift Cards';
+$_['text_review']                = 'Your Product Reviews';
+$_['text_voucher_purchased']     = 'View Gift Vouchers';
 $_['text_newsletter']            = 'Newsletter';
 
 $_['text_affiliate_account']     = 'Affiliate Account';

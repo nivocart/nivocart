@@ -53,6 +53,8 @@ class ControllerInformationSitemap extends Controller {
 		$this->data['text_return'] = $this->language->get('text_return');
 		$this->data['text_reward'] = $this->language->get('text_reward');
 		$this->data['text_giftvoucher'] = $this->language->get('text_giftvoucher');
+		$this->data['text_review'] = $this->language->get('text_review');
+		$this->data['text_voucher_purchased'] = $this->language->get('text_voucher_purchased');
 		$this->data['text_newsletter'] = $this->language->get('text_newsletter');
 
 		$this->data['text_affiliate_account'] = $this->language->get('text_affiliate_account');
@@ -193,6 +195,8 @@ class ControllerInformationSitemap extends Controller {
 		$this->data['addreturn'] = $this->url->link('account/return/insert', '', 'SSL');
 		$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
 		$this->data['giftvoucher'] = $this->url->link('account/voucher', '', 'SSL');
+		$this->data['review'] = $this->url->link('account/review', '', 'SSL');
+		$this->data['voucher_purchased'] = $this->url->link('account/voucher/purchased', '', 'SSL');
 		$this->data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
 
 		$this->data['affiliate_account'] = $this->url->link('affiliate/account', '', 'SSL');
