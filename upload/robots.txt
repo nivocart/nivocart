@@ -1,4 +1,6 @@
 # NivoCart robots.txt
+# Content-Signal declares how content may be used: search results, AI answers (ai-input)
+# and AI model training (ai-train). It is repeated in every group below on purpose.
 # This file controls crawler access to prevent indexing of admin,
 # account, checkout, and system areas, and to manage crawl rate
 # for bots that respect Crawl-delay (Google does not).
@@ -8,6 +10,7 @@
 # "Crawl rate" / Crawl Stats settings instead if needed)
 # ---------------------------------------------------------------
 User-agent: Googlebot
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 # Directories
 Disallow: /admin/
@@ -57,6 +60,7 @@ Disallow: /maintenance.php
 User-agent: Bingbot
 User-agent: Yandex
 User-agent: Baiduspider
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 Crawl-delay: 10
 
 Disallow: /admin/
@@ -102,6 +106,7 @@ Disallow: /maintenance.php
 # ---------------------------------------------------------------
 User-agent: Pinterestbot
 User-agent: Pinterest
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 Allow: /image/
 
 Disallow: /admin/
@@ -115,6 +120,7 @@ Disallow: /vendor/
 # conservative delay as a safety net.
 # ---------------------------------------------------------------
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 Crawl-delay: 10
 
 Disallow: /admin/
