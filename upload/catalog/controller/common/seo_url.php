@@ -130,6 +130,11 @@ class ControllerCommonSeoUrl extends Controller {
 			if (isset($this->request->get['route'])) {
 				return $this->forward($this->request->get['route']);
 			}
+
+			// No alias matched and no route was found: show the Not Found page (404) instead of the home page
+			if (trim($this->request->get['_route_'], '/') !== '') {
+				return $this->forward('error/not_found');
+			}
 		}
 
 		if ((isset($this->request->get['route'])) && is_string($this->request->get['route']) && ($this->config->get('config_seo_url'))) {
