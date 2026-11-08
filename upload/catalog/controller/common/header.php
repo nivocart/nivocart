@@ -71,6 +71,15 @@ class ControllerCommonHeader extends Controller {
 			}
 		}
 
+		// Site-wide structured data (Organization and WebSite) on the home page only
+		if ($route === '' || $route === 'common/home') {
+			$site_schema = json_encode($this->getSiteSchema(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS);
+
+			if ($site_schema) {
+				$this->document->addMeta('<script type="application/ld+json">' . $site_schema . '</script>');
+			}
+		}
+
 		$this->data['description'] = $page_description;
 		$this->data['keywords'] = $page_keywords ? $page_keywords : $default_keywords;
 		$this->data['metas'] = $this->document->getMetas();
@@ -232,5 +241,77 @@ class ControllerCommonHeader extends Controller {
 
 		$this->resolveTemplate('common/header');
 		$this->render();
+	}
+
+	/**
+	 * schema.org Organization and WebSite data (JSON-LD) for the home page.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function getSiteSchema(): array {
+		$base = $this->config->get('config_secure') ? $this->config->get('config_ssl') : $this->config->get('config_url');
+		$store_name = html_entity_decode((string)$this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
+
+		$organization = [
+			'@type' => 'Organization',
+			'@id'   => $base . '#organization',
+			'name'  => $store_name,
+			'url'   => $base
+		];
+
+		$description = trim(html_entity_decode((string)$this->config->get('config_meta_description'), ENT_QUOTES, 'UTF-8'));
+
+		if ($description !== '') {
+			$organization['description'] = $description;
+		}
+
+		$logo = (string)$this->config->get('config_logo');
+
+		if ($logo && is_file(DIR_IMAGE . $logo)) {
+			$organization['logo'] = $base . 'image/' . implode('/', array_map('rawurlencode', explode('/', $logo)));
+		}
+
+		$email = trim((string)$this->config->get('config_email'));
+		$telephone = trim((string)$this->config->get('config_telephone'));
+
+		if ($email !== '' || $telephone !== '') {
+			$contact = [
+				'@type'       => 'ContactPoint',
+				'contactType' => 'customer service'
+			];
+
+			if ($email !== '') {
+				$organization['email'] = $email;
+				$contact['email'] = $email;
+			}
+
+			if ($telephone !== '') {
+				$organization['telephone'] = $telephone;
+				$contact['telephone'] = $telephone;
+			}
+
+			$organization['contactPoint'] = $contact;
+		}
+
+		$website = [
+			'@type'           => 'WebSite',
+			'@id'             => $base . '#website',
+			'name'            => $store_name,
+			'url'             => $base,
+			'publisher'       => ['@id' => $base . '#organization'],
+			'potentialAction' => [
+				'@type'       => 'SearchAction',
+				'target'      => [
+					'@type'       => 'EntryPoint',
+					'urlTemplate' => $this->url->link('product/search', '', 'SSL') . '&search={search_term_string}'
+				],
+				'query-input' => 'required name=search_term_string'
+			]
+		];
+
+		return [
+			'@context' => 'https://schema.org',
+			'@graph'   => [$organization, $website]
+		];
 	}
 }
