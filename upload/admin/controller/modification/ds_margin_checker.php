@@ -4,8 +4,9 @@
  *
  * Admin controller for the DS Margin Checker tool.
  * Lists all dropship products with their sale price vs total cost (supplier cost plus a hand-entered
- * shipping cost, converted to the store default currency), highlights below-threshold and
- * negative-margin products, and allows inline price and shipping cost updates from the product list.
+ * shipping cost, converted to the store default currency), highlights products priced below their target
+ * price (margin up to a Breakpoint, a second margin above it, and a minimum profit) and negative-margin
+ * products, and allows inline price and shipping cost updates from the product list.
  *
  * Requires: nc_product_dropship, nc_dropship_variant and nc_dropship_channel tables (created by a
  * Dropshipping connector such as CJ Dropshipping).
@@ -21,6 +22,12 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 	// Default margin threshold percentage
 	private const DEFAULT_THRESHOLD = 20.0;
+
+	// Default Breakpoint (Total Cost, store default currency). Only used when a second margin is chosen
+	private const DEFAULT_BREAKPOINT = 40;
+
+	// Total Costs shown in the Sample Prices table of the Settings page
+	private const SAMPLE_COSTS = [5, 20, 60, 100, 300];
 
 	// Sale price rounding rules (setting value => language key)
 	private const ROUNDING_RULES = [
@@ -77,19 +84,16 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 		$this->load->model('modification/ds_margin_checker');
 
-		$threshold = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
-
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$this->data['error_dependency'] = '';
-		$this->data['threshold'] = $threshold;
 
 		// Navigation URLs
 		$this->data['list_url'] = $this->url->link('modification/ds_margin_checker/list', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['settings_url'] = $this->url->link('modification/ds_margin_checker/settings', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Dashboard KPI stats
-		$stats = $this->model_modification_ds_margin_checker->getDashboardStats($threshold);
+		$stats = $this->model_modification_ds_margin_checker->getDashboardStats();
 
 		$this->data['total_products'] = $stats['total'];
 		$this->data['below_threshold'] = $stats['below_threshold'];
@@ -176,7 +180,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 	/**
 	 * Full filterable, paginated product list with inline price editing.
-	 * Filter options: all | below (below threshold) | negative (negative margin).
+	 * Filter options: all | below (below target price) | negative (negative margin).
 	 */
 	public function list(): void {
 		// Direct URL access: show the dependency warning instead of querying missing tables
@@ -190,8 +194,6 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('modification/ds_margin_checker');
-
-		$threshold = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
 
 		// Pagination and filter params from GET (filter is whitelisted: it is echoed into URLs)
 		$filter = $this->request->get['filter'] ?? 'all';
@@ -210,15 +212,14 @@ class ControllerModificationDsMarginChecker extends Controller {
 			'limit'  => $limit
 		];
 
-		$products = $this->model_modification_ds_margin_checker->getProducts($data, $threshold);
-		$total = $this->model_modification_ds_margin_checker->getTotalProducts($data, $threshold);
+		$products = $this->model_modification_ds_margin_checker->getProducts($data);
+		$total = $this->model_modification_ds_margin_checker->getTotalProducts($data);
 
 		$this->data['products'] = $products;
 		$this->data['total'] = $total;
 		$this->data['page'] = $page;
 		$this->data['limit'] = $limit;
 		$this->data['filter'] = $filter;
-		$this->data['threshold'] = $threshold;
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		// Pagination
@@ -242,6 +243,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['update_price_url'] = 'index.php?route=modification/ds_margin_checker/updatePrice&token=' . $this->session->data['token'];
 		$this->data['sync_shipping_url'] = 'index.php?route=modification/ds_margin_checker/syncShipping&token=' . $this->session->data['token'];
 		$this->data['set_prices_url'] = 'index.php?route=modification/ds_margin_checker/setAllPrices&token=' . $this->session->data['token'];
+		$this->data['preview_prices_url'] = 'index.php?route=modification/ds_margin_checker/previewPrices&token=' . $this->session->data['token'];
 
 		// The sync button needs the CJ Dropshipping connector and at least one enabled CJ channel
 		$this->data['cj_channels'] = is_file(DIR_APPLICATION . 'model/modification/cjdropshipping.php') ? $this->model_modification_ds_margin_checker->getCjChannelIds() : [];
@@ -259,10 +261,14 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['button_refresh'] = $this->language->get('button_refresh');
 		$this->data['button_set_prices'] = $this->language->get('button_set_prices');
 
-		$rounding = $this->getRoundingRule();
-
-		$this->data['text_set_prices_confirm'] = sprintf($this->language->get('text_set_prices_confirm'), number_format($threshold, 1) . '%', $this->language->get(self::ROUNDING_RULES[$rounding]));
 		$this->data['text_set_prices_done'] = $this->language->get('text_set_prices_done');
+		$this->data['text_set_prices_specials'] = $this->language->get('text_set_prices_specials');
+		$this->data['text_preview_counts'] = $this->language->get('text_preview_counts');
+		$this->data['text_preview_drops'] = $this->language->get('text_preview_drops');
+		$this->data['text_preview_rises'] = $this->language->get('text_preview_rises');
+		$this->data['text_preview_specials'] = $this->language->get('text_preview_specials');
+		$this->data['text_preview_warning'] = $this->language->get('text_preview_warning');
+		$this->data['text_preview_nothing'] = $this->language->get('text_preview_nothing');
 		$this->data['text_sync_running'] = $this->language->get('text_sync_running');
 		$this->data['text_sync_done'] = $this->language->get('text_sync_done');
 		$this->data['text_sync_progress'] = $this->language->get('text_sync_progress');
@@ -288,6 +294,7 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['text_rate_title'] = $this->language->get('text_rate_title');
 		$this->data['column_sale_price'] = $this->language->get('column_sale_price');
 		$this->data['column_margin_pct'] = $this->language->get('column_margin_pct');
+		$this->data['text_target_price'] = $this->language->get('text_target_price');
 		$this->data['column_status'] = $this->language->get('column_status');
 		$this->data['column_channel'] = $this->language->get('column_channel');
 		$this->data['column_action'] = $this->language->get('column_action');
@@ -387,7 +394,9 @@ class ControllerModificationDsMarginChecker extends Controller {
 				'new_shipping' => number_format($shipping, 2, '.', ''),
 				'total_cost_original' => number_format((float)($product['total_cost_original'] ?? 0), 2, '.', ''),
 				'total_cost' => isset($product['total_cost']) ? number_format((float)$product['total_cost'], 2, '.', '') : null,
-				'margin_pct' => $product['margin_pct'] ?? null
+				'margin_pct' => $product['margin_pct'] ?? null,
+				'target_price' => isset($product['target_price']) ? number_format((float)$product['target_price'], 2, '.', '') : null,
+				'below_target' => (int)($product['below_target'] ?? 0)
 			]);
 		} catch (\Exception $e) {
 			$this->jsonResponse(['error' => $e->getMessage()]);
@@ -448,47 +457,93 @@ class ControllerModificationDsMarginChecker extends Controller {
 	// =================================================================
 
 	/**
-	 * Set every dropship product's sale price from its Total Cost (default currency), the Minimum Margin
-	 * Threshold and the Sale Price Rounding Rule. Expects POST. Needs modify permission on this tool AND on catalog/product.
-	 * Returns JSON: updated, unchanged, skipped.
+	 * Preview of "Set All Prices Automatically": nothing is written. Expects POST.
+	 * Same permissions as setAllPrices(). Returns JSON: up, down, same, skipped, specials, drops, rises, rules_text.
+	 */
+	public function previewPrices(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/ds_margin_checker');
+
+		$error = $this->getSetPricesError();
+
+		if ($error) {
+			$this->jsonResponse(['error' => $error]);
+			return;
+		}
+
+		try {
+			$rounding = $this->getRoundingRule();
+
+			$result = $this->model_modification_ds_margin_checker->previewAllPrices($rounding);
+
+			$result['rules_text'] = $this->getRulesText($this->model_modification_ds_margin_checker->getPricingRules(), $rounding);
+
+			$this->jsonResponse($result);
+		} catch (\Exception $e) {
+			$this->jsonResponse(['error' => $e->getMessage()]);
+		}
+	}
+
+	/**
+	 * Set every dropship product's sale price from its Total Cost (default currency), the pricing rules
+	 * (Settings) and the Sale Price Rounding Rule. Expects POST. Needs modify permission on this tool AND on catalog/product.
+	 * Returns JSON: updated, unchanged, skipped, specials (products whose Special is at or above the new price or below their cost).
 	 */
 	public function setAllPrices(): void {
 		$this->language->load('modification/' . $this->name);
 
 		$this->load->model('modification/ds_margin_checker');
 
-		if ($this->dependenciesMissing()) {
-			$this->jsonResponse(['error' => $this->language->get('error_dependency')]);
-			return;
-		}
+		$error = $this->getSetPricesError();
 
-		if (!$this->validatePermission()) {
-			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
-			return;
-		}
-
-		if (!$this->user->hasPermission('modify', 'catalog/product')) {
-			$this->jsonResponse(['error' => $this->language->get('error_permission_product')]);
-			return;
-		}
-
-		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
-			$this->jsonResponse(['error' => $this->language->get('error_method')]);
-			return;
-		}
-
-		$threshold = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
-
-		if ($threshold < 0 || $threshold >= 100) {
-			$this->jsonResponse(['error' => $this->language->get('error_set_prices_margin')]);
+		if ($error) {
+			$this->jsonResponse(['error' => $error]);
 			return;
 		}
 
 		try {
-			$this->jsonResponse($this->model_modification_ds_margin_checker->setAllPrices($threshold, $this->getRoundingRule()));
+			$this->jsonResponse($this->model_modification_ds_margin_checker->setAllPrices($this->getRoundingRule()));
 		} catch (\Exception $e) {
 			$this->jsonResponse(['error' => $e->getMessage()]);
 		}
+	}
+
+	/**
+	 * Sample prices for the Settings page, from the options chosen in the form (saved or not).
+	 * Expects POST: threshold, margin_high, breakpoint, min_profit, price_rounding.
+	 * Read only. Returns JSON: rows (cost, price, profit, margin: formatted text).
+	 */
+	public function samplePrices(): void {
+		$this->load->model('modification/ds_margin_checker');
+
+		$model = $this->model_modification_ds_margin_checker;
+
+		$rounding = (string)($this->request->post['price_rounding'] ?? 'none');
+
+		if (!isset(self::ROUNDING_RULES[$rounding])) {
+			$rounding = 'none';
+		}
+
+		$rules = $model->getPricingRules([
+			'margin'      => $this->request->post['threshold'] ?? null,
+			'margin_high' => $this->request->post['margin_high'] ?? '',
+			'breakpoint'  => $this->request->post['breakpoint'] ?? 0,
+			'floor'       => $this->request->post['min_profit'] ?? 0
+		]);
+
+		$rows = [];
+
+		foreach ($model->getSamplePrices(self::SAMPLE_COSTS, $rounding, $rules) as $row) {
+			$rows[] = [
+				'cost'   => $model->formatAmount($row['cost']),
+				'price'  => $model->formatAmount($row['price']),
+				'profit' => $model->formatAmount($row['profit']),
+				'margin' => number_format($row['margin'], 1) . '%'
+			];
+		}
+
+		$this->jsonResponse(['rows' => $rows]);
 	}
 
 	// =================================================================
@@ -502,15 +557,30 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 		$this->load->model('modification/ds_margin_checker');
 
+		$model = $this->model_modification_ds_margin_checker;
+
+		$margin_high_options = $this->getMarginHighOptions();
+		$breakpoint_options = $this->getBreakpointOptions();
+		$min_profit_options = $this->getMinProfitOptions();
+
+		$saved_margin_high = (string)$model->getSetting('margin_high', '');
+		$saved_breakpoint = (string)$model->getSetting('breakpoint', self::DEFAULT_BREAKPOINT);
+		$saved_min_profit = (string)$model->getSetting('min_profit', '0');
+
 		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validatePermission()) {
 			$threshold = (float)($this->request->post['threshold'] ?? self::DEFAULT_THRESHOLD);
-			$threshold = max(0.0, min(100.0, $threshold));
+			$threshold = max(0.0, min(99.0, $threshold));
 
-			$this->model_modification_ds_margin_checker->setSetting('threshold', $threshold);
+			$model->setSetting('threshold', $threshold);
+
+			// The three dropdown values must be one of the offered options (or the value already saved)
+			$model->setSetting('margin_high', $this->pickOption($this->request->post['margin_high'] ?? '', $margin_high_options, $saved_margin_high));
+			$model->setSetting('breakpoint', $this->pickOption($this->request->post['breakpoint'] ?? '', $breakpoint_options, $saved_breakpoint));
+			$model->setSetting('min_profit', $this->pickOption($this->request->post['min_profit'] ?? '', $min_profit_options, $saved_min_profit));
 
 			$rounding = (string)($this->request->post['price_rounding'] ?? 'none');
 
-			$this->model_modification_ds_margin_checker->setSetting('price_rounding', isset(self::ROUNDING_RULES[$rounding]) ? $rounding : 'none');
+			$model->setSetting('price_rounding', isset(self::ROUNDING_RULES[$rounding]) ? $rounding : 'none');
 
 			$this->session->data['success'] = $this->language->get('text_settings_saved');
 
@@ -518,8 +588,12 @@ class ControllerModificationDsMarginChecker extends Controller {
 			return;
 		}
 
-		$this->data['threshold'] = (float)$this->model_modification_ds_margin_checker->getSetting('threshold', self::DEFAULT_THRESHOLD);
+		$this->data['threshold'] = min(99.0, (float)$model->getSetting('threshold', self::DEFAULT_THRESHOLD));
 		$this->data['price_rounding'] = $this->getRoundingRule();
+
+		$this->data['margin_high_options'] = $this->markSelected($margin_high_options, $saved_margin_high);
+		$this->data['breakpoint_options'] = $this->markSelected($breakpoint_options, $saved_breakpoint);
+		$this->data['min_profit_options'] = $this->markSelected($min_profit_options, $saved_min_profit);
 
 		$this->data['rounding_options'] = [];
 
@@ -530,17 +604,35 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
 		$this->data['save_url'] = $this->url->link('modification/ds_margin_checker/settings', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['sample_url'] = 'index.php?route=modification/ds_margin_checker/samplePrices&token=' . $this->session->data['token'];
 		$this->data['dashboard_url'] = $this->url->link('modification/ds_margin_checker', 'token=' . $this->session->data['token'], 'SSL');
 
 		// Language strings
 		$this->data['tab_settings'] = $this->language->get('tab_settings');
 
 		$this->data['entry_threshold'] = $this->language->get('entry_threshold');
-
 		$this->data['help_threshold'] = $this->language->get('help_threshold');
+
+		$this->data['entry_margin_high'] = $this->language->get('entry_margin_high');
+		$this->data['help_margin_high'] = $this->language->get('help_margin_high');
+
+		$this->data['entry_breakpoint'] = $this->language->get('entry_breakpoint');
+		$this->data['help_breakpoint'] = $this->language->get('help_breakpoint');
+
+		$this->data['entry_min_profit'] = $this->language->get('entry_min_profit');
+		$this->data['help_min_profit'] = $this->language->get('help_min_profit');
 
 		$this->data['entry_rounding'] = $this->language->get('entry_rounding');
 		$this->data['help_rounding'] = $this->language->get('help_rounding');
+
+		$this->data['entry_samples'] = $this->language->get('entry_samples');
+		$this->data['help_samples'] = $this->language->get('help_samples');
+
+		$this->data['column_total_cost'] = $this->language->get('column_total_cost');
+		$this->data['column_sale_price'] = $this->language->get('column_sale_price');
+		$this->data['column_profit'] = $this->language->get('column_profit');
+		$this->data['column_margin_pct'] = $this->language->get('column_margin_pct');
+		$this->data['error_server'] = $this->language->get('error_server');
 
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -571,12 +663,15 @@ class ControllerModificationDsMarginChecker extends Controller {
 
 	/**
 	 * Called when the modification is installed via the admin Modifications page.
-	 * Saves the default threshold setting and creates the shipping cost table.
+	 * Saves the default settings (no tiers, no minimum profit) and creates the shipping cost table.
 	 */
 	public function install(): void {
 		$this->load->model('modification/ds_margin_checker');
 
 		$this->model_modification_ds_margin_checker->setSetting('threshold', self::DEFAULT_THRESHOLD);
+		$this->model_modification_ds_margin_checker->setSetting('margin_high', '');
+		$this->model_modification_ds_margin_checker->setSetting('breakpoint', self::DEFAULT_BREAKPOINT);
+		$this->model_modification_ds_margin_checker->setSetting('min_profit', '0');
 		$this->model_modification_ds_margin_checker->setSetting('price_rounding', 'none');
 		$this->model_modification_ds_margin_checker->ensureShippingTable();
 	}
@@ -668,6 +763,155 @@ class ControllerModificationDsMarginChecker extends Controller {
 		$rule = (string)$this->model_modification_ds_margin_checker->getSetting('price_rounding', 'none');
 
 		return isset(self::ROUNDING_RULES[$rule]) ? $rule : 'none';
+	}
+
+	/**
+	 * Why "Set All Prices Automatically" (and its preview) cannot run now, or '' when it can.
+	 */
+	private function getSetPricesError(): string {
+		if ($this->dependenciesMissing()) {
+			return $this->language->get('error_dependency');
+		}
+
+		if (!$this->validatePermission()) {
+			return $this->language->get('error_permission');
+		}
+
+		if (!$this->user->hasPermission('modify', 'catalog/product')) {
+			return $this->language->get('error_permission_product');
+		}
+
+		if ($this->request->server['REQUEST_METHOD'] !== 'POST') {
+			return $this->language->get('error_method');
+		}
+
+		return '';
+	}
+
+	/**
+	 * A sentence describing the pricing rules, for the confirmation dialog.
+	 */
+	private function getRulesText(array $rules, string $rounding): string {
+		$model = $this->model_modification_ds_margin_checker;
+
+		if ($rules['tiered']) {
+			$text = sprintf($this->language->get('text_rules_tiered'), $this->formatPercent($rules['margin_low']), $model->formatAmount($rules['breakpoint']), $this->formatPercent($rules['margin_high']));
+		} else {
+			$text = sprintf($this->language->get('text_rules_flat'), $this->formatPercent($rules['margin_low']));
+		}
+
+		if ($rules['floor'] > 0) {
+			$text .= sprintf($this->language->get('text_rules_floor'), $model->formatAmount($rules['floor']));
+		}
+
+		return $text . sprintf($this->language->get('text_rules_rounding'), $this->language->get(self::ROUNDING_RULES[$rounding]));
+	}
+
+	private function formatPercent(float $value): string {
+		return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.') . '%';
+	}
+
+	/**
+	 * Options of "Margin above the Breakpoint": an empty value (same margin, no tiers) and 1% to 50%.
+	 *
+	 * @return array  List of ['value' => string, 'label' => string]
+	 */
+	private function getMarginHighOptions(): array {
+		$options = [['value' => '', 'label' => $this->language->get('text_margin_same')]];
+
+		for ($i = 1; $i <= 50; $i++) {
+			$options[] = ['value' => (string)$i, 'label' => $i . '%'];
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Options of the Breakpoint (Total Cost): 10 to 100 by 5, 110 to 200 by 10, 225 to 500 by 25.
+	 */
+	private function getBreakpointOptions(): array {
+		$values = array_merge(range(10, 100, 5), range(110, 200, 10), range(225, 500, 25));
+
+		$options = [];
+
+		foreach ($values as $value) {
+			$options[] = ['value' => (string)$value, 'label' => $this->model_modification_ds_margin_checker->formatAmount((float)$value)];
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Options of the Minimum Profit: none, 0.25 to 5 by 0.25, 5.50 to 10 by 0.50.
+	 */
+	private function getMinProfitOptions(): array {
+		$options = [['value' => '0', 'label' => $this->language->get('text_no_minimum')]];
+
+		$values = [];
+
+		for ($i = 1; $i <= 20; $i++) {
+			$values[] = $i * 0.25;
+		}
+
+		for ($i = 11; $i <= 20; $i++) {
+			$values[] = $i * 0.5;
+		}
+
+		foreach ($values as $value) {
+			$options[] = ['value' => number_format($value, 2, '.', ''), 'label' => $this->model_modification_ds_margin_checker->formatAmount($value)];
+		}
+
+		return $options;
+	}
+
+	/**
+	 * The posted value when it is one of the offered options, otherwise the value that is already saved.
+	 * Numbers are compared as numbers (2.5 is 2.50).
+	 */
+	private function pickOption(mixed $posted, array $options, string $current): string {
+		$posted = trim((string)$posted);
+
+		foreach ($options as $option) {
+			if ($this->sameOption($posted, $option['value'])) {
+				return $option['value'];
+			}
+		}
+
+		return $current;
+	}
+
+	/**
+	 * Mark the saved value as selected. A saved value that is not in the list (changed by hand, or the list
+	 * changed since) is added as an extra option so it is never lost.
+	 */
+	private function markSelected(array $options, string $selected): array {
+		$found = false;
+
+		foreach ($options as &$option) {
+			$option['selected'] = $this->sameOption($selected, $option['value']);
+
+			if ($option['selected']) {
+				$found = true;
+			}
+		}
+
+		unset($option);
+
+		if (!$found && is_numeric($selected)) {
+			$options[] = ['value' => $selected, 'label' => rtrim(rtrim(number_format((float)$selected, 4, '.', ''), '0'), '.'), 'selected' => true];
+
+			usort($options, fn($a, $b) => ($a['value'] === '' ? -1 : (float)$a['value']) <=> ($b['value'] === '' ? -1 : (float)$b['value']));
+		}
+
+		return $options;
+	}
+
+	private function sameOption(string $a, string $b): bool {
+		if ($a === '' || $b === '') {
+			return $a === $b;
+		}
+
+		return is_numeric($a) && is_numeric($b) && abs((float)$a - (float)$b) < 0.00001;
 	}
 
 	private function jsonResponse(array $data): void {

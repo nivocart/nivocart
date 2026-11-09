@@ -22,7 +22,37 @@
         <table class="form">
           <tr>
             <td><?php echo $entry_threshold; ?><span class="help"><?php echo $help_threshold; ?></span></td>
-            <td><input type="number" name="threshold" value="<?php echo number_format((float)$threshold, 2, '.', ''); ?>" min="0" max="100" step="0.5" size="5" /> %</td>
+            <td><input type="number" name="threshold" value="<?php echo number_format((float)$threshold, 2, '.', ''); ?>" min="0" max="99" step="0.5" size="5" /> %</td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_breakpoint; ?><span class="help"><?php echo $help_breakpoint; ?></span></td>
+            <td>
+              <select name="breakpoint">
+                <?php foreach ($breakpoint_options as $option) { ?>
+                <option value="<?php echo $option['value']; ?>"<?php echo $option['selected'] ? ' selected="selected"' : ''; ?>><?php echo $option['label']; ?></option>
+                <?php } ?>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_margin_high; ?><span class="help"><?php echo $help_margin_high; ?></span></td>
+            <td>
+              <select name="margin_high">
+                <?php foreach ($margin_high_options as $option) { ?>
+                <option value="<?php echo $option['value']; ?>"<?php echo $option['selected'] ? ' selected="selected"' : ''; ?>><?php echo $option['label']; ?></option>
+                <?php } ?>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td><?php echo $entry_min_profit; ?><span class="help"><?php echo $help_min_profit; ?></span></td>
+            <td>
+              <select name="min_profit">
+                <?php foreach ($min_profit_options as $option) { ?>
+                <option value="<?php echo $option['value']; ?>"<?php echo $option['selected'] ? ' selected="selected"' : ''; ?>><?php echo $option['label']; ?></option>
+                <?php } ?>
+              </select>
+            </td>
           </tr>
           <tr>
             <td><?php echo $entry_rounding; ?><span class="help"><?php echo $help_rounding; ?></span></td>
@@ -34,9 +64,62 @@
               </select>
             </td>
           </tr>
+          <tr>
+            <td><?php echo $entry_samples; ?><span class="help"><?php echo $help_samples; ?></span></td>
+            <td>
+              <table class="list">
+                <thead>
+                  <tr>
+                    <td class="right"><?php echo $column_total_cost; ?></td>
+                    <td class="right"><?php echo $column_sale_price; ?></td>
+                    <td class="right"><?php echo $column_profit; ?></td>
+                    <td class="right"><?php echo $column_margin_pct; ?></td>
+                  </tr>
+                </thead>
+                <tbody id="mc-sample-body"></tbody>
+              </table>
+            </td>
+          </tr>
         </table>
       </form>
     </div>
   </div>
 </div>
+<script>
+var mcSampleUrl = <?php echo json_encode($sample_url); ?>;
+var mcSampleError = <?php echo json_encode($error_server); ?>;
+var mcSampleTimer = null;
+
+function mcLoadSamples() {
+  $.ajax({
+    url: mcSampleUrl,
+    type: 'POST',
+    dataType: 'json',
+    data: $('#form').serialize(),
+    success: function(res) {
+      var $body = $('#mc-sample-body').empty();
+
+      $.each(res.rows || [], function(i, row) {
+        $('<tr></tr>')
+          .append($('<td class="right"></td>').text(row.cost))
+          .append($('<td class="right"></td>').text(row.price))
+          .append($('<td class="right"></td>').text(row.profit))
+          .append($('<td class="right"></td>').text(row.margin))
+          .appendTo($body);
+      });
+    },
+    error: function(xhr) {
+      $('#mc-sample-body').empty().append($('<tr></tr>').append($('<td colspan="4" class="center"></td>').text(mcSampleError + ' ' + xhr.status)));
+    }
+  });
+}
+
+$('#form select, #form input[name="threshold"]').on('change keyup', function() {
+  clearTimeout(mcSampleTimer);
+
+  mcSampleTimer = setTimeout(mcLoadSamples, 250);
+});
+
+mcLoadSamples();
+</script>
 <?php echo $footer; ?>

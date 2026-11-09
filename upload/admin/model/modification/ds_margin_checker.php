@@ -12,6 +12,14 @@
  *                         total_cost_original                            (default currency)
  *   margin_pct          = ((sale_price - total_cost) / sale_price) * 100  (sale price is ex-tax)
  *
+ * Target price (the price "Set All Prices Automatically" gives, before the rounding rule), from the pricing rules
+ * (Settings): a margin up to a Breakpoint, a second margin above it, and a minimum profit (floor):
+ *   profit = max( markup_low * min(cost, breakpoint) + markup_high * max(cost - breakpoint, 0), floor )
+ *   target = cost + profit,   markup = margin / (100 - margin)
+ * Below the breakpoint this is exactly cost / (1 - margin). When no second margin is chosen the pricing is not tiered.
+ * calculateTargetPrice() is the only place that formula exists in PHP, getBaseSql() has its SQL twin (target_price).
+ * A product is "below target" when its price is lower than its target price.
+ *
  * No tax and no overhead costs are used here: the tool shows the cost as accurately as possible so the retail price
  * can be fine-tuned. exchange_rate is nc_currency.value of the cost currency (units of that currency for one unit
  * of the default currency). When no rate exists for the cost currency the total cost and the margin are NULL
@@ -19,8 +27,9 @@
  *
  * Reads from: nc_product, nc_product_description, nc_product_dropship, nc_dropship_variant,
  *             nc_dropship_channel, nc_currency and nc_ds_margin_shipping.
+ *             nc_product_special (read only, to warn about Specials after a price change) and nc_currency (symbol).
  * Writes to:  nc_product (price only), nc_ds_margin_shipping (own table, created on demand),
- *             nc_setting (threshold).
+ *             nc_setting (pricing rules).
  *
  * Intended location: admin/model/modification/ds_margin_checker.php
  *
@@ -28,6 +37,8 @@
  */
 class ModelModificationDsMarginChecker extends Model {
 	protected bool $shipping_table_ready = false;
+	protected ?array $pricing_rules = null;
+	protected ?array $currency_format = null;
 
 	// =================================================================
 	// SHARED COST / MARGIN QUERY
@@ -35,7 +46,9 @@ class ModelModificationDsMarginChecker extends Model {
 
 	/**
 	 * SQL of one row per active dropship product with the original cost, its currency, the
-	 * exchange rate, the total cost in the default currency and the margin.
+	 * exchange rate, the total cost in the default currency, the margin, the target price, target_margin_pct,
+	 * below_target (1 when the price is under the target price) and margin_gap (margin_pct minus target_margin_pct,
+	 * the sort key: the most negative products need attention first).
 	 * Every other query in this model wraps it, so the calculation exists in exactly one place.
 	 *
 	 * @param  string $where  Extra condition on the product row, for example "p.product_id = '5'".
@@ -50,52 +63,70 @@ class ModelModificationDsMarginChecker extends Model {
 
 		$cost = "CASE WHEN (" . $rate . ") IS NULL THEN NULL WHEN src.original_currency = '" . $default . "' THEN (src.original_cost + src.shipping_cost) ELSE (src.original_cost + src.shipping_cost) / (" . $rate . ") END";
 
+		// Target price: the SQL twin of calculateTargetPrice() (exact, before the rounding rule). NULL without a cost.
+		$rules = $this->getPricingRules();
+
+		$profit = "GREATEST(" . number_format($this->getMarkup($rules['margin_low']), 10, '.', '') . " * LEAST(x.total_cost, " . number_format($rules['breakpoint'], 4, '.', '') . ") + " . number_format($this->getMarkup($rules['margin_high']), 10, '.', '') . " * GREATEST(x.total_cost - " . number_format($rules['breakpoint'], 4, '.', '') . ", 0), " . number_format($rules['floor'], 4, '.', '') . ")";
+
 		return "
 			SELECT
-				x.*,
-				CASE WHEN x.total_cost IS NULL THEN NULL
-					 WHEN x.price > 0 THEN ROUND(((x.price - x.total_cost) / x.price) * 100, 2)
-					 ELSE -100
-				END AS margin_pct
+				y.*,
+				CASE WHEN y.target_price IS NULL THEN 0 WHEN y.price < y.target_price - 0.0001 THEN 1 ELSE 0 END AS below_target,
+				CASE WHEN y.target_price IS NULL THEN NULL ELSE ROUND(((y.target_price - y.total_cost) / y.target_price) * 100, 2) END AS target_margin_pct,
+				CASE WHEN y.margin_pct IS NULL THEN NULL
+					 WHEN y.target_price IS NULL THEN y.margin_pct
+					 ELSE y.margin_pct - ROUND(((y.target_price - y.total_cost) / y.target_price) * 100, 2)
+				END AS margin_gap
 			FROM (
 				SELECT
-					src.*,
-					(src.original_cost + src.shipping_cost) AS total_cost_original,
-					(" . $rate . ") AS exchange_rate,
-					ROUND(" . $cost . ", 4) AS total_cost
+					x.*,
+					CASE WHEN x.total_cost IS NULL THEN NULL
+						 WHEN x.price > 0 THEN ROUND(((x.price - x.total_cost) / x.price) * 100, 2)
+						 ELSE -100
+					END AS margin_pct,
+					CASE WHEN x.total_cost IS NULL OR x.total_cost <= 0 THEN NULL
+						 ELSE ROUND(x.total_cost + " . $profit . ", 4)
+					END AS target_price
 				FROM (
 					SELECT
-						p.product_id,
-						p.model,
-						p.sku,
-						p.price,
-						p.status,
-						pd.dropship_id,
-						pd.channel_id,
-						pd.rrp,
-						pd.last_price_sync,
-						dc.name AS channel_name,
-						psd.name AS product_name,
-						COALESCE(dv.supplier_cost, pd.supplier_cost) AS original_cost,
-						COALESCE(ms.shipping_cost, 0) AS shipping_cost,
-						UPPER(COALESCE(dv.currency_code, '" . $default . "')) AS original_currency,
-						cur.`value` AS currency_value
-					FROM `" . DB_PREFIX . "product_dropship` pd
-					INNER JOIN `" . DB_PREFIX . "product` p ON (p.product_id = pd.product_id)
-					LEFT JOIN `" . DB_PREFIX . "product_description` psd
-						   ON (psd.product_id = p.product_id AND psd.language_id = '" . (int)$this->config->get('config_language_id') . "')
-					LEFT JOIN `" . DB_PREFIX . "dropship_channel` dc ON (dc.channel_id = pd.channel_id)
-					LEFT JOIN `" . DB_PREFIX . "dropship_variant` dv
-						   ON (dv.variant_id = (
-								SELECT MAX(dv2.variant_id)
-								FROM `" . DB_PREFIX . "dropship_variant` dv2
-								WHERE dv2.dropship_id = pd.dropship_id AND dv2.product_id = pd.product_id AND dv2.is_active = '1'
-						   ))
-					LEFT JOIN `" . DB_PREFIX . "ds_margin_shipping` ms ON (ms.product_id = p.product_id)
-					LEFT JOIN `" . DB_PREFIX . "currency` cur ON (cur.code = UPPER(COALESCE(dv.currency_code, '" . $default . "')))
-					WHERE pd.is_active = '1'" . ($where ? " AND " . $where : "") . "
-				) src
-			) x
+						src.*,
+						(src.original_cost + src.shipping_cost) AS total_cost_original,
+						(" . $rate . ") AS exchange_rate,
+						ROUND(" . $cost . ", 4) AS total_cost
+					FROM (
+						SELECT
+							p.product_id,
+							p.model,
+							p.sku,
+							p.price,
+							p.status,
+							pd.dropship_id,
+							pd.channel_id,
+							pd.rrp,
+							pd.last_price_sync,
+							dc.name AS channel_name,
+							psd.name AS product_name,
+							COALESCE(dv.supplier_cost, pd.supplier_cost) AS original_cost,
+							COALESCE(ms.shipping_cost, 0) AS shipping_cost,
+							UPPER(COALESCE(dv.currency_code, '" . $default . "')) AS original_currency,
+							cur.`value` AS currency_value
+						FROM `" . DB_PREFIX . "product_dropship` pd
+						INNER JOIN `" . DB_PREFIX . "product` p ON (p.product_id = pd.product_id)
+						LEFT JOIN `" . DB_PREFIX . "product_description` psd
+							   ON (psd.product_id = p.product_id AND psd.language_id = '" . (int)$this->config->get('config_language_id') . "')
+						LEFT JOIN `" . DB_PREFIX . "dropship_channel` dc ON (dc.channel_id = pd.channel_id)
+						LEFT JOIN `" . DB_PREFIX . "dropship_variant` dv
+							   ON (dv.variant_id = (
+									SELECT MAX(dv2.variant_id)
+									FROM `" . DB_PREFIX . "dropship_variant` dv2
+									WHERE dv2.dropship_id = pd.dropship_id AND dv2.product_id = pd.product_id AND dv2.is_active = '1'
+							   ))
+						LEFT JOIN `" . DB_PREFIX . "ds_margin_shipping` ms ON (ms.product_id = p.product_id)
+						LEFT JOIN `" . DB_PREFIX . "currency` cur ON (cur.code = UPPER(COALESCE(dv.currency_code, '" . $default . "')))
+						WHERE pd.is_active = '1'" . ($where ? " AND " . $where : "") . "
+					) src
+				) x
+			) y
 		";
 	}
 
@@ -166,9 +197,8 @@ class ModelModificationDsMarginChecker extends Model {
 
 	/**
 	 * Return all KPI figures for the dashboard overview tiles plus the
-	 * top-10 worst-margin products table.
+	 * top-10 furthest-below-target products table.
 	 *
-	 * @param  float $threshold   Minimum acceptable margin percentage.
 	 * @return array {
 	 *     total: int,
 	 *     below_threshold: int,
@@ -178,13 +208,13 @@ class ModelModificationDsMarginChecker extends Model {
 	 *     worst_performers: array
 	 * }
 	 */
-	public function getDashboardStats(float $threshold): array {
+	public function getDashboardStats(): array {
 		$base = $this->getBaseSql();
 
-		$q = $this->db->query("SELECT COUNT(*) AS `total`, COALESCE(SUM(t.margin_pct < '" . (float)$threshold . "'), 0) AS `below_threshold`, COALESCE(SUM(t.margin_pct <= 0), 0) AS `negative_margin`, COALESCE(SUM(t.margin_pct IS NULL), 0) AS `no_rate`, AVG(t.margin_pct) AS `avg_margin` FROM (" . $base . ") t");
+		$q = $this->db->query("SELECT COUNT(*) AS `total`, COALESCE(SUM(t.below_target), 0) AS `below_threshold`, COALESCE(SUM(t.margin_pct <= 0), 0) AS `negative_margin`, COALESCE(SUM(t.margin_pct IS NULL), 0) AS `no_rate`, AVG(t.margin_pct) AS `avg_margin` FROM (" . $base . ") t");
 
-		// Top 10 worst-margin products for the dashboard table (products without a rate are counted above)
-		$worst = $this->db->query("SELECT t.* FROM (" . $base . ") t WHERE t.margin_pct IS NOT NULL ORDER BY t.margin_pct ASC LIMIT 10");
+		// Top 10 products furthest below their target margin (products without a rate are counted above)
+		$worst = $this->db->query("SELECT t.* FROM (" . $base . ") t WHERE t.margin_pct IS NOT NULL ORDER BY t.margin_gap ASC, t.product_id ASC LIMIT 10");
 
 		return [
 			'total'            => (int)$q->row['total'],
@@ -208,15 +238,15 @@ class ModelModificationDsMarginChecker extends Model {
 	 *     start: int,
 	 *     limit: int
 	 * }
-	 * @param  float $threshold
 	 * @return array  Rows including original_cost, original_currency, shipping_cost, total_cost_original,
-	 *                exchange_rate, total_cost, margin_pct (NULL without a rate), product_name, channel_name.
+	 *                exchange_rate, total_cost, margin_pct (NULL without a rate), target_price, below_target,
+	 *                product_name, channel_name.
 	 */
-	public function getProducts(array $data, float $threshold): array {
-		$sql = "SELECT t.* FROM (" . $this->getBaseSql() . ") t" . $this->getFilterSql($data['filter'] ?? 'all', $threshold);
+	public function getProducts(array $data): array {
+		$sql = "SELECT t.* FROM (" . $this->getBaseSql() . ") t" . $this->getFilterSql($data['filter'] ?? 'all');
 
-		// NULL (no rate) sorts first, so the products needing attention are on top
-		$sql .= " ORDER BY t.margin_pct ASC";
+		// NULL (no rate) sorts first, then the products furthest below their target margin
+		$sql .= " ORDER BY t.margin_gap ASC, t.product_id ASC";
 
 		if (isset($data['start'], $data['limit'])) {
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
@@ -231,11 +261,10 @@ class ModelModificationDsMarginChecker extends Model {
 	 * Return the total row count for the filtered product list (for pagination).
 	 *
 	 * @param  array $data   Same filter as getProducts().
-	 * @param  float $threshold
 	 * @return int
 	 */
-	public function getTotalProducts(array $data, float $threshold): int {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM (" . $this->getBaseSql() . ") t" . $this->getFilterSql($data['filter'] ?? 'all', $threshold));
+	public function getTotalProducts(array $data): int {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM (" . $this->getBaseSql() . ") t" . $this->getFilterSql($data['filter'] ?? 'all'));
 
 		return (int)$query->row['total'];
 	}
@@ -253,9 +282,9 @@ class ModelModificationDsMarginChecker extends Model {
 		return $query->row ?: [];
 	}
 
-	protected function getFilterSql(string $filter, float $threshold): string {
+	protected function getFilterSql(string $filter): string {
 		if ($filter === 'below') {
-			return " WHERE t.margin_pct < '" . (float)$threshold . "'";
+			return " WHERE t.below_target = 1";
 		}
 
 		if ($filter === 'negative') {
@@ -279,59 +308,277 @@ class ModelModificationDsMarginChecker extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `price` = '" . (float)$price . "', `date_modified` = NOW() WHERE `product_id` = '" . (int)$product_id . "'");
 	}
 
-	/**
-	 * Price (ex-VAT, in the store default currency) that gives exactly the wanted margin on a cost,
-	 * always rounded UP so the margin never ends below the wanted one. Works in whole pence.
-	 *
-	 * @param  float  $cost       Total cost in the store default currency (> 0).
-	 * @param  float  $margin_pct Wanted margin, 0 to below 100.
-	 * @param  string $rule       none | five (next price ending in 0 or 5 pence) | nine (next price ending in 9 pence).
-	 * @return int    Price in pence.
-	 */
-	public function calculatePricePence(float $cost, float $margin_pct, string $rule): int {
-		$pence = (int)ceil(round(($cost / (1 - ($margin_pct / 100))) * 100, 6));
+	// =================================================================
+	// PRICING RULES AND TARGET PRICE
+	// =================================================================
 
-		if ($rule === 'five') {
-			$pence = (int)(ceil($pence / 5) * 5);
-		} elseif ($rule === 'nine') {
-			$pence = (int)(ceil(($pence - 9) / 10) * 10 + 9);
+	/**
+	 * The pricing rules, from the settings or from an override (the unsaved Settings form, for the sample prices).
+	 * Every value is cleaned: margins between 0 and 99.99, breakpoint and floor not negative.
+	 * An empty second margin means "same as the first": the pricing is not tiered.
+	 *
+	 * @param  array $override  Optional keys: margin, margin_high, breakpoint, floor.
+	 * @return array {margin_low: float, margin_high: float, breakpoint: float, floor: float, tiered: bool}
+	 */
+	public function getPricingRules(array $override = []): array {
+		if (!$override && $this->pricing_rules !== null) {
+			return $this->pricing_rules;
 		}
 
-		return max(0, $pence);
+		$low = $override['margin'] ?? $this->getSetting('threshold', 20.0);
+		$high = $override['margin_high'] ?? $this->getSetting('margin_high', '');
+		$breakpoint = $override['breakpoint'] ?? $this->getSetting('breakpoint', 40);
+		$floor = $override['floor'] ?? $this->getSetting('min_profit', 0);
+
+		$low = max(0.0, min(99.99, is_numeric($low) ? (float)$low : 20.0));
+		$high = ($high === '' || $high === null || !is_numeric($high)) ? $low : max(0.0, min(99.99, (float)$high));
+
+		$rules = [
+			'margin_low'  => $low,
+			'margin_high' => $high,
+			'breakpoint'  => max(0.0, is_numeric($breakpoint) ? (float)$breakpoint : 0.0),
+			'floor'       => max(0.0, is_numeric($floor) ? (float)$floor : 0.0),
+			'tiered'      => abs($high - $low) > 0.00001
+		];
+
+		if (!$override) {
+			$this->pricing_rules = $rules;
+		}
+
+		return $rules;
 	}
 
 	/**
-	 * Set the sale price of every dropship product from its Total Cost (default currency) and the margin threshold.
-	 * Products with no cost (no exchange rate, or a zero cost) are skipped, prices already right are left alone.
-	 *
-	 * @param  float  $margin_pct
-	 * @param  string $rule  none | five | nine
-	 * @return array  ['updated' => int, 'unchanged' => int, 'skipped' => int]
+	 * Profit as a share of the cost for a margin on the price: margin 25% = markup 33.33%.
 	 */
-	public function setAllPrices(float $margin_pct, string $rule): array {
-		$result = ['updated' => 0, 'unchanged' => 0, 'skipped' => 0];
+	protected function getMarkup(float $margin_pct): float {
+		return $margin_pct / (100 - $margin_pct);
+	}
 
-		$query = $this->db->query("SELECT t.product_id, t.price, t.total_cost FROM (" . $this->getBaseSql() . ") t");
+	/**
+	 * The price (ex-VAT, in the store default currency) wanted for a Total Cost, always rounded UP to whole pence
+	 * so the margin never ends below the wanted one. This is the only place the pricing formula exists in PHP.
+	 *
+	 *   profit = max( markup_low * min(cost, breakpoint) + markup_high * max(cost - breakpoint, 0), floor )
+	 *   price  = cost + profit, then the rounding rule
+	 *
+	 * Below the breakpoint this equals cost / (1 - margin), the same price as before tiers existed.
+	 *
+	 * @param  float      $total_cost_converted  Total cost in the store default currency (> 0).
+	 * @param  string     $rounding              none | five (next price ending in 0 or 5 pence) | nine (next price ending in 9 pence).
+	 * @param  array|null $rules                 Rules from getPricingRules(), null for the saved ones.
+	 * @param  int|null   $product_id            Not used yet. Reserved for per-product or per-category rules.
+	 * @return float      Price with 2 decimals, 0 when there is no cost.
+	 */
+	public function calculateTargetPrice(float $total_cost_converted, string $rounding = 'none', ?array $rules = null, ?int $product_id = null): float {
+		if ($total_cost_converted <= 0) {
+			return 0.0;
+		}
+
+		$rules = $rules ?? $this->getPricingRules();
+
+		$profit = ($this->getMarkup($rules['margin_low']) * min($total_cost_converted, $rules['breakpoint'])) + ($this->getMarkup($rules['margin_high']) * max($total_cost_converted - $rules['breakpoint'], 0.0));
+
+		$profit = max($profit, $rules['floor']);
+
+		$pence = (int)ceil(round(($total_cost_converted + $profit) * 100, 6));
+
+		if ($rounding === 'five') {
+			$pence = (int)(ceil($pence / 5) * 5);
+		} elseif ($rounding === 'nine') {
+			$pence = (int)(ceil(($pence - 9) / 10) * 10 + 9);
+		}
+
+		return max(0, $pence) / 100;
+	}
+
+	/**
+	 * Price, profit and margin for some costs under a set of rules (the Sample prices table of the Settings page).
+	 *
+	 * @param  float[] $costs
+	 * @param  string  $rounding
+	 * @param  array   $rules   From getPricingRules().
+	 * @return array   Rows with cost, price, profit and margin (% of the price).
+	 */
+	public function getSamplePrices(array $costs, string $rounding, array $rules): array {
+		$rows = [];
+
+		foreach ($costs as $cost) {
+			$price = $this->calculateTargetPrice((float)$cost, $rounding, $rules);
+
+			$rows[] = [
+				'cost'   => (float)$cost,
+				'price'  => $price,
+				'profit' => $price - (float)$cost,
+				'margin' => $price > 0 ? (($price - (float)$cost) / $price) * 100 : 0
+			];
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * Format an amount in the store default currency (symbol and decimals from nc_currency), for display only.
+	 */
+	public function formatAmount(float $amount): string {
+		if ($this->currency_format === null) {
+			$code = strtoupper(trim((string)$this->config->get('config_currency')));
+
+			$query = $this->db->query("SELECT `symbol_left`, `symbol_right`, `decimal_place` FROM `" . DB_PREFIX . "currency` WHERE `code` = '" . $this->db->escape($code) . "' LIMIT 1");
+
+			$this->currency_format = $query->row ? [
+				'left'     => (string)$query->row['symbol_left'],
+				'right'    => (string)$query->row['symbol_right'],
+				'decimals' => (int)$query->row['decimal_place']
+			] : ['left' => '', 'right' => ' ' . $code, 'decimals' => 2];
+		}
+
+		return ($amount < 0 ? '-' : '') . $this->currency_format['left'] . number_format(abs($amount), $this->currency_format['decimals']) . $this->currency_format['right'];
+	}
+
+	// =================================================================
+	// SET ALL PRICES
+	// =================================================================
+
+	/**
+	 * The lowest and highest price of the Specials of each product that are still running or have not started yet.
+	 *
+	 * @return array  product_id => ['min' => float, 'max' => float]
+	 */
+	protected function getSpecialRanges(): array {
+		if (!$this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_special'")->num_rows) {
+			return [];
+		}
+
+		$ranges = [];
+
+		$query = $this->db->query("SELECT `product_id`, MIN(`price`) AS `min_price`, MAX(`price`) AS `max_price` FROM `" . DB_PREFIX . "product_special` WHERE (`date_end` IS NULL OR `date_end` = '0000-00-00' OR `date_end` >= CURDATE()) GROUP BY `product_id`");
+
+		foreach ($query->rows as $row) {
+			$ranges[(int)$row['product_id']] = ['min' => (float)$row['min_price'], 'max' => (float)$row['max_price']];
+		}
+
+		return $ranges;
+	}
+
+	/**
+	 * The price change of every dropship product with a cost, from the saved pricing rules. Nothing is written.
+	 * A product is flagged 'special' when one of its Specials is at or above the new price, or below its cost.
+	 *
+	 * @param  string $rounding  none | five | nine
+	 * @return array  ['changes' => array, 'skipped' => int]
+	 */
+	protected function getPriceChanges(string $rounding): array {
+		$changes = [];
+		$skipped = 0;
+
+		$specials = $this->getSpecialRanges();
+		$rules = $this->getPricingRules();
+
+		$query = $this->db->query("SELECT t.product_id, t.product_name, t.price, t.total_cost FROM (" . $this->getBaseSql() . ") t ORDER BY t.product_id ASC");
 
 		foreach ($query->rows as $row) {
 			if ($row['total_cost'] === null || (float)$row['total_cost'] <= 0) {
-				$result['skipped']++;
+				$skipped++;
 				continue;
 			}
 
-			$pence = $this->calculatePricePence((float)$row['total_cost'], $margin_pct, $rule);
+			$product_id = (int)$row['product_id'];
+			$cost = (float)$row['total_cost'];
+			$new = $this->calculateTargetPrice($cost, $rounding, $rules, $product_id);
 
-			if ($pence === (int)round((float)$row['price'] * 100)) {
-				$result['unchanged']++;
-				continue;
-			}
-
-			$this->updateProductPrice((int)$row['product_id'], $pence / 100);
-
-			$result['updated']++;
+			$changes[] = [
+				'product_id' => $product_id,
+				'name'       => (string)$row['product_name'],
+				'old'        => (float)$row['price'],
+				'new'        => $new,
+				'special'    => isset($specials[$product_id]) && ($specials[$product_id]['max'] >= $new - 0.00001 || $specials[$product_id]['min'] < $cost)
+			];
 		}
 
-		return $result;
+		return ['changes' => $changes, 'skipped' => $skipped];
+	}
+
+	/**
+	 * Preview of setAllPrices(): how many prices go up, go down or stay, the biggest changes, and how many
+	 * products would have a Special at or above the new price or below their cost. Nothing is written.
+	 *
+	 * @param  string $rounding  none | five | nine
+	 * @return array  ['up' => int, 'down' => int, 'same' => int, 'skipped' => int, 'specials' => int, 'drops' => array, 'rises' => array]
+	 */
+	public function previewAllPrices(string $rounding): array {
+		$result = $this->getPriceChanges($rounding);
+
+		$out = ['up' => 0, 'down' => 0, 'same' => 0, 'skipped' => $result['skipped'], 'specials' => 0, 'drops' => [], 'rises' => []];
+
+		$drops = [];
+		$rises = [];
+
+		foreach ($result['changes'] as $change) {
+			$diff = (int)round($change['new'] * 100) - (int)round($change['old'] * 100);
+
+			if ($diff > 0) {
+				$out['up']++;
+				$rises[] = $change + ['diff' => $diff];
+			} elseif ($diff < 0) {
+				$out['down']++;
+				$drops[] = $change + ['diff' => -$diff];
+			} else {
+				$out['same']++;
+			}
+
+			if ($change['special']) {
+				$out['specials']++;
+			}
+		}
+
+		usort($drops, fn($a, $b) => $b['diff'] <=> $a['diff']);
+		usort($rises, fn($a, $b) => $b['diff'] <=> $a['diff']);
+
+		foreach (array_slice($drops, 0, 5) as $row) {
+			$out['drops'][] = ['name' => $row['name'], 'old' => $this->formatAmount($row['old']), 'new' => $this->formatAmount($row['new'])];
+		}
+
+		foreach (array_slice($rises, 0, 3) as $row) {
+			$out['rises'][] = ['name' => $row['name'], 'old' => $this->formatAmount($row['old']), 'new' => $this->formatAmount($row['new'])];
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Set the sale price of every dropship product from its Total Cost (default currency) and the pricing rules.
+	 * Products with no cost (no exchange rate, or a zero cost) are skipped, prices already right are left alone.
+	 * Specials are never changed: the result counts the products whose Special is at or above the new price or below their cost.
+	 *
+	 * @param  string $rounding  none | five | nine
+	 * @return array  ['updated' => int, 'unchanged' => int, 'skipped' => int, 'specials' => int]
+	 */
+	public function setAllPrices(string $rounding): array {
+		$result = $this->getPriceChanges($rounding);
+
+		$out = ['updated' => 0, 'unchanged' => 0, 'skipped' => $result['skipped'], 'specials' => 0];
+
+		$flagged = [];
+
+		foreach ($result['changes'] as $change) {
+			if ($change['special']) {
+				$flagged[$change['product_id']] = true;
+			}
+
+			if ((int)round($change['new'] * 100) === (int)round($change['old'] * 100)) {
+				$out['unchanged']++;
+				continue;
+			}
+
+			$this->updateProductPrice($change['product_id'], $change['new']);
+
+			$out['updated']++;
+		}
+
+		$out['specials'] = count($flagged);
+
+		return $out;
 	}
 
 	// =================================================================

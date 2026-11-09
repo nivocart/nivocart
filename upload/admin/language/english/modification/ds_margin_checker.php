@@ -22,7 +22,7 @@ $_['text_no_rate_warning']      = 'Warning: %s product(s) have no exchange rate 
 
 // Text — dashboard KPI tile labels
 $_['text_total_products']       = 'Total Dropship Products';
-$_['text_below_threshold']      = 'Below Threshold';
+$_['text_below_threshold']      = 'Below Target Price';
 $_['text_negative_margin']      = 'Negative Margin';
 $_['text_avg_margin']           = 'Avg Margin';
 $_['text_worst_performers']     = 'Worst Performers (top 10)';
@@ -42,13 +42,15 @@ $_['column_shipping_cost']      = 'Shipping Cost';
 $_['column_total_cost']         = 'Total Cost';
 $_['column_total_cost_default'] = 'Total Cost (%s)';
 $_['column_margin_pct']         = 'Margin %';
+$_['column_profit']             = 'Profit';
+$_['text_target_price']         = 'Target price: %s';
 $_['column_status']             = 'Status';
 $_['column_channel']            = 'Channel';
 $_['column_action']             = 'Action';
 
 // Filter labels
 $_['filter_all']                = 'All Products';
-$_['filter_below']              = 'Below Threshold';
+$_['filter_below']              = 'Below Target Price';
 $_['filter_negative']           = 'Negative Margin';
 
 // Margin status badge labels
@@ -58,13 +60,23 @@ $_['status_negative']           = 'Negative';
 $_['status_no_rate']            = 'No rate';
 
 // Entry — settings form
-$_['entry_threshold']           = 'Minimum Margin Threshold (%)';
+$_['entry_threshold']           = 'Margin up to the Breakpoint (%)';
 $_['entry_rounding']            = 'Sale Price Rounding Rule';
-$_['help_rounding']             = 'Used by \'Set All Prices Automatically\'. The price is always rounded UP, so the margin never falls below the threshold. The rule is applied to the ex-VAT sale price.';
+$_['help_rounding']             = 'Used by \'Set All Prices Automatically\'. The price is always rounded UP, so the margin never falls below the target. The rule is applied to the ex-VAT sale price, after the margins and the minimum profit.';
 $_['text_rounding_none']        = 'No Rounding';
 $_['text_rounding_five']        = 'Rounding by next 5 (7.22 becomes 7.25, 7.26 becomes 7.30)';
 $_['text_rounding_nine']        = 'Rounding by next 9 (7.23 becomes 7.29)';
-$_['help_threshold']            = 'Products with a margin (ex-VAT sale price against the cost) below this percentage are flagged as \'Low\'. Set to 0 to disable. Default: 20%.';
+$_['help_threshold']            = 'The margin (ex-VAT sale price against the Total Cost) that \'Set All Prices Automatically\' aims for on the part of the Total Cost up to the Breakpoint. Products priced below their target price are flagged \'Low\'. Default: 20%.';
+$_['entry_margin_high']         = 'Margin above the Breakpoint (%)';
+$_['help_margin_high']          = 'The lower margin used on the part of the Total Cost above the Breakpoint, so high value products are not over-priced. Choose \'Same as above\' to switch the tiers off. The price rises smoothly with the cost: there is no jump at the Breakpoint.';
+$_['entry_breakpoint']          = 'Breakpoint (Total Cost)';
+$_['help_breakpoint']           = 'The Total Cost, in the store default currency, where the margin changes. Only used when a margin above the Breakpoint is chosen.';
+$_['entry_min_profit']          = 'Minimum Profit';
+$_['help_min_profit']           = 'The lowest profit (ex-VAT, in the store default currency) a product is priced for, so low value products still cover payment fees and shipping changes. Choose \'No minimum\' to switch it off.';
+$_['entry_samples']             = 'Sample Prices';
+$_['help_samples']              = 'The price, profit and margin that some Total Costs would get with the options chosen above (also before saving), including the rounding rule.';
+$_['text_margin_same']          = 'Same as above (no tiers)';
+$_['text_no_minimum']           = 'No minimum';
 
 // Buttons
 $_['button_save']               = 'Save Settings';
@@ -72,9 +84,18 @@ $_['button_cancel']             = 'Cancel';
 $_['button_close']              = 'Close';
 $_['button_sync_shipping']      = 'Sync Shipping from CJ';
 $_['button_set_prices']         = 'Set All Prices Automatically';
-$_['text_set_prices_confirm']   = 'Set the Sale Price of ALL dropship products so that each one gets a margin of %s on its Total Cost? Rounding rule: %s. Existing sale prices will be overwritten and this cannot be undone.';
 $_['text_set_prices_done']      = 'Prices set. %s sale prices were changed. %s were already right. %s were skipped because they have no cost (no exchange rate).';
-$_['error_set_prices_margin']   = 'The Minimum Margin Threshold must be below 100% to set prices automatically.';
+$_['text_set_prices_specials']  = ' %s product(s) have a Special at or above their new price, or below their cost. Specials were not changed: please check them.';
+$_['text_preview_counts']       = 'Preview: %s prices will go up, %s will go down and %s stay the same. %s are skipped because they have no cost (no exchange rate).';
+$_['text_preview_drops']        = 'Biggest drops:';
+$_['text_preview_rises']        = 'Biggest rises:';
+$_['text_preview_specials']     = '%s product(s) will have a Special at or above their new price, or below their cost. Specials are not changed by this tool: please check them afterwards.';
+$_['text_preview_warning']      = 'Existing sale prices will be overwritten and this cannot be undone. Take a database backup first.';
+$_['text_preview_nothing']      = 'All sale prices are already right: there is nothing to change.';
+$_['text_rules_flat']           = 'Margin %s on the Total Cost.';
+$_['text_rules_tiered']         = 'Margin %s on the Total Cost up to %s, and %s above it.';
+$_['text_rules_floor']          = ' Minimum profit %s.';
+$_['text_rules_rounding']       = ' Rounding rule: %s.';
 $_['button_refresh']            = 'Refresh Page';
 $_['text_sync_running']         = 'Syncing shipping costs from CJ, page %s of %s...';
 $_['text_sync_progress']        = '%s% - page %s of %s';

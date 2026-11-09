@@ -17,7 +17,7 @@
       <div id="mc-result" hidden></div>
       <div class="mc-toolbar">
         <a href="<?php echo $filter_all_url; ?>" class="<?php echo ($filter === 'all') ? 'button-save' : 'button-form'; ?> ripple"><?php echo $filter_all; ?></a>
-        <a href="<?php echo $filter_below_url; ?>" class="<?php echo ($filter === 'below') ? 'button-save' : 'button-form'; ?> ripple"><?php echo $filter_below; ?> (&lt; <?php echo number_format($threshold, 1); ?>%)</a>
+        <a href="<?php echo $filter_below_url; ?>" class="<?php echo ($filter === 'below') ? 'button-save' : 'button-form'; ?> ripple"><?php echo $filter_below; ?></a>
         <a href="<?php echo $filter_negative_url; ?>" class="<?php echo ($filter === 'negative') ? 'button-save' : 'button-form'; ?> ripple"><?php echo $filter_negative; ?></a>
         <div class="mc-toolbar-actions" id="mc-toolbar-actions">
           <?php if ($cj_channels) { ?>
@@ -60,13 +60,15 @@
             } elseif ($m < 0) {
               $badge = 'mc-badge-negative';
               $label = $status_negative;
-            } elseif ($m < $threshold) {
+            } elseif ($product['below_target']) {
               $badge = 'mc-badge-low';
               $label = $status_low;
             } else {
               $badge = 'mc-badge-good';
               $label = $status_good;
             }
+
+            $target_title = ($product['target_price'] === null) ? '' : sprintf($text_target_price, number_format((float)$product['target_price'], 2));
           ?>
           <tr>
             <td class="left"><?php echo htmlspecialchars($product['product_name'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></td>
@@ -77,7 +79,7 @@
             <td class="right" id="total-<?php echo (int)$product['product_id']; ?>"><?php echo ($m === null) ? '—' : number_format((float)$product['total_cost'], 2); ?></td>
             <td class="right"><input type="number" step="any" min="0" class="mc-price-input" id="price-input-<?php echo (int)$product['product_id']; ?>" data-product-id="<?php echo (int)$product['product_id']; ?>" value="<?php echo number_format((float)$product['price'], 2, '.', ''); ?>" /></td>
             <td class="right mc-margin" id="margin-<?php echo (int)$product['product_id']; ?>"><?php echo ($m === null) ? '—' : number_format($m, 2) . '%'; ?></td>
-            <td class="left"><span class="mc-badge <?php echo $badge; ?>" id="badge-<?php echo (int)$product['product_id']; ?>"><?php echo $label; ?></span></td>
+            <td class="left"><span class="mc-badge <?php echo $badge; ?>" id="badge-<?php echo (int)$product['product_id']; ?>" title="<?php echo htmlspecialchars($target_title, ENT_QUOTES, 'UTF-8'); ?>"><?php echo $label; ?></span></td>
             <td class="left"><?php echo htmlspecialchars($product['channel_name'] ?: '—', ENT_QUOTES, 'UTF-8'); ?></td>
             <td class="right"><a class="button-form ripple mc-update-price" data-product-id="<?php echo (int)$product['product_id']; ?>"><?php echo $button_update_price; ?></a></td>
           </tr>
@@ -97,8 +99,8 @@
 var mcUpdatePriceUrl = <?php echo json_encode($update_price_url); ?>;
 var mcSyncShippingUrl = <?php echo json_encode($sync_shipping_url); ?>;
 var mcSetPricesUrl = <?php echo json_encode($set_prices_url); ?>;
+var mcPreviewPricesUrl = <?php echo json_encode($preview_prices_url); ?>;
 var mcCjChannels = <?php echo json_encode($cj_channels); ?>;
-var mcThreshold = <?php echo (float)$threshold; ?>;
 var mcText = <?php echo json_encode([
   'error_price'     => $error_price,
   'sync_running'    => $text_sync_running,
@@ -107,8 +109,15 @@ var mcText = <?php echo json_encode([
   'refresh'         => $button_refresh,
   'sync_retry'      => $text_sync_retry,
   'set_prices_title' => $button_set_prices,
-  'set_prices_confirm' => $text_set_prices_confirm,
   'set_prices_done' => $text_set_prices_done,
+  'set_prices_specials' => $text_set_prices_specials,
+  'preview_counts'  => $text_preview_counts,
+  'preview_drops'   => $text_preview_drops,
+  'preview_rises'   => $text_preview_rises,
+  'preview_specials' => $text_preview_specials,
+  'preview_warning' => $text_preview_warning,
+  'preview_nothing' => $text_preview_nothing,
+  'target_price'    => $text_target_price,
   'sync_no_freight' => $text_sync_no_freight,
   'sync_ranged'     => $text_sync_ranged,
   'error_shipping'  => $error_shipping,
@@ -162,7 +171,7 @@ function mcUpdatePrice(productId) {
       } else if (marginPct < 0) {
         badgeClass = 'mc-badge-negative';
         badgeLabel = mcText.status_negative;
-      } else if (marginPct < mcThreshold) {
+      } else if (res.below_target) {
         badgeClass = 'mc-badge-low';
         badgeLabel = mcText.status_low;
       }
@@ -174,7 +183,7 @@ function mcUpdatePrice(productId) {
       $totalOriginal.text($totalOriginal.data('currency') + ' ' + parseFloat(res.total_cost_original).toFixed(2));
       $('#total-' + productId).text((res.total_cost === null) ? '—' : parseFloat(res.total_cost).toFixed(2));
       $('#margin-' + productId).text((marginPct === null) ? '—' : marginPct.toFixed(2) + '%');
-      $('#badge-' + productId).attr('class', 'mc-badge ' + badgeClass).text(badgeLabel);
+      $('#badge-' + productId).attr('class', 'mc-badge ' + badgeClass).attr('title', (res.target_price === null) ? '' : mcText.target_price.replace('%s', parseFloat(res.target_price).toFixed(2))).text(badgeLabel);
 
       mcShowResult(res.message, false);
     },
@@ -247,7 +256,13 @@ function mcSetAllPrices($button) {
         return;
       }
 
-      mcShowResult(mcText.set_prices_done.replace('%s', res.updated).replace('%s', res.unchanged).replace('%s', res.skipped), false);
+      var doneText = mcText.set_prices_done.replace('%s', res.updated).replace('%s', res.unchanged).replace('%s', res.skipped);
+
+      if (res.specials > 0) {
+        doneText += mcText.set_prices_specials.replace('%s', res.specials);
+      }
+
+      mcShowResult(doneText, res.specials > 0);
       mcAddRefreshButton();
     },
     error: function(xhr) {
@@ -258,6 +273,39 @@ function mcSetAllPrices($button) {
   });
 }
 
+function mcEsc(text) {
+  return $('<div></div>').text(text).html();
+}
+
+function mcPreviewList(title, rows) {
+  if (!rows || !rows.length) {
+    return '';
+  }
+
+  var html = '<p><b>' + mcEsc(title) + '</b></p><ul>';
+
+  $.each(rows, function(i, row) {
+    html += '<li>' + mcEsc(row.name) + ': ' + mcEsc(row.old) + ' &rarr; ' + mcEsc(row['new']) + '</li>';
+  });
+
+  return html + '</ul>';
+}
+
+function mcPreviewContent(res) {
+  var html = '<p>' + mcEsc(res.rules_text) + '</p>';
+
+  html += '<p>' + mcEsc(mcText.preview_counts.replace('%s', res.up).replace('%s', res.down).replace('%s', res.same).replace('%s', res.skipped)) + '</p>';
+  html += mcPreviewList(mcText.preview_drops, res.drops);
+  html += mcPreviewList(mcText.preview_rises, res.rises);
+
+  if (res.specials > 0) {
+    html += '<p>' + mcEsc(mcText.preview_specials.replace('%s', res.specials)) + '</p>';
+  }
+
+  return html + '<p>' + mcEsc(mcText.preview_warning) + '</p>';
+}
+
+// The button first asks for a preview (nothing is written), then shows it in the confirmation dialog
 $('#mc-set-prices').on('click', function() {
   var $button = $(this);
 
@@ -265,21 +313,47 @@ $('#mc-set-prices').on('click', function() {
     return;
   }
 
-  $.confirm({
-    title: mcText.set_prices_title,
-    content: mcText.set_prices_confirm,
-    icon: 'fa fa-question-circle',
-    theme: 'light',
-    useBootstrap: false,
-    boxWidth: 580,
-    animation: 'zoom',
-    closeAnimation: 'scale',
-    opacity: 0.1,
-    buttons: {
-      confirm: function() {
-        mcSetAllPrices($button);
-      },
-      cancel: function() { }
+  $button.addClass('mc-busy');
+
+  $.ajax({
+    url: mcPreviewPricesUrl,
+    type: 'POST',
+    dataType: 'json',
+    success: function(res) {
+      $button.removeClass('mc-busy');
+
+      if (res.error) {
+        mcShowResult(res.error, true);
+        return;
+      }
+
+      if (res.up + res.down === 0) {
+        mcShowResult(mcText.preview_nothing + ((res.specials > 0) ? ' ' + mcText.preview_specials.replace('%s', res.specials) : ''), res.specials > 0);
+        return;
+      }
+
+      $.confirm({
+        title: mcText.set_prices_title,
+        content: mcPreviewContent(res),
+        icon: 'fa fa-question-circle',
+        theme: 'light',
+        useBootstrap: false,
+        boxWidth: 580,
+        animation: 'zoom',
+        closeAnimation: 'scale',
+        opacity: 0.1,
+        buttons: {
+          confirm: function() {
+            mcSetAllPrices($button);
+          },
+          cancel: function() { }
+        }
+      });
+    },
+    error: function(xhr) {
+      $button.removeClass('mc-busy');
+
+      mcShowResult(mcText.error_server + ' ' + xhr.status, true);
     }
   });
 });

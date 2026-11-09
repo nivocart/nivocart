@@ -37,7 +37,7 @@
         </div>
         <div class="mc-kpi mc-kpi-warn">
           <span class="mc-kpi-value"><?php echo (int)$below_threshold; ?></span>
-          <span class="mc-kpi-label"><?php echo $text_below_threshold; ?> (&lt; <?php echo number_format($threshold, 1); ?>%)</span>
+          <span class="mc-kpi-label"><?php echo $text_below_threshold; ?></span>
         </div>
         <div class="mc-kpi mc-kpi-danger">
           <span class="mc-kpi-value"><?php echo (int)$negative_margin; ?></span>
@@ -69,7 +69,7 @@
             if ($m < 0) {
               $badge = 'mc-badge-negative';
               $label = $status_negative;
-            } elseif ($m < $threshold) {
+            } elseif ($row['below_target']) {
               $badge = 'mc-badge-low';
               $label = $status_low;
             } else {
