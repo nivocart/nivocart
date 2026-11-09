@@ -12,8 +12,6 @@
 User-agent: Googlebot
 Content-Signal: ai-train=no, search=yes, ai-input=yes
 
-Allow: /catalog/
-
 # Directories
 Disallow: /admin/
 Disallow: /download/
@@ -67,8 +65,6 @@ User-agent: Baiduspider
 Content-Signal: ai-train=no, search=yes, ai-input=yes
 Crawl-delay: 5
 
-Allow: /catalog/
-
 Disallow: /admin/
 Disallow: /download/
 Disallow: /security/
@@ -113,7 +109,6 @@ Disallow: /maintenance.php
 User-agent: Pinterestbot
 User-agent: Pinterest
 Content-Signal: ai-train=no, search=yes, ai-input=yes
-Allow: /catalog/
 Allow: /image/
 
 Disallow: /admin/
@@ -129,8 +124,6 @@ Disallow: /vendor/
 User-agent: *
 Content-Signal: ai-train=no, search=yes, ai-input=yes
 Crawl-delay: 10
-
-Allow: /catalog/
 
 Disallow: /admin/
 Disallow: /download/
