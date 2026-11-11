@@ -8,6 +8,11 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+
+NivoCart v2.5.5
+---------------
+Release: 11/11/2026
+
 - Add canonical links to seven pages that lacked one for better SEO.
 - Add schema.org Organization and WebSite data (JSON-LD) for the home page.
 - Add llms.txt summary for AI agents and to improve SEO further.
