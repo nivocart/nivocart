@@ -939,7 +939,7 @@ class ModelCatalogProduct extends Model {
 
 		$query = $this->db->query($sql);
 
-		return $query->rows;
+		return is_object($query) ? $query->rows : [];
 	}
 
 	/**

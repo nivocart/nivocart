@@ -904,7 +904,7 @@ class ModelCatalogProduct extends Model {
 
 		$query = $this->db->query($sql);
 
-		return $query->row['total'];
+		return is_object($query) ? (int)($query->row['total'] ?? 0) : 0;
 	}
 
 	public function getTotalProductSpecials(): int {
