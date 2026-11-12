@@ -899,6 +899,14 @@ class ModelSaleOrder extends Model {
 			}
 		}
 
+		// Trustpilot review invitation
+		if ((int)$this->config->get('config_complete_status_id') === (int)$data['order_status_id']) {
+			require_once DIR_SYSTEM . 'library/trustpilot.php';
+
+			$trustpilot = new Trustpilot($this->registry);
+			$trustpilot->invite($order_id);
+		}
+
 		if ($data['notify']) {
 			$language = new Language($order_info['language_directory']);
 

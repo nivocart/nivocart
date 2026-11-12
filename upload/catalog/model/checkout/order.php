@@ -311,6 +311,14 @@ class ModelCheckoutOrder extends Model {
 				$this->model_checkout_voucher->confirm($order_id);
 			}
 
+			// Trustpilot review invitation
+			if ((int)$this->config->get('config_complete_status_id') === $order_status_id) {
+				require_once DIR_SYSTEM . 'library/trustpilot.php';
+
+				$trustpilot = new Trustpilot($this->registry);
+				$trustpilot->invite($order_id);
+			}
+
 			// Order Totals
 			$order_total_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
 
@@ -736,6 +744,14 @@ class ModelCheckoutOrder extends Model {
 				$this->load->model('checkout/voucher');
 
 				$this->model_checkout_voucher->confirm($order_id);
+			}
+
+			// Trustpilot review invitation
+			if ((int)$this->config->get('config_complete_status_id') === $order_status_id) {
+				require_once DIR_SYSTEM . 'library/trustpilot.php';
+
+				$trustpilot = new Trustpilot($this->registry);
+				$trustpilot->invite($order_id);
 			}
 
 			if ($notify) {

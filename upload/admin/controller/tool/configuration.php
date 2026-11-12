@@ -356,6 +356,7 @@ class ControllerToolConfiguration extends Controller {
 			'session'    => $ds(DIR_SYSTEM . 'library/session.php'),
 			'tax'        => $ds(DIR_SYSTEM . 'library/tax.php'),
 			'template'   => $ds(DIR_SYSTEM . 'library/template.php'),
+			'trustpilot' => $ds(DIR_SYSTEM . 'library/trustpilot.php'),
 			'url'        => $ds(DIR_SYSTEM . 'library/url.php'),
 			'user'       => $ds(DIR_SYSTEM . 'library/user.php'),
 			'vault'      => $ds(DIR_SYSTEM . 'library/vault.php'),

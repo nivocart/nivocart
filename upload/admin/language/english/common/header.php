@@ -133,6 +133,7 @@ $_['text_tax_rate']                    = 'Tax Rates';
 $_['text_theme']                       = 'Themes';
 $_['text_tool']                        = 'Tools';
 $_['text_total']                       = 'Totals';
+$_['text_trustpilot']                  = 'Trustpilot';
 $_['text_images_cleanup']              = 'Images Cleanup';
 $_['text_upload']                      = 'Uploads';
 $_['text_user']                        = 'User';
