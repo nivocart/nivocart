@@ -2626,25 +2626,6 @@ CREATE TABLE `nc_tax_rule` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `nc_trustpilot_invitation`
---
-
-DROP TABLE IF EXISTS `nc_trustpilot_invitation`;
-CREATE TABLE `nc_trustpilot_invitation` (
-  `invitation_id` int NOT NULL AUTO_INCREMENT,
-  `order_id` int NOT NULL DEFAULT '0',
-  `reference` varchar(32) NOT NULL,
-  `status` varchar(16) NOT NULL DEFAULT 'sent',
-  `message` varchar(255) NOT NULL DEFAULT '',
-  `date_added` datetime NOT NULL,
-  PRIMARY KEY (`invitation_id`),
-  KEY `order_id` (`order_id`),
-  KEY `status_date` (`status`,`date_added`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `nc_upload`
 --
 

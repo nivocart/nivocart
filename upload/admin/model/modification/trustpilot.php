@@ -1,12 +1,14 @@
 <?php
 /**
- * Class ModelToolTrustpilot
+ * Class ModelModificationTrustpilot
  *
- * Read-only helpers for the Trustpilot admin page.
+ * Helpers for the Trustpilot modification admin page (reads nc_trustpilot_invitation).
+ *
+ * Location: admin/model/modification/trustpilot.php
  *
  * @package NivoCart
  */
-class ModelToolTrustpilot extends Model {
+class ModelModificationTrustpilot extends Model {
 	/**
 	 * Latest invitation requests, newest first.
 	 *
@@ -30,5 +32,16 @@ class ModelToolTrustpilot extends Model {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "trustpilot_invitation` WHERE `status` = 'sent' AND `date_added` >= DATE_FORMAT(NOW(), '%Y-%m-01')");
 
 		return (int)$query->row['total'];
+	}
+
+	/**
+	 * Check whether the nc_trustpilot_invitation table exists.
+	 *
+	 * @return bool
+	 */
+	public function tableExists(): bool {
+		$result = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "trustpilot_invitation'");
+
+		return (bool)$result->num_rows;
 	}
 }

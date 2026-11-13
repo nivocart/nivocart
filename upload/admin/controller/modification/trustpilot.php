@@ -1,16 +1,45 @@
 <?php
 /**
- * Class ControllerToolTrustpilot
+ * Class ControllerModificationTrustpilot
  *
- * Settings and invitation overview for the Trustpilot review invitations.
+ * Optional modification: Trustpilot review invitations (Automatic Feedback Service).
+ * Settings, invitation overview and the install / uninstall of its own database table.
+ *
+ * Location: admin/controller/modification/trustpilot.php
  *
  * @package NivoCart
  */
-class ControllerToolTrustpilot extends Controller {
+class ControllerModificationTrustpilot extends Controller {
 	private array $error = [];
+	private string $name = 'trustpilot';
 
 	public function index(): void {
-		$this->language->load('tool/trustpilot');
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/trustpilot');
+
+		// The table is created on install, show the install page if it is missing (e.g. restored database)
+		if (!$this->model_modification_trustpilot->tableExists()) {
+			$this->document->setTitle($this->language->get('heading_title'));
+
+			$this->data['heading_title'] = $this->language->get('heading_title');
+			$this->data['text_install_message'] = $this->language->get('text_install_message');
+			$this->data['text_install_btn'] = $this->language->get('text_install_btn');
+
+			$this->data['install_url'] = $this->url->link('modification/trustpilot/setup', 'token=' . $this->session->data['token'], 'SSL');
+
+			$this->data['breadcrumbs'] = $this->breadcrumbs();
+
+			$this->template = 'modification/trustpilot_install.tpl';
+			$this->children = [
+				'common/header',
+				'common/footer'
+			];
+
+			$this->response->setOutput($this->render());
+
+			return;
+		}
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
@@ -26,7 +55,7 @@ class ControllerToolTrustpilot extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$this->redirect($this->url->link('tool/trustpilot', 'token=' . $this->session->data['token'], 'SSL'));
+			$this->redirect($this->url->link('modification/trustpilot', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -57,22 +86,10 @@ class ControllerToolTrustpilot extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['breadcrumbs'] = [];
+		$this->data['breadcrumbs'] = $this->breadcrumbs();
 
-		$this->data['breadcrumbs'][] = [
-			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-			'separator' => false
-		];
-
-		$this->data['breadcrumbs'][] = [
-			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('tool/trustpilot', 'token=' . $this->session->data['token'], 'SSL'),
-			'separator' => ' :: '
-		];
-
-		$this->data['action'] = $this->url->link('tool/trustpilot', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('modification/trustpilot', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['token'] = $this->session->data['token'];
 
 		// Settings (posted values win so a failed save keeps what was typed)
@@ -96,10 +113,9 @@ class ControllerToolTrustpilot extends Controller {
 		}
 
 		// Invitations tab
-		$this->load->model('tool/trustpilot');
-
+		
 		$limit = max(1, (int)$this->config->get('trustpilot_monthly_limit') ?: 50);
-		$month_count = $this->model_tool_trustpilot->getMonthlyCount();
+		$month_count = $this->model_modification_trustpilot->getMonthlyCount();
 
 		$this->data['text_month_count'] = sprintf($this->language->get('text_month_count'), $month_count, $limit);
 		$this->data['limit_reached'] = ($month_count >= $limit);
@@ -107,7 +123,7 @@ class ControllerToolTrustpilot extends Controller {
 
 		$this->data['invitations'] = [];
 
-		foreach ($this->model_tool_trustpilot->getInvitations(100) as $result) {
+		foreach ($this->model_modification_trustpilot->getInvitations(100) as $result) {
 			$this->data['invitations'][] = [
 				'date'        => date('Y-m-d H:i', strtotime($result['date_added'])),
 				'order_id'    => (int)$result['order_id'],
@@ -120,7 +136,7 @@ class ControllerToolTrustpilot extends Controller {
 			];
 		}
 
-		$this->template = 'tool/trustpilot.tpl';
+		$this->template = 'modification/trustpilot.tpl';
 		$this->children = [
 			'common/header',
 			'common/footer'
@@ -133,13 +149,13 @@ class ControllerToolTrustpilot extends Controller {
 	 * Ajax: send a real test invitation request.
 	 */
 	public function test(): void {
-		$this->language->load('tool/trustpilot');
+		$this->language->load('modification/' . $this->name);
 
 		$json = [];
 
 		$email = trim((string)($this->request->post['test_email'] ?? ''));
 
-		if (!$this->user->hasPermission('modify', 'tool/trustpilot')) {
+		if (!$this->user->hasPermission('modify', 'modification/' . $this->name)) {
 			$json['error'] = $this->language->get('error_permission');
 		} elseif (!emailIsValid($email)) {
 			$json['error'] = $this->language->get('error_email');
@@ -165,8 +181,68 @@ class ControllerToolTrustpilot extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+	/**
+	 * Called by Extensions > Modifications when the modification is installed.
+	 */
+	public function install(): void {
+		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "trustpilot_invitation` (
+			`invitation_id` int NOT NULL AUTO_INCREMENT,
+			`order_id` int NOT NULL DEFAULT '0',
+			`reference` varchar(32) NOT NULL,
+			`status` varchar(16) NOT NULL DEFAULT 'sent',
+			`message` varchar(255) NOT NULL DEFAULT '',
+			`date_added` datetime NOT NULL,
+			PRIMARY KEY (`invitation_id`),
+			KEY `order_id` (`order_id`),
+			KEY `status_date` (`status`,`date_added`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
+	}
+
+	/**
+	 * Called by Extensions > Modifications when the modification is uninstalled.
+	 * The settings (group "trustpilot") are removed by the Modifications page itself.
+	 */
+	public function uninstall(): void {
+		$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "trustpilot_invitation`");
+	}
+
+	/**
+	 * Install page button: create the missing table and open the settings.
+	 */
+	public function setup(): void {
+		$this->language->load('modification/' . $this->name);
+
+		if (!$this->user->hasPermission('modify', 'modification/' . $this->name)) {
+			$this->session->data['error'] = $this->language->get('error_permission');
+		} else {
+			$this->install();
+		}
+
+		$this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
+	}
+
+	private function breadcrumbs(): array {
+		return [
+			[
+				'text'      => $this->language->get('text_home'),
+				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+				'separator' => false
+			],
+			[
+				'text'      => $this->language->get('text_modification'),
+				'href'      => $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL'),
+				'separator' => ' :: '
+			],
+			[
+				'text'      => $this->language->get('heading_title'),
+				'href'      => $this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'),
+				'separator' => ' :: '
+			]
+		];
+	}
+
 	protected function validate(): bool {
-		if (!$this->user->hasPermission('modify', 'tool/trustpilot')) {
+		if (!$this->user->hasPermission('modify', 'modification/' . $this->name)) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 

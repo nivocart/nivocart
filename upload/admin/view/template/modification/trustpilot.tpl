@@ -159,7 +159,7 @@ $('#button-trustpilot-test').on('click', function() {
 
 function sendTest() {
   $.ajax({
-    url: 'index.php?route=tool/trustpilot/test&token=<?php echo $token; ?>',
+    url: 'index.php?route=modification/trustpilot/test&token=<?php echo $token; ?>',
     type: 'post',
     dataType: 'json',
     data: {test_email: $('#test-email').val()},

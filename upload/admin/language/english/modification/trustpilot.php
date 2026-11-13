@@ -2,6 +2,12 @@
 // Heading
 $_['heading_title']              = 'Trustpilot';
 
+// Navigation
+$_['text_home']                  = 'Home';
+$_['text_modification']          = 'Modifications';
+$_['text_install_message']       = 'The Trustpilot database table is missing. Click Install to set it up.';
+$_['text_install_btn']           = 'Install Trustpilot';
+
 // Tabs
 $_['tab_settings']               = 'Settings';
 $_['tab_invitations']            = 'Invitations';

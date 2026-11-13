@@ -235,7 +235,6 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_theme'] = $this->language->get('text_theme');
 		$this->data['text_tool'] = $this->language->get('text_tool');
 		$this->data['text_total'] = $this->language->get('text_total');
-		$this->data['text_trustpilot'] = $this->language->get('text_trustpilot');
 		$this->data['text_images_cleanup'] = $this->language->get('text_images_cleanup');
 		$this->data['text_upload'] = $this->language->get('text_upload');
 		$this->data['text_user'] = $this->language->get('text_user');
@@ -394,7 +393,6 @@ class ControllerCommonHeader extends Controller {
 			$this->data['theme'] = $this->url->link('extension/theme', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['total'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['images_cleanup'] = $this->url->link('tool/images_cleanup', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['trustpilot'] = $this->url->link('tool/trustpilot', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['upload'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['user'] = $this->url->link('user/user', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['user_log'] = $this->url->link('user/user_log', 'token=' . $this->session->data['token'], 'SSL');

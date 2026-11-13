@@ -8,7 +8,7 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
-- Add new TrustPilot Tool. A TrustPilot Business Account is required. 
+- Add new TrustPilot Modification, requires a TrustPilot Business Account. 
 
 
 NivoCart v2.5.5

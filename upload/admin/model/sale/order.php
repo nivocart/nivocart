@@ -899,8 +899,8 @@ class ModelSaleOrder extends Model {
 			}
 		}
 
-		// Trustpilot review invitation
-		if ((int)$this->config->get('config_complete_status_id') === (int)$data['order_status_id']) {
+		// Trustpilot review invitation (optional modification)
+		if ($this->config->get('trustpilot_status') && ((int)$this->config->get('config_complete_status_id') === (int)$data['order_status_id'])) {
 			require_once DIR_SYSTEM . 'library/trustpilot.php';
 
 			$trustpilot = new Trustpilot($this->registry);

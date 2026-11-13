@@ -311,8 +311,8 @@ class ModelCheckoutOrder extends Model {
 				$this->model_checkout_voucher->confirm($order_id);
 			}
 
-			// Trustpilot review invitation
-			if ((int)$this->config->get('config_complete_status_id') === $order_status_id) {
+			// Trustpilot review invitation (optional modification)
+			if ($this->config->get('trustpilot_status') && ((int)$this->config->get('config_complete_status_id') === $order_status_id)) {
 				require_once DIR_SYSTEM . 'library/trustpilot.php';
 
 				$trustpilot = new Trustpilot($this->registry);
@@ -746,8 +746,8 @@ class ModelCheckoutOrder extends Model {
 				$this->model_checkout_voucher->confirm($order_id);
 			}
 
-			// Trustpilot review invitation
-			if ((int)$this->config->get('config_complete_status_id') === $order_status_id) {
+			// Trustpilot review invitation (optional modification)
+			if ($this->config->get('trustpilot_status') && ((int)$this->config->get('config_complete_status_id') === $order_status_id)) {
 				require_once DIR_SYSTEM . 'library/trustpilot.php';
 
 				$trustpilot = new Trustpilot($this->registry);
