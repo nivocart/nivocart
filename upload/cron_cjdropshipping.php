@@ -3,8 +3,9 @@
  * NivoCart CJDropshipping Stock Sync Cron
  *
  * CLI-only entry point. Syncs the stock of every mapped variant on every active
- * CJDropshipping channel, exactly like the "Sync Stock" button on the CJD dashboard
- * but without a browser, so a long run cannot be interrupted.
+ * CJDropshipping channel without a browser. It asks CJ for one product at a time (one call
+ * updates all variants of that product), so the run stays short as the catalogue grows.
+ * Variants CJ does not list are set to stock 0 (kept active, shown as out of stock).
  *
  * The exact command (with the real path) and the recommended schedule are shown at
  * the bottom of the CJD Dashboard. Example (03:00 China time = 19:00 UTC daily):
@@ -90,15 +91,28 @@ $model = new ModelModificationCJDropshipping($registry);
 // -------------------------------------------------------
 // Run
 // -------------------------------------------------------
+// One API call per CJ product updates all of its variants. Products are taken oldest-synced
+// first, so if the time budget runs out the next run carries on with the products not done yet.
 const CJD_BATCH_SIZE = 10;
 const CJD_MAX_FAILED_BATCHES = 5;
+const CJD_TIME_BUDGET = 1500; // Seconds: stop cleanly before a host that cuts runs at 30 minutes.
 
 $started = time();
 $total_updated = 0;
+$total_zeroed = 0;
+$total_errors = 0;
 $failed = false;
 $summary = [];
 
 echo '[' . date('Y-m-d H:i:s') . '] CJDropshipping stock sync started.' . PHP_EOL;
+
+// A "running" row is written first: if the host kills this run, no finish row follows and the
+// dashboard shows the run as interrupted instead of showing nothing at all.
+try {
+	$cron->log('cjd_stock_sync', 0, 'running', 'Started. If no result follows, the run was interrupted.');
+} catch (\Throwable $e) {
+	$log->write('CJDropshipping stock cron: could not write nc_cron_log: ' . $e->getMessage());
+}
 
 $channels = $model->getChannels(['status' => 1]);
 
@@ -109,26 +123,25 @@ if (!$channels) {
 
 foreach ($channels as $channel) {
 	$channel_id = (int)$channel['channel_id'];
-	$after_id = 0;
+	$skip_pids = [];
 	$updated = 0;
+	$zeroed = 0;
 	$errors = 0;
 	$total = 0;
 	$failed_batches = 0;
 
 	try {
 		do {
-			$result = $model->syncStock($channel_id, $after_id, CJD_BATCH_SIZE);
+			$result = $model->syncStockByPid($channel_id, $skip_pids, CJD_BATCH_SIZE);
 
+			$skip_pids = array_merge($skip_pids, $result['pids']);
 			$updated += $result['updated'];
+			$zeroed += $result['zeroed'];
 			$total = max($total, $result['total']);
 			$errors += count($result['errors']);
 
-			// Variants CJD no longer lists (1602001) are deactivated on purpose: not a failure.
-			$hard_errors = count(array_filter($result['errors'], function (string $error): bool {
-				return !str_contains($error, '1602001');
-			}));
-
-			if ($result['processed'] > 0 && $hard_errors >= $result['processed']) {
+			// Every product of the batch failed (not just a few): the CJ API is probably down or rate limited.
+			if ($result['processed'] > 0 && count($result['errors']) >= $result['processed']) {
 				$failed_batches++;
 			} else {
 				$failed_batches = 0;
@@ -138,18 +151,22 @@ foreach ($channels as $channel) {
 				throw new \Exception('Stopped after ' . CJD_MAX_FAILED_BATCHES . ' batches in a row with only errors (CJ API unreachable or rate limited?).');
 			}
 
-			$after_id = $result['last_id'];
+			if ($result['has_more'] && (time() - $started) >= CJD_TIME_BUDGET) {
+				throw new \Exception('Time limit reached after ' . count($skip_pids) . '/' . $total . ' products; the rest comes first on the next run.');
+			}
 		} while ($result['has_more']);
 
-		$summary[] = $channel['name'] . ': ' . $updated . '/' . $total . ' updated, ' . $errors . ' error(s).';
+		$summary[] = $channel['name'] . ': ' . $updated . ' variant(s) updated, ' . $zeroed . ' set to 0 (not listed by CJ), ' . $errors . ' error(s), ' . count($skip_pids) . '/' . $total . ' products.';
 	} catch (\Throwable $e) {
 		$failed = true;
-		$summary[] = $channel['name'] . ': ' . $e->getMessage() . ' (' . $updated . ' updated before stopping).';
+		$summary[] = $channel['name'] . ': ' . $e->getMessage() . ' (' . $updated . ' variant(s) updated before stopping).';
 
 		$log->write('CJDropshipping stock cron channel ' . $channel_id . ': ' . $e->getMessage());
 	}
 
-	$total_updated += $updated;
+	$total_updated += $updated + $zeroed;
+	$total_zeroed += $zeroed;
+	$total_errors += $errors;
 }
 
 $message = implode(' ', $summary) . ' Duration: ' . gmdate('H:i:s', time() - $started) . '.';

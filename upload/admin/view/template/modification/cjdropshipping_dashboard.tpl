@@ -183,6 +183,7 @@
           <div id="purge-result" hidden></div>
           <div id="purge-dup-result" hidden></div>
           <div id="purge-removed-result" hidden></div>
+          <div id="restore-result" hidden></div>
           <table class="form">
             <tr>
               <td><?php echo $text_purge_confirm; ?></td>
@@ -194,7 +195,11 @@
             </tr>
             <tr>
               <td><?php echo $text_purge_removed_confirm; ?></td>
-              <td><a id="button-purge-removed" class="button-form ripple"><?php echo $button_purge_removed; ?></a></td>
+              <td><a id="button-purge-removed" class="button-form button-form-uninstall ripple<?php echo $cj_js['removed_count'] ? '' : ' cj-busy'; ?>"><?php echo $button_purge_removed; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $text_restore_confirm; ?></td>
+              <td><a id="button-restore" class="button-form ripple<?php echo $cj_js['deactivated_count'] ? '' : ' cj-busy'; ?>"><?php echo $button_restore_deactivated; ?></a></td>
             </tr>
           </table>
         </div>
@@ -319,6 +324,9 @@
             <?php } ?>
             <?php } else { ?>
             <?php echo $text_cron_never; ?>
+            <?php } ?>
+            <?php if ($cron_stale) { ?>
+            <div class="warning"><?php echo htmlspecialchars($cron_stale, ENT_QUOTES, 'UTF-8'); ?></div>
             <?php } ?></td>
         </tr>
       </table>
@@ -656,19 +664,63 @@ function progressDone() {
 	}, 1000);
 }
 
+// Delete Removed Products is only active when a Sync Stock / Sync Prices found products removed
+// from the CJ shelves, and never while a sync is running.
+var syncRunning = false;
+var removedAvailable = cj.removed_count > 0;
+var deactivatedAvailable = cj.deactivated_count > 0;
+
+function updateRemovedButton() {
+	$('#button-purge-removed').toggleClass('cj-busy', syncRunning || !removedAvailable);
+	$('#button-restore').toggleClass('cj-busy', syncRunning || !deactivatedAvailable);
+}
+
+// Re-check both maintenance buttons (Delete Removed Products, Re-check Deactivated Products).
+function refreshRemovedButton() {
+	$.ajax({
+		url: cj.url.count_removed,
+		type: 'GET',
+		dataType: 'json',
+		success: function(res) {
+			removedAvailable = !res.error && (parseInt(res.count, 10) || 0) > 0;
+
+			updateRemovedButton();
+		}
+	});
+
+	$.ajax({
+		url: cj.url.count_deactivated,
+		type: 'GET',
+		dataType: 'json',
+		success: function(res) {
+			deactivatedAvailable = !res.error && (parseInt(res.count, 10) || 0) > 0;
+
+			updateRemovedButton();
+		}
+	});
+}
+
 function setSyncBusy(busy) {
 	$('.cj-sync').toggleClass('cj-busy', busy);
+
+	syncRunning = busy;
+
+	if (busy) {
+		updateRemovedButton();
+	} else {
+		refreshRemovedButton();
+	}
 }
 
 // -----------------------------------------------------------------
-// Stock sync (auto-paginated — 10 variants per AJAX call)
+// Stock sync (auto-paginated — 10 CJ products per AJAX call)
 // -----------------------------------------------------------------
 var stockSyncState = null;
 
 function stockSyncPage() {
 	var s = stockSyncState;
 
-	request(cj.url.sync_stock + '&channel_id=' + s.channelId + '&after_id=' + s.afterId, function(res) {
+	request(cj.url.sync_stock + '&channel_id=' + s.channelId + '&after_pid=' + encodeURIComponent(s.afterPid), function(res) {
 		if (res.error) {
 			progressDone();
 			showResult(res.error, 'warning');
@@ -690,23 +742,22 @@ function stockSyncPage() {
 			s.allErrors = s.allErrors.concat(res.errors);
 		}
 
-		var progress = s.grandTotal > 0 ? fmt(cj.text.text_x_of_y, s.totalUpdated, s.grandTotal) : s.totalUpdated;
+		s.offset += (res.processed || 0);
 
 		if (res.has_more) {
-			s.afterId = res.last_id || s.afterId;
-			s.offset += (res.processed || 10);
+			s.afterPid = res.last_pid || s.afterPid;
 
 			var pct = s.grandTotal > 0 ? Math.min(100, Math.round((s.offset / s.grandTotal) * 100)) : 0;
 
-			progressUpdate(pct, fmt(cj.text.text_progress_variants, pct, s.offset, s.grandTotal));
+			progressUpdate(pct, fmt(cj.text.text_progress_pids, pct, s.offset, s.grandTotal));
 
-			showResult(fmt(cj.text.text_stock_sync_complete, progress) + ' ...', 'tooltip');
+			showResult(fmt(cj.text.text_stock_sync_complete, s.totalUpdated) + ' ...', 'tooltip');
 
-			setTimeout(stockSyncPage, 5000); // 5-second pause between AJAX pages
+			setTimeout(stockSyncPage, 1000); // 1-second pause between AJAX pages
 		} else {
 			progressDone();
 
-			showResult(withErrors(fmt(cj.text.text_stock_sync_complete, progress), s.allErrors), s.allErrors.length ? 'warning' : 'success');
+			showResult(withErrors(fmt(cj.text.text_stock_sync_complete, s.totalUpdated), s.allErrors), s.allErrors.length ? 'warning' : 'success');
 
 			setSyncBusy(false);
 
@@ -726,7 +777,7 @@ $('#button-sync-stock').on('click', function() {
 
 	setSyncBusy(true);
 
-	stockSyncState = { channelId: id, afterId: 0, offset: 0, totalUpdated: 0, grandTotal: 0, allErrors: [] };
+	stockSyncState = { channelId: id, afterPid: '', offset: 0, totalUpdated: 0, grandTotal: 0, allErrors: [] };
 
 	progressInit();
 	showResult(cj.text.text_loading, 'tooltip');
@@ -1091,7 +1142,7 @@ function purgeFlow(opts) {
 		$.confirm({
 			title: opts.title,
 			content: content,
-			type: 'red',
+			type: opts.dialogType || 'red',
 			typeAnimated: true,
 			useBootstrap: false,
 			boxWidth: 580,
@@ -1100,14 +1151,26 @@ function purgeFlow(opts) {
 			opacity: 0.1,
 			buttons: {
 				confirm: {
-					text: cj.text.button_purge_confirm,
-					btnClass: 'btn-red',
+					text: opts.confirmText || cj.text.button_purge_confirm,
+					btnClass: opts.confirmClass || 'btn-red',
 					action: function() {
 						request(opts.purgeUrl, function(res2) {
 							if (res2.error) {
 								showMessage(opts.resultId, htmlEsc(res2.error), 'warning');
+							} else if (opts.onResult) {
+								var shown = opts.onResult(res2);
+
+								showMessage(opts.resultId, shown.html, shown.type);
+
+								if (opts.onDone) {
+									opts.onDone();
+								}
 							} else {
 								showMessage(opts.resultId, fmt(opts.textComplete, res2.deleted), 'success');
+
+								if (opts.onDone) {
+									opts.onDone();
+								}
 							}
 						}, opts.resultId);
 					}
@@ -1145,8 +1208,42 @@ $('#button-purge-removed').on('click', function() {
 		textComplete: cj.text.text_purge_removed_complete,
 		textSample: cj.text.text_purge_removed_sample,
 		topResult: true,
+		onDone: refreshRemovedButton,
 		sampleLine: function(item) {
 			return '<b>' + htmlEsc(item.model) + '</b> &mdash; ' + htmlEsc(item.product_name) + ' (PID: ' + htmlEsc(item.supplier_pid) + ')';
+		}
+	});
+});
+
+$('#button-restore').on('click', function() {
+	purgeFlow({
+		resultId: 'restore-result',
+		countUrl: cj.url.count_deactivated,
+		purgeUrl: cj.url.restore_deactivated,
+		title: cj.text.button_restore_deactivated,
+		textNone: cj.text.text_restore_none,
+		textFound: cj.text.text_restore_found,
+		textConfirm: cj.text.text_restore_dialog,
+		textSample: cj.text.text_restore_sample,
+		dialogType: 'blue',
+		confirmClass: 'btn-blue',
+		confirmText: cj.text.button_restore_confirm,
+		onDone: refreshRemovedButton,
+		sampleLine: function(item) {
+			return '<b>' + htmlEsc(item.model) + '</b> &mdash; ' + htmlEsc(item.product_name) + ' (PID: ' + htmlEsc(item.supplier_pid) + ')';
+		},
+		onResult: function(res2) {
+			var html = fmt(cj.text.text_restore_complete, res2.restored, res2.still);
+
+			if (res2.remaining > 0) {
+				html += '<br />' + fmt(cj.text.text_restore_more, res2.remaining);
+			}
+
+			if (res2.errors && res2.errors.length) {
+				html = withErrors(html, res2.errors);
+			}
+
+			return {html: html, type: (res2.errors && res2.errors.length) ? 'warning' : 'success'};
 		}
 	});
 });

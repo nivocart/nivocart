@@ -199,11 +199,20 @@ $_['text_purge_removed_confirm']     = 'This will permanently delete these produ
 $_['text_purge_removed_found']       = '%s product(s) found that CJDropshipping has removed from its shelves.';
 $_['text_purge_removed_complete']    = 'Purge complete: %s product(s) deleted.';
 $_['text_purge_removed_none']        = 'No removed products found. Products CJDropshipping has removed from its shelves are listed here after a Sync Prices or Sync Stock run.';
+$_['button_restore_deactivated']      = 'Re-check Deactivated Products';
+$_['text_restore_confirm']           = 'This asks CJDropshipping again about the products a Sync Stock deactivated. Products CJDropshipping lists again are enabled with their current stock; the others stay deactivated.';
+$_['text_restore_found']             = '%s deactivated variant(s) found.';
+$_['text_restore_none']              = 'No deactivated products found. Products a Sync Stock deactivates because CJDropshipping no longer lists them appear here.';
+$_['text_restore_sample']            = 'First %s listed (CJ SKU, name, PID):';
+$_['text_restore_dialog']            = 'Re-check these with CJDropshipping now? Products it lists again are enabled with their current stock. Continue?';
+$_['text_restore_complete']          = 'Re-check complete: %s restored, %s still not listed by CJDropshipping.';
+$_['text_restore_more']              = '%s more CJ product(s) were not re-checked yet: click the button again.';
+$_['button_restore_confirm']         = 'Re-check';
 $_['text_purge_removed_sample']      = 'First %s listed (CJ SKU, name, PID):';
 
 // Stock Sync Cron Job
 $_['tab_cron']                       = 'Stock Sync Cron Job';
-$_['text_cron_info']                 = 'Keeps stock availability accurate every day without anyone clicking Sync Stock. Add the cron job below at your hosting provider (in your hosting control panel, usually under Cron Jobs). It syncs every active CJDropshipping channel, one variant at a time, and records the result here and in the server log.';
+$_['text_cron_info']                 = 'Keeps stock availability accurate every day without anyone clicking Sync Stock. Add the cron job below at your hosting provider (in your hosting control panel, usually under Cron Jobs). It syncs every active CJDropshipping channel, one CJ product (with all its variants) at a time, and records the result here and in the server log.';
 $_['text_cron_schedule']             = 'Schedule:';
 $_['text_cron_command']              = 'Cron job:';
 $_['text_cron_time']                 = 'Runs at %s China time (UTC+8), when the CJ servers are quietest. That is %s UTC: if your hosting provider asks for the schedule in another time zone, convert it.';
@@ -212,6 +221,9 @@ $_['text_cron_last_run']             = 'Last run:';
 $_['text_cron_never']                = 'The cron job has not run yet.';
 $_['text_cron_success']              = 'Success';
 $_['text_cron_error']                = 'Error';
+$_['text_cron_running']              = 'Running or interrupted';
+$_['text_cron_stale']                = 'No successful stock sync for more than 36 hours (last success: %s). Stock may be out of date: check the cron job, or run Sync Stock manually.';
+$_['text_cron_never_success']        = 'never';
 
 // Errors
 $_['error_permission']               = 'Warning: You do not have permission to modify <b>CJDropshipping</b>!';

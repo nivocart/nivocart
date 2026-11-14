@@ -716,118 +716,157 @@ class ModelModificationCJDropshipping extends Model {
 	// =================================================================
 
 	/**
-	 * Sync stock for all mapped variants on a channel.
+	 * Stock sync by CJ product: ONE API call per product updates ALL of its variants
+	 * (matched by CJ vid). Used by the cron job and by the manual Sync Stock button.
 	 *
-	 * Batches by CJ parent product (PID) — the same strategy syncPrices uses —
-	 * so a single call to getVariants() covers all variants of each parent in one
-	 * API request. For 70 NivoCart products spread across 25 CJ parent products
-	 * this is 25 API calls instead of 70, keeping the total well within the
-	 * server's PHP execution time limit.
+	 * Two ways to page, chosen by $after_pid:
+	 *  - null (cron): products oldest-synced first (variants never synced come first), skipping
+	 *    $skip_pids, which the caller fills with every product handled in this run. A run that has
+	 *    to stop early is continued by the next run exactly where it matters most.
+	 *  - string (manual button): products in CJ product ID order after $after_pid ('' = start).
+	 *    Pass the returned last_pid as $after_pid to fetch the next batch.
 	 *
-	 * getVariants(pid, 'GB') returns all variants of a parent product with their
-	 * per-warehouse inventory array (countryCode + totalInventory), exactly the
-	 * shape extractMaxWarehouseStock() expects.
+	 * A variant that CJ does not list for its product, or a product CJ no longer knows (error
+	 * 1602001 / 1602003), is handled in one of two ways:
+	 *  - $maintenance false (cron): stock set to 0 only; the variant stays active and enabled, so the
+	 *    shop shows it as out of stock and its SEO URL stays alive.
+	 *  - $maintenance true (manual): stock set to 0, the variant is deactivated and its product is
+	 *    disabled (so it drops off the storefront and out of later syncs), and the variant is
+	 *    reported in 'errors'. A variant CJ does not list, or error 1602003, is also remembered for
+	 *    the Delete Removed Products button (Products Maintenance).
+	 * Other API errors leave the stock of that product unchanged.
 	 *
-	 * Pages by variant_id (keyset) instead of OFFSET: a variant that CJD reports as
-	 * removed is deactivated during the run, which would shift an OFFSET window and
-	 * make the next batch skip variants. Pass the returned last_id as $after_id to
-	 * fetch the next batch.
-	 *
-	 * @param  int $channel_id
-	 * @param  int $after_id  Only variants with a higher variant_id are processed (0 = start).
-	 * @param  int $limit     Variants per batch.
-	 * @return array ['updated' => int, 'errors' => array, 'total' => int, 'processed' => int, 'has_more' => bool, 'last_id' => int]
+	 * @param  int         $channel_id
+	 * @param  array       $skip_pids    CJ product IDs already handled in this run (oldest-first paging).
+	 * @param  int         $limit        Products per call.
+	 * @param  bool        $maintenance  Deactivate removed variants and disable their product.
+	 * @param  string|null $after_pid    Only products with a higher CJ product ID (keyset paging), null = oldest-first paging.
+	 * @return array ['pids' => handled CJ product IDs, 'last_pid' => last handled CJ product ID, 'updated' => variants set from CJ,
+	 *                'zeroed' => variants not listed by CJ (stock set to 0), 'errors' => array, 'total' => products on the channel,
+	 *                'processed' => products handled, 'has_more' => bool]
 	 */
-	public function syncStock(int $channel_id, int $after_id = 0, int $limit = 10): array {
+	public function syncStockByPid(int $channel_id, array $skip_pids = [], int $limit = 10, bool $maintenance = false, ?string $after_pid = null): array {
 		$adapter = $this->getAdapter($channel_id);
 
-		// Total active variants for this channel — used for progress display.
-		$count_query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "dropship_variant` WHERE `channel_id` = '" . (int)$channel_id . "' AND `is_active` = '1'");
+		$from = " FROM `" . DB_PREFIX . "dropship_variant` dv INNER JOIN `" . DB_PREFIX . "product_dropship` pd ON (dv.`dropship_id` = pd.`dropship_id`) WHERE dv.`channel_id` = '" . (int)$channel_id . "' AND dv.`is_active` = '1' AND pd.`supplier_pid` != ''";
 
-		$total = (int)($count_query->row['total'] ?? 0);
+		$total_query = $this->db->query("SELECT COUNT(DISTINCT pd.`supplier_pid`) AS total" . $from);
 
-		if ($total === 0) {
-			return ['updated' => 0, 'errors' => [], 'total' => 0, 'processed' => 0, 'has_more' => false, 'last_id' => $after_id];
+		$total = (int)($total_query->row['total'] ?? 0);
+
+		if ($after_pid !== null) {
+			$filter_sql = " AND pd.`supplier_pid` > '" . $this->db->escape($after_pid) . "'";
+			$order_sql = " ORDER BY pd.`supplier_pid` ASC";
+		} else {
+			$filter_sql = $skip_pids ? " AND pd.`supplier_pid` NOT IN ('" . implode("','", array_map([$this->db, 'escape'], $skip_pids)) . "')" : '';
+			$order_sql = " ORDER BY oldest ASC, pd.`supplier_pid` ASC";
 		}
 
-		// Fetch the next slice — no JOIN needed; product_id lives on the variant row.
-		$variants_query = $this->db->query(
-			"SELECT `variant_id`, `product_id`, `supplier_sku`
-			 FROM `" . DB_PREFIX . "dropship_variant`
-			 WHERE `channel_id` = '" . (int)$channel_id . "'
-			   AND `is_active` = '1'
-			   AND `variant_id` > '" . (int)$after_id . "'
-			 ORDER BY `variant_id` ASC
-			 LIMIT " . (int)$limit
-		);
+		$pid_query = $this->db->query("SELECT pd.`supplier_pid` AS pid, MIN(IFNULL(dv.`last_stock_sync`, '1970-01-01 00:00:00')) AS oldest" . $from . $filter_sql . " GROUP BY pd.`supplier_pid`" . $order_sql . " LIMIT " . (int)$limit);
 
-		if (!is_object($variants_query) || empty($variants_query->rows)) {
-			return ['updated' => 0, 'errors' => [], 'total' => $total, 'processed' => 0, 'has_more' => false, 'last_id' => $after_id];
-		}
-
+		$pids = [];
 		$updated = 0;
+		$zeroed = 0;
 		$errors = [];
 		$removed = [];
 
-		foreach ($variants_query->rows as $row) {
+		foreach ($pid_query->rows as $pid_row) {
+			$pid = (string)$pid_row['pid'];
+			$pids[] = $pid;
+			$product_gone = false;
+			$gone_removed = false; // Error 1602003 on the product: remember it for Delete Removed Products.
+			$stock = [];
+
 			try {
-				usleep(400000); // 0.4s between SKU calls — stays well within CJ rate limit
+				usleep(400000); // 0.4s between calls — stays well within the CJ rate limit
 
-				// getInventoryBySku returns an array of per-warehouse inventory objects:
-				// [ { "countryCode": "CN", "totalInventory": 42 }, ... ]
-				$stockData = $adapter->getInventoryBySku($row['supplier_sku']);
-
-				if (empty($stockData) || !is_array($stockData)) {
-					continue; // No inventory data returned — leave this variant unchanged.
-				}
-
-				// Take the highest stock figure across all warehouses so CN-only products
-				// don't read as 0 when only GB warehouses are checked.
-				$qty = $this->extractMaxWarehouseStock($stockData);
-
-				$this->db->query("UPDATE `" . DB_PREFIX . "dropship_variant` SET `quantity` = '" . (int)$qty . "', `last_stock_sync` = NOW(), `date_modified` = NOW() WHERE `variant_id` = '" . (int)$row['variant_id'] . "'");
-				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int)$qty . "', `date_modified` = NOW() WHERE `product_id` = '" . (int)$row['product_id'] . "'");
-
-				$updated++;
-
+				$stock = $adapter->getInventoryByPid($pid);
 			} catch (\Exception $e) {
-				$this->log->write('CJDropshipping syncStock SKU ' . $row['supplier_sku'] . ': ' . $e->getMessage());
-				$errors[] = $row['supplier_sku'] . ': ' . $e->getMessage();
-
-				// CJD error 1602003 = this variant was removed from the shelves: remember it
-				// for the Delete Removed Products button (Products Maintenance).
-				if (str_contains($e->getMessage(), 'API error ' . self::CODE_VARIANT_REMOVED)) {
-					$removed[] = (int)$row['variant_id'];
-				}
-
-				// CJD error 1602001 = product no longer exists on supplier side; 1602003 = variant removed
-				// from the shelves. Zero the stock and deactivate so it drops off the storefront and
-				// is excluded from all future syncs (is_active = 0 filter).
 				if (str_contains($e->getMessage(), '1602001') || str_contains($e->getMessage(), 'API error ' . self::CODE_VARIANT_REMOVED)) {
-					$this->db->query("UPDATE `" . DB_PREFIX . "dropship_variant` SET `quantity` = '0', `is_active` = '0', `date_modified` = NOW() WHERE `variant_id` = '" . (int)$row['variant_id'] . "'");
-					$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0', `status` = '0', `date_modified` = NOW() WHERE `product_id` = '" . (int)$row['product_id'] . "'");
+					$product_gone = true;
+					$gone_removed = str_contains($e->getMessage(), 'API error ' . self::CODE_VARIANT_REMOVED);
+				} else {
+					$this->log->write('CJDropshipping syncStockByPid PID ' . $pid . ': ' . $e->getMessage());
+					$errors[] = $pid . ': ' . $e->getMessage();
+
+					continue; // Stock of this product is left unchanged.
 				}
+			}
+
+			$variants = $this->db->query("SELECT dv.`variant_id`, dv.`product_id`, dv.`supplier_vid`, dv.`supplier_sku` FROM `" . DB_PREFIX . "dropship_variant` dv INNER JOIN `" . DB_PREFIX . "product_dropship` pd ON (dv.`dropship_id` = pd.`dropship_id`) WHERE dv.`channel_id` = '" . (int)$channel_id . "' AND dv.`is_active` = '1' AND pd.`supplier_pid` = '" . $this->db->escape($pid) . "'");
+
+			foreach ($variants->rows as $row) {
+				$vid = (string)$row['supplier_vid'];
+
+				if ($vid === '') {
+					$errors[] = $row['supplier_sku'] . ': variant has no CJ vid, stock left unchanged.';
+
+					continue;
+				}
+
+				if (!$product_gone && isset($stock[$vid])) {
+					$qty = $this->extractMaxWarehouseStock($stock[$vid]);
+					$updated++;
+
+					$this->db->query("UPDATE `" . DB_PREFIX . "dropship_variant` SET `quantity` = '" . (int)$qty . "', `last_stock_sync` = NOW(), `date_modified` = NOW() WHERE `variant_id` = '" . (int)$row['variant_id'] . "'");
+					$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int)$qty . "', `date_modified` = NOW() WHERE `product_id` = '" . (int)$row['product_id'] . "'");
+
+					continue;
+				}
+
+				// CJ does not list this variant any more (or the whole product is gone).
+				$zeroed++;
+
+				if ($maintenance) {
+					// Deactivate it, disable its product and zero the stock: it drops off the storefront and out of all later syncs.
+					$this->db->query("UPDATE `" . DB_PREFIX . "dropship_variant` SET `quantity` = '0', `is_active` = '0', `last_stock_sync` = NOW(), `date_modified` = NOW() WHERE `variant_id` = '" . (int)$row['variant_id'] . "'");
+					$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0', `status` = '0', `date_modified` = NOW() WHERE `product_id` = '" . (int)$row['product_id'] . "'");
+
+					if (!$product_gone || $gone_removed) {
+						$removed[] = (int)$row['variant_id'];
+					}
+
+					$errors[] = $row['supplier_sku'] . ': not listed by CJ, stock set to 0, variant deactivated and product disabled.';
+				} else {
+					$this->db->query("UPDATE `" . DB_PREFIX . "dropship_variant` SET `quantity` = '0', `last_stock_sync` = NOW(), `date_modified` = NOW() WHERE `variant_id` = '" . (int)$row['variant_id'] . "'");
+					$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '0', `date_modified` = NOW() WHERE `product_id` = '" . (int)$row['product_id'] . "'");
+				}
+
+				$this->log->write('CJDropshipping syncStockByPid: ' . $row['supplier_sku'] . ' (PID ' . $pid . ') not listed by CJ, stock set to 0' . ($maintenance ? ', variant deactivated, product disabled.' : '.'));
 			}
 		}
 
-		// Removed variants are deactivated above, so later runs skip them: keep adding to the saved list.
-		// Products already deleted drop out of getRemovedProducts() by themselves.
-		$this->saveRemovedPids($channel_id, $removed, false, self::REMOVED_VARIANTS_KEY);
+		if ($removed) {
+			// Deactivated variants are skipped by later runs: keep adding to the saved list.
+			// Products already deleted drop out of getRemovedProducts() by themselves.
+			$this->saveRemovedPids($channel_id, $removed, false, self::REMOVED_VARIANTS_KEY);
+		}
 
-		$processed = count($variants_query->rows);
-		$last_id = (int)end($variants_query->rows)['variant_id'];
+		// Products were disabled: clear the catalogue product caches (product.latest, product.bestseller, ...)
+		// so a disabled product does not stay in those module lists until the cache expires.
+		if ($maintenance && $zeroed > 0) {
+			$this->cache->delete('product');
+		}
 
-		$more_query = $this->db->query("SELECT COUNT(*) AS remaining FROM `" . DB_PREFIX . "dropship_variant` WHERE `channel_id` = '" . (int)$channel_id . "' AND `is_active` = '1' AND `variant_id` > '" . (int)$last_id . "'");
+		$last_pid = $pids ? end($pids) : (string)$after_pid;
 
-		$has_more = (int)($more_query->row['remaining'] ?? 0) > 0;
+		if ($after_pid !== null) {
+			$more_sql = " AND pd.`supplier_pid` > '" . $this->db->escape($last_pid) . "'";
+		} else {
+			$more_sql = $filter_sql . ($pids ? " AND pd.`supplier_pid` NOT IN ('" . implode("','", array_map([$this->db, 'escape'], $pids)) . "')" : '');
+		}
+
+		$remaining_query = $this->db->query("SELECT COUNT(DISTINCT pd.`supplier_pid`) AS remaining" . $from . $more_sql);
 
 		return [
+			'pids'      => $pids,
+			'last_pid'  => $last_pid,
 			'updated'   => $updated,
+			'zeroed'    => $zeroed,
 			'errors'    => $errors,
 			'total'     => $total,
-			'processed' => $processed,
-			'has_more'  => $has_more,
-			'last_id'   => $last_id,
+			'processed' => count($pids),
+			'has_more'  => (int)($remaining_query->row['remaining'] ?? 0) > 0,
 		];
 	}
 
@@ -847,6 +886,22 @@ class ModelModificationCJDropshipping extends Model {
 		$query = $this->db->query("SELECT `rows_affected`, `status`, `message`, `date_added` FROM `" . DB_PREFIX . "cron_log` WHERE `task` = 'cjd_stock_sync' ORDER BY `log_id` DESC LIMIT 1");
 
 		return is_object($query) ? $query->row : [];
+	}
+
+	/**
+	 * Return the date of the last fully successful stock-sync cron run, or an empty string
+	 * when there has not been one (or the log table does not exist yet).
+	 */
+	public function getLastStockCronSuccessDate(): string {
+		$table = $this->db->query("SHOW TABLES LIKE '" . $this->db->escape(DB_PREFIX . 'cron_log') . "'");
+
+		if (!is_object($table) || !$table->num_rows) {
+			return '';
+		}
+
+		$query = $this->db->query("SELECT `date_added` FROM `" . DB_PREFIX . "cron_log` WHERE `task` = 'cjd_stock_sync' AND `status` = 'success' ORDER BY `log_id` DESC LIMIT 1");
+
+		return is_object($query) ? (string)($query->row['date_added'] ?? '') : '';
 	}
 
 	// =================================================================
@@ -1954,7 +2009,7 @@ class ModelModificationCJDropshipping extends Model {
 
 	/**
 	 * Return the maximum stock quantity across all warehouses.
-	 * Used by syncStock() so CN-only products show real availability
+	 * Used by syncStockByPid() so CN-only products show real availability
 	 * rather than 0 (which only GB warehouse would return).
 	 */
 	private function extractMaxWarehouseStock(array $inventories): int {
@@ -2164,6 +2219,135 @@ class ModelModificationCJDropshipping extends Model {
 		}
 
 		return array_values($unique);
+	}
+
+	/**
+	 * Variants a manual Sync Stock deactivated (CJ no longer listed them): one row per variant with
+	 * variant_id, product_id, model (CJ SKU), product_name, supplier_pid, channel_id.
+	 */
+	public function getDeactivatedVariants(): array {
+		$query = $this->db->query(
+			"SELECT dv.`variant_id`, p.`product_id`, p.`model`, COALESCE(pdesc.`name`, '') AS product_name, pd.`supplier_pid`, dv.`channel_id`, dv.`supplier_vid`
+			 FROM `" . DB_PREFIX . "dropship_variant` dv
+			 INNER JOIN `" . DB_PREFIX . "product_dropship` pd ON dv.`dropship_id` = pd.`dropship_id`
+			 INNER JOIN `" . DB_PREFIX . "product` p ON dv.`product_id` = p.`product_id`
+			 LEFT JOIN `" . DB_PREFIX . "product_description` pdesc ON p.`product_id` = pdesc.`product_id` AND pdesc.`language_id` = '" . (int)$this->config->get('config_language_id') . "'
+			 WHERE dv.`is_active` = '0' AND pd.`supplier_pid` != ''
+			 ORDER BY pd.`supplier_pid` ASC, p.`model` ASC"
+		);
+
+		return is_object($query) ? $query->rows : [];
+	}
+
+	/**
+	 * Re-check the deactivated variants with CJ, one call per CJ product. A variant CJ lists again is
+	 * set active, its product is enabled and its stock is set from CJ; a variant CJ still does not list
+	 * (or a product CJ still reports as removed) stays deactivated. A product whose call fails for another
+	 * reason is left untouched. Restored variants are taken off the Delete Removed Products lists.
+	 *
+	 * @param  int $max_pids  CJ products re-checked per call (keeps the AJAX request short).
+	 * @return array ['restored' => variants set active again, 'still' => variants still not listed or not checked,
+	 *                'errors' => array, 'remaining' => CJ products not re-checked yet because of $max_pids]
+	 */
+	public function restoreDeactivatedVariants(int $max_pids = 20): array {
+		$groups = [];
+
+		foreach ($this->getDeactivatedVariants() as $row) {
+			$groups[(int)$row['channel_id']][(string)$row['supplier_pid']][] = $row;
+		}
+
+		$restored = 0;
+		$still = 0;
+		$errors = [];
+		$checked = 0;
+		$remaining = 0;
+		$restored_ids = [];
+		$restored_pids = [];
+
+		foreach ($groups as $channel_id => $pids) {
+			$adapter = null;
+
+			foreach ($pids as $pid => $variants) {
+				if ($checked >= $max_pids) {
+					$remaining++;
+
+					continue;
+				}
+
+				$checked++;
+
+				try {
+					$adapter = $adapter ?? $this->getAdapter($channel_id);
+
+					usleep(400000); // 0.4s between calls — stays well within the CJ rate limit
+
+					$stock = $adapter->getInventoryByPid((string)$pid);
+				} catch (\Exception $e) {
+					$still += count($variants);
+
+					// 1602001 / 1602002 / 1602003: CJ still does not have it. Anything else is a real error.
+					if (!preg_match('/160200[123]/', $e->getMessage())) {
+						$this->log->write('CJDropshipping restoreDeactivatedVariants PID ' . $pid . ': ' . $e->getMessage());
+						$errors[] = $pid . ': ' . $e->getMessage();
+					}
+
+					continue;
+				}
+
+				foreach ($variants as $row) {
+					$vid = (string)$row['supplier_vid'];
+
+					if ($vid === '' || !isset($stock[$vid])) {
+						$still++;
+
+						continue;
+					}
+
+					$qty = $this->extractMaxWarehouseStock($stock[$vid]);
+
+					$this->db->query("UPDATE `" . DB_PREFIX . "dropship_variant` SET `quantity` = '" . (int)$qty . "', `is_active` = '1', `last_stock_sync` = NOW(), `date_modified` = NOW() WHERE `variant_id` = '" . (int)$row['variant_id'] . "'");
+					$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = '" . (int)$qty . "', `status` = '1', `date_modified` = NOW() WHERE `product_id` = '" . (int)$row['product_id'] . "'");
+
+					$restored++;
+					$restored_ids[$channel_id][] = (int)$row['variant_id'];
+					$restored_pids[$channel_id][] = (string)$pid;
+				}
+			}
+		}
+
+		// Products were enabled again: clear the catalogue product caches (product.latest, product.bestseller, ...).
+		if ($restored > 0) {
+			$this->cache->delete('product');
+		}
+
+		// Restored variants must not stay on the Delete Removed Products lists.
+		if ($restored_ids) {
+			$variant_map = $this->loadRemovedPids(self::REMOVED_VARIANTS_KEY);
+			$pid_map = $this->loadRemovedPids();
+
+			foreach ($restored_ids as $channel_id => $ids) {
+				if (isset($variant_map[$channel_id])) {
+					$variant_map[$channel_id] = array_values(array_diff(array_map('intval', (array)$variant_map[$channel_id]), $ids));
+
+					if (!$variant_map[$channel_id]) {
+						unset($variant_map[$channel_id]);
+					}
+				}
+
+				if (isset($pid_map[$channel_id])) {
+					$pid_map[$channel_id] = array_values(array_diff(array_map('strval', (array)$pid_map[$channel_id]), $restored_pids[$channel_id]));
+
+					if (!$pid_map[$channel_id]) {
+						unset($pid_map[$channel_id]);
+					}
+				}
+			}
+
+			$this->storeRemovedPids($variant_map, self::REMOVED_VARIANTS_KEY);
+			$this->storeRemovedPids($pid_map);
+		}
+
+		return ['restored' => $restored, 'still' => $still, 'errors' => $errors, 'remaining' => $remaining];
 	}
 
 	private function clearRemovedLists(): void {

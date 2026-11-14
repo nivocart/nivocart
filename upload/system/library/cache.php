@@ -112,15 +112,27 @@ class Cache {
 	/**
 	 * Delete
 	 *
+	 * Removes EVERY cache file whose name starts with the key, so delete('product') clears
+	 * product.latest.*, product.bestseller.*, product.popular.* and so on, as the catalogue
+	 * models expect.
+	 *
 	 * @param string $key
 	 *
 	 * @return void
 	 */
 	public function delete(string $key): void {
-		$file = $this->findCacheFile($key);
+		if (!is_dir(DIR_CACHE)) {
+			return;
+		}
 
-		if ($file !== null) {
-			unlink($file);
+		$prefix = 'cache.' . $this->sanitiseKey($key) . '.';
+
+		$iterator = new FilesystemIterator(DIR_CACHE, FilesystemIterator::SKIP_DOTS);
+
+		foreach ($iterator as $entry) {
+			if ($entry->isFile() && str_starts_with($entry->getFilename(), $prefix)) {
+				unlink($entry->getPathname());
+			}
 		}
 	}
 

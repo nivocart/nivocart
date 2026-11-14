@@ -480,6 +480,37 @@ class CJDropshipping {
 		return $response['data'];
 	}
 
+	/**
+	 * Query the stock of ALL variants of one CJ product with a single call.
+	 *
+	 * CJ answers with "inventories" (product level) and "variantInventories" (one entry per
+	 * variant: its "vid" plus an "inventory" list with one object per warehouse).
+	 * Used by the stock sync cron job: one call per product instead of one call per variant.
+	 *
+	 * @param  string $pid  CJ product ID.
+	 * @return array        ['vid' => [per-warehouse inventory objects], ...] for the variants CJ lists.
+	 * @throws \Exception
+	 */
+	public function getInventoryByPid(string $pid): array {
+		$response = $this->get(self::BASE_URL . '/product/stock/getInventoryByPid', [
+			'pid' => $pid
+		]);
+
+		if (!isset($response['data']) || !is_array($response['data'])) {
+			throw new \Exception('CJDropshipping: Unexpected response from stock/getInventoryByPid for pid=' . $pid);
+		}
+
+		$variants = [];
+
+		foreach (($response['data']['variantInventories'] ?? []) as $row) {
+			if (!empty($row['vid']) && is_array($row['inventory'] ?? null)) {
+				$variants[(string)$row['vid']] = $row['inventory'];
+			}
+		}
+
+		return $variants;
+	}
+
 	// =================================================================
 	// PUBLIC — ORDERS
 	// =================================================================

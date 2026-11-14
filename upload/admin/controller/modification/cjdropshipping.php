@@ -147,6 +147,8 @@ class ControllerModificationCJDropshipping extends Controller {
 			'count_dup'      => 'countDuplicates',
 			'count_removed'  => 'countRemoved',
 			'purge_removed'  => 'purgeRemoved',
+			'count_deactivated' => 'countDeactivated',
+			'restore_deactivated' => 'restoreDeactivated',
 			'orders'         => 'getOrders',
 			'dispatch'       => 'dispatchOrder',
 			'tracking_email' => 'sendTrackingEmail'
@@ -187,9 +189,10 @@ class ControllerModificationCJDropshipping extends Controller {
 			'button_purge_stale', 'text_purge_confirm',
 			'button_purge_duplicates', 'text_purge_dup_confirm',
 			'button_purge_removed', 'text_purge_removed_confirm',
+				'button_restore_deactivated', 'text_restore_confirm',
 			'text_prev', 'text_next',
 			'tab_cron', 'text_cron_info', 'text_cron_schedule', 'text_cron_command', 'text_cron_note',
-			'text_cron_last_run', 'text_cron_never', 'text_cron_success', 'text_cron_error'
+			'text_cron_last_run', 'text_cron_never', 'text_cron_success', 'text_cron_error', 'text_cron_running'
 		] as $key) {
 			$this->data[$key] = $this->language->get($key);
 		}
@@ -214,6 +217,8 @@ class ControllerModificationCJDropshipping extends Controller {
 			'text_price_failed', 'text_price_failed_sku', 'text_price_failed_more',
 			'text_purge_removed_none', 'text_purge_removed_found', 'text_purge_removed_complete',
 			'text_purge_removed_sample', 'text_purge_removed_confirm', 'button_purge_removed',
+				'button_restore_deactivated', 'text_restore_none', 'text_restore_found', 'text_restore_sample', 'text_restore_dialog',
+				'text_restore_complete', 'text_restore_more', 'button_restore_confirm',
 			'button_dispatch', 'button_email_tracking', 'button_test_connection',
 			'text_add_channel', 'text_edit_channel', 'button_delete',
 			'error_channel_id', 'error_sync_failed', 'error_ajax'
@@ -223,7 +228,11 @@ class ControllerModificationCJDropshipping extends Controller {
 
 		$this->data['cj_js'] = [
 			'url'  => $js_urls,
-			'text' => $js_text
+			'text' => $js_text,
+			// Delete Removed Products stays disabled until a sync has found products removed from the CJ shelves.
+			'removed_count' => count($this->model_modification_cjdropshipping->getRemovedProducts()),
+			// Re-check Deactivated Products stays disabled until a Sync Stock has deactivated some variants.
+			'deactivated_count' => count($this->model_modification_cjdropshipping->getDeactivatedVariants())
 		];
 
 		// Import country choices (warehouse country codes accepted by the CJ API)
@@ -260,11 +269,18 @@ class ControllerModificationCJDropshipping extends Controller {
 
 		$this->data['cron_last'] = $cron_last ? [
 			'ok'      => ($cron_last['status'] === 'success'),
-			'status'  => ($cron_last['status'] === 'success') ? $this->language->get('text_cron_success') : $this->language->get('text_cron_error'),
+			'status'  => ($cron_last['status'] === 'success') ? $this->language->get('text_cron_success') : (($cron_last['status'] === 'running') ? $this->language->get('text_cron_running') : $this->language->get('text_cron_error')),
 			'date'    => $cron_last['date_added'],
 			'rows'    => (int)$cron_last['rows_affected'],
 			'message' => $cron_last['message']
 		] : [];
+
+		// Warn when there has been no successful run for more than 36 hours (a run the host kills writes no result).
+		$cron_success = $this->model_modification_cjdropshipping->getLastStockCronSuccessDate();
+
+		$this->data['cron_stale'] = ($cron_last && (!$cron_success || strtotime($cron_success) < (time() - 36 * 3600)))
+			? sprintf($this->language->get('text_cron_stale'), $cron_success ?: $this->language->get('text_cron_never_success'))
+			: '';
 
 		// Channel list — CJ only
 		$this->data['channels'] = $this->model_modification_cjdropshipping->getChannels();
@@ -480,6 +496,7 @@ class ControllerModificationCJDropshipping extends Controller {
 
 	/**
 	 * Trigger a manual stock sync. Returns JSON.
+	 * Batched by CJ product: call repeatedly with after_pid = last_pid until has_more is false.
 	 */
 	public function syncStock(): void {
 		$this->language->load('modification/' . $this->name);
@@ -503,10 +520,12 @@ class ControllerModificationCJDropshipping extends Controller {
 			return;
 		}
 
-		$after_id = max(0, (int)($this->request->get['after_id'] ?? 0));
+		// CJ product ID reached by the previous batch ('' = start). CJ product IDs are letters, digits and dashes.
+		$after_pid = preg_replace('/[^A-Za-z0-9_\-]/', '', (string)($this->request->get['after_pid'] ?? ''));
 
 		try {
-			$result = $this->model_modification_cjdropshipping->syncStock($channel_id, $after_id, 10);
+			// Same one-call-per-product sync as the cron job, plus maintenance: a variant CJ no longer lists is deactivated and its product disabled.
+			$result = $this->model_modification_cjdropshipping->syncStockByPid($channel_id, [], 10, true, $after_pid);
 
 			$this->jsonResponse([
 				'success'   => true,
@@ -515,7 +534,7 @@ class ControllerModificationCJDropshipping extends Controller {
 				'total'     => $result['total'],
 				'processed' => $result['processed'],
 				'has_more'  => $result['has_more'],
-				'last_id'   => $result['last_id'],
+				'last_pid'  => $result['last_pid'],
 			]);
 		} catch (\Exception $e) {
 			$this->jsonResponse(['error' => $e->getMessage()]);
@@ -1162,6 +1181,66 @@ class ControllerModificationCJDropshipping extends Controller {
 			$this->jsonResponse(['success' => true, 'deleted' => $deleted]);
 		} catch (\Throwable $e) {
 			$this->jsonResponse(['error' => 'purgeRemoved error: ' . $e->getMessage()]);
+		}
+	}
+
+	// =================================================================
+	// RE-CHECK VARIANTS A SYNC STOCK DEACTIVATED
+	// =================================================================
+
+	/**
+	 * AJAX: list the variants a manual Sync Stock deactivated (CJ no longer listed them). Returns JSON.
+	 */
+	public function countDeactivated(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/cjdropshipping');
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if ($this->tablesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_database')]);
+			return;
+		}
+
+		$rows = $this->model_modification_cjdropshipping->getDeactivatedVariants();
+
+		$this->jsonResponse(['count' => count($rows), 'sample' => array_slice($rows, 0, 50)]);
+	}
+
+	/**
+	 * AJAX: re-check the deactivated variants with CJ and restore those it lists again. Returns JSON.
+	 */
+	public function restoreDeactivated(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/cjdropshipping');
+
+		if (!$this->validatePermission()) {
+			$this->jsonResponse(['error' => $this->language->get('error_permission')]);
+			return;
+		}
+
+		if ($this->tablesMissing()) {
+			$this->jsonResponse(['error' => $this->language->get('error_database')]);
+			return;
+		}
+
+		try {
+			$result = $this->model_modification_cjdropshipping->restoreDeactivatedVariants(20);
+
+			$this->jsonResponse([
+				'success'   => true,
+				'restored'  => $result['restored'],
+				'still'     => $result['still'],
+				'errors'    => $result['errors'],
+				'remaining' => $result['remaining']
+			]);
+		} catch (\Throwable $e) {
+			$this->jsonResponse(['error' => 'restoreDeactivated error: ' . $e->getMessage()]);
 		}
 	}
 

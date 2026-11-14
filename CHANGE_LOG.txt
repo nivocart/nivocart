@@ -8,7 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
-- Add new TrustPilot Modification, requires a TrustPilot Business Account. 
+- Add new TrustPilot Modification, requires a TrustPilot Business Account.
+- Updated the CJDropshipping Dashboard for faster Stock Sync operations.
 
 
 NivoCart v2.5.5
