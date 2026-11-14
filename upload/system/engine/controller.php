@@ -87,11 +87,15 @@ abstract class Controller {
 	/**
 	 * Redirect
 	 *
+	 * Sends the Location header and stops the script, so no code after a redirect can run.
+	 *
 	 * @param string $url
 	 * @param int $status
 	 */
-	protected function redirect(string $url, int $status = 302) {
+	protected function redirect(string $url, int $status = 302): never {
 		header('Location: ' . str_replace(['&amp;', "\n", "\r"], ['&', '', ''], $url), true, $status);
+
+		exit();
 	}
 
 	/**
