@@ -159,7 +159,7 @@ $_['button_dispatch']                = 'Dispatch to CJ';
 $_['button_register_webhooks']       = 'Register Webhooks';
 $_['button_test_connection']         = 'Test Connection';
 $_['button_email_tracking']          = 'Email Tracking';
-$_['button_cj_dashboard']            = 'Go to CJ Dropshipping Dashboard &rsaquo;';
+$_['button_cj_dashboard']            = 'Go to CJ Dashboard &rsaquo;';
 $_['button_purge_confirm']           = 'Yes, Purge';
 
 // About
@@ -168,7 +168,7 @@ $_['text_cj_author']                 = 'Author:';
 $_['text_cj_support']                = 'Support:';
 $_['text_cj_license']                = 'License:';
 $_['text_cj_tables']                 = 'Database Tables:';
-$_['cj_version']                     = '1.0.0';
+$_['cj_version']                     = '1.1.0';
 $_['cj_author']                      = 'NivoCart';
 $_['cj_support']                     = 'contact@nivocart.org';
 $_['cj_license']                     = 'GPLv3 (GNU General Public License)';

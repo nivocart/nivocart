@@ -163,10 +163,6 @@
               <td><a id="button-sync-videos" class="button-form ripple cj-sync"><i class="fa fa-refresh"></i> <?php echo $button_sync_videos; ?></a></td>
             </tr>
             <tr>
-              <td><?php echo $button_register_webhooks; ?></td>
-              <td><a id="button-register-webhooks" class="button-form ripple"><?php echo $button_register_webhooks; ?></a></td>
-            </tr>
-            <tr>
               <td><?php echo $button_test_connection; ?></td>
               <td><a id="button-test-connection" class="button-form ripple"><?php echo $button_test_connection; ?></a></td>
             </tr>
@@ -209,7 +205,16 @@
         <div class="dashboard-content">
           <div class="tooltip"><?php echo $text_cj_payment_note; ?></div>
           <div class="tooltip"><?php echo $text_cj_currency_note; ?></div>
-          <a href="https://cjdropshipping.com/home" target="_blank" class="button-form ripple"><?php echo $button_cj_dashboard; ?></a>
+          <table class="form">
+            <tr>
+              <td><?php echo $button_register_webhooks; ?></td>
+              <td><a id="button-register-webhooks" class="button-form ripple"><?php echo $button_register_webhooks; ?></a></td>
+            </tr>
+            <tr>
+              <td><?php echo $heading_title; ?></td>
+              <td><a href="https://cjdropshipping.com/home" target="_blank" class="button-form-install ripple"><?php echo $button_cj_dashboard; ?></a></td>
+            </tr>
+          </table>
         </div>
       </div>
       <h2><?php echo $tab_orders; ?></h2>
