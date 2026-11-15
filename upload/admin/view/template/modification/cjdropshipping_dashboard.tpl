@@ -278,6 +278,33 @@
         <div class="links"><a href="#" id="products-prev"><?php echo $text_prev; ?></a> <a href="#" id="products-next"><?php echo $text_next; ?></a></div>
         <div class="results" id="products-page-info"></div>
       </div>
+      <h2><?php echo $tab_cron; ?></h2>
+      <div class="tooltip"><?php echo $text_cron_info; ?></div>
+      <table class="form">
+        <tr>
+          <td><?php echo $text_cron_schedule; ?><span class="help"><?php echo htmlspecialchars($cron_time_text, ENT_QUOTES, 'UTF-8'); ?></span></td>
+          <td><input type="text" value="<?php echo htmlspecialchars($cron_schedule, ENT_QUOTES, 'UTF-8'); ?>" class="cj-narrow cj-mono" readonly="readonly" onfocus="this.select();" /></td>
+        </tr>
+        <tr>
+          <td><?php echo $text_cron_command; ?><span class="help"><?php echo $text_cron_note; ?></span></td>
+          <td><textarea rows="2" class="cj-wide cj-mono" readonly="readonly" onfocus="this.select();"><?php echo htmlspecialchars($cron_command, ENT_QUOTES, 'UTF-8'); ?></textarea></td>
+        </tr>
+        <tr>
+          <td><?php echo $text_cron_last_run; ?></td>
+          <td><?php if ($cron_last) { ?>
+            <span class="cj-badge <?php echo $cron_last['ok'] ? 'cj-badge-ok' : 'cj-badge-error'; ?>"><?php echo $cron_last['status']; ?></span>
+            <?php echo htmlspecialchars($cron_last['date'], ENT_QUOTES, 'UTF-8'); ?>
+            <?php if ($cron_last['message']) { ?>
+              <span class="help"><?php echo htmlspecialchars($cron_last['message'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <?php } ?>
+            <?php } else { ?>
+            <?php echo $text_cron_never; ?>
+            <?php } ?>
+            <?php if ($cron_stale) { ?>
+              <div class="warning"><?php echo htmlspecialchars($cron_stale, ENT_QUOTES, 'UTF-8'); ?></div>
+            <?php } ?></td>
+        </tr>
+      </table>
       <h2><?php echo $tab_about; ?></h2>
       <table class="form">
         <tr>
@@ -299,35 +326,6 @@
         <tr>
           <td><?php echo $text_cj_tables; ?></td>
           <td><?php echo $cj_tables; ?></td>
-        </tr>
-      </table>
-      <h2><?php echo $tab_cron; ?></h2>
-      <div class="tooltip"><?php echo $text_cron_info; ?></div>
-      <table class="form">
-        <tr>
-          <td><?php echo $text_cron_schedule; ?></td>
-          <td><input type="text" value="<?php echo htmlspecialchars($cron_schedule, ENT_QUOTES, 'UTF-8'); ?>" class="cj-narrow cj-mono" readonly="readonly" onfocus="this.select();" />
-            <span class="help"><?php echo htmlspecialchars($cron_time_text, ENT_QUOTES, 'UTF-8'); ?></span></td>
-        </tr>
-        <tr>
-          <td><?php echo $text_cron_command; ?></td>
-          <td><textarea rows="2" class="cj-wide cj-mono" readonly="readonly" onfocus="this.select();"><?php echo htmlspecialchars($cron_command, ENT_QUOTES, 'UTF-8'); ?></textarea>
-            <span class="help"><?php echo $text_cron_note; ?></span></td>
-        </tr>
-        <tr>
-          <td><?php echo $text_cron_last_run; ?></td>
-          <td><?php if ($cron_last) { ?>
-            <span class="cj-badge <?php echo $cron_last['ok'] ? 'cj-badge-ok' : 'cj-badge-error'; ?>"><?php echo $cron_last['status']; ?></span>
-            <?php echo htmlspecialchars($cron_last['date'], ENT_QUOTES, 'UTF-8'); ?>
-            <?php if ($cron_last['message']) { ?>
-            <span class="help"><?php echo htmlspecialchars($cron_last['message'], ENT_QUOTES, 'UTF-8'); ?></span>
-            <?php } ?>
-            <?php } else { ?>
-            <?php echo $text_cron_never; ?>
-            <?php } ?>
-            <?php if ($cron_stale) { ?>
-            <div class="warning"><?php echo htmlspecialchars($cron_stale, ENT_QUOTES, 'UTF-8'); ?></div>
-            <?php } ?></td>
         </tr>
       </table>
     </div>
