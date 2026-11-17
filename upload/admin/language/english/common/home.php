@@ -37,6 +37,26 @@ $_['text_guest']                    = 'Guest';
 $_['text_user_log']                 = 'View User Log';
 $_['text_seo_url_audit']            = 'Audit SEO URLs';
 
+// Nova dashboard
+$_['text_vs_yesterday']             = 'vs yesterday';
+$_['text_store_health']             = 'Store Health';
+$_['text_overall']                  = 'Overall';
+$_['text_orders_hour']              = 'Orders / hour';
+$_['text_avg_order']                = 'Avg. order value';
+$_['text_system_status']            = 'System Status';
+$_['text_moderation']               = 'Moderation Queue';
+$_['text_orders_by_hour']           = 'Orders By Hour';
+$_['text_live']                     = 'Live';
+$_['text_pending_orders']           = 'Pending orders';
+$_['text_awaiting_approval']        = 'Awaiting approval';
+$_['text_seo_issues']               = 'SEO URL issues';
+$_['text_directories']              = 'Folders writeable';
+$_['text_customers_approved']       = 'Customers approved';
+$_['text_reviews_approved']         = 'Reviews approved';
+$_['text_affiliates_approved']      = 'Affiliates approved';
+$_['text_orders_processed']         = 'Orders processed';
+$_['text_seo_healthy']              = 'SEO URLs healthy';
+
 // Help
 $_['help_mail_log']                 = 'Mail log';
 $_['help_quote_log']                = 'Quote log';
@@ -78,6 +98,12 @@ $_['column_return_id']              = 'Return ID';
 $_['column_return_history']         = 'History';
 $_['column_upload_id']              = 'Upload ID';
 $_['column_filename']               = 'Filename';
+$_['column_sold']                   = 'Sold';
+$_['column_viewed']                 = 'Viewed';
+$_['column_percent']                = '%';
+$_['column_orders']                 = 'Orders';
+$_['column_products']               = 'Products';
+$_['column_model']                  = 'Model';
 $_['column_action']                 = 'Action';
 
 // Entry

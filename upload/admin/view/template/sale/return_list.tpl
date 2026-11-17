@@ -112,7 +112,7 @@
               <td class="left"><?php echo $return['status']; ?></td>
               <td class="left"><?php echo $return['date_added']; ?>
                 <?php if ($return['overdue']) { ?>
-                  &nbsp;<span class="label label-warning" style="background:#f0ad4e;color:#fff;padding:2px 5px;border-radius:3px;font-size:11px;white-space:nowrap;" title="Return is <?php echo $return['days_open']; ?> days old — refund deadline approaching">&#9888; <?php echo $return['days_open']; ?>d</span>
+                  &nbsp;<span class="return-age" title="Return is <?php echo $return['days_open']; ?> days old — refund deadline approaching">&#9888; <?php echo $return['days_open']; ?>d</span>
                 <?php } ?>
               </td>
               <td class="left"><?php echo $return['date_modified']; ?></td>
@@ -280,9 +280,4 @@ $('#delete').on('click', function() {
 	});
 });
 //--></script>
-
-<style>
-tr.overdue-return { background-color: #fff8e1 !important; }
-tr.overdue-return td { border-left: 3px solid #f0ad4e; }
-</style>
 <?php echo $footer; ?>

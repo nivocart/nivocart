@@ -25,7 +25,7 @@ class ModelDesignAdministration extends Model {
 		$this->cache->delete('administration');
 	}
 
-	public function deleteAdministration(int$administration_id): void {
+	public function deleteAdministration(int $administration_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "administration` WHERE administration_id = '" . (int)$administration_id . "'");
 
 		$this->cache->delete('administration');
@@ -81,9 +81,10 @@ class ModelDesignAdministration extends Model {
 	}
 
 	public function getAdministrationContrastByName($name) {
-		$query = $this->db->query("SELECT LCASE(contrast) AS `contrast` FROM `" . DB_PREFIX . "administration` WHERE `name` LIKE '%" . $this->db->escape($name) . "%'");
+		$query = $this->db->query("SELECT LCASE(contrast) AS `contrast` FROM `" . DB_PREFIX . "administration` WHERE `name` = '" . $this->db->escape($name) . "' LIMIT 1");
 
-		return $query->row['contrast'];
+		// Fall back to dark when the configured stylesheet has no row (e.g. renamed or deleted)
+		return $query->num_rows ? $query->row['contrast'] : 'dark';
 	}
 
 	public function getTotalAdministrations(): int {
@@ -99,8 +100,9 @@ class ModelDesignAdministration extends Model {
 		if (!$stylesheet_query->rows) {
 			$stylesheets = [];
 
-			$stylesheets[] = ['name' => 'light', 'contrast' => 'light'];
 			$stylesheets[] = ['name' => 'dark', 'contrast' => 'dark'];
+			$stylesheets[] = ['name' => 'light', 'contrast' => 'light'];
+			$stylesheets[] = ['name' => 'nova', 'contrast' => 'dark'];
 
 			foreach ($stylesheets as $stylesheet) {
 				$this->db->query("INSERT INTO `" . DB_PREFIX . "administration` SET `name` = '" . $this->db->escape($stylesheet['name']) . "', contrast = '" . $this->db->escape($stylesheet['contrast']) . "', date_added = NOW(), date_modified = NOW()");

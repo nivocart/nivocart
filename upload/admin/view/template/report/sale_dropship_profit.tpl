@@ -33,8 +33,8 @@
       <!-- Filter bar -->
       <div class="report">
         <div class="left"><i class="fa fa-search" style="font-size:19px;"></i></div>
-        <div class="left"><em><?php echo $entry_date_start; ?></em> <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" id="date-start" size="12" /> <img src="view/image/calendar.png" alt="" /></div>
-        <div class="left"><em><?php echo $entry_date_end; ?></em> <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="date-end" size="12" /> <img src="view/image/calendar.png" alt="" /></div>
+        <div class="left"><em><?php echo $entry_date_start; ?></em> <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" id="date-start" size="12" /> <label for="date-start" class="gx-date-icon"><i class="fa fa-calendar"></i></label></div>
+        <div class="left"><em><?php echo $entry_date_end; ?></em> <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="date-end" size="12" /> <label for="date-end" class="gx-date-icon"><i class="fa fa-calendar"></i></label></div>
         <div class="left"><em><?php echo $entry_group; ?></em>
           <select name="filter_group">
           <?php foreach ($groups as $group) { ?>

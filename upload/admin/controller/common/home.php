@@ -352,9 +352,13 @@ class ControllerCommonHome extends Controller {
 		// Overview Sales
 		$this->load->model('sale/order');
 
-		$this->data['total_sale'] = $this->currency->format($this->model_sale_order->getTotalSales([]), $this->config->get('config_currency'));
-		$this->data['total_sale_year'] = $this->currency->format($this->model_sale_order->getTotalSalesByYear(date('Y')), $this->config->get('config_currency'));
-		$this->data['total_sale_month'] = $this->currency->format($this->model_sale_order->getTotalSalesByMonth(date('m')), $this->config->get('config_currency'));
+		$sale_all = $this->model_sale_order->getTotalSales([]);
+		$sale_year = $this->model_sale_order->getTotalSalesByYear(date('Y'));
+		$sale_month = $this->model_sale_order->getTotalSalesByMonth(date('m'));
+
+		$this->data['total_sale'] = $this->currency->format($sale_all, $this->config->get('config_currency'));
+		$this->data['total_sale_year'] = $this->currency->format($sale_year, $this->config->get('config_currency'));
+		$this->data['total_sale_month'] = $this->currency->format($sale_month, $this->config->get('config_currency'));
 
 		// Overview Customers
 		$this->load->model('sale/customer');
@@ -852,13 +856,201 @@ class ControllerCommonHome extends Controller {
 			}
 		}
 
+		// Optional dashboard template per admin theme (e.g. home_nova.tpl), falls back to home.tpl
 		$this->template = 'common/home.tpl';
+
+		$theme_template = preg_replace('/[^a-z0-9_]/', '', strtolower((string)$admin_css));
+
+		$dashboard_template = $theme_template;
+
+		if (in_array($theme_template, ['dark', 'light']) && !is_file(DIR_TEMPLATE . 'common/home_' . $theme_template . '.tpl')) {
+			$dashboard_template = 'nova';
+		}
+
+		if ($dashboard_template && is_file(DIR_TEMPLATE . 'common/home_' . $dashboard_template . '.tpl')) {
+			$this->novaData([
+				'sale_all'         => $sale_all,
+				'sale_year'        => $sale_year,
+				'sale_month'       => $sale_month,
+				'sale_today'       => $total_sales_today,
+				'seo_url_issues'   => isset($seo_url_audit['total']) ? (int)$seo_url_audit['total'] : 0
+			]);
+
+			$this->document->addScript('view/javascript/nova/nc-nova.js');
+
+			$this->template = 'common/home_' . $dashboard_template . '.tpl';
+		}
+
 		$this->children = [
 			'common/header',
 			'common/footer'
 		];
 
 		$this->response->setOutput($this->render());
+	}
+
+	/**
+	 * Extra values used by the dashboard templates that draw gauges, counters and bars.
+	 * Only called when the active admin theme has its own home template.
+	 *
+	 * @param array $raw Unformatted numbers already calculated by index()
+	 */
+	private function novaData($raw) {
+		$this->language->load('common/home');
+
+		$text_keys = [
+			'text_vs_yesterday', 'text_store_health', 'text_overall', 'text_orders_hour', 'text_avg_order',
+			'text_system_status', 'text_moderation', 'text_orders_by_hour', 'text_live',
+			'text_pending_orders', 'text_awaiting_approval', 'text_seo_issues', 'text_directories',
+			'text_customers_approved', 'text_reviews_approved', 'text_affiliates_approved', 'text_orders_processed',
+			'text_seo_healthy',
+			'column_sold', 'column_viewed', 'column_percent',
+			'column_orders', 'column_products'
+		];
+
+		foreach ($text_keys as $key) {
+			$this->data[$key] = $this->language->get($key);
+		}
+
+		$currency = $this->config->get('config_currency');
+
+		// Counter formatting for money values
+		$this->data['money_prefix'] = $this->currency->getSymbolLeft($currency);
+		$this->data['money_suffix'] = $this->currency->getSymbolRight($currency);
+		$this->data['money_decimals'] = (int)$this->currency->getDecimalPlace($currency);
+
+		$this->data['raw_sale'] = round((float)$raw['sale_all'], 2);
+		$this->data['raw_sale_year'] = round((float)$raw['sale_year'], 2);
+		$this->data['raw_sale_month'] = round((float)$raw['sale_month'], 2);
+		$this->data['raw_sale_today'] = round((float)$raw['sale_today'], 2);
+
+		// Yesterday comparison for the three KPI tiles
+		$yesterday = date('Y-m-d', strtotime('-1 day'));
+
+		$orders_yesterday = (int)$this->model_sale_order->getTotalOrders(['filter_date_added' => $yesterday]);
+		$customers_yesterday = (int)$this->model_sale_customer->getTotalCustomers(['filter_date_added' => $yesterday]);
+		$sales_yesterday = (float)$this->model_report_sale->getTotalSales(['filter_date_added' => $yesterday]);
+
+		$this->data['delta_orders'] = $this->novaDelta((int)$this->data['total_order_today'], $orders_yesterday);
+		$this->data['delta_customers'] = $this->novaDelta((int)$this->data['total_customer_today'], $customers_yesterday);
+		$this->data['delta_sales'] = $this->novaDelta((float)$raw['sale_today'], $sales_yesterday);
+
+		// Orders by hour (today) for the bars widgets
+		$hours = array_fill(0, 24, 0);
+
+		$query = $this->db->query("SELECT HOUR(date_added) AS `hour`, COUNT(*) AS `total` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' AND DATE(date_added) = DATE(NOW()) GROUP BY HOUR(date_added)");
+
+		foreach ($query->rows as $row) {
+			$hours[(int)$row['hour']] = (int)$row['total'];
+		}
+
+		$this->data['orders_by_hour'] = json_encode($hours);
+		$this->data['orders_by_hour_max'] = max(4, max($hours));
+		$this->data['current_hour'] = (int)date('G');
+		$this->data['orders_hour_rate'] = round(array_sum($hours) / max(1, (int)date('G') + 1), 1);
+
+		$total_order_today = (int)$this->data['total_order_today'];
+
+		$this->data['avg_order_value'] = ($total_order_today > 0) ? round((float)$raw['sale_today'] / $total_order_today, 2) : 0;
+
+		// Sales by region donut
+		$segments = [];
+
+		foreach ($this->data['top_countries'] as $top_country) {
+			$segments[] = [
+				'label' => html_entity_decode((string)$top_country['country'], ENT_QUOTES, 'UTF-8'),
+				'value' => round((float)$top_country['amount'] * 100, 1, PHP_ROUND_HALF_UP)
+			];
+		}
+
+		$this->data['donut_segments'] = htmlspecialchars(json_encode($segments), ENT_QUOTES, 'UTF-8');
+
+		// Moderation queue and system status ratios (percentages)
+		$total_orders = (int)$this->data['total_order'];
+		$pending_orders = (int)$this->data['total_pending_orders'];
+
+		$this->data['pct_customers'] = $this->novaRatio((int)$this->data['total_customer'], (int)$this->data['total_customer_approval']);
+		$this->data['pct_reviews'] = $this->novaRatio((int)$this->data['total_review'], (int)$this->data['total_review_approval']);
+		$this->data['pct_affiliates'] = $this->novaRatio((int)$this->data['total_affiliate'], (int)$this->data['total_affiliate_approval']);
+		$this->data['pct_orders'] = $this->novaRatio($total_orders, $pending_orders);
+
+		$awaiting = (int)$this->data['total_customer_approval'] + (int)$this->data['total_review_approval'];
+
+		if ($this->data['allow_affiliate']) {
+			$awaiting += (int)$this->data['total_affiliate_approval'];
+		}
+
+		$this->data['total_awaiting'] = $awaiting;
+		$this->data['seo_url_issues'] = $raw['seo_url_issues'];
+		$this->data['pct_seo'] = ($this->data['seo_url_status']) ? max(0, 100 - min(100, $raw['seo_url_issues'] * 5)) : 100;
+
+		// Store health: writeable directories, error log and SEO URLs
+		$directory_errors = 0;
+
+		foreach (['error_image', 'error_image_cache', 'error_cache', 'error_download', 'error_upload', 'error_logs'] as $key) {
+			if (!empty($this->data[$key])) {
+				$directory_errors++;
+			}
+		}
+
+		$this->data['pct_directories'] = (int)round((6 - $directory_errors) / 6 * 100);
+
+		$health = 100 - ($directory_errors * 15);
+
+		if (!empty($this->data['error_log_status'])) {
+			$health -= 10;
+		}
+
+		if ($this->data['seo_url_ratio'] == 3) {
+			$health -= 15;
+		} elseif ($this->data['seo_url_ratio'] == 2) {
+			$health -= 5;
+		}
+
+		if ($pending_orders > 20) {
+			$health -= 10;
+		}
+
+		$this->data['store_health'] = max(0, $health);
+	}
+
+	/**
+	 * Percentage change of today against yesterday.
+	 *
+	 * @param float $today
+	 * @param float $yesterday
+	 *
+	 * @return array
+	 */
+	private function novaDelta($today, $yesterday) {
+		if ($yesterday <= 0) {
+			return ['show' => false, 'class' => '', 'icon' => '', 'text' => ''];
+		}
+
+		$percent = (int)round(($today - $yesterday) / $yesterday * 100);
+
+		return [
+			'show'  => true,
+			'class' => ($percent >= 0) ? 'is-up' : 'is-down',
+			'icon'  => ($percent >= 0) ? 'fa-caret-up' : 'fa-caret-down',
+			'text'  => abs($percent) . '%'
+		];
+	}
+
+	/**
+	 * Share of items that are not waiting, as a whole percentage.
+	 *
+	 * @param int $total
+	 * @param int $waiting
+	 *
+	 * @return int
+	 */
+	private function novaRatio($total, $waiting) {
+		if ($total <= 0) {
+			return 100;
+		}
+
+		return (int)max(0, min(100, round(($total - $waiting) / $total * 100)));
 	}
 
 	public function chart() {

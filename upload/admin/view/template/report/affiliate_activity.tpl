@@ -28,8 +28,8 @@
     <?php } ?>
       <div class="report">
         <div class="left"><i class="fa fa-search" style="font-size:19px;"></i></div>
-        <div class="left"><em><?php echo $entry_date_start; ?></em> <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" id="input-date-start" size="12" /> <img src="view/image/calendar.png" alt="" /></div>
-        <div class="left"><em><?php echo $entry_date_end; ?></em> <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="input-date-end" size="12" /> <img src="view/image/calendar.png" alt="" /></div>
+        <div class="left"><em><?php echo $entry_date_start; ?></em> <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" id="input-date-start" size="12" /> <label for="input-date-start" class="gx-date-icon"><i class="fa fa-calendar"></i></label></div>
+        <div class="left"><em><?php echo $entry_date_end; ?></em> <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="input-date-end" size="12" /> <label for="input-date-end" class="gx-date-icon"><i class="fa fa-calendar"></i></label></div>
         <div class="right"><a onclick="filter();" class="button-filter ripple"><?php echo $button_filter; ?></a></div>
       </div>
       <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">

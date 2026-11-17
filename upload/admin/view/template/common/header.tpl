@@ -30,7 +30,7 @@
 <script type="text/javascript" src="view/javascript/jquery/tabs.min.js"></script>
 <script type="text/javascript" src="view/javascript/common.min.js"></script>
 </head>
-<body>
+<body class="theme-<?php echo $admin_css; ?>">
 <div id="container-<?php echo $resolution; ?>">
   <div id="header">
     <div class="static">
@@ -145,56 +145,7 @@
           <li><a href="<?php echo $contact; ?>"><?php echo ($icons) ? '<i class="fa fa-mail-forward"></i>' : ''; ?><?php echo $text_contact; ?></a></li>
         </ul>
       </li>
-      <li id="reports"><a class="top"><?php echo $text_reports; ?></a>
-        <ul>
-          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-shopping-cart"></i>' : ''; ?><?php echo $text_sale; ?></a>
-            <ul>
-              <li><a href="<?php echo $report_sale_order; ?>"><?php echo ($icons) ? '<i class="fa fa-shopping-basket"></i>' : ''; ?><?php echo $text_report_sale_order; ?></a></li>
-              <li><a href="<?php echo $report_sale_profit; ?>"><?php echo ($icons) ? '<i class="fa fa-line-chart"></i>' : ''; ?><?php echo $text_report_sale_profit; ?></a></li>
-              <li><a href="<?php echo $report_sale_dropship_profit; ?>"><?php echo ($icons) ? '<i class="fa fa-cloud-download"></i>' : ''; ?><?php echo $text_report_sale_dropship_profit; ?></a></li>
-              <li><a href="<?php echo $report_sale_tax; ?>"><?php echo ($icons) ? '<i class="fa fa-briefcase"></i>' : ''; ?><?php echo $text_report_sale_tax; ?></a></li>
-              <li><a href="<?php echo $report_sale_shipping; ?>"><?php echo ($icons) ? '<i class="fa fa-truck"></i>' : ''; ?><?php echo $text_report_sale_shipping; ?></a></li>
-              <li><a href="<?php echo $report_sale_return; ?>"><?php echo ($icons) ? '<i class="fa fa-history"></i>' : ''; ?><?php echo $text_report_sale_return; ?></a></li>
-              <li><a href="<?php echo $report_sale_coupon; ?>"><?php echo ($icons) ? '<i class="fa fa-tags"></i>' : ''; ?><?php echo $text_report_sale_coupon; ?></a></li>
-              <li><a href="<?php echo $report_sale_voucher; ?>"><?php echo ($icons) ? '<i class="fa fa-ticket"></i>' : ''; ?><?php echo $text_report_sale_voucher; ?></a></li>
-            </ul>
-          </li>
-          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-cube"></i>' : ''; ?><?php echo $text_product; ?></a>
-            <ul>
-              <li><a href="<?php echo $report_product_viewed; ?>"><?php echo ($icons) ? '<i class="fa fa-eye"></i>' : ''; ?><?php echo $text_report_product_viewed; ?></a></li>
-              <li><a href="<?php echo $report_product_label; ?>"><?php echo ($icons) ? '<i class="fa fa-leaf"></i>' : ''; ?><?php echo $text_report_product_label; ?></a></li>
-              <li><a href="<?php echo $report_product_quantity; ?>"><?php echo ($icons) ? '<i class="fa fa-cubes"></i>' : ''; ?><?php echo $text_report_product_quantity; ?></a></li>
-              <li><a href="<?php echo $report_product_markup; ?>"><?php echo ($icons) ? '<i class="fa fa-bar-chart"></i>' : ''; ?><?php echo $text_report_product_markup; ?></a></li>
-              <li><a href="<?php echo $report_product_purchased; ?>"><?php echo ($icons) ? '<i class="fa fa-dollar"></i>' : ''; ?><?php echo $text_report_product_purchased; ?></a></li>
-            </ul>
-          </li>
-          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-user"></i>' : ''; ?><?php echo $text_customer; ?></a>
-            <ul>
-              <li><a href="<?php echo $report_customer_order; ?>"><?php echo ($icons) ? '<i class="fa fa-shopping-bag"></i>' : ''; ?><?php echo $text_report_customer_order; ?></a></li>
-              <li><a href="<?php echo $report_customer_wishlist; ?>"><?php echo ($icons) ? '<i class="fa fa-heart"></i>' : ''; ?><?php echo $text_report_customer_wishlist; ?></a></li>
-              <li><a href="<?php echo $report_customer_reward; ?>"><?php echo ($icons) ? '<i class="fa fa-gift"></i>' : ''; ?><?php echo $text_report_customer_reward; ?></a></li>
-              <li><a href="<?php echo $report_customer_credit; ?>"><?php echo ($icons) ? '<i class="fa fa-money"></i>' : ''; ?><?php echo $text_report_customer_credit; ?></a></li>
-              <li><a href="<?php echo $report_customer_country; ?>"><?php echo ($icons) ? '<i class="fa fa-globe"></i>' : ''; ?><?php echo $text_report_customer_country; ?></a></li>
-              <li><a href="<?php echo $report_customer_deleted; ?>"><?php echo ($icons) ? '<i class="fa fa-eraser"></i>' : ''; ?><?php echo $text_report_customer_deleted; ?></a></li>
-              <li><a href="<?php echo $report_customer_online; ?>"><?php echo ($icons) ? '<i class="fa fa-feed"></i>' : ''; ?><?php echo $text_report_customer_online; ?></a></li>
-            </ul>
-          </li>
-          <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-street-view"></i>' : ''; ?><?php echo $text_affiliate; ?></a>
-            <ul>
-              <li><a href="<?php echo $report_affiliate_activity; ?>"><?php echo ($icons) ? '<i class="fa fa-spinner"></i>' : ''; ?><?php echo $text_report_affiliate_activity; ?></a></li>
-              <li><a href="<?php echo $report_affiliate_commission; ?>"><?php echo ($icons) ? '<i class="fa fa-percent"></i>' : ''; ?><?php echo $text_report_affiliate_commission; ?></a></li>
-            </ul>
-          </li>
-          <li><a href="<?php echo $report_abandoned_cart; ?>"><?php echo ($icons) ? '<i class="fa fa-paper-plane"></i>' : ''; ?><?php echo $text_report_abandoned_cart; ?></a></li>
-        <?php if ($blog_ready) { ?>
-          <li><a href="<?php echo $blog_view_report; ?>"><?php echo ($icons) ? '<i class="fa fa-eye"></i>' : ''; ?><?php echo $text_blog_views; ?></a></li>
-        <?php } ?>
-          <li><a href="<?php echo $report_banner_clicked; ?>"><?php echo ($icons) ? '<i class="fa fa-photo"></i>' : ''; ?><?php echo $text_report_banner_clicked; ?></a></li>
-        <?php if ($track_robots) { ?>
-          <li><a href="<?php echo $report_robot_online; ?>"><?php echo ($icons) ? '<i class="fa fa-wifi"></i>' : ''; ?><?php echo $text_report_robot_online; ?></a></li>
-        <?php } ?>
-        </ul>
-      </li>
+      <li id="reports"><a class="top" href="<?php echo $report_dashboard; ?>"><?php echo $text_reports; ?></a></li>
       <li id="tools"><a class="top"><?php echo $text_tool; ?></a>
         <ul>
           <li><a class="arrow"><?php echo ($icons) ? '<i class="fa fa-compress"></i>' : ''; ?><?php echo $text_export_import; ?></a>

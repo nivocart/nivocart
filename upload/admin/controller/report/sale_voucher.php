@@ -132,7 +132,7 @@ class ControllerReportSaleVoucher extends Controller {
 			];
 		}
 
-		$this->data['close'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['close'] = $this->url->link('report/dashboard', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['token'] = $this->session->data['token'];
 

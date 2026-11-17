@@ -4,11 +4,15 @@
 ---------------
 
 
-NivoCart v2.X.X
+NivoCart v2.6.0
 ---------------
 Release: TBA
 
 - Add new TrustPilot Modification, requires a TrustPilot Business Account.
+- Add new Administration Reports Dashboard for better performance overview.
+- Add new "Nova" Admin Theme to complement the "Light" and "Dark" templates.
+- Updated the "Light" Admin Theme with a more modern Home Dashboard.
+- Updated the "Dark" Admin Theme with a more modern Home Dashboard.
 - Updated the CJDropshipping Dashboard for faster Stock Sync operations.
 
 
