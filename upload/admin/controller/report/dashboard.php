@@ -1075,11 +1075,23 @@ class ControllerReportDashboard extends Controller {
 			}
 		}
 
-		if ($this->allowed('report/product_markup')) {
+		if ($this->allowed('report/product_markup') || $this->allowed('modification/ds_margin_checker')) {
 			$margins = $model->getMarginSummary();
 
-			if ($margins['below']) {
-				$alerts[] = ['status' => 'bad', 'icon' => 'fa-bar-chart', 'text' => $this->language->get('text_alert_below_cost'), 'count' => $this->num($margins['below']), 'href' => $this->link('report/product_markup')];
+			if ($margins['standard_below'] && $this->allowed('report/product_markup')) {
+				$alerts[] = ['status' => 'bad', 'icon' => 'fa-bar-chart', 'text' => $this->language->get('text_alert_below_cost'), 'count' => $this->num($margins['standard_below']), 'href' => $this->link('report/product_markup')];
+			}
+
+			if ($margins['dropship'] && $this->allowed('modification/ds_margin_checker')) {
+				$margin_checker = $this->url->link('modification/ds_margin_checker/list', 'token=' . $this->session->data['token'] . '&filter=negative', 'SSL');
+
+				if ($margins['dropship_below']) {
+					$alerts[] = ['status' => 'bad', 'icon' => 'fa-bar-chart', 'text' => $this->language->get('text_alert_ds_below_cost'), 'count' => $this->num($margins['dropship_below']), 'href' => $margin_checker];
+				}
+
+				if ($margins['dropship_no_rate']) {
+					$alerts[] = ['status' => 'warn', 'icon' => 'fa-usd', 'text' => $this->language->get('text_alert_ds_no_rate'), 'count' => $this->num($margins['dropship_no_rate']), 'href' => $margin_checker];
+				}
 			}
 		}
 

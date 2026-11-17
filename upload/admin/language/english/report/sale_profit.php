@@ -5,6 +5,7 @@ $_['heading_title']     = 'Profits Report';
 // Text
 $_['text_total']        = 'Total';
 $_['text_all_status']   = 'All Statuses';
+$_['text_no_rate_warning'] = '%s dropship order lines have no exchange rate for their cost currency and are left out of these figures.';
 
 // Column
 $_['column_date_start'] = 'Date Start';

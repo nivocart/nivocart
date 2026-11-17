@@ -92,6 +92,11 @@ class ControllerReportSaleProfit extends Controller {
 
 		$results = $this->model_report_product->getProfit($data);
 
+		// Dropship lines with no exchange rate are left out of the figures; tell the user how many
+		$no_rate = $this->model_report_product->getNoRateProfitLines($data);
+
+		$this->data['warning'] = $no_rate ? sprintf($this->language->get('text_no_rate_warning'), $no_rate) : '';
+
 		foreach ($results as $result) {
 			$this->data['products'][] = [
 				'year'           => $result['year'],

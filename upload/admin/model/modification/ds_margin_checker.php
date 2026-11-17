@@ -226,6 +226,46 @@ class ModelModificationDsMarginChecker extends Model {
 		];
 	}
 
+	/**
+	 * True when the dropship tables this tool reads from exist.
+	 */
+	public function isReady(): bool {
+		$required = [DB_PREFIX . 'product_dropship', DB_PREFIX . 'dropship_variant', DB_PREFIX . 'dropship_channel'];
+
+		$q = $this->db->query("SELECT COUNT(*) AS `total` FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN ('" . implode("', '", array_map([$this->db, 'escape'], $required)) . "')");
+
+		return (int)$q->row['total'] >= count($required);
+	}
+
+	/**
+	 * SQL of one row per dropship product: product_id and its Total Cost in the store default currency
+	 * (the highest one when the product sits in several channels, NULL when there is no exchange rate).
+	 * Meant to be joined to a product query by the Profit Margins report.
+	 */
+	public function getCostSql(): string {
+		return "SELECT b.product_id, MAX(b.total_cost) AS `total_cost` FROM (" . $this->getBaseSql() . ") b GROUP BY b.product_id";
+	}
+
+	/**
+	 * Margin counts for the main Reports Dashboard, using exactly the same cost and margin as this tool
+	 * (supplier cost plus shipping, converted to the default currency, against the ex-tax price).
+	 * "below" matches the Negative filter of the product list (margin of 0% or less).
+	 * Products without an exchange rate have no margin and are only counted in no_rate.
+	 *
+	 * @return array {rated: int, below: int, low: int, no_rate: int, margin_sum: float}
+	 */
+	public function getMarginSummary(): array {
+		$q = $this->db->query("SELECT COUNT(t.margin_pct) AS `rated`, COALESCE(SUM(t.margin_pct <= 0), 0) AS `below`, COALESCE(SUM(t.margin_pct > 0 AND t.margin_pct < 10), 0) AS `low`, COALESCE(SUM(t.margin_pct IS NULL), 0) AS `no_rate`, COALESCE(SUM(t.margin_pct), 0) AS `margin_sum` FROM (" . $this->getBaseSql() . ") t");
+
+		return [
+			'rated'      => (int)$q->row['rated'],
+			'below'      => (int)$q->row['below'],
+			'low'        => (int)$q->row['low'],
+			'no_rate'    => (int)$q->row['no_rate'],
+			'margin_sum' => (float)$q->row['margin_sum']
+		];
+	}
+
 	// =================================================================
 	// PRODUCT LIST
 	// =================================================================

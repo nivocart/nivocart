@@ -5,6 +5,9 @@
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
   <?php } ?>
   </div>
+  <?php if ($warning) { ?>
+  <div class="warning"><?php echo $warning; ?></div>
+  <?php } ?>
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/report.png" alt="" /> <?php echo $heading_title; ?></h1>
@@ -60,7 +63,9 @@
                   <?php echo $product['price_formatted']; ?>
                 <?php } ?></td>
                 <td class="right"><?php echo $product['cost_formatted']; ?></td>
-                <td class="right"><?php if ($product['graph_type'] > 0) { ?>
+                <td class="right"><?php if ($product['no_rate']) { ?>
+                  -
+                <?php } elseif ($product['graph_type'] > 0) { ?>
                   <span style="color:#E53030;">-<?php echo $product['ratio']; ?>%</span>
                 <?php } else { ?>
                   <?php echo $product['ratio']; ?>%

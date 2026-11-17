@@ -90,6 +90,8 @@ class ControllerReportProductMarkup extends Controller {
 
 		$products = $this->model_report_product->getProducts($data);
 
+		$no_rate_total = 0;
+
 		foreach ($products as $product) {
 			$has_special = false;
 			$special = false;
@@ -114,9 +116,18 @@ class ControllerReportProductMarkup extends Controller {
 				$price = 1; // prevents division by zero
 			}
 
+			$no_rate = !empty($product['no_rate']);
+
 			$cost = ($product['cost'] > 0) ? $product['cost'] : 0;
 
-			if ($price >= $cost) {
+			if ($no_rate) {
+				// Dropship product whose cost currency has no exchange rate: no margin, never guessed
+				$no_rate_total++;
+
+				$ratio = '';
+				$graph = 0;
+				$graph_type = 0;
+			} elseif ($price >= $cost) {
 				$ratio = number_format((($price - $cost) / $price) * 100, 2);
 				$graph = (($price - $cost) / $price) * 300;
 				$graph_type = 0;
@@ -131,7 +142,8 @@ class ControllerReportProductMarkup extends Controller {
 				'product_href'    => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL'),
 				'name'            => $product['name'],
 				'price_formatted' => $this->currency->format($price, $this->config->get('config_currency')),
-				'cost_formatted'  => $this->currency->format($cost, $this->config->get('config_currency')),
+				'cost_formatted'  => $no_rate ? $this->language->get('text_no_rate') : $this->currency->format($cost, $this->config->get('config_currency')),
+				'no_rate'         => $no_rate,
 				'ratio'           => $ratio,
 				'graph'           => $graph,
 				'graph_type'      => (int)$graph_type,
@@ -140,6 +152,8 @@ class ControllerReportProductMarkup extends Controller {
 				'cost'            => $cost
 			];
 		}
+
+		$this->data['warning'] = $no_rate_total ? sprintf($this->language->get('text_no_rate_warning'), $no_rate_total) : '';
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 

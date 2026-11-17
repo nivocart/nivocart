@@ -107,5 +107,7 @@ $_['text_robot_note']           = 'crawlers online';
 $_['text_alert_outstock']       = 'Products out of stock';
 $_['text_alert_lowstock']       = 'Products low on stock';
 $_['text_alert_below_cost']     = 'Products priced below cost';
+$_['text_alert_ds_below_cost']  = 'Dropship products priced below cost';
+$_['text_alert_ds_no_rate']     = 'Dropship products with no exchange rate';
 $_['text_alert_abandoned']      = 'Abandoned carts';
 $_['text_alert_returns']        = 'Returns awaiting action';

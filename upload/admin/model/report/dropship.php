@@ -45,6 +45,57 @@ class ModelReportDropship extends Model {
     }
 
     // =====================================================================
+    // ORDER LINE COST (shared by the Reports Dashboard and the Profit reports)
+    // =====================================================================
+
+    /**
+     * SQL pieces that give an order line a cost in the store default currency when the order line is a dropship
+     * line. The stored order_product.cost is the raw product cost (supplier currency, no shipping), so for a
+     * dropship line the cost is rebuilt as (supplier cost + shipping) / exchange rate at today's rate, the same
+     * figure the DS Margin Checker shows.
+     *
+     * Use it in a query that has `order_product` aliased as op:
+     *   SELECT ... , {cost} ... FROM order_product op ... {joins}
+     * `cost` is a per-unit SQL expression: op.cost for a standard line, the converted cost for a dropship line,
+     * NULL for a dropship line whose currency has no usable rate (never guessed; sums skip it).
+     *
+     * @return array{joins: string, cost: string}|null  null when the Dropship modules are not installed.
+     */
+    public function getLineCostSql(): ?array {
+        $required = [DB_PREFIX . 'dropship_order', DB_PREFIX . 'product_dropship', DB_PREFIX . 'dropship_variant'];
+
+        $query = $this->db->query("SELECT COUNT(*) AS `total` FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME IN ('" . implode("', '", array_map([$this->db, 'escape'], $required)) . "')");
+
+        if ((int)$query->row['total'] < count($required)) {
+            return null;
+        }
+
+        $shipping = $this->db->query("SELECT COUNT(*) AS `total` FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '" . $this->db->escape(DB_PREFIX . 'ds_margin_shipping') . "'");
+
+        $default = $this->db->escape(strtoupper(trim((string)$this->config->get('config_currency'))));
+
+        $original = "COALESCE(dsl_dv.supplier_cost, dsl_pd.supplier_cost)";
+        $currency = "UPPER(COALESCE(dsl_dv.currency_code, '" . $default . "'))";
+        $rate = "CASE WHEN " . $currency . " = '" . $default . "' THEN 1 WHEN dsl_cur.`value` > 0 THEN dsl_cur.`value` ELSE NULL END";
+
+        $joins = " LEFT JOIN `" . DB_PREFIX . "dropship_order` dsl_o ON (dsl_o.order_product_id = op.order_product_id)"
+            . " LEFT JOIN `" . DB_PREFIX . "product_dropship` dsl_pd ON (dsl_pd.product_id = op.product_id AND dsl_pd.channel_id = dsl_o.channel_id)"
+            . " LEFT JOIN `" . DB_PREFIX . "dropship_variant` dsl_dv ON (dsl_dv.variant_id = COALESCE(NULLIF(dsl_o.variant_id, 0), (SELECT MAX(dsl_dv2.variant_id) FROM `" . DB_PREFIX . "dropship_variant` dsl_dv2 WHERE dsl_dv2.product_id = op.product_id AND dsl_dv2.channel_id = dsl_o.channel_id AND dsl_dv2.is_active = '1')))"
+            . " LEFT JOIN `" . DB_PREFIX . "currency` dsl_cur ON (dsl_cur.code = " . $currency . ")";
+
+        if ((int)$shipping->row['total']) {
+            $joins .= " LEFT JOIN `" . DB_PREFIX . "ds_margin_shipping` dsl_ms ON (dsl_ms.product_id = op.product_id)";
+            $ship = "COALESCE(dsl_ms.shipping_cost, 0)";
+        } else {
+            $ship = "0";
+        }
+
+        $cost = "(CASE WHEN dsl_o.order_product_id IS NULL OR " . $original . " IS NULL THEN op.cost ELSE (" . $original . " + " . $ship . ") / (" . $rate . ") END)";
+
+        return ['joins' => $joins, 'cost' => $cost];
+    }
+
+    // =====================================================================
     // CHANNELS FOR FILTER DROPDOWN
     // =====================================================================
 
