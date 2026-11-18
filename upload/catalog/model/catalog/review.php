@@ -5,6 +5,12 @@
  * @package NivoCart
  */
 class ModelCatalogReview extends Model {
+	/** @var array<string, bool> */
+	private array $tables = [];
+
+	/** @var array<int, array<int, int>> */
+	private array $related = [];
+
 	/**
 	 * Functions Get, Add
 	 */
@@ -67,6 +73,46 @@ class ModelCatalogReview extends Model {
 		return $query->rows;
 	}
 
+	/**
+	 * Product ids whose reviews belong to this product: the product itself plus its sibling
+	 * variants (same pid in nc_product_variant). Without the variant table it is the product only.
+	 *
+	 * @param int $product_id
+	 *
+	 * @return array<int, int>
+	 */
+	public function getRelatedProductIds(int $product_id): array {
+		if (isset($this->related[$product_id])) {
+			return $this->related[$product_id];
+		}
+
+		$ids = [$product_id];
+
+		if ($this->hasTable('product_variant')) {
+			$query = $this->db->query("SELECT pv2.`product_id` FROM `" . DB_PREFIX . "product_variant` pv2 WHERE pv2.`pid` = (SELECT pv.`pid` FROM `" . DB_PREFIX . "product_variant` pv WHERE pv.`product_id` = '" . (int)$product_id . "' LIMIT 1)");
+
+			if (is_object($query)) {
+				foreach ($query->rows as $row) {
+					$ids[] = (int)$row['product_id'];
+				}
+			}
+		}
+
+		$this->related[$product_id] = array_values(array_unique($ids));
+
+		return $this->related[$product_id];
+	}
+
+	/**
+	 * Approved reviews of a product and of its sibling variants, newest first.
+	 * Each row has a "variant" label (empty when the table is missing) and the reviewed "product_id".
+	 *
+	 * @param int $product_id
+	 * @param int $start
+	 * @param int $limit
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
 	public function getReviewsByProductId(int $product_id, $start = 0, $limit = 20): array {
 		if ($start < 0) {
 			$start = 0;
@@ -76,7 +122,16 @@ class ModelCatalogReview extends Model {
 			$limit = 20;
 		}
 
-		$query = $this->db->query("SELECT r.review_id, r.author, r.text, r.rating, r.date_added, p.* FROM `" . DB_PREFIX . "review` r LEFT JOIN `" . DB_PREFIX . "product` p ON (r.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND p.date_available <= NOW() AND p.status = '1' AND r.status = '1' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY r.date_added DESC LIMIT " . (int)$start . "," . (int)$limit);
+		$ids = implode(',', array_map('intval', $this->getRelatedProductIds($product_id)));
+
+		// The columns are listed one by one: p.* would overwrite the review date with the product date
+		$variant = "''";
+
+		if ($this->hasTable('product_variant') && $this->hasTable('dropship_variant')) {
+			$variant = "(SELECT dv.`variant_key` FROM `" . DB_PREFIX . "product_variant` pv INNER JOIN `" . DB_PREFIX . "dropship_variant` dv ON (dv.`variant_id` = pv.`variant_id`) WHERE pv.`product_id` = r.`product_id` LIMIT 1)";
+		}
+
+		$query = $this->db->query("SELECT r.`review_id`, r.`product_id`, r.`author`, r.`text`, r.`rating`, r.`date_added`, " . $variant . " AS `variant` FROM `" . DB_PREFIX . "review` r INNER JOIN `" . DB_PREFIX . "product` p ON (r.`product_id` = p.`product_id`) WHERE r.`product_id` IN (" . $ids . ") AND r.`status` = '1' ORDER BY r.`date_added` DESC, r.`review_id` DESC LIMIT " . (int)$start . "," . (int)$limit);
 
 		return $query->rows;
 	}
@@ -115,8 +170,27 @@ class ModelCatalogReview extends Model {
 	}
 
 	public function getTotalReviewsByProductId(int $product_id): int {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "review` r LEFT JOIN `" . DB_PREFIX . "product` p ON (r.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND p.date_available <= NOW() AND p.status = '1' AND r.status = '1' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$ids = implode(',', array_map('intval', $this->getRelatedProductIds($product_id)));
 
-		return $query->row['total'];
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "review` r INNER JOIN `" . DB_PREFIX . "product` p ON (r.`product_id` = p.`product_id`) WHERE r.`product_id` IN (" . $ids . ") AND r.`status` = '1'");
+
+		return (int)$query->row['total'];
+	}
+
+	/**
+	 * Cached check that a table exists (the variant tables belong to the dropship modification).
+	 *
+	 * @param string $table Table name without prefix
+	 *
+	 * @return bool
+	 */
+	private function hasTable(string $table): bool {
+		if (!isset($this->tables[$table])) {
+			$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . $table . "'");
+
+			$this->tables[$table] = ($check->num_rows > 0);
+		}
+
+		return $this->tables[$table];
 	}
 }

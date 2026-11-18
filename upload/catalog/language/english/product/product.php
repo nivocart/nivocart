@@ -25,6 +25,7 @@ $_['text_meta_description']                   = 'Buy %s online at %s.';
 $_['text_latest']                             = 'Latest reviews';
 $_['text_no_reviews']                         = 'There are no reviews for this product.';
 $_['text_on']                                 = ' on ';
+$_['text_review_variant']                     = 'Variant: %s';
 $_['text_write']                              = 'Write a review';
 $_['text_review_invite']                      = 'Bought this product? Share your opinion with other customers.';
 $_['text_share']                              = 'Share';

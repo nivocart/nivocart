@@ -44,12 +44,35 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
 
+	/**
+	 * SQL condition for the reviews of a product, used inside rating and review count subqueries.
+	 * With the dropship variant table the reviews of all sibling variants (same pid) count for
+	 * every variant of the product. Without it only the reviews of the product itself count.
+	 *
+	 * @param string $review_alias Alias of the review table in the subquery, for example r1
+	 * @param string $product_expr Product id expression of the outer query, for example p.product_id
+	 *
+	 * @return string
+	 */
+	private function reviewFilter(string $review_alias, string $product_expr): string {
+		$this->variantJoinAndGroup();
+
+		if (!$this->hasVariantTable) {
+			return $review_alias . ".product_id = " . $product_expr;
+		}
+
+		return "(" . $review_alias . ".product_id = " . $product_expr . " OR " . $review_alias . ".product_id IN (SELECT pv2.`product_id` FROM `" . DB_PREFIX . "product_variant` pv2 WHERE pv2.`pid` = (SELECT pv3.`pid` FROM `" . DB_PREFIX . "product_variant` pv3 WHERE pv3.`product_id` = " . $product_expr . " LIMIT 1)))";
+	}
+
 	public function getProduct(int $product_id): array {
 		if ($this->customer->isLogged()) {
 			$customer_group_id = $this->customer->getCustomerGroupId();
 		} else {
 			$customer_group_id = $this->config->get('config_customer_group_id');
 		}
+
+		$review_filter_r1 = $this->reviewFilter('r1', 'p.product_id');
+		$review_filter_r2 = $this->reviewFilter('r2', 'p.product_id');
 
 		$sql = "SELECT DISTINCT *, pd.name AS `name`, p.image, p.label, pd.description AS `description`, md.name AS `manufacturer`,";
 		$sql .= " (SELECT price FROM `" . DB_PREFIX . "product_discount` pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 0,1) AS `discount`,";
@@ -58,8 +81,8 @@ class ModelCatalogProduct extends Model {
 		$sql .= " (SELECT ss.name FROM `" . DB_PREFIX . "stock_status` ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS `stock_status`,";
 		$sql .= " (SELECT wcd.unit FROM `" . DB_PREFIX . "weight_class_description` wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS `weight_class`,";
 		$sql .= " (SELECT lcd.unit FROM `" . DB_PREFIX . "length_class_description` lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS `length_class`,";
-		$sql .= " (SELECT AVG(rating) AS `total` FROM `" . DB_PREFIX . "review` r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS `rating`,";
-		$sql .= " (SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "review` r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS `reviews`,";
+		$sql .= " (SELECT AVG(r1.rating) FROM `" . DB_PREFIX . "review` r1 WHERE " . $review_filter_r1 . " AND r1.status = '1') AS `rating`,";
+		$sql .= " (SELECT COUNT(*) FROM `" . DB_PREFIX . "review` r2 WHERE " . $review_filter_r2 . " AND r2.status = '1') AS `reviews`,";
 		$sql .= " p.sort_order FROM `" . DB_PREFIX . "product` p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "manufacturer` m ON (p.manufacturer_id = m.manufacturer_id) LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id)";
 		$sql .= " WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
@@ -109,6 +132,7 @@ class ModelCatalogProduct extends Model {
 				'reward'           => $query->row['reward'],
 				'points'           => $query->row['points'],
 				'rating'           => $query->row['rating'] ? round($query->row['rating'], 0, PHP_ROUND_HALF_UP) : 0,
+				'rating_exact'     => $query->row['rating'] ? round((float)$query->row['rating'], 1) : 0,
 				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0,
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
@@ -130,7 +154,7 @@ class ModelCatalogProduct extends Model {
 		$variant_group = $this->variantJoinAndGroup();
 
 		$sql = "SELECT MIN(p.product_id) AS product_id, COUNT(DISTINCT p.product_id) AS variant_count,";
-		$sql .= " (SELECT AVG(rating) AS `total` FROM `" . DB_PREFIX . "review` r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS `rating`,";
+		$sql .= " (SELECT AVG(r1.rating) FROM `" . DB_PREFIX . "review` r1 WHERE " . $this->reviewFilter('r1', 'p.product_id') . " AND r1.status = '1') AS `rating`,";
 		$sql .= " (SELECT price FROM `" . DB_PREFIX . "product_discount` pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW()))";
 		$sql .= " ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 0,1) AS `discount`,";
 		$sql .= " (SELECT price FROM `" . DB_PREFIX . "product_special` ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))";
@@ -292,7 +316,7 @@ class ModelCatalogProduct extends Model {
 		}
 
 		$sql = "SELECT DISTINCT ps.product_id, md.name AS `manufacturer`,";
-		$sql .= " (SELECT AVG(rating) FROM `" . DB_PREFIX . "review` r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS `rating`";
+		$sql .= " (SELECT AVG(r1.rating) FROM `" . DB_PREFIX . "review` r1 WHERE " . $this->reviewFilter('r1', 'ps.product_id') . " AND r1.status = '1') AS `rating`";
 		$sql .= " FROM `" . DB_PREFIX . "product_special` ps LEFT JOIN `" . DB_PREFIX . "product` p ON (ps.product_id = p.product_id) LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (p.product_id = pd.product_id) LEFT JOIN `" . DB_PREFIX . "product_to_store` p2s ON (p.product_id = p2s.product_id)";
 		$sql .= " LEFT JOIN `" . DB_PREFIX . "manufacturer` m ON (p.manufacturer_id = m.manufacturer_id) LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id = md.manufacturer_id)";
 		$sql .= " WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) GROUP BY ps.product_id";

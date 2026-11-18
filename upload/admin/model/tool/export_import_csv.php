@@ -40,12 +40,15 @@ class ModelToolExportImportCsv extends Model {
 
 			$fields_cnt = count($row);
 
+			$column = 0;
+
 			foreach ($row as $k => $v) {
 				if ($row[$k] === '0' || $row[$k] !== '') {
 					if ($csv_enclosure === '') {
 						$schema_insert .= $row[$k];
 					} else {
-						$row[$k] = str_replace(["\r","\n","\t"], "", $row[$k]);
+						// NULL values are exported as an empty string
+						$row[$k] = str_replace(["\r","\n","\t"], "", (string)$row[$k]);
 						$row[$k] = html_entity_decode($row[$k], ENT_COMPAT, 'UTF-8');
 
 						$schema_insert .= $csv_enclosure . str_replace($csv_enclosure, $csv_escaped . $csv_enclosure, $row[$k]) . $csv_enclosure;
@@ -54,9 +57,12 @@ class ModelToolExportImportCsv extends Model {
 					$schema_insert .= '';
 				}
 
-				if ($k < $fields_cnt - 1) {
+				// $k is the column name, so the position is counted separately
+				if ($column < $fields_cnt - 1) {
 					$schema_insert .= $csv_delimiter;
 				}
+
+				$column++;
 			}
 
 			$output .= $schema_insert;

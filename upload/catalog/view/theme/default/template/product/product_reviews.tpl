@@ -4,6 +4,9 @@
     <div class="review-box">
       <div class="rating"><img src="catalog/view/theme/<?php echo $template; ?>/image/stars-<?php echo $review['rating'] . '.png'; ?>" alt="<?php echo $review['reviews']; ?>" /></div>
       <div class="author"><b><?php echo $review['author']; ?></b> <?php echo $text_on; ?> <?php echo $review['date_added']; ?></div>
+      <?php if ($review['variant']) { ?>
+        <div class="author"><?php echo sprintf($text_review_variant, $review['variant']); ?></div>
+      <?php } ?>
       <div class="text">&#8220;<?php echo $review['text']; ?>&#8221;</div>
     </div>
   <?php } ?>
