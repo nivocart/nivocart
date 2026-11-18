@@ -1122,6 +1122,7 @@ class ControllerProductProduct extends Controller {
 		$this->data['text_latest'] = $this->language->get('text_latest');
 		$this->data['text_on'] = $this->language->get('text_on');
 		$this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
+		$this->data['text_review_variant'] = $this->language->get('text_review_variant');
 
 		$product_id = (int)$this->request->get['product_id'];
 
@@ -1138,6 +1139,7 @@ class ControllerProductProduct extends Controller {
 				'author'     => $result['author'],
 				'text'       => nl2br($result['text']),
 				'rating'     => (int)$result['rating'],
+				'variant'    => ((int)$result['product_id'] !== $product_id) ? html_entity_decode((string)$result['variant'], ENT_QUOTES, 'UTF-8') : '',
 				'reviews'    => sprintf($this->language->get('text_reviews'), (int)$review_total),
 				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
 			];
@@ -1158,6 +1160,15 @@ class ControllerProductProduct extends Controller {
 		$this->resolveTemplate('product/product_reviews');
 
 		return $this->render();
+	}
+
+	/**
+	 * Ajax pagination of the review list (the page links point to this route).
+	 *
+	 * @return void
+	 */
+	public function product_reviews() {
+		$this->response->setOutput($this->reviews());
 	}
 
 	public function upload() {
@@ -1339,11 +1350,46 @@ class ControllerProductProduct extends Controller {
 		if (!empty($this->data['review_status']) && (int)$product_info['reviews'] > 0 && (float)$product_info['rating'] > 0) {
 			$schema['aggregateRating'] = [
 				'@type'       => 'AggregateRating',
-				'ratingValue' => (float)$product_info['rating'],
+				'ratingValue' => (float)($product_info['rating_exact'] ?? $product_info['rating']),
 				'bestRating'  => 5,
 				'worstRating' => 1,
 				'reviewCount' => (int)$product_info['reviews']
 			];
+
+			// Individual reviews (this product and its sibling variants), newest first
+			$this->load->model('catalog/review');
+
+			$reviews = [];
+
+			foreach ($this->model_catalog_review->getReviewsByProductId((int)$product_info['product_id'], 0, 10) as $result) {
+				$author = trim(html_entity_decode((string)$result['author'], ENT_QUOTES, 'UTF-8'));
+				$body = trim(html_entity_decode(strip_tags((string)$result['text']), ENT_QUOTES, 'UTF-8'));
+
+				$review = [
+					'@type'         => 'Review',
+					'author'        => [
+						'@type' => 'Person',
+						'name'  => ($author !== '') ? $author : 'Customer'
+					],
+					'datePublished' => date('Y-m-d', strtotime((string)$result['date_added'])),
+					'reviewRating'  => [
+						'@type'       => 'Rating',
+						'ratingValue' => (int)$result['rating'],
+						'bestRating'  => 5,
+						'worstRating' => 1
+					]
+				];
+
+				if ($body !== '') {
+					$review['reviewBody'] = $body;
+				}
+
+				$reviews[] = $review;
+			}
+
+			if ($reviews) {
+				$schema['review'] = $reviews;
+			}
 		}
 
 		return $schema;
