@@ -29,6 +29,15 @@ class ModelAccountCustomer extends Model {
 
 		$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$customer_id . "'");
 
+		// Welcome Reward points: only when set in Settings and the customer opted in on the registration page
+		$welcome_points = (int)$this->config->get('config_register_reward');
+
+		if ($welcome_points > 0 && !empty($data['welcome_reward'])) {
+			$this->language->load('account/register');
+
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_reward` SET customer_id = '" . (int)$customer_id . "', order_id = '0', description = '" . $this->db->escape($this->language->get('text_reward_description')) . "', points = '" . $welcome_points . "', date_added = NOW()");
+		}
+
 		// ── Send new customer email ────────────────────────────────────
 		$this->language->load('mail/customer');
 

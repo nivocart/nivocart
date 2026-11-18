@@ -176,6 +176,27 @@
       </tr>
     </table>
   </div>
+  <?php if ($register_reward) { ?>
+  <h2><?php echo $text_welcome_reward; ?></h2>
+  <div class="content">
+    <table class="form">
+      <tr>
+        <td><?php echo $entry_welcome_reward; ?></td>
+        <td><?php if ($welcome_reward) { ?>
+          <input type="radio" name="welcome_reward" value="1" checked="checked" />
+          <?php echo $text_yes; ?>
+          <input type="radio" name="welcome_reward" value="0" />
+          <?php echo $text_no; ?>
+        <?php } else { ?>
+          <input type="radio" name="welcome_reward" value="1" />
+          <?php echo $text_yes; ?>
+          <input type="radio" name="welcome_reward" value="0" checked="checked" />
+          <?php echo $text_no; ?>
+        <?php } ?></td>
+      </tr>
+    </table>
+  </div>
+  <?php } ?>
   <h2><?php echo $text_newsletter; ?></h2>
   <div class="content">
     <table class="form">

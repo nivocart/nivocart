@@ -11,6 +11,7 @@ Release: TBA
 - Add new TrustPilot Modification, requires a TrustPilot Business Account.
 - Add new Administration Reports Dashboard for better performance overview.
 - Add new "Nova" Admin Theme to complement the "Light" and "Dark" templates.
+- Add the ability to offer Reward Points for new Customer Registrations.
 - Updated the "Light" Admin Theme with a more modern Home Dashboard.
 - Updated the "Dark" Admin Theme with a more modern Home Dashboard.
 - Updated the CJDropshipping Dashboard for faster Stock Sync operations.

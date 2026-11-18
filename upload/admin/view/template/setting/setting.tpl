@@ -874,6 +874,15 @@
             <?php } ?></td>
           </tr>
           <tr>
+            <td><?php echo $entry_register_reward; ?><span class="help"><?php echo $help_register_reward; ?></span></td>
+            <td><?php if ($error_register_reward) { ?>
+              <input type="text" name="config_register_reward" value="<?php echo $config_register_reward; ?>" class="input-error" />
+              <span class="error"><?php echo $error_register_reward; ?></span>
+            <?php } else { ?>
+              <input type="text" name="config_register_reward" value="<?php echo $config_register_reward; ?>" />
+            <?php } ?></td>
+          </tr>
+          <tr>
             <td><?php echo $entry_customer_gender; ?></td>
             <td><?php if ($config_customer_gender) { ?>
               <input type="radio" name="config_customer_gender" value="1" id="customer-gender-on" class="radio" checked />

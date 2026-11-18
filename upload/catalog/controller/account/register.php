@@ -77,6 +77,7 @@ class ControllerAccountRegister extends Controller {
 		$this->data['text_your_address'] = $this->language->get('text_your_address');
 		$this->data['text_your_password'] = $this->language->get('text_your_password');
 		$this->data['text_newsletter'] = $this->language->get('text_newsletter');
+		$this->data['text_welcome_reward'] = $this->language->get('text_welcome_reward');
 		$this->data['text_yes'] = $this->language->get('text_yes');
 		$this->data['text_no'] = $this->language->get('text_no');
 		$this->data['text_female'] = $this->language->get('text_female');
@@ -101,6 +102,7 @@ class ControllerAccountRegister extends Controller {
 		$this->data['entry_country'] = $this->language->get('entry_country');
 		$this->data['entry_zone'] = $this->language->get('entry_zone');
 		$this->data['entry_newsletter'] = $this->language->get('entry_newsletter');
+		$this->data['entry_welcome_reward'] = sprintf($this->language->get('entry_welcome_reward'), max(0, (int)$this->config->get('config_register_reward')));
 		$this->data['entry_password'] = $this->language->get('entry_password');
 		$this->data['entry_confirm'] = $this->language->get('entry_confirm');
 		$this->data['entry_captcha'] = $this->language->get('entry_captcha');
@@ -357,6 +359,15 @@ class ControllerAccountRegister extends Controller {
 			$this->data['newsletter'] = $this->request->post['newsletter'];
 		} else {
 			$this->data['newsletter'] = '';
+		}
+
+		// Welcome Reward: only offered when a points value is set in Settings, default is Yes
+		$this->data['register_reward'] = max(0, (int)$this->config->get('config_register_reward'));
+
+		if (isset($this->request->post['welcome_reward'])) {
+			$this->data['welcome_reward'] = (int)$this->request->post['welcome_reward'];
+		} else {
+			$this->data['welcome_reward'] = 1;
 		}
 
 		if (isset($this->request->post['captcha'])) {

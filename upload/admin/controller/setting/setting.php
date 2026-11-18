@@ -55,7 +55,7 @@ class ControllerSettingSetting extends Controller {
 		'entry_stock_checkout', 'entry_stock_status', 'entry_supplier_group',
 		'entry_customer_approval', 'entry_customer_online', 'entry_customer_group',
 		'entry_customer_group_display', 'entry_customer_price',
-		'entry_customer_redirect', 'entry_customer_gender', 'entry_customer_dob',
+		'entry_customer_redirect', 'entry_register_reward', 'entry_customer_gender', 'entry_customer_dob',
 		'entry_picklist_status', 'entry_account_captcha', 'entry_account',
 		'entry_force_delete', 'entry_affiliate_approval', 'entry_affiliate_auto',
 		'entry_affiliate_commission', 'entry_login_attempts', 'entry_affiliate',
@@ -115,7 +115,7 @@ class ControllerSettingSetting extends Controller {
 		'help_stock_warning', 'help_stock_checkout', 'help_stock_status',
 		'help_supplier_group', 'help_customer_approval', 'help_customer_online',
 		'help_customer_group', 'help_customer_group_display', 'help_customer_price',
-		'help_customer_redirect', 'help_customer_dob', 'help_picklist_status',
+		'help_customer_redirect', 'help_register_reward', 'help_customer_dob', 'help_picklist_status',
 		'help_account_captcha', 'help_account', 'help_force_delete',
 		'help_affiliate_approval', 'help_affiliate_auto', 'help_affiliate_commission',
 		'help_login_attempts', 'help_affiliate', 'help_affiliate_mail',
@@ -239,6 +239,7 @@ class ControllerSettingSetting extends Controller {
 		'config_customer_group_display' => ['default' => []],
 		'config_customer_price'    => [],
 		'config_customer_redirect' => [],
+		'config_register_reward'   => [],
 		'config_customer_gender'   => [],
 		'config_customer_dob'      => [],
 		'config_picklist_status'  => [],
@@ -381,7 +382,7 @@ class ControllerSettingSetting extends Controller {
 	private const ERROR_KEYS = [
 		'warning', 'name', 'owner', 'address', 'email', 'email_noreply',
 		'telephone', 'title', 'customer_group_display', 'login_attempts',
-		'reward_rate', 'voucher_min', 'voucher_max', 'voucher_expiry', 'voucher_presets', 'catalog_limit',
+		'reward_rate', 'register_reward', 'voucher_min', 'voucher_max', 'voucher_expiry', 'voucher_presets', 'catalog_limit',
 		'admin_limit', 'preference_pagination', 'image_quality', 'image_category', 'image_thumb',
 		'image_wide_thumb', 'image_popup', 'image_product', 'image_additional', 'image_brand',
 		'image_related', 'image_compare', 'image_wishlist', 'image_newsthumb',
@@ -792,6 +793,12 @@ class ControllerSettingSetting extends Controller {
 
 		if (!$rate || (int) $rate != $rate || $rate < 1) {
 			$this->error['reward_rate'] = $this->language->get('error_reward_rate');
+		}
+
+		$register_reward = trim((string)($post['config_register_reward'] ?? ''));
+
+		if ($register_reward !== '' && (!ctype_digit($register_reward) || strlen($register_reward) > 9 || (int)$register_reward < 1)) {
+			$this->error['register_reward'] = $this->language->get('error_register_reward');
 		}
 
 		if (empty($post['config_voucher_min'])) {
