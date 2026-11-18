@@ -71,9 +71,66 @@ $(document).ready(function() {
   <a class="top-link" href="<?php echo $checkout; ?>"><i class="fa fa-play" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_checkout; ?></span></a>
   <a class="top-link" href="<?php echo $shopping_cart; ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_shopping_cart; ?></span></a>
 <?php if ($logged) { ?>
-  <a class="top-link" href="<?php echo $account; ?>"><i class="fa fa-user" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_account; ?> &nbsp;</span></a>
+  <div class="account-widget" id="account-widget">
+    <button type="button" class="account-pill" id="account-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="account-menu" aria-label="<?php echo $text_account_menu; ?>">
+      <span class="account-avatar <?php echo $avatar_class; ?>" aria-hidden="true"><?php echo $customer_initials; ?></span>
+      <span class="account-name hide-phone"><?php echo $customer_first_name; ?></span>
+<?php if ($reward_points) { ?>
+      <span class="account-points hide-phone"><i class="fa fa-star" aria-hidden="true"></i><?php echo $text_points; ?></span>
+<?php } ?>
+      <i class="fa fa-angle-down account-caret hide-phone" aria-hidden="true"></i>
+    </button>
+    <div class="account-menu" id="account-menu">
+      <div class="account-menu-head">
+        <span class="account-menu-name"><?php echo $customer_full_name; ?></span>
+<?php if ($text_points_value) { ?>
+        <span class="account-menu-points"><?php echo $text_points_value; ?></span>
+<?php } ?>
+      </div>
+      <a href="<?php echo $account; ?>"><i class="fa fa-user" aria-hidden="true"></i><?php echo $text_my_account; ?></a>
+      <a href="<?php echo $wishlist; ?>"><i class="fa fa-heart" aria-hidden="true"></i><?php echo $text_wishlist; ?></a>
+      <a href="<?php echo $reward; ?>"><i class="fa fa-star" aria-hidden="true"></i><?php echo $text_reward_points; ?></a>
+      <a class="account-menu-logout" href="<?php echo $logout; ?>"><i class="fa fa-sign-out" aria-hidden="true"></i><?php echo $text_logout; ?></a>
+    </div>
+  </div>
+  <script type="text/javascript"><!--
+  (function () {
+    var widget = document.getElementById('account-widget');
+    var toggle = document.getElementById('account-toggle');
+
+    if (!widget || !toggle) {
+      return;
+    }
+
+    function setOpen(open) {
+      widget.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    toggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      setOpen(!widget.classList.contains('open'));
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!widget.contains(event.target)) {
+        setOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && widget.classList.contains('open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  })();
+  //--></script>
 <?php } else { ?>
-  <a class="top-link" href="<?php echo $account; ?>"><i class="fa fa-user" aria-hidden="true"></i><span class="hide-phone"> &nbsp;<?php echo $text_signin; ?> &nbsp;</span></a>
+  <div class="account-widget">
+    <a class="register-link hide-phone" href="<?php echo $register; ?>"><?php echo $text_new_here; ?> <?php echo $text_register; ?></a>
+    <a class="signin-pill" href="<?php echo $account; ?>" aria-label="<?php echo $text_signin; ?>"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="hide-phone"><?php echo $text_signin; ?></span><i class="fa fa-long-arrow-right hide-phone" aria-hidden="true"></i></a>
+  </div>
 <?php } ?>
   <?php echo $language; ?>
   </div>

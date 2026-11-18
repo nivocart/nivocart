@@ -9,3 +9,11 @@ $_['text_logged']        = 'You are logged in as <a href="%s">%s</a> <b>(</b> <a
 $_['text_signin']        = 'Sign In';
 $_['text_account']       = 'Account';
 $_['text_checkout']      = 'Checkout';
+$_['text_new_here']      = 'New here?';
+$_['text_register']      = 'Register';
+$_['text_my_account']    = 'My Account';
+$_['text_reward_points'] = 'Reward Points';
+$_['text_logout']        = 'Log Out';
+$_['text_points']        = '%s pts';
+$_['text_points_value']  = '%s points = %s off eligible items';
+$_['text_account_menu']  = 'Account menu';

@@ -113,9 +113,16 @@ class ControllerAccountLogin extends Controller {
 				unset($this->session->data['payment_zone_id']);
 			}
 
+			// The Account page is only the default landing page, so it must not override the "Login Home Redirect" setting
+			$post_redirect = isset($this->request->post['redirect']) ? (string)$this->request->post['redirect'] : '';
+
+			if ($this->config->get('config_customer_redirect') && rtrim(str_replace('&amp;', '&', $post_redirect), '/') === rtrim($this->url->link('account/account', '', 'SSL'), '/')) {
+				$post_redirect = '';
+			}
+
 			// Added strpos check to pass McAfee PCI compliance test
-			if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) === 0 || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) === 0)) {
-				$this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
+			if ($post_redirect !== '' && (strpos($post_redirect, $this->config->get('config_url')) === 0 || strpos($post_redirect, $this->config->get('config_ssl')) === 0)) {
+				$this->redirect(str_replace('&amp;', '&', $post_redirect));
 			} elseif ($this->cart->hasProducts() && !$this->config->get('config_customer_redirect')) {
 				$this->redirect($this->url->link('checkout/cart', '', 'SSL'));
 			} elseif ($this->config->get('config_customer_redirect')) {

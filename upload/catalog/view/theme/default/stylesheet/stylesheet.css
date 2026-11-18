@@ -390,6 +390,215 @@ a.top-link:hover {
   color: var(--clr-link);
 }
 
+/* Account widget: Sign In pill (guest) and account pill + dropdown (logged in) */
+#container-top .account-widget {
+  float: right;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  margin-right: 12px;
+}
+#container-top .account-widget a.register-link,
+#container-top .account-widget a.register-link:visited {
+  float: none;
+  display: inline;
+  margin: 0;
+  color: var(--clr-primary-dark);
+  font-size: 13px;
+  line-height: 1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--ease);
+}
+#container-top .account-widget a.register-link:hover {
+  color: var(--clr-primary-hover);
+}
+#container-top .account-widget a.signin-pill,
+#container-top .account-widget a.signin-pill:visited {
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  margin: 0;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--clr-primary-dark);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  text-shadow: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform var(--ease), background var(--ease), box-shadow var(--ease);
+}
+#container-top .account-widget a.signin-pill:hover {
+  background: #0A5A7E;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+#container-top .account-widget a.signin-pill .fa-long-arrow-right {
+  transition: transform var(--ease);
+}
+#container-top .account-widget a.signin-pill:hover .fa-long-arrow-right {
+  transform: translateX(3px);
+}
+#container-top .account-widget a.signin-pill:focus-visible,
+#container-top .account-widget a.register-link:focus-visible,
+#container-top .account-widget .account-pill:focus-visible,
+#container-top .account-widget .account-menu a:focus-visible {
+  outline: 2px solid var(--clr-primary-dark);
+  outline-offset: 2px;
+}
+#container-top .account-widget .account-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  margin: 0;
+  padding: 0 12px 0 4px;
+  border: 1px solid var(--clr-border);
+  border-radius: 999px;
+  background: var(--clr-bg-light);
+  color: var(--clr-text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease);
+}
+#container-top .account-widget .account-pill:hover,
+#container-top .account-widget.open .account-pill {
+  background: var(--clr-bg-muted);
+  border-color: var(--clr-border-input);
+}
+#container-top .account-widget .account-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.avatar-0 { background: #6B4FBB; }
+.avatar-1 { background: #B4532A; }
+.avatar-2 { background: #C2457A; }
+.avatar-3 { background: #1F6FB5; }
+.avatar-4 { background: #8A5A0B; }
+.avatar-5 { background: #B22E2E; }
+.avatar-6 { background: #4A3FA8; }
+.avatar-7 { background: #8E3B8E; }
+#container-top .account-widget .account-points {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--clr-star);
+  color: #3B2400;
+  font-size: 12px;
+  font-weight: 700;
+}
+#container-top .account-widget .account-points .fa {
+  font-size: 11px;
+}
+#container-top .account-widget .account-caret {
+  transition: transform var(--ease);
+}
+#container-top .account-widget.open .account-caret {
+  transform: rotate(180deg);
+}
+#container-top .account-widget .account-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  width: 260px;
+  max-width: calc(100vw - 20px);
+  padding: 6px;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  background: var(--clr-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+#container-top .account-widget.open .account-menu {
+  display: block;
+  animation: account-menu-in 0.18s ease-out;
+}
+@keyframes account-menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#container-top .account-widget .account-menu-head {
+  margin-bottom: 4px;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--clr-border-light);
+  line-height: 1.35;
+}
+#container-top .account-widget .account-menu-name {
+  display: block;
+  color: var(--clr-text);
+  font-size: 14px;
+  font-weight: 500;
+}
+#container-top .account-widget .account-menu-points {
+  display: block;
+  color: var(--clr-text-muted);
+  font-size: 12.5px;
+}
+#container-top .account-widget .account-menu a,
+#container-top .account-widget .account-menu a:visited {
+  float: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 9px 10px;
+  border-radius: var(--radius-md);
+  color: var(--clr-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: none;
+  transition: background var(--ease), color var(--ease);
+}
+#container-top .account-widget .account-menu a .fa {
+  width: 18px;
+  color: var(--clr-primary-dark);
+  text-align: center;
+}
+#container-top .account-widget .account-menu a:hover {
+  background: var(--clr-bg-light);
+  color: var(--clr-primary-dark);
+}
+#container-top .account-widget .account-menu a.account-menu-logout {
+  margin-top: 4px;
+  border-top: 1px solid var(--clr-border-light);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+#container-top .account-widget .account-menu a.account-menu-logout,
+#container-top .account-widget .account-menu a.account-menu-logout .fa {
+  color: var(--clr-danger);
+}
+@media only screen and (max-width: 640px) {
+  #container-top .account-widget { margin-right: 8px; }
+  #container-top .account-widget .account-pill { padding: 0 4px; }
+  #container-top .account-widget a.signin-pill { padding: 0 11px; }
+}
+
 /* ============================================================
  * CONTAINER -> Header + Content
  * ============================================================ */

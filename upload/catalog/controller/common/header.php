@@ -129,6 +129,59 @@ class ControllerCommonHeader extends Controller {
 		$this->data['shopping_cart'] = $this->url->link('checkout/cart', '', 'SSL');
 		$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
+		// Account pill: Sign In / Register links, or the logged-in customer's initials, points and menu
+		$this->data['text_new_here'] = $this->language->get('text_new_here');
+		$this->data['text_register'] = $this->language->get('text_register');
+		$this->data['text_my_account'] = $this->language->get('text_my_account');
+		$this->data['text_reward_points'] = $this->language->get('text_reward_points');
+		$this->data['text_logout'] = $this->language->get('text_logout');
+		$this->data['text_account_menu'] = $this->language->get('text_account_menu');
+
+		$this->data['register'] = $this->url->link('account/register', '', 'SSL');
+		$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
+		$this->data['logout'] = $this->url->link('account/logout', '', 'SSL');
+
+		$this->data['customer_initials'] = '';
+		$this->data['customer_first_name'] = '';
+		$this->data['customer_full_name'] = '';
+		$this->data['avatar_class'] = 'avatar-0';
+		$this->data['reward_points'] = 0;
+		$this->data['text_points'] = '';
+		$this->data['text_points_value'] = '';
+
+		if ($this->customer->isLogged()) {
+			$first_name = html_entity_decode(trim($this->customer->getFirstName()), ENT_QUOTES, 'UTF-8');
+			$last_name = html_entity_decode(trim($this->customer->getLastName()), ENT_QUOTES, 'UTF-8');
+			$full_name = trim($first_name . ' ' . $last_name);
+
+			$initials = mb_strtoupper(mb_substr($first_name, 0, 1, 'UTF-8') . mb_substr($last_name, 0, 1, 'UTF-8'), 'UTF-8');
+
+			if ($initials === '') {
+				$initials = mb_strtoupper(mb_substr($this->customer->getEmail(), 0, 1, 'UTF-8'), 'UTF-8');
+			}
+
+			$this->data['customer_initials'] = htmlspecialchars($initials, ENT_QUOTES, 'UTF-8');
+			$this->data['customer_first_name'] = htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8');
+			$this->data['customer_full_name'] = htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8');
+
+			// The same name always gets the same disc colour (8 colours, none of them green)
+			$this->data['avatar_class'] = 'avatar-' . (abs(crc32(mb_strtolower($full_name !== '' ? $full_name : $this->customer->getEmail(), 'UTF-8'))) % 8);
+
+			$points = (int)floor($this->customer->getRewardPoints());
+
+			if ($points > 0) {
+				$this->data['reward_points'] = $points;
+				$this->data['text_points'] = sprintf($this->language->get('text_points'), number_format($points));
+
+				// The points value (rate) is only shown when "Display Rate in Customer's Account" is enabled
+				if ($this->config->get('config_reward_display')) {
+					$points_rate = (float)$this->config->get('config_reward_rate') ?: 1.0;
+
+					$this->data['text_points_value'] = sprintf($this->language->get('text_points_value'), number_format($points), $this->currency->format($points / $points_rate, $this->config->get('config_currency')));
+				}
+			}
+		}
+
 		// Google Analytics — only load when visitor has given analytics cookie consent
 		$ga_code = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
 
