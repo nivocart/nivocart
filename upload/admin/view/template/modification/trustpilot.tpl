@@ -25,6 +25,31 @@
         <a href="#tab-settings"><?php echo $tab_settings; ?></a>
       </div>
       <div id="tab-invitations">
+        <h2><?php echo $text_export_title; ?></h2>
+        <p><?php echo $text_export_info; ?></p>
+        <form action="<?php echo $export_action; ?>" method="post" enctype="multipart/form-data" id="form-export">
+          <table class="form">
+            <tr>
+              <td><?php echo $entry_export_date_from; ?></td>
+              <td><input type="text" name="export_date_from" value="<?php echo $export_date_from; ?>" size="12" class="date" /></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_export_date_to; ?></td>
+              <td><input type="text" name="export_date_to" value="<?php echo $export_date_to; ?>" size="12" class="date" /></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_export_include; ?><span class="help"><?php echo $help_export_include; ?></span></td>
+              <td><input type="radio" name="export_include_exported" value="1" id="trustpilot-include-on" class="radio" />
+                <label for="trustpilot-include-on"><span><span></span></span><?php echo $text_yes; ?></label>
+                <input type="radio" name="export_include_exported" value="0" id="trustpilot-include-off" class="radio" checked />
+                <label for="trustpilot-include-off"><span><span></span></span><?php echo $text_no; ?></label></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><a id="button-trustpilot-export" class="button button-align ripple"><i class="fa fa-download"></i> &nbsp; <?php echo $button_export; ?></a></td>
+            </tr>
+          </table>
+        </form>
         <p><?php echo $text_month_count; ?></p>
         <?php if ($limit_reached) { ?>
           <div class="attention"><?php echo $text_limit_reached; ?></div>
@@ -137,6 +162,33 @@ $('#tabs a').tabs();
 //--></script>
 
 <script type="text/javascript"><!--
+$('.date').datepicker({dateFormat: 'yy-mm-dd'});
+
+$('#button-trustpilot-export').on('click', function() {
+  $.confirm({
+    title: '<?php echo $button_export_title; ?>',
+    content: '<?php echo $text_confirm_export; ?>',
+    icon: 'fa fa-question-circle',
+    theme: 'light',
+    useBootstrap: false,
+    boxWidth: 580,
+    animation: 'zoom',
+    closeAnimation: 'scale',
+    opacity: 0.1,
+    buttons: {
+      confirm: function() {
+        $('#form-export').submit();
+
+        // The file downloads in the background, then the list shows the exported orders
+        setTimeout(function() {
+          location.reload();
+        }, 2500);
+      },
+      cancel: function() {}
+    }
+  });
+});
+
 $('#button-trustpilot-test').on('click', function() {
   $.confirm({
     title: '<?php echo $button_test_title; ?>',

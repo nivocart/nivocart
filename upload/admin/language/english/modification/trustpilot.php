@@ -21,15 +21,20 @@ $_['text_no']                    = 'No';
 $_['text_info']                  = 'When an order reaches the Complete status, NivoCart emails your Trustpilot Automatic Feedback Service (AFS) address with the customer\'s name, email address and order number. Trustpilot then sends the review invitation to the customer, using the delay, templates and reminders set in your Trustpilot account. This works on every Trustpilot plan and needs no API key.';
 $_['text_trigger_status']        = '%s (the invitation is sent once per order)';
 $_['text_trigger_not_set']       = 'Not set';
-$_['text_month_count']           = 'Invitation requests sent this month: <b>%s</b> of <b>%s</b> (estimate, Trustpilot keeps the real count).';
+$_['text_month_count']           = 'Invitation requests sent or exported this month: <b>%s</b> of <b>%s</b> (estimate, Trustpilot keeps the real count).';
 $_['text_limit_reached']         = 'The monthly limit of your Trustpilot plan has been reached. Trustpilot will not send more invitations until next month.';
 $_['text_no_results']            = 'No invitation requests yet.';
 $_['text_status_sent']           = 'Sent';
 $_['text_status_failed']         = 'Failed';
+$_['text_status_exported']           = 'Exported';
 $_['text_status_skipped']        = 'Skipped';
 $_['text_test']                  = 'Test';
 $_['text_test_success']          = 'Test invitation request sent for %s. Check Invitation history in Trustpilot Business.';
 $_['text_confirm_test']          = 'This sends a real invitation request to Trustpilot, which will email the address you entered and count towards your monthly limit. Continue?';
+
+$_['text_export_title']          = 'Export for Trustpilot';
+$_['text_export_info']           = 'Creates the CSV file for the &quot;Upload a file with customer data&quot; page of Trustpilot (Invitations > Invite customers). It holds only the customer email, customer name and order number of orders with the Complete status in the date range. Orders already invited by email or already exported are left out.';
+$_['text_confirm_export']        = 'The orders in the file are marked as exported, so they are not invited again by email. Download the file now?';
 
 // Columns
 $_['column_date']                = 'Date';
@@ -46,6 +51,10 @@ $_['entry_monthly_limit']        = 'Monthly Invitations:';
 $_['entry_trigger_status']       = 'Trigger Order Status:';
 $_['entry_test']                 = 'Test Invitation:';
 
+$_['entry_export_date_from']     = 'Orders From:';
+$_['entry_export_date_to']       = 'Orders To:';
+$_['entry_export_include']       = 'Include Exported Orders:';
+
 // Help
 $_['help_status']                = 'Send a review invitation request to Trustpilot when an order is completed.';
 $_['help_afs_email']             = 'Your unique Automatic Feedback Service address. In Trustpilot Business open Invitation methods and copy the address shown under Automatic Invitations (AFS).';
@@ -54,9 +63,13 @@ $_['help_monthly_limit']         = 'Invitations included in your Trustpilot plan
 $_['help_trigger_status']        = 'This is the Complete Order Status of the store settings. Change it there if needed.';
 $_['help_test']                  = 'Sends a real invitation request for this email address so you can check the result in Trustpilot (Invitation history). Save the settings first.';
 
+$_['help_export_include']         = 'Also put orders in the file that were exported before (for example when the file was lost). Orders invited by email are never included.';
+
 // Buttons
 $_['button_test']                = 'Send Test Invitation';
 $_['button_test_title']          = 'Send Test Invitation';
+$_['button_export']               = 'Download CSV File';
+$_['button_export_title']         = 'Export for Trustpilot';
 
 // Errors
 $_['error_permission']           = 'Warning: You do not have permission to modify <b>Trustpilot</b>!';
@@ -64,5 +77,8 @@ $_['error_warning']              = 'Warning: Please check the form carefully for
 $_['error_afs_email']            = 'A valid Trustpilot AFS email address is required to enable invitations!';
 $_['error_sender_email']         = 'The Send From address is not a valid email address!';
 $_['error_monthly_limit']        = 'The monthly invitations must be a whole number of 1 or more!';
+$_['error_export_dates']         = 'Please enter valid dates (YYYY-MM-DD), the first date cannot be after the second one!';
+$_['error_export_status']        = 'The Complete Order Status is not set in the store settings!';
+$_['error_export_none']          = 'There are no orders to export for these dates.';
 $_['error_email']                = 'Please enter a valid email address for the test invitation!';
 $_['error_not_enabled']          = 'Save the settings with Send Invitations enabled and a valid AFS email address before sending a test.';

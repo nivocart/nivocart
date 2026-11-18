@@ -40,7 +40,7 @@ class Trustpilot {
 
 	/**
 	 * Send the invitation request for an order. Safe to call more than once for the
-	 * same order: an order that was already sent successfully is never sent again.
+	 * same order: an order that was already sent (or put in a CSV export) is never sent again.
 	 *
 	 * @param int $order_id
 	 *
@@ -51,7 +51,7 @@ class Trustpilot {
 			return 'disabled';
 		}
 
-		$sent_query = $this->db->query("SELECT `invitation_id` FROM `" . DB_PREFIX . "trustpilot_invitation` WHERE `order_id` = '" . (int)$order_id . "' AND `status` = 'sent' LIMIT 1");
+		$sent_query = $this->db->query("SELECT `invitation_id` FROM `" . DB_PREFIX . "trustpilot_invitation` WHERE `order_id` = '" . (int)$order_id . "' AND `status` IN ('sent', 'exported') LIMIT 1");
 
 		if ($sent_query->row) {
 			return 'duplicate';
@@ -176,7 +176,7 @@ class Trustpilot {
 		$existing_id = 0;
 
 		if ($order_id) {
-			$query = $this->db->query("SELECT `invitation_id` FROM `" . DB_PREFIX . "trustpilot_invitation` WHERE `order_id` = '" . (int)$order_id . "' AND `status` != 'sent' ORDER BY `invitation_id` DESC LIMIT 1");
+			$query = $this->db->query("SELECT `invitation_id` FROM `" . DB_PREFIX . "trustpilot_invitation` WHERE `order_id` = '" . (int)$order_id . "' AND `status` NOT IN ('sent', 'exported') ORDER BY `invitation_id` DESC LIMIT 1");
 
 			if ($query->row) {
 				$existing_id = (int)$query->row['invitation_id'];

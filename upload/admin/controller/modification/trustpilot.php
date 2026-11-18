@@ -66,7 +66,9 @@ class ControllerModificationTrustpilot extends Controller {
 			'column_status', 'column_details', 'entry_status', 'entry_afs_email', 'entry_sender_email',
 			'entry_monthly_limit', 'entry_trigger_status', 'entry_test', 'help_status', 'help_afs_email',
 			'help_sender_email', 'help_monthly_limit', 'help_trigger_status', 'help_test', 'button_test',
-			'button_test_title', 'button_save', 'button_cancel'
+			'button_test_title', 'button_save', 'button_cancel', 'text_export_title', 'text_export_info',
+			'text_confirm_export', 'entry_export_date_from', 'entry_export_date_to', 'entry_export_include',
+			'help_export_include', 'button_export', 'button_export_title'
 		];
 
 		foreach ($texts as $text) {
@@ -74,6 +76,12 @@ class ControllerModificationTrustpilot extends Controller {
 		}
 
 		$this->data['error_warning'] = $this->error['warning'] ?? '';
+
+		if (isset($this->session->data['error'])) {
+			$this->data['error_warning'] = $this->session->data['error'];
+
+			unset($this->session->data['error']);
+		}
 		$this->data['error_afs_email'] = $this->error['afs_email'] ?? '';
 		$this->data['error_sender_email'] = $this->error['sender_email'] ?? '';
 		$this->data['error_monthly_limit'] = $this->error['monthly_limit'] ?? '';
@@ -87,6 +95,10 @@ class ControllerModificationTrustpilot extends Controller {
 		}
 
 		$this->data['breadcrumbs'] = $this->breadcrumbs();
+
+		$this->data['export_action'] = $this->url->link('modification/trustpilot/export', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['export_date_from'] = date('Y-m-d', strtotime('-30 days'));
+		$this->data['export_date_to'] = date('Y-m-d');
 
 		$this->data['action'] = $this->url->link('modification/trustpilot', 'token=' . $this->session->data['token'], 'SSL');
 		$this->data['cancel'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
@@ -182,6 +194,71 @@ class ControllerModificationTrustpilot extends Controller {
 	}
 
 	/**
+	 * Download a CSV file for the "Upload a file with customer data" page of Trustpilot.
+	 * It holds the customer email, name and order number of completed orders and nothing else.
+	 * The orders are remembered, so they are not exported again or invited by email.
+	 *
+	 * @return void
+	 */
+	public function export(): void {
+		$this->language->load('modification/' . $this->name);
+
+		$this->load->model('modification/trustpilot');
+
+		$redirect = $this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL');
+
+		$date_from = trim((string)($this->request->post['export_date_from'] ?? ''));
+		$date_to = trim((string)($this->request->post['export_date_to'] ?? ''));
+		$include_exported = !empty($this->request->post['export_include_exported']);
+
+		if (($this->request->server['REQUEST_METHOD'] !== 'POST') || !$this->user->hasPermission('modify', 'modification/' . $this->name)) {
+			$this->session->data['error'] = $this->language->get('error_permission');
+		} elseif (!$this->isDate($date_from) || !$this->isDate($date_to) || ($date_from > $date_to)) {
+			$this->session->data['error'] = $this->language->get('error_export_dates');
+		} elseif (!(int)$this->config->get('config_complete_status_id')) {
+			$this->session->data['error'] = $this->language->get('error_export_status');
+		} else {
+			$rows = [];
+			$order_ids = [];
+
+			foreach ($this->model_modification_trustpilot->getExportOrders($date_from, $date_to, $include_exported) as $order) {
+				$email = trim((string)$order['email']);
+
+				if (!emailIsValid($email)) {
+					continue;
+				}
+
+				$name = trim(html_entity_decode($order['firstname'] . ' ' . $order['lastname'], ENT_QUOTES, 'UTF-8'));
+
+				$rows[] = [$email, $this->csvSafe($name !== '' ? $name : $email), (string)(int)$order['order_id']];
+				$order_ids[] = (int)$order['order_id'];
+			}
+
+			if (!$rows) {
+				$this->session->data['error'] = $this->language->get('error_export_none');
+			} else {
+				// Same layout as the Trustpilot template: comma separated, a field is only quoted when it needs to be
+				$csv = $this->csvLine(['customer email', 'customer name', 'reference number']);
+
+				foreach ($rows as $row) {
+					$csv .= $this->csvLine($row);
+				}
+
+				$this->model_modification_trustpilot->addExported($order_ids);
+
+				$this->response->addHeader('Content-Type: text/csv; charset=utf-8');
+				$this->response->addHeader('Content-Disposition: attachment; filename="trustpilot-invitations-' . date('Ymd-His') . '.csv"');
+				$this->response->addHeader('Cache-Control: no-store');
+				$this->response->setOutput($csv);
+
+				return;
+			}
+		}
+
+		$this->redirect($redirect);
+	}
+
+	/**
 	 * Called by Extensions > Modifications when the modification is installed.
 	 */
 	public function install(): void {
@@ -219,6 +296,57 @@ class ControllerModificationTrustpilot extends Controller {
 		}
 
 		$this->redirect($this->url->link('modification/' . $this->name, 'token=' . $this->session->data['token'], 'SSL'));
+	}
+
+	/**
+	 * One CSV line (RFC 4180): fields are quoted only when they contain a comma, a quote or a line break.
+	 *
+	 * @param array<int, string> $fields
+	 *
+	 * @return string
+	 */
+	private function csvLine(array $fields): string {
+		$line = [];
+
+		foreach ($fields as $field) {
+			$field = (string)$field;
+
+			if (preg_match('/[",\r\n]/', $field)) {
+				$field = '"' . str_replace('"', '""', $field) . '"';
+			}
+
+			$line[] = $field;
+		}
+
+		return implode(',', $line) . "\r\n";
+	}
+
+	/**
+	 * Is the value a real date in the Y-m-d format?
+	 *
+	 * @param string $value
+	 *
+	 * @return bool
+	 */
+	private function isDate(string $value): bool {
+		$date = \DateTime::createFromFormat('Y-m-d', $value);
+
+		return $date && ($date->format('Y-m-d') === $value);
+	}
+
+	/**
+	 * Stop a spreadsheet from running a name that starts with = + - or @ as a formula.
+	 *
+	 * @param string $value
+	 *
+	 * @return string
+	 */
+	private function csvSafe(string $value): string {
+		if (($value !== '') && (strpbrk($value[0], "=+-@\t\r") !== false)) {
+			return "'" . $value;
+		}
+
+		return $value;
 	}
 
 	private function breadcrumbs(): array {
