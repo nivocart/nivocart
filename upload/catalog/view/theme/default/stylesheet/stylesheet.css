@@ -333,11 +333,13 @@ span.from {
   background: var(--clr-bg);
 }
 #container-top .container-top-inner-normal {
-  width: 1267px;
+  width: 100%;
+  max-width: 1267px;
   margin: 0 auto;
 }
 #container-top .container-top-inner-wide {
-  width: 1907px;
+  width: 100%;
+  max-width: 1907px;
   margin: 0 auto;
 }
 #container-top .container-top-inner-full {
