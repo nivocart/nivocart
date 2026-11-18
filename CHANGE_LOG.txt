@@ -9,6 +9,7 @@ NivoCart v2.6.0
 Release: TBA
 
 - Add new TrustPilot Modification, requires a TrustPilot Business Account.
+- Add new module TrustPilot Review Collector to display a Free Plan widget.
 - Add new Administration Reports Dashboard for better performance overview.
 - Add new "Nova" Admin Theme to complement the "Light" and "Dark" templates.
 - Add the ability to offer Reward Points for new Customer Registrations.
