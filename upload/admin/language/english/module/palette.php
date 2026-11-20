@@ -6,7 +6,7 @@ $_['heading_title']        = 'Palette';
 $_['text_module']          = 'Modules';
 $_['text_success']         = 'Success: You have modified module <b>Palette</b> !';
 $_['text_manage_palettes'] = 'Add, Edit or View, Palettes.';
-$_['text_manage_products'] = 'Add, Edit or View, Palette colors in Products.';
+$_['text_manage_products'] = 'Add, Edit or View, Palette colours in Products.';
 
 // Entry
 $_['entry_theme']          = 'Complete Module:<span class="help">Show content with header.</span>';

@@ -31,7 +31,11 @@ $_['text_view']                     = 'View';
 $_['text_home']                     = 'Home';
 $_['text_characters']               = 'Characters';
 
-// Text Content (Positions)
+// Heading (Modules)
+$_['heading_module_style']          = 'Module Style';
+$_['heading_module_parameters']     = 'Module Parameters';
+
+// Text Content (Module Positions)
 $_['text_content_higher']           = '&#9710; &nbsp; Higher';
 $_['text_content_high']             = '&#9651; &nbsp; High';
 $_['text_content_left']             = '&#9665; &nbsp; Left';
@@ -39,7 +43,7 @@ $_['text_content_right']            = '&#9655; &nbsp; Right';
 $_['text_content_low']              = '&#9661; &nbsp; Low';
 $_['text_content_lower']            = '&#10729; &nbsp; Lower';
 
-// Confirm Delete/Uninstall
+// Text Confirm Delete/Uninstall
 $_['text_confirm']                  = 'Delete/Uninstall cannot be undone! Are you sure you want to do this?';
 $_['text_confirm_delete']           = 'Confirm Delete';
 $_['text_confirm_uninstall']        = 'Confirm Uninstall';

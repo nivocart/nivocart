@@ -19,12 +19,9 @@
     </div>
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="manufacturer">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
-          <tr>
-            <td><a href="<?php echo $manager; ?>" class="button"><i class="fa fa-gear"></i> &nbsp; <?php echo $button_manager; ?></a></td>
-            <td><b><i><?php echo $text_manage_brands; ?></i></b></td>
-          </tr>
           <tr>
             <td><?php echo $entry_theme; ?></td>
             <td><?php if ($manufacturer_theme) { ?>
@@ -45,6 +42,10 @@
               <input type="text" name="manufacturer_title<?php echo $language['language_id']; ?>" id="manufacturer_title<?php echo $language['language_id']; ?>" size="30" value="<?php echo ${'manufacturer_title' . $language['language_id']}; ?>" />
               <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="" style="vertical-align:top;" /><br />
             <?php } ?></td>
+          </tr>
+          <tr>
+            <td><a href="<?php echo $manager; ?>" class="button"><i class="fa fa-gear"></i> &nbsp; <?php echo $button_manager; ?></a></td>
+            <td><b><i><?php echo $text_manage_brands; ?></i></b></td>
           </tr>
         </tbody>
         </table>

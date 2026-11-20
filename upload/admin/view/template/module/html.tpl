@@ -26,7 +26,9 @@
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="html">
       <?php for ($i = 1; $i <= 10; $i++) { ?>
         <div id="tab-<?php echo $i; ?>" style="clear:both;">
+          <h2><?php echo $heading_module_style; ?></h2>
           <table class="form">
+          <tbody>
             <tr>
               <td><?php echo $entry_theme; ?></td>
               <td><?php if (${'html_theme' . $i}) { ?>
@@ -48,10 +50,16 @@
                 <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="" style="vertical-align:top;" /><br />
               <?php } ?></td>
             </tr>
+          </tbody>
+          </table>
+          <h2><?php echo $heading_module_parameters; ?></h2>
+          <table class="form">
+          <tbody>
             <tr>
               <td><?php echo $entry_code; ?></td>
               <td><textarea name="html_code<?php echo $i; ?>" cols="55" rows="11"><?php echo isset(${'html_code' . $i}) ? ${'html_code' . $i} : ''; ?></textarea></td>
             </tr>
+          </tbody>
           </table>
         </div>
       <?php } ?>

@@ -20,6 +20,7 @@
     <div class="content">
       <div class="tooltip"><?php echo $text_info; ?></div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="trustpilot_widget">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
           <tr>
@@ -43,47 +44,52 @@
               <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="" style="vertical-align:top;" /><br />
             <?php } ?></td>
           </tr>
+        </tbody>
+        </table>
+        <h2><?php echo $heading_module_parameters; ?></h2>
+        <table class="form">
+        <tbody>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_business_id; ?></td>
             <td><input type="text" name="trustpilot_widget_business_id" value="<?php echo $trustpilot_widget_business_id; ?>" size="30" />
-              <?php if ($error_business_id) { ?>
-                <span class="error"><?php echo $error_business_id; ?></span>
-              <?php } ?></td>
+            <?php if ($error_business_id) { ?>
+              <span class="error"><?php echo $error_business_id; ?></span>
+            <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_store_name; ?></td>
             <td><input type="text" name="trustpilot_widget_store_name" value="<?php echo $trustpilot_widget_store_name; ?>" placeholder="<?php echo $default_store_name; ?>" size="40" />
-              <?php if ($error_store_name) { ?>
-                <span class="error"><?php echo $error_store_name; ?></span>
-              <?php } ?></td>
+            <?php if ($error_store_name) { ?>
+              <span class="error"><?php echo $error_store_name; ?></span>
+            <?php } ?></td>
           </tr>
           <tr>
             <td><span class="required">*</span> <?php echo $entry_template_id; ?></td>
             <td><input type="text" name="trustpilot_widget_template_id" value="<?php echo $trustpilot_widget_template_id; ?>" size="30" />
-              <?php if ($error_template_id) { ?>
-                <span class="error"><?php echo $error_template_id; ?></span>
-              <?php } ?></td>
+            <?php if ($error_template_id) { ?>
+              <span class="error"><?php echo $error_template_id; ?></span>
+            <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_locale; ?></td>
             <td><input type="text" name="trustpilot_widget_locale" value="<?php echo $trustpilot_widget_locale; ?>" placeholder="auto" size="8" />
-              <?php if ($error_locale) { ?>
-                <span class="error"><?php echo $error_locale; ?></span>
-              <?php } ?></td>
+            <?php if ($error_locale) { ?>
+              <span class="error"><?php echo $error_locale; ?></span>
+            <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_height; ?></td>
             <td><input type="text" name="trustpilot_widget_height" value="<?php echo $trustpilot_widget_height; ?>" size="8" />
-              <?php if ($error_height) { ?>
-                <span class="error"><?php echo $error_height; ?></span>
-              <?php } ?></td>
+            <?php if ($error_height) { ?>
+              <span class="error"><?php echo $error_height; ?></span>
+            <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_width; ?></td>
             <td><input type="text" name="trustpilot_widget_width" value="<?php echo $trustpilot_widget_width; ?>" size="8" />
-              <?php if ($error_width) { ?>
-                <span class="error"><?php echo $error_width; ?></span>
-              <?php } ?></td>
+            <?php if ($error_width) { ?>
+              <span class="error"><?php echo $error_width; ?></span>
+            <?php } ?></td>
           </tr>
           <tr>
             <td><?php echo $entry_consent; ?></td>

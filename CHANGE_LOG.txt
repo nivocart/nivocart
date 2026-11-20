@@ -17,6 +17,7 @@ Release: TBA
 - Updated the "Dark" Admin Theme with a more modern Home Dashboard.
 - Updated the CJDropshipping Dashboard for faster Stock Sync operations.
 - Updated the Register/Sign In links on the Frontend for better visiblity.
+- Updated most module forms under Administration to be more intuitive.
 
 
 NivoCart v2.5.5

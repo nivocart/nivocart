@@ -32,6 +32,9 @@ class ControllerModuleBanner extends Controller {
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
+		$this->data['heading_module_style'] = $this->language->get('heading_module_style');
+		$this->data['heading_module_parameters'] = $this->language->get('heading_module_parameters');
+
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_yes'] = $this->language->get('text_yes');

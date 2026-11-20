@@ -32,6 +32,9 @@ class ControllerModuleTrustpilotWidget extends Controller {
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
+		$this->data['heading_module_style'] = $this->language->get('heading_module_style');
+		$this->data['heading_module_parameters'] = $this->language->get('heading_module_parameters');
+
 		$this->data['text_info'] = $this->language->get('text_info');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
@@ -47,6 +50,7 @@ class ControllerModuleTrustpilotWidget extends Controller {
 
 		$this->data['entry_theme'] = $this->language->get('entry_theme');
 		$this->data['entry_title'] = $this->language->get('entry_title');
+
 		$this->data['entry_business_id'] = $this->language->get('entry_business_id');
 		$this->data['entry_store_name'] = $this->language->get('entry_store_name');
 		$this->data['entry_template_id'] = $this->language->get('entry_template_id');
@@ -54,6 +58,7 @@ class ControllerModuleTrustpilotWidget extends Controller {
 		$this->data['entry_height'] = $this->language->get('entry_height');
 		$this->data['entry_width'] = $this->language->get('entry_width');
 		$this->data['entry_consent'] = $this->language->get('entry_consent');
+
 		$this->data['entry_layout'] = $this->language->get('entry_layout');
 		$this->data['entry_position'] = $this->language->get('entry_position');
 		$this->data['entry_status'] = $this->language->get('entry_status');

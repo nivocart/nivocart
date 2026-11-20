@@ -19,16 +19,9 @@
     </div>
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="palette">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
-          <tr>
-            <td><a href="<?php echo $manager_palette; ?>" class="button"><i class="fa fa-paint-brush"></i> &nbsp; <?php echo $button_palette; ?></a></td>
-            <td><b><i><?php echo $text_manage_palettes; ?></i></b></td>
-          </tr>
-          <tr>
-            <td><a href="<?php echo $manager_product; ?>" class="button"><i class="fa fa-cube"></i> &nbsp; <?php echo $button_product; ?></a></td>
-            <td><b><i><?php echo $text_manage_products; ?></i></b></td>
-          </tr>
           <tr>
             <td><?php echo $entry_theme; ?></td>
             <td><?php if ($palette_theme) { ?>
@@ -49,6 +42,14 @@
               <input type="text" name="palette_title<?php echo $language['language_id']; ?>" id="palette_title<?php echo $language['language_id']; ?>" size="30" value="<?php echo ${'palette_title' . $language['language_id']}; ?>" />
               <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="" style="vertical-align:top;" /><br />
             <?php } ?></td>
+          </tr>
+          <tr>
+            <td><a href="<?php echo $manager_palette; ?>" class="button"><i class="fa fa-paint-brush"></i> &nbsp; <?php echo $button_palette; ?></a></td>
+            <td><b><i><?php echo $text_manage_palettes; ?></i></b></td>
+          </tr>
+          <tr>
+            <td><a href="<?php echo $manager_product; ?>" class="button"><i class="fa fa-cube"></i> &nbsp; <?php echo $button_product; ?></a></td>
+            <td><b><i><?php echo $text_manage_products; ?></i></b></td>
           </tr>
         </tbody>
         </table>

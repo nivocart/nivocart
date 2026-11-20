@@ -19,6 +19,7 @@
     </div>
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="information">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
           <tr>

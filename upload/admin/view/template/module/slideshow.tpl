@@ -20,6 +20,7 @@
     </div>
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="slideshow">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
           <tr>
@@ -44,6 +45,9 @@
             <?php } ?></td>
           </tr>
         </tbody>
+        </table>
+        <h2><?php echo $heading_module_parameters; ?></h2>
+        <table class="form">
         <tbody>
           <tr>
             <td><?php echo $entry_transition; ?></td>

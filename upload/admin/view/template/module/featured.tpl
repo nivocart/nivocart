@@ -24,6 +24,7 @@
       </div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="featured">
         <div id="tab-1" style="clear:both;">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
           <tr>
@@ -47,6 +48,11 @@
               <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="" style="vertical-align:top;" /><br />
             <?php } ?></td>
           </tr>
+        </tbody>
+        </table>
+        <h2><?php echo $heading_module_parameters; ?></h2>
+        <table class="form">
+        <tbody>
           <tr class="highlighted">
             <td><?php echo $entry_product; ?></td>
             <td><input type="text" name="product" value="" size="30" /></td>

@@ -16,6 +16,7 @@ class ControllerModuleRandom extends Controller {
 		$this->load->model('setting/setting');
 
 		if (($this->request->server['REQUEST_METHOD'] === 'POST') && ($this->validate())) {
+			// POST uses json_encode
 			$this->model_setting_setting->editSetting($this->name, $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -28,6 +29,9 @@ class ControllerModuleRandom extends Controller {
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['heading_module_style'] = $this->language->get('heading_module_style');
+		$this->data['heading_module_parameters'] = $this->language->get('heading_module_parameters');
 
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');

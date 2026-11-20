@@ -21,6 +21,7 @@
     <?php if ($blog_ready) { ?>
       <div style="color:#36AAD8; margin:5px 0 5px 10px;"><?php echo $text_status_ready; ?></div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="blog_category">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
           <tr>

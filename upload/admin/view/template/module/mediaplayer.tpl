@@ -20,6 +20,7 @@
     </div>
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" name="mediaplayer">
+        <h2><?php echo $heading_module_style; ?></h2>
         <table class="form">
         <tbody>
           <tr>
@@ -43,6 +44,11 @@
               <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="" style="vertical-align:top;" /><br />
             <?php } ?></td>
           </tr>
+        </tbody>
+        </table>
+        <h2><?php echo $heading_module_parameters; ?></h2>
+        <table class="form">
+        <tbody>
           <tr>
             <td><?php echo $entry_image; ?></td>
             <td><div class="image"><img src="<?php echo $mediaplayer_thumb; ?>" alt="" id="thumb" /><br />
