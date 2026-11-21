@@ -2626,6 +2626,60 @@ CREATE TABLE `nc_tax_rule` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `nc_tile`
+--
+
+DROP TABLE IF EXISTS `nc_tile`;
+CREATE TABLE `nc_tile` (
+  `tile_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  PRIMARY KEY (`tile_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nc_tile_item`
+--
+
+DROP TABLE IF EXISTS `nc_tile_item`;
+CREATE TABLE `nc_tile_item` (
+  `tile_item_id` int NOT NULL AUTO_INCREMENT,
+  `tile_id` int NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `link` varchar(255) NOT NULL,
+  `external_link` tinyint(1) NOT NULL,
+  `layout` varchar(16) NOT NULL DEFAULT 'top',
+  `align` varchar(8) NOT NULL DEFAULT 'center',
+  `valign` varchar(8) NOT NULL DEFAULT 'middle',
+  `background` varchar(6) NOT NULL,
+  `colour` varchar(6) NOT NULL,
+  `sort_order` int NOT NULL,
+  PRIMARY KEY (`tile_item_id`),
+  KEY `tile_id` (`tile_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nc_tile_item_description`
+--
+
+DROP TABLE IF EXISTS `nc_tile_item_description`;
+CREATE TABLE `nc_tile_item_description` (
+  `tile_item_id` int NOT NULL,
+  `language_id` int NOT NULL,
+  `tile_id` int NOT NULL,
+  `title` varchar(64) NOT NULL,
+  `text` varchar(255) NOT NULL,
+  `link_text` varchar(64) NOT NULL,
+  PRIMARY KEY (`tile_item_id`,`language_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nc_upload`
 --
 

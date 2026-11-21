@@ -1,0 +1,237 @@
+/**-------------------------------
+ *  Tiles CSS for NivoCart
+ *  Default Theme — v1.0
+ *--------------------------------
+ *  Up to 6 tiles per line over 2 lines (12 max). Widths are automatic:
+ *  tiles share each line equally. Columns step down 6 > 4 > 3 > 2 > 1
+ *  according to the width of the module itself (container queries), so it
+ *  also behaves in the left and right columns.
+ */
+
+.tiles-wrap {
+  container-type: inline-size;
+  container-name: tiles;
+}
+
+.box .box-content.tiles-box {
+  padding: 10px;
+}
+
+.tiles {
+  --c: 6;
+  --g: 10px;
+  --tiles-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--g);
+  margin: 0 0 20px 0;
+}
+
+/* Columns per line (set by the module from the number of tiles) */
+.tiles-cols-1 { --c: 1; }
+.tiles-cols-2 { --c: 2; }
+.tiles-cols-3 { --c: 3; }
+.tiles-cols-4 { --c: 4; }
+.tiles-cols-5 { --c: 5; }
+.tiles-cols-6 { --c: 6; }
+
+/* Gap between tiles */
+.tiles-gap-0  { --g: 0px;  }
+.tiles-gap-5  { --g: 5px;  }
+.tiles-gap-10 { --g: 10px; }
+.tiles-gap-15 { --g: 15px; }
+.tiles-gap-20 { --g: 20px; }
+.tiles-gap-30 { --g: 30px; }
+
+/* Corner shapes — keyed to NivoCart getShapes() values */
+.tiles-rounded-0  { --tiles-radius: 0px;  }
+.tiles-rounded-3  { --tiles-radius: 3px;  }
+.tiles-rounded-5  { --tiles-radius: 5px;  }
+.tiles-rounded-7  { --tiles-radius: 7px;  }
+.tiles-rounded-9  { --tiles-radius: 9px;  }
+.tiles-rounded-11 { --tiles-radius: 11px; }
+.tiles-rounded-13 { --tiles-radius: 13px; }
+.tiles-rounded-15 { --tiles-radius: 15px; }
+.tiles-rounded-17 { --tiles-radius: 17px; }
+.tiles-rounded-19 { --tiles-radius: 19px; }
+.tiles-rounded-21 { --tiles-radius: 21px; }
+
+/* Stacking — columns step down as the module gets narrower */
+@container tiles (max-width: 899px) {
+  .tiles-cols-5,
+  .tiles-cols-6 { --c: 4; }
+}
+
+@container tiles (max-width: 699px) {
+  .tiles-cols-4,
+  .tiles-cols-5,
+  .tiles-cols-6 { --c: 3; }
+}
+
+@container tiles (max-width: 479px) {
+  .tiles-cols-3,
+  .tiles-cols-4,
+  .tiles-cols-5,
+  .tiles-cols-6 { --c: 2; }
+}
+
+@container tiles (max-width: 299px) {
+  .tiles { --c: 1; }
+}
+
+/* Tile */
+.tile {
+  position: relative;
+  display: flex;
+  flex: 1 1 calc((100% - var(--g) * (var(--c) - 1)) / var(--c) - 0.1px);
+  flex-direction: column;
+  min-width: 0;
+  min-height: var(--tiles-min-h, 0);
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--tiles-radius);
+  background: var(--tile-bg, var(--clr-bg-panel, #F2F2F2));
+  color: var(--tile-fg, var(--clr-text, #111));
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.tile:hover,
+a.tile:visited,
+a.tile:active {
+  color: var(--tile-fg, var(--clr-text, #111));
+  text-decoration: none;
+}
+
+a.tile:focus-visible {
+  outline: 2px solid var(--clr-primary, #239DD1);
+  outline-offset: 2px;
+}
+
+.tile-image {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: var(--tiles-ratio, 3 / 2);
+}
+
+.tile-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.tile-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px;
+  box-sizing: border-box;
+  text-align: center;
+  align-items: center;
+}
+
+.tile-title {
+  font-size: 1.15em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.tile-text {
+  font-size: 0.95em;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.tile-button {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 5px 14px;
+  border: 1px solid currentColor;
+  border-radius: var(--tiles-radius);
+  font-size: 0.9em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Text alignment */
+.tile-align-left .tile-body   { text-align: left;   align-items: flex-start; }
+.tile-align-center .tile-body { text-align: center; align-items: center;     }
+.tile-align-right .tile-body  { text-align: right;  align-items: flex-end;   }
+
+/* Text position */
+.tile-valign-top .tile-body    { justify-content: flex-start; }
+.tile-valign-middle .tile-body { justify-content: center;     }
+.tile-valign-bottom .tile-body { justify-content: flex-end;   }
+
+/* Layout: image on the left, text on the right */
+.tile-left {
+  flex-direction: row;
+}
+
+.tile-left .tile-image {
+  flex: 0 0 40%;
+  aspect-ratio: auto;
+}
+
+/* Layout: image as background, text over it */
+.tile-cover {
+  min-height: var(--tiles-min-h, 200px);
+  color: var(--tile-fg, #FFF);
+}
+
+a.tile-cover:hover,
+a.tile-cover:visited,
+a.tile-cover:active {
+  color: var(--tile-fg, #FFF);
+}
+
+.tile-cover .tile-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  aspect-ratio: auto;
+}
+
+.tile-cover .tile-image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1));
+}
+
+.tile-cover .tile-body {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Hover effects */
+.tiles-hover-lift .tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.tiles-hover-zoom .tile:hover .tile-image img {
+  transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .tile-image img {
+    transition: none;
+  }
+
+  .tiles-hover-lift .tile:hover,
+  .tiles-hover-zoom .tile:hover .tile-image img {
+    transform: none;
+  }
+}

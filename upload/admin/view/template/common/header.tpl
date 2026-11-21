@@ -194,6 +194,7 @@
             <ul>
               <li><a href="<?php echo $administration; ?>"><?php echo ($icons) ? '<i class="fa fa-magic"></i>' : ''; ?><?php echo $text_administration; ?></a></li>
               <li><a href="<?php echo $banner; ?>"><?php echo ($icons) ? '<i class="fa fa-photo"></i>' : ''; ?><?php echo $text_banner; ?></a></li>
+              <li><a href="<?php echo $tile; ?>"><?php echo ($icons) ? '<i class="fa fa-th-large"></i>' : ''; ?><?php echo $text_tile; ?></a></li>
               <li><a href="<?php echo $media; ?>"><?php echo ($icons) ? '<i class="fa fa-video-camera"></i>' : ''; ?><?php echo $text_media; ?></a></li>
               <li><a href="<?php echo $footer; ?>"><?php echo ($icons) ? '<i class="fa fa-hashtag"></i>' : ''; ?><?php echo $text_footer; ?></a></li>
               <li><a href="<?php echo $layout; ?>"><?php echo ($icons) ? '<i class="fa fa-tasks"></i>' : ''; ?><?php echo $text_layout; ?></a></li>

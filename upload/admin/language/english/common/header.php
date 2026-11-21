@@ -131,6 +131,7 @@ $_['text_tax']                         = 'Taxes';
 $_['text_tax_class']                   = 'Tax Classes';
 $_['text_tax_rate']                    = 'Tax Rates';
 $_['text_theme']                       = 'Themes';
+$_['text_tile']                        = 'Tiles';
 $_['text_tool']                        = 'Tools';
 $_['text_total']                       = 'Totals';
 $_['text_images_cleanup']              = 'Images Cleanup';

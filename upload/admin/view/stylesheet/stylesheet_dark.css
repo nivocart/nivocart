@@ -3851,3 +3851,33 @@ body.theme-dark .report:has(#rd-period) {
 /* Invisible hover bridges: the pointer can never fall through a gap between a menu item and its drop-down / fly-out */
 ul.menu > li > ul::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
 ul.menu li li > ul::before { content: ""; position: absolute; top: 0; bottom: 0; left: -14px; width: 14px; }
+
+/** -----------------------------
+ * TILE Design fields (design/tile form)
+ * ----------------------------*/
+.tile-design {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  gap: 6px 10px;
+}
+.tile-design .tile-colour {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.tile-design input.colour-text {
+  width: 70px;
+  box-sizing: border-box;
+}
+.tile-design input[type='color'] {
+  box-sizing: border-box;
+  width: 44px;
+  height: var(--input-height);
+  padding: 2px;
+  margin: 0;
+  border: 1px solid var(--clr-input-border);
+  border-radius: var(--radius-sm);
+  background: var(--clr-input-bg);
+  cursor: pointer;
+}
