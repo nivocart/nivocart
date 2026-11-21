@@ -431,6 +431,23 @@ class ControllerDesignTile extends Controller {
 			];
 		}
 
+		// NivoCart colours for the colour selects (hex without the leading #)
+		$this->load->model('setting/setting');
+
+		$this->data['colour_options'] = [];
+
+		foreach ($this->model_setting_setting->getColors() as $colour) {
+			$this->data['colour_options'][] = [
+				'hex'   => strtoupper(ltrim($colour['color'], '#')),
+				'title' => $colour['title']
+			];
+		}
+
+		$this->data['text_default'] = $this->language->get('text_default');
+		$this->data['text_custom'] = $this->language->get('text_custom');
+		$this->data['text_sample'] = $this->language->get('text_sample');
+		$this->data['text_sample_text'] = $this->language->get('text_sample_text');
+
 		// Option lists used by the row template
 		$this->data['layout_options'] = [
 			'top'   => $this->language->get('text_layout_top'),

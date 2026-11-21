@@ -5,6 +5,9 @@ $_['heading_title']        = 'Tiles';
 // Text
 $_['text_success']         = 'Success: You have modified <b>Tiles</b> !';
 $_['text_default']         = 'Default';
+$_['text_custom']          = 'Custom';
+$_['text_sample']          = 'Sample';
+$_['text_sample_text']     = 'Sample text';
 $_['text_link']            = 'Internal Links:<span class="help">External links require a complete Url,<br />including the "https://".</span>';
 $_['text_info']            = 'Click <a class="colorbox" href="%s" title="List of internal links"><b>Here</b></a> to see a list of internal links.';
 $_['text_limits']          = 'A set of tiles can hold between 1 and 12 tiles. Up to 6 tiles are shown per line, over 2 lines, and the tile widths adjust automatically.';

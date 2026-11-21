@@ -3870,14 +3870,21 @@ ul.menu li li > ul::before { content: ""; position: absolute; top: 0; bottom: 0;
   width: 70px;
   box-sizing: border-box;
 }
-.tile-design input[type='color'] {
-  box-sizing: border-box;
-  width: 44px;
+.tile-design .colour-swatch {
+  flex: 0 0 auto;
+  width: var(--input-height);
   height: var(--input-height);
-  padding: 2px;
-  margin: 0;
+  box-sizing: border-box;
   border: 1px solid var(--clr-input-border);
   border-radius: var(--radius-sm);
-  background: var(--clr-input-bg);
-  cursor: pointer;
+}
+.tile-design .colour-swatch.is-empty {
+  background-image: repeating-linear-gradient(45deg, transparent 0, transparent 4px, rgba(128, 128, 128, 0.45) 4px, rgba(128, 128, 128, 0.45) 8px);
+}
+.tile-design .tile-sample {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid var(--clr-input-border);
+  border-radius: var(--radius-sm);
+  font-weight: bold;
 }

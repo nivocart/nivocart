@@ -24,7 +24,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--g);
-  margin: 0 0 20px 0;
+  margin: 10px 0 20px 0;
+}
+
+/* Inside a column box the box padding already gives the space */
+.box .box-content.tiles-box .tiles {
+  margin-top: 0;
 }
 
 /* Columns per line (set by the module from the number of tiles) */

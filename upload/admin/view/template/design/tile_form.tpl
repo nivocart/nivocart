@@ -88,6 +88,8 @@ var layout_options = <?php echo json_encode($layout_options, JSON_HEX_TAG | JSON
 var align_options = <?php echo json_encode($align_options, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 var valign_options = <?php echo json_encode($valign_options, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
+var colour_options = <?php echo json_encode($colour_options, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+
 var tile_items = <?php echo json_encode($tile_items, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 var tile_errors = <?php echo json_encode($error_tile_item, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
@@ -109,6 +111,49 @@ function selectHtml(name, options, value) {
 
 function errorHtml(message) {
 	return message ? '<span class="error">' + message + '</span><br />' : '';
+}
+
+function colourHtml(n, field, value) {
+	var html = '<div class="tile-colour">#<input type="text" name="tile_item[' + n + '][' + field + ']" value="' + escapeHtml(value).replace(/"/g, '&quot;') + '" size="6" maxlength="7" class="colour-text" />';
+
+	html += '<select class="colour-select">';
+	html += '<option value=""><?php echo addslashes($text_default); ?></option>';
+	html += '<option value="*"><?php echo addslashes($text_custom); ?></option>';
+
+	$.each(colour_options, function(i, colour) {
+		html += '<option value="' + colour.hex + '">' + escapeHtml(colour.title) + '</option>';
+	});
+
+	html += '</select><span class="colour-swatch"></span></div>';
+
+	return html;
+}
+
+// Keeps the select, the swatch and the sample text in step with the hex fields of one tile
+function syncColours($row) {
+	var colours = {};
+
+	$row.find('input.colour-text').each(function() {
+		var $input = $(this);
+		var value = String($input.val()).trim().replace('#', '').toUpperCase();
+		var valid = /^[0-9A-F]{6}$/.test(value);
+		var $field = $input.closest('.tile-colour');
+		var $select = $field.find('select.colour-select');
+
+		if (value === '') {
+			$select.val('');
+		} else if (valid && $select.find('option[value="' + value + '"]').length) {
+			$select.val(value);
+		} else {
+			$select.val('*');
+		}
+
+		$field.find('.colour-swatch').toggleClass('is-empty', !valid).css('background-color', valid ? '#' + value : '');
+
+		colours[/\[(background|colour)\]$/.exec($input.attr('name'))[1]] = valid ? '#' + value : '';
+	});
+
+	$row.find('.tile-sample').css({'background-color': colours.background, 'color': colours.colour});
 }
 
 function addTile(item, errors) {
@@ -189,15 +234,11 @@ function addTile(item, errors) {
 	html += '        <span><?php echo addslashes($entry_align); ?>:</span><div>' + selectHtml('tile_item[' + n + '][align]', align_options, item.align) + '</div>';
 	html += '        <span><?php echo addslashes($entry_valign); ?>:</span><div>' + selectHtml('tile_item[' + n + '][valign]', valign_options, item.valign) + '</div>';
 	html += '        <span><?php echo addslashes($entry_background); ?>:</span>';
-	html += '        <div>';
-	html += '          <div class="tile-colour">#<input type="text" name="tile_item[' + n + '][background]" value="' + escapeHtml(item.background).replace(/"/g, '&quot;') + '" size="6" maxlength="7" class="colour-text" /><input type="color" class="colour-picker" value="#' + (/^[0-9A-Fa-f]{6}$/.test(item.background) ? item.background : 'FFFFFF') + '" /></div>';
-	html += errorHtml(errors.background);
-	html += '        </div>';
+	html += '        <div>' + colourHtml(n, 'background', item.background) + errorHtml(errors.background) + '</div>';
 	html += '        <span><?php echo addslashes($entry_colour); ?>:</span>';
-	html += '        <div>';
-	html += '          <div class="tile-colour">#<input type="text" name="tile_item[' + n + '][colour]" value="' + escapeHtml(item.colour).replace(/"/g, '&quot;') + '" size="6" maxlength="7" class="colour-text" /><input type="color" class="colour-picker" value="#' + (/^[0-9A-Fa-f]{6}$/.test(item.colour) ? item.colour : '000000') + '" /></div>';
-	html += errorHtml(errors.colour);
-	html += '        </div>';
+	html += '        <div>' + colourHtml(n, 'colour', item.colour) + errorHtml(errors.colour) + '</div>';
+	html += '        <span><?php echo addslashes($text_sample); ?>:</span>';
+	html += '        <div><span class="tile-sample"><?php echo addslashes($text_sample_text); ?></span></div>';
 	html += '      </div>';
 	html += '    </td>';
 
@@ -209,20 +250,24 @@ function addTile(item, errors) {
 
 	$('#tiles > tfoot').before(html);
 
+	syncColours($('#tile-row' + n));
+
 	tile_row++;
 }
 
-// Colour picker and hex field stay in step
-$('#tiles').on('input change', 'input.colour-picker', function() {
-	$(this).prev('input.colour-text').val(this.value.substring(1).toUpperCase());
+// Hex fields, colour selects, swatches and sample text stay in step
+$('#tiles').on('input', 'input.colour-text', function() {
+	syncColours($(this).closest('tbody'));
 });
 
-$('#tiles').on('input', 'input.colour-text', function() {
-	var value = $.trim(this.value).replace('#', '');
+$('#tiles').on('change', 'select.colour-select', function() {
+	var value = $(this).val();
 
-	if (/^[0-9A-Fa-f]{6}$/.test(value)) {
-		$(this).next('input.colour-picker').val('#' + value);
+	if (value !== '*') {
+		$(this).closest('.tile-colour').find('input.colour-text').val(value);
 	}
+
+	syncColours($(this).closest('tbody'));
 });
 
 $(document).ready(function() {
