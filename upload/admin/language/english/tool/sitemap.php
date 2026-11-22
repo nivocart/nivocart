@@ -46,6 +46,7 @@ $_['text_group_shopping']         = 'Shopping';
 $_['text_group_account']          = 'Account';
 $_['text_group_affiliate']        = 'Affiliate';
 $_['text_group_information']      = 'Information';
+$_['text_group_gallery']          = 'Gallery';
 
 // Route labels
 $_['route_home']                  = 'Home';
@@ -88,6 +89,7 @@ $_['route_contact']               = 'Contact Us';
 $_['route_sitemap']               = 'Sitemap';
 $_['route_news_list']             = 'News';
 $_['route_quote']                 = 'Request a Quote';
+$_['route_gallery']               = 'Gallery (list page and all approved image pages)';
 
 // IndexNow
 $_['text_indexnow_title']         = 'IndexNow (Bing)';

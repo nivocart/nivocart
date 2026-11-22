@@ -317,11 +317,14 @@ class ControllerToolSitemap extends Controller {
 			'account'     => 'text_group_account',
 			'affiliate'   => 'text_group_affiliate',
 			'information' => 'text_group_information',
+			'gallery'     => 'text_group_gallery',
 		];
 
 		$route_groups = [];
 
-		foreach ($this->sitemap_route_defs as $group_key => $route_items) {
+		$sitemap_route_defs = $this->getRouteDefs();
+
+		foreach ($sitemap_route_defs as $group_key => $route_items) {
 			$labeled = [];
 
 			foreach ($route_items as $item) {
@@ -359,6 +362,15 @@ class ControllerToolSitemap extends Controller {
 
 		if ($this->request->server['REQUEST_METHOD'] === 'POST' && $this->validate()) {
 			$pages = isset($this->request->post['sitemap_pages']) ? array_values(array_filter((array)$this->request->post['sitemap_pages'])) : [];
+
+			// The Gallery group is hidden while the Gallery is off: keep its saved choice for when it comes back
+			if (!$this->isGalleryActive()) {
+				$saved = $this->config->get('sitemap_pages');
+
+				if (is_array($saved) && in_array('modification/gallery', $saved, true)) {
+					$pages[] = 'modification/gallery';
+				}
+			}
 
 			$this->db->query("DELETE FROM `" . DB_PREFIX . "setting` WHERE `key` = 'sitemap_pages' AND `store_id` = '0'");
 
@@ -522,11 +534,34 @@ class ControllerToolSitemap extends Controller {
 		return empty($this->error);
 	}
 
+	/** Route groups offered in the settings: the Gallery group only exists while the Gallery is installed and enabled */
+	private function getRouteDefs(): array {
+		$defs = $this->sitemap_route_defs;
+
+		if ($this->isGalleryActive()) {
+			$defs['gallery'] = [
+				['route' => 'modification/gallery', 'lang' => 'route_gallery'],
+			];
+		}
+
+		return $defs;
+	}
+
+	private function isGalleryActive(): bool {
+		if (!$this->config->get('gallery_page_status')) {
+			return false;
+		}
+
+		$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "gallery'");
+
+		return (bool)$check->num_rows;
+	}
+
 	/** Returns the full list of routes as the default when no setting has been saved yet */
 	private function getDefaultSitemapPages(): array {
 		$all = [];
 
-		foreach ($this->sitemap_route_defs as $routes) {
+		foreach ($this->getRouteDefs() as $routes) {
 			foreach ($routes as $item) {
 				$all[] = $item['route'];
 			}

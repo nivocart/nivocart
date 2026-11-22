@@ -13,6 +13,8 @@ Release: TBA
 - Add new Administration Reports Dashboard for better performance overview.
 - Add new "Tile Manager" in the Design section to create sets of tiles.
 - Add new Module "Tiles" to display sets of up to 12 tiles in the pages.
+- Add new Gallery Modification to allow user submitted photos in a Gallery.
+- Add new Module "Gallery" to display user submitted photos in Catalog.
 - Add new "Nova" Admin Theme to complement the "Light" and "Dark" templates.
 - Add the ability to offer Reward Points for new Customer Registrations.
 - Updated the "Light" Admin Theme with a more modern Home Dashboard.

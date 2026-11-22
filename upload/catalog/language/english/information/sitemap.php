@@ -43,4 +43,5 @@ $_['text_affiliate_transaction'] = 'Transactions';
 $_['text_information']           = 'Information';
 $_['text_news']                  = 'News';
 $_['text_quote']                 = 'Get a Quote';
+$_['text_gallery']               = 'Gallery';
 $_['text_contact']               = 'Contact us';

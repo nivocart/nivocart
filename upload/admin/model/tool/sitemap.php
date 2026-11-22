@@ -41,7 +41,7 @@ class ModelToolSitemap extends Model {
 		// Generating XML sitemap
 		$fp = fopen('../sitemap.xml', 'w+');
 		fwrite($fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r");
-		fwrite($fp, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:video=\"http://www.google.com/schemas/sitemap-video/1.1\">\r");
+		fwrite($fp, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:video=\"http://www.google.com/schemas/sitemap-video/1.1\" xmlns:image=\"http://www.google.com/schemas/sitemap-image/1.1\">\r");
 		fwrite($fp, $this->getCommonPages());
 		fwrite($fp, $this->getCategories($parent_id, $current_path));
 		fwrite($fp, $this->getProducts());
@@ -49,6 +49,7 @@ class ModelToolSitemap extends Model {
 		fwrite($fp, $this->getNews());
 		fwrite($fp, $this->getInformationPages());
 		fwrite($fp, $this->getBlogArticles());
+		fwrite($fp, $this->getGalleryPages());
 		fwrite($fp, "</urlset>");
 		fclose($fp);
 
@@ -472,6 +473,52 @@ class ModelToolSitemap extends Model {
 		return $output;
 	}
 
+	/**
+	 * The customer Gallery only takes part when the Gallery modification is installed and enabled.
+	 */
+	protected function isGalleryActive(): bool {
+		if (!$this->config->get('gallery_page_status')) {
+			return false;
+		}
+
+		$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "gallery'");
+
+		return (bool)$check->num_rows;
+	}
+
+	/**
+	 * Approved Gallery images, newest first.
+	 *
+	 * @return array<int, array<string, mixed>>
+	 */
+	protected function getGalleryImages(): array {
+		$query = $this->db->query("SELECT `gallery_id`, `image` FROM `" . DB_PREFIX . "gallery` WHERE `status` = '1' AND `image` != '' ORDER BY `gallery_id` DESC");
+
+		return $query->rows;
+	}
+
+	protected function getGalleryPages() {
+		if (!$this->isGalleryActive() || !$this->isPageEnabled('modification/gallery')) {
+			return '';
+		}
+
+		$base = $this->getBase();
+
+		$output = $this->generateLinkNode($base . 'index.php?route=modification/gallery', 'daily', '0.6');
+
+		foreach ($this->getGalleryImages() as $result) {
+			$image_loc = $base . 'image/' . implode('/', array_map('rawurlencode', explode('/', $result['image'])));
+
+			$extra = "<image:image>\r";
+			$extra .= "<image:loc>" . htmlspecialchars($image_loc, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</image:loc>\r";
+			$extra .= "</image:image>\r";
+
+			$output .= $this->generateLinkNode($base . 'index.php?route=modification/gallery/info&gallery_id=' . (int)$result['gallery_id'], 'monthly', '0.5', $extra);
+		}
+
+		return $output;
+	}
+
 	// Text Sitemap - Links
 	protected function getTextLinks() {
 		$this->load->model('catalog/sitemap');
@@ -700,6 +747,21 @@ class ModelToolSitemap extends Model {
 						}
 					}
 				}
+			}
+		}
+
+		// Gallery
+		if ($this->isGalleryActive() && $this->isPageEnabled('modification/gallery')) {
+			$links = [$base . 'index.php?route=modification/gallery'];
+
+			foreach ($this->getGalleryImages() as $result) {
+				$links[] = $base . 'index.php?route=modification/gallery/info&gallery_id=' . (int)$result['gallery_id'];
+			}
+
+			foreach ($links as $link_gallery) {
+				$link = $this->model_tool_seo_url->rewrite(mb_convert_encoding($link_gallery, 'UTF-8'));
+
+				$output .= str_replace("&", "&amp;", $link) . "\r";
 			}
 		}
 

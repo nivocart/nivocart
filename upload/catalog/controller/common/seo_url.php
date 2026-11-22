@@ -86,6 +86,10 @@ class ControllerCommonSeoUrl extends Controller {
 						$this->request->get['blog_author_id'] = $url[1];
 					}
 
+					if ($url[0] === 'gallery_id') {
+						$this->request->get['gallery_id'] = $url[1];
+					}
+
 					if ($url[0] === 'blog_category_id') {
 						if (!isset($this->request->get['blog_category_id'])) {
 							$this->request->get['blog_category_id'] = $url[1];
@@ -125,6 +129,8 @@ class ControllerCommonSeoUrl extends Controller {
 				$this->request->get['route'] = 'blog/article_author';
 			} elseif (isset($this->request->get['blog_category_id'])) {
 				$this->request->get['route'] = 'blog/category';
+			} elseif (isset($this->request->get['gallery_id'])) {
+				$this->request->get['route'] = 'modification/gallery/info';
 			}
 
 			if (isset($this->request->get['route'])) {
@@ -161,7 +167,8 @@ class ControllerCommonSeoUrl extends Controller {
 					($data['route'] === 'product/product' && $key === 'manufacturer_id' && $key === 'product_id') ||
 					(($data['route'] === 'product/manufacturer/info' || $data['route'] === 'product/product') && $key === 'manufacturer_id') ||
 					($data['route'] === 'information/information' && $key === 'information_id') || ($data['route'] === 'information/news' && $key === 'news_id') ||
-					($data['route'] === 'blog/article_info' && $key === 'blog_article_id') || ($data['route'] === 'blog/article_author' && $key === 'blog_author_id')
+					($data['route'] === 'blog/article_info' && $key === 'blog_article_id') || ($data['route'] === 'blog/article_author' && $key === 'blog_author_id') ||
+					($data['route'] === 'modification/gallery/info' && $key === 'gallery_id')
 				) {
 					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
 
