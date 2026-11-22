@@ -10,7 +10,7 @@
 # "Crawl rate" / Crawl Stats settings instead if needed)
 # ---------------------------------------------------------------
 User-agent: Googlebot
-Content-Signal: ai-train=no, search=yes, ai-input=yes
+# Content-Signal: ai-train=no, search=yes, ai-input=yes
 
 # Directories
 Disallow: /admin/
@@ -62,7 +62,7 @@ User-agent: Yandex
 User-agent: Applebot
 User-agent: AhrefsBot
 User-agent: Baiduspider
-Content-Signal: ai-train=no, search=yes, ai-input=yes
+# Content-Signal: ai-train=no, search=yes, ai-input=yes
 Crawl-delay: 5
 
 Disallow: /admin/
@@ -108,7 +108,7 @@ Disallow: /maintenance.php
 # ---------------------------------------------------------------
 User-agent: Pinterestbot
 User-agent: Pinterest
-Content-Signal: ai-train=no, search=yes, ai-input=yes
+# Content-Signal: ai-train=no, search=yes, ai-input=yes
 Allow: /image/
 
 Disallow: /admin/
@@ -122,7 +122,7 @@ Disallow: /vendor/
 # conservative delay as a safety net.
 # ---------------------------------------------------------------
 User-agent: *
-Content-Signal: ai-train=no, search=yes, ai-input=yes
+# Content-Signal: ai-train=no, search=yes, ai-input=yes
 Crawl-delay: 10
 
 Disallow: /admin/
