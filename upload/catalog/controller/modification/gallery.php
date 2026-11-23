@@ -10,7 +10,7 @@
  * @package NivoCart
  */
 class ControllerModificationGallery extends Controller {
-	private const DESCRIPTION_MAX = 250;
+	private const DESCRIPTION_MAX = 100;
 
 	/**
 	 * Gallery list: grid or list view, latest submission first, with the filters.

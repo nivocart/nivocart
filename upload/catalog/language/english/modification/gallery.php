@@ -52,7 +52,7 @@ $_['entry_description']      = 'Short Description (optional)';
 $_['entry_fullname']         = 'Your Full Name';
 $_['entry_email']            = 'Your Email Address';
 $_['entry_captcha']          = 'Enter the code below';
-$_['help_description']       = 'A short description of the photo (maximum 250 characters).';
+$_['help_description']       = 'A short description of the photo (maximum 100 characters).';
 $_['help_pet_name']          = 'Do not use a surname or any address details.';
 
 // Email: submission received
@@ -101,8 +101,8 @@ $_['text_agreement_default'] = '<h2>Publishing Agreement</h2>
 </ul>
 <p>Photos that do not follow these rules, or that we consider unsuitable, are refused and deleted.</p>
 <h2>Your Photo and Copyright</h2>
-<p>The photo stays your property. You only give %1$s the right to display it in the Gallery on our website, together with its name and short description, for as long as it is published. We add a small watermark with our website address, and we may crop it to a square and make it smaller.</p>
-<p>We do not use the photos for marketing, advertising, social media or any other purpose, and we do not sell, share or give them to anyone else. The photo is a public web page, so search engines may show it in their image results, and we cannot control copies that others make.</p>
+<p>The photo stays your property. You only give %1$s the right to display it in the Gallery on our website, together with its name and short description, for as long as it is published.<br />We add a small watermark with our website address, and we may crop it to a square and make it smaller.</p>
+<p>We do not use the photos for marketing, advertising, social media or any other purpose, and we do not sell, share or give them to anyone else.<br />The photo is a public web page, so search engines may show it in their image results, and we cannot control copies that others make.</p>
 <h2>Privacy Policy</h2>
 <p>This policy is only for the Gallery. It is separate from the Privacy Policy of our online store.</p>
 <ul>
