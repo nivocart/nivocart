@@ -32,9 +32,18 @@
             /* Init */
             var _options = $.extend(defaults, options),
                 _input = $(this),
-                _sfiWrapper = $('<div class="sfi-wrapper ' + _options.wrapperClass + (_input .is(':disabled') ? 'sfi-disabled' : '') + '"></div>'),
-                _sfiFileName = $('<span class="sfi-filename empty">' + _options.placeholder + '</span>'),
-                _sfiTrigger = $('<a href="#" class="sfi-trigger">' + _options.buttonText + '</a>');
+                _sanitizedWrapperClass = String(_options.wrapperClass || '').match(/[A-Za-z0-9_-]+/g),
+                _sfiWrapper = $('<div></div>').addClass('sfi-wrapper'),
+                _sfiFileName = $('<span></span>').addClass('sfi-filename empty').text(_options.placeholder),
+                _sfiTrigger = $('<a></a>').attr('href', '#').addClass('sfi-trigger').text(_options.buttonText);
+
+            if (_sanitizedWrapperClass) {
+                _sfiWrapper.addClass(_sanitizedWrapperClass.join(' '));
+            }
+
+            if (_input.is(':disabled')) {
+                _sfiWrapper.addClass('sfi-disabled');
+            }
 
             _options.onInit();
 

@@ -22,6 +22,9 @@ Release: TBA
 - Updated the CJDropshipping Dashboard for faster Stock Sync operations.
 - Updated the Register/Sign In links on the Frontend for better visiblity.
 - Updated most module forms under Administration to be more intuitive.
+- Fix for Code Scanning Issue #116: Unsafe HTML is SimpleFile Input JS (1).
+- Fix for Code Scanning Issue #117: Unsafe HTML is SimpleFile Input JS (2).
+- Fix for Code Scanning Issue #118: Unsafe HTML is SimpleFile Input JS (3).
 
 
 NivoCart v2.5.5
