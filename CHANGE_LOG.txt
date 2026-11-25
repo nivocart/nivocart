@@ -8,6 +8,8 @@ NivoCart v2.X.X
 ---------------
 Release: TBA
 
+- Fix a Admin Dashboard rendering issue when no order has been received yet.
+
 
 NivoCart v2.6.0
 ---------------

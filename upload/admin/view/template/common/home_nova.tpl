@@ -101,7 +101,7 @@
             </tr>
           </table>
         </div>
-        <div class="gx-panel <?php echo $top_countries ? 'gx-c6' : 'gx-c9'; ?> gx-hero">
+        <div class="gx-panel gx-c6 gx-hero">
           <h2 class="gx-panel-title"><?php echo $text_store_health; ?></h2>
           <div class="gx-hero-body">
             <div class="gx-hero-side">
@@ -122,6 +122,11 @@
         <div class="gx-panel gx-c3">
           <h2 class="gx-panel-title"><?php echo $text_topcountry; ?> <?php echo (!empty($top_flag)) ? '<img src="' . $top_flag . '" alt="" />' : ''; ?></h2>
           <div data-nc="donut" data-segments="<?php echo $donut_segments; ?>"></div>
+        </div>
+        <?php } else { ?>
+        <div class="gx-panel gx-c3">
+          <h2 class="gx-panel-title"><?php echo $text_topcountry; ?></h2>
+          <p class="gx-all-clear"><?php echo $text_no_orders; ?></p>
         </div>
         <?php } ?>
         <div class="gx-panel gx-c8">

@@ -32,6 +32,7 @@ $_['text_topseller']                = 'Top 5 Sellers';
 $_['text_topview']                  = 'Top 5 Viewed';
 $_['text_topcustomer']              = 'Top 5 Customers';
 $_['text_topcountry']               = 'Top Country';
+$_['text_no_orders']                = 'No orders have been received yet!';
 $_['text_download']                 = 'Download';
 $_['text_guest']                    = 'Guest';
 $_['text_user_log']                 = 'View User Log';

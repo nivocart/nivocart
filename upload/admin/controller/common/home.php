@@ -79,6 +79,7 @@ class ControllerCommonHome extends Controller {
 		$this->data['text_topcustomer'] = $this->language->get('text_topcustomer');
 		$this->data['text_topcountry'] = 'Sales by Region';
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
+		$this->data['text_no_orders'] = $this->language->get('text_no_orders');
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		$this->data['text_deleted'] = $this->language->get('text_deleted');
