@@ -4,9 +4,14 @@
 ---------------
 
 
-NivoCart v2.6.0
+NivoCart v2.X.X
 ---------------
 Release: TBA
+
+
+NivoCart v2.6.0
+---------------
+Release: 25/11/2026
 
 - Add new TrustPilot Modification, requires a TrustPilot Business Account.
 - Add new module TrustPilot Review Collector to display a Free Plan widget.
