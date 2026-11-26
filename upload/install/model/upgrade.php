@@ -78,25 +78,29 @@ class ModelUpgrade extends Model {
 					'unsigned'      => trim($match[8][$key]),
 					'notnull'       => trim($match[9][$key]),
 					'autoincrement' => trim($match[12][$key]),
-					'default'       => trim($match[14][$key]),
+					'default'       => trim($match[14][$key])
 				];
 			}
 
 			// Primary keys
 			$primary_data = [];
+
 			preg_match('#primary\s*key\s*\([^)]+\)#i', $sql, $match);
 
 			if (!empty($match[0])) {
 				preg_match_all('#`(\w[\w\d]*)`#', $match[0], $match);
+
 				$primary_data = $match[1] ?? [];
 			}
 
 			// Indexes
 			$index_data = [];
+
 			preg_match_all('#key\s*`\w[\w\d]*`\s*\(.*\)#i', $sql, $match);
 
 			foreach ($match[0] as $key) {
 				preg_match_all('#`(\w[\w\d]*)`#', $key, $parts);
+
 				$fields = $parts[1] ?? [];
 
 				if (count($fields) >= 2) {
@@ -107,6 +111,7 @@ class ModelUpgrade extends Model {
 
 			// Table options
 			$option_data = [];
+
 			preg_match_all('#(\w+)=(\w+)#', $sql, $option);
 
 			foreach (array_keys($option[0]) as $key) {
@@ -123,7 +128,7 @@ class ModelUpgrade extends Model {
 					'field'   => $field_data,
 					'primary' => $primary_data,
 					'index'   => $index_data,
-					'option'  => $option_data,
+					'option'  => $option_data
 				];
 			}
 		}
@@ -291,7 +296,7 @@ class ModelUpgrade extends Model {
 		// Migrate config_sitemap_pages (group=config) → sitemap_pages (group=sitemap)
 		// Carry forward any saved selection, then remove the old row
 		$old_sitemap = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "setting` WHERE `key` = 'config_sitemap_pages' AND `store_id` = '0' LIMIT 1");
-		$new_check   = $this->db->query("SELECT `setting_id` FROM `" . DB_PREFIX . "setting` WHERE `key` = 'sitemap_pages' AND `store_id` = '0' LIMIT 1");
+		$new_check = $this->db->query("SELECT `setting_id` FROM `" . DB_PREFIX . "setting` WHERE `key` = 'sitemap_pages' AND `store_id` = '0' LIMIT 1");
 
 		if (!$new_check->num_rows) {
 			if ($old_sitemap->num_rows) {
