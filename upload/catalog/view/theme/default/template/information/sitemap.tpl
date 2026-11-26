@@ -145,6 +145,9 @@
         <?php if ($gallery_active && $sp_enabled('modification/gallery')) { ?>
         <li class="last-line"><a href="<?php echo $gallery; ?>"><?php echo $text_gallery; ?></a></li>
         <?php } ?>
+        <?php if ($videos_active) { ?>
+        <li class="last-line"><a href="<?php echo $videos; ?>"><?php echo $text_videos; ?></a></li>
+        <?php } ?>
         <?php if ($sp_enabled('information/quote')) { ?>
         <li class="last-line"><a href="<?php echo $quote; ?>"><?php echo $text_quote; ?></a></li>
         <?php } ?>

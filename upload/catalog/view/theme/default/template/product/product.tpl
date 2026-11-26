@@ -200,6 +200,11 @@
           <video controls preload="none" playsinline<?php if ($video_poster) { ?> poster="<?php echo $video_poster; ?>"<?php } ?><?php if ($video_file_width && $video_file_height) { ?> width="<?php echo $video_file_width; ?>" height="<?php echo $video_file_height; ?>"<?php } ?>>
             <source src="<?php echo $video_file; ?>" type="video/<?php echo pathinfo($video_file, PATHINFO_EXTENSION); ?>" />
           </video>
+          <?php if ($video_watch) { ?>
+            <a href="<?php echo $video_watch; ?>" class="video-watch">
+              <i class="fa fa-play-circle" aria-hidden="true"></i> <?php echo $text_watch_video; ?>
+            </a>
+          <?php } ?>
         </div>
       <?php } ?>
       <?php if ($video_code) { ?>

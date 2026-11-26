@@ -3710,3 +3710,28 @@ table.address-options td h2 {
 }
 .box-account > ul > li > a .fa-gift { display: inline-block; width: 24px; margin-right: 20px; font-size: 20px; text-align: center; }
 .voucher-buy { margin: 10px 0 0 0; }
+
+/* Video watch pages */
+.product-info > .left .video .video-watch { display: inline-block; margin: 10px 0 0 0; }
+.video-intro { margin: 0 0 20px 0; }
+.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin: 0 0 20px 0; }
+.video-card { border: 1px solid var(--clr-border-light); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+.video-card-image { display: block; position: relative; }
+.video-card-image img { display: block; width: 100%; height: auto; }
+.video-card-image .fa-play-circle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 56px; color: #FFF; text-shadow: 0 0 12px rgba(0, 0, 0, .6); }
+.video-card-time { position: absolute; right: 6px; bottom: 6px; padding: 2px 6px; font-size: 12px; color: #FFF; background: rgba(0, 0, 0, .75); border-radius: var(--radius-sm); }
+.video-card-name { margin: 10px 0 0 0; }
+.watch-player { --plyr-color-main: var(--clr-primary); margin: 0 auto 20px auto; max-width: 860px; background: #000; border-radius: var(--radius-sm); overflow: hidden; }
+.watch-player.square { max-width: 600px; }
+.watch-player.portrait { max-width: 400px; }
+.watch-player video { display: block; width: 100%; height: auto; max-height: 75vh; }
+.watch-player .plyr { width: 100%; }
+.watch-details { max-width: 860px; margin: 0 auto 20px auto; }
+.watch-buy { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; margin: 0 0 20px 0; }
+.watch-price { font-size: 24px; font-weight: bold; }
+.watch-price small { font-family: inherit; font-size: 14px; font-weight: normal; color: var(--clr-text-muted); }
+.watch-price-old { margin: 0 8px 0 0; font-size: 16px; font-weight: normal; text-decoration: line-through; color: var(--clr-text-muted); }
+.watch-options ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px 0; padding: 0; list-style: none; }
+.watch-options li a { display: block; padding: 6px 12px; border: 1px solid var(--clr-border-light); border-radius: var(--radius-sm); }
+.watch-description { line-height: 1.6; }
+.watch-more { text-align: center; }

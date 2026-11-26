@@ -33,6 +33,13 @@ class ControllerCommonSeoUrl extends Controller {
 				array_pop($parts);
 			}
 
+			// Video watch pages and the page listing them (no url_alias entries)
+			$video_action = $this->getVideoRoute($parts);
+
+			if ($video_action) {
+				return $this->forward($video_action);
+			}
+
 			foreach ($parts as $part) {
 				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE keyword = '" . $this->db->escape($part) . "'");
 
@@ -161,6 +168,10 @@ class ControllerCommonSeoUrl extends Controller {
 
 		parse_str($url_info['query'], $data);
 
+		if (isset($data['route']) && ($data['route'] === 'product/video' || $data['route'] === 'product/video/watch')) {
+			return $this->rewriteVideo($link, $url_info, $data);
+		}
+
 		foreach ($data as $key => $value) {
 			if (isset($data['route'])) {
 				if (($data['route'] === 'product/product' && $key === 'product_id') ||
@@ -240,5 +251,74 @@ class ControllerCommonSeoUrl extends Controller {
 		} else {
 			return $link;
 		}
+	}
+
+	/**
+	 * Route of a video address: "videos" or "video/<name>-<code>". Sets the route and the video code.
+	 *
+	 * @param array<int, string> $parts Parts of the requested path
+	 *
+	 * @return string Route, or an empty string when the path is not a video address
+	 */
+	private function getVideoRoute(array $parts): string {
+		if (!$this->config->get('config_seo_url')) {
+			return '';
+		}
+
+		if (count($parts) === 2 && $parts[0] === 'video' && preg_match('/^[a-z0-9-]+-([a-f0-9]{8})$/', $parts[1], $match)) {
+			$this->request->get['video'] = $match[1];
+			$this->request->get['route'] = 'product/video/watch';
+		} elseif (count($parts) === 1 && $parts[0] === 'videos') {
+			// An SEO URL entered in the administration with the same keyword keeps priority
+			$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "url_alias` WHERE keyword = 'videos'");
+
+			if ($query->num_rows) {
+				return '';
+			}
+
+			$this->request->get['route'] = 'product/video';
+		} else {
+			return '';
+		}
+
+		return $this->request->get['route'];
+	}
+
+	/**
+	 * SEO address of the video pages.
+	 *
+	 * @param string                $link     Original link, returned when the video is unknown
+	 * @param array<string, mixed>  $url_info Parts of the original link
+	 * @param array<string, mixed>  $data     Query values of the original link
+	 *
+	 * @return string
+	 */
+	private function rewriteVideo(string $link, array $url_info, array $data): string {
+		if ($data['route'] === 'product/video') {
+			$path = 'videos';
+		} else {
+			$videos = videoWatchList($this->db, (int)$this->config->get('config_store_id'));
+
+			$code = (isset($data['video']) && is_string($data['video'])) ? $data['video'] : '';
+
+			if (!isset($videos[$code])) {
+				return $link;
+			}
+
+			$path = videoWatchPath($videos[$code]);
+
+			unset($data['video']);
+		}
+
+		unset($data['route']);
+
+		$url = $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . '/' . $path;
+
+		if ($data) {
+			// The page placeholder of the pagination must stay readable
+			$url .= '?' . str_replace('%7Bpage%7D', '{page}', http_build_query($data, '', '&amp;', PHP_QUERY_RFC3986));
+		}
+
+		return $url;
 	}
 }

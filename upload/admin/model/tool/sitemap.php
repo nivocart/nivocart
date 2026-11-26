@@ -5,9 +5,6 @@
  * @package NivoCart
  */
 class ModelToolSitemap extends Model {
-	// Hosted product videos by product_id, loaded once per request (see getVideoMap())
-	private ?array $video_map = null;
-
 	/**
 	 * Functions Generate, Get
 	 */
@@ -50,6 +47,7 @@ class ModelToolSitemap extends Model {
 		fwrite($fp, $this->getInformationPages());
 		fwrite($fp, $this->getBlogArticles());
 		fwrite($fp, $this->getGalleryPages());
+		fwrite($fp, $this->getVideoPages());
 		fwrite($fp, "</urlset>");
 		fclose($fp);
 
@@ -221,7 +219,7 @@ class ModelToolSitemap extends Model {
 		$results = $this->model_catalog_sitemap->getAllProducts($store_id);
 
 		foreach ($results as $result) {
-			$output .= $this->generateLinkNode($base . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0", $this->getVideoNode($result, $base));
+			$output .= $this->generateLinkNode($base . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0");
 		}
 
 		$stores_pro = $this->model_catalog_sitemap->getAllStores();
@@ -234,7 +232,7 @@ class ModelToolSitemap extends Model {
 					foreach ($results as $result) {
 						$store_url = $store_pro['url'];
 
-						$output .= $this->generateLinkNode($store_url . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0", $this->getVideoNode($result, $store_url));
+						$output .= $this->generateLinkNode($store_url . 'index.php?route=product/product&product_id=' . $result['product_id'], "weekly", "1.0");
 					}
 				}
 			}
@@ -244,80 +242,104 @@ class ModelToolSitemap extends Model {
 	}
 
 	/**
-	 * Hosted product videos (CJDropshipping import), keyed by product_id.
-	 * Only videos whose file and cover image still exist on disk are returned,
-	 * because Google needs a thumbnail and a reachable video file.
-	 * The table only exists with the CJDropshipping modification.
+	 * The video pages of every store: the address of the page listing the videos and the watch pages.
+	 * Empty without hosted videos (CJDropshipping modification).
+	 *
+	 * @return array<int, array{hub: string, videos: array<int, array<string, mixed>>}>
 	 */
-	protected function getVideoMap(): array {
-		if ($this->video_map !== null) {
-			return $this->video_map;
+	protected function getVideoStores(): array {
+		$this->load->model('catalog/sitemap');
+
+		$stores = [
+			[
+				'store_id' => 0,
+				'url'      => $this->getBase(),
+				'seo_url'  => (bool)$this->config->get('config_seo_url')
+			]
+		];
+
+		$results = $this->model_catalog_sitemap->getAllStores();
+
+		if ($results) {
+			foreach ($results as $result) {
+				if ((int)$result['store_id'] !== 0) {
+					$query = $this->db->query("SELECT `value` FROM `" . DB_PREFIX . "setting` WHERE `key` = 'config_seo_url' AND `store_id` = '" . (int)$result['store_id'] . "'");
+
+					$stores[] = [
+						'store_id' => (int)$result['store_id'],
+						'url'      => $result['url'],
+						'seo_url'  => !empty($query->row['value'])
+					];
+				}
+			}
 		}
 
-		$this->video_map = [];
+		$video_stores = [];
 
-		$check = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "product_video'");
+		foreach ($stores as $store) {
+			$videos = [];
 
-		if (!$check->num_rows) {
-			return $this->video_map;
-		}
+			foreach (videoWatchList($this->db, $store['store_id']) as $video) {
+				$video['loc'] = videoWatchUrl($store['url'], $store['seo_url'], $video);
+				$video['content_loc'] = videoWatchImageUrl($store['url'], $video['video']);
+				$video['thumbnail_loc'] = videoWatchImageUrl($store['url'], $video['poster']);
 
-		$query = $this->db->query("SELECT `product_id`, `video`, `poster`, `duration` FROM `" . DB_PREFIX . "product_video` WHERE `video` != '' AND `poster` != '' ORDER BY `sort_order` ASC, `product_video_id` ASC");
-
-		foreach ($query->rows as $row) {
-			// One video per product in the sitemap: the first one wins
-			if (isset($this->video_map[$row['product_id']])) {
-				continue;
+				$videos[] = $video;
 			}
 
-			if (is_file(DIR_IMAGE . $row['video']) && is_file(DIR_IMAGE . $row['poster'])) {
-				$this->video_map[$row['product_id']] = $row;
+			if ($videos) {
+				$video_stores[] = [
+					'hub'    => videoWatchHubUrl($store['url'], $store['seo_url']),
+					'videos' => $videos
+				];
 			}
 		}
 
-		return $this->video_map;
+		return $video_stores;
 	}
 
 	/**
-	 * Google video sitemap entry for a product row from getAllProducts()
-	 * (needs name and description). Returns '' when the product has no usable video.
+	 * XML entries of the video pages. The Google video information belongs to the watch pages.
+	 *
+	 * @return string
 	 */
-	protected function getVideoNode(array $product, string $base): string {
-		$map = $this->getVideoMap();
+	protected function getVideoPages(): string {
+		$output = '';
 
-		if (!isset($map[$product['product_id']])) {
-			return '';
+		foreach ($this->getVideoStores() as $store) {
+			$output .= $this->standardLinkNode($store['hub'], 'weekly', '0.6');
+
+			foreach ($store['videos'] as $video) {
+				$output .= $this->standardLinkNode($video['loc'], 'monthly', '0.8', $this->getVideoNode($video));
+			}
 		}
 
-		$video = $map[$product['product_id']];
+		return $output;
+	}
 
-		$title = trim(preg_replace('/\s+/u', ' ', preg_replace('/<[^>]*>/', ' ', html_entity_decode((string)$product['name'], ENT_QUOTES, 'UTF-8'))));
-		$description = trim(preg_replace('/\s+/u', ' ', preg_replace('/<[^>]*>/', ' ', html_entity_decode((string)($product['description'] ?? ''), ENT_QUOTES, 'UTF-8'))));
-
-		if ($description === '') {
-			$description = $title;
-		}
-
-		$title = mb_substr($title, 0, 100);
-		$description = mb_substr($description, 0, 2000);
+	/**
+	 * Google video sitemap entry of a watch page.
+	 *
+	 * @param array<string, mixed> $video Entry of getVideoStores()
+	 *
+	 * @return string
+	 */
+	protected function getVideoNode(array $video): string {
+		$title = mb_substr($video['title'], 0, 100);
+		$description = mb_substr(($video['description'] !== '') ? $video['description'] : $video['title'], 0, 2000);
 
 		if ($title === '') {
 			return '';
 		}
 
-		$content_loc = $base . 'image/' . implode('/', array_map('rawurlencode', explode('/', $video['video'])));
-		$thumbnail_loc = $base . 'image/' . implode('/', array_map('rawurlencode', explode('/', $video['poster'])));
-
 		$output = "<video:video>\r";
-		$output .= "<video:thumbnail_loc>" . htmlspecialchars($thumbnail_loc, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:thumbnail_loc>\r";
+		$output .= "<video:thumbnail_loc>" . htmlspecialchars($video['thumbnail_loc'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:thumbnail_loc>\r";
 		$output .= "<video:title>" . htmlspecialchars($title, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:title>\r";
 		$output .= "<video:description>" . htmlspecialchars($description, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:description>\r";
-		$output .= "<video:content_loc>" . htmlspecialchars($content_loc, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:content_loc>\r";
+		$output .= "<video:content_loc>" . htmlspecialchars($video['content_loc'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</video:content_loc>\r";
 
-		$duration = (int)round((float)$video['duration']);
-
-		if ($duration >= 1 && $duration <= 28800) {
-			$output .= "<video:duration>" . $duration . "</video:duration>\r";
+		if ($video['duration'] >= 1 && $video['duration'] <= 28800) {
+			$output .= "<video:duration>" . $video['duration'] . "</video:duration>\r";
 		}
 
 		$output .= "</video:video>\r";
@@ -765,6 +787,15 @@ class ModelToolSitemap extends Model {
 			}
 		}
 
+		// Videos
+		foreach ($this->getVideoStores() as $store) {
+			$output .= str_replace("&", "&amp;", $store['hub']) . "\r";
+
+			foreach ($store['videos'] as $video) {
+				$output .= str_replace("&", "&amp;", $video['loc']) . "\r";
+			}
+		}
+
 		return $output;
 	}
 
@@ -846,7 +877,7 @@ class ModelToolSitemap extends Model {
 		return $output;
 	}
 
-	protected function standardLinkNode($link, $changefreq = 'monthly', $priority = '1.0') {
+	protected function standardLinkNode($link, $changefreq = 'monthly', $priority = '1.0', $extra = '') {
 		$link_url = str_replace("&", "&amp;", $link);
 
 		$output = "<url>\r";
@@ -854,6 +885,7 @@ class ModelToolSitemap extends Model {
 		$output .= "<lastmod>" . date("Y-m-d") . "</lastmod>\r";
 		$output .= "<changefreq>" . $changefreq . "</changefreq>\r";
 		$output .= "<priority>" . $priority . "</priority>\r";
+		$output .= $extra;
 		$output .= "</url>\r";
 
 		return $output;

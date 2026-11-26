@@ -325,6 +325,7 @@ class ControllerToolConfiguration extends Controller {
 			'pdf'        => $ds(DIR_SYSTEM . 'helper/pdf.php'),
 			'totals'     => $ds(DIR_SYSTEM . 'helper/totals.php'),
 			'vat'        => $ds(DIR_SYSTEM . 'helper/vat.php'),
+			'video'      => $ds(DIR_SYSTEM . 'helper/video.php'),
 			'voucher'    => $ds(DIR_SYSTEM . 'helper/voucher.php')
 		];
 

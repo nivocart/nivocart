@@ -72,6 +72,7 @@ class ControllerInformationSitemap extends Controller {
 		$this->data['text_news'] = $this->language->get('text_news');
 		$this->data['text_quote'] = $this->language->get('text_quote');
 		$this->data['text_gallery'] = $this->language->get('text_gallery');
+		$this->data['text_videos'] = $this->language->get('text_videos');
 		$this->data['text_contact'] = $this->language->get('text_contact');
 
 		$this->load->model('catalog/category');
@@ -217,6 +218,8 @@ class ControllerInformationSitemap extends Controller {
 		$this->data['gallery_active'] = (bool)$this->config->get('gallery_page_status');
 		$this->data['gallery'] = $this->url->link('modification/gallery', '', 'SSL');
 		$this->data['contact'] = $this->url->link('information/contact', '', 'SSL');
+		$this->data['videos_active'] = (bool)videoWatchList($this->db, (int)$this->config->get('config_store_id'));
+		$this->data['videos'] = $this->url->link('product/video', '', 'SSL');
 
 		$this->load->model('catalog/information');
 
