@@ -891,10 +891,10 @@ class ControllerCommonHome extends Controller {
 		$this->data['money_suffix'] = $this->currency->getSymbolRight($currency);
 		$this->data['money_decimals'] = (int)$this->currency->getDecimalPlace($currency);
 
-		$this->data['raw_sale'] = round((float)$raw['sale_all'], 2);
-		$this->data['raw_sale_year'] = round((float)$raw['sale_year'], 2);
-		$this->data['raw_sale_month'] = round((float)$raw['sale_month'], 2);
-		$this->data['raw_sale_today'] = round((float)$raw['sale_today'], 2);
+		$this->data['raw_sale'] = round((float)$raw['sale_all'], 2, PHP_ROUND_HALF_UP);
+		$this->data['raw_sale_year'] = round((float)$raw['sale_year'], 2, PHP_ROUND_HALF_UP);
+		$this->data['raw_sale_month'] = round((float)$raw['sale_month'], 2, PHP_ROUND_HALF_UP);
+		$this->data['raw_sale_today'] = round((float)$raw['sale_today'], 2, PHP_ROUND_HALF_UP);
 
 		// Yesterday comparison for the three KPI tiles
 		$yesterday = date('Y-m-d', strtotime('-1 day'));
@@ -919,11 +919,11 @@ class ControllerCommonHome extends Controller {
 		$this->data['orders_by_hour'] = json_encode($hours);
 		$this->data['orders_by_hour_max'] = max(4, max($hours));
 		$this->data['current_hour'] = (int)date('G');
-		$this->data['orders_hour_rate'] = round(array_sum($hours) / max(1, (int)date('G') + 1), 1);
+		$this->data['orders_hour_rate'] = round(array_sum($hours) / max(1, (int)date('G') + 1), 1, PHP_ROUND_HALF_UP);
 
 		$total_order_today = (int)$this->data['total_order_today'];
 
-		$this->data['avg_order_value'] = ($total_order_today > 0) ? round((float)$raw['sale_today'] / $total_order_today, 2) : 0;
+		$this->data['avg_order_value'] = ($total_order_today > 0) ? round((float)$raw['sale_today'] / $total_order_today, 2, PHP_ROUND_HALF_UP) : 0;
 
 		// Sales by region donut
 		$segments = [];
@@ -965,7 +965,7 @@ class ControllerCommonHome extends Controller {
 			}
 		}
 
-		$this->data['pct_directories'] = (int)round((6 - $directory_errors) / 6 * 100);
+		$this->data['pct_directories'] = (int)round((6 - $directory_errors) / 6 * 100, PHP_ROUND_HALF_UP);
 
 		$health = 100 - ($directory_errors * 15);
 
@@ -999,7 +999,7 @@ class ControllerCommonHome extends Controller {
 			return ['show' => false, 'class' => '', 'icon' => '', 'text' => ''];
 		}
 
-		$percent = (int)round(($today - $yesterday) / $yesterday * 100);
+		$percent = (int)round(($today - $yesterday) / $yesterday * 100, PHP_ROUND_HALF_UP);
 
 		return [
 			'show'  => true,
@@ -1022,7 +1022,7 @@ class ControllerCommonHome extends Controller {
 			return 100;
 		}
 
-		return (int)max(0, min(100, round(($total - $waiting) / $total * 100)));
+		return (int)max(0, min(100, round(($total - $waiting) / $total * 100, PHP_ROUND_HALF_UP)));
 	}
 
 	public function chart() {
