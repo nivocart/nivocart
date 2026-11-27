@@ -217,9 +217,6 @@ class ControllerCommonHeader extends Controller {
 		$this->data['text_weight_class'] = $this->language->get('text_weight_class');
 		$this->data['text_zone'] = $this->language->get('text_zone');
 
-		$this->data['text_paypal_express'] = $this->language->get('text_paypal_manage');
-		$this->data['text_paypal_express_search'] = $this->language->get('text_paypal_search');
-
 		// Header
 		if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] !== $this->session->data['token'])) {
 			$this->data['logged'] = false;

@@ -143,6 +143,3 @@ $_['text_users']                       = 'Users';
 $_['text_voucher']                     = 'Gift Vouchers';
 $_['text_weight_class']                = 'Weight Classes';
 $_['text_zone']                        = 'Zones';
-
-$_['text_paypal_manage']               = 'PayPal';
-$_['text_paypal_search']               = 'Search';
