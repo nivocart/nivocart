@@ -427,6 +427,7 @@ body > #container-limited {
   color: var(--clr-text-bright);
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.05);
   font-size: 12px;
+  font-weight: 600;
   line-height: 20px;
   text-decoration: none;
   padding: 0 11px;
@@ -459,6 +460,7 @@ body > #container-limited {
   display: inline-block;
   color: #777;
   font-size: 12px;
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
   padding: 0 6px;
@@ -475,7 +477,8 @@ body > #container-limited {
   float: right;
   color: var(--clr-text-bright);
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.05);
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 600;
   line-height: 20px;
   text-decoration: none;
   padding: 0 12px;
@@ -508,7 +511,8 @@ body > #container-limited {
   display: inline-block;
   color: #777;
   text-shadow: 0 0 1px rgba(119, 119, 119, 0.05);
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
   padding: 0 6px;
