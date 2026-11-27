@@ -15,7 +15,10 @@
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
-<link rel="stylesheet" type="text/css" href="view/stylesheet/stylesheet_<?php echo $admin_css; ?>.css" />
+<?php if ($dashboard_css_version) { ?>
+<link rel="stylesheet" type="text/css" href="view/stylesheet/dashboard.css?v=<?php echo $dashboard_css_version; ?>" />
+<?php } ?>
+<link rel="stylesheet" type="text/css" href="view/stylesheet/stylesheet_<?php echo $admin_css; ?>.css?v=<?php echo $admin_css_version; ?>" />
 <link rel="stylesheet" type="text/css" href="view/javascript/jquery/ui/jquery-ui-1.14.2.min.css" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/animate-custom.min.css" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/font-awesome.min.css" />
@@ -30,7 +33,7 @@
 <script type="text/javascript" src="view/javascript/jquery/tabs.min.js"></script>
 <script type="text/javascript" src="view/javascript/common.min.js"></script>
 </head>
-<body class="theme-<?php echo $admin_css; ?>">
+<body class="theme-<?php echo $admin_css; ?> nc-admin">
 <div id="container-<?php echo $resolution; ?>">
   <div id="header">
     <div class="static">

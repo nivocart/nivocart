@@ -51,6 +51,11 @@ class ControllerCommonHeaderLogin extends Controller {
 			$this->data['admin_css'] = 'light';
 		}
 
+		// Changes whenever the file does, so browsers fetch the new copy instead of a cached one
+		$css_file = DIR_APPLICATION . 'view/stylesheet/stylesheet_' . $this->data['admin_css'] . '.css';
+
+		$this->data['admin_css_version'] = is_file($css_file) ? filemtime($css_file) : VERSION;
+
 		// Display Limit
 		$display_limit = $this->config->get('config_admin_width_limit');
 

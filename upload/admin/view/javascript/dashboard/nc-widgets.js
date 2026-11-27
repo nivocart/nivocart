@@ -1,5 +1,5 @@
 /*!
- * NivoCart Nova widget kit (nc-nova.js)
+ * NivoCart dashboard widget kit (nc-widgets.js)
  * Requires: jQuery 3.x and jQuery UI 1.12+ (widget factory + easing). No other dependencies.
  *
  * Widgets (all configured with data- attributes, initialised with $.nc.init()):

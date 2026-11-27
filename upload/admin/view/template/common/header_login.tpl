@@ -16,7 +16,7 @@
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
-<link rel="stylesheet" type="text/css" href="view/stylesheet/stylesheet_<?php echo $admin_css; ?>.css" />
+<link rel="stylesheet" type="text/css" href="view/stylesheet/stylesheet_<?php echo $admin_css; ?>.css?v=<?php echo $admin_css_version; ?>" />
 <link rel="stylesheet" type="text/css" href="view/javascript/jquery/ui/jquery-ui-1.14.2.min.css" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/animate-custom.min.css" />
 <link rel="stylesheet" type="text/css" href="view/stylesheet/font-awesome.min.css" />

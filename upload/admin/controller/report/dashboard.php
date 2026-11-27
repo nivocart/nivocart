@@ -18,7 +18,7 @@ class ControllerReportDashboard extends Controller {
 
 		$this->document->addScript('view/javascript/jquery/flot/jquery.flot.min.js');
 		$this->document->addScript('view/javascript/jquery/flot/jquery.flot.resize.min.js');
-		$this->document->addScript('view/javascript/nova/nc-nova.js');
+		$this->document->addScript('view/javascript/dashboard/nc-widgets.js');
 
 		foreach (['heading_title', 'button_close', 'button_apply', 'button_retry', 'text_period_today', 'text_period_week', 'text_period_month', 'text_period_year', 'text_period_custom', 'text_vs_previous', 'text_group_sales', 'text_group_products', 'text_group_customers', 'text_group_affiliates', 'text_group_other', 'text_sitemap', 'text_attention', 'text_trend', 'entry_date_start', 'entry_date_end', 'error_date', 'error_group'] as $key) {
 			$this->data[$key] = $this->language->get($key);

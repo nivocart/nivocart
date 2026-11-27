@@ -38,7 +38,7 @@ $_['text_guest']                    = 'Guest';
 $_['text_user_log']                 = 'View User Log';
 $_['text_seo_url_audit']            = 'Audit SEO URLs';
 
-// Nova dashboard
+// Dashboard widgets
 $_['text_vs_yesterday']             = 'vs yesterday';
 $_['text_store_health']             = 'Store Health';
 $_['text_overall']                  = 'Overall';
@@ -106,9 +106,6 @@ $_['column_orders']                 = 'Orders';
 $_['column_products']               = 'Products';
 $_['column_model']                  = 'Model';
 $_['column_action']                 = 'Action';
-
-// Entry
-$_['entry_range']                   = 'Select Range:';
 
 // Error
 $_['error_image']                   = 'Warning: Image directory %s not writeable!';

@@ -51,6 +51,18 @@ class ControllerCommonHeader extends Controller {
 			$this->data['admin_css'] = 'light';
 		}
 
+		// Changes whenever the file does, so browsers fetch the new copy instead of a cached one
+		$css_file = DIR_APPLICATION . 'view/stylesheet/stylesheet_' . $this->data['admin_css'] . '.css';
+
+		$this->data['admin_css_version'] = is_file($css_file) ? filemtime($css_file) : VERSION;
+
+		// Shared dashboard widget stylesheet, only for the pages which use it
+		$route = !empty($this->request->get['route']) ? (string)$this->request->get['route'] : 'common/home';
+
+		$dashboard_file = DIR_APPLICATION . 'view/stylesheet/dashboard.css';
+
+		$this->data['dashboard_css_version'] = (preg_match('#^(common/home|report/dashboard)(/index)?$#', $route) && is_file($dashboard_file)) ? filemtime($dashboard_file) : '';
+
 		// Display Limit
 		$display_limit = $this->config->get('config_admin_width_limit');
 

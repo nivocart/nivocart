@@ -125,7 +125,6 @@ class ControllerCommonHome extends Controller {
 		$this->data['column_filename'] = $this->language->get('column_filename');
 		$this->data['column_action'] = $this->language->get('column_action');
 
-		$this->data['entry_range'] = $this->language->get('entry_range');
 
 		// Login unserialize warning
 		if (isset($this->error['warning'])) {
@@ -330,24 +329,6 @@ class ControllerCommonHome extends Controller {
 		// Stylesheet
 		$admin_css = $this->config->get('config_admin_stylesheet');
 
-		$this->load->model('design/administration');
-
-		$contrast = $this->model_design_administration->getAdministrationContrastByName($admin_css);
-
-		if ($contrast === 'dark') {
-			$this->data['chart_background'] = '#6D7582';
-			$this->data['chart_border'] = '#999999';
-			$this->data['chart_colour'] = '#E5E5E5';
-		} elseif ($contrast === 'light') {
-			$this->data['chart_background'] = '#FFFFFF';
-			$this->data['chart_border'] = '#AAAAAA';
-			$this->data['chart_colour'] = '#333333';
-		} else {
-			$this->data['chart_background'] = '#FFFFFF';
-			$this->data['chart_border'] = '#AAAAAA';
-			$this->data['chart_colour'] = '#333333';
-		}
-
 		$this->data['admin_css'] = $admin_css;
 
 		// Overview Sales
@@ -357,9 +338,6 @@ class ControllerCommonHome extends Controller {
 		$sale_year = $this->model_sale_order->getTotalSalesByYear(date('Y'));
 		$sale_month = $this->model_sale_order->getTotalSalesByMonth(date('m'));
 
-		$this->data['total_sale'] = $this->currency->format($sale_all, $this->config->get('config_currency'));
-		$this->data['total_sale_year'] = $this->currency->format($sale_year, $this->config->get('config_currency'));
-		$this->data['total_sale_month'] = $this->currency->format($sale_month, $this->config->get('config_currency'));
 
 		// Overview Customers
 		$this->load->model('sale/customer');
@@ -430,7 +408,6 @@ class ControllerCommonHome extends Controller {
 
 		$total_sales_today = $this->model_report_sale->getTotalSales(['filter_date_added' => date('Y-m-d')]);
 
-		$this->data['total_sale_today'] = $this->currency->format($total_sales_today, $this->config->get('config_currency'));
 
 		$this->data['view_sales'] = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . '&filter_date_start=' . date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01')) . '&filter_date_end=' . date('Y-m-d') . '&filter_group=day', 'SSL');
 
@@ -857,29 +834,24 @@ class ControllerCommonHome extends Controller {
 			}
 		}
 
-		// Optional dashboard template per admin theme (e.g. home_nova.tpl), falls back to home.tpl
-		$this->template = 'common/home.tpl';
+		// Dashboard widgets
+		$this->dashboardData([
+			'sale_all'         => $sale_all,
+			'sale_year'        => $sale_year,
+			'sale_month'       => $sale_month,
+			'sale_today'       => $total_sales_today,
+			'seo_url_issues'   => isset($seo_url_audit['total']) ? (int)$seo_url_audit['total'] : 0
+		]);
 
+		$this->document->addScript('view/javascript/dashboard/nc-widgets.js');
+
+		// An admin theme may bring its own layout as home_<theme>.tpl
 		$theme_template = preg_replace('/[^a-z0-9_]/', '', strtolower((string)$admin_css));
 
-		$dashboard_template = $theme_template;
-
-		if (in_array($theme_template, ['dark', 'light']) && !is_file(DIR_TEMPLATE . 'common/home_' . $theme_template . '.tpl')) {
-			$dashboard_template = 'nova';
-		}
-
-		if ($dashboard_template && is_file(DIR_TEMPLATE . 'common/home_' . $dashboard_template . '.tpl')) {
-			$this->novaData([
-				'sale_all'         => $sale_all,
-				'sale_year'        => $sale_year,
-				'sale_month'       => $sale_month,
-				'sale_today'       => $total_sales_today,
-				'seo_url_issues'   => isset($seo_url_audit['total']) ? (int)$seo_url_audit['total'] : 0
-			]);
-
-			$this->document->addScript('view/javascript/nova/nc-nova.js');
-
-			$this->template = 'common/home_' . $dashboard_template . '.tpl';
+		if ($theme_template && is_file(DIR_TEMPLATE . 'common/home_' . $theme_template . '.tpl')) {
+			$this->template = 'common/home_' . $theme_template . '.tpl';
+		} else {
+			$this->template = 'common/home.tpl';
 		}
 
 		$this->children = [
@@ -891,12 +863,11 @@ class ControllerCommonHome extends Controller {
 	}
 
 	/**
-	 * Extra values used by the dashboard templates that draw gauges, counters and bars.
-	 * Only called when the active admin theme has its own home template.
+	 * Values used by the dashboard template to draw its gauges, counters and bars.
 	 *
 	 * @param array $raw Unformatted numbers already calculated by index()
 	 */
-	private function novaData($raw) {
+	private function dashboardData($raw) {
 		$this->language->load('common/home');
 
 		$text_keys = [
@@ -932,9 +903,9 @@ class ControllerCommonHome extends Controller {
 		$customers_yesterday = (int)$this->model_sale_customer->getTotalCustomers(['filter_date_added' => $yesterday]);
 		$sales_yesterday = (float)$this->model_report_sale->getTotalSales(['filter_date_added' => $yesterday]);
 
-		$this->data['delta_orders'] = $this->novaDelta((int)$this->data['total_order_today'], $orders_yesterday);
-		$this->data['delta_customers'] = $this->novaDelta((int)$this->data['total_customer_today'], $customers_yesterday);
-		$this->data['delta_sales'] = $this->novaDelta((float)$raw['sale_today'], $sales_yesterday);
+		$this->data['delta_orders'] = $this->dayDelta((int)$this->data['total_order_today'], $orders_yesterday);
+		$this->data['delta_customers'] = $this->dayDelta((int)$this->data['total_customer_today'], $customers_yesterday);
+		$this->data['delta_sales'] = $this->dayDelta((float)$raw['sale_today'], $sales_yesterday);
 
 		// Orders by hour (today) for the bars widgets
 		$hours = array_fill(0, 24, 0);
@@ -970,10 +941,10 @@ class ControllerCommonHome extends Controller {
 		$total_orders = (int)$this->data['total_order'];
 		$pending_orders = (int)$this->data['total_pending_orders'];
 
-		$this->data['pct_customers'] = $this->novaRatio((int)$this->data['total_customer'], (int)$this->data['total_customer_approval']);
-		$this->data['pct_reviews'] = $this->novaRatio((int)$this->data['total_review'], (int)$this->data['total_review_approval']);
-		$this->data['pct_affiliates'] = $this->novaRatio((int)$this->data['total_affiliate'], (int)$this->data['total_affiliate_approval']);
-		$this->data['pct_orders'] = $this->novaRatio($total_orders, $pending_orders);
+		$this->data['pct_customers'] = $this->doneRatio((int)$this->data['total_customer'], (int)$this->data['total_customer_approval']);
+		$this->data['pct_reviews'] = $this->doneRatio((int)$this->data['total_review'], (int)$this->data['total_review_approval']);
+		$this->data['pct_affiliates'] = $this->doneRatio((int)$this->data['total_affiliate'], (int)$this->data['total_affiliate_approval']);
+		$this->data['pct_orders'] = $this->doneRatio($total_orders, $pending_orders);
 
 		$awaiting = (int)$this->data['total_customer_approval'] + (int)$this->data['total_review_approval'];
 
@@ -1023,7 +994,7 @@ class ControllerCommonHome extends Controller {
 	 *
 	 * @return array
 	 */
-	private function novaDelta($today, $yesterday) {
+	private function dayDelta($today, $yesterday) {
 		if ($yesterday <= 0) {
 			return ['show' => false, 'class' => '', 'icon' => '', 'text' => ''];
 		}
@@ -1046,7 +1017,7 @@ class ControllerCommonHome extends Controller {
 	 *
 	 * @return int
 	 */
-	private function novaRatio($total, $waiting) {
+	private function doneRatio($total, $waiting) {
 		if ($total <= 0) {
 			return 100;
 		}
