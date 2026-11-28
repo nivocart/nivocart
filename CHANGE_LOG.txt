@@ -4,12 +4,13 @@
 ---------------
 
 
-NivoCart v2.X.X
+NivoCart v2.6.X
 ---------------
 Release: TBA
 
 - Add new Video Watch Page for better Search Engine videos indexation.
 - Fix a Admin Dashboard rendering issue when no order has been received yet.
+- Updated all 3 Admin Stylesheets for better code structure and performance.
 
 
 NivoCart v2.6.0
